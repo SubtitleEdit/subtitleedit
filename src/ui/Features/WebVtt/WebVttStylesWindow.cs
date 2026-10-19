@@ -1,12 +1,15 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data.Converters;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -14,8 +17,15 @@ using System.Windows.Input;
 
 namespace Nikse.SubtitleEdit.Features.WebVtt;
 
+/// <summary>
+/// WebVTT styles (::cue classes), styled like ASSA draw: the style list on the left, the preview
+/// on the right with the style editor and the CSS before/after under it.
+/// </summary>
 public class WebVttStylesWindow : Window
 {
+    private const string Current = nameof(WebVttStylesViewModel.SelectedStyle) + ".";
+    private static readonly FontFamily MonoFont = new("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace");
+
     public WebVttStylesWindow(WebVttStylesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -25,44 +35,50 @@ public class WebVttStylesWindow : Window
             Mode = BindingMode.TwoWay,
         });
         CanResize = true;
-        Width = 1150;
-        Height = 750;
-        MinWidth = 900;
-        MinHeight = 560;
+        Width = 1200;
+        Height = 800;
+        MinWidth = 950;
+        MinHeight = 600;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
+        AddStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
+        var right = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
             },
+        };
+        right.Add(MakePreview(vm), 0, 0);
+        right.Add(MakeEditorPanel(vm), 1, 0);
+
+        var content = new Grid
+        {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition(new GridLength(380)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        content.Add(MakeStylesPanel(vm), 0, 0);
+        content.Add(right, 0, 1);
 
-        var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand)
-            .WithBindIsVisible(nameof(vm.IsApplyVisible));
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonApply, buttonOk, buttonCancel);
-
-        grid.Add(MakeStylesView(vm), 0, 0);
-        grid.Add(MakeRightView(vm), 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
-
-        Content = grid;
+        var mainGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
+            },
+        };
+        mainGrid.Add(content, 0, 0);
+        mainGrid.Add(MakeButtonBar(vm), 1, 0);
+        Content = mainGrid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.StyleGrid); });
@@ -72,74 +88,43 @@ public class WebVttStylesWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Border MakeStylesView(WebVttStylesViewModel vm)
+    /// <summary>
+    /// Toggle buttons (B/I/U/S) in the editor accent.
+    /// </summary>
+    private static void AddStyles(Styles styles)
     {
-        var grid = new Grid
+        styles.Add(new Style(x => x.OfType<ToggleButton>().Class("tool"))
         {
-            RowDefinitions =
+            Setters =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // label
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // styles
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // duplicate names warning
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
+                new Setter(ToggleButton.BackgroundProperty, Brushes.Transparent),
+                new Setter(ToggleButton.BorderThicknessProperty, new Thickness(0)),
+                new Setter(ToggleButton.CornerRadiusProperty, new CornerRadius(6)),
+                new Setter(ToggleButton.ForegroundProperty, EditorChrome.IconBrush),
+                new Setter(ToggleButton.PaddingProperty, new Thickness(0)),
             },
-            ColumnDefinitions =
+        });
+        styles.Add(new Style(x => x.OfType<ToggleButton>().Class("tool").Class(":checked").Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"))
+        {
+            Setters =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new Setter(ContentPresenter.BackgroundProperty, EditorChrome.AccentBrush),
+                new Setter(ContentPresenter.ForegroundProperty, Brushes.White),
             },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            RowSpacing = 5,
-        };
+        });
+    }
 
-        var label = UiUtil.MakeLabel(Se.Language.General.Styles).WithBold();
-
+    private static Border MakeStylesPanel(WebVttStylesViewModel vm)
+    {
         // No header sorting: the styles are written to the file header in list order on
         // OK/Apply, so the collection order is not presentation-only.
         var dataGrid = TableViewExtras.MakeTableView();
+        AutomationProperties.SetName(dataGrid, Se.Language.General.Styles);
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Styles;
-
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.Name,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(WebVttStyleDisplay.Name)),
-            Width = new GridLength(1, GridUnitType.Star),
-        });
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.FontName,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(WebVttStyleDisplay.FontNameDisplay)),
-            Width = new GridLength(150),
-        });
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.FontSize,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(WebVttStyleDisplay.FontSizeDisplay)),
-            Width = new GridLength(80),
-        });
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.Italic,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(WebVttStyleDisplay.ItalicDisplay)),
-            Width = new GridLength(70),
-        });
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.Usages,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(WebVttStyleDisplay.UsageCount)),
-            Width = new GridLength(80),
-        });
+        dataGrid.Columns.Add(Column(Se.Language.General.Name, nameof(WebVttStyleDisplay.Name), new GridLength(1, GridUnitType.Star)));
+        dataGrid.Columns.Add(Column(Se.Language.General.FontSize, nameof(WebVttStyleDisplay.FontSizeDisplay), new GridLength(70)));
+        dataGrid.Columns.Add(Column(Se.Language.General.Usages, nameof(WebVttStyleDisplay.UsageCount), new GridLength(70)));
 
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedStyle)) { Source = vm });
         dataGrid.AddHandler(InputElement.KeyDownEvent, vm.StylesMoveKeyDown, RoutingStrategies.Tunnel);
@@ -147,252 +132,312 @@ public class WebVttStylesWindow : Window
         vm.StyleGrid = dataGrid;
 
         var flyout = new MenuFlyout();
-        flyout.Items.Add(new MenuItem
-        {
-            Header = Se.Language.General.Delete,
-            DataContext = vm,
-            Command = vm.RemoveCommand,
-        });
-        flyout.Items.Add(new MenuItem
-        {
-            Header = Se.Language.General.Clear,
-            DataContext = vm,
-            Command = vm.RemoveAllCommand,
-        });
+        flyout.Items.Add(new MenuItem { Header = Se.Language.General.Delete, DataContext = vm, Command = vm.RemoveCommand });
+        flyout.Items.Add(new MenuItem { Header = Se.Language.General.Clear, DataContext = vm, Command = vm.RemoveAllCommand });
         AddMoveMenuItems(flyout, vm);
         dataGrid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        var labelDuplicates = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.DuplicateStyleNames));
-        labelDuplicates.Foreground = Brushes.OrangeRed;
-        labelDuplicates.Bind(IsVisibleProperty, new Binding(nameof(vm.HasDuplicateStyleNames)) { Source = vm });
+        // Title, then the actions under it
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, Margin = new Thickness(0, 6, 0, 0) };
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.NewCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-regular fa-clone", Se.Language.General.Duplicate, vm.DuplicateCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.RemoveCommand, 24));
+        actions.Children.Add(EditorChrome.MakeToolbarSeparator());
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-file-import", Se.Language.General.Import, vm.ImportCommand, 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-file-export", Se.Language.General.Export, vm.ExportCommand, 24));
+        var header = new StackPanel { Margin = new Thickness(14, 10, 10, 8) };
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Styles));
+        header.Children.Add(actions);
 
-        var buttonNew = UiUtil.MakeButton(vm.NewCommand, IconNames.Plus, Se.Language.General.New);
-        var buttonDuplicate = UiUtil.MakeButton(vm.DuplicateCommand, IconNames.Duplicate, Se.Language.General.Duplicate);
-        var buttonRemove = UiUtil.MakeButton(vm.RemoveCommand, IconNames.Trash, Se.Language.General.Delete);
-        var buttonImport = UiUtil.MakeButton(vm.ImportCommand, IconNames.Import, Se.Language.General.Import);
-        var buttonExport = UiUtil.MakeButton(vm.ExportCommand, IconNames.Export, Se.Language.General.Export);
-        var panelButtons = UiUtil.MakeButtonBar(
-            buttonNew,
-            buttonDuplicate,
-            buttonRemove,
-            buttonImport,
-            buttonExport
-        ).WithAlignmentLeft();
+        // Two styles with one name would overwrite each other on save
+        var duplicates = new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(40, 255, 69, 0)),
+            BorderBrush = Brushes.OrangeRed,
+            BorderThickness = new Thickness(3, 0, 0, 0),
+            Padding = new Thickness(10, 6),
+            Margin = new Thickness(8, 0, 8, 8),
+            Child = new TextBlock
+            {
+                FontSize = 12,
+                TextWrapping = TextWrapping.Wrap,
+                [!TextBlock.TextProperty] = new Binding(nameof(vm.DuplicateStyleNames)),
+            },
+            [!Border.IsVisibleProperty] = new Binding(nameof(vm.HasDuplicateStyleNames)),
+        };
 
-        grid.Add(label, 0, 0);
+        dataGrid.Margin = new Thickness(8, 0, 8, 8);
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
+            },
+        };
+        grid.Add(header, 0, 0);
         grid.Add(dataGrid, 1, 0);
-        grid.Add(labelDuplicates, 2, 0);
-        grid.Add(panelButtons, 3, 0);
+        grid.Add(duplicates, 2, 0);
 
-        return UiUtil.MakeBorderForControl(grid);
+        return new Border
+        {
+            Child = grid,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
+        };
     }
 
-    private static Grid MakeRightView(WebVttStylesViewModel vm)
+    private static SeTableViewColumn Column(string header, string property, GridLength width) => new()
     {
-        var grid = new Grid
+        Header = header,
+        CellTheme = UiUtil.TableViewCellTheme,
+        HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        Binding = new Binding(property),
+        Width = width,
+    };
+
+    private static Border MakeEditorPanel(WebVttStylesViewModel vm)
+    {
+        var columns = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            RowSpacing = 5,
         };
 
-        grid.Add(MakeSelectedStyleView(vm), 0);
-        grid.Add(MakePreviewView(vm), 1);
-        grid.Add(MakeRawStyleView(vm), 2);
+        var first = new StackPanel();
+        first.Children.Add(MakeNameSection(vm));
+        first.Children.Add(MakeFontSection(vm));
+        columns.Add(first, 0, 0);
+        columns.Add(new Border
+        {
+            Child = MakeColorsSection(vm),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0),
+        }, 0, 1);
+        columns.Add(MakeCssSection(vm), 0, 2);
 
-        return grid;
+        return new Border
+        {
+            Child = columns,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            [!Border.IsEnabledProperty] = new Binding(nameof(vm.SelectedStyle)) { Converter = ObjectConverters.IsNotNull },
+        };
     }
 
-    private static Border MakeSelectedStyleView(WebVttStylesViewModel vm)
+    private static Border MakeNameSection(WebVttStylesViewModel vm)
     {
-        var grid = new Grid
+        var name = new TextBox
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            ColumnSpacing = 5,
-            RowSpacing = 5,
+            FontSize = 12.5,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(6),
+            [!TextBox.TextProperty] = new Binding(Current + nameof(WebVttStyleDisplay.Name)) { Mode = BindingMode.TwoWay },
         };
+        AutomationProperties.SetName(name, Se.Language.General.Name);
 
-        var label = UiUtil.MakeLabel(Se.Language.General.Style).WithBold();
-
-        var labelName = UiUtil.MakeLabel(Se.Language.General.Name).WithMinWidth(70);
-        var textBoxName = UiUtil.MakeTextBox(220, vm, nameof(vm.SelectedStyle) + "." + nameof(WebVttStyleDisplay.Name));
         // A blank or already-used name would silently overwrite another style on save.
-        textBoxName.Bind(TemplatedControl.BorderBrushProperty, new Binding(nameof(vm.IsNameInvalid))
+        name.Bind(TemplatedControl.BorderBrushProperty, new Binding(nameof(vm.IsNameInvalid))
         {
             Source = vm,
-            Converter = new FuncValueConverter<bool, IBrush?>(invalid => invalid ? Brushes.OrangeRed : null),
+            Converter = new FuncValueConverter<bool, IBrush?>(invalid => invalid ? Brushes.OrangeRed : EditorChrome.FieldBorderBrush),
         });
-        var panelName = UiUtil.MakeHorizontalPanel(labelName, textBoxName);
 
-        var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName).WithMinWidth(70);
-        var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.SelectedStyle) + "." + nameof(WebVttStyleDisplay.FontName)).WithMinWidth(160);
-        var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
-        var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(0, 500, 110, vm, nameof(vm.SelectedStyle) + "." + nameof(WebVttStyleDisplay.FontSize));
-        numericUpDownFontSize.Increment = 1;
-        var panelFont = UiUtil.MakeHorizontalPanel(labelFontName, comboBoxFontName, labelFontSize, numericUpDownFontSize);
-
-        var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.SelectedStyle) + "." + nameof(WebVttStyleDisplay.Bold));
-        var checkBoxItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.SelectedStyle) + "." + nameof(WebVttStyleDisplay.Italic));
-        var checkBoxUnderline = UiUtil.MakeCheckBox(Se.Language.General.Underline, vm, nameof(vm.SelectedStyle) + "." + nameof(WebVttStyleDisplay.Underline));
-        var checkBoxStrikeout = UiUtil.MakeCheckBox(Se.Language.General.Strikeout, vm, nameof(vm.SelectedStyle) + "." + nameof(WebVttStyleDisplay.Strikeout));
-        var panelFontStyle = UiUtil.MakeHorizontalPanel(checkBoxBold, checkBoxItalic, checkBoxUnderline, checkBoxStrikeout);
-
-        // Every CSS property is optional, so each color has its own "use it" check box - an
-        // unchecked color is left out of the style instead of being written as a default.
-        var panelColor = MakeColorRow(
-            vm,
-            Se.Language.General.Color,
-            nameof(WebVttStyleDisplay.UseColor),
-            nameof(WebVttStyleDisplay.Color));
-        var panelBackgroundColor = MakeColorRow(
-            vm,
-            Se.Language.General.Background,
-            nameof(WebVttStyleDisplay.UseBackgroundColor),
-            nameof(WebVttStyleDisplay.BackgroundColor));
-
-        var panelShadow = MakeColorRow(
-            vm,
-            Se.Language.General.Shadow,
-            nameof(WebVttStyleDisplay.UseShadow),
-            nameof(WebVttStyleDisplay.ShadowColor));
-        var labelShadowWidth = UiUtil.MakeLabel(Se.Language.General.ShadowWidth);
-        var numericUpDownShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 110, vm, nameof(vm.SelectedStyle) + "." + nameof(WebVttStyleDisplay.ShadowWidth));
-        numericUpDownShadowWidth.Increment = 1;
-        panelShadow.Children.Add(labelShadowWidth);
-        panelShadow.Children.Add(numericUpDownShadowWidth);
-
-        grid.Add(label, 0, 0);
-        grid.Add(panelName, 1, 0);
-        grid.Add(panelFont, 2, 0);
-        grid.Add(panelFontStyle, 3, 0);
-        grid.Add(UiUtil.MakeHorizontalPanel(panelColor, panelBackgroundColor), 4, 0);
-        grid.Add(panelShadow, 5, 0);
-
-        return UiUtil.MakeBorderForControl(grid);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Name, name, first: true);
     }
 
-    private static StackPanel MakeColorRow(WebVttStylesViewModel vm, string text, string useProperty, string colorProperty)
+    private static Border MakeFontSection(WebVttStylesViewModel vm)
     {
-        var checkBox = UiUtil.MakeCheckBox(text, vm, nameof(vm.SelectedStyle) + "." + useProperty);
-        var button = MakeStyleColorPickerButton(vm, colorProperty);
-        return UiUtil.MakeHorizontalPanel(checkBox, button);
+        var fontName = UiUtil.MakeComboBox(vm.Fonts, vm, Current + nameof(WebVttStyleDisplay.FontName));
+        fontName.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(fontName, Se.Language.General.FontName);
+
+        var size = EditorChrome.MakeField(Current + nameof(WebVttStyleDisplay.FontSize), 0, 500, 76, "Aa", "0.#");
+        AutomationProperties.SetName(size, Se.Language.General.FontSize);
+
+        ToggleButton Toggle(string text, string property, string name, FontWeight weight = FontWeight.Normal, FontStyle style = FontStyle.Normal, TextDecorationCollection? decorations = null)
+        {
+            var toggle = new ToggleButton
+            {
+                Content = new TextBlock { Text = text, FontWeight = weight, FontStyle = style, TextDecorations = decorations, FontSize = 13 },
+                Width = 28,
+                Height = 28,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                [!ToggleButton.IsCheckedProperty] = new Binding(Current + property) { Mode = BindingMode.TwoWay },
+            };
+            toggle.Classes.Add("tool");
+            AutomationProperties.SetName(toggle, name);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(toggle, name);
+            }
+
+            return toggle;
+        }
+
+        var styleRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        styleRow.Children.Add(size);
+        styleRow.Children.Add(new Border { Width = 6 });
+        styleRow.Children.Add(Toggle("B", nameof(WebVttStyleDisplay.Bold), Se.Language.General.Bold, FontWeight.Bold));
+        styleRow.Children.Add(Toggle("I", nameof(WebVttStyleDisplay.Italic), Se.Language.General.Italic, style: FontStyle.Italic));
+        styleRow.Children.Add(Toggle("U", nameof(WebVttStyleDisplay.Underline), Se.Language.General.Underline, decorations: TextDecorations.Underline));
+        styleRow.Children.Add(Toggle("S", nameof(WebVttStyleDisplay.Strikeout), Se.Language.General.Strikeout, decorations: TextDecorations.Strikethrough));
+
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(fontName);
+        content.Children.Add(styleRow);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Font, content);
     }
 
-    private static Border MakePreviewView(WebVttStylesViewModel vm)
+    /// <summary>
+    /// Every CSS property is optional, so each color has its own on/off switch - a color that is
+    /// off is left out of the style instead of being written as a default.
+    /// </summary>
+    private static Border MakeColorsSection(WebVttStylesViewModel vm)
     {
-        var grid = new Grid
+        var rows = new StackPanel { Spacing = 6 };
+        rows.Children.Add(MakeColorRow(vm, Se.Language.General.Color, nameof(WebVttStyleDisplay.UseColor), nameof(WebVttStyleDisplay.Color)));
+        rows.Children.Add(MakeColorRow(vm, Se.Language.General.Background, nameof(WebVttStyleDisplay.UseBackgroundColor), nameof(WebVttStyleDisplay.BackgroundColor)));
+        rows.Children.Add(MakeColorRow(vm, Se.Language.General.Shadow, nameof(WebVttStyleDisplay.UseShadow), nameof(WebVttStyleDisplay.ShadowColor)));
+
+        var shadowWidth = EditorChrome.MakeField(Current + nameof(WebVttStyleDisplay.ShadowWidth), 0, 100, double.NaN, "W", "0.#");
+        AutomationProperties.SetName(shadowWidth, Se.Language.General.ShadowWidth);
+        shadowWidth.Bind(IsEnabledProperty, new Binding(Current + nameof(WebVttStyleDisplay.UseShadow)));
+        rows.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Width, shadowWidth));
+
+        return EditorChrome.MakeEditorSection(Se.Language.General.Color, rows, first: true);
+    }
+
+    private static Grid MakeColorRow(WebVttStylesViewModel vm, string text, string useProperty, string colorProperty)
+    {
+        var toggle = new ToggleSwitch
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleSwitch.IsCheckedProperty] = new Binding(Current + useProperty) { Mode = BindingMode.TwoWay },
         };
+        AutomationProperties.SetName(toggle, text);
 
-        var label = UiUtil.MakeLabel(Se.Language.General.Preview).WithBold();
+        var swatch = MakeStyleColorPickerButton(vm, colorProperty);
+        AutomationProperties.SetName(swatch, text);
+        swatch.Bind(IsEnabledProperty, new Binding(Current + useProperty));
 
-        var image = new Image
+        var row = new Grid
         {
-            [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
-            DataContext = vm,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Top,
-            Stretch = Stretch.Uniform, // Scale the preview frame to fit while keeping aspect ratio
-            MinHeight = 140,
-            MaxHeight = 220,
+            ColumnSpacing = 8,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
         };
-
-        grid.Add(label, 0);
-        grid.Add(image, 1);
-
-        return UiUtil.MakeBorderForControl(grid);
+        row.Add(toggle, 0, 0);
+        row.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center }, 0, 1);
+        row.Add(swatch, 0, 2);
+        return row;
     }
 
     /// <summary>
     /// The CSS the style was loaded from next to the CSS it will be saved as, so an edit to a
     /// hand-written style shows exactly what it changes.
     /// </summary>
-    private static Border MakeRawStyleView(WebVttStylesViewModel vm)
+    private static Border MakeCssSection(WebVttStylesViewModel vm)
     {
-        var grid = new Grid
+        Border Code(string property) => new()
         {
-            RowDefinitions =
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            Padding = new Thickness(8, 6),
+            MinHeight = 64,
+            Child = new TextBlock
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                FontFamily = MonoFont,
+                FontSize = 11.5,
+                TextWrapping = TextWrapping.Wrap,
+                [!TextBlock.TextProperty] = new Binding(property),
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            ColumnSpacing = 5,
         };
 
-        var labelBeforeTitle = UiUtil.MakeLabel(Se.Language.General.Before).WithBold();
-        var labelAfterTitle = UiUtil.MakeLabel(Se.Language.General.After).WithBold();
+        var content = new StackPanel { Spacing = 4 };
+        content.Children.Add(EditorChrome.MakeDimLabel(Se.Language.General.Before, new Thickness(0)));
+        content.Children.Add(Code(nameof(vm.CssBefore)));
+        content.Children.Add(EditorChrome.MakeDimLabel(Se.Language.General.After, new Thickness(0, 6, 0, 0)));
+        content.Children.Add(Code(nameof(vm.CssAfter)));
+        return EditorChrome.MakeEditorSection("CSS", content, first: true);
+    }
 
-        var labelBefore = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CssBefore));
-        labelBefore.MinHeight = 70;
-        labelBefore.VerticalContentAlignment = VerticalAlignment.Top;
+    private static Control MakePreview(WebVttStylesViewModel vm)
+    {
+        var image = new Image
+        {
+            [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
+            Stretch = Stretch.Uniform,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        AutomationProperties.SetName(image, Se.Language.General.Preview);
 
-        var labelAfter = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CssAfter));
-        labelAfter.MinHeight = 70;
-        labelAfter.VerticalContentAlignment = VerticalAlignment.Top;
+        return new Border { Child = image, Margin = new Thickness(16, 12) };
+    }
 
-        grid.Add(labelBeforeTitle, 0, 0);
-        grid.Add(labelAfterTitle, 0, 1);
-        grid.Add(labelBefore, 1, 0);
-        grid.Add(labelAfter, 1, 1);
+    private static Border MakeButtonBar(WebVttStylesViewModel vm)
+    {
+        var summary = new TextBlock
+        {
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        void UpdateSummary() => summary.Text = $"{vm.Styles.Count} {Se.Language.General.Styles.ToLowerInvariant()}";
+        UpdateSummary();
+        vm.Styles.CollectionChanged += (_, _) => UpdateSummary();
 
-        return UiUtil.MakeBorderForControl(grid);
+        var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand)
+            .WithBindIsVisible(nameof(vm.IsApplyVisible));
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
+        buttons.Children.Add(buttonApply);
+        buttons.Children.Add(buttonCancel);
+        buttons.Children.Add(buttonOk);
+
+        var bar = new DockPanel();
+        DockPanel.SetDock(buttons, Dock.Right);
+        bar.Children.Add(buttons);
+        bar.Children.Add(summary);
+        return new Border
+        {
+            Child = bar,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 10),
+        };
     }
 
     private static Button MakeStyleColorPickerButton(WebVttStylesViewModel vm, string colorPropertyName)
     {
         var swatch = new Border
         {
-            Width = 30,
-            Height = 20,
-            CornerRadius = new CornerRadius(3),
+            Width = 34,
+            Height = 22,
+            CornerRadius = new CornerRadius(5),
             BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Colors.Gray),
+            BorderBrush = EditorChrome.MenuBorderBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
-        swatch.Bind(Border.BackgroundProperty, new Binding(nameof(vm.SelectedStyle) + "." + colorPropertyName)
+        swatch.Bind(Border.BackgroundProperty, new Binding(Current + colorPropertyName)
         {
             Source = vm,
             Converter = new ColorToBrushConverter(),
@@ -401,9 +446,10 @@ public class WebVttStylesWindow : Window
         var button = new Button
         {
             Content = swatch,
-            Padding = new Thickness(4, 2),
+            Padding = new Thickness(3),
             VerticalAlignment = VerticalAlignment.Center,
         };
+        button.Classes.Add("tool");
 
         button.Click += async (_, _) =>
         {

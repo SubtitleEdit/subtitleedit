@@ -243,15 +243,15 @@ public static class Se4ShortcutsImporter
         ["MainListViewSetNewActor"] = nameof(MainViewModel.SetNewActorCommand),
         ["MainListViewSplit"] = nameof(MainViewModel.SplitCommand),
         ["MainListViewToggleDashes"] = nameof(MainViewModel.ToggleDialogDashesCommand),
-        ["MainListViewCopyPlainText"] = nameof(MainViewModel.CopyTextToClipboardCommand),
-        ["MainListViewCopyOriginalPlainText"] = nameof(MainViewModel.CopyTextFromOriginalToClipboardCommand),
+        ["MainListViewCopyPlainText"] = nameof(MainViewModel.CopyPlainTextToClipboardCommand),
+        ["MainListViewCopyOriginalPlainText"] = nameof(MainViewModel.CopyPlainTextFromOriginalToClipboardCommand),
         ["MainRemoveFormatting"] = nameof(MainViewModel.TextBoxRemoveAllFormattingCommand),
 
         // Text box
         ["MainTextBoxSplitAtCursor"] = nameof(MainViewModel.SplitAtTextBoxCursorPositionCommand),
         ["MainTextBoxSplitAtCursorAndAutoBr"] = nameof(MainViewModel.SplitAtTextBoxCursorPositionCommand),
         ["MainTextBoxSplitAtCursorAndVideoPos"] = nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionCommand),
-        ["MainTextBoxSplitAtCursorAndVideoPosPlay"] = nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionCommand),
+        ["MainTextBoxSplitAtCursorAndVideoPosPlay"] = nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionAndPlayCommand),
         ["MainTextBoxMoveLastWordDown"] = nameof(MainViewModel.MoveLastWordToNextSubtitleCommand),
         ["MainTextBoxMoveLastWordDownCurrent"] = nameof(MainViewModel.MoveLastWordFromFirstLineDownCurrentSubtitleCommand),
         ["MainTextBoxMoveFirstWordUpCurrent"] = nameof(MainViewModel.MoveFirstWordFromNextLineUpCurrentSubtitleCommand),

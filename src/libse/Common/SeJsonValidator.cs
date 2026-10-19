@@ -207,9 +207,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                             state.Peek().Count++;
                         }
                     }
-                    else if ("+-0123456789".IndexOf(ch) >= 0)
+                    else if ("+-0123456789".Contains(ch))
                     {
-                        while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
+                        while ("+-0123456789.Ee".Contains(content[i]) && i < max)
                         {
                             i++;
                         }

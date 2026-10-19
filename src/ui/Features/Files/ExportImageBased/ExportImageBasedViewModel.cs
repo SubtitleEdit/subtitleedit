@@ -157,6 +157,9 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private readonly IFolderHelper _folderHelper;
     private readonly IWindowService _windowService;
 
+    /// <summary>For the preview's "Image background color..." menu entry.</summary>
+    internal IWindowService WindowService => _windowService;
+
     public ExportImageBasedViewModel(IFileHelper fileHelper, IFolderHelper folderHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;
@@ -457,9 +460,20 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         {
             await ExportRun(fileOrFolderName, cancellationToken);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // cancelled by the user or a new run
+        }
         catch (Exception exception)
         {
             Se.LogError(exception);
+            if (Window != null)
+            {
+                // e.g. a D-Cinema MXF with more images than one track file can hold
+                await MessageBox.Show(Window, Se.Language.General.Error,
+                    string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileOrFolderName, exception.Message),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         finally
         {
@@ -783,6 +797,11 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             _ = Task.Run(() =>
             {
                 var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
+                if (exportHandler is ExportHandlerDCinemaSmpte2014Mxf mxfHandler && mediaInfo?.Duration is { TotalMilliseconds: > 0 } videoDuration)
+                {
+                    mxfHandler.ReelDuration = TimeSpan.FromMilliseconds(videoDuration.TotalMilliseconds);
+                }
+
                 if (mediaInfo?.Dimension is { Width: > 0, Height: > 0 } dimension)
                 {
                     Dispatcher.UIThread.Post(() =>

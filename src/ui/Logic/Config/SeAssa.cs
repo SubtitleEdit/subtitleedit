@@ -23,6 +23,8 @@ public class SeAssa
     public string ProgressBarForegroundColor { get; set; }
     public string ProgressBarBackgroundColor { get; set; }
     public int ProgressBarCornerStyleIndex { get; set; }
+    public int ProgressBarEdgeMargin { get; set; }
+    public bool ProgressBarShowPlayhead { get; set; }
     public int BackgroundBoxesPaddingLeft { get; set; }
     public int BackgroundBoxesPaddingRight { get; set; }
     public int BackgroundBoxesPaddingTop { get; set; }
@@ -35,6 +37,13 @@ public class SeAssa
     public string BackgroundBoxesBoxColor { get; set; }
     public string BackgroundBoxesShadowColor { get; set; }
     public string BackgroundBoxesOutlineColor { get; set; }
+    public int BackgroundBoxesOutlineWidth { get; set; }
+    public bool SetPositionShowSafeArea { get; set; }
+    public int StylesPreviewBackground { get; set; }
+    public string StylesPreviewText { get; set; }
+    public bool SetPositionShowCenterLines { get; set; }
+    public bool SetPositionSnapToGuides { get; set; }
+    public int BackgroundBoxesShadowDistance { get; set; }
     public bool HideLayersFromWaveform { get; set; }
 
     /// <summary>
@@ -46,6 +55,11 @@ public class SeAssa
     /// ASSA draw: stretch a background image to the canvas instead of fitting it with its aspect ratio.
     /// </summary>
     public bool DrawBackgroundStretch { get; set; }
+
+    /// <summary>
+    /// ASSA draw: the Animation section of the properties panel is open.
+    /// </summary>
+    public bool DrawAnimationExpanded { get; set; }
 
     /// <summary>
     /// ASSA draw: shapes the user saved to the shape library ("My shapes").
@@ -71,6 +85,8 @@ public class SeAssa
         ProgressBarForegroundColor = "#FF0000";
         ProgressBarBackgroundColor = "#80000000";
         ProgressBarCornerStyleIndex = 0;
+        ProgressBarEdgeMargin = 0;
+        ProgressBarShowPlayhead = false;
 
         BackgroundBoxesPaddingLeft = 25;
         BackgroundBoxesPaddingRight = 25;
@@ -85,6 +101,12 @@ public class SeAssa
         BackgroundBoxesBoxColor = Color.FromArgb(50, 0,0,0).FromColorToHex();
         BackgroundBoxesShadowColor = Color.FromArgb(50, 0,0,0).FromColorToHex();    
         BackgroundBoxesOutlineColor = Color.FromArgb(50, 200,200,200).FromColorToHex();
+        BackgroundBoxesOutlineWidth = 2;
+        SetPositionShowSafeArea = true;
+        StylesPreviewText = "This is a test";
+        SetPositionShowCenterLines = true;
+        SetPositionSnapToGuides = true;
+        BackgroundBoxesShadowDistance = 1;
 
         HideLayersFromWaveform = true;
         DrawBackgroundOpacity = 1.0;

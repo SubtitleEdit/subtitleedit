@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
@@ -21,7 +22,7 @@ public class Se
     internal const int CurrentShortcutsMigrationVersion = 6;
     internal const int CurrentLayoutMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.3.0-rc3";
+    public static string Version { get; set; } = "v5.4.0-beta1";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -1526,6 +1527,7 @@ public class Se
         libSe.MaxNumberOfLines = g.MaxNumberOfLines;
         libSe.MergeLinesShorterThan = g.UnbreakLinesShorterThan;
         libSe.CpsLineLengthStrategy = g.CpsLineLengthStrategy;
+        CalcFactory.SetIgnoreTagsPattern(g.CpsLineLengthIgnoreTagsRegex);
 
         if (Enum.TryParse<Core.Enums.DialogType>(g.DialogStyle, out var dt))
         {

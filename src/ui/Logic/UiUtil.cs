@@ -3416,16 +3416,25 @@ public static class UiUtil
         {
             // Stop content-driven sizing before shrinking, or the next measure pass
             // would just grow the window back.
+            var sizeToContent = window.SizeToContent;
             window.SizeToContent = SizeToContent.Manual;
+            var clampedWidth = false;
+            var clampedHeight = false;
             if (window.Bounds.Width > maxWidth)
             {
                 window.Width = maxWidth;
+                clampedWidth = sizeToContent is SizeToContent.Width or SizeToContent.WidthAndHeight;
             }
 
             if (window.Bounds.Height > maxHeight)
             {
                 window.Height = maxHeight;
+                clampedHeight = sizeToContent is SizeToContent.Height or SizeToContent.WidthAndHeight;
             }
+
+            // A shrunk auto-sized window clips its bottom rows (often the OK/Cancel bar),
+            // and many of them can't be resized - so let the content scroll. (#16026)
+            WrapContentInScrollViewer(window, clampedWidth, clampedHeight);
         }
 
         // Keep the whole frame inside the working area so the bottom buttons stay
@@ -3440,6 +3449,43 @@ public static class UiUtil
         if (position != window.Position)
         {
             window.Position = position;
+        }
+    }
+
+    // Puts an auto-sized window's content in a ScrollViewer after the window was clamped to the
+    // screen. Only a clamped auto-sized dimension scrolls: the content was laid out with unlimited
+    // room in that direction anyway, so its layout is unchanged - it just scrolls instead of
+    // being clipped. A fixed dimension stays disabled so text wrapping and stretching still work.
+    internal static void WrapContentInScrollViewer(Window window, bool horizontal, bool vertical)
+    {
+        if ((!horizontal && !vertical) || window.Content is not Control content)
+        {
+            return;
+        }
+
+        // Windows with a ScrollViewer of their own that takes up the spare height (e.g. burn-in:
+        // scrolling settings over a fixed button bar) already handle a short screen, and an outer
+        // one would stop theirs scrolling. A fixed-size one (spell check suggestions, message box
+        // text) is just a part of the content and scrolls fine inside the outer one.
+        if (content is ScrollViewer ||
+            content.GetLogicalDescendants().OfType<ScrollViewer>().Any(p => double.IsNaN(p.Height) && double.IsPositiveInfinity(p.MaxHeight)))
+        {
+            return;
+        }
+
+        var focused = window.FocusManager?.GetFocusedElement() as Control;
+        window.Content = null;
+        window.Content = new ScrollViewer
+        {
+            HorizontalScrollBarVisibility = horizontal ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = vertical ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled,
+            Content = content,
+        };
+
+        // Re-parenting detaches the content from the visual tree, which drops keyboard focus.
+        if (focused != null && content.IsVisualAncestorOf(focused))
+        {
+            focused.Focus();
         }
     }
 

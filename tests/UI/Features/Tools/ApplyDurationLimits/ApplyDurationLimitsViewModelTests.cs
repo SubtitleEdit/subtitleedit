@@ -78,6 +78,44 @@ public class ApplyDurationLimitsViewModelTests : IDisposable
         Assert.Equal(2000, vm.AllSubtitlesFixed[1].Duration.TotalMilliseconds);
     }
     [AvaloniaFact]
+    public async Task ExtendingNeverShrinksTheGapBelowTheMinimum()
+    {
+        // #15994: a 1000 ms line 80 ms before the next one was extended to 1050 ms, leaving a
+        // 30 ms gap - the minimum gap was only respected when the extension would overlap.
+        using var settings = new SettingsScope(
+            "General.UseFrameMode",
+            "General.MinimumBetweenLines.Milliseconds",
+            "Tools.ApplyDurationLimitsMinDurationMs",
+            "Tools.ApplyDurationLimitsMaxDurationMs");
+        Se.Settings.General.UseFrameMode = false;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 80;
+
+        var vm = new ApplyDurationLimitsViewModel();
+        var window = new ApplyDurationLimitsWindow(vm);
+        _windows.Add(window);
+        window.Show();
+        vm.Initialize(new List<SubtitleLineViewModel>
+        {
+            // 80 ms gap to the next line: no room to grow.
+            new() { Text = "At gap", StartTime = TimeSpan.FromMilliseconds(1000), EndTime = TimeSpan.FromMilliseconds(2000) },
+            // 120 ms gap to the next line: may grow 40 ms.
+            new() { Text = "Partial", StartTime = TimeSpan.FromMilliseconds(2080), EndTime = TimeSpan.FromMilliseconds(3080) },
+            new() { Text = "Next", StartTime = TimeSpan.FromMilliseconds(3200), EndTime = TimeSpan.FromMilliseconds(6000) },
+        }, new List<double>());
+        Dispatcher.UIThread.RunJobs();
+        vm.FixMinDurationMs = true;
+        vm.MinDurationMsOrFrames = 1050;
+        vm.FixMaxDurationMs = false;
+        vm.MaxDurationMsOrFrames = 6000;
+
+        await vm.OkCommand.ExecuteAsync(null);
+
+        Assert.Equal(1000, vm.AllSubtitlesFixed[0].Duration.TotalMilliseconds);
+        Assert.Equal(1040, vm.AllSubtitlesFixed[1].Duration.TotalMilliseconds);
+        Assert.Equal(new[] { "At gap" }, vm.Subtitles.Select(p => p.Text));
+    }
+
+    [AvaloniaFact]
     public async Task OnlySelectedIdsAreFixedAndTheRestPassThroughUnchanged()
     {
         var vm = new ApplyDurationLimitsViewModel();

@@ -44,6 +44,15 @@ public partial class RemuxFileItem : ObservableObject
     /// </summary>
     [ObservableProperty] private bool _showVolume;
 
+    /// <summary>
+    /// "CC1"/"CC3" when the subtitle file becomes closed captions in the video, else empty.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasCaptionChannel))]
+    private string _captionChannel = string.Empty;
+
+    public bool HasCaptionChannel => !string.IsNullOrEmpty(CaptionChannel);
+
     public RemuxFileItem(string fileName)
     {
         FileName = fileName;

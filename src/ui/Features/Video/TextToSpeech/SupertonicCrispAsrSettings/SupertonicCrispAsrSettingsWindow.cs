@@ -1,20 +1,17 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
-using Avalonia.Data;
 using Avalonia.Input;
-using Avalonia.Layout;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.SupertonicCrispAsrSettings;
 
+/// <summary>
+/// Supertonic (CrispASR) settings, in the editor look (see <see cref="TtsSettingsChrome"/>).
+/// </summary>
 public class SupertonicCrispAsrSettingsWindow : Window
 {
     private const int LabelWidth = 170;
-    private const int ValueWidth = 360;
 
     private readonly SupertonicCrispAsrSettingsViewModel _vm;
 
@@ -22,238 +19,43 @@ public class SupertonicCrispAsrSettingsWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "Supertonic");
-        SizeToContent = SizeToContent.WidthAndHeight;
-        CanResize = false;
-        MinWidth = 580;
+        TtsSettingsChrome.Apply(this);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        Content = BuildContent(vm);
-
-        var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        UiUtil.FocusOnFirstActivation(this, ok);
-    }
-
-    private Border BuildContent(SupertonicCrispAsrSettingsViewModel vm)
-    {
-        var header = BuildHeader(vm);
-        var details = BuildDetails(vm);
-        var actions = BuildActions(vm);
-
-        var stack = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 14,
-            Children = { header, details, actions },
-        };
-
-        var outerGrid = new Grid
-        {
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-        outerGrid.Children.Add(stack);
-
-        return new Border
-        {
-            Child = outerGrid,
-            Padding = new Thickness(4),
-        };
-    }
-
-    private static StackPanel BuildHeader(SupertonicCrispAsrSettingsViewModel vm)
-    {
-        var title = new TextBlock
-        {
-            Text = "Supertonic (CrispASR)",
-            FontSize = UiUtil.ScaledFontSize(18),
-            FontWeight = FontWeight.SemiBold,
-        };
-
-        var subtitle = new TextBlock
-        {
-            Text = new SupertonicCrispAsr().Description,
-            FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.75,
-            Margin = new Thickness(0, 2, 0, 0),
-        };
-
         // The weights are OpenRAIL-M: commercial use is allowed, but the licence carries use
         // restrictions and an attribution requirement. Surface that (with a link to the model
         // page) rather than leaving it buried in the download source.
-        var license = UiUtil.MakeLink("License: OpenRAIL-M (use restrictions + attribution)", vm.OpenLicensePageCommand);
-        license.Margin = new Thickness(0, 2, 0, 0);
-        license.FontSize = UiUtil.ScaledFontSize(12);
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 0,
-            Children = { title, subtitle, license },
-        };
-    }
-
-    private static Border BuildDetails(SupertonicCrispAsrSettingsViewModel vm)
-    {
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(LabelWidth, GridUnitType.Pixel) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 12,
-            RowSpacing = 10,
-        };
-
-        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
-        var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
-        var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
-            .WithIconLeftBindText(IconNames.Download, nameof(vm.EngineDownloadButtonText))
-            .WithMarginLeft(12);
-        enginePanel.Children.Add(engineButton);
-        grid.Add(enginePanel, 0, 1);
-
-        grid.Add(MakeLabel(Se.Language.General.Model), 1, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.ModelBrush), nameof(vm.ModelLabel)), 1, 1);
-
-        grid.Add(MakeLabel(Se.Language.Video.Voices), 2, 0);
-        var voicesText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.SemiBold,
-            Text = "10 preset voices (no voice cloning)",
-        };
-        grid.Add(voicesText, 2, 1);
-
-        grid.Add(MakeLabel(Se.Language.General.Speed), 3, 0);
-        grid.Add(MakeSpeedPanel(), 3, 1);
-
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 4, 0);
-        var folderText = new TextBox
-        {
-            IsReadOnly = true,
-            Width = ValueWidth,
-            BorderThickness = new Thickness(0),
-            Background = Brushes.Transparent,
-            Padding = new Thickness(0),
-            VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = UiUtil.ScaledFontSize(12),
-            [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
-        };
-        grid.Add(folderText, 4, 1);
-
-        return new Border
-        {
-            Child = grid,
-            Padding = new Thickness(14),
-            CornerRadius = new CornerRadius(6),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
-        };
-    }
-
-    private static StackPanel MakeSpeedPanel()
-    {
-        // Server accepts 0.25-4.0; cap UI at 0.5-2.0 since anything outside that range is
-        // already a hack rather than a "preferred pace" choice.
-        var slider = new Slider
-        {
-            Minimum = 0.5,
-            Maximum = 2.0,
-            Width = 220,
-            TickFrequency = 0.05,
-            IsSnapToTickEnabled = true,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!Slider.ValueProperty] = new Binding(nameof(SupertonicCrispAsrSettingsViewModel.Speed)),
-        };
-        var label = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(8, 0, 0, 0),
-            Width = 100,
-            [!TextBlock.TextProperty] = new Binding(nameof(SupertonicCrispAsrSettingsViewModel.SpeedLabel)),
-        };
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { slider, label },
-        };
-    }
-
-    private static StackPanel MakeStatusPanel(string brushBindingPath, string labelBindingPath)
-    {
-        var dot = new Ellipse
-        {
-            Width = 10,
-            Height = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!Ellipse.FillProperty] = new Binding(brushBindingPath),
-        };
-        var text = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(8, 0, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(labelBindingPath),
-        };
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { dot, text },
-        };
-    }
-
-    private static Grid BuildActions(SupertonicCrispAsrSettingsViewModel vm)
-    {
-        var openModelsFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenModelsFolderCommand).WithIconLeft(IconNames.FolderOpen);
+        var license = TtsSettingsChrome.MakeLicenseLink("License: OpenRAIL-M (use restrictions + attribution)", vm.OpenLicensePageCommand);
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
-
-        var leftPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Children = { openModelsFolder },
-        };
-
-        var rightPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Spacing = 8,
-            Children = { close },
-        };
-
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-        };
-        grid.Add(leftPanel, 0, 0);
-        grid.Add(rightPanel, 0, 2);
-        return grid;
+        Content = TtsSettingsChrome.MakeContent(
+            TtsSettingsChrome.MakeHeader("Supertonic (CrispASR)", new SupertonicCrispAsr().Description, license),
+            TtsSettingsChrome.MakeButtonBar(close),
+            BuildModels(vm),
+            BuildVoice(vm));
     }
 
-    private static TextBlock MakeLabel(string text) => new()
+    private static Border BuildModels(SupertonicCrispAsrSettingsViewModel vm)
     {
-        Text = text,
-        Opacity = 0.7,
-        VerticalAlignment = VerticalAlignment.Center,
-    };
+        var rows = TtsSettingsChrome.MakeRows(LabelWidth,
+            (Se.Language.General.Engine, TtsSettingsChrome.MakeStatus(nameof(vm.EngineBrush), nameof(vm.EngineLabel),
+                TtsSettingsChrome.MakeEngineDownloadButton(vm.RedownloadEngineCommand, nameof(vm.EngineDownloadButtonText)))),
+            (Se.Language.General.Model, TtsSettingsChrome.MakeStatus(nameof(vm.ModelBrush), nameof(vm.ModelLabel))),
+            (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
+    }
+
+    private static Border BuildVoice(SupertonicCrispAsrSettingsViewModel vm)
+    {
+        var rows = TtsSettingsChrome.MakeRows(LabelWidth,
+            (Se.Language.Video.Voices, TtsSettingsChrome.MakeFixedValue("10 preset voices (no voice cloning)")),
+            // Server accepts 0.25-4.0; cap UI at 0.5-2.0 since anything outside that range is
+            // already a hack rather than a "preferred pace" choice.
+            (Se.Language.General.Speed, TtsSettingsChrome.MakeSlider(Se.Language.General.Speed, 0.5, 2.0, 0.05, nameof(vm.Speed), nameof(vm.SpeedLabel))));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
+    }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {

@@ -81,14 +81,20 @@ public static class TextBoxSurroundToggler
     /// Selects the whole text again once the new subtitle text has reached the text box. Without
     /// this the text box keeps the old selection range, which no longer covers the end of the
     /// (now longer) text - so the next surround lands before the last characters (#15693).
+    /// Selected right away (the binding has already updated the text) and once more after the
+    /// rest of the key handling has run, so nothing later in the same key press can leave the
+    /// old range behind (#16015).
     /// </summary>
     public static void SelectAllAfterTextChange(ITextBoxWrapper tb)
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            tb.SelectionStart = 0;
-            tb.SelectionEnd = tb.Text?.Length ?? 0;
-        });
+        SelectAll(tb);
+        Dispatcher.UIThread.Post(() => SelectAll(tb), DispatcherPriority.Background);
+    }
+
+    private static void SelectAll(ITextBoxWrapper tb)
+    {
+        tb.SelectionStart = 0;
+        tb.SelectionEnd = tb.Text?.Length ?? 0;
     }
 
     /// <summary>

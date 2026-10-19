@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -48,8 +49,7 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private DrawingTool _currentTool = DrawingTool.Line;
     [ObservableProperty] private int _canvasWidth = 1920;
     [ObservableProperty] private int _canvasHeight = 1080;
-    [ObservableProperty] private string _positionText = "Position: 0, 0";
-    [ObservableProperty] private string _zoomText = "Zoom: 100%";
+    [ObservableProperty] private string _positionText = string.Format(Se.Language.Assa.DrawPositionXY, 0, 0);
     [ObservableProperty] private float _pointX;
     [ObservableProperty] private float _pointY;
     [ObservableProperty] private bool _isPointSelected;
@@ -69,6 +69,18 @@ public partial class AssaDrawViewModel : ObservableObject
     [ObservableProperty] private float _shapeWidth;
     [ObservableProperty] private float _shapeHeight;
     [ObservableProperty] private int _shapeLayer;
+    [ObservableProperty] private float _shapeOutlineWidth;
+    [ObservableProperty] private Color _shapeOutlineColor = Colors.Black;
+    [ObservableProperty] private bool _isTextBoxSelected;
+    [ObservableProperty] private bool _isDrawShapeSelected;
+    [ObservableProperty] private bool _canEditText;
+    [ObservableProperty] private bool _canEditOutline;
+    [ObservableProperty] private string _shapeText = string.Empty;
+    [ObservableProperty] private string _textFontName = "Arial";
+    [ObservableProperty] private float _textFontSize = 48;
+    [ObservableProperty] private bool _textBold;
+    [ObservableProperty] private Color _textColor = Colors.Black;
+    [ObservableProperty] private bool _textShrinkToFit = true;
     [ObservableProperty] private string _selectionText = string.Empty;
     [ObservableProperty] private string _codePreview = string.Empty;
     [ObservableProperty] private double _zoomPercent = 100;
@@ -84,6 +96,42 @@ public partial class AssaDrawViewModel : ObservableObject
 
     public Subtitle ResultSubtitle { get; set; } = new Subtitle();
 
+    /// <summary>
+    /// A text box or bubble was just placed: the window puts the cursor in the text field.
+    /// </summary>
+    public event EventHandler? TextEditRequested;
+
+    private List<string>? _fontNames;
+
+    /// <summary>
+    /// Fonts by the names libass knows them by.
+    /// </summary>
+    public List<string> FontNames
+    {
+        get
+        {
+            if (_fontNames == null)
+            {
+                try
+                {
+                    _fontNames = FontHelper.GetLibAssaFonts().Distinct().OrderBy(f => f).ToList();
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception, "ASSA draw: could not list fonts");
+                    _fontNames = [];
+                }
+
+                if (!_fontNames.Contains("Arial"))
+                {
+                    _fontNames.Insert(0, "Arial");
+                }
+            }
+
+            return _fontNames;
+        }
+    }
+
     private float _currentX = float.MinValue;
     private float _currentY = float.MinValue;
     private readonly Regex _regexStart = new(@"\{[^{]*\\p1[^}]*\}");
@@ -92,6 +140,7 @@ public partial class AssaDrawViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
     private string _fileName = string.Empty;
+    private string? _openedState;
     private Subtitle? _subtitle;
     private string? _videoFileName;
     private double _videoSeconds;
@@ -118,6 +167,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
     public void Initialize()
     {
+        _openedState = GetChangeState();
         UiUtil.RestoreWindowPosition(Window);
         ZoomToFitCurrentVideoResolution();
         RefreshTreeView();
@@ -137,11 +187,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         // Wait a bit to ensure the canvas bounds are updated
-        Dispatcher.UIThread.Post(() =>
-        {
-            Canvas?.FitToView();
-            UpdateZoomText();
-        }, DispatcherPriority.Background);
+        Dispatcher.UIThread.Post(() => Canvas?.FitToView(), DispatcherPriority.Background);
     }
 
     public void Initialize(Subtitle subtitle, List<SubtitleLineViewModel> selectedLines, int? width, int? height,
@@ -149,10 +195,20 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         _subtitle = subtitle;
         _videoFileName = videoFileName;
+        // The main window writes the result into the selected drawing rows, which keep their own
+        // times, so the animation must be timed by the first drawing row - a 2 s dialogue line
+        // selected above a 5 s drawing made the out-animation fire after 2 s. Without a drawing
+        // row the new rows get the times of the last selected line.
+        var timingLine = selectedLines.FirstOrDefault(p => MainViewModel.IsAssaDrawingText(p.Text)) ??
+                         selectedLines.LastOrDefault();
+        if (timingLine != null && timingLine.Duration.TotalMilliseconds >= 1)
+        {
+            LineDurationMs = (int)Math.Round(timingLine.Duration.TotalMilliseconds);
+        }
 
         // Same frame Set position uses: the paused player position when it is inside the line
-        _videoSeconds = selectedLines.Count > 0
-            ? AssaSetPositionViewModel.GetScreenshotSeconds(selectedLines[0], videoPositionSeconds)
+        _videoSeconds = timingLine != null
+            ? AssaSetPositionViewModel.GetScreenshotSeconds(timingLine, videoPositionSeconds)
             : videoPositionSeconds ?? 0;
 
         // Drawing coordinates live in script (PlayRes) space, so the script resolution wins. The main
@@ -174,30 +230,10 @@ public partial class AssaDrawViewModel : ObservableObject
         foreach (var line in selectedLines)
         {
             var style = styles.FirstOrDefault(s => s.Name.Equals(line.Style, StringComparison.OrdinalIgnoreCase)) ?? new SsaStyle();
-            var color = style.Primary.ToAvaloniaColor();
-
-            // 1. Process iclip (Vector Mask)
-            var iclipMatch = _regexIclip.Match(line.Text);
-            if (iclipMatch.Success)
-            {
-                // Extract only the drawing commands inside the parentheses
-                var clipCommands = iclipMatch.Groups[1].Value;
-                ImportAssaDrawingFromText(clipCommands, line.Layer, color, true);
-            }
-
-            // 2. Process \p1 Drawing (the \p1 can share its tag block with \pos, \an etc.)
-            if (_regexStart.IsMatch(line.Text))
-            {
-                // Remove all tags (anything inside curly braces) to get raw vector data
-                string drawingOnly = Regex.Replace(line.Text, @"\{[^}]+\}", string.Empty).Trim();
-
-                if (!string.IsNullOrWhiteSpace(drawingOnly))
-                {
-                    ImportAssaDrawingFromText(drawingOnly, line.Layer, color, false);
-                }
-            }
+            ImportLine(line.Text, line.Layer, style.Primary.ToAvaloniaColor());
         }
 
+        AttachTextLines();
         RefreshTreeView();
         Canvas?.InvalidateVisual();
     }
@@ -218,6 +254,8 @@ public partial class AssaDrawViewModel : ObservableObject
         Canvas.PointDragged += OnPointDragged;
         Canvas.ZoomChanged += OnZoomChanged;
         Canvas.ShapeClicked += OnShapeClicked;
+        Canvas.ShapeToggled += OnShapeToggled;
+        Canvas.MarqueeSelected += OnMarqueeSelected;
         Canvas.ShapeMoved += OnShapeMoved;
         Canvas.EditStarting += (_, _) => SaveUndo();
         Canvas.InsertRequested += OnInsertRequested;
@@ -239,6 +277,9 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private void ColorPickerTool() => SetTool(DrawingTool.ColorPicker);
 
+    [RelayCommand]
+    private void TextTool() => SetTool(DrawingTool.Text);
+
     /// <summary>
     /// Eyedropper result: becomes the current color - new shapes get it, and a selected shape's
     /// (or layer's) color changes to it.
@@ -256,7 +297,7 @@ public partial class AssaDrawViewModel : ObservableObject
     /// </summary>
     private int GetLayerForColor(Color color)
     {
-        var existing = Shapes.FirstOrDefault(s => s.ForeColor == color && !s.IsEraser);
+        var existing = Shapes.FirstOrDefault(s => s.ForeColor == color && !s.IsEraser && !s.IsTextBox);
         if (existing != null)
         {
             return existing.Layer;
@@ -280,7 +321,69 @@ public partial class AssaDrawViewModel : ObservableObject
         SetTool(DrawingTool.Shape);
     }
 
-    private void OnInsertRequested(object? sender, CanvasInsertEventArgs e) => InsertLibraryShape(e);
+    private void OnInsertRequested(object? sender, CanvasInsertEventArgs e)
+    {
+        if (CurrentTool == DrawingTool.Text)
+        {
+            InsertTextBox(e);
+        }
+        else
+        {
+            InsertLibraryShape(e);
+        }
+    }
+
+    /// <summary>
+    /// Text tool: a text box on a new layer above the drawing, in the current color with a black
+    /// outline like a subtitle, selected with its text ready to be typed over.
+    /// </summary>
+    public DrawShape InsertTextBox(CanvasInsertEventArgs e)
+    {
+        var x = e.X;
+        var y = e.Y;
+        var width = e.Width;
+        var height = e.Height;
+        if (e.IsClick)
+        {
+            width = CanvasWidth * 0.4f;
+            height = CanvasHeight * 0.12f;
+            x -= width / 2f;
+            y -= height / 2f;
+        }
+
+        CancelDrawing();
+        SaveUndo();
+        var layer = Shapes.Count == 0 ? 0 : Shapes.Max(s => s.Layer) + 1;
+        var shape = MakeRectangle(x, y, width, height, layer, LayerColor);
+        shape.IsTextBox = true;
+        shape.SetTextBounds(x, y, x + width, y + height);
+        shape.Text = Se.Language.Assa.DrawDefaultText;
+        shape.TextColor = LayerColor;
+        shape.FontSize = DefaultFontSize(16f);
+        shape.OutlineWidth = 2;
+        shape.OutlineColor = Colors.Black;
+        Shapes.Add(shape);
+        SetTool(DrawingTool.Select);
+        RefreshTreeView();
+        SelectShape(shape);
+        Canvas?.InvalidateVisual();
+        TextEditRequested?.Invoke(this, EventArgs.Empty);
+        return shape;
+    }
+
+    /// <summary>
+    /// A font size that suits the frame: a fraction of its height (54 for 1080p with 20).
+    /// </summary>
+    private float DefaultFontSize(float linesPerFrame) => MathF.Max(AssaTextLayout.MinFontSize, MathF.Round(CanvasHeight / linesPerFrame));
+
+    /// <summary>
+    /// Black text on light shapes, white on dark ones.
+    /// </summary>
+    private static Color ContrastColor(Color color)
+    {
+        var luminance = 0.299 * color.R + 0.587 * color.G + 0.114 * color.B;
+        return luminance > 140 ? Colors.Black : Colors.White;
+    }
 
     /// <summary>
     /// Places the current library shape on a new layer above the drawing, in the current color,
@@ -317,17 +420,31 @@ public partial class AssaDrawViewModel : ObservableObject
         SaveUndo();
         var firstLayer = Shapes.Count == 0 ? 0 : Shapes.Max(s => s.Layer) + 1;
         var shapes = item.CreateShapes(x, y, width, height, LayerColor, firstLayer);
+
+        // A multi-part shape (clip art, a ring) is one group: a click picks all of it
+        var groupId = shapes.Count > 1 ? NextGroupId() : 0;
+        foreach (var shape in shapes)
+        {
+            shape.TextColor = ContrastColor(shape.ForeColor);
+            shape.FontSize = DefaultFontSize(20f);
+            shape.GroupId = groupId;
+            shape.Animation = item.AnimatedColor is not { } animated || shape.ForeColor == animated ? item.Animation?.Clone() : null;
+        }
+
         Shapes.AddRange(shapes);
         SetTool(DrawingTool.Select);
         RefreshTreeView();
         if (shapes.Count == 1)
         {
             SelectShape(shapes[0]);
+            if (item.TextArea != null)
+            {
+                TextEditRequested?.Invoke(this, EventArgs.Empty);
+            }
         }
         else
         {
-            SelectedShapes = shapes;
-            UpdateSelectionInfo();
+            SelectGroup(groupId);
         }
 
         Canvas?.InvalidateVisual();
@@ -378,15 +495,43 @@ public partial class AssaDrawViewModel : ObservableObject
         }
     }
 
-    private void OnShapeClicked(object? sender, DrawShape? shape)
+    private void OnShapeClicked(object? sender, ShapeClickEventArgs e)
     {
+        var shape = e.Shape;
         if (shape == null)
         {
             ClearSelection();
             return;
         }
 
-        SelectShape(shape);
+        if (e.SelectPart)
+        {
+            // Alt+click / double-click: the single part inside its group, for point editing
+            SelectShape(shape);
+            return;
+        }
+
+        // A click on the group that is already selected keeps it
+        var members = GetGroupMembers(shape);
+        if (members.Count > 1 && SelectedShapes.Count == members.Count && members.All(SelectedShapes.Contains))
+        {
+            return;
+        }
+
+        SelectShapeOrGroup(shape);
+    }
+
+    private void OnShapeToggled(object? sender, ShapeClickEventArgs e)
+    {
+        if (e.Shape != null)
+        {
+            ToggleShapeSelection(e.Shape, e.SelectPart);
+        }
+    }
+
+    private void OnMarqueeSelected(object? sender, CanvasMarqueeEventArgs e)
+    {
+        SelectInRectangle(e.Left, e.Top, e.Right, e.Bottom, e.Additive, e.SelectParts);
     }
 
     private void OnShapeMoved(object? sender, DrawShape shape)
@@ -404,9 +549,10 @@ public partial class AssaDrawViewModel : ObservableObject
         {
             SelectPoint(e.Point);
         }
-        else if (e.Shape != null)
+        else if (e.Shape != null && !(SelectedShapes.Count > 1 && SelectedShapes.Contains(e.Shape)))
         {
-            SelectShape(e.Shape);
+            // A right-click inside the selection keeps it, so the menu acts on all of it
+            SelectShapeOrGroup(e.Shape);
         }
     }
 
@@ -452,6 +598,276 @@ public partial class AssaDrawViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// The shapes of the shape's group (in drawing order), or just the shape when it has none.
+    /// </summary>
+    public List<DrawShape> GetGroupMembers(DrawShape shape)
+    {
+        return shape.GroupId == 0 ? [shape] : Shapes.Where(s => s.GroupId == shape.GroupId).ToList();
+    }
+
+    private int NextGroupId() => Shapes.Count == 0 ? 1 : Shapes.Max(s => s.GroupId) + 1;
+
+    /// <summary>
+    /// The shapes plus every other shape of their groups, in drawing order.
+    /// </summary>
+    private List<DrawShape> ExpandToGroups(IEnumerable<DrawShape> shapes)
+    {
+        var set = new HashSet<DrawShape>(shapes);
+        var groupIds = set.Where(s => s.GroupId != 0).Select(s => s.GroupId).ToHashSet();
+        return Shapes.Where(s => set.Contains(s) || (s.GroupId != 0 && groupIds.Contains(s.GroupId))).ToList();
+    }
+
+    /// <summary>
+    /// A canvas click: the whole group of a grouped shape, else the shape.
+    /// </summary>
+    public void SelectShapeOrGroup(DrawShape shape)
+    {
+        if (shape.GroupId != 0 && Shapes.Count(s => s.GroupId == shape.GroupId) > 1)
+        {
+            SelectGroup(shape.GroupId);
+        }
+        else
+        {
+            SelectShape(shape);
+        }
+    }
+
+    /// <summary>
+    /// Selects the group's tree node, which selects all of its shapes.
+    /// </summary>
+    public void SelectGroup(int groupId)
+    {
+        var item = FindGroupTreeItem(groupId);
+        if (item != null)
+        {
+            SelectedTreeItem = item;
+        }
+    }
+
+    /// <summary>
+    /// The shapes in the selection: the multi-selection, else the single target shape.
+    /// </summary>
+    private List<DrawShape> GetSelectedShapeList()
+    {
+        if (SelectedShapes.Count > 0)
+        {
+            return SelectedShapes.Where(Shapes.Contains).ToList();
+        }
+
+        return TargetShape is { } target && SelectedTreeItem?.IsLayer != true ? [target] : [];
+    }
+
+    /// <summary>
+    /// Makes these shapes the selection: none clears it, one selects it (as a part), exactly one
+    /// group's shapes select that group, anything else is a multi-selection.
+    /// </summary>
+    public void SetSelection(IEnumerable<DrawShape> shapes)
+    {
+        var set = new HashSet<DrawShape>(shapes);
+        var list = Shapes.Where(set.Contains).ToList();
+        if (list.Count == 0)
+        {
+            ClearSelection();
+            UpdateSelectionInfo();
+            NotifyCommandStates();
+            return;
+        }
+
+        if (list.Count == 1)
+        {
+            if (SelectedTreeItem?.Shape == list[0])
+            {
+                ApplyTreeSelection(SelectedTreeItem);
+            }
+            else
+            {
+                SelectShape(list[0]);
+            }
+
+            return;
+        }
+
+        var groupId = list[0].GroupId;
+        if (groupId != 0 && list.All(s => s.GroupId == groupId) && Shapes.Count(s => s.GroupId == groupId) == list.Count)
+        {
+            SelectGroup(groupId);
+            return;
+        }
+
+        ClearSelection();
+        SelectedShapes = list;
+        UpdateSelectionInfo();
+    }
+
+    /// <summary>
+    /// Ctrl+click: adds the shape (or its whole group) to the selection, or takes it out.
+    /// </summary>
+    public void ToggleShapeSelection(DrawShape shape, bool partOnly = false)
+    {
+        var current = GetSelectedShapeList();
+        var toggled = partOnly ? [shape] : GetGroupMembers(shape);
+        if (toggled.All(current.Contains))
+        {
+            SetSelection(current.Where(s => !toggled.Contains(s)));
+        }
+        else
+        {
+            SetSelection(current.Concat(toggled));
+        }
+    }
+
+    /// <summary>
+    /// Rubber-band selection: every visible shape whose bounds touch the rectangle (with the rest
+    /// of their groups unless <paramref name="partsOnly"/>), added to the selection when <paramref name="additive"/>.
+    /// </summary>
+    public void SelectInRectangle(float left, float top, float right, float bottom, bool additive, bool partsOnly = false)
+    {
+        var hits = Shapes.Where(s =>
+        {
+            if (s.Hidden || s.Points.Count == 0)
+            {
+                return false;
+            }
+
+            var b = s.GetBounds();
+            return b.Left <= right && b.Right >= left && b.Top <= bottom && b.Bottom >= top;
+        }).ToList();
+
+        if (!partsOnly)
+        {
+            hits = ExpandToGroups(hits);
+        }
+
+        SetSelection(additive ? GetSelectedShapeList().Concat(hits) : hits);
+    }
+
+    /// <summary>
+    /// Ctrl/Shift+click in the shapes tree: the shapes of the picked shape, group (and layer)
+    /// nodes become the canvas selection. The tree keeps showing its own selection.
+    /// </summary>
+    public void SetTreeMultiSelection(IEnumerable<ShapeTreeItem> items)
+    {
+        var shapes = new HashSet<DrawShape>();
+        foreach (var item in items)
+        {
+            if (item.IsGroup)
+            {
+                shapes.UnionWith(Shapes.Where(s => s.GroupId == item.GroupId));
+            }
+            else if (item.Shape != null)
+            {
+                shapes.Add(item.Shape);
+            }
+            else if (item.Point?.DrawShape is { } pointShape)
+            {
+                shapes.Add(pointShape);
+            }
+            else if (item.IsLayer)
+            {
+                shapes.UnionWith(Shapes.Where(s => s.Layer == item.Layer));
+            }
+        }
+
+        var list = Shapes.Where(shapes.Contains).ToList();
+        if (list.Count < 2)
+        {
+            return;
+        }
+
+        ActivePoint = null;
+        IsPointSelected = false;
+        if (ActiveShape != null && Shapes.Contains(ActiveShape))
+        {
+            ActiveShape = null;
+        }
+
+        IsShapeSelected = false;
+        IsLayerSelected = false;
+        SelectedShapes = list;
+        if (Canvas != null)
+        {
+            Canvas.SelectedShape = null;
+            Canvas.InvalidateVisual();
+        }
+
+        UpdateSelectionInfo();
+    }
+
+    /// <summary>
+    /// The tree is down to one picked row again. When that row was already the current item (so
+    /// no selection change came through the binding) a tree multi-selection still has to end.
+    /// </summary>
+    public void OnTreeSingleSelection(ShapeTreeItem item)
+    {
+        if (ReferenceEquals(SelectedTreeItem, item) && !item.IsGroup && SelectedShapes.Count > 0)
+        {
+            ApplyTreeSelection(item);
+        }
+    }
+
+    private bool CanGroupShapes()
+    {
+        var targets = GetCommandTargets();
+        if (targets.Count < 2)
+        {
+            return false;
+        }
+
+        // Already exactly one group: nothing to do
+        var groupId = targets[0].GroupId;
+        return groupId == 0 || targets.Any(s => s.GroupId != groupId) || Shapes.Count(s => s.GroupId == groupId) != targets.Count;
+    }
+
+    /// <summary>
+    /// Ctrl+G: the selected shapes become one group (shapes of other groups leave those - groups don't nest).
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanGroupShapes))]
+    private void GroupShapes()
+    {
+        if (!CanGroupShapes())
+        {
+            return;
+        }
+
+        var targets = GetCommandTargets();
+        SaveUndo();
+        var groupId = NextGroupId();
+        foreach (var shape in targets)
+        {
+            shape.GroupId = groupId;
+        }
+
+        RefreshTreeView();
+        SelectGroup(groupId);
+        Canvas?.InvalidateVisual();
+    }
+
+    private bool CanUngroupShapes() => GetCommandTargets().Any(s => s.GroupId != 0);
+
+    /// <summary>
+    /// Ctrl+Shift+G: the selected shapes leave their groups and stay selected.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanUngroupShapes))]
+    private void UngroupShapes()
+    {
+        var targets = GetCommandTargets();
+        if (!targets.Any(s => s.GroupId != 0))
+        {
+            return;
+        }
+
+        SaveUndo();
+        foreach (var shape in targets)
+        {
+            shape.GroupId = 0;
+        }
+
+        RefreshTreeView();
+        SetSelection(targets);
+        Canvas?.InvalidateVisual();
+    }
+
     public void SelectPoint(DrawCoordinate point)
     {
         var item = FindTreeItem(point, null, null);
@@ -485,7 +901,6 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private void OnZoomChanged(object? sender, float zoomFactor)
     {
-        ZoomText = $"Zoom: {zoomFactor * 100:0}%";
         if (Math.Abs(ZoomPercent - zoomFactor * 100) > 0.5)
         {
             ZoomPercent = Math.Round(zoomFactor * 100);
@@ -518,6 +933,23 @@ public partial class AssaDrawViewModel : ObservableObject
                 ShapeWidth = MathF.Round(right - left, 1);
                 ShapeHeight = MathF.Round(bottom - top, 1);
                 ShapeLayer = shape.Layer;
+                ShapeText = shape.Text;
+                TextFontName = shape.FontName;
+                TextFontSize = shape.FontSize;
+                TextBold = shape.FontBold;
+                TextColor = shape.TextColor;
+                TextShrinkToFit = shape.ShrinkToFit;
+                if (!FontNames.Contains(shape.FontName))
+                {
+                    FontNames.Add(shape.FontName);
+                }
+            }
+
+            var outlineShape = GetOutlineShapes().FirstOrDefault();
+            if (outlineShape != null)
+            {
+                ShapeOutlineWidth = outlineShape.OutlineWidth;
+                ShapeOutlineColor = outlineShape.OutlineColor;
             }
         }
         finally
@@ -525,19 +957,26 @@ public partial class AssaDrawViewModel : ObservableObject
             _updatingShapeFields = false;
         }
 
+        IsTextBoxSelected = shape?.IsTextBox == true;
+        IsDrawShapeSelected = shape != null && !shape.IsTextBox;
+        CanEditText = shape != null && !shape.IsEraser;
+        CanEditOutline = GetOutlineShapes().Count > 0;
+
         var item = SelectedTreeItem;
-        SelectionText = SelectedShapes.Count > 1
-            ? $"{SelectedShapes.Count} shapes"
+        SelectionText = item?.IsGroup == true
+            ? $"{item.Name} · {string.Format(Se.Language.Assa.DrawXShapes, SelectedShapes.Count)}"
+            : SelectedShapes.Count > 1
+            ? string.Format(Se.Language.Assa.DrawXShapes, SelectedShapes.Count)
             : item?.Point != null
                 ? item.Name.Trim()
                 : shape != null
-                    ? $"{string.Format(Se.Language.Assa.DrawLayerX, shape.Layer)} · {shape.Points.Count} points"
+                    ? $"{string.Format(Se.Language.Assa.DrawLayerX, shape.Layer)} · {string.Format(Se.Language.Assa.DrawXPoints, shape.Points.Count)}"
                     : item?.IsLayer == true
                         ? item.Name
                         : string.Empty;
 
-        var code = GenerateAssaCode();
-        CodePreview = code.Length > 400 ? code[..400] + "..." : code;
+        RefreshAnimationFields();
+        UpdateCodePreview();
     }
 
     partial void OnShapeXChanged(float value) => MoveTargetShape(value - (TargetShape?.GetBounds().Left ?? value), 0, "shape-x");
@@ -588,8 +1027,134 @@ public partial class AssaDrawViewModel : ObservableObject
             point.Y = top + (point.Y - top) * scaleY;
         }
 
+        shape.TransformText((x, y) => (left + (x - left) * scaleX, top + (y - top) * scaleY), mirrored: false);
+
         RefreshTreeView();
         Canvas?.InvalidateVisual();
+    }
+
+    /// <summary>
+    /// What the outline fields change: a selected text box, or else the drawing shapes of the
+    /// selected layer (or of the selected shape's layer) - the layer is one ASSA line with one outline.
+    /// </summary>
+    private List<DrawShape> GetOutlineShapes()
+    {
+        var shape = TargetShape;
+        if (shape?.IsTextBox == true)
+        {
+            return [shape];
+        }
+
+        int? layer = SelectedTreeItem?.IsLayer == true ? SelectedTreeItem.Layer : shape?.Layer;
+        return layer == null ? [] : Shapes.Where(s => s.Layer == layer && !s.IsEraser && !s.IsTextBox).ToList();
+    }
+
+    partial void OnShapeOutlineWidthChanged(float value) => ApplyOutline();
+
+    partial void OnShapeOutlineColorChanged(Color value) => ApplyOutline();
+
+    private void ApplyOutline()
+    {
+        if (_updatingShapeFields)
+        {
+            return;
+        }
+
+        var width = Math.Max(0, ShapeOutlineWidth);
+        var color = ShapeOutlineColor;
+        var shapes = GetOutlineShapes();
+        if (!shapes.Any(s => Math.Abs(s.OutlineWidth - width) > 0.001f || s.OutlineColor != color))
+        {
+            return;
+        }
+
+        SaveUndo($"outline-{RuntimeHelpers.GetHashCode(shapes[0])}");
+        foreach (var shape in shapes)
+        {
+            shape.OutlineWidth = width;
+            shape.OutlineColor = color;
+        }
+
+        UpdateCodePreview();
+        Canvas?.InvalidateVisual();
+    }
+
+    partial void OnShapeTextChanged(string value) => EditText("text", shape =>
+    {
+        // First text in a plain shape: pick a color that shows on it
+        if (string.IsNullOrEmpty(shape.Text) && !shape.IsTextBox && shape.TextColor == Colors.Black)
+        {
+            shape.TextColor = ContrastColor(shape.ForeColor);
+            SetTextColorField(shape.TextColor);
+        }
+
+        if (string.IsNullOrEmpty(shape.Text) && shape.FontSize == 48)
+        {
+            shape.FontSize = DefaultFontSize(20f);
+            SetTextFontSizeField(shape.FontSize);
+        }
+
+        shape.Text = value ?? string.Empty;
+    });
+
+    partial void OnTextFontNameChanged(string value) => EditText("font", shape => shape.FontName = string.IsNullOrWhiteSpace(value) ? "Arial" : value);
+
+    partial void OnTextFontSizeChanged(float value) => EditText("font-size", shape => shape.FontSize = Math.Clamp(value, AssaTextLayout.MinFontSize, 1000));
+
+    partial void OnTextBoldChanged(bool value) => EditText("bold", shape => shape.FontBold = value);
+
+    partial void OnTextColorChanged(Color value) => EditText("text-color", shape => shape.TextColor = value);
+
+    partial void OnTextShrinkToFitChanged(bool value) => EditText("shrink", shape => shape.ShrinkToFit = value);
+
+    private void EditText(string undoKey, Action<DrawShape> apply)
+    {
+        var shape = TargetShape;
+        if (_updatingShapeFields || shape == null || shape.IsEraser)
+        {
+            return;
+        }
+
+        SaveUndo($"{undoKey}-{RuntimeHelpers.GetHashCode(shape)}");
+        apply(shape);
+        if (undoKey == "text")
+        {
+            UpdateShapeTreeName(shape);
+        }
+
+        Canvas?.InvalidateVisual();
+    }
+
+    private void SetTextColorField(Color color)
+    {
+        _updatingShapeFields = true;
+        try
+        {
+            TextColor = color;
+        }
+        finally
+        {
+            _updatingShapeFields = false;
+        }
+    }
+
+    private void SetTextFontSizeField(float size)
+    {
+        _updatingShapeFields = true;
+        try
+        {
+            TextFontSize = size;
+        }
+        finally
+        {
+            _updatingShapeFields = false;
+        }
+    }
+
+    private void UpdateCodePreview()
+    {
+        var code = GenerateAssaCode();
+        CodePreview = code.Length > 400 ? code[..400] + "..." : code;
     }
 
     partial void OnShapeLayerChanged(int value)
@@ -624,12 +1189,14 @@ public partial class AssaDrawViewModel : ObservableObject
         if (ActiveShape != null && ActiveShape.Points.Count > 0 && !Shapes.Contains(ActiveShape))
         {
             AddPointToActiveShape(x, y);
+            NotifyCommandStates();
             Canvas?.InvalidateVisual();
             return;
         }
 
         // Start new shape
         StartNewShape(x, y);
+        NotifyCommandStates();
         Canvas?.InvalidateVisual();
     }
 
@@ -739,7 +1306,7 @@ public partial class AssaDrawViewModel : ObservableObject
     {
         _currentX = e.X;
         _currentY = e.Y;
-        PositionText = $"Position: {e.X:0}, {e.Y:0}";
+        PositionText = string.Format(Se.Language.Assa.DrawPositionXY, e.X.ToString("0", CultureInfo.CurrentCulture), e.Y.ToString("0", CultureInfo.CurrentCulture));
 
         if (Canvas != null)
         {
@@ -795,9 +1362,11 @@ public partial class AssaDrawViewModel : ObservableObject
         {
             Canvas.CurrentTool = tool;
         }
+
+        CloseShapeCommand.NotifyCanExecuteChanged();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanCloseShape))]
     private void CloseShape()
     {
         // A shape picked in the tree is already finished - closing it again appended a closing
@@ -873,6 +1442,68 @@ public partial class AssaDrawViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// A shape is being drawn with enough points to finish it (a circle/rectangle needs its first
+    /// corner only, the cursor gives the rest).
+    /// </summary>
+    private bool CanCloseShape()
+    {
+        if (!IsDrawing)
+        {
+            return false;
+        }
+
+        var isCircleOrRect = CurrentTool == DrawingTool.Circle || CurrentTool == DrawingTool.Rectangle;
+        return ActiveShape!.Points.Count >= (isCircleOrRect ? 1 : 2);
+    }
+
+    /// <summary>
+    /// The shapes the shape commands act on: a multi-selection (Ctrl+A, SVG import, inserted
+    /// library shapes), else the single target shape.
+    /// </summary>
+    private List<DrawShape> GetCommandTargets()
+    {
+        if (SelectedShapes.Count > 1)
+        {
+            return SelectedShapes.Where(Shapes.Contains).ToList();
+        }
+
+        return TargetShape is { } target ? [target] : [];
+    }
+
+    private bool CanDeleteShape() => IsDrawing || GetCommandTargets().Count > 0;
+
+    private bool CanDuplicateShape() => GetCommandTargets().Count > 0;
+
+    private bool CanClearAll() => Shapes.Count > 0 || IsDrawing;
+
+    /// <summary>
+    /// The selection, the shape list or the drawing state changed - the toolbar buttons and menu
+    /// items of these commands grey out when they can't run.
+    /// </summary>
+    private void NotifyCommandStates()
+    {
+        CloseShapeCommand.NotifyCanExecuteChanged();
+        DeleteShapeCommand.NotifyCanExecuteChanged();
+        DuplicateShapeCommand.NotifyCanExecuteChanged();
+        ClearAllCommand.NotifyCanExecuteChanged();
+        GroupShapesCommand.NotifyCanExecuteChanged();
+        UngroupShapesCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>
+    /// Rebuilds the tree but keeps a multi-selection - restoring the tree selection would end it.
+    /// </summary>
+    private void RefreshTreeViewKeepingMultiSelection()
+    {
+        var multiSelection = SelectedShapes;
+        RefreshTreeView();
+        if (multiSelection.Count > 1)
+        {
+            SelectedShapes = multiSelection.Where(Shapes.Contains).ToList();
+        }
+    }
+
     private static DrawShape MakeRectangle(float x, float y, float width, float height, int layer, Color color)
     {
         var shape = new DrawShape { ForeColor = color, Layer = layer };
@@ -883,25 +1514,30 @@ public partial class AssaDrawViewModel : ObservableObject
         return shape;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanDeleteShape))]
     private void DeleteShape()
     {
-        var shape = IsDrawing ? ActiveShape : TargetShape;
-        if (shape != null)
+        var shapes = IsDrawing ? [ActiveShape!] : GetCommandTargets();
+        if (shapes.Count > 0)
         {
-            if (ActivePoint != null && shape.Points.Contains(ActivePoint))
+            if (ActivePoint != null && shapes.Any(s => s.Points.Contains(ActivePoint)))
             {
                 ActivePoint = null;
                 IsPointSelected = false;
             }
 
-            if (Shapes.Contains(shape))
+            // One undo step for the whole selection
+            if (shapes.Any(Shapes.Contains))
             {
                 SaveUndo();
             }
 
-            Shapes.Remove(shape);
-            SelectedShapes = SelectedShapes.Where(s => s != shape).ToList();
+            foreach (var shape in shapes)
+            {
+                Shapes.Remove(shape);
+            }
+
+            SelectedShapes = SelectedShapes.Where(s => !shapes.Contains(s)).ToList();
             ActiveShape = null;
             _currentX = float.MinValue;
             _currentY = float.MinValue;
@@ -952,9 +1588,10 @@ public partial class AssaDrawViewModel : ObservableObject
         var newLayer = vm.Layer;
         SaveUndo();
 
-        // Get color from existing shapes in the new layer (if any)
+        // Get color and animation from existing shapes in the new layer (if any)
         var existingShapeInNewLayer = Shapes.FirstOrDefault(s => s.Layer == newLayer);
         var newColor = existingShapeInNewLayer?.ForeColor;
+        var newAnimation = existingShapeInNewLayer != null ? GetLayerAnimation(newLayer) : null;
 
         if (SelectedTreeItem.IsLayer)
         {
@@ -965,6 +1602,7 @@ public partial class AssaDrawViewModel : ObservableObject
                 if (newColor.HasValue)
                 {
                     shape.ForeColor = newColor.Value;
+                    shape.Animation = newAnimation?.Clone();
                 }
             }
         }
@@ -975,6 +1613,7 @@ public partial class AssaDrawViewModel : ObservableObject
             if (newColor.HasValue)
             {
                 SelectedTreeItem.Shape.ForeColor = newColor.Value;
+                SelectedTreeItem.Shape.Animation = newAnimation?.Clone();
             }
         }
 
@@ -982,10 +1621,17 @@ public partial class AssaDrawViewModel : ObservableObject
         Canvas?.InvalidateVisual();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanDuplicateShape))]
     private void DuplicateShape()
     {
-        var shape = TargetShape;
+        var shapes = GetCommandTargets();
+        if (shapes.Count > 1)
+        {
+            DuplicateShapes(shapes);
+            return;
+        }
+
+        var shape = shapes.FirstOrDefault();
         if (shape == null)
         {
             return;
@@ -994,6 +1640,9 @@ public partial class AssaDrawViewModel : ObservableObject
         SaveUndo();
         var copy = shape.Clone();
         copy.Hidden = false;
+
+        // A part copied out of its group is a shape of its own
+        copy.GroupId = 0;
         copy.Offset(DrawSettings.GridSize, DrawSettings.GridSize);
         Shapes.Insert(Shapes.IndexOf(shape) + 1, copy);
         RefreshTreeView();
@@ -1001,18 +1650,62 @@ public partial class AssaDrawViewModel : ObservableObject
         Canvas?.InvalidateVisual();
     }
 
+    /// <summary>
+    /// Duplicates a multi-selection in one undo step; the copies become the selection.
+    /// </summary>
+    private void DuplicateShapes(List<DrawShape> shapes)
+    {
+        SaveUndo();
+
+        // Copies of a group form a new group of their own - never one sharing the original's id
+        var nextGroupId = NextGroupId();
+        var newGroupIds = new Dictionary<int, int>();
+        foreach (var groupId in shapes.Where(s => s.GroupId != 0).GroupBy(s => s.GroupId).Where(g => g.Count() > 1).Select(g => g.Key))
+        {
+            newGroupIds[groupId] = nextGroupId++;
+        }
+
+        var copies = new List<DrawShape>();
+        foreach (var shape in shapes)
+        {
+            var copy = shape.Clone();
+            copy.Hidden = false;
+            copy.GroupId = newGroupIds.GetValueOrDefault(shape.GroupId);
+            copy.Offset(DrawSettings.GridSize, DrawSettings.GridSize);
+            Shapes.Insert(Shapes.IndexOf(shape) + 1, copy);
+            copies.Add(copy);
+        }
+
+        RefreshTreeView();
+        SetSelection(copies);
+        Canvas?.InvalidateVisual();
+    }
+
     [RelayCommand]
     private void FlipShapeHorizontal()
     {
-        var shape = TargetShape;
-        if (shape == null)
+        var shapes = GetCommandTargets();
+        if (shapes.Count == 0)
         {
             return;
         }
 
         SaveUndo();
-        shape.FlipHorizontal();
-        RefreshTreeView();
+        if (shapes.Count == 1)
+        {
+            shapes[0].FlipHorizontal();
+        }
+        else
+        {
+            // The selection is mirrored as a whole, like the transform handles do
+            var (left, _, right, _) = DrawShape.GetBounds(shapes);
+            foreach (var shape in shapes)
+            {
+                shape.FlipHorizontal(left, right);
+            }
+        }
+
+        RefreshTreeViewKeepingMultiSelection();
         Canvas?.InvalidateVisual();
     }
 
@@ -1024,30 +1717,55 @@ public partial class AssaDrawViewModel : ObservableObject
 
     private void RotateShape(float degrees)
     {
-        var shape = TargetShape;
-        if (shape == null)
+        var shapes = GetCommandTargets();
+        if (shapes.Count == 0)
         {
             return;
         }
 
         SaveUndo();
-        shape.Rotate(degrees);
-        RefreshTreeView();
+        if (shapes.Count == 1)
+        {
+            shapes[0].Rotate(degrees);
+        }
+        else
+        {
+            // The selection turns as a whole around its middle, like with the rotate handle
+            var (left, top, right, bottom) = DrawShape.GetBounds(shapes);
+            foreach (var shape in shapes)
+            {
+                shape.Rotate(degrees, (left + right) / 2f, (top + bottom) / 2f);
+            }
+        }
+
+        RefreshTreeViewKeepingMultiSelection();
         Canvas?.InvalidateVisual();
     }
 
     [RelayCommand]
     private void FlipShapeVertical()
     {
-        var shape = TargetShape;
-        if (shape == null)
+        var shapes = GetCommandTargets();
+        if (shapes.Count == 0)
         {
             return;
         }
 
         SaveUndo();
-        shape.FlipVertical();
-        RefreshTreeView();
+        if (shapes.Count == 1)
+        {
+            shapes[0].FlipVertical();
+        }
+        else
+        {
+            var (_, top, _, bottom) = DrawShape.GetBounds(shapes);
+            foreach (var shape in shapes)
+            {
+                shape.FlipVertical(top, bottom);
+            }
+        }
+
+        RefreshTreeViewKeepingMultiSelection();
         Canvas?.InvalidateVisual();
     }
 
@@ -1132,24 +1850,39 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private void MoveShapeToLayer(int layer)
     {
-        var shape = TargetShape;
-        if (shape == null || shape.Layer == layer)
+        var shapes = GetCommandTargets().Where(s => s.Layer != layer).ToList();
+        if (shapes.Count == 0)
         {
             return;
         }
 
         SaveUndo();
 
-        // Same rule as Change layer: a shape joining a layer takes that layer's color
+        // Same rule as Change layer: a shape joining a layer takes that layer's color and animation
         var existing = Shapes.FirstOrDefault(s => s.Layer == layer);
-        shape.Layer = layer;
-        if (existing != null)
+        var layerAnimation = existing != null ? GetLayerAnimation(layer) : null;
+        foreach (var shape in shapes)
         {
-            shape.ForeColor = existing.ForeColor;
+            shape.Layer = layer;
+            if (existing != null)
+            {
+                shape.ForeColor = existing.ForeColor;
+                shape.Animation = layerAnimation?.Clone();
+            }
         }
 
-        RefreshTreeView();
+        RefreshTreeViewKeepingMultiSelection();
         Canvas?.InvalidateVisual();
+    }
+
+    /// <summary>
+    /// An anchor point is selected - bezier control points can't be deleted on their own.
+    /// </summary>
+    private bool CanDeleteActivePoint()
+    {
+        var point = ActivePoint;
+        var shape = point == null ? null : point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(point));
+        return point != null && shape != null && point.DrawType is not (DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2);
     }
 
     [RelayCommand]
@@ -1158,6 +1891,13 @@ public partial class AssaDrawViewModel : ObservableObject
         var point = ActivePoint;
         var shape = point == null ? null : point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(point));
         if (point == null || shape == null || point.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2)
+        {
+            return;
+        }
+
+        // RemovePoint refuses a point that isn't in the shape - check first, so no empty undo step
+        // is saved (it also cleared the redo stack)
+        if (!shape.Points.Contains(point))
         {
             return;
         }
@@ -1290,7 +2030,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanClearAll))]
     private void ClearAll()
     {
         if (Shapes.Count > 0)
@@ -1325,14 +2065,12 @@ public partial class AssaDrawViewModel : ObservableObject
     private void ZoomIn()
     {
         Canvas?.ZoomIn();
-        UpdateZoomText();
     }
 
     [RelayCommand]
     private void ZoomOut()
     {
         Canvas?.ZoomOut();
-        UpdateZoomText();
     }
 
     [RelayCommand]
@@ -1341,15 +2079,6 @@ public partial class AssaDrawViewModel : ObservableObject
         // Back to the opening view: whole frame fitted and centered (was 100% at the top-left
         // corner, which for a 1080p frame is mostly off screen).
         Canvas?.FitToView();
-        UpdateZoomText();
-    }
-
-    private void UpdateZoomText()
-    {
-        if (Canvas != null)
-        {
-            ZoomText = $"Zoom: {Canvas.ZoomFactor * 100:0}%";
-        }
     }
 
     [RelayCommand]
@@ -1555,7 +2284,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Assa.DrawBackgroundImage.TrimEnd('.'),
-            Se.Language.Assa.DrawImages, "*.png;*.jpg;*.jpeg;*.bmp;*.webp");
+            Se.Language.General.Images, "*.png;*.jpg;*.jpeg;*.bmp;*.webp");
         if (!string.IsNullOrEmpty(fileName) && !LoadImageBackground(fileName))
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Path.GetFileName(fileName), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1598,7 +2327,8 @@ public partial class AssaDrawViewModel : ObservableObject
             return;
         }
 
-        var subtitle = GenerateSubtitle();
+        // The still preview shows the drawing at rest - the canvas plays the animation
+        var subtitle = GenerateSubtitle(withAnimation: false);
         var source = new AdvancedSubStationAlpha().ToText(subtitle, string.Empty) + CanvasWidth + "x" + CanvasHeight;
         if (source == _previewSource)
         {
@@ -1687,7 +2417,7 @@ public partial class AssaDrawViewModel : ObservableObject
             Window,
             ".assadraw",
             string.IsNullOrEmpty(_fileName) ? "untitled.assadraw" : Path.GetFileName(_fileName),
-            "Save ASSA drawing");
+            Se.Language.Assa.DrawSaveDrawing);
 
         if (string.IsNullOrEmpty(fileName))
         {
@@ -1698,15 +2428,22 @@ public partial class AssaDrawViewModel : ObservableObject
 
         try
         {
-            var subtitle = GenerateSubtitle();
-            var format = new AdvancedSubStationAlpha();
-            var text = format.ToText(subtitle, string.Empty);
-            await File.WriteAllTextAsync(fileName, text);
+            await File.WriteAllTextAsync(fileName, GetAssaDrawFileText());
         }
         catch (Exception ex)
         {
             await MessageBox.Show(Window, Se.Language.General.Error, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
+
+    /// <summary>
+    /// The .assadraw file: hidden shapes are kept, as Comment lines, so a reload still has them (hidden),
+    /// and groups are kept in the Effect field (libass ignores an Effect it doesn't know).
+    /// </summary>
+    internal string GetAssaDrawFileText()
+    {
+        var subtitle = GenerateSubtitle(hiddenAsComments: true, withGroups: true);
+        return new AdvancedSubStationAlpha().ToText(subtitle, string.Empty);
     }
 
     [RelayCommand]
@@ -1719,10 +2456,10 @@ public partial class AssaDrawViewModel : ObservableObject
 
         var fileName = await _fileHelper.PickOpenFile(
             Window,
-            "Open ASSA drawing",
-            "ASSA drawing files",
+            Se.Language.Assa.DrawOpenDrawing,
+            Se.Language.Assa.DrawDrawingFiles,
             "*.assadraw",
-            "ASS files",
+            Se.Language.Assa.DrawAssFiles,
             "*.ass");
 
         if (string.IsNullOrEmpty(fileName))
@@ -1790,19 +2527,90 @@ public partial class AssaDrawViewModel : ObservableObject
 
         CancelDrawing();
         SaveUndo();
+
+        // The imported picture is one group
+        var groupId = result.Shapes.Count > 1 ? NextGroupId() : 0;
+        foreach (var shape in result.Shapes)
+        {
+            shape.GroupId = groupId;
+        }
+
         Shapes.AddRange(result.Shapes);
-        SelectedShapes = result.Shapes.ToList();
         RefreshTreeView();
+        if (groupId != 0)
+        {
+            SelectGroup(groupId);
+        }
+        else
+        {
+            SelectedShapes = result.Shapes.ToList();
+            UpdateSelectionInfo();
+        }
+
         Canvas?.InvalidateVisual();
         return true;
     }
 
     private static readonly string[] BackgroundImageExtensions = [".png", ".jpg", ".jpeg", ".bmp", ".webp"];
 
+    /// <summary>
+    /// A shape dragged from the shape palette (same process only).
+    /// </summary>
+    public static readonly DataFormat<ShapeLibraryItem> LibraryShapeFormat = DataFormat.CreateInProcessFormat<ShapeLibraryItem>("se-assa-draw-library-shape");
+
     internal void OnDragOver(object? sender, DragEventArgs e)
     {
+        if (GetDraggedLibraryShape(e) != null)
+        {
+            e.DragEffects = GetCanvasDropPoint(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
+            e.Handled = true;
+            return;
+        }
+
         e.DragEffects = GetDroppedFile(e) != null ? DragDropEffects.Copy : DragDropEffects.None;
         e.Handled = true;
+    }
+
+    /// <summary>
+    /// The palette shape being dragged: the in-process item, or (if the platform only hands back
+    /// the text that went along) the library shape with that name.
+    /// </summary>
+    private static ShapeLibraryItem? GetDraggedLibraryShape(DragEventArgs e)
+    {
+        if (e.DataTransfer.Contains(LibraryShapeFormat) && e.DataTransfer.TryGetValue(LibraryShapeFormat) is { } item)
+        {
+            return item;
+        }
+
+        if (!e.DataTransfer.Contains(DataFormat.Text) || e.DataTransfer.TryGetText() is not { } name)
+        {
+            return null;
+        }
+
+        return ShapeLibrary.BuiltIn.Concat(ShapeLibrary.GetUserShapes()).FirstOrDefault(i => i.Name == name);
+    }
+
+    /// <summary>
+    /// Where on the drawing a drag is, or null when it is not over the canvas.
+    /// </summary>
+    private (float X, float Y)? GetCanvasDropPoint(DragEventArgs e)
+    {
+        if (Canvas == null)
+        {
+            return null;
+        }
+
+        var position = e.GetPosition(Canvas);
+        return new Rect(Canvas.Bounds.Size).Contains(position) ? Canvas.ToCanvasPoint(position) : null;
+    }
+
+    /// <summary>
+    /// A shape dropped from the palette: default size, centered where it was dropped, selected.
+    /// </summary>
+    public void DropLibraryShape(ShapeLibraryItem item, float x, float y)
+    {
+        CurrentLibraryShape = item;
+        InsertLibraryShape(new CanvasInsertEventArgs(x, y, 0, 0, isClick: true));
     }
 
     /// <summary>
@@ -1810,6 +2618,17 @@ public partial class AssaDrawViewModel : ObservableObject
     /// </summary>
     internal void OnDrop(object? sender, DragEventArgs e)
     {
+        if (GetDraggedLibraryShape(e) is { } item)
+        {
+            e.Handled = true;
+            if (GetCanvasDropPoint(e) is { } point)
+            {
+                DropLibraryShape(item, point.X, point.Y);
+            }
+
+            return;
+        }
+
         var fileName = GetDroppedFile(e);
         if (fileName == null)
         {
@@ -1859,7 +2678,13 @@ public partial class AssaDrawViewModel : ObservableObject
         }
     }
 
-    private Subtitle GenerateSubtitle(bool includeAll = false)
+    /// <summary>
+    /// The drawing as ASSA lines. <paramref name="hiddenAsComments"/> (.assadraw save) writes hidden
+    /// shapes as Comment lines, which <see cref="LoadFromText"/> turns back into hidden shapes.
+    /// <paramref name="withGroups"/> (.assadraw save too) writes the shapes' groups in the Effect field.
+    /// <paramref name="withAnimation"/> false (the still preview) leaves the in/out effects out.
+    /// </summary>
+    private Subtitle GenerateSubtitle(bool includeAll = false, bool hiddenAsComments = false, bool withGroups = false, bool withAnimation = true)
     {
         var subtitle = new Subtitle
         {
@@ -1883,9 +2708,30 @@ public partial class AssaDrawViewModel : ObservableObject
 
         // Collect unique colors from all layers
         var colorToStyleName = new Dictionary<Color, string>();
-        var layers = Shapes.Where(s => !s.Hidden || includeAll).GroupBy(s => s.Layer).OrderBy(g => g.Key).ToList();
-        
-        foreach (var layer in layers)
+        var layers = new List<(int Key, List<DrawShape> Shapes, bool IsComment)>();
+        foreach (var group in Shapes.Where(s => !s.Hidden || includeAll || hiddenAsComments).GroupBy(s => s.Layer).OrderBy(g => g.Key))
+        {
+            if (!hiddenAsComments)
+            {
+                layers.Add((group.Key, group.ToList(), false));
+                continue;
+            }
+
+            // Runs of visible and hidden shapes, so the shape order survives a save and load
+            List<DrawShape>? run = null;
+            foreach (var shape in group)
+            {
+                if (run == null || shape.Hidden != layers[^1].IsComment)
+                {
+                    run = [];
+                    layers.Add((group.Key, run, shape.Hidden));
+                }
+
+                run.Add(shape);
+            }
+        }
+
+        foreach (var (_, layer, _) in layers)
         {
             var firstShape = GetLayerStyleShape(layer);
             if (firstShape != null && !colorToStyleName.ContainsKey(firstShape.ForeColor))
@@ -1911,25 +2757,50 @@ public partial class AssaDrawViewModel : ObservableObject
             }
         }
 
+        var hasText = layers.Any(l => l.Shapes.Any(s => s.HasText));
+        if (hasText)
+        {
+            // Own style for the text lines: centered, no margins, outline or shadow - so a Default
+            // style with an opaque box or big margins doesn't change them
+            subtitle.Header = AdvancedSubStationAlpha.AddSsaStyle(new SsaStyle
+            {
+                Name = AssaDrawTextLine.StyleName,
+                Alignment = "5",
+                MarginVertical = 0,
+                MarginLeft = 0,
+                MarginRight = 0,
+                ShadowWidth = 0,
+                OutlineWidth = 0,
+                BorderStyle = "1",
+            }, subtitle.Header);
+        }
+
         // Generate paragraphs with style names
         var sbDraw = new StringBuilder();
         var sbErase = new StringBuilder();
         var finalText = new StringBuilder();
-        foreach (var layer in layers)
+        foreach (var (layerKey, layer, isComment) in layers)
         {
             sbDraw.Clear();
             sbErase.Clear();
             var firstShape = GetLayerStyleShape(layer);
 
-            // Collect draw shapes (normal shapes)
-            foreach (var shape in layer.Where(p => !p.IsEraser))
+            var animation = withAnimation && firstShape != null ? GetLayerAnimation(layerKey) : null;
+            var anchor = animation != null ? GetAnimationAnchor(firstShape!) : default;
+
+            // Collect draw shapes (normal shapes) - relative to the anchor when animated
+            foreach (var shape in layer.Where(p => !p.IsEraser && !p.IsTextBox))
             {
-                sbDraw.Append(shape.ToAssa());
+                sbDraw.Append(animation != null ? shape.ToAssa(anchor.X, anchor.Y) : shape.ToAssa());
                 sbDraw.Append("  ");
             }
 
-            // Collect erase shapes (iclip shapes)
-            foreach (var shape in layer.Where(p => p.IsEraser))
+            // Collect erase shapes (iclip shapes). These stay in absolute coordinates even when the
+            // layer is animated: libass never moves, scales or turns a vector \iclip with \pos/\move,
+            // \fscx or \frz, and \t can't animate one. They erase the right spot when the animation
+            // is at rest (and always for a fade or blink), so the clip is kept rather than dropped; the
+            // canvas animation preview shows them standing still the same way.
+            foreach (var shape in layer.Where(p => p.IsEraser && !p.IsTextBox))
             {
                 sbErase.Append(shape.ToAssa());
                 sbErase.Append("  ");
@@ -1949,10 +2820,32 @@ public partial class AssaDrawViewModel : ObservableObject
                     finalText.Append($"{{\\iclip({eraseText})}}");
                 }
 
-                // Add draw shapes
+                // Add draw shapes, with the layer's outline
                 if (!string.IsNullOrEmpty(drawText))
                 {
-                    finalText.Append($"{{\\p1}}{drawText}{{\\p0}}");
+                    finalText.Append('{');
+                    if (firstShape is { IsEraser: false, OutlineWidth: > 0 })
+                    {
+                        AssaDrawTextLine.AppendOutline(finalText, firstShape.OutlineWidth, firstShape.OutlineColor);
+                    }
+
+                    finalText.Append($"\\p1}}{drawText}{{\\p0}}");
+                }
+
+                if (finalText.Length > 0 && animation != null)
+                {
+                    // A drawing turns around its \\pos (the anchor) unless the animation needs another \\org
+                    var origin = string.Empty;
+                    if (animation.OriginKind != DrawAnimationOrigin.Anchor &&
+                        animation.GetOrigin(anchor.X, anchor.Y, anchor.Bounds, CanvasWidth, CanvasHeight) is { } org)
+                    {
+                        origin = $"\\org({FormatCoordinate(org.X)},{FormatCoordinate(org.Y)})";
+                    }
+
+                    finalText.Insert(0, "{\\an7" +
+                        animation.GetPositionTag(anchor.X, anchor.Y, LineDurationMs, anchor.Bounds, CanvasWidth, CanvasHeight) +
+                        origin + animation.GetEffectTags(LineDurationMs, 0, anchor.Bounds, CanvasWidth, CanvasHeight) + "}" +
+                        animation.FormatMarker(anchor.X, anchor.Y));
                 }
 
                 if (finalText.Length > 0)
@@ -1965,11 +2858,35 @@ public partial class AssaDrawViewModel : ObservableObject
                   
                     var p = new Paragraph(finalText.ToString(), 0, 10000)
                     {
-                        Layer = layer.Key,
+                        Layer = layerKey,
+                        IsComment = isComment,
                         Extra = styleName,
+                        Effect = withGroups ? GetGroupEffect(layer) : null,
                     };
                     subtitle.Paragraphs.Add(p);
                 }
+            }
+
+            // Text after the layer's drawing, on the same layer: libass draws later lines of a
+            // layer on top, so the text shows over its bubble and under the layers above
+            foreach (var shape in layer.Where(s => s.HasText && s.Points.Count > 0))
+            {
+                var textAnimation = withAnimation ? GetLayerAnimation(layerKey) : null;
+                var textLine = AssaDrawTextLine.Format(shape);
+                if (textAnimation != null)
+                {
+                    textLine = AddTextAnimation(textLine, shape, textAnimation);
+                }
+
+                subtitle.Paragraphs.Add(new Paragraph(textLine, 0, 10000)
+                {
+                    Layer = layerKey,
+                    IsComment = isComment,
+                    Extra = AssaDrawTextLine.StyleName,
+
+                    // A text box is only this line; a bubble's group is on its drawing line
+                    Effect = withGroups && shape.IsTextBox && shape.GroupId != 0 ? GroupEffectPrefix + shape.GroupId.ToString(CultureInfo.InvariantCulture) : null,
+                });
             }
         }
 
@@ -1977,15 +2894,122 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Duration of the line the drawing is written to (the first selected line), for the out effect.
+    /// </summary>
+    public int LineDurationMs { get; set; } = 2000;
+
+    /// <summary>
+    /// A layer is one line, so it has one animation: the first one set on any of its shapes. The
+    /// output, the canvas preview and the animation panel all read it this way - the output used
+    /// the first draw shape's, so a shape without one at the top of the layer dropped the effect.
+    /// </summary>
+    internal DrawAnimation? GetLayerAnimation(int layer) =>
+        Shapes.Where(s => s.Layer == layer).Select(s => s.Animation).FirstOrDefault(a => a is { IsNone: false });
+
+    /// <summary>
+    /// What an animation scales and turns around, and what it slides out of the frame: the shape's
+    /// group, or else its layer.
+    /// </summary>
+    internal (float X, float Y, (float Left, float Top, float Right, float Bottom) Bounds) GetAnimationAnchor(DrawShape shape)
+    {
+        var members = shape.GroupId != 0
+            ? Shapes.Where(s => s.GroupId == shape.GroupId && !s.IsEraser)
+            : Shapes.Where(s => s.Layer == shape.Layer && !s.IsEraser);
+        var bounds = DrawShape.GetBounds(members);
+        return ((bounds.Left + bounds.Right) / 2, (bounds.Top + bounds.Bottom) / 2, bounds);
+    }
+
+    /// <summary>
+    /// A text line follows its shape's animation: it turns around the same \org as its drawing (the
+    /// anchor, its top edge, or a far one), so its position is written to allow for its own \frz
+    /// turning around that point; \move instead of \pos for a slide. The marker and the effects go
+    /// after its tag block.
+    /// </summary>
+    private string AddTextAnimation(string textLine, DrawShape shape, DrawAnimation animation)
+    {
+        var anchor = GetAnimationAnchor(shape);
+        var (left, top, right, bottom) = shape.GetTextBounds();
+
+        // The \frz as the text line writes it (two decimals) - a far \org magnifies any difference
+        var baseFrz = (float)Math.Round(-shape.GetTextFrame().Angle, 2);
+        var (originX, originY) = animation.GetOrigin(anchor.X, anchor.Y, anchor.Bounds, CanvasWidth, CanvasHeight) ?? (anchor.X, anchor.Y);
+
+        var position = animation.GetPositionTag((left + right) / 2, (top + bottom) / 2, LineDurationMs, anchor.Bounds, CanvasWidth, CanvasHeight,
+            (x, y) => DrawAnimation.MapAroundOrigin(x, y, originX, originY, baseFrz));
+        var posStart = textLine.IndexOf("\\pos(", StringComparison.Ordinal);
+        if (posStart >= 0)
+        {
+            var posEnd = textLine.IndexOf(')', posStart);
+            textLine = textLine[..posStart] + position + textLine[(posEnd + 1)..];
+        }
+
+        var blockEnd = textLine.IndexOf('}');
+        var effects = $"{{\\org({FormatCoordinate(originX)},{FormatCoordinate(originY)})" + animation.GetEffectTags(LineDurationMs, baseFrz, anchor.Bounds, CanvasWidth, CanvasHeight) + "}";
+        return textLine[..(blockEnd + 1)] + animation.FormatMarker(anchor.X, anchor.Y) + effects + textLine[(blockEnd + 1)..];
+    }
+
+    private static string FormatCoordinate(double value) =>
+        Math.Abs(value) < 0.005 ? "0" : value.ToString("0.##", CultureInfo.InvariantCulture);
+
+    /// <summary>
     /// The shape whose color names the layer's style: the first draw shape, or for a layer of only
     /// erase shapes (written as an \iclip-only line) the first erase shape. The style loop and the
     /// line loop picked differently, so an erase-only layer got a line with an empty style name.
     /// </summary>
+    /// <summary>
+    /// Effect field of an .assadraw line: "SeGroups:" and the group id of each drawing shape in
+    /// the line, then "|" and those of its erase shapes, e.g. "SeGroups:1 1 0|2" - no commas, the
+    /// Effect field ends at one.
+    /// </summary>
+    private const string GroupEffectPrefix = "SeGroups:";
+
+    private static string? GetGroupEffect(List<DrawShape> layer)
+    {
+        var drawShapes = layer.Where(s => !s.IsEraser && !s.IsTextBox).ToList();
+        var eraseShapes = layer.Where(s => s.IsEraser && !s.IsTextBox).ToList();
+        if (drawShapes.Concat(eraseShapes).All(s => s.GroupId == 0))
+        {
+            return null;
+        }
+
+        var effect = GroupEffectPrefix + string.Join(' ', drawShapes.Select(s => s.GroupId.ToString(CultureInfo.InvariantCulture)));
+        if (eraseShapes.Count > 0)
+        {
+            effect += "|" + string.Join(' ', eraseShapes.Select(s => s.GroupId.ToString(CultureInfo.InvariantCulture)));
+        }
+
+        return effect;
+    }
+
+    /// <summary>
+    /// The group ids of a line's drawing and erase shapes (see <see cref="GroupEffectPrefix"/>); empty without them.
+    /// </summary>
+    private static (List<int> Draw, List<int> Erase) ParseGroupEffect(string? effect)
+    {
+        if (string.IsNullOrEmpty(effect) || !effect.StartsWith(GroupEffectPrefix, StringComparison.Ordinal))
+        {
+            return ([], []);
+        }
+
+        static List<int> ParseIds(string text) => text
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Select(t => int.TryParse(t, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id) && id > 0 ? id : 0)
+            .ToList();
+
+        var parts = effect[GroupEffectPrefix.Length..].Split('|');
+        return (ParseIds(parts[0]), parts.Length > 1 ? ParseIds(parts[1]) : []);
+    }
+
     private static DrawShape? GetLayerStyleShape(IEnumerable<DrawShape> layer)
     {
         DrawShape? firstEraser = null;
         foreach (var shape in layer)
         {
+            if (shape.IsTextBox)
+            {
+                continue;
+            }
+
             if (!shape.IsEraser)
             {
                 return shape;
@@ -2049,7 +3073,7 @@ public partial class AssaDrawViewModel : ObservableObject
         return $"{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 
-    private string GenerateAssaCode()
+    internal string GenerateAssaCode()
     {
         if (Shapes.Count == 0)
         {
@@ -2057,14 +3081,14 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         var sbDraw = new StringBuilder();
-        foreach (var shape in Shapes.Where(s => !s.IsEraser && !s.Hidden))
+        foreach (var shape in Shapes.Where(s => !s.IsEraser && !s.Hidden && !s.IsTextBox))
         {
             sbDraw.Append(shape.ToAssa());
             sbDraw.Append(' ');
         }
 
         var sbErase = new StringBuilder();
-        foreach (var shape in Shapes.Where(s => s.IsEraser && !s.Hidden))
+        foreach (var shape in Shapes.Where(s => s.IsEraser && !s.Hidden && !s.IsTextBox))
         {
             sbErase.Append(shape.ToAssa());
             sbErase.Append(' ');
@@ -2085,7 +3109,14 @@ public partial class AssaDrawViewModel : ObservableObject
         }
         if (!string.IsNullOrEmpty(drawCode))
         {
-            result.Append($"{{\\p1}}{drawCode}{{\\p0}}");
+            result.Append('{');
+            var outlineShape = Shapes.FirstOrDefault(s => !s.IsEraser && !s.Hidden && !s.IsTextBox);
+            if (outlineShape is { OutlineWidth: > 0 })
+            {
+                AssaDrawTextLine.AppendOutline(result, outlineShape.OutlineWidth, outlineShape.OutlineColor);
+            }
+
+            result.Append($"\\p1}}{drawCode}{{\\p0}}");
         }
 
         return result.ToString();
@@ -2101,9 +3132,78 @@ public partial class AssaDrawViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Cancel()
+    private async Task Cancel()
     {
-        Window?.Close();
+        await CloseAfterConfirm();
+    }
+
+    private bool _closeConfirmed;
+    private bool _askingToClose;
+
+    /// <summary>
+    /// Closing without OK (X button) while there are changes - the window cancels the close and asks first.
+    /// </summary>
+    public bool ShouldAskBeforeClosing => !OkPressed && !_closeConfirmed && HasChanges;
+
+    internal async Task CloseAfterConfirm()
+    {
+        if (_askingToClose)
+        {
+            return;
+        }
+
+        _askingToClose = true;
+        try
+        {
+            if (await ConfirmDiscardChanges())
+            {
+                _closeConfirmed = true;
+                Window?.Close();
+            }
+        }
+        finally
+        {
+            _askingToClose = false;
+        }
+    }
+
+    /// <summary>
+    /// The drawing as it would be written (text, outlines, hidden shapes and canvas size included),
+    /// to tell whether anything changed since the dialog opened.
+    /// </summary>
+    private string GetChangeState()
+    {
+        var subtitle = GenerateSubtitle(includeAll: true);
+        var sb = new StringBuilder();
+        sb.Append(CanvasWidth).Append('x').Append(CanvasHeight).Append('\n');
+        foreach (var p in subtitle.Paragraphs)
+        {
+            sb.Append(p.Layer).Append(' ').Append(p.Extra).Append(' ').Append(p.Text).Append('\n');
+        }
+
+        foreach (var shape in Shapes.Where(s => s.Hidden))
+        {
+            sb.Append("hidden ").Append(Shapes.IndexOf(shape)).Append('\n');
+        }
+
+        return sb.ToString();
+    }
+
+    public bool HasChanges => _openedState != null && _openedState != GetChangeState();
+
+    /// <summary>
+    /// True when the dialog may close without OK: nothing changed, or the user agreed to discard.
+    /// </summary>
+    internal async Task<bool> ConfirmDiscardChanges()
+    {
+        if (Window == null || !HasChanges)
+        {
+            return true;
+        }
+
+        var result = await MessageBox.Show(Window, Se.Language.General.DiscardChangesTitle, Se.Language.Assa.DrawDiscardChanges,
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        return result == MessageBoxResult.Yes;
     }
 
     private void RefreshTreeView()
@@ -2114,53 +3214,87 @@ public partial class AssaDrawViewModel : ObservableObject
         try
         {
             ShapeTreeItems.Clear();
+            NormalizeGroups();
+
+            // A group on one layer is a node inside that layer. A group spread over several layers
+            // (clip art puts each color on its own layer) is one node next to its lowest layer, its
+            // shapes named with their layer - split over layer nodes it would show up as several
+            // one-shape groups, and selecting it would no longer mean "the whole group".
+            var groupLayers = Shapes.Where(s => s.GroupId != 0).GroupBy(s => s.GroupId)
+                .ToDictionary(g => g.Key, g => (Min: g.Min(s => s.Layer), Multi: g.Select(s => s.Layer).Distinct().Count() > 1));
+            var shapeNumbers = new Dictionary<DrawShape, int>();
+            foreach (var layer in Shapes.GroupBy(s => s.Layer))
+            {
+                var number = 0;
+                foreach (var shape in layer)
+                {
+                    shapeNumbers[shape] = ++number;
+                }
+            }
+
+            var crossLayerGroupItems = new Dictionary<int, ShapeTreeItem>();
+            foreach (var shape in Shapes.Where(s => s.GroupId != 0 && groupLayers[s.GroupId].Multi))
+            {
+                if (!crossLayerGroupItems.TryGetValue(shape.GroupId, out var groupItem))
+                {
+                    groupItem = MakeGroupTreeItem(shape.GroupId);
+                    crossLayerGroupItems[shape.GroupId] = groupItem;
+                }
+
+                groupItem.Children.Add(MakeShapeTreeItem(shape, shapeNumbers[shape], withLayer: true));
+            }
 
             var layers = Shapes.GroupBy(s => s.Layer).OrderBy(g => g.Key);
             foreach (var layer in layers)
             {
-                var layerShapes = layer.ToList();
-                var layerItem = new ShapeTreeItem
+                var layerShapes = layer.Where(s => s.GroupId == 0 || !groupLayers[s.GroupId].Multi).ToList();
+                if (layerShapes.Count > 0)
                 {
-                    Name = string.Format(Se.Language.Assa.DrawLayerX, layer.Key),
-                    IsLayer = true,
-                    Layer = layer.Key,
-                    IsExpanded = true,
-                    IconName = "fa-solid fa-layer-group",
-                    Swatch = new SolidColorBrush(layerShapes[0].ForeColor),
-                    IsHidden = layerShapes.All(s => s.Hidden),
-                    Meta = layerShapes.Count.ToString(CultureInfo.InvariantCulture),
-                };
-
-                var shapeNumber = 0;
-                foreach (var shape in layerShapes)
-                {
-                    shapeNumber++;
-                    var shapeItem = new ShapeTreeItem
+                    var layerItem = new ShapeTreeItem
                     {
-                        Name = $"Shape {shapeNumber} ({(shape.IsEraser ? "erase" : "draw")})",
-                        Shape = shape,
-                        IsExpanded = shape.Expanded,
-                        IconName = shape.IsEraser ? "fa-solid fa-eraser" : "fa-solid fa-draw-polygon",
-                        IsHidden = shape.Hidden,
-                        Meta = shape.Points.Count.ToString(CultureInfo.InvariantCulture),
+                        Name = string.Format(Se.Language.Assa.DrawLayerX, layer.Key),
+                        IsLayer = true,
+                        Layer = layer.Key,
+                        IsExpanded = true,
+                        IconName = "fa-solid fa-layer-group",
+                        Swatch = new SolidColorBrush(layerShapes[0].ForeColor),
+                        IsHidden = layerShapes.All(s => s.Hidden),
+                        Meta = layerShapes.Count.ToString(CultureInfo.InvariantCulture),
                     };
 
-                    foreach (var point in shape.Points)
+                    var layerGroupItems = new Dictionary<int, ShapeTreeItem>();
+                    foreach (var shape in layerShapes)
                     {
-                        var isControlPoint = point.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2;
-                        shapeItem.Children.Add(new ShapeTreeItem
+                        var shapeItem = MakeShapeTreeItem(shape, shapeNumbers[shape], withLayer: false);
+                        if (shape.GroupId == 0)
                         {
-                            Name = point.GetText(point.X, point.Y),
-                            Point = point,
-                            IconName = isControlPoint ? "fa-regular fa-circle" : "fa-regular fa-square",
-                            IsHidden = shape.Hidden,
-                        });
+                            layerItem.Children.Add(shapeItem);
+                            continue;
+                        }
+
+                        if (!layerGroupItems.TryGetValue(shape.GroupId, out var groupItem))
+                        {
+                            groupItem = MakeGroupTreeItem(shape.GroupId);
+                            layerGroupItems[shape.GroupId] = groupItem;
+                            layerItem.Children.Add(groupItem);
+                        }
+
+                        groupItem.Children.Add(shapeItem);
                     }
 
-                    layerItem.Children.Add(shapeItem);
+                    foreach (var groupItem in layerGroupItems.Values)
+                    {
+                        FinishGroupTreeItem(groupItem);
+                    }
+
+                    ShapeTreeItems.Add(layerItem);
                 }
 
-                ShapeTreeItems.Add(layerItem);
+                foreach (var groupItem in crossLayerGroupItems.Where(g => groupLayers[g.Key].Min == layer.Key).Select(g => g.Value))
+                {
+                    FinishGroupTreeItem(groupItem);
+                    ShapeTreeItems.Add(groupItem);
+                }
             }
         }
         finally
@@ -2171,7 +3305,9 @@ public partial class AssaDrawViewModel : ObservableObject
         // Keep the selection across the rebuild - it used to vanish after every edit
         var restored = previous == null
             ? null
-            : FindTreeItem(previous.Point, previous.Shape, previous.IsLayer ? previous.Layer : null);
+            : previous.IsGroup
+                ? FindGroupTreeItem(previous.GroupId)
+                : FindTreeItem(previous.Point, previous.Shape, previous.IsLayer ? previous.Layer : null);
         if (restored != null)
         {
             SelectedTreeItem = restored;
@@ -2184,6 +3320,147 @@ public partial class AssaDrawViewModel : ObservableObject
         {
             ApplyTreeSelection(null);
         }
+
+        NotifyCommandStates();
+    }
+
+    private static string GetShapeTreeName(DrawShape shape, int shapeNumber)
+    {
+        var text = shape.Text.Replace("\r", string.Empty).Replace('\n', ' ').Trim();
+        if (text.Length > 24)
+        {
+            text = text[..24] + "…";
+        }
+
+        if (shape.IsTextBox)
+        {
+            return text.Length > 0 ? $"{Se.Language.Assa.DrawTextBox}: {text}" : Se.Language.Assa.DrawTextBox;
+        }
+
+        var name = string.Format(shape.IsEraser ? Se.Language.Assa.DrawShapeXErase : Se.Language.Assa.DrawShapeXDraw, shapeNumber);
+        return text.Length > 0 && !shape.IsEraser ? $"{name}: {text}" : name;
+    }
+
+    /// <summary>
+    /// Typing renames the shape's tree row - rebuilding the tree per key press would drop the text field's focus.
+    /// </summary>
+    private void UpdateShapeTreeName(DrawShape shape)
+    {
+        var shapeItem = EnumerateShapeTreeItems().FirstOrDefault(i => i.Shape == shape);
+        if (shapeItem != null)
+        {
+            shapeItem.Name = GetShapeTreeName(shape, shapeItem.ShapeNumber, shapeItem.NameWithLayer);
+        }
+    }
+
+    private static string GetShapeTreeName(DrawShape shape, int shapeNumber, bool withLayer)
+    {
+        var name = GetShapeTreeName(shape, shapeNumber);
+        return withLayer ? $"{string.Format(Se.Language.Assa.DrawLayerX, shape.Layer)} · {name}" : name;
+    }
+
+    private static ShapeTreeItem MakeShapeTreeItem(DrawShape shape, int shapeNumber, bool withLayer)
+    {
+        var shapeItem = new ShapeTreeItem
+        {
+            Name = GetShapeTreeName(shape, shapeNumber, withLayer),
+            Shape = shape,
+            ShapeNumber = shapeNumber,
+            NameWithLayer = withLayer,
+            IsExpanded = shape.Expanded,
+            IconName = shape.IsTextBox ? "fa-solid fa-font" : shape.IsEraser ? "fa-solid fa-eraser" : "fa-solid fa-draw-polygon",
+            IsHidden = shape.Hidden,
+            Meta = shape.IsTextBox ? string.Empty : shape.Points.Count.ToString(CultureInfo.InvariantCulture),
+        };
+
+        // A text box is sized with the handles, its corners aren't points to edit
+        foreach (var point in shape.IsTextBox ? [] : shape.Points)
+        {
+            var isControlPoint = point.DrawType is DrawCoordinateType.BezierCurveSupport1 or DrawCoordinateType.BezierCurveSupport2;
+            shapeItem.Children.Add(new ShapeTreeItem
+            {
+                Name = point.GetText(point.X, point.Y),
+                Point = point,
+                IconName = isControlPoint ? "fa-regular fa-circle" : "fa-regular fa-square",
+                IsHidden = shape.Hidden,
+            });
+        }
+
+        return shapeItem;
+    }
+
+    /// <summary>
+    /// Groups collapsed in the tree (open by default), by group id.
+    /// </summary>
+    private readonly HashSet<int> _collapsedGroups = [];
+
+    private ShapeTreeItem MakeGroupTreeItem(int groupId)
+    {
+        var item = new ShapeTreeItem
+        {
+            Name = string.Format(Se.Language.Assa.DrawGroupX, groupId),
+            IsGroup = true,
+            GroupId = groupId,
+            IsExpanded = !_collapsedGroups.Contains(groupId),
+            IconName = "fa-regular fa-object-group",
+        };
+        item.ExpandedChanged = expanded =>
+        {
+            if (expanded)
+            {
+                _collapsedGroups.Remove(groupId);
+            }
+            else
+            {
+                _collapsedGroups.Add(groupId);
+            }
+        };
+        return item;
+    }
+
+    private static void FinishGroupTreeItem(ShapeTreeItem groupItem)
+    {
+        groupItem.IsHidden = groupItem.Children.All(c => c.IsHidden);
+        groupItem.Meta = groupItem.Children.Count.ToString(CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>
+    /// A group left with one shape (the others deleted, moved out or ungrouped) is no group.
+    /// </summary>
+    private void NormalizeGroups()
+    {
+        foreach (var group in Shapes.Where(s => s.GroupId != 0).GroupBy(s => s.GroupId).Where(g => g.Count() == 1).ToList())
+        {
+            group.First().GroupId = 0;
+        }
+    }
+
+    /// <summary>
+    /// Every shape row of the tree, in layers and in groups.
+    /// </summary>
+    private IEnumerable<ShapeTreeItem> EnumerateShapeTreeItems()
+    {
+        foreach (var topItem in ShapeTreeItems)
+        {
+            foreach (var child in topItem.Children)
+            {
+                if (child.Shape != null)
+                {
+                    yield return child;
+                    continue;
+                }
+
+                foreach (var groupChild in child.Children.Where(c => c.Shape != null))
+                {
+                    yield return groupChild;
+                }
+            }
+        }
+    }
+
+    private ShapeTreeItem? FindGroupTreeItem(int groupId)
+    {
+        return groupId == 0 ? null : FindAndExpand(ShapeTreeItems, i => i.IsGroup && i.GroupId == groupId, i => i.IsLayer);
     }
 
     /// <summary>
@@ -2191,35 +3468,39 @@ public partial class AssaDrawViewModel : ObservableObject
     /// </summary>
     private ShapeTreeItem? FindTreeItem(DrawCoordinate? point, DrawShape? shape, int? layer)
     {
-        foreach (var layerItem in ShapeTreeItems)
+        if (point != null)
         {
-            if (layer.HasValue && point == null && shape == null && layerItem.Layer == layer.Value)
+            return FindAndExpand(ShapeTreeItems, i => i.Point == point, _ => true);
+        }
+
+        if (shape != null)
+        {
+            // A shape row's children are its points - no need to look through those
+            return FindAndExpand(ShapeTreeItems, i => i.Shape == shape, i => i.Shape == null);
+        }
+
+        return layer.HasValue ? ShapeTreeItems.FirstOrDefault(i => i.IsLayer && i.Layer == layer.Value) : null;
+    }
+
+    private static ShapeTreeItem? FindAndExpand(IEnumerable<ShapeTreeItem> items, Func<ShapeTreeItem, bool> match, Func<ShapeTreeItem, bool> descend)
+    {
+        foreach (var item in items)
+        {
+            if (match(item))
             {
-                return layerItem;
+                return item;
             }
 
-            foreach (var shapeItem in layerItem.Children)
+            if (item.Children.Count == 0 || !descend(item))
             {
-                if (shape != null && point == null && shapeItem.Shape == shape)
-                {
-                    layerItem.IsExpanded = true;
-                    return shapeItem;
-                }
+                continue;
+            }
 
-                if (point == null)
-                {
-                    continue;
-                }
-
-                foreach (var pointItem in shapeItem.Children)
-                {
-                    if (pointItem.Point == point)
-                    {
-                        layerItem.IsExpanded = true;
-                        shapeItem.IsExpanded = true;
-                        return pointItem;
-                    }
-                }
+            var found = FindAndExpand(item.Children, match, descend);
+            if (found != null)
+            {
+                item.IsExpanded = true;
+                return found;
             }
         }
 
@@ -2229,6 +3510,124 @@ public partial class AssaDrawViewModel : ObservableObject
     private void ImportAssaDrawingFromText(string text, int layer, Color color, bool isEraser)
     {
         Shapes.AddRange(DrawShape.ParseAssa(text, layer, color, isEraser));
+    }
+
+    private readonly List<(int Layer, AssaDrawTextLine.Parsed Text, bool Hidden, int GroupId, DrawAnimation? Animation)> _importedTexts = [];
+
+    /// <summary>
+    /// One line of a script: its \iclip erase shapes, its \p1 drawing (with the line's outline),
+    /// or an ASSA draw text line - those are attached to their shapes by <see cref="AttachTextLines"/>.
+    /// A <paramref name="hidden"/> line (Comment line of a saved .assadraw) gives hidden shapes, and
+    /// the line's <paramref name="effect"/> (saved .assadraw) their groups.
+    /// </summary>
+    private void ImportLine(string text, int layer, Color color, bool hidden = false, string? effect = null)
+    {
+        var (drawGroups, eraseGroups) = ParseGroupEffect(effect);
+
+        // An animated line: the effects come off, and its drawing (written relative to the anchor) goes back in place
+        DrawAnimation? animation = null;
+        float anchorX = 0, anchorY = 0;
+        var anchored = false;
+        if (DrawAnimation.TryParseMarker(text, out var parsedAnimation, out anchorX, out anchorY))
+        {
+            animation = parsedAnimation.IsNone ? null : parsedAnimation;
+            anchored = DrawAnimation.IsAnchoredDrawingLine(text);
+            text = DrawAnimation.RemoveFromLine(text);
+        }
+
+        if (AssaDrawTextLine.TryParse(text, out var parsedText))
+        {
+            _importedTexts.Add((layer, parsedText, hidden, drawGroups.FirstOrDefault(), animation));
+            return;
+        }
+
+        var firstNewShape = Shapes.Count;
+        ImportDrawingLine(text, layer, color);
+        int drawIndex = 0, eraseIndex = 0;
+        for (var i = firstNewShape; i < Shapes.Count; i++)
+        {
+            var shape = Shapes[i];
+            shape.Hidden = hidden;
+            var groups = shape.IsEraser ? eraseGroups : drawGroups;
+            var index = shape.IsEraser ? eraseIndex++ : drawIndex++;
+            shape.GroupId = index < groups.Count ? groups[index] : 0;
+            shape.Animation = animation?.Clone();
+            if (anchored && !shape.IsEraser)
+            {
+                shape.Offset(anchorX, anchorY);
+            }
+        }
+    }
+
+    private void ImportDrawingLine(string text, int layer, Color color)
+    {
+        // 1. Process iclip (Vector Mask)
+        var iclipMatch = _regexIclip.Match(text);
+        if (iclipMatch.Success)
+        {
+            // Extract only the drawing commands inside the parentheses
+            ImportAssaDrawingFromText(iclipMatch.Groups[1].Value, layer, color, true);
+        }
+
+        // 2. Process \p1 Drawing (the \p1 can share its tag block with \pos, \an etc.)
+        if (_regexStart.IsMatch(text))
+        {
+            // Remove all tags (anything inside curly braces) to get raw vector data
+            var drawingOnly = Regex.Replace(text, @"\{[^}]+\}", string.Empty).Trim();
+            if (!string.IsNullOrWhiteSpace(drawingOnly))
+            {
+                var shapes = DrawShape.ParseAssa(drawingOnly, layer, color, false);
+                AssaDrawTextLine.ParseOutline(text, out var outlineWidth, out var outlineColor);
+                foreach (var shape in shapes)
+                {
+                    shape.OutlineWidth = outlineWidth;
+                    shape.OutlineColor = outlineColor;
+                }
+
+                Shapes.AddRange(shapes);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Imported text goes back into the shape it was written for: the smallest drawing shape of
+    /// its layer that holds the center of the text area. Text without one becomes a text box.
+    /// </summary>
+    private void AttachTextLines()
+    {
+        foreach (var (layer, parsed, hidden, groupId, animation) in _importedTexts)
+        {
+            var (left, top, right, bottom) = parsed.Box;
+            var centerX = (left + right) / 2;
+            var centerY = (top + bottom) / 2;
+            var host = Shapes
+                .Where(s => s.Layer == layer && s.Hidden == hidden && !s.IsEraser && !s.IsTextBox && !s.HasText && s.Points.Count > 2 && s.HitTest(centerX, centerY, 0))
+                .OrderBy(s => { var b = s.GetBounds(); return (b.Right - b.Left) * (b.Bottom - b.Top); })
+                .FirstOrDefault();
+            if (host == null)
+            {
+                host = MakeRectangle(left, top, right - left, bottom - top, layer, parsed.Color ?? Colors.White);
+                host.IsTextBox = true;
+                host.Rotate(parsed.Angle);
+                host.OutlineWidth = parsed.OutlineWidth;
+                host.OutlineColor = parsed.OutlineColor;
+                host.Hidden = hidden;
+                host.GroupId = groupId;
+                Shapes.Add(host);
+            }
+
+            host.Animation ??= animation?.Clone();
+
+            host.Text = parsed.Text;
+            host.FontName = parsed.FontName;
+            host.FontSize = parsed.FontSize;
+            host.FontBold = parsed.Bold;
+            host.ShrinkToFit = parsed.ShrinkToFit;
+            host.TextColor = parsed.Color ?? Colors.White;
+            host.SetTextBounds(left, top, right, bottom, parsed.Angle);
+        }
+
+        _importedTexts.Clear();
     }
 
     private static bool TryGetPlayRes(string? header, out int width, out int height)
@@ -2246,7 +3645,7 @@ public partial class AssaDrawViewModel : ObservableObject
                int.TryParse(playResY, NumberStyles.Integer, CultureInfo.InvariantCulture, out height) && height >= 125 && height <= 4096;
     }
 
-    private void LoadFromText(string text)
+    internal void LoadFromText(string text)
     {
         if (Shapes.Count > 0)
         {
@@ -2280,25 +3679,10 @@ public partial class AssaDrawViewModel : ObservableObject
                 }
             }
 
-            // Handle iclip
-            var iclipMatch = _regexIclip.Match(paragraph.Text);
-            if (iclipMatch.Success)
-            {
-                ImportAssaDrawingFromText(iclipMatch.Groups[1].Value, paragraph.Layer, color, true);
-            }
-
-            // Handle \p1 Drawing (the \p1 can share its tag block with \pos, \an etc.)
-            if (_regexStart.IsMatch(paragraph.Text))
-            {
-                // Strip tags to avoid parsing non-coordinate text
-                string drawingOnly = Regex.Replace(paragraph.Text, @"\{[^}]+\}", string.Empty).Trim();
-                if (!string.IsNullOrWhiteSpace(drawingOnly))
-                {
-                    ImportAssaDrawingFromText(drawingOnly, paragraph.Layer, color, false);
-                }
-            }
+            ImportLine(paragraph.Text, paragraph.Layer, color, hidden: paragraph.IsComment, effect: paragraph.Effect);
         }
 
+        AttachTextLines();
         RefreshTreeView();
         Canvas?.InvalidateVisual();
     }
@@ -2315,17 +3699,60 @@ public partial class AssaDrawViewModel : ObservableObject
             }
 
             e.Handled = true;
-            Window?.Close();
+
+            // Esc steps back: selected point -> its shape -> nothing selected -> close
+            if (ClearSelectionStep())
+            {
+                return;
+            }
+
+            await Cancel();
+        }
+        else if (IsTextInput(e) && e.Key is Key.Enter or Key.Delete or Key.Back)
+        {
+            // Typing in the text field (or a number box) - not a canvas command. Enter there only
+            // commits the value: handled here, it no longer reaches the default OK button.
+            if (e.Key == Key.Enter)
+            {
+                e.Handled = true;
+            }
         }
         else if (e.Key == Key.Enter)
         {
             CloseShape();
             e.Handled = true;
         }
-        else if (e.Key == Key.Delete && (IsDrawing || TargetShape != null))
+        else if (e.Key == Key.Delete && !IsDrawing && ActivePoint != null)
+        {
+            // A selected point deletes just that point (like the context menu), never the whole shape.
+            // A bezier control point can't be deleted on its own, so Delete does nothing then.
+            if (CanDeleteActivePoint())
+            {
+                DeletePoint();
+            }
+
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Delete && CanDeleteShape())
         {
             DeleteShape();
             e.Handled = true;
+        }
+        else if (e.Key is Key.Up or Key.Down or Key.Left or Key.Right && !IsTextInput(e) && GetNudgeStep(e.KeyModifiers) is { } step)
+        {
+            // Arrow 1 px, Shift+arrow 10 px (Alt+arrow 1 px and Ctrl+arrow 10 px still work)
+            (float dx, float dy) = e.Key switch
+            {
+                Key.Up => (0f, -step),
+                Key.Down => (0f, step),
+                Key.Left => (-step, 0f),
+                _ => (step, 0f),
+            };
+
+            if (AdjustPosition(dx, dy))
+            {
+                e.Handled = true;
+            }
         }
         else if ((e.KeyModifiers & ~KeyModifiers.Shift) is KeyModifiers.Control or KeyModifiers.Meta && e.Key is Key.Z or Key.Y)
         {
@@ -2341,29 +3768,25 @@ public partial class AssaDrawViewModel : ObservableObject
 
             e.Handled = true;
         }
+        else if ((e.KeyModifiers & ~KeyModifiers.Shift) is KeyModifiers.Control or KeyModifiers.Meta && e.Key == Key.G)
+        {
+            // Ctrl/Cmd+G groups the selection, Ctrl/Cmd+Shift+G ungroups it
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                UngroupShapes();
+            }
+            else
+            {
+                GroupShapes();
+            }
+
+            e.Handled = true;
+        }
         else if (e.KeyModifiers.HasFlag(KeyModifiers.Alt) ||
                  (e.KeyModifiers.HasFlag(KeyModifiers.Control) && !e.KeyModifiers.HasFlag(KeyModifiers.Shift)))
         {
-            var offset = e.KeyModifiers.HasFlag(KeyModifiers.Alt) ? 1 : 10;
-
             switch (e.Key)
             {
-                case Key.Up:
-                    AdjustPosition(0, -offset);
-                    e.Handled = true;
-                    break;
-                case Key.Down:
-                    AdjustPosition(0, offset);
-                    e.Handled = true;
-                    break;
-                case Key.Left:
-                    AdjustPosition(-offset, 0);
-                    e.Handled = true;
-                    break;
-                case Key.Right:
-                    AdjustPosition(offset, 0);
-                    e.Handled = true;
-                    break;
                 case Key.D0:
                 case Key.NumPad0:
                     if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
@@ -2402,7 +3825,8 @@ public partial class AssaDrawViewModel : ObservableObject
                         e.Handled = true;
                     }
                     break;
-                case Key.G:
+                case Key.OemQuotes:
+                    // Ctrl+' like other drawing programs - Ctrl+G is Group
                     if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
                     {
                         ToggleGrid();
@@ -2425,7 +3849,7 @@ public partial class AssaDrawViewModel : ObservableObject
                     break;
             }
         }
-        else if (e.KeyModifiers == KeyModifiers.None && !IsTextInput(e) && e.Key is Key.V or Key.L or Key.B or Key.R or Key.C or Key.S or Key.I)
+        else if (e.KeyModifiers == KeyModifiers.None && !IsTextInput(e) && e.Key is Key.V or Key.L or Key.B or Key.R or Key.C or Key.S or Key.I or Key.T)
         {
             // Single-key tools like other drawing programs (not while typing in a number box)
             SetTool(e.Key switch
@@ -2436,6 +3860,7 @@ public partial class AssaDrawViewModel : ObservableObject
                 Key.R => DrawingTool.Rectangle,
                 Key.S => DrawingTool.Shape,
                 Key.I => DrawingTool.ColorPicker,
+                Key.T => DrawingTool.Text,
                 _ => DrawingTool.Circle,
             });
             e.Handled = true;
@@ -2483,56 +3908,129 @@ public partial class AssaDrawViewModel : ObservableObject
                (visual is TextBox || Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<TextBox>(visual) != null);
     }
 
-    private void AdjustPosition(float xAdjust, float yAdjust)
+    /// <summary>
+    /// Arrow-key step in pixels: none or Alt 1, Shift or Ctrl 10; null for other combinations.
+    /// </summary>
+    private static float? GetNudgeStep(KeyModifiers modifiers)
     {
-        if (SelectedShapes.Count == 0 && SelectedTreeItem?.Shape == null && ActiveShape == null)
+        if (modifiers.HasFlag(KeyModifiers.Alt))
         {
-            return;
+            return 1;
+        }
+
+        return modifiers switch
+        {
+            KeyModifiers.None => 1,
+            KeyModifiers.Shift => 10,
+            KeyModifiers.Control => 10,
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Arrow-key nudge: the selected point, else the selected shape(s). False when nothing is selected.
+    /// </summary>
+    internal bool AdjustPosition(float xAdjust, float yAdjust)
+    {
+        // A selected point moves on its own (not while several shapes are selected)
+        if (ActivePoint is { } point && SelectedShapes.Count <= 1 && !IsDrawing)
+        {
+            SaveUndo("nudge");
+            point.X += xAdjust;
+            point.Y += yAdjust;
+            PointX = point.X;
+            PointY = point.Y;
+            UpdateSelectedPointName();
+            UpdateSelectionInfo();
+            Canvas?.InvalidateVisual();
+            return true;
+        }
+
+        List<DrawShape> shapes;
+        if (SelectedShapes.Count > 0)
+        {
+            // Multi-selection (Ctrl+A, SVG import, inserted library shapes)
+            shapes = SelectedShapes;
+        }
+        else if (SelectedTreeItem?.Shape != null)
+        {
+            shapes = [SelectedTreeItem.Shape];
+        }
+        else if (ActiveShape != null)
+        {
+            // Fall back to active shape (e.g. currently being drawn)
+            shapes = [ActiveShape];
+        }
+        else
+        {
+            return false;
         }
 
         // Holding an arrow key is one undo step, not one per repeat
         SaveUndo("nudge");
-
-        // Check if multiple shapes are selected (Ctrl+A scenario)
-        if (SelectedShapes.Count > 0)
+        foreach (var shape in shapes)
         {
-            foreach (var shape in SelectedShapes)
+            shape.Offset(xAdjust, yAdjust);
+        }
+
+        // Only the moved shapes' point labels change - no tree rebuild per key repeat
+        UpdatePointNames(shapes);
+        UpdateSelectionInfo();
+        Canvas?.InvalidateVisual();
+        return true;
+    }
+
+    private void UpdatePointNames(List<DrawShape> shapes)
+    {
+        var set = shapes.Count > 4 ? new HashSet<DrawShape>(shapes) : null;
+        foreach (var shapeItem in EnumerateShapeTreeItems())
+        {
+            if (shapeItem.Shape == null || !(set?.Contains(shapeItem.Shape) ?? shapes.Contains(shapeItem.Shape)))
             {
-                foreach (var point in shape.Points)
+                continue;
+            }
+
+            foreach (var pointItem in shapeItem.Children)
+            {
+                if (pointItem.Point is { } p)
                 {
-                    point.X += xAdjust;
-                    point.Y += yAdjust;
+                    pointItem.Name = p.GetText(p.X, p.Y);
                 }
             }
-            RefreshTreeView();
-            Canvas?.InvalidateVisual();
-            return;
+        }
+    }
+
+    /// <summary>
+    /// One step back in the selection (Esc): a selected point goes back to its shape, a selection is
+    /// cleared. False when nothing was selected.
+    /// </summary>
+    private bool ClearSelectionStep()
+    {
+        if (ActivePoint is { } point)
+        {
+            var shape = point.DrawShape ?? Shapes.FirstOrDefault(s => s.Points.Contains(point));
+            if (shape != null && Shapes.Contains(shape) && SelectedShapes.Count <= 1)
+            {
+                SelectShape(shape);
+            }
+
+            if (ActivePoint != null)
+            {
+                ActivePoint = null;
+                IsPointSelected = false;
+                Canvas?.InvalidateVisual();
+            }
+
+            return true;
         }
 
-        // Check if a shape is selected in the tree view
-        if (SelectedTreeItem?.Shape != null)
+        if (SelectedTreeItem != null || SelectedShapes.Count > 0 || (ActiveShape != null && Shapes.Contains(ActiveShape)))
         {
-            foreach (var point in SelectedTreeItem.Shape.Points)
-            {
-                point.X += xAdjust;
-                point.Y += yAdjust;
-            }
-            RefreshTreeView();
-            Canvas?.InvalidateVisual();
-            return;
+            ClearSelection();
+            return true;
         }
 
-        // Fall back to active shape (currently being drawn)
-        if (ActiveShape != null)
-        {
-            foreach (var point in ActiveShape.Points)
-            {
-                point.X += xAdjust;
-                point.Y += yAdjust;
-            }
-            RefreshTreeView();
-            Canvas?.InvalidateVisual();
-        }
+        return false;
     }
 
     partial void OnCanvasWidthChanged(int value)
@@ -2561,6 +4059,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         UndoCommand.NotifyCanExecuteChanged();
+        NotifyCommandStates();
     }
 
     partial void OnActivePointChanged(DrawCoordinate? value)
@@ -2577,6 +4076,9 @@ public partial class AssaDrawViewModel : ObservableObject
         {
             Canvas.SelectedShapes = value;
         }
+
+        NotifyCommandStates();
+        RefreshAnimationFields();
     }
 
     partial void OnPointXChanged(float value)
@@ -2624,17 +4126,14 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         // Find and update the tree item that contains this point
-        foreach (var layerItem in ShapeTreeItems)
+        foreach (var shapeItem in EnumerateShapeTreeItems())
         {
-            foreach (var shapeItem in layerItem.Children)
+            foreach (var pointItem in shapeItem.Children)
             {
-                foreach (var pointItem in shapeItem.Children)
+                if (pointItem.Point == ActivePoint)
                 {
-                    if (pointItem.Point == ActivePoint)
-                    {
-                        pointItem.Name = ActivePoint.GetText(ActivePoint.X, ActivePoint.Y);
-                        return;
-                    }
+                    pointItem.Name = ActivePoint.GetText(ActivePoint.X, ActivePoint.Y);
+                    return;
                 }
             }
         }
@@ -2674,6 +4173,10 @@ public partial class AssaDrawViewModel : ObservableObject
                 ShapeIsEraser = value.Shape.IsEraser;
                 SetLayerColorFromSelection(value.Shape.ForeColor);
             }
+            else if (value.IsGroup && ActiveShape != null && Shapes.Contains(ActiveShape))
+            {
+                ActiveShape = null;
+            }
         }
 
         // Update layer selection state
@@ -2681,11 +4184,21 @@ public partial class AssaDrawViewModel : ObservableObject
         IsShapeSelected = value?.Shape != null;
 
         // A tree pick ends a Ctrl+A selection - otherwise the arrow keys kept nudging every shape.
-        if (value != null)
+        // A group node is a selection of its own: all of its shapes.
+        if (value?.IsGroup == true)
+        {
+            var members = Shapes.Where(s => s.GroupId == value.GroupId).ToList();
+            SelectedShapes = members;
+            if (members.Count > 0)
+            {
+                SetLayerColorFromSelection(members[0].ForeColor);
+            }
+        }
+        else if (value != null)
         {
             SelectedShapes = [];
         }
-        
+
         if (value?.IsLayer == true)
         {
             // Get color from first shape in this layer
@@ -2703,6 +4216,7 @@ public partial class AssaDrawViewModel : ObservableObject
         }
 
         UpdateSelectionInfo();
+        NotifyCommandStates();
     }
 
     /// <summary>
@@ -2760,7 +4274,9 @@ public partial class AssaDrawViewModel : ObservableObject
 
         var shapes = item.IsLayer
             ? Shapes.Where(s => s.Layer == item.Layer).ToList()
-            : item.Shape != null ? [item.Shape] : [];
+            : item.IsGroup
+                ? Shapes.Where(s => s.GroupId == item.GroupId).ToList()
+                : item.Shape != null ? [item.Shape] : [];
         if (shapes.Count == 0)
         {
             return;
@@ -2855,6 +4371,7 @@ public partial class AssaDrawViewModel : ObservableObject
 
         Canvas?.InvalidateVisual();
         UpdateUndoState();
+        NotifyCommandStates();
     }
 
     private UndoState CaptureState()
@@ -2871,6 +4388,13 @@ public partial class AssaDrawViewModel : ObservableObject
         state.SelectedShapeIndex = selectedShape != null ? Shapes.IndexOf(selectedShape) : -1;
         state.SelectedPointIndex = item?.Point != null && selectedShape != null ? selectedShape.Points.IndexOf(item.Point) : -1;
         state.SelectedLayer = item?.IsLayer == true ? item.Layer : null;
+
+        // A group or multi-selection comes back too (undo of group/ungroup, a moved group)
+        if (SelectedShapes.Count > 1)
+        {
+            state.SelectedShapeIndexes = SelectedShapes.Select(s => Shapes.IndexOf(s)).Where(i => i >= 0).ToList();
+        }
+
         return state;
     }
 
@@ -2898,7 +4422,11 @@ public partial class AssaDrawViewModel : ObservableObject
 
         RefreshTreeView();
 
-        if (state.SelectedShapeIndex >= 0 && state.SelectedShapeIndex < Shapes.Count)
+        if (state.SelectedShapeIndexes is { Count: > 1 } indexes && indexes.All(i => i < Shapes.Count))
+        {
+            SetSelection(indexes.Select(i => Shapes[i]));
+        }
+        else if (state.SelectedShapeIndex >= 0 && state.SelectedShapeIndex < Shapes.Count)
         {
             var shape = Shapes[state.SelectedShapeIndex];
             if (state.SelectedPointIndex >= 0 && state.SelectedPointIndex < shape.Points.Count)
@@ -2934,7 +4462,8 @@ public partial class AssaDrawViewModel : ObservableObject
     [RelayCommand]
     private void SelectAllShapes()
     {
-        SelectedShapes = Shapes.ToList();
+        // Like the rubber band: hidden shapes can't be seen, so they aren't moved or deleted with the rest
+        SelectedShapes = Shapes.Where(s => !s.Hidden).ToList();
         Canvas?.InvalidateVisual();
     }
 
@@ -2943,6 +4472,7 @@ public partial class AssaDrawViewModel : ObservableObject
         UiUtil.SaveWindowPosition(Window);
 
         _previewTimer?.Stop();
+        StopAnimationPlayback();
         if (Canvas != null)
         {
             (Canvas.PreviewImage as IDisposable)?.Dispose();
@@ -2960,6 +4490,7 @@ internal sealed class UndoState
     public int SelectedShapeIndex { get; set; } = -1;
     public int SelectedPointIndex { get; set; } = -1;
     public int? SelectedLayer { get; set; }
+    public List<int>? SelectedShapeIndexes { get; set; }
 }
 
 /// <summary>
@@ -2980,8 +4511,25 @@ public partial class ShapeTreeItem : ObservableObject
     public DrawShape? Shape { get; set; }
     public DrawCoordinate? Point { get; set; }
 
+    /// <summary>
+    /// A group node: its children are the group's shapes.
+    /// </summary>
+    public bool IsGroup { get; set; }
+    public int GroupId { get; set; }
+
+    /// <summary>
+    /// A shape row's number within its layer, and whether its name starts with the layer (in a group spanning layers).
+    /// </summary>
+    public int ShapeNumber { get; set; }
+    public bool NameWithLayer { get; set; }
+
+    /// <summary>
+    /// Called when a group node is opened or closed, so a tree rebuild keeps it that way.
+    /// </summary>
+    public Action<bool>? ExpandedChanged { get; set; }
+
     public bool HasSwatch => IsLayer;
-    public bool CanToggleVisibility => IsLayer || Shape != null;
+    public bool CanToggleVisibility => IsLayer || IsGroup || Shape != null;
 
     partial void OnIsExpandedChanged(bool value)
     {
@@ -2990,6 +4538,8 @@ public partial class ShapeTreeItem : ObservableObject
         {
             Shape.Expanded = value;
         }
+
+        ExpandedChanged?.Invoke(value);
     }
 
     public override string ToString() => Name;

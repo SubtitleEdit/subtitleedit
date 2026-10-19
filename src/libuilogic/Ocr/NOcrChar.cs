@@ -328,25 +328,30 @@ public class NOcrChar
 
     public static void GenerateLineSegments(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap, NOcrLineAlgorithm algorithm)
     {
+        GenerateLineSegments(maxNumberOfLines, veryPrecise, nOcrChar, bitmap, algorithm, Random.Shared);
+    }
+
+    /// <param name="random">Source for the Random algorithm (also the fallback of the others for tiny glyphs); pass a seeded instance for reproducible lines.</param>
+    public static void GenerateLineSegments(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap, NOcrLineAlgorithm algorithm, Random random)
+    {
         switch (algorithm)
         {
             case NOcrLineAlgorithm.SkeletonDistance:
-                NOcrLineGenerator.GenerateSkeletonDistance(maxNumberOfLines, veryPrecise, nOcrChar, bitmap);
+                NOcrLineGenerator.GenerateSkeletonDistance(maxNumberOfLines, veryPrecise, nOcrChar, bitmap, random);
                 break;
             case NOcrLineAlgorithm.EdgeHough:
-                NOcrLineGenerator.GenerateEdgeHough(maxNumberOfLines, veryPrecise, nOcrChar, bitmap);
+                NOcrLineGenerator.GenerateEdgeHough(maxNumberOfLines, veryPrecise, nOcrChar, bitmap, random);
                 break;
             case NOcrLineAlgorithm.Random:
             default:
-                GenerateLineSegmentsRandom(maxNumberOfLines, veryPrecise, nOcrChar, bitmap);
+                GenerateLineSegmentsRandom(maxNumberOfLines, veryPrecise, nOcrChar, bitmap, random);
                 break;
         }
     }
 
-    internal static void GenerateLineSegmentsRandom(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap)
+    internal static void GenerateLineSegmentsRandom(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap, Random r)
     {
         const int giveUpCount = 15_000;
-        var r = Random.Shared;
 
         GenerateLines(
             maxNumberOfLines, veryPrecise, giveUpCount, nOcrChar, bitmap, r,

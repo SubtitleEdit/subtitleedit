@@ -104,4 +104,66 @@ public class AssaDrawCanvasUndoTests
             DrawSettings.ShowGrid = oldGrid;
         }
     }
+
+    private static void Drag(AssaDrawWindow window, AssaDrawCanvas canvas, float x1, float y1, float x2, float y2)
+    {
+        var start = ToWindow(window, canvas, x1, y1);
+        window.MouseMove(start);
+        window.MouseDown(start, MouseButton.Left);
+        window.MouseMove(ToWindow(window, canvas, (x1 + x2) / 2, (y1 + y2) / 2), RawInputModifiers.LeftMouseButton);
+        window.MouseMove(ToWindow(window, canvas, x2, y2), RawInputModifiers.LeftMouseButton);
+        window.MouseUp(ToWindow(window, canvas, x2, y2), MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+    }
+
+    [AvaloniaFact]
+    public void DragShape_WithSelectTool_MovesIt()
+    {
+        var oldGrid = DrawSettings.ShowGrid;
+        var (window, vm) = Open("{\\p1}m 400 400 l 800 400 800 800 400 800{\\p0}");
+        try
+        {
+            vm.SelectToolCommand.Execute(null);
+            Drag(window, vm.Canvas!, 600, 600, 700, 650);
+            Assert.Equal(500, vm.Shapes[0].GetBounds().Left, 0);
+
+            // Second drag, now that it is selected
+            Drag(window, vm.Canvas!, 700, 650, 800, 650);
+            Assert.Equal(600, vm.Shapes[0].GetBounds().Left, 0);
+        }
+        finally
+        {
+            window.Close();
+            DrawSettings.ShowGrid = oldGrid;
+        }
+    }
+
+    [AvaloniaFact]
+    public void DragBubbleWithText_AndTextBox_MovesThem()
+    {
+        var oldGrid = DrawSettings.ShowGrid;
+        var (window, vm) = Open(string.Empty);
+        try
+        {
+            vm.PickLibraryShapeCommand.Execute(ShapeLibrary.BuiltIn[0]);
+            Drag(window, vm.Canvas!, 400, 300, 1000, 800);
+            Assert.Single(vm.Shapes);
+            var left = vm.Shapes[0].GetBounds().Left;
+            vm.ShapeText = "Hello";
+            Dispatcher.UIThread.RunJobs();
+            Drag(window, vm.Canvas!, 700, 450, 800, 450);
+            Assert.Equal(left + 100, vm.Shapes[0].GetBounds().Left, 0);
+
+            vm.TextToolCommand.Execute(null);
+            Drag(window, vm.Canvas!, 100, 100, 500, 200);
+            Assert.Equal(2, vm.Shapes.Count);
+            Drag(window, vm.Canvas!, 300, 150, 300, 250);
+            Assert.Equal(200, vm.Shapes[1].GetBounds().Top, 0);
+        }
+        finally
+        {
+            window.Close();
+            DrawSettings.ShowGrid = oldGrid;
+        }
+    }
 }

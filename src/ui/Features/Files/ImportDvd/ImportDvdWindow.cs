@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -16,8 +16,14 @@ using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Files.ImportDvd;
 
+/// <summary>
+/// Subtitles from a DVD (IFO/VOB), in the editor look (see <see cref="EditorChrome"/>): the IFO
+/// file and title, the VOB files to rip, the video standard; progress and Start ripping at the bottom.
+/// </summary>
 public class ImportDvdWindow : Window
 {
+    private const double LabelWidth = 70;
+
     public ImportDvdWindow(ImportDvdViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -31,29 +37,42 @@ public class ImportDvdWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+
+        var vobFiles = MakeVobFilesView(vm);
+        vobFiles.Margin = new Thickness(14, 12, 14, 12);
+        var sections = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = GridLength.Auto }, // disc: IFO + title + info
-                new RowDefinition { Height = GridLength.Auto }, // VOB files label
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // VOB files
                 new RowDefinition { Height = GridLength.Auto }, // PAL/NTSC
-                new RowDefinition { Height = GridLength.Auto }, // progress
-                new RowDefinition { Height = GridLength.Auto }, // buttons
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 8,
         };
+        sections.Add(MakeDiscView(vm), 0);
+        sections.Add(new Border
+        {
+            Child = vobFiles,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+        }, 1);
+        sections.Add(MakeVideoStandardView(vm), 2);
 
-        grid.Add(MakeDiscView(vm), 0);
-        grid.Add(MakeHeader(IconNames.FileVideoOutline, Se.Language.File.Import.DvdVobFiles).WithMarginTop(4), 1);
-        grid.Add(MakeVobFilesView(vm), 2);
-        grid.Add(MakeVideoStandardView(vm), 3);
-        grid.Add(MakeProgressView(vm), 4);
-        grid.Add(MakeButtons(vm), 5);
+        var root = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = GridLength.Auto }, // progress, while ripping
+                new RowDefinition { Height = GridLength.Auto }, // status + buttons
+            },
+        };
+        root.Add(new Border { Background = EditorChrome.PanelBrush, Child = sections }, 0);
+        root.Add(MakeProgressView(vm), 1);
+        root.Add(MakeButtons(vm), 2);
 
-        Content = grid;
+        Content = root;
 
         // drop an IFO or VOB files anywhere on the window
         DragDrop.SetAllowDrop(this, true);
@@ -64,16 +83,6 @@ public class ImportDvdWindow : Window
 
     private static Border MakeDiscView(ImportDvdViewModel vm)
     {
-        var discIcon = new ContentControl
-        {
-            FontSize = 44,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(4, 2, 14, 0),
-            Opacity = 0.85,
-        };
-        Attached.SetIcon(discIcon, IconNames.Disc);
-
-        var labelIfo = UiUtil.MakeLabel(Se.Language.File.Import.DvdIfoFile).WithBold();
         var textBoxIfo = new TextBox
         {
             IsReadOnly = true,
@@ -81,11 +90,12 @@ public class ImportDvdWindow : Window
             [!TextBox.TextProperty] = new Binding(nameof(vm.IfoFileName)),
             PlaceholderText = "VIDEO_TS\\VTS_01_0.IFO",
         };
+        textBoxIfo.Classes.Add("text");
         AutomationProperties.SetName(textBoxIfo, Se.Language.File.Import.DvdIfoFile);
-        var buttonBrowse = UiUtil.MakeButton(vm.BrowseIfoCommand, IconNames.FolderOpen, Se.Language.File.Import.DvdOpenIfoFile)
+        var buttonBrowse = EditorChrome.CreateToolButton("fa-solid fa-folder-open", Se.Language.File.Import.DvdOpenIfoFile, vm.BrowseIfoCommand, 28)
             .BindIsEnabled(vm, nameof(vm.IsNotRipping));
 
-        var labelTitle = UiUtil.MakeLabel(Se.Language.General.Title).WithBold();
+        var labelTitle = EditorChrome.MakeDimLabel(Se.Language.General.Title, new Thickness(0));
         var comboBoxTitles = new ComboBox
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -98,11 +108,11 @@ public class ImportDvdWindow : Window
         labelTitle.BindIsVisible(vm, nameof(vm.HasTitles));
         comboBoxTitles.BindIsVisible(vm, nameof(vm.HasTitles));
 
-        var infoIcon = new ContentControl { Opacity = 0.6, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) };
-        Attached.SetIcon(infoIcon, IconNames.Information);
+        var infoIcon = new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-circle-info", FontSize = 12, Foreground = EditorChrome.FaintTextBrush, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) };
         var infoText = new TextBlock
         {
-            Opacity = 0.75,
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Info)),
@@ -118,7 +128,7 @@ public class ImportDvdWindow : Window
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = new GridLength(LabelWidth) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = GridLength.Auto },
             },
@@ -131,21 +141,13 @@ public class ImportDvdWindow : Window
             ColumnSpacing = 8,
             RowSpacing = 8,
         };
-        fields.Add(labelIfo, 0, 0);
-        fields.Add(textBoxIfo, 0, 1);
+        fields.Add(textBoxIfo, 0, 0, 1, 2); // the section header names it
         fields.Add(buttonBrowse, 0, 2);
         fields.Add(labelTitle, 1, 0);
         fields.Add(comboBoxTitles, 1, 1, 1, 2);
-        fields.Add(infoPanel, 2, 1, 1, 2);
+        fields.Add(infoPanel, 2, 0, 1, 3);
 
-        var panel = new DockPanel();
-        DockPanel.SetDock(discIcon, Dock.Left);
-        panel.Children.Add(discIcon);
-        panel.Children.Add(fields);
-
-        var border = UiUtil.MakeBorderForControl(panel);
-        border.Padding = new Thickness(10);
-        return border;
+        return EditorChrome.MakeEditorSection(Se.Language.File.Import.DvdIfoFile, fields, first: true);
     }
 
     private static Control MakeTitleItem()
@@ -159,7 +161,7 @@ public class ImportDvdWindow : Window
         duration.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Duration)) { Converter = new TimeSpanToDisplayShortConverter() });
 
         var chapters = new TextBlock { Opacity = 0.7, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 0, 0) };
-        chapters.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Chapters)) { StringFormat = "{0} " + Se.Language.File.Chapters.ToLowerInvariant() });
+        chapters.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Chapters)) { StringFormat = "{0} " + Se.Language.General.Chapters.ToLowerInvariant() });
 
         var status = new TextBlock { Foreground = Brushes.OrangeRed, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 0, 0) };
         status.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Status)));
@@ -171,18 +173,7 @@ public class ImportDvdWindow : Window
         };
     }
 
-    private static StackPanel MakeHeader(string iconName, string text)
-    {
-        var icon = new ContentControl { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) };
-        Attached.SetIcon(icon, iconName);
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { icon, UiUtil.MakeLabel(text).WithBold() },
-        };
-    }
-
-    private static Grid MakeVobFilesView(ImportDvdViewModel vm)
+    private static DockPanel MakeVobFilesView(ImportDvdViewModel vm)
     {
         var fileSizeConverter = new FileSizeConverter();
         var listBox = new ListBox
@@ -222,13 +213,14 @@ public class ImportDvdWindow : Window
             Spacing = 8,
             IsHitTestVisible = false,
         };
-        var hintIcon = new ContentControl { FontSize = 40, Opacity = 0.35, HorizontalAlignment = HorizontalAlignment.Center };
+        var hintIcon = new ContentControl { FontSize = 40, Foreground = EditorChrome.FaintTextBrush, HorizontalAlignment = HorizontalAlignment.Center };
         Attached.SetIcon(hintIcon, IconNames.Disc);
         hint.Children.Add(hintIcon);
         hint.Children.Add(new TextBlock
         {
             Text = Se.Language.File.Import.DvdDropHint,
-            Opacity = 0.55,
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = 12.5,
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Center,
             MaxWidth = 380,
@@ -239,35 +231,37 @@ public class ImportDvdWindow : Window
         listHost.Children.Add(listBox);
         listHost.Children.Add(hint);
 
+        Button Tool(string icon, string name, System.Windows.Input.ICommand command) =>
+            EditorChrome.CreateToolButton(icon, name, command, 28).BindIsEnabled(vm, nameof(vm.IsNotRipping));
+
         var buttons = new StackPanel
         {
-            Orientation = Orientation.Vertical,
-            Spacing = 6,
-            Margin = new Thickness(8, 0, 0, 0),
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                UiUtil.MakeButton(vm.AddVobCommand, IconNames.Plus, Se.Language.File.Import.DvdAddVobFiles).BindIsEnabled(vm, nameof(vm.IsNotRipping)),
-                UiUtil.MakeButton(vm.RemoveVobCommand, IconNames.Minus, Se.Language.General.Remove).BindIsEnabled(vm, nameof(vm.IsNotRipping)),
-                UiUtil.MakeButton(vm.MoveVobUpCommand, IconNames.ArrowUpThin, Se.Language.General.MoveUp).BindIsEnabled(vm, nameof(vm.IsNotRipping)),
-                UiUtil.MakeButton(vm.MoveVobDownCommand, IconNames.ArrowDownThin, Se.Language.General.MoveDown).BindIsEnabled(vm, nameof(vm.IsNotRipping)),
-                UiUtil.MakeButton(vm.ClearVobsCommand, IconNames.Trash, Se.Language.General.Clear).BindIsEnabled(vm, nameof(vm.IsNotRipping)),
+                Tool("fa-solid fa-plus", Se.Language.File.Import.DvdAddVobFiles, vm.AddVobCommand),
+                Tool("fa-solid fa-minus", Se.Language.General.Remove, vm.RemoveVobCommand),
+                Tool("fa-solid fa-arrow-up", Se.Language.General.MoveUp, vm.MoveVobUpCommand),
+                Tool("fa-solid fa-arrow-down", Se.Language.General.MoveDown, vm.MoveVobDownCommand),
+                Tool("fa-solid fa-trash", Se.Language.General.Clear, vm.ClearVobsCommand),
             },
         };
 
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-        };
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(listHost), 0, 0);
-        grid.Add(buttons, 0, 1);
-        return grid;
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 8), MinHeight = 28 };
+        DockPanel.SetDock(buttons, Dock.Right);
+        header.Children.Add(buttons);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.File.Import.DvdVobFiles));
+
+        var panel = new DockPanel();
+        DockPanel.SetDock(header, Dock.Top);
+        panel.Children.Add(header);
+        panel.Children.Add(EditorChrome.MakeListFrame(listHost, clearListBackground: true));
+        return panel;
     }
 
-    private static StackPanel MakeVideoStandardView(ImportDvdViewModel vm)
+    private static Border MakeVideoStandardView(ImportDvdViewModel vm)
     {
         var panel = new StackPanel
         {
@@ -275,10 +269,10 @@ public class ImportDvdWindow : Window
             Spacing = 14,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.File.Import.DvdVideoStandard).WithBold(),
                 new RadioButton
                 {
                     Content = "PAL (25 fps)",
+                    FontSize = 12.5,
                     GroupName = "DvdVideoStandard",
                     [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.IsPal)) { Mode = BindingMode.TwoWay },
                     [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsNotRipping)),
@@ -286,63 +280,68 @@ public class ImportDvdWindow : Window
                 new RadioButton
                 {
                     Content = "NTSC (29.97 fps)",
+                    FontSize = 12.5,
                     GroupName = "DvdVideoStandard",
                     [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.IsNtsc)) { Mode = BindingMode.TwoWay },
                     [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsNotRipping)),
                 },
             },
         };
-        return panel;
+        return EditorChrome.MakeEditorSection(Se.Language.File.Import.DvdVideoStandard, panel);
     }
 
-    private static Grid MakeProgressView(ImportDvdViewModel vm)
+    private static Border MakeProgressView(ImportDvdViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar(8);
+        progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.BindIsVisible(vm, nameof(vm.IsRipping));
 
-        var status = new TextBlock
-        {
-            Opacity = 0.8,
-            TextWrapping = TextWrapping.Wrap,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
-        };
+        var status = MakeStatusText(vm);
+        status.MaxWidth = 360;
 
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            RowSpacing = 4,
+            ColumnSpacing = 12,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
         };
-        grid.Add(progressBar, 0);
-        grid.Add(status, 1);
-        return grid;
+        grid.Add(progressBar, 0, 0);
+        grid.Add(status, 0, 1);
+
+        return new Border
+        {
+            Child = grid,
+            Background = EditorChrome.StatusBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 8),
+            [!Border.IsVisibleProperty] = new Binding(nameof(vm.IsRipping)),
+        };
     }
 
-    private static Grid MakeButtons(ImportDvdViewModel vm)
+    private static TextBlock MakeStatusText(ImportDvdViewModel vm) => new()
+    {
+        FontSize = 12,
+        Foreground = EditorChrome.DimTextBrush,
+        TextWrapping = TextWrapping.Wrap,
+        VerticalAlignment = VerticalAlignment.Center,
+        [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
+    };
+
+    private static Border MakeButtons(ImportDvdViewModel vm)
     {
         var buttonStart = UiUtil.MakeButton(Se.Language.File.Import.DvdStartRipping, vm.StartRippingCommand)
             .WithIconLeft(IconNames.PlayCircle)
-            .WithBold()
             .BindIsEnabled(vm, nameof(vm.CanRip))
             .WithBindIsVisible(vm, nameof(vm.IsNotRipping));
+        buttonStart.Classes.Add("primary");
         var buttonAbort = UiUtil.MakeButton(Se.Language.General.Abort, vm.AbortCommand)
             .WithIconLeft(IconNames.StopCircle)
             .WithBindIsVisible(vm, nameof(vm.IsRipping));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-        };
-        grid.Add(UiUtil.MakeButtonBar(buttonStart, buttonAbort, buttonCancel), 0, 1);
-        return grid;
+        // The result (or what went wrong) once ripping is done; while ripping it sits beside the progress bar
+        var status = MakeStatusText(vm);
+        status.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsNotRipping)));
+        return EditorChrome.MakeDockedButtonBar(status, buttonCancel, buttonAbort, buttonStart);
     }
 }

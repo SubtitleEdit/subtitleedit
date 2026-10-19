@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -12,6 +12,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
+/// <summary>
+/// Place a logo on a video frame, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class BurnInLogoWindow : Window
 {
     private readonly BurnInLogoViewModel _vm;
@@ -26,6 +29,8 @@ public class BurnInLogoWindow : Window
         Width = 1000;
         Height = 700;
 
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
+
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
@@ -34,84 +39,81 @@ public class BurnInLogoWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // toolbar
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // video
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 15,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        // Top panel with button to pick logo and position label
+        // Toolbar: pick the logo, its position, and the alpha and size sliders
         var topPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 10,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
         };
 
-        var buttonPickLogo = UiUtil.MakeButton(Se.Language.General.OpenImageFile + "...", vm.PickLogoCommand);
-        var labelLogoPosition = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.LogoPositionText));
+        var buttonPickLogo = EditorChrome.MakeActionButton("fa-solid fa-image", Se.Language.General.OpenImageFile + "...", vm.PickLogoCommand);
+        var labelLogoPosition = EditorChrome.MakeBoundHint(nameof(vm.LogoPositionText));
+        labelLogoPosition.FontSize = 12;
+        labelLogoPosition.MinWidth = 110;
+        labelLogoPosition.Margin = new Thickness(8, 0, 0, 0);
 
         // Alpha slider
-        var labelAlpha = UiUtil.MakeLabel(Se.Language.General.Alpha);
-        labelAlpha.VerticalAlignment = VerticalAlignment.Center;
-        labelAlpha.Margin = new Thickness(20, 0, 5, 0);
+        var labelAlpha = EditorChrome.MakeDimLabel(Se.Language.General.Alpha, new Thickness(0, 0, 8, 0));
 
         var sliderAlpha = new Slider
         {
             Minimum = 0,
             Maximum = 100,
-            Width = 150,
+            Width = 140,
             VerticalAlignment = VerticalAlignment.Center,
             [!Slider.ValueProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Alpha)}"),
         };
+        Avalonia.Automation.AutomationProperties.SetName(sliderAlpha, Se.Language.General.Alpha);
         sliderAlpha.ValueChanged += (_, _) => vm.UpdateOverlayOpacity();
 
         // TextBlock, not UiUtil.MakeLabel: a Label is a ContentControl, so a TextBlock.Text binding on it never shows
         var labelAlphaValue = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0, 0, 0),
-            MinWidth = 35,
+            Margin = new Thickness(6, 0, 0, 0),
+            MinWidth = 40,
+            FontSize = 12,
             [!TextBlock.TextProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Alpha)}") { StringFormat = "{0}%" },
         };
 
         // Logo size slider
-        var labelSize = UiUtil.MakeLabel(Se.Language.General.Size);
-        labelSize.VerticalAlignment = VerticalAlignment.Center;
-        labelSize.Margin = new Thickness(20, 0, 5, 0);
+        var labelSize = EditorChrome.MakeDimLabel(Se.Language.General.Size, new Thickness(0, 0, 8, 0));
 
         var sliderSize = new Slider
         {
             Minimum = 10,
             Maximum = 200,
-            Width = 150,
+            Width = 140,
             VerticalAlignment = VerticalAlignment.Center,
             [!Slider.ValueProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Size)}"),
         };
+        Avalonia.Automation.AutomationProperties.SetName(sliderSize, Se.Language.General.Size);
         sliderSize.ValueChanged += (_, _) => vm.UpdateLogoSize();
 
         // TextBlock, not UiUtil.MakeLabel: a Label is a ContentControl, so a TextBlock.Text binding on it never shows
         var labelSizeValue = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0, 0, 0),
-            MinWidth = 35,
+            Margin = new Thickness(6, 0, 0, 0),
+            MinWidth = 40,
+            FontSize = 12,
             [!TextBlock.TextProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Size)}") { StringFormat = "{0}%" },
         };
 
         topPanel.Children.Add(buttonPickLogo);
         topPanel.Children.Add(labelLogoPosition);
+        topPanel.Children.Add(EditorChrome.MakeToolbarSeparator());
         topPanel.Children.Add(labelAlpha);
         topPanel.Children.Add(sliderAlpha);
         topPanel.Children.Add(labelAlphaValue);
+        topPanel.Children.Add(EditorChrome.MakeToolbarSeparator());
         topPanel.Children.Add(labelSize);
         topPanel.Children.Add(sliderSize);
         topPanel.Children.Add(labelSizeValue);
@@ -229,18 +231,30 @@ public class BurnInLogoWindow : Window
             }
         };
 
-        // Instructions label
-        var instructionsLabel = UiUtil.MakeLabel(Se.Language.Video.BurnIn.LogoInfo);
+        // Instructions in the button bar
+        var instructionsLabel = new TextBlock
+        {
+            Text = Se.Language.Video.BurnIn.LogoInfo,
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            TextWrapping = TextWrapping.Wrap,
+        };
 
         // Buttons
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = EditorChrome.MakeButtonBar(instructionsLabel, buttonCancel, buttonOk);
 
-        grid.Add(topPanel, 0);
-        grid.Add(videoGrid, 1);
-        grid.Add(instructionsLabel, 2);
-        grid.Add(panelButtons, 3);
+        // The player in a plain border - no corner radius or clipping, the macOS native video
+        // surface disappears inside either
+        grid.Add(EditorChrome.MakeToolbar(topPanel), 0);
+        grid.Add(new Border
+        {
+            Child = EditorChrome.MakeVideoFrame(videoGrid),
+            Padding = new Thickness(12),
+        }, 1);
+        grid.Add(panelButtons, 2);
 
         Content = grid;
 

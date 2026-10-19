@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -23,51 +24,37 @@ public class PickLayerFilterWindow : Window
         Height = 700;
         MinWidth = 500;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
-
         var settingsView = MakeSettings(vm);
 
-        var fontsView = MakeLayersView(vm);
+        // Check all / invert on the list header, like the other check lists
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, vm.SelectAllCommand, 26));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-right-left", Se.Language.General.InvertSelection, vm.InvertSelectionCommand, 26));
+        var layersView = EditorChrome.MakePickerListSection(Se.Language.General.Layer, MakeLayersView(vm), actions, lineOnTop: true);
 
-        var buttonRemoveFilter = UiUtil.MakeButton(Se.Language.General.RemoveFilter, vm.RemoveFilterCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonRemoveFilter, buttonOk, buttonCancel);
-
-        var buttonSelectAll = UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand);
-        var buttonInverseSelection = UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand);
-        var panelButtonTools = UiUtil.MakeHorizontalPanel(buttonSelectAll, buttonInverseSelection);
-
-        var grid = new Grid
+        var sections = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        sections.Add(settingsView, 0);
+        sections.Add(layersView, 1);
 
-        grid.Add(settingsView, 0);
-        grid.Add(fontsView, 1);
-        grid.Add(panelButtonTools, 2);
-        grid.Add(buttonPanel, 2);
+        var buttonRemoveFilter = EditorChrome.MakeTextToolButton("fa-solid fa-filter-circle-xmark", Se.Language.General.RemoveFilter, vm.RemoveFilterCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(buttonRemoveFilter, buttonCancel, buttonOk));
 
-        Loaded += delegate 
-        { 
+        Loaded += delegate
+        {
             buttonOk.Focus();
             vm.Loaded();
         }; // hack to make OnKeyDown work
@@ -76,26 +63,22 @@ public class PickLayerFilterWindow : Window
 
     private static Border MakeSettings(PickLayerFilterViewModel vm)
     {
-        var checkBoxHideFromWaveform = UiUtil.MakeCheckBox(Se.Language.Tools.FilterLayersHideFromWaveform, vm, nameof(vm.HideFromWaveform));
-        var checkBoxHideFromGridView = UiUtil.MakeCheckBox(Se.Language.Tools.FilterLayersHideFromSubtitleGrid, vm, nameof(vm.HideFromGridView));
-        var checkBoxHideFromVideoPreview = UiUtil.MakeCheckBox(Se.Language.Tools.FilterLayersHideFromVideoPreview, vm, nameof(vm.HideFromVideoPreview));
-
         var panel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 5,
+            Spacing = 8,
             Children =
             {
-                checkBoxHideFromWaveform,
-                checkBoxHideFromGridView,
-                checkBoxHideFromVideoPreview,
+                EditorChrome.MakeSwitchRow(nameof(vm.HideFromWaveform), Se.Language.Tools.FilterLayersHideFromWaveform),
+                EditorChrome.MakeSwitchRow(nameof(vm.HideFromGridView), Se.Language.Tools.FilterLayersHideFromSubtitleGrid),
+                EditorChrome.MakeSwitchRow(nameof(vm.HideFromVideoPreview), Se.Language.Tools.FilterLayersHideFromVideoPreview),
             }
         };
 
-        return UiUtil.MakeBorderForControl(panel);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, panel, first: true);
     }
 
-    private static Border MakeLayersView(PickLayerFilterViewModel vm)
+    private static TableView MakeLayersView(PickLayerFilterViewModel vm)
     {
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         dataGrid.Width = double.NaN;
@@ -175,6 +158,7 @@ public class PickLayerFilterWindow : Window
             .AddSortable<LayerItem, int>(layerColumn, x => x.Layer)
             .AddSortable<LayerItem, int>(usagesColumn, x => x.UsageCount);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        AutomationProperties.SetName(dataGrid, Se.Language.General.Layer);
+        return dataGrid;
     }
 }

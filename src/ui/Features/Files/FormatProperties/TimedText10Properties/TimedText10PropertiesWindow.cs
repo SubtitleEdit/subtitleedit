@@ -1,170 +1,62 @@
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
 
+/// <summary>
+/// Timed Text 1.0 properties in the editor look (see <see cref="FormatPropertiesChrome"/>).
+/// </summary>
 public class TimedText10PropertiesWindow : Window
 {
+    private const double FieldWidth = 260;
+
     public TimedText10PropertiesWindow(TimedText10PropertiesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = string.Format(Se.Language.File.XProperties, "Timed Text 1.0");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        MinWidth = 500;
-        MinHeight = 200;
+        MinWidth = 480;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
-        var labelWidth = 200;
+        var textBoxTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Title)), Se.Language.General.Title);
+        var textBoxDescription = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Description)), Se.Language.General.Description);
+        var textBoxLanguage = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedLanguage)), Se.Language.General.Language);
+        var general = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(Se.Language.General.Title, textBoxTitle),
+            FormatPropertiesChrome.Row(Se.Language.General.Description, textBoxDescription),
+            FormatPropertiesChrome.Row(Se.Language.General.Language, textBoxLanguage));
 
-        var labelTitle = UiUtil.MakeLabel(Se.Language.General.Title).WithMinWidth(labelWidth);
-        var textBoxTitle = UiUtil.MakeTextBox(263, vm, nameof(vm.Title));
-        var panelTitle = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelTitle, textBoxTitle },
-        };
+        var comboBoxTimeBase = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeBases, vm, nameof(vm.SelectedTimeBase)), Se.Language.File.PropertyTimeBase, FieldWidth);
+        var textBoxFrameRate = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRate)), Se.Language.General.FrameRate);
+        var textBoxFrameRateMultiplier = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.SelectedFrameRateMultiplier)), Se.Language.File.PropertyFrameRateMultiplier);
+        var comboBoxDropMode = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.DropModes, vm, nameof(vm.SelectedDropMode)), Se.Language.File.PropertyDropMode, FieldWidth);
+        var comboBoxTimeCodeFormat = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)), Se.Language.General.TimeCodeFormat, FieldWidth);
+        var timing = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(Se.Language.File.PropertyTimeBase, comboBoxTimeBase),
+            FormatPropertiesChrome.Row(Se.Language.General.FrameRate, textBoxFrameRate),
+            FormatPropertiesChrome.Row(Se.Language.File.PropertyFrameRateMultiplier, textBoxFrameRateMultiplier),
+            FormatPropertiesChrome.Row(Se.Language.File.PropertyDropMode, comboBoxDropMode),
+            FormatPropertiesChrome.Row(Se.Language.General.TimeCodeFormat, comboBoxTimeCodeFormat));
 
-        var labelDescription = UiUtil.MakeLabel(Se.Language.General.Description).WithMinWidth(labelWidth);
-        var textBoxDescription = UiUtil.MakeTextBox(263, vm, nameof(vm.Description));
-        var panelDescription = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelDescription, textBoxDescription },
-        };
+        var comboBoxDefaultStyle = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox<string>(vm.DefaultStyles, vm, nameof(vm.SelectedDefaultStyle)), Se.Language.File.PropertyDefaultStyle, FieldWidth);
+        var comboBoxDefaultRegion = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.DefaultRegions, vm, nameof(vm.SelectedDefaultRegion)), Se.Language.File.PropertyDefaultRegion, FieldWidth);
+        var comboBoxFileExtension = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.FileExtensions, vm, nameof(vm.SelectedFileExtension)), Se.Language.General.FileExtension, FieldWidth);
+        var style = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(Se.Language.File.PropertyDefaultStyle, comboBoxDefaultStyle),
+            FormatPropertiesChrome.Row(Se.Language.File.PropertyDefaultRegion, comboBoxDefaultRegion),
+            FormatPropertiesChrome.Row(Se.Language.General.FileExtension, comboBoxFileExtension));
 
-        var labelLanguage = UiUtil.MakeLabel(Se.Language.General.Language).WithMinWidth(labelWidth);
-        var textBoxLanguage = UiUtil.MakeTextBox(263, vm, nameof(vm.SelectedLanguage));
-        var panelLanguage = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelLanguage, textBoxLanguage },
-        };
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
-        var labelTimeBase = UiUtil.MakeLabel(Se.Language.File.PropertyTimeBase).WithMinWidth(labelWidth);
-        var comboBoxTimeBase = UiUtil.MakeComboBox(vm.TimeBases, vm, nameof(vm.SelectedTimeBase)).WithMinWidth(263);
-        var panelTimeBase = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelTimeBase, comboBoxTimeBase },
-        };
-
-        var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate).WithMinWidth(labelWidth);
-        var textBoxFrameRate = UiUtil.MakeTextBox(263, vm, nameof(vm.SelectedFrameRate));
-        var panelFrameRate = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelFrameRate, textBoxFrameRate },
-        };
-
-        var labelFrameRateMultiplier = UiUtil.MakeLabel(Se.Language.File.PropertyFrameRateMultiplier).WithMinWidth(labelWidth);
-        var textBoxFrameRateMultiplier = UiUtil.MakeTextBox(263, vm, nameof(vm.SelectedFrameRateMultiplier));
-        var panelFrameRateMultiplier = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelFrameRateMultiplier, textBoxFrameRateMultiplier },
-        };
-
-        var labelDropMode = UiUtil.MakeLabel(Se.Language.File.PropertyDropMode).WithMinWidth(labelWidth);
-        var comboBoxDropMode = UiUtil.MakeComboBox(vm.DropModes, vm, nameof(vm.SelectedDropMode)).WithMinWidth(263);
-        var panelDropMode = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelDropMode, comboBoxDropMode },
-        };
-
-        var labelDefaultStyle = UiUtil.MakeLabel(Se.Language.File.PropertyDefaultStyle).WithMinWidth(labelWidth);
-        var comboBoxDefaultStyle = UiUtil.MakeComboBox<string>(vm.DefaultStyles, vm, nameof(vm.SelectedDefaultStyle)).WithMinWidth(263);
-        var panelDefaultStyle = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelDefaultStyle, comboBoxDefaultStyle },
-        };
-
-        var labelDefaultRegion = UiUtil.MakeLabel(Se.Language.File.PropertyDefaultRegion).WithMinWidth(labelWidth);
-        var comboBoxDefaultRegion = UiUtil.MakeComboBox(vm.DefaultRegions, vm, nameof(vm.SelectedDefaultRegion)).WithMinWidth(263);
-        var panelDefaultRegion = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelDefaultRegion, comboBoxDefaultRegion },
-        };
-
-        var labelTimeCodeFormat = UiUtil.MakeLabel(Se.Language.File.PropertyTimeCodeFormat).WithMinWidth(labelWidth);
-        var comboBoxTimeCodeFormat = UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)).WithMinWidth(263);
-        var panelTimeCodeFormat = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelTimeCodeFormat, comboBoxTimeCodeFormat },
-        };
-
-        var labelFileExtension = UiUtil.MakeLabel(Se.Language.General.FileExtension).WithMinWidth(labelWidth);
-        var comboBoxFileExtension = UiUtil.MakeComboBox(vm.FileExtensions, vm, nameof(vm.SelectedFileExtension)).WithMinWidth(263);
-        var panelFileExtension = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { labelFileExtension, comboBoxFileExtension },
-        };
-
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelTitle, 0);
-        grid.Add(panelDescription, 1);
-        grid.Add(panelLanguage, 2);
-        grid.Add(panelTimeBase, 3);
-        grid.Add(panelFrameRate, 4);
-        grid.Add(panelFrameRateMultiplier, 5);
-        grid.Add(panelDropMode, 6);
-        grid.Add(panelDefaultStyle, 7);
-        grid.Add(panelDefaultRegion, 8);
-        grid.Add(panelTimeCodeFormat, 9);
-        grid.Add(panelFileExtension, 10);
-        grid.Add(buttonPanel, 11);
-
-        Content = grid;
+        Content = FormatPropertiesChrome.MakeRoot(
+            buttonBar,
+            EditorChrome.MakeEditorSection(Se.Language.General.General, general, first: true),
+            EditorChrome.MakeEditorSection(Se.Language.General.Timing, timing),
+            EditorChrome.MakeEditorSection(Se.Language.General.Style, style));
 
         UiUtil.FocusOnFirstActivation(this, textBoxTitle); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

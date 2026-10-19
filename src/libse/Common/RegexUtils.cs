@@ -299,11 +299,167 @@ namespace Nikse.SubtitleEdit.Core.Common
             // unchanged through the SplitToLines+Join normalization, so skip the four allocations.
             if (!ContainsNonLineFeedNewLine(text) && !ContainsNonLineFeedNewLine(replaceWith))
             {
-                return RestorePlatformNewLines(regularExpression.Replace(text, replaceWith, count, startIndex));
+                return RestorePlatformNewLines(Replace(regularExpression, text, replaceWith, count, startIndex));
             }
 
-            text = regularExpression.Replace(string.Join("\n", text.SplitToLines()), replaceWith, count, startIndex);
+            text = Replace(regularExpression, string.Join("\n", text.SplitToLines()), replaceWith, count, startIndex);
             return RestorePlatformNewLines(text);
+        }
+
+        private static string Replace(Regex regularExpression, string text, string replaceWith, int count, int startIndex)
+        {
+            var parts = ParseCaseConversionReplacement(replaceWith);
+            if (parts == null)
+            {
+                return regularExpression.Replace(text, replaceWith, count, startIndex);
+            }
+
+            return regularExpression.Replace(text, m => ApplyCaseConversion(m, parts), count, startIndex);
+        }
+
+        private enum CaseConversion
+        {
+            None,
+            UpperNext,
+            LowerNext,
+            Upper,
+            Lower,
+            End,
+        }
+
+        private readonly struct ReplacementPart
+        {
+            public ReplacementPart(string text, CaseConversion conversion)
+            {
+                Text = text;
+                Conversion = conversion;
+            }
+
+            public string Text { get; }
+            public CaseConversion Conversion { get; }
+        }
+
+        /// <summary>
+        /// Splits a replacement on the Perl-style case conversion escapes \u, \l (next character to
+        /// upper/lower case), \U, \L (upper/lower case until \E or the end) and \E (#16033), so a
+        /// rule like "^Um,\s*(\w)" -> "\u$1" can capitalize the word left at the start. "\\u" keeps
+        /// a literal "\u". Returns null when the replacement has none of them - plain .NET replace.
+        /// </summary>
+        private static List<ReplacementPart> ParseCaseConversionReplacement(string replaceWith)
+        {
+            if (string.IsNullOrEmpty(replaceWith) || replaceWith.IndexOf('\\') < 0)
+            {
+                return null;
+            }
+
+            List<ReplacementPart> parts = null;
+            var sb = new System.Text.StringBuilder();
+            for (var i = 0; i < replaceWith.Length; i++)
+            {
+                var ch = replaceWith[i];
+                if (ch != '\\' || i + 1 >= replaceWith.Length)
+                {
+                    sb.Append(ch);
+                    continue;
+                }
+
+                var next = replaceWith[i + 1];
+                if (next == '\\' && i + 2 < replaceWith.Length && GetCaseConversion(replaceWith[i + 2]) != CaseConversion.None)
+                {
+                    // "\\u" is an escaped backslash followed by a plain "u".
+                    sb.Append('\\').Append(replaceWith[i + 2]);
+                    i += 2;
+                    parts = parts ?? new List<ReplacementPart>();
+                    continue;
+                }
+
+                var conversion = GetCaseConversion(next);
+                if (conversion == CaseConversion.None ||
+                    conversion != CaseConversion.End && i + 2 < replaceWith.Length && char.IsDigit(replaceWith[i + 2]))
+                {
+                    // A digit after \u, \l, \U or \L is an ASSA tag like {\u1} (underline), not a case escape.
+                    sb.Append(ch);
+                    continue;
+                }
+
+                parts = parts ?? new List<ReplacementPart>();
+                parts.Add(new ReplacementPart(sb.ToString(), conversion));
+                sb.Clear();
+                i++;
+            }
+
+            if (parts == null)
+            {
+                return null;
+            }
+
+            parts.Add(new ReplacementPart(sb.ToString(), CaseConversion.None));
+            return parts;
+        }
+
+        private static CaseConversion GetCaseConversion(char ch)
+        {
+            switch (ch)
+            {
+                case 'u': return CaseConversion.UpperNext;
+                case 'l': return CaseConversion.LowerNext;
+                case 'U': return CaseConversion.Upper;
+                case 'L': return CaseConversion.Lower;
+                case 'E': return CaseConversion.End;
+                default: return CaseConversion.None;
+            }
+        }
+
+        /// <summary>
+        /// Builds one match's replacement: each part's text is expanded with <see cref="Match.Result"/>
+        /// (so $1 etc. work), then cased by the \U/\L mode in effect, then the first character after a
+        /// \u/\l gets that one-shot conversion - so "\u\L$1" gives "Word" like in Perl.
+        /// </summary>
+        private static string ApplyCaseConversion(Match match, List<ReplacementPart> parts)
+        {
+            var sb = new System.Text.StringBuilder();
+            var mode = CaseConversion.None;
+            var oneShot = CaseConversion.None;
+            foreach (var part in parts)
+            {
+                var expanded = part.Text.Length == 0 ? string.Empty : match.Result(part.Text);
+                if (mode == CaseConversion.Upper)
+                {
+                    expanded = expanded.ToUpperInvariant();
+                }
+                else if (mode == CaseConversion.Lower)
+                {
+                    expanded = expanded.ToLowerInvariant();
+                }
+
+                if (oneShot != CaseConversion.None && expanded.Length > 0)
+                {
+                    var first = oneShot == CaseConversion.UpperNext
+                        ? char.ToUpperInvariant(expanded[0])
+                        : char.ToLowerInvariant(expanded[0]);
+                    expanded = first + expanded.Substring(1);
+                    oneShot = CaseConversion.None;
+                }
+
+                sb.Append(expanded);
+
+                switch (part.Conversion)
+                {
+                    case CaseConversion.UpperNext:
+                    case CaseConversion.LowerNext:
+                        oneShot = part.Conversion;
+                        break;
+                    case CaseConversion.Upper:
+                    case CaseConversion.Lower:
+                        mode = part.Conversion;
+                        break;
+                    case CaseConversion.End:
+                        mode = CaseConversion.None;
+                        break;
+                }
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>
@@ -335,7 +491,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static bool ContainsNonLineFeedNewLine(string text)
         {
-            return text.IndexOf('\r') >= 0 || text.IndexOf('\u2028') >= 0;
+            return text.Contains('\r') || text.Contains('\u2028');
         }
     }
 }

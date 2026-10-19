@@ -1,6 +1,7 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -8,13 +9,18 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 
+/// <summary>
+/// Add a character to the binary image compare database, in the editor look (see
+/// <see cref="EditorChrome"/>): the whole line image on top, the current letter image with its
+/// text below, Abort/Skip/Use once/OK in the button bar.
+/// </summary>
 public class BinaryOcrCharacterAddWindow : Window
 {
     public BinaryOcrCharacterAddWindow(BinaryOcrCharacterAddViewModel vm)
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Bind(Window.TitleProperty, new Binding(nameof(vm.Title)));   
+        Bind(Window.TitleProperty, new Binding(nameof(vm.Title)));
         Title = string.Empty;
         Width = 1200;
         Height = 700;
@@ -22,26 +28,8 @@ public class BinaryOcrCharacterAddWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         DataContext = vm;
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Whole image for subtitle
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Controls
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            Height = double.NaN,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
-        };
 
         var image = new Image
         {
@@ -52,28 +40,30 @@ public class BinaryOcrCharacterAddWindow : Window
 
         // subtitle bitmaps are light or dark text on transparent pixels, so without a backdrop they
         // vanish into the window - white text on the light theme (#15111)
-        var imageBackdrop = new Border
+        var imageBackdrop = BinaryOcrChrome.MakeImageFrame(image, ImagePreviewBackground.CreateBrush());
+        imageBackdrop.HorizontalAlignment = HorizontalAlignment.Center;
+
+        var body = new Grid
         {
-            Background = ImagePreviewBackground.CreateBrush(),
-            Child = image,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 10),
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Whole image for subtitle
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Controls
+            },
         };
+        body.Add(EditorChrome.MakeEditorSection(Se.Language.Ocr.OcrImage, imageBackdrop, first: true), 0, 0);
+        body.Add(MakeControlsView(vm), 1, 0);
 
-        var controlsView = MakeControlsView(vm);
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonInspectAdditions = EditorChrome.MakeTextToolButton(IconNames.History, Se.Language.General.InspectAdditions, vm.InspectAdditionsCommand)
+            .WithBindIsVisible(nameof(vm.IsInspectAdditionsVisible));
+        buttonInspectAdditions.HorizontalAlignment = HorizontalAlignment.Left;
+        var buttonUseOnce = EditorChrome.WithoutMargin(UiUtil.MakeButton(Se.Language.General.UseOnce, vm.UseOnceCommand).WithBindIsVisible(nameof(vm.ShowUseOnce)));
+        var buttonSkip = EditorChrome.WithoutMargin(UiUtil.MakeButton(Se.Language.General.Skip, vm.SkipCommand).WithBindIsVisible(nameof(vm.ShowSkip)));
+        var buttonAbort = EditorChrome.WithoutMargin(UiUtil.MakeButton(Se.Language.General.Abort, vm.AbortCommand));
+        var buttonBar = EditorChrome.MakeDockedButtonBar(buttonInspectAdditions, buttonAbort, buttonSkip, buttonUseOnce, buttonOk);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonInspectAdditions = UiUtil.MakeButton(Se.Language.General.InspectAdditions, vm.InspectAdditionsCommand).WithBindIsVisible(nameof(vm.IsInspectAdditionsVisible));
-        var buttonUseOnce = UiUtil.MakeButton(Se.Language.General.UseOnce, vm.UseOnceCommand).WithBindIsVisible(nameof(vm.ShowUseOnce));
-        var buttonSkip = UiUtil.MakeButton(Se.Language.General.Skip, vm.SkipCommand).WithBindIsVisible(nameof(vm.ShowSkip));
-        var buttonAbort = UiUtil.MakeButton(Se.Language.General.Abort, vm.AbortCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk, buttonInspectAdditions, buttonUseOnce, buttonSkip, buttonAbort);
-
-        grid.Add(imageBackdrop, 0, 0);
-        grid.Add(controlsView, 1, 0);
-        grid.Add(buttonBar, 2, 0);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(body, buttonBar);
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
         vm.TextBoxNew.KeyUp += vm.TextBoxNewOnKeyUp;
@@ -81,7 +71,7 @@ public class BinaryOcrCharacterAddWindow : Window
         vm.TextBoxNew.Bind(TextBox.FontStyleProperty, new Binding(nameof(vm.IsNewTextItalic)) { Converter = new BoolToFontStyleConverter() });
 
         var menuFlyout = new MenuFlyout();
-        CharactersFlyoutMenuHelper.MakeFlyoutLetters(menuFlyout, vm.InsertSpecialCharacterCommand); 
+        CharactersFlyoutMenuHelper.MakeFlyoutLetters(menuFlyout, vm.InsertSpecialCharacterCommand);
         vm.TextBoxNew.ContextFlyout = menuFlyout;
 
         UiUtil.FocusOnFirstActivation(this, () =>
@@ -94,80 +84,57 @@ public class BinaryOcrCharacterAddWindow : Window
         KeyUp += (_, args) => vm.KeyUp(args);
     }
 
-    private static Grid MakeControlsView(BinaryOcrCharacterAddViewModel vm)
+    private static Control MakeControlsView(BinaryOcrCharacterAddViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 20,
-            Width = double.NaN,
-        };
-
-        vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)).WithAccessibleName(Se.Language.General.Text);
+        vm.TextBoxNew = BinaryOcrChrome.AsField(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText))).WithAccessibleName(Se.Language.General.Text);
+        vm.TextBoxNew.Width = 220;
+        vm.TextBoxNew.HorizontalAlignment = HorizontalAlignment.Left;
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
+
         var image = new Image
         {
-            Margin = new Thickness(5),
             Stretch = Stretch.Uniform,
             MinWidth = 30,
+            StretchDirection = StretchDirection.DownOnly, // natural size, as in the old auto-sized column
             MinHeight = 30,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
         };
         image.Bind(Image.SourceProperty, new Binding(nameof(vm.CurrentBitmap)));
+        var panelCurrentImage = BinaryOcrChrome.MakeImageFrame(image, ImagePreviewBackground.CreateBrush());
+        panelCurrentImage.HorizontalAlignment = HorizontalAlignment.Left;
 
+        var switchItalic = EditorChrome.MakeSwitch(nameof(vm.IsNewTextItalic), Se.Language.General.Italic);
+        switchItalic.IsCheckedChanged += vm.ItalicCheckChanged;
 
-        var panelCurrentImage = new StackPanel
-        {
-            Background = ImagePreviewBackground.CreateBrush(),
-            Children = { image },
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            Margin = new Thickness(5, 2, 0, 5),
-        };
-
-        var checkBoxItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.IsNewTextItalic));
-        checkBoxItalic.IsCheckedChanged += vm.ItalicCheckChanged;
-
-        var checkBoAutoSubmitFirsChar = UiUtil.MakeCheckBox(Se.Language.Ocr.AutoSubmitFirstCharacter, vm, nameof(vm.SubmitOnFirstLetter));
+        var switchAutoSubmitFirstChar = EditorChrome.MakeSwitch(nameof(vm.SubmitOnFirstLetter), Se.Language.Ocr.AutoSubmitFirstCharacter);
 
         var panelCurrent = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
+            Spacing = 8,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Ocr.CurrentImage).WithBold(),
-                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ResolutionAndTopMargin)),
+                BinaryOcrChrome.MakeInfo(nameof(vm.ResolutionAndTopMargin)),
                 panelCurrentImage,
                 vm.TextBoxNew,
-                checkBoxItalic,
-                checkBoAutoSubmitFirsChar,
+                BinaryOcrChrome.MakeSwitchRow(switchItalic, Se.Language.General.Italic),
+                BinaryOcrChrome.MakeSwitchRow(switchAutoSubmitFirstChar, Se.Language.Ocr.AutoSubmitFirstCharacter),
             },
         };
 
-        var buttonShrink = UiUtil.MakeButton(Se.Language.General.Shrink, vm.ShrinkCommand)
-            .WithMinWidth(100).WithBindEnabled(nameof(vm.CanShrink));
-        var buttonExpand = UiUtil.MakeButton(Se.Language.General.Expand, vm.ExpandCommand)
-            .WithMinWidth(100).WithBindEnabled(nameof(vm.CanExpand));
+        // Shrink/expand the letter selection - in the section header, right
+        var buttonShrink = EditorChrome.MakeTextToolButton(IconNames.Minus, Se.Language.General.Shrink, vm.ShrinkCommand)
+            .WithBindEnabled(nameof(vm.CanShrink));
+        var buttonExpand = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.Expand, vm.ExpandCommand)
+            .WithBindEnabled(nameof(vm.CanExpand));
         var panelButtons = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
-            Width = double.NaN,
-            Margin = new Thickness(0, 0, 0, 5),
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
                 buttonShrink,
@@ -175,9 +142,7 @@ public class BinaryOcrCharacterAddWindow : Window
             },
         };
 
-        grid.Add(panelCurrent, 0, 0);
-        grid.Add(panelButtons, 0, 1);
-
-        return grid;
+        var section = EditorChrome.MakeEditorSection(Se.Language.Ocr.CurrentImage, panelCurrent, panelButtons);
+        return new ScrollViewer { Content = section };
     }
 }

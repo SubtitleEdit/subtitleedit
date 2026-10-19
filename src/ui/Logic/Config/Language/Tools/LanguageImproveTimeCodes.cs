@@ -30,7 +30,6 @@ public class LanguageImproveTimeCodes
     public string ShowSpeechOnly { get; set; }
     public string ShowSpeechOnlyHint { get; set; }
     public string Align { get; set; }
-    public string Original { get; set; }
     public string Aligned { get; set; }
     public string Intro { get; set; }
     public string ExtractingAudio { get; set; }
@@ -42,9 +41,6 @@ public class LanguageImproveTimeCodes
     public string ToCheckX { get; set; }
     public string LargeMovesToCheckX { get; set; }
     public string LinesToCheckX { get; set; }
-    public string ChangeXOfY { get; set; }
-    public string PreviousChange { get; set; }
-    public string NextChange { get; set; }
     public string StartShift { get; set; }
     public string EndShift { get; set; }
     public string StatusRetimed { get; set; }
@@ -56,12 +52,10 @@ public class LanguageImproveTimeCodes
     public string StatusFailed { get; set; }
     public string StatusAdjustedByHand { get; set; }
     public string AlignedWaveformHint { get; set; }
-    public string PlayLine { get; set; }
     public string UndoAdjustment { get; set; }
     public string PlayPause { get; set; }
     public string PlayAligned { get; set; }
     public string PlayAlignedHint { get; set; }
-    public string Apply { get; set; }
     public string ApplyHint { get; set; }
 
     public LanguageImproveTimeCodes()
@@ -94,7 +88,6 @@ public class LanguageImproveTimeCodes
         ShowSpeechOnly = "Show speech only";
         ShowSpeechOnlyHint = "Draw the aligned waveform from the audio with music and sound effects removed; the original waveform stays as it is, for comparison. Available once the speech has been isolated - here, or with \"Show speech only\" in the main window's waveform.";
         Align = "Align";
-        Original = "Original";
         Aligned = "Aligned";
         Intro = "Pick an aligner and press \"Align\" to listen for every line in the audio and tighten its time codes.";
         ExtractingAudio = "Extracting audio...";
@@ -106,9 +99,6 @@ public class LanguageImproveTimeCodes
         ToCheckX = "To check: {0}";
         LargeMovesToCheckX = "{0} line(s) would move a long way on their own and are left unticked - listen to them (F5 plays the aligned line, Shift+F5 the original) and tick the ones that are right.";
         LinesToCheckX = "{0} line(s) are left unticked to check - listen to them (F5 plays the aligned line, Shift+F5 the original) and tick the ones that are right.";
-        ChangeXOfY = "Change {0} of {1}";
-        PreviousChange = "Previous change";
-        NextChange = "Next change";
         StartShift = "Start";
         EndShift = "End";
         StatusRetimed = "Re-timed";
@@ -120,12 +110,10 @@ public class LanguageImproveTimeCodes
         StatusFailed = "Kept - aligner failed";
         StatusAdjustedByHand = "Adjusted by hand";
         AlignedWaveformHint = "Drag a line to move it, or drag its edges to change its start or end.";
-        PlayLine = "Play line";
         UndoAdjustment = "Undo adjustment";
         PlayPause = "Play / pause";
         PlayAligned = "Aligned";
         PlayAlignedHint = "Play the selected line with its aligned time codes";
-        Apply = "Apply";
         ApplyHint = "Untick a line to keep its original time codes. Double-click a line to play it. Lines can also be moved or resized in the aligned waveform.";
     }
 }

@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -28,7 +29,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 //   │ │ Maria     │ ElevenLabs│ Rachel    │                        │ ▶  │ │
 //   │ └───────────┴───────────┴───────────┴────────────────────────┴─────┘ │
 //   ├──────────────────────────────────────────────────────────────────────┤
-//   │ [Apply default to all] [Clear all]              [OK] [Cancel]        │
+//   │ [Apply default to all] [Clear all]              [Cancel] [OK]        │
 //   └──────────────────────────────────────────────────────────────────────┘
 public class ActorVoiceMappingWindow : Window
 {
@@ -43,6 +44,7 @@ public class ActorVoiceMappingWindow : Window
         MinWidth = 700;
         MinHeight = 400;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
         _vm = vm;
         vm.Window = this;
@@ -52,6 +54,7 @@ public class ActorVoiceMappingWindow : Window
         var grid = BuildGrid(vm);
         var buttons = BuildButtons(vm);
 
+        // The grid gives up height first, so the button bar stays reachable on a short screen.
         var root = new Grid
         {
             RowDefinitions =
@@ -64,14 +67,17 @@ public class ActorVoiceMappingWindow : Window
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 12,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
         };
 
         root.Add(header, 0, 0);
-        root.Add(grid, 1, 0);
+        root.Add(new Border
+        {
+            Background = EditorChrome.PanelBrush,
+            Padding = new Thickness(14, 12, 14, 14),
+            Child = grid,
+        }, 1, 0);
         root.Add(buttons, 2, 0);
 
         Content = root;
@@ -84,15 +90,15 @@ public class ActorVoiceMappingWindow : Window
         var icon = new Icon
         {
             Value = IconNames.PoliceBadge,
-            FontSize = 28,
-            Foreground = UiUtil.GetTextColor(0.8d),
+            FontSize = 24,
+            Foreground = EditorChrome.IconBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
 
         var title = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.ActorVoicesTitle,
-            FontSize = UiUtil.ScaledFontSize(16),
+            FontSize = 16,
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -100,15 +106,15 @@ public class ActorVoiceMappingWindow : Window
         var subtitle = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.ActorVoicesSubtitle,
-            FontSize = UiUtil.ScaledFontSize(12),
-            Foreground = UiUtil.GetTextColor(0.6d),
+            FontSize = 12.5,
+            Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
 
         var status = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = UiUtil.GetTextColor(0.55d),
+            FontSize = 11.5,
+            Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)) { Mode = BindingMode.OneWay },
@@ -132,7 +138,10 @@ public class ActorVoiceMappingWindow : Window
 
         return new Border
         {
-            Padding = new Thickness(4, 0),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(16, 12),
             Child = row,
         };
     }
@@ -142,12 +151,21 @@ public class ActorVoiceMappingWindow : Window
         var tableView = TableViewExtras.MakeTableView(multiSelect: false);
         tableView[!TableView.ItemsSourceProperty] = new Binding(nameof(vm.Rows));
         tableView[!TableView.SelectedItemProperty] = new Binding(nameof(vm.SelectedRow)) { Mode = BindingMode.TwoWay };
+        tableView.Margin = new Thickness(2);
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.Video.TextToSpeech.ActorOrVoice,
-            Binding = new Binding(nameof(ActorVoiceRow.Actor)),
+            // Centered like the combo boxes in the other cells of the row
+            NameBinding = new Binding(nameof(ActorVoiceRow.Actor)),
+            CellTemplate = new FuncDataTemplate<ActorVoiceRow>((_, _) => new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(4, 0),
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                [!TextBlock.TextProperty] = new Binding(nameof(ActorVoiceRow.Actor)) { Mode = BindingMode.OneWay },
+            }, true),
             Width = new GridLength(180),
-            CellTheme = UiUtil.TableViewCellTheme,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
         tableView.Columns.Add(new SeTableViewColumn
@@ -280,18 +298,16 @@ public class ActorVoiceMappingWindow : Window
                 // Per-row "..." button → opens ActorVoiceRowSettingsWindow for voice
                 // instruction + OmniVoice keyword picker. Disabled for engines that have
                 // no advanced settings so the user doesn't open an empty dialog.
-                var settingsBtn = UiUtil.MakeButton(vm.ShowRowSettingsCommand, IconNames.Settings,
-                    Se.Language.Video.TextToSpeech.ActorVoicesRowSettingsTitle);
+                var settingsBtn = EditorChrome.CreateToolButton("fa-solid fa-sliders",
+                    Se.Language.Video.TextToSpeech.ActorVoicesRowSettingsTitle, vm.ShowRowSettingsCommand, 28);
                 settingsBtn.CommandParameter = row;
-                settingsBtn.Margin = new Thickness(4, 2);
                 settingsBtn.Bind(InputElement.IsEnabledProperty, new Binding(nameof(ActorVoiceRow.HasAdvancedSettings))
                 {
                     Mode = BindingMode.OneWay,
                 });
 
-                var testBtn = UiUtil.MakeButton(vm.TestRowCommand, "fa-solid fa-play", Se.Language.Video.TextToSpeech.TestVoice);
+                var testBtn = EditorChrome.CreateToolButton("fa-solid fa-play", Se.Language.Video.TextToSpeech.TestVoice, vm.TestRowCommand, 28);
                 testBtn.CommandParameter = row;
-                testBtn.Margin = new Thickness(4, 2);
                 testBtn.Bind(InputElement.IsEnabledProperty, new Binding(nameof(ActorVoiceRow.SelectedVoice))
                 {
                     Mode = BindingMode.OneWay,
@@ -302,6 +318,7 @@ public class ActorVoiceMappingWindow : Window
                 {
                     Orientation = Orientation.Horizontal,
                     HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
                     Spacing = 4,
                     Children = { settingsBtn, testBtn },
                 };
@@ -309,17 +326,22 @@ public class ActorVoiceMappingWindow : Window
             Width = new GridLength(110),
         });
 
-        return UiUtil.MakeBorderForControl(tableView);
+        return EditorChrome.MakeListFrame(tableView);
     }
 
-    private static StackPanel BuildButtons(ActorVoiceMappingViewModel vm)
+    /// <summary>
+    /// Apply default / clear on the left, Cancel and OK on the right.
+    /// </summary>
+    private static Border BuildButtons(ActorVoiceMappingViewModel vm)
     {
-        var applyDefault = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.ApplyDefaultToAll, vm.ApplyDefaultToAllCommand);
-        var clearAll = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearAllCommand);
+        var applyDefault = EditorChrome.MakeActionButton("fa-solid fa-wand-magic-sparkles", Se.Language.Video.TextToSpeech.ApplyDefaultToAll, vm.ApplyDefaultToAllCommand);
+        var clearAll = EditorChrome.MakeActionButton("fa-solid fa-eraser", Se.Language.General.Clear, vm.ClearAllCommand);
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
+        ok.Classes.Add("primary");
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return UiUtil.MakeButtonBar(applyDefault, clearAll, ok, cancel);
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, Margin = new Thickness(-10, 0, 0, 0), Children = { applyDefault, clearAll } };
+        return EditorChrome.MakeFlushButtonBar(actions, cancel, ok);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

@@ -1,4 +1,6 @@
-﻿using Avalonia;
+using System;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -8,86 +10,52 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
 
+/// <summary>
+/// Changes the script resolution and rescales what depends on it - styled like ASSA draw:
+/// source and target as compact W × H fields with presets, the options as toggles, and
+/// the scale factor in the button bar.
+/// </summary>
 public class AssaResolutionResamplerWindow : Window
 {
+    private static readonly (int Width, int Height)[] Presets = [(640, 360), (1280, 720), (1920, 1080), (3840, 2160)];
+
     public AssaResolutionResamplerWindow(AssaResolutionResamplerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Assa.ResolutionResamplerTitle;
         CanResize = false;
-        SizeToContent = SizeToContent.WidthAndHeight;
-        MinWidth = 450;
+        Width = 560;
+        SizeToContent = SizeToContent.Height;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 15,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        void AddRow(Control control)
-        {
-            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
-            Grid.SetRow(control, grid.RowDefinitions.Count - 1);
-            grid.Children.Add(control);
-        }
+        var sections = new StackPanel { Background = EditorChrome.PanelBrush };
 
         // Opened as the video-open prompt: say why the dialog appeared (#14367)
         if (vm.IsVideoPrompt)
         {
-            AddRow(new TextBlock
-            {
-                Text = vm.PromptText,
-                TextWrapping = TextWrapping.Wrap,
-                MaxWidth = 520,
-                HorizontalAlignment = HorizontalAlignment.Left,
-            });
+            sections.Children.Add(MakePromptBanner(vm.PromptText));
         }
 
-        // Source resolution panel
-        var sourcePanel = CreateResolutionPanel(
-            Se.Language.Assa.ResolutionResamplerSourceRes,
-            nameof(vm.SourceWidth),
-            nameof(vm.SourceHeight),
-            vm.SourceFromVideoCommand,
-            out var sourceWidthBox);
-        AddRow(sourcePanel);
+        sections.Children.Add(MakeResolutionSection(vm, Se.Language.Assa.ResolutionResamplerSourceRes,
+            nameof(vm.SourceWidth), nameof(vm.SourceHeight), vm.SourceFromVideoCommand,
+            () => (vm.SourceWidth, vm.SourceHeight), (w, h) => { vm.SourceWidth = w; vm.SourceHeight = h; },
+            first: !vm.IsVideoPrompt, out var sourceWidthBox));
+        sections.Children.Add(MakeResolutionSection(vm, Se.Language.Assa.ResolutionResamplerTargetRes,
+            nameof(vm.TargetWidth), nameof(vm.TargetHeight), vm.TargetFromVideoCommand,
+            () => (vm.TargetWidth, vm.TargetHeight), (w, h) => { vm.TargetWidth = w; vm.TargetHeight = h; },
+            first: false, out _));
+        sections.Children.Add(MakeOptionsSection(vm));
 
-        // Target resolution panel
-        var targetPanel = CreateResolutionPanel(
-            Se.Language.Assa.ResolutionResamplerTargetRes,
-            nameof(vm.TargetWidth),
-            nameof(vm.TargetHeight),
-            vm.TargetFromVideoCommand,
-            out _);
-        AddRow(targetPanel);
-
-        // Options panel
-        AddRow(CreateOptionsPanel(vm));
-
-        if (vm.IsVideoPrompt)
-        {
-            AddRow(new CheckBox
-            {
-                Content = Se.Language.Assa.ResolutionResamplerAskOnVideoOpen,
-                [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.AskOnVideoOpen)) { Mode = BindingMode.TwoWay },
-            });
-        }
-
-        // Buttons
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        AddRow(UiUtil.MakeButtonBar(buttonOk, buttonCancel));
-
-        Content = grid;
+        var root = new DockPanel();
+        var buttonBar = MakeButtonBar(vm);
+        DockPanel.SetDock(buttonBar, Dock.Bottom);
+        root.Children.Add(buttonBar);
+        root.Children.Add(sections);
+        Content = root;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, sourceWidthBox);
@@ -95,157 +63,155 @@ public class AssaResolutionResamplerWindow : Window
         Closing += (_, _) => vm.OnClosing();
     }
 
-    private static Border CreateResolutionPanel(string title, string widthBinding, string heightBinding, System.Windows.Input.ICommand fromVideoCommand, out NumericUpDown firstInput)
+    private static Border MakePromptBanner(string text)
     {
-        var panelGrid = new Grid
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
+        row.Children.Add(new Optris.Icons.Avalonia.Icon
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 8,
-            ColumnSpacing = 10,
-        };
-
-        // Title
-        var titleLabel = new TextBlock
+            Value = "fa-solid fa-circle-info",
+            FontSize = 14,
+            Foreground = EditorChrome.AccentBrush,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 1, 0, 0),
+        });
+        row.Children.Add(new TextBlock
         {
-            Text = title,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        Grid.SetRow(titleLabel, 0);
-        Grid.SetColumnSpan(titleLabel, 5);
-        panelGrid.Children.Add(titleLabel);
-
-        // Width
-        var widthLabel = new TextBlock
-        {
-            Text = Se.Language.General.Width + ":",
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        Grid.SetRow(widthLabel, 1);
-        Grid.SetColumn(widthLabel, 0);
-        panelGrid.Children.Add(widthLabel);
-
-        var widthBox = new NumericUpDown
-        {
-            Minimum = 1,
-            Maximum = 8192,
-            Width = 120,
-            Increment = 1,
-            FormatString = "0",
-            [!NumericUpDown.ValueProperty] = new Binding(widthBinding) { Mode = BindingMode.TwoWay },
-        };
-        firstInput = widthBox;
-        Grid.SetRow(widthBox, 1);
-        Grid.SetColumn(widthBox, 1);
-        panelGrid.Children.Add(widthBox);
-
-        // Height
-        var heightLabel = new TextBlock
-        {
-            Text = Se.Language.General.Height + ":",
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        Grid.SetRow(heightLabel, 1);
-        Grid.SetColumn(heightLabel, 2);
-        panelGrid.Children.Add(heightLabel);
-
-        var heightBox = new NumericUpDown
-        {
-            Minimum = 1,
-            Maximum = 8192,
-            Width = 120,
-            Increment = 1,
-            FormatString = "0",
-            [!NumericUpDown.ValueProperty] = new Binding(heightBinding) { Mode = BindingMode.TwoWay },
-        };
-        Grid.SetRow(heightBox, 1);
-        Grid.SetColumn(heightBox, 3);
-        panelGrid.Children.Add(heightBox);
-
-        // From video button
-        var fromVideoButton = new Button
-        {
-            Content = Se.Language.Assa.ResolutionResamplerFromVideo,
-            Command = fromVideoCommand,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
-        Grid.SetRow(fromVideoButton, 1);
-        Grid.SetColumn(fromVideoButton, 4);
-        panelGrid.Children.Add(fromVideoButton);
+            Text = text,
+            FontSize = 12.5,
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 490,
+        });
 
         return new Border
         {
-            Child = panelGrid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(10),
+            Child = row,
+            Background = EditorChrome.AccentSoftBrush,
+            Padding = new Thickness(14, 10),
         };
     }
 
-    private static Border CreateOptionsPanel(AssaResolutionResamplerViewModel vm)
+    private static Border MakeResolutionSection(
+        AssaResolutionResamplerViewModel vm,
+        string title,
+        string widthProperty,
+        string heightProperty,
+        System.Windows.Input.ICommand fromVideoCommand,
+        Func<(int Width, int Height)> get,
+        Action<int, int> set,
+        bool first,
+        out NumericUpDown widthBox)
     {
-        var stackPanel = new StackPanel
+        widthBox = EditorChrome.MakeField(widthProperty, 1, 8192, 90, "W");
+        var heightBox = EditorChrome.MakeField(heightProperty, 1, 8192, 90, "H");
+        AutomationProperties.SetName(widthBox, title + " - " + Se.Language.General.Width);
+        AutomationProperties.SetName(heightBox, title + " - " + Se.Language.General.Height);
+        var fromVideo = EditorChrome.CreateToolButton("fa-solid fa-film", Se.Language.Assa.ResolutionResamplerFromVideo, fromVideoCommand, 28);
+
+        var size = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+        size.Children.Add(widthBox);
+        size.Children.Add(new TextBlock { Text = "×", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center });
+        size.Children.Add(heightBox);
+        size.Children.Add(fromVideo);
+
+        // Common sizes, one click each; the active one lit
+        var presets = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        foreach (var (w, h) in Presets)
         {
-            Orientation = Orientation.Vertical,
-            Spacing = 8,
+            var text = $"{w} × {h}";
+            var button = new Button
+            {
+                Content = new TextBlock { Text = text, FontSize = 12, Margin = new Thickness(8, 0) },
+                Height = 26,
+                VerticalContentAlignment = VerticalAlignment.Center,
+            };
+            button.Classes.Add("tool");
+            AutomationProperties.SetName(button, title + " " + text);
+            button.Click += (_, _) => set(w, h);
+
+            void Update() => button.Classes.Set("active", get() == (w, h));
+            Update();
+            vm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == widthProperty || e.PropertyName == heightProperty)
+                {
+                    Update();
+                }
+            };
+            presets.Children.Add(button);
+        }
+
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(size);
+        content.Children.Add(presets);
+        return EditorChrome.MakeEditorSection(title, content, first: first);
+    }
+
+    private static Border MakeOptionsSection(AssaResolutionResamplerViewModel vm)
+    {
+        var content = new StackPanel { Spacing = 4 };
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ChangeMargins), Se.Language.Assa.ResolutionResamplerChangeMargins));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ChangeFontSize), Se.Language.Assa.ResolutionResamplerChangeFontSize));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ChangePositions), Se.Language.Assa.ResolutionResamplerChangePositions));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ChangeDrawing), Se.Language.Assa.ResolutionResamplerChangeDrawing));
+        if (vm.IsVideoPrompt)
+        {
+            content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.AskOnVideoOpen), Se.Language.Assa.ResolutionResamplerAskOnVideoOpen));
+        }
+
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, content);
+    }
+
+    private static Border MakeButtonBar(AssaResolutionResamplerViewModel vm)
+    {
+        // How much everything is scaled, e.g. "×5 · ×3.75"
+        var scale = new TextBlock
+        {
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
         };
 
-        var titleLabel = new TextBlock
+        void UpdateScale()
         {
-            Text = Se.Language.General.Options,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        stackPanel.Children.Add(titleLabel);
+            if (vm.SourceWidth <= 0 || vm.SourceHeight <= 0)
+            {
+                scale.Text = string.Empty;
+                return;
+            }
 
-        var checkBoxMargins = new CheckBox
-        {
-            Content = Se.Language.Assa.ResolutionResamplerChangeMargins,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ChangeMargins)) { Mode = BindingMode.TwoWay },
-        };
-        stackPanel.Children.Add(checkBoxMargins);
+            var x = (double)vm.TargetWidth / vm.SourceWidth;
+            var y = (double)vm.TargetHeight / vm.SourceHeight;
+            scale.Text = Math.Abs(x - y) < 0.005 ? $"×{x:0.##}" : $"×{x:0.##} · ×{y:0.##}";
+        }
 
-        var checkBoxFontSize = new CheckBox
+        UpdateScale();
+        vm.PropertyChanged += (_, e) =>
         {
-            Content = Se.Language.Assa.ResolutionResamplerChangeFontSize,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ChangeFontSize)) { Mode = BindingMode.TwoWay },
+            if (e.PropertyName is nameof(vm.SourceWidth) or nameof(vm.SourceHeight) or nameof(vm.TargetWidth) or nameof(vm.TargetHeight))
+            {
+                UpdateScale();
+            }
         };
-        stackPanel.Children.Add(checkBoxFontSize);
 
-        var checkBoxPositions = new CheckBox
-        {
-            Content = Se.Language.Assa.ResolutionResamplerChangePositions,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ChangePositions)) { Mode = BindingMode.TwoWay },
-        };
-        stackPanel.Children.Add(checkBoxPositions);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, HorizontalAlignment = HorizontalAlignment.Right };
+        buttons.Children.Add(buttonCancel);
+        buttons.Children.Add(buttonOk);
 
-        var checkBoxDrawing = new CheckBox
-        {
-            Content = Se.Language.Assa.ResolutionResamplerChangeDrawing,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ChangeDrawing)) { Mode = BindingMode.TwoWay },
-        };
-        stackPanel.Children.Add(checkBoxDrawing);
+        var bar = new DockPanel();
+        DockPanel.SetDock(buttons, Dock.Right);
+        bar.Children.Add(buttons);
+        bar.Children.Add(scale);
 
         return new Border
         {
-            Child = stackPanel,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(10),
+            Child = bar,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 10),
         };
     }
 }

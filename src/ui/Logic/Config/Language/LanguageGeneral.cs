@@ -489,6 +489,7 @@ public class LanguageGeneral
     public string Reason { get; set; }
     public string RecentFiles { get; set; }
     public string RecentlyUsedVideoOffsets { get; set; }
+    public string Recent { get; set; }
     public string Redo { get; set; }
     public string Redownload { get; set; }
     public string Release { get; set; }
@@ -714,6 +715,8 @@ public class LanguageGeneral
     public string Undelete { get; set; }
     public string Underline { get; set; }
     public string Undo { get; set; }
+    public string Uninstall { get; set; }
+    public string Uninstalled { get; set; }
     public string Unknown { get; set; }
     public string UnknownNoInstallRecord { get; set; }
     public string UnknownSubtitleFormat { get; set; }
@@ -826,8 +829,6 @@ public class LanguageGeneral
     public string OpenAiCompatibleSttExtraHeaders { get; set; }
     public string OpenAiCompatibleSttTimeout { get; set; }
     public string OpenAiCompatibleSttLanguage { get; set; }
-    public string OpenAiCompatibleSttTemperature { get; set; }
-    public string OpenAiCompatibleSttPrompt { get; set; }
     public string OpenAiCompatibleSttModelRejectedHint { get; set; }
     public string DashScopeSttRegion { get; set; }
     public string DashScopeSttEnableWords { get; set; }
@@ -854,6 +855,47 @@ public class LanguageGeneral
     public string TranscriptionProgressModelFormat { get; set; }
     public string TranscriptionProgressReceivedSegmentsFormat { get; set; }
     public string TranscriptionProgressModelAuto { get; set; }
+    public string Prompt { get; set; }
+    public string Temperature { get; set; }
+    public string Preset { get; set; }
+    public string Output { get; set; }
+    public string OutputFormat { get; set; }
+    public string Other { get; set; }
+    public string TimeCodeFormat { get; set; }
+    public string TopBottomMargin { get; set; }
+    public string Theme { get; set; }
+    public string Brightness { get; set; }
+    public string ChooseColor { get; set; }
+    public string LineX { get; set; }
+    public string PlayLine { get; set; }
+    public string MaxLineLength { get; set; }
+    public string MaxCharsPerSec { get; set; }
+    public string MaxNumberOfLines { get; set; }
+    public string Subtitles { get; set; }
+    public string ShotChanges { get; set; }
+    public string Chapters { get; set; }
+    public string Audio { get; set; }
+    public string Interjections { get; set; }
+    public string BlankLines { get; set; }
+    public string EditWholeText { get; set; }
+    public string NoTextInClipboard { get; set; }
+    public string NoSubtitlesFoundTitle { get; set; }
+    public string ReplacedXOccurrences { get; set; }
+    public string InvalidRegularExpressionX { get; set; }
+    public string DiscardChangesTitle { get; set; }
+    public string DownloadingXDotDotDot { get; set; }
+    public string ImportTimeCodesDotDotDot { get; set; }
+    public string Original { get; set; }
+    public string NextChange { get; set; }
+    public string PreviousChange { get; set; }
+    public string ChangeXOfY { get; set; }
+    public string TooLong { get; set; }
+    public string TooShort { get; set; }
+    public string Overlapping { get; set; }
+    public string Detail { get; set; }
+    public string FixOcrErrors { get; set; }
+    public string RunningOcrXY { get; set; }
+    public string LlamaCppDownloadEnginePrompt { get; set; }
 
     public LanguageGeneral()
     {
@@ -1135,7 +1177,7 @@ public class LanguageGeneral
         FrameRate = "Frame rate";
         Frames = "Frames";
         From = "From";
-        FromCurrentVideoPosition = "from current video position";
+        FromCurrentVideoPosition = "From current video position";
         FullScreen = "Full screen";
         Gap = "Gap";
         General = "General";
@@ -1186,7 +1228,7 @@ public class LanguageGeneral
         KeepExistingTimeCodes = "Keep existing time codes (do not add video offset)";
         KeyFile = "Key file";
         Language = "Language";
-        LanguagePostFix = "Language post-fix (mkv/mp4/auto-translate)";
+        LanguagePostFix = "Language suffix (mkv/mp4/auto-translate)";
         Layer = "Layer";
         LayerFilterOn = "Layer filter on";
         Left = "Left";
@@ -1350,6 +1392,7 @@ public class LanguageGeneral
         Reason = "Reason";
         RecentFiles = "Recent files";
         RecentlyUsedVideoOffsets = "Recently used video offsets";
+        Recent = "Recent";
         Redo = "Redo";
         Redownload = "Re-download...";
         Release = "Release";
@@ -1567,6 +1610,8 @@ public class LanguageGeneral
         Undelete = "Undelete";
         Underline = "Underline";
         Undo = "Undo";
+        Uninstall = "Uninstall";
+        Uninstalled = "Uninstalled";
         Unknown = "Unknown";
         UnknownNoInstallRecord = "Unknown (no install record)";
         UnknownSubtitleFormat = "Unknown subtitle format";
@@ -1679,8 +1724,6 @@ public class LanguageGeneral
         OpenAiCompatibleSttExtraHeaders = "Extra Headers";
         OpenAiCompatibleSttTimeout = "Timeout (seconds)";
         OpenAiCompatibleSttLanguage = "Language Hint";
-        OpenAiCompatibleSttTemperature = "Temperature";
-        OpenAiCompatibleSttPrompt = "Prompt";
         OpenAiCompatibleSttModelRejectedHint = "The server rejected the model name. Not every OpenAI compatible endpoint takes a model - xAI's https://api.x.ai/v1/stt, for one, has no 'model' parameter at all. Try clearing the Model field.";
         DashScopeSttRegion = "Region";
         DashScopeSttEnableWords = "Word-level timestamps";
@@ -1707,5 +1750,46 @@ public class LanguageGeneral
         TranscriptionProgressModelFormat = "Model: {0}";
         TranscriptionProgressReceivedSegmentsFormat = "Received Segments ({0})";
         TranscriptionProgressModelAuto = "(auto)";
+        Prompt = "Prompt";
+        Temperature = "Temperature";
+        Preset = "Preset";
+        Output = "Output";
+        OutputFormat = "Output format";
+        Other = "Other";
+        TimeCodeFormat = "Time code format";
+        TopBottomMargin = "Top/bottom margin";
+        Theme = "Theme";
+        Brightness = "Brightness";
+        ChooseColor = "Choose color";
+        LineX = "Line {0}";
+        PlayLine = "Play line";
+        MaxLineLength = "Max line length";
+        MaxCharsPerSec = "Max chars/sec";
+        MaxNumberOfLines = "Max number of lines";
+        Subtitles = "Subtitles";
+        ShotChanges = "Shot changes";
+        Chapters = "Chapters";
+        Audio = "Audio";
+        Interjections = "Interjections";
+        BlankLines = "Blank lines";
+        EditWholeText = "Edit whole text";
+        NoTextInClipboard = "No text in clipboard";
+        NoSubtitlesFoundTitle = "No subtitles found";
+        ReplacedXOccurrences = "Replaced {0} occurrences";
+        InvalidRegularExpressionX = "Invalid regular expression: {0}";
+        DiscardChangesTitle = "Discard changes?";
+        DownloadingXDotDotDot = "Downloading {0}...";
+        ImportTimeCodesDotDotDot = "Import time codes...";
+        Original = "Original";
+        NextChange = "Next change";
+        PreviousChange = "Previous change";
+        ChangeXOfY = "Change {0} of {1}";
+        TooLong = "Too long";
+        TooShort = "Too short";
+        Overlapping = "Overlapping";
+        Detail = "Detail";
+        FixOcrErrors = "Fix OCR errors";
+        RunningOcrXY = "Running OCR... {0}/{1}";
+        LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
     }
 }

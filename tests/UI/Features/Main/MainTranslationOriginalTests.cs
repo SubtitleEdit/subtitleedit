@@ -1,13 +1,16 @@
 using System.Reflection;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Media;
 
 namespace UITests.Features.Main;
 
@@ -209,10 +212,120 @@ public class MainTranslationOriginalTests
         }
     }
 
-    private static (Window Window, MainViewModel Vm) CreateMainViewModel()
+    /// <summary>
+    /// "Save as" onto the file the translation was made from replaces that file with the
+    /// translation. The same Ctrl+S then saved the (unsaved) original to its old file name - the
+    /// same file - so the translation was overwritten straight away and the file looked untouched
+    /// (issue #15999).
+    /// </summary>
+    [AvaloniaFact]
+    public async Task Save_TranslationSavedAsOverTheOriginalFile_KeepsTheTranslation()
+    {
+        var fileName = Path.Combine(Path.GetTempPath(), $"se-translation-over-original-{Guid.NewGuid():N}.srt");
+        await File.WriteAllTextAsync(fileName, "1\r\n00:00:00,000 --> 00:00:02,000\r\nSource line one\r\n\r\n");
+        var (window, vm) = CreateMainViewModel(new PickFileHelper(fileName));
+
+        try
+        {
+            SetUpTranslationOf(vm, fileName);
+
+            await vm.CommandFileSaveCommand.ExecuteAsync(null);
+
+            var onDisk = await File.ReadAllTextAsync(fileName);
+            Assert.Contains("Vertaalde regel een", onDisk);
+            Assert.DoesNotContain("Source line one", onDisk);
+            Assert.Equal(string.Empty, GetField("_subtitleFileNameOriginal").GetValue(vm));
+
+            // A second Ctrl+S must not bring the original back over the translation either.
+            await vm.CommandFileSaveCommand.ExecuteAsync(null);
+
+            onDisk = await File.ReadAllTextAsync(fileName);
+            Assert.Contains("Vertaalde regel een", onDisk);
+            Assert.DoesNotContain("Source line one", onDisk);
+
+            // The original was never written anywhere, so closing must still offer to save it.
+            Assert.NotEqual(GetField("_changeSubtitleHashOriginal").GetValue(vm), vm.GetFastHashOriginal());
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+            File.Delete(fileName);
+        }
+    }
+
+    /// <summary>
+    /// The mirror: "Save original as" onto the translation's file hands that file to the original,
+    /// so the translation becomes untitled and the next Ctrl+S asks where it goes (#15999).
+    /// </summary>
+    [AvaloniaFact]
+    public async Task SaveOriginalAs_OverTheTranslationFile_DetachesTheTranslation()
+    {
+        var translationFileName = Path.Combine(Path.GetTempPath(), $"se-translation-{Guid.NewGuid():N}.srt");
+        var (window, vm) = CreateMainViewModel(new PickFileHelper(translationFileName));
+
+        try
+        {
+            SetUpTranslationOf(vm, string.Empty);
+            SetPrivateField(vm, "_subtitleFileName", translationFileName);
+            SetPrivateField(vm, "_converted", false);
+
+            var method = typeof(MainViewModel).GetMethod(
+                             "SaveSubtitleOriginalAs", BindingFlags.Instance | BindingFlags.NonPublic)
+                         ?? throw new InvalidOperationException("SaveSubtitleOriginalAs not found");
+            var saved = await (Task<bool>)method.Invoke(vm, null)!;
+
+            Assert.True(saved);
+            Assert.Contains("Source line one", await File.ReadAllTextAsync(translationFileName));
+            Assert.Equal(string.Empty, GetField("_subtitleFileName").GetValue(vm));
+            Assert.Equal(translationFileName, GetField("_subtitleFileNameOriginal").GetValue(vm));
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+            File.Delete(translationFileName);
+        }
+    }
+
+    // The state a translation made from the loaded file leaves behind: the rows hold the
+    // translation, the original column (and original subtitle) the source text, and the original
+    // points at the source file while the translation is still untitled.
+    private static void SetUpTranslationOf(MainViewModel vm, string originalFileName)
+    {
+        vm.SelectedSubtitleFormat = vm.SubtitleFormats.First(f => f is SubRip);
+        AddLine(vm, "Vertaalde regel een", "Source line one", 0, 2000);
+        vm.IsOriginalReadOnly = false;
+        vm.ShowColumnOriginalText = true;
+        InvokeCaptureOriginalFromTranslatedRows(vm);
+        SetPrivateField(vm, "_subtitleFileNameOriginal", originalFileName);
+        SetPrivateField(vm, "_subtitleFileName", string.Empty);
+        SetPrivateField(vm, "_converted", true);
+    }
+
+    private sealed class PickFileHelper : StubFileHelper
+    {
+        private readonly string _fileName;
+
+        public PickFileHelper(string fileName)
+        {
+            _fileName = fileName;
+        }
+
+        public override Task<FileHelperSubtitleSavePickerResult?> PickSaveSubtitleFileAs(Visual sender, SubtitleFormat currentFormat, string suggestedFileName, string title)
+            => Task.FromResult<FileHelperSubtitleSavePickerResult?>(new FileHelperSubtitleSavePickerResult { FileName = _fileName, SubtitleFormat = currentFormat });
+
+        public override Task<string> PickSaveSubtitleFile(Visual sender, SubtitleFormat currentFormat, string suggestedFileName, string title)
+            => Task.FromResult(_fileName);
+    }
+
+    private static (Window Window, MainViewModel Vm) CreateMainViewModel(IFileHelper? fileHelper = null)
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
+        if (fileHelper != null)
+        {
+            services.AddSingleton(fileHelper);
+        }
+
         Locator.Services = services.BuildServiceProvider();
 
         var window = new Window { Width = 1200, Height = 800 };

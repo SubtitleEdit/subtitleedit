@@ -1,18 +1,25 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.AdjustDuration;
 
+/// <summary>
+/// Adjust durations, in the editor look (see <see cref="EditorChrome"/>): how to adjust and the
+/// value(s) for the chosen way in one section, the overlap note under it, Cancel/OK at the bottom.
+/// </summary>
 public class AdjustDurationWindow : Window
 {
-    private const int LabelMinWidth = 100;
-    private const int NumericUpDownWidth = 150;
+    private const double LabelWidth = 200;
+    // The value field lines up with the "Adjust via" box above it
+    private const double FieldWidth = 180;
 
     public AdjustDurationWindow(AdjustDurationViewModel vm)
     {
@@ -20,21 +27,16 @@ public class AdjustDurationWindow : Window
         Title = UiUtil.MakeWindowTitle(Se.Language.Tools.AdjustDurations.Title);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
-
-        var label = new Label
-        {
-            Content = Se.Language.Tools.AdjustDurations.AdjustVia,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
 
         var combo = new ComboBox
         {
             ItemsSource = vm.AdjustTypes,
             VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 180,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = FieldWidth,
         };
         combo.Bind(SelectingItemsControl.SelectedValueProperty, new Binding
         {
@@ -42,78 +44,61 @@ public class AdjustDurationWindow : Window
             Mode = BindingMode.TwoWay,
             Source = vm,
         });
+        AutomationProperties.SetName(combo, Se.Language.Tools.AdjustDurations.AdjustVia);
 
         var panelSeconds = MakeAdjustSeconds(vm);
         var panelPercent = MakeAdjustPercent(vm);
         var panelFixed = MakeAdjustFixed(vm);
         var panelRecalculate = MakeAdjustRecalculate(vm);
 
+        // Only one of the four is visible at a time - the one for the chosen way to adjust.
+        var panelValues = new Panel { Children = { panelSeconds, panelPercent, panelFixed, panelRecalculate } };
+
         var labelInfo = new TextBlock
         {
-            VerticalAlignment = VerticalAlignment.Bottom,
-            HorizontalAlignment = HorizontalAlignment.Left,
             Text = Se.Language.Tools.AdjustDurations.Note,
-            Margin = new Thickness(10, 25, 10, 15),
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 360,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
+
+        var rows = new StackPanel { Spacing = 10 };
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Tools.AdjustDurations.AdjustVia, combo, LabelWidth));
+        rows.Children.Add(panelValues);
+        rows.Children.Add(labelInfo);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Adjustment, rows, first: true);
+        section.MinWidth = 440;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(label, 0);
-        grid.Add(combo, 0, 1);
-
-        grid.Add(panelSeconds, 1, 0, 1, 2);
-        grid.Add(panelPercent, 1, 0, 1, 2);
-        grid.Add(panelFixed, 1, 0, 1, 2);
-        grid.Add(panelRecalculate, 1, 0, 1, 2);
-
-        grid.Add(labelInfo, 2, 0, 1, 2);
-
-        grid.Add(panelButtons, 3, 0, 1, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, combo); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static StackPanel MakeAdjustSeconds(AdjustDurationViewModel vm)
+    private static NumericUpDown MakeNumber(string label, decimal minimum, decimal maximum)
     {
-        var textBlockSeconds = new TextBlock
+        var numericUpDown = new NumericUpDown
         {
-            Text = Se.Language.General.Seconds,
-            VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = LabelMinWidth,
-        };
-        var numericUpDownSeconds = new NumericUpDown
-        {
-            Minimum = -1000000,
-            Maximum = 1000000,
-            Width = NumericUpDownWidth,
+            Minimum = minimum,
+            Maximum = maximum,
+            Width = FieldWidth,
+            HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
         };
+        numericUpDown.Classes.Add("field");
+        AutomationProperties.SetName(numericUpDown, label);
+        return numericUpDown;
+    }
+
+    private static Grid MakeAdjustSeconds(AdjustDurationViewModel vm)
+    {
+        var numericUpDownSeconds = MakeNumber(Se.Language.General.Seconds, -1000000, 1000000);
         numericUpDownSeconds.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Path = nameof(vm.AdjustSeconds),
@@ -122,18 +107,8 @@ public class AdjustDurationWindow : Window
             Converter = new DoubleToThreeDecimalConverter(),
         });
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 25, 0, 0),
-            Children =
-            {
-                textBlockSeconds,
-                numericUpDownSeconds
-            }
-        };
-        panel.Bind(StackPanel.IsVisibleProperty, new Binding()
+        var panel = EditorChrome.MakeLabeledRow(Se.Language.General.Seconds, numericUpDownSeconds, LabelWidth);
+        panel.Bind(IsVisibleProperty, new Binding()
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsSecondsVisible)}",
             Source = vm,
@@ -143,22 +118,10 @@ public class AdjustDurationWindow : Window
         return panel;
     }
 
-    private static StackPanel MakeAdjustPercent(AdjustDurationViewModel vm)
+    private static Grid MakeAdjustPercent(AdjustDurationViewModel vm)
     {
-        var textBlockSeconds = new TextBlock
-        {
-            Text = Se.Language.General.Percent,
-            VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = LabelMinWidth,
-        };
-        var numericUpDownSeconds = new NumericUpDown
-        {
-            Minimum = -1000000,
-            Maximum = 1000000,
-            Width = NumericUpDownWidth,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        numericUpDownSeconds.Bind(NumericUpDown.ValueProperty, new Binding
+        var numericUpDownPercent = MakeNumber(Se.Language.General.Percent, -1000000, 1000000);
+        numericUpDownPercent.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Path = nameof(vm.AdjustPercent),
             Mode = BindingMode.TwoWay,
@@ -166,18 +129,8 @@ public class AdjustDurationWindow : Window
             Converter = new NullableIntConverter(),
         });
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 25, 0, 0),
-            Children =
-            {
-                textBlockSeconds,
-                numericUpDownSeconds
-            }
-        };
-        panel.Bind(StackPanel.IsVisibleProperty, new Binding
+        var panel = EditorChrome.MakeLabeledRow(Se.Language.General.Percent, numericUpDownPercent, LabelWidth);
+        panel.Bind(IsVisibleProperty, new Binding
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsPercentVisible)}",
             Source = vm,
@@ -187,23 +140,10 @@ public class AdjustDurationWindow : Window
         return panel;
     }
 
-
-    private static StackPanel MakeAdjustFixed(AdjustDurationViewModel vm)
+    private static Grid MakeAdjustFixed(AdjustDurationViewModel vm)
     {
-        var textBlockSeconds = new TextBlock
-        {
-            Text = Se.Language.Tools.AdjustDurations.Fixed,
-            VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = LabelMinWidth,
-        };
-        var numericUpDownSeconds = new NumericUpDown
-        {
-            Minimum = -1000000,
-            Maximum = 1000000,
-            Width = NumericUpDownWidth,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        numericUpDownSeconds.Bind(NumericUpDown.ValueProperty, new Binding
+        var numericUpDownFixed = MakeNumber(Se.Language.Tools.AdjustDurations.Fixed, -1000000, 1000000);
+        numericUpDownFixed.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Mode = BindingMode.TwoWay,
             Source = vm,
@@ -211,18 +151,8 @@ public class AdjustDurationWindow : Window
             Converter = new DoubleToThreeDecimalConverter(),
         });
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 25, 0, 0),
-            Children =
-            {
-                textBlockSeconds,
-                numericUpDownSeconds
-            }
-        };
-        panel.Bind(StackPanel.IsVisibleProperty, new Binding
+        var panel = EditorChrome.MakeLabeledRow(Se.Language.Tools.AdjustDurations.Fixed, numericUpDownFixed, LabelWidth);
+        panel.Bind(IsVisibleProperty, new Binding
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsFixedVisible)}",
             Source = vm,
@@ -231,21 +161,9 @@ public class AdjustDurationWindow : Window
         return panel;
     }
 
-    private static Grid MakeAdjustRecalculate(AdjustDurationViewModel vm)
+    private static StackPanel MakeAdjustRecalculate(AdjustDurationViewModel vm)
     {
-        var textBlockMax = new TextBlock
-        {
-            Text = Se.Language.General.MaxCharactersPerSecond,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var numericUpDownMax = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 1000,
-            Width = NumericUpDownWidth,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
+        var numericUpDownMax = MakeNumber(Se.Language.General.MaxCharactersPerSecond, 0, 1000);
         numericUpDownMax.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Path = nameof(vm.AdjustRecalculateMaxCharacterPerSecond),
@@ -254,19 +172,7 @@ public class AdjustDurationWindow : Window
             Converter = new DoubleToOneDecimalConverter(),
         });
 
-        var textBlockOptimal = new TextBlock
-        {
-            Text = Se.Language.General.OptimalCharactersPerSecond,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var numericUpDownOptimal = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 1000,
-            Width = NumericUpDownWidth,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
+        var numericUpDownOptimal = MakeNumber(Se.Language.General.OptimalCharactersPerSecond, 0, 1000);
         numericUpDownOptimal.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Path = nameof(vm.AdjustRecalculateOptimalCharacterPerSecond),
@@ -275,61 +181,49 @@ public class AdjustDurationWindow : Window
             Converter = new DoubleToOneDecimalConverter(),
         });
 
-        var grid = new Grid
+        var toggleExtendOnly = new ToggleSwitch
         {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
             VerticalAlignment = VerticalAlignment.Center,
-            RowSpacing = 10,
-            Margin = new Thickness(10, 25, 0, 0),
         };
-
-        var checkBoxExtendOnly = new CheckBox
-        {
-            Content = Se.Language.Tools.AdjustDurations.ExtendOnly,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
-        checkBoxExtendOnly.Bind(CheckBox.IsCheckedProperty, new Binding
+        toggleExtendOnly.Bind(ToggleButton.IsCheckedProperty, new Binding
         {
             Path = nameof(vm.ExtendOnly),
             Mode = BindingMode.TwoWay,
             Source = vm,
         });
+        AutomationProperties.SetName(toggleExtendOnly, Se.Language.Tools.AdjustDurations.ExtendOnly);
+        var rowExtendOnly = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children =
+            {
+                toggleExtendOnly,
+                new TextBlock { Text = Se.Language.Tools.AdjustDurations.ExtendOnly, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center },
+            },
+        };
 
-        grid.Children.Add(textBlockMax);
-        Grid.SetColumn(textBlockMax, 0);
+        var panel = new StackPanel
+        {
+            Spacing = 10,
+            Children =
+            {
+                EditorChrome.MakeLabeledRow(Se.Language.General.MaxCharactersPerSecond, numericUpDownMax, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.OptimalCharactersPerSecond, numericUpDownOptimal, LabelWidth),
+                EditorChrome.MakeLabeledRow(string.Empty, rowExtendOnly, LabelWidth),
+            },
+        };
 
-        grid.Children.Add(numericUpDownMax);
-        Grid.SetColumn(numericUpDownMax, 1);
-
-        grid.Children.Add(textBlockOptimal);
-        Grid.SetColumn(textBlockOptimal, 0);
-        Grid.SetRow(textBlockOptimal, 1);
-
-        grid.Children.Add(numericUpDownOptimal);
-        Grid.SetColumn(numericUpDownOptimal, 1);
-        Grid.SetRow(numericUpDownOptimal, 1);
-
-        grid.Add(checkBoxExtendOnly, 2, 1);
-
-        grid.Bind(Grid.IsVisibleProperty, new Binding
+        panel.Bind(IsVisibleProperty, new Binding
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(AdjustDurationDisplay.IsRecalculateVisible)}",
             Source = vm,
             Mode = BindingMode.OneWay,
         });
 
-        return grid;
+        return panel;
     }
 }

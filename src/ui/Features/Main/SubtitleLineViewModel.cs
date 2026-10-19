@@ -626,6 +626,31 @@ public partial class SubtitleLineViewModel : ObservableObject
     private TextErrorSettings _textErrorCacheSettings;
     private bool _textErrorCacheValue;
 
+    // The same memo for the user's custom error rules (#10136): keyed on the text and the
+    // compiled rule set, which is a new instance whenever the rules or their switch change.
+    private string? _customRuleCacheText;
+    private CustomErrorRuleMatcher.RuleSet? _customRuleCacheRules;
+    private CustomErrorRuleMatcher.CompiledRule? _customRuleCacheValue;
+
+    /// <summary>The first custom error rule whose pattern matches the text, or null.</summary>
+    public CustomErrorRuleMatcher.CompiledRule? GetMatchingCustomErrorRule()
+    {
+        var rules = CustomErrorRuleMatcher.Current;
+        if (rules.Rules.Count == 0)
+        {
+            return null;
+        }
+
+        if (!ReferenceEquals(_customRuleCacheText, Text) || !ReferenceEquals(_customRuleCacheRules, rules))
+        {
+            _customRuleCacheText = Text;
+            _customRuleCacheRules = rules;
+            _customRuleCacheValue = rules.Match(Text);
+        }
+
+        return _customRuleCacheValue;
+    }
+
     private readonly record struct TextErrorSettings(
         bool ColorTextTooLong,
         int MaxLineLength,
@@ -658,7 +683,10 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
-    public IBrush TextBackgroundBrush => HasTextRuleError() ? _errorBrush : _transparentBrush;
+    // A built-in text error wins; otherwise a matching custom rule paints the cell in its own color.
+    public IBrush TextBackgroundBrush => HasTextRuleError()
+        ? _errorBrush
+        : GetMatchingCustomErrorRule()?.Brush ?? _transparentBrush;
 
     /// <summary>
     /// The memoized "text too long / too wide / too many lines" verdict behind
@@ -996,6 +1024,11 @@ public partial class SubtitleLineViewModel : ObservableObject
                 Add(UseTeletextLineLength ? "text too long or wide for teletext" : "text too long or wide");
             }
 
+            if (GetMatchingCustomErrorRule() is { } customRule)
+            {
+                Add("matches rule " + customRule.DisplayName);
+            }
+
             return errors?.ToString() ?? string.Empty;
         }
     }
@@ -1197,6 +1230,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         _cpsCacheText = null;
         _cpsOriginalCacheText = null;
         _textErrorCacheText = null;
+        _customRuleCacheText = null;
     }
 
     public void RefreshAfterSettingsChanged()
@@ -1382,7 +1416,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         // Last, because these are the only rules that touch the text (and, with
         // "text too wide" on, shape every line with HarfBuzz).
-        return HasTextRuleError();
+        return HasTextRuleError() || GetMatchingCustomErrorRule() != null;
     }
 
     private static bool HasGapError(SeGeneral general, double gapMs)
@@ -1510,6 +1544,11 @@ public partial class SubtitleLineViewModel : ObservableObject
             {
                 errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToNext, Math.Round(gapNext, 3), minGap)));
             }
+        }
+
+        if (GetMatchingCustomErrorRule() is { } customRule)
+        {
+            errors.Add(new LineError(LineErrorType.CustomRule, customRule.DisplayName));
         }
 
         return errors;

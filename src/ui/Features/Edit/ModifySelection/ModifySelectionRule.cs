@@ -248,8 +248,13 @@ public class ModifySelectionRule
             },
             new()
             {
+                RuleType = RuleType.HasErrors,
+                Name = l.HasErrors,
+            },
+            new()
+            {
                 RuleType = RuleType.BlankLines,
-                Name = l.BlankLines,
+                Name = Se.Language.General.BlankLines,
             },
             new()
             {
@@ -288,7 +293,9 @@ public class ModifySelectionRule
         return list;
     }
 
-    internal bool IsMatch(SubtitleLineViewModel item)
+    /// <param name="prev">The line before <paramref name="item"/> (gap and overlap errors), if any.</param>
+    /// <param name="next">The line after <paramref name="item"/> (gap and overlap errors), if any.</param>
+    internal bool IsMatch(SubtitleLineViewModel item, SubtitleLineViewModel? prev = null, SubtitleLineViewModel? next = null)
     {
         // Evaluate based on RuleType
         var text = item.Text ?? string.Empty;
@@ -301,7 +308,7 @@ public class ModifySelectionRule
                     return false;
                 }
 
-                return HasMatchCase && MatchCase ? text.Contains(Text) : text.IndexOf(Text, StringComparison.OrdinalIgnoreCase) >= 0;
+                return HasMatchCase && MatchCase ? text.Contains(Text) : text.Contains(Text, StringComparison.OrdinalIgnoreCase);
 
             case RuleType.StartsWith:
                 if (string.IsNullOrEmpty(Text))
@@ -429,10 +436,14 @@ public class ModifySelectionRule
                     return false;
                 }
 
-                return HasMatchCase && MatchCase ? item.Bookmark.Contains(Text) : item.Bookmark.IndexOf(Text, StringComparison.OrdinalIgnoreCase) >= 0;
+                return HasMatchCase && MatchCase ? item.Bookmark.Contains(Text) : item.Bookmark.Contains(Text, StringComparison.OrdinalIgnoreCase);
 
             case RuleType.Forced:
                 return item.Forced;
+
+            // The same rules that color a line in the subtitle grid (#9621).
+            case RuleType.HasErrors:
+                return item.HasErrors(prev, next);
 
             case RuleType.BlankLines:
                 return string.IsNullOrWhiteSpace(text);

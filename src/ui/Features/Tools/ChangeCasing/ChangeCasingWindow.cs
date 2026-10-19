@@ -1,12 +1,17 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
+/// <summary>
+/// Change casing, in the editor look (see <see cref="EditorChrome"/>): the casing choices (normal
+/// casing with its two options as switches) in one section, Cancel and OK at the bottom.
+/// </summary>
 public class ChangeCasingWindow : Window
 {
     public ChangeCasingWindow(ChangeCasingViewModel vm)
@@ -16,95 +21,60 @@ public class ChangeCasingWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 300;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var radioButtonNormalCasing = new RadioButton
-        {
-            Content = Se.Language.General.NormalCasing,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 5),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.NormalCasing)) { Mode = BindingMode.TwoWay },
-        };
+        var radioButtonNormalCasing = MakeRadio(Se.Language.General.NormalCasing, nameof(vm.NormalCasing));
 
-        var checkBoxNormalCasingFixNames = new CheckBox
-        {
-            Content = Se.Language.Tools.ChangeCasing.FixNames,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(15, 0, 0, 5),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.NormalCasingFixNames)) { Mode = BindingMode.TwoWay },
-        };
+        var rowNormalCasingFixNames = EditorChrome.MakeToggleRow(nameof(vm.NormalCasingFixNames), Se.Language.Tools.ChangeCasing.FixNames);
+        rowNormalCasingFixNames.Margin = new Thickness(28, 2, 0, 4);
+        rowNormalCasingFixNames.Bind(IsEnabledProperty, new Binding(nameof(vm.NormalCasing)));
+        rowNormalCasingFixNames.Bind(OpacityProperty, new Binding(nameof(vm.NormalCasing)) { Converter = EnabledOpacityConverter });
 
-        var checkBoxNormalCasingOnlyUpper = new CheckBox
-        {
-            Content = Se.Language.Tools.ChangeCasing.OnlyFixUppercaseLines,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(15, 0, 0, 15),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.NormalCasingOnlyUpper)) { Mode = BindingMode.TwoWay },
-        };
+        var rowNormalCasingOnlyUpper = EditorChrome.MakeToggleRow(nameof(vm.NormalCasingOnlyUpper), Se.Language.Tools.ChangeCasing.OnlyFixUppercaseLines);
+        rowNormalCasingOnlyUpper.Margin = new Thickness(28, 0, 0, 8);
+        rowNormalCasingOnlyUpper.Bind(IsEnabledProperty, new Binding(nameof(vm.NormalCasing)));
+        rowNormalCasingOnlyUpper.Bind(OpacityProperty, new Binding(nameof(vm.NormalCasing)) { Converter = EnabledOpacityConverter });
 
-        var radioButtonFixNames = new RadioButton
+        var panel = new StackPanel
         {
-            Content = Se.Language.Tools.ChangeCasing.FixNamesOnly,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 15),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FixNamesOnly)) { Mode = BindingMode.TwoWay },
-        };
-
-        var radioButtonAllUppercase = new RadioButton
-        {
-            Content = Se.Language.Tools.ChangeCasing.AllUppercase,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 15),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AllUppercase)) { Mode = BindingMode.TwoWay },
-        };
-
-        var radioButtonAllLowercase = new RadioButton
-        {
-            Content = Se.Language.Tools.ChangeCasing.AllLowercase,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 15),
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AllLowercase)) { Mode = BindingMode.TwoWay },
+            Spacing = 2,
+            Children =
+            {
+                radioButtonNormalCasing,
+                rowNormalCasingFixNames,
+                rowNormalCasingOnlyUpper,
+                MakeRadio(Se.Language.Tools.ChangeCasing.FixNamesOnly, nameof(vm.FixNamesOnly)),
+                MakeRadio(Se.Language.Tools.ChangeCasing.AllUppercase, nameof(vm.AllUppercase)),
+                MakeRadio(Se.Language.Tools.ChangeCasing.AllLowercase, nameof(vm.AllLowercase)),
+            },
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(
-            buttonOk,
-            UiUtil.MakeButtonCancel(vm.CancelCommand)
-        );
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var sections = new StackPanel { MinWidth = 320 };
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Casing, panel, first: true));
 
-        grid.Add(radioButtonNormalCasing, 0, 0);
-        grid.Add(checkBoxNormalCasingFixNames, 1, 0);
-        grid.Add(checkBoxNormalCasingOnlyUpper, 2, 0);
-        grid.Add(radioButtonFixNames, 3, 0);
-        grid.Add(radioButtonAllUppercase, 4, 0);
-        grid.Add(radioButtonAllLowercase, 5, 0);
-        grid.Add(buttonPanel, 6, 0);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, radioButtonNormalCasing); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    // a disabled row's label (plain TextBlock) has no disabled look, so dim the whole row
+    private static readonly FuncValueConverter<bool, double> EnabledOpacityConverter = new(on => on ? 1.0 : 0.5);
+
+    private static RadioButton MakeRadio(string text, string property)
+    {
+        return new RadioButton
+        {
+            Content = text,
+            FontSize = 12.5,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!RadioButton.IsCheckedProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
+        };
     }
 }

@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -30,6 +31,7 @@ public class CompareWindow : Window
 {
     private const double GutterWidth = 52;
     private const string EditButtonClass = "compareEdit";
+    private const string SegmentClass = "compareSegment";
 
     // Trims in the middle: the start of the name and its end (episode, language, extension) stay visible.
     private static readonly TextTrimming FileNameTrimming = new TextLeadingPrefixTrimming("\u2026", 24);
@@ -51,28 +53,39 @@ public class CompareWindow : Window
         vm.Window = this;
         DataContext = vm;
         _vm = vm;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
+        AddStyles(Styles);
+
+        // The two file headers and the aligned rows; the rows give up height first, so the status
+        // strip and the button bar stay reachable on a short screen.
+        var body = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto), // the two file headers
+                new RowDefinition(GridLength.Star), // the aligned rows
+            },
+            Margin = new Thickness(12, 10, 12, 10),
+            RowSpacing = 8,
+        };
+        body.Add(MakeHeaders(vm), 0);
+        body.Add(MakeRowsArea(vm), 1);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition(GridLength.Auto), // filter tabs + options + navigation
-                new RowDefinition(GridLength.Auto), // the two file headers
-                new RowDefinition(GridLength.Star), // the aligned rows
-                new RowDefinition(GridLength.Auto), // sync points: picking hint + actions
-                new RowDefinition(GridLength.Auto), // status text + legend
+                new RowDefinition(GridLength.Star), // headers + rows
+                new RowDefinition(GridLength.Auto), // sync points hint + actions, status text + legend
                 new RowDefinition(GridLength.Auto), // pending changes + buttons
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
         };
 
-        grid.Add(MakeToolbar(vm), 0);
-        grid.Add(MakeHeaders(vm), 1);
-        grid.Add(MakeRowsArea(vm), 2);
-        grid.Add(MakeSyncBar(vm), 3);
-        grid.Add(MakeStatusBar(vm), 4);
-        grid.Add(MakeBottomBar(vm), 5);
+        grid.Add(EditorChrome.MakeToolbar(MakeToolbar(vm)), 0);
+        grid.Add(body, 1);
+        grid.Add(MakeStatusStrip(vm), 2);
+        grid.Add(MakeBottomBar(vm), 3);
 
         Content = grid;
 
@@ -119,6 +132,40 @@ public class CompareWindow : Window
         };
     }
 
+    /// <summary>
+    /// The filter tabs as a segmented control in the editor accent, and the selected row in the
+    /// soft accent - the row cards keep their own diff colors on top of it.
+    /// </summary>
+    private static void AddStyles(Styles styles)
+    {
+        static Style Presenter(Func<Selector?, Selector> selector, params (AvaloniaProperty Property, object Value)[] setters)
+        {
+            var style = new Style(x => selector(x).Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"));
+            foreach (var (property, value) in setters)
+            {
+                style.Setters.Add(new Setter(property, value));
+            }
+
+            return style;
+        }
+
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class(SegmentClass),
+            (ContentPresenter.BackgroundProperty, Brushes.Transparent)));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class(SegmentClass).Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.HoverBrush), (ContentPresenter.ForegroundProperty, EditorChrome.StrongTextBrush)));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class(SegmentClass).Class(":checked"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.AccentBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class(SegmentClass).Class(":checked").Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.AccentHoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+
+        styles.Add(Presenter(x => x.OfType<ListBoxItem>().Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.HoverBrush)));
+        styles.Add(Presenter(x => x.OfType<ListBoxItem>().Class(":selected"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.AccentSoftBrush)));
+        styles.Add(Presenter(x => x.OfType<ListBoxItem>().Class(":selected").Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.AccentSoftBrush)));
+    }
+
     private Control MakeToolbar(CompareViewModel vm)
     {
         var tabs = new StackPanel
@@ -135,7 +182,9 @@ public class CompareWindow : Window
 
         var segmented = new Border
         {
-            Background = UiUtil.GetTextColor(0.06),
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(2),
             VerticalAlignment = VerticalAlignment.Center,
@@ -146,8 +195,8 @@ public class CompareWindow : Window
         var options = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
-            ItemSpacing = 16,
-            LineSpacing = 4,
+            ItemSpacing = 18,
+            LineSpacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(16, 0, 0, 0),
             Children =
@@ -159,14 +208,14 @@ public class CompareWindow : Window
             },
         };
 
-        var buttonPrevious = UiUtil.MakeButton(vm.PreviousDifferenceCommand, IconNames.ChevronLeft, Se.Language.File.PreviousDifference + " (Shift+F8)");
-        var buttonNext = UiUtil.MakeButton(vm.NextDifferenceCommand, IconNames.ChevronRight, Se.Language.File.NextDifference + " (F8)");
+        var buttonPrevious = EditorChrome.CreateToolButton(IconNames.ChevronLeft, Se.Language.File.PreviousDifference + " (Shift+F8)", vm.PreviousDifferenceCommand);
+        var buttonNext = EditorChrome.CreateToolButton(IconNames.ChevronRight, Se.Language.File.NextDifference + " (F8)", vm.NextDifferenceCommand);
         var navigation = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 4,
+            Spacing = 2,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { buttonPrevious, buttonNext },
+            Children = { EditorChrome.MakeToolbarSeparator(), buttonPrevious, buttonNext },
         };
 
         var bar = new Grid
@@ -209,7 +258,7 @@ public class CompareWindow : Window
             {
                 Orientation = Orientation.Horizontal,
                 Spacing = 7,
-                Children = { new TextBlock { Text = label, VerticalAlignment = VerticalAlignment.Center }, count },
+                Children = { new TextBlock { Text = label, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center }, count },
             },
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(CompareViewModel.SelectedCompareVisual))
             {
@@ -218,22 +267,31 @@ public class CompareWindow : Window
             },
         };
 
+        tab.Classes.Add(SegmentClass);
         AutomationProperties.SetName(tab, label);
         return tab;
     }
 
-    private static CheckBox MakeOption(CompareViewModel vm, string text, string hint, string propertyPath)
+    private static Control MakeOption(CompareViewModel vm, string text, string hint, string propertyPath)
     {
-        var checkBox = UiUtil.MakeCheckBox(text, vm, propertyPath);
-        checkBox.IsCheckedChanged += vm.CheckBoxChanged;
-        AddHint(checkBox, hint);
-        return checkBox;
+        var toggle = EditorChrome.MakeSwitch(propertyPath, text);
+        toggle.IsCheckedChanged += vm.CheckBoxChanged;
+        var row = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { toggle, new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center } },
+        };
+        AddHint(row, hint);
+        return row;
     }
 
     private static Control MakeTimeToleranceOption(CompareViewModel vm)
     {
-        var label = UiUtil.MakeLabel(Se.Language.File.IgnoreTimeDifferenceMs);
-        var numericUpDown = UiUtil.MakeNumericUpDownInt(0, 10_000, 0, 120, vm, nameof(vm.IgnoreTimeDifferenceMs));
+        var label = new TextBlock { Text = Se.Language.File.IgnoreTimeDifferenceMs, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center };
+        var numericUpDown = UiUtil.MakeNumericUpDownInt(0, 10_000, 0, 72, vm, nameof(vm.IgnoreTimeDifferenceMs));
+        numericUpDown.Classes.Add("field");
         numericUpDown.Increment = 10;
         numericUpDown.ValueChanged += vm.CheckBoxChanged;
         AutomationProperties.SetName(numericUpDown, Se.Language.File.IgnoreTimeDifferenceMs);
@@ -266,7 +324,7 @@ public class CompareWindow : Window
         AddHint(pillLeft, Se.Language.File.CompareEditableHint);
         var pillLeftReadOnly = MakePill(IconNames.Lock, nameof(vm.LeftSideLabel), highlighted: false)
             .WithBindIsVisible(nameof(vm.IsLeftEditable), new FuncValueConverter<bool, bool>(v => !v));
-        var buttonLeftBrowse = UiUtil.MakeButtonBrowse(vm.PickLeftSubtitleFileCommand, accessibleName: Se.Language.General.OpenOriginalSubtitleFileTitle);
+        var buttonLeftBrowse = EditorChrome.CreateToolButton(IconNames.FolderOpen, Se.Language.General.OpenOriginalSubtitleFileTitle, vm.PickLeftSubtitleFileCommand, 28);
 
         var left = MakeHeaderCard(
             MakeIcon(IconNames.FileOutline, 0.9),
@@ -289,15 +347,15 @@ public class CompareWindow : Window
         var pillRight = MakePill(IconNames.Lock, string.Empty, highlighted: false, fixedText: Se.Language.File.CompareReadOnly);
         // A short label, the file name in the hint: the whole name made the button so wide that the
         // "Reference" caption was pushed under the read-only pill (#15619).
-        var buttonRightReload = UiUtil.MakeButton(Se.Language.File.CompareLoadSavedFile, vm.ReloadRightFromFileCommand)
-            .WithIconLeft(IconNames.Refresh)
+        var buttonRightReload = EditorChrome.MakeActionButton(IconNames.Refresh, Se.Language.File.CompareLoadSavedFile, vm.ReloadRightFromFileCommand)
             .WithBindIsVisible(nameof(vm.IsReloadFromFileVisible));
+        buttonRightReload.Height = 28;
         AddHint(buttonRightReload, vm.ReloadFromFileHint);
         if (Se.Settings.Appearance.ShowHints)
         {
             buttonRightReload[!ToolTip.TipProperty] = new Binding(nameof(vm.ReloadFromFileHint));
         }
-        var buttonRightBrowse = UiUtil.MakeButtonBrowse(vm.PickRightSubtitleFileCommand, accessibleName: Se.Language.General.OpenSubtitleFileTitle);
+        var buttonRightBrowse = EditorChrome.CreateToolButton(IconNames.FolderOpen, Se.Language.General.OpenSubtitleFileTitle, vm.PickRightSubtitleFileCommand, 28);
 
         var right = MakeHeaderCard(
             MakeIcon(IconNames.FileOutline, 0.6),
@@ -375,11 +433,11 @@ public class CompareWindow : Window
 
         return new Border
         {
-            Background = UiUtil.GetTextColor(0.04),
-            BorderBrush = UiUtil.GetTextColor(0.1),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(8),
-            Padding = new Thickness(10, 5),
+            Padding = new Thickness(10, 4, 4, 4),
             Child = grid,
         };
     }
@@ -404,15 +462,14 @@ public class CompareWindow : Window
         var icon = MakeIcon(iconName, 0.85);
         icon.FontSize = UiUtil.ScaledFontSize(11);
 
-        var accent = UiUtil.GetAccentBrush();
         return new Border
         {
             CornerRadius = new CornerRadius(10),
             Padding = new Thickness(8, 2),
             VerticalAlignment = VerticalAlignment.Center,
             BorderThickness = new Thickness(1),
-            BorderBrush = highlighted ? accent : UiUtil.GetTextColor(0.2),
-            Background = highlighted ? new SolidColorBrush(((ISolidColorBrush)accent).Color, 0.15) : UiUtil.GetTextColor(0.05),
+            BorderBrush = highlighted ? EditorChrome.AccentBrush : EditorChrome.FieldBorderBrush,
+            Background = highlighted ? EditorChrome.AccentSoftBrush : EditorChrome.FieldBrush,
             Child = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
@@ -504,14 +561,7 @@ public class CompareWindow : Window
 
         vm.RowsView = listBox;
 
-        var listBorder = new Border
-        {
-            BorderBrush = UiUtil.GetTextColor(0.15),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(8),
-            ClipToBounds = true,
-            Child = listBox,
-        };
+        var listBorder = EditorChrome.MakeListFrame(listBox);
 
         var area = new Grid
         {
@@ -610,7 +660,7 @@ public class CompareWindow : Window
 
         return new Border
         {
-            BorderBrush = UiUtil.GetTextColor(0.08),
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 0, 0, 1),
             Child = grid,
         };
@@ -872,6 +922,7 @@ public class CompareWindow : Window
         AutomationProperties.SetName(textBox, Se.Language.General.Text);
 
         var buttonSave = UiUtil.MakeButton(Se.Language.General.Ok, vm.CommitEditCommand).WithIconLeft(IconNames.Check);
+        buttonSave.Classes.Add("primary");
         buttonSave.Bind(Button.CommandParameterProperty, new Binding("."));
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelEditCommand);
         buttonCancel.Bind(Button.CommandParameterProperty, new Binding("."));
@@ -885,10 +936,12 @@ public class CompareWindow : Window
         var hint = MakeCaption(Se.Language.File.CompareEditHint);
         hint.Margin = new Thickness(6, 0, 0, 0);
 
-        var buttons = new StackPanel
+        // Wraps, so on a narrow card the shortcut hint goes to its own line instead of under the gutter.
+        var buttons = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
+            ItemSpacing = 6,
+            LineSpacing = 4,
             Children = { buttonSave, buttonCancel, buttonTakeText, buttonTakeTiming, hint },
         };
 
@@ -969,10 +1022,33 @@ public class CompareWindow : Window
         return button;
     }
 
+    /// <summary>The sync points bar above the status text and the color legend, on the status color.</summary>
+    private Control MakeStatusStrip(CompareViewModel vm)
+    {
+        return new Border
+        {
+            Background = EditorChrome.StatusBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 6),
+            Child = new StackPanel
+            {
+                Spacing = 6,
+                Children = { MakeSyncBar(vm), MakeStatusBar(vm) },
+            },
+        };
+    }
+
     private Control MakeStatusBar(CompareViewModel vm)
     {
-        var statusText = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.StatusText));
-        statusText.VerticalAlignment = VerticalAlignment.Center;
+        var statusText = new TextBlock
+        {
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
+        };
 
         var legend = new StackPanel
         {
@@ -1007,16 +1083,18 @@ public class CompareWindow : Window
             [!IsVisibleProperty] = new Binding(nameof(vm.HasSyncPointHint)),
         };
 
-        var buttonApply = UiUtil.MakeButton(Se.Language.File.CompareSyncApply, vm.ApplySyncCommand)
-            .WithIconLeft(IconNames.LinkVariant)
+        var buttonApply = EditorChrome.MakeActionButton(IconNames.LinkVariant, UiUtil.RemoveAccessKey(Se.Language.File.CompareSyncApply), vm.ApplySyncCommand)
             .WithBindIsVisible(nameof(vm.HasSyncPointHint));
         buttonApply.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanApplySync)));
-        var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelSyncPickCommand)
+        var buttonCancel = EditorChrome.MakeActionButton(IconNames.Close, UiUtil.RemoveAccessKey(Se.Language.General.Cancel), vm.CancelSyncPickCommand)
             .WithBindIsVisible(nameof(vm.HasSyncPointHint));
         AddHint(buttonCancel, Se.Language.General.Cancel + " (Esc)");
         var buttonClear = UiUtil.MakeButton(string.Empty, vm.ClearSyncPointsCommand)
             .WithIconLeftBindText(IconNames.Close, nameof(vm.ClearSyncPointsText))
             .WithBindIsVisible(nameof(vm.HasSyncPoints));
+        buttonClear.Classes.Add("tool");
+        buttonClear.Height = 30;
+        buttonClear.Padding = new Thickness(10, 0);
 
         var buttons = new StackPanel
         {
@@ -1038,6 +1116,7 @@ public class CompareWindow : Window
         };
         var message = new TextBlock
         {
+            FontSize = 12.5,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SyncPointMessage)),
@@ -1076,30 +1155,22 @@ public class CompareWindow : Window
         };
         var lastChange = new TextBlock
         {
-            Opacity = 0.65,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             MaxWidth = 360,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LastChangeText)),
         };
-        var buttonUndo = UiUtil.MakeButton(Se.Language.General.Undo, vm.UndoCommand).WithIconLeft(IconNames.Undo);
+        var buttonUndo = EditorChrome.MakeActionButton(IconNames.Undo, UiUtil.RemoveAccessKey(Se.Language.General.Undo), vm.UndoCommand);
         AddHint(buttonUndo, Se.Language.General.Undo + " (Ctrl+Z)");
 
-        var tray = new Border
+        var tray = new StackPanel
         {
-            Background = UiUtil.GetTextColor(0.05),
-            BorderBrush = UiUtil.GetTextColor(0.1),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(8),
-            Padding = new Thickness(10, 4, 4, 4),
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
-            Child = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 10,
-                Children = { badge, pendingText, lastChange, buttonUndo },
-            },
+            Children = { badge, pendingText, lastChange, buttonUndo },
             [!IsVisibleProperty] = new Binding(nameof(vm.HasPendingChanges)),
         };
 
@@ -1110,9 +1181,9 @@ public class CompareWindow : Window
             .WithBindIsVisible(nameof(vm.IsExportVisible));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindContent(nameof(vm.OkButtonText));
-        var panelButtons = UiUtil.MakeButtonBar(buttonExport, buttonCancel, buttonOk);
+        buttonOk.Classes.Add("primary");
 
-        return MakeTwoColumnBar(tray, panelButtons);
+        return EditorChrome.MakeButtonBar(tray, buttonExport, buttonCancel, buttonOk);
     }
 
     private void HookScrollViewer()
@@ -1264,7 +1335,7 @@ public class CompareWindow : Window
                 new TextBlock
                 {
                     Text = label,
-                    Opacity = 0.8,
+                    Foreground = EditorChrome.DimTextBrush,
                     FontSize = UiUtil.ScaledFontSize(12),
                     VerticalAlignment = VerticalAlignment.Center,
                 },

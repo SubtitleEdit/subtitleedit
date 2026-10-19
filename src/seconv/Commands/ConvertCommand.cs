@@ -52,6 +52,26 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("ASSA style file name")]
         public string? AssaStyleFile { get; init; }
 
+        [CommandOption("--burn-in-video")]
+        [Description("Burn the converted ASSA subtitle into this video with ffmpeg (target format must be ass); output: <subtitle name>_burn-in.<video ext>")]
+        public string? BurnInVideo { get; init; }
+
+        [CommandOption("--burn-in-ffmpeg-args")]
+        [Description("ffmpeg encoder arguments for --burn-in-video (default: \"" + BurnInRunner.DefaultFfmpegArgs + "\")")]
+        public string? BurnInFfmpegArgs { get; init; }
+
+        [CommandOption("--burn-in-effects")]
+        [Description("Comma-separated subtitle effects for the ass output, the UI burn-in's effects: fade (250 ms in/out; fade:<ms> for another length), font-kerning, font-size-change, scroll-up, scroll-down, rotate-in, tilt-bounce, font-size-bounce-in, fix-rtl")]
+        public string? BurnInEffects { get; init; }
+
+        [CommandOption("--dcinema-font|--dcinemafont")]
+        [Description("Font file (.ttf/.otf) embedded in dcinemasmpte2014mxf output")]
+        public string? DCinemaFont { get; init; }
+
+        [CommandOption("--reel-duration|--reelduration")]
+        [Description("D-Cinema MXF output: the reel (picture) length as hh:mm:ss:ff - every asset of a DCP reel must have it (default: until the last subtitle)")]
+        public string? ReelDuration { get; init; }
+
         [CommandOption("--ebu-header-file|--ebuheaderfile")]
         [Description("EBU header file name")]
         public string? EbuHeaderFile { get; init; }
@@ -762,6 +782,63 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
 
+            if (!string.IsNullOrWhiteSpace(settings.BurnInVideo))
+            {
+                if (!File.Exists(settings.BurnInVideo))
+                {
+                    return Fail(settings, $"--burn-in-video: video file not found: {settings.BurnInVideo}");
+                }
+
+                if (!IsAssTarget(settings.Format))
+                {
+                    return Fail(settings, "--burn-in-video needs the ass target format, e.g. seconv movie.srt ass --burn-in-video:movie.mp4");
+                }
+
+                var ffmpeg = BurnInRunner.FindFfmpeg();
+                if (ffmpeg is null)
+                {
+                    return Fail(settings, "--burn-in-video needs ffmpeg, but it was not found on PATH. Install ffmpeg or add its folder to PATH.");
+                }
+
+                // FfmpegMediaInfo only trusts FFmpegLocation on Windows, so point it at the one found.
+                Configuration.Settings.General.FFmpegLocation = ffmpeg;
+
+                // Without PlayResX/Y libass assumes 384x288 and scales the style up; take the
+                // video's own size so --assa-style-file sizes mean pixels, like the UI burn-in.
+                if (resolution is null)
+                {
+                    var dimension = Nikse.SubtitleEdit.UiLogic.Media.FfmpegMediaInfo.Parse(settings.BurnInVideo).Dimension;
+                    if (dimension is { Width: > 0, Height: > 0 })
+                    {
+                        resolution = (dimension.Width, dimension.Height);
+                    }
+                    else
+                    {
+                        const string warning = "--burn-in-video: could not read the video's size; pass --resolution:<WxH> so style sizes match the video.";
+                        settingsWarnings.Add(warning);
+                        if (!silent)
+                        {
+                            AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: {warning}[/]");
+                        }
+                    }
+                }
+            }
+
+            List<string> burnInEffects;
+            try
+            {
+                burnInEffects = BurnInRunner.ParseEffects(settings.BurnInEffects);
+            }
+            catch (FormatException ex)
+            {
+                return Fail(settings, ex.Message);
+            }
+
+            if (burnInEffects.Count > 0 && !IsAssTarget(settings.Format))
+            {
+                return Fail(settings, "--burn-in-effects needs the ass target format, e.g. seconv movie.srt ass --burn-in-effects:fade");
+            }
+
             // Parse PAC code page if supplied
             int? pacCodePage = null;
             if (!string.IsNullOrWhiteSpace(settings.PacCodepage))
@@ -821,9 +898,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 Resolution = resolution,
                 ImageStyle = imageStyle,
                 AssaStyleFile = settings.AssaStyleFile,
+                BurnInVideo = settings.BurnInVideo,
+                BurnInFfmpegArgs = settings.BurnInFfmpegArgs,
+                BurnInEffects = burnInEffects,
                 PacCodePage = pacCodePage,
                 PacSecondaryCodePage = pacSecondaryCodePage,
                 EbuHeaderFile = settings.EbuHeaderFile,
+                DCinemaFontFile = settings.DCinemaFont,
+                ReelDuration = settings.ReelDuration,
                 MultipleReplaceFile = settings.MultipleReplace,
                 CustomFormatFile = settings.CustomFormat,
                 PlainTextMerge = settings.PlainTextMerge,
@@ -840,7 +922,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 OcrDb = settings.OcrDb,
                 DictionaryFolder = settings.DictionaryFolder,
                 TimeCodesOnly = settings.TimeCodesOnly,
-                VobSubIsolateColors = !settings.NoVobSubIsolateColors,
+                // Same for VobSub/DVD sup: nOCR and BinaryOCR need the transparent original, or
+                // every line is one opaque blob read as "*".
+                VobSubIsolateColors = !settings.NoVobSubIsolateColors &&
+                                      settings.OcrEngine?.Trim().ToLowerInvariant() is not ("nocr" or "binaryocr" or "binary"),
                 // Apple Vision reads the original PGS/DVB-sub images better than binarised ones -
                 // binarising costs it umlauts and trailing punctuation - and the GUI never
                 // binarises for it either, so isolation stays off for that engine.
@@ -1034,6 +1119,17 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
     /// one document shape on every path instead of JSON on success and plain text on a bad
     /// option value.
     /// </summary>
+    /// <summary>
+    /// True for every name the ass target resolves from - "ass", "assa", "AdvancedSubStationAlpha",
+    /// "Advanced Sub Station Alpha" (any case) - as ApplyAssaPostProcess matches it.
+    /// </summary>
+    internal static bool IsAssTarget(string? format)
+    {
+        return !string.IsNullOrWhiteSpace(format) &&
+               LibSEIntegration.NormalizeFormatName(format).Replace(" ", string.Empty)
+                   .Equals("AdvancedSubStationAlpha", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static int Fail(Settings settings, string message)
     {
         if (settings.Json)

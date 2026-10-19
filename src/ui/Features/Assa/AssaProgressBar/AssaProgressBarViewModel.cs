@@ -30,7 +30,19 @@ public partial class AssaProgressBarViewModel : ObservableObject, IClosingCleanu
     [ObservableProperty] private Color _foregroundColor = Colors.LimeGreen;
     [ObservableProperty] private Color _backgroundColor = Color.FromRgb(64, 64, 64);
     [ObservableProperty] private Color _textColor = Colors.White;
-    [ObservableProperty] private int _cornerStyleIndex; // 0 = square, 1 = rounded
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(BarStyleName))]
+    private int _cornerStyleIndex; // the bar style, see ProgressBarStyles (0 = square, 1 = rounded)
+
+    /// <summary>
+    /// Distance between the bar and the top/bottom edge of the video - a floating bar.
+    /// </summary>
+    [ObservableProperty] private int _edgeMargin;
+
+    /// <summary>
+    /// A knob that moves along the bar with the video position.
+    /// </summary>
+    [ObservableProperty] private bool _showPlayhead;
     [ObservableProperty] private ObservableCollection<string> _cornerStyles = [];
 
     // Chapters settings
@@ -70,12 +82,16 @@ public partial class AssaProgressBarViewModel : ObservableObject, IClosingCleanu
     private bool _isSubtitleLoaded;
 
     public Subtitle ResultSubtitle => _subtitle;
+
+    public string BarStyleName => CornerStyleIndex >= 0 && CornerStyleIndex < CornerStyles.Count ? CornerStyles[CornerStyleIndex] : string.Empty;
     public VideoPlayerControl? VideoPlayerControl { get; set; }
 
     public AssaProgressBarViewModel()
     {
-        CornerStyles.Add(Se.Language.Assa.ProgressBarSquareCorners);
-        CornerStyles.Add(Se.Language.Assa.ProgressBarRoundedCorners);
+        foreach (var name in ProgressBarStyles.Names)
+        {
+            CornerStyles.Add(name);
+        }
 
         TextAlignments.Add(Se.Language.General.Left);
         TextAlignments.Add(Se.Language.General.Center);
@@ -105,6 +121,9 @@ public partial class AssaProgressBarViewModel : ObservableObject, IClosingCleanu
         {
             CornerStyleIndex = Se.Settings.Assa.ProgressBarCornerStyleIndex;
         }
+
+        EdgeMargin = Se.Settings.Assa.ProgressBarEdgeMargin;
+        ShowPlayhead = Se.Settings.Assa.ProgressBarShowPlayhead;
     }
 
     public void Initialize(Subtitle subtitle, int videoWidth, int videoHeight, double videoDurationMs, string? videoFileName)
@@ -242,6 +261,8 @@ public partial class AssaProgressBarViewModel : ObservableObject, IClosingCleanu
     partial void OnBackgroundColorChanged(Color value) => GeneratePreview();
     partial void OnTextColorChanged(Color value) => GeneratePreview();
     partial void OnCornerStyleIndexChanged(int value) => GeneratePreview();
+    partial void OnEdgeMarginChanged(int value) => GeneratePreview();
+    partial void OnShowPlayheadChanged(bool value) => GeneratePreview();
     partial void OnSplitterWidthChanged(int value) => GeneratePreview();
     partial void OnSplitterHeightChanged(int value) => GeneratePreview();
     partial void OnFontNameChanged(string value) => GeneratePreview();
@@ -356,7 +377,7 @@ PlayResY: {_videoHeight}
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: SE-progress-bar-splitter,Arial,20,{txtColor},&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
-Style: SE-progress-bar-bg,Arial,20,{foreColor},{backColor},&H00FFFFFF,&H00000000,0,0,0,0,100,100,0,0,1,0,0,{alignment},0,0,0,1
+Style: SE-progress-bar-bg,Arial,20,{foreColor},{backColor},&H00FFFFFF,&H00000000,0,0,0,0,100,100,0,0,1,0,0,{alignment},0,0,{EdgeMargin},1
 Style: SE-progress-bar-text,{FontName},{FontSize},{txtColor},&H0000FFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,{textAlignment},0,0,0,1
 
 [Events]
@@ -369,6 +390,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         script += $"Dialogue: -255,0:00:00.00,{TimeSpan.FromMilliseconds(_videoDurationMs):hh\\:mm\\:ss\\.ff},SE-progress-bar-bg,,0,0,0,,{pbDrawing}\n";
 
         new AdvancedSubStationAlpha().LoadSubtitle(_progressBarSubtitle, script.SplitToLines(), string.Empty);
+
+        // The bar's vertical span in the video (MarginV lifts it off the edge)
+        var barTop = PositionTop ? EdgeMargin : _videoHeight - BarHeight - EdgeMargin;
+        if (ShowPlayhead)
+        {
+            _progressBarSubtitle.Paragraphs.Add(MakePlayhead(barTop));
+        }
 
         // Add chapters
         if (Chapters.Count > 0)
@@ -384,7 +412,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 string splitterText;
                 if (PositionTop)
                 {
-                    var splitterTop = 0;
+                    var splitterTop = barTop;
                     if (SplitterHeight < BarHeight)
                     {
                         splitterTop += (BarHeight - SplitterHeight) / 2;
@@ -398,7 +426,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 }
                 else
                 {
-                    var splitterTop = _videoHeight - BarHeight;
+                    var splitterTop = barTop;
                     if (SplitterHeight < BarHeight)
                     {
                         splitterTop += (BarHeight - SplitterHeight) / 2;
@@ -423,9 +451,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 }
 
                 // Add chapter text
-                var yPos = PositionTop
-                    ? (int)Math.Round(BarHeight / 2.0 + YAdjustment)
-                    : (int)Math.Round(_videoHeight - BarHeight / 2.0 + YAdjustment);
+                var yPos = (int)Math.Round(barTop + BarHeight / 2.0 + YAdjustment);
 
                 var posTag = $"{{\\pos({textPosition}, {yPos})}}";
                 var chapterInfo = new Paragraph(posTag + chapter.Text, 0, _videoDurationMs)
@@ -441,15 +467,29 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         PreviewCode = new AdvancedSubStationAlpha().ToText(_progressBarSubtitle, string.Empty);
     }
 
+    /// <summary>
+    /// The bar: one drawing that \K fills from left to right over the video's duration.
+    /// </summary>
     private string GenerateProgressBarDrawing(int durationInCs)
     {
-        if (CornerStyleIndex == 1) // Rounded corners
-        {
-            var barEnd = _videoWidth - BarHeight;
-            return $@"{{\K{durationInCs}\p1}}m {BarHeight} 0 b 0 0 0 {BarHeight} {BarHeight} {BarHeight} l {barEnd} {BarHeight} b {_videoWidth} {BarHeight} {_videoWidth} 0 {barEnd} 0 l {barEnd} 0 {BarHeight} 0{{\p0}}";
-        }
+        return $"{{\\K{durationInCs}\\p1}}{ProgressBarStyles.Drawing(CornerStyleIndex, _videoWidth, BarHeight)}{{\\p0}}";
+    }
 
-        return $"{{\\K{durationInCs}\\p1}}m 0 0 l {_videoWidth} 0 {_videoWidth} {BarHeight} 0 {BarHeight}{{\\p0}}";
+    /// <summary>
+    /// A round knob in the text color, moving from the start to the end of the bar over the video.
+    /// </summary>
+    private Paragraph MakePlayhead(int barTop)
+    {
+        var diameter = Math.Max(8, (int)Math.Round(BarHeight * 1.6));
+        var y = barTop + BarHeight / 2 - diameter / 2;
+        var durationMs = (long)Math.Round(_videoDurationMs);
+        var knob = ProgressBarStyles.RoundedRect(0, 0, diameter, diameter, diameter / 2.0);
+        var text = $"{{\\an7\\move({-diameter / 2},{y},{_videoWidth - diameter / 2},{y},0,{durationMs})\\p1}}{knob}{{\\p0}}";
+        return new Paragraph(text, 0, _videoDurationMs)
+        {
+            Extra = "SE-progress-bar-splitter",
+            Layer = -200,
+        };
     }
 
     private int GetTextPosition(int position, int chapterIndex, double percentOfDuration)
@@ -475,21 +515,18 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 positionNextX = (int)Math.Round(_videoWidth * percentNext / 100.0);
             }
 
-            if (CornerStyleIndex == 1 && chapterIndex == Chapters.Count - 1)
-            {
-                return (int)Math.Round((double)(positionNextX - BarHeight + XAdjustment));
-            }
-
-            return (int)Math.Round(positionNextX - 10.0 + XAdjustment);
+            // The last chapter's text keeps clear of the bar's right end where its shape narrows
+            var rightInset = chapterIndex == Chapters.Count - 1
+                ? Math.Max(10.0, ProgressBarStyles.GetEndCapInset(CornerStyleIndex, BarHeight).Right)
+                : 10.0;
+            return (int)Math.Round(positionNextX - rightInset + XAdjustment);
         }
 
-        // Left
-        if (CornerStyleIndex == 1 && chapterIndex == 0)
-        {
-            return (int)Math.Round(position + (double)BarHeight + SplitterWidth + XAdjustment);
-        }
-
-        return (int)Math.Round(position + 8.0 + SplitterWidth + XAdjustment);
+        // Left - the first chapter's text keeps clear of the bar's left end where its shape narrows
+        var leftInset = chapterIndex == 0
+            ? Math.Max(8.0, ProgressBarStyles.GetEndCapInset(CornerStyleIndex, BarHeight).Left)
+            : 8.0;
+        return (int)Math.Round(position + leftInset + SplitterWidth + XAdjustment);
     }
 
     private static string ToAssaColor(Color color)
@@ -505,6 +542,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         Se.Settings.Assa.ProgressBarForegroundColor = ForegroundColor.FromColorToHex();
         Se.Settings.Assa.ProgressBarBackgroundColor = BackgroundColor.FromColorToHex();
         Se.Settings.Assa.ProgressBarCornerStyleIndex = CornerStyleIndex;
+        Se.Settings.Assa.ProgressBarEdgeMargin = EdgeMargin;
+        Se.Settings.Assa.ProgressBarShowPlayhead = ShowPlayhead;
         
         ApplyProgressBar();
         OkPressed = true;
@@ -560,6 +599,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         BackgroundColor = Color.FromRgb(64, 64, 64);
         TextColor = Colors.White;
         CornerStyleIndex = 0;
+        EdgeMargin = 0;
+        ShowPlayhead = false;
         SplitterWidth = 2;
         SplitterHeight = 10;
         FontName = "Arial";

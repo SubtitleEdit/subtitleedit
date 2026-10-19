@@ -1,72 +1,80 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
+/// <summary>
+/// Transport Stream settings for batch convert, in the editor look (see <see cref="EditorChrome"/>):
+/// position and video size overrides, the file name ending, OK in the button bar.
+/// </summary>
 public class BatchConvertTsSettingsWindow : Window
 {
+    private const double LabelWidth = 130;
+
     public BatchConvertTsSettingsWindow(BatchConvertTsSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Tools.BatchConvert.TransportStreamSettings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
-        var labelInfo = UiUtil.MakeTextBlock(Se.Language.Tools.BatchConvert.TransportStreamSettingsInfo);
-        labelInfo.TextWrapping = Avalonia.Media.TextWrapping.Wrap;
+        var labelInfo = EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.TransportStreamSettingsInfo);
         labelInfo.MaxWidth = 560;
-        labelInfo.Opacity = 0.7;
-        labelInfo.Margin = new Avalonia.Thickness(0, 0, 0, 6);
+        labelInfo.HorizontalAlignment = HorizontalAlignment.Left;
 
         // X position
-        var checkBoxOverrideX = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.TransportStreamOverrideXPosition, vm, nameof(vm.OverrideXPosition));
-        var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment).WithMarginLeft(25);
+        var switchOverrideX = EditorChrome.MakeSwitchRow(nameof(vm.OverrideXPosition), Se.Language.Tools.BatchConvert.TransportStreamOverrideXPosition, out var toggleOverrideX);
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.HorizontalAlignments, vm, nameof(vm.SelectedHorizontalAlignment))
             .WithBindEnabled(nameof(vm.OverrideXPosition));
-        var labelHMargin = UiUtil.MakeLabel(Se.Language.File.Export.LeftRightMargin).WithMarginLeft(15);
-        var numericHMargin = UiUtil.MakeNumericUpDownInt(0, 100, 5, 110, vm, nameof(vm.HorizontalMarginPercent))
+        comboBoxAlignment.MinWidth = 140;
+        AutomationProperties.SetName(comboBoxAlignment, Se.Language.General.Alignment);
+        var numericHMargin = Field(UiUtil.MakeNumericUpDownInt(0, 100, 5, 80, vm, nameof(vm.HorizontalMarginPercent)), Se.Language.File.Export.LeftRightMargin)
             .WithBindEnabled(nameof(vm.OverrideXPosition));
-        var panelX = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { labelAlignment, comboBoxAlignment, labelHMargin, numericHMargin, UiUtil.MakeLabel("%") }
-        };
+        var panelX = Indented(
+            EditorChrome.MakeLabeledRow(Se.Language.General.Alignment, comboBoxAlignment, LabelWidth, wrap: true),
+            EditorChrome.MakeLabeledRow(Se.Language.File.Export.LeftRightMargin, Percent(numericHMargin), LabelWidth, wrap: true));
 
         // Y position
-        var checkBoxOverrideY = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.TransportStreamOverrideYPosition, vm, nameof(vm.OverrideYPosition));
-        var labelBottomMargin = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.TransportStreamBottomMargin).WithMarginLeft(25);
-        var numericBottomMargin = UiUtil.MakeNumericUpDownInt(0, 100, 5, 110, vm, nameof(vm.BottomMarginPercent))
+        var switchOverrideY = EditorChrome.MakeSwitchRow(nameof(vm.OverrideYPosition), Se.Language.Tools.BatchConvert.TransportStreamOverrideYPosition);
+        var numericBottomMargin = Field(UiUtil.MakeNumericUpDownInt(0, 100, 5, 80, vm, nameof(vm.BottomMarginPercent)), Se.Language.Tools.BatchConvert.TransportStreamBottomMargin)
             .WithBindEnabled(nameof(vm.OverrideYPosition));
-        var panelY = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { labelBottomMargin, numericBottomMargin, UiUtil.MakeLabel("%") }
-        };
+        var panelY = Indented(EditorChrome.MakeLabeledRow(Se.Language.Tools.BatchConvert.TransportStreamBottomMargin, Percent(numericBottomMargin), LabelWidth, wrap: true));
+
+        var position = new StackPanel { Spacing = 8, Children = { switchOverrideX, panelX, switchOverrideY, panelY } };
 
         // Video size
-        var checkBoxOverrideSize = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.TransportStreamOverrideVideoSize, vm, nameof(vm.OverrideVideoSize));
-        var labelWidth = UiUtil.MakeLabel(Se.Language.General.Width).WithMarginLeft(25);
-        var numericWidth = UiUtil.MakeNumericUpDownInt(1, 9999, 1920, 120, vm, nameof(vm.VideoWidth))
+        var switchOverrideSize = EditorChrome.MakeSwitchRow(nameof(vm.OverrideVideoSize), Se.Language.Tools.BatchConvert.TransportStreamOverrideVideoSize);
+        var numericWidth = Field(UiUtil.MakeNumericUpDownInt(1, 9999, 1920, 80, vm, nameof(vm.VideoWidth)), Se.Language.General.Width, "W")
             .WithBindEnabled(nameof(vm.OverrideVideoSize));
-        var labelHeight = UiUtil.MakeLabel(Se.Language.General.Height).WithMarginLeft(15);
-        var numericHeight = UiUtil.MakeNumericUpDownInt(1, 9999, 1080, 120, vm, nameof(vm.VideoHeight))
+        var numericHeight = Field(UiUtil.MakeNumericUpDownInt(1, 9999, 1080, 80, vm, nameof(vm.VideoHeight)), Se.Language.General.Height, "H")
             .WithBindEnabled(nameof(vm.OverrideVideoSize));
-        var buttonGetSizeFromVideo = UiUtil.MakeButton(Se.Language.Tools.BatchConvert.TransportStreamGetSizeFromVideo, vm.GetSizeFromVideoCommand)
-            .WithMarginLeft(15);
+        var buttonGetSizeFromVideo = EditorChrome.MakeActionButton("fa-solid fa-film", Se.Language.Tools.BatchConvert.TransportStreamGetSizeFromVideo, vm.GetSizeFromVideoCommand);
         var panelSize = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Children = { labelWidth, numericWidth, labelHeight, numericHeight, buttonGetSizeFromVideo }
+            Spacing = 6,
+            Margin = new Thickness(46, 0, 0, 0), // under the switch's label
+            Children =
+            {
+                numericWidth,
+                new TextBlock { Text = "×", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center },
+                numericHeight,
+                buttonGetSizeFromVideo,
+            }
         };
+        var videoSize = new StackPanel { Spacing = 8, Children = { switchOverrideSize, panelSize } };
 
         // File name ending
-        var labelFileNameEnding = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.TransportStreamFileNameEnding);
-        var textBoxFileNameEnding = UiUtil.MakeTextBox(260, vm, nameof(vm.FileNameEnding));
+        var textBoxFileNameEnding = EditorChrome.MakeTextField(nameof(vm.FileNameEnding), Se.Language.Tools.BatchConvert.TransportStreamFileNameEnding, 220);
         vm.GetFileNameEndingCaretIndex = () => textBoxFileNameEnding.CaretIndex;
         vm.SetFileNameEndingCaretIndex = index =>
         {
@@ -75,7 +83,11 @@ public class BatchConvertTsSettingsWindow : Window
         };
         var buttonInsertPlaceholder = new Button
         {
-            Content = "{ }",
+            Content = new TextBlock { Text = "{ }", FontSize = 12.5, FontWeight = FontWeight.SemiBold },
+            Width = 34,
+            Height = 28,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             Flyout = new MenuFlyout
             {
@@ -87,63 +99,102 @@ public class BatchConvertTsSettingsWindow : Window
                     MakePlaceholderMenuItem(vm, Se.Language.Tools.BatchConvert.ThreeLetterLanguageCodeUppercase, TransportStreamExportSettings.PlaceholderThreeLetterUppercase),
                 }
             },
-        }.WithMarginLeft(5);
-        ToolTip.SetTip(buttonInsertPlaceholder, Se.Language.Tools.BatchConvert.TransportStreamFileNameEndingInfo);
-        var labelSample = UiUtil.MakeLabel(string.Empty).WithMarginLeft(10).WithOpacity(0.7);
-        labelSample.Bind(ContentControl.ContentProperty, new Avalonia.Data.Binding(nameof(vm.FileNameEndingSample)) { Source = vm });
+        };
+        buttonInsertPlaceholder.Classes.Add("tool");
+        AutomationProperties.SetName(buttonInsertPlaceholder, Se.Language.Tools.BatchConvert.TransportStreamFileNameEndingInfo);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonInsertPlaceholder, Se.Language.Tools.BatchConvert.TransportStreamFileNameEndingInfo);
+        }
+
+        var labelSample = EditorChrome.MakeBoundHint(nameof(vm.FileNameEndingSample));
         var panelFileNameEnding = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Children = { labelFileNameEnding, textBoxFileNameEnding, buttonInsertPlaceholder, labelSample }
+            Spacing = 6,
+            Children = { textBoxFileNameEnding, buttonInsertPlaceholder, labelSample }
         };
 
-        var checkBoxOnlyTeletext = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.TransportStreamOnlyTeletext, vm, nameof(vm.OnlyTeletext));
+        var fileNameInfo = EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.TransportStreamFileNameEndingInfo);
+        fileNameInfo.MaxWidth = 480;
+        fileNameInfo.HorizontalAlignment = HorizontalAlignment.Left;
+        fileNameInfo.Margin = new Thickness(LabelWidth + 8, 0, 0, 0);
+
+        var outputFiles = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                EditorChrome.MakeLabeledRow(Se.Language.Tools.BatchConvert.TransportStreamFileNameEnding, panelFileNameEnding, LabelWidth, wrap: true),
+                fileNameInfo,
+                EditorChrome.MakeSwitchRow(nameof(vm.OnlyTeletext), Se.Language.Tools.BatchConvert.TransportStreamOnlyTeletext),
+            }
+        };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        var sections = EditorChrome.MakeSectionStack(new Border { Child = labelInfo, Padding = new Thickness(14, 12, 14, 0) }, EditorChrome.MakeEditorSection(Se.Language.General.Position, position, first: true), EditorChrome.MakeEditorSection(Se.Language.General.VideoResolution, videoSize), EditorChrome.MakeEditorSection(Se.Language.General.Output, outputFiles));
+        sections.MinWidth = 600;
+
+        Content = new StackPanel
         {
-            RowDefinitions =
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 8,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+                EditorChrome.MakePanel(sections),
+                EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk),
+            }
         };
 
-        grid.Add(labelInfo, 0, 0);
-        grid.Add(checkBoxOverrideX, 1, 0);
-        grid.Add(panelX, 2, 0);
-        grid.Add(checkBoxOverrideY, 3, 0);
-        grid.Add(panelY, 4, 0);
-        grid.Add(checkBoxOverrideSize, 5, 0);
-        grid.Add(panelSize, 6, 0);
-        grid.Add(panelFileNameEnding, 7, 0);
-        grid.Add(checkBoxOnlyTeletext, 8, 0);
-        grid.Add(panelButtons, 9, 0);
-
-        Content = grid;
-
-        UiUtil.FocusOnFirstActivation(this, checkBoxOverrideX); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, toggleOverrideX); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (s, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// A compact number field (see <see cref="EditorChrome.MakeField"/>) with an optional dim prefix.
+    /// </summary>
+    private static NumericUpDown Field(NumericUpDown field, string name, string? prefix = null)
+    {
+        field.Classes.Add("field");
+        AutomationProperties.SetName(field, name);
+        if (prefix != null)
+        {
+            field.InnerLeftContent = new TextBlock
+            {
+                Text = prefix,
+                Foreground = EditorChrome.FaintTextBrush,
+                FontSize = 11,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(8, 0, 0, 0),
+            };
+        }
+
+        return field;
+    }
+
+    private static StackPanel Percent(NumericUpDown field)
+    {
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            Children = { field, new TextBlock { Text = "%", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center } },
+        };
+    }
+
+    /// <summary>
+    /// The rows that belong to the switch above, indented under its label.
+    /// </summary>
+    private static StackPanel Indented(params Control[] rows)
+    {
+        var panel = new StackPanel { Spacing = 6, Margin = new Thickness(46, 0, 0, 0) };
+        foreach (var row in rows)
+        {
+            panel.Children.Add(row);
+        }
+
+        return panel;
     }
 
     private static MenuItem MakePlaceholderMenuItem(BatchConvertTsSettingsViewModel vm, string header, string placeholder)

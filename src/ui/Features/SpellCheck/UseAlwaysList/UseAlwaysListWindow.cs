@@ -1,4 +1,5 @@
-﻿using Avalonia;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -11,9 +12,13 @@ using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.UseAlwaysList;
 
+/// <summary>
+/// The spell check "use always" list in the editor look (see <see cref="EditorChrome"/>): the
+/// pairs with language, search and counts above them, the add/edit row below, and Cancel + OK in
+/// the button bar.
+/// </summary>
 public class UseAlwaysListWindow : Window
 {
-    private const string AccentColor = "#7fa8f0"; // same blue as the spell check list in Word lists
     private const string WarningColor = "#e0a030";
 
     private readonly UseAlwaysListViewModel _vm;
@@ -27,6 +32,7 @@ public class UseAlwaysListWindow : Window
         Height = 640;
         MinWidth = 560;
         MinHeight = 420;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -35,7 +41,8 @@ public class UseAlwaysListWindow : Window
         var comboLanguages = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage));
         comboLanguages.MinWidth = 220;
         comboLanguages.MaxWidth = 320;
-        Avalonia.Automation.AutomationProperties.SetName(comboLanguages, Se.Language.General.Language);
+        comboLanguages.VerticalAlignment = VerticalAlignment.Center;
+        AutomationProperties.SetName(comboLanguages, Se.Language.General.Language);
 
         var textBoxSearch = new TextBox
         {
@@ -43,8 +50,9 @@ public class UseAlwaysListWindow : Window
             [!TextBox.TextProperty] = new Binding(nameof(vm.SearchText)) { Mode = BindingMode.TwoWay },
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
-            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Search,
+            [AutomationProperties.NameProperty] = Se.Language.General.Search,
         }.WithSearchAndClearIcons();
+        textBoxSearch.Classes.Add("text");
 
         var toolbar = new Grid
         {
@@ -52,83 +60,64 @@ public class UseAlwaysListWindow : Window
             {
                 new ColumnDefinition { Width = GridLength.Auto },
                 new ColumnDefinition { Width = GridLength.Star },
-                new ColumnDefinition { Width = GridLength.Auto },
             },
             ColumnSpacing = 10,
         };
         toolbar.Add(comboLanguages, 0, 0);
         toolbar.Add(textBoxSearch, 0, 1);
-        toolbar.Add(MakeBadges(vm), 0, 2);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var footer = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Star },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-        };
-        var linkOpenFolder = UiUtil.MakeLink(Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
-        linkOpenFolder.VerticalAlignment = VerticalAlignment.Center;
-        footer.Add(linkOpenFolder, 0, 0);
-        footer.Add(UiUtil.MakeButtonBar(buttonOk, buttonCancel), 0, 1);
+        var header = new DockPanel();
+        var badges = MakeBadges(vm);
+        DockPanel.SetDock(badges, Dock.Right);
+        header.Children.Add(badges);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.SpellCheck.UseAlwaysListHeader));
 
-        var grid = new Grid
+        var description = EditorChrome.MakeWrappingDimLabel(Se.Language.SpellCheck.UseAlwaysListDescription);
+        description.FontSize = 12.5;
+
+        var listSection = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = GridLength.Auto }, // header
+                new RowDefinition { Height = GridLength.Auto }, // header + badges
+                new RowDefinition { Height = GridLength.Auto }, // description
                 new RowDefinition { Height = GridLength.Auto }, // "remember" off warning
-                new RowDefinition { Height = GridLength.Auto }, // language + search + badges
+                new RowDefinition { Height = GridLength.Auto }, // language + search
                 new RowDefinition { Height = GridLength.Star }, // pairs
-                new RowDefinition { Height = GridLength.Auto }, // add / edit card
-                new RowDefinition { Height = GridLength.Auto }, // footer
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Star },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 12,
+            RowSpacing = 10,
+            Margin = new Thickness(14, 12, 14, 14),
         };
+        listSection.Add(header, 0, 0);
+        listSection.Add(description, 1, 0);
+        listSection.Add(MakeRememberOffBanner(vm), 2, 0);
+        listSection.Add(toolbar, 3, 0);
+        listSection.Add(MakePairsView(vm), 4, 0);
 
-        grid.Add(MakeHeader(), 0, 0);
-        grid.Add(MakeRememberOffBanner(vm), 1, 0);
-        grid.Add(toolbar, 2, 0);
-        grid.Add(MakePairsView(vm), 3, 0);
-        grid.Add(MakeEditCard(vm), 4, 0);
-        grid.Add(footer, 5, 0);
+        var editSection = EditorChrome.MakeEditorSection(Se.Language.General.Edit, MakeEditRow(vm));
 
-        Content = grid;
+        var sections = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Star },
+                new RowDefinition { Height = GridLength.Auto },
+            },
+        };
+        sections.Add(listSection, 0, 0);
+        sections.Add(editSection, 1, 0);
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttonOpenFolder = EditorChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
+        buttonOpenFolder.HorizontalAlignment = HorizontalAlignment.Left;
+
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(buttonOpenFolder, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxSearch); // an input, not a button - a focused button clicks on bare Space
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
-    }
-
-    private static Control MakeGlyph(string iconName, string colorHex, double size, double iconFontSize)
-    {
-        var icon = new ContentControl
-        {
-            FontSize = UiUtil.ScaledFontSize(iconFontSize),
-            Foreground = Brushes.White,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        Attached.SetIcon(icon, iconName);
-        icon.Classes.Add(UiTheme.IconOnAccentClassName);
-
-        return new Border
-        {
-            Width = size,
-            Height = size,
-            CornerRadius = new CornerRadius(size / 4),
-            Background = new SolidColorBrush(Color.Parse(colorHex)),
-            VerticalAlignment = VerticalAlignment.Top,
-            Child = icon,
-        };
     }
 
     private static Control MakeIcon(string iconName, double fontSize, IBrush? foreground = null, double opacity = 1.0)
@@ -149,42 +138,12 @@ public class UseAlwaysListWindow : Window
         return icon;
     }
 
-    private static Control MakeHeader()
+    private static void SetHint(Control control, string hint)
     {
-        var title = new TextBlock
+        if (Se.Settings.Appearance.ShowHints)
         {
-            Text = Se.Language.SpellCheck.UseAlwaysListHeader,
-            FontSize = UiUtil.ScaledFontSize(17),
-            FontWeight = FontWeight.SemiBold,
-        };
-
-        var description = new TextBlock
-        {
-            Text = Se.Language.SpellCheck.UseAlwaysListDescription,
-            TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.75,
-        };
-
-        var texts = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 3,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children = { title, description },
-        };
-
-        var header = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Star },
-            },
-            ColumnSpacing = 14,
-        };
-        header.Add(MakeGlyph(IconNames.Spellcheck, AccentColor, 40, 22), 0, 0);
-        header.Add(texts, 0, 1);
-        return header;
+            ToolTip.SetTip(control, hint);
+        }
     }
 
     private static Control MakeRememberOffBanner(UseAlwaysListViewModel vm)
@@ -208,6 +167,7 @@ public class UseAlwaysListWindow : Window
                     {
                         Text = Se.Language.SpellCheck.UseAlwaysRememberOff,
                         TextWrapping = TextWrapping.Wrap,
+                        FontSize = 12.5,
                         VerticalAlignment = VerticalAlignment.Center,
                     },
                 },
@@ -217,13 +177,11 @@ public class UseAlwaysListWindow : Window
         return banner;
     }
 
-    private static Border MakeBadge(string textPropertyPath, string colorHex, string? iconName)
+    private static Border MakeBadge(string textPropertyPath, IBrush foreground, IBrush background, string? iconName)
     {
-        var color = Color.Parse(colorHex);
-        var foreground = new SolidColorBrush(color);
         var text = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(11),
+            FontSize = 11,
             FontWeight = FontWeight.SemiBold,
             Foreground = foreground,
             VerticalAlignment = VerticalAlignment.Center,
@@ -240,9 +198,9 @@ public class UseAlwaysListWindow : Window
 
         return new Border
         {
-            Background = new SolidColorBrush(color, 0.16),
+            Background = background,
             CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(9, 3, 9, 3),
+            Padding = new Thickness(9, 2, 9, 2),
             VerticalAlignment = VerticalAlignment.Center,
             Child = panel,
         };
@@ -250,17 +208,16 @@ public class UseAlwaysListWindow : Window
 
     private static Control MakeBadges(UseAlwaysListViewModel vm)
     {
-        var unusedBadge = MakeBadge(nameof(vm.UnusedText), WarningColor, IconNames.Alert);
+        var warningColor = Color.Parse(WarningColor);
+        var unusedBadge = MakeBadge(nameof(vm.UnusedText), new SolidColorBrush(warningColor), new SolidColorBrush(warningColor, 0.16), IconNames.Alert);
         unusedBadge.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasUnused)));
-        ToolTip.SetTip(unusedBadge, Se.Language.SpellCheck.UseAlwaysUnusedHint);
+        SetHint(unusedBadge, Se.Language.SpellCheck.UseAlwaysUnusedHint);
 
-        var buttonRemoveUnused = new Button
-        {
-            Content = Se.Language.SpellCheck.RemoveUnused,
-            Command = vm.RemoveUnusedCommand,
-            VerticalAlignment = VerticalAlignment.Center,
-        }.WithIconLeft(IconNames.Trash).WithBindIsVisible(nameof(vm.HasUnused));
-        ToolTip.SetTip(buttonRemoveUnused, Se.Language.SpellCheck.UseAlwaysUnusedHint);
+        var buttonRemoveUnused = EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.SpellCheck.RemoveUnused, vm.RemoveUnusedCommand)
+            .WithBindIsVisible(nameof(vm.HasUnused));
+        buttonRemoveUnused.Height = 24;
+        buttonRemoveUnused.VerticalAlignment = VerticalAlignment.Center;
+        SetHint(buttonRemoveUnused, Se.Language.SpellCheck.UseAlwaysUnusedHint);
 
         return new StackPanel
         {
@@ -269,7 +226,7 @@ public class UseAlwaysListWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                MakeBadge(nameof(vm.CountText), AccentColor, null),
+                MakeBadge(nameof(vm.CountText), EditorChrome.StrongTextBrush, EditorChrome.AccentSoftBrush, null),
                 unusedBadge,
                 buttonRemoveUnused,
             },
@@ -280,9 +237,8 @@ public class UseAlwaysListWindow : Window
     {
         var table = TableViewExtras.MakeTableView(alwaysSelected: false, multiSelect: false);
         table.Height = double.NaN;
-        table.Margin = new Thickness(2);
         table.ItemsSource = vm.Pairs;
-        Avalonia.Automation.AutomationProperties.SetName(table, Se.Language.SpellCheck.UseAlwaysListHeader);
+        AutomationProperties.SetName(table, Se.Language.SpellCheck.UseAlwaysListHeader);
 
         var warning = new SolidColorBrush(Color.Parse(WarningColor));
 
@@ -296,8 +252,8 @@ public class UseAlwaysListWindow : Window
             {
                 var icon = MakeIcon(IconNames.Alert, 15, warning);
                 icon.Bind(Visual.IsVisibleProperty, new Binding(nameof(UseAlwaysPairItem.IsUnused)));
-                ToolTip.SetTip(icon, Se.Language.SpellCheck.UseAlwaysUnusedHint);
-                Avalonia.Automation.AutomationProperties.SetName(icon, Se.Language.SpellCheck.UseAlwaysUnusedHint);
+                SetHint(icon, Se.Language.SpellCheck.UseAlwaysUnusedHint);
+                AutomationProperties.SetName(icon, Se.Language.SpellCheck.UseAlwaysUnusedHint);
                 return icon;
             }),
         });
@@ -324,7 +280,7 @@ public class UseAlwaysListWindow : Window
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(34),
-            CellTemplate = new FuncDataTemplate<UseAlwaysPairItem>((_, _) => MakeIcon(IconNames.ArrowRightThick, 14, null, 0.45)),
+            CellTemplate = new FuncDataTemplate<UseAlwaysPairItem>((_, _) => MakeIcon(IconNames.ArrowRightThick, 14, EditorChrome.FaintTextBrush)),
         });
         table.Columns.Add(new SeTableViewColumn
         {
@@ -345,15 +301,13 @@ public class UseAlwaysListWindow : Window
             Header = string.Empty,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Width = new GridLength(46),
+            Width = new GridLength(40),
             CellTemplate = new FuncDataTemplate<UseAlwaysPairItem>((item, _) =>
             {
-                var button = UiUtil.MakeButton(vm.RemoveCommand, IconNames.Trash, Se.Language.General.Remove);
+                var button = EditorChrome.CreateToolButton(IconNames.Trash, Se.Language.General.Remove, vm.RemoveCommand, 26);
                 button.CommandParameter = item;
-                button.Margin = new Thickness(2);
-                button.Padding = new Thickness(6, 2);
-                button.Opacity = 0.75;
                 button.HorizontalAlignment = HorizontalAlignment.Center;
+                button.VerticalAlignment = VerticalAlignment.Center;
                 return button;
             }),
         });
@@ -370,11 +324,11 @@ public class UseAlwaysListWindow : Window
             Margin = new Thickness(24),
             Children =
             {
-                MakeIcon(IconNames.FormatListChecks, 40, null, 0.35),
+                MakeIcon(IconNames.FormatListChecks, 40, EditorChrome.FaintTextBrush),
                 new TextBlock
                 {
                     Text = Se.Language.SpellCheck.UseAlwaysEmpty,
-                    FontSize = UiUtil.ScaledFontSize(15),
+                    FontSize = 14,
                     FontWeight = FontWeight.SemiBold,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     TextAlignment = TextAlignment.Center,
@@ -383,7 +337,8 @@ public class UseAlwaysListWindow : Window
                 new TextBlock
                 {
                     Text = Se.Language.SpellCheck.UseAlwaysEmptyHint,
-                    Opacity = 0.65,
+                    FontSize = 12.5,
+                    Foreground = EditorChrome.DimTextBrush,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     TextAlignment = TextAlignment.Center,
                     TextWrapping = TextWrapping.Wrap,
@@ -400,17 +355,17 @@ public class UseAlwaysListWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                MakeIcon(IconNames.Find, 18, null, 0.45),
-                new TextBlock { Text = Se.Language.SpellCheck.UseAlwaysNoMatch, Opacity = 0.65, VerticalAlignment = VerticalAlignment.Center },
+                MakeIcon(IconNames.Find, 18, EditorChrome.FaintTextBrush),
+                new TextBlock { Text = Se.Language.SpellCheck.UseAlwaysNoMatch, FontSize = 12.5, Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center },
             },
         };
         noMatch.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsNoMatch)));
 
         var panel = new Panel { Children = { table, emptyState, noMatch } };
-        return UiUtil.MakeBorderForControlNoPadding(panel);
+        return EditorChrome.MakeListFrame(panel, clearListBackground: true);
     }
 
-    private static Control MakeEditCard(UseAlwaysListViewModel vm)
+    private static Control MakeEditRow(UseAlwaysListViewModel vm)
     {
         var textBoxFrom = new TextBox
         {
@@ -418,8 +373,9 @@ public class UseAlwaysListWindow : Window
             [!TextBox.TextProperty] = new Binding(nameof(vm.EditFrom)) { Mode = BindingMode.TwoWay },
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
-            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.SpellCheck.UseAlwaysWord,
+            [AutomationProperties.NameProperty] = Se.Language.SpellCheck.UseAlwaysWord,
         };
+        textBoxFrom.Classes.Add("text");
         textBoxFrom.KeyDown += (_, e) => vm.EditTextBoxKeyDown(e);
 
         var textBoxTo = new TextBox
@@ -428,29 +384,23 @@ public class UseAlwaysListWindow : Window
             [!TextBox.TextProperty] = new Binding(nameof(vm.EditTo)) { Mode = BindingMode.TwoWay },
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
-            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.ReplaceWith,
+            [AutomationProperties.NameProperty] = Se.Language.General.ReplaceWith,
         };
+        textBoxTo.Classes.Add("text");
         textBoxTo.KeyDown += (_, e) => vm.EditTextBoxKeyDown(e);
 
         // Same command, but a pencil instead of a plus when the word already has a pair.
-        var buttonAdd = new Button
-        {
-            Content = Se.Language.General.Add,
-            Command = vm.AddOrUpdateCommand,
-            VerticalAlignment = VerticalAlignment.Center,
-        }.WithIconLeft(IconNames.Plus);
+        var buttonAdd = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.Add, vm.AddOrUpdateCommand);
+        buttonAdd.VerticalAlignment = VerticalAlignment.Center;
         buttonAdd.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsEditingExisting)) { Converter = Avalonia.Data.Converters.BoolConverters.Not });
 
-        var buttonUpdate = new Button
-        {
-            Content = Se.Language.General.Update,
-            Command = vm.AddOrUpdateCommand,
-            VerticalAlignment = VerticalAlignment.Center,
-        }.WithIconLeft(IconNames.Pencil).WithBindIsVisible(nameof(vm.IsEditingExisting));
+        var buttonUpdate = EditorChrome.MakeTextToolButton(IconNames.Pencil, Se.Language.General.Update, vm.AddOrUpdateCommand)
+            .WithBindIsVisible(nameof(vm.IsEditingExisting));
+        buttonUpdate.VerticalAlignment = VerticalAlignment.Center;
 
         var panelAddOrUpdate = new Panel { Children = { buttonAdd, buttonUpdate } };
 
-        var buttonNew = UiUtil.MakeButton(vm.NewCommand, IconNames.NewText, Se.Language.General.New);
+        var buttonNew = EditorChrome.CreateToolButton(IconNames.NewText, Se.Language.General.New, vm.NewCommand, 28);
 
         var grid = new Grid
         {
@@ -465,20 +415,11 @@ public class UseAlwaysListWindow : Window
             ColumnSpacing = 8,
         };
         grid.Add(textBoxFrom, 0, 0);
-        grid.Add(MakeIcon(IconNames.ArrowRightThick, 16, null, 0.5), 0, 1);
+        grid.Add(MakeIcon(IconNames.ArrowRightThick, 16, EditorChrome.FaintTextBrush), 0, 1);
         grid.Add(textBoxTo, 0, 2);
         grid.Add(panelAddOrUpdate, 0, 3);
         grid.Add(buttonNew, 0, 4);
-
-        return new Border
-        {
-            CornerRadius = new CornerRadius(8),
-            Background = new SolidColorBrush(Color.FromArgb(18, 128, 128, 128)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(48, 128, 128, 128)),
-            BorderThickness = new Thickness(1),
-            Padding = new Thickness(12, 10),
-            Child = grid,
-        };
+        return grid;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

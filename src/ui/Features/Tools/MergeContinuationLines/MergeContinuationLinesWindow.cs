@@ -14,6 +14,10 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 
+/// <summary>
+/// Merge continuation lines, in the editor look (see <see cref="EditorChrome"/>): the options on
+/// top, the candidates below, the summary plus Cancel and OK in the button bar.
+/// </summary>
 public class MergeContinuationLinesWindow : Window
 {
     private NumericUpDown _numericGap = null!;
@@ -27,39 +31,14 @@ public class MergeContinuationLinesWindow : Window
         Height = 700;
         MinWidth = 700;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(MakeControlsView(vm), 0);
-        grid.Add(MakeCandidatesView(vm), 1);
-        grid.Add(MakeSelectionButtonsView(vm), 2);
-        grid.Add(panelButtons, 3);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(MakeControlsView(vm), MakeCandidatesView(vm)), EditorChrome.MakeStatusText(nameof(vm.CandidatesInfo), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, _numericGap); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -69,71 +48,27 @@ public class MergeContinuationLinesWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private Grid MakeControlsView(MergeContinuationLinesViewModel vm)
+    private Border MakeControlsView(MergeContinuationLinesViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var labelGap = UiUtil.MakeLabel(Se.Language.Tools.MergeContinuationLines.MaxMillisecondsBetweenLines);
-        var numericGap = UiUtil.MakeNumericUpDownInt(0, 10000, 250, 150, vm, nameof(vm.MaxMillisecondsBetweenLines));
+        var labelGap = Se.Language.Tools.MergeContinuationLines.MaxMillisecondsBetweenLines;
+        var numericGap = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 10000, 250, 150, vm, nameof(vm.MaxMillisecondsBetweenLines)), labelGap.TrimEnd(':'), 100, alignLeft: true, center: true);
         _numericGap = numericGap;
         numericGap.ValueChanged += (_, _) => vm.SetChanged();
 
-        var labelMax = UiUtil.MakeLabel(Se.Language.Tools.MergeContinuationLines.MaxCharacters);
-        var numericMax = UiUtil.MakeNumericUpDownInt(20, 1000, 100, 150, vm, nameof(vm.MaxCharacters));
+        var labelMax = Se.Language.Tools.MergeContinuationLines.MaxCharacters;
+        var numericMax = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(20, 1000, 100, 150, vm, nameof(vm.MaxCharacters)), labelMax.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericMax.ValueChanged += (_, _) => vm.SetChanged();
 
-        grid.Add(labelGap, 0, 0);
-        grid.Add(numericGap, 1, 0);
-
-        grid.Add(labelMax, 0, 1);
-        grid.Add(numericMax, 1, 1);
-
-        return grid;
+        var fields = EditorChrome.MakeFieldGrid((labelGap, numericGap), (labelMax, numericMax));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, fields, first: true);
     }
 
-    private static Grid MakeCandidatesView(MergeContinuationLinesViewModel vm)
+    private static Border MakeCandidatesView(MergeContinuationLinesViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var labelInfo = UiUtil.MakeLabel()
-            .WithBindText(vm, nameof(vm.CandidatesInfo))
-            .WithMarginTop(10)
-            .WithMarginLeft(10);
-
         // The DataGrid this replaces used DataGridCheckboxMultiSelect for extended
         // selection + Space toggling; shift/ctrl multi-select is native ListBox behavior
         // on TableView, so only the Space toggle needs wiring (below).
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -204,16 +139,8 @@ public class MergeContinuationLinesWindow : Window
             item => item.IsSelected,
             (item, value) => item.IsSelected = value);
 
-        grid.Add(labelInfo, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
+        var actions = EditorChrome.MakeListActions(EditorChrome.MakeSelectAllButton(vm.SelectAllCommand), EditorChrome.MakeInvertSelectionButton(vm.InverseSelectionCommand));
 
-        return grid;
-    }
-
-    private static StackPanel MakeSelectionButtonsView(MergeContinuationLinesViewModel vm)
-    {
-        return UiUtil.MakeButtonBar(
-            UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand),
-            UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InverseSelectionCommand));
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid, actions);
     }
 }

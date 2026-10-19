@@ -789,7 +789,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        PushUndo(Se.Language.SpellCheck.EditWholeText, SpellCheckUndoAction.ChangeWholeText, string.Empty);
+        PushUndo(Se.Language.General.EditWholeText, SpellCheckUndoAction.ChangeWholeText, string.Empty);
         selectedParagraph.Text = result.WholeText;
         DoSpellCheck();
     }
@@ -916,6 +916,12 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
         {
             LoadDictionaries();
             SetLanguage(result.SpellCheckDictionary);
+        }
+        else if (result.DictionariesChanged)
+        {
+            var current = SelectedDictionary;
+            LoadDictionaries();
+            SetLanguage(current);
         }
     }
 

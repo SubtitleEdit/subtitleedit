@@ -25,7 +25,7 @@ public class DvdTitleDisplay
 
     public override string ToString()
     {
-        var text = $"{Name}:  {Duration:hh\\:mm\\:ss}  ({Chapters} {Se.Language.File.Chapters.ToLowerInvariant()})";
+        var text = $"{Name}:  {Duration:hh\\:mm\\:ss}  ({Chapters} {Se.Language.General.Chapters.ToLowerInvariant()})";
         return string.IsNullOrEmpty(Status) ? text : $"{text}  -  {Status}";
     }
 }

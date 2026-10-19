@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -31,19 +31,17 @@ public sealed class DownloadVoicePacksWindow : Window
         vm.Window = this;
         DataContext = vm;
         _vm = vm;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
-        var intro = new TextBlock
-        {
-            Text = Se.Language.Video.TextToSpeech.VoicePackIntro,
-            TextWrapping = TextWrapping.Wrap,
-            Foreground = UiUtil.GetTextColor(0.8d),
-        };
+        var intro = EditorChrome.MakeHint(Se.Language.Video.TextToSpeech.VoicePackIntro);
+        intro.FontSize = 12.5;
 
         var listBox = new ListBox
         {
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.Packs)),
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+            Background = Brushes.Transparent,
             ItemTemplate = new FuncDataTemplate<VoicePackItem>((_, _) =>
             {
                 var checkBox = new CheckBox
@@ -58,10 +56,10 @@ public sealed class DownloadVoicePacksWindow : Window
                 var name = new TextBlock { FontWeight = FontWeight.SemiBold };
                 name.Bind(TextBlock.TextProperty, new Binding(nameof(VoicePackItem.Name)));
 
-                var description = new TextBlock { TextWrapping = TextWrapping.Wrap, Foreground = UiUtil.GetTextColor(0.8d) };
+                var description = new TextBlock { TextWrapping = TextWrapping.Wrap, FontSize = 12.5, Foreground = EditorChrome.DimTextBrush };
                 description.Bind(TextBlock.TextProperty, new Binding(nameof(VoicePackItem.Description)));
 
-                var details = new TextBlock { FontSize = UiUtil.ScaledFontSize(11), Foreground = UiUtil.GetTextColor(0.55d) };
+                var details = new TextBlock { FontSize = 11, Foreground = EditorChrome.FaintTextBrush };
                 details.Bind(TextBlock.TextProperty, new Binding(nameof(VoicePackItem.Details)));
 
                 var status = new TextBlock { FontSize = UiUtil.ScaledFontSize(11), Foreground = new SolidColorBrush(Color.FromRgb(0x2E, 0x8B, 0x57)) };
@@ -69,32 +67,50 @@ public sealed class DownloadVoicePacksWindow : Window
                 status.Bind(IsVisibleProperty, new Binding(nameof(VoicePackItem.Status)) { Converter = new FuncValueConverter<string?, bool>(s => !string.IsNullOrEmpty(s)) });
 
                 var text = new StackPanel { Spacing = 2, Children = { name, description, details, status } };
-                return new StackPanel
+                // A grid rather than a horizontal stack panel, so the description wraps at the
+                // list's width instead of running off its right edge.
+                var row = new Grid
                 {
-                    Orientation = Orientation.Horizontal,
-                    Margin = new Thickness(2, 4),
-                    Children = { checkBox, text },
+                    Margin = new Thickness(2, 6),
+                    ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
                 };
+                row.Add(checkBox, 0, 0);
+                row.Add(text, 0, 1);
+                return row;
             }, true),
         };
         listBox.Bind(IsEnabledProperty, new Binding(nameof(vm.IsIdle)));
+        ScrollViewer.SetHorizontalScrollBarVisibility(listBox, ScrollBarVisibility.Disabled);
+        AutomationProperties.SetName(listBox, Se.Language.Video.TextToSpeech.DownloadVoicePacksTitle);
 
-        var labelTarget = new Label { Content = Se.Language.Video.TextToSpeech.InstallToEngine, VerticalAlignment = VerticalAlignment.Center };
+        var labelTarget = EditorChrome.MakeDimLabel(Se.Language.Video.TextToSpeech.InstallToEngine, new Thickness(0));
         var comboTarget = UiUtil.MakeComboBox(vm.TargetEngines, vm, nameof(vm.SelectedTargetEngine)).WithBindEnabled(nameof(vm.IsIdle));
         comboTarget.MinWidth = 260;
-        var panelTarget = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Children = { labelTarget, comboTarget } };
+        comboTarget.VerticalAlignment = VerticalAlignment.Center;
+        AutomationProperties.SetName(comboTarget, Se.Language.Video.TextToSpeech.InstallToEngine);
+        var panelTarget = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, Children = { labelTarget, comboTarget } };
 
         var progressBar = UiUtil.MakeProgressBar();
+        progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.Bind(IsVisibleProperty, new Binding(nameof(vm.IsDownloading)));
+        var progressStrip = EditorChrome.MakeProgressStrip(progressBar);
+        progressStrip.Bind(IsVisibleProperty, new Binding(nameof(vm.IsDownloading)));
 
-        var progressText = new TextBlock();
+        // In the button bar rather than the strip: after the run it says how many packs were
+        // installed, when the strip is gone.
+        var progressText = new TextBlock
+        {
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
         progressText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
 
         var errorText = new TextBlock
         {
             Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
             TextWrapping = TextWrapping.Wrap,
+            FontSize = 12.5,
         };
         errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
         errorText.Bind(IsVisibleProperty, new Binding(nameof(vm.Error)) { Converter = new FuncValueConverter<string?, bool>(s => !string.IsNullOrEmpty(s)) });
@@ -102,32 +118,43 @@ public sealed class DownloadVoicePacksWindow : Window
         var buttonDownload = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.DownloadAndInstall, vm.DownloadAndInstallCommand)
             .WithIconLeft(IconNames.CloudDownload)
             .WithBindEnabled(nameof(vm.IsIdle));
+        buttonDownload.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonDownload, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(progressText, buttonCancel, buttonDownload);
 
-        var grid = new Grid
+        var packsHeader = EditorChrome.MakeSectionHeader(Se.Language.Video.Voices);
+        var content = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
+            },
+            RowSpacing = 10,
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+        content.Add(intro, 0);
+        content.Add(packsHeader, 1);
+        content.Add(EditorChrome.MakeListFrame(listBox), 2);
+        content.Add(panelTarget, 3);
+        content.Add(errorText, 4);
+
+        var root = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = GridLength.Auto },
             },
-            RowSpacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
         };
-        grid.Add(intro, 0);
-        grid.Add(listBox, 1);
-        grid.Add(panelTarget, 2);
-        grid.Add(progressBar, 3);
-        grid.Add(progressText, 4);
-        grid.Add(errorText, 5);
-        grid.Add(buttonBar, 6);
-        Content = grid;
+        root.Add(new Border { Background = EditorChrome.PanelBrush, Child = content }, 0);
+        root.Add(progressStrip, 1);
+        root.Add(buttonBar, 2);
+        Content = root;
 
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);

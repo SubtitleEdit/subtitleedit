@@ -67,7 +67,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         SplitAtOptions = new ObservableCollection<string>
         {
             Se.Language.General.Auto,
-            Se.Language.File.Import.BlankLines,
+            Se.Language.General.BlankLines,
             Se.Language.File.Import.OneLineIsOneSubtitle,
             Se.Language.File.Import.TwoLinesAreOneSubtitle,
         };
@@ -213,7 +213,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         {
             return PlainTextSplitter.AutomaticSplit(plainText, Se.Settings.General.MaxNumberOfLines, Se.Settings.General.SubtitleLineMaximumLength);
         }
-        else if (splitAtOption == Se.Language.File.Import.BlankLines)
+        else if (splitAtOption == Se.Language.General.BlankLines)
         {
             var blocks = plainText.SplitToLines();
             var sb = new System.Text.StringBuilder();

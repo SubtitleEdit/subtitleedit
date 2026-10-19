@@ -48,7 +48,6 @@ public class LanguageStatistics
     public string GapMaximum { get; set; }
     public string GapAverage { get; set; }
     public string GapExceedingMinimum { get; set; }
-    public string Subtitles { get; set; }
     public string Words { get; set; }
     public string TotalDurationShort { get; set; }
     public string TimingAndPacing { get; set; }
@@ -113,7 +112,6 @@ public class LanguageStatistics
         GapMaximum = "Gap - maximum: {0:#,##0} ms";
         GapAverage = "Gap - average: {0:#,##0.##} ms";
         GapExceedingMinimum = "Gap - below minimum ({0:#,##0} ms): {1} ({2:0.00}%)";
-        Subtitles = "Subtitles";
         Words = "Words";
         TotalDurationShort = "Total duration";
         TimingAndPacing = "Timing and pacing";

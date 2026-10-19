@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Text.RegularExpressions;
 using Xunit;
@@ -117,5 +117,41 @@ public class RegexUtilsTest
     public void BuildWholeWordPattern_Matches(string searchText, string text, bool expected)
     {
         Assert.Equal(expected, Regex.IsMatch(text, RegexUtils.BuildWholeWordPattern(searchText)));
+    }
+
+    // #16033: Perl-style case conversion escapes in the replacement - \u/\l change the next
+    // character, \U/\L change everything up to \E (or the end).
+    [Theory]
+    [InlineData(@"^Um,\s*(\w)", "Um, so I went home.", @"\u$1", "So I went home.")]
+    [InlineData(@"(\w+) (\w+)", "hello world", @"\U$1\E $2", "HELLO world")]
+    [InlineData(@"(\w+) (\w+)", "HELLO WORLD", @"\L$1 $2", "hello world")]
+    [InlineData(@"(\w+)", "HELLO", @"\l$1", "hELLO")]
+    [InlineData(@"(\w+)", "wORD", @"\u\L$1", "Word")]
+    [InlineData(@"(\w+)", "word", @"x\Uy$1\Ez", "xYWORDz")]
+    [InlineData(@"(\w+)", "word", @"\\u$1", @"\uword")]
+    [InlineData(@"(\w+)", "word", @"a\b$1", @"a\bword")]
+    [InlineData(@"(?<w>\w+)", "word", @"\U${w}", "WORD")]
+    [InlineData(@"<u>(.*?)</u>", "<u>word</u>", @"{\u1}$1{\u0}", @"{\u1}word{\u0}")]
+    [InlineData(@"(\w+)", "word", @"{\u1}\u$1", @"{\u1}Word")]
+    public void ReplaceNewLineSafe_CaseConversion(string pattern, string text, string replaceWith, string expected)
+    {
+        var regex = new Regex(pattern, RegexOptions.Multiline);
+        Assert.Equal(expected, RegexUtils.ReplaceNewLineSafe(regex, text, replaceWith));
+    }
+
+    [Fact]
+    public void ReplaceNewLineSafe_CaseConversion_EachLineOfTwoLineText()
+    {
+        var regex = new Regex(RegexUtils.FixNewLine(@"^(?:Um|Uh),\s*(\w)"), RegexOptions.Multiline);
+        var result = RegexUtils.ReplaceNewLineSafe(regex, "Um, so I went home.\r\nUh, and then?", @"\u$1");
+        Assert.Equal("So I went home." + Environment.NewLine + "And then?", result);
+    }
+
+    [Fact]
+    public void ReplaceNewLineSafe_CaseConversion_HonoursCount()
+    {
+        var regex = new Regex(@"\b(\w)");
+        var result = RegexUtils.ReplaceNewLineSafe(regex, "one two three", @"\u$1", 1, 0);
+        Assert.Equal("One two three", result);
     }
 }

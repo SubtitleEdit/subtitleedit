@@ -15,6 +15,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 
+/// <summary>
+/// Merge lines with same time codes, in the editor look (see <see cref="EditorChrome"/>): the options on top, the
+/// lines to merge and a preview of the result below, Cancel and OK in the button bar.
+/// </summary>
 public class MergeSameTimeCodesWindow : Window
 {
     private readonly MergeSameTimeCodesViewModel _vm;
@@ -29,6 +33,7 @@ public class MergeSameTimeCodesWindow : Window
         Height = 750;
         MinWidth = 600;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -36,34 +41,8 @@ public class MergeSameTimeCodesWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsOkEnabled));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(MakeControlsView(vm), 0);
-        grid.Add(MakeMergesView(vm), 1);
-        grid.Add(MakeSubtitlesView(vm), 2);
-        grid.Add(panelButtons, 3);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(EditorChrome.MakeEditorSection(Se.Language.General.Options, MakeControlsView(vm), first: true), EditorChrome.MakeListSection(Se.Language.General.MergeLines, MakeMergesView(vm)), EditorChrome.MakeListSection(Se.Language.General.Preview, MakeSubtitlesView(vm))), null, buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, _numericUpDownMaxDiff); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += _vm.OnKeyDown;
@@ -72,22 +51,27 @@ public class MergeSameTimeCodesWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private StackPanel MakeControlsView(MergeSameTimeCodesViewModel vm)
+    private Grid MakeControlsView(MergeSameTimeCodesViewModel vm)
     {
-        var labelMaxDiff = UiUtil.MakeLabel(vm.MaxDifferenceLabel);
-        var numericUpDownMaxDiff = UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesDifference, 130, vm, nameof(vm.MaxMsOrFramesDifference));
+        var numericUpDownMaxDiff = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesDifference, 130, vm, nameof(vm.MaxMsOrFramesDifference)), vm.MaxDifferenceLabel.TrimEnd(':'), 100, alignLeft: true, center: true);
         _numericUpDownMaxDiff = numericUpDownMaxDiff;
         numericUpDownMaxDiff.ValueChanged += (s, e) => { vm.SetDirty(); };
-        var checkBoxMergeAsDialog = UiUtil.MakeCheckBox(Se.Language.Tools.MergeLinesWithSameTimeCodes.MakeDialog, vm, nameof(vm.MergeDialog));
+        var rowMergeAsDialog = EditorChrome.MakeToggleRow(nameof(vm.MergeDialog), Se.Language.Tools.MergeLinesWithSameTimeCodes.MakeDialog, out var checkBoxMergeAsDialog);
         checkBoxMergeAsDialog.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
-        var checkBoxAutoBreak = UiUtil.MakeCheckBox(Se.Language.General.AutoBreak, vm, nameof(vm.AutoBreak));
+        var rowAutoBreak = EditorChrome.MakeToggleRow(nameof(vm.AutoBreak), Se.Language.General.AutoBreak, out var checkBoxAutoBreak);
         checkBoxAutoBreak.IsCheckedChanged += (s, e) => { vm.SetDirty(); };
-        var panel = UiUtil.MakeHorizontalPanel(labelMaxDiff, numericUpDownMaxDiff, checkBoxMergeAsDialog, checkBoxAutoBreak);
 
-        return panel;
+        var grid = new Grid
+        {
+            ColumnSpacing = 40,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
+        };
+        grid.Add(EditorChrome.MakeFieldGrid((vm.MaxDifferenceLabel, numericUpDownMaxDiff)), 0, 0);
+        grid.Add(new StackPanel { Spacing = 8, Children = { rowMergeAsDialog, rowAutoBreak } }, 0, 1);
+        return grid;
     }
 
-    private static Border MakeMergesView(MergeSameTimeCodesViewModel vm)
+    private static TableView MakeMergesView(MergeSameTimeCodesViewModel vm)
     {
         // Sorting dropped in the DataGrid -> TableView conversion: the grid shows
         // merge candidates in subtitle order.
@@ -158,10 +142,10 @@ public class MergeSameTimeCodesWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return dataGrid;
     }
 
-    private static Border MakeSubtitlesView(MergeSameTimeCodesViewModel vm)
+    private static TableView MakeSubtitlesView(MergeSameTimeCodesViewModel vm)
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
 
@@ -231,6 +215,6 @@ public class MergeSameTimeCodesWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return dataGrid;
     }
 }

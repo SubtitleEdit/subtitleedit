@@ -33,12 +33,10 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-10-08b: upstream v0.9.1 @ f04de8ec, compiled with the index_tts2 + higgs_audio_tts +
-    // fish_audio + fireredtts3 + ace_step + kugelaudio families plus sidon for "Clean
-    // voice-clone references". Windows binaries now use the UTF-8 process code page (non-ASCII
-    // model/voice paths). Higgs, FireRedTTS3, IndexTTS 2.5 and KugelAudio output byte-identical
-    // to 2026-10-04 on Metal.
-    private const string ReleaseTag = "audiocpp-indextts25-2026-10-08b";
+    // 2026-10-16b: the 2026-10-16 build (upstream v0.9.2 @ 0097d365, index_tts2 + higgs_audio_tts
+    // + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts) plus voxtral_tts
+    // for Voxtral TTS. Same upstream commit, so the other families are unchanged.
+    private const string ReleaseTag = "audiocpp-indextts25-2026-10-16b";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 

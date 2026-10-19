@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -21,6 +22,7 @@ public static class HarfBuzzNativeFix
 {
     private const int RtldNow = 2;
     private const int RtldDeepBind = 8;
+    private const string LibraryFileName = "libHarfBuzzSharp.so";
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate IntPtr DlopenDelegate(string fileName, int flags);
@@ -68,7 +70,8 @@ public static class HarfBuzzNativeFix
 
                 foreach (var path in CandidatePaths())
                 {
-                    if (!File.Exists(path))
+                    // A bare file name (no directory) is resolved by the dynamic loader's own search.
+                    if (Path.IsPathRooted(path) && !File.Exists(path))
                     {
                         continue;
                     }
@@ -112,13 +115,53 @@ public static class HarfBuzzNativeFix
         return null;
     }
 
-    private static string[] CandidatePaths()
+    private static List<string> CandidatePaths()
     {
-        var baseDir = AppContext.BaseDirectory;
-        return
-        [
-            Path.Combine(baseDir, "libHarfBuzzSharp.so"),
-            Path.Combine(baseDir, "runtimes", "linux-x64", "native", "libHarfBuzzSharp.so"),
-        ];
+        var paths = new List<string>();
+        AddDirectory(paths, AppContext.BaseDirectory);
+
+        // Packages may symlink the executable into /usr/bin (AppContext.BaseDirectory is then
+        // the symlink's folder), so also look next to the real executable.
+        try
+        {
+            var processPath = Environment.ProcessPath;
+            if (!string.IsNullOrEmpty(processPath))
+            {
+                var target = File.ResolveLinkTarget(processPath, returnFinalTarget: true)?.FullName ?? processPath;
+                AddDirectory(paths, Path.GetDirectoryName(target));
+            }
+        }
+        catch
+        {
+            // Ignore - the other candidates still apply.
+        }
+
+        // Distro packages may move the native library out of the app folder entirely, e.g. the
+        // Arch AUR package installs the binary to /usr/bin and libHarfBuzzSharp.so to /usr/lib
+        // (issue #16014). A bare name lets dlopen search LD_LIBRARY_PATH, the ld cache and the
+        // default library folders - the same lookup .NET's default resolution would end up using.
+        paths.Add(LibraryFileName);
+
+        return paths;
+    }
+
+    private static void AddDirectory(List<string> paths, string? directory)
+    {
+        if (string.IsNullOrEmpty(directory))
+        {
+            return;
+        }
+
+        foreach (var path in new[]
+                 {
+                     Path.Combine(directory, LibraryFileName),
+                     Path.Combine(directory, "runtimes", "linux-x64", "native", LibraryFileName),
+                 })
+        {
+            if (!paths.Contains(path))
+            {
+                paths.Add(path);
+            }
+        }
     }
 }

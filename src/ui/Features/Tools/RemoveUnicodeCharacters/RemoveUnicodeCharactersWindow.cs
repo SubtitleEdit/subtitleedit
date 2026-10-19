@@ -11,6 +11,10 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.RemoveUnicodeCharacters;
 
+/// <summary>
+/// Remove Unicode characters, in the editor look (see <see cref="EditorChrome"/>): the characters
+/// found (with what to replace them with), the summary plus Cancel and OK in the button bar.
+/// </summary>
 public class RemoveUnicodeCharactersWindow : Window
 {
     public RemoveUnicodeCharactersWindow(RemoveUnicodeCharactersViewModel vm)
@@ -22,6 +26,7 @@ public class RemoveUnicodeCharactersWindow : Window
         Height = 600;
         MinWidth = 600;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -29,7 +34,7 @@ public class RemoveUnicodeCharactersWindow : Window
 
         // Sorting dropped in the DataGrid -> TableView conversion: the characters are
         // listed in order of first appearance in the subtitle.
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.General.Characters);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -91,7 +96,7 @@ public class RemoveUnicodeCharactersWindow : Window
                             VerticalAlignment = VerticalAlignment.Center,
                             HorizontalAlignment = HorizontalAlignment.Stretch,
                             Margin = new Thickness(2),
-                        }),
+                        }.WithAccessibleName(Se.Language.General.ReplaceWith)),
                 },
                 new SeTableViewColumn
                 {
@@ -130,41 +135,12 @@ public class RemoveUnicodeCharactersWindow : Window
             e.Handled = true;
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
-        var buttonSelectAll = UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand);
-        var buttonInvertSelection = UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand);
-        var panelSelection = UiUtil.MakeHorizontalPanel(buttonSelectAll, buttonInvertSelection);
-
-        var labelStatus = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.StatusText)).WithAlignmentTop();
+        var actions = EditorChrome.MakeListActions(EditorChrome.MakeSelectAllButton(vm.SelectAllCommand), EditorChrome.MakeInvertSelectionButton(vm.InvertSelectionCommand));
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
-        grid.Add(panelSelection, 1);
-        grid.Add(labelStatus, 2);
-        grid.Add(panelButtons, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(null, EditorChrome.MakeListSection(Se.Language.General.Characters, dataGrid, actions, first: true)), EditorChrome.MakeStatusText(nameof(vm.StatusText), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(dataGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

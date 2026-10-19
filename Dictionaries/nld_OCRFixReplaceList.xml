@@ -165,9 +165,9 @@
     <!-- SlNG to SING -->
   </RegularExpressionsIfSpelledCorrectly>
   <RegularExpressions>
-    <RegEx find="\blk(?=\p{Ll}{2})" replaceWith="Ik" />
-    <RegEx find="\bln(?=\p{Ll}{2})" replaceWith="In" />
-    <RegEx find="\bls(?=\p{Ll}{2})" replaceWith="Is" />
+    <RegEx find="\blk\b(?!['’])" replaceWith="Ik" />
+    <RegEx find="\bln\b(?!['’])" replaceWith="In" />
+    <RegEx find="\bls\b(?!['’])" replaceWith="Is" />
     <RegEx find="\beIk" replaceWith="elk" />
     <RegEx find="\bler(land|se|s|)\b" replaceWith="Ier$1" />
     <RegEx find="\biij" replaceWith="lij" />
@@ -224,6 +224,9 @@
 
     <!-- trailing I→l in capitalised word (e.g. AmsterdamI → Amsterdaml) -->
     <RegEx find="\b([A-Z][a-zéèëïóöüij]+)I\b" spellCheck="$1l" replaceWith="$1l" />
+
+    <!-- aI → al, oI → ol : a two-letter word is lowercase + I only when the I is an italic l -->
+    <RegEx find="\b([a-zéèëïóöü])I\b" spellCheck="$1l" replaceWith="$1l" />
 
     <!-- I→l mid capitalised word (e.g. AmstIerdam → Amstlerdam) -->
     <RegEx find="\b([A-Z][a-zéèëïóöüij]+)I([a-zéèëïóöüij]+)\b" spellCheck="$1l$2" replaceWith="$1l$2" />

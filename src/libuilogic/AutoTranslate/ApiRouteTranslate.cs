@@ -31,11 +31,17 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         {
             // Anthropic Claude
             "claude-sonnet-5",
+            "claude-sonnet-5-5",
+            "claude-opus-5-5",
+            "claude-haiku-5-5",
             "claude-opus-5",
             "claude-haiku-4-5",
             "claude-sonnet-4-6",
 
             // OpenAI GPT Series
+            "gpt-6.1-sol",
+            "gpt-6-sol",
+            "gpt-6-luna",
             "gpt-5.6-sol",
             "gpt-5.5",
             "gpt-5.4",
@@ -49,8 +55,10 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             // Google Gemini
             "gemini-flash-latest",
+            "gemini-4-argon",
+            "gemini-3.8-flash",
+            "gemini-3.6-flash",
             "gemini-3.1-pro-preview",
-            "gemini-3.5-flash",
             "gemini-2.5-pro",
             "gemini-2.5-flash",
         };

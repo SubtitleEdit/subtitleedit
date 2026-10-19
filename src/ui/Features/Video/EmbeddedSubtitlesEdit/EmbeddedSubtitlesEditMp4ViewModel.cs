@@ -43,6 +43,9 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isGenerating;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.AddRemoveEmbeddedSubtitlesMp4Title);
+
     // Flips true after the initial off-thread ffmpeg scan finishes populating Tracks.
     // Add/Edit/Delete/Preview bind their IsEnabled to CanEditTracks so the user can't
     // race the scan: clicking Add before existing tracks land would otherwise append
@@ -131,6 +134,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 
     partial void OnIsGeneratingChanged(bool value)
     {
+        _sleepInhibitor.SetActive(value);
         OnPropertyChanged(nameof(CanGenerate));
         OnPropertyChanged(nameof(CanEditTracks));
 
@@ -342,7 +346,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window,
-                    Se.Language.Video.EmbeddedTrackNoSubtitlesFoundTitle,
+                    Se.Language.General.NoSubtitlesFoundTitle,
                     Se.Language.Video.EmbeddedTrackNoSubtitlesFoundMessage,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -766,6 +770,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     internal void OnClosing()
     {
         UiUtil.SaveWindowPosition(Window);
+        _sleepInhibitor.Dispose();
 
         // Stop the poll timer and any still-running encode - closing the window used to
         // leave the ffmpeg process muxing to completion in the background.

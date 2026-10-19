@@ -1,23 +1,36 @@
-﻿using Avalonia;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Avalonia.Media;
-using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Config.Language.Tools;
-using Optris.Icons.Avalonia;
+using System;
 using System.Globalization;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 
+/// <summary>
+/// The beautify time codes profile, in the editor look (see <see cref="EditorChrome"/>): the base
+/// gap on top, in/out cues and connected/chaining side by side in sections (each with its cue
+/// preview), the presets plus Cancel/OK in the button bar. The sections scroll on a short screen.
+/// The in/out and general/in/out pages of the connected and chaining sections are segmented
+/// buttons bound to the same view model indices the tab controls used.
+/// </summary>
 public class BeautifyTimeCodesProfileWindow : Window
 {
+    private const double LabelWidth = 80;
+
+    private static readonly IBrush GreenZoneBrush = new SolidColorBrush(Color.FromRgb(0, 160, 0));
+    private static readonly IBrush RedZoneBrush = new SolidColorBrush(Color.FromRgb(200, 30, 30));
+
     private readonly LanguageBeautifyTimeCodesProfile _l;
     private readonly BeautifyTimeCodesProfileViewModel _vm;
 
@@ -37,50 +50,33 @@ public class BeautifyTimeCodesProfileWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = _l.Title;
         CanResize = true;
-        Width = 1220;
-        Height = 760;
-        MinWidth = 1180;
-        MinHeight = 640;
+        Width = 1080;
+        Height = 640;
+        MinWidth = 960;
+        MinHeight = 520;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            RowDefinitions = new RowDefinitions("Auto,*,Auto"),
-            ColumnDefinitions = new ColumnDefinitions("*,*"),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Margin = UiUtil.MakeWindowMargin(),
-        };
+        var sections = new StackPanel();
+        sections.Children.Add(BuildGeneralSection());
+        sections.Children.Add(SideBySide(BuildInCuesGroup(), BuildOutCuesGroup()));
+        sections.Children.Add(SideBySide(BuildConnectedGroup(), BuildChainingGroup()));
 
-        grid.Add(BuildGeneralSection(), 0, 0, 1, 2);
-        grid.Add(BuildInCuesGroup(), 1, 0);
-        grid.Add(BuildOutCuesGroup(), 1, 1);
-
-        var bottomGrid = new Grid
+        // Keeps the buttons reachable when the window is clamped to a small working area.
+        var scrollViewer = new ScrollViewer
         {
-            ColumnDefinitions = new ColumnDefinitions("*,*"),
-            ColumnSpacing = 10,
+            Content = sections,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
-        bottomGrid.Add(BuildConnectedGroup(), 0, 0);
-        bottomGrid.Add(BuildChainingGroup(), 0, 1);
-        grid.Add(bottomGrid, 2, 0, 1, 2);
 
         var presetButton = BuildPresetButton();
         var ok = UiUtil.MakeButtonOk(vm.OkCommand);
+        ok.Classes.Add("primary");
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(ok, cancel);
-        buttonBar.Children.Insert(0, presetButton);
 
-        var outerGrid = new Grid
-        {
-            RowDefinitions = new RowDefinitions("*,Auto"),
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
-        };
-        outerGrid.Add(new ScrollViewer { Content = grid, VerticalScrollBarVisibility = ScrollBarVisibility.Auto }, 0, 0);
-        outerGrid.Add(buttonBar, 1, 0);
-        Content = outerGrid;
+        Content = EditorChrome.MakeRoot(scrollViewer, EditorChrome.MakeDockedButtonBar(presetButton, cancel, ok));
 
         UiUtil.FocusOnFirstActivation(this, ok);
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -173,7 +169,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             Content = _l.LoadPreset,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 0, 20, 0),
+            VerticalAlignment = VerticalAlignment.Center,
             Flyout = flyout,
         };
     }
@@ -217,19 +213,9 @@ public class BeautifyTimeCodesProfileWindow : Window
 
     private Control BuildGeneralSection()
     {
-        var labelGap = UiUtil.MakeLabel(_l.Gap + ":");
-        var nudGap = MakeFrameNud(nameof(_vm.Gap));
-        var suffix = UiUtil.MakeLabel(_l.GapSuffix);
-
-        var content = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children = { labelGap, nudGap, suffix, UiUtil.MakeHintIcon(_l.HintGap) },
-        };
-
-        return MakeGroupBox(Se.Language.General.General, content);
+        var nudGap = MakeFrameNud(nameof(_vm.Gap), _l.Gap);
+        var content = Row(_l.Gap, nudGap, MakeUnit(_l.GapSuffix), UiUtil.MakeHintIcon(_l.HintGap, nudGap));
+        return EditorChrome.MakeEditorSection(Se.Language.General.General, content, first: true);
     }
 
     private Control BuildInCuesGroup()
@@ -243,11 +229,11 @@ public class BeautifyTimeCodesProfileWindow : Window
 
         var stack = new StackPanel
         {
-            Spacing = 6,
-            Children = { _previewIn, rowGap, rowZones },
+            Spacing = 8,
+            Children = { FramePreview(_previewIn), rowGap, rowZones },
         };
 
-        return MakeGroupBox(_l.InCues, stack);
+        return EditorChrome.MakeEditorSection(_l.InCues, stack);
     }
 
     private Control BuildOutCuesGroup()
@@ -261,11 +247,11 @@ public class BeautifyTimeCodesProfileWindow : Window
 
         var stack = new StackPanel
         {
-            Spacing = 6,
-            Children = { _previewOut, rowGap, rowZones },
+            Spacing = 8,
+            Children = { FramePreview(_previewOut), rowGap, rowZones },
         };
 
-        return MakeGroupBox(_l.OutCues, stack);
+        return EditorChrome.MakeEditorSection(_l.OutCues, stack);
     }
 
     private Control BuildConnectedGroup()
@@ -277,24 +263,22 @@ public class BeautifyTimeCodesProfileWindow : Window
         previewHost.Children.Add(_previewConnectedIn);
         previewHost.Children.Add(_previewConnectedOut);
 
-        var tabs = new TabControl
-        {
-            [!SelectingItemsControl.SelectedIndexProperty] = new Binding(nameof(_vm.SelectedConnectedTabIndex)) { Source = _vm, Mode = BindingMode.TwoWay },
-        };
-        tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.InCueClosest) });
-        tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.OutCueClosest) });
-        tabs.SelectionChanged += (_, _) =>
-        {
-            _previewConnectedIn.IsVisible = _vm.SelectedConnectedTabIndex == 0;
-            _previewConnectedOut.IsVisible = _vm.SelectedConnectedTabIndex == 1;
-        };
+        var pages = MakeSegmented(
+            new[] { _l.InCueClosest, _l.OutCueClosest },
+            nameof(_vm.SelectedConnectedTabIndex),
+            () => _vm.SelectedConnectedTabIndex,
+            index => _vm.SelectedConnectedTabIndex = index,
+            () =>
+            {
+                _previewConnectedIn.IsVisible = _vm.SelectedConnectedTabIndex == 0;
+                _previewConnectedOut.IsVisible = _vm.SelectedConnectedTabIndex == 1;
+            });
 
-        // Gap row — two NUDs depending on selected tab
-        var labelGap = UiUtil.MakeLabel(_l.Gap + ":");
-        var nudGapInLeft = MakeFrameNud(nameof(_vm.ConnectedInCueClosestLeftGap));
-        var nudGapInRight = MakeFrameNud(nameof(_vm.ConnectedInCueClosestRightGap));
-        var nudGapOutLeft = MakeFrameNud(nameof(_vm.ConnectedOutCueClosestLeftGap));
-        var nudGapOutRight = MakeFrameNud(nameof(_vm.ConnectedOutCueClosestRightGap));
+        // Gap row — two NUDs depending on selected page
+        var nudGapInLeft = MakeFrameNud(nameof(_vm.ConnectedInCueClosestLeftGap), _l.Gap);
+        var nudGapInRight = MakeFrameNud(nameof(_vm.ConnectedInCueClosestRightGap), _l.Gap);
+        var nudGapOutLeft = MakeFrameNud(nameof(_vm.ConnectedOutCueClosestLeftGap), _l.Gap);
+        var nudGapOutRight = MakeFrameNud(nameof(_vm.ConnectedOutCueClosestRightGap), _l.Gap);
 
         var conv = new IndexEqualsConverter();
         nudGapInLeft.Bind(IsVisibleProperty, new Binding(nameof(_vm.SelectedConnectedTabIndex)) { Source = _vm, Converter = conv, ConverterParameter = 0 });
@@ -302,12 +286,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         nudGapOutLeft.Bind(IsVisibleProperty, new Binding(nameof(_vm.SelectedConnectedTabIndex)) { Source = _vm, Converter = conv, ConverterParameter = 1 });
         nudGapOutRight.Bind(IsVisibleProperty, new Binding(nameof(_vm.SelectedConnectedTabIndex)) { Source = _vm, Converter = conv, ConverterParameter = 1 });
 
-        var rowGap = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            Children = { labelGap, nudGapInLeft, nudGapInRight, nudGapOutLeft, nudGapOutRight, UiUtil.MakeHintIcon(_l.HintConnected) },
-        };
+        var rowGap = Row(_l.Gap, nudGapInLeft, nudGapInRight, nudGapOutLeft, nudGapOutRight, MakeUnit(_l.Frames), UiUtil.MakeHintIcon(_l.HintConnected));
 
         var rowZones = MakeZonesRow(
             nameof(_vm.ConnectedLeftGreenZone), nameof(_vm.ConnectedLeftRedZone),
@@ -316,22 +295,22 @@ public class BeautifyTimeCodesProfileWindow : Window
         var rowTreatConnected = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
+            Spacing = 8,
             Children =
             {
-                UiUtil.MakeLabel(_l.TreatAsConnected),
-                MakeMsNud(nameof(_vm.ConnectedTreatConnectedMs)),
-                UiUtil.MakeLabel(_l.Milliseconds),
+                EditorChrome.MakeDimLabel(_l.TreatAsConnected, new Thickness(0)),
+                MakeMsNud(nameof(_vm.ConnectedTreatConnectedMs), _l.TreatAsConnected),
+                MakeUnit(_l.Milliseconds),
             }
         };
 
         var stack = new StackPanel
         {
-            Spacing = 6,
-            Children = { previewHost, tabs, rowGap, rowZones, rowTreatConnected },
+            Spacing = 8,
+            Children = { FramePreview(previewHost), pages, rowGap, rowZones, rowTreatConnected },
         };
 
-        return MakeGroupBox(_l.ConnectedSubtitles, stack);
+        return EditorChrome.MakeEditorSection(_l.ConnectedSubtitles, stack);
     }
 
     private Control BuildChainingGroup()
@@ -345,19 +324,17 @@ public class BeautifyTimeCodesProfileWindow : Window
         previewHost.Children.Add(_previewChainInOnShot);
         previewHost.Children.Add(_previewChainOutOnShot);
 
-        var tabs = new TabControl
-        {
-            [!SelectingItemsControl.SelectedIndexProperty] = new Binding(nameof(_vm.SelectedChainingTabIndex)) { Source = _vm, Mode = BindingMode.TwoWay },
-        };
-        tabs.Items.Add(new TabItem { Header = MakeTabHeader(Se.Language.General.General) });
-        tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.InCueOnShot) });
-        tabs.Items.Add(new TabItem { Header = MakeTabHeader(_l.OutCueOnShot) });
-        tabs.SelectionChanged += (_, _) =>
-        {
-            _previewChainGeneral.IsVisible = _vm.SelectedChainingTabIndex == 0;
-            _previewChainInOnShot.IsVisible = _vm.SelectedChainingTabIndex == 1;
-            _previewChainOutOnShot.IsVisible = _vm.SelectedChainingTabIndex == 2;
-        };
+        var pages = MakeSegmented(
+            new[] { Se.Language.General.General, _l.InCueOnShot, _l.OutCueOnShot },
+            nameof(_vm.SelectedChainingTabIndex),
+            () => _vm.SelectedChainingTabIndex,
+            index => _vm.SelectedChainingTabIndex = index,
+            () =>
+            {
+                _previewChainGeneral.IsVisible = _vm.SelectedChainingTabIndex == 0;
+                _previewChainInOnShot.IsVisible = _vm.SelectedChainingTabIndex == 1;
+                _previewChainOutOnShot.IsVisible = _vm.SelectedChainingTabIndex == 2;
+            });
 
         var conv = new IndexEqualsConverter();
 
@@ -404,11 +381,11 @@ public class BeautifyTimeCodesProfileWindow : Window
 
         var stack = new StackPanel
         {
-            Spacing = 6,
-            Children = { previewHost, tabs, hostPanel },
+            Spacing = 8,
+            Children = { FramePreview(previewHost), pages, hostPanel },
         };
 
-        return MakeGroupBox(_l.Chaining, stack);
+        return EditorChrome.MakeEditorSection(_l.Chaining, stack);
     }
 
     private Control BuildChainingSubPanel(
@@ -421,22 +398,26 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             GroupName = "chaining_" + useZonesPath,
             Content = _l.MaxGap,
+            FontSize = 12.5,
+            MinWidth = 110,
             VerticalAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(useMaxGapPath) { Source = _vm, Mode = BindingMode.TwoWay },
         };
-        var nudMax = MakeMsNud(maxGapPath);
+        var nudMax = MakeMsNud(maxGapPath, _l.MaxGap);
         nudMax.Bind(IsEnabledProperty, new Binding(useMaxGapPath) { Source = _vm });
         var maxRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            Children = { radioMax, nudMax, UiUtil.MakeLabel(_l.Milliseconds) },
+            Spacing = 8,
+            Children = { radioMax, nudMax, MakeUnit(_l.Milliseconds) },
         };
 
         var radioZones = new RadioButton
         {
             GroupName = "chaining_" + useZonesPath,
             Content = _l.Zones,
+            FontSize = 12.5,
+            MinWidth = 110,
             VerticalAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(useZonesPath) { Source = _vm, Mode = BindingMode.TwoWay },
         };
@@ -444,19 +425,19 @@ public class BeautifyTimeCodesProfileWindow : Window
         var nudFields = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
         if (leftGreenPath != null)
         {
-            nudFields.Children.Add(MakeFrameNud(leftGreenPath));
+            nudFields.Children.Add(MakeZoneNud(leftGreenPath, isGreen: true));
         }
         if (leftRedPath != null)
         {
-            nudFields.Children.Add(MakeFrameNud(leftRedPath));
+            nudFields.Children.Add(MakeZoneNud(leftRedPath, isGreen: false));
         }
         if (rightRedPath != null)
         {
-            nudFields.Children.Add(MakeFrameNud(rightRedPath));
+            nudFields.Children.Add(MakeZoneNud(rightRedPath, isGreen: false));
         }
         if (rightGreenPath != null)
         {
-            nudFields.Children.Add(MakeFrameNud(rightGreenPath));
+            nudFields.Children.Add(MakeZoneNud(rightGreenPath, isGreen: true));
         }
         // Only the first field would inherit the "Zones" radio as its label; name them all (#12087).
         foreach (var nud in nudFields.Children)
@@ -467,89 +448,176 @@ public class BeautifyTimeCodesProfileWindow : Window
         var zonesRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
+            Spacing = 8,
             Children = { radioZones, nudFields },
         };
 
-        var stack = new StackPanel { Spacing = 6 };
+        var stack = new StackPanel { Spacing = 8 };
         stack.Children.Add(maxRow);
         stack.Children.Add(zonesRow);
 
         if (includeShotChangeBehavior)
         {
-            var labelBehavior = UiUtil.MakeLabel(_l.ShotChangeBehavior);
             var combo = new ComboBox
             {
                 Width = 220,
                 [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.ShotChangeBehaviors)) { Source = _vm },
                 [!SelectingItemsControl.SelectedIndexProperty] = new Binding(nameof(_vm.SelectedChainingShotChangeBehaviorIndex)) { Source = _vm, Mode = BindingMode.TwoWay },
             };
+            AutomationProperties.SetName(combo, _l.ShotChangeBehavior);
             var behaviorRow = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
-                Spacing = 6,
-                Children = { labelBehavior, combo, UiUtil.MakeHintIcon(_l.HintChaining) },
+                Spacing = 8,
+                Margin = new Thickness(0, 2, 0, 0),
+                Children = { EditorChrome.MakeDimLabel(_l.ShotChangeBehavior, new Thickness(0)), combo, UiUtil.MakeHintIcon(_l.HintChaining, combo) },
             };
             stack.Children.Add(behaviorRow);
         }
 
         if (checkGeneralPath != null)
         {
-            var cb = new CheckBox
-            {
-                Content = _l.CheckGeneral,
-                [!ToggleButton.IsCheckedProperty] = new Binding(checkGeneralPath) { Source = _vm, Mode = BindingMode.TwoWay },
-            };
-            stack.Children.Add(cb);
+            var switchRow = EditorChrome.MakeToggleRow(checkGeneralPath, _l.CheckGeneral, out _);
+            switchRow.Margin = new Thickness(0, 2, 0, 0);
+            stack.Children.Add(switchRow);
         }
 
         return stack;
     }
 
+    /// <summary>
+    /// Two sections side by side with a line between them, the columns sharing the width.
+    /// </summary>
+    private static Grid SideBySide(Control left, Control right)
+    {
+        var grid = new Grid
+        {
+            ColumnDefinitions = { new ColumnDefinition(1, GridUnitType.Star), new ColumnDefinition(1, GridUnitType.Star) },
+        };
+        grid.Add(left, 0, 0);
+        grid.Add(new Border
+        {
+            Child = right,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
+        return grid;
+    }
+
+    /// <summary>
+    /// The pages of a section (in/out cue closest, general/in/out on shot change) as segmented
+    /// buttons; the selected page index lives in the view model, as it did for the tab controls.
+    /// </summary>
+    private Control MakeSegmented(string[] titles, string indexProperty, Func<int> getIndex, Action<int> setIndex, Action onChanged)
+    {
+        var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
+        var buttons = new Button[titles.Length];
+        for (var i = 0; i < titles.Length; i++)
+        {
+            var index = i;
+            var button = new Button
+            {
+                Content = new TextBlock { Text = titles[i], FontSize = 12, VerticalAlignment = VerticalAlignment.Center },
+                Height = 26,
+                Padding = new Thickness(10, 0),
+                VerticalContentAlignment = VerticalAlignment.Center,
+            };
+            button.Classes.Add("tool");
+            button.Click += (_, _) => setIndex(index);
+            AutomationProperties.SetName(button, titles[i]);
+            buttons[i] = button;
+            panel.Children.Add(button);
+        }
+
+        void Update()
+        {
+            var selected = getIndex();
+            for (var i = 0; i < buttons.Length; i++)
+            {
+                buttons[i].Classes.Set("active", i == selected);
+            }
+
+            onChanged();
+        }
+
+        _vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == indexProperty)
+            {
+                Update();
+            }
+        };
+        Update();
+
+        return new Border
+        {
+            Child = panel,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(2),
+            HorizontalAlignment = HorizontalAlignment.Left,
+        };
+    }
+
+    /// <summary>
+    /// A cue preview in a rounded frame.
+    /// </summary>
+    private static Border FramePreview(Control preview)
+    {
+        return new Border
+        {
+            Child = preview,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            ClipToBounds = true,
+        };
+    }
+
+    /// <summary>
+    /// A dim label of fixed width and the controls after it on one line.
+    /// </summary>
+    private static Grid Row(string label, params Control[] controls)
+    {
+        var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, VerticalAlignment = VerticalAlignment.Center };
+        foreach (var control in controls)
+        {
+            panel.Children.Add(control);
+        }
+
+        return EditorChrome.MakeLabeledRow(label, panel, LabelWidth);
+    }
+
+    private static TextBlock MakeUnit(string text)
+    {
+        var unit = EditorChrome.MakeDimLabel(text, new Thickness(2, 0, 0, 0));
+        unit.Foreground = EditorChrome.FaintTextBrush;
+        return unit;
+    }
+
     private Control MakeRowLabelNudSuffix(string label, string bindingPath, string suffix)
     {
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            Children =
-            {
-                UiUtil.MakeLabel(label + ":"),
-                MakeFrameNud(bindingPath),
-                UiUtil.MakeLabel(suffix),
-            },
-        };
+        return Row(label, MakeFrameNud(bindingPath, label), MakeUnit(suffix));
     }
 
     private Control MakeZonesRow(string leftGreenPath, string leftRedPath, string rightRedPath, string rightGreenPath)
     {
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            Children =
-            {
-                UiUtil.MakeLabel(_l.Zones + ":"),
-                MakeZoneNud(leftGreenPath, isGreen: true),
-                MakeZoneNud(leftRedPath, isGreen: false),
-                MakeZoneNud(rightRedPath, isGreen: false),
-                MakeZoneNud(rightGreenPath, isGreen: true),
-                UiUtil.MakeHintIcon(_l.HintZones),
-            },
-        };
+        var first = MakeZoneNud(leftGreenPath, isGreen: true);
+        return Row(_l.Zones,
+            first,
+            MakeZoneNud(leftRedPath, isGreen: false),
+            MakeZoneNud(rightRedPath, isGreen: false),
+            MakeZoneNud(rightGreenPath, isGreen: true),
+            UiUtil.MakeHintIcon(_l.HintZones, first));
     }
 
-    private static TextBlock MakeTabHeader(string text) => new()
+    private NumericUpDown MakeFrameNud(string bindingPath, string accessibleName)
     {
-        Text = text,
-        FontSize = UiUtil.ScaledFontSize(12),
-    };
-
-    private NumericUpDown MakeFrameNud(string bindingPath)
-    {
-        return new NumericUpDown
+        var nud = new NumericUpDown
         {
-            Width = 115,
+            Width = 64,
             Minimum = 0,
             Maximum = 100,
             Increment = 1,
@@ -557,13 +625,16 @@ public class BeautifyTimeCodesProfileWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             [!NumericUpDown.ValueProperty] = new Binding(bindingPath) { Source = _vm, Mode = BindingMode.TwoWay, Converter = new IntDecimalConverter() },
         };
+        nud.Classes.Add("field");
+        AutomationProperties.SetName(nud, accessibleName);
+        return nud;
     }
 
-    private NumericUpDown MakeMsNud(string bindingPath)
+    private NumericUpDown MakeMsNud(string bindingPath, string accessibleName)
     {
-        return new NumericUpDown
+        var nud = new NumericUpDown
         {
-            Width = 130,
+            Width = 80,
             Minimum = 0,
             Maximum = 5000,
             Increment = 10,
@@ -571,30 +642,27 @@ public class BeautifyTimeCodesProfileWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             [!NumericUpDown.ValueProperty] = new Binding(bindingPath) { Source = _vm, Mode = BindingMode.TwoWay, Converter = new IntDecimalConverter() },
         };
-    }
-
-    private NumericUpDown MakeZoneNud(string bindingPath, bool isGreen)
-    {
-        var nud = MakeFrameNud(bindingPath);
-        nud.Background = new SolidColorBrush(isGreen ? Color.FromArgb(80, 0, 160, 0) : Color.FromArgb(80, 200, 30, 30));
-        nud.Width = 110;
+        nud.Classes.Add("field");
+        AutomationProperties.SetName(nud, accessibleName);
         return nud;
     }
 
-    private static Control MakeGroupBox(string title, Control content)
+    /// <summary>
+    /// A zone field: a green (warn) or red (snap) dot inside it, the colors of the cue preview.
+    /// </summary>
+    private NumericUpDown MakeZoneNud(string bindingPath, bool isGreen)
     {
-        var header = new TextBlock
+        var nud = MakeFrameNud(bindingPath, _l.Zones);
+        nud.Width = 72;
+        nud.InnerLeftContent = new Ellipse
         {
-            Text = title,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 6),
+            Width = 8,
+            Height = 8,
+            Fill = isGreen ? GreenZoneBrush : RedZoneBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
         };
-        var inner = new StackPanel
-        {
-            Spacing = 4,
-            Children = { header, content },
-        };
-        return UiUtil.MakeBorderForControl(inner);
+        return nud;
     }
 
     private sealed class IndexEqualsConverter : IValueConverter

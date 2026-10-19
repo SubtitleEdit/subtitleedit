@@ -29,6 +29,7 @@ public class FixNetflixErrorsWindow : Window
         MinWidth = 900;
         MinHeight = 640;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -40,52 +41,30 @@ public class FixNetflixErrorsWindow : Window
         var buttonGenerateReport = UiUtil.MakeButton(Se.Language.Tools.NetflixCheckAndFix.GenerateReport, vm.GenerateReportCommand)
             .WithIconLeft(IconNames.Netflix);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var panelButtons = UiUtil.MakeButtonBar(
-            buttonGenerateReport,
-            buttonOk,
-            UiUtil.MakeButtonCancel(vm.CancelCommand)
-        );
+        buttonOk.Classes.Add("primary");
 
-        var summaryText = new TextBlock
+        var summaryText = EditorChrome.MakeBoundHint(nameof(vm.FixesSummaryText));
+        summaryText.FontSize = 12;
+
+        var panelButtons = EditorChrome.MakeButtonBar(summaryText, buttonGenerateReport, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
+
+        var columns = new Grid
         {
-            VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.8,
-            Margin = new Thickness(4, 0, 10, 0),
-        };
-        summaryText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FixesSummaryText)));
-
-        var buttonSelectPanel = UiUtil.MakeButtonBar(
-            UiUtil.MakeButton(Se.Language.General.SelectAll, vm.ChecksSelectAllCommand),
-            UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.ChecksInverseSelectionCommand),
-            summaryText
-        ).WithAlignmentLeft().WithAlignmentTop();
-
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(310, GridUnitType.Pixel) },
+                new ColumnDefinition { Width = new GridLength(320, GridUnitType.Pixel) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        columns.Add(settingsView, 0, 0);
+        columns.Add(new Border
+        {
+            Child = fixesView,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
 
-        grid.Add(settingsView, 0, 0);
-        grid.Add(fixesView, 0, 1);
-        grid.Add(buttonSelectPanel, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(columns, panelButtons);
 
         UiUtil.FocusOnFirstActivation(this, _comboBoxLanguage); // initial focus on an input, not an action button - a focused button clicks on bare Space
 
@@ -96,31 +75,21 @@ public class FixNetflixErrorsWindow : Window
     private Border MakeSettingsView(FixNetflixErrorsViewModel vm)
     {
         _comboBoxLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage));
-        var panelLanguage = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                UiUtil.MakeTextBlock(Se.Language.General.Language).WithMarginRight(5),
-                _comboBoxLanguage
-            }
-        };
+        _comboBoxLanguage.HorizontalAlignment = HorizontalAlignment.Stretch;
+        _comboBoxLanguage.Width = double.NaN;
+        AutomationProperties.SetName(_comboBoxLanguage, Se.Language.General.Language);
 
         // Netflix allows higher reading speeds for SDH and requires lower ones for
         // children's programs, so both change which limits the checks run against.
         var panelTop = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(8),
-            Spacing = 4,
+            Spacing = 10,
             Children =
             {
-                panelLanguage,
-                UiUtil.MakeCheckBox(Se.Language.Tools.NetflixCheckAndFix.ChildrensProgram, vm, nameof(vm.IsChildrenProgram)),
-                UiUtil.MakeCheckBox(Se.Language.Tools.NetflixCheckAndFix.Sdh, vm, nameof(vm.IsSdh)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Language, _comboBoxLanguage, 80, spacing: 6),
+                EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.IsChildrenProgram), Se.Language.Tools.NetflixCheckAndFix.ChildrensProgram), Se.Language.Tools.NetflixCheckAndFix.ChildrensProgram),
+                EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.IsSdh), Se.Language.Tools.NetflixCheckAndFix.Sdh), Se.Language.Tools.NetflixCheckAndFix.Sdh),
             }
         };
 
@@ -173,6 +142,30 @@ public class FixNetflixErrorsWindow : Window
         TableViewExtras.AddSpaceToggle<NetflixCheckDisplayItem>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
+        var checksActions = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                EditorChrome.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, vm.ChecksSelectAllCommand, 26),
+                EditorChrome.CreateToolButton("fa-solid fa-right-left", Se.Language.General.InvertSelection, vm.ChecksInverseSelectionCommand, 26),
+            },
+        };
+        var checksHeader = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(checksActions, Dock.Right);
+        checksHeader.Children.Add(checksActions);
+        checksHeader.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Rules));
+
+        var checksPanel = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,*"),
+            Margin = new Thickness(14, 10, 14, 14),
+        };
+        checksPanel.Add(checksHeader, 0);
+        checksPanel.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1);
+
         var grid = new Grid
         {
             RowDefinitions =
@@ -180,16 +173,17 @@ public class FixNetflixErrorsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(306, GridUnitType.Pixel) },
-            },
         };
 
-        grid.Add(panelTop, 0, 0);
-        grid.Add(dataGrid, 1, 0);
+        grid.Add(EditorChrome.MakeEditorSection(Se.Language.General.Settings, panelTop, first: true), 0, 0);
+        grid.Add(new Border
+        {
+            Child = checksPanel,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+        }, 1, 0);
 
-        return UiUtil.MakeBorderForControlNoPadding(grid);
+        return EditorChrome.MakePanel(grid);
     }
 
     private Border MakeFixesView(FixNetflixErrorsViewModel vm)
@@ -309,7 +303,17 @@ public class FixNetflixErrorsWindow : Window
                 }
             });
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        var fixesPanel = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,*"),
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+        var fixesHeader = EditorChrome.MakeSectionHeader(Se.Language.Tools.FixCommonErrors.Fixes);
+        fixesHeader.Margin = new Thickness(0, 0, 0, 10);
+        fixesPanel.Add(fixesHeader, 0);
+        fixesPanel.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1);
+
+        return EditorChrome.MakePanel(fixesPanel);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

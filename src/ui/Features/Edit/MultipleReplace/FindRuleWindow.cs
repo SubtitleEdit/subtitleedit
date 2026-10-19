@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -18,27 +19,31 @@ public class FindRuleWindow : Window
         MinWidth = 600;
         MinHeight = 300;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
-        var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
         var textBoxSearch = UiUtil.MakeTextBox(300, vm, nameof(vm.SearchText)).WithSearchAndClearIcons();
+        textBoxSearch.Classes.Add("text");
+        textBoxSearch.HorizontalAlignment = HorizontalAlignment.Left;
+        AutomationProperties.SetName(textBoxSearch, Se.Language.General.Search);
 
         var searchPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 5),
-            Spacing = 8,
+            Spacing = 10,
+            Margin = new Thickness(4, 2), // lines up with the list's 14 px margin
             Children =
             {
-                labelSearch,
+                EditorChrome.MakeDimLabel(Se.Language.General.Search, new Thickness(0)),
                 textBoxSearch,
             }
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -48,14 +53,15 @@ public class FindRuleWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 5,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(searchPanel, 0, 0);
-        grid.Add(MakeDataGrid(vm), 1, 0);
+        var rulesList = MakeDataGrid(vm);
+        rulesList.Margin = new Thickness(14, 12, 14, 14);
+
+        grid.Add(EditorChrome.MakeToolbar(searchPanel), 0, 0);
+        grid.Add(rulesList, 1, 0);
         grid.Add(panelButtons, 2, 0);
 
         Content = grid;
@@ -135,6 +141,7 @@ public class FindRuleWindow : Window
             }
         };
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        AutomationProperties.SetName(dataGrid, Se.Language.General.Rules);
+        return EditorChrome.MakeListFrame(dataGrid);
     }
 }

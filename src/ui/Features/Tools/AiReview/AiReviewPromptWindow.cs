@@ -8,6 +8,11 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Tools.AiReview;
 
+/// <summary>
+/// The AI review prompt editor in the editor look (see <see cref="EditorChrome"/>): the prompt
+/// and the reference context as two sections, the JSON contract note under them, Reset/Cancel/OK
+/// in the button bar.
+/// </summary>
 public class AiReviewPromptWindow : Window
 {
     public AiReviewPromptWindow(AiReviewPromptViewModel vm)
@@ -19,28 +24,17 @@ public class AiReviewPromptWindow : Window
         Height = 700;
         MinHeight = 520;
         CanResize = true;
+        // The Edit dialogs' styles: compact fields that keep the field color while focused
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var l = Se.Language.Tools.AiReview;
 
-        var labelInfo = UiUtil.MakeTextBlock(l.PromptInfo);
-        labelInfo.TextWrapping = TextWrapping.Wrap;
-        labelInfo.Opacity = 0.75;
-
-        var textBox = new TextBox
-        {
-            AcceptsReturn = true,
-            TextWrapping = TextWrapping.Wrap,
-            MinHeight = 140,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.PromptText)) { Mode = BindingMode.TwoWay },
-        };
+        // ---------- prompt ----------
+        var textBox = MakeMultiLineTextBox(nameof(vm.PromptText), 140);
         Avalonia.Automation.AutomationProperties.SetName(textBox, l.EditPromptTitle);
 
-        var labelTemplate = UiUtil.MakeTextBlock(l.Template);
-        labelTemplate.VerticalAlignment = VerticalAlignment.Center;
         var comboTemplate = new ComboBox
         {
             ItemsSource = vm.Templates,
@@ -54,90 +48,95 @@ public class AiReviewPromptWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
-            Children = { labelTemplate, comboTemplate },
+            Children = { EditorChrome.MakeDimLabel(l.Template, new Thickness(0)), comboTemplate },
         };
 
-        var labelContext = UiUtil.MakeTextBlock(l.ReferenceContext);
-        labelContext.FontWeight = FontWeight.SemiBold;
-        labelContext.VerticalAlignment = VerticalAlignment.Center;
+        var promptSection = MakeSection(Se.Language.General.Prompt, panelTemplate, l.PromptInfo, textBox, first: true);
+
+        // ---------- reference context ----------
         var buttonGenerate = UiUtil.MakeButton(l.GenerateContext, vm.GenerateContextCommand);
         buttonGenerate.Bind(Button.ContentProperty, new Binding(nameof(vm.GenerateButtonText)));
         buttonGenerate.Bind(IsVisibleProperty, new Binding(nameof(vm.CanGenerate)));
+        buttonGenerate.MinHeight = 28;
+        buttonGenerate.Height = 28;
+        buttonGenerate.Padding = new Thickness(10, 0);
+        buttonGenerate.FontSize = 12.5;
+        buttonGenerate.VerticalContentAlignment = VerticalAlignment.Center;
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(buttonGenerate, l.GenerateContextHint);
         }
 
-        var labelGenerateStatus = UiUtil.MakeTextBlock(string.Empty);
-        labelGenerateStatus.Opacity = 0.75;
-        labelGenerateStatus.VerticalAlignment = VerticalAlignment.Center;
-        labelGenerateStatus.Bind(TextBlock.TextProperty, new Binding(nameof(vm.GenerateStatus)));
-        var panelContextHeader = new StackPanel
+        var labelGenerateStatus = EditorChrome.MakeBoundHint(nameof(vm.GenerateStatus));
+        labelGenerateStatus.FontSize = 12;
+        labelGenerateStatus.MaxWidth = 260;
+        var panelGenerate = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 10,
-            Children = { labelContext, buttonGenerate, labelGenerateStatus },
+            Children = { labelGenerateStatus, buttonGenerate },
         };
 
-        var labelContextInfo = UiUtil.MakeTextBlock(l.ReferenceContextInfo);
-        labelContextInfo.TextWrapping = TextWrapping.Wrap;
-        labelContextInfo.Opacity = 0.75;
-
-        var textBoxContext = new TextBox
-        {
-            AcceptsReturn = true,
-            TextWrapping = TextWrapping.Wrap,
-            MinHeight = 90,
-            PlaceholderText = l.ReferenceContextPlaceholder,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.ContextText)) { Mode = BindingMode.TwoWay },
-            [!TextBox.IsReadOnlyProperty] = new Binding(nameof(vm.IsGenerating)),
-        };
+        var textBoxContext = MakeMultiLineTextBox(nameof(vm.ContextText), 90);
+        textBoxContext.PlaceholderText = l.ReferenceContextPlaceholder;
+        textBoxContext[!TextBox.IsReadOnlyProperty] = new Binding(nameof(vm.IsGenerating));
         Avalonia.Automation.AutomationProperties.SetName(textBoxContext, l.ReferenceContext);
 
-        var labelProtocol = UiUtil.MakeTextBlock(l.ProtocolInfo);
-        labelProtocol.TextWrapping = TextWrapping.Wrap;
-        labelProtocol.Opacity = 0.6;
-        labelProtocol.FontSize = UiUtil.ScaledFontSize(12);
+        var contextSection = MakeSection(l.ReferenceContext, panelGenerate, l.ReferenceContextInfo, textBoxContext, first: false);
+
+        // ---------- protocol note ----------
+        var labelProtocol = EditorChrome.MakeHint(l.ProtocolInfo);
         var borderProtocol = new Border
         {
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(6),
-            Padding = new Thickness(10),
-            Child = labelProtocol,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 10, 14, 12),
+            Child = new Grid
+            {
+                ColumnDefinitions = new ColumnDefinitions("Auto,*"),
+                ColumnSpacing = 8,
+                Children =
+                {
+                    new Optris.Icons.Avalonia.Icon
+                    {
+                        Value = "fa-solid fa-circle-info",
+                        FontSize = 12,
+                        Foreground = EditorChrome.FaintTextBrush,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Margin = new Thickness(0, 2, 0, 0),
+                    },
+                    labelProtocol,
+                },
+            },
         };
+        Grid.SetColumn(labelProtocol, 1);
 
-        var buttonReset = UiUtil.MakeButton(l.ResetToDefault, vm.ResetToDefaultCommand);
+        // ---------- buttons ----------
+        var buttonReset = EditorChrome.MakeActionButton("fa-solid fa-rotate-left", l.ResetToDefault, vm.ResetToDefaultCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = new Grid
-        {
-            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
-        };
-        buttonBar.Add(buttonReset, 0, 0);
-        buttonBar.Add(UiUtil.MakeButtonBar(buttonOk, buttonCancel), 0, 2);
+        var buttonBar = EditorChrome.MakeButtonBar(buttonReset, buttonCancel, buttonOk);
 
         // The prompt editor takes the star row so a long prompt scrolls inside the
         // text box instead of growing the window past the screen edge and pushing
         // the OK/Cancel buttons out of reach.
-        var panel = new Grid
+        var sections = new Grid
         {
-            Margin = UiUtil.MakeWindowMargin(),
-            RowDefinitions = new RowDefinitions("Auto,Auto,3*,Auto,Auto,2*,Auto,Auto"),
-            RowSpacing = 10,
+            RowDefinitions = new RowDefinitions("3*,2*,Auto"),
         };
-        panel.Add(labelInfo, 0, 0);
-        panel.Add(panelTemplate, 1, 0);
-        panel.Add(textBox, 2, 0);
-        panel.Add(panelContextHeader, 3, 0);
-        panel.Add(labelContextInfo, 4, 0);
-        panel.Add(textBoxContext, 5, 0);
-        panel.Add(borderProtocol, 6, 0);
-        panel.Add(buttonBar, 7, 0);
+        sections.Add(promptSection, 0, 0);
+        sections.Add(contextSection, 1, 0);
+        sections.Add(borderProtocol, 2, 0);
 
-        Content = panel;
+        var root = new Grid
+        {
+            RowDefinitions = new RowDefinitions("*,Auto"),
+        };
+        root.Add(EditorChrome.MakePanel(sections), 0, 0);
+        root.Add(buttonBar, 1, 0);
+
+        Content = root;
 
         Loaded += delegate
         {
@@ -150,5 +149,51 @@ public class AiReviewPromptWindow : Window
             UiUtil.SaveWindowPosition(this);
         };
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    private static TextBox MakeMultiLineTextBox(string property, double minHeight)
+    {
+        var textBox = new TextBox
+        {
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            MinHeight = minHeight,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            VerticalContentAlignment = VerticalAlignment.Top,
+            Padding = new Thickness(8, 6),
+            [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
+        };
+        textBox.Classes.Add("text");
+        return textBox;
+    }
+
+    /// <summary>
+    /// A section whose text box takes the rest of its height: header (with actions on the right),
+    /// a dim explanation, then the text box.
+    /// </summary>
+    private static Border MakeSection(string title, Control headerRight, string info, TextBox textBox, bool first)
+    {
+        var header = new DockPanel { MinHeight = 28 };
+        DockPanel.SetDock(headerRight, Dock.Right);
+        header.Children.Add(headerRight);
+        header.Children.Add(EditorChrome.MakeSectionHeader(title));
+
+        var grid = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,Auto,*"),
+            RowSpacing = 8,
+        };
+        grid.Add(header, 0, 0);
+        grid.Add(EditorChrome.MakeHint(info), 1, 0);
+        grid.Add(textBox, 2, 0);
+
+        return new Border
+        {
+            Child = grid,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, first ? 0 : 1, 0, 0),
+            Padding = new Thickness(14, 12, 14, 14),
+        };
     }
 }

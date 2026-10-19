@@ -58,11 +58,8 @@ public class LanguageAudioToText
     public string QualityReportLinesChecked { get; set; }
     public string QualityReportIssuesFound { get; set; }
     public string QualityReportLinesRemoved { get; set; }
-    public string QualityReportTooShort { get; set; }
     public string QualityReportTooShortHint { get; set; }
-    public string QualityReportTooLong { get; set; }
     public string QualityReportTooLongHint { get; set; }
-    public string QualityReportOverlap { get; set; }
     public string QualityReportOverlapHint { get; set; }
     public string QualityReportNonSpeech { get; set; }
     public string QualityReportNonSpeechHint { get; set; }
@@ -71,7 +68,6 @@ public class LanguageAudioToText
     public string QualityReportRemoved { get; set; }
     public string QualityReportAll { get; set; }
     public string QualityReportIssue { get; set; }
-    public string QualityReportDetail { get; set; }
     public string QualityReportTip { get; set; }
     public string QualityReportDoNotShowAgain { get; set; }
 
@@ -139,11 +135,8 @@ public class LanguageAudioToText
         QualityReportLinesChecked = "Lines checked";
         QualityReportIssuesFound = "Issues found";
         QualityReportLinesRemoved = "Lines removed";
-        QualityReportTooShort = "Too short";
         QualityReportTooShortHint = "Shorter than the minimum display time, or reading speed above the maximum";
-        QualityReportTooLong = "Too long";
         QualityReportTooLongHint = "Longer than the maximum display time, or very few words over a long time (often a hallucination)";
-        QualityReportOverlap = "Overlapping";
         QualityReportOverlapHint = "Ends after the next line starts";
         QualityReportNonSpeech = "Non-speech";
         QualityReportNonSpeechHint = "Only a sound or music description, like \"[Music]\"";
@@ -152,7 +145,6 @@ public class LanguageAudioToText
         QualityReportRemoved = "Removed";
         QualityReportAll = "All";
         QualityReportIssue = "Issue";
-        QualityReportDetail = "Detail";
         QualityReportTip = "Lines are listed with their numbers in the new subtitle. Use \"Fix common errors\" or the post-processing settings to fix more automatically, or try another model/engine if many lines are affected.";
         QualityReportDoNotShowAgain = "Do not show this report again";
 

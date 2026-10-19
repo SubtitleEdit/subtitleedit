@@ -8,6 +8,7 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -35,21 +36,36 @@ public class ImproveTimeCodesWindow : Window
         Height = 760;
         MinWidth = 900;
         MinHeight = 560;
+        // The Edit dialogs' styles: compact fields, a dimmed disabled primary (Align while aligning)
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+        AddStyles(Styles);
         vm.Window = this;
         DataContext = vm;
 
+        // The waveforms and the list give up height first (both have a minimum), so the progress
+        // strip and the button bar stay reachable on a short screen.
+        var middle = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(5, GridUnitType.Star)) { MinHeight = 160 }, // waveforms
+                new RowDefinition(GridLength.Auto), // change navigation
+                new RowDefinition(new GridLength(4, GridUnitType.Star)) { MinHeight = 140 }, // rows + video
+            },
+        };
+        middle.Add(BuildVisualizerArea(vm), 0, 0);
+        middle.Add(BuildChangeNavBar(vm), 1, 0);
+        middle.Add(BuildRowsAndVideo(vm), 2, 0);
+
         var grid = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,5*,Auto,4*,Auto"),
+            RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
             ColumnDefinitions = new ColumnDefinitions("*"),
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
         };
         grid.Add(BuildSetupBar(vm), 0, 0);
-        grid.Add(BuildVisualizerArea(vm), 1, 0);
-        grid.Add(BuildChangeNavBar(vm), 2, 0);
-        grid.Add(BuildRowsAndVideo(vm), 3, 0);
-        grid.Add(BuildButtonBar(vm), 4, 0);
+        grid.Add(EditorChrome.MakePanel(middle), 1, 0);
+        grid.Add(BuildProgressStrip(vm), 2, 0);
+        grid.Add(BuildButtonBar(vm), 3, 0);
         Content = grid;
 
         // Space is taken on the way down, so it plays/pauses wherever the focus is - the list
@@ -58,6 +74,26 @@ public class ImproveTimeCodesWindow : Window
         AddHandler(KeyDownEvent, (_, e) => vm.OnSpaceKeyDown(e), RoutingStrategies.Tunnel);
         KeyDown += (_, e) => vm.OnKeyDown(e);
         Closing += (_, _) => vm.Dispose();
+    }
+
+    /// <summary>
+    /// A switch row whose label fades with it while it is disabled.
+    /// </summary>
+    private static void AddStyles(Styles styles)
+    {
+        styles.Add(new Style(x => x.OfType<Grid>().Class("switch-row").Class(":disabled"))
+        {
+            Setters = { new Setter(Visual.OpacityProperty, 0.5) },
+        });
+    }
+
+    private static Grid SwitchRow(ImproveTimeCodesViewModel vm, string property, string text)
+    {
+        var toggle = EditorChrome.MakeSwitch(property, text);
+        toggle.DataContext = vm;
+        var row = EditorChrome.MakeSwitchRow(toggle, text);
+        row.Classes.Add("switch-row");
+        return row;
     }
 
     private static Control BuildSetupBar(ImproveTimeCodesViewModel vm)
@@ -70,11 +106,12 @@ public class ImproveTimeCodesWindow : Window
         var engineStatus = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
+            FontSize = 12.5,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.EngineStatus)) { Source = vm },
         };
 
         var engineSettingsName = $"{Se.Language.General.Engine} - {Se.Language.General.Settings}";
-        var buttonEngineSettings = UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings, engineSettingsName)
+        var buttonEngineSettings = EditorChrome.CreateToolButton(IconNames.Settings, engineSettingsName, vm.ShowEngineSettingsCommand, 28)
             .BindIsEnabled(vm, nameof(vm.IsIdle));
 
         var comboAligner = new ComboBox
@@ -90,14 +127,15 @@ public class ImproveTimeCodesWindow : Window
         }.BindIsEnabled(vm, nameof(vm.IsIdle));
         AutomationProperties.SetName(comboAligner, l.Aligner);
 
-        var numericMaxShift = UiUtil.MakeNumericUpDownOneDecimal(0.1m, 10m, 110, vm, nameof(vm.MaxShiftSeconds), defaultValue: 0.5m);
+        var numericMaxShift = UiUtil.MakeNumericUpDownOneDecimal(0.1m, 10m, 70, vm, nameof(vm.MaxShiftSeconds), defaultValue: 0.5m);
+        numericMaxShift.Classes.Add("field"); // compact, no spinner - the arrow keys and wheel still step it
         AutomationProperties.SetName(numericMaxShift, l.MaxShift);
 
-        var checkStart = UiUtil.MakeCheckBox(l.AdjustStartTimes, vm, nameof(vm.AdjustStart));
-        var checkEnd = UiUtil.MakeCheckBox(l.AdjustEndTimes, vm, nameof(vm.AdjustEnd));
-        var checkIsolate = UiUtil.MakeCheckBox(l.IsolateSpeech, vm, nameof(vm.IsolateSpeech));
+        var checkStart = SwitchRow(vm, nameof(vm.AdjustStart), l.AdjustStartTimes);
+        var checkEnd = SwitchRow(vm, nameof(vm.AdjustEnd), l.AdjustEndTimes);
+        var checkIsolate = SwitchRow(vm, nameof(vm.IsolateSpeech), l.IsolateSpeech);
         checkIsolate.Bind(IsEnabledProperty, new Binding(nameof(vm.IsIdle)) { Source = vm });
-        var checkSpeechToText = UiUtil.MakeCheckBox(l.CheckWithSpeechToText, vm, nameof(vm.CheckWithSpeechToText));
+        var checkSpeechToText = SwitchRow(vm, nameof(vm.CheckWithSpeechToText), l.CheckWithSpeechToText);
         checkSpeechToText.Bind(IsEnabledProperty, new Binding(nameof(vm.CanCheckWithSpeechToText)) { Source = vm });
 
         if (Se.Settings.Appearance.ShowHints)
@@ -109,7 +147,9 @@ public class ImproveTimeCodesWindow : Window
             ToolTip.SetShowOnDisabled(checkSpeechToText, true); // says why, for a language it cannot hear
         }
 
-        var left = new WrapPanel
+        // Engine and aligner settings on the first line, the on/off options on the second - the
+        // wrap panels let them flow onto more lines in a narrow window.
+        var settings = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
@@ -118,27 +158,32 @@ public class ImproveTimeCodesWindow : Window
                 Group(engineDot, engineStatus, buttonEngineSettings),
                 Group(Label(l.Aligner), comboAligner),
                 Group(Label(l.MaxShift), numericMaxShift),
-                Group(checkStart, checkEnd, checkIsolate, checkSpeechToText),
+            },
+        };
+        var options = new WrapPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                Group(checkStart),
+                Group(checkEnd),
+                Group(checkIsolate),
+                Group(checkSpeechToText),
             },
         };
 
         return new Border
         {
-            CornerRadius = new CornerRadius(6),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(70, 128, 128, 128)),
-            Background = new SolidColorBrush(Color.FromArgb(18, 128, 128, 128)),
-            Padding = new Thickness(12, 6),
-            Child = left,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(14, 6),
+            Child = new StackPanel { Children = { settings, options } },
         };
     }
 
-    private static TextBlock Label(string text) => new()
-    {
-        Text = text,
-        VerticalAlignment = VerticalAlignment.Center,
-        Opacity = 0.85,
-    };
+    private static TextBlock Label(string text) => EditorChrome.MakeDimLabel(text, new Thickness(0));
 
     private static StackPanel Group(params Control[] controls)
     {
@@ -146,7 +191,7 @@ public class ImproveTimeCodesWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
-            Margin = new Thickness(0, 4, 18, 4),
+            Margin = new Thickness(0, 4, 22, 4),
             VerticalAlignment = VerticalAlignment.Center,
         };
         panel.Children.AddRange(controls);
@@ -157,7 +202,7 @@ public class ImproveTimeCodesWindow : Window
     {
         var l = Se.Language.Tools.ImproveTimeCodes;
 
-        var (labelOriginal, borderOriginal, avOriginal) = BuildLabeledVisualizer(l.Original, OriginalTint);
+        var (labelOriginal, borderOriginal, avOriginal) = BuildLabeledVisualizer(Se.Language.General.Original, OriginalTint);
         var (labelAligned, borderAligned, avAligned) = BuildLabeledVisualizer(l.Aligned, AlignedTint);
 
         vm.AudioVisualizerOriginal = avOriginal;
@@ -179,8 +224,9 @@ public class ImproveTimeCodesWindow : Window
         {
             RowDefinitions = new RowDefinitions("Auto,*,Auto,*"),
             ColumnDefinitions = new ColumnDefinitions("*"),
+            Margin = new Thickness(14, 4, 14, 10),
         };
-        var checkSpeechOnly = UiUtil.MakeCheckBox(l.ShowSpeechOnly, vm, nameof(vm.ShowSpeechOnly));
+        var checkSpeechOnly = SwitchRow(vm, nameof(vm.ShowSpeechOnly), l.ShowSpeechOnly);
         checkSpeechOnly.HorizontalAlignment = HorizontalAlignment.Right;
         checkSpeechOnly.Bind(IsEnabledProperty, new Binding(nameof(vm.IsSpeechOnlyAvailable)) { Source = vm });
         if (Se.Settings.Appearance.ShowHints)
@@ -243,7 +289,7 @@ public class ImproveTimeCodesWindow : Window
         av.OnDragEnded += (_, _) => vm.OnAlignedDragEnded();
 
         var l = Se.Language.Tools.ImproveTimeCodes;
-        var menuPlay = new Avalonia.Controls.MenuItem { Header = l.PlayLine, Command = vm.PlayRowCommand };
+        var menuPlay = new Avalonia.Controls.MenuItem { Header = Se.Language.General.PlayLine, Command = vm.PlayRowCommand };
         var menuUndo = new Avalonia.Controls.MenuItem { Header = l.UndoAdjustment, Command = vm.UndoAdjustmentCommand };
         var flyout = new MenuFlyout();
         flyout.Items.Add(menuPlay);
@@ -275,12 +321,13 @@ public class ImproveTimeCodesWindow : Window
         var label = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            Margin = new Thickness(2, 6, 5, 3),
+            Spacing = 7,
+            Margin = new Thickness(0, 8, 5, 6),
+            Background = Brushes.Transparent, // so the hint shows over the whole label
             Children =
             {
                 swatch,
-                new TextBlock { Text = title, FontWeight = FontWeight.Bold, VerticalAlignment = VerticalAlignment.Center },
+                EditorChrome.MakeSectionHeader(title),
             },
         };
 
@@ -293,12 +340,12 @@ public class ImproveTimeCodesWindow : Window
             ParagraphSelectedBackground = CurrentTint,
         };
 
+        // A plain frame, like the video player's: no rounded, clipping border around a waveform.
+        // The black is the waveform's own canvas, not window chrome.
         var border = new Border
         {
-            BorderBrush = Brushes.Gray,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            ClipToBounds = true,
             Background = Brushes.Black,
             Child = av,
         };
@@ -309,16 +356,17 @@ public class ImproveTimeCodesWindow : Window
     {
         var l = Se.Language.Tools.ImproveTimeCodes;
 
-        var buttonPrev = UiUtil.MakeButton(vm.PreviousChangeCommand, IconNames.ArrowUpThin, $"{l.PreviousChange} (F7)");
+        var buttonPrev = EditorChrome.CreateToolButton(IconNames.ArrowUpThin, $"{Se.Language.General.PreviousChange} (F7)", vm.PreviousChangeCommand, 28);
         buttonPrev.Bind(IsEnabledProperty, new Binding(nameof(vm.CanGoPrevious)) { Source = vm });
 
-        var buttonNext = UiUtil.MakeButton(vm.NextChangeCommand, IconNames.ArrowDownThin, $"{l.NextChange} (F8)");
+        var buttonNext = EditorChrome.CreateToolButton(IconNames.ArrowDownThin, $"{Se.Language.General.NextChange} (F8)", vm.NextChangeCommand, 28);
         buttonNext.Bind(IsEnabledProperty, new Binding(nameof(vm.CanGoNext)) { Source = vm });
 
         var labelPosition = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
+            FontSize = 12.5,
             MinWidth = 120,
             TextAlignment = TextAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangePositionLabel)) { Source = vm },
@@ -327,19 +375,19 @@ public class ImproveTimeCodesWindow : Window
         var nav = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
+            Spacing = 2,
             VerticalAlignment = VerticalAlignment.Center,
             Children = { buttonPrev, labelPosition, buttonNext },
         };
 
-        var buttonPlayPause = UiUtil.MakeButton(vm.TogglePlayPauseCommand, "mdi-play-pause", $"{l.PlayPause} (Space)");
-        var buttonPlayAligned = UiUtil.MakeButton(l.PlayAligned, vm.PlaySelectedAlignedCommand).WithIconLeft(IconNames.Play);
+        var buttonPlayPause = EditorChrome.CreateToolButton("mdi-play-pause", $"{l.PlayPause} (Space)", vm.TogglePlayPauseCommand, 28);
+        var buttonPlayAligned = EditorChrome.MakeActionButton(IconNames.Play, l.PlayAligned, vm.PlaySelectedAlignedCommand);
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(buttonPlayAligned, $"{l.PlayAlignedHint} (F5)");
         }
 
-        nav.Children.Add(UiUtil.MakeVerticalSeparator(margin: new Thickness(8, 2)));
+        nav.Children.Add(EditorChrome.MakeToolbarSeparator());
         nav.Children.Add(buttonPlayPause);
         nav.Children.Add(buttonPlayAligned);
 
@@ -347,8 +395,8 @@ public class ImproveTimeCodesWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Right,
-            Opacity = 0.8,
-            FontSize = UiUtil.ScaledFontSize(12),
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = 12,
             // With the speech-to-text counts it can be longer than the room beside the buttons.
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Right,
@@ -361,9 +409,10 @@ public class ImproveTimeCodesWindow : Window
 
         return new Border
         {
-            BorderBrush = new SolidColorBrush(Color.FromArgb(120, 128, 128, 128)),
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(0, 1, 0, 1),
-            Padding = new Thickness(6),
+            Padding = new Thickness(10, 5, 14, 5),
             Child = grid,
         };
     }
@@ -373,10 +422,11 @@ public class ImproveTimeCodesWindow : Window
         vm.VideoPlayer = InitVideoPlayer.MakeVideoPlayer();
         vm.VideoPlayer.FullScreenIsVisible = false;
 
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,340"), ColumnSpacing = 4 };
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,340"), ColumnSpacing = 4, Margin = new Thickness(14, 10, 14, 12) };
         grid.Add(BuildRowsView(vm), 0, 0);
         grid.Add(new GridSplitter { Width = 4, ResizeDirection = GridResizeDirection.Columns, Background = Brushes.Transparent }, 0, 1);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(vm.VideoPlayer), 0, 2);
+        // A plain border: the native video surface on macOS disappears under a rounded, clipping one
+        grid.Add(EditorChrome.MakeVideoFrame(vm.VideoPlayer), 0, 2);
         return grid;
     }
 
@@ -397,7 +447,7 @@ public class ImproveTimeCodesWindow : Window
 
         var applyColumn = new SeTableViewColumn
         {
-            Header = l.Apply,
+            Header = Se.Language.General.Apply,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<ImproveTimeCodesRow>((_, _) => new Border
@@ -472,7 +522,7 @@ public class ImproveTimeCodesWindow : Window
             ToolTip.SetTip(tableView, $"{l.ApplyHint}{System.Environment.NewLine}{System.Environment.NewLine}{l.Heard}: {l.HeardHint}");
         }
 
-        return UiUtil.MakeBorderForControlNoPadding(tableView);
+        return EditorChrome.MakeListFrame(tableView);
     }
 
     /// <summary>
@@ -512,8 +562,8 @@ public class ImproveTimeCodesWindow : Window
         // The accent marks the next step: Align until there is something to apply, then OK.
         void UpdateAccent()
         {
-            buttonAlign.Classes.Set("accent", !vm.HasResult);
-            buttonOk.Classes.Set("accent", vm.HasResult);
+            buttonAlign.Classes.Set("primary", !vm.HasResult);
+            buttonOk.Classes.Set("primary", vm.HasResult);
         }
 
         vm.PropertyChanged += (_, e) =>
@@ -525,38 +575,34 @@ public class ImproveTimeCodesWindow : Window
         };
         UpdateAccent();
 
-        // Progress and status share the line with the buttons, next to the Align that drives them.
+        // The status (the intro, then the result) sits left of the buttons; while aligning it
+        // moves up into the progress strip, next to the bar.
         var status = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
+            TextWrapping = TextWrapping.Wrap,
+            MaxLines = 2,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            Opacity = 0.85,
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)) { Source = vm },
+            [!IsVisibleProperty] = new Binding("!" + nameof(vm.IsAligning)) { Source = vm },
         };
 
-        var progress = UiUtil.MakeProgressBar();
-        progress.Width = double.NaN;
-        progress.HorizontalAlignment = HorizontalAlignment.Stretch;
-        progress.VerticalAlignment = VerticalAlignment.Center;
+        return EditorChrome.MakeButtonBar(status, buttonAlign, buttonCancel, buttonOk);
+    }
+
+    /// <summary>
+    /// Progress bar and status while aligning, on the status color above the button bar.
+    /// </summary>
+    private static Control BuildProgressStrip(ImproveTimeCodesViewModel vm)
+    {
+        var progress = UiUtil.MakeProgressBar(6);
         progress.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)) { Source = vm });
-        progress.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning)) { Source = vm });
         progress.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsProgressIndeterminate)) { Source = vm });
 
-        var buttons = UiUtil.MakeButtonBar(buttonAlign, buttonOk, buttonCancel);
-        // The bar takes all the room left of the buttons, with its text underneath.
-        status.FontSize = UiUtil.ScaledFontSize(12);
-        var progressPanel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 4,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(2, 10, 0, 0),
-            Children = { progress, status },
-        };
-
-        var bar = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 20 };
-        bar.Add(progressPanel, 0, 0);
-        bar.Add(buttons, 0, 1);
-        return bar;
+        var strip = EditorChrome.MakeProgressStrip(progress, nameof(vm.StatusText), nameof(vm.IsAligning));
+        strip.DataContext = vm;
+        return strip;
     }
 }

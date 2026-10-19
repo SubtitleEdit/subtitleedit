@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -12,6 +13,11 @@ using System;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
 
+/// <summary>
+/// Waveform color themes in the editor look (see <see cref="EditorChrome"/>): the theme picker
+/// and a live preview on top, the colors below, load/export/save-as + Cancel + OK in the button
+/// bar. The preview and the swatches show the theme's own colors.
+/// </summary>
 public class WaveformThemesWindow : Window
 {
     public WaveformThemesWindow(WaveformThemesViewModel vm)
@@ -20,12 +26,15 @@ public class WaveformThemesWindow : Window
         Title = Se.Language.Options.Settings.WaveformColorThemesDotDotDot;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
         var themeComboBox = new ComboBox
         {
-            MinWidth = 200,
+            MinWidth = 260,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
             DataContext = vm,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.Themes)),
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedTheme))
@@ -33,22 +42,33 @@ public class WaveformThemesWindow : Window
                 Mode = BindingMode.TwoWay,
             },
         };
+        var themeLabel = Se.Language.Options.Settings.WaveformColorTheme.TrimEnd(':', ' ');
+        AutomationProperties.SetName(themeComboBox, themeLabel);
 
-        var themeRow = new StackPanel
+        var preview = new WaveformPreviewControl(vm)
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children =
-            {
-                UiUtil.MakeLabel(Se.Language.Options.Settings.WaveformColorTheme),
-                themeComboBox,
-            },
+            Width = 560,
+            Height = 90,
+        };
+        var previewFrame = new Border
+        {
+            Child = preview,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            ClipToBounds = true,
+            HorizontalAlignment = HorizontalAlignment.Left,
+        };
+
+        var themeContent = new StackPanel
+        {
+            Spacing = 12,
+            Children = { themeComboBox, previewFrame },
         };
 
         var colorGrid = new Grid
         {
-            ColumnDefinitions = new ColumnDefinitions("Auto,8,Auto,30,Auto,8,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("*,8,Auto,32,*,8,Auto"),
             RowSpacing = 6,
         };
 
@@ -81,49 +101,43 @@ public class WaveformThemesWindow : Window
         for (var i = 0; i < leftColors.Length; i++)
         {
             var (label, propName) = leftColors[i];
-            colorGrid.Add(UiUtil.MakeLabel(label), i, 0);
-            colorGrid.Add(MakeColorButton(vm, propName), i, 2);
+            colorGrid.Add(MakeColorLabel(label), i, 0);
+            colorGrid.Add(MakeColorButton(vm, propName, label), i, 2);
         }
 
         for (var i = 0; i < rightColors.Length; i++)
         {
             var (label, propName) = rightColors[i];
-            colorGrid.Add(UiUtil.MakeLabel(label), i, 4);
-            colorGrid.Add(MakeColorButton(vm, propName), i, 6);
+            colorGrid.Add(MakeColorLabel(label), i, 4);
+            colorGrid.Add(MakeColorButton(vm, propName, label), i, 6);
         }
 
-        var preview = new WaveformPreviewControl(vm)
+        var sections = new StackPanel
         {
-            Width = 500,
-            Height = 90,
-        };
-
-        var buttonLoad = UiUtil.MakeButton(Se.Language.Options.Settings.WaveformLoadThemeDotDotDot, vm.LoadThemeCommand);
-        var buttonExport = UiUtil.MakeButton(Se.Language.Options.Settings.WaveformExportThemeDotDotDot, vm.ExportThemeCommand);
-        var buttonSaveAs = UiUtil.MakeButton(Se.Language.Options.Settings.WaveformSaveAsCustomTheme, vm.SaveAsCustomThemeCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonLoad, buttonExport, buttonSaveAs, buttonOk, buttonCancel);
-
-        var mainGrid = new Grid
-        {
-            RowDefinitions =
+            Children =
             {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
+                EditorChrome.MakeEditorSection(themeLabel, themeContent, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.General.Color, colorGrid),
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 15,
         };
 
-        mainGrid.Add(themeRow, 0);
-        mainGrid.Add(preview, 1);
-        mainGrid.Add(colorGrid, 2);
-        mainGrid.Add(panelButtons, 3);
+        var buttonLoad = EditorChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.Options.Settings.WaveformLoadThemeDotDotDot, vm.LoadThemeCommand);
+        var buttonExport = EditorChrome.MakeTextToolButton(IconNames.Export, Se.Language.Options.Settings.WaveformExportThemeDotDotDot, vm.ExportThemeCommand);
+        var buttonSaveAs = EditorChrome.MakeTextToolButton(IconNames.ContentSave, Se.Language.Options.Settings.WaveformSaveAsCustomTheme, vm.SaveAsCustomThemeCommand);
+        var panelLeft = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
+            Margin = new Thickness(0, 0, 16, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonLoad, buttonExport, buttonSaveAs },
+        };
 
-        Content = mainGrid;
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(panelLeft, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, themeComboBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) =>
@@ -140,15 +154,22 @@ public class WaveformThemesWindow : Window
         };
     }
 
-    private static Button MakeColorButton(WaveformThemesViewModel vm, string propertyName)
+    private static TextBlock MakeColorLabel(string text)
+    {
+        var label = EditorChrome.MakeDimLabel(text, new Thickness(0));
+        label.FontSize = 12.5;
+        return label;
+    }
+
+    private static Button MakeColorButton(WaveformThemesViewModel vm, string propertyName, string accessibleName)
     {
         var swatch = new Border
         {
-            Width = 30,
-            Height = 20,
-            CornerRadius = new CornerRadius(3),
+            Width = 34,
+            Height = 18,
+            CornerRadius = new CornerRadius(4),
             BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Colors.Gray),
+            BorderBrush = EditorChrome.FieldBorderBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
 
@@ -161,9 +182,15 @@ public class WaveformThemesWindow : Window
         var button = new Button
         {
             Content = swatch,
-            Padding = new Thickness(4, 2),
+            Padding = new Thickness(4, 3),
+            CornerRadius = new CornerRadius(6),
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
             VerticalAlignment = VerticalAlignment.Center,
         };
+        // The swatch is all there is to see - name the button for a screen reader.
+        AutomationProperties.SetName(button, accessibleName);
 
         button.Click += async (_, _) =>
         {

@@ -44,6 +44,9 @@ public partial class BackgroundMusicViewModel : ObservableObject
     [ObservableProperty] private int _originalAudioVolumePercent;
     [ObservableProperty] private string _outputLengthText;
     [ObservableProperty] private bool _isBusy;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.BackgroundMusic.Title);
+
     [ObservableProperty] private bool _isNotBusy;
     [ObservableProperty] private bool _hasMusic;
     [ObservableProperty] private bool _canAddToVideo;
@@ -210,6 +213,7 @@ public partial class BackgroundMusicViewModel : ObservableObject
     partial void OnIsBusyChanged(bool value)
     {
         IsNotBusy = !value;
+        _sleepInhibitor.SetActive(value);
         UpdateCanAddToVideo();
     }
 
@@ -742,6 +746,7 @@ public partial class BackgroundMusicViewModel : ObservableObject
     {
         SaveSettings();
         _cancellationTokenSource?.Cancel();
+        _sleepInhibitor.Dispose();
         _statusTimer.Stop();
         DisposePlayer();
 

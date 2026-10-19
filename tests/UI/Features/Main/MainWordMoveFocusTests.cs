@@ -331,6 +331,85 @@ public class MainWordMoveFocusTests
     /// Swaps in an original text box wrapper that reports the requested focus state. Headless
     /// windows cannot reliably move keyboard focus, and the commands only read IsFocused.
     /// </summary>
+    [AvaloniaFact]
+    public void MoveTextBeforeCursorToPrevious_TranslationFocused_AppendsTextBeforeCaretToPrevious()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            var first = AddLine(vm, "Hello", "Hej");
+            var second = AddLine(vm, "big world again", "store verden igen", 2000, 4000);
+            vm.SelectedSubtitle = second;
+            FocusOriginal(vm, editable: true, focused: false);
+            vm.EditTextBox = new FocusStubTextBoxWrapper(new TextBox { Text = second.Text }, isFocused: true);
+            vm.EditTextBox.SelectionStart = "big world".Length;
+            vm.EditTextBox.SelectionEnd = "big world".Length;
+
+            vm.MoveTextBeforeCursorToPreviousCommand.Execute(null);
+
+            Assert.Equal("Hello" + Environment.NewLine + "big world", first.Text);
+            Assert.Equal("again", second.Text);
+            Assert.Equal("Hej", first.OriginalText);
+            Assert.Equal("store verden igen", second.OriginalText);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public void MoveTextBeforeCursorToPrevious_OriginalFocused_MovesOriginalTextOnly()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            var first = AddLine(vm, "Hello", "Hej");
+            var second = AddLine(vm, "big world", "store verden", 2000, 4000);
+            vm.SelectedSubtitle = second;
+            vm.ShowColumnOriginalText = true;
+            vm.IsOriginalReadOnly = false;
+            vm.EditTextBoxOriginal = new FocusStubTextBoxWrapper(new TextBox { Text = second.OriginalText }, isFocused: true);
+            vm.EditTextBoxOriginal.SelectionStart = "store".Length;
+            vm.EditTextBoxOriginal.SelectionEnd = "store".Length;
+
+            vm.MoveTextBeforeCursorToPreviousCommand.Execute(null);
+
+            Assert.Equal("Hej" + Environment.NewLine + "store", first.OriginalText);
+            Assert.Equal("verden", second.OriginalText);
+            Assert.Equal("Hello", first.Text);
+            Assert.Equal("big world", second.Text);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public void MoveTextBeforeCursorToPrevious_FirstLine_DoesNothing()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            var first = AddLine(vm, "big world", "store verden");
+            vm.SelectedSubtitle = first;
+            FocusOriginal(vm, editable: true, focused: false);
+            vm.EditTextBox = new FocusStubTextBoxWrapper(new TextBox { Text = first.Text }, isFocused: true);
+            vm.EditTextBox.SelectionStart = 3;
+            vm.EditTextBox.SelectionEnd = 3;
+
+            vm.MoveTextBeforeCursorToPreviousCommand.Execute(null);
+
+            Assert.Equal("big world", first.Text);
+            Assert.Single(vm.Subtitles);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     private static void FocusOriginal(MainViewModel vm, bool editable, bool focused = true)
     {
         vm.ShowColumnOriginalText = true;

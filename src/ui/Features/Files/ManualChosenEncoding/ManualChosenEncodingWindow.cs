@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -22,65 +22,43 @@ public class ManualChosenEncodingWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
-        var searchBox = new TextBox
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+
+        var searchBox = EditorChrome.AsCenteredTextField(new TextBox
         {
             PlaceholderText = Se.Language.File.ManualChosenEncoding.SearchEncodings,
-            Margin = new Thickness(10),
-            Width = 200,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        }.WithSearchAndClearIcons();
+            Width = 240,
+        }.WithSearchAndClearIcons()).WithAccessibleName(Se.Language.General.Search);
         searchBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
         searchBox.TextChanged += (s, e) => vm.SearchTextChanged();
-        var panelSearch = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Children =
-            {
-                labelSearch,
-                searchBox,
-            }
-        };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        var labelCurrentEncoding = EditorChrome.MakeDimText();
+        labelCurrentEncoding.DataContext = vm;
+        labelCurrentEncoding.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CurrentEncodingText)));
+
+        var sections = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(new GridLength(1, GridUnitType.Star)) { MinHeight = 140 },
+                new RowDefinition(new GridLength(1, GridUnitType.Star)) { MinHeight = 120 },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        sections.Add(EditorChrome.MakeListSection(Se.Language.General.Encoding, MakeEncodingsView(vm), searchBox, first: true), 0, 0);
+        sections.Add(EditorChrome.MakeFillSection(Se.Language.General.Preview, MakePreviewBox(vm)), 1, 0);
 
-        grid.Add(panelSearch, 0);
-        grid.Add(MakeEncodingsView(vm), 1);
-        grid.Add(MakePreviewBox(vm), 2);
-        grid.Add(panelButtons, 3);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(sections, labelCurrentEncoding, buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, searchBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Border MakeEncodingsView(ManualChosenEncodingViewModel vm)
+    private static TableView MakeEncodingsView(ManualChosenEncodingViewModel vm)
     {
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Encoding);
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Encodings;
 
@@ -133,46 +111,22 @@ public class ManualChosenEncodingWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedEncoding)) { Source = vm });
         dataGrid.SelectionChanged += vm.EncodingChanged;
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return dataGrid;
     }
 
-    private static Control MakePreviewBox(ManualChosenEncodingViewModel vm)
+    private static TextBox MakePreviewBox(ManualChosenEncodingViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var label = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CurrentEncodingText));
-        var textBox = new TextBox
+        var textBox = EditorChrome.AsTextArea(new TextBox
         {
             AcceptsReturn = true,
             // Read-only: a typed tab could never land here anyway, and accepting it only
             // swallowed Tab/Shift+Tab so the box could not be left from the keyboard (#14313).
             AcceptsTab = false,
             IsReadOnly = true,
-            Margin = new Thickness(0, 0, 0, 0),
             Width = double.NaN,
             Height = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-        };
+        }).WithAccessibleName(Se.Language.General.Preview);
         textBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.PreviewText)) { Source = vm, Mode = BindingMode.OneWay });
-
-        grid.Add(label, 0);
-        grid.Add(textBox, 1);
-
-        return UiUtil.MakeBorderForControl(grid);
+        return textBox;
     }
 }

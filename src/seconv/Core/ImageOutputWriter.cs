@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using SkiaSharp;
 using Nikse.SubtitleEdit.UiLogic.Export;
 
@@ -13,6 +14,8 @@ namespace SeConv.Core;
 internal static class ImageOutputWriter
 {
     public sealed record FormatTarget(string Name, IExportHandler Handler);
+
+    public const string DCinemaSmpte2014PngMxfName = "D-Cinema SMPTE 2014/png MXF";
 
     public static IExportHandler? TryCreateHandler(string normalizedFormat)
     {
@@ -43,6 +46,9 @@ internal static class ImageOutputWriter
                 => new ExportHandlerDCinemaInteropPng(),
             var x when x.Equals("D-Cinema SMPTE 2014/png", StringComparison.OrdinalIgnoreCase) || x.Equals("DCinemaSmpte2014", StringComparison.OrdinalIgnoreCase)
                 => new ExportHandlerDCinemaSmpte2014Png(),
+            // The same images and XML as one SMPTE ST 429-5 track file - the subtitle asset of a SMPTE DCP.
+            var x when x.Equals(DCinemaSmpte2014PngMxfName, StringComparison.OrdinalIgnoreCase) || x.Equals("DCinemaSmpte2014PngMxf", StringComparison.OrdinalIgnoreCase)
+                => new ExportHandlerDCinemaSmpte2014Mxf(),
             var x when x.Equals("Images with time codes in file name", StringComparison.OrdinalIgnoreCase) || x.Equals("ImagesWithTimeCodes", StringComparison.OrdinalIgnoreCase)
                 => new ExportHandlerImagesWithTimeCode(),
             // WebVTT thumbnail bundle: a directory of numbered PNG sprites plus an
@@ -64,6 +70,7 @@ internal static class ImageOutputWriter
         }
 
         var (screenWidth, screenHeight) = options.Resolution ?? (1920, 1080);
+        ApplyReelDuration(handler, options);
 
         // "{\pos(x,y)}" is in the script's own resolution, the export canvas may be another one.
         var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(subtitle.Header);
@@ -96,6 +103,27 @@ internal static class ImageOutputWriter
     }
 
     /// <summary>
+    /// --reel-duration for the D-Cinema MXF track: hh:mm:ss:ff at the output frame rate.
+    /// </summary>
+    private static void ApplyReelDuration(IExportHandler handler, ConversionOptions options)
+    {
+        if (handler is not ExportHandlerDCinemaSmpte2014Mxf mxf || string.IsNullOrWhiteSpace(options.ReelDuration))
+        {
+            return;
+        }
+
+        var frameRate = (int)Math.Round(options.TargetFps ?? options.Fps ?? 25.0, MidpointRounding.AwayFromZero);
+        if (!TimedTextMxfWriter.TryParseTimeCode(options.ReelDuration, frameRate, out var frames))
+        {
+            throw new InvalidOperationException($"--reel-duration must be hh:mm:ss:ff, not '{options.ReelDuration}'.");
+        }
+
+        // A time code is a frame count already - converting it to seconds at the integer rate and
+        // back at the real (e.g. 23.976) rate would shrink it.
+        mxf.ReelFrames = frames;
+    }
+
+    /// <summary>
     /// Image-to-image variant: write a sequence of pre-rendered bitmaps (Blu-Ray .sup,
     /// VobSub, MKV PGS, DVB-sub) into <paramref name="handler"/> without going through
     /// <see cref="ImageRenderer"/>. Source dimensions baked into each
@@ -119,6 +147,7 @@ internal static class ImageOutputWriter
 
         var first = items[0];
         var firstParam = BuildPreservedParameter(first, 0, defaultWidth, defaultHeight, options);
+        ApplyReelDuration(handler, options);
         handler.WriteHeader(filePath, firstParam);
 
         var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);

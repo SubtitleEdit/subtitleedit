@@ -93,10 +93,12 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             text = FillUnknownCharactersInWords(text);
         }
 
+        text = FixSlashMisreadAsL(text);
         var replacedLine = ReplaceLineFixes(index, text, wordsToIgnore);
         if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
         {
             replacedLine = NormalizeApostrophes(replacedLine);
+            replacedLine = NormalizeSpacedEllipses(replacedLine);
         }
 
         replacedLine = FixStartWithUppercaseLetterAfterSentenceEnd(index, replacedLine);
@@ -171,7 +173,21 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var fixedFirstWord = uppercaseLetter + firstWord.Substring(1);
         if (!_spellCheckManager.IsWordCorrect(fixedFirstWord) && !_spellCheckWordLists.HasName(fixedFirstWord))
         {
-            return text;
+            // A sans-serif capital I is a plain bar, so nOCR reads it as "l": "lk" / "ls" / "ln"
+            // (Dutch), "lt" / "lf" (English). Only for a whole word the dictionary knows with I.
+            if (uppercaseLetter != 'L' || firstWord.Length < 2 || !char.IsLower(firstWord[1]) ||
+                (firstWord.Length < st.StrippedText.Length && char.IsLetterOrDigit(st.StrippedText[firstWord.Length])))
+            {
+                return text;
+            }
+
+            var iWord = "I" + firstWord.Substring(1);
+            if (!_spellCheckManager.IsWordCorrect(iWord) && !_spellCheckWordLists.HasName(iWord))
+            {
+                return text;
+            }
+
+            fixedFirstWord = iWord;
         }
 
         st.StrippedText = fixedFirstWord + st.StrippedText.Substring(firstWord.Length);
@@ -224,6 +240,26 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     }
 
     /// <summary>
+    /// Image matchers split the dots of a wide-set ellipsis far enough apart to read each as a
+    /// word: ". . ." ("voor. . .", "<i>. . .en</i>"). No subtitle means three spaced periods, so
+    /// join them (SE4's hardcoded rules did the same at the line start and end). The two-dot
+    /// forms ". .." and ".. ." are Tesseract's and stay with the replace lists, which only join
+    /// them at the end of a line after a letter or digit.
+    /// </summary>
+    internal static string NormalizeSpacedEllipses(string text)
+    {
+        if (string.IsNullOrEmpty(text) || !text.Contains(". . .", StringComparison.Ordinal))
+        {
+            return text;
+        }
+
+        return SpacedEllipsis().Replace(text, "...");
+    }
+
+    [GeneratedRegex(@"(?<![.…])\. \. \.(?![.…])")]
+    private static partial Regex SpacedEllipsis();
+
+    /// <summary>
     /// Tesseract emits typographic single quotes for apostrophes ("‘cause", "didn’t"); subtitles
     /// use the plain apostrophe. A line holding both an opening and a closing curly quote is
     /// quoting something ("La lettera ‘E’") and is left alone. Runs after the replace list so
@@ -238,8 +274,8 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             return text;
         }
 
-        var hasOpening = text.IndexOf('‘') >= 0;
-        var hasClosing = text.IndexOf('’') >= 0;
+        var hasOpening = text.Contains('‘');
+        var hasClosing = text.Contains('’');
         if (hasOpening == hasClosing)
         {
             return text; // neither, or a quotation pair
@@ -249,6 +285,55 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         // but only that pair: a straight '' elsewhere on the line is not the OCR's doing.
         return text.Replace("'‘", "'").Replace("‘'", "'").Replace("'’", "'").Replace("’'", "'")
             .Replace('‘', '\'').Replace('’', '\'');
+    }
+
+    // A run of letters with a slash touching a letter ("p/ease", "/itt/e", "wi/I"). A slash right
+    // after "<" is a closing tag ("</i>"), not a misread letter - "li" is a word in some
+    // dictionaries (Dutch), which turned every "</i>" into "<li>".
+    [GeneratedRegex(@"(?<![\p{L}\d/'’<])[\p{L}'’/]*(?:\p{L}/|/\p{L})[\p{L}'’/]*")]
+    private static partial Regex WordWithSlash();
+
+    /// <summary>
+    /// Image matchers read a slanted italic "l" as "/" ("p/ease", "re/igions", "/itt/e"). The line
+    /// splitter cuts words at the slash, so the per-word fixes never see the whole word - repair
+    /// it on the line: every slash to "l", and an "I" after a lowercase letter to "l" ("wi/I",
+    /// "teI/ing"), kept only when the dictionary or names list accepts the result. A real slash
+    /// between two words ("and/or", "AC/DC") is left alone.
+    /// </summary>
+    private string FixSlashMisreadAsL(string text)
+    {
+        if (string.IsNullOrEmpty(text) || !text.Contains('/'))
+        {
+            return text;
+        }
+
+        return WordWithSlash().Replace(text, m =>
+        {
+            var token = m.Value;
+            if (token.Contains("//"))
+            {
+                return token;
+            }
+
+            var parts = token.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length > 1 && parts.All(p => p.Length > 1 && IsSpelledCorrect(p)))
+            {
+                return token; // "and/or", "he/she"
+            }
+
+            var chars = token.Replace('/', 'l').ToCharArray();
+            for (var i = 1; i < chars.Length; i++)
+            {
+                if (chars[i] == 'I' && char.IsLower(chars[i - 1]))
+                {
+                    chars[i] = 'l';
+                }
+            }
+
+            var candidate = new string(chars);
+            var bare = candidate.Trim('\'', '’');
+            return bare.Length > 1 && (IsSpelledCorrect(bare) || _spellCheckWordLists.HasName(bare)) ? candidate : token;
+        });
     }
 
     private string ReplaceLineFixes(int index, string text, List<string> wordsToIgnore)
@@ -716,7 +801,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     private string GetAccentLookalikesForLanguage(char c)
     {
         var lookalikes = GetAccentLookalikes(c);
-        if (!PlainLatinLanguages.Contains(_twoLetterIsoLanguageName) || DotPositionAccents.IndexOf(c) >= 0)
+        if (!PlainLatinLanguages.Contains(_twoLetterIsoLanguageName) || DotPositionAccents.Contains(c))
         {
             return lookalikes;
         }
@@ -729,7 +814,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var sb = new StringBuilder();
         foreach (var group in AccentLookalikeGroups)
         {
-            if (group.IndexOf(c) >= 0)
+            if (group.Contains(c))
             {
                 sb.Append(group);
             }
@@ -737,7 +822,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
 
         foreach (var group in AccentCrossGroups)
         {
-            if (group.IndexOf(c) >= 0)
+            if (group.Contains(c))
             {
                 sb.Append(group);
             }

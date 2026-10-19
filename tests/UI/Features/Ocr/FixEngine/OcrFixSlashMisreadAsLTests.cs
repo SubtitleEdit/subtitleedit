@@ -1,0 +1,114 @@
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+using Nikse.SubtitleEdit.Features.SpellCheck;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
+
+namespace UITests.Features.Ocr.FixEngine;
+
+// nOCR reads a slanted italic "l" as "/" ("p/ease", "re/igions", "/itt/e"). The line splitter cuts
+// words at the slash, so the engine repairs these on the line, gated on the dictionary.
+public class OcrFixSlashMisreadAsLTests : IDisposable
+{
+    private readonly Func<string> _originalSpellCheckDictionariesFolder;
+    private readonly string _tempDictionariesFolder;
+
+    public OcrFixSlashMisreadAsLTests()
+    {
+        _originalSpellCheckDictionariesFolder = SpellCheckConfig.DictionariesFolder;
+
+        _tempDictionariesFolder = Path.Combine(
+            Path.GetTempPath(),
+            "SeOcrFixSlashMisreadAsLTest_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(_tempDictionariesFolder);
+        SpellCheckConfig.DictionariesFolder = () => _tempDictionariesFolder;
+        File.WriteAllText(
+            Path.Combine(_tempDictionariesFolder, "eng_OCRFixReplaceList.xml"),
+            "<ReplaceList></ReplaceList>");
+    }
+
+    [Theory]
+    [InlineData("<i>One moment, p/ease.</i>", "<i>One moment, please.</i>")]
+    [InlineData("by any of the re/igions.", "by any of the religions.")]
+    [InlineData("Your /itt/e bird has flown.", "Your little bird has flown.")]
+    [InlineData("<i>A private jet wi/I pick you up</i>", "<i>A private jet will pick you up</i>")]
+    [InlineData("and was teI/ing her", "and was telling her")]
+    [InlineData("keep a/I of your be/ongings", "keep all of your belongings")]
+    [InlineData("<i>On/y I can tie others.</i>", "<i>Only I can tie others.</i>")]
+    public void FixOcrErrors_SlashMisreadAsL_IsFixed(string input, string expected)
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(expected, result.GetText());
+    }
+
+    [Theory]
+    [InlineData("[AC/DC's \"Back in Black\" plays]")]
+    [InlineData("and/or one of your")]
+    [InlineData("see http://example.com/please")]
+    [InlineData("8600 A/varado Street")]
+    [InlineData("1/2 of it")]
+    [InlineData("<i>Heil</i> Hitler.")]
+    [InlineData("<i>One moment.</i>")]
+    [InlineData("<font color=\"red\">Hello</font>")]
+    public void FixOcrErrors_RealSlash_IsLeftAlone(string input)
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(input, result.GetText());
+    }
+
+    private static IOcrFixEngine CreateEngine()
+    {
+        IOcrFixEngine engine = new OcrFixEngine(new FakeSpellChecker());
+        engine.Initialize(new Subtitle(), "eng", new SpellCheckDictionaryDisplay());
+        return engine;
+    }
+
+    private sealed class FakeSpellChecker : ISpellChecker
+    {
+        private static readonly HashSet<string> Words = new(StringComparer.Ordinal)
+        {
+            "I", "one", "moment", "please", "by", "any", "of", "the", "religions", "your", "little",
+            "bird", "has", "flown", "a", "private", "jet", "will", "pick", "you", "up", "and", "was",
+            "telling", "her", "keep", "all", "belongings", "only", "can", "tie", "others", "or",
+            "back", "in", "black", "plays", "see", "street", "it", "AC", "DC",
+            // "li" is a dictionary word in Dutch; "</i>" must not become "<li>" because of it.
+            "li", "Heil", "Hitler", "hello",
+        };
+
+        public bool Initialize(string dictionaryFile, string twoLetterLanguageCode) => true;
+
+        public bool IsWordCorrect(string word)
+        {
+            if (string.IsNullOrWhiteSpace(word))
+            {
+                return true;
+            }
+
+            return Words.Contains(word) || Words.Contains(word.ToLowerInvariant());
+        }
+
+        public List<string> GetSuggestions(string word) => new();
+    }
+
+    public void Dispose()
+    {
+        SpellCheckConfig.DictionariesFolder = _originalSpellCheckDictionariesFolder;
+        try
+        {
+            Directory.Delete(_tempDictionariesFolder, recursive: true);
+        }
+        catch
+        {
+            // Best-effort cleanup.
+        }
+    }
+}

@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private static int LastTextIndex(string v, int start, int end)
         {
             var i = end - 1;
-            while (i >= start && (char.IsWhiteSpace(v[i]) || ".,!?;:".IndexOf(v[i]) >= 0))
+            while (i >= start && (char.IsWhiteSpace(v[i]) || ".,!?;:".Contains(v[i])))
             {
                 i--;
             }
@@ -296,12 +296,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static bool IsOpenerBoundary(string v, int i, int start)
         {
-            return i == start || char.IsWhiteSpace(v[i - 1]) || "-([—".IndexOf(v[i - 1]) >= 0;
+            return i == start || char.IsWhiteSpace(v[i - 1]) || "-([—".Contains(v[i - 1]);
         }
 
         private static bool IsCloserBoundary(string v, int i, int end)
         {
-            return i + 1 >= end || char.IsWhiteSpace(v[i + 1]) || ".,!?;:)]-—".IndexOf(v[i + 1]) >= 0;
+            return i + 1 >= end || char.IsWhiteSpace(v[i + 1]) || ".,!?;:)]-—".Contains(v[i + 1]);
         }
 
         private static bool IsOpening(string v, int i, int start, int end)

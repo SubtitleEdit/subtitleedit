@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Features.Tools.ConvertActors;
 using System.Collections.Generic;
 
@@ -75,6 +76,7 @@ public class BatchConvertConfig
     public RenumberSettings Renumber { get; set; }
     public MergeContinuationLinesSettings MergeContinuationLines { get; set; }
     public ConvertActorsSettings ConvertActors { get; set; }
+    public RunPluginSettings RunPlugin { get; set; }
 
     public BatchConvertConfig()
     {
@@ -123,6 +125,7 @@ public class BatchConvertConfig
         Renumber = new RenumberSettings();
         MergeContinuationLines = new MergeContinuationLinesSettings();
         ConvertActors = new ConvertActorsSettings();
+        RunPlugin = new RunPluginSettings();
     }
 
     public bool IsTargetFormatImageBased =>
@@ -491,6 +494,15 @@ public class BatchConvertConfig
     public class RemoveUnicodeControlCharactersSettings
     {
         public bool IsActive { get; set; }
+    }
+
+    public class RunPluginSettings
+    {
+        public bool IsActive { get; set; }
+        public string PluginName { get; set; } = string.Empty;
+
+        /// <summary>Resolved when the run starts; null when the plugin is missing, disabled or not batch-capable.</summary>
+        public InstalledPlugin? Plugin { get; set; }
     }
 
     public class RenumberSettings

@@ -1437,7 +1437,7 @@ public static partial class MergeAndSplitHelper
 
         // Lyrics keep one line per phrase; AutoBreakLine's own ♪ guard only fires on text that
         // still holds line breaks, which the UnbreakLine below removes, so guard here.
-        if (text.IndexOf('♪') >= 0 || text.IndexOf('♫') >= 0)
+        if (text.Contains('♪') || text.Contains('♫'))
         {
             return text;
         }

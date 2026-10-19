@@ -16,9 +16,14 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ApplyDurationLimits;
 
+/// <summary>
+/// Apply duration limits, in the editor look (see <see cref="EditorChrome"/>): the limits on top,
+/// the fixes (with their Apply check boxes) and the lines that cannot be fixed below, Cancel/OK in
+/// the button bar.
+/// </summary>
 public class ApplyDurationLimitsWindow : Window
 {
-    private CheckBox _checkBoxFixMinDuration = null!;
+    private ToggleSwitch _toggleFixMinDuration = null!;
 
     public ApplyDurationLimitsWindow(ApplyDurationLimitsViewModel vm)
     {
@@ -29,41 +34,31 @@ public class ApplyDurationLimitsWindow : Window
         Height = 800;
         MinWidth = 600;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
+        var sections = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeControlsView(vm), 0);
-        grid.Add(MakeFixesView(vm), 1);
-        grid.Add(MakeCannotFixView(vm), 2);
-        grid.Add(panelButtons, 3);
+        sections.Add(EditorChrome.MakeEditorSection(Se.Language.General.Options, MakeControlsView(vm), first: true), 0);
+        sections.Add(MakeFixesView(vm), 1);
+        sections.Add(MakeCannotFixView(vm), 2);
 
-        Content = grid;
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        UiUtil.FocusOnFirstActivation(this, _checkBoxFixMinDuration); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
+
+        UiUtil.FocusOnFirstActivation(this, _toggleFixMinDuration); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -84,61 +79,47 @@ public class ApplyDurationLimitsWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnSpacing = 10,
+            ColumnSpacing = 14,
             RowSpacing = 10,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var checkBoxFixMinDuration = UiUtil.MakeCheckBox(vm.FixMinDurationLabel, vm, nameof(vm.FixMinDurationMs));
-        _checkBoxFixMinDuration = checkBoxFixMinDuration;
-        checkBoxFixMinDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
-        var numericUpDownMinDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 150, vm, nameof(vm.MinDurationMsOrFrames))
-                .WithBindEnabled(nameof(vm.FixMinDurationMs));
+        var switchFixMinDuration = EditorChrome.MakeToggleRow(nameof(vm.FixMinDurationMs), vm.FixMinDurationLabel, out var toggleFixMinDuration);
+        _toggleFixMinDuration = toggleFixMinDuration;
+        toggleFixMinDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
+        var numericUpDownMinDuration = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 90, vm, nameof(vm.MinDurationMsOrFrames)), vm.FixMinDurationLabel, 90, center: true)
+            .WithBindEnabled(nameof(vm.FixMinDurationMs));
         numericUpDownMinDuration.ValueChanged += (s, e) => vm.SetChanged();
-        var checkBoxDoNotGoPastShotChange = UiUtil.MakeCheckBox(Se.Language.Tools.ApplyDurationLimits.DoNotGoPastShotChange, vm, nameof(vm.DoNotGoPastShotChange))
-            .WithBindEnabled(nameof(vm.FixMinDurationMs))
-            .WithMarginLeft(5)
+        var switchDoNotGoPastShotChange = EditorChrome.MakeToggleRow(nameof(vm.DoNotGoPastShotChange), Se.Language.Tools.ApplyDurationLimits.DoNotGoPastShotChange, out var toggleDoNotGoPastShotChange)
+            .WithBindIsEnabled(nameof(vm.FixMinDurationMs))
+            .WithMarginLeft(14)
             .BindIsVisible(vm, nameof(vm.IsDoNotGoPastShotChangeVisible));
-        checkBoxDoNotGoPastShotChange.IsCheckedChanged += (s, e) => vm.SetChanged();
-        var panelMin = UiUtil.MakeHorizontalPanel(numericUpDownMinDuration, checkBoxDoNotGoPastShotChange);
+        toggleDoNotGoPastShotChange.IsCheckedChanged += (s, e) => vm.SetChanged();
+        var panelMin = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children = { numericUpDownMinDuration, switchDoNotGoPastShotChange },
+        };
 
-        var checkBoxFixMaxDuration = UiUtil.MakeCheckBox(vm.FixMaxDurationLabel, vm, nameof(vm.FixMaxDurationMs));
-        checkBoxFixMaxDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
-        var numericUpDownMaxDuration = UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 150, vm, nameof(vm.MaxDurationMsOrFrames))
+        var switchFixMaxDuration = EditorChrome.MakeToggleRow(nameof(vm.FixMaxDurationMs), vm.FixMaxDurationLabel, out var toggleFixMaxDuration);
+        toggleFixMaxDuration.IsCheckedChanged += (s, e) => vm.SetChanged();
+        var numericUpDownMaxDuration = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(1, 10000, 1000, 90, vm, nameof(vm.MaxDurationMsOrFrames)), vm.FixMaxDurationLabel, 90, center: true)
             .WithBindEnabled(nameof(vm.FixMaxDurationMs));
         numericUpDownMaxDuration.ValueChanged += (s, e) => vm.SetChanged();
 
-        grid.Add(checkBoxFixMinDuration, 0, 0);
+        grid.Add(switchFixMinDuration, 0, 0);
         grid.Add(panelMin, 0, 1);
 
-        grid.Add(checkBoxFixMaxDuration, 1, 0);
+        grid.Add(switchFixMaxDuration, 1, 0);
         grid.Add(numericUpDownMaxDuration, 1, 1);
 
         return grid;
     }
 
-    private static Grid MakeFixesView(ApplyDurationLimitsViewModel vm)
+    private static Border MakeFixesView(ApplyDurationLimitsViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var labelFixesAvailable = UiUtil.MakeLabel()
-            .WithBindText(vm, nameof(vm.FixesInfo))
-            .WithMarginTop(10)
-            .WithMarginLeft(10);
+        var labelFixesAvailable = EditorChrome.MakeBoundSectionHeader(nameof(vm.FixesInfo));
 
         // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
         // over): the fixes are previews in subtitle order. The DataGrid-era
@@ -190,34 +171,12 @@ public class ApplyDurationLimitsWindow : Window
         TableViewExtras.AddSpaceToggle<ApplyDurationLimitItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
 
-        grid.Add(labelFixesAvailable, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
-
-        return grid;
+        return EditorChrome.MakeFillSection(labelFixesAvailable, EditorChrome.MakeListFrame(dataGrid));
     }
 
-    private static Grid MakeCannotFixView(ApplyDurationLimitsViewModel vm)
+    private static Border MakeCannotFixView(ApplyDurationLimitsViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var labelFixesAvailable = UiUtil.MakeLabel()
-            .WithBindText(vm, nameof(vm.FixesSkippedInfo))
-            .WithMarginTop(10)
-            .WithMarginLeft(10);
+        var labelFixesAvailable = EditorChrome.MakeBoundSectionHeader(nameof(vm.FixesSkippedInfo));
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
@@ -280,9 +239,6 @@ public class ApplyDurationLimitsWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        grid.Add(labelFixesAvailable, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
-
-        return grid;
+        return EditorChrome.MakeFillSection(labelFixesAvailable, EditorChrome.MakeListFrame(dataGrid));
     }
 }

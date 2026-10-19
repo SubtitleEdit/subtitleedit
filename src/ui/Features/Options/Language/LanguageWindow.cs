@@ -1,13 +1,16 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Options.Language;
 
+/// <summary>
+/// Pick the UI language, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class LanguageWindow : Window
 {
     public LanguageWindow(LanguageViewModel vm)
@@ -16,53 +19,33 @@ public class LanguageWindow : Window
         Title = Se.Language.Options.ChooseLanguage.Title;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
-
-        var label = new Label
-        {
-            Content = Se.Language.General.Language,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
 
         var combo = new ComboBox
         {
             ItemsSource = vm.Languages,
             SelectedValue = vm.SelectedLanguage,
             VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 180,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinWidth = 240,
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(LanguageViewModel.SelectedLanguage)),
         };
+        AutomationProperties.SetName(combo, Se.Language.General.Language);
+
+        var section = EditorChrome.MakeEditorSection(
+            Se.Language.General.Language,
+            combo,
+            first: true);
+        section.MinWidth = 360;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);   
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        grid.Add(label, 0);
-        grid.Add(combo, 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
-        Content = grid;
-        
         UiUtil.FocusOnFirstActivation(this, combo); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => vm.OnLoaded();
         KeyDown += (_, e) => vm.OnKeyDown(e);

@@ -188,7 +188,7 @@ public static class OcrHtmlExporter
         sb.Append("<button type=\"button\" data-shot=\"check\" aria-pressed=\"false\">").Append(WebUtility.HtmlEncode(language.HtmlExportCheckerboard)).AppendLine("</button>");
         sb.AppendLine("</div>");
         sb.Append("<div class=\"seg\" id=\"themeSeg\" role=\"group\" aria-label=\"")
-            .Append(WebUtility.HtmlEncode(language.HtmlExportTheme)).AppendLine("\">");
+            .Append(WebUtility.HtmlEncode(Se.Language.General.Theme)).AppendLine("\">");
         sb.Append("<button type=\"button\" data-theme=\"auto\" aria-pressed=\"true\">").Append(WebUtility.HtmlEncode(general.Auto)).AppendLine("</button>");
         sb.Append("<button type=\"button\" data-theme=\"light\" aria-pressed=\"false\">").Append(WebUtility.HtmlEncode(general.Light)).AppendLine("</button>");
         sb.Append("<button type=\"button\" data-theme=\"dark\" aria-pressed=\"false\">").Append(WebUtility.HtmlEncode(general.Dark)).AppendLine("</button>");

@@ -9,6 +9,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustBrightness;
 
+/// <summary>
+/// Adjust brightness in the editor look (see <see cref="EditorChrome"/>): brightness, contrast and
+/// gamma sliders in a settings column, the preview on the right, Cancel/OK at the bottom.
+/// </summary>
 public class BinaryAdjustBrightnessWindow : Window
 {
     public BinaryAdjustBrightnessWindow(BinaryAdjustBrightnessViewModel vm)
@@ -18,173 +22,63 @@ public class BinaryAdjustBrightnessWindow : Window
         Width = 800;
         Height = 600;
         CanResize = true;
+        BinaryEditChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var mainGrid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition(GridLength.Star),
-                new RowDefinition(GridLength.Auto),
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-
-        // Content area with controls on left and preview on right
-        var contentGrid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition(new GridLength(300)),
-                new ColumnDefinition(GridLength.Star),
-            },
-            ColumnSpacing = 10,
-        };
-
-        // Left side - controls
+        // Settings column on the left, preview on the right
         var leftPanel = MakeControlsPanel(vm, out var brightnessInputSlider);
-        contentGrid.Add(leftPanel, 0, 0);
-
-        // Right side - preview
         var rightPanel = MakePreviewPanel(vm);
-        contentGrid.Add(rightPanel, 0, 1);
 
-        mainGrid.Add(contentGrid, 0, 0);
-
-        // Button panel
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        mainGrid.Add(buttonPanel, 1, 0);
-
-        Content = mainGrid;
+        Content = BinaryEditChrome.MakePreviewDialogRoot(leftPanel, rightPanel, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, brightnessInputSlider); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
+    private static Slider MakeSlider(string property, double minimum, double maximum)
+    {
+        return new Slider
+        {
+            Minimum = minimum,
+            Maximum = maximum,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            TickFrequency = 10,
+            IsSnapToTickEnabled = false,
+            [!Slider.ValueProperty] = new Binding(property)
+            {
+                Mode = BindingMode.TwoWay,
+            },
+        };
+    }
+
     private static StackPanel MakeControlsPanel(BinaryAdjustBrightnessViewModel vm, out Slider brightnessInputSlider)
     {
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 10,
-        };
+        var l = Se.Language.Tools.ImageBasedEdit;
+        var panel = new StackPanel();
 
-        // Brightness slider
-        var brightnessLabel = new TextBlock
-        {
-            Text = Se.Language.Tools.ImageBasedEdit.Brightness,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        panel.Children.Add(brightnessLabel);
+        brightnessInputSlider = MakeSlider(nameof(vm.Brightness), -100, 100);
+        panel.Children.Add(BinaryEditChrome.MakeSliderSection(Se.Language.General.Brightness, brightnessInputSlider, nameof(vm.BrightnessDisplay), first: true));
+        panel.Children.Add(BinaryEditChrome.MakeSliderSection(l.Contrast, MakeSlider(nameof(vm.Contrast), -100, 100), nameof(vm.ContrastDisplay)));
+        panel.Children.Add(BinaryEditChrome.MakeSliderSection(l.Gamma, MakeSlider(nameof(vm.Gamma), 1, 300), nameof(vm.GammaDisplay)));
 
-        var brightnessSlider = new Slider
+        // Reset button and info text
+        var resetButton = EditorChrome.MakeActionButton("fa-solid fa-rotate-left", l.ResetToDefaults, vm.ResetCommand);
+        resetButton.HorizontalAlignment = HorizontalAlignment.Left;
+        resetButton.Margin = new Thickness(-10, 0, 0, 0); // the flat button pads its icon; line it up with the text
+        var resetPanel = new StackPanel { Spacing = 10 };
+        resetPanel.Children.Add(resetButton);
+        resetPanel.Children.Add(EditorChrome.MakeHint(l.BrightnessAdjustmentInfo));
+        panel.Children.Add(new Border
         {
-            Minimum = -100,
-            Maximum = 100,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            TickFrequency = 10,
-            IsSnapToTickEnabled = false,
-            [!Slider.ValueProperty] = new Binding(nameof(vm.Brightness))
-            {
-                Mode = BindingMode.TwoWay,
-            },
-        };
-        panel.Children.Add(brightnessSlider);
-        brightnessInputSlider = brightnessSlider;
-
-        var brightnessValueLabel = new TextBlock
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 5, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.BrightnessDisplay)),
-        };
-        panel.Children.Add(brightnessValueLabel);
-
-        // Contrast slider
-        var contrastLabel = new TextBlock
-        {
-            Text = Se.Language.Tools.ImageBasedEdit.Contrast,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Thickness(0, 20, 0, 5),
-        };
-        panel.Children.Add(contrastLabel);
-
-        var contrastSlider = new Slider
-        {
-            Minimum = -100,
-            Maximum = 100,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            TickFrequency = 10,
-            IsSnapToTickEnabled = false,
-            [!Slider.ValueProperty] = new Binding(nameof(vm.Contrast))
-            {
-                Mode = BindingMode.TwoWay,
-            },
-        };
-        panel.Children.Add(contrastSlider);
-
-        var contrastValueLabel = new TextBlock
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 5, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.ContrastDisplay)),
-        };
-        panel.Children.Add(contrastValueLabel);
-
-        // Gamma slider
-        var gammaLabel = new TextBlock
-        {
-            Text = Se.Language.Tools.ImageBasedEdit.Gamma,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Thickness(0, 20, 0, 5),
-        };
-        panel.Children.Add(gammaLabel);
-
-        var gammaSlider = new Slider
-        {
-            Minimum = 1,
-            Maximum = 300,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            TickFrequency = 10,
-            IsSnapToTickEnabled = false,
-            [!Slider.ValueProperty] = new Binding(nameof(vm.Gamma))
-            {
-                Mode = BindingMode.TwoWay,
-            },
-        };
-        panel.Children.Add(gammaSlider);
-
-        var gammaValueLabel = new TextBlock
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 5, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.GammaDisplay)),
-        };
-        panel.Children.Add(gammaValueLabel);
-
-        // Reset button
-        var resetButton = UiUtil.MakeButton(Se.Language.Tools.ImageBasedEdit.ResetToDefaults, vm.ResetCommand);
-        resetButton.Margin = new Thickness(0, 20, 0, 0);
-        resetButton.HorizontalAlignment = HorizontalAlignment.Stretch;
-        panel.Children.Add(resetButton);
-
-        // Info text
-        var infoText = new TextBlock
-        {
-            Text = Se.Language.Tools.ImageBasedEdit.BrightnessAdjustmentInfo,
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            Margin = new Thickness(0, 20, 0, 0),
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = Avalonia.Media.Brushes.Gray,
-        };
-        panel.Children.Add(infoText);
+            Child = resetPanel,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 10, 14, 14),
+        });
 
         return panel;
     }
@@ -211,8 +105,6 @@ public class BinaryAdjustBrightnessWindow : Window
 
         // Image based subtitles are light or dark text on a transparent background, both
         // invisible on a matching flat backdrop - use the mid-gray checkerboard (issue #12692).
-        var border = UiUtil.MakeBorderForControl(scrollViewer);
-        border.Background = UiUtil.GetCheckerboardBrush();
-        return border;
+        return BinaryEditChrome.MakePreviewFrame(scrollViewer, UiUtil.GetCheckerboardBrush());
     }
 }

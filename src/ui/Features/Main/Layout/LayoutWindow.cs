@@ -1,6 +1,8 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -14,6 +16,11 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
+/// <summary>
+/// The layout picker in the editor look (see <see cref="EditorChrome"/>): the layout thumbnails as
+/// cards on the panel color, each with its number in a badge, the hovered/keyboard-picked card
+/// lifted in the accent, and Cancel in the button bar.
+/// </summary>
 public class LayoutWindow : Window
 {
     private readonly LayoutViewModel _vm;
@@ -26,16 +33,17 @@ public class LayoutWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         _vm = viewViewModel;
         Title = Se.Language.Options.Shortcuts.GeneralChooseLayout;
-        Width = 1150;
-        Height = 500;
+        Width = 1180;
+        Height = 590;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
 
         var wrapPanel = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10)
+            Margin = new Thickness(14),
         };
 
         for (var i = 1; i <= LayoutCount; i++)
@@ -55,12 +63,23 @@ public class LayoutWindow : Window
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 Foreground = Brushes.White,
-                FontSize = UiUtil.ScaledFontSize(34),
+                FontSize = 13,
                 FontWeight = FontWeight.Bold,
-                Opacity = 0.7,
+            };
+            var badge = new Border
+            {
+                MinWidth = 26,
+                Height = 26,
+                CornerRadius = new CornerRadius(13),
+                Padding = new Thickness(6, 0),
+                Background = new SolidColorBrush(Color.FromArgb(0xb0, 0x10, 0x12, 0x18)),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(6),
+                Child = text,
             };
 
-            // Layer the image and text
+            // Layer the image and the number badge
             var grid = new Grid
             {
                 Width = 200,
@@ -68,29 +87,33 @@ public class LayoutWindow : Window
             };
 
             grid.Children.Add(image);
-            grid.Children.Add(text);
+            grid.Children.Add(badge);
 
             var border = new Border
             {
-                Margin = new Thickness(10),
+                Margin = new Thickness(6),
+                Padding = new Thickness(6),
                 Child = grid,
+                CornerRadius = new CornerRadius(10),
+                BorderThickness = new Thickness(1),
+                Cursor = new Cursor(StandardCursorType.Hand),
                 RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative),
                 RenderTransform = new ScaleTransform(1, 1)
             };
+            AutomationProperties.SetName(border, Se.Language.Options.Shortcuts.GeneralChooseLayout + " " + i.ToString(CultureInfo.InvariantCulture));
+            SetHighlight(border, false);
 
             var layoutNumber = i;
 
             border.PointerEntered += (_, __) =>
             {
-                border.RenderTransform = new ScaleTransform(1.1, 1.1);
-                border.Background = Brushes.DarkSlateGray;
+                SetHighlight(border, true);
                 _focusedLayout = layoutNumber - 1;
             };
 
             border.PointerExited += (_, __) =>
             {
-                border.RenderTransform = new ScaleTransform(1.0, 1.0);
-                border.Background = Brushes.Transparent;
+                SetHighlight(border, false);
                 _focusedLayout = -1;
             };
 
@@ -105,7 +128,85 @@ public class LayoutWindow : Window
             _borders.Add(border);
         }
 
-        Content = new ScrollViewer { Content = wrapPanel };
+        var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel);
+        buttonCancel.Click += (_, _) => Close();
+
+        Content = EditorChrome.MakeRoot(new ScrollViewer { Content = wrapPanel }, EditorChrome.MakeDockedButtonBar(null, buttonCancel));
+
+        // Tunnel, so the scroll viewer doesn't take Up/Down for scrolling and a focused button doesn't take Enter
+        AddHandler(KeyDownEvent, (_, e) =>
+        {
+            if (e.KeyModifiers != KeyModifiers.None)
+            {
+                return;
+            }
+
+            if (e.Key is Key.Up or Key.Down)
+            {
+                e.Handled = true;
+                MoveVertically(e.Key == Key.Up ? -1 : 1);
+            }
+            else if (e.Key == Key.Enter && _focusedLayout >= 0)
+            {
+                e.Handled = true;
+                _vm.SelectedLayout = _focusedLayout + 1;
+                _vm.OkPressed = true;
+                Close();
+            }
+        }, RoutingStrategies.Tunnel);
+    }
+
+    /// <summary>
+    /// Moves the picked card one row up/down in the wrap panel, keeping the column.
+    /// </summary>
+    private void MoveVertically(int direction)
+    {
+        if (_focusedLayout < 0)
+        {
+            ResetOldLayout();
+            _focusedLayout = direction > 0 ? 0 : LayoutCount - 1;
+            SetHighlight(_borders[_focusedLayout], true);
+            _borders[_focusedLayout].BringIntoView();
+            return;
+        }
+
+        var columns = 0;
+        foreach (var border in _borders)
+        {
+            if (Math.Abs(border.Bounds.Y - _borders[0].Bounds.Y) > 1)
+            {
+                break;
+            }
+
+            columns++;
+        }
+
+        if (columns <= 0)
+        {
+            return;
+        }
+
+        var newIndex = _focusedLayout + direction * columns;
+        if (newIndex < 0 || newIndex >= LayoutCount)
+        {
+            return;
+        }
+
+        ResetOldLayout();
+        _focusedLayout = newIndex;
+        SetHighlight(_borders[_focusedLayout], true);
+        _borders[_focusedLayout].BringIntoView();
+    }
+
+    /// <summary>
+    /// The picked card is lifted: a little larger, soft accent behind it, accent border.
+    /// </summary>
+    private static void SetHighlight(Border border, bool isHighlighted)
+    {
+        border.RenderTransform = isHighlighted ? new ScaleTransform(1.06, 1.06) : new ScaleTransform(1.0, 1.0);
+        border.Background = isHighlighted ? EditorChrome.AccentSoftBrush : EditorChrome.FieldBrush;
+        border.BorderBrush = isHighlighted ? EditorChrome.AccentBrush : EditorChrome.FieldBorderBrush;
+        border.ZIndex = isHighlighted ? 1 : 0;
     }
 
     protected override async void OnKeyDown(KeyEventArgs e)
@@ -140,42 +241,18 @@ public class LayoutWindow : Window
         if (e.Key == Key.Left)
         {
             e.Handled = true;
-            if (_focusedLayout > 0)
-            {
-                ResetOldLayout();
-
-                _focusedLayout--;
-                _borders[_focusedLayout].RenderTransform = new ScaleTransform(1.1, 1.1);
-                _borders[_focusedLayout].Background = Brushes.DarkSeaGreen;
-            }
-            else
-            {
-                ResetOldLayout();
-
-                _focusedLayout = LayoutCount - 1;
-                _borders[_focusedLayout].RenderTransform = new ScaleTransform(1.1, 1.1);
-                _borders[_focusedLayout].Background = Brushes.DarkSeaGreen;
-            }
+            ResetOldLayout();
+            _focusedLayout = _focusedLayout > 0 ? _focusedLayout - 1 : LayoutCount - 1;
+            SetHighlight(_borders[_focusedLayout], true);
             return;
         }
 
         if (e.Key == Key.Right)
         {
             e.Handled = true;
-            if (_focusedLayout < LayoutCount - 1)
-            {
-                ResetOldLayout();
-                _focusedLayout++;
-                _borders[_focusedLayout].RenderTransform = new ScaleTransform(1.1, 1.1);
-                _borders[_focusedLayout].Background = Brushes.DarkSeaGreen;
-            }
-            else
-            {
-                ResetOldLayout();
-                _focusedLayout = 0;
-                _borders[_focusedLayout].RenderTransform = new ScaleTransform(1.1, 1.1);
-                _borders[_focusedLayout].Background = Brushes.DarkSeaGreen;
-            }
+            ResetOldLayout();
+            _focusedLayout = _focusedLayout < LayoutCount - 1 ? _focusedLayout + 1 : 0;
+            SetHighlight(_borders[_focusedLayout], true);
             return;
         }
 
@@ -196,12 +273,10 @@ public class LayoutWindow : Window
             var fl = _focusedLayout;
             if (fl >= 0)
             {
-                _borders[fl].RenderTransform = new ScaleTransform(1.0, 1.0);
-                _borders[fl].Background = Brushes.Transparent;
+                SetHighlight(_borders[fl], false);
             }
 
-            _borders[layoutNumber - 1].RenderTransform = new ScaleTransform(1.1, 1.1);
-            _borders[layoutNumber - 1].Background = Brushes.DarkSeaGreen;
+            SetHighlight(_borders[layoutNumber - 1], true);
             await Task.Delay(500);
 
             _vm.SelectedLayout = layoutNumber;
@@ -214,8 +289,7 @@ public class LayoutWindow : Window
     {
         for (var i = 0; i < _borders.Count; i++)
         {
-            _borders[i].RenderTransform = new ScaleTransform(1.0, 1.0);
-            _borders[i].Background = Brushes.Transparent;
+            SetHighlight(_borders[i], false);
         }
     }
 }

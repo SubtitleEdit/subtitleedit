@@ -838,7 +838,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
         var position = SelectedRow != null ? changed.IndexOf(SelectedRow) : -1;
         ChangePositionLabel = position >= 0
-            ? string.Format(Se.Language.Tools.ImproveTimeCodes.ChangeXOfY, position + 1, changed.Count)
+            ? string.Format(Se.Language.General.ChangeXOfY, position + 1, changed.Count)
             : string.Empty;
     }
 

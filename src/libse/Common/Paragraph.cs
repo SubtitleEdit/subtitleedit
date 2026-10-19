@@ -172,12 +172,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public double GetCharactersPerSecond()
         {
-            if (DurationTotalMilliseconds < 1)
-            {
-                return 999;
-            }
-
-            return (double)Text.CountCharacters(true) / DurationTotalSeconds;
+            return GetCharactersPerSecond(CalcFactory.MakeCalculator(Configuration.Settings.General.CpsLineLengthStrategy));
         }
 
         public double GetCharactersPerSecond(ICalcLength calc)

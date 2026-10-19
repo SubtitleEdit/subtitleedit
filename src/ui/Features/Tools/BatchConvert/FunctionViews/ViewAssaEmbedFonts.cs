@@ -1,8 +1,6 @@
 using Avalonia.Controls;
-using Avalonia.Layout;
-using Avalonia.Media;
-using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 
@@ -10,34 +8,8 @@ public static class ViewAssaEmbedFonts
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var labelHeader = new Label
-        {
-            Content = Se.Language.Tools.BatchConvert.AssaEmbedFontsTitle,
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.Bold,
-        };
-
-        var labelInfo = new TextBlock
-        {
-            Text = Se.Language.Tools.BatchConvert.AssaEmbedFontsInfo,
-            Opacity = 0.7,
-            FontStyle = FontStyle.Italic,
-            TextWrapping = TextWrapping.Wrap,
-        };
-
-        var checkBoxTrimFonts = UiUtil.MakeCheckBox(Se.Language.Assa.FontCollectorTrimFonts, vm, nameof(vm.AssaEmbedFontsTrim));
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Margin = new Avalonia.Thickness(10),
-            Spacing = 10,
-            Children =
-            {
-                labelHeader,
-                labelInfo,
-                checkBoxTrimFonts,
-            }
-        };
+        return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.BatchConvert.AssaEmbedFontsTitle,
+            EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaEmbedFontsInfo),
+            EditorChrome.MakeSwitchRow(nameof(vm.AssaEmbedFontsTrim), Se.Language.Assa.FontCollectorTrimFonts));
     }
 }

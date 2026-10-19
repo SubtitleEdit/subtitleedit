@@ -483,6 +483,8 @@ public partial class SettingsImportExportViewModel : ObservableObject
             to.ColorTimeCodeOverlap = from.ColorTimeCodeOverlap;
             to.ColorGapTooShort = from.ColorGapTooShort;
             to.ErrorColor = from.ErrorColor;
+            to.ColorCustomErrorRules = from.ColorCustomErrorRules;
+            to.CustomErrorRules = from.CustomErrorRules;
         }
 
         if (ExportImportAll || ExportImportWaveform)

@@ -1,6 +1,8 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 
@@ -17,49 +19,37 @@ public class OcrFallbackDatabaseWindow : Window
         MinWidth = 400;
         vm.Window = this;
         DataContext = vm;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
-        var labelDatabase = new TextBlock
+        // A section header, like the other pickers (it was a plain label)
+        var labelDatabase = EditorChrome.MakeBoundSectionHeader(nameof(vm.Label));
+        labelDatabase.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Label))
         {
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 2),
-        };
-        labelDatabase.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Label)));
+            Converter = new FuncValueConverter<string?, string>(text => (text ?? string.Empty).ToUpperInvariant()),
+        });
 
         var comboBoxDatabases = new ComboBox
         {
-            Width = 300,
+            Width = 340,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedDatabase)) { Mode = BindingMode.TwoWay },
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Databases)) { Mode = BindingMode.TwoWay },
         };
+        AutomationProperties.SetLabeledBy(comboBoxDatabases, labelDatabase);
+        comboBoxDatabases.Bind(AutomationProperties.NameProperty, new Binding(nameof(vm.Label)));
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
 
-        var grid = new Grid
+        var body = new StackPanel
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 2,
-            RowSpacing = 0,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Spacing = 6,
+            Margin = new Thickness(16, 14, 16, 16),
+            Children = { labelDatabase, comboBoxDatabases },
         };
 
-        grid.Add(labelDatabase, 0);
-        grid.Add(comboBoxDatabases, 1);
-        grid.Add(buttonPanel, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(body, buttonBar, stretch: false);
 
         UiUtil.FocusOnFirstActivation(this, comboBoxDatabases);
         KeyDown += vm.KeyDown;

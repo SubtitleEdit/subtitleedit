@@ -304,7 +304,7 @@ public static class LlamaCppDownloadHelper
         }
         else if (!engineInstalled)
         {
-            message = Se.Language.Translate.LlamaCppDownloadEnginePrompt;
+            message = Se.Language.General.LlamaCppDownloadEnginePrompt;
         }
         else
         {

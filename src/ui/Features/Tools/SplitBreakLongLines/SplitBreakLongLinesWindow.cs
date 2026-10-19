@@ -5,6 +5,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -14,9 +15,13 @@ using System.Collections;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
+/// <summary>
+/// Split/break long lines, in the editor look (see <see cref="EditorChrome"/>): the options on
+/// top, the preview of the fixes below, the summary plus Cancel and OK in the button bar.
+/// </summary>
 public class SplitBreakLongLinesWindow : Window
 {
-    private CheckBox _checkBoxSplitLongLines = null!;
+    private Control _checkBoxSplitLongLines = null!;
 
     public SplitBreakLongLinesWindow(SplitBreakLongLinesViewModel vm)
     {
@@ -27,37 +32,14 @@ public class SplitBreakLongLinesWindow : Window
         Height = 800;
         MinWidth = 600;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(MakeControlsView(vm), 0);
-        grid.Add(MakeFixesView(vm), 1);
-        grid.Add(panelButtons, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(MakeControlsView(vm), MakeFixesView(vm)), EditorChrome.MakeStatusText(nameof(vm.FixesInfo), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, _checkBoxSplitLongLines); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -67,116 +49,63 @@ public class SplitBreakLongLinesWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private Grid MakeControlsView(SplitBreakLongLinesViewModel vm)
+    private Border MakeControlsView(SplitBreakLongLinesViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var checkBoxSplitLongLines = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.SplitLongLines, vm, nameof(vm.SplitLongLines))
-            .WithMarginRight(40);
+        var rowSplitLongLines = EditorChrome.MakeToggleRow(nameof(vm.SplitLongLines), Se.Language.Tools.SplitBreakLongLines.SplitLongLines, out var checkBoxSplitLongLines);
         _checkBoxSplitLongLines = checkBoxSplitLongLines;
         checkBoxSplitLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
-        var checkBoxRebalanceLongLines = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines, vm, nameof(vm.RebalanceLongLines))
-            .WithMarginRight(40);
+        var rowRebalanceLongLines = EditorChrome.MakeToggleRow(nameof(vm.RebalanceLongLines), Se.Language.Tools.SplitBreakLongLines.RebalanceLongLines, out var checkBoxRebalanceLongLines);
         checkBoxRebalanceLongLines.IsCheckedChanged += (s, e) => vm.SetChanged();
 
-        var checkBoxRebalanceOnlyTooLong = UiUtil.MakeCheckBox(Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong, vm, nameof(vm.RebalanceOnlyLinesTooLong))
-            .WithMarginLeft(25)
-            .WithMarginRight(40);
-        checkBoxRebalanceOnlyTooLong[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.RebalanceLongLines));
+        var rowRebalanceOnlyTooLong = EditorChrome.MakeToggleRow(nameof(vm.RebalanceOnlyLinesTooLong), Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLong, out var checkBoxRebalanceOnlyTooLong);
+        rowRebalanceOnlyTooLong.Margin = new Thickness(25, 0, 0, 0);
+        rowRebalanceOnlyTooLong[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.RebalanceLongLines));
+        rowRebalanceOnlyTooLong[!Visual.OpacityProperty] = new Binding(nameof(vm.RebalanceLongLines)) { Converter = new FuncValueConverter<bool, double>(on => on ? 1.0 : 0.5) };
         checkBoxRebalanceOnlyTooLong.IsCheckedChanged += (s, e) => vm.SetChanged();
 
-        var labelSingleLineMaxLength = UiUtil.MakeLabel(Se.Language.Options.Settings.SingleLineMaxLength);
-        var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength));
+        var labelSingleLineMaxLength = Se.Language.Options.Settings.SingleLineMaxLength;
+        var numericUpDownSingleLineMaxLength = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength)), labelSingleLineMaxLength.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
 
-        var labelMaxNumberOfLines = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxLines);
-        var numericUpDownMaxNumberOfLines = UiUtil.MakeNumericUpDownInt(1, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines));
+        var labelMaxNumberOfLines = Se.Language.General.MaxNumberOfLines;
+        var numericUpDownMaxNumberOfLines = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(1, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines)), labelMaxNumberOfLines.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownMaxNumberOfLines.ValueChanged += (s, e) => vm.SetChanged();
 
-        var labelUnbreakLinesShorterThan = UiUtil.MakeLabel(Se.Language.Options.Settings.UnbreakSubtitlesShortThan);
-        var numericUpDownUnbreakLinesShorterThan = UiUtil.MakeNumericUpDownInt(1, 1000, 33, 130, vm, nameof(vm.UnbreakLinesShorterThan));
+        var labelUnbreakLinesShorterThan = Se.Language.Options.Settings.UnbreakSubtitlesShortThan;
+        var numericUpDownUnbreakLinesShorterThan = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(1, 1000, 33, 130, vm, nameof(vm.UnbreakLinesShorterThan)), labelUnbreakLinesShorterThan.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownUnbreakLinesShorterThan.ValueChanged += (s, e) => vm.SetChanged();
+
+        var fields = EditorChrome.MakeFieldGrid((labelSingleLineMaxLength, numericUpDownSingleLineMaxLength), (labelMaxNumberOfLines, numericUpDownMaxNumberOfLines), (labelUnbreakLinesShorterThan, numericUpDownUnbreakLinesShorterThan));
         if (Se.Settings.Appearance.ShowHints)
         {
-            ToolTip.SetTip(labelUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
+            ToolTip.SetTip(fields.Children[4], Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint); // the label
             ToolTip.SetTip(numericUpDownUnbreakLinesShorterThan, Se.Language.Tools.SplitBreakLongLines.UnbreakLinesShorterThanHint);
-            ToolTip.SetTip(checkBoxRebalanceOnlyTooLong, Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLongHint);
+            ToolTip.SetTip(rowRebalanceOnlyTooLong, Se.Language.Tools.SplitBreakLongLines.RebalanceOnlyLinesTooLongHint);
         }
 
-        grid.Add(checkBoxSplitLongLines, 0);
-        grid.Add(labelSingleLineMaxLength, 0, 1);
-        grid.Add(numericUpDownSingleLineMaxLength, 0, 2);
+        var switches = new StackPanel
+        {
+            Spacing = 8,
+            Children = { rowSplitLongLines, rowRebalanceLongLines, rowRebalanceOnlyTooLong },
+        };
 
-        grid.Add(checkBoxRebalanceLongLines, 1);
-        grid.Add(labelMaxNumberOfLines, 1, 1);
-        grid.Add(numericUpDownMaxNumberOfLines, 1, 2);
-
-        grid.Add(checkBoxRebalanceOnlyTooLong, 2);
-        grid.Add(labelUnbreakLinesShorterThan, 2, 1);
-        grid.Add(numericUpDownUnbreakLinesShorterThan, 2, 2);
-
-        return grid;
-    }
-
-    private static Grid MakeFixesView(SplitBreakLongLinesViewModel vm)
-    {
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            ColumnSpacing = 40,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
         };
+        grid.Add(switches, 0, 0);
+        grid.Add(fields, 0, 1);
 
-        var labelFixesAvailable = UiUtil.MakeLabel()
-            .WithBindText(vm, nameof(vm.FixesInfo))
-            .WithMarginLeft(10);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, grid, first: true);
+    }
 
-        // Select all / none only touch the rebalance rows (the ones with a checkbox).
-        var panelHeader = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children =
-            {
-                labelFixesAvailable.WithMarginRight(10),
-                UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand),
-                UiUtil.MakeButton(Se.Language.General.SelectNone, vm.SelectNoneCommand),
-            },
-        };
-
+    private static Border MakeFixesView(SplitBreakLongLinesViewModel vm)
+    {
         // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
         // split/rebalance fixes in subtitle order.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -280,9 +209,9 @@ public class SplitBreakLongLinesWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        grid.Add(panelHeader, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
+        // Select all / none only touch the rebalance rows (the ones with a checkbox).
+        var actions = EditorChrome.MakeListActions(EditorChrome.MakeSelectAllButton(vm.SelectAllCommand), EditorChrome.MakeSelectNoneButton(vm.SelectNoneCommand));
 
-        return grid;
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid, actions);
     }
 }

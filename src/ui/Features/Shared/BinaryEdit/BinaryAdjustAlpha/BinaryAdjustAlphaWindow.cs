@@ -8,6 +8,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAlpha;
 
+/// <summary>
+/// Adjust alpha in the editor look (see <see cref="EditorChrome"/>): alpha and threshold sliders in
+/// a settings column, the preview on the right, Cancel/OK at the bottom.
+/// </summary>
 public class BinaryAdjustAlphaWindow : Window
 {
     public BinaryAdjustAlphaWindow(BinaryAdjustAlphaViewModel vm)
@@ -17,151 +21,62 @@ public class BinaryAdjustAlphaWindow : Window
         Width = 800;
         Height = 600;
         CanResize = true;
+        BinaryEditChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var mainGrid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition(GridLength.Star),
-                new RowDefinition(GridLength.Auto),
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-
-        // Content area with controls on left and preview on right
-        var contentGrid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition(new GridLength(300)),
-                new ColumnDefinition(GridLength.Star),
-            },
-            ColumnSpacing = 10,
-        };
-
-        // Left side - controls
+        // Settings column on the left, preview on the right
         var leftPanel = MakeControlsPanel(vm, out var alphaAdjustmentSlider);
-        contentGrid.Add(leftPanel, 0, 0);
-
-        // Right side - preview
         var rightPanel = MakePreviewPanel(vm);
-        contentGrid.Add(rightPanel, 0, 1);
 
-        mainGrid.Add(contentGrid, 0, 0);
-
-        // Button panel
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        mainGrid.Add(buttonPanel, 1, 0);
-
-        Content = mainGrid;
+        Content = BinaryEditChrome.MakePreviewDialogRoot(leftPanel, rightPanel, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, alphaAdjustmentSlider); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
+    private static Slider MakeSlider(string property, double minimum, double maximum)
+    {
+        return new Slider
+        {
+            Minimum = minimum,
+            Maximum = maximum,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            TickFrequency = 10,
+            IsSnapToTickEnabled = false,
+            [!Slider.ValueProperty] = new Binding(property)
+            {
+                Mode = BindingMode.TwoWay,
+            },
+        };
+    }
+
     private static StackPanel MakeControlsPanel(BinaryAdjustAlphaViewModel vm, out Slider alphaAdjustmentSlider)
     {
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 10,
-        };
+        var panel = new StackPanel();
 
-        // Alpha adjustment slider
-        var alphaLabel = new TextBlock
-        {
-            Text = Se.Language.General.AlphaAdjustment,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        panel.Children.Add(alphaLabel);
+        alphaAdjustmentSlider = MakeSlider(nameof(vm.AlphaAdjustment), -255, 255);
+        panel.Children.Add(BinaryEditChrome.MakeSliderSection(Se.Language.General.AlphaAdjustment, alphaAdjustmentSlider, nameof(vm.AlphaAdjustmentDisplay), first: true));
+        panel.Children.Add(BinaryEditChrome.MakeSliderSection(Se.Language.General.AlphaThreshold, MakeSlider(nameof(vm.TransparencyThreshold), 0, 255),
+            nameof(vm.TransparencyThresholdDisplay), EditorChrome.MakeHint(Se.Language.Tools.ImageBasedEdit.AlphaThresholdInfo)));
 
-        var alphaSlider = new Slider
+        // Reset button and info text
+        var resetButton = EditorChrome.MakeActionButton("fa-solid fa-rotate-left", Se.Language.Tools.ImageBasedEdit.ResetToDefaults, vm.ResetCommand);
+        resetButton.HorizontalAlignment = HorizontalAlignment.Left;
+        resetButton.Margin = new Thickness(-10, 0, 0, 0); // the flat button pads its icon; line it up with the text
+        var resetPanel = new StackPanel { Spacing = 10 };
+        resetPanel.Children.Add(resetButton);
+        resetPanel.Children.Add(EditorChrome.MakeHint(Se.Language.Tools.ImageBasedEdit.AlphaAdjustmentInfo));
+        panel.Children.Add(new Border
         {
-            Minimum = -255,
-            Maximum = 255,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            TickFrequency = 10,
-            IsSnapToTickEnabled = false,
-            [!Slider.ValueProperty] = new Binding(nameof(vm.AlphaAdjustment))
-            {
-                Mode = BindingMode.TwoWay,
-            },
-        };
-        panel.Children.Add(alphaSlider);
-        alphaAdjustmentSlider = alphaSlider;
-
-        var alphaValueLabel = new TextBlock
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 5, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.AlphaAdjustmentDisplay)),
-        };
-        panel.Children.Add(alphaValueLabel);
-
-        // Threshold slider
-        var thresholdLabel = new TextBlock
-        {
-            Text = Se.Language.General.AlphaThreshold,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Thickness(0, 20, 0, 5),
-        };
-        panel.Children.Add(thresholdLabel);
-
-        var thresholdSlider = new Slider
-        {
-            Minimum = 0,
-            Maximum = 255,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            TickFrequency = 10,
-            IsSnapToTickEnabled = false,
-            [!Slider.ValueProperty] = new Binding(nameof(vm.TransparencyThreshold))
-            {
-                Mode = BindingMode.TwoWay,
-            },
-        };
-        panel.Children.Add(thresholdSlider);
-
-        var thresholdValueLabel = new TextBlock
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 5, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.TransparencyThresholdDisplay)),
-        };
-        panel.Children.Add(thresholdValueLabel);
-
-        var thresholdInfo = new TextBlock
-        {
-            Text = Se.Language.Tools.ImageBasedEdit.AlphaThresholdInfo,
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            FontSize = UiUtil.ScaledFontSize(10),
-            Foreground = Avalonia.Media.Brushes.Gray,
-            Margin = new Thickness(0, 2, 0, 0),
-        };
-        panel.Children.Add(thresholdInfo);
-
-        // Reset button
-        var resetButton = UiUtil.MakeButton(Se.Language.Tools.ImageBasedEdit.ResetToDefaults, vm.ResetCommand);
-        resetButton.Margin = new Thickness(0, 20, 0, 0);
-        resetButton.HorizontalAlignment = HorizontalAlignment.Stretch;
-        panel.Children.Add(resetButton);
-
-        // Info text
-        var infoText = new TextBlock
-        {
-            Text = Se.Language.Tools.ImageBasedEdit.AlphaAdjustmentInfo,
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            Margin = new Thickness(0, 20, 0, 0),
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = Avalonia.Media.Brushes.Gray,
-        };
-        panel.Children.Add(infoText);
+            Child = resetPanel,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 10, 14, 14),
+        });
 
         return panel;
     }
@@ -199,6 +114,7 @@ public class BinaryAdjustAlphaWindow : Window
         vm.PreviewImage = previewImage;
         vm.BackgroundImage = backgroundImage;
 
-        return UiUtil.MakeBorderForControl(scrollViewer);
+        // The view model draws its own checkered backdrop behind the bitmap (sized to it)
+        return BinaryEditChrome.MakePreviewFrame(scrollViewer, EditorChrome.FieldBrush);
     }
 }

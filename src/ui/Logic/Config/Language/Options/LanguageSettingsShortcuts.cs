@@ -34,7 +34,6 @@ public class LanguageSettingsShortcuts
     public string CustomShortcutPickCommand { get; set; }
     public string CustomShortcutEnterText { get; set; }
     public string CustomShortcutEnterFind { get; set; }
-    public string CustomShortcutInvalidRegexX { get; set; }
     public string CustomShortcutStepsHint { get; set; }
     public string ActiveIn { get; set; }
     public string ActiveInEverywhere { get; set; }
@@ -57,6 +56,7 @@ public class LanguageSettingsShortcuts
     public string AlsoSetVideoPosition { get; set; }
     public string GeneralGoToVideoPosition { get; set; }
     public string GeneralToggleItalic { get; set; }
+    public string GeneralRecordSpeechToTextBox { get; set; }
     public string GeneralToggleBold { get; set; }
     public string GeneralToggleUnderline { get; set; }
     public string GeneralToggleBox { get; set; }
@@ -125,6 +125,12 @@ public class LanguageSettingsShortcuts
     public string MoveTextFromCursorToNextAndGoToNext { get; set; }
     public string MoveTextFromCursorToNextAndGoToNextAndPlay { get; set; }
     public string MoveTextFromCursorToNextAndGoToNextAndPlayAndPause { get; set; }
+    public string MoveTextBeforeCursorToPrevious { get; set; }
+    public string ShowCustomErrorRules { get; set; }
+    public string ToggleCustomErrorRules { get; set; }
+    public string SplitAtVideoPositionAndPlay { get; set; }
+    public string SplitAtTextBoxCursorPositionAndPlay { get; set; }
+    public string SplitAtVideoAndTextBoxPositionAndPlay { get; set; }
     public string BreakAtFirstSpaceFromCursor { get; set; }
     public string BreakAtFirstSpaceFromCursorAndGoToNext { get; set; }
     public string ToggleFocusGridAndWaveform { get; set; }
@@ -293,6 +299,8 @@ public class LanguageSettingsShortcuts
     public string DuplicatesFound { get; set; }
     public string CopyTextToClipboard { get; set; }
     public string CopyTextFromOriginalToClipboard { get; set; }
+    public string CopyPlainTextToClipboard { get; set; }
+    public string CopyPlainTextFromOriginalToClipboard { get; set; }
     public string AssaDraw { get; set; }
     public string AssaGenerateProgressBar { get; set; }
     public string AssaGenerateBackgroundBox { get; set; }
@@ -336,6 +344,12 @@ public class LanguageSettingsShortcuts
     public string MoveSelectedLinesAndForwardXMsForward { get; set; }
     public string MoveAllLinesXMsBack { get; set; }
     public string MoveAllLinesXMsForward { get; set; }
+    public string MoveSelectedLinesOneFrameBack { get; set; }
+    public string MoveSelectedLinesOneFrameForward { get; set; }
+    public string MoveSelectedLinesAndForwardOneFrameBack { get; set; }
+    public string MoveSelectedLinesAndForwardOneFrameForward { get; set; }
+    public string MoveAllLinesOneFrameBack { get; set; }
+    public string MoveAllLinesOneFrameForward { get; set; }
     public string MoveSelectedLinesCustomMsBack { get; set; }
     public string MoveSelectedLinesCustomMsForward { get; set; }
     public string MoveSelectedLinesAndForwardCustomMsBack { get; set; }
@@ -374,7 +388,6 @@ public class LanguageSettingsShortcuts
         CustomShortcutPickCommand = "Please select a command to run.";
         CustomShortcutEnterText = "Please enter the text to insert.";
         CustomShortcutEnterFind = "Please enter the text to find.";
-        CustomShortcutInvalidRegexX = "Invalid regular expression: {0}";
         CustomShortcutStepsHint = "Steps run from top to bottom. Text steps work on the selected lines; commands that open a window continue after it closes.";
         ActiveIn = "Active in";
         ActiveInEverywhere = "Everywhere";
@@ -397,6 +410,7 @@ public class LanguageSettingsShortcuts
         AlsoSetVideoPosition = "Also set video position";
         GeneralGoToVideoPosition = "Go to video position";
         GeneralToggleItalic = "Toggle italic";
+        GeneralRecordSpeechToTextBox = "Record speech to text box (start/stop)";
         GeneralToggleBold = "Toggle bold";
         GeneralToggleUnderline = "Toggle underline";
         GeneralToggleBox = "Toggle box (EBU STL)";
@@ -470,6 +484,12 @@ public class LanguageSettingsShortcuts
         MoveTextFromCursorToNextAndGoToNext = "Move text after cursor position to next subtitle and go to next";
         MoveTextFromCursorToNextAndGoToNextAndPlay = "Move text after cursor position to next subtitle, go to next and play";
         MoveTextFromCursorToNextAndGoToNextAndPlayAndPause = "Move text after cursor position to next subtitle, go to next, play it and pause at its end";
+        MoveTextBeforeCursorToPrevious = "Move text before cursor position to previous subtitle";
+        ShowCustomErrorRules = "Show custom error rules";
+        ToggleCustomErrorRules = "Toggle custom error rules coloring on/off";
+        SplitAtVideoPositionAndPlay = "Split line at video position, go to second part and play";
+        SplitAtTextBoxCursorPositionAndPlay = "Split line at text box cursor position, go to second part and play";
+        SplitAtVideoAndTextBoxPositionAndPlay = "Split line at video and text box position, go to second part and play";
         BreakAtFirstSpaceFromCursor = "Break at first space from cursor position";
         BreakAtFirstSpaceFromCursorAndGoToNext = "Break at first space from cursor position and go to next";
         ToggleFocusGridAndWaveform = "Toggle focus between subtitle grid and waveform/spectrogram";
@@ -638,6 +658,8 @@ public class LanguageSettingsShortcuts
         DuplicatesFound = "The following duplicate shortcuts were found:";
         CopyTextToClipboard = "Copy text to clipboard (selected lines)";
         CopyTextFromOriginalToClipboard = "Copy text from original to clipboard (selected lines)";
+        CopyPlainTextToClipboard = "Copy plain text to clipboard (selected lines)";
+        CopyPlainTextFromOriginalToClipboard = "Copy plain text from original to clipboard (selected lines)";
         AssaDraw = "ASSA Draw";
         AssaGenerateProgressBar = "ASSA Generate progress bar";
         AssaGenerateBackgroundBox = "ASSA Generate background box";
@@ -681,6 +703,12 @@ public class LanguageSettingsShortcuts
         MoveSelectedLinesAndForwardXMsForward = "Move selected lines and all following X ms forward (X set in Settings)";
         MoveAllLinesXMsBack = "Move all lines X ms back (X set in Settings)";
         MoveAllLinesXMsForward = "Move all lines X ms forward (X set in Settings)";
+        MoveSelectedLinesOneFrameBack = "Move selected lines one frame back";
+        MoveSelectedLinesOneFrameForward = "Move selected lines one frame forward";
+        MoveSelectedLinesAndForwardOneFrameBack = "Move selected lines and all following one frame back";
+        MoveSelectedLinesAndForwardOneFrameForward = "Move selected lines and all following one frame forward";
+        MoveAllLinesOneFrameBack = "Move all lines one frame back";
+        MoveAllLinesOneFrameForward = "Move all lines one frame forward";
         MoveSelectedLinesCustomMsBack = "Move selected lines, custom milliseconds ({0:#,###,##0}) back, {1}";
         MoveSelectedLinesCustomMsForward = "Move selected lines, custom milliseconds ({0:#,###,##0}) forward, {1}";
         MoveSelectedLinesAndForwardCustomMsBack = "Move selected lines and all following, custom milliseconds ({0:#,###,##0}) back, {1}";

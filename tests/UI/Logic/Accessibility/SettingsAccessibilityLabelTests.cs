@@ -17,7 +17,8 @@ public class SettingsAccessibilityLabelTests
 {
     private static (Control control, TextBlock label) BuildRow(SettingsItem item)
     {
-        var panel = (StackPanel)item.Build();
+        // A row is the label column and the field column of a grid
+        var panel = (Panel)item.Build();
         var label = panel.Children.OfType<TextBlock>().First();
         var control = panel.Children.Last();
         return (control, label);

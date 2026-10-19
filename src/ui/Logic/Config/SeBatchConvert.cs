@@ -181,6 +181,8 @@ public class SeBatchConvert
 
     public int RenumberStartNumber { get; set; }
 
+    public string RunPluginName { get; set; }
+
     public int MergeContinuationLinesMaxGapMs { get; set; }
     public int MergeContinuationLinesMaxCharacters { get; set; }
 
@@ -332,6 +334,8 @@ public class SeBatchConvert
         ConvertColorsToDialogRemoveColorTags = true;
 
         RenumberStartNumber = 1;
+
+        RunPluginName = string.Empty;
 
         MergeContinuationLinesMaxGapMs = 250;
         MergeContinuationLinesMaxCharacters = 0; // 0 = max line length x max number of lines

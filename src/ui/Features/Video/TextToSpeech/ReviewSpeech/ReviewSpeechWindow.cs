@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -16,9 +17,17 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 
+/// <summary>
+/// Review the generated speech, in the editor look (see <see cref="EditorChrome"/>): engine and
+/// voice for regenerating on the left, the lines with the selected line's text on the right, the
+/// waveform under them, auto-continue, position and the buttons at the bottom.
+/// </summary>
 public class ReviewSpeechWindow : Window
 {
     private readonly ReviewSpeechViewModel _vm;
+
+    private const double LabelWidth = 76;
+    private const double SliderLabelWidth = 124;
 
     public ReviewSpeechWindow(ReviewSpeechViewModel vm)
     {
@@ -26,59 +35,55 @@ public class ReviewSpeechWindow : Window
         Title = Se.Language.Video.TextToSpeech.ReviewAudioSegments;
         Width = 1100;
         Height = 700;
-        MinWidth = 700;
-        MinHeight = 690;
+        MinWidth = 760;
+        MinHeight = 520;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var controls = MakeControls(vm);
-        var lineGridView = MakeLineGrid(vm);
-        var waveform = MakeWaveform(vm);
+        // The side panel scrolls on its own and the list gives up height first, so the waveform
+        // and the button bar stay reachable on a short screen.
+        var side = new Border
+        {
+            Child = new ScrollViewer
+            {
+                Content = MakeControls(vm),
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            },
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
+        };
 
-        // Disabled while a regenerate runs: its progress popup is non-modal, and publishing
-        // (OK/Export) or closing mid-run would commit the row's half-updated step result.
-        var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
-        var panelButtons = UiUtil.MakeButtonBar(buttonExport, buttonOk, buttonCancel);
+        var content = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(350)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+        };
+        content.Add(side, 0, 0);
+        content.Add(MakeLineGrid(vm), 0, 1);
 
-        var grid = new Grid
+        var root = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(new GridLength(1, GridUnitType.Star)), // settings + lines
+                new RowDefinition(GridLength.Auto), // waveform
+                new RowDefinition(GridLength.Auto), // buttons
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        root.Add(content, 0, 0);
+        root.Add(MakeWaveform(vm), 1, 0);
+        root.Add(MakeButtonBar(vm), 2, 0);
 
-        var checkBoxAutoContinue = new CheckBox
-        {
-            Content = Se.Language.Video.TextToSpeech.AutoContinuePlaying,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.AutoContinue)) { Mode = BindingMode.TwoWay },
-        };
-
-        grid.Add(controls, 0, 0);
-        grid.Add(lineGridView, 0, 1);
-        grid.Add(waveform, 1, 0, 1, 2);
-        grid.Add(panelButtons, 2, 0, 1, 2);
-        grid.Add(checkBoxAutoContinue, 2, 0);
-        grid.Add(MakePositionLabel(vm), 2, 0, 1, 2);
-
-        Content = grid;
+        Content = root;
 
         // Focus the grid, not a button, so the window receives key events (OnKeyDown needs a
         // focused element) without arming any button: a focused button fires OnClick on bare
@@ -107,14 +112,33 @@ public class ReviewSpeechWindow : Window
         };
     }
 
-    private static Border MakeLineGrid(ReviewSpeechViewModel vm)
+    /// <summary>
+    /// Auto-continue and the position on the left; Export, Cancel and OK on the right.
+    /// </summary>
+    private static Border MakeButtonBar(ReviewSpeechViewModel vm)
+    {
+        var autoContinue = TtsMainEditorLook.SwitchRow(nameof(vm.AutoContinue), Se.Language.Video.TextToSpeech.AutoContinuePlaying);
+        autoContinue.HorizontalAlignment = HorizontalAlignment.Left;
+
+        var left = TtsMainEditorLook.Horizontal(autoContinue, EditorChrome.MakeToolbarSeparator(), MakePositionLabel(vm));
+        left.Spacing = 4;
+
+        // Disabled while a regenerate runs: its progress popup is non-modal, and publishing
+        // (OK/Export) or closing mid-run would commit the row's half-updated step result.
+        var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled)));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
+        return EditorChrome.MakeButtonBar(left, buttonExport, buttonCancel, buttonOk);
+    }
+
+    private static Grid MakeLineGrid(ReviewSpeechViewModel vm)
     {
         var lineGrid = TableViewExtras.MakeTableView(multiSelect: false);
-        lineGrid.Margin = new Thickness(0, 10, 0, 0);
         lineGrid.Width = double.NaN;
         lineGrid.Height = double.NaN;
         lineGrid[!TableView.ItemsSourceProperty] = new Binding(nameof(vm.Lines));
         lineGrid[!TableView.SelectedItemProperty] = new Binding(nameof(vm.SelectedLine)) { Mode = BindingMode.TwoWay };
+        AutomationProperties.SetName(lineGrid, Se.Language.General.Lines);
 
         // Re-enabled: OK publishes only rows with Include ticked and Export/Import
         // round-trip the flag, so without this column an imported session's excluded
@@ -143,28 +167,30 @@ public class ReviewSpeechWindow : Window
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
             {
-                var buttonRegenerate = UiUtil.MakeButton(vm.RegenerateAudioCommand, IconNames.Recycle, Se.Language.Video.TextToSpeech.RegenerateAudio)
-                .WithBindEnabled(nameof(item.IsPlayingEnabled));
+                var buttonRegenerate = EditorChrome.CreateToolButton("fa-solid fa-rotate", Se.Language.Video.TextToSpeech.RegenerateAudio, vm.RegenerateAudioCommand, 26)
+                    .WithBindEnabled(nameof(item.IsPlayingEnabled));
                 buttonRegenerate.CommandParameter = item;
 
-                var buttonHistory = UiUtil.MakeButton(vm.ShowHistoryCommand, IconNames.DotsVertical, Se.Language.General.ShowHistory).WithBindEnabled(nameof(ReviewRow.HasHistory));
+                var buttonHistory = EditorChrome.CreateToolButton("fa-solid fa-clock-rotate-left", Se.Language.General.ShowHistory, vm.ShowHistoryCommand, 26)
+                    .WithBindEnabled(nameof(ReviewRow.HasHistory));
                 buttonHistory.CommandParameter = item;
                 buttonHistory.Bind(Button.OpacityProperty, new Binding(nameof(ReviewRow.HistoryButtonOpacity)));
 
-                var buttonPlay = UiUtil.MakeButton(vm.PlayRowCommand,"fa-solid fa-play")
-                .WithBindIsVisible(nameof(item.IsPlaying), InverseBooleanConverter.Instance)
-                .WithBindEnabled(nameof(item.IsPlayingEnabled));
+                var buttonPlay = EditorChrome.CreateToolButton("fa-solid fa-play", Se.Language.General.PlayLine, vm.PlayRowCommand, 26)
+                    .WithBindIsVisible(nameof(item.IsPlaying), InverseBooleanConverter.Instance)
+                    .WithBindEnabled(nameof(item.IsPlayingEnabled));
                 buttonPlay.CommandParameter = item;
 
-                var buttonStop = UiUtil.MakeButton(vm.StopCommand, "fa-solid fa-stop")
-                .WithBindIsVisible(nameof(item.IsPlaying));
+                var buttonStop = EditorChrome.CreateToolButton("fa-solid fa-stop", Se.Language.General.Stop, vm.StopCommand, 26)
+                    .WithBindIsVisible(nameof(item.IsPlaying));
                 buttonStop.CommandParameter = item;
 
                 return new StackPanel
                 {
                     Orientation = Orientation.Horizontal,
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    Spacing = 5,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Spacing = 2,
                     Children =
                     {
                         buttonRegenerate,
@@ -174,7 +200,7 @@ public class ReviewSpeechWindow : Window
                     }
                 };
             }),
-            Width = new GridLength(150),
+            Width = new GridLength(110),
         });
         lineGrid.Columns.Add(new SeTableViewColumn
         {
@@ -230,7 +256,10 @@ public class ReviewSpeechWindow : Window
             },
             FontSize = Se.Settings.Appearance.SubtitleTextBoxFontSize,
             FontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal,
-            Margin = new Thickness(0, 0, 0, 3),
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(8),
+            Margin = new Thickness(0, 10, 0, 0),
         };
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
@@ -238,219 +267,131 @@ public class ReviewSpeechWindow : Window
         }
         textBox.WithAccessibleName(Se.Language.General.Text); // edits the selected row's text; no visible label (#12087)
 
+        var header = EditorChrome.MakeSectionHeader(Se.Language.General.Lines);
+        header.Margin = new Thickness(0, 0, 0, 10);
+
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(14, 12, 14, 14),
         };
 
-        grid.Add(lineGrid, 0, 0);
-        grid.Add(textBox, 1, 0);
-
-        return UiUtil.MakeBorderForControl(grid);
+        grid.Add(header, 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(lineGrid), 1, 0);
+        grid.Add(textBox, 2, 0);
+        return grid;
     }
 
-    private static Border MakeControls(ReviewSpeechViewModel vm)
+    private static Grid Row(string? label, Control content, string? labelBinding = null) => EditorChrome.MakeLabeledRow(label, content, LabelWidth, spacing: 6, labelBinding: labelBinding);
+
+    /// <summary>
+    /// A combo box filling the row, with optional tool buttons after it.
+    /// </summary>
+    private static Grid ComboRow(string? label, ComboBox comboBox, string name, string? labelBinding = null, params Control[] buttons)
     {
-        var labelMinWidth = 100;
-        var controlMinWidth = 200;
+        comboBox.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBox.Width = double.NaN;
+        comboBox.MinWidth = 0;
+        AutomationProperties.SetName(comboBox, name);
+        // Docked rather than in grid columns: a hidden button then takes no room (no column
+        // spacing left behind), so the combo boxes of all rows end at the same edge.
+        var panel = new DockPanel();
+        for (var i = buttons.Length - 1; i >= 0; i--)
+        {
+            buttons[i].Margin = new Thickness(4, 0, 0, 0);
+            DockPanel.SetDock(buttons[i], Dock.Right);
+            panel.Children.Add(buttons[i]);
+        }
 
-        var comboBoxEngines = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine)).WithMinWidth(controlMinWidth);
+        panel.Children.Add(comboBox);
+        return Row(label, panel, labelBinding);
+    }
+
+    private static StackPanel MakeControls(ReviewSpeechViewModel vm)
+    {
+        var comboBoxEngines = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine));
         comboBoxEngines.SelectionChanged += vm.SelectedEngineChanged;
-        var buttonEngineSettings = UiUtil.MakeButton(string.Empty, vm.ShowEngineSettingsCommand)
-            .WithIconLeft(IconNames.Settings)
+        var buttonEngineSettings = EditorChrome.CreateToolButton("fa-solid fa-gear", Se.Language.General.Settings, vm.ShowEngineSettingsCommand, 28)
             .WithBindIsVisible(nameof(vm.IsEngineSettingsVisible));
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonEngineSettings, Se.Language.General.Settings);
-        }
 
-        var buttonElevenLabsRest = UiUtil.MakeButton(Se.Language.General.Reset, vm.ElevenLabsResetCommand)
-            .WithIconLeft(IconNames.Repeat)
+        var buttonElevenLabsRest = EditorChrome.CreateToolButton("fa-solid fa-rotate-left", Se.Language.Video.TextToSpeech.ElevenLabsSettingsResetHint, vm.ElevenLabsResetCommand, 28)
             .WithBindIsVisible(nameof(vm.IsElevenLabsControlsVisible));
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonElevenLabsRest, Se.Language.Video.TextToSpeech.ElevenLabsSettingsResetHint);
-        }
+        AutomationProperties.SetName(buttonElevenLabsRest, Se.Language.General.Reset);
 
-        var panelEngine = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children =
-            {
-                new Label
-                {
-                    Content = Se.Language.General.Engine,
-                    MinWidth = labelMinWidth,
-                },
-                comboBoxEngines,
-                buttonEngineSettings,
-                buttonElevenLabsRest,
-            }
-        };
+        var panelEngine = ComboRow(Se.Language.General.Engine, comboBoxEngines, Se.Language.General.Engine, null, buttonEngineSettings, buttonElevenLabsRest);
 
-        var panelVoice = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children =
-            {
-                new Label
-                {
-                    Content = Se.Language.General.Voice,
-                    MinWidth = labelMinWidth,
-                },
-                UiUtil.MakeComboBox(vm.Voices, vm, nameof(vm.SelectedVoice)).WithWidth(controlMinWidth),
-            }
-        };
+        var panelVoice = ComboRow(Se.Language.General.Voice, UiUtil.MakeComboBox(vm.Voices, vm, nameof(vm.SelectedVoice)), Se.Language.General.Voice);
 
-        var comboBoxModels = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel)).WithWidth(controlMinWidth);
-        var panelModel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children =
-            {
-                new Label
-                {
-                    Content = Se.Language.General.Model,
-                    MinWidth = labelMinWidth,
-                },
-                comboBoxModels,
-                UiUtil.MakeButton(vm.ShowElevenLabsEngineV3HelpCommand, IconNames.Help, $"{Se.Language.General.Model} - {Se.Language.General.Help}")
-                    .WithBindIsVisible(nameof(vm.IsElevenLabsEngineV3Selected))
-                    .WithMarginLeft(5),
-            },
-            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.SelectedEngine) + "." + nameof(ITtsEngine.HasModel)) { Mode = BindingMode.OneWay },
-        };
+        var comboBoxModels = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel));
+        var buttonModelHelp = TtsMainEditorLook.MakeHelpButton(vm.ShowElevenLabsEngineV3HelpCommand, $"{Se.Language.General.Model} - {Se.Language.General.Help}")
+            .WithBindIsVisible(nameof(vm.IsElevenLabsEngineV3Selected));
+        var panelModel = ComboRow(Se.Language.General.Model, comboBoxModels, Se.Language.General.Model, null, buttonModelHelp);
+        panelModel.Bind(IsVisibleProperty, new Binding(nameof(vm.SelectedEngine) + "." + nameof(ITtsEngine.HasModel)) { Mode = BindingMode.OneWay });
         comboBoxModels.SelectionChanged += vm.SelectedModelChanged;
 
-        var panelRegion = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children =
-            {
-                new Label
-                {
-                    MinWidth = labelMinWidth,
-                    [!ContentProperty] = new Binding(nameof(vm.RegionLabel)) { Mode = BindingMode.OneWay },
-                },
-                UiUtil.MakeComboBox(vm.Regions, vm, nameof(vm.SelectedRegion)).WithWidth(controlMinWidth),
-            },
-            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.SelectedEngine) + "." + nameof(ITtsEngine.HasRegion)) { Mode = BindingMode.OneWay },
-        };
+        var comboBoxRegions = UiUtil.MakeComboBox(vm.Regions, vm, nameof(vm.SelectedRegion));
+        var panelRegion = ComboRow(null, comboBoxRegions, Se.Language.General.Region, nameof(vm.RegionLabel));
+        comboBoxRegions.Bind(AutomationProperties.NameProperty, new Binding(nameof(vm.RegionLabel)) { Mode = BindingMode.OneWay });
+        panelRegion.Bind(IsVisibleProperty, new Binding(nameof(vm.SelectedEngine) + "." + nameof(ITtsEngine.HasRegion)) { Mode = BindingMode.OneWay });
 
-        var comboBoxLanguages = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage)).WithWidth(controlMinWidth);
-        var panelLanguage = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children =
-            {
-                new Label
-                {
-                    Content = Se.Language.General.Language,
-                    MinWidth = labelMinWidth,
-                },
-                comboBoxLanguages,
-            },
-            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.SelectedEngine) + "." + nameof(ITtsEngine.HasLanguageParameter)) { Mode = BindingMode.OneWay },
-        };
+        var comboBoxLanguages = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage));
+        var panelLanguage = ComboRow(Se.Language.General.Language, comboBoxLanguages, Se.Language.General.Language);
+        panelLanguage.Bind(IsVisibleProperty, new Binding(nameof(vm.SelectedEngine) + "." + nameof(ITtsEngine.HasLanguageParameter)) { Mode = BindingMode.OneWay });
         comboBoxLanguages.SelectionChanged += vm.SelectedLanguageChanged;
 
-
-        var elevenLabsControls = MakeElevenLabsControls(vm);
-        var panelInstruction = MakeInstructionPanel(vm, labelMinWidth);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // filler
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Margin = new Thickness(0, 0, 0, 15),
-        };
-
-        grid.Add(panelEngine, 0, 0);
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(panelEngine);
         // Model comes before Voice — same ordering as the main TTS window and Cast dialog so the
         // user picks a model first (which sometimes filters the voice list) and the dropdowns
         // line up across windows.
-        grid.Add(panelModel, 1, 0);
-        grid.Add(panelVoice, 2, 0);
-        grid.Add(panelRegion, 3, 0);
-        grid.Add(panelLanguage, 4, 0);
-        grid.Add(elevenLabsControls, 5, 0);
-        grid.Add(panelInstruction, 6, 0);
-        // 7 is filler
+        rows.Children.Add(panelModel);
+        rows.Children.Add(panelVoice);
+        rows.Children.Add(panelRegion);
+        rows.Children.Add(panelLanguage);
+        rows.Children.Add(MakeInstructionPanel(vm));
 
-        return UiUtil.MakeBorderForControl(grid);
+        var panel = new StackPanel();
+        panel.Children.Add(EditorChrome.MakeEditorSection(Se.Language.Video.TextToSpeech.EngineAndVoice, rows, first: true));
+        var elevenLabs = EditorChrome.MakeEditorSection(Se.Language.Video.TextToSpeech.ElevenLabsSettings, MakeElevenLabsControls(vm));
+        elevenLabs.Bind(IsVisibleProperty, new Binding(nameof(vm.IsElevenLabsControlsVisible)) { Mode = BindingMode.OneWay });
+        panel.Children.Add(elevenLabs);
+        return panel;
     }
 
     // Voice-design controls shared with the main TTS window: free-text instruction (Qwen3
     // VoiceDesign model) and OmniVoice keyword picker. Visibility flags on the VM mirror those
     // in TextToSpeechViewModel — see ReviewSpeechViewModel.UpdateInstructionVisibility.
-    private static StackPanel MakeInstructionPanel(ReviewSpeechViewModel vm, int labelMinWidth)
+    private static Grid MakeInstructionPanel(ReviewSpeechViewModel vm)
     {
         var textBoxInstruction = new TextBox
         {
-            Width = 260,
             Height = 90,
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
             VerticalContentAlignment = VerticalAlignment.Top,
-            HorizontalAlignment = HorizontalAlignment.Left,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             PlaceholderText = Se.Language.Video.TextToSpeech.VoiceInstructionHint,
             DataContext = vm,
             [!TextBox.IsVisibleProperty] = new Binding(nameof(vm.IsInstructionTextVisible)) { Mode = BindingMode.OneWay },
         };
+        textBoxInstruction.Classes.Add("text");
         textBoxInstruction.Bind(TextBox.TextProperty, new Binding(nameof(vm.Instruction))
         {
             Mode = BindingMode.TwoWay,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
+        AutomationProperties.SetName(textBoxInstruction, Se.Language.Video.TextToSpeech.VoiceInstruction);
 
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children =
-            {
-                new Label
-                {
-                    Content = Se.Language.Video.TextToSpeech.VoiceInstruction,
-                    MinWidth = labelMinWidth,
-                    VerticalAlignment = VerticalAlignment.Top,
-                },
-                textBoxInstruction,
-                MakeInstructionKeywordPicker(vm),
-            },
-            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.HasInstruction)) { Mode = BindingMode.OneWay },
-        };
+        var row = Row(Se.Language.Video.TextToSpeech.VoiceInstruction, new StackPanel { Children = { textBoxInstruction, MakeInstructionKeywordPicker(vm) } });
+        row.Children[0].VerticalAlignment = VerticalAlignment.Top;
+        row.Children[0].Margin = new Thickness(0, 6, 0, 0);
+        row.Bind(IsVisibleProperty, new Binding(nameof(vm.HasInstruction)) { Mode = BindingMode.OneWay });
+        return row;
     }
 
     // OmniVoice keyword picker — gender/age/pitch/accent combos plus a whisper checkbox and a
@@ -463,7 +404,7 @@ public class ReviewSpeechWindow : Window
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             RowDefinitions =
             {
@@ -487,20 +428,15 @@ public class ReviewSpeechWindow : Window
         {
             Content = OmniVoiceTtsCpp.InstructionWhisper,
             DataContext = vm,
-            Margin = new Thickness(0, 4, 0, 0),
+            FontSize = 12.5,
+            Margin = new Thickness(0, 2, 0, 0),
         };
         whisper.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.OmniVoiceWhisper)) { Mode = BindingMode.TwoWay });
         grid.Add(whisper, 4, 0, 1, 2);
 
-        var clonedVoiceNote = new TextBlock
-        {
-            Text = Se.Language.Video.TextToSpeech.VoiceInstructionClonedVoiceNote,
-            TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.7,
-            MaxWidth = 280,
-            Margin = new Thickness(0, 6, 0, 0),
-            [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.IsInstructionVoiceHintVisible)) { Mode = BindingMode.OneWay },
-        };
+        var clonedVoiceNote = TtsMainEditorLook.Hint(Se.Language.Video.TextToSpeech.VoiceInstructionClonedVoiceNote);
+        clonedVoiceNote.Margin = new Thickness(0, 6, 0, 0);
+        clonedVoiceNote.Bind(IsVisibleProperty, new Binding(nameof(vm.IsInstructionVoiceHintVisible)) { Mode = BindingMode.OneWay });
 
         return new StackPanel
         {
@@ -513,126 +449,108 @@ public class ReviewSpeechWindow : Window
     private static void AddPickerRow(Grid grid, int row, string label, ReviewSpeechViewModel vm,
         System.Collections.ObjectModel.ObservableCollection<string> items, string selectedPropertyPath)
     {
-        grid.Add(new Label { Content = label, MinWidth = 60, VerticalAlignment = VerticalAlignment.Center }, row, 0);
-        grid.Add(UiUtil.MakeComboBox(items, vm, selectedPropertyPath).WithWidth(200), row, 1);
+        var text = EditorChrome.MakeDimLabel(label, new Thickness(0));
+        text.MinWidth = 50;
+        grid.Add(text, row, 0);
+        var comboBox = UiUtil.MakeComboBox(items, vm, selectedPropertyPath);
+        comboBox.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(comboBox, label);
+        grid.Add(comboBox, row, 1);
     }
 
-    private static Grid MakeElevenLabsControls(ReviewSpeechViewModel vm)
+    /// <summary>
+    /// "Label  [slider] value (?)" - the label column is wider than the engine rows' so
+    /// "Style exaggeration" fits.
+    /// </summary>
+    private static Grid SliderRow(string label, Slider slider, Control value, Control help)
     {
-        var sliderWidth = 150;
+        AutomationProperties.SetName(slider, label);
+        slider.HorizontalAlignment = HorizontalAlignment.Stretch;
+        slider.Width = double.NaN;
+        slider.Margin = new Thickness(0);
+        slider.VerticalAlignment = VerticalAlignment.Center;
+        value.VerticalAlignment = VerticalAlignment.Center;
+        var grid = new Grid
+        {
+            ColumnSpacing = 6,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(34)),
+                new ColumnDefinition(GridLength.Auto),
+            },
+        };
+        grid.Add(slider, 0, 0);
+        grid.Add(value, 0, 1);
+        grid.Add(help, 0, 2);
+        return EditorChrome.MakeLabeledRow(label, grid, SliderLabelWidth, spacing: 6);
+    }
 
-        var labelStability = UiUtil.MakeLabel(Se.Language.Video.TextToSpeech.Stability);
+    private static TextBlock SliderValue(ReviewSpeechViewModel vm, string property)
+    {
+        return new TextBlock
+        {
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            FontFeatures = new FontFeatureCollection { FontFeature.Parse("tnum") },
+            [!TextBlock.TextProperty] = new Binding(property) { Converter = new DoubleToTwoDecimalConverter(), Source = vm },
+        };
+    }
+
+    private static StackPanel MakeElevenLabsControls(ReviewSpeechViewModel vm)
+    {
         var sliderStability = new Slider
         {
             Minimum = 0,
             Maximum = 1,
             Value = vm.Stability,
-            Width = sliderWidth,
             [!Slider.ValueProperty] = new Binding(nameof(vm.Stability)),
         };
+        var buttonStability = TtsMainEditorLook.MakeHelpButton(vm.ShowStabilityHelpCommand, $"{Se.Language.Video.TextToSpeech.Stability} - {Se.Language.General.Help}");
 
-        var labelStabilityValue = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.Stability), new DoubleToTwoDecimalConverter());
-        var buttonStability = UiUtil.MakeButton(vm.ShowStabilityHelpCommand, IconNames.Help, $"{Se.Language.Video.TextToSpeech.Stability} - {Se.Language.General.Help}");
-
-        var labelSimilarity = UiUtil.MakeLabel(Se.Language.Video.TextToSpeech.Similarity);
         var sliderSimilarity = new Slider
         {
             Minimum = 0,
             Maximum = 1,
             Value = vm.Similarity,
-            Width = sliderWidth,
             [!Slider.ValueProperty] = new Binding(nameof(vm.Similarity)),
         };
-        var labelSimilarityValue = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.Similarity), new DoubleToTwoDecimalConverter());
-        var buttonSimilarity = UiUtil.MakeButton(vm.ShowSimilarityHelpCommand, IconNames.Help, $"{Se.Language.Video.TextToSpeech.Similarity} - {Se.Language.General.Help}");
+        var buttonSimilarity = TtsMainEditorLook.MakeHelpButton(vm.ShowSimilarityHelpCommand, $"{Se.Language.Video.TextToSpeech.Similarity} - {Se.Language.General.Help}");
 
-        var labelSpeakerBoost = UiUtil.MakeLabel(Se.Language.Video.TextToSpeech.SpeakerBoost);
         var sliderSpeakerBoost = new Slider
         {
             Minimum = 0,
             Maximum = 100,
             Value = vm.SpeakerBoost,
-            Width = sliderWidth,
             [!Slider.ValueProperty] = new Binding(nameof(vm.SpeakerBoost)),
         };
-        var labelSpeakerBoostValue = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.SpeakerBoost), new DoubleToTwoDecimalConverter());
-        var buttonSpeakerBoost = UiUtil.MakeButton(vm.ShowSpeakerBoostHelpCommand, IconNames.Help, $"{Se.Language.Video.TextToSpeech.SpeakerBoost} - {Se.Language.General.Help}");
+        var buttonSpeakerBoost = TtsMainEditorLook.MakeHelpButton(vm.ShowSpeakerBoostHelpCommand, $"{Se.Language.Video.TextToSpeech.SpeakerBoost} - {Se.Language.General.Help}");
 
-        var labelSpeed = UiUtil.MakeLabel(Se.Language.General.Speed);
         var sliderSpeed = new Slider
         {
             Minimum = 0.7,
             Maximum = 1.2,
             Value = vm.Speed,
-            Width = sliderWidth,
             [!Slider.ValueProperty] = new Binding(nameof(vm.Speed)),
         };
-        var labelSpeedValue = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.Speed), new DoubleToTwoDecimalConverter());
-        var buttonSpeed = UiUtil.MakeButton(vm.ShowSpeedHelpCommand, IconNames.Help, $"{Se.Language.General.Speed} - {Se.Language.General.Help}");
+        var buttonSpeed = TtsMainEditorLook.MakeHelpButton(vm.ShowSpeedHelpCommand, $"{Se.Language.General.Speed} - {Se.Language.General.Help}");
 
-        var labelStyleExaggeration = UiUtil.MakeLabel(Se.Language.General.StyleExaggeration);
         var sliderStyleExaggeration = new Slider
         {
             Minimum = 0.0,
             Maximum = 1.0,
             Value = vm.StyleExaggeration,
-            Width = sliderWidth,
-            Margin = new Thickness(5, 0, 0, 0),
             [!Slider.ValueProperty] = new Binding(nameof(ElevenLabsSettingsViewModel.StyleExaggeration)),
         };
-        var labelStyleExaggerationValue = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.StyleExaggeration), new DoubleToTwoDecimalConverter());
-        var buttonStyleExaggeration = UiUtil.MakeButton(vm.ShowStyleExaggerationHelpCommand, IconNames.Help, $"{Se.Language.General.StyleExaggeration} - {Se.Language.General.Help}");
+        var buttonStyleExaggeration = TtsMainEditorLook.MakeHelpButton(vm.ShowStyleExaggerationHelpCommand, $"{Se.Language.General.StyleExaggeration} - {Se.Language.General.Help}");
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            [!Grid.IsVisibleProperty] = new Binding(nameof(vm.IsElevenLabsControlsVisible)) { Mode = BindingMode.OneWay },
-        };
-
-        grid.Add(labelStability, 0, 0);
-        grid.Add(sliderStability, 0, 1);
-        grid.Add(labelStabilityValue, 0, 2);
-        grid.Add(buttonStability, 0, 3);
-
-        grid.Add(labelSimilarity, 1, 0);
-        grid.Add(sliderSimilarity, 1, 1);
-        grid.Add(labelSimilarityValue, 1, 2);
-        grid.Add(buttonSimilarity, 1, 3);
-
-        grid.Add(labelSpeakerBoost, 2, 0);
-        grid.Add(sliderSpeakerBoost, 2, 1);
-        grid.Add(labelSpeakerBoostValue, 2, 2);
-        grid.Add(buttonSpeakerBoost, 2, 3);
-
-        grid.Add(labelSpeed, 3, 0);
-        grid.Add(sliderSpeed, 3, 1);
-        grid.Add(labelSpeedValue, 3, 2);
-        grid.Add(buttonSpeed, 3, 3);
-
-        grid.Add(labelStyleExaggeration, 4, 0);
-        grid.Add(sliderStyleExaggeration, 4, 1);
-        grid.Add(labelStyleExaggerationValue, 4, 2);
-        grid.Add(buttonStyleExaggeration, 4, 3);
-
-        return grid;
+        var rows = new StackPanel { Spacing = 2 };
+        rows.Children.Add(SliderRow(Se.Language.Video.TextToSpeech.Stability, sliderStability, SliderValue(vm, nameof(vm.Stability)), buttonStability));
+        rows.Children.Add(SliderRow(Se.Language.Video.TextToSpeech.Similarity, sliderSimilarity, SliderValue(vm, nameof(vm.Similarity)), buttonSimilarity));
+        rows.Children.Add(SliderRow(Se.Language.Video.TextToSpeech.SpeakerBoost, sliderSpeakerBoost, SliderValue(vm, nameof(vm.SpeakerBoost)), buttonSpeakerBoost));
+        rows.Children.Add(SliderRow(Se.Language.General.Speed, sliderSpeed, SliderValue(vm, nameof(vm.Speed)), buttonSpeed));
+        rows.Children.Add(SliderRow(Se.Language.General.StyleExaggeration, sliderStyleExaggeration, SliderValue(vm, nameof(vm.StyleExaggeration)), buttonStyleExaggeration));
+        return rows;
     }
 
     private static TextBlock MakePositionLabel(ReviewSpeechViewModel vm)
@@ -640,9 +558,8 @@ public class ReviewSpeechWindow : Window
         var label = new TextBlock
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.PositionText)),
-            HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 16,
+            FontSize = 15,
             FontFeatures = new FontFeatureCollection { FontFeature.Parse("tnum") },
             Background = Brushes.Transparent, // hit-testable between the digits
             Cursor = new Cursor(StandardCursorType.Hand),
@@ -740,7 +657,7 @@ public class ReviewSpeechWindow : Window
         // Context menu: the row actions from the grid plus the two timing fixes that only make
         // sense here. The target is the row under the pointer (selected on open), so the items
         // take it as CommandParameter rather than relying on SelectedLine.
-        var menuPlay = new MenuItem { Header = Se.Language.Video.TextToSpeech.PlayLine, Command = vm.PlayRowCommand };
+        var menuPlay = new MenuItem { Header = Se.Language.General.PlayLine, Command = vm.PlayRowCommand };
         var menuRegenerate = new MenuItem { Header = Se.Language.Video.TextToSpeech.RegenerateAudio, Command = vm.RegenerateAudioCommand };
         var menuHistory = new MenuItem { Header = Se.Language.General.ShowHistory, Command = vm.ShowHistoryCommand };
         var menuFit = new MenuItem { Header = Se.Language.Video.TextToSpeech.FitDurationToGeneratedAudio, Command = vm.FitDurationToAudioCommand };
@@ -772,9 +689,11 @@ public class ReviewSpeechWindow : Window
             }
         };
 
+        // A plain border with a line on top - the waveform keeps its own colors
         return new Border
         {
-            Margin = new Thickness(2),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
             Height = 120,
             Child = audioVisualizer,
         };

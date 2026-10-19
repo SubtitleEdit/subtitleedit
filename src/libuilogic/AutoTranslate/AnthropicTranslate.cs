@@ -30,6 +30,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
+            "claude-sonnet-5-5",
+            "claude-opus-5-5",
+            "claude-haiku-5-5",
             "claude-sonnet-5",
             "claude-opus-5",
             "claude-opus-4-8",

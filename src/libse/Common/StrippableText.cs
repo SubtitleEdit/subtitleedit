@@ -415,7 +415,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                     lastWasBreak = true;
                                 }
                             }
-                            else if (s == ']' && idx == -1 && Pre.IndexOf('[') >= 0)
+                            else if (s == ']' && idx == -1 && Pre.Contains('['))
                             { // [ Motor roaring ] Hallo!
                                 lastWasBreak = true;
                             }
@@ -436,7 +436,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 }
                             }
                         }
-                        else if (s == '-' && Pre.IndexOf('-') >= 0)
+                        else if (s == '-' && Pre.Contains('-'))
                         {
                             if (sb.EndsWith(NewLineDash))
                             {

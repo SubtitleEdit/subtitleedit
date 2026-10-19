@@ -19,6 +19,10 @@ namespace Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 
 public class MultipleReplaceWindow : Window
 {
+    // Follow the app theme, also when it changes while the window is open
+    private static readonly IBrush ErrorBrush = EditorChrome.Themed(Color.FromRgb(255, 100, 100), Color.FromRgb(183, 28, 28));
+    private static readonly IBrush ReplacedBrush = EditorChrome.Themed(Color.FromRgb(100, 220, 100), Color.FromRgb(27, 94, 32));
+
     public MultipleReplaceWindow(MultipleReplaceViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -28,36 +32,46 @@ public class MultipleReplaceWindow : Window
         MinWidth = 850;
         MinHeight = 400;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
         var rulesView = MakeRulesView(vm, out var rulesTreeView);
         var fixesView = MakeFixesView(vm);
 
-        var buttonCollapseAll = UiUtil.MakeButton(vm.CollapseAllCommand, IconNames.Minus, Se.Language.General.Collapse);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand);
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var buttonExpandAll = UiUtil.MakeButton(vm.ExpandAllCommand, IconNames.Plus, Se.Language.General.Expand);
+        // How many lines the checked fixes change, on the left of the button bar.
+        var labelFixesInfo = EditorChrome.MakeBoundHint(nameof(vm.FixesInfo));
+        labelFixesInfo.FontSize = 12;
+        var panelButtons = EditorChrome.MakeButtonBar(labelFixesInfo, buttonApply, buttonCancel, buttonOk);
 
-        var panelExpandCollapse = new StackPanel
+        var content = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, 0, 0, 10),
-            Children =
+            ColumnDefinitions =
             {
-                buttonCollapseAll,
-                buttonExpandAll,
-            }
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star), MinWidth = 300, },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // splitter
+                new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star), MinWidth = 300, },
+            },
         };
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand);
-        var panelButtons = UiUtil.MakeButtonBar(
-            buttonOk,
-            buttonApply,
-            UiUtil.MakeButtonCancel(vm.CancelCommand)
-        );
+        // The splitter doubles as the line between the rules and the preview.
+        var splitter = new GridSplitter
+        {
+            Width = 5,
+            Background = EditorChrome.LineBrush,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            ResizeDirection = GridResizeDirection.Columns,
+        };
+
+        content.Add(rulesView, 0, 0);
+        content.Add(splitter, 0, 1);
+        content.Add(fixesView, 0, 2);
 
         var grid = new Grid
         {
@@ -66,33 +80,9 @@ public class MultipleReplaceWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star), MinWidth = 300, },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // splitter
-                new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star), MinWidth = 300, },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 2,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-
-        // Create the vertical splitter
-        var splitter = new GridSplitter
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            ResizeDirection = GridResizeDirection.Columns,
-            Margin = new Thickness(0, 0, 0, 10),
-        };
-
-        grid.Add(rulesView, 0, 0);
-        grid.Add(splitter, 0, 1);
-        grid.Add(fixesView, 0, 2);
-        grid.Add(panelExpandCollapse, 1, 0);
-        grid.Add(panelButtons, 1, 0, 1, 3);
+        grid.Add(content, 0, 0);
+        grid.Add(panelButtons, 1, 0);
 
         Content = grid;
 
@@ -102,6 +92,9 @@ public class MultipleReplaceWindow : Window
         KeyDown += vm.OnKeyDown;
     }
 
+    /// <summary>
+    /// The rules pane: a "Rules" header with the tree actions, the category/rule tree under it.
+    /// </summary>
     private static Border MakeRulesView(MultipleReplaceViewModel vm, out TreeView rulesTreeView)
     {
         var treeView = new TreeView
@@ -151,7 +144,7 @@ public class MultipleReplaceWindow : Window
             if (node.IsCategory)
             {
                 var label = UiUtil.MakeLabel(string.Empty).WithBindText(node, nameof(RuleTreeNode.CategoryName));
-                label.FontWeight = FontWeight.Bold;
+                label.FontWeight = FontWeight.SemiBold;
                 label.VerticalAlignment = VerticalAlignment.Center;
                 label.VerticalContentAlignment = VerticalAlignment.Center;
                 label.Margin = new Thickness(5, 0, 0, 0);
@@ -166,9 +159,12 @@ public class MultipleReplaceWindow : Window
                     Command = vm.NodeCategoryOpenContextMenuCommand,
                     CommandParameter = node,
                     Margin = new Thickness(5, 0, 0, 0),
-                    Padding = new Thickness(4),
+                    Padding = new Thickness(0),
+                    Width = 22,
+                    Height = 22,
                     DataContext = vm,
                 };
+                buttonCategoryActions.Classes.Add("tool");
                 buttonCategoryActions.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsMultipleReplaceDotDotDotButtonsVisible)));
                 Attached.SetIcon(buttonCategoryActions, IconNames.DotsVertical);
                 AutomationProperties.SetName(buttonCategoryActions, Se.Language.General.More);
@@ -240,9 +236,7 @@ public class MultipleReplaceWindow : Window
             // nothing (#13534).
             var labelError = new Label
             {
-                Foreground = new SolidColorBrush(UiTheme.IsDarkThemeEnabled()
-                    ? Color.FromRgb(255, 100, 100)
-                    : Color.FromRgb(183, 28, 28)),
+                Foreground = ErrorBrush,
                 VerticalAlignment = VerticalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, 4, 0),
@@ -264,15 +258,18 @@ public class MultipleReplaceWindow : Window
                 Command = vm.NodeOpenContextMenuCommand,
                 CommandParameter = node,
                 Margin = new Thickness(5, 0, 0, 0),
-                Padding = new Thickness(4),
+                Padding = new Thickness(0),
+                Width = 22,
+                Height = 22,
                 DataContext = vm,
             };
+            buttonActions.Classes.Add("tool");
             buttonActions.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsMultipleReplaceDotDotDotButtonsVisible)));
             Attached.SetIcon(buttonActions, IconNames.DotsVertical);
             AutomationProperties.SetName(buttonActions, Se.Language.General.More);
 
             var labelDescription = UiUtil.MakeLabel().WithBindText(node, nameof(RuleTreeNode.Description));
-            labelDescription.Opacity = 0.6;
+            labelDescription.Foreground = EditorChrome.FaintTextBrush;
             labelDescription.FontStyle = FontStyle.Italic;
             labelDescription.VerticalAlignment = VerticalAlignment.Center;
             labelDescription.VerticalContentAlignment = VerticalAlignment.Center;
@@ -345,27 +342,114 @@ public class MultipleReplaceWindow : Window
             }
         }, RoutingStrategies.Bubble);
 
+        AutomationProperties.SetName(treeView, Se.Language.General.Rules);
+
         var scrollViewer = new ScrollViewer
         {
             Content = treeView,
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
             HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            Padding = new Thickness(4),
         };
 
-        var border = new Border
+        // New category and import were only on the right-click menu of the empty tree area.
+        var buttonNewCategory = EditorChrome.CreateToolButton("fa-solid fa-folder-plus", Se.Language.Edit.MultipleReplace.NewCategory, vm.CategoryAddCategoryCommand, 26);
+        var buttonImport = EditorChrome.CreateToolButton("fa-solid fa-file-import", Se.Language.Edit.MultipleReplace.ImportReplaceRules, vm.CategoryImportCommand, 26);
+        var buttonCollapseAll = EditorChrome.CreateToolButton("fa-solid fa-minus", Se.Language.General.Collapse, vm.CollapseAllCommand, 26);
+        var buttonExpandAll = EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.Expand, vm.ExpandAllCommand, 26);
+
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
+        actions.Children.Add(buttonNewCategory);
+        actions.Children.Add(buttonImport);
+        actions.Children.Add(EditorChrome.MakeToolbarSeparator());
+        actions.Children.Add(buttonCollapseAll);
+        actions.Children.Add(buttonExpandAll);
+
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(actions, Dock.Right);
+        header.Children.Add(actions);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Rules));
+
+        var panel = new Grid
         {
-            BorderThickness = new Thickness(1),
-            BorderBrush = UiUtil.GetBorderBrush(),
-            Margin = new Thickness(0, 0, 0, 10),
-            Padding = new Thickness(5),
-            Child = scrollViewer,
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+            Margin = new Thickness(14, 12, 14, 14),
         };
+        panel.Add(header, 0);
+        panel.Add(EditorChrome.MakeListFrame(scrollViewer), 1);
 
-        return border;
+        return EditorChrome.MakePanel(panel);
     }
 
-    private static Border MakeFixesView(MultipleReplaceViewModel vm)
+    /// <summary>
+    /// The selected rule's fields on top (only while a rule is selected), the preview of the
+    /// fixes under them and the rules that made the selected fix at the bottom.
+    /// </summary>
+    private static Grid MakeFixesView(MultipleReplaceViewModel vm)
     {
+        var textBoxFind = new TextBox
+        {
+            MinWidth = 100,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.Find)) { Source = vm }
+        };
+        textBoxFind.Classes.Add("text");
+        AutomationProperties.SetName(textBoxFind, Se.Language.General.Find);
+        textBoxFind.TextChanged += vm.RuleTextChanged;
+
+        var textBoxReplaceWith = new TextBox
+        {
+            MinWidth = 100,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.ReplaceWith)) { Source = vm }
+        };
+        textBoxReplaceWith.Classes.Add("text");
+        AutomationProperties.SetName(textBoxReplaceWith, Se.Language.General.ReplaceWith);
+        textBoxReplaceWith.TextChanged += vm.RuleTextChanged;
+
+        var comboBoxType = new ComboBox
+        {
+            Width = 170,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.RuleTypes)) { Source = vm },
+            [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedRuleType)) { Source = vm, Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(comboBoxType, Se.Language.General.Type);
+        // no event handler needed; binding to SelectedRuleType updates RuleTreeNode.Type
+
+        var switchWholeWord = new ToggleSwitch
+        {
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.WholeWord)) { Source = vm, Mode = BindingMode.TwoWay },
+            [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.CanUseWholeWord)) { Source = vm },
+        };
+        AutomationProperties.SetName(switchWholeWord, Se.Language.Edit.Find.WholeWord);
+        switchWholeWord.IsCheckedChanged += vm.OnActiveChanged;
+        var panelWholeWord = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                switchWholeWord,
+                new TextBlock { Text = Se.Language.Edit.Find.WholeWord, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center },
+            },
+        };
+
+        // Labels above the fields: find and replace share the width, type and whole word take what they need.
         var editGrid = new Grid
         {
             RowDefinitions =
@@ -376,67 +460,31 @@ public class MultipleReplaceWindow : Window
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
-            Margin = new Thickness(0, 0, 0, 10),
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            ColumnSpacing = 5,
-        }.WithBindVisible(vm, nameof(vm.IsEditPanelVisible));
-
-        var labelFind = UiUtil.MakeLabel(Se.Language.General.Find);
-        var textBoxFind = new TextBox
-        {
-            MinWidth = 100,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.Find)) { Source = vm }
+            ColumnSpacing = 8,
+            RowSpacing = 4,
         };
-        textBoxFind.TextChanged += vm.RuleTextChanged;
 
-        var labelReplaceWith = UiUtil.MakeLabel(Se.Language.General.ReplaceWith);
-        var textBoxReplaceWith = new TextBox
-        {
-            Width = 190,
-            MinWidth = 100,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.ReplaceWith)) { Source = vm }
-        };
-        textBoxReplaceWith.TextChanged += vm.RuleTextChanged;
-
-        var labelType = UiUtil.MakeLabel(Se.Language.General.Type);
-        var comboBoxType = new ComboBox
-        {
-            Width = 190,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.RuleTypes)) { Source = vm },
-            [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedRuleType)) { Source = vm, Mode = BindingMode.TwoWay },
-        };
-        // no event handler needed; binding to SelectedRuleType updates RuleTreeNode.Type
-
-        var checkBoxWholeWord = new CheckBox
-        {
-            Content = Se.Language.Edit.Find.WholeWord,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.WholeWord)) { Source = vm, Mode = BindingMode.TwoWay },
-            [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.CanUseWholeWord)) { Source = vm },
-        };
-        checkBoxWholeWord.IsCheckedChanged += vm.OnActiveChanged;
-
-        editGrid.Add(labelFind, 0, 0);
+        editGrid.Add(EditorChrome.MakeDimLabel(Se.Language.General.Find, new Thickness(0)), 0, 0);
         editGrid.Add(textBoxFind, 1, 0);
 
-        editGrid.Add(labelReplaceWith, 0, 1);
+        editGrid.Add(EditorChrome.MakeDimLabel(Se.Language.General.ReplaceWith, new Thickness(0)), 0, 1);
         editGrid.Add(textBoxReplaceWith, 1, 1);
 
-        editGrid.Add(labelType, 0, 2);
+        editGrid.Add(EditorChrome.MakeDimLabel(Se.Language.General.Type, new Thickness(0)), 0, 2);
         editGrid.Add(comboBoxType, 1, 2);
 
-        editGrid.Add(checkBoxWholeWord, 1, 3);
+        editGrid.Add(panelWholeWord, 1, 3);
+
+        var editSection = EditorChrome.MakeEditorSection(Se.Language.Edit.MultipleReplace.EditRule, editGrid, first: true);
+        editSection.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsEditPanelVisible)) { Source = vm });
+        editSection.Background = EditorChrome.PanelBrush;
+        editSection.BorderBrush = EditorChrome.LineBrush;
+        editSection.BorderThickness = new Thickness(0, 0, 0, 1);
 
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // this is a fix preview in subtitle order, and the replace rules themselves run
@@ -532,10 +580,8 @@ public class MultipleReplaceWindow : Window
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.SelectedFixHits)) { Source = vm },
             ItemTemplate = new FuncDataTemplate<ReplaceExpression>((hit, _) =>
             {
-                var isDark = UiTheme.IsDarkThemeEnabled();
-                var redFg = new SolidColorBrush(isDark ? Color.FromRgb(255, 100, 100) : Color.FromRgb(183, 28, 28));
-                var greenFg = new SolidColorBrush(isDark ? Color.FromRgb(100, 220, 100) : Color.FromRgb(27, 94, 32));
-                var chipBg = new SolidColorBrush(isDark ? Color.FromArgb(40, 200, 200, 200) : Color.FromArgb(25, 0, 0, 0));
+                var redFg = ErrorBrush;
+                var greenFg = ReplacedBrush;
 
                 var iconLabel = new Label { Padding = new Thickness(0, 0, 2, 0), VerticalAlignment = VerticalAlignment.Center };
                 if (hit.RuleTreeNode != null)
@@ -553,6 +599,7 @@ public class MultipleReplaceWindow : Window
                 };
 
                 var arrowLabel = UiUtil.MakeLabel("→");
+                arrowLabel.Foreground = EditorChrome.FaintTextBrush;
                 arrowLabel.Margin = new Thickness(4, 0, 4, 0);
                 arrowLabel.VerticalAlignment = VerticalAlignment.Center;
                 arrowLabel.Padding = new Thickness(0);
@@ -579,7 +626,7 @@ public class MultipleReplaceWindow : Window
                     var descBlock = new TextBlock
                     {
                         Text = "  · " + hit.RuleTreeNode.Description,
-                        Opacity = 0.6,
+                        Foreground = EditorChrome.FaintTextBrush,
                         FontStyle = FontStyle.Italic,
                         VerticalAlignment = VerticalAlignment.Center,
                         TextTrimming = TextTrimming.CharacterEllipsis,
@@ -589,14 +636,17 @@ public class MultipleReplaceWindow : Window
 
                 var chip = new Border
                 {
-                    Background = chipBg,
-                    CornerRadius = new CornerRadius(3),
-                    Padding = new Thickness(6, 2, 6, 2),
+                    Background = EditorChrome.HoverBrush,
+                    CornerRadius = new CornerRadius(6),
+                    Padding = new Thickness(8, 3, 8, 3),
                     Margin = new Thickness(0, 1, 0, 1),
                     Child = row,
                     Cursor = hit.RuleTreeNode != null ? new Cursor(StandardCursorType.Hand) : null,
                 };
-                ToolTip.SetTip(chip, hit.RuleInfo);
+                if (Se.Settings.Appearance.ShowHints)
+                {
+                    ToolTip.SetTip(chip, hit.RuleInfo);
+                }
                 if (hit.RuleTreeNode != null)
                 {
                     chip.Tapped += (_, _) => vm.NavigateToRule(hit.RuleTreeNode);
@@ -607,15 +657,11 @@ public class MultipleReplaceWindow : Window
 
         var hitsPanel = new StackPanel
         {
-            Margin = new Thickness(0, 4, 0, 0),
+            Margin = new Thickness(0, 10, 0, 0),
+            Spacing = 6,
             Children =
             {
-                new TextBlock
-                {
-                    Text = Se.Language.Edit.MultipleReplace.AppliedRules,
-                    FontWeight = FontWeight.SemiBold,
-                    Margin = new Thickness(0, 0, 0, 2),
-                },
+                EditorChrome.MakeSectionHeader(Se.Language.Edit.MultipleReplace.AppliedRules),
                 new ScrollViewer
                 {
                     Content = hitsItemsControl,
@@ -626,43 +672,48 @@ public class MultipleReplaceWindow : Window
             },
         }.WithBindVisible(vm, nameof(vm.IsFixDetailPanelVisible));
 
-        var gridFixes = new Grid
+        // Tick all / untick all / invert, also on the preview's context menu (#13502).
+        var buttonSelectAll = EditorChrome.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, vm.SelectAllFixesCommand, 26);
+        var buttonSelectNone = EditorChrome.CreateToolButton("fa-regular fa-square", Se.Language.General.SelectNone, vm.SelectNoFixesCommand, 26);
+        var buttonInvert = EditorChrome.CreateToolButton("fa-solid fa-right-left", Se.Language.General.InvertSelection, vm.InvertFixesSelectionCommand, 26);
+        var previewActions = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonSelectAll, buttonSelectNone, buttonInvert },
+        };
+        var previewHeader = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(previewActions, Dock.Right);
+        previewHeader.Children.Add(previewActions);
+        previewHeader.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview));
+
+        var gridPreview = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+        gridPreview.Add(previewHeader, 0, 0);
+        gridPreview.Add(EditorChrome.MakeListFrame(dataGrid), 1, 0);
+        gridPreview.Add(hitsPanel, 2, 0);
+
+        var gridFixes = new Grid
+        {
+            RowDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
         };
+        gridFixes.Add(editSection, 0, 0);
+        gridFixes.Add(gridPreview, 1, 0);
 
-        var labelFixesInfo = new TextBlock
-        {
-            Margin = new Thickness(0, 0, 0, 4),
-            Opacity = 0.7,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.FixesInfo)) { Source = vm },
-        };
-
-        gridFixes.Add(editGrid, 0, 0);
-        gridFixes.Add(dataGrid, 1, 0);
-        gridFixes.Add(labelFixesInfo, 2, 0);
-        gridFixes.Add(hitsPanel, 3, 0);
-
-        var border = new Border
-        {
-            BorderThickness = new Thickness(1),
-            BorderBrush = UiUtil.GetBorderBrush(),
-            Margin = new Thickness(0, 0, 0, 10),
-            Padding = new Thickness(5),
-            Child = gridFixes,
-        };
-
-        return border;
+        return gridFixes;
     }
 
     // A preview with one row per changed line is far too long to untick by hand, so offer

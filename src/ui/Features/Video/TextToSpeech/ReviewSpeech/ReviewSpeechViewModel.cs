@@ -2364,7 +2364,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         IsInstructionTextVisible =
             (engine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(model))
-            || (engine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(model));
+            || (engine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(model))
+            || engine is BreezeTtsAudioCpp;
         IsInstructionPickerVisible = engine is OmniVoiceTtsCpp;
         HasInstruction = IsInstructionTextVisible || IsInstructionPickerVisible;
 
@@ -2380,6 +2381,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             Qwen3TtsCpp => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
             Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
             OmniVoiceTtsCpp => Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction ?? string.Empty,
+            BreezeTtsAudioCpp => Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppInstruction ?? string.Empty,
             _ => string.Empty,
         };
 

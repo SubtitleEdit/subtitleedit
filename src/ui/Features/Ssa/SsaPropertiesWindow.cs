@@ -1,11 +1,17 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ssa;
 
+/// <summary>
+/// The script's [Script Info] (SSA): credits, resolution and playback options - styled like ASSA draw.
+/// </summary>
 public class SsaPropertiesWindow : Window
 {
     public SsaPropertiesWindow(SsaPropertiesViewModel vm)
@@ -16,206 +22,192 @@ public class SsaPropertiesWindow : Window
             Source = vm,
             Mode = BindingMode.TwoWay,
         });
-        SizeToContent = SizeToContent.WidthAndHeight;
+        Width = 640;
+        SizeToContent = SizeToContent.Height;
         CanResize = false;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var sections = new StackPanel { Background = EditorChrome.PanelBrush };
+        sections.Children.Add(MakeScriptSection(vm, out var textBoxTitle));
+        sections.Children.Add(MakeResolutionSection(vm));
+        sections.Children.Add(MakeOptionsSection(vm));
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        grid.Add(MakeScriptView(vm, out var textBoxTitle), 0);
-        grid.Add(MakeResolutionView(vm), 1);
-        grid.Add(MakeOptionsView(vm), 2);
-        grid.Add(panelButtons, 3);
-
-        Content = grid;
+        var root = new DockPanel();
+        var buttonBar = MakeButtonBar(vm);
+        DockPanel.SetDock(buttonBar, Dock.Bottom);
+        root.Children.Add(buttonBar);
+        root.Children.Add(sections);
+        Content = root;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, textBoxTitle);
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeScriptView(SsaPropertiesViewModel vm, out TextBox firstInput)
+    /// <summary>
+    /// A dark text field with its label above it.
+    /// </summary>
+    private static TextBox MakeTextBox(string label, string property)
     {
-        var grid = new Grid
+        var textBox = new TextBox
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            RowSpacing = 5,
+            FontSize = 12.5,
+            MinHeight = 28,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(6),
+            [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
         };
-
-        var label = UiUtil.MakeLabel(Se.Language.General.Script).WithBold().WithMarginBottom(10);
-
-        var labelTitle = UiUtil.MakeLabel(Se.Language.General.Title);
-        var textBoxTitle = UiUtil.MakeTextBox(200, vm, nameof(vm.ScriptTitle));
-        firstInput = textBoxTitle;
-
-        var labelOriginalScript = UiUtil.MakeLabel(Se.Language.Assa.OriginalScript);
-        var textBoxOriginalScript = UiUtil.MakeTextBox(200, vm, nameof(vm.OriginalScript));
-
-        var labelTranslation = UiUtil.MakeLabel(Se.Language.General.Translation);
-        var textBoxTranslation = UiUtil.MakeTextBox(200, vm, nameof(vm.Translation));
-
-        var labelEditing = UiUtil.MakeLabel(Se.Language.General.Editing);
-        var textBoxEditing = UiUtil.MakeTextBox(200, vm, nameof(vm.Editing));
-
-        var labelTiming = UiUtil.MakeLabel(Se.Language.General.Timing);
-        var textBoxTiming = UiUtil.MakeTextBox(200, vm, nameof(vm.Timing));
-
-        var labelSyncPoint = UiUtil.MakeLabel(Se.Language.General.Sync);
-        var textBoxSyncPoint = UiUtil.MakeTextBox(200, vm, nameof(vm.SyncPoint));
-
-        var labelUpdatedBy = UiUtil.MakeLabel(Se.Language.General.UpdatedBy);
-        var textBoxUpdatedBy = UiUtil.MakeTextBox(200, vm, nameof(vm.UpdatedBy));
-
-        var labelUpdateDetails = UiUtil.MakeLabel(Se.Language.General.UpdateDetails);
-        var textBoxUpdateDetails = UiUtil.MakeTextBox(200, vm, nameof(vm.UpdateDetails));
-
-        grid.Add(label, 0, 0, 1, 2);
-        grid.Add(labelTitle, 1, 0);
-        grid.Add(textBoxTitle, 1, 1);
-        grid.Add(labelOriginalScript, 2, 0);
-        grid.Add(textBoxOriginalScript, 2, 1);
-        grid.Add(labelTranslation, 3, 0);
-        grid.Add(textBoxTranslation, 3, 1);
-        grid.Add(labelEditing, 4, 0);
-        grid.Add(textBoxEditing, 4, 1);
-        grid.Add(labelTiming, 5, 0);
-        grid.Add(textBoxTiming, 5, 1);
-        grid.Add(labelSyncPoint, 6, 0);
-        grid.Add(textBoxSyncPoint, 6, 1);
-        grid.Add(labelUpdatedBy, 7, 0);
-        grid.Add(textBoxUpdatedBy, 7, 1);
-        grid.Add(labelUpdateDetails, 8, 0);
-        grid.Add(textBoxUpdateDetails, 8, 1);
-
-        return UiUtil.MakeBorderForControl(grid);
+        AutomationProperties.SetName(textBox, label);
+        return textBox;
     }
 
-    private static Border MakeResolutionView(SsaPropertiesViewModel vm)
+    /// <summary>
+    /// A text field with its label above it.
+    /// </summary>
+    private static StackPanel MakeTextField(string label, string property, out TextBox textBox)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-        };
-
-        var label = UiUtil.MakeLabel(Se.Language.General.Resolution).WithBold().WithMarginBottom(10);
-
-        var labelVideoResolution = UiUtil.MakeLabel(Se.Language.General.VideoResolution);
-        var numericUpDownWidth = UiUtil.MakeNumericUpDownInt(0, 10000, 1920, 120, vm, nameof(vm.VideoWidth));
-        var labelX = UiUtil.MakeLabel("x");
-        var numericUpDownHeight = UiUtil.MakeNumericUpDownInt(0, 10000, 1080, 120, vm, nameof(vm.VideoHeight));
-        var buttonBrowseResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, null, Se.Language.General.VideoResolution);
-        var buttonFromCurrentVideo = UiUtil.MakeButton(Se.Language.General.PickResolutionFromCurrentVideo, vm.GetResolutionFromCurrentVideoCommand);
-
-        grid.Add(label, 0, 0, 1, 6);
-        grid.Add(labelVideoResolution, 1, 0);
-        grid.Add(numericUpDownWidth, 1, 1);
-        grid.Add(labelX, 1, 2);
-        grid.Add(numericUpDownHeight, 1, 3);
-        grid.Add(buttonBrowseResolution, 1, 4);
-        grid.Add(buttonFromCurrentVideo, 1, 5);
-
-        return UiUtil.MakeBorderForControl(grid);
+        textBox = MakeTextBox(label, property);
+        var panel = new StackPanel { Spacing = 4 };
+        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = EditorChrome.DimTextBrush });
+        panel.Children.Add(textBox);
+        return panel;
     }
 
-    private static Border MakeOptionsView(SsaPropertiesViewModel vm)
+    private static Border MakeScriptSection(SsaPropertiesViewModel vm, out TextBox firstInput)
     {
+        var title = MakeTextField(Se.Language.General.Title, nameof(vm.ScriptTitle), out firstInput);
+
+        // The credits two by two
         var grid = new Grid
         {
-            RowDefinitions =
+            ColumnSpacing = 12,
+            RowSpacing = 10,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto) },
+        };
+        grid.Add(MakeTextField(Se.Language.Assa.OriginalScript, nameof(vm.OriginalScript), out _), 0, 0);
+        grid.Add(MakeTextField(Se.Language.General.Translation, nameof(vm.Translation), out _), 0, 1);
+        grid.Add(MakeTextField(Se.Language.General.Editing, nameof(vm.Editing), out _), 1, 0);
+        grid.Add(MakeTextField(Se.Language.General.Timing, nameof(vm.Timing), out _), 1, 1);
+        grid.Add(MakeTextField(Se.Language.General.Sync, nameof(vm.SyncPoint), out _), 2, 0);
+        grid.Add(MakeTextField(Se.Language.General.UpdatedBy, nameof(vm.UpdatedBy), out _), 2, 1);
+
+        var content = new StackPanel { Spacing = 10 };
+        content.Children.Add(title);
+        content.Children.Add(grid);
+        content.Children.Add(MakeTextField(Se.Language.General.UpdateDetails, nameof(vm.UpdateDetails), out _));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Script, content, first: true);
+    }
+
+    private static Border MakeResolutionSection(SsaPropertiesViewModel vm)
+    {
+        var width = EditorChrome.MakeField(nameof(vm.VideoWidth), 0, 10000, 90, "W");
+        var height = EditorChrome.MakeField(nameof(vm.VideoHeight), 0, 10000, 90, "H");
+        AutomationProperties.SetName(width, Se.Language.General.Width);
+        AutomationProperties.SetName(height, Se.Language.General.Height);
+
+        var browse = EditorChrome.CreateToolButton("fa-solid fa-folder-open", Se.Language.General.VideoResolution, vm.BrowseResolutionCommand, 28);
+        var fromVideo = EditorChrome.CreateToolButton("fa-solid fa-film", Se.Language.General.PickResolutionFromCurrentVideo, vm.GetResolutionFromCurrentVideoCommand, 28);
+        fromVideo.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ShowGetResolutionFromCurrentVideo)) { Source = vm });
+
+        var size = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+        size.Children.Add(width);
+        size.Children.Add(new TextBlock { Text = "×", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center });
+        size.Children.Add(height);
+        size.Children.Add(browse);
+        size.Children.Add(fromVideo);
+
+        // Common sizes, one click each; the active one lit
+        var presets = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        foreach (var (text, w, h) in new[] { ("640 × 360", 640, 360), ("1280 × 720", 1280, 720), ("1920 × 1080", 1920, 1080), ("3840 × 2160", 3840, 2160) })
+        {
+            var button = new Button
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
+                Content = new TextBlock { Text = text, FontSize = 12, Margin = new Thickness(8, 0) },
+                Height = 26,
+                VerticalContentAlignment = VerticalAlignment.Center,
+            };
+            button.Classes.Add("tool");
+            AutomationProperties.SetName(button, text);
+            button.Click += (_, _) =>
+            {
+                vm.VideoWidth = w;
+                vm.VideoHeight = h;
+            };
+
+            void Update() => button.Classes.Set("active", vm.VideoWidth == w && vm.VideoHeight == h);
+            Update();
+            vm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName is nameof(vm.VideoWidth) or nameof(vm.VideoHeight))
+                {
+                    Update();
+                }
+            };
+            presets.Children.Add(button);
+        }
+
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(size);
+        content.Children.Add(presets);
+        return EditorChrome.MakeEditorSection(Se.Language.General.VideoResolution, content);
+    }
+
+    private static Border MakeOptionsSection(SsaPropertiesViewModel vm)
+    {
+        var collisions = UiUtil.MakeComboBox(vm.Collisions, vm, nameof(vm.SelectedCollision));
+        collisions.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(collisions, Se.Language.Assa.Collisions);
+        var playDepth = EditorChrome.MakeField(nameof(vm.PlayDepth), 0, 32);
+        playDepth.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(playDepth, Se.Language.Assa.PlayDepth);
+        var timer = MakeTextBox(Se.Language.Assa.Timer, nameof(vm.Timer));
+
+        var grid = new Grid
+        {
+            ColumnSpacing = 12,
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition(new GridLength(2, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            RowSpacing = 5,
         };
+        grid.Add(Labeled(Se.Language.Assa.Collisions, collisions), 0, 0);
+        grid.Add(Labeled(Se.Language.Assa.PlayDepth, playDepth), 0, 1);
+        grid.Add(Labeled(Se.Language.Assa.Timer, timer), 0, 2);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, grid);
+    }
 
-        var label = UiUtil.MakeLabel(Se.Language.General.Options).WithBold().WithMarginBottom(10);
+    private static StackPanel Labeled(string label, Control control)
+    {
+        var panel = new StackPanel { Spacing = 4 };
+        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = EditorChrome.DimTextBrush, TextTrimming = TextTrimming.CharacterEllipsis });
+        panel.Children.Add(control);
+        return panel;
+    }
 
-        var labelCollisions = UiUtil.MakeLabel(Se.Language.Assa.Collisions);
-        var comboBoxCollisions = UiUtil.MakeComboBox(vm.Collisions, vm, nameof(vm.SelectedCollision));
+    private static Border MakeButtonBar(SsaPropertiesViewModel vm)
+    {
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, HorizontalAlignment = HorizontalAlignment.Right };
+        buttons.Children.Add(buttonCancel);
+        buttons.Children.Add(buttonOk);
 
-        var labelPlayDepth = UiUtil.MakeLabel(Se.Language.Assa.PlayDepth);
-        var numericUpDownPlayDepth = UiUtil.MakeNumericUpDownInt(0, 32, 0, 120, vm, nameof(vm.PlayDepth));
-
-        var labelTimer = UiUtil.MakeLabel(Se.Language.Assa.Timer);
-        var textBoxTimer = UiUtil.MakeTextBox(120, vm, nameof(vm.Timer));
-
-        grid.Add(label, 0, 0, 1, 2);
-        grid.Add(labelCollisions, 1, 0);
-        grid.Add(comboBoxCollisions, 1, 1);
-        grid.Add(labelPlayDepth, 2, 0);
-        grid.Add(numericUpDownPlayDepth, 2, 1);
-        grid.Add(labelTimer, 3, 0);
-        grid.Add(textBoxTimer, 3, 1);
-
-        return UiUtil.MakeBorderForControl(grid);
+        return new Border
+        {
+            Child = buttons,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 10),
+        };
     }
 }

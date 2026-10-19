@@ -1,17 +1,28 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Assa.FontCollector;
 
+/// <summary>
+/// Fonts used by the subtitle, installed fonts and SE's collected fonts - styled like ASSA draw:
+/// view switcher and actions on top, the list, the sample-text preview under it, status in the
+/// button bar.
+/// </summary>
 public class FontCollectorWindow : Window
 {
+    private static readonly IBrush FoundBrush = new ImmutableSolidColorBrush(Color.FromRgb(46, 160, 90));
+    private static readonly IBrush NotFoundBrush = new ImmutableSolidColorBrush(Color.FromRgb(220, 70, 70));
+
     private readonly FontCollectorViewModel _vm;
 
     public FontCollectorWindow(FontCollectorViewModel vm)
@@ -19,103 +30,173 @@ public class FontCollectorWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Assa.FontCollectorTitle;
         CanResize = true;
-        Width = 800;
-        Height = 500;
-        MinWidth = 600;
-        MinHeight = 400;
+        Width = 960;
+        Height = 680;
+        MinWidth = 700;
+        MinHeight = 480;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var tabControl = new TabControl
-        {
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Items =
-            {
-                new TabItem
-                {
-                    Header = MakeTabHeader(IconNames.ClosedCaption, Se.Language.Assa.FontCollectorCurrentSubtitle),
-                    Content = MakeCurrentSubtitleView(vm),
-                },
-                new TabItem
-                {
-                    Header = MakeTabHeader(IconNames.CaseSensitiveAlt, Se.Language.Tools.PickFontNameInstalledFonts),
-                    Content = MakeInstalledFontsView(vm),
-                },
-                new TabItem
-                {
-                    Header = MakeTabHeader(IconNames.Folder, Se.Language.Tools.PickFontNameCollectedFonts),
-                    Content = MakeCollectedFontsView(vm),
-                },
-            },
-        };
-        tabControl.Bind(TabControl.SelectedIndexProperty, new Binding(nameof(vm.SelectedTabIndex)) { Source = vm, Mode = BindingMode.TwoWay });
+        // One list per view; only the selected one shows
+        var lists = new Panel();
+        lists.Children.Add(OnTab(vm, 0, MakeCurrentSubtitleList(vm)));
+        lists.Children.Add(OnTab(vm, 1, MakeInstalledFontsList(vm)));
+        lists.Children.Add(OnTab(vm, 2, MakeCollectedFontsList(vm)));
 
-        var grid = new Grid
+        var content = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(new GridLength(190)),
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        content.Add(new Border
+        {
+            Child = lists,
+            Background = EditorChrome.PanelBrush,
+            Padding = new Thickness(8),
+        }, 0, 0);
+        content.Add(MakePreview(vm), 1, 0);
 
-        grid.Add(tabControl, 0);
-        grid.Add(UiUtil.MakeButtonBar(UiUtil.MakeButtonDone(vm.CloseCommand)), 1);
-
-        Content = grid;
+        var mainGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
+            },
+        };
+        mainGrid.Add(MakeToolbar(vm), 0, 0);
+        mainGrid.Add(content, 1, 0);
+        mainGrid.Add(MakeButtonBar(vm), 2, 0);
+        Content = mainGrid;
     }
 
-    /// <summary>The fonts the current subtitle uses, with found/not-found status and copy actions.</summary>
-    private static Grid MakeCurrentSubtitleView(FontCollectorViewModel vm)
+    private static T OnTab<T>(FontCollectorViewModel vm, int index, T control) where T : Control
     {
-        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.Assa.FontCollectorCurrentSubtitle); // the tab header (#12087)
+        control.Bind(IsVisibleProperty, new Binding(nameof(vm.SelectedTabIndex))
+        {
+            Source = vm,
+            Converter = new FuncValueConverter<int, bool>(selected => selected == index),
+        });
+        return control;
+    }
+
+    /// <summary>
+    /// Icon button with its label beside it, for the toolbar.
+    /// </summary>
+    private static Button MakeAction(string icon, string text, System.Windows.Input.ICommand? command)
+    {
+        var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 7, Margin = new Thickness(10, 0) };
+        content.Children.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 13, VerticalAlignment = VerticalAlignment.Center });
+        content.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        var button = new Button
+        {
+            Content = content,
+            Height = 30,
+            Command = command,
+            VerticalContentAlignment = VerticalAlignment.Center,
+        };
+        button.Classes.Add("tool");
+
+        // Icon + label in a panel: a screen reader needs the name spelled out (#12087)
+        AutomationProperties.SetName(button, text);
+        return button;
+    }
+
+    private static Border MakeToolbar(FontCollectorViewModel vm)
+    {
+        // View switcher: the active view lit
+        var views = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
+        foreach (var (index, icon, text) in new[]
+                 {
+                     (0, "fa-solid fa-closed-captioning", Se.Language.Assa.FontCollectorCurrentSubtitle),
+                     (1, "fa-solid fa-font", Se.Language.Tools.PickFontNameInstalledFonts),
+                     (2, "fa-solid fa-folder", Se.Language.Tools.PickFontNameCollectedFonts),
+                 })
+        {
+            var button = MakeAction(icon, text, null);
+            button.Click += (_, _) => vm.SelectedTabIndex = index;
+
+            void Update() => button.Classes.Set("active", vm.SelectedTabIndex == index);
+            Update();
+            vm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(vm.SelectedTabIndex))
+                {
+                    Update();
+                }
+            };
+            views.Children.Add(button);
+        }
+
+        // Actions for the view on show
+        var subtitleActions = OnTab(vm, 0, new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 });
+        subtitleActions.Children.Add(MakeAction("fa-solid fa-paperclip", Se.Language.Assa.FontCollectorEmbedFontsDotDotDot, vm.EmbedFontsInSubtitleCommand));
+        subtitleActions.Children.Add(MakeAction("fa-solid fa-copy", Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyFontsToSeFontsFolderCommand));
+
+        var installedActions = OnTab(vm, 1, new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 });
+        installedActions.Children.Add(MakeAction("fa-solid fa-copy", Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyInstalledFontToSeFontsFolderCommand));
+
+        var collectedActions = OnTab(vm, 2, new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 });
+        collectedActions.Children.Add(MakeAction("fa-solid fa-file-import", Se.Language.Assa.FontCollectorImportFontDotDotDot, vm.ImportFontCommand));
+        collectedActions.Children.Add(MakeAction("fa-solid fa-folder-open", Se.Language.Assa.FontCollectorOpenFontsFolder, vm.OpenSeFontsFolderCommand));
+
+        var actions = new Panel();
+        actions.Children.Add(subtitleActions);
+        actions.Children.Add(installedActions);
+        actions.Children.Add(collectedActions);
+
+        var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
+        panel.Children.Add(views);
+        panel.Children.Add(EditorChrome.MakeToolbarSeparator());
+        panel.Children.Add(actions);
+
+        return new Border
+        {
+            Child = panel,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(10, 6),
+        };
+    }
+
+    private static SeTableViewColumn Column(string header, string property, GridLength width) => new()
+    {
+        Header = header,
+        CellTheme = UiUtil.TableViewCellTheme,
+        HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+        Binding = new Binding(property),
+        Width = width,
+    };
+
+    /// <summary>The fonts the current subtitle uses, with a found/embedded/not-found badge.</summary>
+    private static TableView MakeCurrentSubtitleList(FontCollectorViewModel vm)
+    {
+        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.Assa.FontCollectorCurrentSubtitle); // the view name (#12087)
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.FontItems;
 
-        var fontNameColumn = new SeTableViewColumn
-        {
-            Header = Se.Language.General.FontName,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(FontCollectorItem.FontName)),
-            Width = new GridLength(180),
-        };
-        var usedInColumn = new SeTableViewColumn
-        {
-            Header = Se.Language.Assa.FontCollectorUsedIn,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(FontCollectorItem.UsedIn)),
-            Width = new GridLength(1, GridUnitType.Star),
-        };
+        var fontNameColumn = Column(Se.Language.General.FontName, nameof(FontCollectorItem.FontName), new GridLength(200));
+        var usedInColumn = Column(Se.Language.Assa.FontCollectorUsedIn, nameof(FontCollectorItem.UsedIn), new GridLength(1, GridUnitType.Star));
         var statusColumn = new SeTableViewColumn
         {
             Header = Se.Language.General.Status,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(FontCollectorItem.Status)),
+            CellTemplate = new FuncDataTemplate<FontCollectorItem>((_, _) => MakeStatusBadge()),
+            NameBinding = new Binding(nameof(FontCollectorItem.Status)),
             Width = new GridLength(120),
         };
-        var fontFilesColumn = new SeTableViewColumn
-        {
-            Header = Se.Language.Assa.FontCollectorFontFiles,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(FontCollectorItem.FileDisplay)),
-            Width = new GridLength(1, GridUnitType.Star),
-        };
+        var fontFilesColumn = Column(Se.Language.Assa.FontCollectorFontFiles, nameof(FontCollectorItem.FileDisplay), new GridLength(1, GridUnitType.Star));
         dataGrid.Columns.Add(fontNameColumn);
         dataGrid.Columns.Add(usedInColumn);
         dataGrid.Columns.Add(statusColumn);
@@ -132,117 +213,66 @@ public class FontCollectorWindow : Window
             .AddSortable<FontCollectorItem, string>(statusColumn, x => x.Status)
             .AddSortable<FontCollectorItem, string>(fontFilesColumn, x => x.FileDisplay);
 
-        var statusText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.8,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
-        };
-
-        var buttonEmbedFonts = UiUtil.MakeButton(Se.Language.Assa.FontCollectorEmbedFontsDotDotDot, vm.EmbedFontsInSubtitleCommand)
-            .WithIconLeft(IconNames.Paperclip);
-        var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyFontsToSeFontsFolderCommand)
-            .WithIconLeft(IconNames.FormatFont);
-        var checkBoxTrimFonts = UiUtil.MakeCheckBox(Se.Language.Assa.FontCollectorTrimFonts, vm, nameof(vm.TrimFontsToUsedCharacters));
-        var buttonBar = UiUtil.MakeButtonBar(buttonEmbedFonts, buttonCopyToSeFolder, checkBoxTrimFonts);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            RowSpacing = 5,
-            ColumnSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(dataGrid, 0, 0, 1, 2);
-        grid.Add(statusText, 1, 0);
-        grid.Add(buttonBar, 1, 1);
-        grid.Add(MakeFontPreviewView(vm), 2, 0, 1, 2);
-
-        return grid;
+        return dataGrid;
     }
 
-    /// <summary>All fonts installed on this machine, with a sample-text preview.</summary>
-    private static Grid MakeInstalledFontsView(FontCollectorViewModel vm)
+    /// <summary>
+    /// Status as a small colored pill: found green, embedded accent, not found red.
+    /// </summary>
+    private static Border MakeStatusBadge()
+    {
+        IBrush BrushFor(string? status)
+        {
+            if (status == Se.Language.Assa.FontCollectorFound)
+            {
+                return FoundBrush;
+            }
+
+            if (status == Se.Language.Assa.FontCollectorNotFound)
+            {
+                return NotFoundBrush;
+            }
+
+            return EditorChrome.AccentBrush;
+        }
+
+        return new Border
+        {
+            CornerRadius = new CornerRadius(9),
+            Padding = new Thickness(8, 1),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!Border.BackgroundProperty] = new Binding(nameof(FontCollectorItem.Status)) { Converter = new FuncValueConverter<string, IBrush>(BrushFor) },
+            [!Border.IsVisibleProperty] = new Binding(nameof(FontCollectorItem.Status)) { Converter = StringConverters.IsNotNullOrEmpty },
+            Child = new TextBlock
+            {
+                FontSize = 11.5,
+                FontWeight = FontWeight.SemiBold,
+                Foreground = Brushes.White,
+                [!TextBlock.TextProperty] = new Binding(nameof(FontCollectorItem.Status)),
+            },
+        };
+    }
+
+    /// <summary>All fonts installed on this machine.</summary>
+    private static TableView MakeInstalledFontsList(FontCollectorViewModel vm)
     {
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.Tools.PickFontNameInstalledFonts);
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.InstalledFontNames;
-
-        var fontNameColumn = new SeTableViewColumn
-        {
-            Header = Se.Language.General.FontName,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding("."),
-            Width = new GridLength(1, GridUnitType.Star),
-        };
-        dataGrid.Columns.Add(fontNameColumn);
+        dataGrid.Columns.Add(Column(Se.Language.General.FontName, ".", new GridLength(1, GridUnitType.Star)));
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedInstalledFontName)));
-
-        var buttonCopyToSeFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorCopyFontsToSeFontsFolder, vm.CopyInstalledFontToSeFontsFolderCommand)
-            .WithIconLeft(IconNames.FormatFont);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
-        grid.Add(UiUtil.MakeButtonBar(buttonCopyToSeFolder), 1);
-        grid.Add(MakeFontPreviewView(vm), 2);
-
-        return grid;
+        return dataGrid;
     }
 
-    /// <summary>The fonts collected in SE's own Fonts folder, with a sample-text preview.</summary>
-    private static Grid MakeCollectedFontsView(FontCollectorViewModel vm)
+    /// <summary>The fonts collected in SE's own Fonts folder.</summary>
+    private static TableView MakeCollectedFontsList(FontCollectorViewModel vm)
     {
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.Tools.PickFontNameCollectedFonts);
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.CollectedFonts;
-
-        var fontNameColumn = new SeTableViewColumn
-        {
-            Header = Se.Language.General.FontName,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(CollectedFont.Name)),
-            Width = new GridLength(220),
-        };
-        var fileColumn = new SeTableViewColumn
-        {
-            Header = Se.Language.Assa.FontCollectorFontFiles,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(CollectedFont.FilePath)),
-            Width = new GridLength(1, GridUnitType.Star),
-        };
-        dataGrid.Columns.Add(fontNameColumn);
-        dataGrid.Columns.Add(fileColumn);
+        dataGrid.Columns.Add(Column(Se.Language.General.FontName, nameof(CollectedFont.Name), new GridLength(240)));
+        dataGrid.Columns.Add(Column(Se.Language.Assa.FontCollectorFontFiles, nameof(CollectedFont.FilePath), new GridLength(1, GridUnitType.Star)));
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedCollectedFont)));
         dataGrid.KeyDown += vm.CollectedFontsGridKeyDown;
 
@@ -251,73 +281,82 @@ public class FontCollectorWindow : Window
         dataGrid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        var menuItemDelete = new Avalonia.Controls.MenuItem
+        var menuItemDelete = new MenuItem
         {
             Header = Se.Language.General.Delete,
             DataContext = vm,
             Command = vm.DeleteCollectedFontCommand,
         };
-        menuItemDelete.Bind(Avalonia.Controls.MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteCollectedFontVisible)) { Source = vm });
+        menuItemDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteCollectedFontVisible)) { Source = vm });
         flyout.Items.Add(menuItemDelete);
 
-        var buttonImportFont = UiUtil.MakeButton(Se.Language.Assa.FontCollectorImportFontDotDotDot, vm.ImportFontCommand)
-            .WithIconLeft(IconNames.Import);
-        var buttonOpenFolder = UiUtil.MakeButton(Se.Language.Assa.FontCollectorOpenFontsFolder, vm.OpenSeFontsFolderCommand)
-            .WithIconLeft(IconNames.FolderOpen);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
-        grid.Add(UiUtil.MakeButtonBar(buttonImportFont, buttonOpenFolder), 1);
-        grid.Add(MakeFontPreviewView(vm), 2);
-
-        return grid;
+        return dataGrid;
     }
 
-    private static StackPanel MakeTabHeader(string iconName, string text)
-    {
-        var icon = new ContentControl { VerticalAlignment = VerticalAlignment.Center };
-        Attached.SetIcon(icon, iconName);
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            Children =
-            {
-                icon,
-                new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center },
-            },
-        };
-    }
-
-    private static Border MakeFontPreviewView(FontCollectorViewModel vm)
+    private static Border MakePreview(FontCollectorViewModel vm)
     {
         var image = new Image
         {
             [!Image.SourceProperty] = new Binding(nameof(vm.FontPreview)),
             DataContext = vm,
             HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
+            VerticalAlignment = VerticalAlignment.Center,
             Stretch = Stretch.Uniform,
+            StretchDirection = StretchDirection.DownOnly,
+        };
+        var stage = new Border
+        {
+            Child = image,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(12),
         };
 
-        return UiUtil.MakeBorderForControl(image);
+        var panel = new Grid { RowSpacing = 8, RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) } };
+        panel.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0, 0);
+        panel.Add(stage, 1, 0);
+        return new Border
+        {
+            Child = panel,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 10, 14, 12),
+        };
+    }
+
+    private static Border MakeButtonBar(FontCollectorViewModel vm)
+    {
+        var status = new TextBlock
+        {
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
+        };
+
+        var buttonDone = UiUtil.MakeButtonDone(vm.CloseCommand);
+        buttonDone.Classes.Add("primary");
+
+        // Embed option, beside Done while the subtitle's fonts show
+        var trim = OnTab(vm, 0, EditorChrome.MakeToggleRow(nameof(vm.TrimFontsToUsedCharacters), Se.Language.Assa.FontCollectorTrimFonts));
+        trim.Margin = new Thickness(0, 0, 16, 0);
+
+        var bar = new DockPanel();
+        DockPanel.SetDock(buttonDone, Dock.Right);
+        DockPanel.SetDock(trim, Dock.Right);
+        bar.Children.Add(buttonDone);
+        bar.Children.Add(trim);
+        bar.Children.Add(status);
+        return new Border
+        {
+            Child = bar,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 10),
+        };
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -6,6 +7,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.MediaInfoView;
 
+/// <summary>
+/// Media information, in the editor look (see <see cref="EditorChrome"/>): the report (the view
+/// model puts its text box in the content border), Open containing folder and OK at the bottom.
+/// </summary>
 public class MediaInfoViewWindow : Window
 {
     public MediaInfoViewWindow(MediaInfoViewViewModel vm)
@@ -17,6 +22,7 @@ public class MediaInfoViewWindow : Window
         MinWidth = 500;
         MinHeight = 400;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -29,32 +35,17 @@ public class MediaInfoViewWindow : Window
         };
         vm.TextBoxContainer = contentBorder;
 
-        var buttonOpenContainingFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenContainingFolderCommand);
+        var buttonOpenContainingFolder = EditorChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.OpenContainingFolderCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOpenContainingFolder, buttonOk);
+        buttonOk.Classes.Add("primary");
 
-        var grid = new Grid
+        var body = new Border
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 0,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Child = contentBorder, // the view model's text box brings its own frame
+            Padding = new Thickness(14),
         };
 
-        grid.Add(contentBorder, 0);
-        grid.Add(buttonPanel, 1);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(body, EditorChrome.MakeDockedButtonBar(buttonOpenContainingFolder, buttonOk));
 
         AddHandler(KeyDownEvent, vm.OnKeyDownHandler, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
     }

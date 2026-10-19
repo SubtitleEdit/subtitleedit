@@ -18,9 +18,7 @@ public class LanguageAiReview
     public string CategoryGrammar { get; set; }
     public string CategoryPunctuation { get; set; }
     public string CategoryCasing { get; set; }
-    public string CategoryOther { get; set; }
     public string XNeedACloserLook { get; set; }
-    public string LineX { get; set; }
     public string LinesXToY { get; set; }
     public string LargeChangeWarning { get; set; }
     public string MismatchWarning { get; set; }
@@ -61,9 +59,7 @@ public class LanguageAiReview
         CategoryGrammar = "Grammar";
         CategoryPunctuation = "Punctuation";
         CategoryCasing = "Casing";
-        CategoryOther = "Other";
         XNeedACloserLook = "{0} suggestion(s) need a closer look";
-        LineX = "Line {0}";
         LinesXToY = "Lines {0}-{1}";
         LargeChangeWarning = "Large change - looks like a rewrite, review carefully";
         MismatchWarning = "Does not resemble the original - may belong to a different line";

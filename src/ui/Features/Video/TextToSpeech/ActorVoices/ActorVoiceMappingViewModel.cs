@@ -313,7 +313,7 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
         // Mirrors the engines that opt into RefreshInstructionVisibility in the main TTS VM. We
         // expose the field unconditionally for these engines - the cast dialog doesn't know which
         // sub-model the row will use, and an unused instruction is harmless.
-        return engine is Qwen3TtsCpp or Qwen3TtsCrispAsr or OmniVoiceTtsCpp;
+        return engine is Qwen3TtsCpp or Qwen3TtsCrispAsr or OmniVoiceTtsCpp or BreezeTtsAudioCpp;
     }
 
     // True when opening the row-settings sub-window would actually surface usable controls for
@@ -322,6 +322,7 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
     //   - Qwen3:     only if the VoiceDesign model is selected (other Qwen3 models ignore the
     //                instruction field)
     //   - OmniVoice: always (cloned voices still get the disabled picker with a note)
+    //   - Breeze:    always (voice design or delivery direction)
     //   - others:    never
     private static bool HasAdvancedSettingsForRow(ITtsEngine? engine, string? model)
     {
@@ -330,6 +331,7 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
             Qwen3TtsCpp => Qwen3TtsCpp.IsVoiceDesignModel(model),
             Qwen3TtsCrispAsr => Qwen3TtsCrispAsr.IsVoiceDesignModel(model),
             OmniVoiceTtsCpp => true,
+            BreezeTtsAudioCpp => true,
             _ => false,
         };
     }

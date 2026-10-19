@@ -41,6 +41,10 @@ public class AssaDrawShapeLibraryTests
         }
 
         Assert.Equal(2, ShapeLibrary.BuiltIn.First(i => i.Name == Se.Language.Assa.DrawShapeRing).Template.Count);
+
+        // Face + two eyes + mouth: the eyes and mouth are holes
+        Assert.Equal(4, ShapeLibrary.BuiltIn.First(i => i.Name == Se.Language.Assa.DrawShapeSmiley).Template.Count);
+        Assert.Equal(4, ShapeLibrary.BuiltIn.First(i => i.Name == Se.Language.Assa.DrawShapeSadSmiley).Template.Count);
         Assert.True(ShapeLibrary.BuiltIn.Count(i => i.Category == Se.Language.Assa.DrawCategorySpeechBubbles) >= 6);
     }
 
@@ -158,5 +162,22 @@ public class AssaDrawShapeLibraryTests
         {
             window.Close();
         }
+    }
+
+    [Fact]
+    public void DropFromPalette_PlacesDefaultSize_CenteredOnTheDrop_AndSelectsIt()
+    {
+        var vm = MakeViewModel();
+        var item = ShapeLibrary.BuiltIn.First(i => i.Name == Se.Language.Assa.DrawShapeArrow);
+
+        vm.DropLibraryShape(item, 600, 400);
+
+        var shape = Assert.Single(vm.Shapes);
+        var (left, top, right, bottom) = shape.GetBounds();
+        Assert.Equal(600, (left + right) / 2, 0);
+        Assert.Equal(400, (top + bottom) / 2, 0);
+        Assert.Equal(1920 / 5f, right - left, 0);
+        Assert.Same(item, vm.CurrentLibraryShape);
+        Assert.Same(shape, vm.SelectedTreeItem?.Shape);
     }
 }

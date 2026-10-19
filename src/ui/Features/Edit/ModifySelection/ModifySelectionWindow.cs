@@ -9,9 +9,14 @@ using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 
+/// <summary>
+/// Modify selection, in the editor look (see <see cref="EditorChrome"/>): the rule and how to combine
+/// with the current selection side by side, the preview list below, Cancel and OK at the bottom.
+/// </summary>
 public class ModifySelectionWindow : Window
 {
     public ModifySelectionWindow(ModifySelectionViewModel vm)
@@ -23,43 +28,44 @@ public class ModifySelectionWindow : Window
         Height = 700;
         MinWidth = 825;
         MinHeight = 450;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        var top = new Grid
+        {
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
+        };
+        top.Add(MakeRulesView(vm, out var comboBoxRules, out var textbox), 0, 0);
+        top.Add(new Border
+        {
+            Child = MakeSelectionView(vm),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
+
+        var sections = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        sections.Add(top, 0, 0);
+        sections.Add(MakeSubtitleView(vm), 1, 0);
 
-        grid.Add(MakeRulesView(vm, out TextBox textbox), 0);
-        grid.Add(MakeSelectionView(vm), 0, 1);
-        grid.Add(MakeSubtitleView(vm), 1, 0, 1, 2);
-        grid.Add(panelButtons, 3, 0, 1, 2);
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
-        Content = grid;
-
+        // The rule (or its text) gets first focus, not an action button - a focused button
+        // clicks on bare Space.
         UiUtil.FocusOnFirstActivation(this, () =>
         {
-            buttonOk.Focus();
+            comboBoxRules.Focus();
             if (textbox.IsVisible)
             {
                 textbox.Focus();
@@ -71,35 +77,21 @@ public class ModifySelectionWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Border MakeRulesView(ModifySelectionViewModel vm, out TextBox textBoxRuleText)
+    private static Border MakeRulesView(ModifySelectionViewModel vm, out ComboBox comboBoxRules, out TextBox textBoxRuleText)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            VerticalAlignment = VerticalAlignment.Top,
-        };
-
-        var comboBoxRules = UiUtil.MakeComboBox(vm.Rules, vm, nameof(vm.SelectedRule)).WithWidth(230).WithTopAlignment()
+        comboBoxRules = UiUtil.MakeComboBox(vm.Rules, vm, nameof(vm.SelectedRule)).WithWidth(230).WithTopAlignment()
             .WithAccessibleName(Se.Language.General.Rules); // #12087: the rule row has no visible labels
         comboBoxRules.SelectionChanged += (sender, args) => vm.OnRuleChanged();
 
         textBoxRuleText = UiUtil.MakeTextBox(150, vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.Text));
+        textBoxRuleText.Classes.Add("text");
         textBoxRuleText.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasText));
         textBoxRuleText.WithAccessibleName(Se.Language.General.Text);
         textBoxRuleText.TextChanged += (sender, args) => vm.OnRuleChanged();
 
         var numericUpDownRuleNumber = UiUtil.MakeNumericUpDownInt(0, 10000, 0, 150, vm);
+        numericUpDownRuleNumber.Classes.Add("field");
+        numericUpDownRuleNumber.VerticalAlignment = VerticalAlignment.Top;
         numericUpDownRuleNumber.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Path = nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.Number),
@@ -145,35 +137,40 @@ public class ModifySelectionWindow : Window
             Binding = new Binding(nameof(StyleDisplay.Name)),
             Width = new GridLength(1, GridUnitType.Star),
         });
-        dataGridMultiSelect.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasMultiSelect));
+        var frameMultiSelect = EditorChrome.MakeListFrame(dataGridMultiSelect, clearListBackground: true);
+        frameMultiSelect.VerticalAlignment = VerticalAlignment.Top;
+        frameMultiSelect.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasMultiSelect));
         dataGridMultiSelect.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.MultiSelectItems)) { Source = vm });
 
-        var buttonRuleSettings = UiUtil.MakeButton(Se.Language.General.Settings, vm.ShowRuleSettingsCommand).WithTopAlignment();
+        var buttonRuleSettings = EditorChrome.MakeTextToolButton("fa-solid fa-gear", Se.Language.General.Settings, vm.ShowRuleSettingsCommand);
+        buttonRuleSettings.VerticalAlignment = VerticalAlignment.Top;
         buttonRuleSettings.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasSettings));
 
         var panelRule = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 10,
+            Spacing = 8,
             HorizontalAlignment = HorizontalAlignment.Left,
             Children =
             {
                 comboBoxRules,
                 textBoxRuleText,
                 numericUpDownRuleNumber,
-                dataGridMultiSelect,
+                frameMultiSelect,
                 buttonRuleSettings,
             },
         };
 
-        var checkBoxRuleCaseSensitive = UiUtil.MakeCheckBox(Se.Language.General.CaseSensitive, vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.MatchCase));
-        checkBoxRuleCaseSensitive.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasMatchCase));
-        checkBoxRuleCaseSensitive.IsCheckedChanged += (sender, args) => vm.OnRuleChanged();
+        var rowCaseSensitive = EditorChrome.MakeToggleRow(nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.MatchCase), Se.Language.General.CaseSensitive);
+        rowCaseSensitive.DataContext = vm;
+        rowCaseSensitive.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasMatchCase));
+        rowCaseSensitive.Children.OfType<ToggleSwitch>().First().IsCheckedChanged += (sender, args) => vm.OnRuleChanged();
 
-        grid.Add(panelRule, 0);
-        grid.Add(checkBoxRuleCaseSensitive, 1);
+        var rows = new StackPanel { Spacing = 10 };
+        rows.Children.Add(panelRule);
+        rows.Children.Add(rowCaseSensitive);
 
-        return UiUtil.MakeBorderForControl(grid);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Rules, rows, first: true);
     }
 
     private static CheckBox MakeCheckBox(ModifySelectionViewModel vm)
@@ -192,31 +189,20 @@ public class ModifySelectionWindow : Window
 
     private static Border MakeSelectionView(ModifySelectionViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var panel = new StackPanel { Spacing = 0, MinWidth = 200 };
 
-        grid.Add(UiUtil.MakeRadioButton(Se.Language.Edit.ModifySelection.SelectionNew, vm, nameof(vm.SelectionNew), "selection"), 0);
-        grid.Add(UiUtil.MakeRadioButton(Se.Language.Edit.ModifySelection.SelectionAdd, vm, nameof(vm.SelectionAdd), "selection"), 1);
-        grid.Add(UiUtil.MakeRadioButton(Se.Language.Edit.ModifySelection.SelectionSubtract, vm, nameof(vm.SelectionSubtract), "selection"), 2);
-        grid.Add(UiUtil.MakeRadioButton(Se.Language.Edit.ModifySelection.SelectionIntersect, vm, nameof(vm.SelectionIntersect), "selection"), 3);
+        panel.Children.Add(MakeRadio(UiUtil.MakeRadioButton(Se.Language.Edit.ModifySelection.SelectionNew, vm, nameof(vm.SelectionNew), "selection")));
+        panel.Children.Add(MakeRadio(UiUtil.MakeRadioButton(Se.Language.Edit.ModifySelection.SelectionAdd, vm, nameof(vm.SelectionAdd), "selection")));
+        panel.Children.Add(MakeRadio(UiUtil.MakeRadioButton(Se.Language.Edit.ModifySelection.SelectionSubtract, vm, nameof(vm.SelectionSubtract), "selection")));
+        panel.Children.Add(MakeRadio(UiUtil.MakeRadioButton(Se.Language.Edit.ModifySelection.SelectionIntersect, vm, nameof(vm.SelectionIntersect), "selection")));
 
-        return UiUtil.MakeBorderForControl(grid);
+        return EditorChrome.MakeEditorSection(Se.Language.Edit.ModifySelection.Selection, panel, first: true);
+    }
+
+    private static RadioButton MakeRadio(RadioButton radioButton)
+    {
+        radioButton.FontSize = 12.5;
+        return radioButton;
     }
 
     private static Border MakeSubtitleView(ModifySelectionViewModel vm)
@@ -288,6 +274,21 @@ public class ModifySelectionWindow : Window
         // so the grid follows the collection when the view model swaps it on preview.
         dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Subtitles)) { Source = vm });
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        // The preview fills the rest of the window, so the section header and list are laid out
+        // in a grid rather than in a section's stack panel.
+        var content = new Grid
+        {
+            RowSpacing = 10,
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) },
+        };
+        content.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0, 0);
+        content.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
+        return new Border
+        {
+            Child = content,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 12, 14, 14),
+        };
     }
 }

@@ -1,5 +1,5 @@
 using Avalonia;
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -27,62 +27,39 @@ public class ImportPlainTextWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
-        var buttonImportFiles = UiUtil.MakeButton(Se.Language.File.Import.ImportFilesDotDotDot, vm.FilesImportCommand).WithMinWidth(110);
+        var buttonImportFiles = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", Se.Language.File.Import.ImportFilesDotDotDot, vm.FilesImportCommand);
         buttonImportFiles.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm });
-        var buttonImportFile = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.FileImportCommand).WithMinWidth(110);
+        var buttonImportFile = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", Se.Language.General.ImportDotDotDot, vm.FileImportCommand);
         buttonImportFile.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = InverseBooleanConverter.Instance });
-        var checkBoxImportFiles = UiUtil.MakeCheckBox(Se.Language.File.Import.MultipleFiles, vm, nameof(vm.IsImportFilesVisible));
-        checkBoxImportFiles.IsCheckedChanged += (s, e) => vm.CheckBoxImportFilesChanged();
+        var rowImportFiles = EditorChrome.MakeToggleRow(nameof(vm.IsImportFilesVisible), Se.Language.File.Import.MultipleFiles, out var switchImportFiles);
+        switchImportFiles.IsCheckedChanged += (s, e) => vm.CheckBoxImportFilesChanged();
         var panelImport = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
+                rowImportFiles,
                 buttonImportFiles,
                 buttonImportFile,
-                checkBoxImportFiles,
             },
-            Spacing = 10,
+            Spacing = 14,
         };
 
-        // Shares its cell with the alignment progress, so it steps aside while that runs.
-        var labelNumberOfSubtitles = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.Subtitles)}.{nameof(vm.Subtitles.Count)}")
+        var labelNumberOfSubtitles = EditorChrome.MakeDimText();
+        labelNumberOfSubtitles.DataContext = vm;
+        labelNumberOfSubtitles.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.Subtitles)}.{nameof(vm.Subtitles.Count)}")
         {
             StringFormat = Se.Language.File.Import.NumberOfSubtitlesX,
-        }).WithAlignmentTop();
-        labelNumberOfSubtitles.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning))
-        {
-            Source = vm,
-            Converter = InverseBooleanConverter.Instance,
         });
 
-        // Progress sits next to the line count; forced alignment of a long video runs for
+        // Progress sits above the button bar; forced alignment of a long video runs for
         // minutes, so the window must show that something is happening.
-        var labelAlignProgress = UiUtil.MakeLabel()
-            .WithBindText(vm, nameof(vm.AlignProgress))
-            .WithAlignmentTop()
-            .WithBindVisible(vm, nameof(vm.IsAligning));
+        var labelAlignProgress = EditorChrome.MakeDimText();
+        labelAlignProgress.DataContext = vm;
+        labelAlignProgress.Bind(TextBlock.TextProperty, new Binding(nameof(vm.AlignProgress)));
 
         // Alignment on a long video runs for minutes over many chunks, so show how far it
         // has actually got rather than just that something is happening.
@@ -92,73 +69,93 @@ public class ImportPlainTextWindow : Window
             Maximum = 100,
             Width = 220,
             Height = 6,
+            MinHeight = 6,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 4, 10, 0),
+            Margin = new Thickness(0, 0, 12, 0),
         };
         progressBarAlign.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.AlignPercent)));
-        progressBarAlign.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning)));
 
-        var panelAlignProgress = new StackPanel
+        var panelAlignProgress = new DockPanel();
+        DockPanel.SetDock(progressBarAlign, Dock.Left);
+        panelAlignProgress.Children.Add(progressBarAlign);
+        panelAlignProgress.Children.Add(labelAlignProgress);
+        var progressStrip = new Border
         {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
-            Children = { progressBarAlign, labelAlignProgress },
+            Background = EditorChrome.StatusBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 8),
+            Child = panelAlignProgress,
         };
+        progressStrip.Bind(IsVisibleProperty, new Binding(nameof(vm.IsAligning)));
 
         // While aligning, Cancel stops the alignment; nothing else may start or close the window
         // with lines the aligner is still writing to.
-        var buttonAlignViaWhisper = UiUtil.MakeButton(Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand)
+        var buttonAlignViaWhisper = EditorChrome.MakeTextToolButton("fa-solid fa-microphone", Se.Language.File.Import.AlignViaSpeechToText, vm.AlignScriptWithTimestampsFromWhisperCommand)
             .WithBindEnabled(nameof(vm.IsAligning), InverseBooleanConverter.Instance);
-        var buttonAlignViaForcedAligner = UiUtil.MakeButton(Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand)
+        var buttonAlignViaForcedAligner = EditorChrome.MakeTextToolButton(IconNames.Waveform, Se.Language.File.Import.AlignViaForcedAligner, vm.AlignScriptWithForcedAlignerCommand)
             .WithBindEnabled(nameof(vm.IsAligning), InverseBooleanConverter.Instance);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
             .WithBindEnabled(nameof(vm.IsAligning), InverseBooleanConverter.Instance);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonAlignViaForcedAligner, buttonAlignViaWhisper, buttonOk, buttonCancel);
+        var panelAlign = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonAlignViaForcedAligner, buttonAlignViaWhisper },
+        };
 
-        grid.Add(panelImport, 0);
-        grid.Add(MakeTextBoxAndControlsView(vm), 1);
-        grid.Add(MakeSubtitleGridView(vm), 2);
-        grid.Add(labelNumberOfSubtitles, 3, 0);
-        grid.Add(panelAlignProgress, 3, 0);
-        grid.Add(panelButtons, 3, 0);
-
-        Content = grid;
-
-        UiUtil.FocusOnFirstActivation(this, checkBoxImportFiles); // initial focus on an input, not an action button - a focused button clicks on bare Space
-        KeyDown += vm.KeyDown;
-    }
-
-    private static Grid MakeTextBoxAndControlsView(ImportPlainTextViewModel vm)
-    {
-        var grid = new Grid
+        var sections = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 180 },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 150 },
             },
+        };
+        sections.Add(MakeTextBoxAndControlsView(vm, panelImport), 0);
+        sections.Add(MakeSubtitleGridView(vm, panelAlign), 1);
+
+        buttonOk.Classes.Add("primary");
+        var root = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto), // progress, while aligning
+                new RowDefinition(GridLength.Auto), // buttons
+            },
+        };
+        root.Add(new Border { Background = EditorChrome.PanelBrush, Child = sections }, 0);
+        root.Add(progressStrip, 1);
+        root.Add(EditorChrome.MakeDockedButtonBar(labelNumberOfSubtitles, buttonCancel, buttonOk), 2);
+        Content = root;
+
+        UiUtil.FocusOnFirstActivation(this, switchImportFiles); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        KeyDown += vm.KeyDown;
+    }
+
+    private static Grid MakeTextBoxAndControlsView(ImportPlainTextViewModel vm, Control importActions)
+    {
+        var grid = new Grid
+        {
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            ColumnSpacing = 5,
-            RowSpacing = 5,
         };
 
-        var textBox = new TextBox
+        var textBox = EditorChrome.AsTextArea(new TextBox
         {
             IsReadOnly = false,
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
-            Height = 350,
             Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Height = double.NaN,
             DataContext = vm,
-        };
+        });
         textBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.PlainText)) { Mode = BindingMode.TwoWay });
         textBox.WithAccessibleName(Se.Language.General.Text); // the pasted plain text, no visible label (#12087)
         textBox.Bind(TextBox.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = InverseBooleanConverter.Instance });
@@ -169,7 +166,7 @@ public class ImportPlainTextWindow : Window
         // the preview builds one subtitle line per file in collection order, so
         // reordering the backing collection would reorder the imported lines.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.SubtitleFiles);
-        dataGrid.Height = 348;
+        dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Files;
         dataGrid.Columns.AddRange(new TableViewColumn[]
@@ -225,8 +222,13 @@ public class ImportPlainTextWindow : Window
         flyout.Items.Add(menuItemClear);
 
 
-        grid.Add(textBox, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dropHost), 0);
+        var source = new Grid();
+        source.Children.Add(textBox);
+        var filesFrame = EditorChrome.MakeListFrame(dropHost, clearListBackground: true);
+        filesFrame.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm });
+        source.Children.Add(filesFrame);
+
+        grid.Add(EditorChrome.MakeFillSection(Se.Language.General.Text, source, importActions, first: true), 0, 0);
         grid.Add(MakeControlsView(vm), 0, 1);
 
         return grid;
@@ -234,73 +236,42 @@ public class ImportPlainTextWindow : Window
 
     private static Border MakeControlsView(ImportPlainTextViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            MinWidth = 320,
-        };
-
-        var labelSplit = UiUtil.MakeLabel(Se.Language.File.Import.SplitTextAt);
         var comboBoxSplit = new ComboBox
         {
             DataContext = vm,
-        };
+            MinWidth = 160,
+        }.WithAccessibleName(Se.Language.File.Import.SplitTextAt);
         comboBoxSplit.Bind(ComboBox.ItemsSourceProperty, new Binding(nameof(vm.SplitAtOptions)) { Source = vm });
         comboBoxSplit.Bind(ComboBox.SelectedItemProperty, new Binding(nameof(vm.SelectedSplitAtOption)) { Source = vm, Mode = BindingMode.TwoWay });
         comboBoxSplit.Bind(ComboBox.IsEnabledProperty, new Binding(nameof(vm.IsImportFilesVisible)) { Source = vm, Converter = InverseBooleanConverter.Instance });
         comboBoxSplit.SelectionChanged += (s, e) => vm.SplitAtOptionChanged();
 
-        var panelSplit = UiUtil.MakeHorizontalPanel(labelSplit, comboBoxSplit);
-
-        var labelGap = UiUtil.MakeLabel(Se.Language.File.Import.GapMs);
-        var numericUpDownGap = UiUtil.MakeNumericUpDownInt(0, 100000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.MinGapMs));
+        var numericUpDownGap = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 100000, Se.Settings.Tools.BridgeGaps.MinGapMs, 130, vm, nameof(vm.MinGapMs)), Se.Language.File.Import.GapMs.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownGap.ValueChanged += vm.GapChanged;
-        var panelGap = UiUtil.MakeHorizontalPanel(labelGap, numericUpDownGap).WithMarginTop(30);
 
-        var checkBoxUseFixedDuration = UiUtil.MakeCheckBox(Se.Language.File.Import.UseFixedDuration, vm, nameof(vm.UseFixedDuration)).WithMarginTop(30);
-        var labelFixedDurationMs = UiUtil.MakeLabel(Se.Language.File.Import.FixedDurationMs);
-        var numericUpDownFixedDurationMs = UiUtil.MakeNumericUpDownInt(0, 100000, (int)Se.Settings.Tools.AdjustDurations.AdjustDurationFixed, 130, vm, nameof(vm.FixedDurationMs));
+        var rowUseFixedDuration = EditorChrome.MakeToggleRow(nameof(vm.UseFixedDuration), Se.Language.File.Import.UseFixedDuration, out _);
+        var numericUpDownFixedDurationMs = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 100000, (int)Se.Settings.Tools.AdjustDurations.AdjustDurationFixed, 130, vm, nameof(vm.FixedDurationMs)), Se.Language.File.Import.FixedDurationMs.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownFixedDurationMs.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.UseFixedDuration)));
-        var panelFixedDurationMs = UiUtil.MakeHorizontalPanel(labelFixedDurationMs, numericUpDownFixedDurationMs);
 
-        grid.Add(panelSplit, 0);
-        grid.Add(panelGap, 1);
-        grid.Add(checkBoxUseFixedDuration, 2);
-        grid.Add(panelFixedDurationMs, 3);
-
-
-        return UiUtil.MakeBorderForControl(grid);
-    }
-
-    private static Border MakeSubtitleGridView(ImportPlainTextViewModel vm)
-    {
-        var grid = new Grid
+        var panel = new StackPanel
         {
-            RowDefinitions =
+            Spacing = 12,
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                EditorChrome.MakeFieldGrid((Se.Language.File.Import.SplitTextAt, comboBoxSplit), (Se.Language.File.Import.GapMs, numericUpDownGap)),
+                rowUseFixedDuration,
+                EditorChrome.MakeFieldGrid((Se.Language.File.Import.FixedDurationMs, numericUpDownFixedDurationMs)),
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Options, panel, first: true);
+        section.BorderThickness = new Thickness(1, 0, 0, 0);
+        section.MinWidth = 320;
+        return section;
+    }
+
+    private static Border MakeSubtitleGridView(ImportPlainTextViewModel vm, Control alignActions)
+    {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
 
@@ -356,8 +327,6 @@ public class ImportPlainTextWindow : Window
         });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)) { Source = vm });
 
-        grid.Add(dataGrid, 0);
-
-        return UiUtil.MakeBorderForControlNoPadding(grid);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid, alignActions);
     }
 }

@@ -16,6 +16,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Media
         // "-map 0:N". -1 when ffmpeg did not report one.
         public int StreamIndex { get; set; } = -1;
 
+        // ffmpeg's stream type word for FfmpegTrackType.Other ("Data", "Attachment", "Unknown"),
+        // e.g. to leave data streams (MOV timecode, SCTE-35) out of a stream copy.
+        public string TypeName { get; set; } = string.Empty;
+
         private static readonly Regex BitRateRegex = new Regex(@"\d+ kb/s", RegexOptions.Compiled);
 
         public int BitRate

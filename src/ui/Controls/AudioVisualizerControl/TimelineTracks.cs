@@ -139,7 +139,14 @@ public class TimelineTracks : Control, IDisposable
         // nothing announces. Looking twice a second is far cheaper than looking per frame, and
         // unlike Render it is allowed to change the control's height.
         _trackTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
-        _trackTimer.Tick += (_, _) => UpdateTracks();
+        _trackTimer.Tick += (_, _) =>
+        {
+            UpdateTracks();
+
+            // Nothing may be drawn right after playback stops, and the frames queued while it
+            // played should still come.
+            UpdateThumbnailsPaused();
+        };
 
         PointerEntered += (_, e) => Forward(e, e.GetPosition(this));
         PointerMoved += (_, e) => Forward(e, e.GetPosition(this));
@@ -563,6 +570,7 @@ public class TimelineTracks : Control, IDisposable
 
         // A keyframe within half a tile is the right picture for it, and much cheaper to get
         var toleranceMilliseconds = (long)Math.Round(step * 500.0);
+        var isPlaying = UpdateThumbnailsPaused();
 
         // No tiles past the end of the media (as far as the waveform knows it): there is no
         // picture there, only an ffmpeg run per tile to find that out.
@@ -570,6 +578,22 @@ public class TimelineTracks : Control, IDisposable
         if (source.WavePeaks is { LengthInSeconds: > 0 } wavePeaks)
         {
             lastTileSeconds = Math.Min(endSeconds, wavePeaks.LengthInSeconds);
+        }
+
+        // While paused, the next screen is fetched too, so playback finds its frames there. It is
+        // asked for first: the newest request is served first, so the visible tiles go before it.
+        if (!isPlaying)
+        {
+            var aheadEndSeconds = endSeconds + (endSeconds - startSeconds);
+            if (source.WavePeaks is { LengthInSeconds: > 0 } peaks)
+            {
+                aheadEndSeconds = Math.Min(aheadEndSeconds, peaks.LengthInSeconds);
+            }
+
+            for (var tile = Math.Max(firstTile, (long)Math.Ceiling(endSeconds / step)); tile * step < aheadEndSeconds; tile++)
+            {
+                _thumbnails.Get(videoFileName, GetFilmstripFrameMilliseconds(tile, step), toleranceMilliseconds);
+            }
         }
 
         for (var tile = firstTile; tile * step < lastTileSeconds; tile++)
@@ -601,6 +625,21 @@ public class TimelineTracks : Control, IDisposable
             var x = Math.Round((shotChange - startSeconds) * pixelsPerSecond);
             context.DrawLine(_shotChangePen, new Point(x, row.Y), new Point(x, row.Bottom));
         }
+    }
+
+    /// <summary>
+    /// No frames are extracted while the video plays (see <see cref="TimelineThumbnailCache"/>).
+    /// Returns whether it plays.
+    /// </summary>
+    private bool UpdateThumbnailsPaused()
+    {
+        var isPlaying = _source?.GetIsVideoPlaying?.Invoke() == true;
+        if (_thumbnails.Paused != isPlaying)
+        {
+            _thumbnails.Paused = isPlaying;
+        }
+
+        return isPlaying;
     }
 
     private void DrawSubtitles(DrawingContext context, AudioVisualizer source, double width, double startSeconds, double pixelsPerSecond)

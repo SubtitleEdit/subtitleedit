@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.LogicalTree;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
 using Nikse.SubtitleEdit.Features.Main;
@@ -205,7 +206,7 @@ public class SettingsBackupTests
             Assert.Contains("2026-09-12 09:00:00", vm.LastSettingsBackupText);
 
             var tabControl = window.GetVisualDescendants().OfType<TabControl>().FirstOrDefault()
-                             ?? (window.Content as Grid)?.Children.OfType<TabControl>().First();
+                             ?? window.GetLogicalDescendants().OfType<TabControl>().First();
             Assert.NotNull(tabControl);
             Assert.Equal(2, tabControl!.Items.Count);
         }

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -14,6 +15,11 @@ using System;
 
 namespace Nikse.SubtitleEdit.Features.Main.ActorPicker;
 
+/// <summary>
+/// The actor picker in the editor look (see <see cref="EditorChrome"/>): selection info and the
+/// filter field on top, the actor list in a field frame, the keys hint under it, and remove actor
+/// and Cancel in the button bar.
+/// </summary>
 public class ActorPickerWindow : Window
 {
     public ActorPickerWindow(ActorPickerViewModel vm)
@@ -23,17 +29,27 @@ public class ActorPickerWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         Width = 460;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
 
         vm.Window = this;
         DataContext = vm;
 
-        var labelSelectionInfo = new TextBlock { Opacity = 0.8 };
+        var labelSelectionInfo = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
+        labelSelectionInfo.TextTrimming = TextTrimming.CharacterEllipsis;
         labelSelectionInfo.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectionInfo)));
 
         var textBoxFilter = new TextBox
         {
             PlaceholderText = Se.Language.General.ActorPickerFilterHint,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+        }.AsTextField(Se.Language.General.ActorPickerFilterHint);
+        textBoxFilter.InnerLeftContent = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "fa-solid fa-magnifying-glass",
+            FontSize = 11,
+            Foreground = EditorChrome.FaintTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
         };
         textBoxFilter.Bind(TextBox.TextProperty, new Binding(nameof(vm.FilterText)) { Mode = BindingMode.TwoWay });
 
@@ -44,6 +60,7 @@ public class ActorPickerWindow : Window
             MaxHeight = 520,
             Focusable = false,
         };
+        AutomationProperties.SetName(listBox, Se.Language.General.ActorPickerTitle);
         listBox.Bind(ListBox.SelectedItemProperty, new Binding(nameof(vm.SelectedItem)) { Mode = BindingMode.TwoWay });
         listBox.SelectionChanged += (_, _) =>
         {
@@ -60,40 +77,28 @@ public class ActorPickerWindow : Window
             }
         };
 
-        var labelKeysHint = new TextBlock
+        var labelKeysHint = EditorChrome.MakeWrappingDimLabel(Se.Language.General.ActorPickerKeysHint);
+        labelKeysHint.FontSize = 11.5;
+
+        var panel = new StackPanel
         {
-            Text = Se.Language.General.ActorPickerKeysHint,
-            TextWrapping = TextWrapping.Wrap,
-            FontSize = UiUtil.ScaledFontSize(11),
-            Opacity = 0.7,
+            Spacing = 10,
+            Margin = new Thickness(14, 12, 14, 12),
+            Children =
+            {
+                labelSelectionInfo,
+                textBoxFilter,
+                EditorChrome.MakeCompactListFrame(listBox),
+                labelKeysHint,
+            },
         };
 
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Actor + " - " + Se.Language.General.Remove);
         buttonRemove.Click += (_, _) => vm.PickRemoveActor();
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel);
         buttonCancel.Click += (_, _) => vm.Cancel();
-        var panelButtons = UiUtil.MakeButtonBar(buttonRemove, buttonCancel);
 
-        var grid = new Grid
-        {
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 8,
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-        };
-        grid.Add(labelSelectionInfo, 0);
-        grid.Add(textBoxFilter, 1);
-        grid.Add(listBox, 2);
-        grid.Add(labelKeysHint, 3);
-        grid.Add(panelButtons, 4);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeDockedButtonBar(null, buttonRemove, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, textBoxFilter);
 
@@ -115,7 +120,9 @@ public class ActorPickerWindow : Window
     {
         var labelNumber = new TextBlock
         {
-            FontWeight = FontWeight.Bold,
+            FontWeight = FontWeight.SemiBold,
+            FontSize = 12.5,
+            Foreground = EditorChrome.AccentBrush,
             Width = 24,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -127,6 +134,7 @@ public class ActorPickerWindow : Window
 
         var labelName = new TextBlock
         {
+            FontSize = 12.5,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
@@ -140,21 +148,12 @@ public class ActorPickerWindow : Window
             Converter = new FuncValueConverter<bool, FontStyle>(isNew => isNew ? FontStyle.Italic : FontStyle.Normal),
         });
 
-        var labelLineCount = new TextBlock
-        {
-            Opacity = 0.6,
-            Margin = new Thickness(8, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        var labelLineCount = EditorChrome.MakeDimLabel(string.Empty, new Thickness(8, 0, 0, 0));
         labelLineCount.Bind(TextBlock.TextProperty, new Binding(nameof(ActorPickerItem.LineCountText)));
 
-        var labelShortcut = new TextBlock
-        {
-            Opacity = 0.6,
-            Margin = new Thickness(12, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Right,
-        };
+        var labelShortcut = EditorChrome.MakeDimLabel(string.Empty, new Thickness(12, 0, 0, 0));
+        labelShortcut.Foreground = EditorChrome.FaintTextBrush;
+        labelShortcut.HorizontalAlignment = HorizontalAlignment.Right;
         labelShortcut.Bind(TextBlock.TextProperty, new Binding(nameof(ActorPickerItem.ShortcutText)));
 
         var grid = new Grid

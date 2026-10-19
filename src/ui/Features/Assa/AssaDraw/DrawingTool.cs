@@ -25,4 +25,7 @@ public enum DrawingTool
 
     /// <summary>Place a shape from the shape library</summary>
     Shape,
+
+    /// <summary>Place a text box</summary>
+    Text,
 }

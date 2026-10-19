@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -9,14 +10,21 @@ using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Shared.FormatLimitWarning;
 
+/// <summary>
+/// Warns that the format cannot hold the subtitle as it is (too many characters/lines), in the
+/// editor look (see <see cref="EditorChrome"/>). Cancel and Save anyway in the button bar.
+/// </summary>
 public class FormatLimitWarningWindow : Window
 {
+    private static readonly IBrush WarningBrush = new SolidColorBrush(Color.FromRgb(0xE6, 0x7E, 0x22));
+
     public FormatLimitWarningWindow(FormatLimitWarningViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Main.FormatLimitWarningTitle;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -27,7 +35,7 @@ public class FormatLimitWarningWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                MakeIcon(IconNames.Alert, 36, 1.0),
+                MakeWarningIcon(),
                 new TextBlock
                 {
                     FontSize = UiUtil.ScaledFontSize(15),
@@ -55,8 +63,8 @@ public class FormatLimitWarningWindow : Window
         var card = new Border
         {
             CornerRadius = new CornerRadius(8),
-            Background = new SolidColorBrush(Color.FromArgb(18, 128, 128, 128)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(48, 128, 128, 128)),
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(16, 14, 24, 14),
             Child = rows,
@@ -67,41 +75,70 @@ public class FormatLimitWarningWindow : Window
             Text = Se.Language.Main.FormatLimitWarningTextWillBeRewrapped,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 460,
-            Opacity = 0.85,
-        };
-
-        var checkBoxDoNotShowAgain = new CheckBox
-        {
-            Content = new TextBlock { Text = Se.Language.Main.FormatLimitWarningDoNotShowAgain, FontSize = UiUtil.ScaledFontSize(13) },
-            Opacity = 0.8,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoNotShowAgain)) { Mode = BindingMode.TwoWay },
-        };
-
-        var checkBoxSmall = new LayoutTransformControl
-        {
-            LayoutTransform = new ScaleTransform(0.85, 0.85),
+            FontSize = 12.5,
+            Foreground = EditorChrome.DimTextBrush,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Child = checkBoxDoNotShowAgain,
+        };
+
+        var toggleDoNotShowAgain = new ToggleSwitch
+        {
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleSwitch.IsCheckedProperty] = new Binding(nameof(vm.DoNotShowAgain)) { Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(toggleDoNotShowAgain, Se.Language.Main.FormatLimitWarningDoNotShowAgain);
+        var doNotShowAgainRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children =
+            {
+                toggleDoNotShowAgain,
+                new TextBlock
+                {
+                    Text = Se.Language.Main.FormatLimitWarningDoNotShowAgain,
+                    FontSize = 12,
+                    Foreground = EditorChrome.DimTextBrush,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+            },
         };
 
         var buttonSaveAnyway = UiUtil.MakeButton(Se.Language.Main.FormatLimitWarningSaveAnyway, vm.SaveAnywayCommand);
+        buttonSaveAnyway.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonSaveAnyway, buttonCancel);
 
         var panel = new StackPanel
         {
             Orientation = Orientation.Vertical,
             Spacing = 14,
-            Margin = UiUtil.MakeWindowMargin(),
+            Margin = new Thickness(18, 16, 18, 18),
             MinWidth = 360,
-            Children = { header, card, explanation, checkBoxSmall, buttonPanel },
+            Children = { header, card, explanation },
         };
 
-        Content = panel;
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeDockedButtonBar(doNotShowAgainRow, buttonCancel, buttonSaveAnyway));
 
         // Cancel is the safe default: Enter must not accidentally commit a lossy save.
         UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// The warning sign in the warning orange, so it reads as a warning in both themes.
+    /// </summary>
+    private static Control MakeWarningIcon()
+    {
+        return new Icon
+        {
+            Value = IconNames.Alert,
+            FontSize = 32,
+            Foreground = WarningBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 2, 0),
+        };
     }
 
     private static Control MakeIcon(string iconName, double size, double opacity)
@@ -111,6 +148,7 @@ public class FormatLimitWarningWindow : Window
             Width = size,
             Height = size,
             Opacity = opacity,
+            Foreground = EditorChrome.IconBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
         Attached.SetIcon(icon, iconName);
@@ -131,7 +169,7 @@ public class FormatLimitWarningWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 10,
-            Children = { MakeIcon(iconName, 20, 0.85), text },
+            Children = { MakeIcon(iconName, 20, 1.0), text },
         };
 
         if (visiblePropertyPath != null)

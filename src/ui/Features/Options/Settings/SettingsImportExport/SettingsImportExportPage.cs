@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -16,92 +15,66 @@ public class SettingsImportExportPage : UserControl
     {
         _vm = vm;
 
-        var checkBoxExportImportAll = new CheckBox
+        ToggleSwitch MakeSwitch(string property, string? isEnabledProperty = null)
         {
-            Content = Se.Language.Options.Settings.AllSettings,
-            Margin = new Thickness(0, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ExportImportAll)) { Mode = BindingMode.TwoWay },
-        };
+            var toggle = EditorChrome.MakeSwitch(property, null, vm);
+            if (isEnabledProperty != null)
+            {
+                toggle[!IsEnabledProperty] = new Binding(isEnabledProperty);
+            }
 
-        var checkBoxExportImportRules = new CheckBox
-        {
-            Content = Se.Language.General.Rules,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ExportImportRules)) { Mode = BindingMode.TwoWay },
-            [!CheckBox.IsEnabledProperty] = new Binding(nameof(vm.CanEditRules))
-        };
+            return toggle;
+        }
 
-        var checkBoxExportImportAppearance = new CheckBox
-        {
-            Content = Se.Language.General.Appearance,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ExportImportAppearance)) { Mode = BindingMode.TwoWay },
-            [!CheckBox.IsEnabledProperty] = new Binding(nameof(vm.CanEditAppearance))
-        };
+        var switchExportImportAll = MakeSwitch(nameof(vm.ExportImportAll));
 
-        var checkBoxExportImportWaveform = new CheckBox
-        {
-            Content = Se.Language.General.WaveformSpectrogram,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ExportImportWaveform)) { Mode = BindingMode.TwoWay },
-            [!CheckBox.IsEnabledProperty] = new Binding(nameof(vm.CanEditWaveform))
-        };
+        var switchExportImportSyntaxColoring = MakeSwitch(nameof(vm.ExportImportSyntaxColoring));
+        switchExportImportSyntaxColoring[!IsEnabledProperty] = new Binding(nameof(vm.ExportImportAll)) { Converter = InverseBooleanConverter.Instance };
 
-        var checkBoxExportImportSyntaxColoring = new CheckBox
+        var parts = new StackPanel
         {
-            Content = Se.Language.General.SyntaxColoring,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ExportImportSyntaxColoring)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ExportImportAll), InverseBooleanConverter.Instance);
-
-        var checkBoxExportImportShortcuts = new CheckBox
-        {
-            Content = Se.Language.General.Shortcuts,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ExportImportShortcuts)) { Mode = BindingMode.TwoWay },
-            [!CheckBox.IsEnabledProperty] = new Binding(nameof(vm.CanEditShortcuts))
-        };
-
-        var checkBoxExportImportAutoTranslate = new CheckBox
-        {
-            Content = Se.Language.General.AutoTranslate,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ExportImportAutoTranslate)) { Mode = BindingMode.TwoWay },
-            [!CheckBox.IsEnabledProperty] = new Binding(nameof(vm.CanEditAutoTranslate))
-        };
-
-        var checkBoxStack = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 5,
+            Spacing = 6,
+            Margin = new Thickness(20, 0, 0, 0),
             Children =
             {
-                checkBoxExportImportAll,
-                checkBoxExportImportRules,
-                checkBoxExportImportAppearance,
-                checkBoxExportImportWaveform,
-                checkBoxExportImportSyntaxColoring,
-                checkBoxExportImportShortcuts,
-                checkBoxExportImportAutoTranslate,
+                SettingsChrome.MakeSwitchRow(MakeSwitch(nameof(vm.ExportImportRules), nameof(vm.CanEditRules)), Se.Language.General.Rules),
+                SettingsChrome.MakeSwitchRow(MakeSwitch(nameof(vm.ExportImportAppearance), nameof(vm.CanEditAppearance)), Se.Language.General.Appearance),
+                SettingsChrome.MakeSwitchRow(MakeSwitch(nameof(vm.ExportImportWaveform), nameof(vm.CanEditWaveform)), Se.Language.General.WaveformSpectrogram),
+                SettingsChrome.MakeSwitchRow(switchExportImportSyntaxColoring, Se.Language.General.SyntaxColoring),
+                SettingsChrome.MakeSwitchRow(MakeSwitch(nameof(vm.ExportImportShortcuts), nameof(vm.CanEditShortcuts)), Se.Language.General.Shortcuts),
+                SettingsChrome.MakeSwitchRow(MakeSwitch(nameof(vm.ExportImportAutoTranslate), nameof(vm.CanEditAutoTranslate)), Se.Language.General.AutoTranslate),
+            }
+        };
+
+        var content = new StackPanel
+        {
+            Spacing = 10,
+            MinWidth = 300,
+            Children =
+            {
+                SettingsChrome.MakeSwitchRow(switchExportImportAll, Se.Language.Options.Settings.AllSettings),
+                parts,
             }
         };
 
         var buttonOk = UiUtil.MakeButtonOk(_vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(_vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var mainStack = new StackPanel
+        // "Export..." / "Import..." as the section header, without the dots
+        var title = (vm.TitleText ?? string.Empty).TrimEnd('.', '…', ' ');
+
+        var grid = new Grid
         {
-            Orientation = Orientation.Vertical,
-            Margin = new Thickness(15),
-            Spacing = 5,
-            Children =
+            RowDefinitions =
             {
-                checkBoxStack,
-                buttonBar
-            }
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = GridLength.Auto },
+            },
         };
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(title, content, first: true)), 0);
+        grid.Add(SettingsChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1);
 
-        Content = mainStack;
+        Content = grid;
     }
 }

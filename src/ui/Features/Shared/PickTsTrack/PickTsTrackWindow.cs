@@ -23,44 +23,18 @@ public class PickTsTrackWindow : Window
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         DataContext = vm;
 
-        var tracksView = MakeTracksView(vm);
-        var subtitleView = MakeSubtitleView(vm);
+        var tracksView = EditorChrome.MakePickerListSection(Se.Language.Video.EmbeddedTracks, MakeTracksView(vm));
+        var labelSubtitleCount = EditorChrome.MakeBoundHint(nameof(vm.SubtitleCountText));
+        var subtitleView = EditorChrome.MakePickerListSection(Se.Language.General.Preview, MakeSubtitleView(vm), labelSubtitleCount);
 
-        var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonExport = EditorChrome.MakeTextToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonExport, buttonOk, buttonCancel);
 
-        var labelSubtitleCount = UiUtil.MakeLabel(new Binding(nameof(vm.SubtitleCountText)));
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(tracksView, 0, 0);
-        grid.Add(subtitleView, 0, 1);
-        grid.Add(labelSubtitleCount, 1, 1);
-        grid.Add(panelButtons, 2, 0, 1, 2);
-
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeTwoPanes(tracksView, subtitleView), EditorChrome.MakeButtonBar(buttonExport, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
@@ -71,7 +45,7 @@ public class PickTsTrackWindow : Window
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private Border MakeTracksView(PickTsTrackViewModel vm)
+    private TableView MakeTracksView(PickTsTrackViewModel vm)
     {
         var dataGridTracks = TableViewExtras.MakeTableView(multiSelect: false);
         dataGridTracks.WithAccessibleName(Se.Language.General.SelectSubtitle);
@@ -153,10 +127,10 @@ public class PickTsTrackWindow : Window
             .AddSortable<TsTrackInfoDisplay, bool>(defaultColumn, x => x.IsDefault)
             .AddSortable<TsTrackInfoDisplay, bool>(forcedColumn, x => x.IsForced);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGridTracks);
+        return dataGridTracks;
     }
 
-    private static Border MakeSubtitleView(PickTsTrackViewModel vm)
+    private static TableView MakeSubtitleView(PickTsTrackViewModel vm)
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
@@ -239,6 +213,6 @@ public class PickTsTrackWindow : Window
                 },
         });
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle);
+        return dataGridSubtitle;
     }
 }

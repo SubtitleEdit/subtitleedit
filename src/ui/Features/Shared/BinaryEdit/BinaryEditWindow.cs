@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -14,6 +14,7 @@ using System.Linq;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main.Layout;
+using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -22,6 +23,11 @@ using MenuItem = Avalonia.Controls.MenuItem;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
 
+/// <summary>
+/// The image-based subtitle editor in the editor look (see <see cref="EditorChrome"/>): menu bar,
+/// the image list with the selected line's timing/position below it, the video preview or position
+/// map on the right, and the frame rate with Cancel/OK in the button bar.
+/// </summary>
 public class BinaryEditWindow : Window
 {
     public BinaryEditWindow(BinaryEditViewModel vm)
@@ -33,6 +39,7 @@ public class BinaryEditWindow : Window
         MinWidth = 1000;
         MinHeight = 600;
         CanResize = true;
+        BinaryEditChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
@@ -49,11 +56,19 @@ public class BinaryEditWindow : Window
         // Top menu bar
         var menu = MakeTopMenu(vm);
         vm.Menu = menu;
+        var menuBar = new Border
+        {
+            Child = menu,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+        };
         if (OperatingSystem.IsMacOS())
         {
             menu.IsVisible = false;
+            menuBar.IsVisible = false;
         }
-        mainGrid.Add(menu, 0);
+        mainGrid.Add(menuBar, 0);
 
         // Content area (grid + video)
         var leftColumnDef = new ColumnDefinition(GridLength.Star);
@@ -77,6 +92,7 @@ public class BinaryEditWindow : Window
             Width = splitterWidth,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Stretch,
+            Background = EditorChrome.LineBrush,
         };
         contentGrid.Add(splitter, 0, 1);
 
@@ -89,7 +105,7 @@ public class BinaryEditWindow : Window
         var monitorPanel = MakePositionMonitorPanel(vm);
         monitorPanel.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsPositionMonitorActive)) { Source = vm });
 
-        var panelHost = new Panel();
+        var panelHost = new Panel { Margin = new Thickness(14, 12, 14, 14) };
         panelHost.Children.Add(videoPanel);
         panelHost.Children.Add(monitorPanel);
 
@@ -103,53 +119,31 @@ public class BinaryEditWindow : Window
         };
         rightGrid.Add(MakeRightPanelViewToggle(vm), 0);
         rightGrid.Add(panelHost, 1);
-
-        var rightContent = new Border
-        {
-            Child = rightGrid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            Margin = new Thickness(5),
-        };
-        contentGrid.Add(rightContent, 0, 2);
+        contentGrid.Add(rightGrid, 0, 2);
 
         mainGrid.Add(contentGrid, 1);
 
         // Status bar and button panel
-        var bottomPanel = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition(GridLength.Star),
-                new ColumnDefinition(GridLength.Auto),
-                new ColumnDefinition(GridLength.Auto),
-            },
-            Margin = new Thickness(5),
-        };
-
         var statusTextBlock = new TextBlock
         {
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
         };
-        bottomPanel.Add(statusTextBlock, 0);
 
         // The frame rate exports are written at, and where it came from (issue #15549).
         var frameRatePanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 5,
-            Margin = new Thickness(10, 0, 10, 0),
+            Spacing = 8,
+            Margin = new Thickness(0, 0, 10, 0),
             [!ToolTip.TipProperty] = new Binding(nameof(vm.FrameRateHint)),
             Children =
             {
-                new TextBlock
-                {
-                    Text = Se.Language.General.FrameRate,
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
+                EditorChrome.MakeDimLabel(Se.Language.General.FrameRate, new Thickness(0)),
                 new ComboBox
                 {
                     Width = 110,
@@ -160,14 +154,11 @@ public class BinaryEditWindow : Window
                 },
             },
         };
-        bottomPanel.Add(frameRatePanel, 0, 1);
 
-        var buttonPanel = UiUtil.MakeButtonBar(
-            UiUtil.MakeButtonOk(vm.OkCommand),
-            UiUtil.MakeButtonCancel(vm.CancelCommand));
-        bottomPanel.Add(buttonPanel, 0, 2);
-
-        mainGrid.Add(bottomPanel, 2);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonBar = EditorChrome.MakeButtonBar(statusTextBlock, frameRatePanel, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
+        mainGrid.Add(buttonBar, 2);
 
         Content = mainGrid;
         AddHandler(KeyDownEvent, (_, args) => vm.OnKeyDown(args), handledEventsToo: true);
@@ -181,7 +172,7 @@ public class BinaryEditWindow : Window
         {
             // Measure controls at natural (unconstrained) size so MinWidth is font-size-aware
             controlsGrid.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            const double borderAndMarginOverhead = 22; // MakeBorderForControl: padding(10) + border(2); mainGrid margin: 10
+            const double borderAndMarginOverhead = 28; // controls section padding: 14 left + 14 right
             var leftPanelMin = controlsGrid.DesiredSize.Width + borderAndMarginOverhead;
             leftColumnDef.MinWidth = leftPanelMin;   // prevents splitter from squeezing the controls
             var computedMinWidth = Math.Ceiling(leftPanelMin * 2 + splitterWidth) + 10;
@@ -257,6 +248,11 @@ public class BinaryEditWindow : Window
                         },
                         new MenuItem
                         {
+                            Header = Se.Language.File.Export.TitleExportDCinemaSmpte2014PngMxf,
+                            Command = vm.ExportDCinemaSmpte2014PngMxfCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = Se.Language.File.Export.TitleExportDostPng,
                             Command = vm.ExportDostPngCommand,
                         },
@@ -295,7 +291,7 @@ public class BinaryEditWindow : Window
                 new Separator(),
                 new MenuItem
                 {
-                    Header = Se.Language.Tools.ImageBasedEdit.ImportTimeCodes,
+                    Header = Se.Language.General.ImportTimeCodesDotDotDot,
                     Command = vm.ImportTimeCodesCommand,
                 },
                 new Separator(),
@@ -485,7 +481,7 @@ public class BinaryEditWindow : Window
         return menu;
     }
 
-    private static Grid MakeLayoutListViewAndEditBox(BinaryEditViewModel vm, out Grid controlsGrid)
+    private static Border MakeLayoutListViewAndEditBox(BinaryEditViewModel vm, out Grid controlsGrid)
     {
         // One brush for every preview cell in this window, so recolouring repaints them all.
         var previewBackground = ImagePreviewBackground.CreateBrush();
@@ -497,7 +493,6 @@ public class BinaryEditWindow : Window
                 new RowDefinition(GridLength.Star), // Subtitle grid
                 new RowDefinition(GridLength.Auto), // Controls
             },
-            Margin = new Thickness(5),
         };
 
         // Grid for subtitle lines (grid lines come from the TableView cell themes)
@@ -511,6 +506,7 @@ public class BinaryEditWindow : Window
 
         dataGrid.Height = double.NaN;
         dataGrid.FontSize = Se.Settings.Appearance.SubtitleGridFontSize;
+        dataGrid.WithAccessibleName(Se.Language.General.ImageBasedSubtitles);
 
         dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Subtitles)));
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)) { Mode = BindingMode.Default });
@@ -741,9 +737,6 @@ public class BinaryEditWindow : Window
         vm.SubtitleGrid = dataGrid;
         dataGrid.SelectionChanged += vm.SubtitleGridSelectionChanged;
 
-        var dataGridBorder = UiUtil.MakeBorderForControlNoPadding(dataGrid);
-        dataGridBorder.Margin = new Thickness(0, 0, 0, 5);
-
         // Columns: Zone, Forced, Number, Show, Duration, Image. All columns go through
         // the manager because the zone column toggles visibility with the position map.
         var columnManager = new TableViewColumnManager(dataGrid);
@@ -861,140 +854,89 @@ public class BinaryEditWindow : Window
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
 
-        mainGrid.Add(dataGridBorder, 0);
+        mainGrid.Add(EditorChrome.MakeListPane(Se.Language.General.ImageBasedSubtitles, dataGrid, margin: new Thickness(14, 12, 14, 12)), 0);
 
         controlsGrid = MakeControls(vm);
-        mainGrid.Add(UiUtil.MakeBorderForControl(controlsGrid), 1);
+        mainGrid.Add(new Border
+        {
+            Child = controlsGrid,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 12, 14, 14),
+        }, 1);
 
-        return mainGrid;
+        return new Border
+        {
+            Child = mainGrid,
+            Background = EditorChrome.PanelBrush,
+        };
     }
 
     private static Grid MakeControls(BinaryEditViewModel vm)
     {
-        // 7-column × 6-row Grid: Show/Duration | gap | X/Y/Pos | gap | SW/SH | spacer(*) | icon buttons
-        var grid = new Grid { Margin = new Thickness(0, 10, 0, 0), MinWidth = 600 }; // pre-load fallback; overridden dynamically in Loaded
+        // Timing | Position | Screen size groups, spacer(*), action buttons
+        var grid = new Grid { ColumnSpacing = 24, MinWidth = 600 }; // pre-load fallback; overridden dynamically in Loaded
         grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
-        grid.ColumnDefinitions.Add(new ColumnDefinition(15, GridUnitType.Pixel));
         grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
-        grid.ColumnDefinitions.Add(new ColumnDefinition(15, GridUnitType.Pixel));
         grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
-        grid.ColumnDefinitions.Add(new ColumnDefinition(20, GridUnitType.Pixel));
+        grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
         grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
-        for (var i = 0; i < 6; i++)
-            grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
 
-        // Row 0: first labels
-        grid.Add(new TextBlock { Text = Se.Language.General.Show, FontWeight = FontWeight.Bold, Margin = new Thickness(0, 0, 0, 2) }, 0, 0);
-        grid.Add(new TextBlock { Text = "X", FontWeight = FontWeight.Bold, Margin = new Thickness(0, 0, 0, 2) }, 0, 2);
-        grid.Add(new TextBlock { Text = Se.Language.Tools.ImageBasedEdit.ScreenWidth, FontWeight = FontWeight.Bold, Margin = new Thickness(0, 0, 0, 2) }, 0, 4);
-
-        // Row 1: first controls — VerticalAlignment=Bottom aligns bottom edges across columns
         var startTimeUpDown = new TimeCodeUpDown
         {
-            VerticalAlignment = VerticalAlignment.Bottom,
+            VerticalAlignment = VerticalAlignment.Center,
             DataContext = vm,
             [!TimeCodeUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.StartTime)}") { Mode = BindingMode.TwoWay },
         };
-        grid.Add(startTimeUpDown, 1, 0);
 
-        var xUpDown = new NumericUpDown
-        {
-            Width = 130,
-            Minimum = int.MinValue,
-            Maximum = int.MaxValue,
-            Increment = 1,
-            FormatString = "F0",
-            VerticalAlignment = VerticalAlignment.Bottom,
-            DataContext = vm,
-            [!NumericUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.X)}") { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(xUpDown, 1, 2);
-
-        var screenWidthUpDown = new NumericUpDown
-        {
-            Width = 130,
-            Minimum = 1,
-            Maximum = int.MaxValue,
-            Increment = 1,
-            FormatString = "F0",
-            VerticalAlignment = VerticalAlignment.Bottom,
-            DataContext = vm,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.ScreenWidth)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(screenWidthUpDown, 1, 4);
-
-        // Row 2: second labels
-        grid.Add(new TextBlock { Text = Se.Language.General.Duration, FontWeight = FontWeight.Bold, Margin = new Thickness(0, 6, 0, 2) }, 2, 0);
-        grid.Add(new TextBlock { Text = "Y", FontWeight = FontWeight.Bold, Margin = new Thickness(0, 6, 0, 2) }, 2, 2);
-        grid.Add(new TextBlock { Text = Se.Language.Tools.ImageBasedEdit.ScreenHeight, FontWeight = FontWeight.Bold, Margin = new Thickness(0, 6, 0, 2) }, 2, 4);
-
-        // Row 3: second controls — VerticalAlignment=Bottom aligns bottom edges across columns
         var durationUpDown = new SecondsUpDown
         {
-            VerticalAlignment = VerticalAlignment.Bottom,
+            VerticalAlignment = VerticalAlignment.Center,
             DataContext = vm,
             [!SecondsUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.Duration)}") { Mode = BindingMode.TwoWay },
         };
-        grid.Add(durationUpDown, 3, 0);
 
-        var yUpDown = new NumericUpDown
-        {
-            Width = 130,
-            Minimum = int.MinValue,
-            Maximum = int.MaxValue,
-            Increment = 1,
-            FormatString = "F0",
-            VerticalAlignment = VerticalAlignment.Bottom,
-            DataContext = vm,
-            [!NumericUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.Y)}") { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(yUpDown, 3, 2);
+        grid.Add(MakeControlGroup(Se.Language.General.Timing,
+            (Se.Language.General.Show, startTimeUpDown),
+            (Se.Language.General.Duration, durationUpDown)), 0, 0);
 
-        var screenHeightUpDown = new NumericUpDown
-        {
-            Width = 130,
-            Minimum = 1,
-            Maximum = int.MaxValue,
-            Increment = 1,
-            FormatString = "F0",
-            VerticalAlignment = VerticalAlignment.Bottom,
-            DataContext = vm,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.ScreenHeight)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(screenHeightUpDown, 3, 4);
+        var xUpDown = MakePositionField(vm, $"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.X)}", int.MinValue, "X");
+        var yUpDown = MakePositionField(vm, $"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.Y)}", int.MinValue, "Y");
 
-        // Col 6 buttons — stacked with top edge of Export aligned with top of first controls row
-        var exportBtn = UiUtil.MakeButton(Se.Language.General.Export, vm.ExportImageCommand);
-        exportBtn.HorizontalAlignment = HorizontalAlignment.Stretch;
+        // Position and size of the selected image - the forced flag lives only in the grid column
+        var positionLabel = MakeInfoLabel(vm, nameof(vm.CurrentPosition));
+        var sizeLabel = MakeInfoLabel(vm, nameof(vm.CurrentSize));
+        grid.Add(MakeControlGroup(Se.Language.General.Position,
+            ("X", xUpDown),
+            ("Y", yUpDown),
+            (string.Empty, positionLabel),
+            (string.Empty, sizeLabel)), 0, 1);
 
-        var importBtn = UiUtil.MakeButton(Se.Language.General.Import, vm.ImportImageCommand);
-        importBtn.HorizontalAlignment = HorizontalAlignment.Stretch;
+        var screenWidthUpDown = MakePositionField(vm, nameof(vm.ScreenWidth), 1, Se.Language.Tools.ImageBasedEdit.ScreenWidth);
+        var screenHeightUpDown = MakePositionField(vm, nameof(vm.ScreenHeight), 1, Se.Language.Tools.ImageBasedEdit.ScreenHeight);
+        grid.Add(MakeControlGroup(Se.Language.General.VideoResolution,
+            (Se.Language.Tools.ImageBasedEdit.ScreenWidth, screenWidthUpDown),
+            (Se.Language.Tools.ImageBasedEdit.ScreenHeight, screenHeightUpDown)), 0, 2);
 
-        var setTextBtn = UiUtil.MakeButton(Se.Language.Tools.ImageBasedEdit.SetText, vm.SetTextCommand);
-        setTextBtn.HorizontalAlignment = HorizontalAlignment.Stretch;
+        // Actions on the selected image
+        var exportBtn = EditorChrome.MakeActionButton("fa-solid fa-file-export", Se.Language.General.Export, vm.ExportImageCommand);
+        var importBtn = EditorChrome.MakeActionButton("fa-solid fa-file-import", Se.Language.General.Import, vm.ImportImageCommand);
+        var setTextBtn = EditorChrome.MakeActionButton("fa-solid fa-font", Se.Language.Tools.ImageBasedEdit.SetText, vm.SetTextCommand);
 
         var buttonStack = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 6,
+            Spacing = 2,
             VerticalAlignment = VerticalAlignment.Top,
         };
-        buttonStack.Children.Add(exportBtn);
-        buttonStack.Children.Add(importBtn);
-        buttonStack.Children.Add(setTextBtn);
-        grid.Add(buttonStack, 1, 6, rowSpan: 5);
+        foreach (var button in new[] { exportBtn, importBtn, setTextBtn })
+        {
+            button.HorizontalAlignment = HorizontalAlignment.Stretch;
+            button.HorizontalContentAlignment = HorizontalAlignment.Left;
+            buttonStack.Children.Add(button);
+        }
 
-        // Row 4: gap between second controls row and position label
-        grid.Add(new TextBlock { Margin = new Thickness(0, 6, 0, 2) }, 4, 0);
-
-        // Row 5: Position label (Col 2, under X/Y), Size label (Col 4, under screen width/height) — forced flag lives only in the grid column
-        var positionLabel = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CurrentPosition));
-        positionLabel.VerticalAlignment = VerticalAlignment.Center;
-        grid.Add(positionLabel, 5, 2);
-
-        var sizeLabel = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CurrentSize));
-        sizeLabel.VerticalAlignment = VerticalAlignment.Center;
-        grid.Add(sizeLabel, 5, 4);
+        grid.Add(buttonStack, 0, 4);
 
         xUpDown.ValueChanged += (_, _) => vm.UpdateOverlayPosition();
         yUpDown.ValueChanged += (_, _) => vm.UpdateOverlayPosition();
@@ -1002,7 +944,68 @@ public class BinaryEditWindow : Window
         return grid;
     }
 
-    private static Grid MakeVideoPlayer(BinaryEditViewModel vm)
+    /// <summary>
+    /// A small caps header above "label  control" rows that line up.
+    /// </summary>
+    private static StackPanel MakeControlGroup(string title, params (string Label, Control Control)[] rows)
+    {
+        var rowsGrid = new Grid { ColumnSpacing = 8, RowSpacing = 6 };
+        rowsGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+        rowsGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+        for (var i = 0; i < rows.Length; i++)
+        {
+            rowsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+            var (label, control) = rows[i];
+            if (label.Length > 0)
+            {
+                rowsGrid.Add(EditorChrome.MakeDimLabel(label, new Thickness(0)), i, 0);
+                if (control is not TextBlock && string.IsNullOrEmpty(AutomationProperties.GetName(control)))
+                {
+                    AutomationProperties.SetName(control, label);
+                }
+            }
+
+            rowsGrid.Add(control, i, 1);
+        }
+
+        var panel = new StackPanel { Spacing = 10, VerticalAlignment = VerticalAlignment.Top };
+        panel.Children.Add(EditorChrome.MakeSectionHeader(title));
+        panel.Children.Add(rowsGrid);
+        return panel;
+    }
+
+    private static NumericUpDown MakePositionField(BinaryEditViewModel vm, string path, int minimum, string name)
+    {
+        var field = new NumericUpDown
+        {
+            Width = 100,
+            Minimum = minimum,
+            Maximum = int.MaxValue,
+            Increment = 1,
+            FormatString = "F0",
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            DataContext = vm,
+            [!NumericUpDown.ValueProperty] = new Binding(path) { Mode = BindingMode.TwoWay },
+        };
+        field.Classes.Add("field");
+        AutomationProperties.SetName(field, name);
+        return field;
+    }
+
+    private static TextBlock MakeInfoLabel(BinaryEditViewModel vm, string property)
+    {
+        return new TextBlock
+        {
+            FontSize = 11.5,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = vm,
+            [!TextBlock.TextProperty] = new Binding(property),
+        };
+    }
+
+    private static Border MakeVideoPlayer(BinaryEditViewModel vm)
     {
         var vp = InitVideoPlayer.MakeVideoPlayer();
         vp.FullScreenIsVisible = false;
@@ -1108,7 +1111,13 @@ public class BinaryEditWindow : Window
             }
         };
 
-        return videoGrid;
+        // A plain frame: no corner radius, as the native video surface on macOS disappears inside a rounded clip.
+        return new Border
+        {
+            Child = videoGrid,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1),
+        };
     }
 
     private static Control MakeRightPanelViewToggle(BinaryEditViewModel vm)
@@ -1116,15 +1125,13 @@ public class BinaryEditWindow : Window
         var buttonVideo = new ToggleButton
         {
             Content = Se.Language.Tools.ImageBasedEdit.VideoPreview,
-            Padding = new Thickness(14, 4),
-            CornerRadius = new CornerRadius(4, 0, 0, 4),
         };
         var buttonMap = new ToggleButton
         {
             Content = Se.Language.Tools.ImageBasedEdit.PositionMap,
-            Padding = new Thickness(14, 4),
-            CornerRadius = new CornerRadius(0, 4, 4, 0),
         };
+        buttonVideo.Classes.Add("segment");
+        buttonMap.Classes.Add("segment");
 
         // Explicit sync instead of IsChecked bindings: a click always toggles the
         // button locally, so clicking the already-active side would untick it with
@@ -1139,12 +1146,29 @@ public class BinaryEditWindow : Window
         buttonMap.Click += (_, _) => { vm.IsPositionMonitorActive = true; Sync(); };
         Sync();
 
-        return new StackPanel
+        var segmented = new Border
         {
-            Orientation = Orientation.Horizontal,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(7),
+            Padding = new Thickness(2),
             HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 6, 0, 4),
-            Children = { buttonVideo, buttonMap },
+            Child = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 2,
+                Children = { buttonVideo, buttonMap },
+            },
+        };
+
+        return new Border
+        {
+            Child = segmented,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(14, 8),
         };
     }
 
@@ -1161,15 +1185,16 @@ public class BinaryEditWindow : Window
                 new RowDefinition(GridLength.Auto), // letterbox / title-safe controls
                 new RowDefinition(GridLength.Star), // position map canvas
             },
-            Margin = new Thickness(8, 0, 8, 8),
         };
 
         // Summary header: "1920×1080 - 623 subtitles - bar height: 138 px"
         var summaryText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 2, 0, 4),
+            FontSize = 12.5,
+            FontWeight = FontWeight.SemiBold,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Margin = new Thickness(0, 0, 0, 8),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.PositionMonitorSummary)) { Source = vm },
         };
         grid.Add(summaryText, 0);
@@ -1179,7 +1204,7 @@ public class BinaryEditWindow : Window
         var chipsPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 6),
+            Margin = new Thickness(0, 0, 0, 10),
         };
         chipsPanel.Children.Add(MakeZoneChip(vm, Color.FromRgb(0x22, 0xC5, 0x5E), nameof(vm.ActivePictureCountText), null, PositionMonitorZone.ActivePicture, isFirst: true));
         chipsPanel.Children.Add(MakeZoneChip(vm, Color.FromRgb(0xF5, 0x9E, 0x0B), nameof(vm.BottomBarCountText), nameof(vm.HasBottomBarSubtitles), PositionMonitorZone.BottomBar));
@@ -1190,10 +1215,11 @@ public class BinaryEditWindow : Window
         // margin. Grouped so label + control never wrap apart.
         var ratioCombo = UiUtil.MakeComboBox(vm.LetterboxRatios, vm, nameof(vm.SelectedLetterboxRatio));
         ratioCombo.MinWidth = 170;
+        AutomationProperties.SetName(ratioCombo, lang.Letterbox);
 
         var barHeightUpDown = new NumericUpDown
         {
-            Width = 130,
+            Width = 80,
             Minimum = 0,
             Maximum = 2000,
             Increment = 1,
@@ -1203,48 +1229,37 @@ public class BinaryEditWindow : Window
             [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.LetterboxBarHeight)) { Mode = BindingMode.TwoWay },
             [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsLetterboxBarHeightEditable)),
         };
+        barHeightUpDown.Classes.Add("field");
+        AutomationProperties.SetName(barHeightUpDown, lang.BarHeightPx);
 
-        var titleSafeCheckBox = new CheckBox
-        {
-            Content = lang.TitleSafePercent,
-            VerticalAlignment = VerticalAlignment.Center,
-            DataContext = vm,
-            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.ShowTitleSafeArea)) { Mode = BindingMode.TwoWay },
-        };
+        var titleSafeSwitch = EditorChrome.MakeSwitch(nameof(vm.ShowTitleSafeArea), lang.TitleSafePercent);
+        titleSafeSwitch.DataContext = vm;
 
         var titleSafeUpDown = new NumericUpDown
         {
-            Width = 130,
+            Width = 70,
             Minimum = 0,
             Maximum = 20,
             Increment = 0.5m,
             FormatString = "F1",
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(6, 0, 0, 0),
             DataContext = vm,
             [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.TitleSafePercent)) { Mode = BindingMode.TwoWay },
             [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.ShowTitleSafeArea)),
         };
+        titleSafeUpDown.Classes.Add("field");
+        AutomationProperties.SetName(titleSafeUpDown, lang.TitleSafePercent);
 
         var letterboxGroup = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 18, 4),
+            Spacing = 8,
+            Margin = new Thickness(0, 0, 20, 8),
             Children =
             {
-                new TextBlock
-                {
-                    Text = lang.Letterbox,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(0, 0, 6, 0),
-                },
+                EditorChrome.MakeDimLabel(lang.Letterbox, new Thickness(0)),
                 ratioCombo,
-                new TextBlock
-                {
-                    Text = lang.BarHeightPx,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(12, 0, 6, 0),
-                },
+                EditorChrome.MakeDimLabel(lang.BarHeightPx, new Thickness(6, 0, 0, 0)),
                 barHeightUpDown,
             },
         };
@@ -1252,14 +1267,20 @@ public class BinaryEditWindow : Window
         var titleSafeGroup = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 4),
-            Children = { titleSafeCheckBox, titleSafeUpDown },
+            Spacing = 8,
+            Margin = new Thickness(0, 0, 0, 8),
+            Children =
+            {
+                titleSafeSwitch,
+                new TextBlock { Text = lang.TitleSafePercent, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center },
+                titleSafeUpDown,
+            },
         };
 
         var controlsPanel = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 4),
+            Margin = new Thickness(0, 0, 0, 2),
             Children = { letterboxGroup, titleSafeGroup },
         };
         grid.Add(controlsPanel, 2);
@@ -1272,9 +1293,9 @@ public class BinaryEditWindow : Window
         var monitorBorder = new Border
         {
             Child = monitor,
-            BorderBrush = UiUtil.GetBorderBrush(),
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
+            CornerRadius = new CornerRadius(8),
             ClipToBounds = true,
         };
         grid.Add(monitorBorder, 3);

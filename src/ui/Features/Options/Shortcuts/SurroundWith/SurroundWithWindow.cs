@@ -1,3 +1,5 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
@@ -6,7 +8,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Options.Shortcuts.SurroundWith;
 
 public class SurroundWithWindow : Window
-{   
+{
     public SurroundWithWindow(SurroundWithViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -14,62 +16,75 @@ public class SurroundWithWindow : Window
         MinWidth = 400;
         CanResize = false;
         Title = Se.Language.Options.Shortcuts.SurroundWith;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var labelBefore = UiUtil.MakeLabel(Se.Language.General.Before);
-        var textBoxBefore = UiUtil.MakeTextBox(200, vm, nameof(vm.Before)); 
+        const double labelWidth = 120;
 
-        var labelAfter = UiUtil.MakeLabel(Se.Language.General.After);   
-        var textBoxAfter = UiUtil.MakeTextBox(200, vm, nameof(vm.After));
+        var textBoxBefore = EditorChrome.MakeTextField(nameof(vm.Before), Se.Language.General.Before, 200);
+        var textBoxAfter = EditorChrome.MakeTextField(nameof(vm.After), Se.Language.General.After, 200);
 
-        var labelBehavior = UiUtil.MakeLabel(Se.Language.Options.Shortcuts.SurroundWithBehavior);
         var comboBoxBehavior = UiUtil.MakeComboBox(vm.Behaviors, vm, nameof(vm.SelectedBehavior));
         comboBoxBehavior.Width = 300;
+        comboBoxBehavior.HorizontalAlignment = HorizontalAlignment.Left;
+        AutomationProperties.SetName(comboBoxBehavior, Se.Language.Options.Shortcuts.SurroundWithBehavior);
 
-        var labelScope = UiUtil.MakeLabel(Se.Language.Options.Shortcuts.SurroundWithWorksOn);
         var comboBoxScope = UiUtil.MakeComboBox(vm.Scopes, vm, nameof(vm.SelectedScope));
         comboBoxScope.Width = 300;
+        comboBoxScope.HorizontalAlignment = HorizontalAlignment.Left;
+        AutomationProperties.SetName(comboBoxScope, Se.Language.Options.Shortcuts.SurroundWithWorksOn);
+
+        var textRows = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                EditorChrome.MakeLabeledRow(Se.Language.General.Before, textBoxBefore, labelWidth, spacing: 6),
+                EditorChrome.MakeLabeledRow(Se.Language.General.After, textBoxAfter, labelWidth, spacing: 6),
+            },
+        };
+        var optionRows = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                EditorChrome.MakeLabeledRow(Se.Language.Options.Shortcuts.SurroundWithBehavior, comboBoxBehavior, labelWidth, spacing: 6),
+                EditorChrome.MakeLabeledRow(Se.Language.Options.Shortcuts.SurroundWithWorksOn, comboBoxScope, labelWidth, spacing: 6),
+            },
+        };
+
+        var sections = new StackPanel
+        {
+            Children =
+            {
+                EditorChrome.MakeEditorSection(Se.Language.General.Text, textRows, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.General.Settings, optionRows),
+            },
+        };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(labelBefore, 0);
-        grid.Add(textBoxBefore, 0, 1);
-        grid.Add(labelAfter, 1);
-        grid.Add(textBoxAfter, 1, 1);
-        grid.Add(labelBehavior, 2);
-        grid.Add(comboBoxBehavior, 2, 1);
-        grid.Add(labelScope, 3);
-        grid.Add(comboBoxScope, 3, 1);
-        grid.Add(buttonPanel, 4, 0, 1, 2);
+        grid.Add(EditorChrome.MakePanel(sections), 0);
+        grid.Add(buttonPanel, 1);
 
         Content = grid;
-        
+
         UiUtil.FocusOnFirstActivation(this, textBoxBefore); // initial focus on an input, not an action button - a focused button clicks on bare Space
-        KeyDown += (s, e) => vm.OnKeyDown(e);   
+        KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 }

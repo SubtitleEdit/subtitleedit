@@ -37,6 +37,7 @@ public class AudioVisualizerDragTests : IDisposable
     // stranded window is enough to take the rest of the class down with it.
     private readonly List<Window> _windows = new();
     private readonly bool _snapToFrames = Se.Settings.Waveform.SnapToFrames;
+    private readonly bool _snapToShotChanges = Se.Settings.Waveform.SnapToShotChanges;
     private readonly double _frameRate = Se.Settings.General.CurrentFrameRate;
 
     public void Dispose()
@@ -48,6 +49,7 @@ public class AudioVisualizerDragTests : IDisposable
 
         _windows.Clear();
         Se.Settings.Waveform.SnapToFrames = _snapToFrames;
+        Se.Settings.Waveform.SnapToShotChanges = _snapToShotChanges;
         Se.Settings.General.CurrentFrameRate = _frameRate;
     }
 
@@ -66,21 +68,22 @@ public class AudioVisualizerDragTests : IDisposable
         return new WavePeakData2(SampleRate, peaks);
     }
 
-    private static SubtitleLineViewModel Line(double startSeconds, double endSeconds) => new()
+    private static SubtitleLineViewModel Line(double startSeconds, double endSeconds, string text = "text") => new()
     {
-        Text = "text",
+        Text = text,
         StartTime = TimeSpan.FromSeconds(startSeconds),
         EndTime = TimeSpan.FromSeconds(endSeconds),
     };
 
-    private (Window Window, AudioVisualizer Av, List<SubtitleLineViewModel> Lines) Open(params SubtitleLineViewModel[] lines)
+    private (Window Window, AudioVisualizer Av, List<SubtitleLineViewModel> Lines) Open(params SubtitleLineViewModel[] lines) =>
+        Open(false, lines);
+
+    private (Window Window, AudioVisualizer Av, List<SubtitleLineViewModel> Lines) Open(bool useSkia, params SubtitleLineViewModel[] lines)
     {
-        var av = new AudioVisualizer
-        {
-            WavePeaks = MakePeaks(60),
-            Width = WidthPx,
-            Height = HeightPx,
-        };
+        AudioVisualizer av = useSkia ? new SkiaAudioVisualizer() : new AudioVisualizer();
+        av.WavePeaks = MakePeaks(60);
+        av.Width = WidthPx;
+        av.Height = HeightPx;
 
         var list = new List<SubtitleLineViewModel>(lines);
         av.SetPosition(0, list, 0, 0, new List<SubtitleLineViewModel>());
@@ -98,6 +101,298 @@ public class AudioVisualizerDragTests : IDisposable
         Dispatcher.UIThread.RunJobs();
 
         return (window, av, list);
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false, false, false)]
+    [InlineData(false, false, true)]
+    [InlineData(false, true, false)]
+    [InlineData(false, true, true)]
+    [InlineData(true, false, false)]
+    [InlineData(true, false, true)]
+    [InlineData(true, true, false)]
+    [InlineData(true, true, true)]
+    public void ClickWithSmallPointerMovement_DoesNotChangeTimes_Issue15989(bool useSkia, bool snap, bool multiSelection)
+    {
+        Se.Settings.Waveform.SnapToFrames = snap;
+        Se.Settings.Waveform.SnapToShotChanges = snap;
+        Se.Settings.General.CurrentFrameRate = 25;
+        var first = Line(1.003, 3.007);
+        var second = Line(3.251, 5.009);
+        var (window, av, _) = Open(useSkia, first, second);
+        var (firstStart, firstEnd, secondStart, secondEnd) = (first.StartTime, first.EndTime, second.StartTime, second.EndTime);
+        av.ShotChanges = new List<double> { 1, 3 };
+        if (multiSelection)
+        {
+            av.AllSelectedParagraphs = new List<SubtitleLineViewModel> { first, second };
+        }
+
+        var seeks = new List<double>();
+        av.OnVideoPositionChanged += (_, e) => seeks.Add(e.PositionInSeconds);
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(254, 100), RawInputModifiers.LeftMouseButton);
+        Dispatcher.UIThread.RunJobs();
+
+        // Even a transient edit can be observed by change detection or snapping. At this zoom,
+        // two pixels would move the cue about 16 ms despite being treated as a click on release.
+        Assert.Equal(firstStart, first.StartTime);
+        Assert.Equal(firstEnd, first.EndTime);
+        Assert.Equal(secondStart, second.StartTime);
+        Assert.Equal(secondEnd, second.EndTime);
+
+        window.MouseUp(new Point(254, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Contains(seeks, position => Math.Abs(position - 254.0 / SampleRate) < 0.001);
+        Assert.False(av.IsEditingWithPointer);
+        Assert.Equal(firstStart, first.StartTime);
+        Assert.Equal(firstEnd, first.EndTime);
+        Assert.Equal(secondStart, second.StartTime);
+        Assert.Equal(secondEnd, second.EndTime);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
+    [InlineData(126, -3)]
+    [InlineData(126, 0)]
+    [InlineData(126, 3)]
+    [InlineData(379, -3)]
+    [InlineData(379, 0)]
+    [InlineData(379, 3)]
+    public void ClickNearCueEdge_DoesNotResizeOrSnapTimes(double pressX, double movement)
+    {
+        Se.Settings.Waveform.SnapToFrames = true;
+        Se.Settings.Waveform.SnapToShotChanges = false;
+        Se.Settings.General.CurrentFrameRate = 25;
+        var line = Line(1.003, 3.007);
+        var (window, av, _) = Open(line);
+        var (start, end) = (line.StartTime, line.EndTime);
+
+        window.MouseDown(new Point(pressX, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(pressX + movement, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseUp(new Point(pressX + movement, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(start, line.StartTime);
+        Assert.Equal(end, line.EndTime);
+        Assert.False(av.IsEditingWithPointer);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
+    [InlineData(126)]
+    [InlineData(252)]
+    [InlineData(378)]
+    public void DragReturningNearPress_ContinuesUpdatingTimes(double pressX)
+    {
+        Se.Settings.Waveform.SnapToFrames = false;
+        Se.Settings.Waveform.SnapToShotChanges = false;
+        var line = Line(1, 3);
+        var (window, _, _) = Open(line);
+
+        window.MouseDown(new Point(pressX, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(pressX + 63, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseMove(new Point(pressX + 1, 100), RawInputModifiers.LeftMouseButton);
+        Dispatcher.UIThread.RunJobs();
+
+        if (pressX != 378)
+        {
+            Assert.Equal(TimeSpan.FromMilliseconds(1008), line.StartTime);
+        }
+
+        if (pressX != 126)
+        {
+            Assert.Equal(TimeSpan.FromMilliseconds(3008), line.EndTime);
+        }
+
+        window.MouseUp(new Point(pressX + 1, 100), MouseButton.Left, RawInputModifiers.None);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void DragDoesNotSeekOnRelease_AndNextClickDoesNotMoveTimes()
+    {
+        Se.Settings.Waveform.SnapToFrames = false;
+        Se.Settings.Waveform.SnapToShotChanges = false;
+        var line = Line(1, 3);
+        var (window, av, _) = Open(line);
+        var seeks = 0;
+        av.OnVideoPositionChanged += (_, _) => seeks++;
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(315, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseUp(new Point(315, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(TimeSpan.FromMilliseconds(1500), line.StartTime);
+        Assert.Equal(TimeSpan.FromMilliseconds(3500), line.EndTime);
+        Assert.Equal(0, seeks);
+
+        window.MouseDown(new Point(315, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(316, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseUp(new Point(316, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(TimeSpan.FromMilliseconds(1500), line.StartTime);
+        Assert.Equal(TimeSpan.FromMilliseconds(3500), line.EndTime);
+        Assert.True(seeks > 0);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void DragClampedByNeighbours_LeavesTimesUnchanged_AndStillSeeksOnRelease()
+    {
+        // The cue sits exactly one minimum gap from both neighbours, so a move has no room in
+        // either direction. The pointer did pass the slop, but nothing was edited, so release
+        // still behaves like a click (seek) instead of silently doing nothing.
+        Se.Settings.Waveform.SnapToFrames = false;
+        Se.Settings.Waveform.SnapToShotChanges = false;
+        var before = Line(0, 0.9);
+        var line = Line(1, 3);
+        var after = Line(3.1, 5);
+        var (window, av, _) = Open(before, line, after);
+        var seeks = new List<double>();
+        av.OnVideoPositionChanged += (_, e) => seeks.Add(e.PositionInSeconds);
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(258, 100), RawInputModifiers.LeftMouseButton);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(TimeSpan.FromSeconds(1), line.StartTime);
+        Assert.Equal(TimeSpan.FromSeconds(3), line.EndTime);
+
+        window.MouseUp(new Point(258, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(TimeSpan.FromSeconds(1), line.StartTime);
+        Assert.Equal(TimeSpan.FromSeconds(3), line.EndTime);
+        Assert.Contains(seeks, position => Math.Abs(position - 258.0 / SampleRate) < 0.001);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
+    [InlineData(-4)]
+    [InlineData(8)]
+    public void DragSharedEdge_ResizesTheCueOnTheDragSide_WithoutSeeking(double movement)
+    {
+        // Two cues share the edge at 3 s (x = 378). Pressing there is an "Or" resize: the
+        // direction of the first move past the slop decides which cue gets the edge.
+        Se.Settings.Waveform.SnapToFrames = false;
+        Se.Settings.Waveform.SnapToShotChanges = false;
+        var first = Line(1, 3);
+        var second = Line(3, 5);
+        var (window, av, _) = Open(first, second);
+        var seeks = 0;
+        av.OnVideoPositionChanged += (_, _) => seeks++;
+
+        window.MouseDown(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+        // The switch to the other cue re-anchors the drag on its first move, so a second move
+        // is what actually resizes it.
+        window.MouseMove(new Point(378 + movement / 2, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseMove(new Point(378 + movement, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseUp(new Point(378 + movement, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        if (movement < 0)
+        {
+            // The shared edge leaves no gap, so the pulled-back end is also clamped to the
+            // minimum gap before the second cue; either way it moved left and only it moved.
+            Assert.True(first.EndTime.TotalSeconds < 3, $"first end {first.EndTime.TotalSeconds}");
+            Assert.Equal(TimeSpan.FromSeconds(3), second.StartTime);
+        }
+        else
+        {
+            Assert.Equal(TimeSpan.FromSeconds(3), first.EndTime);
+            Assert.True(second.StartTime.TotalSeconds > 3, $"second start {second.StartTime.TotalSeconds}");
+        }
+
+        Assert.Equal(TimeSpan.FromSeconds(1), first.StartTime);
+        Assert.Equal(TimeSpan.FromSeconds(5), second.EndTime);
+        Assert.Equal(0, seeks);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Assa_Move_LinesWithTheSameTimes_MoveTogether()
+    {
+        // A clip art is one ASSA drawing line per layer, all 1-3 s; dragging one moved only that layer
+        var a = Line(1, 3, "{\\p1}m 0 0 l 10 0 10 10{\\p0}");
+        var b = Line(1, 3, "{\\p1}m 5 5 l 15 5 15 15{\\p0}");
+        var sign = Line(1, 3, "A sign with the same times");
+        var neighbour = Line(4, 5);
+        var (window, av, _) = Open(a, b, sign, neighbour);
+        av.MovesSameTimeLinesTogether = () => true;
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(315, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        window.MouseUp(new Point(315, 100), MouseButton.Left, RawInputModifiers.None);
+
+        // +63 px = +0.5 s for the whole stack; the line after it is not part of it
+        Assert.All(new[] { a, b, sign }, line => Assert.Equal(1.5, line.StartTime.TotalSeconds, 2));
+        Assert.All(new[] { a, b, sign }, line => Assert.Equal(3.5, line.EndTime.TotalSeconds, 2));
+        Assert.Equal(4, neighbour.StartTime.TotalSeconds, 2);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Assa_Move_LinesWithTheSameTimes_StopAtTheNeighbour()
+    {
+        // A dialogue line with a Comment twin at the same times is a stack too - it must still keep
+        // the minimum gap to the next line instead of sliding over it
+        var line = Line(1, 3, "Dialogue");
+        var twin = Line(1, 3, "Dialogue (original)");
+        var neighbour = Line(3.5, 5);
+        var (window, av, _) = Open(line, twin, neighbour);
+        av.MovesSameTimeLinesTogether = () => true;
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(315, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        window.MouseUp(new Point(315, 100), MouseButton.Left, RawInputModifiers.None);
+
+        Assert.All(new[] { line, twin }, l => Assert.Equal(3.4, l.EndTime.TotalSeconds, 2));
+        Assert.All(new[] { line, twin }, l => Assert.Equal(1.4, l.StartTime.TotalSeconds, 2));
+        Assert.Equal(3.5, neighbour.StartTime.TotalSeconds, 2);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
+    [InlineData(126, 1.5, 3)]  // left edge at x = 1 s, +63 px -> 1.5 s
+    [InlineData(378, 1, 3.5)]  // right edge at x = 3 s, +63 px -> 3.5 s
+    public void Assa_EdgeDrag_ResizesTheLinesWithTheSameTimes(double edgeX, double expectedStart, double expectedEnd)
+    {
+        var a = Line(1, 3);
+        var b = Line(1, 3);
+        var c = Line(1, 3);
+        var (window, av, _) = Open(a, b, c);
+        av.MovesSameTimeLinesTogether = () => true;
+
+        window.MouseDown(new Point(edgeX, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(edgeX + 63, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        window.MouseUp(new Point(edgeX + 63, 100), MouseButton.Left, RawInputModifiers.None);
+
+        Assert.All(new[] { a, b, c }, line => Assert.Equal(expectedStart, line.StartTime.TotalSeconds, 2));
+        Assert.All(new[] { a, b, c }, line => Assert.Equal(expectedEnd, line.EndTime.TotalSeconds, 2));
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void NotAssa_Move_LinesWithTheSameTimes_MovesJustTheOne()
+    {
+        var a = Line(1, 3);
+        var b = Line(1, 3);
+        var (window, _, _) = Open(a, b);
+
+        window.MouseDown(new Point(252, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(378, 100), RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        window.MouseUp(new Point(378, 100), MouseButton.Left, RawInputModifiers.None);
+
+        Assert.Single(new[] { a, b }, line => Math.Abs(line.StartTime.TotalSeconds - 2) < 0.01);
+        window.Close();
     }
 
     [AvaloniaFact]

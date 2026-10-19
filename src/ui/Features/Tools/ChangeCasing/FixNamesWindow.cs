@@ -3,17 +3,18 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
-using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
+/// <summary>
+/// The fix names step of change casing, in the editor look (see <see cref="EditorChrome"/>): the
+/// names found (plus extra names) on top, the hits they give below, Cancel and OK at the bottom.
+/// </summary>
 public class FixNamesWindow : Window
 {
 
@@ -29,92 +30,102 @@ public class FixNamesWindow : Window
         MinWidth = 800;
         MinHeight = 500;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
+        // Names
+        var labelNamesCount = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
+        labelNamesCount.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.Names)}.{nameof(vm.Names.Count)}")
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Title
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Name title
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Names
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Extra names label
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Extra names entry
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Hits title
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Hits
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-
-        var row = 0;
-        var labelTitle = UiUtil.MakeLabel(lang.FixNames);
-        grid.Add(labelTitle, row, 0);
-
-        row++;
-        var labelNamesCount = new Label();
-        labelNamesCount.Bind(Label.ContentProperty, new Binding($"{nameof(vm.Names)}.{nameof(vm.Names.Count)}")
-        {
+            Source = vm,
             Mode = BindingMode.OneWay,
             StringFormat = lang.NamesX,
         });
-        grid.Add(labelNamesCount, row, 0);
 
-        row++;
-        grid.Add(MakeNamesView(vm), row, 0);
-
-        row++;
-        var labelExtraNames = UiUtil.MakeLabel(lang.ExtraNames);
-        grid.Add(labelExtraNames, row, 0);
-
-        row++;
-        var textBoxExtraNames = UiUtil.MakeTextBox(600, vm, nameof(vm.ExtraNames));
+        var textBoxExtraNames = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.ExtraNames))
+            .WithAccessibleName(lang.ExtraNames);
+        textBoxExtraNames.Classes.Add("text");
+        textBoxExtraNames.HorizontalAlignment = HorizontalAlignment.Stretch;
         textBoxExtraNames.PlaceholderText = lang.EnterExtraNamesHint;
-        var buttonAddExtraName = UiUtil.MakeButton(Se.Language.General.Refresh, vm.AddExtraNameCommand);
-        var stackExtraNames = new StackPanel
+        var buttonAddExtraName = EditorChrome.MakeTextToolButton("fa-solid fa-rotate", Se.Language.General.Refresh, vm.AddExtraNameCommand);
+        var gridExtraNames = new Grid
         {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            Margin = new Thickness(0, 5, 0, 20),
-            Children =
-            {
-                textBoxExtraNames,
-                buttonAddExtraName,
-            }
+            ColumnSpacing = 8,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
         };
-        grid.Add(stackExtraNames, row, 0);
+        gridExtraNames.Add(textBoxExtraNames, 0, 0);
+        gridExtraNames.Add(buttonAddExtraName, 0, 1);
 
-        row++;
-        var labelHits = UiUtil.MakeLabel(new Binding($"{nameof(vm.Hits)}.{nameof(vm.Hits.Count)}")
+        var namesContent = new Grid
         {
+            RowSpacing = 8,
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(1, GridUnitType.Star)), // names
+                new RowDefinition(GridLength.Auto), // extra names
+            },
+        };
+        namesContent.Add(MakeNamesView(vm), 0, 0);
+        namesContent.Add(EditorChrome.MakeLabeledRow(lang.ExtraNames, gridExtraNames, 90), 1, 0);
+
+        // Hits
+        var labelHits = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
+        labelHits.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.Hits)}.{nameof(vm.Hits.Count)}")
+        {
+            Source = vm,
+            Mode = BindingMode.OneWay,
             StringFormat = lang.HitsX,
         });
-        grid.Add(labelHits, row, 0);
 
-        row++;
-        grid.Add(MakeHitsView(vm), row, 0);
+        var sections = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(1, GridUnitType.Star)), // names
+                new RowDefinition(new GridLength(1, GridUnitType.Star)), // hits
+            },
+        };
+        sections.Add(MakeFillSection(lang.FixNames, labelNamesCount, namesContent, true), 0, 0);
+        sections.Add(MakeFillSection(Se.Language.General.Preview, labelHits, MakeHitsView(vm), false), 1, 0);
 
         // OK and Cancel buttons
-        row++;
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtonsBottom = UiUtil.MakeButtonBar(
-            buttonOk,
-            buttonCancel
-        );
 
-        grid.Add(panelButtonsBottom, row, 0);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+    }
+
+    /// <summary>
+    /// A section that fills its row: header (with a count on the right), then the content.
+    /// </summary>
+    private static Border MakeFillSection(string title, Control headerRight, Control content, bool first)
+    {
+        var header = new DockPanel();
+        DockPanel.SetDock(headerRight, Dock.Right);
+        header.Children.Add(headerRight);
+        header.Children.Add(EditorChrome.MakeSectionHeader(title));
+
+        var grid = new Grid
+        {
+            RowSpacing = 10,
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) },
+        };
+        grid.Add(header, 0, 0);
+        grid.Add(content, 1, 0);
+        return new Border
+        {
+            Child = grid,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, first ? 0 : 1, 0, 0),
+            Padding = new Thickness(14, 12, 14, 14),
+        };
     }
 
     private static Border MakeNamesView(FixNamesViewModel vm)
@@ -122,7 +133,7 @@ public class FixNamesWindow : Window
         // The DataGrid this replaces used DataGridCheckboxMultiSelect for extended
         // selection + Space toggling; shift/ctrl multi-select is native ListBox behavior
         // on TableView, so only the Space toggle needs wiring (TableViewExtras.AddSpaceToggle).
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.Tools.ChangeCasing.FixNames);
         dataGrid.Height = double.NaN;
         dataGrid.ItemsSource = vm.Names;
         dataGrid.DataContext = vm;
@@ -166,13 +177,12 @@ public class FixNamesWindow : Window
         dataGrid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        var border = UiUtil.MakeBorderForControlNoPadding(dataGrid);
-        return border;
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 
     private static Border MakeHitsView(FixNamesViewModel vm)
     {
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Height = double.NaN;
         dataGrid.ItemsSource = vm.Hits;
         dataGrid.DataContext = vm;
@@ -230,8 +240,7 @@ public class FixNamesWindow : Window
         dataGrid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        var border = UiUtil.MakeBorderForControlNoPadding(dataGrid);
-        return border;
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 
 

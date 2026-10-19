@@ -1,70 +1,88 @@
-﻿using Avalonia.Controls;
+using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
 
+/// <summary>
+/// Earlier override tags, newest first - styled like ASSA draw and the apply override tags window.
+/// </summary>
 public class AssaTagHistoryWindow : Window
 {
+    private static readonly FontFamily MonoFont = new("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace");
+
     public AssaTagHistoryWindow(AssaTagHistoryViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Assa.OverrideTagsHistory;
         CanResize = false;
-        SizeToContent = SizeToContent.WidthAndHeight;
-        MinWidth = 450;
+        Width = 520;
+        SizeToContent = SizeToContent.Height;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(300) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 15,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
 
         var listBox = new ListBox
         {
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.OverrideTags)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedOverrideTag)) { Mode = BindingMode.TwoWay },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Height = 300,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(4),
+            ItemTemplate = new FuncDataTemplate<string>((_, _) => new TextBlock
+            {
+                FontFamily = MonoFont,
+                FontSize = 12.5,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                [!TextBlock.TextProperty] = new Binding("."),
+            }),
         };
-        listBox.DoubleTapped += (s, e) => vm.OkCommand.Execute(null);
-        grid.Add(listBox, 0);
+        AutomationProperties.SetName(listBox, Se.Language.Assa.OverrideTagsHistory);
+        listBox.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
 
-        var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteItemCommand);
-        var panelDelete = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { buttonDelete },
-        };
-        grid.Add(panelDelete, 1);
+        var delete = EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.DeleteItemCommand, 24);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.History, listBox, delete, first: true);
+        section.Background = EditorChrome.PanelBrush;
 
-        // Buttons
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        grid.Add(panelButtons, 2);
-
-        Content = grid;
+        var root = new DockPanel();
+        var buttonBar = MakeButtonBar(vm);
+        DockPanel.SetDock(buttonBar, Dock.Bottom);
+        root.Children.Add(buttonBar);
+        root.Children.Add(section);
+        Content = root;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, listBox);
         KeyDown += vm.KeyDown;
+    }
+
+    private static Border MakeButtonBar(AssaTagHistoryViewModel vm)
+    {
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, HorizontalAlignment = HorizontalAlignment.Right };
+        buttons.Children.Add(buttonCancel);
+        buttons.Children.Add(buttonOk);
+
+        return new Border
+        {
+            Child = buttons,
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 10),
+        };
     }
 }

@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             foreach (var line in lines)
             {
-                if (line.IndexOf("<sync ", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (line.Contains("<sync ", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string syncTag = "<sync start=";
             const string syncTagEnc = "<sync encrypted=\"true\" start=";
             int syncStartPos = allInputLower.IndexOf(syncTag, StringComparison.Ordinal);
-            bool hasEncryptedTags = allInputLower.IndexOf(syncTagEnc, StringComparison.Ordinal) >= 0;
+            bool hasEncryptedTags = allInputLower.Contains(syncTagEnc);
             int index = syncStartPos + syncTag.Length;
 
             int syncStartPosEnc = -1;
