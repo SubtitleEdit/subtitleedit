@@ -17,7 +17,7 @@ internal static class SpeechToTextChrome
     internal static StackPanel Stacked(TextBlock label, Control content)
     {
         label.Foreground = EditorChrome.DimTextBrush;
-        label.FontSize = 12;
+        label.FontSize = EditorChrome.ScaledFont(12);
         label.TextWrapping = TextWrapping.Wrap;
         label.Margin = new Thickness(0);
         var panel = new StackPanel { Spacing = 4 };

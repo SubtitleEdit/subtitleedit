@@ -37,7 +37,7 @@ public class MinGapCalculateWindow : Window
 
         var labelCalculation = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.CalculationText)),

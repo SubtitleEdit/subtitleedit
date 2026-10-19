@@ -196,12 +196,12 @@ internal static class FormatPropertiesChrome
         };
         var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
         content.Children.Add(swatch);
-        content.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        content.Children.Add(new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center });
         var button = new Button
         {
             Content = content,
             Command = command,
-            MinHeight = 28,
+            MinHeight = EditorChrome.FieldHeight,
             Padding = new Thickness(8, 0, 10, 0),
             CornerRadius = new CornerRadius(6),
             Background = EditorChrome.FieldBrush,

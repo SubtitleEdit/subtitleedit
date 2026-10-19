@@ -116,7 +116,7 @@ public class SettingsItem
             ? new TextBlock
             {
                 Text = _label,
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
                 VerticalAlignment = VerticalAlignment.Center,
                 TextWrapping = TextWrapping.Wrap,
             }

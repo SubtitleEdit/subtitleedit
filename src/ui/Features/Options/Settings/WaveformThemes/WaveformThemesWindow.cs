@@ -157,7 +157,7 @@ public class WaveformThemesWindow : Window
     private static TextBlock MakeColorLabel(string text)
     {
         var label = EditorChrome.MakeDimLabel(text, new Thickness(0));
-        label.FontSize = 12.5;
+        label.FontSize = EditorChrome.FieldFontSize;
         return label;
     }
 

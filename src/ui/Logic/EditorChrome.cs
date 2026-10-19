@@ -26,6 +26,24 @@ internal static partial class EditorChrome
     // windows are open), so everything built from it repaints without rebuilding.
     internal static bool IsLightTheme => Application.Current?.ActualThemeVariant == ThemeVariant.Light;
 
+    // The editor look's sizes are design values at 100 % that follow the "Font scale (%)" setting
+    // (#16242): an explicit FontSize does not inherit the scaled window font, so every text size
+    // goes through ScaledFont, and the fixed heights and widths that must fit the text (the 28 px
+    // fields) through ScaledSize. Icons keep their size: an Icon with its own FontSize is left
+    // alone, and one that inherits gets the scale undone by the icon style in UiTheme.
+
+    /// <summary>The text size of the fields, labels and buttons: 12.5 at 100 %.</summary>
+    internal static double FieldFontSize => ScaledFont(12.5);
+
+    /// <summary>The height of the compact fields, combo boxes and buttons: 28 at 100 %.</summary>
+    internal static double FieldHeight => ScaledSize(28);
+
+    /// <summary>A text size of the editor look scaled by the "Font scale (%)" setting.</summary>
+    internal static double ScaledFont(double designSize) => UiUtil.ScaledFontSize(designSize);
+
+    /// <summary>A height or width of the editor look that holds text, scaled by the "Font scale (%)" setting.</summary>
+    internal static double ScaledSize(double designSize) => Math.Round(designSize * UiTheme.FontScale);
+
     /// <summary>
     /// Text and icons on hover - white on the dark palette, near black on the light one.
     /// </summary>
@@ -224,9 +242,9 @@ internal static partial class EditorChrome
             Setters =
             {
                 new Setter(NumericUpDown.ShowButtonSpinnerProperty, false),
-                new Setter(NumericUpDown.MinHeightProperty, 28.0),
-                new Setter(NumericUpDown.HeightProperty, 28.0),
-                new Setter(NumericUpDown.FontSizeProperty, 12.5),
+                new Setter(NumericUpDown.MinHeightProperty, FieldHeight),
+                new Setter(NumericUpDown.HeightProperty, FieldHeight),
+                new Setter(NumericUpDown.FontSizeProperty, FieldFontSize),
                 new Setter(NumericUpDown.BackgroundProperty, FieldBrush),
                 new Setter(NumericUpDown.BorderBrushProperty, FieldBorderBrush),
                 new Setter(NumericUpDown.CornerRadiusProperty, new CornerRadius(6)),
@@ -316,7 +334,7 @@ internal static partial class EditorChrome
             Setters =
             {
                 new Setter(Border.CornerRadiusProperty, new CornerRadius(6)),
-                new Setter(Border.MinHeightProperty, 28.0),
+                new Setter(Border.MinHeightProperty, FieldHeight),
             },
         });
         styles.Add(new Style(x => x.OfType<TreeViewItem>().Class(":selected").Template().OfType<Border>().Name("PART_LayoutRoot"))
@@ -352,7 +370,7 @@ internal static partial class EditorChrome
         {
             Text = text,
             Foreground = DimTextBrush,
-            FontSize = 12,
+            FontSize = ScaledFont(12),
             VerticalAlignment = VerticalAlignment.Center,
             Margin = margin,
         };
@@ -380,7 +398,7 @@ internal static partial class EditorChrome
             {
                 Text = prefix,
                 Foreground = FaintTextBrush,
-                FontSize = 11,
+                FontSize = ScaledFont(11),
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(8, 0, 0, 0),
             };
@@ -484,7 +502,7 @@ internal static partial class EditorChrome
         AutomationProperties.SetName(toggle, text);
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
         row.Children.Add(toggle);
-        row.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap });
+        row.Children.Add(new TextBlock { Text = text, FontSize = FieldFontSize, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap });
         return row;
     }
 
@@ -493,7 +511,7 @@ internal static partial class EditorChrome
         return new TextBlock
         {
             Text = text.ToUpperInvariant(),
-            FontSize = 11,
+            FontSize = ScaledFont(11),
             FontWeight = FontWeight.SemiBold,
             LetterSpacing = 0.6,
             Foreground = DimTextBrush,
