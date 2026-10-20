@@ -43,6 +43,7 @@ public class SeAssa
     public string StylesPreviewText { get; set; }
     public bool SetPositionShowCenterLines { get; set; }
     public bool SetPositionSnapToGuides { get; set; }
+    public bool SetPositionShowSelection { get; set; }
     public int BackgroundBoxesShadowDistance { get; set; }
     public bool HideLayersFromWaveform { get; set; }
 
@@ -111,6 +112,7 @@ public class SeAssa
         StylesPreviewText = "This is a test";
         SetPositionShowCenterLines = true;
         SetPositionSnapToGuides = true;
+        SetPositionShowSelection = true;
         BackgroundBoxesShadowDistance = 1;
 
         HideLayersFromWaveform = true;

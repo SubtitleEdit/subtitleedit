@@ -71,6 +71,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [ObservableProperty] private bool _showSafeArea = Se.Settings.Assa.SetPositionShowSafeArea;
     [ObservableProperty] private bool _showCenterLines = Se.Settings.Assa.SetPositionShowCenterLines;
     [ObservableProperty] private bool _snapToGuides = Se.Settings.Assa.SetPositionSnapToGuides;
+    [ObservableProperty] private bool _showSelection = Se.Settings.Assa.SetPositionShowSelection;
 
     /// <summary>
     /// The title-safe frame the anchor grid places the line inside, as a fraction of each side.
@@ -230,6 +231,8 @@ public partial class AssaSetPositionViewModel : ObservableObject
     partial void OnShowCenterLinesChanged(bool value) => Se.Settings.Assa.SetPositionShowCenterLines = value;
 
     partial void OnSnapToGuidesChanged(bool value) => Se.Settings.Assa.SetPositionSnapToGuides = value;
+
+    partial void OnShowSelectionChanged(bool value) => Se.Settings.Assa.SetPositionShowSelection = value;
 
     /// <summary>
     /// Anchor grid: places the text box inside the safe area - left/center/right, top/middle/bottom.
