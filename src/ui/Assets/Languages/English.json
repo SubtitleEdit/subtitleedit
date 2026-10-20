@@ -3892,6 +3892,7 @@
       "clearBookmarks": "Clear bookmarks",
       "goToNextEmptyLine": "Go to next empty line",
       "toggleWaveformToolbar": "Toggle waveform toolbar",
+      "cycleTheme": "Cycle theme",
       "toggleSubtitleGridFormatting": "Toggle grid formatting (show formatting/show tags/no formatting/hide tags)",
       "waveformSetStartAndSetEndOfPreviousMinusGap": "Set start and set end of previous minus gap",
       "waveformSetEndAndStartOfNextAfterGap": "Set end and start of next plus gap",

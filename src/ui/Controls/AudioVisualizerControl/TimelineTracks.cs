@@ -761,7 +761,7 @@ public class TimelineTracks : Control, IDisposable
             source?.WaveformSelectedColor ?? Colors.White,
             source?.WaveformCursorColor ?? Colors.Cyan,
             source?.WaveformShotChangeColor ?? Colors.AntiqueWhite,
-            Se.Settings.Waveform.WaveformTextColor);
+            WaveformColors.CurrentTextHex);
         if (key == _colorKey)
         {
             return;

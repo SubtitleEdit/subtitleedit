@@ -115,6 +115,7 @@ public class LanguageSettingsShortcuts
     public string ClearBookmarks { get; set; }
     public string GoToNextEmptyLine { get; set; }
     public string ToggleWaveformToolbar { get; set; }
+    public string CycleTheme { get; set; }
     public string ToggleSubtitleGridFormatting { get; set; }
     public string WaveformSetStartAndSetEndOfPreviousMinusGap { get; set; }
     public string WaveformSetEndAndStartOfNextAfterGap { get; set; }
@@ -474,6 +475,7 @@ public class LanguageSettingsShortcuts
         ClearBookmarks = "Clear bookmarks";
         GoToNextEmptyLine = "Go to next empty line";
         ToggleWaveformToolbar = "Toggle waveform toolbar";
+        CycleTheme = "Cycle theme";
         ToggleSubtitleGridFormatting = "Toggle grid formatting (show formatting/show tags/no formatting/hide tags)";
         WaveformSetStartAndSetEndOfPreviousMinusGap = "Set start and set end of previous minus gap";
         WaveformSetEndAndStartOfNextAfterGap = "Set end and start of next plus gap";

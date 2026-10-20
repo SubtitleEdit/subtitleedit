@@ -150,14 +150,15 @@ public class VisualSyncWindow : Window
 
     private static AudioVisualizer MakeAudioVisualizer()
     {
+        var colors = WaveformColors.Current;
         var audioVisualizer = new AudioVisualizer
         {
             Width = double.NaN,
             IsReadOnly = true,
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
-            WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor(),
-            WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor(),
-            WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor(),
+            WaveformColor = colors.Waveform,
+            WaveformSelectedColor = colors.Selected,
+            WaveformGridColor = colors.Grid,
             InvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel,
         };
         AutomationProperties.SetName(audioVisualizer, Se.Language.General.Waveform);

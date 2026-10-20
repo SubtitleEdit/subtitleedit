@@ -78,17 +78,8 @@ public class InitWaveform
         {
             vm.AudioVisualizer = settings.UseSkiaRenderer ? new SkiaAudioVisualizer() : new AudioVisualizer();
             vm.AudioVisualizer.DrawGridLines = settings.DrawGridLines;
-            vm.AudioVisualizer.WaveformColor = settings.WaveformColor.FromHexToColor();
-            vm.AudioVisualizer.WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor();
-            vm.AudioVisualizer.WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor();
-            vm.AudioVisualizer.WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor();
-            vm.AudioVisualizer.WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor();
-            vm.AudioVisualizer.WaveformGridColor = settings.WaveformGridColor.FromHexToColor();
-            vm.AudioVisualizer.WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor();
-            vm.AudioVisualizer.WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor();
-            vm.AudioVisualizer.WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor();
-            vm.AudioVisualizer.ParagraphBackground = settings.ParagraphBackground.FromHexToColor();
-            vm.AudioVisualizer.ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor();
+            WaveformColors.Current.ApplyTo(vm.AudioVisualizer);
+            vm.AudioVisualizer.EmptyBackgroundTile = UiTheme.GetThemeArt(UiTheme.WaveformBackgroundFileName);
             vm.AudioVisualizer.InvertMouseWheel = settings.InvertMouseWheel;
             vm.AudioVisualizer.VerticalAlignment = VerticalAlignment.Stretch;
             vm.AudioVisualizer.Height = double.NaN; // Auto height

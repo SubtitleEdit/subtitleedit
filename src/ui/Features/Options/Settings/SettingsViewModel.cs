@@ -551,13 +551,16 @@ public partial class SettingsViewModel : ObservableObject
         ];
         SelectedUpdateChannel = UpdateChannels[0];
 
-        Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel", "Nord"];
+        Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel", "Nord", "Midnight Cinema", "Sakura"];
         SelectedTheme = Themes[0];
 
         // Themes.zip is unpacked into the data folder at start-up; if that failed (or has not run)
         // the folder is missing, which must not take the whole Settings window down with it.
         var iconFolders = Directory.Exists(Se.ThemesFolder)
-            ? Directory.GetDirectories(Se.ThemesFolder).Select(p => Path.GetFileName(p)).ToList()
+            ? Directory.GetDirectories(Se.ThemesFolder)
+                // Nord's folder holds only background art - not an icon set to pick
+                .Where(p => File.Exists(Path.Combine(p, "Open.png")))
+                .Select(p => Path.GetFileName(p)).ToList()
             : new List<string>();
         iconFolders.Insert(0, Se.Language.General.Auto);
         IconThemes = new ObservableCollection<string>(iconFolders);
@@ -1507,13 +1510,21 @@ public partial class SettingsViewModel : ObservableObject
         {
             return UiTheme.ThemeNameNord;
         }
+        else if (translation == "Midnight Cinema")
+        {
+            return UiTheme.ThemeNameMidnightCinema;
+        }
+        else if (translation == "Sakura")
+        {
+            return UiTheme.ThemeNameSakura;
+        }
         else
         {
             return UiTheme.ThemeNameSystem;
         }
     }
 
-    private string MapThemeToTranslation(string theme)
+    internal static string MapThemeToTranslation(string theme)
     {
         if (theme == UiTheme.ThemeNameSystem)
         {
@@ -1538,6 +1549,14 @@ public partial class SettingsViewModel : ObservableObject
         else if (theme == UiTheme.ThemeNameNord)
         {
             return "Nord";
+        }
+        else if (theme == UiTheme.ThemeNameMidnightCinema)
+        {
+            return "Midnight Cinema";
+        }
+        else if (theme == UiTheme.ThemeNameSakura)
+        {
+            return "Sakura";
         }
         else
         {

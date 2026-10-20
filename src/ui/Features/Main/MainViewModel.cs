@@ -15164,6 +15164,40 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Switches to the next theme without a settings round trip. Only the theme-keyed parts are
+    /// refreshed - unlike ApplySettings there is no layout rebuild, so a playing video and the
+    /// grid keep their state.
+    /// </summary>
+    [RelayCommand]
+    private void CycleTheme()
+    {
+        Se.Settings.Appearance.Theme = UiTheme.GetNextTheme(Se.Settings.Appearance.Theme);
+        UiTheme.SetCurrentTheme();
+        RebuildToolbar();
+        UpdateAlternatingRowBrush();
+        foreach (var subtitle in Subtitles)
+        {
+            subtitle.RefreshTextRendering();
+        }
+
+        if (AudioVisualizer != null)
+        {
+            WaveformColors.Current.ApplyTo(AudioVisualizer);
+            AudioVisualizer.EmptyBackgroundTile = UiTheme.GetThemeArt(UiTheme.WaveformBackgroundFileName);
+            AudioVisualizer.ResetCache();
+            AudioVisualizer.InvalidateVisual();
+        }
+
+        var videoPlayer = GetVideoPlayerControl();
+        if (videoPlayer != null)
+        {
+            videoPlayer.EmptyBackground = UiTheme.GetThemeArt(UiTheme.VideoBackgroundFileName);
+        }
+
+        ShowStatus($"{Se.Language.General.Theme}: {SettingsViewModel.MapThemeToTranslation(Se.Settings.Appearance.Theme)}");
+    }
+
     public void ApplySettings()
     {
         // Restored at the very end, after the format list refresh below: SetLayout re-creates
@@ -15241,17 +15275,8 @@ public partial class MainViewModel :
         if (AudioVisualizer != null)
         {
             AudioVisualizer.DrawGridLines = Se.Settings.Waveform.DrawGridLines;
-            AudioVisualizer.WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor();
-            AudioVisualizer.WaveformBackgroundColor = Se.Settings.Waveform.WaveformBackgroundColor.FromHexToColor();
-            AudioVisualizer.WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor();
-            AudioVisualizer.WaveformCursorColor = Se.Settings.Waveform.WaveformCursorColor.FromHexToColor();
-            AudioVisualizer.WaveformShotChangeColor = Se.Settings.Waveform.WaveformShotChangeColor.FromHexToColor();
-            AudioVisualizer.WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor();
-            AudioVisualizer.WaveformParagraphLeftColor = Se.Settings.Waveform.WaveformParagraphLeftColor.FromHexToColor();
-            AudioVisualizer.WaveformParagraphRightColor = Se.Settings.Waveform.WaveformParagraphRightColor.FromHexToColor();
-            AudioVisualizer.WaveformFancyHighColor = Se.Settings.Waveform.WaveformFancyHighColor.FromHexToColor();
-            AudioVisualizer.ParagraphBackground = Se.Settings.Waveform.ParagraphBackground.FromHexToColor();
-            AudioVisualizer.ParagraphSelectedBackground = Se.Settings.Waveform.ParagraphSelectedBackground.FromHexToColor();
+            WaveformColors.Current.ApplyTo(AudioVisualizer);
+            AudioVisualizer.EmptyBackgroundTile = UiTheme.GetThemeArt(UiTheme.WaveformBackgroundFileName);
             AudioVisualizer.InvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel;
             AudioVisualizer.UpdateTheme();
             AudioVisualizer.IsReadOnly = AreTimeCodesLocked;

@@ -84,14 +84,15 @@ public class SetSyncPointWindow : Window
         panelVideo.Add(EditorChrome.MakeToolbarSeparator(), 0, 1);
         panelVideo.Add(labelVideoInfo, 0, 2);
 
+        var colors = WaveformColors.Current;
         vm.AudioVisualizer = new AudioVisualizer
         {
             Width = double.NaN,
             IsReadOnly = true,
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
-            WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor(),
-            WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor(),
-            WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor(),
+            WaveformColor = colors.Waveform,
+            WaveformSelectedColor = colors.Selected,
+            WaveformGridColor = colors.Grid,
             InvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel,
         };
         vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerLeftPositionChanged;

@@ -71,6 +71,10 @@ public class SkiaAudioVisualizer : AudioVisualizer
         if (drawOperation != null)
         {
             context.Custom(drawOperation);
+
+            // The draw operation paints its own opaque background, so the theme art for an
+            // empty waveform goes on top - it is faint and there is no waveform to cover yet.
+            DrawEmptyBackground(context, new Rect(Bounds.Size));
         }
 
         RaiseRendered();
@@ -131,7 +135,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.ParagraphRightColor = ToSkColor(WaveformParagraphRightColor, new SKColor(255, 0, 0, 100));
         f.ParagraphBackgroundColor = ToSkColor(ParagraphBackground, SKColors.Transparent);
         f.ParagraphSelectedBackgroundColor = ToSkColor(ParagraphSelectedBackground, SKColors.Transparent);
-        f.TextColor = GetTextColor(settings.Waveform.WaveformTextColor);
+        f.TextColor = GetTextColor(WaveformColors.CurrentTextHex);
 
         f.FontName = GetFontName(settings.Appearance.FontName);
         f.FontSize = (float)settings.Waveform.WaveformTextFontSize;

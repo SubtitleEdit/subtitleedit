@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.Logic.Plugins;
 
 /// <summary>
 /// Builds <see cref="PluginThemeColors"/> for the currently active Subtitle Edit theme.
-/// Dark colors come from <see cref="SeAppearance"/> (Nord has its own); Classic/Pastel/Light use the same
+/// Dark colors come from <see cref="SeAppearance"/> (Nord and Midnight Cinema have their own); Classic/Pastel/Sakura/Light use the same
 /// hard-coded palettes as <see cref="UiTheme"/>.
 /// </summary>
 internal static class PluginThemeColorsFactory
@@ -33,6 +33,11 @@ internal static class PluginThemeColorsFactory
         {
             background = Color.FromRgb(240, 235, 255);
             foreground = Color.FromRgb(0, 0, 0);
+        }
+        else if (themeName == UiTheme.ThemeNameSakura)
+        {
+            background = UiTheme.SakuraBackgroundColor;
+            foreground = UiTheme.SakuraForegroundColor;
         }
         else
         {
