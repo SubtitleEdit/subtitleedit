@@ -67,6 +67,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             return text;
         }
 
+        /// <summary>
+        /// Reads a box payload whose length comes from the box size in the file. A corrupt size
+        /// asked for gigabytes (OutOfMemoryException), so cap it by the bytes left in the stream.
+        /// The few extra bytes keep the zero padding that the "Size - 4" reads of the last box in
+        /// a file have always relied on.
+        /// </summary>
+        internal static byte[] ReadPayload(System.IO.Stream fs, ulong length)
+        {
+            var bytesLeft = fs.Length > fs.Position ? (ulong)(fs.Length - fs.Position) : 0UL;
+            var buffer = new byte[Math.Min(length, bytesLeft + 8)];
+            fs.ReadFully(buffer, 0, buffer.Length);
+            return buffer;
+        }
+
         internal bool InitializeSizeAndName(System.IO.Stream fs)
         {
             if (StartPosition == 0)

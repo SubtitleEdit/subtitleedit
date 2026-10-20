@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -100,5 +101,44 @@ public class FuzzFindingsTest
         var trun = new Trun(new MemoryStream(data), (ulong)data.Length);
 
         Assert.Equal(3, trun.Samples.Count);
+    }
+
+    [Fact]
+    public void Mp4Elst_HugeBoxSize_DoesNotAllocateIt()
+    {
+        // The payload buffer was sized from the box size alone: 4 GB for a 32-byte file.
+        var data = new byte[32];
+
+        var elst = new Elst(new MemoryStream(data), 0xFFFFFFF0);
+
+        Assert.Empty(elst.Entries);
+    }
+
+    [Fact]
+    public void Mp4Mdia_HugeHdlrBoxSize_DoesNotAllocateIt()
+    {
+        var data = new byte[48];
+        data[0] = 0x7F;
+        data[1] = 0xFF;
+        data[2] = 0xFF;
+        data[3] = 0xF0;
+        "hdlr"u8.CopyTo(data.AsSpan(4));
+        "text"u8.CopyTo(data.AsSpan(16));
+
+        var mdia = new Mdia(new MemoryStream(data), (ulong)data.Length);
+
+        Assert.Equal("text", mdia.HandlerType);
+    }
+
+    [Fact]
+    public void GetCcData_HugeSampleSize_DoesNotAllocateIt()
+    {
+        // A corrupt sample size near int.MaxValue made ArrayPool.Rent ask for more than the
+        // largest possible array when reading CEA-608 from fragmented MP4 video samples.
+        var data = new byte[64];
+
+        var ccData = GetCcDataHelper.GetCcData(new MemoryStream(data), 0, int.MaxValue - 1, false, 4);
+
+        Assert.Empty(ccData);
     }
 }
