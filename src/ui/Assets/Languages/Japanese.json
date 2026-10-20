@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta3",
+  "version": "v5.4.0-beta4",
   "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
@@ -1074,7 +1074,7 @@
       "playPauseHint": "再生／一時停止 {0}",
       "playNextHint": "次を再生 {0}",
       "playSelectionHint": "選択行を再生 {0}",
-      "setStartAndOffsetTheRestHint": "現在の字幕の開始位置を設定し 後続の字幕の時間をまとめて調整 {0}",
+      "setStartAndOffsetTheRestHint": "現在の字幕の開始位置を設定し 後続行を一括調整 {0}",
       "setStartHint": "現在の字幕の開始位置を設定 {0}",
       "setEndHint": "現在の字幕の終了位置を設定 {0}",
       "newHint": "動画の {0} 位置に新しい字幕を挿入",
@@ -1712,7 +1712,19 @@
     "propertyTopExtent": "上端の範囲",
     "propertyBottomOrigin": "下端の基準位置",
     "propertyBottomExtent": "下端の範囲",
-    "xProperties": "{0}のプロパティ"
+    "xProperties": "{0}のプロパティ",
+    "propertyHeaderSource": "ヘッダーの参照元",
+    "propertyHeaderSourceCurrentFile": "現在のファイル",
+    "propertyHeaderSourceTemplateFile": "テンプレートファイル",
+    "propertyTemplateFile": "テンプレートファイル",
+    "propertyTemplateFileHint": "保存する各ファイルのスタイル、リージョン、メタデータはこのファイルから取得します。フレームレートは現在の動画に従います。",
+    "propertyTemplateSummaryX": "言語：{0}、スタイル：{1}、リージョン：{2}",
+    "propertyTemplateFileNotFound": "テンプレートファイルが見つかりません",
+    "propertyTemplateFileInvalid": "headとbodyを含むTTMLファイルではありません",
+    "propertyDefaultColor": "デフォルトの色",
+    "propertyDefaultColorTemplateHint": "色はテンプレートファイルから取得します",
+    "pickTemplateFile": "テンプレートファイルを選択",
+    "ttmlFiles": "Timed Textファイル"
   },
   "edit": {
     "modifySelection": {
@@ -1779,7 +1791,12 @@
       "addRulesToX": "「{0}」にルールを追加",
       "xRules": "{0:#,##0} 件のルール",
       "discardXRules": "入力した{0}件のルールを破棄しますか？",
-      "enterAddsRule": "Enterキーでルールをリストに追加し、OKでリストをカテゴリに追加します（Ctrl+Enter）"
+      "enterAddsRule": "Enterキーでルールをリストに追加し、OKでリストをカテゴリに追加します（Ctrl+Enter）",
+      "categories": "カテゴリ",
+      "newestFirst": "新しい順",
+      "filterRules": "ルールを絞り込む...",
+      "rulesInX": "「{0}」のルール",
+      "enterAddsRuleToCategory": "Enterキーでカテゴリの末尾にルールを追加"
     },
     "find": {
       "searchTextWatermark": "検索中...",
@@ -3549,12 +3566,12 @@
       "waveformMouseWheelStepMilliseconds": "{0} ミリ秒",
       "waveformSnapToShotChanges": "カット検出位置に自動で吸着",
       "waveformSnapToFrames": "キューをフレームに合わせる",
-      "waveformSnapToShotChangesPixels": "ドラッグ時のスナップ距離（ピクセル）",
-      "waveformSnapToShotChangeStartMaxSeconds": "最も近いカット点にスナップ：開始位置の最大距離（秒）",
-      "waveformSnapToShotChangeEndMaxSeconds": "最も近いカット点にスナップ：終了位置の最大距離（秒）",
-      "waveformSnapToShotChangeSameShotEndMaxSeconds": "最も近いカット点にスナップ：開始・終了が同じカットにある場合の終了位置の最大距離（秒）",
-      "waveformGuessStartOffsetMs": "波形から開始時間を推測：開始を（ms）早める",
-      "waveformGuessEndOffsetMs": "波形から終了時間を推測：終了を（ms）遅らせる",
+      "waveformSnapToShotChangesPixels": "ドラッグ時のスナップ距離（px）",
+      "waveformSnapToShotChangeStartMaxSeconds": "カット点にスナップ：開始位置の最大距離(秒)",
+      "waveformSnapToShotChangeEndMaxSeconds": "カット点にスナップ：終了位置の最大距離(秒)",
+      "waveformSnapToShotChangeSameShotEndMaxSeconds": "同じカット点に開始･終了をスナップ\n　　　：終了位置の最大距離(秒)",
+      "waveformGuessStartOffsetMs": "波形による開始位置の推測：開始を早める(ms)",
+      "waveformGuessEndOffsetMs": "波形による終了位置の推測：終了を遅らせる(ms)る",
       "waveformShotChangesAutoGenerate": "ショット変更を自動生成",
       "waveformTextFontSize": "波形テキストの文字サイズ",
       "waveformTextFontBold": "波形テキストを太字に",
@@ -4939,3 +4956,4 @@
     "exportMadeWithSubtitleEdit": "Subtitle Editで作成"
   }
 }
+
