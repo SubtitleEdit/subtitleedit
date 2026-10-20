@@ -4,9 +4,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 
@@ -260,24 +258,6 @@ public class NetflixQualityController
             TimeCode = originalParagraph?.StartTime.ToDisplayString() ?? string.Empty,
             CanBeFixed = canBeFixed,
         });
-    }
-
-    public string ExportCsv()
-    {
-        var csvBuilder = new StringBuilder();
-
-        // Header
-        csvBuilder.AppendLine("LineNumber,TimeCode,Context,Comment");
-
-        // Rows
-        Records.ForEach(r => csvBuilder.AppendLine(r.ToCsvRow()));
-
-        return csvBuilder.ToString();
-    }
-
-    public void SaveCsv(string reportPath)
-    {
-        File.WriteAllText(reportPath, ExportCsv(), Encoding.UTF8);
     }
 
     public bool IsEmpty => Records.Count == 0;

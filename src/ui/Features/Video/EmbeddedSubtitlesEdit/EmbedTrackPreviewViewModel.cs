@@ -28,7 +28,6 @@ public partial class EmbedTrackPreviewViewModel : ObservableObject
 
     private MatroskaTrackInfo? _matroskaTrack;
     private MatroskaFile? _matroskaFile;
-    private string _videoFileName;
     private string _subtitleFileName;
 
     public EmbedTrackPreviewViewModel()
@@ -36,7 +35,6 @@ public partial class EmbedTrackPreviewViewModel : ObservableObject
         WindowTitle = string.Empty;
         Rows = new ObservableCollection<MatroskaSubtitleCueDisplay>();
         _matroskaTrack = new MatroskaTrackInfo();
-        _videoFileName = string.Empty;
         _subtitleFileName = string.Empty;
     }
 
@@ -44,7 +42,6 @@ public partial class EmbedTrackPreviewViewModel : ObservableObject
     {
         _matroskaFile = matroskaFile;
         _matroskaTrack = matroskaTrack;
-        _videoFileName = videoFileName;
         _subtitleFileName = subtitleFileName;
         WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.Video.ViewMatroskaTrackX, videoFileName);
     }

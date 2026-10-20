@@ -725,12 +725,6 @@ new("2F", "French - hearing impaired (VF-MAL)"),
         }
     }
 
-    private string RemoveAfterParenthesisAndTrim(string input)
-    {
-        var index = input.IndexOf("(");
-        return index >= 0 ? input.Substring(0, index).TrimEnd() : input;
-    }
-
     private void CheckErrors(Subtitle subtitle)
     {
         if (subtitle.Paragraphs.Count == 0)

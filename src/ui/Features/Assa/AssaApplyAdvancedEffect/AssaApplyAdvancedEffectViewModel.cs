@@ -63,7 +63,6 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private List<SubtitleLineViewModel> _subtitleLines = new List<SubtitleLineViewModel>();
     private List<SubtitleLineViewModel> _selectedSubtitleLines = new List<SubtitleLineViewModel>();
     private FfmpegMediaInfo2? _mediaInfo;
-    private AudioVisualizer? _audioVisualizer;
     private HashSet<Guid> _selectedSubtitleLineIds = [];
     private int _firstSelectedIndex;
 
@@ -109,7 +108,6 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         _subtitleLines = paragraphs;
         _selectedSubtitleLines = selectedParagraphs;
         _mediaInfo = mediaInfo;
-        _audioVisualizer = audioVisualizer;
         _selectedSubtitleLineIds = new HashSet<Guid>(selectedParagraphs.Select(x => x.Id));
         _firstSelectedIndex = _selectedSubtitleLines.Count > 0
             ? Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == _selectedSubtitleLines[0].Id))

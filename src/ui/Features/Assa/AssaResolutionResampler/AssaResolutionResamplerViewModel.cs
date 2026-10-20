@@ -31,7 +31,6 @@ public partial class AssaResolutionResamplerViewModel : ObservableObject
     [ObservableProperty] private bool _askOnVideoOpen = true;
 
     private Subtitle _subtitle = new();
-    private string? _videoFileName;
 
     public Subtitle ResultSubtitle => _subtitle;
 
@@ -63,7 +62,6 @@ public partial class AssaResolutionResamplerViewModel : ObservableObject
     public void Initialize(Subtitle subtitle, string? videoFileName, int? videoWidth, int? videoHeight)
     {
         _subtitle = new Subtitle(subtitle, false);
-        _videoFileName = videoFileName;
 
         if (string.IsNullOrEmpty(_subtitle.Header))
         {

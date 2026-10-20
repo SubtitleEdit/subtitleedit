@@ -59,15 +59,12 @@ public partial class ReEncodeVideoViewModel : ObservableObject
     private bool _doAbort;
     private int _jobItemIndex = -1;
     private SubtitleFormat? _subtitleFormat;
-    private string _inputVideoFileName;
 
     private readonly IWindowService _windowService;
-    private readonly IFolderHelper _folderHelper;
     private readonly IFileHelper _fileHelper;
 
-    public ReEncodeVideoViewModel(IFolderHelper folderHelper, IFileHelper fileHelper, IWindowService windowService)
+    public ReEncodeVideoViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
-        _folderHelper = folderHelper;
         _fileHelper = fileHelper;
         _windowService = windowService;
 
@@ -99,14 +96,12 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         _timerGenerate.Elapsed += TimerGenerateElapsed;
         _timerGenerate.Interval = 100;
 
-        _inputVideoFileName = string.Empty;
         LoadSettings();
     }
 
     public void Initialize(string videoFileName, SubtitleFormat subtitleFormat)
     {
         VideoFileName = videoFileName;
-        _inputVideoFileName = videoFileName;
         _subtitleFormat = subtitleFormat;
         var fileExists = !string.IsNullOrWhiteSpace(videoFileName) && File.Exists(videoFileName);
         if (fileExists)

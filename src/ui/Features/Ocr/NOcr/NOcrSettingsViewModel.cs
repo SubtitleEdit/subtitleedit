@@ -25,12 +25,8 @@ public partial class NOcrSettingsViewModel : ObservableObject
     public bool OptimizePressed { get; set; }
     private NOcrDb _nOcrDb;
 
-    private readonly IWindowService _windowService;
-
-    public NOcrSettingsViewModel(IWindowService windowService)
+    public NOcrSettingsViewModel()
     {
-        _windowService = windowService;
-
         ActionText = string.Empty;
         _nOcrDb = new NOcrDb(string.Empty);
     }

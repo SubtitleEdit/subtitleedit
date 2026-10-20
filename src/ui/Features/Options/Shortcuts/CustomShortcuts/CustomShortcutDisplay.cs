@@ -99,11 +99,6 @@ public static class CustomShortcutDisplay
         }
     }
 
-    public static string GetSummary(SeCustomShortcut custom, IReadOnlyDictionary<string, CustomShortcutCommandItem> commands)
-    {
-        return string.Join("  →  ", custom.Steps.Select(p => GetStepSummary(p, commands)));
-    }
-
     /// <summary>
     /// One-line, length-capped version of user text: line breaks show as "↵".
     /// </summary>

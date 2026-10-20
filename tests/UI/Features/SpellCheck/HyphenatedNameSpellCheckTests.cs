@@ -1,5 +1,6 @@
-using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.IO;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace UITests.Features.SpellCheck;
@@ -30,7 +31,7 @@ public class HyphenatedNameSpellCheckTests : IDisposable
     [Fact]
     public void HyphenatedNameInNamesList_RecognizesEachPart()
     {
-        var wordLists = new SpellCheckWordLists(LanguageName, new AlwaysMissSpellChecker());
+        var wordLists = new SpellCheckWordLists(LanguageName);
         wordLists.AddName("Soo-bin");
 
         const string line = "I met Soo-bin today.";
@@ -41,7 +42,7 @@ public class HyphenatedNameSpellCheckTests : IDisposable
     [Fact]
     public void DashNamePart_NotMatched_WhenCombinedNameAbsentFromLine()
     {
-        var wordLists = new SpellCheckWordLists(LanguageName, new AlwaysMissSpellChecker());
+        var wordLists = new SpellCheckWordLists(LanguageName);
         wordLists.AddName("Soo-bin");
 
         // "Soo" on its own (no "Soo-bin" in the line) must not be treated as a name.
@@ -60,10 +61,5 @@ public class HyphenatedNameSpellCheckTests : IDisposable
         {
             // Best-effort cleanup.
         }
-    }
-
-    private sealed class AlwaysMissSpellChecker : IDoSpell
-    {
-        public bool DoSpell(string word) => false;
     }
 }

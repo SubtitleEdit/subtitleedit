@@ -1163,19 +1163,6 @@ internal static partial class EditorChrome
     }
 
     /// <summary>
-    /// A dim label above its control (for wide inputs like URLs), linked to it for screen readers.
-    /// </summary>
-    internal static StackPanel MakeLabelAbove(string label, Control content)
-    {
-        var text = MakeDimLabel(label, new Thickness(0));
-        AutomationProperties.SetLabeledBy(content, text);
-        var panel = new StackPanel { Spacing = 4 };
-        panel.Children.Add(text);
-        panel.Children.Add(content);
-        return panel;
-    }
-
-    /// <summary>
     /// A dim label that wraps.
     /// </summary>
     internal static TextBlock MakeWrappingDimLabel(string text)

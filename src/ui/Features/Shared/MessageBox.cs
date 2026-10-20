@@ -50,8 +50,6 @@ public enum MessageBoxIcon
 
 public class MessageBox : Window
 {
-    private static string CustomButton1Text { get; set; } = string.Empty;
-    private static string CustomButton2Text { get; set; } = string.Empty;
     private MessageBoxResult _result = MessageBoxResult.None;
     private readonly bool _hasCancel;
     private readonly bool _hasOnlyOk;

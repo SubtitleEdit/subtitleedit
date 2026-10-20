@@ -293,7 +293,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private int _durationProbeGeneration;
         private readonly Grid _gridProgress; // Reference to the controls grid
         private DispatcherTimer? _autoHideTimer;
-        private DateTime _lastActivityTime;
 
         // True while the user is dragging (or arrow-keying) the position slider. The position
         // timer must leave the slider alone for as long as it is set - see StartPositionTimer.
@@ -527,7 +526,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             _videoPlayerInstance = videoPlayerInstance;
             _videoFileName = string.Empty;
-            _lastActivityTime = DateTime.UtcNow;
 
             var mainGrid = new Grid
             {
@@ -1677,8 +1675,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private void StartAutoHideControls()
         {
-            _lastActivityTime = DateTime.UtcNow;
-
             // When the user opts to hide controls in full-screen, never show them —
             // not even briefly on entry — and don't bother arming the auto-hide timer.
             if (Se.Settings.Video.FullscreenHideControls)
@@ -1693,7 +1689,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             // Single one-shot timer reset on each user activity. Stops itself on tick so
             // Stop()+Start() reliably reschedules a fresh 3-second wait from "now" — a
-            // free-running periodic timer can drift out of phase with _lastActivityTime
+            // free-running periodic timer can drift out of phase with the last activity
             // and fail to hide after the user re-shows controls during playback.
             if (_autoHideTimer == null)
             {
@@ -1719,7 +1715,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private void OnUserActivity()
         {
-            _lastActivityTime = DateTime.UtcNow;
             if (IsFullScreen)
             {
                 // If the user opted to hide controls in full-screen, don't reveal them on activity.

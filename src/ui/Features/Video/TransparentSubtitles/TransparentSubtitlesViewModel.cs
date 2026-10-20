@@ -1228,43 +1228,6 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         }
     }
 
-    private static string TryGetSubtitleFileName(string fileName)
-    {
-        var srt = Path.ChangeExtension(fileName, ".srt");
-        if (File.Exists(srt))
-        {
-            return srt;
-        }
-
-        var assa = Path.ChangeExtension(fileName, ".ass");
-        if (File.Exists(assa))
-        {
-            return assa;
-        }
-
-        var dir = Path.GetDirectoryName(fileName);
-        if (string.IsNullOrEmpty(dir))
-        {
-            return string.Empty;
-        }
-
-        var searchPath = Path.GetFileNameWithoutExtension(fileName);
-        var files = Directory.GetFiles(dir, searchPath + "*");
-        var subtitleExtensions = SubtitleFormat.AllSubtitleFormats.Select(p => p.Extension).Distinct();
-        foreach (var ext in subtitleExtensions)
-        {
-            foreach (var file in files)
-            {
-                if (file.EndsWith(ext, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return file;
-                }
-            }
-        }
-
-        return string.Empty;
-    }
-
     private void UpdateOutputProperties()
     {
         // This dialog's own output-folder settings: the settings window and

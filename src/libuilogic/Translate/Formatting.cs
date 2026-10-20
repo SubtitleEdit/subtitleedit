@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -45,9 +46,6 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
         private bool SquareBracketsUppercase { get; set; }
         private bool SquareBracketsStartWithLowercase { get; set; }
         private bool RemovePeriod { get; set; }
-        private int BreakNumberOfLines { get; set; }
-        private bool BreakSplitAtLineEnding { get; set; }
-        private bool BreakIsDialog { get; set; }
         private bool HasReset { get; set; }
         private string? ReplaceAllText { get; set; }
 
@@ -312,36 +310,6 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
             text = StartTags + text + EndTags;
 
             return text;
-        }
-
-        public string UnBreak(string text, string source)
-        {
-            var lines = source.SplitToLines();
-            BreakNumberOfLines = lines.Count;
-            BreakSplitAtLineEnding = lines.Count == 2 && lines[0].HasSentenceEnding();
-            BreakIsDialog = lines.Count == 2 &&
-                       (lines[0].StartsWith('-') || lines[0].StartsWith("<i>-", StringComparison.Ordinal)) &&
-                       lines[1].StartsWith('-') &&
-                       Utilities.CountTagInText(source, '-') == 2;
-            return Utilities.UnbreakLine(text);
-        }
-
-        public string ReBreak(string text, string language)
-        {
-            if (BreakNumberOfLines == 1)
-            {
-                return text;
-            }
-
-            if (BreakIsDialog && Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, '-') == 2)
-            {
-                return text
-                    .Insert(text.LastIndexOf('-') - 1, Environment.NewLine)
-                    .Replace(" " + Environment.NewLine, Environment.NewLine)
-                    .Replace(Environment.NewLine + " ", Environment.NewLine);
-            }
-
-            return Utilities.AutoBreakLine(text, language, BreakSplitAtLineEnding);
         }
     }
 }

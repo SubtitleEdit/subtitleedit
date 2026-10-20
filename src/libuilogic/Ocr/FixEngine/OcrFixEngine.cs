@@ -67,7 +67,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _threeLetterIsoLanguageName = string.Empty;
         _isLoaded = false;
         _ocrFixReplaceList = new OcrFixReplaceList2(string.Empty);
-        _spellCheckWordLists = new SpellCheckWordLists(string.Empty, this);
+        _spellCheckWordLists = new SpellCheckWordLists(string.Empty);
         _wordSplitList = Array.Empty<string>();
         _fiveLetterName = string.Empty;
     }
@@ -1711,12 +1711,12 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     {
         try
         {
-            _spellCheckWordLists = new SpellCheckWordLists(_fiveLetterName, this);
+            _spellCheckWordLists = new SpellCheckWordLists(_fiveLetterName);
         }
         catch (Exception exception)
         {
             SpellCheckConfig.LogError("Error loading names for OCR fix engine: " + exception.Message);
-            _spellCheckWordLists = new SpellCheckWordLists(string.Empty, this);
+            _spellCheckWordLists = new SpellCheckWordLists(string.Empty);
         }
 
         // Read the names *after* rebuilding for _fiveLetterName. Reading first returned the

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.IO;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Logic;
@@ -129,7 +131,7 @@ public class EmbeddedSubtitlesEditTests : IDisposable
     [AvaloniaFact]
     public void MoveUpDown_ReordersTracksAndKeepsSelection()
     {
-        var vm = new EmbeddedSubtitlesEditViewModel(new FolderHelper(), new FileHelper(), new WindowService(new NullServiceProvider()));
+        var vm = new EmbeddedSubtitlesEditViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
         vm.VideoFileName = "movie.mkv";
         var a = new EmbeddedTrack { Name = "A" };
         var b = new EmbeddedTrack { Name = "B" };
@@ -198,7 +200,7 @@ public class EmbeddedSubtitlesEditTests : IDisposable
     [AvaloniaFact]
     public void VideoFileSize_FollowsVideoFileName()
     {
-        var vm = new EmbeddedSubtitlesEditViewModel(new FolderHelper(), new FileHelper(), new WindowService(new NullServiceProvider()));
+        var vm = new EmbeddedSubtitlesEditViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
         var fileName = MakeTempSubtitle();
 
         vm.VideoFileName = fileName;
@@ -211,7 +213,7 @@ public class EmbeddedSubtitlesEditTests : IDisposable
     [AvaloniaFact]
     public void Generating_LocksTheTrackList()
     {
-        var vm = new EmbeddedSubtitlesEditViewModel(new FolderHelper(), new FileHelper(), new WindowService(new NullServiceProvider()));
+        var vm = new EmbeddedSubtitlesEditViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
         vm.VideoFileName = "movie.mkv";
         var a = new EmbeddedTrack { Name = "A" };
         var b = new EmbeddedTrack { Name = "B" };

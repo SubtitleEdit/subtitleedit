@@ -162,7 +162,6 @@ public class OcrWindow : Window
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing(e);
         KeyDown += (s, e) => vm.OnKeyDown(e);
-        KeyUp += (s, e) => vm.OnWindowKeyUp(e);
     }
 
     private static Border MakeTopControlsView(OcrViewModel vm)

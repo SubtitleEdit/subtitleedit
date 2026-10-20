@@ -770,7 +770,6 @@ public static class UiTheme
         Application.Current.Styles.Add(_fieldStyle);
     }
 
-    private static bool _scrollBarAllowAutoHide;
     /// <summary>
     /// Applies scrollbar visibility styles based on the OS preference.
     /// On macOS, reads "Show scroll bars" system setting. When set to "Always",
@@ -794,8 +793,6 @@ public static class UiTheme
             var pref = MacHelper.GetShowScrollBarsPreference();
             allowAutoHide = pref != "Always";
         }
-
-        _scrollBarAllowAutoHide = allowAutoHide;
 
         _scrollBarStyle = new Styles
         {

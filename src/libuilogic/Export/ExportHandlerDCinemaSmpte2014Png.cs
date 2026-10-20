@@ -14,17 +14,12 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
     public virtual string Title => string.Format("Export to {0}", "DCinema SMPTE 2014/png");
     public double FrameRate { get; set; } = 23.976;
 
-    private int _width;
-    private int _height;
     private StringBuilder _sb = new StringBuilder();
     private string _folderName = string.Empty;
     private int _imagesSavedCount = 0;
 
     public void WriteHeader(string fileOrFolderName, ImageParameter imageParameter)
     {
-        _width = imageParameter.ScreenWidth;
-        _height = imageParameter.ScreenHeight;
-
         // Nothing sets the FrameRate property, so it stayed at the 23.976 default and every
         // index.xml declared EditRate/TimeCodeRate 23 - not a valid D-Cinema rate, and out of step
         // with the TimeIn/TimeOut values, which come from the real current frame rate. The Dost and
@@ -165,18 +160,5 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
     protected virtual void SaveXml(string xml)
     {
         File.WriteAllText(Path.Combine(_folderName, "index.xml"), xml);
-    }
-
-    private static string FormatUtf8Xml(XmlDocument doc)
-    {
-        var sb = new StringBuilder();
-        using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
-        {
-            doc.Save(writer);
-        }
-
-        return
-            sb.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"")
-                .Trim(); // "replace hack" due to missing encoding (encoding only works if it's the only parameter...)
     }
 }

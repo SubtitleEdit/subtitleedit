@@ -1,7 +1,6 @@
 ﻿using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
-using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
@@ -25,9 +24,7 @@ public class SpellCheckWordLists
         new string(Enumerable.Range(0x7F, 0x21).Select(i => (char)i).ToArray()));
 
     private static readonly char[] PeriodAndDash = { '.', '-' };
-    private static readonly char[] ApostropheChars = { '\'', '‘', '’' };
     private static readonly System.Buffers.SearchValues<char> ApostropheSearchValues = System.Buffers.SearchValues.Create("'‘’");
-    private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
 
     private readonly NameList _nameList;
     private readonly HashSet<string> _names;
@@ -45,13 +42,11 @@ public class SpellCheckWordLists
     private readonly string _dictionaryFolder;
     private readonly Dictionary<string, string> _useAlwaysList = new Dictionary<string, string>();
     private readonly string _languageName;
-    private readonly IDoSpell _doSpell;
 
-    public SpellCheckWordLists(string fiveLetterName, IDoSpell doSpell)
+    public SpellCheckWordLists(string fiveLetterName)
     {
         _dictionaryFolder = SpellCheckConfig.DictionariesFolder();
         _languageName = fiveLetterName ?? throw new NullReferenceException(nameof(fiveLetterName));
-        _doSpell = doSpell ?? throw new NullReferenceException(nameof(doSpell));
         _nameList = new NameList(_dictionaryFolder, fiveLetterName, false, string.Empty);
         _names = _nameList.GetNames();
         var namesMultiWordList = _nameList.GetMultiNames();

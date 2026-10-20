@@ -121,7 +121,6 @@ public partial class AutoTranslateViewModel : ObservableObject
     private bool _autoStart;
     private bool _translationFailed;
     private Subtitle _subtitle = new Subtitle();
-    private int _translationProgressIndex;
     private bool _llamaCppUpdatePromptShown;
     private bool _suppressLlamaCppRemoteToggle;
     private readonly IWindowService _windowService;
@@ -1538,7 +1537,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
                     var translatedCount = await advancedTranslator.TranslateBatchAsync(Rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken);
                     index += translatedCount;
-                    _translationProgressIndex = index;
 
                     EnqueueTranslateProgress(index);
                 }
@@ -1581,7 +1579,6 @@ public partial class AutoTranslateViewModel : ObservableObject
                     }
 
                     linesTranslated += linesMergedAndTranslated;
-                    _translationProgressIndex = index;
                     errorCount = 0;
                     noProgressCount = 0;
 
@@ -1625,7 +1622,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
                     if (_onlyCurrentLine)
                     {
-                        _translationProgressIndex = index - 1;
                         Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
                         break;
                     }

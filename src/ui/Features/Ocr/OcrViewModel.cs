@@ -195,7 +195,6 @@ public partial class OcrViewModel : ObservableObject
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
     private readonly IOcrImageSourceHolder _ocrImageSourceHolder;
     private PreProcessingSettings? _preProcessingSettings;
-    private bool _isCtrlDown;
     private bool _textBoxFontIsCustom;
     // Saved font name kept so a custom font that is temporarily unresolvable
     // (e.g. user uninstalled the font; FontFamily ctor throws on load) still
@@ -723,8 +722,6 @@ public partial class OcrViewModel : ObservableObject
             vm.IsFontBold = TextBoxFontWeight == FontWeight.Bold;
         });
 
-        _isCtrlDown = false;
-
         if (!result.OkPressed || result.SelectedFontName == null)
         {
             return;
@@ -746,7 +743,6 @@ public partial class OcrViewModel : ObservableObject
         }
 
         var result = await _windowService.ShowDialogAsync<GetDictionariesWindow, GetDictionariesViewModel>(Window!);
-        _isCtrlDown = false;
         if (result.OkPressed && result.SelectedDictionary != null)
         {
             LoadDictionaries();
@@ -844,8 +840,6 @@ public partial class OcrViewModel : ObservableObject
         {
             _ocrFixEngine.ReloadNames();
         }
-
-        _isCtrlDown = false;
     }
 
     [RelayCommand]
@@ -864,8 +858,6 @@ public partial class OcrViewModel : ObservableObject
         {
             _ocrFixEngine.ReloadNames();
         }
-
-        _isCtrlDown = false;
     }
 
     [RelayCommand]
@@ -884,8 +876,6 @@ public partial class OcrViewModel : ObservableObject
         {
             _ocrFixEngine.ReloadNames();
         }
-
-        _isCtrlDown = false;
     }
 
     [RelayCommand]
@@ -917,7 +907,6 @@ public partial class OcrViewModel : ObservableObject
         {
             await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(_sourceFileName, _ocrSubtitle); });
         }
-        _isCtrlDown = false;
     }
 
     [RelayCommand]
@@ -930,7 +919,6 @@ public partial class OcrViewModel : ObservableObject
 
         var items = OcrSubtitleItems.ToList();
         await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(items); });
-        _isCtrlDown = false;
     }
 
     /// <summary>
@@ -947,7 +935,6 @@ public partial class OcrViewModel : ObservableObject
         }
 
         var folder = await _folderHelper.PickFolderAsync(Window, Se.Language.Ocr.SaveAllImagesWithHtmlIndexPickFolder);
-        _isCtrlDown = false;
         if (string.IsNullOrEmpty(folder))
         {
             return;
@@ -1005,7 +992,6 @@ public partial class OcrViewModel : ObservableObject
         }
 
         var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle);
-        _isCtrlDown = false;
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -1120,7 +1106,6 @@ public partial class OcrViewModel : ObservableObject
             "OcrText" + format.Extension,
             Se.Language.Ocr.ExportTextAsSubtitleDotDotDot);
 
-        _isCtrlDown = false;
         if (saveAsResult == null || string.IsNullOrEmpty(saveAsResult.FileName))
         {
             return;
@@ -1225,7 +1210,6 @@ public partial class OcrViewModel : ObservableObject
                 vm.Initialize(nBmp.GetBitmap(), nBmp, item, _nOcrDb, SelectedNOcrMaxWrongPixels, letters,
                     matches, _nOcrAddHistoryManager);
             });
-        _isCtrlDown = false;
     }
 
     private async Task InspectLineBinaryImageCompareOcr(OcrSubtitleItem item)
@@ -1265,8 +1249,6 @@ public partial class OcrViewModel : ObservableObject
                 vm.Initialize(nBmp.GetBitmap(), nBmp, SelectedOcrSubtitleItem, db, BinaryOcrMaxErrorPercent,
                     SelectedNOcrMaxWrongPixels, _binaryOcrAddHistoryManager, letters, matches);
             });
-
-        _isCtrlDown = false;
     }
 
     [RelayCommand]
@@ -1283,8 +1265,6 @@ public partial class OcrViewModel : ObservableObject
         {
             await _windowService.ShowDialogAsync<NOcrCharacterHistoryWindow, NOcrCharacterHistoryViewModel>(Window!,
                 vm => { vm.Initialize(_nOcrDb!, _nOcrAddHistoryManager); });
-
-            _isCtrlDown = false;
         }
 
         if (engine.EngineType == OcrEngineType.BinaryImageCompare)
@@ -1297,8 +1277,6 @@ public partial class OcrViewModel : ObservableObject
 
             await _windowService.ShowDialogAsync<BinaryOcrCharacterHistoryWindow, BinaryOcrCharacterHistoryViewModel>(Window!,
                 vm => { vm.Initialize(db, _binaryOcrAddHistoryManager); });
-
-            _isCtrlDown = false;
         }
     }
 
@@ -1327,7 +1305,6 @@ public partial class OcrViewModel : ObservableObject
                 return new ShowImageItem(Se.Language.Ocr.OcrImage, item.GetBitmapCropped(), item.Text);
             };
         });
-        _isCtrlDown = false;
     }
 
     [RelayCommand]
@@ -1341,7 +1318,6 @@ public partial class OcrViewModel : ObservableObject
 
         var imageIndex = OcrSubtitleItems.IndexOf(item) + 1;
         var fileName = await _fileHelper.PickSaveSubtitleFile(Window!, ".png", $"image{imageIndex}", Se.Language.General.SaveImageAs);
-        _isCtrlDown = false;
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -1368,8 +1344,6 @@ public partial class OcrViewModel : ObservableObject
     {
         var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!,
             vm => { vm.Initialize(Se.Language.General.PickOllamaModel, OllamaModel, OllamaUrl, visionOnly: true); });
-
-        _isCtrlDown = false;
 
         if (result.OkPressed && result.SelectedModel != null)
         {
@@ -1461,7 +1435,6 @@ public partial class OcrViewModel : ObservableObject
             Window, _windowService,
             onEngineDownloadClosed: () =>
             {
-                _isCtrlDown = false;
                 RefreshEngineCombo?.Invoke();
             });
     }
@@ -1482,12 +1455,10 @@ public partial class OcrViewModel : ObservableObject
             Window, _windowService, backend, model.Model, forceModelDownload,
             onEngineDownloadClosed: () =>
             {
-                _isCtrlDown = false;
                 RefreshEngineCombo?.Invoke();
             },
             onModelDownloadClosed: () =>
             {
-                _isCtrlDown = false;
                 RefreshCrispEmbedModelCombo?.Invoke();
             });
     }
@@ -1705,14 +1676,10 @@ public partial class OcrViewModel : ObservableObject
             await _windowService.ShowDialogAsync<NOcrSettingsWindow, NOcrSettingsViewModel>(Window!,
                 vm => { vm.Initialize(_nOcrDb!); });
 
-        _isCtrlDown = false;
-
         if (result.EditPressed)
         {
             await _windowService.ShowDialogAsync<NOcrDbEditWindow, NOcrDbEditViewModel>(Window!,
                 vm => { vm.Initialize(_nOcrDb!); });
-
-            _isCtrlDown = false;
 
             return;
         }
@@ -1750,7 +1717,6 @@ public partial class OcrViewModel : ObservableObject
         {
             var newResult = await _windowService.ShowDialogAsync<NOcrDbNewWindow, NOcrDbNewViewModel>(Window!,
                 vm => { vm.Initialize(Se.Language.Ocr.NewNOcrDatabase, string.Empty); });
-            _isCtrlDown = false;
             if (newResult.OkPressed)
             {
                 if (!Directory.Exists(Se.OcrFolder))
@@ -1785,7 +1751,6 @@ public partial class OcrViewModel : ObservableObject
         if (result.TrainPressed)
         {
             var trainResult = await _windowService.ShowDialogAsync<NOcrTrainWindow, NOcrTrainViewModel>(Window!, _ => { });
-            _isCtrlDown = false;
             if (trainResult.TrainedDatabaseName != null)
             {
                 NOcrDatabases.Clear();
@@ -1814,7 +1779,6 @@ public partial class OcrViewModel : ObservableObject
                     vm.Initialize(Se.Language.Ocr.RenameNOcrDatabase,
                         Path.GetFileNameWithoutExtension(_nOcrDb!.FileName));
                 });
-            _isCtrlDown = false;
             if (newResult.OkPressed)
             {
                 if (!Directory.Exists(Se.OcrFolder))
@@ -1859,14 +1823,10 @@ public partial class OcrViewModel : ObservableObject
             await _windowService.ShowDialogAsync<BinaryOcrSettingsWindow, BinaryOcrSettingsViewModel>(Window!,
                 vm => { vm.Initialize(dbName); });
 
-        _isCtrlDown = false;
-
         if (result.EditPressed)
         {
             await _windowService.ShowDialogAsync<BinaryOcrDbEditWindow, BinaryOcrDbEditViewModel>(Window!,
                 vm => { vm.Initialize(SelectedImageCompareDatabase!); });
-
-            _isCtrlDown = false;
 
             return;
         }
@@ -1947,8 +1907,6 @@ public partial class OcrViewModel : ObservableObject
             {
                 vm.Initialize(Se.Language.Ocr.RenameBinaryImageCompareDatabase, result.BinaryOcrDatabaseName);
             });
-
-            _isCtrlDown = false;
 
             if (newResult.OkPressed)
             {
@@ -2142,8 +2100,6 @@ public partial class OcrViewModel : ObservableObject
         var result = await _windowService
             .ShowDialogAsync<PreProcessingWindow, PreProcessingViewModel>(Window, vm => { vm.Initialize(_preProcessingSettings ?? LoadPreProcessingSettings(), selectedItem.GetSkBitmapClean()); });
 
-        _isCtrlDown = false;
-
         if (result.OkPressed)
         {
             _preProcessingSettings = result.PreProcessingSettings;
@@ -2224,8 +2180,6 @@ public partial class OcrViewModel : ObservableObject
         var result = await _windowService.ShowDialogAsync<VobSubColorChooser.VobSubColorChooserWindow, VobSubColorChooser.VobSubColorChooserViewModel>(
             Window,
             vm => vm.Initialize(previewSubPicture, vobSub.GetPalette(), vobSub.Background, vobSub.Pattern, vobSub.Emphasis1, vobSub.Emphasis2));
-
-        _isCtrlDown = false;
 
         if (!result.OkPressed)
         {
@@ -2777,8 +2731,6 @@ public partial class OcrViewModel : ObservableObject
                         vm.Initialize(engine);
                     });
 
-                _isCtrlDown = false;
-
                 if (!result.OkPressed)
                 {
                     PauseOcr();
@@ -2819,8 +2771,6 @@ public partial class OcrViewModel : ObservableObject
                         vm.Initialize(engine);
                     });
 
-                _isCtrlDown = false;
-
                 if (!result.OkPressed)
                 {
                     PauseOcr();
@@ -2833,8 +2783,6 @@ public partial class OcrViewModel : ObservableObject
             {
                 var result = await _windowService.ShowDialogAsync<DownloadPaddleOcrWindow, DownloadPaddleOcrViewModel>(Window!,
                     vm => { vm.Initialize(PaddleOcrDownloadType.Models); });
-
-                _isCtrlDown = false;
 
                 if (!result.OkPressed)
                 {
@@ -2852,8 +2800,6 @@ public partial class OcrViewModel : ObservableObject
             {
                 var result = await _windowService.ShowDialogAsync<DownloadPaddleOcrWindow, DownloadPaddleOcrViewModel>(Window!,
                     vm => { vm.Initialize(PaddleOcrDownloadType.Models); });
-
-                _isCtrlDown = false;
 
                 if (!result.OkPressed)
                 {
@@ -2925,7 +2871,6 @@ public partial class OcrViewModel : ObservableObject
                 }
 
                 var result = await _windowService.ShowDialogAsync<DownloadGoogleLensOcrWindow, DownloadGoogleLensOcrViewModel>(Window);
-                _isCtrlDown = false;
                 if (!result.OkPressed)
                 {
                     PauseOcr();
@@ -3455,8 +3400,6 @@ public partial class OcrViewModel : ObservableObject
                                             SelectedNOcrMaxWrongPixels, _nOcrAddHistoryManager, true, true);
                                     });
 
-                            _isCtrlDown = false;
-
                             if (result.OkPressed)
                             {
                                 var previewBitmap = result.PreviewBitmap ?? letters[letterIndex].NikseBitmap;
@@ -3491,8 +3434,6 @@ public partial class OcrViewModel : ObservableObject
                                 await _windowService
                                     .ShowDialogAsync<NOcrCharacterHistoryWindow, NOcrCharacterHistoryViewModel>(Window!,
                                         vm => { vm.Initialize(_nOcrDb!, _nOcrAddHistoryManager); });
-
-                                _isCtrlDown = false;
                             }
                         });
 
@@ -3565,13 +3506,11 @@ public partial class OcrViewModel : ObservableObject
                 var keepRunning = await PromptForUnknownWordsAsync(i, item);
                 if (!keepRunning)
                 {
-                    _isCtrlDown = false;
                     return;
                 }
             }
         }
 
-        _isCtrlDown = false;
         IsOcrRunning = false;
     }
 
@@ -5232,8 +5171,6 @@ public partial class OcrViewModel : ObservableObject
 
     internal void OnKeyDown(KeyEventArgs e)
     {
-        _isCtrlDown = e.KeyModifiers.HasFlag(KeyModifiers.Control);
-
         if (HandleFindReplaceKeys(e))
         {
             return;
@@ -5280,27 +5217,9 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    internal void DataGridTracksSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        var flowControl = TrackChanged();
-        if (!flowControl)
-        {
-            return;
-        }
-    }
-
     private bool TrackChanged()
     {
         return true;
-    }
-
-    public static Bitmap ConvertSkBitmapToAvaloniaBitmap(SKBitmap skBitmap)
-    {
-        using var image = SKImage.FromBitmap(skBitmap);
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-        using var stream = new MemoryStream(data.ToArray());
-
-        return new Bitmap(stream);
     }
 
     // Coalesced per-line UI feedback during OCR (#13885) - see CoalescedUiUpdateQueue. Data
@@ -5504,15 +5423,6 @@ public partial class OcrViewModel : ObservableObject
         _sourceFileName = fileName;
         Title = UiUtil.FormatTitleWithFileName(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleIBinaryParagraph(list);
-        SetOcrSubtitleItems();
-        AutoDetectSourceLanguage();
-    }
-
-    public void InitializeBinaryParagraphList(IBinaryParagraphList binaryParagraphList, Subtitle subtitle, string fileName)
-    {
-        _sourceFileName = fileName;
-        Title = UiUtil.FormatTitleWithFileName(Se.Language.Ocr.OcrX, fileName);
-        _ocrSubtitle = new OcrSubtitleBinaryParagraphList(binaryParagraphList, subtitle);
         SetOcrSubtitleItems();
         AutoDetectSourceLanguage();
     }
@@ -5748,7 +5658,6 @@ public partial class OcrViewModel : ObservableObject
         await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
             vm => vm.InitializeEngine(variant));
 
-        _isCtrlDown = false;
         RefreshEngineCombo?.Invoke();
     }
 
@@ -6006,11 +5915,6 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    public void OnWindowKeyUp(KeyEventArgs e)
-    {
-        _isCtrlDown = e.KeyModifiers.HasFlag(KeyModifiers.Control);
-    }
-
     private bool _subtitleGridIsLeftClick = false;
     private bool _subtitleGridIsControlPressed = false;
 
@@ -6091,84 +5995,5 @@ public partial class OcrViewModel : ObservableObject
     internal static string GetAssaPositionFromScreen(double relativeX, double relativeY)
     {
         return OcrAssaAlignment.GetAssaPositionFromScreen(relativeX, relativeY);
-    }
-
-    private List<OcrSubtitleItem> SplitImageToLines(OcrSubtitleItem item)
-    {
-        // (GetSkBitmapClean never returns null - it substitutes a 1x1 - so the old "== null"
-        //  check only allocated and leaked a native bitmap.)
-        if (!HasCaptureAlignment)
-        {
-            return new List<OcrSubtitleItem> { item };
-        }
-
-        try
-        {
-            using var bitmap = item.GetSkBitmapClean(); // fresh bitmap each call; dispose to avoid a native leak
-            var lines = new List<OcrSubtitleItem>();
-
-            // Simple line detection: split image horizontally based on text regions
-            // This is a basic implementation - could be enhanced with more sophisticated line detection
-
-            var height = bitmap.Height;
-            var width = bitmap.Width;
-            var lineHeight = height / 3; // Assume max 3 lines for now
-
-            for (int i = 0; i < 3; i++)
-            {
-                var startY = i * lineHeight;
-                var endY = Math.Min(startY + lineHeight, height);
-
-                if (startY >= height)
-                {
-                    break;
-                }
-
-                // Check if this region has text content (simplified detection)
-                if (HasTextInRegion(bitmap, 0, startY, width, endY - startY))
-                {
-                    // For now, just return the original item since creating new items
-                    // requires complex constructor parameters. The multi-line logic
-                    // should be handled in ProcessMultiLineText instead.
-                    lines.Add(item);
-                    break; // Just detect if there are multiple regions, return original for now
-                }
-            }
-
-            return lines.Count > 0 ? lines : new List<OcrSubtitleItem> { item };
-        }
-        catch
-        {
-            return new List<OcrSubtitleItem> { item };
-        }
-    }
-
-    private bool HasTextInRegion(SKBitmap bitmap, int x, int y, int width, int height)
-    {
-        // Simple heuristic: check for non-white pixels that might indicate text
-        // This is a basic implementation
-        var samplePoints = 10;
-        var nonWhitePixels = 0;
-
-        for (int i = 0; i < samplePoints; i++)
-        {
-            for (int j = 0; j < samplePoints; j++)
-            {
-                var sampleX = x + (i * width / samplePoints);
-                var sampleY = y + (j * height / samplePoints);
-
-                if (sampleX < bitmap.Width && sampleY < bitmap.Height)
-                {
-                    var pixel = bitmap.GetPixel(sampleX, sampleY);
-                    if (pixel.Red < 200 || pixel.Green < 200 || pixel.Blue < 200) // Not white-ish
-                    {
-                        nonWhitePixels++;
-                    }
-                }
-            }
-        }
-
-        // If we find enough non-white pixels, assume there's text
-        return nonWhitePixels > (samplePoints * samplePoints * 0.1); // 10% threshold
     }
 }

@@ -54,12 +54,10 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
     private IFileHelper _fileHelper;
 
     private List<Paragraph> _paragraphs;
-    private string? _videoFileName;
     private string _title;
     private readonly System.Timers.Timer _timerUpdatePreview;
     private volatile bool _isClosing;
     private bool _dirty;
-    private string? _subtitleFileName;
 
     public ExportPlainTextViewModel(IWindowService windowService, IFileHelper fileHelper)
     {
@@ -268,8 +266,6 @@ public partial class ExportPlainTextViewModel : ObservableObject, IClosingCleanu
     private void Initialize(List<Paragraph> paragraphs, string? subtitleFileName, string? videoFileName)
     {
         _paragraphs = paragraphs;
-        _subtitleFileName = subtitleFileName;
-        _videoFileName = videoFileName;
         _timerUpdatePreview.Start();
         _dirty = true;
     }

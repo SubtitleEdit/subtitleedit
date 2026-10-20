@@ -10,6 +10,10 @@ using Nikse.SubtitleEdit.Features.Sync.PointSyncViaOther;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using SkiaSharp;
 
 namespace UITests.Features.Sync.PointSync;
@@ -79,7 +83,7 @@ public class PointSyncWindowTests : IDisposable
     [AvaloniaFact]
     public void PointSyncWindow_Constructs()
     {
-        var vm = new PointSyncViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+        var vm = new PointSyncViewModel(new WindowService(new NullServiceProvider()));
         var lines = TwoLines();
         vm.Initialize(lines, 0, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default, null);
 
@@ -188,7 +192,7 @@ public class PointSyncWindowTests : IDisposable
     {
         // Retiming in several rounds reopens the dialog each time - it has to start where the
         // user is, not at line 1 (issue #15062).
-        var vm = new PointSyncViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+        var vm = new PointSyncViewModel(new WindowService(new NullServiceProvider()));
         var lines = ManyLines();
         vm.Initialize(lines, 200, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default, null);
 
@@ -218,7 +222,7 @@ public class PointSyncWindowTests : IDisposable
     [AvaloniaFact]
     public void PointSyncViewModel_OutOfRangeSelection_FallsBackIntoTheList()
     {
-        var vm = new PointSyncViewModel(new FileHelper(), new WindowService(new NullServiceProvider()));
+        var vm = new PointSyncViewModel(new WindowService(new NullServiceProvider()));
         var lines = TwoLines();
 
         vm.Initialize(lines, -1, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default, null);

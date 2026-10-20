@@ -530,13 +530,6 @@ public partial class SetSyncPointViewModel : ObservableObject
         videoPlayer.Position = originalPosition;
     }
 
-    private bool IsLeftFocused()
-    {
-        return AudioVisualizer.IsFocused ||
-               VideoPlayerControl.IsFocused ||
-               ComboBoxSubtitle.IsFocused;
-    }
-
     public void AudioVisualizerLeftPositionChanged(object sender, AudioVisualizer.PositionEventArgs e)
     {
         SetVideoPosition(e.PositionInSeconds);

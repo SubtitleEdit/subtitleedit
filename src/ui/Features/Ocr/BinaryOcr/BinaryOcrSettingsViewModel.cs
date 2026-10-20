@@ -5,9 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -25,24 +23,17 @@ public partial class BinaryOcrSettingsViewModel : ObservableObject
     public bool RenamePressed { get; set; }
     public string BinaryOcrDatabaseName { get; set; }
 
-    private List<string> _binaryOcrDatabases;
     private BinaryOcrDb? _binaryOcrDb;
 
 
-    private readonly IWindowService _windowService;
-
-    public BinaryOcrSettingsViewModel(IWindowService windowService)
+    public BinaryOcrSettingsViewModel()
     {
-        _windowService = windowService;
-
         ActionText = string.Empty;
-        _binaryOcrDatabases = new List<string>();
         BinaryOcrDatabaseName = string.Empty;
     }
 
     public void Initialize(string binaryOcrDatabase)
     {
-        _binaryOcrDatabases = BinaryOcrDb.GetDatabases(Se.OcrFolder);
         BinaryOcrDatabaseName = binaryOcrDatabase;
         _binaryOcrDb = new  BinaryOcrDb(binaryOcrDatabase);
         var name = Path.GetFileNameWithoutExtension(BinaryOcrDatabaseName);

@@ -121,21 +121,18 @@ public partial class CutVideoViewModel : ObservableObject
     private readonly List<double> _keyFrameSeconds = new List<double>();
     private bool _keyFramePublishPending;
     private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
-    private string _importFileName;
     private Subtitle _currentSubtitle;
     private long _lastKeyPressedMs;
     private SubtitleLineViewModel? _setEndAtKeyUpLine;
 
     private readonly IWindowService _windowService;
-    private readonly IFolderHelper _folderHelper;
     private readonly IFileHelper _fileHelper;
     private readonly IInsertService _insertService;
     private readonly IShortcutManager _shortcutManager;
 
 
-    public CutVideoViewModel(IFolderHelper folderHelper, IFileHelper fileHelper, IWindowService windowService, IInsertService insertService, IShortcutManager shortcutManager)
+    public CutVideoViewModel(IFileHelper fileHelper, IWindowService windowService, IInsertService insertService, IShortcutManager shortcutManager)
     {
-        _folderHelper = folderHelper;
         _fileHelper = fileHelper;
         _windowService = windowService;
         _insertService = insertService;
@@ -184,7 +181,6 @@ public partial class CutVideoViewModel : ObservableObject
         _timerGenerate = new();
         _timerGenerate.Elapsed += TimerGenerateElapsed;
         _timerGenerate.Interval = 100;
-        _importFileName = string.Empty;
         _inputVideoFileName = string.Empty;
         _currentSubtitle = new Subtitle();
         UpdateSelection();
@@ -904,7 +900,6 @@ public partial class CutVideoViewModel : ObservableObject
             return;
         }
 
-        _importFileName = fileName;
         foreach (var p in subtitle.Paragraphs)
         {
             var segment = new SubtitleLineViewModel(p, _subtitleFormat ?? new SubRip());

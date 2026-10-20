@@ -124,11 +124,9 @@ public partial class AssaSetPositionViewModel : ObservableObject
     private int _renderHeight = 1080;
 
     private string _alignment = "2";
-    private bool _isLeftAligned = false;
     private bool _isHorizontalCentered = true;
     private bool _isRightAligned = false;
 
-    private bool _isTopAligned = false;
     private bool _isVerticalCentered = false;
     private bool _isBottomAligned = true;
 
@@ -626,11 +624,9 @@ public partial class AssaSetPositionViewModel : ObservableObject
     private void ApplyAlignment(string alignment)
     {
         _alignment = alignment;
-        _isLeftAligned = alignment == "1" || alignment == "4" || alignment == "7";
         _isHorizontalCentered = alignment == "2" || alignment == "5" || alignment == "8";
         _isRightAligned = alignment == "3" || alignment == "6" || alignment == "9";
 
-        _isTopAligned = alignment == "7" || alignment == "8" || alignment == "9";
         _isVerticalCentered = alignment == "4" || alignment == "5" || alignment == "6";
         _isBottomAligned = alignment == "1" || alignment == "2" || alignment == "3";
     }

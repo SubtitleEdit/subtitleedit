@@ -749,29 +749,6 @@ public partial class PaddleOcr
         return false;
     }
 
-    public static SKBitmap AddBorder(SKBitmap originalBitmap, int borderWidth, SKColor color)
-    {
-        // Calculate new dimensions
-        int newWidth = originalBitmap.Width + 2 * borderWidth;
-        int newHeight = originalBitmap.Height + 2 * borderWidth;
-
-        // Create a new bitmap with the new dimensions
-        SKBitmap borderedBitmap = new(newWidth, newHeight);
-
-        // Create a canvas to draw on the new bitmap
-        using (var canvas = new SKCanvas(borderedBitmap))
-        {
-            // Fill the canvas with a border color (optional)
-            var borderColor = color;
-            canvas.Clear(borderColor);
-
-            // Draw the original bitmap onto the canvas, offset by the border width
-            canvas.DrawBitmap(originalBitmap, borderWidth, borderWidth);
-        }
-
-        return borderedBitmap;
-    }
-
     // Every language PaddleOCR 3.7 supports with a recognition model that ships in the
     // bundled support files. Adding a code here is enough to offer it - as long as the
     // code is also listed in the matching script group above, so GetRecName picks the

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
@@ -32,69 +33,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
             }
 
             return new WhisperModel();
-        }
-
-        public static string ModelExtension()
-        {
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp || 
-                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas ||
-                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
-            {
-                return ".bin";
-            }
-
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2 ||
-                Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
-            {
-                return string.Empty;
-            }
-
-            return ".pt";
-        }
-
-        public static string GetWebSiteUrl()
-        {
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
-            {
-                return "https://github.com/ggerganov/whisper.cpp";
-            }
-
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX)
-            {
-                return "https://github.com/m-bain/whisperX";
-            }
-
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
-            {
-                return "https://github.com/Const-me/Whisper";
-            }
-
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CTranslate2)
-            {
-                return "https://github.com/jordimas/whisper-ctranslate2";
-            }
-
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.PurfviewFasterWhisperXxl)
-            {
-                return "https://github.com/Purfview/whisper-standalone-win";
-            }
-
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.StableTs)
-            {
-                return "https://github.com/jianfch/stable-ts";
-            }
-
-            return "https://github.com/openai/whisper";
-        }
-
-        public static bool IsWhisperInstalled()
-        {
-            if (Directory.Exists(GetWhisperModel().ModelFolder) || Configuration.IsRunningOnLinux)
-            {
-                return true;
-            }
-
-            return !string.IsNullOrEmpty(GetWhisperFolder());
         }
 
         public static string? GetWhisperFolder()
@@ -490,26 +428,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AudioToText
             }
 
             return fileNameOnly;
-        }
-
-        public static string GetWhisperModelForCmdLine(string model)
-        {
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.Cpp || Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
-            {
-                return Path.Combine(GetWhisperModel().ModelFolder, model + ModelExtension());
-            }
-
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.ConstMe)
-            {
-                return Path.Combine(GetWhisperModel().ModelFolder, model + ModelExtension());
-            }
-
-            if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.WhisperX && model == "large-v3")
-            {
-                return "large";
-            }
-
-            return model;
         }
 
         public static string GetWhisperTranslateParameter()

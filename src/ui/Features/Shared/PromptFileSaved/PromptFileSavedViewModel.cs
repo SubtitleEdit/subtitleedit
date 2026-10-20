@@ -40,7 +40,6 @@ public partial class PromptFileSavedViewModel : ObservableObject
     public bool IsMediaFile { get; private set; }
 
     private string _fileName;
-    private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
 
     // Extensions where "Open file" means "play it" and a duration chip makes sense.
@@ -50,9 +49,8 @@ public partial class PromptFileSavedViewModel : ObservableObject
         ".mkv", ".mp4", ".mov", ".webm", ".avi", ".m2ts", ".ts", ".mpg", ".mpeg",
     };
 
-    public PromptFileSavedViewModel(IFileHelper fileHelper, IFolderHelper folderHelper)
+    public PromptFileSavedViewModel(IFolderHelper folderHelper)
     {
-        _fileHelper = fileHelper;
         _folderHelper = folderHelper;
 
         _fileName = string.Empty;
