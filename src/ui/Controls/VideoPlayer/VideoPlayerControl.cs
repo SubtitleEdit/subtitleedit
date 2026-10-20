@@ -80,6 +80,27 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             set => SetValue(PlayerContentProperty, value);
         }
 
+        /// <summary>
+        /// Theme art shown in the video area while no video is loaded. It sits on top of the
+        /// player surface, so a native player window (mpv "wid" on Windows) still covers it.
+        /// </summary>
+        public IImage? EmptyBackground
+        {
+            get => _emptyBackground.Source;
+            set
+            {
+                _emptyBackground.Source = value;
+                UpdateEmptyBackground();
+            }
+        }
+
+        private readonly Image _emptyBackground;
+
+        private void UpdateEmptyBackground()
+        {
+            _emptyBackground.IsVisible = _emptyBackground.Source != null && string.IsNullOrEmpty(_videoFileName);
+        }
+
         public double Volume
         {
             get => GetValue(VolumeProperty);
@@ -510,6 +531,15 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _contentPresenter = contentPresenter;
             mainGrid.Children.Add(contentPresenter);
             Grid.SetRow(contentPresenter, 0);
+
+            _emptyBackground = new Image
+            {
+                Stretch = Stretch.UniformToFill,
+                IsHitTestVisible = false,
+                IsVisible = false,
+            };
+            mainGrid.Children.Add(_emptyBackground);
+            Grid.SetRow(_emptyBackground, 0);
 
             // Row with buttons + position slider + volume slider - the columns are made by
             // ApplyControlsLayout, from the user's order and visibility (#15286)
@@ -1041,6 +1071,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // meanwhile (issue #14218). Callers that seek only after the open have already
             // announced their target - a start-less open must not clear it.
             BeginPositionRestore(startPositionSeconds);
+            _emptyBackground.IsVisible = false;
 
             // Reset slider state before LoadFile. Otherwise, when the new file's
             // Duration arrives on the next timer tick, the slider's Maximum drops
@@ -1314,6 +1345,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             ProgressText = string.Empty;
             _videoFileName = string.Empty;
             _textBlockVideoFileName.Text = string.Empty;
+            UpdateEmptyBackground();
             SetPositionDisplayOnly(0);
             Duration = 0;
             StartDurationProbe(null);

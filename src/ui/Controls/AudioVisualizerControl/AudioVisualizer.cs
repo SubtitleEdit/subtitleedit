@@ -151,6 +151,48 @@ public class AudioVisualizer : Control
         }
     }
 
+    /// <summary>
+    /// Theme art for the empty waveform (no audio loaded): a tile whose height is fitted to the
+    /// control and repeated across it. Null draws the plain background.
+    /// </summary>
+    public Avalonia.Media.Imaging.Bitmap? EmptyBackgroundTile
+    {
+        get => _emptyBackgroundTile;
+        set
+        {
+            _emptyBackgroundTile = value;
+            _emptyBackgroundBrush = null;
+            InvalidateVisual();
+        }
+    }
+
+    private Avalonia.Media.Imaging.Bitmap? _emptyBackgroundTile;
+    private ImageBrush? _emptyBackgroundBrush;
+    private double _emptyBackgroundBrushHeight;
+
+    protected void DrawEmptyBackground(DrawingContext context, Rect boundsRect)
+    {
+        var tile = _emptyBackgroundTile;
+        if (WavePeaks != null || tile == null || tile.Size.Height <= 0)
+        {
+            return;
+        }
+
+        if (_emptyBackgroundBrush == null || Math.Abs(_emptyBackgroundBrushHeight - boundsRect.Height) > 0.5)
+        {
+            var tileWidth = tile.Size.Width * boundsRect.Height / tile.Size.Height;
+            _emptyBackgroundBrush = new ImageBrush(tile)
+            {
+                TileMode = TileMode.Tile,
+                Stretch = Stretch.Fill,
+                DestinationRect = new RelativeRect(0, 0, tileWidth, boundsRect.Height, RelativeUnit.Absolute),
+            };
+            _emptyBackgroundBrushHeight = boundsRect.Height;
+        }
+
+        context.DrawRectangle(_emptyBackgroundBrush, null, boundsRect);
+    }
+
     public Color WaveformSelectedColor
     {
         get => GetValue(WaveformSelectedColorProperty);
@@ -522,7 +564,7 @@ public class AudioVisualizer : Control
     private IBrush _paintParagraphSelectedBackground = new SolidColorBrush(Color.FromArgb(140, 70, 70, 70));
     private Pen _paintLeft = new Pen(new SolidColorBrush(Color.FromArgb(60, 0, 255, 0)), 2);
     private Pen _paintRight = new Pen(new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), 2);
-    private IBrush _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
+    private IBrush _paintText = new SolidColorBrush(WaveformColors.CurrentTextHex.FromHexToColor());
     private Typeface _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
     private readonly Pen _paintShotChangeParagraphStartPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 0, 100, 0)), 2, dashStyle: DashStyle.Dash);
     private readonly Pen _paintShotChangeParagraphEndPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 110, 10, 10)), 2, dashStyle: DashStyle.Dash);
@@ -2505,6 +2547,7 @@ public class AudioVisualizer : Control
 
         var boundsRect = new Rect(0, 0, width, height);
         context.DrawRectangle(_paintBackground, null, boundsRect);
+        DrawEmptyBackground(context, boundsRect);
 
         var waveformHeight = height * (WaveformHeightPercentage / 100.0);
         var playhead = GetRenderTimePlayhead(Stopwatch.GetTimestamp());
@@ -5349,7 +5392,7 @@ public class AudioVisualizer : Control
         _gridLinesGeometry = null;
         _timeLineCacheValid = false;
 
-        _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
+        _paintText = new SolidColorBrush(WaveformColors.CurrentTextHex.FromHexToColor());
         _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
         _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
     }

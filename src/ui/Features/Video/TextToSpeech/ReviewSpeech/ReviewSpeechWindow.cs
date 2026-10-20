@@ -576,20 +576,21 @@ public class ReviewSpeechWindow : Window
         // Mirror the main window's waveform theme so the review waveform looks the same as the
         // one users are already used to.
         var settings = Se.Settings.Waveform;
+        var colors = WaveformColors.Current;
         var audioVisualizer = new AudioVisualizer
         {
             DrawGridLines = settings.DrawGridLines,
-            WaveformColor = settings.WaveformColor.FromHexToColor(),
-            WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor(),
-            WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor(),
-            WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor(),
-            WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor(),
-            WaveformGridColor = settings.WaveformGridColor.FromHexToColor(),
-            WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor(),
-            WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor(),
-            WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor(),
-            ParagraphBackground = settings.ParagraphBackground.FromHexToColor(),
-            ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor(),
+            WaveformColor = colors.Waveform,
+            WaveformBackgroundColor = colors.Background,
+            WaveformSelectedColor = colors.Selected,
+            WaveformCursorColor = colors.Cursor,
+            WaveformShotChangeColor = colors.ShotChange,
+            WaveformGridColor = colors.Grid,
+            WaveformParagraphLeftColor = colors.ParagraphLeft,
+            WaveformParagraphRightColor = colors.ParagraphRight,
+            WaveformFancyHighColor = colors.FancyHigh,
+            ParagraphBackground = colors.ParagraphBackground,
+            ParagraphSelectedBackground = colors.ParagraphSelectedBackground,
             InvertMouseWheel = settings.InvertMouseWheel,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,

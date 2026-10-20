@@ -32,6 +32,7 @@ internal static class ThemePicker
         [
             UiTheme.ThemeNameSystem, UiTheme.ThemeNameLight, UiTheme.ThemeNameDark,
             UiTheme.ThemeNameClassic, UiTheme.ThemeNamePastel, UiTheme.ThemeNameNord,
+            UiTheme.ThemeNameMidnightCinema, UiTheme.ThemeNameSakura,
         ];
 
         for (var i = 0; i < vm.Themes.Count && i < themeNames.Length; i++)
@@ -226,6 +227,10 @@ internal static class ThemePicker
                 return new Palette(Color.FromRgb(240, 235, 255), Color.FromRgb(232, 222, 252), Color.FromRgb(0x3A, 0x30, 0x55), Color.FromRgb(227, 216, 250), Color.FromRgb(142, 111, 216));
             case UiTheme.ThemeNameNord:
                 return new Palette(UiTheme.NordBackgroundColor, Color.FromRgb(0x3B, 0x42, 0x52), UiTheme.NordForegroundColor, Color.FromRgb(0x43, 0x4C, 0x5E), Color.FromRgb(0x88, 0xC0, 0xD0));
+            case UiTheme.ThemeNameMidnightCinema:
+                return new Palette(UiTheme.MidnightCinemaBackgroundColor, UiTheme.MidnightCinemaHeaderColor, UiTheme.MidnightCinemaForegroundColor, Color.FromRgb(0x2A, 0x26, 0x31), UiTheme.MidnightCinemaAccentColor);
+            case UiTheme.ThemeNameSakura:
+                return new Palette(UiTheme.SakuraBackgroundColor, Color.FromRgb(248, 228, 235), UiTheme.SakuraForegroundColor, Color.FromRgb(250, 226, 234), UiTheme.SakuraAccentColor);
             default:
                 return new Palette(Colors.White, Color.FromRgb(243, 243, 243), text, Color.FromRgb(240, 240, 240), EditorChrome.FallbackAccent);
         }

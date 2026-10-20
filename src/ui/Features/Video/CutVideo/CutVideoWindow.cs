@@ -301,13 +301,14 @@ public class CutVideoWindow : Window
 
     private static Border MakeAudioVisualizerView(CutVideoViewModel vm)
     {
+        var colors = WaveformColors.Current;
         vm.AudioVisualizer = new AudioVisualizer { Height = 80, Width = double.NaN, IsReadOnly = false };
         vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerPositionChanged;
         vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
         vm.AudioVisualizer.DrawGridLines = Se.Settings.Waveform.DrawGridLines;
-        vm.AudioVisualizer.WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor();
-        vm.AudioVisualizer.WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor();
-        vm.AudioVisualizer.WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor();
+        vm.AudioVisualizer.WaveformColor = colors.Waveform;
+        vm.AudioVisualizer.WaveformSelectedColor = colors.Selected;
+        vm.AudioVisualizer.WaveformGridColor = colors.Grid;
         vm.AudioVisualizer.OnSelectRequested += vm.AudioVisualizerSelectRequested;
         vm.AudioVisualizer.OnPrimarySingleClicked += vm.AudioVisualizerOnPrimarySingleClicked;
         vm.AudioVisualizer.OnPrimaryDoubleClicked += vm.AudioVisualizerOnPrimaryDoubleClicked;

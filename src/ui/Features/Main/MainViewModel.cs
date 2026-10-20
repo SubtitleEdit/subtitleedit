@@ -15241,17 +15241,8 @@ public partial class MainViewModel :
         if (AudioVisualizer != null)
         {
             AudioVisualizer.DrawGridLines = Se.Settings.Waveform.DrawGridLines;
-            AudioVisualizer.WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor();
-            AudioVisualizer.WaveformBackgroundColor = Se.Settings.Waveform.WaveformBackgroundColor.FromHexToColor();
-            AudioVisualizer.WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor();
-            AudioVisualizer.WaveformCursorColor = Se.Settings.Waveform.WaveformCursorColor.FromHexToColor();
-            AudioVisualizer.WaveformShotChangeColor = Se.Settings.Waveform.WaveformShotChangeColor.FromHexToColor();
-            AudioVisualizer.WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor();
-            AudioVisualizer.WaveformParagraphLeftColor = Se.Settings.Waveform.WaveformParagraphLeftColor.FromHexToColor();
-            AudioVisualizer.WaveformParagraphRightColor = Se.Settings.Waveform.WaveformParagraphRightColor.FromHexToColor();
-            AudioVisualizer.WaveformFancyHighColor = Se.Settings.Waveform.WaveformFancyHighColor.FromHexToColor();
-            AudioVisualizer.ParagraphBackground = Se.Settings.Waveform.ParagraphBackground.FromHexToColor();
-            AudioVisualizer.ParagraphSelectedBackground = Se.Settings.Waveform.ParagraphSelectedBackground.FromHexToColor();
+            WaveformColors.Current.ApplyTo(AudioVisualizer);
+            AudioVisualizer.EmptyBackgroundTile = UiTheme.GetThemeArt(UiTheme.WaveformBackgroundFileName);
             AudioVisualizer.InvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel;
             AudioVisualizer.UpdateTheme();
             AudioVisualizer.IsReadOnly = AreTimeCodesLocked;
