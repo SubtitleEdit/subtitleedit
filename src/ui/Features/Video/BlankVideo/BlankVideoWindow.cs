@@ -156,55 +156,6 @@ public class BlankVideoWindow : Window
         return grid;
     }
 
-    private static StackPanel Horizontal(params Control[] controls)
-    {
-        var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, VerticalAlignment = VerticalAlignment.Center };
-        foreach (var control in controls)
-        {
-            panel.Children.Add(control);
-        }
-
-        return panel;
-    }
-
-    private static TextBlock Hint(string property) => new()
-    {
-        FontSize = 11.5,
-        Foreground = EditorChrome.DimTextBrush,
-        VerticalAlignment = VerticalAlignment.Center,
-        TextTrimming = TextTrimming.CharacterEllipsis,
-        [!TextBlock.TextProperty] = new Binding(property),
-    };
-
-    private static ToggleSwitch Switch(string property, string name)
-    {
-        var toggle = new ToggleSwitch
-        {
-            OnContent = null,
-            OffContent = null,
-            MinWidth = 0,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!ToggleSwitch.IsCheckedProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
-        };
-        AutomationProperties.SetName(toggle, name);
-        return toggle;
-    }
-
-    /// <summary>
-    /// A switch with its label beside it; the label wraps instead of being cut off.
-    /// </summary>
-    private static Grid SwitchRow(ToggleSwitch toggle, string text)
-    {
-        var row = new Grid
-        {
-            ColumnSpacing = 8,
-            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
-        };
-        row.Add(toggle, 0, 0);
-        row.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap }, 0, 1);
-        return row;
-    }
-
     private Border MakeVideoSettingsView(BlankVideoViewModel vm)
     {
         // Minimum 1: a duration of 0 gives "-t 0", which newer ffmpeg reads as "no limit".
@@ -218,7 +169,7 @@ public class BlankVideoWindow : Window
         AutomationProperties.SetName(width, Se.Language.General.Width);
         var height = EditorChrome.MakeField(nameof(vm.VideoHeight), 0, 10_000, 76, "H");
         AutomationProperties.SetName(height, Se.Language.General.Height);
-        var size = Horizontal(width, new TextBlock { Text = Se.Language.Video.ResolutionSeparator, Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center }, height);
+        var size = EditorChrome.MakeInlineRow(width, new TextBlock { Text = Se.Language.Video.ResolutionSeparator, Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center }, height);
         size.Bind(IsVisibleProperty, new Binding(nameof(vm.UseSourceResolution)) { Converter = InverseBooleanConverter.Instance });
         var source = new TextBlock
         {
@@ -243,7 +194,7 @@ public class BlankVideoWindow : Window
         rows.Children.Add(Row(Se.Language.General.Duration, numericUpDownDuration));
         rows.Children.Add(Row(Se.Language.General.Resolution, resolution));
         rows.Children.Add(Row(Se.Language.General.FrameRate, comboBoxFrameRate));
-        rows.Children.Add(SwitchRow(Switch(nameof(vm.GenerateTimeCodes), Se.Language.Video.GenerateTimeCodes), Se.Language.Video.GenerateTimeCodes));
+        rows.Children.Add(EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.GenerateTimeCodes), Se.Language.Video.GenerateTimeCodes), Se.Language.Video.GenerateTimeCodes));
 
         var section = EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.VideoOutput, rows, first: true);
         section.MinWidth = 320;
@@ -257,13 +208,13 @@ public class BlankVideoWindow : Window
         var radioButtonUseSolidColor = UiUtil.MakeRadioButton(Se.Language.General.SolidColor, vm, nameof(vm.UseSolidColor), "background");
         var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.SolidColor), false);
         AutomationProperties.SetName(colorPicker, Se.Language.General.SolidColor);
-        var panelSolidColor = Horizontal(radioButtonUseSolidColor, colorPicker);
+        var panelSolidColor = EditorChrome.MakeInlineRow(radioButtonUseSolidColor, colorPicker);
 
         var radioButtonImage = UiUtil.MakeRadioButton(Se.Language.General.Image, vm, nameof(vm.UseBackgroundImage), "background");
         var buttonBrowseImage = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.Image, vm.BrowseImageCommand, 28);
-        var labelImage = Hint(nameof(vm.BackgroundImageFileName));
+        var labelImage = EditorChrome.MakeBoundHint(nameof(vm.BackgroundImageFileName));
         labelImage.MaxWidth = 200;
-        var panelImage = Horizontal(radioButtonImage, buttonBrowseImage, labelImage);
+        var panelImage = EditorChrome.MakeInlineRow(radioButtonImage, buttonBrowseImage, labelImage);
 
         foreach (var radioButton in new[] { radioButtonCheckeredImage, radioButtonUseSolidColor, radioButtonImage })
         {
@@ -286,7 +237,7 @@ public class BlankVideoWindow : Window
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
-        var statusText = Hint(nameof(vm.ProgressText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
         statusText.FontSize = 12;
         statusText.MaxWidth = 320;
 
@@ -317,7 +268,7 @@ public class BlankVideoWindow : Window
         buttonGenerate.Classes.Add("primary");
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttons = Horizontal(buttonCancel, buttonOk, buttonGenerate);
+        var buttons = EditorChrome.MakeInlineRow(buttonCancel, buttonOk, buttonGenerate);
         buttons.Spacing = 10;
         buttons.HorizontalAlignment = HorizontalAlignment.Right;
 

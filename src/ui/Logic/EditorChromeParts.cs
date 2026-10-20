@@ -1657,6 +1657,20 @@ internal static partial class EditorChrome
     }
 
     /// <summary>
+    /// Controls side by side on one line (a field and its unit, a button and its hint).
+    /// </summary>
+    internal static StackPanel MakeInlineRow(params Control[] controls)
+    {
+        var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, VerticalAlignment = VerticalAlignment.Center };
+        foreach (var control in controls)
+        {
+            panel.Children.Add(control);
+        }
+
+        return panel;
+    }
+
+    /// <summary>
     /// A list header whose text comes from the view model (counts, "No changes needed", ...).
     /// </summary>
     internal static TextBlock MakeBoundSectionHeader(string binding)
