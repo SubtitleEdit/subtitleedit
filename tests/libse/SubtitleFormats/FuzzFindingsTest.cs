@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace LibSETests.SubtitleFormats;
@@ -72,5 +73,32 @@ public class FuzzFindingsTest
 
         Assert.NotNull(list);
         Assert.False(isMine);
+    }
+
+    [Fact]
+    public async Task Mp4Trun_HugeSampleCountWithoutPerSampleFields_IsCapped()
+    {
+        // No per-sample fields: the loop read nothing and ran sample_count (4 billion) times.
+        var data = new byte[64];
+        data[4] = 0xFF;
+        data[5] = 0xFF;
+        data[6] = 0xFF;
+        data[7] = 0xFF;
+
+        var trun = await RunWithTimeout(() => new Trun(new MemoryStream(data), (ulong)data.Length));
+
+        Assert.InRange(trun.Samples.Count, 1, data.Length);
+    }
+
+    [Fact]
+    public void Mp4Trun_SamplesWithoutPerSampleFields_AreKept()
+    {
+        // Legal: durations/sizes come from the tfhd/trex defaults, so the samples must stay.
+        var data = new byte[64];
+        data[7] = 3;
+
+        var trun = new Trun(new MemoryStream(data), (ulong)data.Length);
+
+        Assert.Equal(3, trun.Samples.Count);
     }
 }
