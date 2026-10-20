@@ -167,6 +167,27 @@ public class ItunesTimedTextPresetTest
     }
 
     [Fact]
+    public void SourceHeaderTimingParametersFollowCurrentFrameRate()
+    {
+        using var _ = new SettingsSnapshot();
+        Configuration.Settings.General.CurrentFrameRate = 25;
+
+        var raw = MakeSubtitle(WhiteSourceHeader, "One").ToText(new ItunesTimedText());
+
+        Assert.Contains("ttp:frameRate=\"25\"", raw);
+        Assert.Contains("ttp:frameRateMultiplier=\"1 1\"", raw);
+        Assert.Contains("ttp:dropMode=\"nonDrop\"", raw);
+        Assert.DoesNotContain("999 1000", raw);
+
+        Configuration.Settings.General.CurrentFrameRate = 29.97;
+        raw = MakeSubtitle(WhiteSourceHeader, "One").ToText(new ItunesTimedText());
+
+        Assert.Contains("ttp:frameRate=\"30\"", raw);
+        Assert.Contains("ttp:frameRateMultiplier=\"999 1000\"", raw);
+        Assert.Contains("ttp:dropMode=\"dropNTSC\"", raw);
+    }
+
+    [Fact]
     public void OnlyTopLinesNameTheirRegionWhenBodyIsBottom()
     {
         using var _ = new SettingsSnapshot();

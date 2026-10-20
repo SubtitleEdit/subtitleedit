@@ -179,6 +179,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     xml.LoadXml(subtitle.Header);
                     if (ClearBodyDiv(xml, nsmgr))
                     {
+                        // The time codes are written at the current frame rate, so the source's
+                        // timing parameters must follow it (e.g. after a frame rate change, #16257).
+                        SetRootParameter(xml, "frameRate", frameRate);
+                        SetRootParameter(xml, "frameRateMultiplier", frameRateMultiplier);
+                        SetRootParameter(xml, "dropMode", dropMode);
                         ApplyRegionSettings(xml, nsmgr, settings);
                     }
                     else
