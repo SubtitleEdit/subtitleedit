@@ -57,6 +57,9 @@ public partial class RuleTreeNode : ObservableObject
 
     public RuleTreeNode? Parent { get; set; }
 
+    // What a screen reader announces for a row of the category list (#12087).
+    public override string ToString() => IsCategory ? CategoryName : Find;
+
     /// <summary>
     /// "Whole word" applies to the plain text types only - a regular expression uses \b itself.
     /// </summary>
