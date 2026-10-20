@@ -51,4 +51,26 @@ public class FuzzFindingsTest
             File.Delete(fileName);
         }
     }
+
+    private static async Task<T> RunWithTimeout<T>(Func<T> action)
+    {
+        var task = Task.Run(action, TestContext.Current.CancellationToken);
+        var finished = await Task.WhenAny(task, Task.Delay(TimeSpan.FromSeconds(20), TestContext.Current.CancellationToken));
+        Assert.True(finished == task, "did not return within 20 seconds");
+        return await task;
+    }
+
+    [Fact]
+    public async Task JsonReadArray_NoClosingBracket_Returns()
+    {
+        // When the scan passed the last ']', IndexOf returned -1 and "nextEnd + 1" restarted it
+        // at 0 with a deeper tagLevel every pass - JSON Type 5 detection never returned.
+        const string json = "{\"text_tees\":[[1,[2,[3],[4,[5}";
+
+        var list = await RunWithTimeout(() => Json.ReadArray(json, "text_tees"));
+        var isMine = await RunWithTimeout(() => new JsonType5().IsMine(json.SplitToLines(), "test.json"));
+
+        Assert.NotNull(list);
+        Assert.False(isMine);
+    }
 }
