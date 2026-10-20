@@ -25,6 +25,11 @@ public class LanguageMultipleReplace
     public string XRules { get; set; }
     public string DiscardXRules { get; set; }
     public string EnterAddsRule { get; set; }
+    public string Categories { get; set; }
+    public string NewestFirst { get; set; }
+    public string FilterRules { get; set; }
+    public string RulesInX { get; set; }
+    public string EnterAddsRuleToCategory { get; set; }
 
     public LanguageMultipleReplace()
     {
@@ -51,5 +56,10 @@ public class LanguageMultipleReplace
         XRules = "{0:#,##0} rules";
         DiscardXRules = "Discard the {0} rules entered?";
         EnterAddsRule = "Enter adds the rule to the list, OK adds the list to the category (Ctrl+Enter)";
+        Categories = "Categories";
+        NewestFirst = "Newest first";
+        FilterRules = "Filter rules...";
+        RulesInX = "Rules in '{0}'";
+        EnterAddsRuleToCategory = "Enter adds the rule to the end of the category";
     }
 }

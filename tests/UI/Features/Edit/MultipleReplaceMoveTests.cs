@@ -52,10 +52,18 @@ public class MultipleReplaceMoveTests
     private static string Rules(RuleTreeNode category) =>
         string.Join(",", category.SubNodes!.Select(n => n.Find));
 
-    private static bool SendKey(MultipleReplaceViewModel vm, Key key, KeyModifiers modifiers)
+    private static bool SendKey(MultipleReplaceViewModel vm, Key key, KeyModifiers modifiers, bool toCategories = false)
     {
         var e = new KeyEventArgs { Key = key, KeyModifiers = modifiers, RoutedEvent = InputElement.KeyDownEvent };
-        vm.RulesTreeView_PreviewKeyDown(null, e);
+        if (toCategories)
+        {
+            vm.CategoriesListBox_PreviewKeyDown(null, e);
+        }
+        else
+        {
+            vm.RulesTable_PreviewKeyDown(null, e);
+        }
+
         return e.Handled;
     }
 
@@ -175,20 +183,20 @@ public class MultipleReplaceMoveTests
     public void CtrlKey_MovesSelectedCategory()
     {
         var vm = BuildViewModel();
-        vm.SelectedNode = vm.Nodes[0];
+        vm.SelectedCategory = vm.Nodes[0];
 
-        Assert.True(SendKey(vm, Key.End, KeyModifiers.Control));
+        Assert.True(SendKey(vm, Key.End, KeyModifiers.Control, toCategories: true));
         Assert.Equal("c2,c3,c1", Categories(vm));
     }
 
-    // Plain arrows are the tree's own navigation, and Ctrl+Shift+Arrow is not a move either -
+    // Plain arrows are the list's own navigation, and Ctrl+Shift+Arrow is not a move either -
     // the handler tunnels, so anything it wrongly claims is lost to the tree view.
     [AvaloniaTheory]
     [InlineData(Key.Down, KeyModifiers.None)]
     [InlineData(Key.Home, KeyModifiers.None)]
     [InlineData(Key.End, KeyModifiers.Control | KeyModifiers.Shift)]
     [InlineData(Key.PageDown, KeyModifiers.Control)]
-    public void OtherKeys_AreLeftToTheTreeView(Key key, KeyModifiers modifiers)
+    public void OtherKeys_AreLeftToTheRulesList(Key key, KeyModifiers modifiers)
     {
         var vm = BuildViewModel();
         var category = vm.Nodes[1];
@@ -210,10 +218,10 @@ public class MultipleReplaceMoveTests
     }
 
     // The handler is only reached because the window registers it as a tunnel handler - the list
-    // box inside the tree view handles Ctrl+Arrow itself, so a bubbling registration silently
-    // does nothing. Raise the event on the real tree to pin the registration, not just the method.
+    // handles Ctrl+Arrow itself, so a bubbling registration silently does nothing. Raise the event
+    // on the real rules list to pin the registration, not just the method.
     [AvaloniaFact]
-    public void CtrlHome_IsHandledThroughTheTreeViewsTunnelRoute()
+    public void CtrlHome_IsHandledThroughTheRulesListsTunnelRoute()
     {
         var vm = BuildViewModel();
         var window = new MultipleReplaceWindow(vm);
@@ -231,7 +239,7 @@ public class MultipleReplaceMoveTests
                 KeyModifiers = KeyModifiers.Control,
                 RoutedEvent = InputElement.KeyDownEvent,
             };
-            vm.RulesTreeView.RaiseEvent(e);
+            vm.RulesTable.RaiseEvent(e);
 
             Assert.True(e.Handled);
             Assert.Equal("c2r3,c2r1,c2r2", Rules(category));
@@ -266,7 +274,8 @@ public class MultipleReplaceMoveTests
                 vm.NodeOpenContextMenuCommand.Execute(node);
             }
 
-            var headers = vm.RulesTreeView.ContextMenu!.Items
+            var host = category ? (Control)vm.CategoriesListBox : vm.RulesTable;
+            var headers = host.ContextMenu!.Items
                 .OfType<MenuItem>()
                 .Select(m => m.Header as string)
                 .ToList();
@@ -295,7 +304,8 @@ public class MultipleReplaceMoveTests
         Assert.Equal("c1r1,c1r3", Rules(vm.Nodes[0]));
         Assert.Equal("c3r1,c3r2,c3r3,c1r2", Rules(target));
         Assert.Same(target, rule.Parent);
-        Assert.True(target.IsExpanded);
+        Assert.Same(target, vm.SelectedCategory);
+        Assert.Same(rule, vm.SelectedNode);
 
         // The moved rule then reorders inside its new category, not the old one.
         vm.NodeMoveToTopCommand.Execute(rule);
@@ -331,7 +341,7 @@ public class MultipleReplaceMoveTests
             var rule = vm.Nodes[1].SubNodes![0];
             vm.NodeOpenContextMenuCommand.Execute(rule);
 
-            var moveTo = vm.RulesTreeView.ContextMenu!.Items
+            var moveTo = vm.RulesTable.ContextMenu!.Items
                 .OfType<MenuItem>()
                 .Single(m => m.Header as string == Se.Language.Edit.MultipleReplace.MoveToCategory);
             var targets = moveTo.Items.OfType<MenuItem>().ToList();

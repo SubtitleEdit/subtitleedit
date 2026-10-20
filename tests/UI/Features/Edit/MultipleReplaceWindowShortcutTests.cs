@@ -79,10 +79,11 @@ public class MultipleReplaceWindowShortcutTests
         Dispatcher.UIThread.RunJobs();
     }
 
-    // The rules panel is a TreeView, so the fixes grid is the only TableView in the window.
+    // The rules list is a TableView too, so pick the one showing the fixes.
     private static TableView FixesGrid(Window window)
     {
-        return window.GetVisualDescendants().OfType<TableView>().First();
+        var vm = (MultipleReplaceViewModel)window.DataContext!;
+        return window.GetVisualDescendants().OfType<TableView>().First(t => ReferenceEquals(t.ItemsSource, vm.Fixes));
     }
 
     private static Point CenterOf(Visual container, Window window)
