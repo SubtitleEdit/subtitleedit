@@ -1524,7 +1524,7 @@ public partial class SettingsViewModel : ObservableObject
         }
     }
 
-    private string MapThemeToTranslation(string theme)
+    internal static string MapThemeToTranslation(string theme)
     {
         if (theme == UiTheme.ThemeNameSystem)
         {

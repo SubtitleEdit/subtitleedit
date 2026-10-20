@@ -45,6 +45,29 @@ public static class UiTheme
     public const string ThemeNameMidnightCinema = "MidnightCinema";
     public const string ThemeNameSakura = "Sakura";
 
+    /// <summary>
+    /// The themes the "Cycle theme" shortcut steps through, in the Settings order. System is left
+    /// out - it is always one of Light and Dark.
+    /// </summary>
+    public static readonly string[] CycleThemeNames =
+    [
+        ThemeNameLight, ThemeNameDark, ThemeNameClassic, ThemeNamePastel, ThemeNameNord,
+        ThemeNameMidnightCinema, ThemeNameSakura,
+    ];
+
+    /// <summary>The theme after <paramref name="currentTheme"/> in <see cref="CycleThemeNames"/>.</summary>
+    public static string GetNextTheme(string currentTheme)
+    {
+        // From System, continue after the theme it currently shows
+        if (currentTheme == ThemeNameSystem)
+        {
+            currentTheme = ThemeName;
+        }
+
+        var index = Array.IndexOf(CycleThemeNames, currentTheme);
+        return CycleThemeNames[(index + 1) % CycleThemeNames.Length];
+    }
+
     /// <summary>Theme art in a theme's image folder, for the empty video area.</summary>
     public const string VideoBackgroundFileName = "VideoBackground.jpg";
 
