@@ -1,7 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -81,23 +79,7 @@ public class MergeContinuationLinesWindow : Window
             Header = Se.Language.Tools.MergeContinuationLines.ColumnMerge,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<MergeContinuationLinesCandidate>((_, _) =>
-            {
-                return new Border
-                {
-                    Background = Brushes.Transparent,
-                    Padding = new Thickness(4),
-                    Child = new CheckBox
-                    {
-                        Focusable = false,
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(MergeContinuationLinesCandidate.IsSelected))
-                        {
-                            Mode = BindingMode.TwoWay,
-                        },
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                    },
-                };
-            }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<MergeContinuationLinesCandidate>(nameof(MergeContinuationLinesCandidate.IsSelected)),
             Width = new GridLength(80),
         });
         dataGrid.Columns.Add(new SeTableViewColumn

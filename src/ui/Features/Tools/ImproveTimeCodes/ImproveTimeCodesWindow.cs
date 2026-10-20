@@ -450,21 +450,10 @@ public class ImproveTimeCodesWindow : Window
             Header = Se.Language.General.Apply,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<ImproveTimeCodesRow>((_, _) => new Border
-            {
-                Background = Brushes.Transparent,
-                Padding = new Thickness(4),
-                Child = new CheckBox
-                {
-                    Focusable = false,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ImproveTimeCodesRow.Apply)) { Mode = BindingMode.TwoWay },
-                    // Disabled rather than hidden: a hidden box collapses the row, and the rows
-                    // would all change height the moment the results arrive.
-                    [!IsEnabledProperty] = new Binding(nameof(ImproveTimeCodesRow.IsChanged)),
-                    [!AutomationProperties.NameProperty] = new Binding(nameof(ImproveTimeCodesRow.Text)),
-                },
-            }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<ImproveTimeCodesRow>(nameof(ImproveTimeCodesRow.Apply), nameof(ImproveTimeCodesRow.Text),
+                // Disabled rather than hidden: a hidden box collapses the row, and the rows
+                // would all change height the moment the results arrive.
+                configure: cb => cb[!IsEnabledProperty] = new Binding(nameof(ImproveTimeCodesRow.IsChanged))),
             Width = new GridLength(70),
         };
 

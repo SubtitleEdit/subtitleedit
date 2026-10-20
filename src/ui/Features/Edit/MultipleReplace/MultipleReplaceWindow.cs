@@ -507,17 +507,7 @@ public class MultipleReplaceWindow : Window
                 Header = Se.Language.General.Apply,
                 CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                CellTemplate = new FuncDataTemplate<MultipleReplaceFix>((item, _) =>
-                    new Border
-                    {
-                        Background = Brushes.Transparent, // Prevents highlighting
-                        Padding = new Thickness(4),
-                        Child = new CheckBox
-                        {
-                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(MultipleReplaceFix.Apply)),
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        }
-                    }),
+                CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<MultipleReplaceFix>(nameof(MultipleReplaceFix.Apply), focusable: true),
                 // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
                 Width = new GridLength(70)
             },

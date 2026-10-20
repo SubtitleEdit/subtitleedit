@@ -222,17 +222,7 @@ public class ModifySelectionWindow : Window
                 Header = Se.Language.General.Apply,
                 CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                CellTemplate = new FuncDataTemplate<PreviewItem>((item, _) =>
-                    new Border
-                    {
-                        Background = Brushes.Transparent, // Prevents highlighting
-                        Padding = new Thickness(4),
-                        Child = new CheckBox
-                        {
-                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(PreviewItem.Apply)),
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        }
-                    }),
+                CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<PreviewItem>(nameof(PreviewItem.Apply), focusable: true),
                 // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
                 Width = new GridLength(80)
             },

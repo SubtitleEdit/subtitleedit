@@ -148,17 +148,7 @@ public class ReviewSpeechWindow : Window
             Header = Se.Language.General.Enabled,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
-                new Border
-                {
-                    Background = Brushes.Transparent, // Prevents highlighting
-                    Padding = new Thickness(4),
-                    Child = new CheckBox
-                    {
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewRow.Include)),
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    }
-                }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<ReviewRow>(nameof(ReviewRow.Include), focusable: true),
             Width = new GridLength(80),
         });
         lineGrid.Columns.Add(new SeTableViewColumn

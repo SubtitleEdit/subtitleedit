@@ -1,8 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -134,17 +132,7 @@ public class AssaStylePickerWindow : Window
             Header = Se.Language.General.Enabled,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<StyleDisplay>((item, _) =>
-            new Border
-            {
-                Background = Brushes.Transparent, // Prevents highlighting
-                Padding = new Thickness(4),
-                Child = new CheckBox
-                {
-                    [!ToggleButton.IsCheckedProperty] = new Binding(nameof(StyleDisplay.IsSelected)),
-                    HorizontalAlignment = HorizontalAlignment.Center
-                }
-            }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<StyleDisplay>(nameof(StyleDisplay.IsSelected), focusable: true),
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
             Width = new GridLength(80),
         });

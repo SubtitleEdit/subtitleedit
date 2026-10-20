@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using Avalonia.Data;
@@ -117,19 +116,8 @@ public class SplitBreakLongLinesWindow : Window
                     Header = Se.Language.General.Apply,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                    CellTemplate = new FuncDataTemplate<SplitBreakLongLinesItem>((_, _) => new Border
-                    {
-                        Background = Brushes.Transparent,
-                        Padding = new Thickness(4),
-                        Child = new CheckBox
-                        {
-                            Focusable = false,
-                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(SplitBreakLongLinesItem.IsSelected)),
-                            [!Visual.IsVisibleProperty] = new Binding(nameof(SplitBreakLongLinesItem.IsSelectable)),
-                            [!AutomationProperties.NameProperty] = new Binding(nameof(SplitBreakLongLinesItem.Name)),
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                        },
-                    }),
+                    CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<SplitBreakLongLinesItem>(nameof(SplitBreakLongLinesItem.IsSelected), nameof(SplitBreakLongLinesItem.Name),
+                        configure: cb => cb[!Visual.IsVisibleProperty] = new Binding(nameof(SplitBreakLongLinesItem.IsSelectable))),
                     Width = new GridLength(70),
                 },
                 new SeTableViewColumn
