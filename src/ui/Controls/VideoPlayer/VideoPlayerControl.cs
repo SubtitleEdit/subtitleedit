@@ -81,8 +81,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         }
 
         /// <summary>
-        /// Theme art shown in the video area while no video is loaded. It sits on top of the
-        /// player surface, so a native player window (mpv "wid" on Windows) still covers it.
+        /// Theme art shown in the video area while no video is loaded.
         /// </summary>
         public IImage? EmptyBackground
         {
@@ -96,9 +95,23 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private readonly Image _emptyBackground;
 
+        // From the start of Open until Close - the file name is only set once the file is loaded
+        private bool _hasVideo;
+
         private void UpdateEmptyBackground()
         {
-            _emptyBackground.IsVisible = _emptyBackground.Source != null && string.IsNullOrEmpty(_videoFileName);
+            var showArt = _emptyBackground.Source != null && !_hasVideo;
+            _emptyBackground.IsVisible = showArt;
+
+            // A native player window (mpv "wid" - the Windows default - and VLC) is drawn on top
+            // of everything Avalonia draws, so it is hidden while the art shows. Hiding only hides
+            // the native window: the window and the player in it live until the control is
+            // detached. The presenter is hidden rather than the control itself, as mpv's Linux
+            // resize workaround toggles the control's own IsVisible.
+            if (_contentPresenter != null && PlayerContent is NativeControlHost)
+            {
+                _contentPresenter.IsVisible = !showArt;
+            }
         }
 
         public double Volume
@@ -1071,7 +1084,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // meanwhile (issue #14218). Callers that seek only after the open have already
             // announced their target - a start-less open must not clear it.
             BeginPositionRestore(startPositionSeconds);
-            _emptyBackground.IsVisible = false;
+            _hasVideo = true;
+            UpdateEmptyBackground();
 
             // Reset slider state before LoadFile. Otherwise, when the new file's
             // Duration arrives on the next timer tick, the slider's Maximum drops
@@ -1345,6 +1359,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             ProgressText = string.Empty;
             _videoFileName = string.Empty;
             _textBlockVideoFileName.Text = string.Empty;
+            _hasVideo = false;
             UpdateEmptyBackground();
             SetPositionDisplayOnly(0);
             Duration = 0;
