@@ -1720,11 +1720,11 @@
     "propertyTemplateFileHint": "Stili, regioni e metadati vengono presi da questo file per ogni file salvato; la frequenza fotogrammi è quella del video attuale.",
     "propertyTemplateSummaryX": "Lingua: {0}, stili: {1}, regioni: {2}",
     "propertyTemplateFileNotFound": "File modello non trovato",
-    "propertyTemplateFileInvalid": "Non un file TTML con una intestazione e un corpo",
+    "propertyTemplateFileInvalid": "Non è un file TTML con intestazione e corpo",
     "propertyDefaultColor": "Colore predefinito",
     "propertyDefaultColorTemplateHint": "I colori provengono dal file modello",
     "pickTemplateFile": "Scegli file modello",
-    "ttmlFiles": "File testo temporizzati"
+    "ttmlFiles": "File TTML"
   },
   "edit": {
     "modifySelection": {
@@ -1794,7 +1794,7 @@
       "enterAddsRule": "'Invio' aggiunge la regola all'elenco, 'OK' aggiunge l'elenco alla categoria (Ctrl+Invio)",
       "categories": "Categorie",
       "newestFirst": "Prima il più recente",
-      "filterRules": "Regole filtro...",
+      "filterRules": "Filtra regole...",
       "rulesInX": "Regole in '{0}'",
       "enterAddsRuleToCategory": "'Invio' aggiunge la regola alla fine della categoria"
     },
