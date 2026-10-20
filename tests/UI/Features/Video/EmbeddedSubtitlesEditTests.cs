@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Logic;
