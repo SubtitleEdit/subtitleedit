@@ -65,6 +65,9 @@ public class AssaSetPositionWindow : Window
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, firstInput);
         KeyDown += vm.KeyDown;
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border CreateSettingsPanel(AssaSetPositionViewModel vm, out Control firstInput)
