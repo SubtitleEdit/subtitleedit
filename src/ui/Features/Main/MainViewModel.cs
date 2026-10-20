@@ -200,7 +200,6 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr;
-using Nikse.SubtitleEdit.Logic.Platform.Windows;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -213,7 +212,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -900,7 +898,6 @@ public partial class MainViewModel :
     private readonly Lock _scrollLock = new();
     private bool _changingFormatProgrammatically;
     private bool _formatChangedByUser;
-    private SubtitleFormat? _formatChangedFrom;
 
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -15001,8 +14998,6 @@ public partial class MainViewModel :
         }
     }
 
-    private TableView _oldSubtitleGrid = new TableView();
-    private ITextBoxWrapper _oldEditTextBox = new TextBoxWrapper(new TextBox());
     private bool _oldGenerateSpectrogram;
     private string _oldSpectrogramStyle = string.Empty;
 
@@ -15013,8 +15008,6 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task CommandShowSettings()
     {
-        _oldSubtitleGrid = SubtitleGrid;
-        _oldEditTextBox = EditTextBox;
         _oldGenerateSpectrogram = Se.Settings.Waveform.GenerateSpectrogram;
         _oldSpectrogramStyle = Se.Settings.Waveform.SpectrogramStyle;
 
@@ -15380,9 +15373,6 @@ public partial class MainViewModel :
         _autoBackupService.StartAutoBackup(this);
 
         _updateAudioVisualizer = true;
-
-        _oldSubtitleGrid = SubtitleGrid;
-        _oldEditTextBox = EditTextBox;
 
         var vp = GetVideoPlayerControl();
         if (vp != null)
@@ -27004,19 +26994,6 @@ public partial class MainViewModel :
         });
     }
 
-    private void ImportAndOcrBinaryParagraphList(string fileName, IBinaryParagraphList binaryParagraphList, Subtitle subtitle, bool skipLoadVideo = false)
-    {
-        Dispatcher.UIThread.Post(async () =>
-        {
-            var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeBinaryParagraphList(binaryParagraphList, subtitle, fileName); });
-
-            if (result.OkPressed)
-            {
-                await FinishOcrImportAsync(fileName, result.OcredSubtitle, skipLoadVideo: skipLoadVideo);
-            }
-        });
-    }
-
     private void ImportAndOcrWebVttImages(string fileName, Subtitle subtitle, bool skipLoadVideo = false)
     {
         Dispatcher.UIThread.Post(async () =>
@@ -36403,18 +36380,6 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
-    internal void SubtitleTextOriginalChanged(object? sender, TextChangedEventArgs e)
-    {
-        var selectedSubtitle = SelectedSubtitle;
-        if (selectedSubtitle == null)
-        {
-            return;
-        }
-
-        MakeSubtitleTextInfoOriginal(selectedSubtitle.OriginalText, selectedSubtitle);
-        _updateAudioVisualizer = true;
-    }
-
     /// <summary>
     /// Sets the style of a newly created ASSA/SSA paragraph. Used by the insert paths that bypass
     /// <see cref="IInsertService.InsertBefore"/>/<see cref="IInsertService.InsertAfter"/> - the
@@ -36812,11 +36777,6 @@ public partial class MainViewModel :
 
         var halfWidthInSeconds = (av.Bounds.Width / 2) / (av.WavePeaks.SampleRate * av.ZoomFactor);
         av.StartPositionSeconds = newPositionSeconds - halfWidthInSeconds;
-    }
-
-    internal void AudioVisualizerOnStatus(object sender, ParagraphEventArgs e)
-    {
-        ShowStatus(e.Paragraph.Text, 3000);
     }
 
 
@@ -37665,7 +37625,6 @@ public partial class MainViewModel :
         if (!_changingFormatProgrammatically)
         {
             _formatChangedByUser = true;
-            _formatChangedFrom = e.RemovedItems.Count == 1 ? e.RemovedItems[0] as SubtitleFormat : null;
         }
 
         IsFormatAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;

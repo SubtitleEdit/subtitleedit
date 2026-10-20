@@ -21,8 +21,6 @@ public class LibMpvDownloadService : ILibMpvDownloadService
     // import of vulkan-1.dll, which GPU drivers older than Vulkan never installed (#13856).
     private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win64.zip";
     private const string WindowsUrlArm = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win-arm64.zip";
-    private const string MacUrl = "";
-    private const string MacUrlArm = "";
 
     public LibMpvDownloadService(HttpClient httpClient)
     {
@@ -42,21 +40,6 @@ public class LibMpvDownloadService : ILibMpvDownloadService
 
         throw new PlatformNotSupportedException("Unsupported platform for libmpv download." + Environment.NewLine +
             RuntimeInformation.OSDescription);
-
-        //if (OperatingSystem.IsMacOS())
-        //{
-        //    switch (RuntimeInformation.ProcessArchitecture)
-        //    {
-        //        case Architecture.Arm64:
-        //            return MacUrlArm; // e.g., for M1, M2, M3, M4 chips
-        //        case Architecture.X64:
-        //            return MacUrl;
-        //        default:
-        //            throw new PlatformNotSupportedException("Unsupported macOS architecture.");
-        //    }
-        //}
-
-        //throw new PlatformNotSupportedException();
     }
 
     /// <summary>The <see cref="DownloadHashManager.LibMpv"/> key matching <see cref="GetUrl"/>.</summary>

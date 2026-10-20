@@ -179,12 +179,12 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
             try
             {
-                WordLists = new SpellCheckWordLists(fiveLetterCode ?? "en_US", this);
+                WordLists = new SpellCheckWordLists(fiveLetterCode ?? "en_US");
             }
             catch (Exception exception)
             {
                 SpellCheckConfig.LogError("Error loading names for SpellCheckManager: " + exception.Message);
-                WordLists = new SpellCheckWordLists(string.Empty, this);
+                WordLists = new SpellCheckWordLists(string.Empty);
             }
         }
 

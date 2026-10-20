@@ -18,9 +18,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
-using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
-using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
@@ -32,7 +30,6 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Media;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
@@ -709,68 +706,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         public bool IsImage { get; set; }
         public IOcrSubtitle? OcrSubtitle { get; set; }
         public Subtitle? Subtitle { get; set; }
-    }
-
-    private List<TransportStreamResult> LoadTransportStream(BatchConvertItem item, CancellationToken cancellationToken)
-    {
-        var result = new List<TransportStreamResult>();
-
-        var tsParser = new TransportStreamParser();
-        tsParser.Parse(item.FileName, null);
-
-        var programMapTableParser = new ProgramMapTableParser();
-        programMapTableParser.Parse(item.FileName); // get languages
-
-        foreach (var packetId in tsParser.SubtitlePacketIds)
-        {
-            var language = string.Empty;
-            if (programMapTableParser.GetSubtitlePacketIds().Count > 0)
-            {
-                language = programMapTableParser.GetSubtitleLanguage(packetId);
-            }
-
-            var subtitles = tsParser.GetDvbSubtitles(packetId);
-            if (subtitles.Count > 0)
-            {
-                result.Add(new TransportStreamResult { IsImage = true, OcrSubtitle = new OcrSubtitleTransportStream(subtitles) });
-            }
-        }
-
-        // One PID can carry several teletext subtitle pages; emit each page as its own result.
-        foreach (var pages in tsParser.TeletextSubtitlesLookup.Values)
-        {
-            foreach (var paragraphs in pages.Values)
-            {
-                if (paragraphs.Count > 0)
-                {
-                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(paragraphs) });
-                }
-            }
-        }
-
-        foreach (var aribPid in tsParser.AribSubtitlesLookup)
-        {
-            foreach (var language in aribPid.Value)
-            {
-                if (language.Value.Count > 0)
-                {
-                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(language.Value) });
-                }
-            }
-        }
-
-        foreach (var tracks in tsParser.ClosedCaptionSubtitlesLookup.Values)
-        {
-            foreach (var paragraphs in tracks.Values)
-            {
-                if (paragraphs.Count > 0)
-                {
-                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(paragraphs) });
-                }
-            }
-        }
-
-        return result;
     }
 
     public static List<IBinaryParagraphWithPosition> LoadDvbFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, ref Subtitle subtitle)

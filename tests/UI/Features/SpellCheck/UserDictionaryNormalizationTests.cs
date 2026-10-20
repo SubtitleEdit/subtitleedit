@@ -1,8 +1,6 @@
-using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -43,7 +41,7 @@ public class UserDictionaryNormalizationTests : IDisposable
         Assert.True(UserWordsHelper.AddToUserDictionary(_nfdWord, LanguageName));
         Assert.False(UserWordsHelper.AddToUserDictionary(_nfcWord, LanguageName));
 
-        var wordLists = new SpellCheckWordLists(LanguageName, new AlwaysMissSpellChecker());
+        var wordLists = new SpellCheckWordLists(LanguageName);
         Assert.True(wordLists.HasUserWord(_nfcWord));
         Assert.True(wordLists.HasUserWord(_nfdWord));
 
@@ -65,14 +63,6 @@ public class UserDictionaryNormalizationTests : IDisposable
         catch
         {
             // Best-effort cleanup; leaving a temp dir behind is harmless.
-        }
-    }
-
-    private sealed class AlwaysMissSpellChecker : IDoSpell
-    {
-        public bool DoSpell(string word)
-        {
-            return false;
         }
     }
 }

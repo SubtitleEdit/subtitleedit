@@ -23,7 +23,6 @@ namespace Nikse.SubtitleEdit.Features.Video.RemuxVideo;
 /// </summary>
 public class RemuxVideoWindow : Window
 {
-    private readonly RemuxVideoViewModel _vm;
     private Button? _buttonBrowseVideo;
 
     private const double LabelWidth = 96;
@@ -41,7 +40,6 @@ public class RemuxVideoWindow : Window
         EditorChrome.AddEditorStyles(Styles);
         AddStyles();
 
-        _vm = vm;
         vm.Window = this;
         DataContext = vm;
 

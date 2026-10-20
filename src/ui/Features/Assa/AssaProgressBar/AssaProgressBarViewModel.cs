@@ -72,7 +72,6 @@ public partial class AssaProgressBarViewModel : ObservableObject, IClosingCleanu
 
     private Subtitle _subtitle = new();
     private Subtitle _progressBarSubtitle = new();
-    private string? _videoFileName;
     private LibMpvDynamicPlayer? _mpvPlayer;
     private string _oldSubtitleText = string.Empty;
     private DispatcherTimer _positionTimer = new DispatcherTimer();
@@ -132,7 +131,6 @@ public partial class AssaProgressBarViewModel : ObservableObject, IClosingCleanu
         _videoWidth = videoWidth > 0 ? videoWidth : 1920;
         _videoHeight = videoHeight > 0 ? videoHeight : 1080;
         _videoDurationMs = videoDurationMs > 0 ? videoDurationMs : 3600000;
-        _videoFileName = videoFileName;
 
         LoadExistingSettings();
 

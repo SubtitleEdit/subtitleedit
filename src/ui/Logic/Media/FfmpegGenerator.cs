@@ -756,30 +756,6 @@ public class FfmpegGenerator
         return File.Exists(outputFileName) ? outputFileName : null;
     }
 
-    public static string[] GetScreenShotsForEachFrame(string videoFileName, string outputFolder)
-    {
-        Directory.CreateDirectory(outputFolder);
-        var outputFileName = Path.Combine(outputFolder, "image%05d.png");
-        var process = new Process
-        {
-            StartInfo =
-            {
-                FileName = GetFfmpegLocation(),
-                // "-vsync vfr" was dropped: ffmpeg 9 removed -vsync and aborts before decoding
-                // anything, and "select=1" already passes every frame through unchanged.
-                Arguments = $"-i \"{videoFileName}\" -vf \"select=1\" \"{outputFileName}\"",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            }
-        };
-
-#pragma warning disable CA1416
-        _ = process.Start();
-#pragma warning restore CA1416
-        process.WaitForExit();
-        return Directory.GetFiles(outputFolder, "*.png").OrderBy(p => p).ToArray();
-    }
-
     private static string GetFfmpegLocation()
     {
         return FfmpegHelper.GetFfmpegLocation();
@@ -1361,24 +1337,6 @@ public class FfmpegGenerator
         return processMakeVideo;
     }
 
-    public static Process ConvertToAc2(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
-    {
-        var processMakeVideo = new Process
-        {
-            StartInfo =
-            {
-                FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -ac 2 \"{outputFileName}\"",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            }
-        };
-
-        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
-
-        return processMakeVideo;
-    }
-
     /// <summary>
     /// Resamples / mixes the input to mono PCM16 WAV at 24 kHz. Used for the Chatterbox TTS
     /// voice-clone reference WAV, which only does "atomic" cloning at 24 kHz mono — other
@@ -1593,54 +1551,6 @@ public class FfmpegGenerator
         }
 
         return resizedBitmap;
-    }
-
-    public static Process ReEncodeVideoForSubtitling(string inputVideoFileName, string outputVideoFileName, int width, int height, string frameRate, DataReceivedEventHandler? dataReceivedHandler)
-    {
-        if (width % 2 == 1)
-        {
-            width++;
-        }
-
-        if (height % 2 == 1)
-        {
-            height++;
-        }
-
-        outputVideoFileName = $"\"{outputVideoFileName}\"";
-        var frameRateInt = (int)double.Parse(frameRate, CultureInfo.InvariantCulture);
-
-        var processMakeVideo = new Process
-        {
-            StartInfo =
-            {
-                FileName = GetFfmpegLocation(),
-                Arguments =
-                    $"-y -i \"{inputVideoFileName}\" " +
-                    $"-vf scale={width}:{height},fps={frameRate} " +
-                    $"-c:v libx264 -preset ultrafast -movflags +faststart " +
-                    $"-g {frameRateInt / 2} -keyint_min {frameRateInt / 2} -sc_threshold 0 " +
-                    $"-pix_fmt yuv420p -c:a copy {outputVideoFileName}",
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true,
-            }
-        };
-
-        processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
-
-        // Never let ffmpeg wait on a console prompt: stdin is inherited (not redirected), so an
-        // interactive question - e.g. "File exists. Overwrite? [y/N]" when user-edited custom
-        // parameters lack -y - blocks forever with the UI stuck at the last progress value.
-        if (!processMakeVideo.StartInfo.Arguments.Contains("-nostdin"))
-        {
-            processMakeVideo.StartInfo.Arguments = "-nostdin " + processMakeVideo.StartInfo.Arguments;
-        }
-
-        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
-
-        return processMakeVideo;
     }
 
     public static Process GetProcess(string parameters, DataReceivedEventHandler? dataReceivedHandler, string workingDirectory = "")

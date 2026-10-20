@@ -3,9 +3,7 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Options.Settings;
-using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -24,14 +22,8 @@ public partial class PickRuleProfileViewModel : ObservableObject
 
     public bool OkPressed { get; private set; }
 
-    private readonly IWindowService _windowService;
-    private readonly IFileHelper _fileHelper;
-
-    public PickRuleProfileViewModel(IWindowService windowService, IFileHelper fileHelper)
+    public PickRuleProfileViewModel()
     {
-        _windowService = windowService;
-        _fileHelper = fileHelper;
-
         Profiles = new ObservableCollection<ProfileDisplay>();
         DialogStyles = new ObservableCollection<DialogStyleDisplay>(DialogStyleDisplay.List());
         ContinuationStyles = new ObservableCollection<ContinuationStyleDisplay>(ContinuationStyleDisplay.List());

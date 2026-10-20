@@ -30,7 +30,6 @@ public partial class PickTsTrackViewModel : ObservableObject
     public string WindowTitle { get; private set; }
     public Subtitle TeletextSubtitle { get; private set; }
 
-    private string _fileName = string.Empty;
     private TransportStreamParser? _tsParser;
     private SortedDictionary<int, List<UmdVideoSubtitle>>? _umdTracks;
 
@@ -47,7 +46,6 @@ public partial class PickTsTrackViewModel : ObservableObject
     internal void Initialize(TransportStreamParser tsParser, string fileName)
     {
         _tsParser = tsParser;
-        _fileName = fileName;
         WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.File.PickTransportStreamTrackX, fileName);
 
         var programMapTableParser = new ProgramMapTableParser();
@@ -138,7 +136,6 @@ public partial class PickTsTrackViewModel : ObservableObject
     /// </summary>
     internal void Initialize(Dictionary<int, List<Paragraph>> teletextPages, string fileName)
     {
-        _fileName = fileName;
         WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.File.PickTransportStreamTrackX, fileName);
 
         foreach (var page in teletextPages)
@@ -180,7 +177,6 @@ public partial class PickTsTrackViewModel : ObservableObject
     internal void InitializeUmdVideo(SortedDictionary<int, List<UmdVideoSubtitle>> tracks, string fileName)
     {
         _umdTracks = tracks;
-        _fileName = fileName;
         WindowTitle = UiUtil.FormatTitleWithFileName(Se.Language.File.PickMpegTrackX, fileName);
         foreach (var track in tracks)
         {

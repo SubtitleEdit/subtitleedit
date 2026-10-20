@@ -135,7 +135,6 @@ public partial class AssaDrawViewModel : ObservableObject
     private float _currentX = float.MinValue;
     private float _currentY = float.MinValue;
     private readonly Regex _regexStart = new(@"\{[^{]*\\p1[^}]*\}");
-    private readonly Regex _regexEnd = new(@"\{[^{]*\\p0[^}]*\}");
     private readonly Regex _regexIclip = new(@"\\iclip\(([^)]+)\)");
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
