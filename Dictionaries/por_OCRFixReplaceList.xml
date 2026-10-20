@@ -411,7 +411,6 @@
     <Word from="sinmtoma" to="sintoma" />
     <Word from="sintéticamente" to="sinteticamente" />
     <Word from="sintetisa" to="sintetiza" />
-    <Word from="SÓ" to="só" />
     <Word from="sôfra" to="sofra" />
     <Word from="sôfregamente" to="sofregamente" />
     <Word from="somáste" to="somaste" />
@@ -562,7 +561,7 @@
 
     <!-- SlM para SIM : l entre maiúsculas -->
     <RegEx find="\b([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ]+)l([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ]+)\b" spellCheck="$1I$2" replaceWith="$1I$2" />
-    <RegEx find="\b([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ]+)l\b" spellCheck="$1I" replaceWith="$1I" />
+    <RegEx find="\b([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ]{2,})l\b" spellCheck="$1I" replaceWith="$1I" />
     <RegEx find="\bl([A-ZÀÁÂÃÇÉÊÍÓÔÕÚ]+)\b" spellCheck="I$1" replaceWith="I$1" />
 
     <!-- Iavar para lavar : I inicial lido em vez de l antes de minúsculas -->

@@ -7033,7 +7033,7 @@
     <RegEx find="Menhetn" replaceWith="Manhattan" />
     <RegEx find="Metju" replaceWith="Matthew" />
     <RegEx find="Mexic" replaceWith="Meksik" />
-    <RegEx find="Mič" replaceWith="Mitch" />
+    <RegEx find="\bMič\b" replaceWith="Mitch" />
     <RegEx find="ičigen" replaceWith="ichigan" />
     <RegEx find="ilvoki" replaceWith="illwaukee" />
     <RegEx find="Misuri" replaceWith="Missouri" />
@@ -7102,10 +7102,10 @@
     <RegEx find="Volter" replaceWith="Walter" />
     <RegEx find="Vots" replaceWith="Wats" />
     
-    <RegEx find=", ili" replaceWith="ili" />
+    <RegEx find=", ili" replaceWith=" ili" />
     <RegEx find="ili," replaceWith="ili" />
 
-    <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="(?&lt;=\p{Lu})\|(?=\p{Lu})" replaceWith="I" />
 
     <RegEx find="da li se (\w+)" replaceWith="$1 li se" />
     <!-- <RegEx find=" ([Ss])a(?![szš]\b)" replaceWith=" $1 " /> -->

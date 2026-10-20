@@ -3933,7 +3933,6 @@
     <Word from="lnvestition" to="Investition" />
     <Word from="lnvestoren" to="Investoren" />
     <Word from="lnzucht" to="Inzucht" />
-    <Word from="lo" to="Io" />
     <Word from="Lordkémmerer" to="Lordkämmerer" />
     <Word from="losf" to="los!" />
     <Word from="losl" to="los!" />
@@ -6499,8 +6498,6 @@
     <Word from="Wélfen" to="Wölfen" />
     <Word from="Welﬂt" to="Weißt" />
     <Word from="Wélkchen" to="Wölkchen" />
-    <Word from="well" to="weil" />
-    <Word from="Well" to="Welt" />
     <Word from="Wellit" to="Weißt" />
     <Word from="welllt" to="weißt" />
     <Word from="welt" to="weit" />
@@ -6509,7 +6506,6 @@
     <Word from="Wénden" to="Wänden" />
     <Word from="wér" to="wär" />
     <Word from="Werdja" to="Werd ja" />
-    <Word from="we're" to="wäre" />
     <Word from="Wére" to="Wäre" />
     <Word from="Wéren" to="Wären" />
     <Word from="wéret" to="wäret" />
@@ -6982,12 +6978,8 @@
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
-    <WordPart from="IVI" to="M" />
-    <WordPart from="IVl" to="M" />
     <WordPart from="I\/I" to="M" />
     <WordPart from="I\/l" to="M" />
-    <WordPart from="lVI" to="M" />
-    <WordPart from="lVl" to="M" />
     <WordPart from="l\/I" to="M" />
     <WordPart from="l\/l" to="M" />
     <WordPart from="¤" to="o" />
