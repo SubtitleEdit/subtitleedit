@@ -997,7 +997,7 @@ public class SettingsPage : UserControl
 
         sections.Add(new SettingsSection(Se.Language.General.Appearance, IconNames.EyeSettings, "#4fc3e8",
         [
-            new SettingsItem(Se.Language.General.Theme, () => UiUtil.MakeComboBox(_vm.Themes, _vm, nameof(_vm.SelectedTheme))),
+            new SettingsItem(Se.Language.General.Theme, () => ThemePicker.Make(_vm)),
             new SettingsItem(Se.Language.Options.Settings.IconTheme, () => UiUtil.MakeComboBox(_vm.IconThemes, _vm, nameof(_vm.SelectedIconTheme))),
             MakeCheckboxSetting(Se.Language.Options.Settings.MatchIconColorToDarkTheme, nameof(_vm.MatchIconColorToDarkTheme)),
             new SettingsItem(Se.Language.Options.Settings.UiScale, () => UiUtil.MakeNumericUpDownInt(
