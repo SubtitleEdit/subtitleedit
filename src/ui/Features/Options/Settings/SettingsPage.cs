@@ -659,6 +659,24 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorOverlap, nameof(_vm.ColorOverlap)),
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorGapTooShort, nameof(_vm.ColorGapTooShort)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ColorGapInRange, nameof(_vm.ColorGapInRange)),
+            new SettingsItem(Se.Language.Options.Settings.GapRangeMs + " " + Se.Language.Options.Settings.GapRangeFrames, _vm, nameof(_vm.GapRangeLabel), () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                [!Control.IsEnabledProperty] = new Binding(nameof(_vm.ColorGapInRange)) { Source = _vm },
+                Children =
+                {
+                    MakeNumericUpDownInt(nameof(_vm.GapRangeMinMs), 0, 10_000).WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
+                    MakeNumericUpDownInt(nameof(_vm.GapRangeMinFrames), 0, 1_000).WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
+                    new TextBlock { Text = "-", VerticalAlignment = VerticalAlignment.Center },
+                    MakeNumericUpDownInt(nameof(_vm.GapRangeMaxMs), 0, 10_000).WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
+                    MakeNumericUpDownInt(nameof(_vm.GapRangeMaxFrames), 0, 1_000).WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
+                }
+            })
+            {
+                EnglishLabel = EnglishLabelLookup.English.Options.Settings.GapRangeMs + " " + EnglishLabelLookup.English.Options.Settings.GapRangeFrames,
+            },
             MakeSeparator(),
             new SettingsItem(Se.Language.Options.Settings.CustomErrorRules, () => EditorChrome.MakeSwitch(nameof(_vm.ColorCustomErrorRules), null, _vm))
             {

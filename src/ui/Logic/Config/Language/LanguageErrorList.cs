@@ -12,6 +12,7 @@ public class LanguageErrorList
     public string LineTooLong { get; set; }
     public string LineTooWide { get; set; }
     public string GapTooShort { get; set; }
+    public string GapInRange { get; set; }
     public string CustomRule { get; set; }
     public string TooManyLinesHint { get; set; }
     public string CharactersPerSecondHint { get; set; }
@@ -21,6 +22,7 @@ public class LanguageErrorList
     public string LineTooWideHint { get; set; }
     public string OverlapHint { get; set; }
     public string GapTooShortHint { get; set; }
+    public string GapInRangeHint { get; set; }
     public string CustomRuleHint { get; set; }
     public string DetailXGreaterThanY { get; set; }
     public string DetailXLessThanY { get; set; }
@@ -28,6 +30,8 @@ public class LanguageErrorList
     public string DetailOverlapToNext { get; set; }
     public string DetailGapToPrevious { get; set; }
     public string DetailGapToNext { get; set; }
+    public string DetailGapInRangeToPrevious { get; set; }
+    public string DetailGapInRangeToNext { get; set; }
     public string Tip { get; set; }
     public string ExportAsText { get; set; }
     public string ExportAsExcel { get; set; }
@@ -48,6 +52,7 @@ public class LanguageErrorList
         LineTooLong = "Line too long";
         LineTooWide = "Line too wide";
         GapTooShort = "Gap too short";
+        GapInRange = "Gap in range";
         CustomRule = "Custom rule";
         TooManyLinesHint = "More lines than the maximum number of lines";
         CharactersPerSecondHint = "Characters per second above the maximum";
@@ -57,6 +62,7 @@ public class LanguageErrorList
         LineTooWideHint = "A line is wider (in pixels) than the maximum width";
         OverlapHint = "Overlaps the previous or next line";
         GapTooShortHint = "Gap to the previous or next line is below the minimum";
+        GapInRangeHint = "Gap to the previous or next line is inside the range to avoid";
         CustomRuleHint = "The text matches one of your custom error rules";
         DetailXGreaterThanY = "{0} > {1}";
         DetailXLessThanY = "{0} < {1}";
@@ -64,6 +70,8 @@ public class LanguageErrorList
         DetailOverlapToNext = "to next: {0} ms";
         DetailGapToPrevious = "to previous: {0} < {1} ms";
         DetailGapToNext = "to next: {0} < {1} ms";
+        DetailGapInRangeToPrevious = "to previous: {0} ms (range {1}-{2} ms)";
+        DetailGapInRangeToNext = "to next: {0} ms (range {1}-{2} ms)";
         Tip = "Double-click a line (or press Enter) to go to it. Which checks run, and their limits, are set in Settings > General.";
         ExportAsText = "Text file (.txt)...";
         ExportAsExcel = "Excel file (.xlsx)...";

@@ -139,6 +139,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsMsMode))]
     [NotifyPropertyChangedFor(nameof(MinGapLabel))]
+    [NotifyPropertyChangedFor(nameof(GapRangeLabel))]
     private bool _useFrameMode;
 
     [ObservableProperty] private ObservableCollection<TimeCodeModeDisplay> _timeCodeModes;
@@ -161,6 +162,9 @@ public partial class SettingsViewModel : ObservableObject
     public string MinGapLabel => UseFrameMode
         ? Se.Language.Options.Settings.MinGapFrames
         : Se.Language.Options.Settings.MinGapMs;
+    public string GapRangeLabel => UseFrameMode
+        ? Se.Language.Options.Settings.GapRangeFrames
+        : Se.Language.Options.Settings.GapRangeMs;
     [ObservableProperty] private bool _textBoxLimitNewLines;
     [ObservableProperty] private bool _textBoxAutoWrapWhileTyping;
     [ObservableProperty] private bool _autoSave;
@@ -275,6 +279,11 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _colorWordsPerMinute;
     [ObservableProperty] private bool _colorOverlap;
     [ObservableProperty] private bool _colorGapTooShort;
+    [ObservableProperty] private bool _colorGapInRange;
+    [ObservableProperty] private int? _gapRangeMinMs;
+    [ObservableProperty] private int? _gapRangeMaxMs;
+    [ObservableProperty] private int? _gapRangeMinFrames;
+    [ObservableProperty] private int? _gapRangeMaxFrames;
     [ObservableProperty] private bool _colorCustomErrorRules;
     private List<SeCustomErrorRule> _customErrorRules = new();
     [ObservableProperty] private Color _errorColor;
@@ -1146,6 +1155,11 @@ public partial class SettingsViewModel : ObservableObject
         ColorWordsPerMinute = general.ColorWordsPerMinute;
         ColorOverlap = general.ColorTimeCodeOverlap;
         ColorGapTooShort = general.ColorGapTooShort;
+        ColorGapInRange = general.ColorGapInRange;
+        GapRangeMinMs = general.GapRangeMin.Milliseconds;
+        GapRangeMaxMs = general.GapRangeMax.Milliseconds;
+        GapRangeMinFrames = general.GapRangeMin.Frames;
+        GapRangeMaxFrames = general.GapRangeMax.Frames;
         ErrorColor = general.ErrorColor.FromHexToColor();
         ColorCustomErrorRules = general.ColorCustomErrorRules;
         _customErrorRules = general.CustomErrorRules.Select(CopyCustomErrorRule).ToList();
@@ -2057,6 +2071,11 @@ public partial class SettingsViewModel : ObservableObject
         general.ColorWordsPerMinute = ColorWordsPerMinute;
         general.ColorTimeCodeOverlap = ColorOverlap;
         general.ColorGapTooShort = ColorGapTooShort;
+        general.ColorGapInRange = ColorGapInRange;
+        general.GapRangeMin.Milliseconds = GapRangeMinMs ?? general.GapRangeMin.Milliseconds;
+        general.GapRangeMax.Milliseconds = GapRangeMaxMs ?? general.GapRangeMax.Milliseconds;
+        general.GapRangeMin.Frames = GapRangeMinFrames ?? general.GapRangeMin.Frames;
+        general.GapRangeMax.Frames = GapRangeMaxFrames ?? general.GapRangeMax.Frames;
         general.ErrorColor = ErrorColor.FromColorToHex();
         general.ColorCustomErrorRules = ColorCustomErrorRules;
         general.CustomErrorRules = _customErrorRules.Select(CopyCustomErrorRule).ToList();
@@ -3128,6 +3147,9 @@ public partial class SettingsViewModel : ObservableObject
                 Se.Settings.General.ColorWordsPerMinute = g.ColorWordsPerMinute;
                 Se.Settings.General.ColorTimeCodeOverlap = g.ColorTimeCodeOverlap;
                 Se.Settings.General.ColorGapTooShort = g.ColorGapTooShort;
+                Se.Settings.General.ColorGapInRange = g.ColorGapInRange;
+                Se.Settings.General.GapRangeMin = g.GapRangeMin;
+                Se.Settings.General.GapRangeMax = g.GapRangeMax;
                 Se.Settings.General.ErrorColor = g.ErrorColor;
                 Se.Settings.General.ColorCustomErrorRules = g.ColorCustomErrorRules; // the rules themselves are user data and stay
             }

@@ -185,6 +185,14 @@ public class SeGeneral
     public bool ColorWordsPerMinute { get; set; }
     public bool ColorTimeCodeOverlap { get; set; }
     public bool ColorGapTooShort { get; set; }
+
+    /// <summary>
+    /// Color the gap when it falls inside [GapRangeMin, GapRangeMax] (inclusive) - the broadcast
+    /// rule that a gap should be either closed (about 2 frames) or at least about 12 frames.
+    /// </summary>
+    public bool ColorGapInRange { get; set; }
+    public MsOrFramesValue GapRangeMin { get; set; } = new() { Milliseconds = 120, Frames = 3 };
+    public MsOrFramesValue GapRangeMax { get; set; } = new() { Milliseconds = 480, Frames = 12 };
     public string ErrorColor { get; set; }
     public bool ColorCustomErrorRules { get; set; }
     public List<SeCustomErrorRule> CustomErrorRules { get; set; } = new();

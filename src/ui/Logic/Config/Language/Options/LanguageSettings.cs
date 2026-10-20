@@ -125,6 +125,9 @@ public class LanguageSettings
     public string ColorWordsPerMinute { get; set; }
     public string ColorOverlap { get; set; }
     public string ColorGapTooShort { get; set; }
+    public string ColorGapInRange { get; set; }
+    public string GapRangeMs { get; set; }
+    public string GapRangeFrames { get; set; }
     public string ErrorBackgroundColor { get; set; }
     public string CustomErrorRules { get; set; }
     public string CustomErrorRulesHighlight { get; set; }
@@ -505,6 +508,9 @@ public class LanguageSettings
         ColorWordsPerMinute = "Color words/min if too high";
         ColorOverlap = "Color time code overlap";
         ColorGapTooShort = "Color if gap is too short";
+        ColorGapInRange = "Color if gap is in range";
+        GapRangeMs = "Gap range (ms)";
+        GapRangeFrames = "Gap range (frames)";
         ErrorBackgroundColor = "Error background color";
         CustomErrorRules = "Custom error rules";
         CustomErrorRulesHighlight = "Color lines matching a custom error rule";

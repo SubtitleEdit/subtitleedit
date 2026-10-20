@@ -482,6 +482,9 @@ public partial class SettingsImportExportViewModel : ObservableObject
             to.ColorWordsPerMinute = from.ColorWordsPerMinute;
             to.ColorTimeCodeOverlap = from.ColorTimeCodeOverlap;
             to.ColorGapTooShort = from.ColorGapTooShort;
+            to.ColorGapInRange = from.ColorGapInRange;
+            to.GapRangeMin = from.GapRangeMin;
+            to.GapRangeMax = from.GapRangeMax;
             to.ErrorColor = from.ErrorColor;
             to.ColorCustomErrorRules = from.ColorCustomErrorRules;
             to.CustomErrorRules = from.CustomErrorRules;
