@@ -935,6 +935,11 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return _errorBrush;
             }
 
+            if (IsGapInColorRange(Se.Settings.General, Gap))
+            {
+                return _errorBrush;
+            }
+
             return _transparentBrush;
         }
     }
@@ -975,6 +980,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             else if (general.ColorGapTooShort && Gap < general.MinimumBetweenLines.GetMilliseconds())
             {
                 Add("gap too short");
+            }
+            else if (IsGapInColorRange(general, Gap))
+            {
+                Add("gap in range");
             }
 
             if (_shotInWarning)
@@ -1412,7 +1421,31 @@ public partial class SubtitleLineViewModel : ObservableObject
     private static bool HasGapError(SeGeneral general, double gapMs)
         => gapMs < 0
             ? general.ColorTimeCodeOverlap
-            : general.ColorGapTooShort && gapMs < general.MinimumBetweenLines.GetMilliseconds();
+            : (general.ColorGapTooShort && gapMs < general.MinimumBetweenLines.GetMilliseconds()) ||
+              IsGapInColorRange(general, gapMs);
+
+    /// <summary>
+    /// True when "Color gap in range" is on and the gap is inside GapRangeMin..GapRangeMax
+    /// (both inclusive). In frame mode the gap is rounded to whole frames first, so a 3 frame
+    /// gap matches a min of 3 frames even when its millisecond value is off by rounding.
+    /// </summary>
+    public static bool IsGapInColorRange(SeGeneral general, double gapMs)
+    {
+        // The last line has Gap = double.MaxValue (no next line).
+        if (!general.ColorGapInRange || gapMs < 0 || gapMs > int.MaxValue)
+        {
+            return false;
+        }
+
+        if (general.UseFrameMode)
+        {
+            var frames = SubtitleFormat.MillisecondsToFrames(gapMs);
+            return frames >= general.GapRangeMin.Frames && frames <= general.GapRangeMax.Frames;
+        }
+
+        var ms = Math.Round(gapMs, MidpointRounding.AwayFromZero);
+        return ms >= general.GapRangeMin.Milliseconds && ms <= general.GapRangeMax.Milliseconds;
+    }
 
     /// <summary>All errors as one newline-separated string (batch error list, tooltips).</summary>
     public string GetErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
@@ -1518,6 +1551,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             {
                 errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToPrevious, Math.Round(gapPrev, 3), minGap)));
             }
+            else if (IsGapInColorRange(general, gapPrev))
+            {
+                errors.Add(new LineError(LineErrorType.GapInRange, string.Format(l.DetailGapInRangeToPrevious, Math.Round(gapPrev, 3), general.GapRangeMin.GetMilliseconds(), general.GapRangeMax.GetMilliseconds())));
+            }
         }
 
         if (next != null)
@@ -1533,6 +1570,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             else if (gapNext < minGap && general.ColorGapTooShort)
             {
                 errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToNext, Math.Round(gapNext, 3), minGap)));
+            }
+            else if (IsGapInColorRange(general, gapNext))
+            {
+                errors.Add(new LineError(LineErrorType.GapInRange, string.Format(l.DetailGapInRangeToNext, Math.Round(gapNext, 3), general.GapRangeMin.GetMilliseconds(), general.GapRangeMax.GetMilliseconds())));
             }
         }
 

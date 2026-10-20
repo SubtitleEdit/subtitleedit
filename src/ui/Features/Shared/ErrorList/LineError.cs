@@ -15,6 +15,7 @@ public enum LineErrorType
     LineTooWide,
     Overlap,
     GapTooShort,
+    GapInRange,
     CustomRule,
 }
 
@@ -39,6 +40,7 @@ public record LineError(LineErrorType Type, string Detail)
             LineErrorType.LineTooWide => l.LineTooWide,
             LineErrorType.Overlap => Se.Language.General.Overlapping,
             LineErrorType.GapTooShort => l.GapTooShort,
+            LineErrorType.GapInRange => l.GapInRange,
             LineErrorType.CustomRule => l.CustomRule,
             _ => type.ToString(),
         };
@@ -57,6 +59,7 @@ public record LineError(LineErrorType Type, string Detail)
             LineErrorType.LineTooWide => l.LineTooWideHint,
             LineErrorType.Overlap => l.OverlapHint,
             LineErrorType.GapTooShort => l.GapTooShortHint,
+            LineErrorType.GapInRange => l.GapInRangeHint,
             LineErrorType.CustomRule => l.CustomRuleHint,
             _ => string.Empty,
         };
@@ -96,7 +99,7 @@ public record LineError(LineErrorType Type, string Detail)
             LineErrorType.LineTooLong => LineTooLongColor,
             LineErrorType.LineTooWide => LineTooWideColor,
             LineErrorType.Overlap => OverlapColor,
-            LineErrorType.GapTooShort => GapColor,
+            LineErrorType.GapTooShort or LineErrorType.GapInRange => GapColor,
             LineErrorType.CustomRule => CustomRuleColor,
             _ => AllColor,
         };
@@ -113,7 +116,7 @@ public record LineError(LineErrorType Type, string Detail)
             LineErrorType.LineTooLong => LineTooLongBrush,
             LineErrorType.LineTooWide => LineTooWideBrush,
             LineErrorType.Overlap => OverlapBrush,
-            LineErrorType.GapTooShort => GapBrush,
+            LineErrorType.GapTooShort or LineErrorType.GapInRange => GapBrush,
             LineErrorType.CustomRule => CustomRuleBrush,
             _ => AllBrush,
         };
