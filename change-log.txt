@@ -3,6 +3,26 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-beta3 (20th of October 2026)
+
+* Add Settings: visual theme picker with preview cards
+* Add Nord theme
+* Add iTunes Timed Text: export presets, template-file header source and default color in File > Properties - thx michi987654
+* Add Speech to text: Danish fine-tuned Qwen3 ASR 0.6B model
+* Add ASSA/SSA styles: category picker back, font name + color sample columns, resizable lists - thx bichitoxxx
+* Multiple replace: category list + flat rules list with a type-in row, like SE4 - thx kadrimarzouki
+* Editor look now follows the Font scale (%) setting - thx bichitoxxx
+* Language auto-detect: everyday words for 30 languages, letter rules for Cyrillic (incl. Macedonian/Serbian), Baltic, Afrikaans/Dutch and Arabic script
+* Qwen3 ASR: update qwen3-asr.cpp to v0.1.10 (mel filterbank fix, beam search), pass the selected language
+* OCR fix engine: image-matcher I/l and spacing repairs, lone slash kept - thx fraternl
+* More windows use the shared editor look helpers (button bars, check-box cells, video dialog switches) - thx ivandrofly
+* Fix Qwen3 ASR "<asr_text>" marker in output with older engine builds
+* Fix compact numeric field borders in the editor look - thx pdjdev
+* Add Romanian translation - thx cosstell62-hash
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
 v5.4.0-beta2 (19th of October 2026)
 
 * Add Multiple replace: "Add rules" window for typing a list of find/replace pairs, toolbar "New rule" button, F2 and Cmd shortcuts - thx kadrimarzouki

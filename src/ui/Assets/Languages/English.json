@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta2",
+  "version": "v5.4.0-beta3",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -1791,7 +1791,12 @@
       "addRulesToX": "Add rules to '{0}'",
       "xRules": "{0:#,##0} rules",
       "discardXRules": "Discard the {0} rules entered?",
-      "enterAddsRule": "Enter adds the rule to the list, OK adds the list to the category (Ctrl+Enter)"
+      "enterAddsRule": "Enter adds the rule to the list, OK adds the list to the category (Ctrl+Enter)",
+      "categories": "Categories",
+      "newestFirst": "Newest first",
+      "filterRules": "Filter rules...",
+      "rulesInX": "Rules in '{0}'",
+      "enterAddsRuleToCategory": "Enter adds the rule to the end of the category"
     },
     "find": {
       "searchTextWatermark": "Search text...",
