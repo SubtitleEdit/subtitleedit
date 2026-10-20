@@ -47,7 +47,7 @@ public class AssaSetPositionWindow : Window
                 new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
         };
-        content.Add(CreateSettingsPanel(vm, out var firstInput), 0, 0);
+        content.Add(CreateSettingsPanel(vm), 0, 0);
         content.Add(CreatePreview(vm), 0, 1);
 
         var mainGrid = new Grid
@@ -62,15 +62,16 @@ public class AssaSetPositionWindow : Window
         mainGrid.Add(CreateButtonBar(vm), 1, 0);
         Content = mainGrid;
 
-        // initial focus on an input, not an action button - a focused button clicks on bare Space
-        UiUtil.FocusOnFirstActivation(this, firstInput);
+        // Initial focus on the frame, so the arrow keys nudge the text right away (a focused X/Y
+        // field keeps them for its caret - #16289), and not on an action button, which clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, vm.VideoGrid!);
         KeyDown += vm.KeyDown;
     }
 
-    private static Border CreateSettingsPanel(AssaSetPositionViewModel vm, out Control firstInput)
+    private static Border CreateSettingsPanel(AssaSetPositionViewModel vm)
     {
         var sections = new StackPanel();
-        sections.Children.Add(CreatePositionSection(vm, out firstInput));
+        sections.Children.Add(CreatePositionSection(vm));
         sections.Children.Add(CreateRotationSection(vm));
         sections.Children.Add(CreateGuidesSection(vm));
 
@@ -91,13 +92,12 @@ public class AssaSetPositionWindow : Window
         [!TextBlock.TextProperty] = new Binding(property) { StringFormat = format },
     };
 
-    private static Border CreatePositionSection(AssaSetPositionViewModel vm, out Control firstInput)
+    private static Border CreatePositionSection(AssaSetPositionViewModel vm)
     {
         var x = EditorChrome.MakeField(nameof(vm.PositionX), -10000, 10000, prefix: "X");
         var y = EditorChrome.MakeField(nameof(vm.PositionY), -10000, 10000, prefix: "Y");
         AutomationProperties.SetName(x, "X");
         AutomationProperties.SetName(y, "Y");
-        firstInput = x;
 
         // 3 x 3 anchor grid: a dot in each cell, the chosen one highlighted
         var anchors = new UniformGrid { Columns = 3, Rows = 3, Width = 3 * 30, Height = 3 * 30, HorizontalAlignment = HorizontalAlignment.Left };
@@ -212,7 +212,12 @@ public class AssaSetPositionWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
             ClipToBounds = true,
+            Focusable = true,
         };
+        AutomationProperties.SetName(videoGrid, Se.Language.General.Position);
+
+        // A click on the frame takes focus back from the X/Y fields, so the arrow keys nudge again
+        videoGrid.PointerPressed += (_, _) => videoGrid.Focus();
 
         var bitmapImage = new Image
         {
@@ -304,6 +309,7 @@ public class AssaSetPositionWindow : Window
         {
             if (e.GetCurrentPoint(overlay).Properties.IsLeftButtonPressed)
             {
+                videoGrid.Focus();
                 dragStart = e.GetPosition(videoGrid);
                 originalX = vm.ScreenshotX;
                 originalY = vm.ScreenshotY;
