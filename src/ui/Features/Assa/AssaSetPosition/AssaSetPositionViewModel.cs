@@ -68,6 +68,14 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
     [ObservableProperty] private string _tagsPreview = string.Empty;
     [ObservableProperty] private string _lineInfo = string.Empty;
+
+    /// <summary>
+    /// False until the text is rendered - the position is unknown until then, so moving the text
+    /// and OK wait for it.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(OkCommand))]
+    private bool _isPreviewReady;
     [ObservableProperty] private bool _showSafeArea = Se.Settings.Assa.SetPositionShowSafeArea;
     [ObservableProperty] private bool _showCenterLines = Se.Settings.Assa.SetPositionShowCenterLines;
     [ObservableProperty] private bool _snapToGuides = Se.Settings.Assa.SetPositionSnapToGuides;
@@ -203,7 +211,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     /// </summary>
     private void MoveAnchorTo(int? x, int? y)
     {
-        if (_updatingPositionFields)
+        if (_updatingPositionFields || !IsPreviewReady)
         {
             return;
         }
@@ -237,7 +245,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [RelayCommand]
     private void SetAnchor(int index)
     {
-        if (index < 0 || index > 8)
+        if (index < 0 || index > 8 || !IsPreviewReady)
         {
             return;
         }
@@ -261,6 +269,11 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [RelayCommand]
     private void ResetPosition()
     {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
         ScreenshotX = _initialScreenshotX;
         ScreenshotY = _initialScreenshotY;
         Rotation = _initialRotation;
@@ -276,6 +289,11 @@ public partial class AssaSetPositionViewModel : ObservableObject
     /// </summary>
     public void DragTo(int x, int y)
     {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
         AnchorIndex = -1;
         if (SnapToGuides)
         {
@@ -317,6 +335,11 @@ public partial class AssaSetPositionViewModel : ObservableObject
     /// </summary>
     internal void Nudge(int dx, int dy)
     {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
         AnchorIndex = -1;
         ScreenshotX += dx;
         ScreenshotY += dy;
@@ -408,38 +431,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
         _renderWidth += _renderWidth % 2;
         _renderHeight += _renderHeight % 2;
 
-        var previewSubtitle = MakePreviewSubtitle(_subtitle, line);
-        var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, _renderWidth, _renderHeight);
-
-        // ffmpeg can fail to produce the frame (missing/blocked binary, odd filter input): decoding
-        // a null file name threw and took the whole dialog down. The png and both bitmaps are ours
-        // to clean up.
-        if (!string.IsNullOrEmpty(previewScreenshotFileName))
-        {
-            using var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
-            try
-            {
-                File.Delete(previewScreenshotFileName);
-            }
-            catch
-            {
-                // ignore cleanup errors
-            }
-
-            if (skBitmap != null)
-            {
-                using var trimResult = skBitmap.TrimTransparentPixels();
-                ScreenshotOverlayText = trimResult.TrimmedBitmap.ToAvaloniaBitmap();
-                ScreenshotX = trimResult.Left;
-                ScreenshotY = trimResult.Top;
-            }
-        }
-
-        _initialScreenshotX = ScreenshotX;
-        _initialScreenshotY = ScreenshotY;
-        _initialRotation = Rotation;
         LineInfo = $"#{line.Number}   {new TimeCode(line.StartTime).ToDisplayString()}   ·   {SourceWidth} × {SourceHeight}";
-        UpdatePositionFields();
 
         // Set target resolution from video if available
         if (videoWidth.HasValue && videoWidth.Value > 0)
@@ -466,29 +458,114 @@ public partial class AssaSetPositionViewModel : ObservableObject
             TargetHeight = 1080;
         }
 
-        if (string.IsNullOrEmpty(videoFileName))
+        // The frame and the text come from two ffmpeg runs, which made the dialog open with a
+        // noticeable lag (#16289). Show it at once on the checkered background and fill both in
+        // when they are ready.
+        Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
+        var previewSubtitle = MakePreviewSubtitle(_subtitle, line);
+        var seconds = GetScreenshotSeconds(line, videoPositionSeconds);
+        _ = LoadPreviewAsync(previewSubtitle, videoFileName, seconds);
+    }
+
+    private async Task LoadPreviewAsync(Subtitle previewSubtitle, string? videoFileName, double seconds)
+    {
+        var renderWidth = _renderWidth;
+        var renderHeight = _renderHeight;
+        var textTask = Task.Run(() => RenderText(previewSubtitle, renderWidth, renderHeight));
+        var frameTask = string.IsNullOrEmpty(videoFileName)
+            ? Task.FromResult<Bitmap?>(null)
+            : Task.Run(() => LoadFrame(videoFileName, seconds));
+
+        try
         {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
-            return;
+            var text = await textTask;
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (text != null)
+                {
+                    ScreenshotOverlayText = text.Value.Bitmap;
+                    ScreenshotX = text.Value.Left;
+                    ScreenshotY = text.Value.Top;
+                }
+
+                _initialScreenshotX = ScreenshotX;
+                _initialScreenshotY = ScreenshotY;
+                _initialRotation = Rotation;
+                IsPreviewReady = true;
+                UpdateOverlayPosition();
+                UpdatePositionFields();
+            });
+
+            var frame = await frameTask;
+            if (frame != null)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => Screenshot = frame);
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Set position: preview failed");
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                _initialScreenshotX = ScreenshotX;
+                _initialScreenshotY = ScreenshotY;
+                _initialRotation = Rotation;
+                IsPreviewReady = true;
+            });
+        }
+    }
+
+    /// <summary>
+    /// Renders the line with ffmpeg/libass and trims it to the text. ScreenshotX/Y start at the
+    /// trimmed box's top-left in render space.
+    /// </summary>
+    private static (Bitmap Bitmap, int Left, int Top)? RenderText(Subtitle previewSubtitle, int renderWidth, int renderHeight)
+    {
+        // ffmpeg can fail to produce the frame (missing/blocked binary, odd filter input): decoding
+        // a null file name threw and took the whole dialog down. The png and both bitmaps are ours
+        // to clean up.
+        var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, renderWidth, renderHeight);
+        if (string.IsNullOrEmpty(previewScreenshotFileName))
+        {
+            return null;
         }
 
+        using var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
+        try
+        {
+            File.Delete(previewScreenshotFileName);
+        }
+        catch
+        {
+            // ignore cleanup errors
+        }
+
+        if (skBitmap == null)
+        {
+            return null;
+        }
+
+        using var trimResult = skBitmap.TrimTransparentPixels();
+        return (trimResult.TrimmedBitmap.ToAvaloniaBitmap(), trimResult.Left, trimResult.Top);
+    }
+
+    private static Bitmap? LoadFrame(string videoFileName, double seconds)
+    {
         // Pass exact seconds (not ToDisplayString, which honors the HH:MM:SS:FF time-code format
         // setting and would feed ffmpeg an unparseable "-ss 00:01:23:15", blanking the preview - #12182).
-        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, GetScreenshotSeconds(line, videoPositionSeconds).ToString("0.###", CultureInfo.InvariantCulture));
-        if (System.IO.File.Exists(fileName))
+        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, seconds.ToString("0.###", CultureInfo.InvariantCulture));
+        if (!File.Exists(fileName))
         {
-            try
-            {
-                Screenshot = new Bitmap(fileName);
-            }
-            catch
-            {
-                Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
-            }
+            return null;
         }
-        else
+
+        try
         {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
+            return new Bitmap(fileName);
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -677,6 +754,11 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [RelayCommand]
     private async Task CenterHorizontally()
     {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
         AnchorIndex = -1;
         // ScreenshotX/Y are render-space, so center on the render canvas - centering on
         // SourceWidth (PlayRes) was off whenever the two resolutions differed.
@@ -686,11 +768,16 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [RelayCommand]
     private async Task CenterVertically()
     {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
         AnchorIndex = -1;
         ScreenshotY = (int)Math.Round(_renderHeight / 2.0 - ScreenshotOverlayText.Size.Height / 2.0, MidpointRounding.AwayFromZero);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsPreviewReady))]
     private async Task Ok()
     {
         OkPressed = true;
@@ -797,6 +884,11 @@ public partial class AssaSetPositionViewModel : ObservableObject
     /// </summary>
     private void UpdatePositionFields()
     {
+        if (!IsPreviewReady)
+        {
+            return; // nothing measured yet - the fields would show the placeholder's 0, 0
+        }
+
         _updatingPositionFields = true;
         try
         {

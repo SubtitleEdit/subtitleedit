@@ -33,6 +33,7 @@ public class AssaSetPositionCoordinateSpaceTests
         // Fresh VM: 1x1 overlay bitmap, centered/bottom alignment, render canvas 1920x1080.
         var vm = new AssaSetPositionViewModel
         {
+            IsPreviewReady = true,
             SourceWidth = 640,
             SourceHeight = 360,
             ScreenshotX = 300,
@@ -49,6 +50,7 @@ public class AssaSetPositionCoordinateSpaceTests
     {
         var vm = new AssaSetPositionViewModel
         {
+            IsPreviewReady = true,
             SourceWidth = 1920,
             SourceHeight = 1080,
             ScreenshotX = 300,
@@ -65,6 +67,7 @@ public class AssaSetPositionCoordinateSpaceTests
     {
         var vm = new AssaSetPositionViewModel
         {
+            IsPreviewReady = true,
             SourceWidth = 640, // must not influence centering
             SourceHeight = 360,
         };

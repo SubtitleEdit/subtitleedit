@@ -265,6 +265,7 @@ public class AssaSetPositionWindow : Window
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.SizeAll),
             Background = Brushes.Transparent,
         };
+        overlay.Bind(IsVisibleProperty, new Binding(nameof(vm.IsPreviewReady))); // its size and place are unknown until then
         overlay.Children.Add(textImage);
         overlay.Children.Add(selection);
         overlay.Children.Add(anchorDot);
