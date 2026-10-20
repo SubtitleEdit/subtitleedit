@@ -39,7 +39,30 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [ObservableProperty] private MultipleReplaceTypeItem? _selectedRuleType;
 
     public ObservableCollection<RuleTreeNode> Nodes { get; }
-    public TreeView RulesTreeView { get; internal set; }
+
+    // The category list on the left and the rules of the selected category on the right - a flat,
+    // scrollable list like Subtitle Edit 4 had, instead of a tree that opened a category of
+    // hundreds of rules in full every time a rule was added to it (#16215).
+    [ObservableProperty] private RuleTreeNode? _selectedCategory;
+    [ObservableProperty] private string _selectedCategoryTitle;
+    [ObservableProperty] private string _rulesFilter;
+    [ObservableProperty] private bool _newestFirst;
+    [ObservableProperty] private bool _canReorderRules;
+    public ObservableCollection<RuleTreeNode> VisibleRules { get; }
+
+    // The type-in row above the rules: Enter adds the rule to the end of the category and leaves
+    // the cursor in "Find what" for the next one (#16215).
+    [ObservableProperty] private string _newFind;
+    [ObservableProperty] private string _newReplaceWith;
+    [ObservableProperty] private MultipleReplaceTypeItem? _newRuleType;
+    [ObservableProperty] private bool _newWholeWord;
+    [ObservableProperty] private bool _canUseNewWholeWord;
+
+    public ListBox CategoriesListBox { get; internal set; }
+    public TableView RulesTable { get; internal set; }
+    public TextBox? NewFindTextBox { get; internal set; }
+    private bool _refreshingRules;
+    private ObservableCollection<RuleTreeNode>? _watchedRules;
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public Subtitle FixedSubtitle { get; private set; }
@@ -82,7 +105,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
     private static readonly KeyGesture MoveDownGesture = new(Key.Down, CommandModifier);
     private static readonly KeyGesture MoveToTopGesture = new(Key.Home, CommandModifier);
     private static readonly KeyGesture MoveToBottomGesture = new(Key.End, CommandModifier);
-    private static readonly KeyGesture NewRuleGesture = new(Key.N, CommandModifier);
     private static readonly KeyGesture AddRulesGesture = new(Key.N, CommandModifier | KeyModifiers.Shift);
     private static readonly KeyGesture DuplicateGesture = new(Key.D, CommandModifier);
     private static readonly KeyGesture EditGesture = new(Key.F2);
@@ -96,7 +118,14 @@ public partial class MultipleReplaceViewModel : ObservableObject
         SelectedFixHits = new ObservableCollection<ReplaceExpression>();
         FixesInfo = string.Empty;
         Nodes = new ObservableCollection<RuleTreeNode>(GetNodes());
-        RulesTreeView = new TreeView();
+        CategoriesListBox = new ListBox();
+        RulesTable = new TableView();
+        VisibleRules = new ObservableCollection<RuleTreeNode>();
+        SelectedCategoryTitle = string.Empty;
+        _rulesFilter = string.Empty;
+        _newFind = string.Empty;
+        _newReplaceWith = string.Empty;
+        _newestFirst = Se.Settings.Edit.MultipleReplace.NewestFirst;
         IsMultipleReplaceDotDotDotButtonsVisible = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
 
         _compiledRegExList = new ConcurrentDictionary<string, Regex>();
@@ -118,15 +147,200 @@ public partial class MultipleReplaceViewModel : ObservableObject
         ];
         RuleTypes = ReplaceTypes; // bridge for ItemsSource expected by view
         _fileHelper = fileHelper;
+
+        var lastCategory = Se.Settings.Edit.MultipleReplace.LastCategory;
+        SelectedCategory = Nodes.FirstOrDefault(p => p.CategoryName == lastCategory) ?? Nodes.FirstOrDefault();
+    }
+
+    partial void OnSelectedCategoryChanged(RuleTreeNode? value)
+    {
+        if (_watchedRules != null)
+        {
+            _watchedRules.CollectionChanged -= WatchedRulesChanged;
+        }
+
+        _watchedRules = value?.SubNodes;
+        if (_watchedRules != null)
+        {
+            _watchedRules.CollectionChanged += WatchedRulesChanged;
+        }
+
+        if (SelectedNode != null && SelectedNode.Parent != value)
+        {
+            SelectedNode = null;
+        }
+
+        // A list of words usually shares type and whole word with the rules already there.
+        var last = value?.SubNodes?.LastOrDefault();
+        NewRuleType = ReplaceTypes.FirstOrDefault(t => t.Type == (last?.Type ?? MultipleReplaceType.CaseInsensitive));
+        NewWholeWord = last?.WholeWord ?? false;
+
+        RefreshVisibleRules();
+    }
+
+    partial void OnNewRuleTypeChanged(MultipleReplaceTypeItem? value)
+    {
+        CanUseNewWholeWord = value?.Type != MultipleReplaceType.RegularExpression;
+    }
+
+    partial void OnRulesFilterChanged(string value) => RefreshVisibleRules();
+
+    partial void OnNewestFirstChanged(bool value) => RefreshVisibleRules();
+
+    private void WatchedRulesChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => RefreshVisibleRules();
+
+    /// <summary>
+    /// Rebuilds the rules list from the selected category: numbered in run order, filtered on find,
+    /// replace and description, and last rule first with "Newest first". The selected rule stays
+    /// selected while it is still in the list.
+    /// </summary>
+    internal void RefreshVisibleRules()
+    {
+        var keep = SelectedNode;
+        var category = SelectedCategory;
+        var rules = category?.SubNodes ?? new ObservableCollection<RuleTreeNode>();
+        var filter = RulesFilter?.Trim() ?? string.Empty;
+
+        _refreshingRules = true;
+        try
+        {
+            VisibleRules.Clear();
+            for (var i = 0; i < rules.Count; i++)
+            {
+                rules[i].Number = i + 1;
+            }
+
+            IEnumerable<RuleTreeNode> visible = rules;
+            if (filter.Length > 0)
+            {
+                visible = visible.Where(p =>
+                    p.Find.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                    p.ReplaceWith.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                    p.Description.Contains(filter, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (NewestFirst)
+            {
+                visible = visible.Reverse();
+            }
+
+            foreach (var rule in visible.ToList())
+            {
+                VisibleRules.Add(rule);
+            }
+        }
+        finally
+        {
+            _refreshingRules = false;
+        }
+
+        SelectedCategoryTitle = category == null
+            ? Se.Language.General.Rules
+            : string.Format(Se.Language.Edit.MultipleReplace.RulesInX, category.CategoryName);
+
+        // Reordering inside a filtered list would move rules past ones that are not shown.
+        CanReorderRules = filter.Length == 0;
+
+        if (keep != null && VisibleRules.Contains(keep))
+        {
+            RulesTable.SelectedItem = keep;
+        }
+        else
+        {
+            SelectedNode = null;
+        }
+    }
+
+    /// <summary>
+    /// The rules list's selection, pushed here by the view - ignored while the list is rebuilt.
+    /// </summary>
+    internal void RulesTableSelectionChanged()
+    {
+        if (_refreshingRules)
+        {
+            return;
+        }
+
+        SelectedNode = RulesTable.SelectedItem as RuleTreeNode;
+    }
+
+    /// <summary>
+    /// The type-in row: adds the rule to the end of the selected category, shows it, and empties
+    /// the fields for the next one - type and whole word stay as they are (#16215).
+    /// </summary>
+    [RelayCommand]
+    private void AddNewRule()
+    {
+        var category = SelectedCategory ?? Nodes.FirstOrDefault();
+        if (category?.SubNodes == null || string.IsNullOrEmpty(NewFind))
+        {
+            NewFindTextBox?.Focus();
+            return;
+        }
+
+        var rule = new RuleTreeNode(category, new MultipleReplaceRule
+        {
+            Active = true,
+            Find = NewFind,
+            ReplaceWith = NewReplaceWith ?? string.Empty,
+            Description = string.Empty,
+            Type = NewRuleType?.Type ?? MultipleReplaceType.CaseInsensitive,
+            WholeWord = NewWholeWord,
+        });
+
+        if (SelectedCategory != category)
+        {
+            SelectedCategory = category;
+        }
+
+        RulesFilter = string.Empty; // the new rule must be in the list
+        category.SubNodes.Add(rule);
+        _dirty = true;
+
+        NewFind = string.Empty;
+        NewReplaceWith = string.Empty;
+        NavigateToRule(rule, focus: false);
+        NewFindTextBox?.Focus();
+    }
+
+    internal void NewRuleTextBoxKeyDown(object? sender, KeyEventArgs e)
+    {
+        // Enter in the type-in row adds the rule - without this it reached the window and meant OK.
+        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = true;
+            AddNewRule();
+        }
     }
 
     // Keep SelectedRuleType in sync with SelectedNode
     partial void OnSelectedNodeChanged(RuleTreeNode? value)
     {
+        IsEditPanelVisible = value is { IsCategory: false };
         if (value == null || value.IsCategory)
         {
             SelectedRuleType = null;
+            if (value == null && !_refreshingRules && RulesTable.SelectedItem != null)
+            {
+                RulesTable.SelectedItem = null;
+            }
+
             return;
+        }
+
+        if (value.Parent != null && value.Parent != SelectedCategory)
+        {
+            SelectedCategory = value.Parent;
+        }
+
+        if (!VisibleRules.Contains(value) && !string.IsNullOrEmpty(RulesFilter))
+        {
+            RulesFilter = string.Empty;
+        }
+
+        if (RulesTable.SelectedItem != value && VisibleRules.Contains(value))
+        {
+            RulesTable.SelectedItem = value;
         }
 
         var item = ReplaceTypes.FirstOrDefault(t => t.Type == value.Type);
@@ -200,10 +414,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
     {
         _subtitle = subtitle;
         _dirty = true;
-
-        // Expanded/collapsed is restored by the tree item container theme binding to
-        // RuleTreeNode.IsExpanded - pushing it onto the containers from here could not work, as
-        // the view model is configured before the window is even constructed (#13526).
     }
 
     private static List<RuleTreeNode> GetNodes()
@@ -234,6 +444,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     private void SaveSettings()
     {
+        Se.Settings.Edit.MultipleReplace.LastCategory = SelectedCategory?.CategoryName ?? string.Empty;
+        Se.Settings.Edit.MultipleReplace.NewestFirst = NewestFirst;
         Se.Settings.Edit.MultipleReplace.Categories.Clear();
         foreach (var category in Nodes)
         {
@@ -283,7 +495,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 IsCategory = true,
             };
             Nodes.Add(defaultCategory);
-            SelectedNode = defaultCategory;
+            SelectedCategory = defaultCategory;
         }
     }
 
@@ -421,13 +633,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 },
                 new MenuItem
                 {
-                    Header = Se.Language.Edit.MultipleReplace.NewRule,
-                    Command = CategoryAddRuleCommand,
-                    CommandParameter = node,
-                    InputGesture = NewRuleGesture,
-                },
-                new MenuItem
-                {
                     Header = Se.Language.Edit.MultipleReplace.AddRulesDotDotDot,
                     Command = CategoryAddRulesCommand,
                     CommandParameter = node,
@@ -485,12 +690,17 @@ public partial class MultipleReplaceViewModel : ObservableObject
             }
         };
 
-        RulesTreeView.ContextMenu = contextMenu;
-        contextMenu.Closing += (sender, args) =>
+        OpenContextMenu(CategoriesListBox, contextMenu);
+    }
+
+    private static void OpenContextMenu(Control host, ContextMenu contextMenu)
+    {
+        host.ContextMenu = contextMenu;
+        contextMenu.Closing += (_, _) =>
         {
-            RulesTreeView.ContextMenu = null;
+            host.ContextMenu = null;
         };
-        contextMenu.Open();
+        contextMenu.Open(host);
     }
 
     [RelayCommand]
@@ -516,12 +726,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             }
         };
 
-        RulesTreeView.ContextMenu = contextMenu;
-        contextMenu.Closing += (_, _) =>
-        {
-            RulesTreeView.ContextMenu = null;
-        };
-        contextMenu.Open();
+        OpenContextMenu(CategoriesListBox, contextMenu);
     }
 
     [RelayCommand]
@@ -559,67 +764,19 @@ public partial class MultipleReplaceViewModel : ObservableObject
         {
             category.CategoryName = result.CategoryName;
             Nodes.Add(category);
-            SelectedNode = category;
+            SelectedCategory = category;
             _dirty = true;
-        }
-    }
-
-    [RelayCommand]
-    private async Task CategoryAddRule(RuleTreeNode? node)
-    {
-        if (node == null)
-        {
-            return;
-        }
-
-        var result = await _windowService.ShowDialogAsync<EditRuleWindow, EditRuleViewModel>(Window!, vm =>
-        {
-            vm.Initialize(Se.Language.Edit.MultipleReplace.NewRule, node);
-        });
-
-        if (result.OkPressed)
-        {
-            var rule = new RuleTreeNode(node, new MultipleReplaceRule
-            {
-                Active = true,
-                Description = result.Description,
-                Find = result.FindWhat,
-                ReplaceWith = result.ReplaceWith,
-                Type = result.IsRegularExpression ? MultipleReplaceType.RegularExpression :
-                    result.IsCaseSensitive ? MultipleReplaceType.CaseSensitive :
-                    MultipleReplaceType.CaseInsensitive,
-                WholeWord = result.IsWholeWord,
-            });
-            node.SubNodes?.Add(rule);
-            _dirty = true;
-
-            // Expands the category and scrolls to the rule: at the end of a long category the
-            // new rule was selected but out of view (#16215).
-            NavigateToRule(rule);
         }
     }
 
     /// <summary>
-    /// Toolbar "New rule" and Ctrl+N: a rule at the end of the selected category, or right after
-    /// the selected rule.
+    /// Ctrl+N: the cursor to "Find what" in the type-in row above the rules.
     /// </summary>
     [RelayCommand]
-    private async Task AddRule()
+    private void AddRule()
     {
-        var node = SelectedNode ?? Nodes.FirstOrDefault();
-        if (node == null)
-        {
-            return;
-        }
-
-        if (node.IsCategory)
-        {
-            await CategoryAddRule(node);
-        }
-        else
-        {
-            await NodeInsertAfter(node);
-        }
+        NewFindTextBox?.Focus();
+        NewFindTextBox?.SelectAll();
     }
 
     /// <summary>
@@ -630,7 +787,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [RelayCommand]
     private async Task CategoryAddRules(RuleTreeNode? node)
     {
-        node ??= SelectedNode ?? Nodes.FirstOrDefault();
+        node ??= SelectedNode ?? SelectedCategory ?? Nodes.FirstOrDefault();
         if (node == null || Window == null)
         {
             return;
@@ -706,8 +863,14 @@ public partial class MultipleReplaceViewModel : ObservableObject
             }
         }
 
+        var index = Nodes.IndexOf(node);
         Nodes.Remove(node);
         AddDefaultCategoryIfNone();
+        if (SelectedCategory == node || SelectedCategory == null)
+        {
+            SelectedCategory = Nodes[Math.Clamp(index, 0, Nodes.Count - 1)];
+        }
+
         _dirty = true;
     }
 
@@ -936,7 +1099,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
                     Header = Se.Language.General.InsertAfter,
                     Command = NodeInsertAfterCommand,
                     CommandParameter = node,
-                    InputGesture = NewRuleGesture,
                 },
                 new MenuItem
                 {
@@ -986,12 +1148,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             }
         };
 
-        RulesTreeView.ContextMenu = contextMenu;
-        contextMenu.Closing += (sender, args) =>
-        {
-            RulesTreeView.ContextMenu = null;
-        };
-        contextMenu.Open();
+        OpenContextMenu(RulesTable, contextMenu);
     }
 
     [RelayCommand]
@@ -1141,9 +1298,21 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     private void MoveRule(RuleTreeNode? node, ListMoveDirection direction)
     {
-        if (node == null || node.IsCategory || node.Parent?.SubNodes == null)
+        if (node == null || node.IsCategory || node.Parent?.SubNodes == null || !CanReorderRules)
         {
             return;
+        }
+
+        // Newest first shows the rules bottom up, so up on screen is later in the run order.
+        if (NewestFirst)
+        {
+            direction = direction switch
+            {
+                ListMoveDirection.Up => ListMoveDirection.Down,
+                ListMoveDirection.Down => ListMoveDirection.Up,
+                ListMoveDirection.Top => ListMoveDirection.Bottom,
+                _ => ListMoveDirection.Top,
+            };
         }
 
         MoveNodeIn(node.Parent.SubNodes, node, direction);
@@ -1156,17 +1325,48 @@ public partial class MultipleReplaceViewModel : ObservableObject
     private MenuItem MakeMoveToCategoryMenuItem(RuleTreeNode node)
     {
         var menuItem = new MenuItem { Header = Se.Language.Edit.MultipleReplace.MoveToCategory };
-        foreach (var category in Nodes.Where(p => p.IsCategory && p != node.Parent))
+        foreach (var item in MakeMoveToCategoryItems(node))
         {
-            menuItem.Items.Add(new MenuItem
-            {
-                Header = category.CategoryName,
-                Command = new RelayCommand(() => MoveRuleToCategory(node, category)),
-            });
+            menuItem.Items.Add(item);
         }
 
         menuItem.IsEnabled = menuItem.Items.Count > 0;
         return menuItem;
+    }
+
+    internal List<MenuItem> MakeMoveToCategoryItems(RuleTreeNode node)
+    {
+        return Nodes
+            .Where(p => p.IsCategory && p != node.Parent)
+            .Select(category => new MenuItem
+            {
+                Header = category.CategoryName,
+                Command = new RelayCommand(() => MoveRuleToCategory(node, category)),
+            })
+            .ToList();
+    }
+
+    /// <summary>
+    /// The "Move to category" button under the rules: the categories as a menu on the button.
+    /// </summary>
+    internal void OpenMoveToCategoryMenu(Control button)
+    {
+        var node = SelectedNode;
+        if (node == null)
+        {
+            return;
+        }
+
+        var contextMenu = new ContextMenu();
+        foreach (var item in MakeMoveToCategoryItems(node))
+        {
+            contextMenu.Items.Add(item);
+        }
+
+        if (contextMenu.Items.Count > 0)
+        {
+            OpenContextMenu(button, contextMenu);
+        }
     }
 
     /// <summary>
@@ -1214,19 +1414,35 @@ public partial class MultipleReplaceViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Selects a node and puts keyboard focus back on its row, so the next Ctrl+Up/Down keeps
-    /// walking the same node. <see cref="ItemsControl.ContainerFromItem"/> only ever sees the
-    /// top-level categories, so a rule - which lives one level down - never got its container
-    /// back: focus was left nowhere, the tree handed it to the category above on the next key
-    /// press, and that stole the selection (#14136).
+    /// Selects a category in the category list, or a rule in the rules list, scrolls it into view
+    /// and - with <paramref name="focus"/> - puts keyboard focus on its row, so the next
+    /// Ctrl+Up/Down keeps walking the same node (#14136).
     /// </summary>
-    private void FocusNode(RuleTreeNode node)
+    private void FocusNode(RuleTreeNode node, bool focus = true)
     {
-        SelectedNode = node;
-        if (RulesTreeView.TreeContainerFromItem(node) is TreeViewItem container)
+        if (node.IsCategory)
         {
-            container.BringIntoView();
-            container.Focus(NavigationMethod.Directional);
+            SelectedCategory = node;
+            CategoriesListBox.ScrollIntoView(node);
+            if (focus && CategoriesListBox.ContainerFromItem(node) is { } categoryContainer)
+            {
+                categoryContainer.Focus(NavigationMethod.Directional);
+            }
+
+            return;
+        }
+
+        SelectedNode = node;
+        if (!VisibleRules.Contains(node))
+        {
+            return;
+        }
+
+        RulesTable.SelectedItem = node;
+        RulesTable.ScrollIntoView(node);
+        if (focus)
+        {
+            TableViewExtras.FocusRow(RulesTable);
         }
     }
 
@@ -1249,23 +1465,17 @@ public partial class MultipleReplaceViewModel : ObservableObject
         else if (e.Key == Key.N && IsCommand(e))
         {
             e.Handled = true;
-            if (SelectedNode != null)
-            {
-                _ = AddRule();
-            }
+            AddRule();
         }
         else if (e.Key == Key.N && IsCommand(e, KeyModifiers.Shift))
         {
             e.Handled = true;
-            if (SelectedNode != null)
-            {
-                _ = CategoryAddRules(SelectedNode);
-            }
+            _ = CategoryAddRules(null);
         }
         else if (e.Key == Key.F2 && e.KeyModifiers == KeyModifiers.None)
         {
             // Edit the selected rule, or rename the selected category - the usual "rename" key.
-            var node = SelectedNode;
+            var node = CategoriesListBox.IsKeyboardFocusWithin ? SelectedCategory : SelectedNode ?? SelectedCategory;
             if (node != null)
             {
                 e.Handled = true;
@@ -1285,16 +1495,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
         {
             e.Handled = true;
             _ = FindRule();
-        }
-        else if ((e.Key == Key.OemMinus || e.Key == Key.Subtract) && IsCommand(e, KeyModifiers.Shift))
-        {
-            e.Handled = true;
-            CollapseAll();
-        }
-        else if ((e.Key == Key.OemPlus || e.Key == Key.Add) && IsCommand(e, KeyModifiers.Shift))
-        {
-            e.Handled = true;
-            ExpandAll();
         }
         else if (UiUtil.IsHelp(e))
         {
@@ -1330,21 +1530,17 @@ public partial class MultipleReplaceViewModel : ObservableObject
         NavigateToRule(result.SelectedRule);
     }
 
-    internal void NavigateToRule(RuleTreeNode? rule)
+    internal void NavigateToRule(RuleTreeNode? rule, bool focus = true)
     {
         if (rule == null)
         {
             return;
         }
 
-        if (rule.Parent != null)
-        {
-            rule.Parent.IsExpanded = true;
-        }
-
-        // The rule's own container only exists once the category above it has expanded, so
-        // selecting and scrolling to it has to wait for that layout pass.
-        Dispatcher.UIThread.Post(() => FocusNode(rule), DispatcherPriority.Input);
+        // Shows the rule's category and selects the rule now; scrolling to it has to wait for the
+        // layout pass that realizes the new rows.
+        SelectedNode = rule;
+        Dispatcher.UIThread.Post(() => FocusNode(rule, focus), DispatcherPriority.Input);
     }
 
     /// <summary>
@@ -1352,7 +1548,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
     /// the list box inside the tree view handles Ctrl+Arrow itself (move focus, keep selection),
     /// so a bubbling handler never sees it.
     /// </summary>
-    internal void RulesTreeView_PreviewKeyDown(object? sender, KeyEventArgs e)
+    internal void RulesTable_PreviewKeyDown(object? sender, KeyEventArgs e) => MoveKeyDown(e, SelectedNode);
+
+    internal void CategoriesListBox_PreviewKeyDown(object? sender, KeyEventArgs e) => MoveKeyDown(e, SelectedCategory);
+
+    private void MoveKeyDown(KeyEventArgs e, RuleTreeNode? node)
     {
         if (e.KeyModifiers is not (KeyModifiers.Control or KeyModifiers.Meta))
         {
@@ -1368,13 +1568,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             _ => null,
         };
 
-        if (direction == null)
-        {
-            return;
-        }
-
-        var node = SelectedNode;
-        if (node == null)
+        if (direction == null || node == null)
         {
             return;
         }
@@ -1390,43 +1584,14 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
     }
 
-    internal async void RulesTreeView_KeyDown(object? sender, KeyEventArgs e)
+    internal void RulesTable_KeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Delete)
+        if (e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None)
         {
             e.Handled = true;
-            var node = SelectedNode;
-            if (node != null && !node.IsCategory)
-            {
-                var idx = -1;
-                var parent = node.Parent;
-                if (parent != null && parent.SubNodes != null)
-                {
-                    idx = parent.SubNodes.IndexOf(node);
-                }
-
-                await NodeDeleteAsync(node);
-
-                if (parent != null && parent.SubNodes != null && idx >= 0)
-                {
-                    RuleTreeNode? selectedNode = null;
-                    if (idx < parent.SubNodes.Count)
-                    {
-                        selectedNode = parent.SubNodes[idx];
-                    }
-                    else if (parent.SubNodes.Count > 0)
-                    {
-                        selectedNode = parent.SubNodes[parent.SubNodes.Count - 1];
-                    }
-
-                    if (selectedNode != null)
-                    {
-                        Dispatcher.UIThread.Post(() => FocusNode(selectedNode), DispatcherPriority.Input);
-                    }
-                }
-            }
+            _ = RemoveSelectedRule();
         }
-        else if (e.Key == Key.Space)
+        else if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.None)
         {
             e.Handled = true;
             var node = SelectedNode;
@@ -1436,34 +1601,79 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 _dirty = true;
             }
         }
-    }
-
-    [RelayCommand]
-    public void ExpandAll()
-    {
-        SetAllExpanded(true);
-    }
-
-    [RelayCommand]
-    public void CollapseAll()
-    {
-        SetAllExpanded(false);
-    }
-
-    private void SetAllExpanded(bool isExpanded)
-    {
-        foreach (var node in Nodes.Where(p => p.IsCategory))
+        else if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && SelectedNode != null)
         {
-            node.IsExpanded = isExpanded;
+            e.Handled = true;
+            _ = NodeEdit(SelectedNode);
         }
     }
+
+    internal void CategoriesListBox_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = true;
+            _ = CategoryDeleteAsync(SelectedCategory);
+        }
+        else if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = true;
+            var category = SelectedCategory;
+            if (category != null)
+            {
+                category.IsActive = !category.IsActive;
+                _dirty = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Deletes the selected rule and selects the one that took its place in the list.
+    /// </summary>
+    [RelayCommand]
+    private async Task RemoveSelectedRule()
+    {
+        var node = SelectedNode;
+        if (node == null)
+        {
+            return;
+        }
+
+        var index = VisibleRules.IndexOf(node);
+        await NodeDeleteAsync(node);
+        if (node.Parent?.SubNodes?.Contains(node) == true || VisibleRules.Count == 0 || index < 0)
+        {
+            return; // not deleted, or nothing left to select
+        }
+
+        var next = VisibleRules[Math.Min(index, VisibleRules.Count - 1)];
+        Dispatcher.UIThread.Post(() => FocusNode(next), DispatcherPriority.Input);
+    }
+
+    [RelayCommand]
+    private Task EditSelectedRule() => SelectedNode == null ? Task.CompletedTask : NodeEdit(SelectedNode);
+
+    [RelayCommand]
+    private void MoveSelectedRuleUp() => MoveRule(SelectedNode, ListMoveDirection.Up);
+
+    [RelayCommand]
+    private void MoveSelectedRuleDown() => MoveRule(SelectedNode, ListMoveDirection.Down);
+
+    [RelayCommand]
+    private Task EditSelectedCategory() => CategoryEdit(SelectedCategory);
+
+    [RelayCommand]
+    private Task DeleteSelectedCategory() => CategoryDeleteAsync(SelectedCategory);
+
+    [RelayCommand]
+    private void OpenSelectedCategoryMenu() => NodeCategoryOpenContextMenu(SelectedCategory);
 
     private static RuleTreeNode MakeRuleTreeNode(RuleTreeNode node, EditRuleViewModel result)
     {
         return new RuleTreeNode(node.Parent, new MultipleReplaceRule
         {
             // "node" is only the neighbour used to find the insert position - a rule the user just
-            // typed must start active, as CategoryAddRule does. Inheriting the neighbour's state
+            // typed must start active, as the type-in row does. Inheriting the neighbour's state
             // meant inserting next to an unticked rule silently created an unticked one that never
             // ran, with nothing in the dialog to explain why.
             Active = true,
@@ -1761,12 +1971,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
             .ToList());
     }
 
-    public void RulesTreeView_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        var node = e.AddedItems.OfType<RuleTreeNode>().FirstOrDefault();
-        IsEditPanelVisible = node is { IsCategory: false };
-    }
-
     public void OnActiveChanged(object? sender, RoutedEventArgs e)
     {
         _dirty = true;
@@ -1813,17 +2017,19 @@ public partial class MultipleReplaceViewModel : ObservableObject
         UiUtil.RestoreWindowPosition(Window);
     }
 
-    internal void TreeViewDoubleTapped(TappedEventArgs e)
+    internal void RulesTableDoubleTapped()
     {
-        var node = SelectedNode;
-        if (node is null)
-        {
-            return;
-        }
-
-        if (!node.IsCategory)
+        if (SelectedNode is { } node)
         {
             _ = NodeEdit(node);
+        }
+    }
+
+    internal void CategoriesListBoxDoubleTapped()
+    {
+        if (SelectedCategory is { } category)
+        {
+            _ = CategoryEdit(category);
         }
     }
 }

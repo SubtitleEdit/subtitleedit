@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
@@ -183,7 +184,7 @@ public class MultipleReplaceAddRulesTests : IDisposable
     private static string Order(RuleTreeNode category) => string.Join(",", category.SubNodes!.Select(n => n.Find));
 
     [AvaloniaFact]
-    public void InsertRules_OnACategory_AppendsInOrder_ExpandsIt_AndSelectsTheLast()
+    public void InsertRules_OnACategory_AppendsInOrder_ShowsIt_AndSelectsTheLast()
     {
         var (vm, category) = MakeViewModel();
 
@@ -191,7 +192,8 @@ public class MultipleReplaceAddRulesTests : IDisposable
         Dispatcher.UIThread.RunJobs();
 
         Assert.Equal("r1,r2,a,b", Order(category));
-        Assert.True(category.IsExpanded, "the new rules have to be visible");
+        Assert.Same(category, vm.SelectedCategory); // the new rules have to be visible
+        Assert.Equal("r1,r2,a,b", Visible(vm));
         Assert.Equal("b", vm.SelectedNode?.Find);
         Assert.All(category.SubNodes!, n => Assert.Same(category, n.Parent));
     }
@@ -216,6 +218,142 @@ public class MultipleReplaceAddRulesTests : IDisposable
         vm.InsertRules(category, new List<MultipleReplaceRule>());
 
         Assert.Equal("r1,r2", Order(category));
-        Assert.False(category.IsExpanded);
+        Assert.Null(vm.SelectedNode);
+    }
+
+    private static string Visible(MultipleReplaceViewModel vm) => string.Join(",", vm.VisibleRules.Select(n => n.Find));
+
+    // #16215: the type-in row above the rules - Enter adds the rule to the end of the category,
+    // empties the fields for the next one and keeps type and whole word.
+    [AvaloniaFact]
+    public void TypeInRow_AddsToTheEndOfTheCategory_AndClearsTheFields()
+    {
+        var (vm, category) = MakeViewModel();
+        vm.SelectedCategory = category;
+        vm.NewRuleType = vm.RuleTypes.First(t => t.Type == MultipleReplaceType.CaseSensitive);
+        vm.NewWholeWord = true;
+
+        vm.NewFind = "colour";
+        vm.NewReplaceWith = "color";
+        vm.NewRuleTextBoxKeyDown(null, new KeyEventArgs { Key = Key.Enter, RoutedEvent = InputElement.KeyDownEvent });
+        vm.NewFind = "grey";
+        vm.NewReplaceWith = "gray";
+        vm.AddNewRuleCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal("r1,r2,colour,grey", Order(category));
+        var added = category.SubNodes![3];
+        Assert.Equal("gray", added.ReplaceWith);
+        Assert.Equal(MultipleReplaceType.CaseSensitive, added.Type);
+        Assert.True(added.WholeWord);
+        Assert.True(added.IsActive);
+        Assert.Same(category, added.Parent);
+        Assert.Equal(string.Empty, vm.NewFind);
+        Assert.Equal(string.Empty, vm.NewReplaceWith);
+        Assert.Equal(MultipleReplaceType.CaseSensitive, vm.NewRuleType?.Type);
+        Assert.Same(added, vm.SelectedNode);
+    }
+
+    [AvaloniaFact]
+    public void TypeInRow_WithoutFindText_AddsNothing()
+    {
+        var (vm, category) = MakeViewModel();
+        vm.SelectedCategory = category;
+
+        vm.NewReplaceWith = "x";
+        vm.AddNewRuleCommand.Execute(null);
+
+        Assert.Equal("r1,r2", Order(category));
+    }
+
+    // Adding clears a filter, otherwise the rule just added could be hidden.
+    [AvaloniaFact]
+    public void TypeInRow_ClearsTheFilter()
+    {
+        var (vm, category) = MakeViewModel();
+        vm.SelectedCategory = category;
+        vm.RulesFilter = "r1";
+        Assert.Equal("r1", Visible(vm));
+
+        vm.NewFind = "new";
+        vm.AddNewRuleCommand.Execute(null);
+
+        Assert.Equal(string.Empty, vm.RulesFilter);
+        Assert.Equal("r1,r2,new", Visible(vm));
+    }
+
+    // New rules go to the end, so "Newest first" shows the list bottom up - display only, the
+    // rules still run in their own order.
+    [AvaloniaFact]
+    public void NewestFirst_ShowsTheLastRuleOnTop_WithoutReordering()
+    {
+        var (vm, category) = MakeViewModel();
+        vm.SelectedCategory = category;
+        vm.NewestFirst = true;
+
+        vm.NewFind = "new";
+        vm.AddNewRuleCommand.Execute(null);
+
+        Assert.Equal("new,r2,r1", Visible(vm));
+        Assert.Equal("r1,r2,new", Order(category));
+        Assert.Equal(new[] { 3, 2, 1 }, vm.VisibleRules.Select(n => n.Number));
+    }
+
+    // In the bottom-up list, up on screen is later in the run order.
+    [AvaloniaFact]
+    public void NewestFirst_MoveUpMovesUpOnScreen()
+    {
+        var (vm, category) = MakeViewModel();
+        vm.SelectedCategory = category;
+        vm.NewestFirst = true;
+
+        vm.SelectedNode = category.SubNodes![0]; // r1, at the bottom of the list
+        vm.MoveSelectedRuleUpCommand.Execute(null);
+
+        Assert.Equal("r2,r1", Order(category));
+        Assert.Equal("r1,r2", Visible(vm));
+    }
+
+    [AvaloniaFact]
+    public void Filter_MatchesFindReplaceAndDescription_AndBlocksReordering()
+    {
+        var (vm, category) = MakeViewModel();
+        vm.SelectedCategory = category;
+        category.SubNodes![1].Description = "spelling";
+
+        vm.RulesFilter = "SPELL";
+        Assert.Equal("r2", Visible(vm));
+        Assert.False(vm.CanReorderRules);
+
+        vm.SelectedNode = category.SubNodes[1];
+        vm.MoveSelectedRuleUpCommand.Execute(null);
+        Assert.Equal("r1,r2", Order(category));
+
+        vm.RulesFilter = string.Empty;
+        Assert.True(vm.CanReorderRules);
+    }
+
+    // Deleting the selected rule selects the one that took its place, so Delete can be held down.
+    [AvaloniaFact]
+    public void RemoveSelectedRule_SelectsTheNextOne()
+    {
+        var oldPrompt = Se.Settings.General.PromptBeforeDelete;
+        Se.Settings.General.PromptBeforeDelete = false;
+        try
+        {
+            var (vm, category) = MakeViewModel();
+            vm.SelectedCategory = category;
+            vm.SelectedNode = category.SubNodes![0];
+
+            vm.RemoveSelectedRuleCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal("r2", Order(category));
+            Assert.Same(category.SubNodes[0], vm.SelectedNode);
+        }
+        finally
+        {
+            Se.Settings.General.PromptBeforeDelete = oldPrompt;
+        }
     }
 }
