@@ -349,14 +349,7 @@ public class FontCollectorWindow : Window
         bar.Children.Add(buttonDone);
         bar.Children.Add(trim);
         bar.Children.Add(status);
-        return new Border
-        {
-            Child = bar,
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-        };
+        return EditorChrome.WrapButtonBar(bar);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

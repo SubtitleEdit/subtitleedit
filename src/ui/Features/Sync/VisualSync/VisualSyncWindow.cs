@@ -298,13 +298,6 @@ public class VisualSyncWindow : Window
         bar.Children.Add(buttons);
         bar.Children.Add(labelInfo);
 
-        return new Border
-        {
-            Child = bar,
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-        };
+        return EditorChrome.WrapButtonBar(bar);
     }
 }

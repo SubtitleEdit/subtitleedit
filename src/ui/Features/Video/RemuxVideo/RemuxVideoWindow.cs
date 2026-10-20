@@ -749,13 +749,6 @@ public class RemuxVideoWindow : Window
         status.Margin = new Thickness(0, 0, 12, 0);
         bar.Children.Add(status);
 
-        return new Border
-        {
-            Child = bar,
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-        };
+        return EditorChrome.WrapButtonBar(bar);
     }
 }

@@ -187,20 +187,13 @@ public class KokoroTtsSettingsWindow : Window
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
         close.Classes.Add("primary");
 
-        return new Border
+        return EditorChrome.WrapButtonBar(new StackPanel
         {
-            Child = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                Spacing = 10,
-                Children = { close },
-            },
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-        };
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Spacing = 10,
+            Children = { close },
+        });
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
