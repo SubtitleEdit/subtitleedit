@@ -215,12 +215,18 @@ public static class UiTheme
     /// </summary>
     public const double MinFontScale = 0.8;
     public const double MaxFontScale = 1.5;
-    private const double DefaultFontSize = 14.0;
+
+    /// <summary>
+    /// The text size of every window at 100 % font scale (#16276): the main window, the dialogs'
+    /// editor look (<see cref="EditorChrome.FieldFontSize"/>) and the menus share it, so text
+    /// reads the same size everywhere. Fluent's own default is 14.
+    /// </summary>
+    public const double BaseFontSize = 13.0;
 
     public static double FontScale => Math.Clamp(Se.Settings.Appearance.FontScale <= 0 ? 1.0 : Se.Settings.Appearance.FontScale, MinFontScale, MaxFontScale);
 
     /// <summary>Font size for popup menu/combo items rendered outside the layout transform.</summary>
-    private static double PopupFontSize(double layoutFactor) => DefaultFontSize * layoutFactor * FontScale;
+    private static double PopupFontSize(double layoutFactor) => BaseFontSize * layoutFactor * FontScale;
 
     /// <summary>
     /// Returns the logical content of a window, unwrapping the
@@ -244,16 +250,8 @@ public static class UiTheme
         var factor = Se.Settings.Appearance.LayoutScale;
 
         // Font scale rides on FontSize inheritance: every control without an explicit FontSize
-        // picks it up from the window. Clearing back to the theme default at 100% keeps
-        // windows with locally restyled fonts untouched.
-        if (Math.Abs(FontScale - 1.0) < 0.0001)
-        {
-            window.ClearValue(TemplatedControl.FontSizeProperty);
-        }
-        else
-        {
-            window.FontSize = DefaultFontSize * FontScale;
-        }
+        // picks it up from the window.
+        window.FontSize = BaseFontSize * FontScale;
 
         // Explicit sizes are baked in at creation; long-lived controls that opted in via
         // DesignFontSize get theirs re-derived here.
@@ -371,7 +369,7 @@ public static class UiTheme
         // by the transform). Only direct Menu children: submenu and context menu items are
         // logical descendants of the LTC too, but render in popups outside the transform.
         var ltcMenuItemStyle = new Style(x => x.OfType<Menu>().Child().OfType<MenuItem>());
-        ltcMenuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, DefaultFontSize * FontScale));
+        ltcMenuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, BaseFontSize * FontScale));
         ltcMenuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0));
         styles.Add(ltcMenuItemStyle);
 

@@ -32,8 +32,8 @@ internal static partial class EditorChrome
     // fields) through ScaledSize. Icons keep their size: an Icon with its own FontSize is left
     // alone, and one that inherits gets the scale undone by the icon style in UiTheme.
 
-    /// <summary>The text size of the fields, labels and buttons: 12.5 at 100 %.</summary>
-    internal static double FieldFontSize => ScaledFont(12.5);
+    /// <summary>The text size of the fields, labels and buttons: the shared <see cref="UiTheme.BaseFontSize"/> (13) at 100 %.</summary>
+    internal static double FieldFontSize => ScaledFont(UiTheme.BaseFontSize);
 
     /// <summary>The height of the compact fields, combo boxes and buttons: 28 at 100 %.</summary>
     internal static double FieldHeight => ScaledSize(28);

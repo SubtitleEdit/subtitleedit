@@ -17,7 +17,8 @@ namespace UITests.Features.Options;
 /// <summary>
 /// The editor look sets explicit font sizes and field heights, which the inherited window font of
 /// the "Font scale (%)" setting does not reach: the Settings window stayed at 12.5 px whatever the
-/// setting said (#16242). The sizes now scale with the setting, and stay as they were at 100 %.
+/// setting said (#16242). The sizes now scale with the setting. At 100 % the dialogs and the main
+/// window share one 13 px text size (#16276): the dialogs were 12.5 and the main window 14.
 /// </summary>
 public class SettingsFontScaleTests : IDisposable
 {
@@ -33,8 +34,8 @@ public class SettingsFontScaleTests : IDisposable
     }
 
     [AvaloniaTheory]
-    [InlineData(1.0, 12.5, 28)]
-    [InlineData(1.5, 18.75, 42)]
+    [InlineData(1.0, 13, 28)]
+    [InlineData(1.5, 19.5, 42)]
     public void SettingsWindow_FieldsAndLabelsFollowFontScale(double fontScale, double expectedFontSize, double expectedHeight)
     {
         Se.Settings.Appearance.FontScale = fontScale;
@@ -72,11 +73,47 @@ public class SettingsFontScaleTests : IDisposable
         }
     }
 
+    [AvaloniaTheory]
+    [InlineData(1.0)]
+    [InlineData(1.5)]
+    public void MainWindow_UsesTheEditorLookAndTheDialogTextSize(double fontScale)
+    {
+        Se.Settings.Appearance.FontScale = fontScale;
+
+        var services = new ServiceCollection();
+        services.AddSubtitleEditServices();
+        Locator.Services = services.BuildServiceProvider();
+        var window = new Window { Width = 1200, Height = 800 };
+        MainView.NextHostWindow = window;
+        var view = new MainView();
+        window.Content = view;
+        UiTheme.ApplyScaleToWindow(window);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            window.SuppressSaveChangesPromptOnClose((MainViewModel)view.DataContext!);
+
+            Assert.Equal(EditorChrome.FieldFontSize, window.FontSize, 6);
+            Assert.Equal(UiTheme.BaseFontSize * fontScale, window.FontSize, 6);
+
+            var combo = view.GetVisualDescendants().OfType<ComboBox>().First();
+            Assert.Equal(EditorChrome.FieldFontSize, combo.FontSize, 6);
+            Assert.Equal(EditorChrome.FieldHeight, combo.MinHeight);
+        }
+        finally
+        {
+            window.Close();
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
     [AvaloniaFact]
     public void EditorChromeSizes_ScaleFromTheDesignValues()
     {
         Se.Settings.Appearance.FontScale = 1.3;
-        Assert.Equal(12.5 * 1.3, EditorChrome.FieldFontSize, 6);
+        Assert.Equal(UiTheme.BaseFontSize * 1.3, EditorChrome.FieldFontSize, 6);
         Assert.Equal(36, EditorChrome.FieldHeight); // 28 * 1.3 = 36.4, whole pixels
         Assert.Equal(325, SettingsChrome.LabelWidth);
     }

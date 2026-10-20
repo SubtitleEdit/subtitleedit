@@ -68,13 +68,13 @@ public class MenuPopupScaleTests : IDisposable
         Dispatcher.UIThread.RunJobs();
 
         // Top-level item: scaled by the transform, so only the font scale is baked in.
-        Assert.Equal(14.0 * fontScale, topItem.FontSize, precision: 3);
+        Assert.Equal(UiTheme.BaseFontSize * fontScale, topItem.FontSize, precision: 3);
         Assert.Equal(32.0, topItem.MinHeight, precision: 3);
 
         // Popup items: outside the transform, so both factors are baked in.
-        Assert.Equal(14.0 * layoutScale * fontScale, subItem.FontSize, precision: 3);
+        Assert.Equal(UiTheme.BaseFontSize * layoutScale * fontScale, subItem.FontSize, precision: 3);
         Assert.Equal(32.0 * layoutScale, subItem.MinHeight, precision: 3);
-        Assert.Equal(14.0 * layoutScale * fontScale, flyoutItem.FontSize, precision: 3);
+        Assert.Equal(UiTheme.BaseFontSize * layoutScale * fontScale, flyoutItem.FontSize, precision: 3);
         Assert.Equal(32.0 * layoutScale, flyoutItem.MinHeight, precision: 3);
 
         topItem.Close();
@@ -147,14 +147,14 @@ public class MenuPopupScaleTests : IDisposable
 
         flyout.ShowAt(host);
         Dispatcher.UIThread.RunJobs();
-        Assert.Equal(14.0, flyoutItem.FontSize, precision: 3);
+        Assert.Equal(UiTheme.BaseFontSize, flyoutItem.FontSize, precision: 3);
         flyout.Hide();
 
         UiTheme.SetLayoutScale(1.3);
         flyout.ShowAt(host);
         Dispatcher.UIThread.RunJobs();
 
-        Assert.Equal(14.0 * 1.3, flyoutItem.FontSize, precision: 3);
+        Assert.Equal(UiTheme.BaseFontSize * 1.3, flyoutItem.FontSize, precision: 3);
         Assert.Equal(32.0 * 1.3, flyoutItem.MinHeight, precision: 3);
         flyout.Hide();
     }

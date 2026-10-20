@@ -20,8 +20,8 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public static class InitMenu
 {
-    // One notch below the Fluent theme default (~14).
-    private const double MenuFontSize = 13.0;
+    // The shared text size of all windows (#16276).
+    private const double MenuFontSize = UiTheme.BaseFontSize;
 
     public static void Make(MainViewModel vm)
     {
