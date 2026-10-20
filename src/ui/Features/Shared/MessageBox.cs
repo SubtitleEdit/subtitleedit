@@ -292,14 +292,7 @@ public class MessageBox : Window
                 break;
         }
 
-        var buttonBar = new Border
-        {
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-            Child = buttonPanel,
-        };
+        var buttonBar = EditorChrome.WrapButtonBar(buttonPanel);
 
         if (!string.IsNullOrEmpty(custom1) ||  !string.IsNullOrEmpty(custom2))
         {

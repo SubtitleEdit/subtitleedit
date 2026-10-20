@@ -232,14 +232,7 @@ public class ChaptersWindow : Window
         grid.Add(videoIcon, 0, 0);
         grid.Add(videoName, 0, 1);
         grid.Add(buttons, 0, 2);
-        return new Border
-        {
-            Child = grid,
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-        };
+        return EditorChrome.WrapButtonBar(grid);
     }
 
     /// <summary>

@@ -321,14 +321,7 @@ public class BlankVideoWindow : Window
         buttons.Spacing = 10;
         buttons.HorizontalAlignment = HorizontalAlignment.Right;
 
-        return new Border
-        {
-            Child = buttons,
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-        };
+        return EditorChrome.WrapButtonBar(buttons);
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)

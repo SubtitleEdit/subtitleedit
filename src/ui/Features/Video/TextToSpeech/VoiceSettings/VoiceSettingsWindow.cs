@@ -223,14 +223,7 @@ public class VoiceSettingsWindow : Window
         grid.Add(left, 0, 0);
         grid.Add(right, 0, 1);
 
-        return new Border
-        {
-            Child = grid,
-            Background = EditorChrome.ButtonBarBrush,
-            BorderBrush = EditorChrome.LineBrush,
-            BorderThickness = new Thickness(0, 1, 0, 0),
-            Padding = new Thickness(16, 10),
-        };
+        return EditorChrome.WrapButtonBar(grid);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
