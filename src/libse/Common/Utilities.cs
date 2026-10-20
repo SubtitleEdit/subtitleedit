@@ -2332,12 +2332,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        // Helper method to replace RemoveChar extension method
-        private static string Replace(this string input, char oldChar, string newString)
-        {
-            return input.Replace(oldChar.ToString(), newString);
-        }
-
         public static SKColor FromHtml(string htmlColor)
         {
             return ColorTranslator.FromHtml(htmlColor);

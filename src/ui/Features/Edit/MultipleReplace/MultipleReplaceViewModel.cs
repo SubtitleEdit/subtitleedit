@@ -1,5 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -1978,24 +1977,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     public void RuleTextChanged(object? sender, TextChangedEventArgs e)
     {
-        _dirty = true;
-    }
-
-    public void RuleComboBoxChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.NewValue is not MultipleReplaceTypeItem newType)
-        {
-            return;
-        }
-
-        var node = SelectedNode;
-        if (node is null)
-        {
-            return;
-        }
-
-        node.Type = newType.Type;
-
         _dirty = true;
     }
 

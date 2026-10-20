@@ -22,7 +22,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
-using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 
@@ -50,7 +49,6 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public TableView TracksGrid { get; internal set; }
 
-    private Subtitle _subtitle = new();
     private readonly StringBuilder _log;
     private long _startTicks;
     private long _processedFrames;
@@ -69,12 +67,10 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
     private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
 
     private readonly IWindowService _windowService;
-    private readonly IFolderHelper _folderHelper;
     private readonly IFileHelper _fileHelper;
 
-    public EmbeddedSubtitlesEditViewModel(IFolderHelper folderHelper, IFileHelper fileHelper, IWindowService windowService)
+    public EmbeddedSubtitlesEditViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
-        _folderHelper = folderHelper;
         _fileHelper = fileHelper;
         _windowService = windowService;
 

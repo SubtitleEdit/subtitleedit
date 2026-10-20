@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -98,11 +97,6 @@ public static class CustomShortcutDisplay
                 var name = commands.TryGetValue(step.ActionName, out var command) ? command.DisplayName : step.ActionName;
                 return string.Format(language.CustomShortcutSummaryRunCommandX, name);
         }
-    }
-
-    public static string GetSummary(SeCustomShortcut custom, IReadOnlyDictionary<string, CustomShortcutCommandItem> commands)
-    {
-        return string.Join("  →  ", custom.Steps.Select(p => GetStepSummary(p, commands)));
     }
 
     /// <summary>

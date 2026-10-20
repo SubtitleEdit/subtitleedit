@@ -551,7 +551,6 @@ public class AudioVisualizer : Control
     private Pen _paintShotChangeThinPen = new Pen(Brushes.AntiqueWhite, 1);
 
     private Pen _paintGridLines = new Pen(new SolidColorBrush(Color.FromArgb(90, 169, 169, 169)), 1);
-    private readonly IBrush _mouseOverBrush = new SolidColorBrush(Color.FromArgb(50, 255, 255, 0));
 
     // Cached drawing resources for fancy waveform
     private readonly Dictionary<int, Pen> _fancyWaveformPenCache = new(20);
@@ -4428,17 +4427,6 @@ public class AudioVisualizer : Control
     {
         var y = halfWaveformHeight - value * yScaleHalf;
         return Math.Max(0, Math.Min(boundsHeight, y));
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private double RelativeXPositionToSeconds(int x)
-    {
-        if (WavePeaks == null)
-        {
-            return 0;
-        }
-
-        return StartPositionSeconds + (double)x / WavePeaks.SampleRate / ZoomFactor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

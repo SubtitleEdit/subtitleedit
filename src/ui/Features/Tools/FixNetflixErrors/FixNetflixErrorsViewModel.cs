@@ -19,7 +19,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixNetflixErrors;
 
@@ -74,7 +73,6 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
     private readonly Timer _timer;
     private volatile bool _isClosing;
     private bool _dirty;
-    private readonly List<Paragraph> _edited;
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
@@ -88,7 +86,6 @@ public partial class FixNetflixErrorsViewModel : ObservableObject, IClosingClean
         Languages = new ObservableCollection<LanguageItem>(LanguageItem.GetAll());
         Fixes = new ObservableCollection<FixNetflixErrorsItem>();
         FixText = string.Empty;
-        _edited = new List<Paragraph>();
         _timer = new Timer(500);
         _timer.Elapsed += TimerElapsed;
         FixedSubtitle = new Subtitle();

@@ -4,20 +4,17 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 
 public class OcrSubtitleMkvDvb : IOcrSubtitle
 {
     public int Count { get; private set; }
-    private readonly MatroskaTrackInfo _matroskaSubtitleInfo;
     private Subtitle _subtitle;
     private List<DvbSubPes> _subtitleImages;
 
     public OcrSubtitleMkvDvb(MatroskaTrackInfo matroskaSubtitleInfo, Subtitle subtitle, List<DvbSubPes> subtitleImages)
     {
-        _matroskaSubtitleInfo = matroskaSubtitleInfo;
         _subtitle = subtitle;
         _subtitleImages = subtitleImages;
         Count = _subtitleImages.Count;

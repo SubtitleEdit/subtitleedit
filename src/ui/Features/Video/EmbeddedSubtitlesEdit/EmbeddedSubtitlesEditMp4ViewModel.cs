@@ -63,7 +63,6 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     private Process? _ffmpegProcess;
     private readonly Timer _timerGenerate;
     private bool _doAbort;
-    private SubtitleFormat? _subtitleFormat;
     private Subtitle _currentSubtitle;
     private FfmpegMediaInfo2? _mediaInfo;
     private List<EmbeddedTrack> _originalTracks;
@@ -109,7 +108,6 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     {
         VideoFileName = videoFileName;
         _currentSubtitle = subtitle;
-        _subtitleFormat = subtitleFormat;
         _mediaInfo = mediaInfo;
     }
 

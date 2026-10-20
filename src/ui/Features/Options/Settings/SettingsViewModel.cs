@@ -1311,26 +1311,6 @@ public partial class SettingsViewModel : ObservableObject
             : Se.Language.General.None;
     }
 
-    private string GetTranslationModifierFromSetting(string modifier)
-    {
-        if (modifier == "Control" || modifier == "Ctrl")
-        {
-            return OperatingSystem.IsMacOS() ? Se.Language.Options.Shortcuts.ControlMac : Se.Language.Options.Shortcuts.Control;
-        }
-        else if (modifier == "Shift")
-        {
-            return Se.Language.Options.Shortcuts.Shift;
-        }
-        else if (modifier == "Alt")
-        {
-            return Se.Language.Options.Shortcuts.Alt;
-        }
-        else
-        {
-            return string.Empty;
-        }
-    }
-
     private static string MapFromSpellCheckEngine(string engine)
     {
         if (engine == SeSpellCheck.SpellCheckHunspell)

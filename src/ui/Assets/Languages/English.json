@@ -4788,6 +4788,8 @@
     "setPositionSafeArea": "Safe area",
     "setPositionCenterLines": "Center lines",
     "setPositionSnapToGuides": "Snap to guides",
+    "setPositionClickToPlace": "Text follows mouse, click to place",
+    "setPositionShowSelection": "Selection box and anchor",
     "setPositionNudgeHint": "Arrow keys nudge 1 px, Shift 10 px",
     "scaleX": "Scale X",
     "scaleY": "Scale Y",

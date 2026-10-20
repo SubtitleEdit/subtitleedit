@@ -20,7 +20,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
 
@@ -529,13 +528,6 @@ public partial class SetSyncPointViewModel : ObservableObject
         await Task.Delay(milliseconds);
         videoPlayer.VideoPlayer.Pause();
         videoPlayer.Position = originalPosition;
-    }
-
-    private bool IsLeftFocused()
-    {
-        return AudioVisualizer.IsFocused ||
-               VideoPlayerControl.IsFocused ||
-               ComboBoxSubtitle.IsFocused;
     }
 
     public void AudioVisualizerLeftPositionChanged(object sender, AudioVisualizer.PositionEventArgs e)

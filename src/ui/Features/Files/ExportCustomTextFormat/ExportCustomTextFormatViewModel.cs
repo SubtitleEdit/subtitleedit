@@ -12,7 +12,6 @@ using Nikse.SubtitleEdit.UiLogic.Export;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
@@ -30,7 +29,6 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
     [ObservableProperty] private bool _isSaveButtonVisible;
 
     private List<Paragraph> _paragraphs;
-    private string? _subtitleFileNAme;
     private string? _videoFileName;
     private string _title;
 
@@ -265,7 +263,6 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
     internal void Initialize(List<Paragraph> paragraphs, string? subtitleFileName, string? videoFileName, bool hideSaveButton = false)
     {
         _paragraphs = paragraphs;
-        _subtitleFileNAme = subtitleFileName;
         _videoFileName = videoFileName;
         _title = subtitleFileName != null ? System.IO.Path.GetFileNameWithoutExtension(subtitleFileName) : Se.Language.General.Untitled;
         IsSaveButtonVisible = !hideSaveButton;

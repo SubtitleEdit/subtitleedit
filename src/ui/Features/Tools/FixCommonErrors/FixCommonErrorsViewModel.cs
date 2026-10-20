@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -18,12 +17,10 @@ using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
-using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 
@@ -100,7 +97,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     // the window is open - it is a history of the applies, not a snapshot like the scan half.
     private readonly List<string> _appliedLogEntries = new();
     private bool _hasLogContent;
-    private LanguageDisplayItem _oldSelectedLanguage;
     private int _totalErrors;
     private int _totalFixes;
     private SubtitleFormat _subtitleFormat;
@@ -128,7 +124,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Paragraphs = new ObservableCollection<SubtitleLineViewModel>();
         _language = Se.Language.Tools.FixCommonErrors;
         Step1IsVisible = true;
-        _oldSelectedLanguage = new LanguageDisplayItem(new CultureInfo("en"), "English");
         _subtitleFormat = new SubRip();
         Profiles = new ObservableCollection<ProfileDisplayItem>();
         Step2Title = Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep2;
@@ -285,7 +280,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     {
         Step1IsVisible = false;
         Step2IsVisible = true;
-        _oldSelectedLanguage = SelectedLanguage!;
         _totalFixes = 0;
         _appliedLogEntries.Clear();
         FixesAppliedText = string.Empty;

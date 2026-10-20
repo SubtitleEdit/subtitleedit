@@ -6,9 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
@@ -35,17 +33,11 @@ public partial class PickSpellCheckDictionaryViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public string? DictionaryFileName { get; private set; }
 
-    private readonly ISpellCheckDictionaryDownloadService _spellCheckDictionaryDownloadService;
-    private readonly IZipUnpacker _zipUnpacker;
-    private readonly IFolderHelper _folderHelper;
     private readonly ISpellCheckManager _spellCheckManager;
     private readonly IWindowService _windowService;
 
-    public PickSpellCheckDictionaryViewModel(ISpellCheckDictionaryDownloadService spellCheckDictionaryDownloadService, IZipUnpacker zipUnpacker, IFolderHelper folderHelper, ISpellCheckManager spellCheckManager, IWindowService windowService)
+    public PickSpellCheckDictionaryViewModel(ISpellCheckManager spellCheckManager, IWindowService windowService)
     {
-        _spellCheckDictionaryDownloadService = spellCheckDictionaryDownloadService;
-        _zipUnpacker = zipUnpacker;
-        _folderHelper = folderHelper;
         _spellCheckManager = spellCheckManager;
         _windowService = windowService;
 
