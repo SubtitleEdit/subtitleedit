@@ -305,12 +305,39 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            if (useThisEncoding == null)
+            if (useThisEncoding == null && MayBeUtf16(fileName, encoding))
             {
                 return LoadSubtitle(fileName, out encoding, Encoding.Unicode);
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// The UTF-16 retry runs every format check a second time, so only try it when it can
+        /// find something new: not when the file was already read as UTF-16, and not when its
+        /// start has no zero byte (UTF-16 Latin, digits and punctuation always have one).
+        /// </summary>
+        private static bool MayBeUtf16(string fileName, Encoding firstEncoding)
+        {
+            if (firstEncoding != null && firstEncoding.CodePage == Encoding.Unicode.CodePage)
+            {
+                return false;
+            }
+
+            try
+            {
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    var buffer = new byte[4096];
+                    var count = fs.Read(buffer, 0, buffer.Length);
+                    return Array.IndexOf(buffer, (byte)0, 0, count) >= 0;
+                }
+            }
+            catch
+            {
+                return true;
+            }
         }
 
         /// <summary>
