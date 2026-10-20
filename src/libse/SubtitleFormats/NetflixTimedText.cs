@@ -23,17 +23,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName != null && !(fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)))
+            return HasNetflixMarker(lines, fileName) && base.IsMine(lines, fileName);
+        }
+
+        /// <summary>
+        /// The Netflix-specific part of <see cref="IsMine"/>, without the TTML check in the base
+        /// class. <see cref="TimedText10.IsMine"/> uses it to leave Netflix files to this format -
+        /// calling IsMine there recursed back into the base class forever (stack overflow).
+        /// </summary>
+        internal static bool HasNetflixMarker(List<string> lines, string fileName)
+        {
+            if (fileName != null && !(fileName.EndsWith(".dfxp", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)))
             {
                 return false;
             }
 
-            if (!JoinLines(lines).Contains(">Netflix Subtitle"))
-            {
-                return false;
-            }
-
-            return base.IsMine(lines, fileName);
+            return JoinLines(lines).Contains(">Netflix Subtitle");
         }
 
         public override string ToText(Subtitle subtitle, string title)
