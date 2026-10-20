@@ -202,6 +202,7 @@ public class AssaSetPositionWindow : Window
         content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ShowSafeArea), Se.Language.Assa.SetPositionSafeArea));
         content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ShowCenterLines), Se.Language.Assa.SetPositionCenterLines));
         content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.SnapToGuides), Se.Language.Assa.SetPositionSnapToGuides));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ShowSelection), Se.Language.Assa.SetPositionShowSelection));
         return EditorChrome.MakeEditorSection(Se.Language.Assa.SetPositionGuides, content);
     }
 
@@ -261,6 +262,8 @@ public class AssaSetPositionWindow : Window
             StrokeThickness = 1.5,
             Margin = new Thickness(-5),
         };
+        selection.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowSelection)));
+        anchorDot.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowSelection)));
         var overlay = new Grid
         {
             HorizontalAlignment = HorizontalAlignment.Left,
