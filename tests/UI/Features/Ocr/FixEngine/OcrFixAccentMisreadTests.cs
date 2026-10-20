@@ -75,6 +75,27 @@ public class OcrFixAccentMisreadTests : IDisposable
         Assert.Equal("Il est là.", engine.FixOcrErrors(0, "Il ést là.", doTryToGuessUnknownWords: false).GetText());
     }
 
+    [Theory]
+    [InlineData("Eén voor de sergeant.")]
+    [InlineData("Vijf zijn schroot. Eén mist z'n")]
+    [InlineData("Eénmaal is genoeg.")]
+    public void FixOcrErrors_Dutch_CapitalizedEen_IsNotStripped(string input)
+    {
+        // Dutch capitalizes "één" as "Eén"; the spell checker lowercases that to "eén", which is no
+        // word, and "Een" is - so the accent fix used to strip it (#16031).
+        var engine = CreateEngine("nld", "een", "één", "éénmaal", "voor", "de", "sergeant", "vijf", "zijn", "schroot", "mist", "z'n", "is", "genoeg");
+
+        Assert.Equal(input, engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false).GetText());
+    }
+
+    [Fact]
+    public void FixOcrErrors_Dutch_MisreadAccentWithoutAccentedWord_StillFixed()
+    {
+        var engine = CreateEngine("nld", "een", "voor", "de", "sergeant");
+
+        Assert.Equal("Een voor de sergeant.", engine.FixOcrErrors(0, "Eèn voor de sergeant.", doTryToGuessUnknownWords: false).GetText());
+    }
+
     [Fact]
     public void FixOcrErrors_NoLookalikeInDictionary_IsLeftAlone()
     {

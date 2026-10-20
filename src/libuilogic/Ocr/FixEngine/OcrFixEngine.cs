@@ -868,6 +868,13 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                 isWordCorrect = true;
             }
 
+            // Dutch capitalizes "één" as "Eén" (the capital drops its accent), which the spell checker
+            // lowercases to the non-word "eén" - so the accent fix below turned it into "Een" (#16031).
+            if (!isWordCorrect && IsDutchCapitalizedAccentedWord(result))
+            {
+                isWordCorrect = true;
+            }
+
             // nOCR and binary image compare read a plain letter as an accented lookalike when the
             // accent sits where the letter's own dot or serif is ("ìs", "pà", "vøn") and confuse
             // accented letters of similar bodies ("č" read as "ë"). Pixels can't settle these;
@@ -1287,6 +1294,27 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         // (Danish "Màske" is "Måske", not "Maske"); "ìs" still reaches "is" when "ís" is no word.
         var lookalikes = sb.ToString().Where(ch => ch != c).Distinct().ToList();
         return new string(lookalikes.Where(ch => ch > 127).Concat(lookalikes.Where(ch => ch <= 127)).ToArray());
+    }
+
+    /// <summary>
+    /// "Eén", "Eénmaal": a plain capital followed by the same vowel with an accent is correct Dutch
+    /// when the fully accented lowercase form ("één", "éénmaal") is a dictionary word.
+    /// </summary>
+    private bool IsDutchCapitalizedAccentedWord(string word)
+    {
+        if (_twoLetterIsoLanguageName != "nl" || word.Length < 3 ||
+            "AEIOU".IndexOf(word[0]) < 0 || word[1] <= 127 || !char.IsLower(word[1]))
+        {
+            return false;
+        }
+
+        var baseLetter = word[1].ToString().Normalize(NormalizationForm.FormD)[0];
+        if (baseLetter != char.ToLowerInvariant(word[0]))
+        {
+            return false;
+        }
+
+        return IsSpelledCorrect(word[1] + word.Substring(1).ToLowerInvariant());
     }
 
     private bool IsAccentCandidate(char c)
