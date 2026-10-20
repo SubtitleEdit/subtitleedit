@@ -129,8 +129,8 @@ public class TextToSpeechWindow : Window
     }
 
     /// <summary>
-    /// Context on the left - what is about to be spoken and whether a video is loaded - and
-    /// Cancel, OK and Generate on the right.
+    /// Context on its own line - what is about to be spoken and whether a video is loaded - with
+    /// Cancel, OK and Generate right-aligned below it.
     /// </summary>
     private static Border MakeButtonBar(TextToSpeechViewModel vm)
     {
@@ -152,29 +152,46 @@ public class TextToSpeechWindow : Window
             MaxWidth = 320,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LinesInfo)) { Mode = BindingMode.OneWay },
         };
-        // A movie icon stands in for a "Video:" label inside the chip.
-        var videoChip = TtsMainEditorLook.MakeChip(TtsMainEditorLook.Horizontal(
-            new Optris.Icons.Avalonia.Icon
+        // A movie icon stands in for a "Video:" label inside the chip. DockPanel/Grid rather than
+        // horizontal StackPanels: a StackPanel measures its children with infinite width, so the
+        // text never trimmed and a long video name ran under the Cancel button.
+        var videoIcon = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "fa-solid fa-film",
+            FontSize = 11,
+            Foreground = EditorChrome.FaintTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 6, 0),
+        };
+        DockPanel.SetDock(videoIcon, Dock.Left);
+        var videoChip = TtsMainEditorLook.MakeChip(new DockPanel
+        {
+            Children =
             {
-                Value = "fa-solid fa-film",
-                FontSize = 11,
-                Foreground = EditorChrome.FaintTextBrush,
-                VerticalAlignment = VerticalAlignment.Center,
+                videoIcon,
+                new TextBlock
+                {
+                    FontSize = 11.5,
+                    Foreground = EditorChrome.DimTextBrush,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    MaxWidth = 240,
+                    [!TextBlock.TextProperty] = new Binding(nameof(vm.VideoInfo)) { Mode = BindingMode.OneWay },
+                },
             },
-            new TextBlock
-            {
-                FontSize = 11.5,
-                Foreground = EditorChrome.DimTextBrush,
-                VerticalAlignment = VerticalAlignment.Center,
-                TextTrimming = TextTrimming.CharacterEllipsis,
-                MaxWidth = 240,
-                [!TextBlock.TextProperty] = new Binding(nameof(vm.VideoInfo)) { Mode = BindingMode.OneWay },
-            }));
-        ((StackPanel)videoChip.Child!).Spacing = 6;
+        });
+        videoChip.HorizontalAlignment = HorizontalAlignment.Left;
         videoChip.Bind(IsVisibleProperty, new Binding(nameof(vm.HasVideoFile)) { Mode = BindingMode.OneWay });
 
-        var context = TtsMainEditorLook.Horizontal(contextIcon, contextText, videoChip);
-        context.Spacing = 8;
+        var context = new Grid
+        {
+            ColumnSpacing = 8,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        context.Add(contextIcon, 0, 0);
+        context.Add(contextText, 0, 1);
+        context.Add(videoChip, 0, 2);
 
         // OK accepts the session (the main window applies merged lines and review text edits);
         // Cancel stops a running generation, or - when idle - closes discarding those changes.
@@ -187,9 +204,24 @@ public class TextToSpeechWindow : Window
             .WithBindIsEnabled("!" + nameof(vm.IsGenerating));
         EditorChrome.AsPrimary(buttonGenerate);
 
-        // The context is as wide as the buttons leave room for (trimmed), it never widens the
-        // window - see WidthIgnoringPanel.
-        return EditorChrome.MakeButtonBar(new WidthIgnoringPanel { Children = { context } }, buttonCancel, buttonOk, buttonGenerate);
+        // The context sits on its own line above the buttons - beside them a long video name ran
+        // under Cancel. It is trimmed to the window width and never widens the window - see
+        // WidthIgnoringPanel.
+        var buttons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Children = { buttonCancel, buttonOk, buttonGenerate },
+        };
+        var bar = new Grid
+        {
+            RowSpacing = 8,
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto) },
+        };
+        bar.Add(new WidthIgnoringPanel { ClipToBounds = true, Children = { context } }, 0, 0);
+        bar.Add(buttons, 1, 0);
+        return EditorChrome.WrapButtonBar(bar);
     }
 
     // Install-status dot for the engine combo: green = ready, amber = a newer build is available,
