@@ -55,7 +55,7 @@ public class ComboBoxDropDownScaleTests : IDisposable
         try
         {
             var item = FirstDropDownItem(factor);
-            Assert.Equal(14.0 * factor, item.FontSize, precision: 3);
+            Assert.Equal(UiTheme.BaseFontSize * factor, item.FontSize, precision: 3);
         }
         finally
         {

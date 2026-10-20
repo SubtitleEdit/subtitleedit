@@ -82,7 +82,12 @@ public partial class MainView : ViewBase
         // is a no-op safety net for windows created via other entry points).
         Se.LoadLanguage();
 
-        var root = new DockPanel();
+        // The editor look of the dialogs (#16276): window color, compact combo boxes and time
+        // codes, accent menus. Set on the view, not the window, so the styles reach the popups
+        // and context menus of everything inside it.
+        EditorChrome.AddWindowStyles(Styles, EditorWindowStyles.TimeCodes);
+
+        var root = new DockPanel { Background = EditorChrome.WindowBrush };
 
         // Menu bar
         InitMenu.Make(_vm);
