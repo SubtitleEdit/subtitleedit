@@ -1,12 +1,5 @@
-﻿using Avalonia.Controls;
-using Avalonia.Threading;
-using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Shared;
-using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.IO;
 using System.Threading.Tasks;

@@ -1,8 +1,4 @@
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace UITests.Features.Tools.AiReview;
 

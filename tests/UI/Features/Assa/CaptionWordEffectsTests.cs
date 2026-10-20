@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 using Nikse.SubtitleEdit.Features.Main;

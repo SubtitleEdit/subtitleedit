@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
-
 namespace Nikse.SubtitleEdit.UiLogic.AudioToText;
 
 /// <summary>

@@ -1,6 +1,4 @@
 using Nikse.SubtitleEdit.Controls;
-using System.Collections.Generic;
-using System.Linq;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -9,7 +7,6 @@ using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Options.Settings.VideoControlsItems;
 using Nikse.SubtitleEdit.Logic.Config;
-using Xunit;
 
 namespace UITests.Controls;
 

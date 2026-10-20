@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Text.Json;
-using Xunit;
 
 namespace UITests.Logic.Config;
 

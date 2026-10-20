@@ -1,6 +1,4 @@
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LibUiLogicTests.AutoTranslate;
 

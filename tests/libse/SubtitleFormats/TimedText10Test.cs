@@ -1,8 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System;
-using System.Collections.Generic;
-using Xunit;
 
 namespace LibSETests.SubtitleFormats;
 

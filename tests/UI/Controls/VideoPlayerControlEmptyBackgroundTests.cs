@@ -5,9 +5,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace UITests.Controls;
 

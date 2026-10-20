@@ -3,9 +3,7 @@ using Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace UITests.Features.Edit.ModifySelection;
 

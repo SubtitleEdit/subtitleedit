@@ -1,7 +1,5 @@
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main;
-using System;
-using System.Collections.Generic;
 
 namespace UITests.Controls;
 

@@ -1,6 +1,4 @@
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace LibSETests.ContainerFormats;

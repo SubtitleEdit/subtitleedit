@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Nikse.SubtitleEdit.UiLogic.Ocr;
 
 internal static class NOcrLineGenerator

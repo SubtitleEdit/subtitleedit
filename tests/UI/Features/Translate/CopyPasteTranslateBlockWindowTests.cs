@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Features.Translate;
-using System.Linq;
 
 namespace UITests.Features.Translate;
 

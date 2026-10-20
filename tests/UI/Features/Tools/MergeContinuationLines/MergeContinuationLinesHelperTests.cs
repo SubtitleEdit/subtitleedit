@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
-using System.Collections.Generic;
 
 namespace UITests.Features.Tools.MergeContinuationLines;
 

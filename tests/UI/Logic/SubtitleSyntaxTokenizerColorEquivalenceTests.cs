@@ -1,7 +1,5 @@
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
-using System;
-using System.Collections.Generic;
 
 namespace UITests.Logic;
 

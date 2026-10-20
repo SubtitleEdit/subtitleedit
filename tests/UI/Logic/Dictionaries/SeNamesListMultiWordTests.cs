@@ -1,9 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace UITests.Logic.Dictionaries;
 

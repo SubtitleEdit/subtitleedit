@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.UiLogic.AudioToText;

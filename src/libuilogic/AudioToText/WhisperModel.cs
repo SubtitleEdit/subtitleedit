@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace Nikse.SubtitleEdit.UiLogic.AudioToText
+﻿namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
     public class WhisperModel : IWhisperModel
     {

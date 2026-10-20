@@ -1,8 +1,6 @@
 using Nikse.SubtitleEdit.Logic;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Data;
 using Nikse.SubtitleEdit.Logic.Config;

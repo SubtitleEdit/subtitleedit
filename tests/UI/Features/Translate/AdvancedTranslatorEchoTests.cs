@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
-using Xunit;
 
 namespace UITests.Features.Translate;
 

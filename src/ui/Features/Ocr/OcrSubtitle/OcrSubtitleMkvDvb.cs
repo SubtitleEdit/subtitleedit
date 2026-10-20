@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 

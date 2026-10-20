@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
-using Nikse.SubtitleEdit.Features.Video.BurnIn;
+﻿using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
 using System;

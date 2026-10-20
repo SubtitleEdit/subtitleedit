@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Core.Common;
-using System;
 using System.Globalization;
 using SeConv.Core;
 using Xunit;

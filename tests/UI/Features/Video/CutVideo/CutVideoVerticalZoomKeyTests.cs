@@ -3,7 +3,6 @@ using Avalonia.Input;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
 
 namespace UITests.Features.Video.CutVideo;
 

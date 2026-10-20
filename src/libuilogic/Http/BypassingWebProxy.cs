@@ -1,8 +1,4 @@
-using System;
-using System.Linq;
 using System.Net;
-
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.UiLogic.Http
 {

@@ -6,9 +6,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
-using System;
 using System.Collections.ObjectModel;
-using System.IO;
 
 namespace UITests.Features.SpellCheck;
 

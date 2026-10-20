@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System.IO;
 using Nikse.SubtitleEdit.Logic.Media;
 
 namespace UITests.Features.Video;

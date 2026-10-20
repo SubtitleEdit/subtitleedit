@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
-using System.Linq;
 
 namespace LibUiLogicTests.Ocr;
 

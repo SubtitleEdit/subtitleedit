@@ -1,6 +1,4 @@
 using Nikse.SubtitleEdit.UiLogic.Media;
-using System.Linq;
-using Xunit;
 
 namespace LibUiLogicTests.Common;
 

@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Core.VobSub;
-using System.Collections.Generic;
 
 namespace LibSETests.VobSub;
 

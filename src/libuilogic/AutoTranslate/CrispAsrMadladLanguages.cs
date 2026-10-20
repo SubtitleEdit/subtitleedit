@@ -1,7 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using System;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {

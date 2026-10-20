@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
-using System.Collections.Generic;
 
 namespace LibSETests.Core.Cea608;
 

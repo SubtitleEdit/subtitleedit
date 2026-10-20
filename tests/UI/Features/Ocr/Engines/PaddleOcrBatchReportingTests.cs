@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Ocr;
-using Nikse.SubtitleEdit.UiLogic.Ocr.Paddle;
 
 namespace UITests.Features.Ocr.Engines;
 

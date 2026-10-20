@@ -1,5 +1,4 @@
 using Microsoft.Win32;
-using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

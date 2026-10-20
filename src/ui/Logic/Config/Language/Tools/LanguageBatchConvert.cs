@@ -1,7 +1,4 @@
-﻿using Nikse.SubtitleEdit.Features.Video.BurnIn;
-using System;
-
-namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
+﻿namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 
 public class LanguageBatchConvert
 {

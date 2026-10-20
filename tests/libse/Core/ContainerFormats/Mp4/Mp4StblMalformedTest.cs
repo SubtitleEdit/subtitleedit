@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Text;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 

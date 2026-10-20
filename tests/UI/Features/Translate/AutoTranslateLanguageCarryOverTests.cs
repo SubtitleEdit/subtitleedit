@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using Xunit;
 
 namespace UITests.Features.Translate;
 

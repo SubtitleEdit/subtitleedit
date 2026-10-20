@@ -1,7 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
-using System.IO;
-using System.Linq;
 
 namespace LibSETests.ContainerFormats;
 

@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
-using System;
 
 namespace Nikse.SubtitleEdit.UiLogic.BatchConvert;
 

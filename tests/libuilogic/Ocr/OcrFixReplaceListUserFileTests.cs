@@ -1,6 +1,4 @@
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
-using System;
-using System.IO;
 
 namespace LibUiLogicTests.Ocr;
 

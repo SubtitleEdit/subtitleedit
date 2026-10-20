@@ -1,8 +1,5 @@
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Logic.Config.Language;
-using System;
-using System.IO;
-using System.Linq;
 using System.Text.Json;
 
 namespace UITests.Features.Options.Settings;

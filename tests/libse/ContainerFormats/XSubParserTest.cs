@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Core.ContainerFormats;
 using SkiaSharp;
-using System.IO;
 
 namespace LibSETests.ContainerFormats;
 

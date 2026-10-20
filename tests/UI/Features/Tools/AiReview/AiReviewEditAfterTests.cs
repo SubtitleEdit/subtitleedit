@@ -6,9 +6,6 @@ using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
 using Nikse.SubtitleEdit.Logic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UITests.Features.Tools.AiReview;
 

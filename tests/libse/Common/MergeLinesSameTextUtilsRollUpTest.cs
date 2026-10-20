@@ -1,4 +1,3 @@
-using Xunit;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace LibSETests.Common

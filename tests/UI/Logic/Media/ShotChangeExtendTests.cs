@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Logic.Media;
-using System.Collections.Generic;
 
 namespace UITests.Logic.Media;
 

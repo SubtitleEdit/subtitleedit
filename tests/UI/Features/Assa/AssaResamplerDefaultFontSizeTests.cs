@@ -1,7 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
-using System.Linq;
 
 namespace UITests.Features.Assa;
 

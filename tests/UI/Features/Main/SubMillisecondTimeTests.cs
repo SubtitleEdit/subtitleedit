@@ -10,10 +10,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace UITests.Features.Main;
 

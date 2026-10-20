@@ -1,7 +1,4 @@
-﻿using System;
-using static Nikse.SubtitleEdit.UiLogic.Translate.MergeAndSplitHelper;
-
-namespace Nikse.SubtitleEdit.Logic.Config.Language;
+﻿namespace Nikse.SubtitleEdit.Logic.Config.Language;
 
 public class LanguageMergeShortLines
 {
