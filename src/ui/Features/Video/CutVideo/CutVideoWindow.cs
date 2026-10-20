@@ -170,17 +170,6 @@ public class CutVideoWindow : Window
         return grid;
     }
 
-    private static StackPanel Horizontal(params Control[] controls)
-    {
-        var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, VerticalAlignment = VerticalAlignment.Center };
-        foreach (var control in controls)
-        {
-            panel.Children.Add(control);
-        }
-
-        return panel;
-    }
-
     private static ComboBox Combo<T>(System.Collections.ObjectModel.ObservableCollection<T> items, CutVideoViewModel vm, string property, string name)
     {
         var comboBox = UiUtil.MakeComboBox(items, vm, property);
@@ -208,44 +197,6 @@ public class CutVideoWindow : Window
         return field;
     }
 
-    private static TextBlock Hint(string property) => new()
-    {
-        FontSize = 11.5,
-        Foreground = EditorChrome.DimTextBrush,
-        VerticalAlignment = VerticalAlignment.Center,
-        TextTrimming = TextTrimming.CharacterEllipsis,
-        [!TextBlock.TextProperty] = new Binding(property),
-    };
-
-    private static ToggleSwitch Switch(string property, string name)
-    {
-        var toggle = new ToggleSwitch
-        {
-            OnContent = null,
-            OffContent = null,
-            MinWidth = 0,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!ToggleSwitch.IsCheckedProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
-        };
-        AutomationProperties.SetName(toggle, name);
-        return toggle;
-    }
-
-    /// <summary>
-    /// A switch with its label beside it; the label wraps instead of being cut off.
-    /// </summary>
-    private static Grid SwitchRow(ToggleSwitch toggle, string text)
-    {
-        var row = new Grid
-        {
-            ColumnSpacing = 8,
-            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
-        };
-        row.Add(toggle, 0, 0);
-        row.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap }, 0, 1);
-        return row;
-    }
-
     private static StackPanel MakeSettingsPanel(CutVideoViewModel vm)
     {
         var panel = new StackPanel();
@@ -261,7 +212,7 @@ public class CutVideoWindow : Window
         var extension = Combo(vm.VideoExtensions, vm, nameof(vm.SelectedVideoExtension), Se.Language.General.VideoExtension);
         var encoding = Row(Se.Language.General.Encoding, Combo(vm.VideoEncodings, vm, nameof(vm.SelectedVideoEncoding), Se.Language.General.Encoding));
         encoding.Bind(IsVisibleProperty, new Binding(nameof(vm.IsVideoEncodingVisible)));
-        var cutSubtitle = SwitchRow(Switch(nameof(vm.CutSubtitleToo), Se.Language.Video.CutVideoAlsoCutSubtitle), Se.Language.Video.CutVideoAlsoCutSubtitle);
+        var cutSubtitle = EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.CutSubtitleToo), Se.Language.Video.CutVideoAlsoCutSubtitle), Se.Language.Video.CutVideoAlsoCutSubtitle);
         cutSubtitle.Bind(IsVisibleProperty, new Binding(nameof(vm.IsCutSubtitleVisible)));
 
         var rows = new StackPanel { Spacing = 7 };
@@ -279,7 +230,7 @@ public class CutVideoWindow : Window
 
         var preview = new Button
         {
-            Content = Horizontal(
+            Content = EditorChrome.MakeInlineRow(
                 new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-play", FontSize = 11, VerticalAlignment = VerticalAlignment.Center },
                 new TextBlock { Text = Se.Language.Video.CutVideoPreviewTransition, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center }),
             Command = vm.PreviewTransitionCommand,
@@ -288,7 +239,7 @@ public class CutVideoWindow : Window
         };
         AutomationProperties.SetName(preview, Se.Language.Video.CutVideoPreviewTransition);
 
-        var info = Hint(nameof(vm.TransitionInfo));
+        var info = EditorChrome.MakeBoundHint(nameof(vm.TransitionInfo));
         info.TextWrapping = TextWrapping.Wrap;
         info.TextTrimming = TextTrimming.None;
 
@@ -301,7 +252,7 @@ public class CutVideoWindow : Window
         settings.Bind(IsVisibleProperty, new Binding(nameof(vm.TransitionEnabled)));
 
         var rows = new StackPanel { Spacing = 9 };
-        rows.Children.Add(SwitchRow(Switch(nameof(vm.TransitionEnabled), Se.Language.Video.CutVideoTransition), Se.Language.Video.CutVideoTransition));
+        rows.Children.Add(EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.TransitionEnabled), Se.Language.Video.CutVideoTransition), Se.Language.Video.CutVideoTransition));
         rows.Children.Add(settings);
         return EditorChrome.MakeEditorSection(Se.Language.Video.CutVideoTransitions, rows);
     }
@@ -321,7 +272,7 @@ public class CutVideoWindow : Window
                 ColumnSpacing = 8,
                 ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
             };
-            row.Add(SwitchRow(Switch(enabledProperty, text), text), 0, 0);
+            row.Add(EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(enabledProperty, text), text), 0, 0);
             row.Add(field, 0, 1);
             return row;
         }
@@ -451,7 +402,7 @@ public class CutVideoWindow : Window
         };
         AutomationProperties.SetName(buttonImport, Se.Language.General.ImportDotDotDot);
 
-        var actions = Horizontal(
+        var actions = EditorChrome.MakeInlineRow(
             Action("fa-solid fa-plus", Se.Language.General.Add, vm.AddCommand),
             Action("fa-solid fa-arrow-right-to-bracket", Se.Language.General.SetStart, vm.SetStartCommand, nameof(vm.IsSetStartEnabled)),
             Action("fa-solid fa-arrow-right-from-bracket", Se.Language.General.SetEnd, vm.SetEndCommand, nameof(vm.IsSetEndEnabled)),
@@ -488,7 +439,7 @@ public class CutVideoWindow : Window
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
 
-        var statusText = Hint(nameof(vm.ProgressText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
         statusText.FontSize = 12;
 
         var grid = new Grid
@@ -519,17 +470,17 @@ public class CutVideoWindow : Window
         fileName.Foreground = EditorChrome.DimTextBrush;
         fileName.FontSize = 12;
         fileName.VerticalAlignment = VerticalAlignment.Center;
-        var source = Horizontal(
+        var source = EditorChrome.MakeInlineRow(
             new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-file-video", FontSize = 12, Foreground = EditorChrome.FaintTextBrush, VerticalAlignment = VerticalAlignment.Center },
             fileName,
-            Hint(nameof(vm.VideoFileSize)));
+            EditorChrome.MakeBoundHint(nameof(vm.VideoFileSize)));
         source.Bind(IsVisibleProperty, new Binding(nameof(vm.VideoFileName)) { Converter = Avalonia.Data.Converters.StringConverters.IsNotNullOrEmpty });
 
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
             .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         buttonGenerate.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttons = Horizontal(buttonCancel, buttonGenerate);
+        var buttons = EditorChrome.MakeInlineRow(buttonCancel, buttonGenerate);
         buttons.Spacing = 10;
 
         var bar = new DockPanel();

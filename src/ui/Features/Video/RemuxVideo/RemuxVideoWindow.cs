@@ -194,44 +194,6 @@ public class RemuxVideoWindow : Window
         return grid;
     }
 
-    private static TextBlock Hint(string property) => new()
-    {
-        FontSize = 11.5,
-        Foreground = EditorChrome.DimTextBrush,
-        VerticalAlignment = VerticalAlignment.Center,
-        TextTrimming = TextTrimming.CharacterEllipsis,
-        [!TextBlock.TextProperty] = new Binding(property),
-    };
-
-    private static ToggleSwitch Switch(string property, string name)
-    {
-        var toggle = new ToggleSwitch
-        {
-            OnContent = null,
-            OffContent = null,
-            MinWidth = 0,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!ToggleSwitch.IsCheckedProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
-        };
-        AutomationProperties.SetName(toggle, name);
-        return toggle;
-    }
-
-    /// <summary>
-    /// A switch with its label beside it; the label wraps instead of being cut off.
-    /// </summary>
-    private static Grid SwitchRow(ToggleSwitch toggle, string text)
-    {
-        var row = new Grid
-        {
-            ColumnSpacing = 8,
-            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
-        };
-        row.Add(toggle, 0, 0);
-        row.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap }, 0, 1);
-        return row;
-    }
-
     /// <summary>
     /// A file path box with a "..." browse button after it.
     /// </summary>
@@ -260,7 +222,7 @@ public class RemuxVideoWindow : Window
         _buttonBrowseVideo = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.OpenVideoFile, vm.BrowseVideoCommand, 28);
         _buttonBrowseVideo.Bind(Button.IsEnabledProperty, NotRemuxing(vm));
 
-        var videoSize = Hint(nameof(vm.VideoFileSize));
+        var videoSize = EditorChrome.MakeBoundHint(nameof(vm.VideoFileSize));
         var videoRows = new StackPanel { Spacing = 6 };
         videoRows.Children.Add(PathRow(textBoxVideo, _buttonBrowseVideo));
         videoRows.Children.Add(videoSize);
@@ -281,9 +243,9 @@ public class RemuxVideoWindow : Window
         var buttonBrowseOutput = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Caption(l.RemuxVideoOutputFile), vm.BrowseOutputFileCommand, 28);
         buttonBrowseOutput.Bind(Button.IsEnabledProperty, NotRemuxing(vm));
 
-        var switchFastStart = Switch(nameof(vm.FastStart), l.RemuxVideoFastStart);
+        var switchFastStart = EditorChrome.MakeSwitch(nameof(vm.FastStart), l.RemuxVideoFastStart);
         switchFastStart.Bind(ToggleSwitch.IsEnabledProperty, NotRemuxing(vm));
-        var fastStartRow = SwitchRow(switchFastStart, l.RemuxVideoFastStart);
+        var fastStartRow = EditorChrome.MakeSwitchRow(switchFastStart, l.RemuxVideoFastStart);
         fastStartRow.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFastStartVisible)));
 
         // .mp4: the subtitles as mov_text tracks or as CEA-608 captions in the video (#16164)
@@ -363,7 +325,7 @@ public class RemuxVideoWindow : Window
             first: true);
 
         // Mix all audio files into one track, each at its own volume (shown for two or more files)
-        var switchMixAudio = Switch(nameof(vm.MixAudio), l.RemuxVideoMixAudio);
+        var switchMixAudio = EditorChrome.MakeSwitch(nameof(vm.MixAudio), l.RemuxVideoMixAudio);
         switchMixAudio.Bind(ToggleSwitch.IsEnabledProperty, NotRemuxing(vm));
         var labelVolume = EditorChrome.MakeDimLabel(Caption(l.RemuxVideoVolumePercent), new Thickness(12, 0, 0, 0));
         labelVolume.Bind(TextBlock.IsEnabledProperty, new Binding(nameof(vm.IsVolumeEnabled)));
@@ -618,7 +580,7 @@ public class RemuxVideoWindow : Window
         // Header: icon, title and the "n files" info; the list actions on the right
         var title = EditorChrome.MakeSectionHeader(Caption(header));
         title.TextTrimming = TextTrimming.CharacterEllipsis;
-        var info = Hint(infoPropertyPath);
+        var info = EditorChrome.MakeBoundHint(infoPropertyPath);
         info.Margin = new Thickness(8, 0, 0, 0);
         var titleRow = new Grid
         {
@@ -676,7 +638,7 @@ public class RemuxVideoWindow : Window
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsFinalizing)));
 
-        var statusText = Hint(nameof(vm.ProgressText));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
         statusText.FontSize = 12;
 
         var grid = new Grid
@@ -708,7 +670,7 @@ public class RemuxVideoWindow : Window
         buttonOpenFolder.Margin = new Thickness(0, 0, 8, 0);
 
         // The result ("Remux completed", errors) - while remuxing the progress row shows the text
-        var status = Hint(nameof(vm.ProgressText));
+        var status = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
         status.FontSize = 12;
         status.Bind(Visual.IsVisibleProperty, NotRemuxing(vm));
 
