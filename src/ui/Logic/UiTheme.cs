@@ -122,12 +122,12 @@ public static class UiTheme
     }
 
     /// <summary>
-    /// Themes that ship background art in a folder of their own in Themes.zip. Nord's folder
-    /// holds only the art - its icons are Dark's.
+    /// Themes that ship background art in a folder of their own in Themes.zip. The Nord and
+    /// Pastel folders hold only the art - their icons are Dark's and Light's.
     /// </summary>
     private static bool HasThemeFolder(string themeName)
     {
-        return HasIconFolder(themeName) || themeName == ThemeNameNord;
+        return HasIconFolder(themeName) || themeName == ThemeNameNord || themeName == ThemeNamePastel;
     }
 
     /// <summary>
@@ -149,8 +149,8 @@ public static class UiTheme
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
     /// be reached through an avares:// URI. A theme that ships no image folder of its own
     /// (Pastel, for instance) falls back to Light - or Dark for a dark theme, as the Dark glyphs
-    /// are near-white and vanish on a light background - as does Nord, whose folder holds only
-    /// background art. An explicit icon theme wins over both.
+    /// are near-white and vanish on a light background - as do Nord and Pastel, whose folders
+    /// hold only background art. An explicit icon theme wins over both.
     /// </summary>
     public static string ImageFolder
     {
@@ -1912,18 +1912,47 @@ public static class UiTheme
         ParagraphBackground: Color.FromArgb(70, 0xE8, 0xB4, 0xC6),
         ParagraphSelectedBackground: Color.FromArgb(110, 0xF0, 0x9C, 0xB6));
 
+    private static readonly WaveformColors NordWaveformColors = new(
+        TextHex: Color.FromRgb(0xEC, 0xEF, 0xF4).FromColorToHex(), // nord6
+        Waveform: Color.FromArgb(220, 0x88, 0xC0, 0xD0), // nord8
+        Background: Color.FromRgb(0x24, 0x29, 0x33),
+        Selected: Color.FromArgb(100, 0x5E, 0x81, 0xAC), // nord10
+        Cursor: Color.FromRgb(0xEB, 0xCB, 0x8B), // nord13
+        ShotChange: Color.FromArgb(200, 0xD8, 0xDE, 0xE9), // nord4
+        Grid: Color.FromArgb(50, 0x88, 0xC0, 0xD0),
+        ParagraphLeft: Color.FromArgb(130, 0xA3, 0xBE, 0x8C), // nord14
+        ParagraphRight: Color.FromArgb(130, 0xBF, 0x61, 0x6A), // nord11
+        FancyHigh: Color.FromRgb(0x8F, 0xBC, 0xBB), // nord7
+        ParagraphBackground: Color.FromArgb(130, 0x3B, 0x42, 0x52), // nord1
+        ParagraphSelectedBackground: Color.FromArgb(150, 0x5E, 0x81, 0xAC));
+
+    private static readonly WaveformColors PastelWaveformColors = new(
+        TextHex: Color.FromRgb(0x3A, 0x30, 0x55).FromColorToHex(),
+        Waveform: Color.FromRgb(142, 111, 216),
+        Background: Color.FromRgb(247, 244, 255),
+        Selected: Color.FromArgb(70, 142, 111, 216),
+        Cursor: Color.FromRgb(77, 166, 220),
+        ShotChange: Color.FromArgb(160, 90, 74, 150),
+        Grid: Color.FromArgb(40, 142, 111, 216),
+        ParagraphLeft: Color.FromArgb(140, 95, 191, 150),
+        ParagraphRight: Color.FromArgb(140, 224, 127, 168),
+        FancyHigh: Color.FromRgb(95, 191, 150),
+        ParagraphBackground: Color.FromArgb(70, 200, 185, 240),
+        ParagraphSelectedBackground: Color.FromArgb(110, 180, 160, 240));
+
     /// <summary>
     /// The waveform colors of a theme with a palette of its own, or null to use the settings.
     /// </summary>
     internal static WaveformColors? GetThemeWaveformColors()
     {
-        var theme = Se.Settings.Appearance.Theme;
-        if (theme == ThemeNameMidnightCinema)
+        return Se.Settings.Appearance.Theme switch
         {
-            return MidnightCinemaWaveformColors;
-        }
-
-        return theme == ThemeNameSakura ? SakuraWaveformColors : null;
+            ThemeNameMidnightCinema => MidnightCinemaWaveformColors,
+            ThemeNameSakura => SakuraWaveformColors,
+            ThemeNameNord => NordWaveformColors,
+            ThemeNamePastel => PastelWaveformColors,
+            _ => null,
+        };
     }
 
     private static readonly System.Collections.Generic.Dictionary<string, Bitmap?> ThemeArtCache = new(StringComparer.Ordinal);

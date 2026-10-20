@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Logic;
 
 /// <summary>
 /// The colors a waveform is drawn with. Normally the user's waveform settings, but a theme with
-/// a palette of its own (Midnight Cinema, Sakura) colors the waveform too - like the window
+/// a palette of its own (Nord, Pastel, Midnight Cinema, Sakura) colors the waveform too - like the window
 /// colors, the palette is the point of picking such a theme, so it wins over the settings.
 /// </summary>
 internal sealed record WaveformColors(
