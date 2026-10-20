@@ -427,6 +427,7 @@ public class LanguageAssa
     public string SetPositionCenterLines { get; set; }
     public string SetPositionSnapToGuides { get; set; }
     public string SetPositionClickToPlace { get; set; }
+    public string SetPositionShowSelection { get; set; }
     public string SetPositionNudgeHint { get; set; }
     public string ScaleX { get; set; }
     public string ScaleY { get; set; }
@@ -974,6 +975,7 @@ public class LanguageAssa
         SetPositionCenterLines = "Center lines";
         SetPositionSnapToGuides = "Snap to guides";
         SetPositionClickToPlace = "Text follows mouse, click to place";
+        SetPositionShowSelection = "Selection box and anchor";
         SetPositionNudgeHint = "Arrow keys nudge 1 px, Shift 10 px";
         ScaleX = "Scale X";
         ScaleY = "Scale Y";
