@@ -143,6 +143,7 @@ public class AssaSetPositionRotationTests
     {
         var vm = new AssaSetPositionViewModel
         {
+            IsPreviewReady = true,
             SourceWidth = 1920,
             SourceHeight = 1080,
             ScreenshotX = 300,
