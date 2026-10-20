@@ -969,9 +969,16 @@ public class NikseBitmapImageSplitter2
         var spacePixels = 0;
         var subtractSpacePixels = 0;
 
+        // Per row: everything left of this x is already transparent. Each cut used to clear its
+        // rows from x = 0 again, so the clearing grew with line width times glyph count.
+        var clearedUpTo = new int[bmpHeight];
+
+        // One list for every column - the points are only used within the same iteration.
+        var pointBuffer = new List<NiksePoint>(bmpHeight + 8);
+
         for (var x = 0; x < bmpWidth; x++)
         {
-            var points = IsVerticalLineTransparent(bmp, x, out var right, out var clean);
+            var points = IsVerticalLineTransparent(bmp, x, pointBuffer, out var right, out var clean) ? pointBuffer : null;
 
             if (points != null && clean)
             {
@@ -1031,7 +1038,18 @@ public class NikseBitmapImageSplitter2
                 // Remove pixels before next letter
                 foreach (var p in points)
                 {
-                    bmp.MakeVerticalLinePartTransparent(0, p.X, p.Y);
+                    if (p.Y < 0 || p.Y >= bmpHeight)
+                    {
+                        bmp.MakeVerticalLinePartTransparent(0, p.X, p.Y);
+                        continue;
+                    }
+
+                    var cleared = clearedUpTo[p.Y];
+                    if (p.X >= cleared)
+                    {
+                        bmp.MakeVerticalLinePartTransparent(cleared, p.X, p.Y);
+                        clearedUpTo[p.Y] = Math.Min(p.X, bmpWidth - 1) + 1;
+                    }
                 }
                 width = 1;
                 startX = FindMinX(points, x);
@@ -1140,14 +1158,15 @@ public class NikseBitmapImageSplitter2
         return x;
     }
 
-    private static List<NiksePoint>? IsVerticalLineTransparent(NikseBitmap2 bmp, int x, out bool right, out bool clean)
+    /// <returns>False where the old version returned null; <paramref name="points"/> is cleared and refilled.</returns>
+    private static bool IsVerticalLineTransparent(NikseBitmap2 bmp, int x, List<NiksePoint> points, out bool right, out bool clean)
     {
         right = false;
         var left = false;
         var leftCount = 0;
         var rightCount = 0;
         clean = true;
-        List<NiksePoint>? points = null;
+        points.Clear();
         var y = 0;
         var bmpHeight = bmp.Height;
         var bmpWidth = bmp.Width;
@@ -1160,7 +1179,7 @@ public class NikseBitmapImageSplitter2
                 clean = false;
                 if (x == 0)
                 {
-                    return null;
+                    return false;
                 }
 
                 if (x < bmpWidth - 1 && y < bmpHeight - 1 && bmp.GetAlpha(x + 1, y) == 0 && bmp.GetAlpha(x + 1, y + 1) == 0)
@@ -1178,7 +1197,7 @@ public class NikseBitmapImageSplitter2
                     }
                     else
                     {
-                        return null;
+                        return false;
                     }
                 }
                 else if (x < bmpWidth - 1 && y == bmpHeight - 1 && bmp.GetAlpha(x + 1, y) == 0 && bmp.GetAlpha(x + 1, y - 1) == 0)
@@ -1191,7 +1210,7 @@ public class NikseBitmapImageSplitter2
                     }
                     else
                     {
-                        return null;
+                        return false;
                     }
                 }
                 else if (bmp.GetAlpha(x - 1, y) == 0)
@@ -1205,7 +1224,7 @@ public class NikseBitmapImageSplitter2
                     y--;
                     left = true;
                     // Remove points with Y > current Y
-                    while (points != null && points.Count > 0 && points[^1].Y > y)
+                    while (points.Count > 0 && points[^1].Y > y)
                     {
                         points.RemoveAt(points.Count - 1);
                     }
@@ -1216,14 +1235,14 @@ public class NikseBitmapImageSplitter2
                     y -= 2;
                     left = true;
                     // Remove points with Y > current Y
-                    while (points != null && points.Count > 0 && points[^1].Y > y)
+                    while (points.Count > 0 && points[^1].Y > y)
                     {
                         points.RemoveAt(points.Count - 1);
                     }
                 }
                 else
                 {
-                    return null;
+                    return false;
                 }
 
                 if (left)
@@ -1238,18 +1257,17 @@ public class NikseBitmapImageSplitter2
 
                 if (leftCount > maxSlide || rightCount > maxSlide)
                 {
-                    return null;
+                    return false;
                 }
             }
             else
             {
-                points ??= new List<NiksePoint>();
                 points.Add(new NiksePoint(x, y));
                 y++;
             }
         }
 
-        return points ?? new List<NiksePoint>();
+        return true;
     }
 
     //internal static int IsBitmapsAlike(ManagedBitmap2 bmp1, NikseBitmap2 bmp2)

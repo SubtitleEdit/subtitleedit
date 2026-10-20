@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private readonly string _language;
         private readonly List<string> _names;
+        private NameListIndex _nameIndex;
 
         public FixCasing(string language)
         {
@@ -36,16 +37,17 @@ namespace Nikse.SubtitleEdit.Core.Common
         public void Fix(Subtitle subtitle)
         {
             var subCulture = GetCultureInfoFromLanguage(_language);
+            var names = _nameIndex ?? (_nameIndex = new NameListIndex(_names));
             Paragraph last = null;
             foreach (var p in subtitle.Paragraphs)
             {
                 if (last != null)
                 {
-                    p.Text = Fix(p.Text, last.Text, _names, subCulture, p.StartTime.TotalMilliseconds - last.EndTime.TotalMilliseconds);
+                    p.Text = Fix(p.Text, last.Text, names, subCulture, p.StartTime.TotalMilliseconds - last.EndTime.TotalMilliseconds);
                 }
                 else
                 {
-                    p.Text = Fix(p.Text, string.Empty, _names, subCulture, 10000);
+                    p.Text = Fix(p.Text, string.Empty, names, subCulture, 10000);
                 }
 
                 // fix casing of English alone i to I
@@ -267,7 +269,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString();
         }
 
-        private string Fix(string original, string lastLine, List<string> nameList, CultureInfo subtitleCulture, double millisecondsFromLast)
+        private string Fix(string original, string lastLine, NameListIndex nameList, CultureInfo subtitleCulture, double millisecondsFromLast)
         {
             if (lastLine == null)
             {

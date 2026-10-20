@@ -44,6 +44,9 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
 
         public string TwoLetterLanguageCode { get; }
 
+        private NameListIndex? _casingNames;
+        private GermanNouns? _germanNouns;
+
         /// <summary>
         /// Drop lines that are only a sound/music description ("[Music]", "(waves)").
         /// Whisper emits these on long stretches without speech (issue #13973).
@@ -292,7 +295,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
 
                 if (fixCasing)
                 {
-                    subtitle = FixCasing(subtitle, TwoLetterLanguageCode, engine);
+                    subtitle = FixCasing(subtitle, TwoLetterLanguageCode, engine, GetCasingNames(), TwoLetterLanguageCode == "de" ? GetGermanNouns() : null);
                 }
 
                 if (splitLines && !IsNonStandardLineTerminationLanguage(TwoLetterLanguageCode) && AllowLineContentMove(engine))
@@ -641,9 +644,20 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
 
         public static Subtitle FixCasing(Subtitle inputSubtitle, string language, Engine engine)
         {
-            var subtitle = new Subtitle(inputSubtitle);
+            return FixCasing(inputSubtitle, language, engine, LoadCasingNames(language), language == "de" ? new GermanNouns() : null);
+        }
 
-            // fix casing for names
+        /// <summary>
+        /// The names for the casing pass. A diarized transcript is post-processed once per speaker
+        /// turn, so the name list (and the German nouns) are loaded once per post-processor
+        /// instead of parsing the dictionary files again for every turn.
+        /// </summary>
+        private NameListIndex GetCasingNames() => _casingNames ??= LoadCasingNames(TwoLetterLanguageCode);
+
+        private GermanNouns GetGermanNouns() => _germanNouns ??= new GermanNouns();
+
+        private static NameListIndex LoadCasingNames(string language)
+        {
             var nameList = new NameList(Configuration.DictionariesDirectory, language, false, string.Empty);
             var nameListInclMulti = nameList.GetAllNames();
             if (nameListInclMulti.Contains("US") && language == "en")
@@ -651,6 +665,14 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 nameListInclMulti.Remove("US");
             }
 
+            return new NameListIndex(nameListInclMulti);
+        }
+
+        private static Subtitle FixCasing(Subtitle inputSubtitle, string language, Engine engine, NameListIndex names, GermanNouns? germanNouns)
+        {
+            var subtitle = new Subtitle(inputSubtitle);
+
+            // fix casing for names
             var lastLine = string.Empty;
             foreach (var paragraph in subtitle.Paragraphs)
             {
@@ -659,7 +681,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
                 if (textNoTags != textNoTags.ToUpperInvariant() && !string.IsNullOrEmpty(text))
                 {
                     var st = new StrippableText(text);
-                    st.FixCasing(nameListInclMulti, true, engine == Engine.Vosk, engine == Engine.Vosk, lastLine);
+                    st.FixCasing(names, true, engine == Engine.Vosk, engine == Engine.Vosk, lastLine);
                     paragraph.Text = st.MergedString;
                 }
 
@@ -667,9 +689,8 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
             }
 
             // fix german nouns
-            if (language == "de")
+            if (language == "de" && germanNouns != null)
             {
-                var germanNouns = new GermanNouns();
                 foreach (var paragraph in subtitle.Paragraphs)
                 {
                     paragraph.Text = germanNouns.UppercaseNouns(paragraph.Text);
