@@ -11,6 +11,8 @@
     <Word from="also" to="alsof" />
     <Word from="Also" to="Alsof" />
     <Word from="benje" to="ben je" />
+    <Word from="bietetap" to="bietensap" />
+    <Word from="Bietetap" to="Bietensap" />
     <Word from="Brittannie" to="Brittannië" />
     <Word from="cliche" to="cliché" />
     <Word from="continuiteit" to="continuïteit" />
@@ -21,6 +23,26 @@
     <Word from="definanciën" to="de financiën" />
     <Word from="Denkje" to="Denk je" />
     <Word from="deurbeI" to="deurbel" />
+    <Word from="eskaderligt" to="eskader ligt" />
+    <Word from="Eskaderligt" to="Eskader ligt" />
+    <Word from="gestukt" to="gestuct" />
+    <Word from="Gestukt" to="Gestuct" />
+    <Word from="gezeilschap" to="gezelschap" />
+    <Word from="Gezeilschap" to="Gezelschap" />
+    <Word from="hunjonge" to="hun jonge" />
+    <Word from="Hunjonge" to="Hun jonge" />
+    <Word from="immigranen" to="immigranten" />
+    <Word from="Immigranen" to="Immigranten" />
+    <Word from="ingerupt" to="ingerukt" />
+    <Word from="Ingerupt" to="Ingerukt" />
+    <Word from="inzekere" to="in zekere" />
+    <Word from="Inzekere" to="In zekere" />
+    <Word from="jj" to="jij" />
+    <Word from="jjj" to="jij" />
+    <Word from="onself" to="onszelf" />
+    <Word from="Onself" to="Onszelf" />
+    <Word from="schriken" to="schrikken" />
+    <Word from="Schriken" to="Schrikken" />
     <Word from="éen" to="één" />
     <Word from="eindetegemoet" to="einde tegemoet" />
     <Word from="Ervanaf" to="Ervan af" />
@@ -168,6 +190,7 @@
     <RegEx find="\blk\b(?!['’])" replaceWith="Ik" />
     <RegEx find="\bln\b(?!['’])" replaceWith="In" />
     <RegEx find="\bls\b(?!['’])" replaceWith="Is" />
+    <RegEx find="\bL([kns])\b(?!['’])" replaceWith="I$1" />
     <RegEx find="\beIk" replaceWith="elk" />
     <RegEx find="\bler(land|se|s|)\b" replaceWith="Ier$1" />
     <RegEx find="\biij" replaceWith="lij" />
@@ -342,6 +365,14 @@
 
     <!-- ofLondon → of London -->
     <RegEx find="\bof([A-Z][a-zéèëïóöüij]+)\b" spellCheck="$1" replaceWith="of $1" />
+
+    <!-- ============================================================ -->
+    <!-- MISSING SPACE — VERB/PRONOUN + PRONOUN (#16031)               -->
+    <!-- hadje → had je, welhet → wel het, moestenze → moesten ze.     -->
+    <!-- Only fires when the joined form is not a word, so "wasje",    -->
+    <!-- "weetje" and "moetje" stay.                                   -->
+    <!-- ============================================================ -->
+    <RegEx find="\b([Hh]ad|[Mm]oesten|[Mm]oest|[Ww]el|[Hh]ij|[Zz]ij|[Jj]ij)(je|jij|het|hem|haar|hij|ze)\b" spellCheck="$2" replaceWith="$1 $2" />
 
   </RegularExpressionsIfSpelledCorrectly>
   <RegularExpressionsIfSpelledCorrectly>
