@@ -665,6 +665,7 @@ public class MultipleReplaceWindow : Window
         var dataGrid = TableViewExtras.MakeTableView();
         dataGrid.DataContext = vm;
         dataGrid.ItemsSource = vm.Fixes;
+        AutomationProperties.SetName(dataGrid, Se.Language.General.Preview);
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
             new SeTableViewColumn
