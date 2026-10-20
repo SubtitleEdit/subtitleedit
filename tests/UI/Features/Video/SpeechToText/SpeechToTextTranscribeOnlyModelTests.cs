@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;

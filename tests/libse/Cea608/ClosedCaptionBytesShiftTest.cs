@@ -1,7 +1,4 @@
 using Nikse.SubtitleEdit.Core.Cea608;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace LibSETests.Cea608;
 

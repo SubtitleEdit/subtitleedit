@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 

@@ -5,7 +5,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
@@ -179,4 +178,3 @@ public class OpenSecondarySubtitleWindow : Window
         Closing += (_, _) => vm.OnClosing();
     }
 }
-

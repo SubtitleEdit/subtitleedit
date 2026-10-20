@@ -1,5 +1,4 @@
 using Avalonia.Headless.XUnit;
-using Avalonia.Media;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;

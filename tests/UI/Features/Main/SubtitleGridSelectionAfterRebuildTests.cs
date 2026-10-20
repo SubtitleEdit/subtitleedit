@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Logic.Config;
 using System.Reflection;
 
 namespace UITests.Features.Main;

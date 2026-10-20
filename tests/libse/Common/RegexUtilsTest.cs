@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Text.RegularExpressions;
-using Xunit;
 
 namespace LibSETests.Common;
 

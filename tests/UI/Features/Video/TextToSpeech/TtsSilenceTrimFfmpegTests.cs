@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Logic.Media;
-using System.Diagnostics;
 
 namespace UITests.Features.Video.TextToSpeech;
 

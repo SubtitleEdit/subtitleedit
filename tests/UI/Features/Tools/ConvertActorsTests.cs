@@ -8,7 +8,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.ConvertActors;
-using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features.Tools;
 

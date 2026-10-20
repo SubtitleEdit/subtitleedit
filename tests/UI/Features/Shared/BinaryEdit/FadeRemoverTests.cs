@@ -2,7 +2,6 @@ using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
 using Nikse.SubtitleEdit.Logic;
 using SkiaSharp;
-using System.Collections.Generic;
 
 namespace UITests.Features.Shared.BinaryEdit;
 

@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Config;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 

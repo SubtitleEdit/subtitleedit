@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using SkiaSharp;

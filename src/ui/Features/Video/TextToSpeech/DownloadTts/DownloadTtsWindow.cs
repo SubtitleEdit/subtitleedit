@@ -3,11 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Data;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Avalonia.Controls.Primitives;
-using Avalonia.Styling;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 

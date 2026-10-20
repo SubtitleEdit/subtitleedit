@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;

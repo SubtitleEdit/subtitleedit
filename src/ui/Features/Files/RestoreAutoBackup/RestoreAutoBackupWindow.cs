@@ -4,7 +4,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Controls;
 using Optris.Icons.Avalonia;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;

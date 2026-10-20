@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.UiLogic.Ocr;
-using System;
 
 namespace LibUiLogicTests.Ocr;
 

@@ -13,10 +13,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Optris.Icons.Avalonia;
-using System;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 
 namespace UITests.Features.Edit;
 

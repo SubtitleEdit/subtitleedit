@@ -5,7 +5,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
 
 namespace Nikse.SubtitleEdit.Features.Shared.WaveformGuessTimeCodes;
 

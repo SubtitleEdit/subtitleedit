@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nikse.SubtitleEdit.Logic.Config.Language.File;
+﻿namespace Nikse.SubtitleEdit.Logic.Config.Language.File;
 
 public class LanguageFile
 {

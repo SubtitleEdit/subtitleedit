@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nikse.SubtitleEdit.Logic.Config.Language.Sync;
+﻿namespace Nikse.SubtitleEdit.Logic.Config.Language.Sync;
 
 public class LanguageSync
 {

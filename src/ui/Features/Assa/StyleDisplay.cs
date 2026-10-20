@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Assa;

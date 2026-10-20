@@ -1,9 +1,5 @@
 using Nikse.SubtitleEdit.Core.Cea708;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace LibSETests.SubtitleFormats;
 

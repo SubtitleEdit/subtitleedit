@@ -4,7 +4,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Features.Shared.SetVideoOffset;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Collections.Generic;
 
 namespace UITests.Features.Shared.SetVideoOffset;
 

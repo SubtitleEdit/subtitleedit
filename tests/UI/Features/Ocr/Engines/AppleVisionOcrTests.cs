@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using SkiaSharp;
-using System.Threading;
 
 namespace UITests.Features.Ocr.Engines;
 

@@ -1,8 +1,6 @@
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
-using System;
-using System.IO;
 using System.Text.RegularExpressions;
 
 namespace UITests.Logic;

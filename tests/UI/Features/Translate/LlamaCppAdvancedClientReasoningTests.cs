@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
-using Xunit;
 
 namespace UITests.Features.Translate;
 

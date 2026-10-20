@@ -1,7 +1,4 @@
 using Nikse.SubtitleEdit.Core.Common;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 

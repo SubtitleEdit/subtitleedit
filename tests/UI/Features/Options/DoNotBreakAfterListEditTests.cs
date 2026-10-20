@@ -3,9 +3,6 @@ using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
-using System.IO;
-using System.Linq;
 using System.Xml;
 
 namespace UITests.Features.Options;

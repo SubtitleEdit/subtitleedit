@@ -1,9 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace UITests.Features.Ocr.FixEngine;
 

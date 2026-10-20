@@ -1,6 +1,4 @@
-﻿using Avalonia.Media;
-
-namespace Nikse.SubtitleEdit.Logic.Config;
+﻿namespace Nikse.SubtitleEdit.Logic.Config;
 
 /// <summary>
 /// A user rule that marks a line as an error when its text matches a regular expression,

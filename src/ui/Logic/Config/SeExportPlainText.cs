@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nikse.SubtitleEdit.UiLogic.Export;
+﻿using Nikse.SubtitleEdit.UiLogic.Export;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 

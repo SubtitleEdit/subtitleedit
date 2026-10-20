@@ -2,7 +2,6 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic;
-using System.Collections.Generic;
 
 namespace UITests.Logic;
 

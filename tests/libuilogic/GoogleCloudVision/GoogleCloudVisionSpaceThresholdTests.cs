@@ -1,7 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 

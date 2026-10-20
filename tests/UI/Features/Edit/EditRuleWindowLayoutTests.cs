@@ -6,9 +6,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UITests.Features.Edit;
 

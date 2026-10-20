@@ -1,8 +1,5 @@
-using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 

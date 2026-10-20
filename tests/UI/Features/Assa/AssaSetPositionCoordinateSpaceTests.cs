@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;

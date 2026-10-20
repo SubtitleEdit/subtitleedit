@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Reflection;
 using Avalonia.Input;
 using Nikse.SubtitleEdit.Core.Common;

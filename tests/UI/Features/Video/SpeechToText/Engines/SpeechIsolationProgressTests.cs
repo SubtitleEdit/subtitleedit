@@ -1,7 +1,4 @@
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
-using System;
-using System.IO;
-using Xunit;
 
 namespace UITests.Features.Video.SpeechToText.Engines;
 

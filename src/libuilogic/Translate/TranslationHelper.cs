@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.UiLogic.Translate

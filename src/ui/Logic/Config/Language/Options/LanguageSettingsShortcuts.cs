@@ -1,7 +1,4 @@
-﻿﻿using Nikse.SubtitleEdit.Features.Main;
-using System;
-
-namespace Nikse.SubtitleEdit.Logic.Config.Language.Options;
+﻿namespace Nikse.SubtitleEdit.Logic.Config.Language.Options;
 
 public class LanguageSettingsShortcuts
 {

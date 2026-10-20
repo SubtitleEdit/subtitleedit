@@ -3,10 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace UITests.Features.Ocr;
 

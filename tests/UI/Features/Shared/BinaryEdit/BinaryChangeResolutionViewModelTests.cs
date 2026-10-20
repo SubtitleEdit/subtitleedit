@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryChangeResolution;
-using System.Collections.Generic;
 
 namespace UITests.Features.Shared.BinaryEdit;
 

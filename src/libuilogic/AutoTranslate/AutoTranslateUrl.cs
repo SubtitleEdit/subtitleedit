@@ -1,5 +1,3 @@
-using System;
-
 namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     /// <summary>
