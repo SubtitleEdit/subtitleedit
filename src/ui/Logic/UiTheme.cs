@@ -91,11 +91,20 @@ public static class UiTheme
     }
 
     /// <summary>
-    /// Themes that ship an image folder of their own in Themes.zip, with icons and background art.
+    /// Themes that ship an icon set of their own in Themes.zip (plus background art).
+    /// </summary>
+    private static bool HasIconFolder(string themeName)
+    {
+        return themeName == ThemeNameMidnightCinema || themeName == ThemeNameSakura;
+    }
+
+    /// <summary>
+    /// Themes that ship background art in a folder of their own in Themes.zip. Nord's folder
+    /// holds only the art - its icons are Dark's.
     /// </summary>
     private static bool HasThemeFolder(string themeName)
     {
-        return themeName == ThemeNameMidnightCinema || themeName == ThemeNameSakura;
+        return HasIconFolder(themeName) || themeName == ThemeNameNord;
     }
 
     /// <summary>
@@ -107,7 +116,7 @@ public static class UiTheme
         get
         {
             var themeName = ThemeName;
-            return HasThemeFolder(themeName) &&
+            return HasIconFolder(themeName) &&
                    string.Equals(ImageFolder, Path.Combine(Se.ThemesFolder, themeName), StringComparison.Ordinal);
         }
     }
@@ -117,21 +126,23 @@ public static class UiTheme
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
     /// be reached through an avares:// URI. A theme that ships no image folder of its own
     /// (Pastel, for instance) falls back to Light - or Dark for a dark theme, as the Dark glyphs
-    /// are near-white and vanish on a light background. An explicit icon theme wins over both.
+    /// are near-white and vanish on a light background - as does Nord, whose folder holds only
+    /// background art. An explicit icon theme wins over both.
     /// </summary>
     public static string ImageFolder
     {
         get
         {
-            var folder = Path.Combine(Se.ThemesFolder, ThemeName);
-            if (!Directory.Exists(folder) && HasThemeFolder(ThemeName))
+            var themeName = ThemeName;
+            var folder = Path.Combine(Se.ThemesFolder, themeName);
+            if (!Directory.Exists(folder) && HasThemeFolder(themeName))
             {
                 // A theme added after the folder was last unpacked (same version, so the start-up
                 // check saw nothing to do) - unpack Themes.zip again.
                 Initializers.ThemeInitializer.TryRepair(folder);
             }
 
-            if (!Directory.Exists(folder))
+            if (!Directory.Exists(folder) || (HasThemeFolder(themeName) && !HasIconFolder(themeName)))
             {
                 folder = Path.Combine(Se.ThemesFolder, IsDarkThemeEnabled() ? ThemeNameDark : ThemeNameLight);
             }

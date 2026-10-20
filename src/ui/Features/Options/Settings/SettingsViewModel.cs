@@ -557,7 +557,10 @@ public partial class SettingsViewModel : ObservableObject
         // Themes.zip is unpacked into the data folder at start-up; if that failed (or has not run)
         // the folder is missing, which must not take the whole Settings window down with it.
         var iconFolders = Directory.Exists(Se.ThemesFolder)
-            ? Directory.GetDirectories(Se.ThemesFolder).Select(p => Path.GetFileName(p)).ToList()
+            ? Directory.GetDirectories(Se.ThemesFolder)
+                // Nord's folder holds only background art - not an icon set to pick
+                .Where(p => File.Exists(Path.Combine(p, "Open.png")))
+                .Select(p => Path.GetFileName(p)).ToList()
             : new List<string>();
         iconFolders.Insert(0, Se.Language.General.Auto);
         IconThemes = new ObservableCollection<string>(iconFolders);
