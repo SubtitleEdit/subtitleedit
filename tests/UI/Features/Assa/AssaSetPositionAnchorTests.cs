@@ -50,4 +50,17 @@ public class AssaSetPositionAnchorTests
         Assert.Equal(300, vm.ResultY);
         Assert.Contains("\\pos(700,300)", vm.TagsPreview);
     }
+
+    [AvaloniaFact]
+    public void CenterAt_PutsTheBoxCenterOnThePoint()
+    {
+        // Click-to-place (#16289): the 1x1 box is centered on the mouse point (no guide near it)
+        var vm = new AssaSetPositionViewModel();
+
+        vm.CenterAt(500.4, 300.6);
+
+        Assert.Equal(500, vm.ScreenshotX);
+        Assert.Equal(300, vm.ScreenshotY);
+        Assert.Equal(-1, vm.AnchorIndex);
+    }
 }

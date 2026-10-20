@@ -71,6 +71,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [ObservableProperty] private bool _showSafeArea = Se.Settings.Assa.SetPositionShowSafeArea;
     [ObservableProperty] private bool _showCenterLines = Se.Settings.Assa.SetPositionShowCenterLines;
     [ObservableProperty] private bool _snapToGuides = Se.Settings.Assa.SetPositionSnapToGuides;
+    [ObservableProperty] private bool _clickToPlace = Se.Settings.Assa.SetPositionClickToPlace;
 
     /// <summary>
     /// The title-safe frame the anchor grid places the line inside, as a fraction of each side.
@@ -231,6 +232,8 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
     partial void OnSnapToGuidesChanged(bool value) => Se.Settings.Assa.SetPositionSnapToGuides = value;
 
+    partial void OnClickToPlaceChanged(bool value) => Se.Settings.Assa.SetPositionClickToPlace = value;
+
     /// <summary>
     /// Anchor grid: places the text box inside the safe area - left/center/right, top/middle/bottom.
     /// </summary>
@@ -287,6 +290,15 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
         ScreenshotX = x;
         ScreenshotY = y;
+    }
+
+    /// <summary>
+    /// Click-to-place mode: centers the text box on this render-space point (snapping applies).
+    /// </summary>
+    public void CenterAt(double x, double y)
+    {
+        DragTo((int)Math.Round(x - ScreenshotOverlayText.Size.Width / 2.0, MidpointRounding.AwayFromZero),
+            (int)Math.Round(y - ScreenshotOverlayText.Size.Height / 2.0, MidpointRounding.AwayFromZero));
     }
 
     /// <summary>

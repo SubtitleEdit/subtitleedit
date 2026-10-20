@@ -199,6 +199,7 @@ public class AssaSetPositionWindow : Window
         content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ShowSafeArea), Se.Language.Assa.SetPositionSafeArea));
         content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ShowCenterLines), Se.Language.Assa.SetPositionCenterLines));
         content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.SnapToGuides), Se.Language.Assa.SetPositionSnapToGuides));
+        content.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.ClickToPlace), Se.Language.Assa.SetPositionClickToPlace));
         return EditorChrome.MakeEditorSection(Se.Language.Assa.SetPositionGuides, content);
     }
 
@@ -302,7 +303,7 @@ public class AssaSetPositionWindow : Window
         var originalY = 0;
         overlay.PointerPressed += (_, e) =>
         {
-            if (e.GetCurrentPoint(overlay).Properties.IsLeftButtonPressed)
+            if (!vm.ClickToPlace && e.GetCurrentPoint(overlay).Properties.IsLeftButtonPressed)
             {
                 dragStart = e.GetPosition(videoGrid);
                 originalX = vm.ScreenshotX;
@@ -330,6 +331,104 @@ public class AssaSetPositionWindow : Window
                 dragStart = null;
                 e.Pointer.Capture(null);
                 e.Handled = true;
+            }
+        };
+
+        // Click-to-place (SE4 style): the text follows the mouse over the frame and a click puts it
+        // there; the next click picks it up again. Leaving the frame while it follows puts it back
+        // where it was last placed.
+        var following = true;
+        var placedX = 0;
+        var placedY = 0;
+        var hasPlaced = false;
+
+        bool TryGetRenderPoint(Avalonia.Input.PointerEventArgs e, out Point point)
+        {
+            point = default;
+            var image = bitmapImage.Bounds;
+            if (image.Width <= 0 || image.Height <= 0)
+            {
+                return false;
+            }
+
+            var p = e.GetPosition(videoGrid);
+            var offsetX = (videoGrid.Bounds.Width - image.Width) / 2;
+            var offsetY = (videoGrid.Bounds.Height - image.Height) / 2;
+            var scale = image.Width / vm.RenderWidth;
+            point = new Point((p.X - offsetX) / scale, (p.Y - offsetY) / scale);
+            return true;
+        }
+
+        void RememberPlaced()
+        {
+            placedX = vm.ScreenshotX;
+            placedY = vm.ScreenshotY;
+            hasPlaced = true;
+        }
+
+        void UpdateCursor()
+        {
+            var cursorType = !vm.ClickToPlace
+                ? Avalonia.Input.StandardCursorType.SizeAll
+                : following ? Avalonia.Input.StandardCursorType.Cross : Avalonia.Input.StandardCursorType.Hand;
+            overlay.Cursor = new Avalonia.Input.Cursor(cursorType);
+            videoGrid.Cursor = vm.ClickToPlace ? new Avalonia.Input.Cursor(cursorType) : null;
+        }
+
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(vm.ClickToPlace))
+            {
+                following = true;
+                hasPlaced = false;
+                UpdateCursor();
+            }
+        };
+        UpdateCursor();
+
+        videoGrid.PointerMoved += (_, e) =>
+        {
+            if (!vm.ClickToPlace || !following || !TryGetRenderPoint(e, out var point))
+            {
+                return;
+            }
+
+            if (!hasPlaced)
+            {
+                RememberPlaced();
+            }
+
+            vm.CenterAt(point.X, point.Y);
+        };
+        videoGrid.PointerPressed += (_, e) =>
+        {
+            if (!vm.ClickToPlace || !e.GetCurrentPoint(videoGrid).Properties.IsLeftButtonPressed || !TryGetRenderPoint(e, out var point))
+            {
+                return;
+            }
+
+            if (following)
+            {
+                vm.CenterAt(point.X, point.Y); // put it down here
+                RememberPlaced();
+                following = false;
+            }
+            else
+            {
+                RememberPlaced(); // pick it up - leaving the frame puts it back here
+                following = true;
+                vm.CenterAt(point.X, point.Y);
+            }
+
+            UpdateCursor();
+            e.Handled = true;
+        };
+        videoGrid.PointerExited += (_, _) =>
+        {
+            if (vm.ClickToPlace && following && hasPlaced)
+            {
+                vm.ScreenshotX = placedX; // exactly back, no snapping
+                vm.ScreenshotY = placedY;
             }
         };
 
