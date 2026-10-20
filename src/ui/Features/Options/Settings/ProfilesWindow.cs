@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -11,6 +12,8 @@ namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
 public class ProfilesWindow : Window
 {
+    private const double LabelWidth = 170;
+
     public ProfilesWindow(ProfilesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -19,43 +22,52 @@ public class ProfilesWindow : Window
         Width = 1100;
         Height = 750;
         MinWidth = 800;
-        MinHeight = 700;
+        MinHeight = 560;
+        SettingsChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var label = new Label
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        // The rules of the selected profile on the side; they scroll on a short screen, so the
+        // button bar stays reachable.
+        var sideScroller = new ScrollViewer
         {
-            Content = Se.Language.Tools.AdjustDurations.AdjustVia,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
+            Content = EditorChrome.MakeEditorSection(Se.Language.General.Rules, MakeControlsGrid(vm), first: true),
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+        var side = new Border
+        {
+            Child = sideScroller,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
         };
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var content = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(440) },
+            },
+        };
+        content.Add(MakeDataGrid(vm, out var dataGrid), 0, 0);
+        content.Add(side, 0, 1);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = GridLength.Auto },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-
-        grid.Add(MakeDataGrid(vm, out var dataGrid), 0, 0);
-        grid.Add(MakeControlsGrid(vm), 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        grid.Add(content, 0);
+        grid.Add(SettingsChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1);
 
         Content = grid;
 
@@ -63,29 +75,14 @@ public class ProfilesWindow : Window
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeDataGrid(ProfilesViewModel vm, out TableView tableView)
+    private static Grid MakeDataGrid(ProfilesViewModel vm, out TableView tableView)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-        };
-
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // the caller takes result.Profiles in collection order and saves it back to the
         // settings, so reordering the backing collection would reorder the saved profiles.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         dataGrid.DataContext = vm;
+        AutomationProperties.SetName(dataGrid, Se.Language.General.Profiles);
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
             new SeTableViewColumn
@@ -103,7 +100,7 @@ public class ProfilesWindow : Window
                 CellTheme = UiUtil.TableViewCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 Binding = new Binding(nameof(ProfileDisplay.SingleLineMaxLength)),
-                Width = new GridLength(180),
+                Width = new GridLength(150),
             },
             new SeTableViewColumn
             {
@@ -111,7 +108,7 @@ public class ProfilesWindow : Window
                 CellTheme = UiUtil.TableViewCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 Binding = new Binding(nameof(ProfileDisplay.MaxCharsPerSec)),
-                Width = new GridLength(200),
+                Width = new GridLength(150),
             },
         });
         dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Profiles)) { Source = vm });
@@ -119,93 +116,59 @@ public class ProfilesWindow : Window
 
         tableView = dataGrid;
 
-        var buttonNew = UiUtil.MakeButton(vm.NewCommand, IconNames.New, Se.Language.General.NewProfile);
-        var buttonExport = UiUtil.MakeButton(vm.ExportCommand, IconNames.Export, Se.Language.General.ExportDotDotDot);
-        var buttonImport = UiUtil.MakeButton(vm.ImportCommand, IconNames.Import, Se.Language.General.ImportDotDotDot);
-        var buttonCopy = UiUtil.MakeButton(vm.CopyCommand, IconNames.Copy, Se.Language.General.Copy);
-        var buttonDelete = UiUtil.MakeButton(vm.DeleteCommand, IconNames.Trash, Se.Language.General.Delete);
-        var buttonClear = UiUtil.MakeButton(vm.ClearCommand, IconNames.Close, Se.Language.General.Clear);
-        var panelButtons = UiUtil.MakeButtonBar(
-            buttonNew,
-            buttonExport,
-            buttonImport,
-            buttonCopy,
-            buttonDelete,
-            buttonClear
-            ).WithAlignmentLeft();
+        // List actions as icon buttons in the list header
+        var buttonNew = EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.NewProfile, vm.NewCommand, 26);
+        var buttonCopy = EditorChrome.CreateToolButton("fa-regular fa-copy", Se.Language.General.Copy, vm.CopyCommand, 26);
+        var buttonDelete = EditorChrome.CreateToolButton("fa-solid fa-minus", Se.Language.General.Delete, vm.DeleteCommand, 26);
+        var buttonClear = EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Clear, vm.ClearCommand, 26);
+        var buttonImport = EditorChrome.CreateToolButton("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand, 26);
+        var buttonExport = EditorChrome.CreateToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand, 26);
 
-        grid.Add(dataGrid, 0);
-        grid.Add(panelButtons, 1);
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
+        actions.Children.Add(buttonNew);
+        actions.Children.Add(buttonCopy);
+        actions.Children.Add(buttonDelete);
+        actions.Children.Add(buttonClear);
+        actions.Children.Add(EditorChrome.MakeToolbarSeparator());
+        actions.Children.Add(buttonImport);
+        actions.Children.Add(buttonExport);
 
-        return UiUtil.MakeBorderForControlNoPadding(grid);
-    }
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(actions, Dock.Right);
+        header.Children.Add(actions);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Profiles));
 
-    private static Grid MakeControlsGrid(ProfilesViewModel vm)
-    {
-        var grid = new Grid
+        var panel = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = new Thickness(0),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(14, 12, 14, 14),
         };
+        panel.Add(header, 0);
+        panel.Add(EditorChrome.MakeListFrame(dataGrid), 1);
+        return panel;
+    }
 
-        var labelName = UiUtil.MakeLabel(Se.Language.General.Name);
-        var textBoxName = UiUtil.MakeTextBox(250, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.Name));
+    private static StackPanel MakeControlsGrid(ProfilesViewModel vm)
+    {
+        var textBoxName = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.Name));
+        textBoxName.HorizontalAlignment = HorizontalAlignment.Stretch;
 
-        var labelSingleLineMaxLength = UiUtil.MakeLabel(Se.Language.Options.Settings.SingleLineMaxLength);
         var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.SingleLineMaxLength));
-
-        var labelOptimalCharsPerSec = UiUtil.MakeLabel(Se.Language.Options.Settings.OptimalCharsPerSec);
         var numericUpDownOptimalCharsPerSec = UiUtil.MakeNumericUpDownDouble(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.OptimalCharsPerSec));
-
-        var labelMaxCharsPerSec = UiUtil.MakeLabel(Se.Language.General.MaxCharactersPerSecond);
         var numericUpDownMaxCharsPerSec = UiUtil.MakeNumericUpDownDouble(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MaxCharsPerSec));
-
-        var labelMaxWordsPerMin = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxWordsPerMin);
         var numericUpDownMaxWordsPerMin = UiUtil.MakeNumericUpDownDouble(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MaxWordsPerMin));
-
-        var labelMinDurationMs = UiUtil.MakeLabel(Se.Language.Options.Settings.MinDurationMs);
         var numericUpDownMinDurationMs = UiUtil.MakeNumericUpDownInt(0, 10000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MinDurationMs));
-
-        var labelMaxDurationMs = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxDurationMs);
         var numericUpDownMaxDurationMs = UiUtil.MakeNumericUpDownInt(0, 10000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MaxDurationMs));
-
-        var labelMinGapMs = UiUtil.MakeLabel(Se.Language.Options.Settings.MinGapMs);
         var numericUpDownMinGapMs = UiUtil.MakeNumericUpDownInt(0, 10000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MinGapMs));
-
-        var labelMaxLines = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxLines);
         var numericUpDownMaxLines = UiUtil.MakeNumericUpDownInt(1, 10, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MaxLines));
-
-        var labelUnbreakLinesShorterThan = UiUtil.MakeLabel(Se.Language.Options.Settings.UnbreakSubtitlesShortThan);
         var numericUpDownUnbreakLinesShorterThan = UiUtil.MakeNumericUpDownInt(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.UnbreakLinesShorterThan));
 
-        var labelDialogStyle = UiUtil.MakeLabel(Se.Language.Options.Settings.DialogStyle);
         var comboBoxDialogStyle = new ComboBox
         {
-            Width = 250,
             DataContext = vm,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.DialogStyles)),
             [!SelectingItemsControl.SelectedItemProperty] =
@@ -214,10 +177,8 @@ public class ProfilesWindow : Window
                 new TextBlock { Text = f?.Name }, true)
         };
 
-        var labelContinuationStyle = UiUtil.MakeLabel(Se.Language.Options.Settings.ContinuationStyle);
         var comboBoxContinuationStyle = new ComboBox
         {
-            Width = 250,
             DataContext = vm,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.ContinuationStyles)),
             [!SelectingItemsControl.SelectedItemProperty] =
@@ -226,10 +187,8 @@ public class ProfilesWindow : Window
                 new TextBlock { Text = f?.Name }, true)
         };
 
-        var labelCpsLineLengthStyle = UiUtil.MakeLabel(Se.Language.Options.Settings.CpsLineLengthStyle);
         var comboBoxCpsLineLengthStyle = new ComboBox
         {
-            Width = 250,
             DataContext = vm,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.CpsLineLengthStrategies)),
             [!SelectingItemsControl.SelectedItemProperty] =
@@ -238,45 +197,49 @@ public class ProfilesWindow : Window
                 new TextBlock { Text = f?.Name }, true)
         };
 
-        grid.Add(labelName, 0, 0);
-        grid.Add(textBoxName, 0, 1);
+        return new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                Row(Se.Language.General.Name, textBoxName),
+                Row(Se.Language.Options.Settings.SingleLineMaxLength, numericUpDownSingleLineMaxLength),
+                Row(Se.Language.Options.Settings.OptimalCharsPerSec, numericUpDownOptimalCharsPerSec),
+                Row(Se.Language.General.MaxCharactersPerSecond, numericUpDownMaxCharsPerSec),
+                Row(Se.Language.Options.Settings.MaxWordsPerMin, numericUpDownMaxWordsPerMin),
+                Row(Se.Language.Options.Settings.MinDurationMs, numericUpDownMinDurationMs),
+                Row(Se.Language.Options.Settings.MaxDurationMs, numericUpDownMaxDurationMs),
+                Row(Se.Language.Options.Settings.MinGapMs, numericUpDownMinGapMs),
+                Row(Se.Language.General.MaxNumberOfLines, numericUpDownMaxLines),
+                Row(Se.Language.Options.Settings.UnbreakSubtitlesShortThan, numericUpDownUnbreakLinesShorterThan),
+                Row(Se.Language.Options.Settings.DialogStyle, comboBoxDialogStyle),
+                Row(Se.Language.Options.Settings.ContinuationStyle, comboBoxContinuationStyle),
+                Row(Se.Language.Options.Settings.CpsLineLengthStyle, comboBoxCpsLineLengthStyle),
+            }
+        };
+    }
 
-        grid.Add(labelSingleLineMaxLength, 1, 0);
-        grid.Add(numericUpDownSingleLineMaxLength, 1, 1);
+    /// <summary>
+    /// "Label  [field]" with the label in the label column; the field is named after the label.
+    /// </summary>
+    private static Grid Row(string label, Control field)
+    {
+        var text = SettingsChrome.MakeLabel(label);
+        SettingsChrome.Compact(field);
+        if (field is ComboBox)
+        {
+            field.HorizontalAlignment = HorizontalAlignment.Stretch;
+        }
 
-        grid.Add(labelOptimalCharsPerSec, 2, 0);
-        grid.Add(numericUpDownOptimalCharsPerSec, 2, 1);
+        AccessibleLabels.LinkToLabel(field, text);
 
-        grid.Add(labelMaxCharsPerSec, 3, 0);
-        grid.Add(numericUpDownMaxCharsPerSec, 3, 1);
-
-        grid.Add(labelMaxWordsPerMin, 4, 0);
-        grid.Add(numericUpDownMaxWordsPerMin, 4, 1);
-
-        grid.Add(labelMinDurationMs, 5, 0);
-        grid.Add(numericUpDownMinDurationMs, 5, 1);
-
-        grid.Add(labelMaxDurationMs, 6, 0);
-        grid.Add(numericUpDownMaxDurationMs, 6, 1);
-
-        grid.Add(labelMinGapMs, 7, 0);
-        grid.Add(numericUpDownMinGapMs, 7, 1);
-
-        grid.Add(labelMaxLines, 8, 0);
-        grid.Add(numericUpDownMaxLines, 8, 1);
-
-        grid.Add(labelUnbreakLinesShorterThan, 9, 0);
-        grid.Add(numericUpDownUnbreakLinesShorterThan, 9, 1);
-
-        grid.Add(labelDialogStyle, 10, 0);
-        grid.Add(comboBoxDialogStyle, 10, 1);
-
-        grid.Add(labelContinuationStyle, 11, 0);
-        grid.Add(comboBoxContinuationStyle, 11, 1);
-
-        grid.Add(labelCpsLineLengthStyle, 12, 0);
-        grid.Add(comboBoxCpsLineLengthStyle, 12, 1);
-
+        var grid = new Grid
+        {
+            ColumnSpacing = 10,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(LabelWidth)), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+        };
+        grid.Add(text, 0, 0);
+        grid.Add(field, 0, 1);
         return grid;
     }
 }

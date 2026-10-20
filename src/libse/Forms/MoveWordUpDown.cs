@@ -453,7 +453,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 .Replace("<u></u>", string.Empty)
                 .Replace("<b></b>", string.Empty);
 
-            if (s.IndexOf("</font>", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (s.Contains("</font>", StringComparison.OrdinalIgnoreCase))
             {
                 // A <font color=...> whose last word moved to the other line is left empty, and
                 // repeated moves piled them up ("<font c></font> <font c></font> ...").

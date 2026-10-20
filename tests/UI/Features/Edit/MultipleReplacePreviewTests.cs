@@ -13,10 +13,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Optris.Icons.Avalonia;
-using System;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 
 namespace UITests.Features.Edit;
 
@@ -280,7 +277,7 @@ public class MultipleReplacePreviewTests
     [AvaloniaTheory]
     [InlineData(true)]
     [InlineData(false)]
-    public void BrokenRegexRule_ShowsAWarningInTheTree(bool showHints)
+    public void BrokenRegexRule_ShowsAWarningInTheRulesList(bool showHints)
     {
         var oldShowHints = Se.Settings.Appearance.ShowHints;
         Se.Settings.Appearance.ShowHints = showHints;
@@ -292,11 +289,11 @@ public class MultipleReplacePreviewTests
         try
         {
             window.Show();
-            vm.ExpandAllCommand.Execute(null);
+            vm.SelectedCategory = category;
             Settle();
 
             Assert.True(regexRule.HasError);
-            var marker = vm.RulesTreeView.GetVisualDescendants()
+            var marker = vm.RulesTable.GetVisualDescendants()
                 .OfType<Label>()
                 .FirstOrDefault(l => Attached.GetIcon(l) == IconNames.Alert);
 
@@ -432,7 +429,6 @@ public class MultipleReplaceCategoryActiveTests
         try
         {
             window.Show();
-            vm.ExpandAllCommand.Execute(null);
             for (var i = 0; i < 20; i++)
             {
                 Dispatcher.UIThread.RunJobs();
@@ -443,7 +439,7 @@ public class MultipleReplaceCategoryActiveTests
             Assert.Equal(4, vm.Fixes.Count);
 
             var english = vm.Nodes.First(n => n.CategoryName == "English");
-            var container = (TreeViewItem)vm.RulesTreeView.ContainerFromItem(english)!;
+            var container = (ListBoxItem)vm.CategoriesListBox.ContainerFromItem(english)!;
             var checkBox = container.GetVisualDescendants().OfType<CheckBox>().First();
             var point = checkBox.TranslatePoint(new Point(checkBox.Bounds.Width / 2, checkBox.Bounds.Height / 2), window);
             Assert.NotNull(point);

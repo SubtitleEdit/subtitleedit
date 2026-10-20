@@ -1,12 +1,18 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 
+/// <summary>
+/// The binary OCR characters added in this session, in the editor look (see
+/// <see cref="EditorChrome"/>): the history list on the left, the selected image with its text on
+/// the right, OK in the button bar.
+/// </summary>
 public class BinaryOcrCharacterHistoryWindow : Window
 {
     public BinaryOcrCharacterHistoryWindow(BinaryOcrCharacterHistoryViewModel vm)
@@ -20,38 +26,29 @@ public class BinaryOcrCharacterHistoryWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         DataContext = vm;
 
-        var grid = new Grid
+        var body = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Controls
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(300) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            Height = double.NaN,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
         };
 
         var listView = MakeListView(vm);
         var detailsView = MakeDetailsView(vm);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk);
+        body.Add(listView, 0, 0);
+        body.Add(detailsView, 0, 1);
 
-        grid.Add(listView, 0, 0);
-        grid.Add(detailsView, 0, 1);
-        grid.Add(buttonBar, 1, 0, 1, 2);
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var labelInfo = EditorChrome.MakeDimStatusText("Binary OCR uses pixel-by-pixel comparison. No manual drawing required.");
+        var buttonBar = EditorChrome.MakeDockedButtonBar(labelInfo, buttonOk);
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(body, buttonBar);
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
@@ -67,83 +64,73 @@ public class BinaryOcrCharacterHistoryWindow : Window
 
     private static Border MakeListView(BinaryOcrCharacterHistoryViewModel vm)
     {
-        var listBoxCurrentItems = new ListBox
-        {
-            Margin = new Thickness(0, 5, 0, 0),
-        }.WithAccessibleName(Se.Language.General.History);
+        var listBoxCurrentItems = new ListBox().WithAccessibleName(Se.Language.General.History);
         listBoxCurrentItems.Bind(Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedHistoryItem)));
         listBoxCurrentItems.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.HistoryItems)));
         listBoxCurrentItems.SelectionChanged += vm.HistoryItemChanged;
 
-        return UiUtil.MakeBorderForControl(listBoxCurrentItems);
+        return EditorChrome.MakeDockedFillSection(Se.Language.General.History, EditorChrome.MakeListFrame(listBoxCurrentItems, clearListBackground: true), first: true);
     }
 
-    private static Grid MakeDetailsView(BinaryOcrCharacterHistoryViewModel vm)
+    private static Border MakeDetailsView(BinaryOcrCharacterHistoryViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 20,
-            Width = double.NaN,
-        };
-
-        vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)).WithAccessibleName(Se.Language.General.Text);
+        vm.TextBoxNew = BinaryOcrChrome.AsField(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText))).WithAccessibleName(Se.Language.General.Text);
+        vm.TextBoxNew.Width = 220;
+        vm.TextBoxNew.HorizontalAlignment = HorizontalAlignment.Left;
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
         var image = new Image
         {
-            Margin = new Thickness(5),
             Stretch = Stretch.Uniform,
             MinWidth = 30,
+            StretchDirection = StretchDirection.DownOnly, // natural size, as in the old auto-sized column
             MinHeight = 30,
             MaxWidth = 400,
             MaxHeight = 400,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
         };
         image.Bind(Image.SourceProperty, new Binding(nameof(vm.CurrentBitmap)));
+        var panelCurrentImage = BinaryOcrChrome.MakeImageFrame(image, ImagePreviewBackground.CreateBrush());
+        panelCurrentImage.HorizontalAlignment = HorizontalAlignment.Left;
 
-        var panelCurrentImage = new StackPanel
-        {
-            Background = ImagePreviewBackground.CreateBrush(),
-            Children = { image },
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            Margin = new Thickness(5, 2, 0, 5),
-        };
-
-        var checkBoxItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.IsNewTextItalic));
-        checkBoxItalic.IsCheckedChanged += vm.ItalicCheckChanged;
+        var switchItalic = EditorChrome.MakeSwitch(nameof(vm.IsNewTextItalic), Se.Language.General.Italic);
+        switchItalic.IsCheckedChanged += vm.ItalicCheckChanged;
 
         var panelCurrent = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
+            Spacing = 8,
             Children =
             {
-                UiUtil.MakeLabel("Current Image").WithBold(),
-                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ResolutionAndTopMargin)),
-                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.LineIndex)),
+                BinaryOcrChrome.MakeInfo(nameof(vm.ResolutionAndTopMargin)),
+                BinaryOcrChrome.MakeInfo(nameof(vm.LineIndex)),
                 panelCurrentImage,
                 vm.TextBoxNew,
-                checkBoxItalic,
-                UiUtil.MakeButton(Se.Language.General.Update, vm.UpdateCommand).WithMarginTop(25).WithLeftAlignment(),
-                UiUtil.MakeButton(Se.Language.General.UpdateAndClose, vm.UpdateAndCloseCommand).WithMarginTop(25).WithLeftAlignment(),
-                UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand).WithMarginTop(5).WithLeftAlignment(),
-                UiUtil.MakeLabel("Binary OCR uses pixel-by-pixel comparison.").WithMarginTop(25),
-                UiUtil.MakeLabel("No manual drawing required.").WithMarginTop(5),
+                BinaryOcrChrome.MakeSwitchRow(switchItalic, Se.Language.General.Italic),
+                new WrapPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    ItemSpacing = 6,
+                    LineSpacing = 6,
+                    Margin = new Thickness(0, 8, 0, 0),
+                    Children =
+                    {
+                        BinaryOcrChrome.MakeActionButton(Se.Language.General.Update, IconNames.Check, vm.UpdateCommand),
+                        BinaryOcrChrome.MakeActionButton(Se.Language.General.UpdateAndClose, IconNames.CheckBold, vm.UpdateAndCloseCommand),
+                        BinaryOcrChrome.MakeActionButton(Se.Language.General.Delete, IconNames.Trash, vm.DeleteCommand),
+                    },
+                },
             },
         };
 
-        grid.Add(panelCurrent, 0, 0);
-
-        return grid;
+        var section = EditorChrome.MakeEditorSection(Se.Language.Ocr.CurrentImage, panelCurrent, first: true);
+        return new Border
+        {
+            Child = new ScrollViewer { Content = section },
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        };
     }
 }

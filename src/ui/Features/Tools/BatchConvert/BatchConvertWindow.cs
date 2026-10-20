@@ -8,10 +8,8 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Threading;
 using Avalonia.Media;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Nikse.SubtitleEdit.Controls;
@@ -22,6 +20,11 @@ using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
+/// <summary>
+/// Batch convert, in the editor look (see <see cref="EditorChrome"/>): the file toolbar and filter
+/// on top, the file list with the target format and output under it, the function checklist and the
+/// selected function's settings at the bottom; progress and Convert in the button bar.
+/// </summary>
 public class BatchConvertWindow : Window
 {
     public BatchConvertWindow(BatchConvertViewModel vm)
@@ -33,30 +36,9 @@ public class BatchConvertWindow : Window
         MinWidth = 900;
         MinHeight = 600;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
-
-        var fileView = MakeFileView(vm);
-        var functionsListView = MakeFunctionsListView(vm);
-        var functionView = MakeFunctionView(vm);
-
-        var labelFunctionsSelected = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.ActionsSelected))
-            .WithAlignmentTop();
-
-        var labelBatchItemsInfo = UiUtil.MakeLabel()
-            .WithBindText(vm, nameof(vm.BatchItemsInfo))
-            .WithAlignmentTop();
-
-        var panelInfo = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Children =
-            {
-                labelFunctionsSelected,
-                labelBatchItemsInfo,
-            }
-        };
-        panelInfo.WithBindVisible(vm, nameof(vm.IsConverting), InverseBooleanConverter.Instance);
 
         var buttonConvert = new SeSplitButton
         {
@@ -79,48 +61,55 @@ public class BatchConvertWindow : Window
                 }
             }
         };
+        buttonConvert.Classes.Add("primary");
         buttonConvert.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsConverting)) { Converter = InverseBooleanConverter.Instance });
+        AutomationProperties.SetName(buttonConvert, Se.Language.General.Convert);
 
         var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand).WithBindIsVisible(nameof(vm.IsConverting), InverseBooleanConverter.Instance);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(vm, nameof(vm.IsConverting));
-        var buttonPanel = UiUtil.MakeButtonBar(
-            buttonConvert,
-            buttonCancel,
-            buttonDone
-        );
 
-        var progressText = UiUtil.MakeLabel()
-            .WithBindText(vm, nameof(vm.ProgressText))
-            .WithAlignmentTop();
+        // "No files to convert" and the end-of-run summary
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText));
+        statusText.FontSize = 12;
+        var buttonBar = EditorChrome.MakeButtonBar(statusText, buttonCancel, buttonDone, buttonConvert);
 
-        var grid = new Grid
+        var progressBar = UiUtil.MakeProgressBar(6);
+        progressBar.Maximum = 1; // ProgressValue is the converted fraction
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        var progressStrip = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsConverting));
+
+        // The file list and the functions share the height, resizable with the splitter between them,
+        // so both stay usable and the progress and the buttons reachable at the minimum height.
+        var root = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(GridLength.Auto), // file toolbar + filter
+                new RowDefinition(new GridLength(1, GridUnitType.Star)) { MinHeight = 180 }, // file list, target format, output
+                new RowDefinition(GridLength.Auto), // splitter
+                new RowDefinition(new GridLength(1, GridUnitType.Star)) { MinHeight = 220 }, // functions + the selected function's settings
+                new RowDefinition(GridLength.Auto), // progress, while converting
+                new RowDefinition(GridLength.Auto), // status + buttons
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 5,
-            Width = double.NaN,
+        };
+
+        // The splitter doubles as the line between the file list and the functions.
+        var splitter = new GridSplitter
+        {
+            Height = 5,
+            Background = EditorChrome.LineBrush,
+            ResizeDirection = GridResizeDirection.Rows,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(fileView, 0, 0, 1, 2);
-        grid.Add(functionsListView, 1, 0);
-        grid.Add(functionView, 1, 1);
-        grid.Add(panelInfo, 2, 0);
-        grid.Add(progressText, 2, 0);
-        grid.Add(buttonPanel, 2, 0, 1, 2);
+        root.Add(MakeToolbar(vm), 0, 0);
+        root.Add(MakeFileView(vm), 1, 0);
+        root.Add(splitter, 2, 0);
+        root.Add(MakeFunctionsPanel(vm), 3, 0);
+        root.Add(progressStrip, 4, 0);
+        root.Add(buttonBar, 5, 0);
 
-        Content = grid;
+        Content = root;
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         Loaded += vm.Onloaded;
@@ -128,24 +117,100 @@ public class BatchConvertWindow : Window
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 
-    private static Border MakeFileView(BatchConvertViewModel vm)
+    /// <summary>
+    /// A section that fills its height: small caps header (with optional content on the right) over
+    /// <paramref name="content"/>, which gets the rest - unlike <see cref="EditorChrome.MakeEditorSection"/>,
+    /// which stacks, so a list in it would get unlimited height.
+    /// </summary>
+    private static Grid MakeFillSection(string title, Control content, Control? headerRight = null, Control? headerFill = null)
     {
+        var header = new DockPanel();
+        if (headerRight != null)
+        {
+            DockPanel.SetDock(headerRight, Dock.Right);
+            header.Children.Add(headerRight);
+        }
+
+        var sectionHeader = EditorChrome.MakeSectionHeader(title);
+        header.Children.Add(sectionHeader);
+        if (headerFill != null)
+        {
+            // Between the title and the right-hand content, taking the width left over.
+            DockPanel.SetDock(sectionHeader, Dock.Left);
+            header.Children.Add(headerFill);
+        }
+
         var grid = new Grid
         {
-            RowDefinitions =
+            RowSpacing = 8,
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) },
+        };
+        grid.Add(header, 0, 0);
+        grid.Add(content, 1, 0);
+        return grid;
+    }
+
+    private static Border MakeToolbar(BatchConvertViewModel vm)
+    {
+        // Add/Remove/Clear are locked while converting: the run works on a snapshot of the list,
+        // so removed files would still be converted and added files silently skipped (#15116).
+        Button Action(Button button)
+        {
+            button.WithBindEnabled(nameof(vm.AreControlsEnabled));
+            return button;
+        }
+
+        var actions = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 0,
+                Action(EditorChrome.MakeActionButton("fa-solid fa-plus", Se.Language.General.Add, vm.AddFilesCommand)),
+                Action(EditorChrome.MakeActionButton("fa-solid fa-folder-plus", Se.Language.Tools.BatchConvert.AddFolderDotDotDot, vm.AddFolderCommand)),
+                Action(EditorChrome.MakeActionButton("fa-solid fa-folder-tree", Se.Language.Tools.BatchConvert.AddFolderRecursiveDotDotDot, vm.AddFolderRecursiveCommand)),
+                EditorChrome.MakeToolbarSeparator(),
+                Action(EditorChrome.CreateToolButton("fa-solid fa-minus", Se.Language.General.Remove, vm.RemoveSelectedFilesCommand)),
+                Action(EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Clear, vm.ClearAllFilesCommand)),
+            }
         };
 
+        // Not while converting: rows mid-OCR ("OCR...", "OCR x%") would be filtered as errors.
+        var comboBoxFilter = UiUtil.MakeComboBox(vm.FilterItems, vm, nameof(vm.SelectedFilterItem))
+            .WithBindEnabled(nameof(vm.AreControlsEnabled));
+        comboBoxFilter.SelectionChanged += (_, _) => vm.FilterComboBoxChanged();
+        comboBoxFilter.MinWidth = 150;
+        AutomationProperties.SetName(comboBoxFilter, Se.Language.General.Filter);
+        var textBoxFilter = UiUtil.MakeTextBox(200, vm, nameof(vm.FilterText))
+            .WithBindIsVisible(nameof(vm.IsFilterTextVisible))
+            .WithBindEnabled(nameof(vm.AreControlsEnabled))
+            .WithSearchAndClearIcons();
+        textBoxFilter.Classes.Add("text");
+        textBoxFilter.TextChanged += (_, _) => vm.FilterTextChanged();
+        AutomationProperties.SetName(textBoxFilter, Se.Language.General.Filter);
+        var filter = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-filter", FontSize = 12, Foreground = EditorChrome.FaintTextBrush, VerticalAlignment = VerticalAlignment.Center },
+                comboBoxFilter,
+                textBoxFilter,
+            }
+        };
+
+        var bar = new DockPanel();
+        DockPanel.SetDock(filter, Dock.Right);
+        bar.Children.Add(filter);
+        bar.Children.Add(actions);
+        return EditorChrome.MakeToolbar(bar);
+    }
+
+    private static Border MakeFileView(BatchConvertViewModel vm)
+    {
         var columnFileName = new SeTableViewColumn
         {
             Header = Se.Language.General.FileName,
@@ -236,76 +301,6 @@ public class BatchConvertWindow : Window
             .AddSortable<BatchConvertItem, string>(columnFormat, x => x.Format)
             .AddSortable<BatchConvertItem, string>(columnStatus, x => x.Status);
 
-        var comboBoxSubtitleFormat = UiUtil.MakeComboBox(vm.TargetFormats, vm, nameof(vm.SelectedTargetFormat));
-        comboBoxSubtitleFormat.SelectionChanged += (_, _) => vm.ComboBoxSubtitleFormatChanged();
-        // Tunnel phase so right-click / Mac Ctrl+click opens the format picker before the ComboBox
-        // consumes the click to open its dropdown (matches the main window's format combo).
-        comboBoxSubtitleFormat.AddHandler(InputElement.PointerPressedEvent,
-            vm.ComboBoxSubtitleFormatPointerPressed,
-            RoutingStrategies.Tunnel,
-            handledEventsToo: true);
-        comboBoxSubtitleFormat.Width = 240;
-
-        var buttonTargetFormatSettings = UiUtil.MakeButton(vm.ShowTargetFormatSettingsCommand, IconNames.Settings, Se.Language.Tools.BatchConvert.TargetFormatSettings)
-            .WithMarginLeft(5)
-            .WithMarginRight(5);
-        buttonTargetFormatSettings.WithBindIsVisible(vm, nameof(vm.IsTargetFormatSettingsVisible));
-        // Only offered while a Transport Stream file is in the list - the settings apply to nothing else.
-        var buttonTransportStreamSettings = UiUtil.MakeButton(vm.ShowTransportStreamSettingsCommand, IconNames.FileCog, Se.Language.Tools.BatchConvert.TransportStreamSettingsDotDotDot)
-            .WithMarginLeft(5)
-            .WithMarginRight(5);
-        buttonTransportStreamSettings.WithBindIsVisible(vm, nameof(vm.IsTransportStreamSettingsVisible));
-        var buttonSettings = UiUtil.MakeButton(vm.ShowOutputPropertiesCommand, IconNames.Settings, Se.Language.General.Settings).WithMarginLeft(15).WithMarginRight(5);
-
-        // Add/Remove/Clear are locked while converting: the run works on a snapshot of the list,
-        // so removed files would still be converted and added files silently skipped (#15116).
-        var panelFileControls = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 0),
-            Children =
-            {
-                UiUtil.MakeButton(vm.AddFilesCommand, IconNames.Plus, Se.Language.General.Add).WithMarginLeft(10).WithBindEnabled(nameof(vm.AreControlsEnabled)),
-                UiUtil.MakeButton(vm.AddFolderCommand, IconNames.Folder, Se.Language.Tools.BatchConvert.AddFolderDotDotDot).WithMarginLeft(5).WithBindEnabled(nameof(vm.AreControlsEnabled)),
-                UiUtil.MakeButton(vm.AddFolderRecursiveCommand, IconNames.FolderMultiple, Se.Language.Tools.BatchConvert.AddFolderRecursiveDotDotDot).WithMarginLeft(5).WithBindEnabled(nameof(vm.AreControlsEnabled)),
-                UiUtil.MakeButton(vm.RemoveSelectedFilesCommand, IconNames.Trash, Se.Language.General.Remove).WithMarginLeft(5).WithBindEnabled(nameof(vm.AreControlsEnabled)),
-                UiUtil.MakeButton(vm.ClearAllFilesCommand, IconNames.Close, Se.Language.General.Clear).WithMarginLeft(5).WithBindEnabled(nameof(vm.AreControlsEnabled)),
-                UiUtil.MakeLabel(Se.Language.General.TargetFormat).WithMarginLeft(15),
-                comboBoxSubtitleFormat,
-                buttonTargetFormatSettings,
-                buttonTransportStreamSettings,
-                buttonSettings,
-                MakeOutputPropertiesGrid(vm),
-            }
-        };
-
-        var labelFilter = UiUtil.MakeLabel(Se.Language.General.Filter);
-        // Not while converting: rows mid-OCR ("OCR...", "OCR x%") would be filtered as errors.
-        var comboBoxFilter = UiUtil.MakeComboBox(vm.FilterItems, vm, nameof(vm.SelectedFilterItem))
-            .WithMarginRight(3)
-            .WithBindEnabled(nameof(vm.AreControlsEnabled));
-        comboBoxFilter.SelectionChanged += (_, _) => vm.FilterComboBoxChanged();
-        var textBoxFilter = UiUtil.MakeTextBox(200, vm, nameof(vm.FilterText))
-            .WithBindIsVisible(nameof(vm.IsFilterTextVisible))
-            .WithBindEnabled(nameof(vm.AreControlsEnabled))
-            .WithSearchAndClearIcons();
-        textBoxFilter.TextChanged += (_, _) => vm.FilterTextChanged();
-        var panelFilter = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 10),
-            Children =
-            {
-                labelFilter,
-                comboBoxFilter,
-                textBoxFilter,
-            }
-        };
-
         var flyout = new MenuFlyout();
         flyout.Opening += (_, _) => vm.FileGridContextMenuOpening();
         var menuItemRemove = new MenuItem
@@ -377,30 +372,119 @@ public class BatchConvertWindow : Window
         {
             Children =
             {
-                dropHost,
+                EditorChrome.MakeListFrame(dropHost),
                 MakeBusyOverlay(vm),
             }
         };
 
-        grid.Add(fileGridContainer, 0, 0);
-        grid.Add(panelFileControls, 1, 0);
-        grid.Add(panelFilter, 2, 0);
+        var count = EditorChrome.MakeBoundHint(nameof(vm.BatchItemsInfo));
+        var grid = new Grid
+        {
+            RowSpacing = 10,
+            RowDefinitions = { new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) },
+        };
+        grid.Add(MakeFillSection(Se.Language.General.SubtitleFiles, fileGridContainer, count), 0, 0);
+        grid.Add(MakeTargetRow(vm), 1, 0);
 
-        var border = UiUtil.MakeBorderForControlNoPadding(grid);
-        return border;
+        return new Border
+        {
+            Child = grid,
+            Padding = new Thickness(14, 12, 14, 12),
+        };
+    }
+
+    /// <summary>
+    /// Target format (with its settings) on the left, where the files go and with which encoding on
+    /// the right, and the output settings button.
+    /// </summary>
+    private static Grid MakeTargetRow(BatchConvertViewModel vm)
+    {
+        var comboBoxSubtitleFormat = UiUtil.MakeComboBox(vm.TargetFormats, vm, nameof(vm.SelectedTargetFormat));
+        comboBoxSubtitleFormat.SelectionChanged += (_, _) => vm.ComboBoxSubtitleFormatChanged();
+        // Tunnel phase so right-click / Mac Ctrl+click opens the format picker before the ComboBox
+        // consumes the click to open its dropdown (matches the main window's format combo).
+        comboBoxSubtitleFormat.AddHandler(InputElement.PointerPressedEvent,
+            vm.ComboBoxSubtitleFormatPointerPressed,
+            RoutingStrategies.Tunnel,
+            handledEventsToo: true);
+        comboBoxSubtitleFormat.Width = 240;
+        AutomationProperties.SetName(comboBoxSubtitleFormat, Se.Language.General.TargetFormat);
+
+        var buttonTargetFormatSettings = EditorChrome.CreateToolButton("fa-solid fa-gear", Se.Language.Tools.BatchConvert.TargetFormatSettings, vm.ShowTargetFormatSettingsCommand, 28);
+        buttonTargetFormatSettings.WithBindIsVisible(vm, nameof(vm.IsTargetFormatSettingsVisible));
+        // Only offered while a Transport Stream file is in the list - the settings apply to nothing else.
+        var buttonTransportStreamSettings = EditorChrome.CreateToolButton("fa-solid fa-file-video", Se.Language.Tools.BatchConvert.TransportStreamSettingsDotDotDot, vm.ShowTransportStreamSettingsCommand, 28);
+        buttonTransportStreamSettings.WithBindIsVisible(vm, nameof(vm.IsTransportStreamSettingsVisible));
+
+        var target = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                EditorChrome.MakeDimLabel(Se.Language.General.TargetFormat, new Thickness(0, 0, 2, 0)),
+                comboBoxSubtitleFormat,
+                buttonTargetFormatSettings,
+                buttonTransportStreamSettings,
+            }
+        };
+
+        // Output folder: "Source folder" as text, or the chosen folder as a link that opens it
+        var labelOutputSourceFolder = new TextBlock
+        {
+            FontSize = 12,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.OutputFolderLabel)),
+        };
+        var linkLabelOutputFolder = UiUtil.MakeLink(string.Empty, vm.OpenOutputFolderCommand, vm, nameof(vm.OutputFolderLinkLabel))
+            .WithAlignmentLeft();
+        linkLabelOutputFolder.FontSize = 12;
+        linkLabelOutputFolder.TextTrimming = TextTrimming.CharacterEllipsis;
+        var folder = new Panel { VerticalAlignment = VerticalAlignment.Center, Children = { labelOutputSourceFolder, linkLabelOutputFolder } };
+        var encoding = EditorChrome.MakeBoundHint(nameof(vm.OutputEncodingLabel));
+
+        var output = new Grid
+        {
+            ColumnSpacing = 6,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto) },
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        output.Add(new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-folder", FontSize = 12, Foreground = EditorChrome.FaintTextBrush, VerticalAlignment = VerticalAlignment.Center }, 0, 0);
+        output.Add(folder, 0, 1);
+        output.Add(encoding, 1, 1);
+
+        var buttonSettings = EditorChrome.CreateToolButton("fa-solid fa-sliders", Se.Language.General.Settings, vm.ShowOutputPropertiesCommand, 28);
+
+        var row = new Grid
+        {
+            ColumnSpacing = 8,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
+            },
+        };
+        row.Add(target, 0, 0);
+        row.Add(EditorChrome.MakeToolbarSeparator(), 0, 1);
+        row.Add(output, 0, 2);
+        row.Add(buttonSettings, 0, 3);
+        return row;
     }
 
     private static Border MakeBusyOverlay(BatchConvertViewModel vm)
     {
-        var isDark = Application.Current?.ActualThemeVariant == Avalonia.Styling.ThemeVariant.Dark;
-        var cardBackground = new SolidColorBrush(isDark ? UiUtil.GetDarkThemeBackgroundColor() : Colors.White);
-
         var fileNameLabel = new TextBlock
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             MaxWidth = 360,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            Opacity = 0.8,
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(0, 6, 0, 0),
         };
         fileNameLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.AddingFilesStatus)) { Source = vm });
@@ -423,10 +507,10 @@ public class BatchConvertWindow : Window
 
         var card = new Border
         {
-            Background = cardBackground,
-            BorderBrush = UiUtil.GetBorderBrush(),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(8),
+            CornerRadius = new CornerRadius(10),
             Padding = new Thickness(30, 22),
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -438,6 +522,7 @@ public class BatchConvertWindow : Window
                     new TextBlock
                     {
                         Text = Se.Language.General.PleaseWait,
+                        FontWeight = FontWeight.SemiBold,
                         HorizontalAlignment = HorizontalAlignment.Center,
                     },
                     fileNameLabel,
@@ -450,6 +535,7 @@ public class BatchConvertWindow : Window
         var overlay = new Border
         {
             Background = new SolidColorBrush(Colors.Black, 0.35),
+            CornerRadius = new CornerRadius(8),
             IsVisible = false,
             Child = card,
         };
@@ -458,64 +544,80 @@ public class BatchConvertWindow : Window
         return overlay;
     }
 
-    private static Grid MakeOutputPropertiesGrid(BatchConvertViewModel vm)
+    /// <summary>
+    /// The function checklist (with the presets below it) and the selected function's settings
+    /// beside it, on the panel color.
+    /// </summary>
+    private static Border MakeFunctionsPanel(BatchConvertViewModel vm)
     {
-        var grid = new Grid
+        var comboBoxPreset = UiUtil.MakeComboBox(vm.PresetNames, vm, nameof(vm.SelectedPresetName));
+        comboBoxPreset.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboBoxPreset.PlaceholderText = Se.Language.General.Preset;
+        comboBoxPreset.WithAccessibleName(Se.Language.General.Preset);
+        var buttonSavePreset = EditorChrome.CreateToolButton("fa-solid fa-floppy-disk", Se.Language.Tools.BatchConvert.SavePresetDotDotDot, vm.SavePresetCommand, 28);
+        var buttonDeletePreset = EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.Tools.BatchConvert.DeletePreset, vm.DeletePresetCommand, 28);
+        var panelPresets = new Grid
+        {
+            ColumnSpacing = 4,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
+            },
+        };
+        panelPresets.Add(EditorChrome.MakeDimLabel(Se.Language.General.Preset, new Thickness(0, 0, 4, 0)), 0, 0);
+        panelPresets.Add(comboBoxPreset, 0, 1);
+        panelPresets.Add(buttonSavePreset, 0, 2);
+        panelPresets.Add(buttonDeletePreset, 0, 3);
+
+        var functions = new Grid
+        {
+            RowSpacing = 8,
+            RowDefinitions = { new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) },
+        };
+        functions.Add(MakeFunctionsList(vm), 0, 0);
+        functions.Add(panelPresets, 1, 0);
+
+        // "N actions selected" beside the header, and the function search between the two,
+        // so searching costs no height of its own.
+        var actionsSelected = EditorChrome.MakeBoundHint(nameof(vm.ActionsSelected));
+        actionsSelected.VerticalAlignment = VerticalAlignment.Center;
+        actionsSelected.Margin = new Thickness(8, 0, 0, 0);
+        var textBoxSearch = EditorChrome.MakeSearchBox(vm, nameof(vm.FunctionSearchText), Se.Language.General.Search, double.NaN);
+        textBoxSearch.HorizontalAlignment = HorizontalAlignment.Stretch;
+        textBoxSearch.Margin = new Thickness(12, -4, 0, -4); // overlaps the header's line height a little rather than growing it
+        textBoxSearch.MaxWidth = 220;
+        var left = new Border
+        {
+            Child = MakeFillSection(Se.Language.General.Options, functions, actionsSelected, textBoxSearch),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
+            Padding = new Thickness(14, 12, 14, 14),
+        };
+
+        var right = new Border
+        {
+            Child = MakeFillSection(Se.Language.General.Settings, MakeFunctionView(vm)),
+            Padding = new Thickness(14, 12, 14, 14),
+        };
+
+        var columns = new Grid
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 0,
-            RowSpacing = 0,
         };
+        columns.Add(left, 0, 0);
+        columns.Add(right, 0, 1);
 
-        var labelOutputSourceFolder = UiUtil.MakeLabel(new Binding(nameof(vm.OutputFolderLabel)));
-        var linkLabelOutputFolder = UiUtil.MakeLink(string.Empty, vm.OpenOutputFolderCommand, vm, nameof(vm.OutputFolderLinkLabel))
-                            .WithAlignmentLeft();
-        var labelOutputEncoding = UiUtil.MakeLabel(new Binding(nameof(vm.OutputEncodingLabel))).WithAlignmentTop();
-
-        grid.Add(labelOutputSourceFolder, 0);
-        grid.Add(linkLabelOutputFolder, 0);
-        grid.Add(labelOutputEncoding, 1);
-
-        return grid;
-    }
-
-    private static Control MakeFunctionsListView(BatchConvertViewModel vm)
-    {
-        var comboBoxPreset = UiUtil.MakeComboBox(vm.PresetNames, vm, nameof(vm.SelectedPresetName));
-        comboBoxPreset.Width = 150;
-        comboBoxPreset.PlaceholderText = Se.Language.Tools.BatchConvert.Preset;
-        comboBoxPreset.WithAccessibleName(Se.Language.Tools.BatchConvert.Preset);
-        var buttonSavePreset = UiUtil.MakeButton(Se.Language.Tools.BatchConvert.SavePresetDotDotDot, vm.SavePresetCommand);
-        var buttonDeletePreset = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeletePresetCommand);
-        var panelPresets = new StackPanel
+        return new Border
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Margin = new Thickness(0, 0, 0, 5),
-            Children =
-            {
-                comboBoxPreset,
-                buttonSavePreset,
-                buttonDeletePreset,
-            }
-        };
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Children =
-            {
-                panelPresets,
-                MakeFunctionsList(vm),
-            }
+            Child = columns,
+            Background = EditorChrome.PanelBrush,
         };
     }
 
@@ -530,12 +632,12 @@ public class BatchConvertWindow : Window
         // with a star column measured without a width constraint demands more than
         // the whole window (star columns have no content-based size).
         dataGrid.Width = FunctionsListMinWidth;
-        dataGrid.Height = 300;
+        dataGrid.Height = double.NaN; // fills the functions panel
         // Widen to the longest function name once the effective font is known - 360 fits English,
         // but Russian/Bulgarian/French names are cut off (#15901).
         dataGrid.Loaded += (_, _) => dataGrid.Width = GetFunctionsListWidth(dataGrid, vm.BatchFunctions.Select(f => f.Name));
         dataGrid.DataContext = vm;
-        dataGrid.ItemsSource = vm.BatchFunctions;
+        dataGrid.ItemsSource = vm.VisibleBatchFunctions;
         dataGrid.ContextFlyout = new MenuFlyout()
         {
             Items =
@@ -593,7 +695,9 @@ public class BatchConvertWindow : Window
             item => item.IsSelected, (item, v) => item.IsSelected = v);
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        return UiUtil.MakeBorderForControl(dataGrid);
+        var frame = EditorChrome.MakeListFrame(dataGrid);
+        frame.HorizontalAlignment = HorizontalAlignment.Left;
+        return frame;
     }
 
     private const double FunctionsListMinWidth = 360;
@@ -627,7 +731,21 @@ public class BatchConvertWindow : Window
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(BatchConvertFunction.IsSelected)),
             [!AutomationProperties.NameProperty] = new Binding(nameof(BatchConvertFunction.Name)),
             HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(5, 0, 0, 0),
+            MinHeight = 0,
+            Padding = new Thickness(0),
+        };
+
+        // The Fluent template gives the box a fixed 32 high frame, which made every function row that
+        // tall; 24 keeps a little air between the boxes in the default compact grid.
+        checkBox.TemplateApplied += (_, e) =>
+        {
+            foreach (var frame in e.NameScope.Find<Grid>("RootGrid")?.Children.OfType<Grid>() ?? [])
+            {
+                frame.Height = 24;
+                frame.VerticalAlignment = VerticalAlignment.Center;
+            }
         };
 
         checkBox.IsCheckedChanged += (_, _) => vm.SelectedFunctionChanged();
@@ -641,17 +759,9 @@ public class BatchConvertWindow : Window
         {
             HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            Padding = new Thickness(10, 15, 10, 10),
+            Padding = new Thickness(12, 10, 12, 10),
             Width = double.NaN,
-            Height = 300,
-        };
-
-        var border = new Border
-        {
-            BorderThickness = new Thickness(1),
-            BorderBrush = UiUtil.GetBorderBrush(),
-            Margin = new Thickness(0, 0, 0, 10),
-            Padding = new Thickness(5),
+            Height = double.NaN, // fills the functions panel
         };
         vm.FunctionContainer = scrollViewer;
 
@@ -665,6 +775,13 @@ public class BatchConvertWindow : Window
             }
         };
 
-        return UiUtil.MakeBorderForControl(scrollViewer);
+        return new Border
+        {
+            Child = scrollViewer,
+            Background = EditorChrome.WindowBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+        };
     }
 }

@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
@@ -65,7 +66,14 @@ public static class InitVideoPlayer
         {
             mainGrid.Margin = isFullScreen ? new Thickness(0) : nonFullScreenMargin;
         };
-        if (!string.IsNullOrEmpty(mediaFile))
+        // The theme's art for the empty video area. A rebuild that reopens a video sets it only
+        // once the video is open, or it would flash up for a moment first.
+        var emptyBackground = UiTheme.GetThemeArt(UiTheme.VideoBackgroundFileName);
+        if (string.IsNullOrEmpty(mediaFile))
+        {
+            control.EmptyBackground = emptyBackground;
+        }
+        else
         {
             // Announced before the open so a rebuild that lands while this restore is still
             // running gets the position it is heading for rather than the 0 of a player that
@@ -78,6 +86,7 @@ public static class InitVideoPlayer
                 // opened at 0 and seeked afterwards shows the first frame for a moment and
                 // then jumps (#13329, issue #15027).
                 await control.Open(mediaFile, position);
+                control.EmptyBackground = emptyBackground;
                 await control.WaitForPlayersReadyAsync();
 
                 // Seeks until the player reports it arrived, and bails out when a second rebuild
@@ -90,6 +99,11 @@ public static class InitVideoPlayer
         }
 
         control.FullScreenCommand = vm.VideoFullScreenCommand;
+        control.PreviousSubtitleCommand = vm.PlayPreviousCommand;
+        control.NextSubtitleCommand = vm.PlayNextCommand;
+        control.ToggleSubtitlesCommand = vm.ToggleSubtitlesOnVideoPlayerCommand;
+        control.SubtitlesOnVideoIsVisible = vm.SubtitlesOnVideoPlayerVisible;
+        control.SubtitleButtonsIsVisible = true;
         videoPlayerControl = control;
         vm.VideoPlayerControl = control;
         control.VideoPlayerDisplayTimeLeft = Se.Settings.Video.VideoPlayerDisplayTimeLeft;

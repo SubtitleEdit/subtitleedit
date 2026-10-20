@@ -1,6 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System;
-using System.IO;
 using System.Text;
 
 namespace LibSETests.Common;

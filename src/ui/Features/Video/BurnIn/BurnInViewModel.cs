@@ -30,7 +30,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Nikse.SubtitleEdit.UiLogic.Export;
@@ -2314,7 +2313,7 @@ public partial class BurnInViewModel : ObservableObject
 
     private void FillPreset(string videoCodec)
     {
-        VideoPresetText = Se.Language.Video.BurnIn.Preset;
+        VideoPresetText = Se.Language.General.Preset;
         var previousPreset = SelectedVideoPreset;
         SelectedVideoPreset = null;
 
@@ -2405,7 +2404,7 @@ public partial class BurnInViewModel : ObservableObject
 
             defaultItem = string.Empty;
 
-            VideoPresetText = Se.Language.Video.BurnIn.Preset;
+            VideoPresetText = Se.Language.General.Preset;
         }
 
         VideoPresets.Clear();

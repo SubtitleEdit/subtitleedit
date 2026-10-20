@@ -8,7 +8,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -147,6 +146,36 @@ public class DashScopeSttService : ISttTranscriber
         var fileContent = new ByteArrayContent(audioBytes);
         fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
         form.Add(fileContent, "file", fileName); // file field must be last
+
+        // OSS's form parser requires an unquoted boundary and quoted field/file
+        // names. .NET defaults to a quoted boundary and unquoted token values.
+        foreach (var parameter in form.Headers.ContentType!.Parameters)
+        {
+            if (parameter.Name.Equals("boundary", StringComparison.OrdinalIgnoreCase))
+            {
+                parameter.Value = parameter.Value?.Trim('"');
+            }
+        }
+
+        // Keep Content-Disposition first, and use browser-style filename syntax
+        // rather than .NET's additional RFC 5987 filename* parameter.
+        foreach (var part in form)
+        {
+            var disposition = part.Headers.ContentDisposition!;
+            disposition.Name = $"\"{disposition.Name!.Trim('"')}\"";
+            if (disposition.FileName != null)
+            {
+                disposition.FileName = $"\"{disposition.FileName.Trim('"')}\"";
+                disposition.FileNameStar = null;
+            }
+
+            var contentType = part.Headers.ContentType;
+            part.Headers.ContentType = null;
+            if (contentType != null)
+            {
+                part.Headers.ContentType = contentType;
+            }
+        }
 
         using var uploadResponse = await _httpClient.PostAsync(policy.UploadHost, form, ct);
         if (!uploadResponse.IsSuccessStatusCode)

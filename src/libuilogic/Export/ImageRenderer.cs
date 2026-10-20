@@ -13,52 +13,6 @@ namespace Nikse.SubtitleEdit.UiLogic.Export;
 /// </summary>
 public static class ImageRenderer
 {
-    private static SKPointI CalculatePosition(ImageParameter ip, double width, double height)
-    {
-        var x = 0;
-        var y = 0;
-
-        if (ip.Alignment == ExportAlignment.TopLeft ||
-            ip.Alignment == ExportAlignment.MiddleLeft ||
-            ip.Alignment == ExportAlignment.BottomLeft)
-        {
-            x = ip.LeftRightMargin;
-        }
-        else if (ip.Alignment == ExportAlignment.TopCenter ||
-                 ip.Alignment == ExportAlignment.MiddleCenter ||
-                 ip.Alignment == ExportAlignment.BottomCenter)
-        {
-            x = (int)((ip.ScreenWidth - width) / 2);
-        }
-        else if (ip.Alignment == ExportAlignment.TopRight ||
-                 ip.Alignment == ExportAlignment.MiddleRight ||
-                 ip.Alignment == ExportAlignment.BottomRight)
-        {
-            x = (int)(ip.ScreenWidth - width - ip.LeftRightMargin);
-        }
-
-        if (ip.Alignment == ExportAlignment.TopLeft ||
-            ip.Alignment == ExportAlignment.TopCenter ||
-            ip.Alignment == ExportAlignment.TopRight)
-        {
-            y = ip.BottomTopMargin;
-        }
-        else if (ip.Alignment == ExportAlignment.MiddleLeft ||
-                 ip.Alignment == ExportAlignment.MiddleCenter ||
-                 ip.Alignment == ExportAlignment.MiddleRight)
-        {
-            y = (int)((ip.ScreenHeight - height) / 2);
-        }
-        else if (ip.Alignment == ExportAlignment.BottomLeft ||
-                 ip.Alignment == ExportAlignment.BottomCenter ||
-                 ip.Alignment == ExportAlignment.BottomRight)
-        {
-            y = (int)(ip.ScreenHeight - height - ip.BottomTopMargin);
-        }
-
-        return new SKPointI(x, y);
-    }
-
     public static SKBitmap GenerateBitmap(ImageParameter ip)
     {
         var bitmap = RenderBitmap(ip);

@@ -1,11 +1,12 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -18,49 +19,68 @@ public class ChaptersWindow : Window
 {
     private readonly ChaptersViewModel _vm;
 
+    private const double LabelWidth = 84;
+
     public ChaptersWindow(ChaptersViewModel vm)
     {
-        var language = Se.Language.Video.Chapters;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = language.Title;
+        Title = Se.Language.General.Chapters;
         CanResize = true;
-        Width = 940;
-        Height = 640;
-        MinWidth = 820;
+        Width = 980;
+        Height = 660;
+        MinWidth = 840;
         MinHeight = 480;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
+        AddStyles();
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
+        // The side panel scrolls on its own and the list gives up height first, so the button bar
+        // stays reachable on a short screen.
+        var sideScroller = new ScrollViewer
+        {
+            Content = MakeSidePanel(vm),
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+        var side = new Border
+        {
+            Child = sideScroller,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        };
+
+        var content = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(370)),
+            },
+        };
+        content.Add(MakeChapterListPanel(vm), 0, 0);
+        content.Add(side, 0, 1);
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(370, GridUnitType.Pixel) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 12,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-
-        grid.Add(MakeHeader(vm), 0, 0, 1, 2);
-        grid.Add(MakeChapterListPanel(vm), 1, 0);
-        grid.Add(MakeSidePanel(vm), 1, 1);
-        grid.Add(panelButtons, 2, 0, 1, 2);
+        grid.Add(MakeToolbar(vm), 0, 0);
+        grid.Add(content, 1, 0);
+        grid.Add(MakeButtonBar(vm, buttonOk, buttonCancel), 2, 0);
 
         Content = grid;
 
@@ -68,60 +88,150 @@ public class ChaptersWindow : Window
     }
 
     /// <summary>
-    /// Title row: the chapter glyph, the heading, a count badge, and the video the chapters belong
-    /// to on the right.
+    /// Compact combo boxes, text boxes and time code fields.
     /// </summary>
-    private static Grid MakeHeader(ChaptersViewModel vm)
+    private void AddStyles()
     {
-        var glyph = MakeGlyph(IconNames.Bookmark, 15);
-
-        var title = new TextBlock
+        Styles.Add(new Style(x => x.OfType<ComboBox>())
         {
-            Text = Se.Language.Video.Chapters.Chapters,
-            FontSize = UiUtil.ScaledFontSize(15),
-            FontWeight = FontWeight.SemiBold,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(8, 0, 0, 0),
-        };
-
-        var badge = MakeCountBadge(new Binding(nameof(vm.ChapterCountDisplay)));
-
-        var videoIcon = new ContentControl
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 2, 4, 2)),
+                new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
+            },
+        });
+        Styles.Add(new Style(x => x.OfType<TextBox>().Class("text"))
         {
-            VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.7,
-        };
-        Optris.Icons.Avalonia.Attached.SetIcon(videoIcon, IconNames.MovieOpenOutline);
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 4)),
+                new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
+                new Setter(TemplatedControl.BackgroundProperty, EditorChrome.FieldBrush),
+                new Setter(TemplatedControl.BorderBrushProperty, EditorChrome.FieldBorderBrush),
+                new Setter(TextBox.VerticalContentAlignmentProperty, VerticalAlignment.Center),
+            },
+        });
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+            },
+        });
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<TextBox>())
+        {
+            Setters = { new Setter(TemplatedControl.MinHeightProperty, 26.0) },
+        });
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<ButtonSpinner>())
+        {
+            Setters = { new Setter(TemplatedControl.MinHeightProperty, 26.0) },
+        });
+    }
 
+    /// <summary>
+    /// Icon button with its label beside it, for the actions bar.
+    /// </summary>
+    private static Button MakeAction(string icon, string text, System.Windows.Input.ICommand command)
+    {
+        var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 7, Margin = new Thickness(10, 0) };
+        content.Children.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 13, VerticalAlignment = VerticalAlignment.Center });
+        content.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        var button = new Button
+        {
+            Content = content,
+            Height = 30,
+            Command = command,
+            VerticalContentAlignment = VerticalAlignment.Center,
+        };
+        button.Classes.Add("tool");
+
+        // Icon + label in a panel: a screen reader needs the name spelled out (#12087)
+        AutomationProperties.SetName(button, text);
+        return button;
+    }
+
+    /// <summary>
+    /// Import from the video or a file, and export in the chosen format.
+    /// </summary>
+    private static Border MakeToolbar(ChaptersViewModel vm)
+    {
+        var language = Se.Language.Video.Chapters;
+
+        var buttonImportVideo = MakeAction("fa-solid fa-film", language.ImportFromVideo, vm.ImportFromVideoCommand)
+            .WithBindIsEnabled(nameof(vm.IsVideoLoaded));
+        var buttonImportFile = MakeAction("fa-solid fa-file-import", language.ImportFromFile, vm.ImportFromFileCommand);
+
+        // The format is chosen here rather than guessed from the file name: OGM and YouTube
+        // chapters are both ".txt", so the extension cannot say which writer was meant.
+        var comboExportFormat = UiUtil.MakeComboBox(vm.ExportFormats, vm, nameof(vm.SelectedExportFormat))
+            .WithMinWidth(180);
+        comboExportFormat.VerticalAlignment = VerticalAlignment.Center;
+        AutomationProperties.SetName(comboExportFormat, language.ExportToFile);
+
+        var buttonExport = MakeAction("fa-solid fa-file-export", language.ExportToFile, vm.ExportToFileCommand)
+            .WithBindIsEnabled(nameof(vm.HasChapters));
+
+        var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
+        panel.Children.Add(buttonImportVideo);
+        panel.Children.Add(buttonImportFile);
+        panel.Children.Add(EditorChrome.MakeToolbarSeparator());
+        panel.Children.Add(comboExportFormat);
+        panel.Children.Add(buttonExport);
+
+        return new Border
+        {
+            Child = panel,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(10, 6),
+        };
+    }
+
+    /// <summary>
+    /// The video the chapters belong to on the left, Cancel and OK on the right.
+    /// </summary>
+    private static Border MakeButtonBar(ChaptersViewModel vm, Button buttonOk, Button buttonCancel)
+    {
+        var videoIcon = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "fa-solid fa-file-video",
+            FontSize = 12,
+            Foreground = EditorChrome.FaintTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 8, 0),
+        };
         var videoName = new TextBlock
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.VideoFileNameDisplay)),
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(6, 0, 0, 0),
-            Opacity = 0.7,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
 
-        var videoPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children = { videoIcon, videoName },
-        };
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
+        buttons.Children.Add(buttonCancel);
+        buttons.Children.Add(buttonOk);
 
-        var headerGrid = new Grid
+        var grid = new Grid
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
             },
         };
-
-        headerGrid.Add(UiUtil.MakeHorizontalPanel(glyph, title, badge), 0, 0);
-        headerGrid.Add(videoPanel, 0, 1);
-        return headerGrid;
+        grid.Add(videoIcon, 0, 0);
+        grid.Add(videoName, 0, 1);
+        grid.Add(buttons, 0, 2);
+        return EditorChrome.WrapButtonBar(grid);
     }
 
     /// <summary>
@@ -164,63 +274,47 @@ public class ChaptersWindow : Window
         };
     }
 
+    /// <summary>
+    /// The chapter list: a header with the count and the add/delete/clear actions, the grid under it.
+    /// </summary>
     private static Grid MakeChapterListPanel(ChaptersViewModel vm)
     {
+        var language = Se.Language.Video.Chapters;
+
+        var buttonAdd = EditorChrome.CreateToolButton("fa-solid fa-location-crosshairs", language.AddChapterAtVideoPosition, vm.AddChapterAtVideoPositionCommand, 26)
+            .WithBindIsEnabled(nameof(vm.IsVideoLoaded));
+        var buttonAddPlain = EditorChrome.CreateToolButton("fa-solid fa-plus", language.AddChapter, vm.AddChapterCommand, 26);
+        var buttonDelete = EditorChrome.CreateToolButton("fa-solid fa-minus", Se.Language.General.Delete, vm.DeleteSelectedChapterCommand, 26)
+            .WithBindIsEnabled(nameof(vm.HasSelectedChapter));
+        var buttonClear = EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Clear, vm.ClearChaptersCommand, 26)
+            .WithBindIsEnabled(nameof(vm.HasChapters));
+
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
+        actions.Children.Add(buttonAdd);
+        actions.Children.Add(buttonAddPlain);
+        actions.Children.Add(EditorChrome.MakeToolbarSeparator());
+        actions.Children.Add(buttonDelete);
+        actions.Children.Add(buttonClear);
+
+        var title = EditorChrome.MakeSectionHeader(Se.Language.General.Chapters);
+        var badge = MakeCountBadge(new Binding(nameof(vm.ChapterCountDisplay)));
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(actions, Dock.Right);
+        header.Children.Add(actions);
+        header.Children.Add(UiUtil.MakeHorizontalPanel(title, badge));
+
         var panel = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            RowSpacing = 8,
+            Margin = new Thickness(14, 12, 14, 14),
         };
-
-        panel.Add(MakeChapterGrid(vm), 0);
-        panel.Add(MakeListToolbar(vm), 1);
+        panel.Add(header, 0);
+        panel.Add(MakeChapterGrid(vm), 1);
         return panel;
-    }
-
-    private static Panel MakeListToolbar(ChaptersViewModel vm)
-    {
-        var language = Se.Language.Video.Chapters;
-
-        var buttonAdd = UiUtil.MakeButton(vm.AddChapterAtVideoPositionCommand, IconNames.RayStart, language.AddChapterAtVideoPosition)
-            .WithBindIsEnabled(nameof(vm.IsVideoLoaded));
-        var buttonAddPlain = UiUtil.MakeButton(vm.AddChapterCommand, IconNames.Plus, language.AddChapter);
-        var buttonDelete = UiUtil.MakeButton(vm.DeleteSelectedChapterCommand, IconNames.Trash, Se.Language.General.Delete)
-            .WithBindIsEnabled(nameof(vm.HasSelectedChapter));
-        var buttonClear = UiUtil.MakeButton(vm.ClearChaptersCommand, IconNames.Close, Se.Language.General.Clear)
-            .WithBindIsEnabled(nameof(vm.HasChapters));
-
-        var buttonImportVideo = UiUtil.MakeButton(vm.ImportFromVideoCommand, IconNames.MovieOpenOutline, language.ImportFromVideo)
-            .WithBindIsEnabled(nameof(vm.IsVideoLoaded));
-        var buttonImportFile = UiUtil.MakeButton(vm.ImportFromFileCommand, IconNames.Import, language.ImportFromFile);
-        // The format is chosen here rather than guessed from the file name: OGM and YouTube
-        // chapters are both ".txt", so the extension cannot say which writer was meant.
-        var comboExportFormat = UiUtil.MakeComboBox(vm.ExportFormats, vm, nameof(vm.SelectedExportFormat))
-            .WithMinWidth(180);
-        AutomationProperties.SetName(comboExportFormat, language.ExportToFile);
-
-        var buttonExport = UiUtil.MakeButton(vm.ExportToFileCommand, IconNames.Export, language.ExportToFile)
-            .WithBindIsEnabled(nameof(vm.HasChapters));
-
-        var leftGroup = UiUtil.MakeHorizontalPanel(buttonAdd, buttonAddPlain, buttonDelete, buttonClear);
-        var rightGroup = UiUtil.MakeHorizontalPanel(buttonImportVideo, buttonImportFile, comboExportFormat, buttonExport);
-        rightGroup.HorizontalAlignment = HorizontalAlignment.Right;
-
-        var toolbar = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-        };
-
-        toolbar.Add(leftGroup, 0, 0);
-        toolbar.Add(rightGroup, 0, 1);
-        return toolbar;
     }
 
     private static Border MakeChapterGrid(ChaptersViewModel vm)
@@ -297,66 +391,69 @@ public class ChaptersWindow : Window
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Center,
             MaxWidth = 320,
-            Opacity = 0.6,
+            FontSize = 12.5,
+            Foreground = EditorChrome.FaintTextBrush,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             IsHitTestVisible = false,
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.HasChapters)) { Converter = InverseBooleanConverter.Instance },
         };
 
-        return UiUtil.MakeBorderForControl(new Panel { Children = { tableView, emptyHint } });
+        return new Border
+        {
+            Child = new Panel { Children = { tableView, emptyHint } },
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            ClipToBounds = true,
+        };
     }
 
     private static StackPanel MakeSidePanel(ChaptersViewModel vm)
     {
-        var panel = UiUtil.MakeVerticalPanel(MakeSelectedChapterSection(vm), MakeAdjustTimesSection(vm), MakeWriteToVideoSection(vm));
-
-        // MakeVerticalPanel centers its content, which floated the first box below the top of the
-        // chapter list next to it. Top-align so both columns start on the same line.
-        panel.VerticalAlignment = VerticalAlignment.Top;
-        panel.HorizontalAlignment = HorizontalAlignment.Stretch;
+        var panel = new StackPanel();
+        panel.Children.Add(MakeSelectedChapterSection(vm));
+        panel.Children.Add(MakeAdjustTimesSection(vm));
+        panel.Children.Add(MakeWriteToVideoSection(vm));
         return panel;
     }
 
-    private static Border MakeSectionTitle(string title, string iconName)
+    /// <summary>
+    /// A label of fixed width and the control(s) after it, so the rows line up.
+    /// </summary>
+    private static Grid Row(string label, Control content)
     {
-        var glyph = MakeGlyph(iconName, 13);
-
-        var label = new TextBlock
+        var text = EditorChrome.MakeDimLabel(label, new Thickness(0));
+        text.TextTrimming = TextTrimming.CharacterEllipsis;
+        var grid = new Grid
         {
-            Text = title,
-            FontWeight = FontWeight.SemiBold,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(8, 0, 0, 0),
+            ColumnSpacing = 6,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(LabelWidth)), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
         };
-
-        return new Border
-        {
-            Margin = new Thickness(0, 0, 0, 8),
-            Child = UiUtil.MakeHorizontalPanel(glyph, label),
-        };
+        grid.Add(text, 0, 0);
+        grid.Add(content, 0, 1);
+        return grid;
     }
 
     private static Border MakeSelectedChapterSection(ChaptersViewModel vm)
     {
         var language = Se.Language.Video.Chapters;
 
-        var labelTitle = UiUtil.MakeLabel(language.ChapterTitle);
         var textBoxTitle = new TextBox
         {
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Margin = new Thickness(0, 0, 0, 8),
             [!TextBox.TextProperty] = new Binding($"{nameof(vm.SelectedChapter)}.{nameof(ChapterItem.Title)}")
             {
                 Mode = BindingMode.TwoWay,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             },
         };
+        textBoxTitle.Classes.Add("text");
         textBoxTitle.Bind(IsEnabledProperty, new Binding(nameof(vm.HasSelectedChapter)));
         AutomationProperties.SetName(textBoxTitle, language.ChapterTitle);
 
-        var labelStart = UiUtil.MakeLabel(language.StartTime);
         var timeCodeUpDown = new TimeCodeUpDown
         {
             VerticalAlignment = VerticalAlignment.Center,
@@ -368,22 +465,18 @@ public class ChaptersWindow : Window
         timeCodeUpDown.Bind(IsEnabledProperty, new Binding(nameof(vm.HasSelectedChapter)));
         AutomationProperties.SetName(timeCodeUpDown, language.StartTime);
 
-        var buttonSetToVideoPosition = UiUtil.MakeButton(vm.SetSelectedToVideoPositionCommand, IconNames.RayStart, language.AddChapterAtVideoPosition);
+        var buttonSetToVideoPosition = EditorChrome.CreateToolButton("fa-solid fa-location-crosshairs", language.AddChapterAtVideoPosition, vm.SetSelectedToVideoPositionCommand, 28);
         buttonSetToVideoPosition.Bind(IsEnabledProperty, new Binding(nameof(vm.HasSelectedChapter)));
 
-        var buttonGoTo = UiUtil.MakeButton(vm.GoToSelectedChapterCommand, IconNames.Play, Se.Language.General.GoTo);
+        var buttonGoTo = EditorChrome.CreateToolButton("fa-solid fa-play", Se.Language.General.GoTo, vm.GoToSelectedChapterCommand, 28);
         buttonGoTo.Bind(IsEnabledProperty, new Binding(nameof(vm.HasSelectedChapter)));
 
-        var panelTime = UiUtil.MakeHorizontalPanel(timeCodeUpDown, buttonSetToVideoPosition, buttonGoTo);
+        var panelTime = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, Children = { timeCodeUpDown, buttonSetToVideoPosition, buttonGoTo } };
 
-        var content = UiUtil.MakeVerticalPanel(
-            MakeSectionTitle(language.SelectedChapter, IconNames.Pencil),
-            labelTitle,
-            textBoxTitle,
-            labelStart,
-            panelTime);
-
-        return UiUtil.MakeBorderForControl(content);
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(Row(language.ChapterTitle, textBoxTitle));
+        rows.Children.Add(Row(language.StartTime, panelTime));
+        return EditorChrome.MakeEditorSection(language.SelectedChapter, rows, first: true);
     }
 
     private static Border MakeAdjustTimesSection(ChaptersViewModel vm)
@@ -432,20 +525,18 @@ public class ChaptersWindow : Window
             },
             ColumnSpacing = 6,
         };
-        frameRateGrid.Add(UiUtil.MakeLabel(language.FromFrameRate), 0, 0);
+        frameRateGrid.Add(EditorChrome.MakeDimLabel(language.FromFrameRate, new Thickness(0)), 0, 0);
         frameRateGrid.Add(comboFrom, 0, 1);
-        frameRateGrid.Add(UiUtil.MakeLabel(language.ToFrameRate), 0, 2);
+        frameRateGrid.Add(EditorChrome.MakeDimLabel(language.ToFrameRate, new Thickness(0)), 0, 2);
         frameRateGrid.Add(comboTo, 0, 3);
         frameRateGrid.Add(buttonScale, 0, 4);
 
-        var content = UiUtil.MakeVerticalPanel(
-            MakeSectionTitle(language.AdjustTimes, IconNames.ArrowLeftRightBold),
-            MakeHint(language.ShiftAllTimesDescription),
-            UiUtil.MakeHorizontalPanel(shiftUpDown, buttonShift),
-            MakeHint(language.ScaleTimesDescription),
-            frameRateGrid);
-
-        return UiUtil.MakeBorderForControl(content);
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(MakeHint(language.ShiftAllTimesDescription));
+        rows.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, Children = { shiftUpDown, buttonShift } });
+        rows.Children.Add(MakeHint(language.ScaleTimesDescription, new Thickness(0, 6, 0, 0)));
+        rows.Children.Add(frameRateGrid);
+        return EditorChrome.MakeEditorSection(language.AdjustTimes, rows);
     }
 
     private static Border MakeWriteToVideoSection(ChaptersViewModel vm)
@@ -455,24 +546,23 @@ public class ChaptersWindow : Window
         var buttonWrite = UiUtil.MakeButton(language.WriteToVideo, vm.WriteToVideoCommand)
             .WithIconLeft(IconNames.MovieOpenOutline)
             .WithBindIsEnabled(nameof(vm.CanWriteToVideo));
+        buttonWrite.HorizontalAlignment = HorizontalAlignment.Left;
 
-        var content = UiUtil.MakeVerticalPanel(
-            MakeSectionTitle(language.WriteToVideo, IconNames.Export),
-            MakeHint(language.WriteToVideoDescription),
-            buttonWrite);
-
-        return UiUtil.MakeBorderForControl(content);
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(MakeHint(language.WriteToVideoDescription));
+        rows.Children.Add(buttonWrite);
+        return EditorChrome.MakeEditorSection(language.WriteToVideo.TrimEnd('.', '…'), rows);
     }
 
-    private static TextBlock MakeHint(string text)
+    private static TextBlock MakeHint(string text, Thickness? margin = null)
     {
         return new TextBlock
         {
             Text = text,
             TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.65,
-            FontSize = UiUtil.ScaledFontSize(11),
-            Margin = new Thickness(0, 0, 0, 8),
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = 11.5,
+            Margin = margin ?? new Thickness(0),
         };
     }
 

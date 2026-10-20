@@ -80,6 +80,8 @@ public static class ItalicSpaceFixer
             letter.CouldBeSpaceBefore = false;
         }
 
+        pixelsIsSpace = GetItalicSpaceThreshold(letters, pixelsIsSpace);
+
         // Check for potential spaces in italic text
         for (var i = 0; i < matches.Count - 1; i++)
         {
@@ -124,6 +126,34 @@ public static class ItalicSpaceFixer
         }
 
         return ItalicTextMerger.MergeWithItalicTags(matches).Trim();
+    }
+
+    /// <summary>
+    /// The slanted glyph boxes of an italic line overlap, so the space detector sees few gaps
+    /// in it and its threshold can come out as a double space (a 24 px threshold on a 35 px
+    /// line: no word gap ever reaches it, and the line stays one word). The angled blank
+    /// columns between two italic words measure 0.3-0.5 of the letter height (0.25 of a line
+    /// with descenders); between letters at most 0.15. So the threshold is capped at 0.22 of
+    /// the tallest glyph.
+    /// </summary>
+    private static int GetItalicSpaceThreshold(List<ImageSplitterItem2> letters, int pixelsIsSpace)
+    {
+        var maxHeight = 0;
+        foreach (var letter in letters)
+        {
+            if (letter.NikseBitmap != null && letter.NikseBitmap.Height > maxHeight)
+            {
+                maxHeight = letter.NikseBitmap.Height;
+            }
+        }
+
+        if (maxHeight == 0)
+        {
+            return pixelsIsSpace;
+        }
+
+        var fromHeight = Math.Max(2, (int)Math.Round(maxHeight * 0.22, MidpointRounding.AwayFromZero));
+        return Math.Min(pixelsIsSpace, fromHeight);
     }
 
     private static int IsVerticalAngledLineTransparent(NikseBitmap2 parentBitmap, ImageSplitterItem2 match, ImageSplitterItem2 next, double unItalicFactor)

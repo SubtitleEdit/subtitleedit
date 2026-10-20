@@ -1,13 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.UiLogic.Http;
 
@@ -34,7 +29,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             // Medium / Efficient Multilingual
             "openai/gpt-oss-20b",                           // High-speed reasoning model (Production)
-            "qwen/qwen3.6-27b",                             // Strong multilingual mid-size model (Preview)
+            "qwen/qwen3.8-27b",                             // Strong multilingual mid-size model (Preview)
+            "llama-3.3-70b-versatile",                      // Solid multilingual Llama (Production)
 
             // Agentic systems
             "groq/compound",                                // Groq compound system

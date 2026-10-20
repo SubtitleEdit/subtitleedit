@@ -1,6 +1,6 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -10,10 +10,15 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 
+/// <summary>
+/// llama.cpp engine settings in the editor look (see <see cref="EditorChrome"/>), like the OCR
+/// engine settings: backend, install status, release and folder, re-download and open folder in
+/// the button bar.
+/// </summary>
 public class LlamaCppEngineSettingsWindow : Window
 {
-    private const int LabelWidth = 110;
-    private const int ValueWidth = 360;
+    private const int LabelWidth = 100;
+    private const int ValueWidth = 380;
 
     private readonly LlamaCppEngineSettingsViewModel _vm;
 
@@ -29,114 +34,8 @@ public class LlamaCppEngineSettingsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        Content = BuildContent(vm);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
-        var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        UiUtil.FocusOnFirstActivation(this, ok);
-    }
-
-    private static Border BuildContent(LlamaCppEngineSettingsViewModel vm)
-    {
-        var stack = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 14,
-            Children = { BuildHeader(), BuildDetails(vm), BuildActions(vm) },
-        };
-
-        var outerGrid = new Grid
-        {
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-        outerGrid.Children.Add(stack);
-
-        return new Border
-        {
-            Child = outerGrid,
-            Padding = new Thickness(4),
-        };
-    }
-
-    private static StackPanel BuildHeader()
-    {
-        var title = new TextBlock
-        {
-            Text = "llama.cpp",
-            FontSize = UiUtil.ScaledFontSize(18),
-            FontWeight = FontWeight.SemiBold,
-        };
-
-        var subtitle = new TextBlock
-        {
-            Text = Se.Language.General.LlamaCppEngineSettingsSubtitle,
-            FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.75,
-            Margin = new Thickness(0, 2, 0, 0),
-        };
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 0,
-            Children = { title, subtitle },
-        };
-    }
-
-    private static Border BuildDetails(LlamaCppEngineSettingsViewModel vm)
-    {
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(LabelWidth, GridUnitType.Pixel) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 12,
-            RowSpacing = 10,
-        };
-
-        grid.Add(MakeLabel(Se.Language.General.Backend), 0, 0);
-        grid.Add(MakeValue(nameof(vm.BackendLabel)), 0, 1);
-
-        grid.Add(MakeLabel(Se.Language.General.Status), 1, 0);
-        var statusDot = new Ellipse
-        {
-            Width = 10,
-            Height = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!Ellipse.FillProperty] = new Binding(nameof(vm.StatusBrush)),
-        };
-        var statusText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(8, 0, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusLabel)),
-        };
-        var statusPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { statusDot, statusText },
-        };
-        grid.Add(statusPanel, 1, 1);
-
-        grid.Add(MakeLabel(Se.Language.General.Release), 2, 0);
-        var releaseText = new TextBlock
-        {
-            FontFamily = new FontFamily("Cascadia Mono,Consolas,Menlo,Monaco,monospace"),
-            FontSize = UiUtil.ScaledFontSize(12),
-            VerticalAlignment = VerticalAlignment.Center,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.ReleaseTag)),
-        };
-        grid.Add(releaseText, 2, 1);
-
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 3, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -144,67 +43,62 @@ public class LlamaCppEngineSettingsWindow : Window
             BorderThickness = new Thickness(0),
             Background = Brushes.Transparent,
             Padding = new Thickness(0),
+            // Wrapped, so the whole path shows instead of being cut at the window edge
+            TextWrapping = TextWrapping.Wrap,
+            MinHeight = 0,
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = UiUtil.ScaledFontSize(12),
+            FontSize = 12.5,
             [!TextBox.TextProperty] = new Binding(nameof(vm.InstallFolder)),
         };
-        grid.Add(folderText, 3, 1);
+        AutomationProperties.SetName(folderText, Se.Language.General.InstallFolder);
 
-        return new Border
+        var releaseText = new TextBlock
         {
-            Child = grid,
-            Padding = new Thickness(14),
-            CornerRadius = new CornerRadius(6),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
+            FontFamily = new FontFamily("Cascadia Mono,Consolas,Menlo,Monaco,monospace"),
+            FontSize = 12,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ReleaseTag)),
         };
-    }
 
-    private static Grid BuildActions(LlamaCppEngineSettingsViewModel vm)
-    {
-        var redownload = UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
-            .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel));
-        var openFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen);
-        var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
+        var rows = new StackPanel
+        {
+            Spacing = 10,
+            Children =
+            {
+                EditorChrome.MakeLabeledRow(Se.Language.General.Backend, MakeValue(nameof(vm.BackendLabel)), LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Status, EditorChrome.MakeStatusDot(nameof(vm.StatusBrush), nameof(vm.StatusLabel)), LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Release, releaseText, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.InstallFolder, folderText, LabelWidth, spacing: 10, alignTop: true),
+            },
+        };
+
+        var sections = new StackPanel
+        {
+            Children =
+            {
+                EditorChrome.MakeDialogHeader("llama.cpp", Se.Language.General.LlamaCppEngineSettingsSubtitle),
+                EditorChrome.MakeEditorSection(Se.Language.General.Engine, rows),
+            },
+        };
+
+        var redownload = EditorChrome.AsFlatAction(UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel)));
+        var openFolder = EditorChrome.AsFlatAction(UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen));
+        var close = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
 
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 8,
+            Spacing = 4,
             Children = { redownload, openFolder },
         };
 
-        var rightPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Spacing = 8,
-            Children = { close },
-        };
-
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-        };
-        grid.Add(leftPanel, 0, 0);
-        grid.Add(rightPanel, 0, 2);
-        return grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeFlushButtonBar(leftPanel, close), stretch: false);
     }
-
-    private static TextBlock MakeLabel(string text) => new()
-    {
-        Text = text,
-        Opacity = 0.7,
-        VerticalAlignment = VerticalAlignment.Center,
-    };
 
     private static TextBlock MakeValue(string bindingPath) => new()
     {
+        FontSize = 12.5,
         FontWeight = FontWeight.SemiBold,
         VerticalAlignment = VerticalAlignment.Center,
         [!TextBlock.TextProperty] = new Binding(bindingPath),

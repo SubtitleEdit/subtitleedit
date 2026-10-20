@@ -1,4 +1,3 @@
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
 

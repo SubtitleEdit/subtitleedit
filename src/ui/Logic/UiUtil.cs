@@ -340,23 +340,6 @@ public static class UiUtil
         return new SolidColorBrush(Colors.DodgerBlue);
     }
 
-    public static Color GetBorderColor()
-    {
-        var color = Colors.Black;
-
-        var app = Application.Current;
-        if (app != null)
-        {
-            var theme = app.ActualThemeVariant;
-            if (theme == ThemeVariant.Dark)
-            {
-                color = Colors.White;
-            }
-        }
-
-        return new Color(128, color.R, color.G, color.B);
-    }
-
     public static Separator MakeHorizontalSeparator(double height = 0.5, double opacity = 0.5, Thickness? margin = null,
         IBrush? background = null)
     {
@@ -366,20 +349,6 @@ public static class UiUtil
             Margin = margin ?? new Thickness(5, 1),
             Background = background ?? GetBorderBrush(),
             Opacity = opacity,
-        };
-    }
-
-    public static Border MakeVerticalSeparator(double width = 2.5, double opacity = 0.5, Thickness? margin = null,
-        IBrush? background = null)
-    {
-        return new Border
-        {
-            Width = width,
-            Margin = margin ?? new Thickness(1, 5),
-            Background = background ?? GetBorderBrush(),
-            Opacity = opacity,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            HorizontalAlignment = HorizontalAlignment.Center
         };
     }
 
@@ -563,25 +532,6 @@ public static class UiUtil
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = command,
         };
-    }
-
-    /// <summary>
-    /// Gives a card-style button a green-ish background while hovered, focused or pressed,
-    /// so the active choice stands out (used by the assisted split/move option cards).
-    /// </summary>
-    public static Button WithGreenishActiveBackground(this Button button)
-    {
-        var activeBrush = new SolidColorBrush(Color.FromArgb(0x50, 0x4C, 0xAF, 0x50));
-        var pressedBrush = new SolidColorBrush(Color.FromArgb(0x78, 0x4C, 0xAF, 0x50));
-        foreach (var (pseudoClass, brush) in new[] { (":pointerover", activeBrush), (":focus", activeBrush), (":pressed", pressedBrush) })
-        {
-            button.Styles.Add(new Style(x => x.OfType<Button>().Class(pseudoClass).Template().OfType<ContentPresenter>())
-            {
-                Setters = { new Setter(ContentPresenter.BackgroundProperty, brush) },
-            });
-        }
-
-        return button;
     }
 
     /// <summary>
@@ -1331,13 +1281,6 @@ public static class UiUtil
         return control;
     }
 
-    public static TControl WithMarginBottom<TControl>(this TControl control, int marginBottom) where TControl : Layoutable
-    {
-        var m = control.Margin;
-        control.Margin = new Thickness(m.Left, m.Top, m.Right, marginBottom);
-        return control;
-    }
-
     public static TControl WithMargin<TControl>(this TControl control, int left, int top, int right, int bottom) where TControl : Layoutable
     {
         control.Margin = new Thickness(left, top, right, bottom);
@@ -1362,21 +1305,9 @@ public static class UiUtil
         return control;
     }
 
-    public static TControl WithMinHeight<TControl>(this TControl control, double minHeight) where TControl : Layoutable
-    {
-        control.MinHeight = minHeight;
-        return control;
-    }
-
     public static TControl WithAlignmentLeft<TControl>(this TControl control) where TControl : Layoutable
     {
         control.HorizontalAlignment = HorizontalAlignment.Left;
-        return control;
-    }
-
-    public static TControl WithAlignmentRight<TControl>(this TControl control) where TControl : Layoutable
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Right;
         return control;
     }
 
@@ -1392,45 +1323,15 @@ public static class UiUtil
         return control;
     }
 
-    public static TControl WithAlignmentBottom<TControl>(this TControl control) where TControl : Layoutable
-    {
-        control.VerticalAlignment = VerticalAlignment.Bottom;
-        return control;
-    }
-
     public static TControl WithLeftAlignment<TControl>(this TControl control) where TControl : Layoutable
     {
         control.HorizontalAlignment = HorizontalAlignment.Left;
         return control;
     }
 
-    public static TControl WithRightAlignment<TControl>(this TControl control) where TControl : Layoutable
-    {
-        control.HorizontalAlignment = HorizontalAlignment.Right;
-        return control;
-    }
-
     public static TControl WithTopAlignment<TControl>(this TControl control) where TControl : Layoutable
     {
         control.VerticalAlignment = VerticalAlignment.Top;
-        return control;
-    }
-
-    public static TControl WithCenterAlignment<TControl>(this TControl control) where TControl : Layoutable
-    {
-        control.VerticalAlignment = VerticalAlignment.Center;
-        return control;
-    }
-
-    public static TControl WithBottomAlignment<TControl>(this TControl control) where TControl : Layoutable
-    {
-        control.VerticalAlignment = VerticalAlignment.Bottom;
-        return control;
-    }
-
-    public static TextBlock WithBackgroundColor(this TextBlock control, IBrush brush)
-    {
-        control.Background = brush;
         return control;
     }
 
@@ -1506,12 +1407,6 @@ public static class UiUtil
 
         var text = content?.ToString();
         return (new TextBlock { Text = text, Padding = padding }, text);
-    }
-
-    public static Button WithCommandParameter<T>(this Button control, T parameter)
-    {
-        control.CommandParameter = parameter;
-        return control;
     }
 
     /// <summary>
@@ -1884,18 +1779,6 @@ public static class UiUtil
         return control;
     }
 
-    public static StackPanel WithSpacing(this StackPanel control, int spacing)
-    {
-        control.Spacing = spacing;
-        return control;
-    }
-
-    public static Label HorizontalContentAlignmentCenter(this Label control)
-    {
-        control.HorizontalContentAlignment = HorizontalAlignment.Center;
-        return control;
-    }
-
     public static Label WithBold(this Label control)
     {
         control.FontWeight = FontWeight.Bold;
@@ -2016,12 +1899,6 @@ public static class UiUtil
         return control;
     }
 
-    public static Button WithParameter(this Button control, object parameter)
-    {
-        control.CommandParameter = parameter;
-        return control;
-    }
-
     public static StackPanel MakeButtonBar(params Control[] buttons)
     {
         var stackPanel = new StackPanel
@@ -2037,33 +1914,6 @@ public static class UiUtil
         stackPanel.Children.AddRange(buttons);
 
         return stackPanel;
-    }
-
-    public static StackPanel MakeControlBarLeft(params Control[] buttons)
-    {
-        var stackPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(10),
-            Spacing = 0,
-        };
-
-        stackPanel.Children.AddRange(buttons);
-
-        return stackPanel;
-    }
-
-    public static Border MakeSeparatorForHorizontal(object vm)
-    {
-        return new Border
-        {
-            DataContext = vm,
-            Width = 1,
-            Background = GetBorderBrush(),
-            Margin = new Thickness(5, 5, 5, 5),
-            VerticalAlignment = VerticalAlignment.Stretch,
-        };
     }
 
     private static ImageBrush? _checkerboardBrush;
@@ -2109,29 +1959,6 @@ public static class UiUtil
             DestinationRect = new RelativeRect(0, 0, tileSize, tileSize, RelativeUnit.Absolute),
         };
         return _checkerboardBrush;
-    }
-
-    public static Border MakeBorderForControl(Control control)
-    {
-        return new Border
-        {
-            Child = control,
-            BorderThickness = new Thickness(1),
-            BorderBrush = GetTextColor(0.3d),
-            Padding = new Thickness(5),
-            CornerRadius = new CornerRadius(CornerRadius),
-        };
-    }
-
-    public static Border MakeBorderForControlNoPadding(Control control)
-    {
-        return new Border
-        {
-            Child = control,
-            BorderThickness = new Thickness(1),
-            BorderBrush = GetTextColor(0.3d),
-            CornerRadius = new CornerRadius(CornerRadius),
-        };
     }
 
     public static bool IsScrollBarSource(RoutedEventArgs e)
@@ -2196,24 +2023,6 @@ public static class UiUtil
             {
                 contentControl.Content = null;
             }
-        }
-
-        return control;
-    }
-
-    public static Control AddControlToParent(this Control control, Control parent)
-    {
-        if (parent is Panel panel)
-        {
-            panel.Children.Add(control);
-        }
-        else if (parent is Decorator decorator)
-        {
-            decorator.Child = control;
-        }
-        else if (parent is ContentControl contentControl2)
-        {
-            contentControl2.Content = control;
         }
 
         return control;
@@ -2886,13 +2695,6 @@ public static class UiUtil
         return control;
     }
 
-    public static Label WithBorderColorAsColor(this Label control)
-    {
-        control.Foreground = GetBorderBrush();
-
-        return control;
-    }
-
     public static Grid WithBindVisible(this Grid control, object viewModel, string visiblePropertyPath)
     {
         control.DataContext = viewModel;
@@ -3097,21 +2899,6 @@ public static class UiUtil
         return stackPanel;
     }
 
-    public static StackPanel MakeVerticalPanel(params Control[] controls)
-    {
-        var stackPanel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 5,
-        };
-
-        stackPanel.Children.AddRange(controls);
-
-        return stackPanel;
-    }
-
     public static Color LightenColor(Color color, byte adjustValue)
     {
         var r = (byte)Math.Min(255, color.R + adjustValue);
@@ -3121,62 +2908,9 @@ public static class UiUtil
         return Color.FromArgb(color.A, r, g, b);
     }
 
-    internal static SeGridLinesVisibility GetGridLinesVisibility()
-    {
-        return Se.Settings.Appearance.GridLinesAppearance switch
-        {
-            nameof(SeGridLinesVisibility.Horizontal) => SeGridLinesVisibility.Horizontal,
-            nameof(SeGridLinesVisibility.Vertical) => SeGridLinesVisibility.Vertical,
-            nameof(SeGridLinesVisibility.All) => SeGridLinesVisibility.All,
-            _ => SeGridLinesVisibility.None,
-        };
-    }
-
     internal static Color GetDarkThemeBackgroundColor()
     {
-        return Se.Settings.Appearance.DarkModeBackgroundColor.FromHexToColor();
-    }
-
-    internal static void ReplaceControl(Control old, Control replacement)
-    {
-        var replacementParent = replacement.Parent;
-        if (replacementParent != null)
-        {
-            if (replacementParent is Panel panelReplacement)
-            {
-                panelReplacement.Children.Remove(replacement);
-            }
-            else if (replacementParent is ContentControl contentControl)
-            {
-                contentControl.Content = null;
-            }
-            else if (replacementParent is Grid grid)
-            {
-                grid.Children.Remove(replacement);
-            }
-        }
-
-        var parent = old.Parent;
-        if (parent is Panel panel)
-        {
-            var index = panel.Children.IndexOf(old);
-            if (index >= 0)
-            {
-                panel.Children[index] = replacement;
-            }
-        }
-        else if (parent is ContentControl contentControl)
-        {
-            contentControl.Content = replacement;
-        }
-        else if (parent is Grid grid)
-        {
-            var index = grid.Children.IndexOf(old);
-            if (index >= 0)
-            {
-                grid.Children[index] = replacement;
-            }
-        }
+        return UiTheme.GetDarkThemeBackgroundColor();
     }
 
     public static string? MakeToolTip(string hint, List<ShortCut> shortcuts, string shortcutName = "")
@@ -3416,16 +3150,25 @@ public static class UiUtil
         {
             // Stop content-driven sizing before shrinking, or the next measure pass
             // would just grow the window back.
+            var sizeToContent = window.SizeToContent;
             window.SizeToContent = SizeToContent.Manual;
+            var clampedWidth = false;
+            var clampedHeight = false;
             if (window.Bounds.Width > maxWidth)
             {
                 window.Width = maxWidth;
+                clampedWidth = sizeToContent is SizeToContent.Width or SizeToContent.WidthAndHeight;
             }
 
             if (window.Bounds.Height > maxHeight)
             {
                 window.Height = maxHeight;
+                clampedHeight = sizeToContent is SizeToContent.Height or SizeToContent.WidthAndHeight;
             }
+
+            // A shrunk auto-sized window clips its bottom rows (often the OK/Cancel bar),
+            // and many of them can't be resized - so let the content scroll. (#16026)
+            WrapContentInScrollViewer(window, clampedWidth, clampedHeight);
         }
 
         // Keep the whole frame inside the working area so the bottom buttons stay
@@ -3440,6 +3183,43 @@ public static class UiUtil
         if (position != window.Position)
         {
             window.Position = position;
+        }
+    }
+
+    // Puts an auto-sized window's content in a ScrollViewer after the window was clamped to the
+    // screen. Only a clamped auto-sized dimension scrolls: the content was laid out with unlimited
+    // room in that direction anyway, so its layout is unchanged - it just scrolls instead of
+    // being clipped. A fixed dimension stays disabled so text wrapping and stretching still work.
+    internal static void WrapContentInScrollViewer(Window window, bool horizontal, bool vertical)
+    {
+        if ((!horizontal && !vertical) || window.Content is not Control content)
+        {
+            return;
+        }
+
+        // Windows with a ScrollViewer of their own that takes up the spare height (e.g. burn-in:
+        // scrolling settings over a fixed button bar) already handle a short screen, and an outer
+        // one would stop theirs scrolling. A fixed-size one (spell check suggestions, message box
+        // text) is just a part of the content and scrolls fine inside the outer one.
+        if (content is ScrollViewer ||
+            content.GetLogicalDescendants().OfType<ScrollViewer>().Any(p => double.IsNaN(p.Height) && double.IsPositiveInfinity(p.MaxHeight)))
+        {
+            return;
+        }
+
+        var focused = window.FocusManager?.GetFocusedElement() as Control;
+        window.Content = null;
+        window.Content = new ScrollViewer
+        {
+            HorizontalScrollBarVisibility = horizontal ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = vertical ? ScrollBarVisibility.Auto : ScrollBarVisibility.Disabled,
+            Content = content,
+        };
+
+        // Re-parenting detaches the content from the visual tree, which drops keyboard focus.
+        if (focused != null && content.IsVisualAncestorOf(focused))
+        {
+            focused.Focus();
         }
     }
 

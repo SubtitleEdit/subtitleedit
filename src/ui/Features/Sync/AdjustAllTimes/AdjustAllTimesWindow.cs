@@ -3,12 +3,18 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Sync.AdjustAllTimes;
 
+/// <summary>
+/// Adjust all times, in the editor look (see <see cref="EditorChrome"/>): the adjustment with Show
+/// earlier/later and which lines to adjust side by side; the last adjustment, help and Done at the
+/// bottom. Stays open while editing - every Show earlier/later is applied at once.
+/// </summary>
 public class AdjustAllTimesWindow : Window
 {
     public AdjustAllTimesWindow(AdjustAllTimesViewModel vm)
@@ -17,93 +23,50 @@ public class AdjustAllTimesWindow : Window
         Title = UiUtil.MakeWindowTitle(Se.Language.Sync.AdjustAllTimes);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
         var timeCodeUpDown = new TimeCodeUpDown
         {
             DataContext = vm,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.Adjustment))
             {
                 Mode = BindingMode.TwoWay,
             }
         }.WithAccessibleName(Se.Language.Sync.AdjustAllTimes); // no visible label; the window title names the only input (#12087)
 
-        var buttonShowEarlier = UiUtil.MakeButton(Se.Language.Sync.ShowEarlier, vm.ShowEarlierCommand)
-            .WithMinWidth(110);
-        buttonShowEarlier.Margin = new Thickness(0, 0, 0, 10);
-
-        var buttonShowLater = UiUtil.MakeButton(Se.Language.Sync.ShowLater, vm.ShowLaterCommand)
-            .WithMinWidth(110);
-
-        var panelShowButtons = new StackPanel
+        var buttonShowEarlier = MakeShowButton("fa-solid fa-backward", Se.Language.Sync.ShowEarlier, vm.ShowEarlierCommand);
+        var buttonShowLater = MakeShowButton("fa-solid fa-forward", Se.Language.Sync.ShowLater, vm.ShowLaterCommand);
+        var panelShowButtons = new Grid
         {
-            Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Top,
-            Children =
-            {
-                buttonShowEarlier,
-                buttonShowLater,
-            },
+            ColumnSpacing = 8,
+            ColumnDefinitions = { new ColumnDefinition(1, GridUnitType.Star), new ColumnDefinition(1, GridUnitType.Star) },
         };
+        panelShowButtons.Add(buttonShowEarlier, 0, 0);
+        panelShowButtons.Add(buttonShowLater, 0, 1);
 
-        var panelRadioButtons = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 0,
-            Children =
-            {
-                new RadioButton
-                {
-                    Content = Se.Language.Sync.AdjustAll,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustAll))
-                },
-                new RadioButton
-                {
-                    Content = Se.Language.Sync.AdjustSelectedLines,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLines))
-                },
-                new RadioButton
-                {
-                    Content = Se.Language.Sync.AdjustSelectedLinesAndForward,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLinesAndForward))
-                }
-            },
-        };
+        var adjustmentRows = new StackPanel { Spacing = 10 };
+        adjustmentRows.Children.Add(timeCodeUpDown);
+        adjustmentRows.Children.Add(panelShowButtons);
+        var adjustmentSection = EditorChrome.MakeEditorSection(Se.Language.General.Adjustment, adjustmentRows, first: true);
+        adjustmentSection.MinWidth = 280;
 
-        var buttonHelp = UiUtil.MakeButton(vm.ShowHelpCommand, IconNames.Help, AdjustAllTimesViewModel.GetShortcutsText());
+        var panelRadioButtons = SyncTimingChrome.MakeApplyToRadioButtons(
+            nameof(vm.AdjustAll),
+            nameof(vm.AdjustSelectedLines),
+            nameof(vm.AdjustSelectedLinesAndForward));
+        var linesSection = EditorChrome.MakeEditorSection(Se.Language.General.ApplyTo, panelRadioButtons, first: true);
+
+        var buttonHelp = EditorChrome.CreateToolButton("fa-solid fa-circle-question", AdjustAllTimesViewModel.GetShortcutsText(), vm.ShowHelpCommand);
         var buttonOk = UiUtil.MakeButtonDone(vm.OkCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonHelp, buttonOk);
+        buttonOk.Classes.Add("primary");
 
-        var labelStatus = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.StatusText));
+        var labelStatus = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0)).WithBindText(vm, nameof(vm.StatusText));
+        labelStatus.TextTrimming = TextTrimming.CharacterEllipsis;
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(timeCodeUpDown,    0, 0);
-        grid.Add(panelShowButtons,  0, 1, 2, 1);
-        grid.Add(panelRadioButtons, 1, 0);
-        grid.Add(labelStatus,       2, 0);
-        grid.Add(panelButtons,      2, 1);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeSideBySide(adjustmentSection, linesSection), EditorChrome.MakeDockedButtonBar(labelStatus, buttonHelp, buttonOk));
 
         Loaded += delegate
         {
@@ -112,5 +75,26 @@ public class AdjustAllTimesWindow : Window
         };
         AddHandler(KeyDownEvent, (_, e) => vm.OnKeyDown(e), RoutingStrategies.Tunnel);
         Closing += (_, e) => vm.OnClosing(e);
+    }
+
+    /// <summary>
+    /// Show earlier/later: the actions of this window, so real buttons with an icon and the text.
+    /// </summary>
+    private static Button MakeShowButton(string icon, string text, System.Windows.Input.ICommand command)
+    {
+        var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, HorizontalAlignment = HorizontalAlignment.Center };
+        content.Children.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 11, VerticalAlignment = VerticalAlignment.Center });
+        content.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        var button = new Button
+        {
+            Content = content,
+            Command = command,
+            MinWidth = 110,
+            Padding = new Thickness(12, 6),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+        };
+        Avalonia.Automation.AutomationProperties.SetName(button, text);
+        return button;
     }
 }

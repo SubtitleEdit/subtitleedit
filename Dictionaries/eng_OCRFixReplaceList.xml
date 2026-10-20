@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <OCRFixReplaceList>
 	<WholeWords>
+		<Word from="gasPs" to="gasps" />
+		<Word from="gasPing" to="gasping" />
+		<Word from="yelPs" to="yelps" />
+		<Word from="yelPing" to="yelping" />
         <Word from="tñere" to="there" />
         <Word from="ri9ht" to="right" />
 		<Word from="$COff$" to="scoffs" />
@@ -692,7 +696,6 @@
 		<Word from="forAmerica's" to="for America's" />
 		<Word from="forArthur" to="for Arthur" />
 		<Word from="forbad" to="forbid" />
-		<Word from="forevermore" to="for evermore" />
 		<Word from="forgetyourname" to="forget your name" />
 		<Word from="forJack" to="for Jack" />
 		<Word from="forjoining" to="for joining" />
@@ -1060,7 +1063,6 @@
 		<Word from="Ile" to="lie" />
 		<Word from="Ileft" to="I left" />
 		<Word from="Ilive" to="I live" />
-		<Word from="I'LL" to="I'll" />
 		<Word from="I'lldo" to="I'll do" />
 		<Word from="I'llgo" to="I'll go" />
 		<Word from="I'lljust" to="I'll just" />
@@ -1285,7 +1287,6 @@
 		<Word from="l_AuGHING" to="LAUGHING" />
 		<Word from="l‘m" to="I'm" />
 		<Word from="l0ng's" to="long's" />
-		<Word from="lam" to="I am" />
 		<Word from="Laml6" to="I am 16" />
 		<Word from="lasagna" to="lasagne" />
 		<Word from="Lcad" to="Load" />
@@ -1559,7 +1560,6 @@
 		<Word from="newjobs" to="new jobs" />
 		<Word from="newous" to="nervous" />
 		<Word from="newsagenfs" to="newsagents" />
-		<Word from="newsstand" to="news stand" />
 		<Word from="nextdoor" to="next door" />
 		<Word from="nff" to="off" />
 		<Word from="NiCe" to="Nice" />
@@ -2338,7 +2338,6 @@
 		<Word from="Wasnt" to="Wasn't" />
 		<Word from="Wasrt" to="Wasn't" />
 		<Word from="wasrt" to="wasn't" />
-		<Word from="wastebasket" to="waste basket" />
 		<Word from="wayJack" to="way Jack" />
 		<Word from="wayl" to="way I" />
 		<Word from="wayround" to="way round" />
@@ -3394,6 +3393,8 @@
 		<RegEx find="(2 )(nd\b)" replaceWith="2$2" />
 		<RegEx find="(3 )(rd\b)" replaceWith="3$2" />
 		<RegEx find="([456789])( th\b)" replaceWith="$1th" />
+		<!-- nOCR: "p" and "P" are the same shape; a capital P between lowercase letters before an ending is a "p" ("gasPs", "sleePing") -->
+		<RegEx find="(?&lt;=\p{Ll})P(?=(?:s|ing|ed)\b)" replaceWith="p" />
 	</RegularExpressions>
 	<RegularExpressionsIfSpelledCorrectly>
 		<RegEx find="\[([A-Zl]+)\]" replaceAllFrom="l" replaceAllTo="I" spellCheck="$1" replaceWith="[$1]" />		

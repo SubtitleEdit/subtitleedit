@@ -1,4 +1,3 @@
-using Nikse.SubtitleEdit.Core.Common;
 using System.Globalization;
 using System.Text;
 

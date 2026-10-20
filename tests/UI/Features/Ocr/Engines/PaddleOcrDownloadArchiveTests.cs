@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 

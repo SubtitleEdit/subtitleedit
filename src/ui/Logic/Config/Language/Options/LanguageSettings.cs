@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Enums;
-using System;
 
 namespace Nikse.SubtitleEdit.Logic.Config.Language.Options;
 
@@ -25,6 +24,7 @@ public class LanguageSettings
     public string ContinuationStyleLeadingTrailingDashDots { get; set; }
 
     public string CpsLineLengthStyle { get; set; }
+    public string CpsLineLengthIgnoreTagsRegex { get; set; }
     public string CpsLineLengthStyleCalcAll { get; set; }
     public string CpsLineLengthStyleCalcNoSpaceCpsOnly { get; set; }
     public string CpsLineLengthStyleCalcNoSpace { get; set; }
@@ -66,7 +66,6 @@ public class LanguageSettings
     public string GridAlternatingRowColor { get; set; }
     public string GridAlternatingRowColorDark { get; set; }
     public string UiFont { get; set; }
-    public string Theme { get; set; }
     public string IconTheme { get; set; }
     public string DarkThemeForegroundColor { get; set; }
     public string DarkThemeBackgroundColor { get; set; }
@@ -76,7 +75,6 @@ public class LanguageSettings
     public string SpellCheckHighlightColor { get; set; }
     public string SingleLineMaxLength { get; set; }
     public string OptimalCharsPerSec { get; set; }
-    public string MaxCharsPerSec { get; set; }
     public string MaxWordsPerMin { get; set; }
     public string MinDurationMs { get; set; }
     public string MaxDurationMs { get; set; }
@@ -87,7 +85,6 @@ public class LanguageSettings
     public string MinGapCalculateFrames { get; set; }
     public string MinGapCalculateXFramesAtYGivesZMs { get; set; }
     public string MinGapCalculateUseXAsNewGap { get; set; }
-    public string MaxLines { get; set; }
     public string UnbreakSubtitlesShortThan { get; set; }
     public string AutoBreakLineEndingEarly { get; set; }
     public string AutoBreakCommaBreakEarly { get; set; }
@@ -127,7 +124,19 @@ public class LanguageSettings
     public string ColorWordsPerMinute { get; set; }
     public string ColorOverlap { get; set; }
     public string ColorGapTooShort { get; set; }
+    public string ColorGapInRange { get; set; }
+    public string GapRangeMs { get; set; }
+    public string GapRangeFrames { get; set; }
     public string ErrorBackgroundColor { get; set; }
+    public string CustomErrorRules { get; set; }
+    public string CustomErrorRulesHighlight { get; set; }
+    public string CustomErrorRulesHint { get; set; }
+    public string CustomErrorRuleSelected { get; set; }
+    public string CustomErrorRuleTest { get; set; }
+    public string CustomErrorRuleTestMatch { get; set; }
+    public string CustomErrorRuleTestNoMatch { get; set; }
+    public string CustomErrorRulesOn { get; set; }
+    public string CustomErrorRulesOff { get; set; }
     public string WaveformDrawGridLines { get; set; }
     public string WaveformUseSkiaRenderer { get; set; }
     public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
@@ -193,6 +202,8 @@ public class LanguageSettings
     public string VideoControlsPositionText { get; set; }
     public string VideoControlsVideoFileName { get; set; }
     public string VideoControlsPlayerName { get; set; }
+    public string VideoControlsPreviousSubtitle { get; set; }
+    public string VideoControlsNextSubtitle { get; set; }
     public string FullscreenHideControls { get; set; }
     public string ShowSecondarySubtitleDialog { get; set; }
     public string RememberSecondarySubtitleFile { get; set; }
@@ -248,7 +259,9 @@ public class LanguageSettings
     public string TimeCodeModeTime { get; set; }
     public string TimeCodeModeFrames { get; set; }
     public string TimeCodeModeFrameNumbers { get; set; }
+    public string FrameModeSnapToVideoFrames { get; set; }
     public string TextBoxLimitNewLines { get; set; }
+    public string TextBoxAutoWrapWhileTyping { get; set; }
     public string MpvOpenGl { get; set; }
     public string MpvSoftwareRendering { get; set; }
     public string MpvMetalRendering { get; set; }
@@ -273,6 +286,10 @@ public class LanguageSettings
     public string SubtitleDoubleClickAction { get; set; }
     public string SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
+    public string FileChangedOutsideAction { get; set; }
+    public string FileChangedOutsideReloadWhenUnmodified { get; set; }
+    public string FileChangedOutsideAlwaysAsk { get; set; }
+    public string FileChangedOutsideNever { get; set; }
     public string DefaultSaveLocation { get; set; }
     public string DefaultSaveLocationSourceFileFolder { get; set; }
     public string DefaultSaveLocationLastUsedFolder { get; set; }
@@ -333,6 +350,7 @@ public class LanguageSettings
     public string TextBoxButtonShowColor { get; set; }
     public string TextBoxButtonShowRemoveFormatting { get; set; }
     public string TextBoxButtonShowAiAssistant { get; set; }
+    public string TextBoxButtonShowRecordSpeech { get; set; }
     public string WaveformSingleClickAction { get; set; }
     public string WaveformDoubleClickAction { get; set; }
     public string AllSettings { get; set; }
@@ -389,6 +407,7 @@ public class LanguageSettings
         ContinuationStyleLeadingTrailingDashDots = "Dash, but dots for pauses";
 
         CpsLineLengthStyle = "Cps/line-length";
+        CpsLineLengthIgnoreTagsRegex = "Ignore custom tags (regex)";
         CpsLineLengthStyleCalcAll = "Count all characters";
         CpsLineLengthStyleCalcNoSpaceCpsOnly = "Count all except space, cps only";
         CpsLineLengthStyleCalcNoSpace = "Count all except space";
@@ -430,7 +449,6 @@ public class LanguageSettings
         GridAlternatingRowColor = "Alternating row color (light theme)";
         GridAlternatingRowColorDark = "Alternating row color (dark theme)";
         UiFont = "UI font";
-        Theme = "Theme";
         IconTheme = "Icon theme";
         DarkThemeForegroundColor = "Dark theme foreground color";
         DarkThemeBackgroundColor = "Dark theme background color";
@@ -440,7 +458,6 @@ public class LanguageSettings
         SpellCheckHighlightColor = "Spell check highlight color";
         SingleLineMaxLength = "Single line max length";
         OptimalCharsPerSec = "Optimal chars/sec";
-        MaxCharsPerSec = "Max chars/sec";
         MaxWordsPerMin = "Max words/min";
         MinDurationMs = "Min duration (ms)";
         MaxDurationMs = "Max duration (ms)";
@@ -451,7 +468,6 @@ public class LanguageSettings
         MinGapCalculateFrames = "Min. gap in frames";
         MinGapCalculateXFramesAtYGivesZMs = "{0} frames at a frame rate of {1} gives {2} milliseconds.";
         MinGapCalculateUseXAsNewGap = "Use \"{0}\" milliseconds as new minimum gap?";
-        MaxLines = "Max number of lines";
         UnbreakSubtitlesShortThan = "Unbreak subtitles shorter than";
         AutoBreakLineEndingEarly = "Auto-break early for end of sentence (.!?)";
         AutoBreakCommaBreakEarly = "Auto-break early for comma";
@@ -491,7 +507,19 @@ public class LanguageSettings
         ColorWordsPerMinute = "Color words/min if too high";
         ColorOverlap = "Color time code overlap";
         ColorGapTooShort = "Color if gap is too short";
+        ColorGapInRange = "Color if gap is in range";
+        GapRangeMs = "Gap range (ms)";
+        GapRangeFrames = "Gap range (frames)";
         ErrorBackgroundColor = "Error background color";
+        CustomErrorRules = "Custom error rules";
+        CustomErrorRulesHighlight = "Color lines matching a custom error rule";
+        CustomErrorRulesHint = "A line whose text matches an enabled rule's regular expression is colored with the rule's color and counts as an error (List errors, Go to next error). The first matching rule decides the color.";
+        CustomErrorRuleSelected = "Selected rule";
+        CustomErrorRuleTest = "Test";
+        CustomErrorRuleTestMatch = "The selected rule matches the sample text";
+        CustomErrorRuleTestNoMatch = "The selected rule does not match the sample text";
+        CustomErrorRulesOn = "Custom error rules: on";
+        CustomErrorRulesOff = "Custom error rules: off";
         WaveformDrawGridLines = "Draw grid lines";
         WaveformUseSkiaRenderer = "Use experimental fast renderer";
         WaveformFocusOnMouseOver = "Focus on mouse over";
@@ -550,6 +578,8 @@ public class LanguageSettings
         VideoControlsPositionText = "Position / duration text";
         VideoControlsVideoFileName = "Video file name";
         VideoControlsPlayerName = "Video player name";
+        VideoControlsPreviousSubtitle = "Previous subtitle";
+        VideoControlsNextSubtitle = "Next subtitle";
         FullscreenHideControls = "Hide video controls in full-screen";
         ShowSecondarySubtitleDialog = "Show style dialog when opening a second subtitle file";
         RememberSecondarySubtitleFile = "Remember second subtitle file";
@@ -611,7 +641,9 @@ public class LanguageSettings
         TimeCodeModeTime = "Time (hh:mm:ss,zzz)";
         TimeCodeModeFrames = "Frames (hh:mm:ss:ff)";
         TimeCodeModeFrameNumbers = "Frame numbers";
+        FrameModeSnapToVideoFrames = "Store times on video frames (not frames within each second)";
         TextBoxLimitNewLines = "Limit number of lines in subtitle text box";
+        TextBoxAutoWrapWhileTyping = "Auto-wrap while typing";
         MpvOpenGl = "libmpv - OpenGL";
         MpvWidRendering = "libmpv - Native Window ID rendering";
         MpvSoftwareRendering = "libmpv - Software rendering (slow)";
@@ -636,6 +668,10 @@ public class LanguageSettings
         SubtitleDoubleClickAction = "Subtitle grid double-click action";
         SubtitleGridCenterSelectedRow = "Subtitle grid, center when selecting prev/next row";
         SaveAsBehavior = "\"Save as\" behavior";
+        FileChangedOutsideAction = "Subtitle file changed by another program";
+        FileChangedOutsideReloadWhenUnmodified = "Reload if nothing is unsaved, otherwise ask";
+        FileChangedOutsideAlwaysAsk = "Always ask";
+        FileChangedOutsideNever = "Do nothing";
         DefaultSaveLocation = "Default save location";
         DefaultSaveLocationSourceFileFolder = "Folder of subtitle/video file";
         DefaultSaveLocationLastUsedFolder = "Last used folder";
@@ -696,6 +732,7 @@ public class LanguageSettings
         TextBoxButtonShowColor = "Text box: show color button";
         TextBoxButtonShowRemoveFormatting = "Text box: show remove formatting button";
         TextBoxButtonShowAiAssistant = "Text box: show AI assistant button";
+        TextBoxButtonShowRecordSpeech = "Text box: show record speech button (microphone to text)";
         WaveformSingleClickAction = "Waveform single-click action";
         WaveformDoubleClickAction = "Waveform double-click action (after single-click action)";
         AllSettings = "All settings";

@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -61,6 +62,9 @@ public partial class RemuxVideoViewModel : ObservableObject
     [ObservableProperty] private string _progressText = string.Empty;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isRemuxing;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.RemuxVideoTitle);
+
     [ObservableProperty] private bool _isFinalizing;
     [ObservableProperty] private bool _isNotRemuxing = true;
     [ObservableProperty] private bool _canRemux;
@@ -78,6 +82,20 @@ public partial class RemuxVideoViewModel : ObservableObject
     [ObservableProperty] private bool _isVolumeEnabled;
     [ObservableProperty] private bool _fastStart;
     [ObservableProperty] private bool _isFastStartVisible = true;
+    [ObservableProperty] private ObservableCollection<string> _subtitlesAsOptions = new();
+    [ObservableProperty] private string _selectedSubtitlesAs = string.Empty;
+    [ObservableProperty] private bool _isSubtitlesAsVisible = true;
+    [ObservableProperty] private bool _isMp4CaptionsHintVisible;
+
+    /// <summary>
+    /// Taken off the caption times when the subtitle files become captions in the video (#16220):
+    /// broadcast .scc/.mcc files carry the time of day, usually from 01:00:00:00, while the video
+    /// starts at zero. Suggested from the first file until the user types a value.
+    /// </summary>
+    [ObservableProperty] private TimeSpan _captionOffset;
+    [ObservableProperty] private bool _isCaptionOffsetVisible;
+    private bool _isCaptionOffsetSuggested = true;
+    private bool _isSettingCaptionOffset;
 
     /// <summary>
     /// For an .mpg: the video is not MPEG-2, and the user agreed to have it re-encoded.
@@ -104,6 +122,13 @@ public partial class RemuxVideoViewModel : ObservableObject
         OutputFormats = new ObservableCollection<string> { ".mp4", ".mkv", ".mov", ".mpg" };
         SelectedOutputFormat = OutputFormats[0];
         FastStart = Se.Settings.Video.RemuxFastStart;
+        SubtitlesAsOptions = new ObservableCollection<string>
+        {
+            Se.Language.Video.RemuxVideoSubtitlesAsTracks,
+            Se.Language.Video.RemuxVideoSubtitlesAsCaptions,
+        };
+        SelectedSubtitlesAs = SubtitlesAsOptions[Se.Settings.Video.RemuxMp4SubtitlesAsCaptions ? 1 : 0];
+        UpdateSubtitlesAsState();
 
         AudioFiles.CollectionChanged += AudioFilesOnCollectionChanged;
         SubtitleFiles.CollectionChanged += SubtitleFilesOnCollectionChanged;
@@ -132,6 +157,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             _videoDuration = duration;
         }
 
+        UpdateCaptionOffset();
         if (!string.IsNullOrWhiteSpace(VideoFileName) && File.Exists(VideoFileName))
         {
             try
@@ -187,6 +213,13 @@ public partial class RemuxVideoViewModel : ObservableObject
             return null;
         }
 
+        // .mp4 with captions in the video: every subtitle format becomes CEA-608 (an .mcc brings
+        // its CEA-708 too), so only several unmixed audio tracks need another container (#16164)
+        if (IsMp4WithCaptions)
+        {
+            return RequiresMkv(out reason) ? ".mkv" : null;
+        }
+
         // MacCaption (.mcc) carries CEA-608 and CEA-708 caption packets, which only the .mpg
         // output embeds (ffmpeg has no MCC reader to mux it anywhere else).
         if (SubtitleFiles.Any(IsMcc))
@@ -218,10 +251,17 @@ public partial class RemuxVideoViewModel : ObservableObject
     private bool RequiresMkv(out string reason)
     {
         var isMov = string.Equals(SelectedOutputFormat, ".mov", StringComparison.OrdinalIgnoreCase);
-        if (!isMov && ((AudioFiles.Count > 1 && !IsMixing) || SubtitleFiles.Count > 1))
+        var subtitleTracks = IsMp4WithCaptions ? 0 : SubtitleFiles.Count;
+        if (!isMov && ((AudioFiles.Count > 1 && !IsMixing) || subtitleTracks > 1))
         {
             reason = Se.Language.Video.RemuxVideoMultipleTracksRequiresMkv;
             return true;
+        }
+
+        if (IsMp4WithCaptions)
+        {
+            reason = string.Empty;
+            return false;
         }
 
         var hasAss = SubtitleFiles.Any(f =>
@@ -299,6 +339,8 @@ public partial class RemuxVideoViewModel : ObservableObject
         UpdateCanRemux();
         EnforceMkvIfRequired();
         UpdateSubtitleListState();
+        UpdateCaptionChannels();
+        UpdateCaptionOffset();
     }
 
     private void UpdateAudioListState()
@@ -463,6 +505,7 @@ public partial class RemuxVideoViewModel : ObservableObject
     partial void OnIsRemuxingChanged(bool value)
     {
         IsNotRemuxing = !value;
+        _sleepInhibitor.SetActive(value);
         UpdateCanRemux();
     }
 
@@ -475,6 +518,7 @@ public partial class RemuxVideoViewModel : ObservableObject
     partial void OnSelectedOutputFormatChanged(string value)
     {
         IsFastStartVisible = IsMovFamily(value);
+        UpdateSubtitlesAsState();
         var required = RequiredOutputFormat(out var reason);
         if (required != null && !string.Equals(value, required, StringComparison.OrdinalIgnoreCase))
         {
@@ -565,6 +609,109 @@ public partial class RemuxVideoViewModel : ObservableObject
 
     private static bool IsMpg(string extension) =>
         string.Equals(extension, ".mpg", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsMp4(string extension) =>
+        string.Equals(extension, ".mp4", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// .mp4 output with the subtitles as CEA-608 captions in the H.264/H.265 video (A/53 SEI)
+    /// instead of mov_text tracks (#16164).
+    /// </summary>
+    internal bool IsMp4WithCaptions =>
+        IsMp4(SelectedOutputFormat) && SubtitlesAsOptions.Count > 1 && SelectedSubtitlesAs == SubtitlesAsOptions[1];
+
+    /// <summary>
+    /// True when the subtitle files become closed captions in the video - CC1 and CC3.
+    /// </summary>
+    private bool IsCaptionOutput => IsMpg(SelectedOutputFormat) || IsMp4WithCaptions;
+
+    partial void OnSelectedSubtitlesAsChanged(string value)
+    {
+        if (SubtitlesAsOptions.Count < 2)
+        {
+            return;
+        }
+
+        Se.Settings.Video.RemuxMp4SubtitlesAsCaptions = value == SubtitlesAsOptions[1];
+        IsCompleted = false;
+        UpdateSubtitlesAsState();
+        EnforceMkvIfRequired();
+    }
+
+    private void UpdateSubtitlesAsState()
+    {
+        IsSubtitlesAsVisible = IsMp4(SelectedOutputFormat);
+        IsMp4CaptionsHintVisible = IsMp4WithCaptions;
+        UpdateCaptionChannels();
+        UpdateCaptionOffset();
+    }
+
+    /// <summary>
+    /// Shows the caption time offset when the subtitle files become captions in the video, and
+    /// suggests one for a broadcast .scc/.mcc whose first caption lies at or past the end of the
+    /// video: its start-of-program hour (01:00:00:00 -> 1 h, 00:59:58:00 -> 0). A value the user
+    /// typed is kept.
+    /// </summary>
+    private void UpdateCaptionOffset()
+    {
+        IsCaptionOffsetVisible = IsCaptionOutput && SubtitleFiles.Count > 0;
+        if (!_isCaptionOffsetSuggested)
+        {
+            return;
+        }
+
+        var suggested = SubtitleFiles.Count > 0
+            ? SuggestCaptionOffset(SubtitleFiles[0].GetFirstCaptionTime(), _videoDuration)
+            : TimeSpan.Zero;
+        if (suggested != CaptionOffset)
+        {
+            _isSettingCaptionOffset = true;
+            CaptionOffset = suggested;
+            _isSettingCaptionOffset = false;
+        }
+    }
+
+    /// <summary>
+    /// The whole hours of <paramref name="firstCaptionTime"/> when the caption would come at or
+    /// after the end of a video of <paramref name="videoDuration"/> - else zero, as when either
+    /// is unknown.
+    /// </summary>
+    internal static TimeSpan SuggestCaptionOffset(TimeSpan? firstCaptionTime, TimeSpan? videoDuration)
+    {
+        if (firstCaptionTime == null || videoDuration == null || videoDuration.Value.TotalMilliseconds <= 0)
+        {
+            return TimeSpan.Zero;
+        }
+
+        var first = firstCaptionTime.Value;
+        if (first < videoDuration.Value || first.TotalHours < 1)
+        {
+            return TimeSpan.Zero;
+        }
+
+        return TimeSpan.FromHours((int)first.TotalHours);
+    }
+
+    partial void OnCaptionOffsetChanged(TimeSpan value)
+    {
+        IsCompleted = false;
+        if (!_isSettingCaptionOffset)
+        {
+            _isCaptionOffsetSuggested = false;
+        }
+    }
+
+    /// <summary>
+    /// Shows CC1/CC3 on the first two subtitle files when they become captions in the video.
+    /// </summary>
+    private void UpdateCaptionChannels()
+    {
+        var isCaptionOutput = IsCaptionOutput;
+        for (var i = 0; i < SubtitleFiles.Count; i++)
+        {
+            SubtitleFiles[i].CaptionChannel = !isCaptionOutput ? string.Empty : i == 0 ? "CC1" : i == 1 ? "CC3" : string.Empty;
+        }
+    }
 
     private static bool IsMovFamily(string extension) =>
         string.Equals(extension, ".mp4", StringComparison.OrdinalIgnoreCase) ||
@@ -1045,7 +1192,7 @@ public partial class RemuxVideoViewModel : ObservableObject
         // SCC forces .mov, and ffmpeg's mov muxer refuses the VP9/AV1 video of a .webm
         // ("vp9 only supported in MP4"), so the remux could only fail.
         var isMpg = IsMpg(SelectedOutputFormat);
-        if (!isMpg && subFiles.Any(IsScc) && string.Equals(videoExt, ".webm", StringComparison.OrdinalIgnoreCase))
+        if (!isMpg && !IsMp4WithCaptions && subFiles.Any(IsScc) && string.Equals(videoExt, ".webm", StringComparison.OrdinalIgnoreCase))
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoSccNotWithWebM, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
@@ -1055,6 +1202,13 @@ public partial class RemuxVideoViewModel : ObservableObject
         if (isMpg && subFiles.Count > 2)
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoMpgMaxTwoCaptionTracks, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var isMp4WithCaptions = IsMp4WithCaptions;
+        if (isMp4WithCaptions && subFiles.Count > 2)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoMp4MaxTwoCaptionTracks, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
@@ -1086,9 +1240,9 @@ public partial class RemuxVideoViewModel : ObservableObject
             return;
         }
 
-        var captionFiles = isMpg ? subFiles : new List<RemuxFileItem>();
+        var captionFiles = isMpg || isMp4WithCaptions ? subFiles : new List<RemuxFileItem>();
         var ffmpegOutputFileName = captionFiles.Count > 0
-            ? Path.Combine(Path.GetDirectoryName(fullOutput) ?? string.Empty, Path.GetFileNameWithoutExtension(fullOutput) + ".se-temp.mpg")
+            ? Path.Combine(Path.GetDirectoryName(fullOutput) ?? string.Empty, Path.GetFileNameWithoutExtension(fullOutput) + ".se-temp" + SelectedOutputFormat)
             : OutputFileName;
         DispatcherTimer? elapsedTimer = null;
         Stopwatch? stopwatch = null;
@@ -1122,6 +1276,13 @@ public partial class RemuxVideoViewModel : ObservableObject
                 }
 
                 ReencodeVideoToMpeg2 = true;
+            }
+
+            // SEI captions only exist in H.264/H.265 video
+            if (isMp4WithCaptions && captionFiles.Count > 0 && videoCodec.Length > 0 && videoCodec != "h264" && videoCodec != "hevc")
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, string.Format(Se.Language.Video.RemuxVideoMp4CaptionsNeedH264X, videoCodec), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
             _progressTracker = new FfmpegProgressTracker(durationSeconds);
@@ -1313,24 +1474,27 @@ public partial class RemuxVideoViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Writes the output .mpg from ffmpeg's <paramref name="programStreamFileName"/> with the
-    /// subtitle files as ATSC A/53 closed captions in the MPEG-2 video. The first file is field 1
+    /// Writes the output .mpg/.mp4 from ffmpeg's <paramref name="remuxedFileName"/> with the
+    /// subtitle files as ATSC A/53 closed captions in the video - MPEG-2 picture user data in an
+    /// .mpg, H.264/H.265 SEI in an .mp4. The first file is field 1
     /// (CC1) - an .mcc brings all its caption data, CEA-608 field 2 and CEA-708 too; a second file
     /// replaces field 2 (CC3). A .scc/.mcc goes in as it is, other formats are converted to
     /// CEA-608 pop-on captions first.
     /// </summary>
-    private async Task AddClosedCaptions(string programStreamFileName, List<RemuxFileItem> captionFiles, Stopwatch stopwatch)
+    private async Task AddClosedCaptions(string remuxedFileName, List<RemuxFileItem> captionFiles, Stopwatch stopwatch)
     {
         _isAddingCaptions = true;
         ProgressValue = 0;
         UpdateProgressText(stopwatch.Elapsed);
         var outputFileName = OutputFileName;
+        var isMpg = IsMpg(SelectedOutputFormat);
+        var captionOffset = CaptionOffset;
         try
         {
             await Task.Run(() =>
             {
-                var captions = GetClosedCaptionBytes(captionFiles);
-                ProgramStreamClosedCaptionWriter.Write(programStreamFileName, outputFileName, captions, fraction =>
+                var captions = GetClosedCaptionBytes(captionFiles, captionOffset);
+                Action<double> progress = fraction =>
                 {
                     if (_isCancelled)
                     {
@@ -1342,7 +1506,16 @@ public partial class RemuxVideoViewModel : ObservableObject
                         ProgressValue = fraction * 100.0;
                         UpdateProgressText(stopwatch.Elapsed);
                     });
-                });
+                };
+
+                if (isMpg)
+                {
+                    ProgramStreamClosedCaptionWriter.Write(remuxedFileName, outputFileName, captions, progress);
+                }
+                else
+                {
+                    Mp4ClosedCaptionWriter.Write(remuxedFileName, outputFileName, captions, progress);
+                }
             });
         }
         catch (OperationCanceledException) when (_isCancelled)
@@ -1363,14 +1536,15 @@ public partial class RemuxVideoViewModel : ObservableObject
     /// <summary>
     /// The ffmpeg arguments for remuxing the video with <paramref name="audioFiles"/> and
     /// <paramref name="subFiles"/> into <paramref name="outputFileName"/> (default
-    /// <see cref="OutputFileName"/>), without the progress arguments. For an .mpg the subtitles
+    /// <see cref="OutputFileName"/>), without the progress arguments. For an .mpg (and an .mp4 with
+    /// captions in the video) the subtitles
     /// are left out - they are added to the video as closed captions afterwards.
     /// </summary>
     internal string BuildFfmpegArguments(List<RemuxFileItem> audioFiles, List<RemuxFileItem> subFiles, string? outputFileName = null)
     {
         var isMkv = string.Equals(SelectedOutputFormat, ".mkv", StringComparison.OrdinalIgnoreCase);
         var isMpg = IsMpg(SelectedOutputFormat);
-        if (isMpg)
+        if (isMpg || IsMp4WithCaptions)
         {
             subFiles = new List<RemuxFileItem>();
         }
@@ -1621,6 +1795,8 @@ public partial class RemuxVideoViewModel : ObservableObject
         {
             AbortRemux();
         }
+
+        _sleepInhibitor.Dispose();
     }
 
     private void AbortRemux()
@@ -1649,12 +1825,23 @@ public partial class RemuxVideoViewModel : ObservableObject
     /// </summary>
     internal static ClosedCaptionBytes GetClosedCaptionBytes(List<RemuxFileItem> captionFiles)
     {
+        return GetClosedCaptionBytes(captionFiles, TimeSpan.Zero);
+    }
+
+    /// <summary>
+    /// <see cref="GetClosedCaptionBytes(List{RemuxFileItem})"/> with <paramref name="offset"/>
+    /// taken off every caption time - the start-of-program timecode of a broadcast file (#16220).
+    /// Captions that would come before the video are dropped.
+    /// </summary>
+    internal static ClosedCaptionBytes GetClosedCaptionBytes(List<RemuxFileItem> captionFiles, TimeSpan offset)
+    {
         var captions = ClosedCaptionBytes.FromFile(captionFiles[0].FileName);
         if (captionFiles.Count > 1)
         {
             captions.Field2 = ClosedCaptionBytes.FromFile(captionFiles[1].FileName).Field1;
         }
 
+        captions.Shift(-offset.TotalMilliseconds);
         return captions;
     }
 

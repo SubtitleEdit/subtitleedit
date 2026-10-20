@@ -30,7 +30,7 @@ internal static class FindResultText
 
         return count == 1
             ? Se.Language.Edit.Find.ReplacedOneOccurrence
-            : string.Format(Se.Language.Edit.Find.ReplacedXOccurrences, count);
+            : string.Format(Se.Language.General.ReplacedXOccurrences, count);
     }
 
     /// <summary>A tick for a hit, an info mark for "nothing found".</summary>

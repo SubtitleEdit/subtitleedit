@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
-using System;
 
 namespace LibUiLogicTests.GoogleCloudVision;
 

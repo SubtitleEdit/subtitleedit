@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -40,25 +41,28 @@ public class ShortcutsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+        AddKeyCapStyles(Styles);
+
         _searchBox = new TextBox
         {
             PlaceholderText = language.SearchShortcuts,
-            Margin = new Thickness(10),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Center,
         }.WithSearchAndClearIcons();
+        _searchBox.Classes.Add("text");
         _searchBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
         // Give the interactive controls accessible names so screen readers announce them instead of
         // reading a generic "edit"/"combo box"/"check box" (issue #11745).
         AutomationProperties.SetName(_searchBox, language.SearchShortcuts);
 
-        var accentColor = UiUtil.GetAccentBrush() is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
         var labelBadgeCount = new Border
         {
-            Background = new SolidColorBrush(accentColor, 0.18), // badge background
+            Background = EditorChrome.AccentSoftBrush, // badge background
             CornerRadius = new CornerRadius(10),      // makes it pill-like
             Padding = new Thickness(8, 3, 8, 2),      // spacing around text
-            Margin = new Thickness(0, 0, 12, 0),
+            Margin = new Thickness(10, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Left,
             Child = new TextBlock
@@ -67,32 +71,29 @@ public class ShortcutsWindow : Window
                 FontSize = UiUtil.ScaledFontSize(10),
                 FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = new SolidColorBrush(accentColor),
+                Foreground = EditorChrome.BadgeTextBrush,
                 HorizontalAlignment = HorizontalAlignment.Center
             }
         };
 
-        var labelFilter = UiUtil.MakeTextBlock(Se.Language.General.Filter);
+        var labelFilter = EditorChrome.MakeDimLabel(Se.Language.General.Filter, new Thickness(24, 0, 8, 0));
         var comboBoxFilter = UiUtil.MakeComboBox(vm.Filters, vm, nameof(vm.SelectedFilter))
-            .WithMinWidth(120)
-            .WithMargin(5, 0, 10, 0);
+            .WithMinWidth(140);
+        comboBoxFilter.VerticalAlignment = VerticalAlignment.Center;
         comboBoxFilter.SelectionChanged += vm.ComboBoxFilter_SelectionChanged;
         AutomationProperties.SetLabeledBy(comboBoxFilter, labelFilter);
 
+        // Search (with the match count) on the left, the filter on the right.
         var topGrid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(60, GridUnitType.Pixel) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
-            Margin = new Thickness(10),
+            Margin = new Thickness(4, 4),
         };
         topGrid.Add(_searchBox, 0);
         topGrid.Add(labelBadgeCount, 0, 1);
@@ -103,7 +104,9 @@ public class ShortcutsWindow : Window
         var groupTiles = new ListBox
         {
             ItemsSource = vm.GroupTiles,
-            Margin = new Thickness(0, 0, 0, 8),
+            Background = Brushes.Transparent, // the panel color shows through
+            Margin = new Thickness(0, 0, 0, 10),
+            Classes = { "tiles" },
             ItemsPanel = new FuncTemplate<Panel?>(() => new WrapPanel { Orientation = Orientation.Horizontal }),
             ItemContainerTheme = new ControlTheme(typeof(ListBoxItem))
             {
@@ -149,11 +152,16 @@ public class ShortcutsWindow : Window
                 };
                 glyph.Bind(Border.BackgroundProperty, new Binding(nameof(ShortcutGroupTile.Brush)));
 
+                // Long group names ("Subtitle list view & ...") wrap to a second line instead of
+                // being cut off at the tile width.
                 var name = new TextBlock
                 {
                     FontSize = UiUtil.ScaledFontSize(11),
                     HorizontalAlignment = HorizontalAlignment.Center,
                     TextAlignment = TextAlignment.Center,
+                    TextWrapping = TextWrapping.Wrap,
+                    MaxLines = 2,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
                 };
                 name.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutGroupTile.Name)));
 
@@ -437,7 +445,7 @@ public class ShortcutsWindow : Window
             .AddSortable<ShortcutTreeNode, string>(columnName, x => x.Title)
             .AddSortable<ShortcutTreeNode, string>(columnShortcut, x => x.DisplayShortcut);
 
-        var borderShortcutsGrid = UiUtil.MakeBorderForControlNoPadding(shortcutsGrid).WithMarginBottom(5);
+        var borderShortcutsGrid = EditorChrome.MakeListFrame(shortcutsGrid, clearListBackground: true);
 
         var flyout = new MenuFlyout();
         shortcutsGrid.ContextFlyout = flyout;
@@ -471,54 +479,49 @@ public class ShortcutsWindow : Window
         // with a control-scoped flyout already does this; this grid was the one left out.
         UiUtil.AttachMacContextFlyoutHandler(shortcutsGrid);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.CommandOkCommand);
-        var buttonResetAllShortcuts = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetAllShortcutsCommand);
-        var buttonImportSe4 = UiUtil.MakeButton(language.ImportFromSe4, vm.ImportFromSe4Command);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-
-        // Utility actions on the left, dialog actions on the right.
-        var buttonBarLeft = UiUtil.MakeControlBarLeft(buttonImportSe4, buttonResetAllShortcuts);
-        buttonBarLeft.Margin = new Thickness(10, 20, 10, 10);
-        buttonBarLeft.VerticalAlignment = VerticalAlignment.Bottom;
-        var buttonBarRight = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        var buttonPanel = new Grid
+        // Import/export were only on the list's right-click menu - also as icons on its header.
+        var buttonImport = EditorChrome.CreateToolButton("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand, 26);
+        var buttonExport = EditorChrome.CreateToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand, 26);
+        var listActions = new StackPanel
         {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonImport, buttonExport },
         };
-        buttonPanel.Add(buttonBarLeft, 0, 0);
-        buttonPanel.Add(buttonBarRight, 0, 1);
+        var listHeader = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(listActions, Dock.Right);
+        listHeader.Children.Add(listActions);
+        listHeader.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Shortcuts));
 
-        var grid = new Grid
+        var listPanel = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = new Thickness(UiUtil.WindowMarginWidth),
+            Margin = new Thickness(14, 12, 14, 14),
         };
-        grid.Add(topGrid, 0);
-        grid.Add(groupTiles, 1);
-        grid.Add(borderShortcutsGrid, 2);
+        listPanel.Add(groupTiles, 0);
+        listPanel.Add(listHeader, 1);
+        listPanel.Add(borderShortcutsGrid, 2);
 
-        var editPanel = new StackPanel
+        var buttonOk = UiUtil.MakeButtonOk(vm.CommandOkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
+        var buttonResetAllShortcuts = EditorChrome.MakeTextToolButton("fa-solid fa-arrows-rotate", language.ResetShortcuts, vm.ResetAllShortcutsCommand);
+        var buttonImportSe4 = EditorChrome.MakeTextToolButton("fa-solid fa-file-import", language.ImportFromSe4, vm.ImportFromSe4Command);
+
+        // Utility actions on the left, dialog actions on the right.
+        var buttonBarLeft = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(10),
-            HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 4,
+            Children = { buttonImportSe4, buttonResetAllShortcuts },
         };
+        var buttonPanel = EditorChrome.MakeButtonBar(buttonBarLeft, buttonCancel, buttonOk);
 
         // Get platform-specific labels
         var isMac = OperatingSystem.IsMacOS();
@@ -527,88 +530,75 @@ public class ShortcutsWindow : Window
         var shiftLabel = isMac ? Se.Language.Options.Shortcuts.ShiftMac : Se.Language.Options.Shortcuts.Shift;
         var winLabel = isMac ? Se.Language.Options.Shortcuts.WinMac : Se.Language.Options.Shortcuts.Win;
 
-        // Shift checkbox and label
-        editPanel.Children.Add(UiUtil.MakeTextBlock(shiftLabel).WithMarginRight(3));
-        var checkBoxShift = UiUtil.MakeCheckBox(vm, nameof(vm.ShiftIsSelected));
-        checkBoxShift.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
-        AutomationProperties.SetName(checkBoxShift, shiftLabel);
-        editPanel.Children.Add(checkBoxShift);
+        // The modifiers as keycap toggles, lit while part of the shortcut.
+        var modifierPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        modifierPanel.Children.Add(MakeModifierToggle(vm, shiftLabel, nameof(vm.ShiftIsSelected)));
+        modifierPanel.Children.Add(MakeModifierToggle(vm, ctrlLabel, nameof(vm.CtrlIsSelected)));
+        modifierPanel.Children.Add(MakeModifierToggle(vm, altLabel, nameof(vm.AltIsSelected)));
 
-        // Control checkbox and label
-        editPanel.Children.Add(UiUtil.MakeTextBlock(ctrlLabel).WithMarginRight(3));
-        var controlCheckBox = UiUtil.MakeCheckBox(vm, nameof(vm.CtrlIsSelected));
-        controlCheckBox.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
-        AutomationProperties.SetName(controlCheckBox, ctrlLabel);
-        editPanel.Children.Add(controlCheckBox);
-
-        // Alt checkbox and label
-        editPanel.Children.Add(UiUtil.MakeTextBlock(altLabel).WithMarginRight(3));
-        var checkBoxAlt = UiUtil.MakeCheckBox(vm, nameof(vm.AltIsSelected));
-        checkBoxAlt.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
-        AutomationProperties.SetName(checkBoxAlt, altLabel);
-        editPanel.Children.Add(checkBoxAlt);
-
-        // AltGr checkbox and label - Windows only: elsewhere right Alt is a plain Alt/Option
+        // AltGr toggle - Windows only: elsewhere right Alt is a plain Alt/Option
         // key (macOS) or a layout level shift Avalonia does not report as Ctrl+Alt (Linux).
         if (OperatingSystem.IsWindows())
         {
-            var altGrLabel = Se.Language.Options.Shortcuts.AltGr;
-            editPanel.Children.Add(UiUtil.MakeTextBlock(altGrLabel).WithMarginRight(3));
-            var checkBoxAltGr = UiUtil.MakeCheckBox(vm, nameof(vm.AltGrIsSelected));
-            checkBoxAltGr.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
-            AutomationProperties.SetName(checkBoxAltGr, altGrLabel);
-            editPanel.Children.Add(checkBoxAltGr);
+            modifierPanel.Children.Add(MakeModifierToggle(vm, Se.Language.Options.Shortcuts.AltGr, nameof(vm.AltGrIsSelected)));
         }
 
-        // Win key checkbox and label
-        editPanel.Children.Add(UiUtil.MakeTextBlock(winLabel).WithMarginRight(3));
-        var checkBoxWin = UiUtil.MakeCheckBox(vm, nameof(vm.WinIsSelected));
-        checkBoxWin.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
-        AutomationProperties.SetName(checkBoxWin, winLabel);
-        editPanel.Children.Add(checkBoxWin);
+        modifierPanel.Children.Add(MakeModifierToggle(vm, winLabel, nameof(vm.WinIsSelected)));
 
         // Key combobox
         var comboBoxKeys = new ComboBox
         {
-            Width = 200,
-            Margin = new Thickness(10, 0, 5, 0),
+            Width = 180,
+            VerticalAlignment = VerticalAlignment.Center,
         };
         comboBoxKeys.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.Shortcuts)) { Source = vm });
         comboBoxKeys.Bind(Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedShortcut)) { Source = vm });
         comboBoxKeys.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
         AutomationProperties.SetName(comboBoxKeys, Se.Language.General.Shortcut);
-        editPanel.Children.Add(comboBoxKeys);
 
-        // browse button
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.ShowGetKeyCommand, accessibleName: Se.Language.Options.Shortcuts.DetectKey);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonBrowse, Se.Language.Options.Shortcuts.DetectKey);
-        }
-
-        editPanel.Children.Add(buttonBrowse);
+        // Detect key button
+        var buttonBrowse = EditorChrome.CreateToolButton("fa-solid fa-keyboard", Se.Language.Options.Shortcuts.DetectKey, vm.ShowGetKeyCommand, 28);
         buttonBrowse.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
-        buttonBrowse.Margin = new Thickness(0, 0, 9, 0);
 
         // configure button
-        var buttonConfig = UiUtil.MakeButton(vm.ConfigureCommand, IconNames.Settings, Se.Language.General.Settings);
-
-        editPanel.Children.Add(buttonConfig);
+        var buttonConfig = EditorChrome.CreateToolButton("fa-solid fa-gear", Se.Language.General.Settings, vm.ConfigureCommand, 28);
         buttonConfig.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
         buttonConfig.Bind(IsVisibleProperty, new Binding(nameof(vm.IsConfigureVisible)) { Source = vm });
-        buttonConfig.Margin = new Thickness(0, 0, 10, 0);
 
         // Reset button
-        var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetShortcutCommand);
-        editPanel.Children.Add(buttonReset);
+        var buttonReset = EditorChrome.MakeTextToolButton("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetShortcutCommand);
         buttonReset.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
+
+        var editPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                modifierPanel,
+                EditorChrome.MakeDimLabel("+", new Thickness(2, 0)),
+                comboBoxKeys,
+                buttonBrowse,
+                buttonConfig,
+                EditorChrome.MakeToolbarSeparator(),
+                buttonReset,
+            },
+        };
 
         // Name of the shortcut being edited on the left, key controls on the right.
         var labelEditing = new TextBlock
         {
             FontWeight = FontWeight.SemiBold,
+            FontSize = 13,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 10, 0),
+            Margin = new Thickness(0, 0, 12, 0),
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
         labelEditing.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectedNode) + "." + nameof(ShortcutTreeNode.Title)) { Source = vm });
@@ -624,9 +614,33 @@ public class ShortcutsWindow : Window
         editSplitGrid.Add(labelEditing, 0, 0);
         editSplitGrid.Add(editPanel, 0, 1);
 
-        var editGridBorder = UiUtil.MakeBorderForControl(editSplitGrid);
-        grid.Add(editGridBorder, 3);
-        grid.Add(buttonPanel, 4);
+        var editSection = new Border
+        {
+            Child = editSplitGrid,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 10),
+        };
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+        };
+        grid.Add(EditorChrome.MakeToolbar(topGrid), 0);
+        grid.Add(EditorChrome.MakePanel(listPanel), 1);
+        grid.Add(editSection, 2);
+        grid.Add(buttonPanel, 3);
 
         Content = grid;
 
@@ -638,6 +652,93 @@ public class ShortcutsWindow : Window
         };
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
+    }
+
+    /// <summary>
+    /// A modifier key (Shift, Ctrl, ...) as a keycap toggle bound to <paramref name="property"/>.
+    /// </summary>
+    private static ToggleButton MakeModifierToggle(ShortcutsViewModel vm, string label, string property)
+    {
+        var toggle = new ToggleButton
+        {
+            Content = label,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleButton.IsCheckedProperty] = new Binding(property) { Source = vm, Mode = BindingMode.TwoWay },
+            [!IsEnabledProperty] = new Binding(nameof(vm.IsControlsEnabled)) { Source = vm },
+        };
+        toggle.Classes.Add("keycap");
+        AutomationProperties.SetName(toggle, label);
+        return toggle;
+    }
+
+    /// <summary>
+    /// Keycap toggles: field colored with a deeper bottom edge, the accent while checked.
+    /// </summary>
+    private static void AddKeyCapStyles(Styles styles)
+    {
+        styles.Add(new Style(x => x.OfType<ToggleButton>().Class("keycap"))
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.0),
+                new Setter(TemplatedControl.FontWeightProperty, FontWeight.SemiBold),
+                new Setter(TemplatedControl.MinWidthProperty, 34.0),
+                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(9, 3, 9, 4)),
+                new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
+                new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(1, 1, 1, 2)),
+                new Setter(ContentControl.HorizontalContentAlignmentProperty, HorizontalAlignment.Center),
+                new Setter(ContentControl.VerticalContentAlignmentProperty, VerticalAlignment.Center),
+            },
+        });
+
+        static Style Presenter(Func<Selector?, Selector> toggle, IBrush background, IBrush border, IBrush foreground) =>
+            new(x => toggle(x).Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"))
+            {
+                Setters =
+                {
+                    new Setter(ContentPresenter.BackgroundProperty, background),
+                    new Setter(ContentPresenter.BorderBrushProperty, border),
+                    new Setter(ContentPresenter.ForegroundProperty, foreground),
+                },
+            };
+
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("keycap"),
+            EditorChrome.FieldBrush, EditorChrome.FieldBorderBrush, EditorChrome.IconBrush));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("keycap").Class(":pointerover"),
+            EditorChrome.HoverBrush, EditorChrome.FieldBorderBrush, EditorChrome.StrongTextBrush));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("keycap").Class(":pressed"),
+            EditorChrome.PressedBrush, EditorChrome.FieldBorderBrush, EditorChrome.StrongTextBrush));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("keycap").Class(":checked"),
+            EditorChrome.AccentBrush, EditorChrome.AccentBrush, Brushes.White));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("keycap").Class(":checked").Class(":pointerover"),
+            EditorChrome.AccentHoverBrush, EditorChrome.AccentHoverBrush, Brushes.White));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("keycap").Class(":disabled"),
+            Brushes.Transparent, EditorChrome.LineBrush, EditorChrome.SeparatorBrush));
+        // Group tiles: rounded, the soft accent while selected (instead of the theme's full accent).
+        foreach (var state in new[] { ":pointerover", ":selected" })
+        {
+            styles.Add(new Style(x => x.OfType<ListBox>().Class("tiles").Descendant().OfType<ListBoxItem>().Class(state)
+                .Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"))
+            {
+                Setters =
+                {
+                    new Setter(ContentPresenter.BackgroundProperty, state == ":selected" ? EditorChrome.AccentSoftBrush : EditorChrome.HoverBrush),
+                    new Setter(ContentPresenter.ForegroundProperty, EditorChrome.StrongTextBrush),
+                },
+            });
+        }
+
+        styles.Add(new Style(x => x.OfType<ListBox>().Class("tiles").Descendant().OfType<ListBoxItem>()
+            .Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"))
+        {
+            Setters = { new Setter(ContentPresenter.CornerRadiusProperty, new CornerRadius(8)) },
+        });
+
+        styles.Add(new Style(x => x.OfType<ToggleButton>().Class("keycap").Class(":checked").Class(":disabled"))
+        {
+            Setters = { new Setter(Visual.OpacityProperty, 0.45) },
+        });
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

@@ -1,14 +1,16 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Layout;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
 namespace Nikse.SubtitleEdit.Features.Main.AssistedSplit;
 
+/// <summary>
+/// Assisted split in the editor look (see <see cref="AssistedCardChrome"/>): the current text on
+/// top, one card per split point (number key, both halves), Cancel in the button bar.
+/// </summary>
 public class AssistedSplitWindow : Window
 {
     private readonly AssistedSplitViewModel _vm;
@@ -20,26 +22,20 @@ public class AssistedSplitWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         Width = 720;
+        AssistedCardChrome.Apply(this);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var labelHeader = UiUtil.MakeLabel(Se.Language.General.AssistedSplitChooseSplitPoint);
-        labelHeader.FontWeight = FontWeight.Bold;
+        var header = AssistedCardChrome.MakeHeader(Se.Language.General.AssistedSplitChooseSplitPoint, vm.SubtitleInfo);
 
-        var originalText = new TextBlock
-        {
-            Text = vm.SubtitleInfo,
-            TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.8,
-            Margin = new Thickness(0, 0, 0, 4),
-        };
-
-        var panelCandidates = new StackPanel { Spacing = 8, Margin = new Thickness(0, 0, 0, 10) };
+        var panelCandidates = new StackPanel { Spacing = 8, Margin = new Thickness(14, 12, 14, 14) };
         foreach (var candidate in vm.Candidates)
         {
-            panelCandidates.Children.Add(MakeCandidateCard(vm, candidate));
+            panelCandidates.Children.Add(AssistedCardChrome.MakeCard(candidate.Number, candidate.Title, vm.PickCommand, candidate,
+                AssistedCardChrome.MakePreview(candidate.FirstText, candidate.FirstInfo),
+                AssistedCardChrome.MakePreview(candidate.SecondText, candidate.SecondInfo)));
         }
 
         // The candidate list scrolls when there are more cards than fit on screen.
@@ -51,22 +47,10 @@ public class AssistedSplitWindow : Window
             Focusable = true,
         };
 
-        var grid = new Grid
-        {
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 8,
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-        };
-        grid.Add(labelHeader, 0);
-        grid.Add(UiUtil.MakeBorderForControl(originalText), 1);
-        grid.Add(scrollCandidates, 2);
+        var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel);
+        buttonCancel.Click += (_, _) => Close();
 
-        Content = grid;
+        Content = AssistedCardChrome.MakeRoot(header, scrollCandidates, buttonCancel);
 
         UiUtil.FocusOnFirstActivation(this, scrollCandidates); // hack to make OnKeyDown work
 
@@ -78,84 +62,6 @@ public class AssistedSplitWindow : Window
             {
                 MaxHeight = Math.Min(MaxHeight, workingArea.Value.Height / RenderScaling * 0.92);
             }
-        };
-    }
-
-    private static Button MakeCandidateCard(AssistedSplitViewModel vm, AssistedSplitCandidate candidate)
-    {
-        var labelNumber = new TextBlock
-        {
-            Text = candidate.Number.ToString(),
-            FontSize = UiUtil.ScaledFontSize(22),
-            FontWeight = FontWeight.Bold,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(4, 0, 12, 0),
-        };
-
-        var labelTitle = new TextBlock
-        {
-            Text = candidate.Title,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 4),
-        };
-
-        var panelTexts = new StackPanel
-        {
-            Spacing = 4,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Children =
-            {
-                labelTitle,
-                MakeHalfPreview(candidate.FirstText, candidate.FirstInfo),
-                MakeHalfPreview(candidate.SecondText, candidate.SecondInfo),
-            },
-        };
-
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-        };
-        grid.Add(labelNumber, 0, 0);
-        grid.Add(panelTexts, 0, 1);
-
-        return new Button
-        {
-            Content = grid,
-            Command = vm.PickCommand,
-            CommandParameter = candidate,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            HorizontalContentAlignment = HorizontalAlignment.Stretch,
-            Padding = new Thickness(8),
-        }.WithGreenishActiveBackground();
-    }
-
-    private static Border MakeHalfPreview(string text, string info)
-    {
-        var textBlock = new TextBlock
-        {
-            Text = text,
-            TextWrapping = TextWrapping.Wrap,
-        };
-
-        var infoBlock = new TextBlock
-        {
-            Text = info,
-            FontSize = UiUtil.ScaledFontSize(11),
-            Opacity = 0.7,
-            Margin = new Thickness(0, 2, 0, 0),
-        };
-
-        return new Border
-        {
-            BorderThickness = new Thickness(1),
-            BorderBrush = UiUtil.GetBorderBrush(),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(6, 4),
-            Child = new StackPanel { Children = { textBlock, infoBlock } },
         };
     }
 

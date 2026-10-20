@@ -1,11 +1,7 @@
 using Nikse.SubtitleEdit.Logic.Compression;
-using System;
-using System.Collections.Generic;
 using System.Formats.Tar;
-using System.IO;
 using System.IO.Compression;
 using System.Text;
-using Xunit;
 
 namespace UITests.Logic;
 

@@ -35,6 +35,7 @@ public class LanguageAudioToText
     public string SelectModel { get; set; }
     public string AddCustomModelDotDotDot { get; set; }
     public string CustomModelHelp { get; set; }
+    public string CustomModelHelpGguf { get; set; }
     public string ViewToolsLogFile { get; set; }
     public string UpdateXTitle { get; set; }
     public string UpdateXMessage { get; set; }
@@ -58,11 +59,8 @@ public class LanguageAudioToText
     public string QualityReportLinesChecked { get; set; }
     public string QualityReportIssuesFound { get; set; }
     public string QualityReportLinesRemoved { get; set; }
-    public string QualityReportTooShort { get; set; }
     public string QualityReportTooShortHint { get; set; }
-    public string QualityReportTooLong { get; set; }
     public string QualityReportTooLongHint { get; set; }
-    public string QualityReportOverlap { get; set; }
     public string QualityReportOverlapHint { get; set; }
     public string QualityReportNonSpeech { get; set; }
     public string QualityReportNonSpeechHint { get; set; }
@@ -71,7 +69,6 @@ public class LanguageAudioToText
     public string QualityReportRemoved { get; set; }
     public string QualityReportAll { get; set; }
     public string QualityReportIssue { get; set; }
-    public string QualityReportDetail { get; set; }
     public string QualityReportTip { get; set; }
     public string QualityReportDoNotShowAgain { get; set; }
 
@@ -116,6 +113,7 @@ public class LanguageAudioToText
         SelectModel = "Select model";
         AddCustomModelDotDotDot = "Add custom model...";
         CustomModelHelp = "You can use your own model: pick the model file (whisper.cpp ggml '.bin') or model folder (faster-whisper folder with a 'model.bin' inside). It is copied to the models folder and added to the list above.";
+        CustomModelHelpGguf = "You can use your own model: pick a qwen3-asr.cpp '.gguf' file (one file holding both the audio encoder and the language model, e.g. from OpenVoiceOS or FlippyDora on Hugging Face). It is copied to the models folder and added to the list above. GGUF files made for llama.cpp, transcribe.cpp or CapsWriter use a different layout and cannot be used.";
         ViewToolsLogFile = "View tools log file";
         UpdateXTitle = "Update {0}?";
         UpdateXMessage = "A newer version of {0} is available.{1}{1}Download and install the update now?";
@@ -139,11 +137,8 @@ public class LanguageAudioToText
         QualityReportLinesChecked = "Lines checked";
         QualityReportIssuesFound = "Issues found";
         QualityReportLinesRemoved = "Lines removed";
-        QualityReportTooShort = "Too short";
         QualityReportTooShortHint = "Shorter than the minimum display time, or reading speed above the maximum";
-        QualityReportTooLong = "Too long";
         QualityReportTooLongHint = "Longer than the maximum display time, or very few words over a long time (often a hallucination)";
-        QualityReportOverlap = "Overlapping";
         QualityReportOverlapHint = "Ends after the next line starts";
         QualityReportNonSpeech = "Non-speech";
         QualityReportNonSpeechHint = "Only a sound or music description, like \"[Music]\"";
@@ -152,7 +147,6 @@ public class LanguageAudioToText
         QualityReportRemoved = "Removed";
         QualityReportAll = "All";
         QualityReportIssue = "Issue";
-        QualityReportDetail = "Detail";
         QualityReportTip = "Lines are listed with their numbers in the new subtitle. Use \"Fix common errors\" or the post-processing settings to fix more automatically, or try another model/engine if many lines are affected.";
         QualityReportDoNotShowAgain = "Do not show this report again";
 

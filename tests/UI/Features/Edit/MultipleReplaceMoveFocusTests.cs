@@ -4,21 +4,16 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UITests.Features.Edit;
 
 /// <summary>
 /// Reordering has to be repeatable: Ctrl+Up on a rule moved it once and then dropped keyboard
-/// focus, so the tree handed focus - and with it the selection - to the category above on the
+/// focus, so the old rule tree handed focus - and with it the selection - to the category above on the
 /// next key press and the second Ctrl+Up moved the category instead (#14136). These tests drive
 /// the real window, because the bug lives in the container lookup, not in the reorder itself.
 /// </summary>
@@ -86,26 +81,35 @@ public class MultipleReplaceMoveFocusTests : IDisposable
     private static string Categories(MultipleReplaceViewModel vm) =>
         string.Join(",", vm.Nodes.Select(n => n.CategoryName));
 
-    private static TreeViewItem ContainerOf(Window window, RuleTreeNode node)
+    // A category is a row in the category list, a rule a row in the rules list - which only shows
+    // the rules of the selected category.
+    private static Control ContainerOf(MultipleReplaceViewModel vm, RuleTreeNode node)
     {
-        var container = window.GetVisualDescendants().OfType<TreeViewItem>()
-            .FirstOrDefault(i => ReferenceEquals(i.DataContext, node));
+        if (!node.IsCategory)
+        {
+            vm.SelectedCategory = node.Parent;
+            Dispatcher.UIThread.RunJobs();
+        }
+
+        var container = node.IsCategory
+            ? vm.CategoriesListBox.ContainerFromItem(node)
+            : vm.RulesTable.ContainerFromItem(node);
         Assert.NotNull(container);
         return container!;
     }
 
-    // Clicking the row is the only way to get real keyboard focus into the tree, and the bug is
+    // Clicking the row is the only way to get real keyboard focus into the list, and the bug is
     // about what happens to that focus afterwards.
     private static void ClickNode(Window window, MultipleReplaceViewModel vm, RuleTreeNode node)
     {
-        var container = ContainerOf(window, node);
+        var container = ContainerOf(vm, node);
         var bounds = container.Bounds;
         var point = container.TranslatePoint(new Point(bounds.Width / 2, 8), window)!.Value;
         window.MouseDown(point, MouseButton.Left);
         window.MouseUp(point, MouseButton.Left);
         Dispatcher.UIThread.RunJobs();
 
-        Assert.Same(node, vm.SelectedNode);
+        Assert.Same(node, node.IsCategory ? vm.SelectedCategory : vm.SelectedNode);
     }
 
     private static void CtrlKey(Window window, PhysicalKey key)
@@ -165,7 +169,7 @@ public class MultipleReplaceMoveFocusTests : IDisposable
         CtrlKey(window, PhysicalKey.ArrowUp);
 
         var focused = window.FocusManager?.GetFocusedElement();
-        Assert.Same(rule, (focused as TreeViewItem)?.DataContext);
+        Assert.Same(rule, (focused as Control)?.DataContext);
     }
 
     [AvaloniaFact]
@@ -178,6 +182,6 @@ public class MultipleReplaceMoveFocusTests : IDisposable
         CtrlKey(window, PhysicalKey.ArrowUp);
 
         Assert.Equal("c2,c1", Categories(vm));
-        Assert.Same(category, vm.SelectedNode);
+        Assert.Same(category, vm.SelectedCategory);
     }
 }

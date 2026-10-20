@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Avalonia.Headless.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;

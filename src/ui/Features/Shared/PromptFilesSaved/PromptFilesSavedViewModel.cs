@@ -7,7 +7,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
-using Nikse.SubtitleEdit.UiLogic.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

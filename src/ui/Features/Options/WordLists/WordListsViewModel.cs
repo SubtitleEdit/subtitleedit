@@ -19,7 +19,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
-using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Options.WordLists;
 
@@ -410,21 +409,56 @@ public partial class WordListsViewModel : ObservableObject
         }
     }
 
+    // Arrowing through the language combo must not reload the lists on every key press: the
+    // synchronous load (file parsing + ~11k one-by-one Adds for English) kept the UI thread
+    // busy, so NVDA's query for the combo's new value went unanswered and nothing was
+    // announced (#12087). Wait for the selection to settle, load off the UI thread and swap
+    // in whole collections - one change per list instead of thousands.
+    private const int LanguageChangeDelayMs = 250;
+    private int _loadVersion;
+
     internal void SelectedLanguageChanged()
     {
-        Names.Clear();
-        UserWords.Clear();
-        OcrFixes.Clear();
+        _ = LoadListsAsync(LanguageChangeDelayMs);
+    }
 
-        var lang = SelectedLanguage;
-        if (lang == null)
+    private async Task LoadListsAsync(int delayMs)
+    {
+        var version = ++_loadVersion;
+        try
         {
-            return;
-        }
+            if (delayMs > 0)
+            {
+                await Task.Delay(delayMs);
+                if (version != _loadVersion)
+                {
+                    return;
+                }
+            }
 
-        Names.AddRange(LoadNames(lang));
-        UserWords.AddRange(LoadUserWords(lang));
-        OcrFixes.AddRange(LoadOcrFixList(lang));
+            var lang = SelectedLanguage;
+            if (lang == null)
+            {
+                Names = new ObservableCollection<string>();
+                UserWords = new ObservableCollection<string>();
+                OcrFixes = new ObservableCollection<OcrFixItem>();
+                return;
+            }
+
+            var (names, userWords, ocrFixes) = await Task.Run(() => (LoadNames(lang), LoadUserWords(lang), LoadOcrFixList(lang)));
+            if (version != _loadVersion)
+            {
+                return;
+            }
+
+            Names = new ObservableCollection<string>(names);
+            UserWords = new ObservableCollection<string>(userWords);
+            OcrFixes = new ObservableCollection<OcrFixItem>(ocrFixes);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Word lists: failed to load lists for " + SelectedLanguage?.CultureSpecificCode);
+        }
     }
 
     private List<string> LoadNames(LanguageItem lang)
@@ -480,7 +514,7 @@ public partial class WordListsViewModel : ObservableObject
 
     internal void Loaded()
     {
-        Dispatcher.UIThread.Post(SelectedLanguageChanged);
+        Dispatcher.UIThread.Post(() => _ = LoadListsAsync(0));
     }
 
     internal void NameTextBoxKeyDown(KeyEventArgs e)

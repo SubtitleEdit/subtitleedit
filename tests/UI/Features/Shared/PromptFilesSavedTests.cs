@@ -1,8 +1,6 @@
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Shared.PromptFilesSaved;
 using Nikse.SubtitleEdit.Logic.Media;
-using System.IO;
-using Xunit;
 
 namespace UITests.Features.Shared;
 

@@ -24,10 +24,11 @@ public class ForcedAlignerSetupWindow : Window
         Title = Se.Language.File.Import.ForcedAlignerSetupTitle;
         vm.Window = this;
         DataContext = vm;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var labelIntro = UiUtil.MakeTextBlock(Se.Language.File.Import.ForcedAlignerSetupIntro);
         labelIntro.TextWrapping = TextWrapping.Wrap;
-        labelIntro.MaxWidth = 530;
+        labelIntro.FontSize = 12.5;
         labelIntro.VerticalAlignment = VerticalAlignment.Center;
 
         var introIcon = new ContentControl
@@ -52,13 +53,10 @@ public class ForcedAlignerSetupWindow : Window
             Child = introIcon,
         };
 
-        var panelIntro = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { introGlyph, labelIntro },
-        };
-
-        var labelEngine = UiUtil.MakeLabel(Se.Language.General.Engine);
+        var panelIntro = new DockPanel();
+        DockPanel.SetDock(introGlyph, Dock.Left);
+        panelIntro.Children.Add(introGlyph);
+        panelIntro.Children.Add(labelIntro);
 
         // Same dot vocabulary as everywhere else: green installed, amber update waiting,
         // grey not installed - always paired with text, never colour alone.
@@ -73,6 +71,8 @@ public class ForcedAlignerSetupWindow : Window
 
         var labelEngineStatus = UiUtil.MakeTextBlock(string.Empty, vm, nameof(vm.EngineStatus), null);
         labelEngineStatus.VerticalAlignment = VerticalAlignment.Center;
+        labelEngineStatus.FontSize = 12.5;
+        labelEngineStatus.TextWrapping = TextWrapping.Wrap;
 
         var panelEngineStatus = new StackPanel
         {
@@ -81,14 +81,13 @@ public class ForcedAlignerSetupWindow : Window
             Children = { engineDot, labelEngineStatus },
         };
 
-        var buttonDownloadEngine = UiUtil.MakeButton(
-            Se.Language.File.Import.ForcedAlignerDownloadEngine, vm.DownloadEngineCommand);
-        Attached.SetIcon(buttonDownloadEngine, IconNames.CloudDownload);
+        var buttonDownloadEngine = EditorChrome.MakeTextToolButton(IconNames.CloudDownload, Se.Language.File.Import.ForcedAlignerDownloadEngine, vm.DownloadEngineCommand);
+        buttonDownloadEngine.Margin = new Thickness(10, 0, 0, 0);
 
-        var labelAligner = UiUtil.MakeLabel(Se.Language.File.Import.ForcedAlignerModel);
         var comboAligner = UiUtil.MakeComboBox(vm.Aligners, vm, nameof(vm.SelectedAligner));
         comboAligner.HorizontalAlignment = HorizontalAlignment.Stretch;
-        comboAligner.Width = 420;
+        comboAligner.Width = double.NaN;
+        comboAligner.WithAccessibleName(Se.Language.File.Import.ForcedAlignerModel);
         comboAligner.ItemTemplate = StatusDots.ComboItemTemplate<ForcedAlignerOption>(
             aligner => aligner.BaseDisplay,
             aligner => aligner.Size,
@@ -105,6 +104,8 @@ public class ForcedAlignerSetupWindow : Window
 
         var labelAlignerStatusText = UiUtil.MakeTextBlock(string.Empty, vm, nameof(vm.AlignerStatus), null);
         labelAlignerStatusText.VerticalAlignment = VerticalAlignment.Center;
+        labelAlignerStatusText.FontSize = 12.5;
+        labelAlignerStatusText.Foreground = EditorChrome.DimTextBrush;
 
         var labelAlignerStatus = new StackPanel
         {
@@ -115,48 +116,41 @@ public class ForcedAlignerSetupWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var checkEndsFromSpeech = UiUtil.MakeCheckBox(Se.Language.File.Import.ForcedAlignerEndsFromSpeech, vm, nameof(vm.EndsFromIsolatedSpeech));
+        var rowEndsFromSpeech = EditorChrome.MakeToggleRow(nameof(vm.EndsFromIsolatedSpeech), Se.Language.File.Import.ForcedAlignerEndsFromSpeech, out _);
         if (Se.Settings.Appearance.ShowHints)
         {
-            ToolTip.SetTip(checkEndsFromSpeech, Se.Language.File.Import.ForcedAlignerEndsFromSpeechHint);
+            ToolTip.SetTip(rowEndsFromSpeech, Se.Language.File.Import.ForcedAlignerEndsFromSpeechHint);
         }
 
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
+        var intro = new Border
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // intro
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // engine
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // engine status
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // aligner
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // aligner status
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // ends from isolated speech
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Padding = new Thickness(14, 14, 14, 12),
+            Child = panelIntro,
         };
 
-        grid.Add(panelIntro, 0, 0, 1, 2);
-        grid.Add(labelEngine, 1, 0);
-        grid.Add(buttonDownloadEngine, 1, 1);
-        grid.Add(panelEngineStatus, 2, 0, 1, 2);
-        grid.Add(labelAligner, 3, 0);
-        grid.Add(comboAligner, 3, 1);
-        grid.Add(labelAlignerStatus, 4, 0, 1, 2);
-        grid.Add(checkEndsFromSpeech, 5, 0, 1, 2);
-        grid.Add(panelButtons, 6, 0, 1, 2);
+        // Engine: the status on the left, the download on the right
+        var panelEngine = new DockPanel();
+        DockPanel.SetDock(buttonDownloadEngine, Dock.Right);
+        panelEngine.Children.Add(buttonDownloadEngine);
+        panelEngine.Children.Add(panelEngineStatus);
 
-        Content = grid;
+        var panelAligner = new StackPanel
+        {
+            Spacing = 10,
+            Children = { comboAligner, labelAlignerStatus, rowEndsFromSpeech },
+        };
+
+        var sections = new StackPanel
+        {
+            Children =
+            {
+                intro,
+                EditorChrome.MakeEditorSection(Se.Language.General.Engine, panelEngine),
+                EditorChrome.MakeEditorSection(Se.Language.File.Import.ForcedAlignerModel, panelAligner),
+            },
+        };
+
+        Content = EditorChrome.MakeCancelOkRoot(sections, null, buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, comboAligner); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (s, e) => vm.OnKeyDown(e);

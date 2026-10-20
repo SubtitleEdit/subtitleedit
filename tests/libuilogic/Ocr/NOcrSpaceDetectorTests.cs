@@ -93,4 +93,111 @@ public class NOcrSpaceDetectorTests
         Assert.Single(result, p => p.SpecialCharacter == Environment.NewLine);
         Assert.Equal(new List<int> { 9, 18 }, SpacesKept(result));
     }
+
+    private static NikseBitmap2 Ink(int width, int height, params (int X, int Y, int W, int H)[] rects)
+    {
+        var bitmap = new NikseBitmap2(width, height);
+        foreach (var (x0, y0, w, h) in rects)
+        {
+            for (var y = y0; y < y0 + h; y++)
+            {
+                for (var x = x0; x < x0 + w; x++)
+                {
+                    bitmap.SetPixel(x, y, SkiaSharp.SKColors.White);
+                }
+            }
+        }
+
+        return bitmap;
+    }
+
+    /// <summary>
+    /// "of you": the hook of "f" and the tail of "y" reach into the space, so their boxes are only
+    /// 4 px apart on a line whose word spaces are 10 px - the bodies are 16 px apart.
+    /// </summary>
+    private static List<ImageSplitterItem2> OverhangLine(NikseBitmap2 right, int rightTop)
+    {
+        // Calibration: letter gaps 2 px and word spaces 10 px on a 30 px line (threshold ~6 px).
+        var list = Line(30, 2, 10, 2, 10, 2);
+        var f = Ink(16, 30, (0, 0, 4, 30), (4, 0, 12, 4)); // stem + hook over the gap
+        list.Add(new ImageSplitterItem2(" ") { SpacePixels = 10 });
+        list.Add(new ImageSplitterItem2(100, 0, f) { Top = 0 });
+        list.Add(new ImageSplitterItem2(" ") { SpacePixels = 4 });
+        list.Add(new ImageSplitterItem2(100 + 16 + 4, rightTop, right) { Top = rightTop });
+        return list;
+    }
+
+    [Fact]
+    public void OverhangingLetters_GapBetweenBodiesCounts()
+    {
+        var y = Ink(12, 20, (4, 0, 8, 16), (0, 16, 6, 4)); // x-high body + tail reaching left
+        var result = new NOcrSpaceDetector().RemoveFalseSpaces(OverhangLine(y, 10), out _);
+
+        Assert.Contains(4, SpacesKept(result));
+    }
+
+    /// <summary>
+    /// Calibration line (letter gaps 2 px, word spaces 10 px) followed by the pair under test at
+    /// <paramref name="boxGap"/> px. Letters 30 px high: the jump 5 -> 10 px puts the threshold
+    /// at 8 px, 2 -> 10 at 6 px.
+    /// </summary>
+    private static List<ImageSplitterItem2> PairLine(NikseBitmap2 left, int leftTop, NikseBitmap2 right, int rightTop, int boxGap)
+    {
+        var list = Line(30, 2, 10, 2, 10, 2);
+        list.Add(new ImageSplitterItem2(" ") { SpacePixels = 10 });
+        list.Add(new ImageSplitterItem2(100, leftTop, left) { Top = leftTop });
+        list.Add(new ImageSplitterItem2(" ") { SpacePixels = boxGap });
+        list.Add(new ImageSplitterItem2(100 + left.Width + boxGap, rightTop, right) { Top = rightTop });
+        return list;
+    }
+
+    // Stem with an arm over the gap on the top rows ("f", "r", "T"): the box ends 12 px right of the foot.
+    private static NikseBitmap2 ArmedGlyph() => Ink(16, 30, (0, 0, 4, 30), (4, 0, 12, 12));
+
+    // Stem with 6 px of empty box to its left on every row ("j" seen from above its hook).
+    private static NikseBitmap2 OffsetStem() => Ink(14, 30, (6, 0, 8, 30));
+
+    [Fact]
+    public void OverhangingPair_MostOfASpaceApart_GetsHalfTheBodyGap()
+    {
+        // "f j" in a bold font: boxes 5 px apart (threshold 8), bodies 11 px apart. A quarter of
+        // the extra (6.5) is not a space, half of it (8) is.
+        var result = new NOcrSpaceDetector().RemoveFalseSpaces(PairLine(ArmedGlyph(), 0, OffsetStem(), 0, 5), out var threshold);
+
+        Assert.Equal(8, threshold);
+        Assert.Contains(5, SpacesKept(result));
+    }
+
+    [Fact]
+    public void KernedPair_BoxesAlmostTouching_StaysALetterGap()
+    {
+        // "To": the same glyphs 2 px apart (threshold 6, bodies 8 apart) - only a quarter counts.
+        var result = new NOcrSpaceDetector().RemoveFalseSpaces(PairLine(ArmedGlyph(), 0, OffsetStem(), 0, 2), out var threshold);
+
+        Assert.Equal(6, threshold);
+        Assert.DoesNotContain(2, SpacesKept(result));
+    }
+
+    [Fact]
+    public void HollowNeighbourWithoutOverhang_StaysALetterGap()
+    {
+        // "n?": the hook of "?" is hollow where it shares rows with "n", so the bodies are 13 px
+        // apart on boxes 7 px apart (threshold 9) - but neither glyph overhangs its own box.
+        var n = Ink(16, 30, (0, 0, 16, 30));
+        var questionMark = Ink(14, 40, (0, 0, 14, 4), (6, 4, 8, 36));
+        var result = new NOcrSpaceDetector().RemoveFalseSpaces(PairLine(n, 10, questionMark, 0, 7), out var threshold);
+
+        Assert.Equal(9, threshold);
+        Assert.DoesNotContain(7, SpacesKept(result));
+    }
+
+    [Fact]
+    public void Colon_IsNoLetterForTheBodyGap()
+    {
+        // Two dots: its "body gap" to the "f" says nothing about a space.
+        var colon = Ink(6, 17, (0, 0, 6, 5), (0, 12, 6, 5));
+        var result = new NOcrSpaceDetector().RemoveFalseSpaces(OverhangLine(colon, 10), out _);
+
+        Assert.DoesNotContain(4, SpacesKept(result));
+    }
 }

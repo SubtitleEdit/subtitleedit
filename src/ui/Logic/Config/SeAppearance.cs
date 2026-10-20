@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using static Nikse.SubtitleEdit.Features.Main.Layout.InitLayout;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
@@ -112,6 +111,7 @@ public class SeAppearance
     public bool TextBoxShowButtonColor { get; set; }
     public bool TextBoxShowButtonRemoveFormatting { get; set; }
     public bool TextBoxShowButtonAiAssistant { get; set; }
+    public bool TextBoxShowButtonRecordSpeech { get; set; }
 
     public SeAppearance()
     {
@@ -191,5 +191,6 @@ public class SeAppearance
         TextBoxShowButtonColor = false;
         TextBoxShowButtonRemoveFormatting = false;
         TextBoxShowButtonAiAssistant = true;
+        TextBoxShowButtonRecordSpeech = false;
     }
 }

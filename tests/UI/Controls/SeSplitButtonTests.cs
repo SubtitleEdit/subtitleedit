@@ -5,8 +5,6 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
-using System;
-using System.Collections.Generic;
 
 namespace UITests.Controls;
 

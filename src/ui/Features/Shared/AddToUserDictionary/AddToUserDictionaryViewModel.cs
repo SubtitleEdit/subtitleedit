@@ -2,15 +2,12 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
-using Tmds.DBus.Protocol;
 
 namespace Nikse.SubtitleEdit.Features.Shared.AddToUserDictionary;
 

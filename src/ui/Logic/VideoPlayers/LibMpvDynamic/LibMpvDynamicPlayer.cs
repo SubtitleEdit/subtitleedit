@@ -31,6 +31,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     // thread-affine (OpenGL, Metal), which decides who is allowed to free it - see Dispose.
     private volatile bool _renderContextNeedsGraphicsContext;
     private volatile bool _disposePendingRenderContextFree;
+
+    // Held while the render context is freed and while the core is destroyed: mpv requires the
+    // render context to be gone before the core, and the two run on different threads.
+    private readonly object _teardownLock = new();
     private volatile bool _disposed;
     private int _calledAfterDisposeLogged; // 1 once EnsureNotDisposed has reported this player
     private volatile bool _coreInitialized;
@@ -1145,6 +1149,19 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set " + value);
         }
+
+        // Streaming hits YouTube's "confirm you're not a bot" check just like downloading does,
+        // so hand ytdl_hook the same browser cookies (#16032).
+        var browser = YtDlpDownloadService.GetCookiesBrowser();
+        if (browser != null)
+        {
+            var rawOptions = "cookies-from-browser=" + browser;
+            err = SetOptionString("ytdl-raw-options", rawOptions);
+            if (err < 0)
+            {
+                Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set ytdl-raw-options=" + rawOptions);
+            }
+        }
     }
 
     /// <summary>
@@ -1807,12 +1824,29 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         Task.Run(TerminateCore);
     }
 
+    /// <summary>
+    /// Frees mpv's render context. Under <see cref="_teardownLock"/>: the handle is cleared before
+    /// <c>mpv_render_context_free</c> returns (it waits for the video output to stop), and a
+    /// <see cref="Dispose"/> on another thread that saw it cleared went on to destroy the core
+    /// mid-free - the free then read the core's freed option data and crashed (SIGSEGV in
+    /// free_option_data when closing the ASSA Set background window on macOS).
+    /// </summary>
     private void FreeRenderContext()
     {
-        var renderContext = Interlocked.Exchange(ref _renderContext, IntPtr.Zero);
-        if (renderContext != IntPtr.Zero && _mpvRenderContextFree != null)
+        if (_renderContext == IntPtr.Zero)
         {
-            _mpvRenderContextFree(renderContext);
+            // Nothing to free - and no waiting on a core teardown that holds the lock (the GL
+            // deinit callback runs on the UI thread).
+            return;
+        }
+
+        lock (_teardownLock)
+        {
+            var renderContext = Interlocked.Exchange(ref _renderContext, IntPtr.Zero);
+            if (renderContext != IntPtr.Zero && _mpvRenderContextFree != null)
+            {
+                _mpvRenderContextFree(renderContext);
+            }
         }
     }
 
@@ -1848,12 +1882,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private void TerminateCore()
     {
-        var mpv = Interlocked.Exchange(ref _mpv, IntPtr.Zero);
-        if (mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
+        // Waits for a render context free in progress on the graphics thread - see FreeRenderContext
+        lock (_teardownLock)
         {
-            // The event thread must be out of mpv_wait_event before the core goes away.
-            StopEventLoop();
-            _mpvTerminateDestroy.Invoke(mpv);
+            var mpv = Interlocked.Exchange(ref _mpv, IntPtr.Zero);
+            if (mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
+            {
+                // The event thread must be out of mpv_wait_event before the core goes away.
+                StopEventLoop();
+                _mpvTerminateDestroy.Invoke(mpv);
+            }
         }
     }
 
@@ -2929,6 +2967,23 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         if (err < 0)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer SetAudioTrack");
+        }
+    }
+
+    public bool SupportsAudioDelay => true;
+
+    public void SetAudioDelay(double seconds)
+    {
+        EnsureNotDisposed();
+        if (_mpv == IntPtr.Zero)
+        {
+            return;
+        }
+
+        var err = DoMpvCommand("set", "audio-delay", seconds.ToString("0.000", CultureInfo.InvariantCulture));
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer SetAudioDelay");
         }
     }
 

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -9,6 +10,11 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
+/// <summary>
+/// A failed translation in the editor look (see <see cref="EditorChrome"/>): the message and hint
+/// on top, the technical details in a section under it on demand, the details link and OK in the
+/// button bar.
+/// </summary>
 public class TranslationErrorWindow : Window
 {
     public TranslationErrorWindow(TranslationErrorViewModel vm)
@@ -23,51 +29,51 @@ public class TranslationErrorWindow : Window
         DataContext = vm;
         vm.Window = this;
 
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+
         // ── Header row: icon + bold title ──────────────────────────────────────
         var errorIcon = new TextBlock
         {
             Text = "⚠",
-            FontSize = UiUtil.ScaledFontSize(32),
+            FontSize = UiUtil.ScaledFontSize(28),
             // Darker amber on the light theme - the dark-theme tone is too faint on white (#15768).
             Foreground = new SolidColorBrush(Color.Parse(UiTheme.IsDarkThemeEnabled() ? "#E8A020" : "#9E5500")),
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 12, 0),
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, -4, 12, 0),
         };
 
         var titleBlock = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(16),
-            FontWeight = FontWeight.Bold,
+            FontSize = 15,
+            FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
         };
         titleBlock.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FriendlyMessage)));
 
-        var headerPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 10),
-        };
-        headerPanel.Children.Add(errorIcon);
-        headerPanel.Children.Add(titleBlock);
-
         // ── Hint text ──────────────────────────────────────────────────────────
         var hintBlock = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.85,
-            Margin = new Thickness(0, 0, 0, 14),
+            FontSize = 12.5,
+            Foreground = EditorChrome.DimTextBrush,
         };
         hintBlock.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Hint)));
 
-        // ── Details expander ───────────────────────────────────────────────────
-        var detailsLabel = new TextBlock
+        var messagePanel = new StackPanel
         {
-            FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(0, 0, 0, 4),
-            Text = Se.Language.Translate.TechnicalDetails,
+            Spacing = 6,
+            Children = { titleBlock, hintBlock },
         };
 
+        var headerGrid = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("Auto,*"),
+        };
+        headerGrid.Add(errorIcon, 0, 0);
+        headerGrid.Add(messagePanel, 0, 1);
+
+        // ── Details ────────────────────────────────────────────────────────────
         var detailsTextBox = new TextBox
         {
             IsReadOnly = true,
@@ -76,8 +82,11 @@ public class TranslationErrorWindow : Window
             MaxHeight = 200,
             FontFamily = new FontFamily("Consolas,Menlo,monospace"),
             FontSize = UiUtil.ScaledFontSize(11),
+            VerticalContentAlignment = VerticalAlignment.Top,
             Margin = new Thickness(0),
         };
+        detailsTextBox.Classes.Add("text");
+        AutomationProperties.SetName(detailsTextBox, Se.Language.Translate.TechnicalDetails);
         detailsTextBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.TechnicalDetails)));
 
         var detailsScroll = new ScrollViewer
@@ -87,45 +96,29 @@ public class TranslationErrorWindow : Window
             VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
         };
 
-        var detailsPanel = new StackPanel
-        {
-            Spacing = 0,
-        };
-        detailsPanel.Children.Add(detailsLabel);
-        detailsPanel.Children.Add(detailsScroll);
-        detailsPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.DetailsExpanded)));
-
         // ── Toggle details link ────────────────────────────────────────────────
         var toggleButton = UiUtil.MakeLink(vm.ToggleDetailsText, vm.ToggleDetailsCommand, vm, nameof(vm.ToggleDetailsText));
         toggleButton.HorizontalAlignment = HorizontalAlignment.Left;
-        toggleButton.Margin = new Thickness(0, 0, 0, 8);
+
+        var detailsSection = EditorChrome.MakeEditorSection(Se.Language.Translate.TechnicalDetails, detailsScroll);
+        detailsSection.Bind(IsVisibleProperty, new Binding(nameof(vm.DetailsExpanded)));
 
         // ── OK button ─────────────────────────────────────────────────────────
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk);
-
-        // ── Separator line ────────────────────────────────────────────────────
-        var separator = new Border
-        {
-            Height = 1,
-            Margin = new Thickness(0, 10, 0, 10),
-            Background = new SolidColorBrush(Color.Parse("#33FFFFFF")),
-        };
+        buttonOk.Classes.Add("primary");
+        var buttonBar = EditorChrome.MakeButtonBar(toggleButton, buttonOk);
 
         // ── Main content stack ────────────────────────────────────────────────
-        var content = new StackPanel
+        var sections = new StackPanel
         {
-            Margin = UiUtil.MakeWindowMargin(),
-            Spacing = 0,
+            Children =
+            {
+                new Border { Child = headerGrid, Padding = new Thickness(16, 16, 16, 16) },
+                detailsSection,
+            },
         };
-        content.Children.Add(headerPanel);
-        content.Children.Add(hintBlock);
-        content.Children.Add(toggleButton);
-        content.Children.Add(detailsPanel);
-        content.Children.Add(separator);
-        content.Children.Add(buttonBar);
 
-        Content = content;
+        Content = EditorChrome.MakeRoot(sections, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, buttonOk);
     }

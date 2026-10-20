@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic.Config;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;

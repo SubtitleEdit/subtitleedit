@@ -1,61 +1,65 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Sync.VisualSync;
 
+/// <summary>
+/// Manual sync (from visual sync's Sync menu), in the editor look (see <see cref="EditorChrome"/>):
+/// offset and speed factor in one section, Cancel and OK at the bottom.
+/// </summary>
 public class ManualSyncWindow : Window
 {
-
     public ManualSyncWindow(ManualSyncViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.General.ChangeSpeed;
+        Title = Se.Language.General.ManualSync;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
-        var labelOffset = UiUtil.MakeLabel(Se.Language.Sync.OffsetInSeconds);
-        var numericUpDownOffsetSeconds = UiUtil.MakeNumericUpDownThreeDecimals(-10000, 100000,120, vm, nameof(vm.OffsetSeconds));
+        var numericUpDownOffsetSeconds = UiUtil.MakeNumericUpDownThreeDecimals(-10000, 100000, 120, vm, nameof(vm.OffsetSeconds));
         numericUpDownOffsetSeconds.Increment = 0.1m;
+        numericUpDownOffsetSeconds.Classes.Add("field");
+        AutomationProperties.SetName(numericUpDownOffsetSeconds, Se.Language.Sync.OffsetInSeconds);
 
-        var labelSpeedFactor = UiUtil.MakeLabel(Se.Language.Sync.SpeedFactor);
-        var numericUpDownSpeedFactor  = UiUtil.MakeNumericUpDownThreeDecimals(-1000, 1000, 120, vm, nameof(vm.SpeedFactor));
+        var numericUpDownSpeedFactor = UiUtil.MakeNumericUpDownThreeDecimals(-1000, 1000, 120, vm, nameof(vm.SpeedFactor));
         numericUpDownSpeedFactor.Increment = 0.1m;
+        numericUpDownSpeedFactor.Classes.Add("field");
+        AutomationProperties.SetName(numericUpDownSpeedFactor, Se.Language.Sync.SpeedFactor);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
+        var rows = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+            },
+            ColumnSpacing = 12,
+            RowSpacing = 7,
         };
+        rows.Add(EditorChrome.MakeDimLabel(Se.Language.Sync.OffsetInSeconds, new Thickness(0)), 0, 0);
+        rows.Add(numericUpDownOffsetSeconds, 0, 1);
+        rows.Add(EditorChrome.MakeDimLabel(Se.Language.Sync.SpeedFactor, new Thickness(0)), 1, 0);
+        rows.Add(numericUpDownSpeedFactor, 1, 1);
 
-        grid.Add(labelOffset, 0);
-        grid.Add(numericUpDownOffsetSeconds, 0,1);
-        grid.Add(labelSpeedFactor, 1);
-        grid.Add(numericUpDownSpeedFactor,1,1);
-        grid.Add(buttonPanel, 2);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.ManualSync, rows, first: true);
+        section.MinWidth = 300;
 
-        Content = grid;
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, numericUpDownOffsetSeconds); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);

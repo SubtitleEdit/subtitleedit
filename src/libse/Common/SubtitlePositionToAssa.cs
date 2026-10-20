@@ -58,8 +58,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             // ASSA/SSA margins are already in script units - they are the one thing that must be left alone.
             if (!string.IsNullOrEmpty(sourceHeader) &&
-                (sourceHeader.IndexOf("[V4+ Styles]", StringComparison.Ordinal) >= 0 ||
-                 sourceHeader.IndexOf("[V4 Styles]", StringComparison.Ordinal) >= 0))
+                (sourceHeader.Contains("[V4+ Styles]") ||
+                 sourceHeader.Contains("[V4 Styles]")))
             {
                 return false;
             }

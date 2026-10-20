@@ -1,8 +1,6 @@
 using Nikse.SubtitleEdit.Logic;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Data;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -32,113 +30,83 @@ public class TranscriptionProgressWindow : Window
         Height = 450;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var connectionInfoText = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = Brushes.Gray,
-            Margin = new Thickness(0, 0, 0, 2),
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap
         };
         connectionInfoText.Bind(TextBlock.TextProperty, new Binding(nameof(TranscriptionProgressViewModel.ServerUrl)) { StringFormat = Se.Language.General.TranscriptionProgressServerFormat });
 
         var modelInfoText = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = Brushes.Gray,
-            Margin = new Thickness(0, 0, 0, 10)
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
         };
         modelInfoText.Bind(TextBlock.TextProperty, new Binding(nameof(TranscriptionProgressViewModel.ModelName)) { StringFormat = Se.Language.General.TranscriptionProgressModelFormat });
 
         var statusText = new TextBlock
         {
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 10)
+            FontSize = 13,
+            FontWeight = FontWeight.SemiBold,
+            TextWrapping = TextWrapping.Wrap,
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(TranscriptionProgressViewModel.StatusText)));
+
+        var info = new StackPanel { Spacing = 4, Children = { statusText, connectionInfoText, modelInfoText } };
+        var infoSection = EditorChrome.MakeEditorSection(Se.Language.Video.AudioToText.Transcribing, info, first: true);
 
         var streamedTextBlock = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
             FontFamily = new FontFamily("Monospace"),
-            FontSize = 12
-        };
-        var streamedBorder = new Border
-        {
-            BorderBrush = Brushes.Gray,
-            BorderThickness = new Thickness(1),
-            Padding = new Thickness(5),
-            Child = new ScrollViewer { Content = streamedTextBlock }
+            FontSize = 12,
+            Margin = new Thickness(8, 6),
         };
         streamedTextBlock.Bind(TextBlock.TextProperty, new Binding(nameof(TranscriptionProgressViewModel.StreamedText)));
+        var streamedSection = EditorChrome.MakeFillSection(Se.Language.General.Text,
+            EditorChrome.MakeListFrame(new ScrollViewer { Content = streamedTextBlock }));
 
-        var segmentsList = new ListBox
-        {
-            MaxHeight = 150,
-            Margin = new Thickness(0, 5, 0, 0)
-        };
+        var segmentsList = new ListBox();
         segmentsList.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(TranscriptionProgressViewModel.ReceivedSegments)));
-        // Same text as the expander header, so the list is announced as "Received segments (N)" (#12087).
+        // Same text as the section header, so the list is announced as "Received segments (N)" (#12087).
         segmentsList.Bind(Avalonia.Automation.AutomationProperties.NameProperty,
             new Binding(nameof(TranscriptionProgressViewModel.SegmentCount)) { StringFormat = Se.Language.General.TranscriptionProgressReceivedSegmentsFormat });
 
-        var expander = new Expander
+        // A section like the other windows' lists instead of an expander (it was always expanded)
+        var segmentsHeader = EditorChrome.MakeBoundSectionHeader(nameof(TranscriptionProgressViewModel.SegmentCount));
+        segmentsHeader.Bind(TextBlock.TextProperty, new Binding(nameof(TranscriptionProgressViewModel.SegmentCount))
         {
-            Margin = new Thickness(0, 10, 0, 0),
-            IsExpanded = true,
-            Content = segmentsList
-        };
-        expander.Bind(HeaderedContentControl.HeaderProperty,
-            new Binding(nameof(TranscriptionProgressViewModel.SegmentCount)) { StringFormat = Se.Language.General.TranscriptionProgressReceivedSegmentsFormat });
+            Converter = new Avalonia.Data.Converters.FuncValueConverter<int, string>(count =>
+                string.Format(Se.Language.General.TranscriptionProgressReceivedSegmentsFormat, count).ToUpperInvariant()),
+        });
+        var segmentsSection = EditorChrome.MakeFillSection(segmentsHeader, EditorChrome.MakeListFrame(segmentsList, clearListBackground: true));
 
-        var cancelButton = new Button
-        {
-            Content = Se.Language.General.Cancel,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Margin = new Thickness(0, 10, 0, 0)
-        };
+        var cancelButton = UiUtil.MakeButtonCancel(null);
         cancelButton.Bind(Button.CommandProperty, new Binding(nameof(TranscriptionProgressViewModel.CancelCommand)));
         cancelButton.Bind(Button.IsVisibleProperty, new Binding("!" + nameof(TranscriptionProgressViewModel.IsCompleted)));
 
-        var closeButton = new Button
-        {
-            Content = Se.Language.General.Close,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Margin = new Thickness(0, 10, 0, 0),
-            IsDefault = true
-        };
+        var closeButton = UiUtil.MakeButton(Se.Language.General.Close, null);
+        closeButton.Classes.Add("primary");
+        closeButton.IsDefault = true;
         closeButton.Bind(Button.CommandProperty, new Binding(nameof(TranscriptionProgressViewModel.CloseCommand)));
         closeButton.Bind(Button.IsVisibleProperty, new Binding(nameof(TranscriptionProgressViewModel.IsCompleted)));
 
-        var buttonPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children = { cancelButton, closeButton }
-        };
-
-        var grid = new Grid
+        var sections = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto }
             },
-            Margin = new Thickness(10),
-            Children = { connectionInfoText, modelInfoText, statusText, streamedBorder, expander, buttonPanel }
         };
-        Grid.SetRow(connectionInfoText, 0);
-        Grid.SetRow(modelInfoText, 1);
-        Grid.SetRow(statusText, 2);
-        Grid.SetRow(streamedBorder, 3);
-        Grid.SetRow(expander, 4);
-        Grid.SetRow(buttonPanel, 5);
+        sections.Add(infoSection, 0);
+        sections.Add(streamedSection, 1);
+        sections.Add(segmentsSection, 2);
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, cancelButton, closeButton));
     }
 }

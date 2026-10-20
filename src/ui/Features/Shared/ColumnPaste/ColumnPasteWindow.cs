@@ -1,9 +1,14 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
+using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ColumnPaste;
 
+/// <summary>
+/// Column paste options, in the editor look (see <see cref="EditorChrome"/>): the column and the
+/// overwrite/shift choices side by side, Cancel and OK at the bottom.
+/// </summary>
 public class ColumnPasteWindow : Window
 {
     public ColumnPasteWindow(ColumnPasteViewModel vm)
@@ -12,37 +17,17 @@ public class ColumnPasteWindow : Window
         Title = Se.Language.Main.ColumnPaste;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(2, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
-        };
-
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        grid.Add(MakeChooseColumnView(vm, out var radioButtonColumnsAll, out var radioButtonColumnsTextOnly), 0);
-        grid.Add(MakeOverwriteView(vm), 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        var sections = EditorChrome.MakeSideBySide(MakeChooseColumnView(vm, out var radioButtonColumnsAll, out var radioButtonColumnsTextOnly), MakeOverwriteView(vm));
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         // Plain text has no time codes, so the only enabled column choice is "text only"
         var initialFocusControl = vm.IsTextOnlySource ? radioButtonColumnsTextOnly : radioButtonColumnsAll;
@@ -65,33 +50,30 @@ public class ColumnPasteWindow : Window
 
         var stackPanel = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
+            Orientation = Orientation.Vertical,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Main.ChooseColumn),
                 radioButtonAll,
                 radioButtonTimeCodesOnly,
                 radioButtonTextOnly,
             }
         };
 
-        return UiUtil.MakeBorderForControl(stackPanel);
+        return EditorChrome.MakeEditorSection(Se.Language.Main.ChooseColumn, stackPanel, first: true);
     }
 
     private static Border MakeOverwriteView(ColumnPasteViewModel vm)
     {
         var stackPanel = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
+            Orientation = Orientation.Vertical,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Main.OverwriteOrShiftCellsDown),
                 UiUtil.MakeRadioButton(Se.Language.Main.OverwriteExistingCells, vm, nameof(vm.ModeOverwrite), "overwrite"),
                 UiUtil.MakeRadioButton(Se.Language.Main.ShiftTextCellsDown, vm, nameof(vm.ModeTextDown), "overwrite"),
-
             }
         };
 
-        return UiUtil.MakeBorderForControl(stackPanel);
+        return EditorChrome.MakeEditorSection(Se.Language.Main.OverwriteOrShiftCellsDown, stackPanel, first: true);
     }
 }

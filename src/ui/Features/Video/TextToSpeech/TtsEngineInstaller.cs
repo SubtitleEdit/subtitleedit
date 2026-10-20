@@ -503,6 +503,19 @@ public static class TtsEngineInstaller
                 startDownloadModels: (vm, key) => vm.StartDownloadFishTtsAudioCppModels(key));
         }
 
+        if (engine is BreezeTtsAudioCpp)
+        {
+            return await EnsureAudioCppEngineWithLicense(
+                window, windowService, refreshVoices,
+                engineDisplayName: "Breeze TTS 2",
+                requiredFamily: BreezeTtsAudioCpp.FamilyName,
+                licenseDefinition: BreezeTtsAudioCpp.LicenseDefinition,
+                isLicenseAccepted: BreezeTtsAudioCpp.IsLicenseAccepted,
+                modelKey: BreezeTtsAudioCpp.ResolveModelKey(model),
+                areModelsInstalled: BreezeTtsAudioCpp.AreModelsInstalled,
+                startDownloadModels: (vm, key) => vm.StartDownloadBreezeTtsAudioCppModels(key));
+        }
+
         if (engine is FireRedTts3AudioCpp)
         {
             // Apache-2.0 weights: no licence gate, otherwise the same runtime + model flow.
@@ -529,6 +542,20 @@ public static class TtsEngineInstaller
                 modelKey: KugelAudioAudioCpp.ResolveModelKey(model),
                 areModelsInstalled: KugelAudioAudioCpp.AreModelsInstalled,
                 startDownloadModels: (vm, key) => vm.StartDownloadKugelAudioAudioCppModels(key));
+        }
+
+        if (engine is VoxtralTtsAudioCpp)
+        {
+            // CC BY-NC 4.0 weights and voices: licence gate first, like Fish and Breeze.
+            return await EnsureAudioCppEngineWithLicense(
+                window, windowService, refreshVoices,
+                engineDisplayName: "Voxtral TTS",
+                requiredFamily: VoxtralTtsAudioCpp.FamilyName,
+                licenseDefinition: VoxtralTtsAudioCpp.LicenseDefinition,
+                isLicenseAccepted: VoxtralTtsAudioCpp.IsLicenseAccepted,
+                modelKey: VoxtralTtsAudioCpp.ResolveModelKey(model),
+                areModelsInstalled: VoxtralTtsAudioCpp.AreModelsInstalled,
+                startDownloadModels: (vm, key) => vm.StartDownloadVoxtralTtsAudioCppModels(key));
         }
 
         if (engine is ZonosTtsCrispAsr)

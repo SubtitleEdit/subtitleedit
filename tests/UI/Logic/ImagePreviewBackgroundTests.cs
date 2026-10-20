@@ -1,8 +1,6 @@
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
-using System;
-using System.IO;
 using System.Text.RegularExpressions;
 
 namespace UITests.Logic;
@@ -86,7 +84,8 @@ public class ImagePreviewBackgroundTests
     {
         var source = File.ReadAllText(Path.Combine(FindRepoRoot(), relativePath.Replace('/', Path.DirectorySeparatorChar)));
 
-        Assert.Contains("Background = ImagePreviewBackground.CreateBrush()", source, StringComparison.Ordinal);
+        // Set inline or handed to a frame helper (the binary OCR dialogs build their image frames that way)
+        Assert.Contains("ImagePreviewBackground.CreateBrush()", source, StringComparison.Ordinal);
         Assert.DoesNotContain("Colors.LightGray", source, StringComparison.Ordinal);
     }
 

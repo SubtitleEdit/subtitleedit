@@ -1,6 +1,6 @@
-﻿using Avalonia.Controls;
-using Nikse.SubtitleEdit.Logic;
+using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 
@@ -8,37 +8,13 @@ public static class ViewRemoveFormatting
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var labelHeader = new Label
-        {
-            Content = Se.Language.General.RemoveFormatting,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0,0,0, 10),
-        };
-
-        var checkBoxRemoveAll = UiUtil.MakeCheckBox(Se.Language.General.RemoveAllFormatting, vm, nameof(vm.FormattingRemoveAll));
-        var checkBoxRemoveItalic = UiUtil.MakeCheckBox(Se.Language.General.RemoveItalic, vm, nameof(vm.FormattingRemoveItalic));
-        var checkBoxRemoveBold = UiUtil.MakeCheckBox(Se.Language.General.RemoveBold, vm, nameof(vm.FormattingRemoveBold));
-        var checkBoxRemoveUnderline = UiUtil.MakeCheckBox(Se.Language.General.RemoveUnderline, vm, nameof(vm.FormattingRemoveUnderline));
-        var checkBoxRemoveFontTags = UiUtil.MakeCheckBox(Se.Language.General.RemoveFontName, vm, nameof(vm.FormattingRemoveFontTags));
-        var checkBoxRemoveAlignmentTags = UiUtil.MakeCheckBox(Se.Language.General.RemoveAlignment, vm, nameof(vm.FormattingRemoveAlignmentTags));
-        var checkBoxRemoveColors = UiUtil.MakeCheckBox(Se.Language.General.RemoveColor, vm, nameof(vm.FormattingRemoveColors));
-
-        var panel = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
-            Children = 
-            { 
-                labelHeader,
-                checkBoxRemoveAll,
-                checkBoxRemoveItalic,
-                checkBoxRemoveBold,
-                checkBoxRemoveUnderline,
-                checkBoxRemoveFontTags,
-                checkBoxRemoveAlignmentTags,
-                checkBoxRemoveColors,
-            }
-        };
-
-        return panel;
+        return FunctionViewChrome.MakePanel(vm, Se.Language.General.RemoveFormatting,
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingRemoveAll), Se.Language.General.RemoveAllFormatting),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingRemoveItalic), Se.Language.General.RemoveItalic),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingRemoveBold), Se.Language.General.RemoveBold),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingRemoveUnderline), Se.Language.General.RemoveUnderline),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingRemoveFontTags), Se.Language.General.RemoveFontName),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingRemoveAlignmentTags), Se.Language.General.RemoveAlignment),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingRemoveColors), Se.Language.General.RemoveColor));
     }
 }

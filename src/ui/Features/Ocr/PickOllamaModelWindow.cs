@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -19,34 +20,17 @@ public class PickOllamaModelWindow : Window
         MinHeight = 200;
         vm.Window = this;
         DataContext = vm;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
 
         var listBox = new ListBox
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+            Background = EditorChrome.FieldBrush,
             [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Models,
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.Models)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedModel)) { Mode = BindingMode.TwoWay },
@@ -56,14 +40,26 @@ public class PickOllamaModelWindow : Window
 
         // Only the OCR callers filter to vision-capable models, so only they get the "show all" escape
         // hatch; for the text callers the list is unfiltered already and the checkbox would be a no-op.
-        var checkBoxShowAll = UiUtil.MakeCheckBox(Se.Language.Ocr.ShowAllOllamaModels, vm, nameof(vm.ShowAllModels));
-        checkBoxShowAll.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowAllModelsVisible)));
+        var switchShowAll = EditorChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.ShowAllModels), Se.Language.Ocr.ShowAllOllamaModels), Se.Language.Ocr.ShowAllOllamaModels);
+        switchShowAll.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowAllModelsVisible)));
 
-        grid.Add(listBox, 0);
-        grid.Add(checkBoxShowAll, 1);
-        grid.Add(panelButtons, 2);
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = GridLength.Auto },
+            },
+            Margin = new Thickness(14, 12, 14, 14),
+            RowSpacing = 8,
+        };
 
-        Content = grid;
+        grid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Models), 0);
+        grid.Add(EditorChrome.MakeListFrame(listBox), 1);
+        grid.Add(switchShowAll, 2);
+
+        Content = EditorChrome.MakeRoot(grid, buttonBar, stretch: true);
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, listBox);

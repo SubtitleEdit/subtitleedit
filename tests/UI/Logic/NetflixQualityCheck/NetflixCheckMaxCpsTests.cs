@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
-using Xunit;
 
 namespace UITests.Logic.NetflixQualityCheck;
 

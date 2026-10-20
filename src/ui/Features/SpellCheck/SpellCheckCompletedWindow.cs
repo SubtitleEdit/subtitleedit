@@ -10,6 +10,9 @@ using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck;
 
+/// <summary>
+/// The spell check summary, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class SpellCheckCompletedWindow : Window
 {
     public SpellCheckCompletedWindow(SpellCheckCompletedViewModel vm)
@@ -18,6 +21,7 @@ public class SpellCheckCompletedWindow : Window
         Title = Se.Language.SpellCheck.SpellCheck;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -28,11 +32,11 @@ public class SpellCheckCompletedWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                MakeHeaderIcon(36),
+                MakeHeaderIcon(32),
                 new TextBlock
                 {
                     Text = Se.Language.SpellCheck.SpellCheckCompleted,
-                    FontSize = UiUtil.ScaledFontSize(17),
+                    FontSize = UiUtil.ScaledFontSize(16),
                     FontWeight = FontWeight.SemiBold,
                     VerticalAlignment = VerticalAlignment.Center,
                 },
@@ -53,59 +57,35 @@ public class SpellCheckCompletedWindow : Window
             },
         };
 
-        // A subtle card around the counts so it reads as a grouped result rather than loose text.
+        // A card on the field color around the counts so it reads as a grouped result rather
+        // than loose text.
         var card = new Border
         {
             CornerRadius = new CornerRadius(8),
-            Background = new SolidColorBrush(Color.FromArgb(18, 128, 128, 128)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(48, 128, 128, 128)),
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(16, 14, 24, 14),
             Child = rows,
         };
 
-        var checkBoxDoNotShowAgain = new CheckBox
+        var body = new StackPanel
         {
-            Content = new TextBlock { Text = Se.Language.SpellCheck.DoNotShowThisAgain, FontSize = UiUtil.ScaledFontSize(13) },
-            Opacity = 0.8,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoNotShowAgain)) { Mode = BindingMode.TwoWay },
+            Spacing = 14,
+            MinWidth = 320,
+            Children = { header, card },
         };
 
-        // Shrink the whole control (box + label) so it reads as a small, secondary option.
-        var checkBoxSmall = new LayoutTransformControl
-        {
-            LayoutTransform = new ScaleTransform(0.85, 0.85),
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Child = checkBoxDoNotShowAgain,
-        };
+        // A small, secondary option, left in the button bar
+        var toggleDoNotShowAgain = EditorChrome.MakeToggleRow(nameof(vm.DoNotShowAgain), Se.Language.SpellCheck.DoNotShowThisAgain);
+        toggleDoNotShowAgain.VerticalAlignment = VerticalAlignment.Center;
+        toggleDoNotShowAgain.Margin = new Thickness(0, 0, 16, 0);
 
         var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonDone);
+        buttonDone.Classes.Add("primary");
+        buttonDone.Margin = new Thickness(0);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Star },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 14,
-            MinWidth = 320,
-        };
-
-        grid.Add(header, 0);
-        grid.Add(card, 1);
-        grid.Add(checkBoxSmall, 2);
-        grid.Add(buttonPanel, 3);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(new Border { Child = body, Padding = new Thickness(18, 16, 18, 18) }, EditorChrome.MakeDockedButtonBar(toggleDoNotShowAgain, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -144,14 +124,14 @@ public class SpellCheckCompletedWindow : Window
 
     private static Control MakeCountRow(string iconName, string textPropertyPath, string? visiblePropertyPath)
     {
-        var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(15) };
+        var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = UiUtil.ScaledFontSize(14) };
         text.Bind(TextBlock.TextProperty, new Binding(textPropertyPath));
 
         var row = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 10,
-            Children = { MakeIcon(iconName, 20, 0.85), text },
+            Children = { MakeIcon(iconName, 18, 0.85), text },
         };
 
         if (visiblePropertyPath != null)

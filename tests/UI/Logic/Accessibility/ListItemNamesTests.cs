@@ -7,8 +7,6 @@ using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Features.Video.RemuxVideo;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager.VoicePacks;
-using System;
-using Xunit;
 
 namespace UITests.Logic.Accessibility;
 

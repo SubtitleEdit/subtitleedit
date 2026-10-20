@@ -4,7 +4,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Nikse.SubtitleEdit.Controls;
 using Optris.Icons.Avalonia;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -24,8 +23,7 @@ public class RestoreAutoBackupWindow : Window
         CanResize = true;
         vm.Window = this;
         DataContext = vm;
-
-        var l = Se.Language.File.RestoreAutoBackup;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var subtitleGrid = MakeSubtitleGrid(vm);
         var settingsGrid = MakeSettingsGrid(vm);
@@ -34,11 +32,12 @@ public class RestoreAutoBackupWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+            Padding = new Thickness(0),
             Items =
             {
                 new TabItem
                 {
-                    Header = MakeTabHeader(IconNames.ClosedCaption, l.Subtitles),
+                    Header = MakeTabHeader(IconNames.ClosedCaption, Se.Language.General.Subtitles),
                     Content = MakeSubtitlesView(vm, subtitleGrid),
                 },
                 new TabItem
@@ -51,28 +50,14 @@ public class RestoreAutoBackupWindow : Window
         tabControl.Bind(TabControl.SelectedIndexProperty, new Binding(nameof(vm.SelectedTabIndex)) { Source = vm, Mode = BindingMode.TwoWay });
 
         var buttonOk = UiUtil.MakeButtonOk(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk);
 
-        var grid = new Grid
+        // The tabs on the panel color above the button bar
+        var tabs = new Border
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 4,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Padding = new Thickness(8, 4, 8, 0),
+            Child = tabControl,
         };
-
-        grid.Children.Add(tabControl);
-        Grid.SetRow(tabControl, 0);
-
-        grid.Children.Add(panelButtons);
-        Grid.SetRow(panelButtons, 1);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(tabs, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         // Initial focus on an input, not an action button - a focused button clicks on bare Space.
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(vm.SelectedTabIndex == 1 ? settingsGrid : subtitleGrid); });
@@ -81,7 +66,7 @@ public class RestoreAutoBackupWindow : Window
 
     private static TableView MakeSubtitleGrid(RestoreAutoBackupViewModel vm)
     {
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.File.RestoreAutoBackup.Subtitles); // the tab header (#12087)
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Subtitles); // the tab header (#12087)
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -141,26 +126,17 @@ public class RestoreAutoBackupWindow : Window
     {
         var l = Se.Language.File.RestoreAutoBackup;
 
-        var linkOpenFolder = UiUtil.MakeLink(l.OpenAutoBackupFolder, vm.OpenFolderCommand);
-        var summaryText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.8,
-            Margin = new Thickness(10, 0, 0, 0),
-            [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Files)}.{nameof(vm.Files.Count)}")
-            {
-                StringFormat = l.XBackups
-            }
-        };
+        var buttonOpenFolder = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", l.OpenAutoBackupFolder, vm.OpenFolderCommand);
+        var summaryText = MakeSummaryText($"{nameof(vm.Files)}.{nameof(vm.Files.Count)}");
 
-        var buttonDeleteAll = UiUtil.MakeButton(l.DeleteAll, vm.DeleteAllFilesCommand)
-            .WithBindIsVisible(nameof(vm.IsEmptyFilesVisible))
-            .WithIconLeft("fa-solid fa-trash");
+        var buttonDeleteAll = EditorChrome.MakeTextToolButton("fa-solid fa-trash", l.DeleteAll, vm.DeleteAllFilesCommand)
+            .WithBindIsVisible(nameof(vm.IsEmptyFilesVisible));
         var buttonRestore = UiUtil.MakeButton(l.RestoreAutoBackupFile, vm.RestoreFileCommand)
             .WithIconLeft("fa-solid fa-clock-rotate-left");
+        buttonRestore.Classes.Add("primary");
         buttonRestore.BindIsEnabled(vm, nameof(vm.IsOkButtonEnabled));
 
-        return MakeTabLayout(dataGrid, null, linkOpenFolder, summaryText, buttonDeleteAll, buttonRestore);
+        return MakeTabLayout(Se.Language.General.Subtitles, dataGrid, null, buttonOpenFolder, summaryText, buttonDeleteAll, buttonRestore);
     }
 
     private static Control MakeSettingsView(RestoreAutoBackupViewModel vm, TableView dataGrid)
@@ -180,21 +156,20 @@ public class RestoreAutoBackupWindow : Window
         var infoText = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
+            FontSize = 12.5,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SettingsBackupInfo)),
         };
         var lastBackupText = new TextBlock
         {
-            Opacity = 0.75,
-            FontSize = UiUtil.ScaledFontSize(12),
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = 12,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LastSettingsBackupText)),
         };
 
         var infoPanel = new Border
         {
-            Background = new SolidColorBrush(Color.FromArgb(0x18, 0x4c, 0x9c, 0xe8)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x50, 0x4c, 0x9c, 0xe8)),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(6),
+            Background = EditorChrome.AccentSoftBrush,
+            CornerRadius = new CornerRadius(8),
             Padding = new Thickness(12, 10),
             Child = new Grid
             {
@@ -217,32 +192,25 @@ public class RestoreAutoBackupWindow : Window
             },
         };
 
-        var linkOpenFolder = UiUtil.MakeLink(l.OpenSettingsBackupFolder, vm.OpenSettingsFolderCommand);
-        var summaryText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.8,
-            Margin = new Thickness(10, 0, 0, 0),
-            [!TextBlock.TextProperty] = new Binding($"{nameof(vm.SettingsFiles)}.{nameof(vm.SettingsFiles.Count)}")
-            {
-                StringFormat = l.XBackups
-            }
-        };
+        var buttonOpenFolder = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", l.OpenSettingsBackupFolder, vm.OpenSettingsFolderCommand);
+        var summaryText = MakeSummaryText($"{nameof(vm.SettingsFiles)}.{nameof(vm.SettingsFiles.Count)}");
 
-        var buttonDeleteAll = UiUtil.MakeButton(l.DeleteAll, vm.DeleteAllSettingsFilesCommand)
-            .WithBindIsVisible(nameof(vm.IsSettingsFilesVisible))
-            .WithIconLeft("fa-solid fa-trash");
-        var buttonBackupNow = UiUtil.MakeButton(l.BackUpSettingsNow, vm.BackupSettingsNowCommand)
-            .WithIconLeft("fa-solid fa-floppy-disk");
+        var buttonDeleteAll = EditorChrome.MakeTextToolButton("fa-solid fa-trash", l.DeleteAll, vm.DeleteAllSettingsFilesCommand)
+            .WithBindIsVisible(nameof(vm.IsSettingsFilesVisible));
+        var buttonBackupNow = EditorChrome.MakeTextToolButton("fa-solid fa-floppy-disk", l.BackUpSettingsNow, vm.BackupSettingsNowCommand);
         var buttonRestore = UiUtil.MakeButton(l.RestoreSettings, vm.RestoreSettingsCommand)
             .WithIconLeft("fa-solid fa-clock-rotate-left");
+        buttonRestore.Classes.Add("primary");
         buttonRestore.BindIsEnabled(vm, nameof(vm.IsRestoreSettingsEnabled));
 
-        return MakeTabLayout(dataGrid, infoPanel, linkOpenFolder, summaryText, buttonDeleteAll, buttonBackupNow, buttonRestore);
+        return MakeTabLayout(Se.Language.General.Settings, dataGrid, infoPanel, buttonOpenFolder, summaryText, buttonDeleteAll, buttonBackupNow, buttonRestore);
     }
 
-    /// <summary>Shared tab body: optional header, the list, then a bottom row with links left and actions right.</summary>
-    private static Grid MakeTabLayout(TableView dataGrid, Control? header, Control link, Control summary, params Control[] buttons)
+    /// <summary>
+    /// Shared tab body: optional info on top, the list section (open folder and the count in its
+    /// header), then the actions with the restore button in the accent.
+    /// </summary>
+    private static Grid MakeTabLayout(string title, TableView dataGrid, Control? header, Control openFolder, Control summary, params Control[] buttons)
     {
         var grid = new Grid
         {
@@ -252,50 +220,62 @@ public class RestoreAutoBackupWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = GridLength.Auto },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-            Margin = new Thickness(0, 10, 0, 0),
+            Margin = new Thickness(6, 12, 6, 14),
             RowSpacing = 10,
-            ColumnSpacing = 10,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
         if (header != null)
         {
-            grid.Children.Add(header);
-            Grid.SetRow(header, 0);
-            Grid.SetColumnSpan(header, 2);
+            grid.Add(header, 0, 0);
         }
 
-        grid.Children.Add(dataGrid);
-        Grid.SetRow(dataGrid, 1);
-        Grid.SetColumnSpan(dataGrid, 2);
-
-        var panelBottomLeft = new StackPanel
+        var headerRight = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { link, summary },
+            Children = { summary },
         };
-        grid.Children.Add(panelBottomLeft);
-        Grid.SetRow(panelBottomLeft, 2);
-        Grid.SetColumn(panelBottomLeft, 0);
+        var listHeader = new DockPanel { MinHeight = 26 };
+        DockPanel.SetDock(headerRight, Dock.Right);
+        listHeader.Children.Add(headerRight);
+        listHeader.Children.Add(EditorChrome.MakeSectionHeader(title));
+
+        var list = new Grid
+        {
+            RowSpacing = 8,
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) },
+        };
+        list.Add(listHeader, 0, 0);
+        list.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
+        grid.Add(list, 1, 0);
 
         var panelButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            Spacing = 4,
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Center,
         };
         panelButtons.Children.AddRange(buttons);
-        grid.Children.Add(panelButtons);
-        Grid.SetRow(panelButtons, 2);
-        Grid.SetColumn(panelButtons, 1);
+        var bottom = new DockPanel();
+        DockPanel.SetDock(panelButtons, Dock.Right);
+        bottom.Children.Add(panelButtons);
+        openFolder.HorizontalAlignment = HorizontalAlignment.Left;
+        bottom.Children.Add(openFolder);
+        grid.Add(bottom, 2, 0);
 
         return grid;
+    }
+
+    private static TextBlock MakeSummaryText(string countPath)
+    {
+        var text = EditorChrome.MakeDimText();
+        text.Bind(TextBlock.TextProperty, new Binding(countPath)
+        {
+            StringFormat = Se.Language.File.RestoreAutoBackup.XBackups,
+        });
+        return text;
     }
 
     private static StackPanel MakeTabHeader(string iconName, string text)

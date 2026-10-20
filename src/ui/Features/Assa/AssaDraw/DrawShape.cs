@@ -16,11 +16,55 @@ public class DrawShape
     public List<DrawCoordinate> Points { get; set; } = [];
     public Color ForeColor { get; set; } = Colors.White;
     public Color OutlineColor { get; set; } = Colors.Black;
-    public int OutlineWidth { get; set; }
+
+    /// <summary>
+    /// ASSA \bord. Drawing shapes share their layer's outline (one line per layer); a text box
+    /// outlines its own text.
+    /// </summary>
+    public float OutlineWidth { get; set; }
     public int Layer { get; set; }
     public bool IsEraser { get; set; }
     public bool Hidden { get; set; }
     public bool Expanded { get; set; }
+
+    /// <summary>
+    /// Editor-only group (0 = none): a click selects every shape with the same id. Not part of
+    /// the ASSA output; an .assadraw file keeps it in the Effect field.
+    /// </summary>
+    public int GroupId { get; set; }
+
+    /// <summary>
+    /// The in/out effect of the shape's line (a line is a layer, so every shape of a layer has the
+    /// same one); null = not animated.
+    /// </summary>
+    public DrawAnimation? Animation { get; set; }
+
+    /// <summary>
+    /// A text-only object: its rectangle is where the text goes, nothing is drawn for it.
+    /// </summary>
+    public bool IsTextBox { get; set; }
+
+    /// <summary>
+    /// Text written inside the shape (a speech bubble) or the text box; "\n" = line break.
+    /// </summary>
+    public string Text { get; set; } = string.Empty;
+    public string FontName { get; set; } = "Arial";
+
+    /// <summary>
+    /// ASSA \fs - with <see cref="ShrinkToFit"/> the largest size, made smaller until the text fits.
+    /// </summary>
+    public float FontSize { get; set; } = 48;
+    public bool FontBold { get; set; }
+    public Color TextColor { get; set; } = Colors.Black;
+    public bool ShrinkToFit { get; set; } = true;
+
+    /// <summary>
+    /// Where the text goes (a bubble's body, not its tail), in canvas coordinates. It is moved,
+    /// scaled, rotated and mirrored with the shape. Null = inside the shape's bounds.
+    /// </summary>
+    public DrawTextFrame? TextFrame { get; set; }
+
+    public bool HasText => !IsEraser && !string.IsNullOrWhiteSpace(Text);
 
     public DrawShape()
     {
@@ -35,6 +79,16 @@ public class DrawShape
         IsEraser = other.IsEraser;
         Hidden = other.Hidden;
         Expanded = other.Expanded;
+        GroupId = other.GroupId;
+        Animation = other.Animation?.Clone();
+        IsTextBox = other.IsTextBox;
+        Text = other.Text;
+        FontName = other.FontName;
+        FontSize = other.FontSize;
+        FontBold = other.FontBold;
+        TextColor = other.TextColor;
+        ShrinkToFit = other.ShrinkToFit;
+        TextFrame = other.TextFrame;
 
         foreach (var point in other.Points)
         {
@@ -50,9 +104,10 @@ public class DrawShape
     }
 
     /// <summary>
-    /// Converts the shape to ASSA drawing commands.
+    /// Converts the shape to ASSA drawing commands, optionally relative to an anchor (an animated
+    /// line is positioned at its anchor with \pos or \move).
     /// </summary>
-    public string ToAssa()
+    public string ToAssa(float originX = 0, float originY = 0)
     {
         if (Points.Count == 0)
         {
@@ -63,7 +118,7 @@ public class DrawShape
         var first = Points[0];
 
         // Start with move command using the first point
-        sb.Append(CultureInfo.InvariantCulture, $"m {first.X:0.##} {first.Y:0.##} ");
+        sb.Append(CultureInfo.InvariantCulture, $"m {first.X - originX:0.##} {first.Y - originY:0.##} ");
 
         // A shape can mix line and bezier segments (the importer appends "l" and "b" runs to
         // the same shape, and switching tools mid-shape does too). Emit each point under the
@@ -83,7 +138,7 @@ public class DrawShape
                 currentCommand = command;
             }
 
-            sb.Append(CultureInfo.InvariantCulture, $"{point.X:0.##} {point.Y:0.##} ");
+            sb.Append(CultureInfo.InvariantCulture, $"{point.X - originX:0.##} {point.Y - originY:0.##} ");
         }
 
         return sb.ToString().Trim();
@@ -198,12 +253,118 @@ public class DrawShape
         return (left, top, right, bottom);
     }
 
+    /// <summary>
+    /// Bounding box around several shapes (shapes without points are skipped).
+    /// </summary>
+    public static (float Left, float Top, float Right, float Bottom) GetBounds(IEnumerable<DrawShape> shapes)
+    {
+        (float Left, float Top, float Right, float Bottom)? bounds = null;
+        foreach (var shape in shapes)
+        {
+            if (shape.Points.Count == 0)
+            {
+                continue;
+            }
+
+            var b = shape.GetBounds();
+            bounds = bounds is { } u
+                ? (Math.Min(u.Left, b.Left), Math.Min(u.Top, b.Top), Math.Max(u.Right, b.Right), Math.Max(u.Bottom, b.Bottom))
+                : b;
+        }
+
+        return bounds ?? (0, 0, 0, 0);
+    }
+
+    /// <summary>
+    /// The text area: the one set, or else the middle 80% of the bounds.
+    /// </summary>
+    public DrawTextFrame GetTextFrame()
+    {
+        if (TextFrame is { } frame)
+        {
+            return frame;
+        }
+
+        var (left, top, right, bottom) = GetBounds();
+        return new DrawTextFrame((left + right) / 2, (top + bottom) / 2, (right - left) * 0.8f, (bottom - top) * 0.8f, 0);
+    }
+
+    /// <summary>
+    /// The text area before rotation (rotated by <see cref="DrawTextFrame.Angle"/> around its center).
+    /// </summary>
+    public (float Left, float Top, float Right, float Bottom) GetTextBounds()
+    {
+        var frame = GetTextFrame();
+        return (frame.CenterX - frame.Width / 2, frame.CenterY - frame.Height / 2, frame.CenterX + frame.Width / 2, frame.CenterY + frame.Height / 2);
+    }
+
+    public void SetTextBounds(float left, float top, float right, float bottom, float angle = 0)
+    {
+        TextFrame = new DrawTextFrame((left + right) / 2, (top + bottom) / 2, Math.Abs(right - left), Math.Abs(bottom - top), angle);
+    }
+
+    /// <summary>
+    /// Moves the text area along with a transform of the points. A mirror keeps the text readable:
+    /// of the two possible directions the one closest to the old angle is used.
+    /// </summary>
+    public void TransformText(Func<float, float, (float X, float Y)> map, bool mirrored)
+    {
+        if (TextFrame is not { } frame)
+        {
+            return;
+        }
+
+        var radians = frame.Angle * MathF.PI / 180f;
+        var ux = MathF.Cos(radians) * frame.Width / 2;
+        var uy = MathF.Sin(radians) * frame.Width / 2;
+        var vx = -MathF.Sin(radians) * frame.Height / 2;
+        var vy = MathF.Cos(radians) * frame.Height / 2;
+        var center = map(frame.CenterX, frame.CenterY);
+        var u = map(frame.CenterX + ux, frame.CenterY + uy);
+        var v = map(frame.CenterX + vx, frame.CenterY + vy);
+        var newUx = u.X - center.X;
+        var newUy = u.Y - center.Y;
+        var newVx = v.X - center.X;
+        var newVy = v.Y - center.Y;
+
+        var angle = frame.Width > 0.001f ? MathF.Atan2(newUy, newUx) * 180f / MathF.PI : frame.Angle;
+        if (mirrored && Math.Abs(NormalizeAngle(angle + 180 - frame.Angle)) < Math.Abs(NormalizeAngle(angle - frame.Angle)))
+        {
+            angle += 180;
+        }
+
+        TextFrame = new DrawTextFrame(center.X, center.Y,
+            2 * MathF.Sqrt(newUx * newUx + newUy * newUy),
+            2 * MathF.Sqrt(newVx * newVx + newVy * newVy),
+            MathF.Round(NormalizeAngle(angle), 2));
+    }
+
+    private static float NormalizeAngle(float degrees)
+    {
+        degrees %= 360;
+        if (degrees > 180)
+        {
+            degrees -= 360;
+        }
+        else if (degrees <= -180)
+        {
+            degrees += 360;
+        }
+
+        return degrees;
+    }
+
     public void Offset(float x, float y)
     {
         foreach (var point in Points)
         {
             point.X += x;
             point.Y += y;
+        }
+
+        if (TextFrame is { } frame)
+        {
+            TextFrame = frame with { CenterX = frame.CenterX + x, CenterY = frame.CenterY + y };
         }
     }
 
@@ -213,8 +374,14 @@ public class DrawShape
     public void Rotate(float degrees)
     {
         var (left, top, right, bottom) = GetBounds();
-        var centerX = (left + right) / 2f;
-        var centerY = (top + bottom) / 2f;
+        Rotate(degrees, (left + right) / 2f, (top + bottom) / 2f);
+    }
+
+    /// <summary>
+    /// Rotates around a given center, e.g. the middle of a multi-selection.
+    /// </summary>
+    public void Rotate(float degrees, float centerX, float centerY)
+    {
         var radians = degrees * MathF.PI / 180f;
         var cos = MathF.Cos(radians);
         var sin = MathF.Sin(radians);
@@ -225,6 +392,8 @@ public class DrawShape
             point.X = MathF.Round(centerX + x * cos - y * sin, 2);
             point.Y = MathF.Round(centerY + x * sin + y * cos, 2);
         }
+
+        TransformText((x, y) => (centerX + (x - centerX) * cos - (y - centerY) * sin, centerY + (x - centerX) * sin + (y - centerY) * cos), mirrored: false);
     }
 
     /// <summary>
@@ -234,22 +403,40 @@ public class DrawShape
     public void FlipHorizontal()
     {
         var (left, _, right, _) = GetBounds();
+        FlipHorizontal(left, right);
+    }
+
+    /// <summary>
+    /// Mirrors inside the given horizontal range, e.g. the bounds of a multi-selection.
+    /// </summary>
+    public void FlipHorizontal(float left, float right)
+    {
         foreach (var point in Points)
         {
             point.X = left + right - point.X;
         }
 
+        TransformText((x, y) => (left + right - x, y), mirrored: true);
         ReverseWinding();
     }
 
     public void FlipVertical()
     {
         var (_, top, _, bottom) = GetBounds();
+        FlipVertical(top, bottom);
+    }
+
+    /// <summary>
+    /// Mirrors inside the given vertical range, e.g. the bounds of a multi-selection.
+    /// </summary>
+    public void FlipVertical(float top, float bottom)
+    {
         foreach (var point in Points)
         {
             point.Y = top + bottom - point.Y;
         }
 
+        TransformText((x, y) => (x, top + bottom - y), mirrored: true);
         ReverseWinding();
     }
 
@@ -537,3 +724,9 @@ public class DrawShape
         return MathF.Sqrt(cx * cx + cy * cy);
     }
 }
+
+/// <summary>
+/// A text area: center and size in canvas coordinates, turned <see cref="Angle"/> degrees
+/// clockwise (on screen) around the center.
+/// </summary>
+public readonly record struct DrawTextFrame(float CenterX, float CenterY, float Width, float Height, float Angle);

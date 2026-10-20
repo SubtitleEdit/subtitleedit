@@ -11,6 +11,11 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Edit.Replace;
 
+/// <summary>
+/// Replace, in the editor look (see <see cref="EditorChrome"/>): what to find, what to replace it
+/// with, how to match and where on the left; the actions with the result line in a column to the
+/// right. Non-modal.
+/// </summary>
 public class ReplaceWindow : Window
 {
     public ReplaceWindow(ReplaceViewModel vm)
@@ -19,6 +24,7 @@ public class ReplaceWindow : Window
         Title = UiUtil.RemoveAccessKey(Se.Language.General.Replace);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -27,7 +33,6 @@ public class ReplaceWindow : Window
             DataContext = vm,
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 200,
-            Margin = new Thickness(0, 0, 0, 3),
             PlaceholderText = Se.Language.Edit.Find.SearchTextWatermark,
             ItemsSource = vm.SearchHistory,
             [!AutoCompleteBox.TextProperty] = new Binding(nameof(vm.SearchText)),
@@ -37,154 +42,54 @@ public class ReplaceWindow : Window
         FindWindowParts.SetHistoryItemTemplate(textBoxFind, vm.RemoveHistoryItemCommand);
 
         var buttonHistory = FindWindowParts.MakeHistoryButton(vm.SearchHistory, vm.ShowHistoryCommand, vm.RemoveHistoryItemCommand, vm.ClearHistoryCommand);
+        FindWindow.MakeHistoryButtonCompact(buttonHistory);
         var panelSearch = FindWindowParts.MakeSearchPanel(textBoxFind, buttonHistory);
 
-        var checkBoxWholeWord = new CheckBox
-        {
-            Content = Se.Language.Edit.Find.WholeWord,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 3),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.WholeWord)) { Mode = BindingMode.TwoWay }
-        };
-
-        var panelFind = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 3),
-            Children =
-            {
-                panelSearch,
-                checkBoxWholeWord
-            }
-        };
-
-        var labelReplaceWith = new TextBlock
-        {
-            Text = Se.Language.General.ReplaceWith,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 3)
-        };
+        var findRows = new StackPanel { Spacing = 10 };
+        findRows.Children.Add(panelSearch);
+        findRows.Children.Add(EditorChrome.MakeToggleRow(nameof(vm.WholeWord), Se.Language.Edit.Find.WholeWord));
 
         var textBoxReplace = new TextBox
         {
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 180,
-            Margin = new Thickness(0, 0, 0, 3),
             PlaceholderText = Se.Language.Edit.Find.ReplaceTextWatermark,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ReplaceText)) { Mode = BindingMode.TwoWay }
         };
+        textBoxReplace.Classes.Add("text");
         textBoxReplace.KeyDown += vm.ReplaceTextBoxKeyDown;
 
-        var panelReplace = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 10),
-            Children =
-            {
-                labelReplaceWith,
-                textBoxReplace
-            }
-        };
-
-        var valueConverter = new FindModeValueConverter();
-        var radioButtonNormal = new RadioButton
-        {
-            Content = Se.Language.General.CaseSensitive,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
-            {
-                Converter = valueConverter,
-                ConverterParameter = FindService.FindMode.CaseSensitive,
-                Mode = BindingMode.TwoWay
-            }
-        };
-
-        var radioButtonCaseInsensitive = new RadioButton
-        {
-            Content = Se.Language.General.CaseInsensitive,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
-            {
-                Converter = valueConverter,
-                ConverterParameter = FindService.FindMode.CaseInsensitive,
-                Mode = BindingMode.TwoWay
-            }
-        };
-
-        var radioButtonRegularExpression = new RadioButton
-        {
-            Content = Se.Language.General.RegularExpression,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
-            {
-                Converter = valueConverter,
-                ConverterParameter = FindService.FindMode.RegularExpression,
-                Mode = BindingMode.TwoWay
-            }
-        };
-
-        var panelFindTypes = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 0,
-            Children =
-            {
-                radioButtonNormal,
-                radioButtonCaseInsensitive,
-                radioButtonRegularExpression
-            }
-        };
+        var comboBoxScope = UiUtil.MakeComboBox(vm.Scopes, vm, nameof(vm.SelectedScope)).WithAccessibleName(Se.Language.Edit.Find.ReplaceIn);
+        comboBoxScope.HorizontalAlignment = HorizontalAlignment.Stretch;
 
         // Only relevant while an editable original text column is on screen, so the whole block
         // stays hidden the rest of the time instead of offering choices with no effect.
-        var panelScope = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            Children =
-            {
-                new TextBlock
-                {
-                    Text = Se.Language.Edit.Find.ReplaceIn,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(0, 0, 0, 3),
-                },
-                UiUtil.MakeComboBox(vm.Scopes, vm, nameof(vm.SelectedScope)).WithMinWidth(200),
-            },
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsScopeVisible)) { Source = vm },
-        };
+        var sectionScope = EditorChrome.MakeEditorSection(Se.Language.Edit.Find.ReplaceIn, comboBoxScope);
+        sectionScope.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsScopeVisible)) { Source = vm });
 
-        var buttonFindNext = UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
-            .WithIconLeft(IconNames.ChevronRight)
-            .WithLeftAlignment()
-            .WithMinWidth(180)
-            .WithMargin(0, 0, 0, 10);
-        var buttonReplace = UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAndFindNext, vm.ReplaceCommand)
-            .WithIconLeft(IconNames.FindReplace)
-            .WithLeftAlignment()
-            .WithMinWidth(180)
-            .WithMargin(0, 0, 0, 10);
-        var buttonReplaceAll = UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAll, vm.ReplaceAllCommand)
-            .WithIconLeft(IconNames.FileReplaceOutline)
-            .WithLeftAlignment()
-            .WithMinWidth(180)
-            .WithMargin(0, 0, 0, 10);
-        var buttonCount = UiUtil.MakeButton(Se.Language.General.Count, vm.CountCommand)
-            .WithIconLeft(IconNames.Counter)
-            .WithLeftAlignment()
-            .WithMinWidth(180)
-            .WithMargin(0, 0, 0, 10);
+        var sections = new StackPanel { MinWidth = 280 };
+        sections.Children.Add(EditorChrome.MakeEditorSection(UiUtil.RemoveAccessKey(Se.Language.General.Find), findRows, first: true));
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.ReplaceWith, textBoxReplace));
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Match, FindWindow.MakeFindModeRadioButtons()));
+        sections.Children.Add(sectionScope);
+
+        var buttonFindNext = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.Edit.Find.FindNext, vm.FindNextCommand)
+            .WithIconLeft(IconNames.ChevronRight));
+        var buttonReplace = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAndFindNext, vm.ReplaceCommand)
+            .WithIconLeft(IconNames.FindReplace));
+        buttonReplace.Classes.Add("primary");
+        var buttonReplaceAll = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.Edit.Find.ReplaceAll, vm.ReplaceAllCommand)
+            .WithIconLeft(IconNames.FileReplaceOutline));
+        var buttonCount = EditorChrome.StyleActionColumnButton(UiUtil.MakeButton(Se.Language.General.Count, vm.CountCommand)
+            .WithIconLeft(IconNames.Counter));
         var panelResult = FindWindowParts.MakeResultPanel(nameof(vm.CountResult), nameof(vm.ResultIcon));
+        panelResult.Margin = new Thickness(2, 4, 0, 0);
 
         var panelButtons = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
+            Spacing = 8,
+            MinWidth = 190,
             Children =
             {
                 buttonFindNext,
@@ -195,33 +100,7 @@ public class ReplaceWindow : Window
             }
         };
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelFind, 0, 0);
-        grid.Add(panelReplace, 1, 0);
-        grid.Add(panelFindTypes, 2, 0);
-        grid.Add(panelScope, 3, 0);
-        grid.Add(panelButtons, 0, 1, 4, 1);
-
-        Content = grid;
+        Content = EditorChrome.MakeSidePanelRoot(sections, EditorChrome.MakeActionColumn(panelButtons));
 
         vm.FocusSearchBox = () => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {

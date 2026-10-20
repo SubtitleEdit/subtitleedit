@@ -1,15 +1,18 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Avalonia.Media;
+using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Assa;
 
+/// <summary>
+/// Pick styles to import/export/copy - styled like ASSA draw: the list with check all/none,
+/// the accept button in the accent.
+/// </summary>
 public class AssaStylePickerWindow : Window
 {
     public AssaStylePickerWindow(AssaStylePickerViewModel vm)
@@ -25,48 +28,57 @@ public class AssaStylePickerWindow : Window
         Height = 550;
         MinWidth = 550;
         MinHeight = 400;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        // Header: title with check all / none
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, new RelayCommand(() => SetAll(vm, true)), 24));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-regular fa-square", Se.Language.General.SelectNone, new RelayCommand(() => SetAll(vm, false)), 24));
+        var header = new DockPanel { Margin = new Thickness(14, 10, 10, 8) };
+        DockPanel.SetDock(actions, Dock.Right);
+        header.Children.Add(actions);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Styles));
 
-        var labelFontsAndImages = UiUtil.MakeLabel(Se.Language.General.Styles);
+        var list = new Grid { RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) } };
+        list.Add(header, 0, 0);
+        list.Add(MakeDataGrid(vm, out var stylesGrid), 1, 0);
 
-        var buttonImport = UiUtil.MakeButton(string.Empty, vm.OkCommand).WithBindContent(nameof(vm.ButtonAcceptText));
-        buttonImport.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonImport, buttonCancel);
-
-        grid.Add(labelFontsAndImages, 0);
-        grid.Add(MakeDataGrid(vm, out var stylesGrid), 1);
-        grid.Add(panelButtons, 2);
-
-        Content = grid;
+        var mainGrid = new Grid { RowDefinitions = { new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) } };
+        mainGrid.Add(new Border { Child = list, Background = EditorChrome.PanelBrush }, 0, 0);
+        mainGrid.Add(MakeButtonBar(vm), 1, 0);
+        Content = mainGrid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(stylesGrid); });
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeDataGrid(AssaStylePickerViewModel vm, out TableView tableView)
+    private static void SetAll(AssaStylePickerViewModel vm, bool isSelected)
+    {
+        foreach (var style in vm.Styles)
+        {
+            style.IsSelected = isSelected;
+        }
+    }
+
+    private static Border MakeButtonBar(AssaStylePickerViewModel vm)
+    {
+        var buttonAccept = UiUtil.MakeButton(string.Empty, vm.OkCommand).WithBindContent(nameof(vm.ButtonAcceptText));
+        buttonAccept.IsDefault = true; // the dialog's accept button - Enter runs it (#14586)
+        buttonAccept.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, HorizontalAlignment = HorizontalAlignment.Right };
+        buttons.Children.Add(buttonCancel);
+        buttons.Children.Add(buttonAccept);
+
+        return EditorChrome.WrapButtonBar(buttons);
+    }
+
+    private static TableView MakeDataGrid(AssaStylePickerViewModel vm, out TableView tableView)
     {
         var usagesColumn = new SeTableViewColumn
         {
@@ -112,17 +124,7 @@ public class AssaStylePickerWindow : Window
             Header = Se.Language.General.Enabled,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<StyleDisplay>((item, _) =>
-            new Border
-            {
-                Background = Brushes.Transparent, // Prevents highlighting
-                Padding = new Thickness(4),
-                Child = new CheckBox
-                {
-                    [!ToggleButton.IsCheckedProperty] = new Binding(nameof(StyleDisplay.IsSelected)),
-                    HorizontalAlignment = HorizontalAlignment.Center
-                }
-            }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<StyleDisplay>(nameof(StyleDisplay.IsSelected), focusable: true),
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
             Width = new GridLength(80),
         });
@@ -155,6 +157,8 @@ public class AssaStylePickerWindow : Window
 
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedStyle)) { Source = vm });
 
-        return UiUtil.MakeBorderForControl(dataGrid);
+        dataGrid.Margin = new Thickness(8, 0, 8, 8);
+        AutomationProperties.SetName(dataGrid, Se.Language.General.Styles);
+        return dataGrid;
     }
 }

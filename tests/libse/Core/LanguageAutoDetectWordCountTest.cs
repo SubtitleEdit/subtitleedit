@@ -25,10 +25,11 @@ public class LanguageAutoDetectWordCountTest
     [Fact]
     public void CountsEveryListInOnePass()
     {
+        // English: we, are, here, because, your, money. Danish: jeg, ikke, noget. Norwegian: jeg, ikke.
         var text = "Jeg kan ikke finde på noget at lave i dag.\r\nWe are here because of your money.";
-        Assert.Equal(5, Count("en", text));
-        Assert.Equal(1, Count("da", text));
-        Assert.Equal(1, Count("no", text));
+        Assert.Equal(6, Count("en", text));
+        Assert.Equal(3, Count("da", text));
+        Assert.Equal(2, Count("no", text));
         Assert.Equal(0, Count("th", text));
     }
 
@@ -38,9 +39,9 @@ public class LanguageAutoDetectWordCountTest
         // "You're" and "I'll" are English entries; "Das ist" and "Du bist" are German.
         Assert.Equal(2, Count("en", "You're sure? I'll go."));
         Assert.Equal(0, Count("en", "Youre sure? Ill go."));
-        Assert.Equal(2, Count("de", "Das ist gut. Du bist müde."));
-        // "bist" alone is also a German entry; neither phrase matches here.
-        Assert.Equal(1, Count("de", "Das  ist gut. Du-bist müde."));
+        Assert.Equal(2, Count("de", "Das ist schön. Du bist müde."));
+        // "ist" and "bist" alone are also German entries; neither phrase matches here.
+        Assert.Equal(2, Count("de", "Das  ist schön. Du-bist müde."));
     }
 
     [Fact]

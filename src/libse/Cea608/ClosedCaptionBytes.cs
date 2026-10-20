@@ -86,10 +86,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                     continue;
                 }
 
-                var milliseconds = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture) * 3_600_000.0 +
-                                   int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture) * 60_000.0 +
-                                   int.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture) * 1_000.0 +
-                                   int.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture) * frameMilliseconds;
+                var milliseconds = SccBytePairs.ToMilliseconds(match, frameMilliseconds);
                 foreach (var cc in MacCaption10.GetAllCcData(match.Groups[5].Value))
                 {
                     if (!cc.Valid)
@@ -113,6 +110,79 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Moves all caption data by <paramref name="milliseconds"/> (negative = earlier) and drops
+        /// what would come before the start of the video. Broadcast .scc/.mcc files carry the time
+        /// of day, often from 01:00:00:00, while the video they go into starts at zero - without
+        /// the shift the captions would land an hour into the video (#16220).
+        /// </summary>
+        public void Shift(double milliseconds)
+        {
+            if (Math.Abs(milliseconds) < 0.001)
+            {
+                return;
+            }
+
+            Field1 = SccBytePairs.Shift(Field1, milliseconds);
+            Field2 = SccBytePairs.Shift(Field2, milliseconds);
+            var dtvcc = new List<DtvccTriplet>(Dtvcc.Count);
+            foreach (var triplet in Dtvcc)
+            {
+                var ms = triplet.Milliseconds + milliseconds;
+                if (ms >= 0)
+                {
+                    dtvcc.Add(new DtvccTriplet(ms, triplet.Type, triplet.Data1, triplet.Data2));
+                }
+            }
+
+            Dtvcc = dtvcc;
+        }
+
+        /// <summary>
+        /// The timecode of the first caption line in a Scenarist (.scc) or MacCaption (.mcc) file,
+        /// as <see cref="FromFile"/> places it (time of day plus frames at the file's rate) - the
+        /// start-of-program time of a broadcast file, typically 01:00:00:00. Null for other
+        /// formats, whose times are what Subtitle Edit shows.
+        /// </summary>
+        public static TimeSpan? GetFirstTimeCode(string fileName)
+        {
+            var lines = new List<string>(File.ReadAllLines(fileName));
+            if (lines.Count == 0)
+            {
+                return null;
+            }
+
+            var header = lines[0].TrimStart('\ufeff');
+            if (header.StartsWith("Scenarist_SCC", StringComparison.OrdinalIgnoreCase))
+            {
+                return SccBytePairs.GetFirstTimeCode(lines);
+            }
+
+            if (!header.StartsWith("File Format=MacCaption_MCC", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            var frameMilliseconds = 1001.0 / 30;
+            foreach (var line in lines)
+            {
+                var s = line.Trim();
+                if (s.StartsWith("Time Code Rate=", StringComparison.OrdinalIgnoreCase))
+                {
+                    frameMilliseconds = GetFrameMilliseconds(s.Substring("Time Code Rate=".Length).Trim());
+                    continue;
+                }
+
+                var match = MccTimeCodeLine.Match(s);
+                if (match.Success)
+                {
+                    return TimeSpan.FromMilliseconds(SccBytePairs.ToMilliseconds(match, frameMilliseconds));
+                }
+            }
+
+            return null;
         }
 
         private static double GetFrameMilliseconds(string timeCodeRate)

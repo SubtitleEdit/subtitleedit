@@ -10,6 +10,7 @@ public class SettingsImportExportWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
+        SettingsChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
         Content = new SettingsImportExportPage(vm);

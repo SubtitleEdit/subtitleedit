@@ -1,15 +1,15 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Data.Converters;
-using Avalonia.Layout;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
 
 namespace Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaSmpteProperties;
 
+/// <summary>
+/// D-Cinema SMPTE properties in the editor look (see <see cref="FormatPropertiesChrome"/>):
+/// the subtitle header and the font, Import/Export in the button bar.
+/// </summary>
 public class DCinemaSmptePropertiesWindow : Window
 {
     public DCinemaSmptePropertiesWindow(DCinemaSmptePropertiesViewModel vm)
@@ -22,269 +22,81 @@ public class DCinemaSmptePropertiesWindow : Window
         });
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        MinWidth = 550;
-        MinHeight = 500;
+        MinWidth = 560;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
-        var labelWidth = 150;
         var lang = Se.Language.File.PropertiesDCinema;
 
         // General section
-        var checkBoxGenerateIdAuto = UiUtil.MakeCheckBox(lang.GenerateIdAuto, vm, nameof(vm.GenerateIdAuto));
-
-        var labelSubtitleId = UiUtil.MakeLabel(lang.SubtitleId).WithMinWidth(labelWidth);
-        var textBoxSubtitleId = UiUtil.MakeTextBox(200, vm, nameof(vm.SubtitleId));
-        var buttonGenerateId = UiUtil.MakeButton(lang.GenerateId, vm.GenerateSubtitleIdCommand);
-        var panelSubtitleId = new StackPanel
+        var switchGenerateIdAuto = EditorChrome.MakeSwitchRow(nameof(vm.GenerateIdAuto), lang.GenerateIdAuto, out var toggleGenerateIdAuto);
+        var textBoxSubtitleId = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.SubtitleId)), lang.SubtitleId);
+        var buttonGenerateId = FormatPropertiesChrome.MakeAction("fa-solid fa-rotate", lang.GenerateId, vm.GenerateSubtitleIdCommand);
+        var textBoxMovieTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.MovieTitle)), lang.MovieTitle);
+        var numericUpDownReelNumber = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(1, 250, 1, 90, vm, nameof(vm.ReelNumber)), lang.ReelNumber);
+        var comboBoxLanguage = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage)), Se.Language.General.Language, 140);
+        var textBoxIssueDate = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.IssueDate)), lang.IssueDate);
+        var buttonToday = FormatPropertiesChrome.MakeAction("fa-solid fa-clock", lang.Now, vm.SetTodayIssueDateCommand);
+        var textBoxEditRate = EditorChrome.AsTextField(UiUtil.MakeTextBox(90, vm, nameof(vm.EditRate)), lang.EditRate);
+        var comboBoxTimeCodeRate = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeRates, vm, nameof(vm.SelectedTimeCodeRate)), lang.TimeCodeRate, 90);
+        var textBoxStartTime = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.StartTime)), lang.StartTime);
+        var textBoxReelDuration = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.ReelDuration)), lang.ReelDuration);
+        if (Se.Settings.Appearance.ShowHints)
         {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelSubtitleId, textBoxSubtitleId, buttonGenerateId }
-        };
+            ToolTip.SetTip(textBoxReelDuration, lang.ReelDurationHint);
+        }
 
-        var labelMovieTitle = UiUtil.MakeLabel(lang.MovieTitle).WithMinWidth(labelWidth);
-        var textBoxMovieTitle = UiUtil.MakeTextBox(300, vm, nameof(vm.MovieTitle));
-        var panelMovieTitle = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelMovieTitle, textBoxMovieTitle }
-        };
+        var rowReelDuration = FormatPropertiesChrome.Row(lang.ReelDuration, textBoxReelDuration);
+        rowReelDuration.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMxfExport)) { Source = vm, Mode = BindingMode.OneWay });
 
-        var labelReelNumber = UiUtil.MakeLabel(lang.ReelNumber).WithMinWidth(labelWidth);
-        var numericUpDownReelNumber = UiUtil.MakeNumericUpDownInt(1, 250, 1, 120, vm, nameof(vm.ReelNumber));
-        var labelLanguage = UiUtil.MakeLabel(Se.Language.General.Language).WithMinWidth(80);
-        var comboBoxLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage)).WithMinWidth(100);
-        var panelReelNumber = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelReelNumber, numericUpDownReelNumber, labelLanguage, comboBoxLanguage }
-        };
-
-        var labelIssueDate = UiUtil.MakeLabel(lang.IssueDate).WithMinWidth(labelWidth);
-        var textBoxIssueDate = UiUtil.MakeTextBox(200, vm, nameof(vm.IssueDate));
-        var buttonToday = UiUtil.MakeButton(lang.Now, vm.SetTodayIssueDateCommand);
-        var panelIssueDate = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelIssueDate, textBoxIssueDate, buttonToday }
-        };
-
-        var labelEditRate = UiUtil.MakeLabel(lang.EditRate).WithMinWidth(labelWidth);
-        var textBoxEditRate = UiUtil.MakeTextBox(80, vm, nameof(vm.EditRate));
-        var labelTimeCodeRate = UiUtil.MakeLabel(lang.TimeCodeRate).WithMinWidth(100);
-        var comboBoxTimeCodeRate = UiUtil.MakeComboBox(vm.TimeCodeRates, vm, nameof(vm.SelectedTimeCodeRate)).WithMinWidth(80);
-        var panelEditRate = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelEditRate, textBoxEditRate, labelTimeCodeRate, comboBoxTimeCodeRate }
-        };
-
-        var labelStartTime = UiUtil.MakeLabel(lang.StartTime).WithMinWidth(labelWidth);
-        var textBoxStartTime = UiUtil.MakeTextBox(100, vm, nameof(vm.StartTime));
-        var panelStartTime = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelStartTime, textBoxStartTime }
-        };
+        var general = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(string.Empty, switchGenerateIdAuto),
+            FormatPropertiesChrome.Row(lang.SubtitleId, textBoxSubtitleId, buttonGenerateId),
+            FormatPropertiesChrome.Row(lang.MovieTitle, textBoxMovieTitle),
+            FormatPropertiesChrome.Row(lang.ReelNumber, numericUpDownReelNumber, FormatPropertiesChrome.InlineLabel(Se.Language.General.Language), comboBoxLanguage),
+            FormatPropertiesChrome.Row(lang.IssueDate, textBoxIssueDate, buttonToday),
+            FormatPropertiesChrome.Row(lang.EditRate, textBoxEditRate, FormatPropertiesChrome.InlineLabel(lang.TimeCodeRate), comboBoxTimeCodeRate),
+            FormatPropertiesChrome.Row(lang.StartTime, textBoxStartTime),
+            rowReelDuration);
 
         // Font section
-        var labelFontId = UiUtil.MakeLabel(lang.FontId).WithMinWidth(labelWidth);
-        var textBoxFontId = UiUtil.MakeTextBox(200, vm, nameof(vm.FontId));
-        var panelFontId = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelFontId, textBoxFontId }
-        };
+        var textBoxFontId = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.FontId)), lang.FontId);
+        var textBoxFontUri = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.FontUri)), lang.FontUri);
+        var buttonGenerateFontUri = FormatPropertiesChrome.MakeAction("fa-solid fa-wand-magic-sparkles", Se.Language.General.Generate, vm.GenerateFontUriCommand);
+        var buttonFontColor = FormatPropertiesChrome.ColorButton(Se.Language.General.ChooseColor, Se.Language.General.FontColor, vm.ChooseFontColorCommand, nameof(vm.FontColor));
+        var comboBoxFontEffect = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox<string>(vm.FontEffects, vm, nameof(vm.SelectedFontEffect)), lang.FontEffect, 140);
+        var buttonFontEffectColor = FormatPropertiesChrome.ColorButton(Se.Language.General.ChooseColor, lang.EffectColor, vm.ChooseFontEffectColorCommand, nameof(vm.FontEffectColor));
+        var numericUpDownFontSize = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 250, 42, 90, vm, nameof(vm.FontSize)), Se.Language.General.FontSize);
+        var numericUpDownTopBottomMargin = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(1, 50, 8, 90, vm, nameof(vm.TopBottomMargin)), Se.Language.General.TopBottomMargin);
+        var numericUpDownFadeUpTime = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 50, 0, 90, vm, nameof(vm.FadeUpTime)), lang.FadeUpTime);
+        var numericUpDownFadeDownTime = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownInt(0, 50, 0, 90, vm, nameof(vm.FadeDownTime)), lang.FadeDownTime);
 
-        var labelFontUri = UiUtil.MakeLabel(lang.FontUri).WithMinWidth(labelWidth);
-        var textBoxFontUri = UiUtil.MakeTextBox(200, vm, nameof(vm.FontUri));
-        var buttonGenerateFontUri = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateFontUriCommand);
-        var panelFontUri = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelFontUri, textBoxFontUri, buttonGenerateFontUri }
-        };
+        var textBoxMxfFontFile = EditorChrome.AsTextField(UiUtil.MakeTextBox(340, vm, nameof(vm.MxfFontFile)), lang.FontFile);
+        var buttonBrowseMxfFontFile = FormatPropertiesChrome.MakeAction("fa-solid fa-folder-open", lang.ChooseFontFile, vm.BrowseMxfFontFileCommand);
+        var rowMxfFontFile = FormatPropertiesChrome.Row(lang.FontFile, textBoxMxfFontFile, buttonBrowseMxfFontFile);
+        rowMxfFontFile.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsMxfExport)) { Source = vm, Mode = BindingMode.OneWay });
 
-        var labelFontColor = UiUtil.MakeLabel(Se.Language.General.FontColor).WithMinWidth(labelWidth);
-        var buttonFontColor = UiUtil.MakeButton(lang.ChooseColor, vm.ChooseFontColorCommand).WithMinWidth(100);
-        var panelFontColorPreview = new Border
-        {
-            Width = 30,
-            Height = 20,
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Colors.Black)
-        };
-        panelFontColorPreview.Bind(Border.BackgroundProperty, new Binding(nameof(vm.FontColor))
-        {
-            Source = vm,
-            Mode = BindingMode.OneWay,
-            Converter = new ColorToBrushConverter()
-        });
+        var font = FormatPropertiesChrome.MakeRows(
+            rowMxfFontFile,
+            FormatPropertiesChrome.Row(lang.FontId, textBoxFontId),
+            FormatPropertiesChrome.Row(lang.FontUri, textBoxFontUri, buttonGenerateFontUri),
+            FormatPropertiesChrome.Row(Se.Language.General.FontColor, buttonFontColor),
+            FormatPropertiesChrome.Row(lang.FontEffect, comboBoxFontEffect, FormatPropertiesChrome.InlineLabel(lang.EffectColor), buttonFontEffectColor),
+            FormatPropertiesChrome.Row(Se.Language.General.FontSize, numericUpDownFontSize, FormatPropertiesChrome.InlineLabel(Se.Language.General.TopBottomMargin), numericUpDownTopBottomMargin),
+            FormatPropertiesChrome.Row(lang.FadeUpTime, numericUpDownFadeUpTime, FormatPropertiesChrome.Unit(Se.Language.General.Frames),
+                FormatPropertiesChrome.InlineLabel(lang.FadeDownTime), numericUpDownFadeDownTime, FormatPropertiesChrome.Unit(Se.Language.General.Frames)));
 
-        var panelFontColor = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelFontColor, buttonFontColor, panelFontColorPreview }
-        };
+        var buttonImport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand);
+        var buttonExport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand);
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(FormatPropertiesChrome.MakeActions(buttonImport, buttonExport), UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
-        var labelFontEffect = UiUtil.MakeLabel(lang.FontEffect).WithMinWidth(labelWidth);
-        var comboBoxFontEffect = UiUtil.MakeComboBox<string>(vm.FontEffects, vm, nameof(vm.SelectedFontEffect)).WithMinWidth(100);
-        var panelFontEffect = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelFontEffect, comboBoxFontEffect }
-        };
+        Content = FormatPropertiesChrome.MakeRoot(
+            buttonBar,
+            EditorChrome.MakeEditorSection(Se.Language.General.General, general, first: true),
+            EditorChrome.MakeEditorSection(Se.Language.General.Font, font));
 
-        var labelFontEffectColor = UiUtil.MakeLabel(lang.EffectColor).WithMinWidth(labelWidth);
-        var buttonFontEffectColor = UiUtil.MakeButton(lang.ChooseColor, vm.ChooseFontEffectColorCommand).WithMinWidth(100);
-        var panelFontEffectColorPreview = new Border
-        {
-            Width = 30,
-            Height = 20,
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Colors.Black)
-        };
-        panelFontEffectColorPreview.Bind(Border.BackgroundProperty, new Binding(nameof(vm.FontEffectColor))
-        {
-            Source = vm,
-            Mode = BindingMode.OneWay,
-            Converter = new ColorToBrushConverter()
-        });
-
-        var panelFontEffectColor = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelFontEffectColor, buttonFontEffectColor, panelFontEffectColorPreview }
-        };
-
-        var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize).WithMinWidth(labelWidth);
-        var numericUpDownFontSize = UiUtil.MakeNumericUpDownInt(0, 250, 42, 120, vm, nameof(vm.FontSize));
-        var labelTopBottomMargin = UiUtil.MakeLabel(lang.TopBottomMargin).WithMinWidth(100);
-        var numericUpDownTopBottomMargin = UiUtil.MakeNumericUpDownInt(1, 50, 8, 120, vm, nameof(vm.TopBottomMargin));
-        var panelFontSize = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelFontSize, numericUpDownFontSize, labelTopBottomMargin, numericUpDownTopBottomMargin }
-        };
-
-        var labelFadeUpTime = UiUtil.MakeLabel(lang.FadeUpTime).WithMinWidth(labelWidth);
-        var numericUpDownFadeUpTime = UiUtil.MakeNumericUpDownInt(0, 50, 0, 120, vm, nameof(vm.FadeUpTime));
-        var labelFadeUpFrames = UiUtil.MakeLabel(Se.Language.General.Frames);
-        var labelFadeDownTime = UiUtil.MakeLabel(lang.FadeDownTime).WithMinWidth(80);
-        var numericUpDownFadeDownTime = UiUtil.MakeNumericUpDownInt(0, 50, 0, 120, vm, nameof(vm.FadeDownTime));
-        var labelFadeDownFrames = UiUtil.MakeLabel(Se.Language.General.Frames);
-        var panelFadeUpTime = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
-            Children = { labelFadeUpTime, numericUpDownFadeUpTime, labelFadeUpFrames, labelFadeDownTime, numericUpDownFadeDownTime, labelFadeDownFrames }
-        };
-
-        // Font GroupBox
-        var fontGroupBox = new Border
-        {
-            BorderBrush = new SolidColorBrush(Colors.Gray),
-            BorderThickness = new Thickness(1),
-            Padding = new Thickness(10),
-            Child = new StackPanel
-            {
-                Spacing = 10,
-                Children =
-                {
-                    new TextBlock { Text = Se.Language.General.Font, FontWeight = FontWeight.Bold },
-                    panelFontId,
-                    panelFontUri,
-                    panelFontColor,
-                    panelFontEffect,
-                    panelFontEffectColor,
-                    panelFontSize,
-                    panelFadeUpTime
-                }
-            }
-        };
-
-        var scrollViewer = new ScrollViewer
-        {
-            Content = new StackPanel
-            {
-                Spacing = 10,
-                Margin = UiUtil.MakeWindowMargin(),
-                Children =
-                {
-                    checkBoxGenerateIdAuto,
-                    panelSubtitleId,
-                    panelMovieTitle,
-                    panelReelNumber,
-                    panelIssueDate,
-                    panelEditRate,
-                    panelStartTime,
-                    fontGroupBox
-                }
-            }
-        };
-
-        var buttonImport = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand);
-        var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonImport, buttonExport, buttonOk, buttonCancel);
-
-        var mainPanel = new DockPanel
-        {
-            LastChildFill = true,
-            Children = { buttonPanel, scrollViewer }
-        };
-        DockPanel.SetDock(buttonPanel, Dock.Bottom);
-
-        Content = mainPanel;
-
-        UiUtil.FocusOnFirstActivation(this, checkBoxGenerateIdAuto); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, toggleGenerateIdAuto); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
-    }
-
-    private class ColorToBrushConverter : IValueConverter
-    {
-        public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value is Color color)
-            {
-                return new SolidColorBrush(color);
-            }
-            return new SolidColorBrush(Colors.White);
-        }
-
-        public object? ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value is SolidColorBrush brush)
-            {
-                return brush.Color;
-            }
-            return Colors.White;
-        }
     }
 }

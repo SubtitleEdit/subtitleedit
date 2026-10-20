@@ -142,6 +142,7 @@ The manifest lets Subtitle Edit list the plugin in its menus without launching i
 | `executables`  | yes\*    | Native executable file names per OS, relative to the plugin folder. |
 | `runtime`      | no       | Set to `"dotnet"` to launch via the shared .NET runtime instead of a native exe. |
 | `entry`        | no       | Entry `.dll` (relative to the plugin folder), used with `runtime: "dotnet"`. |
+| `batch`        | no       | `true` when the plugin supports **Batch convert**: it handles the `batch` and `configure` request types (see [Batch convert](#batch-convert)). Default `false`. |
 
 \* Provide either `executables` **or** `runtime` + `entry`. A `dotnet` plugin is
 launched as `dotnet <entry> <requestFilePath>`.
@@ -246,6 +247,34 @@ launched as `dotnet <entry> <requestFilePath>`.
 - `themeColors` carries the active theme's colors as `#AARRGGBB` hex strings so
   your plugin's own UI can match Subtitle Edit. May be omitted in older SE
   versions — fall back to your platform's defaults when it is missing.
+
+- `requestType` is `run` from the Plugins menu. Plugins with `"batch": true` in
+  their manifest can also get `batch` and `configure` — see below.
+
+## Batch convert
+
+A plugin that sets `"batch": true` in `plugin.json` is offered as **Run plugin** in
+**Tools → Batch convert**. Subtitle Edit then sends two more request types:
+
+| `requestType` | When | What the plugin must do |
+|---------------|------|-------------------------|
+| `configure`   | The user clicks **Configure...** next to the plugin in Batch convert. | Show your settings UI only. Return `status: "ok"` with `settings` (and `settingsVersion`) and **no** `subtitle`, or `cancelled`. `subtitle` in the request is empty except `format`, which is the batch target format. |
+| `batch`       | Once per file during a batch run. | **Do not show any UI** — the batch runs unattended. Apply your saved `settings` (from a previous `run` or `configure`) to **all lines** and return `ok` with the subtitle, `ok` without a subtitle for "no changes", or `error` with a `message`. |
+
+- In a `batch` request `subtitle` is the file being converted after the batch steps
+  before it, in the file's original format (`subtitle.format`), and
+  `subtitle.fileName` is the source file. `selectedIndices` is empty, and the video
+  fields are empty/null.
+- `settings` returned from a `batch` response are **ignored**, so one run cannot
+  change its own configuration halfway through. Use `configure` (or a normal `run`)
+  to change them.
+- `error` (or a crash, non-zero exit code or missing response) marks that file as
+  failed in Batch convert; the batch continues with the next file. `message` is shown
+  as the file's status.
+- Run plugin is applied after the other text steps (just before Sort by and
+  Renumber) and is skipped for image-to-image conversions.
+- Plugins without `"batch": true` never receive these request types, so older
+  plugins are not affected.
 
 ## response.json (plugin → Subtitle Edit)
 

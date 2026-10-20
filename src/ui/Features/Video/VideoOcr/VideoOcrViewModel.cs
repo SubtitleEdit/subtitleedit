@@ -18,7 +18,6 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr.EngineSettings;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
 using System;
@@ -32,7 +31,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using Nikse.SubtitleEdit.UiLogic.Media;
 using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
@@ -83,6 +81,9 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _addAssaPositionTag;
     [ObservableProperty] private ObservableCollection<VideoOcrLineItem> _lines;
     [ObservableProperty] private bool _isRunning;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.VideoOcr.Title);
+
     [ObservableProperty] private bool _isOkEnabled;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
@@ -540,7 +541,7 @@ public partial class VideoOcrViewModel : ObservableObject
             }
             else if (!engineInstalled)
             {
-                message = Se.Language.Ocr.LlamaCppDownloadEnginePrompt;
+                message = Se.Language.General.LlamaCppDownloadEnginePrompt;
             }
             else
             {
@@ -925,7 +926,7 @@ public partial class VideoOcrViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window!,
-                    Se.Language.Video.VideoOcr.NoLinesFoundTitle,
+                    Se.Language.General.NoSubtitlesFoundTitle,
                     Se.Language.Video.VideoOcr.NoLinesFoundMessage,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -1078,7 +1079,7 @@ public partial class VideoOcrViewModel : ObservableObject
             var current = Interlocked.Increment(ref done);
             Dispatcher.UIThread.Post(() =>
             {
-                ProgressText = string.Format(Se.Language.Video.VideoOcr.RunningOcrXY, current, ocrGroups.Count);
+                ProgressText = string.Format(Se.Language.General.RunningOcrXY, current, ocrGroups.Count);
                 ProgressValue = current * 100.0 / ocrGroups.Count;
             });
         }
@@ -1107,7 +1108,7 @@ public partial class VideoOcrViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             ProgressValue = 0;
-            ProgressText = string.Format(Se.Language.Video.VideoOcr.RunningOcrXY, 0, ocrGroups.Count);
+            ProgressText = string.Format(Se.Language.General.RunningOcrXY, 0, ocrGroups.Count);
         });
 
         _ocrStoppedEarlyError = string.Empty;
@@ -1587,6 +1588,17 @@ public partial class VideoOcrViewModel : ObservableObject
                     d.Name.Contains(result.SelectedDictionary.NativeName, StringComparison.OrdinalIgnoreCase))
                 ?? SelectedDictionary;
         }
+        else if (result.DictionariesChanged)
+        {
+            // Keep the current dictionary unless it was the one uninstalled.
+            var currentFileName = SelectedDictionary?.DictionaryFileName;
+            SelectedDictionary = null;
+            LoadDictionaries(currentFileName ?? string.Empty);
+            if (currentFileName == string.Empty)
+            {
+                SelectedDictionary = Dictionaries[0]; // "None" stays "None"
+            }
+        }
     }
 
     /// <summary>The current engine's OCR language as a two-letter code, for the dictionary auto-pick.</summary>
@@ -1939,10 +1951,13 @@ public partial class VideoOcrViewModel : ObservableObject
         }
     }
 
+    partial void OnIsRunningChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     internal void OnClosing()
     {
         _previewTimer.Stop();
         _cancellationTokenSource.Cancel();
+        _sleepInhibitor.Dispose();
 
         try
         {

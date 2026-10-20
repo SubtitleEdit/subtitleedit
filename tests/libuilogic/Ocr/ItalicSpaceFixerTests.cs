@@ -1,146 +1,80 @@
 using Nikse.SubtitleEdit.UiLogic.Ocr;
+using SkiaSharp;
 
 namespace LibUiLogicTests.Ocr;
 
 /// <summary>
-/// Italic glyphs lean over the word gaps, so the letter splitter's straight-column space
-/// detection undercounts them. ItalicSpaceFixer re-measures the gaps along the italic slant
-/// and inserts the spaces that were missed (issue #13660: "hat mir gesagt" OCR'ed as
-/// "hatmirgesagt"). These tests pin the insertion rules for both the binary image compare
-/// matches and the nOCR matches.
+/// The slanted glyph boxes of an italic line overlap, so the space detector sees few gaps in
+/// it and its threshold can come out as a double space. <see cref="ItalicSpaceFixer"/> then
+/// counts the blank angled columns between glyphs with its own threshold, capped relative to
+/// the glyph height, so an italic "Dat werd tijd" does not stay one word.
 /// </summary>
 public class ItalicSpaceFixerTests
 {
-    private const double UnItalicFactor = 0.33;
+    private const int Height = 40;
 
-    private static NikseBitmap2 MakeBitmap(int width, int height, bool opaque)
+    private static NikseBitmap2 Bars(int width, params int[] barLefts)
     {
-        var data = new byte[width * height * 4];
-        if (opaque)
+        var bmp = new NikseBitmap2(width, Height);
+        foreach (var left in barLefts)
         {
-            for (var i = 0; i < data.Length; i++)
+            for (var y = 0; y < Height; y++)
             {
-                data[i] = 255;
+                for (var x = left; x < left + 6; x++)
+                {
+                    bmp.SetPixel(x, y, SKColors.White);
+                }
             }
         }
 
-        return new NikseBitmap2(width, height, data);
+        return bmp;
     }
 
-    private static ImageSplitterItem2 MakeLetter(int x, int width) =>
-        new ImageSplitterItem2(x, 0, MakeBitmap(width, 20, opaque: true));
-
-    private static BinaryOcrMatcher.CompareMatch MakeMatch(string text, bool italic, ImageSplitterItem2 letter) =>
-        new BinaryOcrMatcher.CompareMatch(text, italic, 0, null) { ImageSplitterItem = letter };
-
-    [Fact]
-    public void BinaryMatches_WideTransparentGapInItalic_InsertsSpace()
+    private static (NikseBitmap2 Parent, List<ImageSplitterItem2> Letters, List<NOcrChar> Matches) MakeLine()
     {
-        var parentBitmap = MakeBitmap(60, 30, opaque: false); // fully transparent => whole gap is blank
-        var letterA = MakeLetter(0, 10);
-        var letterB = MakeLetter(30, 10); // gap of 20 >= pixelsIsSpace
-        var letters = new List<ImageSplitterItem2> { letterA, letterB };
-        var matches = new List<BinaryOcrMatcher.CompareMatch>
+        // Three upright 6 px bars: 4 px between the first two (a letter gap), 14 px before the third.
+        var parent = Bars(60, 0, 10, 30);
+        var letters = new List<ImageSplitterItem2>();
+        var matches = new List<NOcrChar>();
+        foreach (var (x, text) in new[] { (0, "a"), (10, "b"), (30, "c") })
         {
-            MakeMatch("a", true, letterA),
-            MakeMatch("b", true, letterB),
-        };
+            var item = new ImageSplitterItem2(x, 0, Bars(6, 0)) { Top = 0 };
+            letters.Add(item);
+            matches.Add(new NOcrChar(text) { Italic = true, ImageSplitterItem = item });
+        }
 
-        var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, UnItalicFactor, 12);
-
-        Assert.Equal("<i>a b</i>", text);
+        return (parent, letters, matches);
     }
 
     [Fact]
-    public void BinaryMatches_GapFilledWithPixels_NoSpaceInserted()
+    public void DoubleSpaceThreshold_IsCappedByGlyphHeight()
     {
-        var parentBitmap = MakeBitmap(60, 30, opaque: true); // every angled line hits a pixel
-        var letterA = MakeLetter(0, 10);
-        var letterB = MakeLetter(30, 10);
-        var letters = new List<ImageSplitterItem2> { letterA, letterB };
-        var matches = new List<BinaryOcrMatcher.CompareMatch>
-        {
-            MakeMatch("a", true, letterA),
-            MakeMatch("b", true, letterB),
-        };
+        var (parent, letters, matches) = MakeLine();
 
-        var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, UnItalicFactor, 12);
+        // 24 px: more than any gap in the line - with it no space was ever found.
+        var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parent, unItalicFactor: 0, pixelsIsSpace: 24);
 
-        Assert.Equal("<i>ab</i>", text);
+        Assert.Equal("<i>ab c</i>", text);
     }
 
     [Fact]
-    public void BinaryMatches_GapNarrowerThanPixelsIsSpace_NoSpaceInserted()
+    public void SaneThreshold_IsKept()
     {
-        var parentBitmap = MakeBitmap(60, 30, opaque: false);
-        var letterA = MakeLetter(0, 10);
-        var letterB = MakeLetter(14, 10); // blank range 10..19 => 9 < pixelsIsSpace
-        var letters = new List<ImageSplitterItem2> { letterA, letterB };
-        var matches = new List<BinaryOcrMatcher.CompareMatch>
-        {
-            MakeMatch("a", true, letterA),
-            MakeMatch("b", true, letterB),
-        };
+        var (parent, letters, matches) = MakeLine();
 
-        var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, UnItalicFactor, 12);
+        var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parent, unItalicFactor: 0, pixelsIsSpace: 6);
 
-        Assert.Equal("<i>ab</i>", text);
+        Assert.Equal("<i>ab c</i>", text);
     }
 
     [Fact]
-    public void BinaryMatches_NonItalic_NoSpaceInserted()
+    public void LetterGap_IsNoSpace()
     {
-        // The straight-column detection already handles upright text; the fixer must only
-        // touch italic matches.
-        var parentBitmap = MakeBitmap(60, 30, opaque: false);
-        var letterA = MakeLetter(0, 10);
-        var letterB = MakeLetter(30, 10);
-        var letters = new List<ImageSplitterItem2> { letterA, letterB };
-        var matches = new List<BinaryOcrMatcher.CompareMatch>
-        {
-            MakeMatch("a", false, letterA),
-            MakeMatch("b", false, letterB),
-        };
+        var (parent, letters, matches) = MakeLine();
 
-        var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, UnItalicFactor, 12);
+        // A 3 px threshold would split "ab" too; the cap only lowers, never raises, the threshold.
+        var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parent, unItalicFactor: 0, pixelsIsSpace: 3);
 
-        Assert.Equal("ab", text);
-    }
-
-    [Fact]
-    public void BinaryMatches_ExistingSpaceMatch_NotDoubled()
-    {
-        var parentBitmap = MakeBitmap(90, 30, opaque: false);
-        var letterA = MakeLetter(0, 10);
-        var letterB = MakeLetter(30, 10);
-        var letters = new List<ImageSplitterItem2> { letterA, letterB };
-        var matches = new List<BinaryOcrMatcher.CompareMatch>
-        {
-            MakeMatch("a", true, letterA),
-            new BinaryOcrMatcher.CompareMatch(" ", false, 0, null),
-            MakeMatch("b", true, letterB),
-        };
-
-        var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, UnItalicFactor, 12);
-
-        Assert.Equal("<i>a b</i>", text);
-    }
-
-    [Fact]
-    public void NOcrMatches_WideTransparentGapInItalic_InsertsSpace()
-    {
-        var parentBitmap = MakeBitmap(60, 30, opaque: false);
-        var letterA = MakeLetter(0, 10);
-        var letterB = MakeLetter(30, 10);
-        var letters = new List<ImageSplitterItem2> { letterA, letterB };
-        var matches = new List<NOcrChar>
-        {
-            new NOcrChar("a") { Italic = true, ImageSplitterItem = letterA },
-            new NOcrChar("b") { Italic = true, ImageSplitterItem = letterB },
-        };
-
-        var text = ItalicSpaceFixer.GetTextWithMoreSpacesInItalic(matches, letters, parentBitmap, UnItalicFactor, 12);
-
-        Assert.Equal("<i>a b</i>", text);
+        Assert.Equal("<i>a b c</i>", text);
     }
 }

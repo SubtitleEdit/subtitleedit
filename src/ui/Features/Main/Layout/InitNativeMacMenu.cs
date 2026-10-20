@@ -148,6 +148,7 @@ public static class InitNativeMacMenu
                         UpdateWindowMenus();
                     }
 
+                    MacHelpSearchInterop.TryRegisterHelpMenu(Clean(Se.Language.Main.Menu.HelpTitle));
                     InstallDockMenu();
                 }, Avalonia.Threading.DispatcherPriority.Background);
             };
@@ -250,6 +251,8 @@ public static class InitNativeMacMenu
         exportItems.Items.Add(Item(lExport.TitleExportDvbTeletext, v => v.ExportDvbTeletextCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDCinemaInteropPng, v => v.ExportDCinemaInteropPngCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDCinemaSmpte2014Png, v => v.ExportDCinemaSmpte2014PngCommand));
+        exportItems.Items.Add(Item(lExport.TitleExportDCinemaSmpte2014PngMxf, v => v.ExportDCinemaSmpte2014PngMxfCommand));
+        exportItems.Items.Add(Item(lExport.TitleExportDCinemaSmpte2014Mxf, v => v.ExportDCinemaSmpte2014MxfCommand));
         exportItems.Items.Add(Item(Ebu.NameOfFormat, v => v.ExportEbuStlCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDostPng, v => v.ExportDostPngCommand));
         exportItems.Items.Add(Item(lExport.TitleExportDvdSup, v => v.ExportDvdSupCommand));
@@ -262,6 +265,7 @@ public static class InitNativeMacMenu
         exportItems.Items.Add(new NativeMenuItemSeparator());
         exportItems.Items.Add(Item(Clean(lExport.CustomTextFormatsDotDotDot), v => v.ShowExportCustomTextFormatCommand));
         exportItems.Items.Add(Item(Clean(lExport.PlainTextDotDotDot), v => v.ShowExportPlainTextCommand));
+        exportItems.Items.Add(Item(Clean(lExport.DialogueListDotDotDot), v => v.ShowExportDialogueListCommand));
         fileItems.Items.Add(new NativeMenuItem(Clean(l.Export)) { Menu = exportItems });
 
         // ── Edit ──────────────────────────────────────────────────────────────
@@ -377,6 +381,7 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(l.GenerateTransparent), v => v.ShowVideoTransparentSubtitlesCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.GenerateBlankVideoDotDotDot), v => v.VideoGenerateBlankCommand));
         videoItems.Items.Add(Item(Clean(Se.Language.Video.EmbedSubtitlesDotDotDot), v => v.VideoEmbedCommand));
+        videoItems.Items.Add(Item(Clean(Se.Language.Video.SyncAudioTrackDotDotDot), v => v.ShowSyncAudioTrackCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(Se.Language.Video.Chapters.ChaptersDotDotDot), v => v.ShowVideoChaptersCommand));
         videoItems.Items.Add(new NativeMenuItemSeparator());
@@ -398,6 +403,7 @@ public static class InitNativeMacMenu
             Item(Clean(lVideo.CutVideoDotDotDot), v => v.VideoCutCommand),
             Item(Clean(lVideo.BackgroundMusic.GenerateBackgroundMusicDotDotDot), v => v.ShowVideoBackgroundMusicCommand),
             Item(Clean(lVideo.RemuxVideoDotDotDot), v => v.ShowVideoRemuxVideoCommand),
+            Item(Clean(lVideo.SyncToAudioDotDotDot), v => v.ShowSyncToAudioCommand),
 
             // Finds who speaks in the video, clones each of them and assigns the cast, so the
             // whole thing can be dubbed in its own voices (#13698).

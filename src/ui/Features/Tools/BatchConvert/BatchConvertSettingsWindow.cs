@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -6,242 +8,197 @@ using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
+/// <summary>
+/// Batch convert settings, in the editor look (see <see cref="EditorChrome"/>): output on the left,
+/// adding files and OCR on the right, OK in the button bar.
+/// </summary>
 public class BatchConvertSettingsWindow : Window
 {
+    private const double LabelWidth = 150;
+    private const double ColumnWidth = 440;
+
     public BatchConvertSettingsWindow(BatchConvertSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Tools.BatchConvert.BatchConvertSettings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
-        var labelTargetEncoding = UiUtil.MakeLabel(Se.Language.General.TargetEncoding);
-        var comboBoxTargetEncoding = UiUtil.MakeComboBox(vm.TargetEncodings, vm, nameof(vm.SelectedTargetEncoding));
-        var panelTargetEncoding = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Children = { labelTargetEncoding, comboBoxTargetEncoding }
-        };
+        var comboBoxTargetEncoding = Combo(vm.TargetEncodings, vm, nameof(vm.SelectedTargetEncoding), Se.Language.General.TargetEncoding);
 
-        var checkBoxOverwrite = new CheckBox
-        {
-            Content = Se.Language.General.OverwriteExistingFiles,
-            IsChecked = vm.Overwrite,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.Overwrite)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-        };
-
-        var checkBoxKeepSourceTimestamp = new CheckBox
-        {
-            Content = Se.Language.Tools.BatchConvert.KeepSourceFileTimestamp,
-            IsChecked = vm.KeepSourceTimestamp,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.KeepSourceTimestamp)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-        };
-
-        var checkBoxPreventSleep = new CheckBox
-        {
-            Content = Se.Language.Tools.BatchConvert.PreventSleepWhileConverting,
-            IsChecked = vm.PreventSleep,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.PreventSleep)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-        };
-
-        var checkBoxScanFolderRecursive = new CheckBox
-        {
-            Content = Se.Language.Tools.BatchConvert.IncludeSubfolders,
-            IsChecked = vm.ScanFolderRecursive,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ScanFolderRecursive)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-        };
-
-        var labelScanFolderVideoFiles = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.VideoFilesWhenAddingFolder);
-        var comboBoxScanFolderVideoFiles = UiUtil.MakeComboBox(vm.ScanFolderVideoFilesOptions, vm, nameof(vm.SelectedScanFolderVideoFilesOption));
-        var panelScanFolderVideoFiles = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Children = { labelScanFolderVideoFiles, comboBoxScanFolderVideoFiles }
-        };
-
-        var checkBoxUseSourceFolder = new RadioButton
+        var radioUseSourceFolder = new RadioButton
         {
             Content = Se.Language.General.UseSourceFolder,
             IsChecked = vm.UseSourceFolder,
+            FontSize = 12.5,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.UseSourceFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };
 
-        var checkBoxUseOutputFolder = new RadioButton
+        var radioUseOutputFolder = new RadioButton
         {
             Content = Se.Language.General.UseOutputFolder,
             IsChecked = vm.UseOutputFolder,
+            FontSize = 12.5,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };
 
-        var textBoxOutputFolder = new TextBox
+        var textBoxOutputFolder = EditorChrome.MakeTextField(nameof(vm.OutputFolder), Se.Language.General.OutputFolder);
+        textBoxOutputFolder.Text = vm.OutputFolder;
+        textBoxOutputFolder.Bind(IsEnabledProperty, new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.OneWay });
+
+        var buttonBrowse = EditorChrome.CreateToolButton("fa-solid fa-folder-open", Se.Language.General.UseOutputFolder, vm.BrowseOutputFolderCommand, 28);
+
+        var panelOutputFolder = new Grid
         {
-            Text = vm.OutputFolder,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.OutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-            [!Control.IsEnabledProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.OneWay },
-            Width = 400,
+            Margin = new Thickness(28, 0, 0, 0), // under the "Use output folder" radio button
+            ColumnSpacing = 4,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
         };
+        panelOutputFolder.Add(textBoxOutputFolder, 0, 0);
+        panelOutputFolder.Add(buttonBrowse, 0, 1);
 
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand, accessibleName: Se.Language.General.UseOutputFolder);
+        var folder = new StackPanel { Spacing = 4, Children = { radioUseSourceFolder, radioUseOutputFolder, panelOutputFolder } };
 
-        var panelOutputFolder = new StackPanel
+        var comboBoxLanguagePostFix = Combo(vm.LanguagePostFixes, vm, nameof(vm.SelectedLanguagePostFix), Se.Language.General.LanguagePostFix);
+
+        var output = new StackPanel
         {
-            Orientation = Orientation.Horizontal,
-            Margin = new Avalonia.Thickness(28, 0, 0, 0), // under the "Use output folder" radio button
-            VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 5,
+            Spacing = 8,
             Children =
             {
-                textBoxOutputFolder,
-                buttonBrowse
+                EditorChrome.MakeLabeledRow(Se.Language.General.TargetEncoding, comboBoxTargetEncoding, LabelWidth, wrap: true),
+                folder,
+                EditorChrome.MakeSwitchRow(nameof(vm.Overwrite), Se.Language.General.OverwriteExistingFiles),
+                EditorChrome.MakeSwitchRow(nameof(vm.KeepSourceTimestamp), Se.Language.Tools.BatchConvert.KeepSourceFileTimestamp),
+                EditorChrome.MakeLabeledRow(Se.Language.General.LanguagePostFix, comboBoxLanguagePostFix, LabelWidth, wrap: true),
             }
         };
 
-        var labelOcrEngine = UiUtil.MakeLabel(Se.Language.Ocr.OcrEngine);
-        var comboBoxOcrEngine = UiUtil.MakeComboBox(vm.OcrEngines, vm, nameof(vm.SelectedOcrEngine));
-        var labelOcLanguage = UiUtil.MakeLabel(Se.Language.General.Language).WithBindVisible(vm, nameof(vm.IsOcrLanguageVisible)).WithMarginLeft(10);
-        var labelBinaryOcrDatabase = UiUtil.MakeLabel(Se.Language.Ocr.Database).WithBindVisible(vm, nameof(vm.IsBinaryOcrVisible)).WithMarginLeft(10);
-        var comboBoxTesseractLanguages = UiUtil.MakeComboBox(vm.TesseractDictionaryItems, vm, nameof(vm.SelectedTesseractDictionaryItem))
+        var comboBoxScanFolderVideoFiles = Combo(vm.ScanFolderVideoFilesOptions, vm, nameof(vm.SelectedScanFolderVideoFilesOption), Se.Language.Tools.BatchConvert.VideoFilesWhenAddingFolder);
+        var addingFiles = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                EditorChrome.MakeSwitchRow(nameof(vm.ScanFolderRecursive), Se.Language.Tools.BatchConvert.IncludeSubfolders),
+                EditorChrome.MakeLabeledRow(Se.Language.Tools.BatchConvert.VideoFilesWhenAddingFolder, comboBoxScanFolderVideoFiles, LabelWidth, wrap: true),
+            }
+        };
+
+        var comboBoxOcrEngine = Combo(vm.OcrEngines, vm, nameof(vm.SelectedOcrEngine), Se.Language.Ocr.OcrEngine);
+        var comboBoxTesseractLanguages = Combo(vm.TesseractDictionaryItems, vm, nameof(vm.SelectedTesseractDictionaryItem), Se.Language.General.Language)
             .WithBindVisible(nameof(vm.IsTesseractOcrVisible));
-        var labelTesseractEngineMode = UiUtil.MakeLabel(Se.Language.Ocr.TesseractEngineMode).WithBindVisible(vm, nameof(vm.IsTesseractOcrVisible)).WithMarginLeft(10);
-        var comboBoxTesseractEngineMode = UiUtil.MakeComboBox(vm.TesseractEngineModes, vm, nameof(vm.SelectedTesseractEngineMode))
-            .WithBindVisible(nameof(vm.IsTesseractOcrVisible));
-        var comboBoxPaddleLanguages = UiUtil.MakeComboBox(vm.PaddleOcrLanguages, vm, nameof(vm.SelectedPaddleOcrLanguage))
+        var comboBoxTesseractEngineMode = Combo(vm.TesseractEngineModes, vm, nameof(vm.SelectedTesseractEngineMode), Se.Language.Ocr.TesseractEngineMode);
+        var comboBoxPaddleLanguages = Combo(vm.PaddleOcrLanguages, vm, nameof(vm.SelectedPaddleOcrLanguage), Se.Language.General.Language)
             .WithBindVisible(nameof(vm.IsPaddleOCrVisible));
-        var comboBoxBinaryOcrDatabases = UiUtil.MakeComboBox(vm.BinaryOcrDatabases, vm, nameof(vm.SelectedBinaryOcrDatabase))
-            .WithBindVisible(nameof(vm.IsBinaryOcrVisible));
-        var labelBinaryOcrFallback = UiUtil.MakeLabel(Se.Language.Ocr.BinaryOcrNOcrFallbackDatabase).WithBindVisible(vm, nameof(vm.IsBinaryOcrVisible)).WithMarginLeft(10);
-        var comboBoxBinaryOcrFallback = UiUtil.MakeComboBox(vm.BinaryOcrFallbackNOcrDatabases, vm, nameof(vm.SelectedBinaryOcrFallbackNOcrDatabase))
-            .WithBindVisible(nameof(vm.IsBinaryOcrVisible));
-        var labelNOcrDatabase = UiUtil.MakeLabel(Se.Language.Ocr.Database).WithBindVisible(vm, nameof(vm.IsNOcrVisible)).WithMarginLeft(10);
-        var comboBoxNOcrDatabases = UiUtil.MakeComboBox(vm.NOcrDatabases, vm, nameof(vm.SelectedNOcrDatabase))
-            .WithBindVisible(nameof(vm.IsNOcrVisible));
-        var labelNOcrFallback = UiUtil.MakeLabel(Se.Language.Ocr.NOcrBinaryOcrFallbackDatabase).WithBindVisible(vm, nameof(vm.IsNOcrVisible)).WithMarginLeft(10);
-        var comboBoxNOcrFallback = UiUtil.MakeComboBox(vm.NOcrFallbackBinaryOcrDatabases, vm, nameof(vm.SelectedNOcrFallbackBinaryOcrDatabase))
-            .WithBindVisible(nameof(vm.IsNOcrVisible));
-        var labelOllamaModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.IsOllamaVisible)).WithMarginLeft(10);
-        var comboBoxOllamaModels = UiUtil.MakeComboBox(vm.OllamaModels, vm, nameof(vm.SelectedOllamaModel))
-            .WithBindVisible(nameof(vm.IsOllamaVisible));
-        var buttonOllamaModelBrowse = UiUtil.MakeButtonBrowse(vm.PickOllamaModelCommand, nameof(vm.IsOllamaVisible), Se.Language.General.Model).WithMarginLeft(3);
-        var labelLlamaCppModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.IsLlamaCppVisible)).WithMarginLeft(10);
-        var comboBoxLlamaCppModels = UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel))
-            .WithBindVisible(nameof(vm.IsLlamaCppVisible));
+        var comboBoxBinaryOcrDatabases = Combo(vm.BinaryOcrDatabases, vm, nameof(vm.SelectedBinaryOcrDatabase), Se.Language.Ocr.Database);
+        var comboBoxBinaryOcrFallback = Combo(vm.BinaryOcrFallbackNOcrDatabases, vm, nameof(vm.SelectedBinaryOcrFallbackNOcrDatabase), Se.Language.Ocr.BinaryOcrNOcrFallbackDatabase);
+        var comboBoxNOcrDatabases = Combo(vm.NOcrDatabases, vm, nameof(vm.SelectedNOcrDatabase), Se.Language.Ocr.Database);
+        var comboBoxNOcrFallback = Combo(vm.NOcrFallbackBinaryOcrDatabases, vm, nameof(vm.SelectedNOcrFallbackBinaryOcrDatabase), Se.Language.Ocr.NOcrBinaryOcrFallbackDatabase);
+        var comboBoxOllamaModels = Combo(vm.OllamaModels, vm, nameof(vm.SelectedOllamaModel), Se.Language.General.Model);
+        var buttonOllamaModelBrowse = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.Model, vm.PickOllamaModelCommand, 28);
+        var ollama = new Grid
+        {
+            ColumnSpacing = 4,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
+        };
+        ollama.Add(comboBoxOllamaModels, 0, 0);
+        ollama.Add(buttonOllamaModelBrowse, 0, 1);
+        var comboBoxLlamaCppModels = Combo(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel), Se.Language.General.Model);
         comboBoxLlamaCppModels.ItemTemplate = StatusDots.ComboItemTemplate<LlamaCppModelDisplay>(
             model => model.Model.DisplayName,
             model => model.Model.Size,
             model => model.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
         // Apple Vision: a language and nothing else - no model, no backend, no download.
-        var labelAppleVisionLanguage = UiUtil.MakeLabel(Se.Language.General.Language).WithBindVisible(vm, nameof(vm.IsAppleVisionVisible)).WithMarginLeft(10);
-        var comboBoxAppleVisionLanguages = UiUtil.MakeComboBox(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage))
-            .WithBindVisible(nameof(vm.IsAppleVisionVisible));
-        var labelCrispEmbedBackend = UiUtil.MakeLabel(Se.Language.General.Backend).WithBindVisible(vm, nameof(vm.IsCrispEmbedVisible)).WithMarginLeft(10);
-        var comboBoxCrispEmbedBackends = UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend))
-            .WithBindVisible(nameof(vm.IsCrispEmbedVisible));
-        var labelCrispEmbedModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.IsCrispEmbedVisible)).WithMarginLeft(10);
-        var comboBoxCrispEmbedModels = UiUtil.MakeComboBox(vm.CrispEmbedModels, vm, nameof(vm.SelectedCrispEmbedModel))
-            .WithBindVisible(nameof(vm.IsCrispEmbedVisible));
+        var comboBoxAppleVisionLanguages = Combo(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage), Se.Language.General.Language);
+        var comboBoxCrispEmbedBackends = Combo(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend), Se.Language.General.Backend);
+        var comboBoxCrispEmbedModels = Combo(vm.CrispEmbedModels, vm, nameof(vm.SelectedCrispEmbedModel), Se.Language.General.Model);
         comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
         vm.RefreshCrispEmbedModelCombo = () => comboBoxCrispEmbedModels.ItemTemplate = MakeCrispEmbedModelItemTemplate();
-        var panelOcrEngine = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, labelTesseractEngineMode, comboBoxTesseractEngineMode, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse, labelLlamaCppModel, comboBoxLlamaCppModels, labelCrispEmbedBackend, comboBoxCrispEmbedBackends, labelCrispEmbedModel, comboBoxCrispEmbedModels, labelAppleVisionLanguage, comboBoxAppleVisionLanguages }
-        };
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
 
-        var checkBoxVobSubIsolateColors = new CheckBox
+        var vobSubIsolateColors = EditorChrome.MakeSwitchRow(nameof(vm.VobSubIsolateColors), Se.Language.Ocr.VobSubIsolateColors, out var toggleVobSubIsolateColors);
+        if (Se.Settings.Appearance.ShowHints)
         {
-            Content = Se.Language.Ocr.VobSubIsolateColors,
-            IsChecked = vm.VobSubIsolateColors,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.VobSubIsolateColors)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-        };
-        ToolTip.SetTip(checkBoxVobSubIsolateColors, Se.Language.Ocr.VobSubIsolateColorsHint);
+            ToolTip.SetTip(toggleVobSubIsolateColors, Se.Language.Ocr.VobSubIsolateColorsHint);
+        }
 
-        var labelLanguagePostFix = UiUtil.MakeLabel(Se.Language.General.LanguagePostFix);
-        var comboBoxLanguagePostFix = UiUtil.MakeComboBox(vm.LanguagePostFixes, vm, nameof(vm.SelectedLanguagePostFix));
-        var panelLanguagePostFix = new StackPanel
+        // One row per engine setting; each shows only for the engine it belongs to
+        var ocr = new StackPanel
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Children = { labelLanguagePostFix, comboBoxLanguagePostFix }
-        };
-
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var panelSections = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 12,
-            Margin = UiUtil.MakeWindowMargin(),
+            Spacing = 8,
             Children =
             {
-                MakeSection(Se.Language.Tools.BatchConvert.SettingsSectionOutput,
-                    panelTargetEncoding,
-                    checkBoxUseSourceFolder,
-                    checkBoxUseOutputFolder,
-                    panelOutputFolder,
-                    checkBoxOverwrite,
-                    checkBoxKeepSourceTimestamp,
-                    panelLanguagePostFix),
-                MakeSection(Se.Language.Tools.BatchConvert.SettingsSectionAddingFiles,
-                    checkBoxScanFolderRecursive,
-                    panelScanFolderVideoFiles),
-                MakeSection(Se.Language.Tools.BatchConvert.SettingsSectionImageBasedSubtitles,
-                    panelOcrEngine,
-                    checkBoxVobSubIsolateColors),
-                MakeSection(Se.Language.Tools.BatchConvert.SettingsSectionOther,
-                    checkBoxPreventSleep),
-                panelButtons,
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.OcrEngine, comboBoxOcrEngine, LabelWidth, wrap: true),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Language, new Panel { Children = { comboBoxTesseractLanguages, comboBoxPaddleLanguages } }, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsOcrLanguageVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.TesseractEngineMode, comboBoxTesseractEngineMode, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsTesseractOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.Database, comboBoxBinaryOcrDatabases, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsBinaryOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.BinaryOcrNOcrFallbackDatabase, comboBoxBinaryOcrFallback, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsBinaryOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.Database, comboBoxNOcrDatabases, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsNOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.NOcrBinaryOcrFallbackDatabase, comboBoxNOcrFallback, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsNOcrVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Model, ollama, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsOllamaVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Model, comboBoxLlamaCppModels, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsLlamaCppVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Backend, comboBoxCrispEmbedBackends, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsCrispEmbedVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Model, comboBoxCrispEmbedModels, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsCrispEmbedVisible)),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Language, comboBoxAppleVisionLanguages, LabelWidth, wrap: true, visibleProperty: nameof(vm.IsAppleVisionVisible)),
+                vobSubIsolateColors,
             }
         };
 
-        Content = panelSections;
+        var other = EditorChrome.MakeSwitchRow(nameof(vm.PreventSleep), Se.Language.Tools.BatchConvert.PreventSleepWhileConverting);
+
+        var left = new Border
+        {
+            Width = ColumnWidth,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
+            Child = EditorChrome.MakeSectionStack(EditorChrome.MakeEditorSection(Se.Language.General.Output, output, first: true), EditorChrome.MakeEditorSection(Se.Language.General.Other, other)),
+        };
+        var right = new Border
+        {
+            Width = ColumnWidth,
+            Child = EditorChrome.MakeSectionStack(EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionAddingFiles, addingFiles, first: true), EditorChrome.MakeEditorSection(Se.Language.Tools.BatchConvert.SettingsSectionImageBasedSubtitles, ocr)),
+        };
+
+        var columns = new Grid
+        {
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
+        };
+        columns.Add(left, 0, 0);
+        columns.Add(right, 0, 1);
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        // No scroller of its own: a window clamped to a short screen wraps it all in one (#16026)
+        Content = new StackPanel
+        {
+            Children =
+            {
+                EditorChrome.MakePanel(columns),
+                EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk),
+            }
+        };
 
         UiUtil.FocusOnFirstActivation(this, comboBoxTargetEncoding); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 
-    // A bold title over a bordered group - keeps the long list of options scannable.
-    private static Control MakeSection(string title, params Control[] controls)
+    private static ComboBox Combo<T>(System.Collections.ObjectModel.ObservableCollection<T> items, BatchConvertSettingsViewModel vm, string property, string name)
     {
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 8,
-            Margin = new Avalonia.Thickness(5),
-        };
-        foreach (var control in controls)
-        {
-            panel.Children.Add(control);
-        }
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 4,
-            Children =
-            {
-                UiUtil.MakeLabel(title).WithBold(),
-                UiUtil.MakeBorderForControl(panel),
-            }
-        };
+        var comboBox = UiUtil.MakeComboBox(items, vm, property);
+        comboBox.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(comboBox, name);
+        return comboBox;
     }
 
     // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the

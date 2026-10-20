@@ -2,7 +2,6 @@ using System.Globalization;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
-using Xunit;
 
 namespace UITests.Features.Options;
 

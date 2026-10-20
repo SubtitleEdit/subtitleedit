@@ -1,11 +1,8 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -22,17 +19,46 @@ public class CategoryPickerWindow : Window
         Height = 750;
         MinWidth = 800;
         MinHeight = 700;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
-        var buttonSelectAll = UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand);
-        var buttonSelectNone = UiUtil.MakeButton(Se.Language.General.SelectNone, vm.SelectNoneCommand);
-        var buttonInvertSelection = UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand);
-        var panelSelectionButtons = UiUtil.MakeHorizontalPanel(buttonSelectAll, buttonSelectNone, buttonInvertSelection);
+        var buttonSelectAll = EditorChrome.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, vm.SelectAllCommand, 26);
+        var buttonSelectNone = EditorChrome.CreateToolButton("fa-regular fa-square", Se.Language.General.SelectNone, vm.SelectNoneCommand, 26);
+        var buttonInvertSelection = EditorChrome.CreateToolButton("fa-solid fa-right-left", Se.Language.General.InvertSelection, vm.InvertSelectionCommand, 26);
+        var panelSelectionButtons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonSelectAll, buttonSelectNone, buttonInvertSelection },
+        };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+
+        // The list header carries the select all/none/invert actions, the button bar OK/Cancel:
+        // each in its own row. Sharing one cell (the button bar spanning both columns) only kept
+        // them apart because one is left- and the other right-aligned - in a locale with longer
+        // button labels they overlapped.
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(panelSelectionButtons, Dock.Right);
+        header.Children.Add(panelSelectionButtons);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Category));
+
+        var listPanel = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+        listPanel.Add(header, 0);
+        listPanel.Add(MakeDataGrid(vm, out var dataGrid), 1);
 
         var grid = new Grid
         {
@@ -41,24 +67,12 @@ public class CategoryPickerWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        // The selection buttons and the OK/Cancel bar get a column each. Sharing one cell (with
-        // the button bar spanning both columns) only kept them apart because one is left- and the
-        // other right-aligned - in a locale with longer button labels they overlap.
-        grid.Add(MakeDataGrid(vm, out var dataGrid), 0, 0, 1, 2);
-        grid.Add(panelSelectionButtons, 1, 0);
-        grid.Add(panelButtons, 1, 1);
+        grid.Add(listPanel, 0, 0);
+        grid.Add(panelButtons, 1, 0);
 
         Content = grid;
 
@@ -96,18 +110,7 @@ public class CategoryPickerWindow : Window
                 Header = Se.Language.General.Enabled,
                 CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                CellTemplate = new FuncDataTemplate<RuleTreeNode>((item, _) =>
-                new Border
-                {
-                    Background = Brushes.Transparent, // Prevents highlighting
-                    Padding = new Thickness(4),
-                    Child = new CheckBox
-                    {
-                        Focusable = false, // the row keeps the focus, so Space toggles via AddSpaceToggle below
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(RuleTreeNode.IsSelected)),
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    }
-                }),
+                CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<RuleTreeNode>(nameof(RuleTreeNode.IsSelected)),
                 // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
                 Width = new GridLength(80)
             },
@@ -128,10 +131,11 @@ public class CategoryPickerWindow : Window
         TableViewExtras.AddSpaceToggle<RuleTreeNode>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
+        AutomationProperties.SetName(dataGrid, Se.Language.General.Category);
         tableView = dataGrid;
 
         grid.Add(dataGrid, 0);
 
-        return UiUtil.MakeBorderForControlNoPadding(grid);
+        return EditorChrome.MakeListFrame(grid);
     }
 }

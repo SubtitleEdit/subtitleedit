@@ -10,6 +10,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeFormatting;
 
+/// <summary>
+/// Change formatting, in the editor look (see <see cref="EditorChrome"/>): from/to (and color) on
+/// top, the before/after preview below, the summary plus Cancel and OK in the button bar.
+/// </summary>
 public class ChangeFormattingWindow : Window
 {
     public ChangeFormattingWindow(ChangeFormattingViewModel vm)
@@ -21,62 +25,50 @@ public class ChangeFormattingWindow : Window
         Height = 800;
         MinWidth = 900;
         MinHeight = 500;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var labelFrom = UiUtil.MakeLabel(Se.Language.General.From);
-        var comboBoxFrom = UiUtil.MakeComboBox(vm.FromTypes, vm, nameof(vm.SelectedFromType));
+        var comboBoxFrom = UiUtil.MakeComboBox(vm.FromTypes, vm, nameof(vm.SelectedFromType))
+            .WithAccessibleName(Se.Language.General.From);
         comboBoxFrom.SelectionChanged += vm.SelectionChanged;
 
-        var labelTo = UiUtil.MakeLabel(Se.Language.General.To);
-        var comboBoxTo = UiUtil.MakeComboBox(vm.ToTypes, vm, nameof(vm.SelectedToType));
+        var comboBoxTo = UiUtil.MakeComboBox(vm.ToTypes, vm, nameof(vm.SelectedToType))
+            .WithAccessibleName(Se.Language.General.To);
         comboBoxTo.SelectionChanged += vm.SelectionChanged;
 
-        var labelColor = UiUtil.MakeLabel(Se.Language.General.Color);
-        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.SelectedColor));
-        colorPicker.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsColorVisible)));
+        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.SelectedColor))
+            .WithAccessibleName(Se.Language.General.Color);
 
-        var panelControls = UiUtil.MakeHorizontalPanel(
-            labelFrom,
-            comboBoxFrom,
-            labelTo,
-            comboBoxTo,
-            labelColor,
-            colorPicker);
+        // The color only matters when converting to color, so its label hides with it.
+        var panelColor = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Margin = new Thickness(16, 0, 0, 0),
+            Children = { EditorChrome.MakeDimLabel(Se.Language.General.Color, new Thickness(0)), colorPicker },
+        };
+        panelColor.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsColorVisible)));
 
-        var subtitleView = MakeSubtitleView(vm);
-
-        var labelStatus = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.StatusText)).WithAlignmentTop();
+        var panelControls = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            MinHeight = 30,
+            Children =
+            {
+                EditorChrome.MakeDimLabel(Se.Language.General.From, new Thickness(0)),
+                comboBoxFrom,
+                EditorChrome.MakeDimLabel(Se.Language.General.To, new Thickness(16, 0, 0, 0)),
+                comboBoxTo,
+                panelColor,
+            },
+        };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Bridge gap smaller than
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Subtitle view
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelControls, 0);
-        grid.Add(subtitleView, 1);
-        grid.Add(labelStatus, 2);
-        grid.Add(panelButtons, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(EditorChrome.MakeEditorSection(Se.Language.General.Convert, panelControls, first: true), MakeSubtitleView(vm)), EditorChrome.MakeStatusText(nameof(vm.StatusText), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, comboBoxFrom); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -92,7 +84,7 @@ public class ChangeFormattingWindow : Window
         var colorConverter = new TextWithSubtitleSyntaxHighlightingConverter();
         // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
         // over): before/after formatting previews in subtitle order.
-        var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Preview);
         dataGridSubtitle.Width = double.NaN;
         dataGridSubtitle.Height = double.NaN;
         dataGridSubtitle.DataContext = vm;
@@ -183,6 +175,6 @@ public class ChangeFormattingWindow : Window
             },
         });
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGridSubtitle);
     }
 }

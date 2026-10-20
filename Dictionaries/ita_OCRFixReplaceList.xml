@@ -8,9 +8,6 @@
   <PartialWordsAlways>
     <!-- Will be replaced always -->
     <WordPart from="¤" to="o" />
-    <WordPart from="lVI" to="M" />
-    <WordPart from="IVl" to="M" />
-    <WordPart from="lVl" to="M" />
     <WordPart from="I\/I" to="M" />
     <WordPart from="l\/I" to="M" />
     <WordPart from="I\/l" to="M" />
@@ -26,6 +23,9 @@
     <!-- Will be used to check words not in dictionary.
           If new word(s) and longer than 5 chars and exists in spelling dictionary, it is (or they are) accepted -->
     <WordPart from="IVI" to="M" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="lVl" to="M" />
     <WordPart from="/" to="l" />
     <WordPart from="|" to="I" />
     <WordPart from="vv" to="w" />
@@ -61,7 +61,7 @@
   <BeginLines />
   <EndLines />
   <RegularExpressions>
-    <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="(?&lt;=\p{Lu})\|(?=\p{Lu})" replaceWith="I" />
     <RegEx find="([\p{Ll},] )(I)([oai][, \.])" replaceWith="$1l$3" />
     <RegEx find="\b(I)([àì]|'[ \r\n])\b" replaceWith="l$2" />
     <RegEx find="([\p{Ll},] )(II)\b" replaceWith="$1Il" />

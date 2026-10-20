@@ -18,9 +18,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
-using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
-using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
@@ -32,7 +30,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Media;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
+using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
@@ -106,14 +104,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private OcrLineHeightTracker _lineHeightTracker = new();
     private NOcrSpaceDetector _nOcrSpaceDetector = new();
     private readonly INamesList _namesList;
+    private readonly IPluginRunner _pluginRunner;
     private string _namesListFolder = string.Empty;
     private string _namesListLanguage = string.Empty;
 
-    public BatchConverter(INOcrCaseFixer nOcrCaseFixer, IBinaryOcrMatcher binaryOcrMatcher, INamesList namesList)
+    public BatchConverter(INOcrCaseFixer nOcrCaseFixer, IBinaryOcrMatcher binaryOcrMatcher, INamesList namesList, IPluginRunner? pluginRunner = null)
     {
         _nOcrCaseFixer = nOcrCaseFixer;
         _binaryOcrMatcher = binaryOcrMatcher;
         _namesList = namesList;
+        _pluginRunner = pluginRunner ?? new PluginRunner();
         _config = new BatchConvertConfig();
         _subtitleFormats = new List<SubtitleFormat>();
         _compiledRegExList = new Dictionary<string, Regex>();
@@ -149,12 +149,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         // be the source file itself, and reading the timestamps afterwards would only give back
         // the time the output was written.
         var sourceTimestamps = _config.KeepSourceTimestamp ? FileTimestampHelper.Capture(item.FileName) : null;
+        // Saving may switch libse's frame rate to the "change frame rate" target (see
+        // SaveConverted) - a batch run must not leave the main window on another frame rate.
+        var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
         try
         {
             await ConvertCore(item, cancellationToken);
         }
         finally
         {
+            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
+
             if (sourceTimestamps != null)
             {
                 ApplySourceTimestamp(sourceTimestamps.Value);
@@ -231,7 +236,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             vobSubParser.VobSubPacks.Clear();
             imageSubtitle = new OcrSubtitleVobSub(vobSubMergedPackList, palette)
             {
-                IsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors,
+                IsolateColors = IsolateVobSubColors(),
             };
             //TODO: multi track
         }
@@ -257,7 +262,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                                 var vobSubs = LoadVobSubFromMatroska(track, matroska, out var idx);
                                 imageSubtitle = new OcrSubtitleVobSub(vobSubs, idx?.Palette)
                                 {
-                                    IsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors,
+                                    IsolateColors = IsolateVobSubColors(),
                                 };
                                 var fileName = Path.GetFileName(item.FileName);
                                 item.OutputFileName = fileName.Substring(0, fileName.LastIndexOf('.')).TrimEnd('.') + ".mkv";
@@ -573,6 +578,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private async Task SaveConverted(BatchConvertItem item, IOcrSubtitle? imageSubtitle, CancellationToken cancellationToken)
     {
+        // Frame-based writers (ITT, SMPTE TTML, EBU STL, SCC, D-Cinema, ...) write frames and their
+        // frame rate from libse's current frame rate - after "change frame rate" that must be the
+        // target rate, not the source's (#16257). Convert restores the previous value.
+        if (_config.ChangeFrameRate.IsActive && _config.ChangeFrameRate.ToFrameRate > 0)
+        {
+            Configuration.Settings.General.CurrentFrameRate = _config.ChangeFrameRate.ToFrameRate;
+        }
+
         // Save text based formats - binary ones like EBU STL are in the list too (for loading),
         // but their ToText is just "Not supported!", so they go through the binary save below
         foreach (var format in _subtitleFormats)
@@ -656,16 +669,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (_config.TargetFormatName == FormatPlainText && item.Subtitle != null)
         {
             var path = MakeOutputFileName(item, ".txt");
-            var sb = new StringBuilder();
-            foreach (var p in item.Subtitle.Paragraphs)
-            {
-                sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text, true));
-            }
+
+            // Same options as File -> Export -> Plain text (set via the target format settings button).
+            var text = PlainTextFormatter.Generate(item.Subtitle.Paragraphs, Se.Settings.File.ExportPlainText.ToOptions());
 
             try
             {
                 var encoding = EncodingHelper.ResolveEncoding(_config.TargetEncoding, item.FileName);
-                await File.WriteAllTextAsync(path, sb.ToString(), encoding, cancellationToken);
+                await File.WriteAllTextAsync(path, text, encoding, cancellationToken);
                 item.Status = Se.Language.General.Converted;
             }
             catch (Exception exception) when (exception is not OperationCanceledException)
@@ -695,68 +706,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         public bool IsImage { get; set; }
         public IOcrSubtitle? OcrSubtitle { get; set; }
         public Subtitle? Subtitle { get; set; }
-    }
-
-    private List<TransportStreamResult> LoadTransportStream(BatchConvertItem item, CancellationToken cancellationToken)
-    {
-        var result = new List<TransportStreamResult>();
-
-        var tsParser = new TransportStreamParser();
-        tsParser.Parse(item.FileName, null);
-
-        var programMapTableParser = new ProgramMapTableParser();
-        programMapTableParser.Parse(item.FileName); // get languages
-
-        foreach (var packetId in tsParser.SubtitlePacketIds)
-        {
-            var language = string.Empty;
-            if (programMapTableParser.GetSubtitlePacketIds().Count > 0)
-            {
-                language = programMapTableParser.GetSubtitleLanguage(packetId);
-            }
-
-            var subtitles = tsParser.GetDvbSubtitles(packetId);
-            if (subtitles.Count > 0)
-            {
-                result.Add(new TransportStreamResult { IsImage = true, OcrSubtitle = new OcrSubtitleTransportStream(subtitles) });
-            }
-        }
-
-        // One PID can carry several teletext subtitle pages; emit each page as its own result.
-        foreach (var pages in tsParser.TeletextSubtitlesLookup.Values)
-        {
-            foreach (var paragraphs in pages.Values)
-            {
-                if (paragraphs.Count > 0)
-                {
-                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(paragraphs) });
-                }
-            }
-        }
-
-        foreach (var aribPid in tsParser.AribSubtitlesLookup)
-        {
-            foreach (var language in aribPid.Value)
-            {
-                if (language.Value.Count > 0)
-                {
-                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(language.Value) });
-                }
-            }
-        }
-
-        foreach (var tracks in tsParser.ClosedCaptionSubtitlesLookup.Values)
-        {
-            foreach (var paragraphs in tracks.Values)
-            {
-                if (paragraphs.Count > 0)
-                {
-                    result.Add(new TransportStreamResult { IsImage = false, Subtitle = new Subtitle(paragraphs) });
-                }
-            }
-        }
-
-        return result;
     }
 
     public static List<IBinaryParagraphWithPosition> LoadDvbFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, ref Subtitle subtitle)
@@ -999,6 +948,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
+    /// <summary>
+    /// VobSub colour isolation hands the OCR engine an opaque black-on-white bitmap. nOCR and
+    /// BinaryOCR split letters on the transparency of the original, so for them the whole
+    /// subpicture became one blob read as "*" - isolate only for the other engines.
+    /// </summary>
+    private static bool IsolateVobSubColors()
+    {
+        var engine = Se.Settings.Tools.BatchConvert.OcrEngine;
+        return Se.Settings.Tools.BatchConvert.VobSubIsolateColors &&
+               !engine.Equals("nOcr", StringComparison.OrdinalIgnoreCase) &&
+               !engine.Equals("BinaryOcr", StringComparison.OrdinalIgnoreCase);
+    }
+
     private void RunNOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
         _lineHeightTracker = new OcrLineHeightTracker { FallbackMinLineHeight = item.Format == FormatBluRaySup ? 25 : 12 };
@@ -1172,43 +1134,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             index++;
         }
 
-        matches = RemoveSpacesAfter1(matches, pixelsAreSpace);
+        matches = NOcrSpaceDetector.RemoveFalseSpacesInNumbers(matches, pixelsAreSpace);
 
         var text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
         return new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
     }
 
-    private static List<NOcrChar> RemoveSpacesAfter1(List<NOcrChar> matches, int pixelsAreSpace)
-    {
-        var deleteItems = new List<NOcrChar>();
-        for (var i = 0; i < matches.Count - 1; i++)
-        {
-            var match = matches[i];
-            if (match.Text.EndsWith('1') && !match.Italic)
-            {
-                var pixelsLess = 0;
-                if (pixelsAreSpace > 7)
-                {
-                    pixelsLess = (int)Math.Round(pixelsAreSpace * 0.3m, MidpointRounding.AwayFromZero);
-                }
-
-                var nextMatch = matches[i + 1];
-                if (nextMatch.ImageSplitterItem != null &&
-                    nextMatch.ImageSplitterItem.SpecialCharacter == " " &&
-                    nextMatch.ImageSplitterItem.SpacePixels - pixelsLess < pixelsAreSpace)
-                {
-                    deleteItems.Add(nextMatch);
-                }
-            }
-        }
-
-        foreach (var deleteItem in deleteItems)
-        {
-            matches.Remove(deleteItem);
-        }
-
-        return matches;
-    }
 
     private const int OcrPreflightSampleSize = 50;
 
@@ -2520,11 +2451,70 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = AssaChangeStyleProperties(s);
             s = BeautifyTimeCodes(s, item.FileName);
             s = SnapTimeCodesToFrames(s, item.FileName);
+            s = await RunPlugin(s, item, cancellationToken);
             s = SortBy(s);
             s = Renumber(s);
         }
 
         return s;
+    }
+
+    /// <summary>
+    /// Runs the chosen batch-capable plugin with a "batch" request: no UI, all lines, the plugin's
+    /// saved settings. Any failure throws so this file is marked as failed and the batch goes on.
+    /// Settings the plugin returns are not persisted - a run must not change its own configuration.
+    /// </summary>
+    private async Task<Subtitle> RunPlugin(Subtitle subtitle, BatchConvertItem item, CancellationToken cancellationToken)
+    {
+        if (!_config.RunPlugin.IsActive)
+        {
+            return subtitle;
+        }
+
+        var plugin = _config.RunPlugin.Plugin;
+        if (plugin == null)
+        {
+            throw new InvalidOperationException(string.Format(Se.Language.Plugins.PluginXNotAvailable, _config.RunPlugin.PluginName));
+        }
+
+        var format = subtitle.OriginalFormat ?? new SubRip();
+        var request = PluginRequestHelper.CreateRequest(plugin, PluginConstants.RequestTypeBatch);
+        request.Subtitle = PluginRequestHelper.ToPluginSubtitle(subtitle, format, item.FileName);
+
+        var runResult = await _pluginRunner.RunAsync(plugin, request, cancellationToken);
+        if (runResult.WasCancelled)
+        {
+            throw new OperationCanceledException(cancellationToken);
+        }
+
+        if (!runResult.Succeeded || runResult.Response == null)
+        {
+            throw new InvalidOperationException(runResult.ErrorMessage ?? string.Format(Se.Language.Plugins.PluginXFailed, plugin.Manifest.Name));
+        }
+
+        var response = runResult.Response;
+        if (response.Status == PluginConstants.StatusError)
+        {
+            throw new InvalidOperationException(string.IsNullOrWhiteSpace(response.Message)
+                ? string.Format(Se.Language.Plugins.PluginXReportedError, plugin.Manifest.Name)
+                : response.Message);
+        }
+
+        if (response.Status != PluginConstants.StatusOk || !PluginRequestHelper.HasSubtitle(response.Subtitle))
+        {
+            return subtitle;
+        }
+
+        var result = PluginRequestHelper.ReadSubtitle(response.Subtitle!);
+        if (result.Paragraphs.Count == 0)
+        {
+            throw new InvalidOperationException(string.Format(Se.Language.Plugins.PluginXReturnedUnparsableSubtitle, plugin.Manifest.Name));
+        }
+
+        subtitle.Paragraphs.Clear();
+        subtitle.Paragraphs.AddRange(result.Paragraphs);
+        subtitle.Header = response.Subtitle!.Header ?? (response.Subtitle.Paragraphs is { Count: > 0 } ? subtitle.Header : result.Header ?? subtitle.Header);
+        return subtitle;
     }
 
     private Subtitle RemoveUnicodeControlCharacters(Subtitle subtitle)
@@ -3911,6 +3901,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
+        // "Reverse RTL start/end" moves the punctuation of every line from the end to the start, and
+        // "Fix via Unicode" wraps every line in RTL control characters. Both are right for Hebrew or
+        // Arabic text in players without bidi support and wrong for anything else - a user who left
+        // the box ticked got ".Hello world" in 26 English files. A subtitle with no right-to-left
+        // letters at all has nothing for them to fix, so leave it alone. Removing control characters
+        // is harmless either way and still runs.
+        if (!_config.RightToLeft.RemoveUnicode && !ContainsRightToLeftLetter(subtitle))
+        {
+            return subtitle;
+        }
+
         if (_config.RightToLeft.FixViaUnicode)
         {
             foreach (var p in subtitle.Paragraphs)
@@ -3934,6 +3935,20 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
 
         return subtitle;
+    }
+
+    private static bool ContainsRightToLeftLetter(Subtitle subtitle)
+    {
+        // Every line, not just the first few: an RTL subtitle may well open with Latin credits.
+        foreach (var p in subtitle.Paragraphs)
+        {
+            if (LanguageAutoDetect.ContainsRightToLeftLetter(p.Text))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private Subtitle MergeLinesWithSameTimeCodes(Subtitle subtitle, string language)

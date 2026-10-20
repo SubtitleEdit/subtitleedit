@@ -8,19 +8,18 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using Attached = Optris.Icons.Avalonia.Attached;
 using Icon = Optris.Icons.Avalonia.Icon;
 
 namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 
 /// <summary>
-/// Track list pieces shared by the Matroska and MP4 "Add/remove embedded subtitles" windows:
-/// the button row under the tracks, the tracks context menu, dimming of deleted rows, the
-/// empty-state hint, video file drop and the progress view.
+/// Track list pieces shared by the Matroska and MP4 "Add/remove embedded subtitles" windows, in
+/// the editor look (see <see cref="EditorChrome"/>): the video file bar, the track list with its
+/// action icons in the header, the tracks context menu, dimming of deleted rows, the empty-state
+/// hint, video file drop and the progress strip.
 /// Both view models expose the same command and state names (IsTrackSelected, DeleteText, ...).
 /// </summary>
 internal static class EmbeddedTracksUi
@@ -46,85 +45,61 @@ internal static class EmbeddedTracksUi
             new Binding(nameof(EmbeddedTrack.Deleted)) { Converter = DeletedToOpacity });
     }
 
+    /// <summary>
+    /// The track actions as icon buttons for the list header: add (a file or the current
+    /// subtitle), edit, delete/undelete, preview, and move up/down. Hidden until a video is chosen.
+    /// </summary>
     /// <param name="addEnabledPath">Optional view model property gating Add (off while generating; MP4 also waits for the track scan).</param>
     public static StackPanel MakeButtons(Commands commands, string? addEnabledPath)
     {
-        var buttonAdd = new SeSplitButton
-        {
-            Content = MakeIconText(IconNames.Plus, Se.Language.General.Add),
-            Command = commands.Add,
-            Margin = new Thickness(4, 0),
-            Padding = new Thickness(12, 6),
-            Flyout = new MenuFlyout
-            {
-                Items =
-                {
-                    new MenuItem
-                    {
-                        Header = Se.Language.Video.AddCurrentSubtitle,
-                        Command = commands.AddCurrent,
-                    },
-                }
-            }
-        }.WithBindIsVisible("HasVideoFileName");
-        AutomationProperties.SetName(buttonAdd, Se.Language.General.Add);
+        var buttonAdd = EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.Add, commands.Add, 26);
+        var buttonAddCurrent = EditorChrome.CreateToolButton("fa-solid fa-file-circle-plus", Se.Language.Video.AddCurrentSubtitle, commands.AddCurrent, 26);
         if (addEnabledPath != null)
         {
             buttonAdd.WithBindEnabled(addEnabledPath);
+            buttonAddCurrent.WithBindEnabled(addEnabledPath);
         }
 
-        var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, commands.Edit)
-            .WithIconLeft(IconNames.Pencil)
-            .WithBindIsVisible("HasVideoFileName")
+        var buttonEdit = EditorChrome.CreateToolButton("fa-solid fa-pen", Se.Language.General.Edit, commands.Edit, 26)
             .WithBindEnabled("IsTrackSelected");
 
-        // Delete toggles the mark, so the caption follows the selected track: Delete / Undelete.
-        var textDelete = new TextBlock { Padding = new Thickness(4, 0, 0, 0) };
-        textDelete.Bind(TextBlock.TextProperty, new Binding("DeleteText"));
-        var iconDelete = new ContentControl();
-        Attached.SetIcon(iconDelete, IconNames.Trash);
-        var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, commands.Delete)
-            .WithBindIsVisible("HasVideoFileName")
+        // Delete toggles the mark, so the name follows the selected track: Delete / Undelete.
+        var buttonDelete = EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, commands.Delete, 26)
             .WithBindEnabled("IsTrackSelected");
-        buttonDelete.Content = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { iconDelete, textDelete },
-        };
         buttonDelete.Bind(AutomationProperties.NameProperty, new Binding("DeleteText"));
-
-        var buttonPreview = UiUtil.MakeButton(Se.Language.General.Preview, commands.Preview)
-            .WithIconLeft(IconNames.Eye)
-            .WithBindIsVisible("HasVideoFileName")
-            .WithBindEnabled("IsTrackSelected");
-
-        var buttonMoveUp = UiUtil.MakeButton(commands.MoveUp, IconNames.ArrowUpThin, Se.Language.General.MoveUp)
-            .WithBindIsVisible("HasVideoFileName")
-            .WithBindEnabled("IsMoveUpEnabled");
-        var buttonMoveDown = UiUtil.MakeButton(commands.MoveDown, IconNames.ArrowDownThin, Se.Language.General.MoveDown)
-            .WithBindIsVisible("HasVideoFileName")
-            .WithBindEnabled("IsMoveDownEnabled");
-        foreach (var button in new[] { buttonMoveUp, buttonMoveDown })
+        if (Se.Settings.Appearance.ShowHints)
         {
-            // Icon-only buttons are otherwise shorter than the text buttons beside them.
-            button.VerticalAlignment = VerticalAlignment.Stretch;
-            button.MinWidth = 36;
-            button.Margin = new Thickness(2, 0);
+            buttonDelete.Bind(ToolTip.TipProperty, new Binding("DeleteText"));
         }
 
-        return new StackPanel
+        var buttonPreview = EditorChrome.CreateToolButton("fa-solid fa-eye", Se.Language.General.Preview, commands.Preview, 26)
+            .WithBindEnabled("IsTrackSelected");
+
+        var buttonMoveUp = EditorChrome.CreateToolButton("fa-solid fa-arrow-up", Se.Language.General.MoveUp, commands.MoveUp, 26)
+            .WithBindEnabled("IsMoveUpEnabled");
+        var buttonMoveDown = EditorChrome.CreateToolButton("fa-solid fa-arrow-down", Se.Language.General.MoveDown, commands.MoveDown, 26)
+            .WithBindEnabled("IsMoveDownEnabled");
+
+        var panel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
                 buttonAdd,
+                buttonAddCurrent,
+                EditorChrome.MakeToolbarSeparator(),
                 buttonEdit,
                 buttonDelete,
                 buttonPreview,
+                EditorChrome.MakeToolbarSeparator(),
                 buttonMoveUp,
                 buttonMoveDown,
             },
         };
+        panel.Bind(Visual.IsVisibleProperty, new Binding("HasVideoFileName"));
+        return panel;
     }
 
     public static void AttachContextMenu(TableView tableView, object vm, Commands commands, string? addEnabledPath)
@@ -221,7 +196,8 @@ internal static class EmbeddedTracksUi
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             MaxWidth = 360,
-            Opacity = 0.6,
+            FontSize = 12.5,
+            Foreground = EditorChrome.FaintTextBrush,
             IsHitTestVisible = false,
         };
         hint.Bind(Visual.IsVisibleProperty, new Binding("HasVideoFileName") { Converter = InverseBooleanConverter.Instance });
@@ -243,34 +219,82 @@ internal static class EmbeddedTracksUi
     }
 
     /// <summary>
-    /// Progress bar with the status text below it (they used to share one grid cell, with the
-    /// text pushed down by a margin so it overlapped the bar).
+    /// Progress bar with the status text beside it, in a strip above the button bar while
+    /// generating.
     /// </summary>
-    public static StackPanel MakeProgressView()
+    public static Border MakeProgressView()
     {
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.Bind(ProgressBar.ValueProperty, new Binding("ProgressValue"));
+        return EditorChrome.MakeProgressStrip(progressBar, "ProgressText", "IsGenerating");
+    }
 
-        var statusText = new TextBlock { Margin = new Thickness(2, 0, 0, 0) };
-        statusText.Bind(TextBlock.TextProperty, new Binding("ProgressText"));
+    /// <summary>
+    /// The track list: a header with the actions, the table in a field frame under it.
+    /// </summary>
+    public static Grid MakeTracksPanel(TableView tracksTable, Commands commands, string? addEnabledPath)
+    {
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 8), MinHeight = 26 };
+        var actions = MakeButtons(commands, addEnabledPath);
+        DockPanel.SetDock(actions, Dock.Right);
+        header.Children.Add(actions);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.Video.EmbeddedTracks));
 
-        var panel = new StackPanel
+        var panel = new Grid
         {
-            Spacing = 4,
-            Children = { progressBar, statusText },
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+            Margin = new Thickness(14, 12, 14, 14),
         };
-        panel.Bind(Visual.IsVisibleProperty, new Binding("IsGenerating"));
+        panel.Add(header, 0);
+        panel.Add(EditorChrome.MakeListFrame(MakeTracksWithEmptyHint(tracksTable)), 1);
         return panel;
     }
 
-    private static StackPanel MakeIconText(string iconName, string text)
+    /// <summary>
+    /// The video file row on the panel color: icon and label, the (read-only) file name, its size
+    /// and browse.
+    /// </summary>
+    public static Border MakeVideoFileBar(TextBox textBoxVideoFileName, Button buttonBrowse)
     {
-        var icon = new ContentControl();
-        Attached.SetIcon(icon, iconName);
-        return new StackPanel
+        var icon = new Icon
         {
-            Orientation = Orientation.Horizontal,
-            Children = { icon, new TextBlock { Text = text, Padding = new Thickness(4, 0, 0, 0) } },
+            Value = "fa-solid fa-file-video",
+            FontSize = 13,
+            Foreground = EditorChrome.IconBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        var label = EditorChrome.MakeDimLabel(Se.Language.General.VideoFile, new Thickness(0));
+        var fileSize = EditorChrome.MakeBoundHint("VideoFileSize");
+
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto), // icon
+                new ColumnDefinition(GridLength.Auto), // label
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)), // file name
+                new ColumnDefinition(GridLength.Auto), // file size
+                new ColumnDefinition(GridLength.Auto), // browse
+            },
+            ColumnSpacing = 8,
+        };
+        grid.Add(icon, 0, 0);
+        grid.Add(label, 0, 1);
+        grid.Add(textBoxVideoFileName, 0, 2);
+        grid.Add(fileSize, 0, 3);
+        grid.Add(buttonBrowse, 0, 4);
+
+        return new Border
+        {
+            Child = grid,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(14, 10),
         };
     }
 

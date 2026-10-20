@@ -1,8 +1,6 @@
 using Google.Protobuf;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr.GoogleLens.Proto;
 

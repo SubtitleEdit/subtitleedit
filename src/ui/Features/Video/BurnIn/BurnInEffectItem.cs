@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 

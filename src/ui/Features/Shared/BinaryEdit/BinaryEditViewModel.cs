@@ -18,7 +18,6 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
-using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryApplyDurationLimits;
 using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
@@ -1227,6 +1226,18 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ExportDCinemaSmpte2014PngMxf()
+    {
+        // A DCP reel's assets share one duration - with a video open, run the track to its end
+        var videoSeconds = VideoPlayerControl?.VideoPlayer?.Duration ?? 0;
+        var handler = new ExportHandlerDCinemaSmpte2014Mxf
+        {
+            ReelDuration = videoSeconds > 0 ? TimeSpan.FromSeconds(videoSeconds) : null,
+        };
+        await DoExport(handler, ".mxf");
+    }
+
+    [RelayCommand]
     private async Task ExportImscImage()
     {
         // Single self-contained TTML file; the binary sub's own bitmaps and X/Y placement carry
@@ -1311,7 +1322,20 @@ public partial class BinaryEditViewModel : ObservableObject
             return false;
         }
 
-        WriteExport(exportHandler, fileOrFolderName);
+        try
+        {
+            WriteExport(exportHandler, fileOrFolderName);
+        }
+        catch (Exception exception)
+        {
+            // e.g. a D-Cinema MXF with more images than one track file can hold
+            Se.LogError(exception);
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileOrFolderName, exception.Message),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
         _isDirty = false;
         return true;
     }

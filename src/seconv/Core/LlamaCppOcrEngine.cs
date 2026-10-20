@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
@@ -68,7 +67,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
                 : url.TrimEnd('/') + "/v1/chat/completions";
             var modelName = string.IsNullOrWhiteSpace(options.OcrModel)
                 ? "glmocr"
-                : Path.GetFileNameWithoutExtension(options.OcrModel.Trim());
+                : ModelStem(options.OcrModel);
             // Only for the prompt: a curated model named by file/stem still gets its own tuned
             // prompt against a user-managed server. The engine itself stays in URL mode.
             var curated = LlamaCppServerManager.OcrModels.FirstOrDefault(m =>
@@ -80,6 +79,20 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         LlamaCppLocal.EnsureServerBinary("the OCR window > llama.cpp", "--ocr-url");
         var model = ResolveOcrModel(options.OcrModel);
         return new LlamaCppOcrEngine(null, model, Path.GetFileNameWithoutExtension(model.FileName), options.OcrLanguage, options.OcrPrompt, options.Quiet);
+    }
+
+    /// <summary>
+    /// The model name for a user-managed server: the file name without a trailing <c>.gguf</c>,
+    /// the form the curated lookups (padding, prompt) match on. Only <c>.gguf</c> is stripped -
+    /// <see cref="Path.GetFileNameWithoutExtension(string)"/> would cut "LightOnOCR-3-0.8B-Q8_0"
+    /// to "LightOnOCR-3-0", so the model lost its border padding and was sent the square.
+    /// </summary>
+    internal static string ModelStem(string model)
+    {
+        var fileName = Path.GetFileName(model.Trim());
+        return fileName.EndsWith(".gguf", StringComparison.OrdinalIgnoreCase)
+            ? fileName[..^".gguf".Length]
+            : fileName;
     }
 
     public string Recognize(SKBitmap bitmap)
@@ -103,7 +116,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             url = LlamaCppServerManager.ApiUrl;
         }
 
-        using var padded = PadToSquare(bitmap);
+        using var padded = AiOcrImagePadding.Pad(bitmap, LlamaCppServerManager.GetOcrPadding(_modelName));
         using var image = SKImage.FromBitmap(padded);
         using var data = image.Encode(SKEncodedImageFormat.Png, 90);
         var base64 = Convert.ToBase64String(data.ToArray());
@@ -129,7 +142,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         var contents = parser.GetAllTagsByNameAsStrings(json, "content");
         var text = string.Join(string.Empty, contents).Trim();
         text = text.Replace("\\n", Environment.NewLine).Replace("\\\"", "\"");
-        return text.Trim();
+        return OcrHelper.TrimAiOcrLines(text);
     }
 
     /// <summary>
@@ -201,21 +214,6 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
 
     private static string Escape(string s) =>
         s.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r");
-
-    private static SKBitmap PadToSquare(SKBitmap source)
-    {
-        var margin = (int)(Math.Max(source.Width, source.Height) * 0.2);
-        var side = Math.Max(source.Width, source.Height) + margin;
-        var info = new SKImageInfo(side, side, SKColorType.Rgba8888, SKAlphaType.Opaque);
-        var square = new SKBitmap(info);
-        using var canvas = new SKCanvas(square);
-        canvas.Clear(SKColors.Black);
-        var left = (side - source.Width) / 2f;
-        var top = (side - source.Height) / 2f;
-        canvas.DrawBitmap(source, new SKRect(left, top, left + source.Width, top + source.Height));
-        canvas.Flush();
-        return square;
-    }
 
     public void Dispose() => _httpClient.Dispose();
 }

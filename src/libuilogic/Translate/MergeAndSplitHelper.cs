@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8,7 +7,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Settings;
-using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace Nikse.SubtitleEdit.UiLogic.Translate;
 
@@ -1437,7 +1435,7 @@ public static partial class MergeAndSplitHelper
 
         // Lyrics keep one line per phrase; AutoBreakLine's own ♪ guard only fires on text that
         // still holds line breaks, which the UnbreakLine below removes, so guard here.
-        if (text.IndexOf('♪') >= 0 || text.IndexOf('♫') >= 0)
+        if (text.Contains('♪') || text.Contains('♫'))
         {
             return text;
         }

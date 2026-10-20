@@ -6,6 +6,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Automation;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -69,22 +70,23 @@ public class StatisticsWindow : Window
 
         vm.Window = this;
         DataContext = vm;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         var grid = new Grid
         {
             RowDefinitions = new RowDefinitions("*,Auto"),
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 5,
         };
 
         // Initialize has already computed everything (it runs before the window is
         // constructed), so the dashboard is built directly from the view model data.
         if (vm.HasStatistics)
         {
+            var dashboard = MakeDashboard(vm);
+            dashboard.Margin = new Thickness(14);
             var scrollViewer = new ScrollViewer
             {
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                Content = MakeDashboard(vm),
+                Content = dashboard,
             };
             grid.Add(scrollViewer, 0);
         }
@@ -93,14 +95,16 @@ public class StatisticsWindow : Window
             grid.Add(new TextBlock
             {
                 Text = Se.Language.File.Statistics.NothingFound,
+                Foreground = EditorChrome.DimTextBrush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             }, 0);
         }
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonExport = UiUtil.MakeButton(Se.Language.General.Export, vm.ExportCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonExport, buttonOk);
+        buttonOk.Classes.Add("primary");
+        var buttonExport = UiUtil.MakeButton(Se.Language.General.Export, vm.ExportCommand).WithIconLeft(IconNames.Export);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonExport, buttonOk);
         grid.Add(panelButtons, 1);
 
         Content = grid;
@@ -121,7 +125,7 @@ public class StatisticsWindow : Window
             ColumnDefinitions = new ColumnDefinitions("*,*,*,*"),
             ColumnSpacing = 10,
         };
-        kpiRow.Add(MakeKpiTile(l.Subtitles, vm.KpiSubtitles), 0, 0);
+        kpiRow.Add(MakeKpiTile(Se.Language.General.Subtitles, vm.KpiSubtitles), 0, 0);
         kpiRow.Add(MakeKpiTile(l.Words, vm.KpiWords), 0, 1);
         kpiRow.Add(MakeKpiTile(Se.Language.General.Characters, vm.KpiCharacters), 0, 2);
         kpiRow.Add(MakeKpiTile(l.TotalDurationShort, vm.KpiDuration), 0, 3);
@@ -172,9 +176,22 @@ public class StatisticsWindow : Window
             IsVisible = false,
         };
 
-        var button = UiUtil.MakeButton(command, IconNames.Copy, Se.Language.General.CopyToClipboard);
-        button.FontSize = UiUtil.ScaledFontSize(14);
-        button.Padding = new Thickness(6, 3);
+        var button = new Button
+        {
+            Command = command,
+            Width = 26,
+            Height = 26,
+            FontSize = 13,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+        };
+        button.Classes.Add("tool");
+        Attached.SetIcon(button, IconNames.Copy);
+        AutomationProperties.SetName(button, Se.Language.General.CopyToClipboard);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(button, Se.Language.General.CopyToClipboard);
+        }
 
         // Brief confirmation: green check + "Copied to clipboard" next to the button,
         // then back to the copy icon (same idea as the speech to text console log copy).
@@ -202,7 +219,8 @@ public class StatisticsWindow : Window
     {
         return new Border
         {
-            BorderBrush = UiUtil.GetBorderBrush(),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(14, 10),
@@ -210,8 +228,8 @@ public class StatisticsWindow : Window
             {
                 Children =
                 {
-                    new TextBlock { Text = label, FontSize = UiUtil.ScaledFontSize(11), FontWeight = FontWeight.SemiBold, Opacity = 0.65 },
-                    new TextBlock { Text = value, FontSize = UiUtil.ScaledFontSize(26), FontWeight = FontWeight.Bold, Margin = new Thickness(0, 2, 0, 0) },
+                    EditorChrome.MakeSectionHeader(label),
+                    new TextBlock { Text = value, FontSize = UiUtil.ScaledFontSize(26), FontWeight = FontWeight.Bold, Margin = new Thickness(0, 4, 0, 0) },
                 }
             },
         };
@@ -223,17 +241,17 @@ public class StatisticsWindow : Window
         {
             ColumnDefinitions = new ColumnDefinitions("Auto,Auto,*,Auto"),
             ColumnSpacing = 8,
-            Margin = new Thickness(12, 4, 8, 4),
-            MinHeight = 30,
+            Margin = new Thickness(14, 4, 8, 4),
+            MinHeight = 32,
         };
-        header.Add(new TextBlock { Text = title, FontSize = UiUtil.ScaledFontSize(13), FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center }, 0, 0);
+        header.Add(EditorChrome.MakeSectionHeader(title), 0, 0);
         if (!string.IsNullOrEmpty(subTitle))
         {
             header.Add(new TextBlock
             {
                 Text = subTitle,
                 FontSize = UiUtil.ScaledFontSize(11),
-                Opacity = 0.6,
+                Foreground = EditorChrome.FaintTextBrush,
                 VerticalAlignment = VerticalAlignment.Center,
             }, 0, 1);
         }
@@ -243,11 +261,12 @@ public class StatisticsWindow : Window
             header.Add(headerAction, 0, 3);
         }
 
-        body.Margin = new Thickness(12, 10, 12, 12);
+        body.Margin = new Thickness(14, 10, 14, 14);
 
         return new Border
         {
-            BorderBrush = UiUtil.GetBorderBrush(),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(8),
             Child = new StackPanel
@@ -255,7 +274,7 @@ public class StatisticsWindow : Window
                 Children =
                 {
                     header,
-                    new Border { Height = 1, Background = UiUtil.GetBorderBrush() },
+                    new Border { Height = 1, Background = EditorChrome.LineBrush },
                     body,
                 }
             },
@@ -265,7 +284,7 @@ public class StatisticsWindow : Window
     private static Control MakeRanges(StatisticsViewModel vm)
     {
         var panel = new StackPanel { Spacing = 2 };
-        var accentColor = UiUtil.GetAccentBrush() is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
+        var accentColor = EditorChrome.AccentBrush is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
 
         foreach (var range in vm.Ranges)
         {
@@ -277,9 +296,9 @@ public class StatisticsWindow : Window
             };
 
             row.Add(new TextBlock { Text = range.Label, FontSize = UiUtil.ScaledFontSize(12), VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 3) }, 0, 0);
-            row.Add(new TextBlock { Text = range.MinText, FontSize = UiUtil.ScaledFontSize(11), Opacity = 0.6, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 4) }, 0, 1);
+            row.Add(new TextBlock { Text = range.MinText, FontSize = UiUtil.ScaledFontSize(11), Foreground = EditorChrome.DimTextBrush, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 4) }, 0, 1);
             row.Add(MakeRangeTrack(range, accentColor), 0, 2);
-            row.Add(new TextBlock { Text = range.MaxText, FontSize = UiUtil.ScaledFontSize(11), Opacity = 0.6, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 4) }, 0, 3);
+            row.Add(new TextBlock { Text = range.MaxText, FontSize = UiUtil.ScaledFontSize(11), Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 4) }, 0, 3);
 
             panel.Children.Add(row);
         }
@@ -300,7 +319,7 @@ public class StatisticsWindow : Window
             CornerRadius = new CornerRadius(1.5),
             VerticalAlignment = VerticalAlignment.Bottom,
             Margin = new Thickness(0, 0, 0, 8),
-            Background = UiUtil.GetBorderBrush(),
+            Background = EditorChrome.SeparatorBrush,
             Opacity = 0.5,
         });
 
@@ -429,7 +448,7 @@ public class StatisticsWindow : Window
 
     private static Control MakeHistogram(StatCpsHistogram histogram)
     {
-        var accentBrush = UiUtil.GetAccentBrush();
+        var accentBrush = EditorChrome.AccentBrush;
         var binCount = histogram.Bins.Count;
         var maxBin = 1;
         foreach (var bin in histogram.Bins)
@@ -446,7 +465,7 @@ public class StatisticsWindow : Window
         {
             Text = maxBin.ToString("#,##0", CultureInfo.CurrentCulture),
             FontSize = UiUtil.ScaledFontSize(9.5),
-            Opacity = 0.6,
+            Foreground = EditorChrome.DimTextBrush,
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top,
             Margin = new Thickness(0, -2, 0, 0),
@@ -456,7 +475,7 @@ public class StatisticsWindow : Window
             chart.Children.Add(new Border
             {
                 Height = 1,
-                Background = UiUtil.GetBorderBrush(),
+                Background = EditorChrome.SeparatorBrush,
                 Opacity = 0.4,
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(0, HistogramHeight * fraction, 0, 0),
@@ -465,7 +484,7 @@ public class StatisticsWindow : Window
             {
                 Text = System.Math.Round(maxBin * (1 - fraction)).ToString("#,##0", CultureInfo.CurrentCulture),
                 FontSize = UiUtil.ScaledFontSize(9.5),
-                Opacity = 0.6,
+                Foreground = EditorChrome.DimTextBrush,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(0, HistogramHeight * fraction - 7, 0, 0),
@@ -510,7 +529,7 @@ public class StatisticsWindow : Window
         chart.Children.Add(new Border
         {
             Height = 1,
-            Background = UiUtil.GetBorderBrush(),
+            Background = EditorChrome.SeparatorBrush,
             VerticalAlignment = VerticalAlignment.Bottom,
         });
 
@@ -526,7 +545,7 @@ public class StatisticsWindow : Window
             {
                 Text = (i * StatCpsHistogram.BinSize).ToString("0.#", CultureInfo.CurrentCulture),
                 FontSize = UiUtil.ScaledFontSize(9.5),
-                Opacity = 0.6,
+                Foreground = EditorChrome.DimTextBrush,
                 HorizontalAlignment = HorizontalAlignment.Left,
             }, 0, i);
         }
@@ -594,10 +613,10 @@ public class StatisticsWindow : Window
     {
         if (vm.TopWords.Count == 0)
         {
-            return new TextBlock { Text = Se.Language.File.Statistics.NothingFound, FontSize = UiUtil.ScaledFontSize(12), Opacity = 0.6 };
+            return new TextBlock { Text = Se.Language.File.Statistics.NothingFound, FontSize = UiUtil.ScaledFontSize(12), Foreground = EditorChrome.DimTextBrush };
         }
 
-        var accentBrush = UiUtil.GetAccentBrush();
+        var accentBrush = EditorChrome.AccentBrush;
         var maxCount = vm.TopWords[0].Count;
         var panel = new StackPanel { Spacing = 5 };
 
@@ -641,7 +660,7 @@ public class StatisticsWindow : Window
             {
                 Text = word.Count.ToString("#,##0", CultureInfo.CurrentCulture),
                 FontSize = UiUtil.ScaledFontSize(11),
-                Opacity = 0.6,
+                Foreground = EditorChrome.DimTextBrush,
                 VerticalAlignment = VerticalAlignment.Center,
             }, 0, 2);
 
@@ -655,10 +674,10 @@ public class StatisticsWindow : Window
     {
         if (vm.TopLines.Count == 0)
         {
-            return new TextBlock { Text = Se.Language.File.Statistics.NothingFound, FontSize = UiUtil.ScaledFontSize(12), Opacity = 0.6 };
+            return new TextBlock { Text = Se.Language.File.Statistics.NothingFound, FontSize = UiUtil.ScaledFontSize(12), Foreground = EditorChrome.DimTextBrush };
         }
 
-        var accentColor = UiUtil.GetAccentBrush() is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
+        var accentColor = EditorChrome.AccentBrush is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
         var panel = new StackPanel { Spacing = 4 };
 
         foreach (var line in vm.TopLines)

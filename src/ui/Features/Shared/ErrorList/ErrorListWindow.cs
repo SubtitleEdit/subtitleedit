@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -16,7 +15,7 @@ namespace Nikse.SubtitleEdit.Features.Shared.ErrorList;
 /// <summary>
 /// "List errors": a verdict header, one summary card per error class (click to
 /// filter), and the affected lines in a table. Double-click / Enter / "Go to"
-/// jumps to the line in the main grid.
+/// jumps to the line in the main grid. In the editor look (see <see cref="EditorChrome"/>).
 /// </summary>
 public class ErrorListWindow : Window
 {
@@ -29,6 +28,7 @@ public class ErrorListWindow : Window
         Height = 680;
         MinWidth = 720;
         MinHeight = 460;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -37,60 +37,90 @@ public class ErrorListWindow : Window
         var labelTitle = new TextBlock
         {
             Text = l.Title,
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
+            FontSize = UiUtil.ScaledFontSize(18),
+            FontWeight = FontWeight.SemiBold,
         };
         var labelSummary = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(14),
-            Opacity = 0.75,
+            FontSize = UiUtil.ScaledFontSize(13),
+            Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Summary)),
         };
         var header = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Margin = new Thickness(0, 0, 0, 12),
             Children = { labelTitle, labelSummary },
         };
 
         var cards = SummaryCard.MakeCardsPanel(vm.Cards, vm.SetFilterCommand);
+        cards.Margin = new Thickness(0);
+
+        var top = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 12,
+            Children = { header, cards },
+        };
 
         var labelTip = new TextBlock
         {
             Text = l.Tip,
             TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.7,
-            Margin = new Thickness(0, 10, 0, 10),
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
         };
 
         var buttonGoTo = UiUtil.MakeButton(Se.Language.General.GoTo, vm.GoToCommand).WithBindIsEnabled(nameof(vm.HasErrors));
         var buttonExport = MakeExportButton(vm);
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(MakeExportStatusLabel(vm), buttonExport, buttonGoTo, buttonCancel);
+        buttonCancel.Classes.Add("primary");
+
+        var left = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonExport, MakeExportStatusLabel(vm) },
+        };
+
+        var listArea = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            RowSpacing = 10,
+            Margin = new Thickness(14, 12, 14, 12),
+        };
+        listArea.Add(MakeErrorsGridView(vm), 0, 0);
+        listArea.Add(labelTip, 1, 0);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
         };
 
-        grid.Add(header, 0, 0);
-        grid.Add(cards, 1, 0);
-        grid.Add(MakeErrorsGridView(vm), 2, 0);
-        grid.Add(labelTip, 3, 0);
-        grid.Add(panelButtons, 4, 0);
+        grid.Add(new Border
+        {
+            Child = top,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(16, 14, 16, 14),
+        }, 0, 0);
+        grid.Add(listArea, 1, 0);
+        grid.Add(EditorChrome.MakeDockedButtonBar(left, buttonGoTo, buttonCancel), 2, 0);
 
         Content = grid;
 
@@ -106,7 +136,7 @@ public class ErrorListWindow : Window
     private static Button MakeExportButton(ErrorListViewModel vm)
     {
         var l = Se.Language.ErrorList;
-        var button = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot);
+        var button = EditorChrome.MakeTextToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, null);
         button.Flyout = new MenuFlyout
         {
             Items =
@@ -143,8 +173,9 @@ public class ErrorListWindow : Window
         return new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 10, 0),
-            Opacity = 0.75,
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ExportStatus)),
         };
     }
@@ -212,7 +243,7 @@ public class ErrorListWindow : Window
         });
         dataGrid.Columns.Add(new SeTableViewColumn
         {
-            Header = l.Detail,
+            Header = Se.Language.General.Detail,
             Binding = new Binding(nameof(ErrorListItem.Detail)),
             Width = new GridLength(200),
             CellTheme = UiUtil.TableViewCellTheme,
@@ -246,6 +277,6 @@ public class ErrorListWindow : Window
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 }

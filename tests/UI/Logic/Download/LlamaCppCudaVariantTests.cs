@@ -1,4 +1,3 @@
-using System.IO;
 using Nikse.SubtitleEdit.Logic.Download;
 
 namespace UITests.Logic.Download;

@@ -1,8 +1,6 @@
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using SkiaSharp;
 using SkiaSharp.HarfBuzz;
-using System;
-using Xunit;
 
 namespace UITests.Controls;
 

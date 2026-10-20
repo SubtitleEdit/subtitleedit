@@ -13,6 +13,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public List<TimeSegment> Samples { get; set; }
         public uint? DataOffset { get; set; }
 
+        // Far above a real fragment (a three-hour 60 fps video in a single fragment is ~650k samples).
+        private const ulong MaxSamplesWithoutPerSampleFields = 1_000_000;
+
         public Trun(Stream fs, ulong maximumLength)
         {
             Samples = new List<TimeSegment>();
@@ -55,6 +58,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             // Cap by the bytes actually left in the stream (never smaller than the real table, so
             // valid files are unaffected) and do the multiply in 64-bit so it cannot wrap.
             var bytesLeftInFile = fs.Length > fs.Position ? (ulong)(fs.Length - fs.Position) : 0UL;
+
+            // Without per-sample fields (all values come from the tfhd/trex defaults) the loop below
+            // reads nothing, so only sample_count bounded it: a corrupt trun declaring 4 billion
+            // samples hung the parser while it filled the list. Every sample still needs at least
+            // one byte of media data, so it cannot outnumber the bytes left in the file.
+            if ((flags & (0x000100 | 0x000200 | 0x000400 | 0x000800)) == 0)
+            {
+                sampleCount = (uint)Math.Min(sampleCount, Math.Min(bytesLeftInFile, MaxSamplesWithoutPerSampleFields));
+            }
+
             var sampleLength = Math.Min((ulong)sampleCount * 16UL + 24UL, bytesLeftInFile);
             sampleLength = Math.Min(sampleLength, int.MaxValue);
             Buffer = new byte[(int)sampleLength];

@@ -1,9 +1,6 @@
-using Avalonia;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Files.Compare;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace UITests.Features.Files.Compare;

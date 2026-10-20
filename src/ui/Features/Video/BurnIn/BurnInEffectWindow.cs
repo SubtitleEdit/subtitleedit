@@ -1,4 +1,3 @@
-﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -8,6 +7,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
+/// <summary>
+/// Pick burn-in effects, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class BurnInEffectWindow : Window
 {
     private readonly BurnInEffectViewModel _vm;
@@ -18,14 +20,16 @@ public class BurnInEffectWindow : Window
         Title = Se.Language.General.Effect;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -34,42 +38,36 @@ public class BurnInEffectWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
         };
 
-        // Create a StackPanel to hold all checkboxes
+        // A StackPanel to hold all checkboxes (the view model keeps them in CheckBoxes)
         var checkBoxPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 10,
-            Margin = new Thickness(10)
+            Spacing = 8,
+            MinWidth = 260,
         };
 
         // Create checkboxes for each effect
         foreach (var effect in vm.Effects)
         {
-            var checkBox = new CheckBox
+            // On/off switches like the other dialogs' options (these were checkboxes)
+            var checkBox = new ToggleSwitch
             {
-                Content = effect.Name,
+                OnContent = null,
+                OffContent = null,
+                MinWidth = 0,
                 Tag = effect, // Store the effect item for later reference
                 Name = effect.Type.ToString(),
+                VerticalAlignment = VerticalAlignment.Center,
             };
+            Avalonia.Automation.AutomationProperties.SetName(checkBox, effect.Name);
             vm.CheckBoxes.Add(checkBox);
-
 
             // Handle checkbox state changes
             checkBox.IsCheckedChanged += (sender, e) =>
             {
-                var cb = sender as CheckBox;
+                var cb = sender as ToggleSwitch;
                 var effectItem = cb?.Tag as BurnInEffectItem;
                 if (effectItem != null && cb != null)
                 {
@@ -84,15 +82,15 @@ public class BurnInEffectWindow : Window
                 }
             };
 
-            checkBoxPanel.Children.Add(checkBox);
+            checkBoxPanel.Children.Add(EditorChrome.MakeSwitchRow(checkBox, effect.Name));
         }
 
-        grid.Add(checkBoxPanel, 0, 0);
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.Effect, checkBoxPanel, first: true)), 0, 0);
         grid.Add(panelButtons, 1, 0);
 
         Content = grid;
 
-        UiUtil.FocusOnFirstActivation(this, () => { (checkBoxPanel.Children.Count > 0 ? checkBoxPanel.Children[0] : buttonCancel).Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () => { (vm.CheckBoxes.Count > 0 ? vm.CheckBoxes[0] : buttonCancel).Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

@@ -6,7 +6,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;

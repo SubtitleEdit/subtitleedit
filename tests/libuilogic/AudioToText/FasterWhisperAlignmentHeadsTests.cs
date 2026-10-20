@@ -1,7 +1,5 @@
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
-using System.Linq;
 using System.Text.Json.Nodes;
-using Xunit;
 
 namespace LibUiLogicTests.AudioToText;
 

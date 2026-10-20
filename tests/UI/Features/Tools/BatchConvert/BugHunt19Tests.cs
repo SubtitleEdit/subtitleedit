@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 using Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
-using System.Linq;
 
 namespace UITests.Features.Tools.BatchConvert;
 

@@ -3,7 +3,6 @@ using Avalonia.Input;
 using Nikse.SubtitleEdit.Features.Video.CutVideo;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
 
 namespace UITests.Features.Video.CutVideo;
 
@@ -21,7 +20,7 @@ public class CutVideoVerticalZoomKeyTests
     }
 
     private static CutVideoViewModel MakeViewModel()
-        => new(new FolderHelper(), new FileHelper(), new WindowService(new NullServiceProvider()), new InsertService(), new ShortcutManager());
+        => new(new FileHelper(), new WindowService(new NullServiceProvider()), new InsertService(), new ShortcutManager());
 
     private static KeyEventArgs KeyArgs(Key key, KeyModifiers modifiers)
         => new() { RoutedEvent = InputElement.KeyDownEvent, Key = key, KeyModifiers = modifiers };

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -12,7 +13,8 @@ using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
 
-// The speakers dialog, shown between diarization and cloning:
+// The speakers dialog, shown between diarization and cloning - in the editor look (see
+// EditorChrome): header on the panel color, the table in a field frame, button bar at the bottom:
 //
 //   ┌──────────────────────────────────────────────────────────────────────┐
 //   │ <icon> Voices found in the video                                     │
@@ -25,7 +27,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
 //   │ │ [Speaker 2]│  18   │ 01:04  │ "And nobody listened."           │   │
 //   │ └────────────┴───────┴────────┴──────────────────────────────────┘   │
 //   ├──────────────────────────────────────────────────────────────────────┤
-//   │ Engine [OmniVoice TTS ▾]                          [OK] [Cancel]      │
+//   │ Engine [OmniVoice TTS ▾]                          [Cancel] [OK]      │
 //   └──────────────────────────────────────────────────────────────────────┘
 public class AutoCastSpeakersWindow : Window
 {
@@ -38,6 +40,7 @@ public class AutoCastSpeakersWindow : Window
         MinWidth = 600;
         MinHeight = 360;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
 
         vm.Window = this;
         DataContext = vm;
@@ -50,12 +53,22 @@ public class AutoCastSpeakersWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 12,
         };
 
-        root.Add(BuildHeader(vm), 0, 0);
-        root.Add(BuildTable(vm), 1, 0);
+        root.Add(new Border
+        {
+            Child = BuildHeader(vm),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(16, 12),
+        }, 0, 0);
+        root.Add(new Border
+        {
+            Child = BuildTable(vm),
+            Background = EditorChrome.PanelBrush,
+            Padding = new Thickness(14, 12, 14, 14),
+        }, 1, 0);
         root.Add(BuildButtons(vm), 2, 0);
 
         Content = root;
@@ -73,50 +86,50 @@ public class AutoCastSpeakersWindow : Window
         var icon = new Icon
         {
             Value = IconNames.AccountVoice,
-            FontSize = 28,
-            Foreground = UiUtil.GetTextColor(0.8d),
+            FontSize = 26,
+            Foreground = EditorChrome.IconBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
 
         var title = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.AutoCastSpeakersTitle,
-            FontSize = UiUtil.ScaledFontSize(16),
+            FontSize = 15,
             FontWeight = FontWeight.SemiBold,
         };
 
         var subtitle = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.AutoCastSpeakersSubtitle,
-            FontSize = UiUtil.ScaledFontSize(12),
-            Foreground = UiUtil.GetTextColor(0.6d),
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
 
         var summary = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = UiUtil.GetTextColor(0.55d),
+            FontSize = 11.5,
+            Foreground = EditorChrome.FaintTextBrush,
             Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SummaryText)) { Mode = BindingMode.OneWay },
         };
 
-        return new StackPanel
+        // A grid rather than a horizontal stack panel, so the subtitle gets the window width and
+        // wraps instead of running off the right edge.
+        var grid = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 12,
-            Children =
-            {
-                icon,
-                new StackPanel
-                {
-                    Orientation = Orientation.Vertical,
-                    Spacing = 2,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Children = { title, subtitle, summary },
-                },
-            },
+            ColumnSpacing = 12,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
         };
+        grid.Add(icon, 0, 0);
+        grid.Add(new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { title, subtitle, summary },
+        }, 0, 1);
+        return grid;
     }
 
     private static Border BuildTable(AutoCastSpeakersViewModel vm)
@@ -132,10 +145,16 @@ public class AutoCastSpeakersWindow : Window
             Width = new GridLength(180),
             // A text box rather than a label: naming a speaker is the whole point of this dialog,
             // and typing the same name into two rows is how they are merged.
-            CellTemplate = new FuncDataTemplate<AutoCastSpeakerRow>((_, _) => new TextBox
+            CellTemplate = new FuncDataTemplate<AutoCastSpeakerRow>((_, _) =>
             {
-                Margin = new Thickness(4, 2),
-                [!TextBox.TextProperty] = new Binding(nameof(AutoCastSpeakerRow.Name)) { Mode = BindingMode.TwoWay },
+                var textBox = new TextBox
+                {
+                    Margin = new Thickness(4, 2),
+                    [!TextBox.TextProperty] = new Binding(nameof(AutoCastSpeakerRow.Name)) { Mode = BindingMode.TwoWay },
+                };
+                textBox.Classes.Add("text");
+                AutomationProperties.SetName(textBox, Se.Language.General.Name);
+                return textBox;
             }),
         });
         tableView.Columns.Add(new SeTableViewColumn
@@ -148,7 +167,7 @@ public class AutoCastSpeakersWindow : Window
         });
         tableView.Columns.Add(new SeTableViewColumn
         {
-            Header = Se.Language.Video.TextToSpeech.AutoCastAudio,
+            Header = Se.Language.General.Audio,
             Binding = new Binding(nameof(AutoCastSpeakerRow.TotalDurationDisplay)),
             Width = new GridLength(80),
             CellTheme = UiUtil.TableViewCellTheme,
@@ -164,19 +183,13 @@ public class AutoCastSpeakersWindow : Window
         });
 
         TableViewExtras.BindSelectedItem(tableView, vm, nameof(vm.SelectedRow));
+        AutomationProperties.SetName(tableView, Se.Language.Video.TextToSpeech.AutoCastSpeakersTitle);
 
-        return new Border
-        {
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Child = tableView,
-        };
+        return EditorChrome.MakeListFrame(tableView);
     }
 
-    private static Control BuildButtons(AutoCastSpeakersViewModel vm)
+    private static Border BuildButtons(AutoCastSpeakersViewModel vm)
     {
-        var engineLabel = UiUtil.MakeLabel(Se.Language.General.Engine);
         var engineCombo = new ComboBox
         {
             MinWidth = 220,
@@ -185,6 +198,7 @@ public class AutoCastSpeakersWindow : Window
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.Engines)),
             [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.SelectedEngine)) { Mode = BindingMode.TwoWay },
         };
+        AutomationProperties.SetName(engineCombo, Se.Language.General.Engine);
 
         var enginePanel = new StackPanel
         {
@@ -192,23 +206,9 @@ public class AutoCastSpeakersWindow : Window
             Spacing = 8,
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Children = { engineLabel, engineCombo },
+            Children = { EditorChrome.MakeDimLabel(Se.Language.General.Engine, new Thickness(0)), engineCombo },
         };
 
-        var buttons = UiUtil.MakeButtonBar(
-            UiUtil.MakeButtonOk(vm.OkCommand),
-            UiUtil.MakeButtonCancel(vm.CancelCommand));
-
-        var panel = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-        };
-        panel.Add(enginePanel, 0, 0);
-        panel.Add(buttons, 0, 1);
-        return panel;
+        return EditorChrome.MakeButtonBar(enginePanel, UiUtil.MakeButtonCancel(vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand)));
     }
 }

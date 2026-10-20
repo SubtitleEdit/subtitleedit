@@ -1,13 +1,14 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -17,416 +18,85 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
+/// <summary>
+/// Speech to text, in the editor look (see <see cref="EditorChrome"/>): engine, model and options
+/// in a scrolling column on the left, the console log (and in batch mode the file list) on the
+/// right, progress and the Single/Batch switch, Cancel and Transcribe at the bottom.
+/// </summary>
 public class SpeechToTextWindow : Window
 {
+    private const double LabelWidth = 96;
+    private const double SettingsWidth = 410;
+
+    /// <summary>
+    /// The settings column (engine, model, options, online engine settings, advanced).
+    /// </summary>
+    internal const string SettingsPanelName = "SpeechToTextSettings";
+
+    /// <summary>
+    /// The progress strip above the button bar.
+    /// </summary>
+    internal const string ProgressPanelName = "SpeechToTextProgress";
+
+    /// <summary>
+    /// The bottom button bar.
+    /// </summary>
+    internal const string ButtonBarName = "SpeechToTextButtonBar";
+
     public SpeechToTextWindow(SpeechToTextViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.AudioToText.Title;
         Width = 1100;
         Height = 680;
-        MinWidth = 800;
-        MinHeight = 680;
+        MinWidth = 820;
+        MinHeight = 480;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
         vm.Window = this;
         DataContext = vm;
 
-        var labelConsoleLog = new TextBlock
+        // The settings column scrolls on its own and the console log gives up height first, so
+        // the progress strip and the buttons stay reachable on a short screen - and no settings
+        // row can ever end up on top of the progress text again.
+        var settingsScroller = new ScrollViewer
         {
-            Text = Se.Language.General.ConsoleLog,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
+            Content = MakeSettingsPanel(vm),
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
         };
-        var buttonCopyConsoleLog = UiUtil.MakeButton(
-            vm.CopyConsoleLogCommand,
-            IconNames.Copy,
-            Se.Language.General.CopyTextToClipboard);
-        vm.CopyConsoleLogButton = buttonCopyConsoleLog;
-        var panelConsoleLogHeader = UiUtil.MakeHorizontalPanel(labelConsoleLog, buttonCopyConsoleLog);
-        panelConsoleLogHeader.Margin = new Thickness(10, 12, 10, 10);
-
-        var consoleLogAndBatchView = MakeConsoleLogAndBatchView(vm);
-        var consoleLogOnlyView = MakeConsoleLogOnlyView(vm);
-
-        var labelEngine = UiUtil.MakeTextBlock(Se.Language.General.Engine).WithMarginTop(10);
-        var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine))
-            .WithMinWidth(260)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithMarginTop(10)
-            .WithLabeledBy(labelEngine);
-        comboEngine.ItemTemplate = MakeEngineItemTemplate();
-        comboEngine.SelectionChanged += vm.OnEngineChanged;
-
-        // Force the combo to rebuild its row visuals after a re-download finishes, so the
-        // install-status dot reflects the freshly-written .installed.sha256 sidecar instead
-        // of the snapshot taken when each row was first realised.
-        vm.RefreshEngineCombo = () => comboEngine.ItemTemplate = MakeEngineItemTemplate();
-        var buttonEngineWebsite = UiUtil.MakeButton(vm.ShowWebLinkCommand, IconNames.Web)
-            .WithMarginLeft(5)
-            .WithMarginTop(10)
-            .WithAccessibleName($"{Se.Language.General.Engine} - {Se.Language.General.MoreInfo}");
-        var buttonEngineDownload = UiUtil.MakeButton(vm.DownloadSelectedEngineCommand, IconNames.Download)
-            .WithMarginLeft(5)
-            .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsEngineDownloadButtonVisible))
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithAccessibleName(Se.Language.General.Download);
-        buttonEngineDownload.Bind(ToolTip.TipProperty, new Binding(nameof(vm.EngineDownloadHint))
+        var settings = new Border
         {
-            Source = vm,
-            Mode = BindingMode.OneWay,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-        });
-
-        var buttonEngineSettings = UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings)
-            .WithMarginLeft(5)
-            .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsEngineSettingsButtonVisible))
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithAccessibleName(Se.Language.Video.AudioToText.BackendAndUpdateStatus);
-        ToolTip.SetTip(buttonEngineSettings, Se.Language.Video.AudioToText.BackendAndUpdateStatus);
-
-        var panelEngineControls = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children =
-            {
-                comboEngine,
-                buttonEngineWebsite,
-                buttonEngineDownload,
-                buttonEngineSettings,
-            }
+            Name = SettingsPanelName,
+            Child = settingsScroller,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
         };
 
-        var labelBackend = UiUtil.MakeTextBlock(Se.Language.General.Backend).WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsBackendSelectionVisible));
-        var comboWhisperCppBackend = UiUtil.MakeComboBox(vm.WhisperCppBackends, vm, nameof(vm.SelectedWhisperCppBackend))
-            .WithMinWidth(220)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsWhisperCppSelected))
-            .WithLabeledBy(labelBackend);
-        var comboCrispAsrBackend = UiUtil.MakeComboBox(vm.CrispAsrBackends, vm, nameof(vm.SelectedCrispAsrBackend))
-            .WithMinWidth(220)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected))
-            .WithLabeledBy(labelBackend);
-
-        var labelForcedAligner = UiUtil.MakeTextBlock(Se.Language.Video.ForcedAligner).WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsForcedAlignerVisible));
-        var comboForcedAligner = UiUtil.MakeComboBox(vm.ForcedAligners, vm, nameof(vm.SelectedForcedAligner))
-            .WithMinWidth(220)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithMarginTop(10)
-            .WithLabeledBy(labelForcedAligner);
-        comboForcedAligner.ItemTemplate = MakeForcedAlignerItemTemplate();
-        var buttonForcedAlignerDownload = UiUtil.MakeButtonBrowse(vm.DownloadForcedAlignerCommand, accessibleName: Se.Language.General.Download)
-            .WithMarginTop(10)
-            .WithMarginLeft(5)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        var panelForcedAlignerControls = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children =
-            {
-                comboForcedAligner,
-                buttonForcedAlignerDownload,
-            },
-        }.BindIsVisible(vm, nameof(vm.IsForcedAlignerVisible));
-
-        var labelVad = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.Vad).WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsVadVisible));
-        var comboVad = UiUtil.MakeComboBox(vm.VadOptions, vm, nameof(vm.SelectedVadOption))
-            .WithMinWidth(220)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsVadVisible))
-            .WithLabeledBy(labelVad);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(labelVad, Se.Language.Video.AudioToText.VadHint);
-            ToolTip.SetTip(comboVad, Se.Language.Video.AudioToText.VadHint);
-        }
-
-        var labelLanguage = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.InputLanguage).WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible));
-        var comboLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
-            .WithMinWidth(220)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible))
-            .WithLabeledBy(labelLanguage);
-
-        var labelModel = UiUtil.MakeTextBlock(Se.Language.General.Model).WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
-        var comboModel = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel))
-            .WithMinWidth(220)
-            .WithMarginTop(10)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible))
-            .WithLabeledBy(labelModel);
-        comboModel.ItemTemplate = MakeModelItemTemplate();
-
-        var buttonModelDownload = UiUtil.MakeButtonBrowse(vm.DownloadModelCommand, accessibleName: Se.Language.General.Download)
-            .WithMarginTop(10)
-            .WithMarginLeft(5)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .BindIsVisible(vm, nameof(vm.IsModelDownloadVisible));
-
-        var panelModelControls = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children =
-            {
-                comboModel,
-                buttonModelDownload
-            }
-        };
-
-        var labelTranslateToEnglish = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.TranslateToEnglish)
-            .WithMarginTop(20)
-            .BindIsVisible(vm, nameof(vm.IsTranslateVisible));
-        var checkTranslateToEnglish = UiUtil.MakeCheckBox(vm, nameof(vm.DoTranslateToEnglish))
-            .WithMarginTop(20)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .BindIsVisible(vm, nameof(vm.IsTranslateVisible))
-            .WithLabeledBy(labelTranslateToEnglish);
-
-        var labelIsolateSpeech = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.IsolateSpeech)
-            .WithMarginTop(15)
-            .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected));
-        var checkIsolateSpeech = UiUtil.MakeCheckBox(vm, nameof(vm.DoIsolateSpeech))
-            .WithMarginTop(15)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected))
-            .WithLabeledBy(labelIsolateSpeech);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(labelIsolateSpeech, Se.Language.Video.AudioToText.IsolateSpeechHint);
-            ToolTip.SetTip(checkIsolateSpeech, Se.Language.Video.AudioToText.IsolateSpeechHint);
-        }
-
-        var labelDetectSpeakers = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.DetectSpeakers)
-            .WithMarginTop(15)
-            .BindIsVisible(vm, nameof(vm.IsDetectSpeakersVisible));
-        var checkDetectSpeakers = UiUtil.MakeCheckBox(vm, nameof(vm.DoDetectSpeakers))
-            .WithMarginTop(15)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .BindIsVisible(vm, nameof(vm.IsDetectSpeakersVisible))
-            .WithLabeledBy(labelDetectSpeakers);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(labelDetectSpeakers, Se.Language.Video.AudioToText.DetectSpeakersHint);
-            ToolTip.SetTip(checkDetectSpeakers, Se.Language.Video.AudioToText.DetectSpeakersHint);
-        }
-
-        var labelPostProcessing = UiUtil.MakeTextBlock(Se.Language.General.PostProcessing).WithMarginTop(15);
-        var checkPostProcessing = UiUtil.MakeCheckBox(vm, nameof(vm.DoPostProcessing)).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithLabeledBy(labelPostProcessing);
-        var buttonPostProcessing = UiUtil.MakeButton(vm.ShowPostProcessingSettingsCommand, IconNames.Settings)
-                    .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-                    .WithAccessibleName(Se.Language.General.PostProcessing);
-
-        var panelPostProcessingControls = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 15, 0, 0),
-            Children =
-            {
-                checkPostProcessing,
-                buttonPostProcessing
-            }
-        };
-
-        var openAiRows = MakeOpenAiCompatibleSttRows(vm);
-        var openRouterRows = MakeOpenRouterSttRows(vm);
-        var dashScopeRows = MakeDashScopeSttRows(vm);
-        var googleCloudRows = MakeGoogleCloudSttRows(vm);
-
-        var labelAdvancedSettings = UiUtil.MakeTextBlock(Se.Language.General.AdvancedSettings).WithMarginTop(15)
-            .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
-
-        var buttonAdvancedSettings = UiUtil.MakeButton(vm.ShowAdvancedSettingsCommand, IconNames.Settings)
-                    .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-                    .WithMarginTop(15)
-                    .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible))
-                    .WithAccessibleName(Se.Language.General.AdvancedSettings);
-
-        var textBoxAdvancedSettings = new TextBox()
-        {
-            VerticalAlignment = VerticalAlignment.Top,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            IsReadOnly = true,
-            FontSize = UiUtil.ScaledFontSize(12),
-            Margin = new Thickness(0),
-            Opacity = 0.6,
-            BorderThickness = new Thickness(0),
-            MaxWidth = 320,
-        }.BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible))
-            .WithLabeledBy(labelAdvancedSettings);
-        textBoxAdvancedSettings.Bind(TextBox.TextProperty, new Binding
-        {
-            Path = nameof(vm.Parameters),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        });
-
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.WithPlatformProgress(this, nameof(vm.IsTranscribeEnabled), InverseBooleanConverter.Instance);
-        AutomationProperties.SetName(progressBar, Se.Language.Video.AudioToText.Transcribe);
-        progressBar.Margin = new Thickness(10, 0, 10, 8);
-        progressBar.Width = double.NaN;
-        progressBar.VerticalAlignment = VerticalAlignment.Center;
-        progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding
-        {
-            Path = nameof(vm.ProgressValue),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-        });
-        progressBar.Bind(ProgressBar.OpacityProperty, new Binding
-        {
-            Path = nameof(vm.ProgressOpacity),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-        });
-
-        var progressText = new TextBlock()
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 10, 0),
-        };
-        progressText.Bind(TextBlock.TextProperty, new Binding
-        {
-            Path = nameof(vm.ProgressText),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        });
-        progressText.Bind(TextBlock.OpacityProperty, new Binding
-        {
-            Path = nameof(vm.ProgressOpacity),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        });
-
-        var estimatedTimeText = new TextBlock()
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 10, 0),
-        };
-        estimatedTimeText.Bind(TextBlock.TextProperty, new Binding
-        {
-            Path = nameof(vm.EstimatedText),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        });
-        estimatedTimeText.Bind(TextBlock.OpacityProperty, new Binding
-        {
-            Path = nameof(vm.ProgressOpacity),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        });
-
-        var elapsedTimeText = new TextBlock()
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 10, 0),
-        };
-        elapsedTimeText.Bind(TextBlock.TextProperty, new Binding
-        {
-            Path = nameof(vm.ElapsedText),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        });
-        elapsedTimeText.Bind(TextBlock.OpacityProperty, new Binding
-        {
-            Path = nameof(vm.ProgressOpacity),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        });
-
-
-        var panelProgress = new StackPanel()
-        {
-            Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, 5, 0, 0),
-            Children =
-            {
-                progressBar,
-                progressText,
-                elapsedTimeText,
-                estimatedTimeText,
-            },
-        };
-
-        var buttonBatchMode = UiUtil.MakeButton(Se.Language.General.BatchMode, vm.BatchModeCommand)
-            .WithBindIsVisible(nameof(vm.IsBatchModeVisible))
-            .WithBindEnabled(nameof(vm.IsTranscribeEnabled));
-        var buttonSingleMode = UiUtil.MakeButton(Se.Language.General.SingleMode, vm.SingleModeCommand)
-            .WithBindIsVisible(nameof(vm.IsSingleModeVisible))
-            .WithBindEnabled(nameof(vm.IsTranscribeEnabled));
-        var transcribeButton = UiUtil.MakeButton(Se.Language.Video.AudioToText.Transcribe, vm.TranscribeCommand).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        var buttonPanel = UiUtil.MakeButtonBar(
-            transcribeButton,
-            buttonBatchMode,
-            buttonSingleMode,
-            UiUtil.MakeButtonCancel(vm.CancelCommand)
-        );
-        buttonPanel.Margin = new Thickness(10, 0, 10, 10);
-
-        // Rows: 0 console log label, 1 console log (Star), 2-9 engine/backend/language/model/forced aligner/VAD/
-        // isolate speech/detect speakers, then one row per online-STT setting (OpenAI-compatible, OpenRouter, DashScope, Google Cloud; only the
-        // selected engine's rows are visible, the rest collapse to zero height), then translate-to-English,
-        // post processing, advanced settings label + button, advanced parameters text box, and finally the
-        // progress panel + buttons. The count is derived from the engine row arrays so adding an online engine
-        // cannot leave trailing rows clamped onto the last row (which made the labels overlap the progress text).
-        const int fixedRowsBeforeOnlineStt = 10;
-        const int fixedRowsAfterOnlineStt = 5;
-        var onlineSttRowCount = openAiRows.Length + openRouterRows.Length + dashScopeRows.Length + googleCloudRows.Length;
-        var totalRowCount = fixedRowsBeforeOnlineStt + onlineSttRowCount + fixedRowsAfterOnlineStt;
-        var progressRow = totalRowCount - 1;
-
-        var grid = new Grid
+        var content = new Grid
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition(new GridLength(SettingsWidth)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 0,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-        for (var i = 0; i < totalRowCount; i++)
+        content.Add(settings, 0, 0);
+        content.Add(MakeLogPanel(vm), 0, 1);
+
+        var grid = new Grid
         {
-            grid.RowDefinitions.Add(new RowDefinition { Height = i == 1 ? new GridLength(1, GridUnitType.Star) : new GridLength(1, GridUnitType.Auto) });
-        }
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(1, GridUnitType.Star)), // settings + console log / batch list
+                new RowDefinition(GridLength.Auto), // progress, while transcribing
+                new RowDefinition(GridLength.Auto), // mode, buttons
+            },
+        };
+        grid.Add(content, 0, 0);
+        grid.Add(MakeProgressView(vm), 1, 0);
+        grid.Add(MakeButtonBar(vm), 2, 0);
 
         var flyout = new MenuFlyout();
         flyout.Opening += vm.WindowContextMenuOpening;
@@ -452,83 +122,6 @@ public class SpeechToTextWindow : Window
         menuItemReDownloadWhisperEngine.Bind(MenuItem.HeaderProperty, new Binding(nameof(vm.ReDownloadText)) { Source = vm });
         flyout.Items.Add(menuItemReDownloadWhisperEngine);
 
-
-        var row = 0;
-
-        grid.Add(panelConsoleLogHeader, row, 2);
-        row++;
-
-        // Row span must reach the row just above the progress/buttons row so the
-        // console log fills the full height of the settings column. It covers every
-        // settings row including the online-STT rows.
-        var consoleLogRowSpan = progressRow - row;
-        grid.Add(consoleLogAndBatchView, row, 2, consoleLogRowSpan);
-        grid.Add(consoleLogOnlyView, row, 2, consoleLogRowSpan);
-        row++;
-
-        grid.Add(labelEngine, row, 0);
-        grid.Add(panelEngineControls, row, 1);
-        row++;
-
-        grid.Add(labelBackend, row, 0);
-        grid.Add(comboWhisperCppBackend, row, 1);
-        grid.Add(comboCrispAsrBackend, row, 1);
-        row++;
-
-        grid.Add(labelLanguage, row, 0);
-        grid.Add(comboLanguage, row, 1);
-        row++;
-
-        grid.Add(labelModel, row, 0);
-        grid.Add(panelModelControls, row, 1);
-        row++;
-
-        grid.Add(labelForcedAligner, row, 0);
-        grid.Add(panelForcedAlignerControls, row, 1);
-        row++;
-
-        grid.Add(labelVad, row, 0);
-        grid.Add(comboVad, row, 1);
-        row++;
-
-        grid.Add(labelIsolateSpeech, row, 0);
-        grid.Add(checkIsolateSpeech, row, 1);
-        row++;
-
-        grid.Add(labelDetectSpeakers, row, 0);
-        grid.Add(checkDetectSpeakers, row, 1);
-        row++;
-
-        foreach (var (label, control) in openAiRows.Concat(openRouterRows).Concat(dashScopeRows).Concat(googleCloudRows))
-        {
-            // Link each online-STT input to its visible label so a screen reader announces the
-            // label as the control's name instead of a bare "edit"/"combo box" (#11745). Only the
-            // selected engine's rows are visible; the rest collapse to zero-height grid rows.
-            AutomationProperties.SetLabeledBy(control, label);
-            grid.Add(label, row, 0);
-            grid.Add(control, row, 1);
-            row++;
-        }
-
-        grid.Add(labelTranslateToEnglish, row, 0);
-        grid.Add(checkTranslateToEnglish, row, 1);
-        row++;
-
-        grid.Add(labelPostProcessing, row, 0);
-        grid.Add(panelPostProcessingControls, row, 1);
-        row++;
-
-        grid.Add(labelAdvancedSettings, row, 0);
-        grid.Add(buttonAdvancedSettings, row, 1);
-        row++;
-
-        grid.Add(textBoxAdvancedSettings, row, 0, 1, 2);
-        row++;
-
-        System.Diagnostics.Debug.Assert(row == progressRow, "SpeechToTextWindow grid row count is out of sync with the rows added");
-        grid.Add(panelProgress, row, 0, 1, 3);
-        grid.Add(buttonPanel, row, 0, 1, 3);
-
         Content = grid;
 
         UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
@@ -537,7 +130,436 @@ public class SpeechToTextWindow : Window
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 
-    private static Grid MakeConsoleLogAndBatchView(SpeechToTextViewModel vm)
+    private static TextBlock Label(string text) => UiUtil.MakeTextBlock(text);
+
+    private static StackPanel MakeSettingsPanel(SpeechToTextViewModel vm)
+    {
+        var panel = new StackPanel();
+        panel.Children.Add(MakeEngineSection(vm));
+        panel.Children.Add(MakeOptionsSection(vm));
+        panel.Children.Add(MakeOnlineSttSection(vm));
+        panel.Children.Add(MakeAdvancedSection(vm));
+        return panel;
+    }
+
+    /// <summary>
+    /// Engine (with web site, download and backend-status buttons), backend, model and language.
+    /// </summary>
+    private static Border MakeEngineSection(SpeechToTextViewModel vm)
+    {
+        var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithAccessibleName(Se.Language.General.Engine);
+        comboEngine.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboEngine.ItemTemplate = MakeEngineItemTemplate();
+        comboEngine.SelectionChanged += vm.OnEngineChanged;
+
+        // Force the combo to rebuild its row visuals after a re-download finishes, so the
+        // install-status dot reflects the freshly-written .installed.sha256 sidecar instead
+        // of the snapshot taken when each row was first realised.
+        vm.RefreshEngineCombo = () => comboEngine.ItemTemplate = MakeEngineItemTemplate();
+        var buttonEngineWebsite = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.ShowWebLinkCommand, IconNames.Web))
+            .WithAccessibleName($"{Se.Language.General.Engine} - {Se.Language.General.MoreInfo}");
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonEngineWebsite, Se.Language.General.MoreInfo);
+        }
+
+        var buttonEngineDownload = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.DownloadSelectedEngineCommand, IconNames.Download))
+            .BindIsVisible(vm, nameof(vm.IsEngineDownloadButtonVisible))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithAccessibleName(Se.Language.General.Download);
+        buttonEngineDownload.Bind(ToolTip.TipProperty, new Binding(nameof(vm.EngineDownloadHint))
+        {
+            Source = vm,
+            Mode = BindingMode.OneWay,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+        });
+
+        var buttonEngineSettings = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings))
+            .BindIsVisible(vm, nameof(vm.IsEngineSettingsButtonVisible))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithAccessibleName(Se.Language.Video.AudioToText.BackendAndUpdateStatus);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonEngineSettings, Se.Language.Video.AudioToText.BackendAndUpdateStatus);
+        }
+
+        var engineRow = SpeechToTextChrome.WithTrailing(comboEngine, buttonEngineWebsite, buttonEngineDownload, buttonEngineSettings);
+
+        var labelBackend = Label(Se.Language.General.Backend);
+        var comboWhisperCppBackend = UiUtil.MakeComboBox(vm.WhisperCppBackends, vm, nameof(vm.SelectedWhisperCppBackend))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .BindIsVisible(vm, nameof(vm.IsWhisperCppSelected))
+            .WithLabeledBy(labelBackend);
+        comboWhisperCppBackend.HorizontalAlignment = HorizontalAlignment.Stretch;
+        var comboCrispAsrBackend = UiUtil.MakeComboBox(vm.CrispAsrBackends, vm, nameof(vm.SelectedCrispAsrBackend))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected))
+            .WithLabeledBy(labelBackend);
+        comboCrispAsrBackend.HorizontalAlignment = HorizontalAlignment.Stretch;
+        var backends = new Panel { Children = { comboWhisperCppBackend, comboCrispAsrBackend } };
+        var rowBackend = EditorChrome.MakeLabeledRow(labelBackend, backends, LabelWidth)
+            .BindIsVisible(vm, nameof(vm.IsBackendSelectionVisible));
+
+        var labelModel = Label(Se.Language.General.Model);
+        var comboModel = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithLabeledBy(labelModel);
+        comboModel.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboModel.ItemTemplate = MakeModelItemTemplate();
+
+        var buttonModelDownload = EditorChrome.AsToolButton(UiUtil.MakeButtonBrowse(vm.DownloadModelCommand, accessibleName: Se.Language.General.Download))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .BindIsVisible(vm, nameof(vm.IsModelDownloadVisible));
+        var rowModel = EditorChrome.MakeLabeledRow(labelModel, SpeechToTextChrome.WithTrailing(comboModel, buttonModelDownload), LabelWidth)
+            .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
+
+        var labelLanguage = Label(Se.Language.Video.AudioToText.InputLanguage);
+        var comboLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithLabeledBy(labelLanguage);
+        comboLanguage.HorizontalAlignment = HorizontalAlignment.Stretch;
+        var rowLanguage = EditorChrome.MakeLabeledRow(labelLanguage, comboLanguage, LabelWidth)
+            .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible));
+
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(engineRow);
+        rows.Children.Add(rowBackend);
+        rows.Children.Add(rowModel);
+        rows.Children.Add(rowLanguage);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Engine, rows, first: true);
+    }
+
+    /// <summary>
+    /// Forced aligner, VAD and the on/off options (isolate speech, detect speakers, translate,
+    /// post-processing).
+    /// </summary>
+    private static Border MakeOptionsSection(SpeechToTextViewModel vm)
+    {
+        var labelForcedAligner = Label(Se.Language.Video.ForcedAligner);
+        var comboForcedAligner = UiUtil.MakeComboBox(vm.ForcedAligners, vm, nameof(vm.SelectedForcedAligner))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithLabeledBy(labelForcedAligner);
+        comboForcedAligner.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboForcedAligner.ItemTemplate = MakeForcedAlignerItemTemplate();
+        var buttonForcedAlignerDownload = EditorChrome.AsToolButton(UiUtil.MakeButtonBrowse(vm.DownloadForcedAlignerCommand, accessibleName: Se.Language.General.Download))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+        var rowForcedAligner = EditorChrome.MakeLabeledRow(labelForcedAligner, SpeechToTextChrome.WithTrailing(comboForcedAligner, buttonForcedAlignerDownload), LabelWidth)
+            .BindIsVisible(vm, nameof(vm.IsForcedAlignerVisible));
+
+        var labelVad = Label(Se.Language.Video.AudioToText.Vad);
+        var comboVad = UiUtil.MakeComboBox(vm.VadOptions, vm, nameof(vm.SelectedVadOption))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithLabeledBy(labelVad);
+        comboVad.HorizontalAlignment = HorizontalAlignment.Stretch;
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(labelVad, Se.Language.Video.AudioToText.VadHint);
+            ToolTip.SetTip(comboVad, Se.Language.Video.AudioToText.VadHint);
+        }
+
+        var rowVad = EditorChrome.MakeLabeledRow(labelVad, comboVad, LabelWidth)
+            .BindIsVisible(vm, nameof(vm.IsVadVisible));
+
+        Grid MakeSwitchRow(string property, string text, string? visibleProperty, string? hint, params Control[] trailing)
+        {
+            var toggle = EditorChrome.EnabledBy(EditorChrome.MakeSwitch(property, text, vm), vm, nameof(vm.IsTranscribeEnabled));
+            var label = Label(text);
+            if (hint != null && Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(label, hint);
+                ToolTip.SetTip(toggle, hint);
+            }
+
+            var row = EditorChrome.MakeSwitchRow(toggle, label, trailing);
+            if (visibleProperty != null)
+            {
+                row.BindIsVisible(vm, visibleProperty);
+            }
+
+            return row;
+        }
+
+        var buttonPostProcessing = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.ShowPostProcessingSettingsCommand, IconNames.Settings), 26)
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithAccessibleName(Se.Language.General.PostProcessing);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonPostProcessing, Se.Language.General.PostProcessing);
+        }
+
+        var switches = new StackPanel { Spacing = 6, Margin = new Thickness(0, 2, 0, 0) };
+        switches.Children.Add(MakeSwitchRow(nameof(vm.DoIsolateSpeech), Se.Language.Video.AudioToText.IsolateSpeech,
+            nameof(vm.IsCrispAsrSelected), Se.Language.Video.AudioToText.IsolateSpeechHint));
+        switches.Children.Add(MakeSwitchRow(nameof(vm.DoDetectSpeakers), Se.Language.Video.AudioToText.DetectSpeakers,
+            nameof(vm.IsDetectSpeakersVisible), Se.Language.Video.AudioToText.DetectSpeakersHint));
+        switches.Children.Add(MakeSwitchRow(nameof(vm.DoTranslateToEnglish), Se.Language.Video.AudioToText.TranslateToEnglish,
+            nameof(vm.IsTranslateVisible), null));
+        switches.Children.Add(MakeSwitchRow(nameof(vm.DoPostProcessing), Se.Language.General.PostProcessing,
+            null, null, buttonPostProcessing));
+
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(rowForcedAligner);
+        rows.Children.Add(rowVad);
+        rows.Children.Add(switches);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, rows);
+    }
+
+    /// <summary>
+    /// The online engines' settings (OpenAI-compatible, OpenRouter, DashScope, Google Cloud) -
+    /// only the selected engine's group is visible, and the section only for an online engine.
+    /// </summary>
+    private static Border MakeOnlineSttSection(SpeechToTextViewModel vm)
+    {
+        var groups = new StackPanel();
+        groups.Children.Add(MakeOnlineGroup(vm, nameof(vm.IsOpenAiCompatibleSttVisible), MakeOpenAiCompatibleSttRows(vm)));
+        groups.Children.Add(MakeOnlineGroup(vm, nameof(vm.IsOpenRouterSttVisible), MakeOpenRouterSttRows(vm)));
+        groups.Children.Add(MakeOnlineGroup(vm, nameof(vm.IsDashScopeSttVisible), MakeDashScopeSttRows(vm)));
+        groups.Children.Add(MakeOnlineGroup(vm, nameof(vm.IsGoogleCloudSttVisible), MakeGoogleCloudSttRows(vm)));
+
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Settings, groups);
+        section.Bind(Visual.IsVisibleProperty, new MultiBinding
+        {
+            Converter = BoolConverters.Or,
+            Bindings =
+            {
+                new Binding(nameof(vm.IsOpenAiCompatibleSttVisible)) { Source = vm },
+                new Binding(nameof(vm.IsOpenRouterSttVisible)) { Source = vm },
+                new Binding(nameof(vm.IsDashScopeSttVisible)) { Source = vm },
+                new Binding(nameof(vm.IsGoogleCloudSttVisible)) { Source = vm },
+            },
+        });
+        return section;
+    }
+
+    private static StackPanel MakeOnlineGroup(SpeechToTextViewModel vm, string visibleProperty, Control[] rows)
+    {
+        var group = new StackPanel { Spacing = 10 };
+        foreach (var row in rows)
+        {
+            group.Children.Add(row);
+        }
+
+        return group.BindIsVisible(vm, visibleProperty);
+    }
+
+    /// <summary>
+    /// An online-engine setting: label above a stretching field. The input is linked to its
+    /// visible label so a screen reader announces the label as the control's name instead of a
+    /// bare "edit"/"combo box" (#11745).
+    /// </summary>
+    private static StackPanel OnlineRow(string text, Control control)
+    {
+        var label = Label(text);
+        AutomationProperties.SetLabeledBy(control, label);
+        return SpeechToTextChrome.Stacked(label, control);
+    }
+
+    private static Grid OnlineSwitch(SpeechToTextViewModel vm, string property, string text, string? hint = null)
+    {
+        var toggle = EditorChrome.MakeSwitch(property, text, vm);
+        var label = Label(text);
+        if (hint != null && Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(toggle, hint);
+            ToolTip.SetTip(label, hint);
+        }
+
+        return EditorChrome.MakeSwitchRow(toggle, label);
+    }
+
+    private static TextBox OnlineText(SpeechToTextViewModel vm, string property)
+    {
+        return EditorChrome.AsTextField(new TextBox
+        {
+            DataContext = vm,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
+        });
+    }
+
+    private static NumericUpDown OnlineNumber(SpeechToTextViewModel vm, string property, double minimum, double maximum, string format, decimal increment = 1)
+    {
+        var field = EditorChrome.MakeField(property, minimum, maximum, 120, null, format);
+        field.DataContext = vm;
+        field.Increment = increment;
+        field.HorizontalAlignment = HorizontalAlignment.Left;
+        return field;
+    }
+
+    private static StackPanel OnlineApiKey(SpeechToTextViewModel vm, string property)
+    {
+        return SpeechToTextChrome.CompactApiKey(UiUtil.MakeApiKeyTextBox(SettingsWidth - 60, vm, property), SettingsWidth - 60);
+    }
+
+    private static Control[] MakeOpenAiCompatibleSttRows(SpeechToTextViewModel vm)
+    {
+        var textExtraHeaders = EditorChrome.AsTextField(new TextBox
+        {
+            DataContext = vm,
+            Height = 60,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            VerticalContentAlignment = VerticalAlignment.Top,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.OpenAiCompatibleSttExtraHeaders)) { Mode = BindingMode.TwoWay }
+        });
+
+        var comboAudioFormat = UiUtil.MakeComboBox(vm.OpenAiCompatibleSttAudioFormats, vm, nameof(vm.OpenAiCompatibleSttAudioFormat))
+            .WithMinWidth(160);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(comboAudioFormat, Se.Language.General.OpenAiCompatibleSttAudioFormatHint);
+        }
+
+        var numbers = new Grid
+        {
+            ColumnSpacing = 12,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
+        };
+        numbers.Add(OnlineRow(Se.Language.General.OpenAiCompatibleSttTimeout, OnlineNumber(vm, nameof(vm.OpenAiCompatibleSttTimeoutSeconds), 10, 3600, "F0")), 0, 0);
+        numbers.Add(OnlineRow(Se.Language.General.Temperature, OnlineNumber(vm, nameof(vm.OpenAiCompatibleSttTemperature), 0, 1, "F2", 0.1m)), 0, 1);
+
+        return new Control[]
+        {
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttEndpoint, OnlineText(vm, nameof(vm.OpenAiCompatibleSttUrl))),
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttApiKey, OnlineApiKey(vm, nameof(vm.OpenAiCompatibleSttApiKey))),
+            OnlineRow(Se.Language.General.Model, OnlineText(vm, nameof(vm.OpenAiCompatibleSttModel))),
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttLanguage, OnlineText(vm, nameof(vm.OpenAiCompatibleSttLanguage))),
+            numbers,
+            OnlineRow(Se.Language.General.Prompt, OnlineText(vm, nameof(vm.OpenAiCompatibleSttPrompt))),
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttExtraHeaders, textExtraHeaders),
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttAudioFormat, comboAudioFormat),
+            OnlineSwitch(vm, nameof(vm.OpenAiCompatibleSttStream), Se.Language.General.OpenAiCompatibleSttStream, Se.Language.General.OpenAiCompatibleSttStreamHint),
+        };
+    }
+
+    private static Control[] MakeOpenRouterSttRows(SpeechToTextViewModel vm)
+    {
+        var numbers = new Grid
+        {
+            ColumnSpacing = 12,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
+        };
+        numbers.Add(OnlineRow(Se.Language.General.OpenAiCompatibleSttTimeout, OnlineNumber(vm, nameof(vm.OpenRouterSttTimeoutSeconds), 10, 3600, "F0")), 0, 0);
+        numbers.Add(OnlineRow(Se.Language.General.Temperature, OnlineNumber(vm, nameof(vm.OpenRouterSttTemperature), 0, 1, "F2", 0.1m)), 0, 1);
+
+        return new Control[]
+        {
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttApiKey, OnlineApiKey(vm, nameof(vm.OpenRouterSttApiKey))),
+            OnlineRow(Se.Language.General.Model, OnlineText(vm, nameof(vm.OpenRouterSttModel))),
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttLanguage, OnlineText(vm, nameof(vm.OpenRouterSttLanguage))),
+            numbers,
+            OnlineRow(Se.Language.General.Prompt, OnlineText(vm, nameof(vm.OpenRouterSttPrompt))),
+        };
+    }
+
+    private static Control[] MakeDashScopeSttRows(SpeechToTextViewModel vm)
+    {
+        var comboRegion = UiUtil.MakeComboBox(vm.DashScopeSttRegions, vm, nameof(vm.DashScopeSttRegion))
+            .WithMinWidth(160);
+
+        return new Control[]
+        {
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttApiKey, OnlineApiKey(vm, nameof(vm.DashScopeSttApiKey))),
+            OnlineRow(Se.Language.General.Model, OnlineText(vm, nameof(vm.DashScopeSttModel))),
+            OnlineRow(Se.Language.General.DashScopeSttRegion, comboRegion),
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttLanguage, OnlineText(vm, nameof(vm.DashScopeSttLanguage))),
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttTimeout, OnlineNumber(vm, nameof(vm.DashScopeSttTimeoutSeconds), 30, 21600, "F0")),
+            OnlineSwitch(vm, nameof(vm.DashScopeSttEnableWords), Se.Language.General.DashScopeSttEnableWords),
+        };
+    }
+
+    private static Control[] MakeGoogleCloudSttRows(SpeechToTextViewModel vm)
+    {
+        var buttonBrowse = EditorChrome.AsToolButton(UiUtil.MakeButtonBrowse(vm.BrowseGoogleCloudSttKeyFileCommand, accessibleName: Se.Language.General.KeyFile));
+        var textKeyFile = OnlineText(vm, nameof(vm.GoogleCloudSttKeyFile));
+        var keyFile = SpeechToTextChrome.WithTrailing(textKeyFile, buttonBrowse);
+        var keyFileRow = SpeechToTextChrome.Stacked(Label(Se.Language.General.KeyFile), keyFile);
+        AutomationProperties.SetLabeledBy(textKeyFile, keyFileRow.Children[0]);
+
+        return new Control[]
+        {
+            keyFileRow,
+            OnlineRow(Se.Language.General.GoogleCloudSttProjectId, OnlineText(vm, nameof(vm.GoogleCloudSttProjectId))),
+            OnlineRow(Se.Language.General.Region, OnlineText(vm, nameof(vm.GoogleCloudSttRegion))),
+            OnlineRow(Se.Language.General.Model, OnlineText(vm, nameof(vm.GoogleCloudSttModel))),
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttLanguage, OnlineText(vm, nameof(vm.GoogleCloudSttLanguage))),
+            OnlineRow(Se.Language.General.GoogleCloudSttBucketName, OnlineText(vm, nameof(vm.GoogleCloudSttBucketName))),
+            OnlineSwitch(vm, nameof(vm.GoogleCloudSttDynamicBatching), Se.Language.General.GoogleCloudSttDynamicBatching),
+            OnlineRow(Se.Language.General.OpenAiCompatibleSttTimeout, OnlineNumber(vm, nameof(vm.GoogleCloudSttTimeoutSeconds), 30, 21600, "F0")),
+        };
+    }
+
+    /// <summary>
+    /// The engine's command line parameters, with the button that opens the advanced dialog.
+    /// </summary>
+    private static Border MakeAdvancedSection(SpeechToTextViewModel vm)
+    {
+        var buttonAdvancedSettings = EditorChrome.AsToolButton(UiUtil.MakeButton(vm.ShowAdvancedSettingsCommand, IconNames.Settings), 26)
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithAccessibleName(Se.Language.General.AdvancedSettings);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonAdvancedSettings, Se.Language.General.AdvancedSettings);
+        }
+
+        var textBoxAdvancedSettings = new TextBox
+        {
+            IsReadOnly = true,
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Padding = new Thickness(0),
+            MinHeight = 0,
+            TextWrapping = TextWrapping.Wrap,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        }.WithAccessibleName(Se.Language.General.AdvancedSettings);
+        textBoxAdvancedSettings.Bind(TextBox.TextProperty, new Binding
+        {
+            Path = nameof(vm.Parameters),
+            Mode = BindingMode.OneWay,
+            Source = vm,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+        });
+
+        return EditorChrome.MakeEditorSection(Se.Language.General.AdvancedSettings, textBoxAdvancedSettings, buttonAdvancedSettings)
+            .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
+    }
+
+    /// <summary>
+    /// The console log - and in batch mode the file list under it.
+    /// </summary>
+    private static Grid MakeLogPanel(SpeechToTextViewModel vm)
+    {
+        var buttonCopyConsoleLog = EditorChrome.AsToolButton(UiUtil.MakeButton(
+            vm.CopyConsoleLogCommand,
+            IconNames.Copy,
+            Se.Language.General.CopyTextToClipboard), 26);
+        vm.CopyConsoleLogButton = buttonCopyConsoleLog;
+
+        var body = new Panel();
+        body.Children.Add(MakeConsoleLogOnlyView(vm));
+        body.Children.Add(MakeConsoleLogAndBatchView(vm));
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+        grid.Add(SpeechToTextChrome.ListHeader(Se.Language.General.ConsoleLog, buttonCopyConsoleLog), 0, 0);
+        grid.Add(body, 1, 0);
+        return grid;
+    }
+
+    private static TextBox MakeConsoleLogTextBox(SpeechToTextViewModel vm)
     {
         var textBoxConsoleLog = new TextBox()
         {
@@ -546,7 +568,10 @@ public class SpeechToTextWindow : Window
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             IsReadOnly = true,
-            Margin = new Thickness(0, 0, 0, 10),
+            FontSize = 12,
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Padding = new Thickness(10, 8),
         };
         AutomationProperties.SetName(textBoxConsoleLog, Se.Language.General.ConsoleLog);
         textBoxConsoleLog.Bind(TextBox.TextProperty, new Binding
@@ -556,8 +581,13 @@ public class SpeechToTextWindow : Window
             Source = vm,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
         });
-        vm.TextBoxConsoleLogBatch = textBoxConsoleLog;
+        return textBoxConsoleLog;
+    }
 
+    private static Grid MakeConsoleLogAndBatchView(SpeechToTextViewModel vm)
+    {
+        var textBoxConsoleLog = MakeConsoleLogTextBox(vm);
+        vm.TextBoxConsoleLogBatch = textBoxConsoleLog;
 
         // No header sorting: the batch queue is processed top-to-bottom (the run aliases
         // BatchItems and walks it in list order), so the list order is meaningful.
@@ -594,45 +624,26 @@ public class SpeechToTextWindow : Window
         AutomationProperties.SetName(dataGrid, Se.Language.General.BatchMode);
         vm.BatchGrid = dataGrid;
 
-        var buttonAdd = UiUtil.MakeButton(Se.Language.General.AddDotDotDot, vm.AddCommand).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveCommand).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-
-        var checkAddLanguageCode = UiUtil.MakeCheckBox(Se.Language.Video.AudioToText.AddLanguageCodeToFileName, vm, nameof(vm.AddLanguageCodeToFileName))
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        checkAddLanguageCode.Margin = new Thickness(10, 0, 0, 0);
-        if (Se.Settings.Appearance.ShowHints)
+        Button Action(string icon, string name, System.Windows.Input.ICommand command)
         {
-            ToolTip.SetTip(checkAddLanguageCode, Se.Language.Video.AudioToText.AddLanguageCodeToFileNameHint);
+            return EditorChrome.CreateToolButton(icon, name, command, 26)
+                .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
         }
 
-        var panelFileControls = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children =
-            {
-                buttonAdd,
-                buttonRemove,
-                buttonClear,
-                checkAddLanguageCode,
-            }
-        };
+        var buttonAdd = Action("fa-solid fa-plus", Se.Language.General.AddDotDotDot, vm.AddCommand);
+        var buttonRemove = Action("fa-solid fa-minus", Se.Language.General.Remove, vm.RemoveCommand);
+        var buttonClear = Action("fa-solid fa-trash", Se.Language.General.Clear, vm.ClearCommand);
 
-        var gridBatch = new Grid
+        var labelAddLanguageCode = Label(Se.Language.Video.AudioToText.AddLanguageCodeToFileName);
+        var switchAddLanguageCode = EditorChrome.EnabledBy(EditorChrome.MakeSwitch(nameof(vm.AddLanguageCodeToFileName), Se.Language.Video.AudioToText.AddLanguageCodeToFileName, vm), vm, nameof(vm.IsTranscribeEnabled));
+        if (Se.Settings.Appearance.ShowHints)
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Batch view
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Batch view buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+            ToolTip.SetTip(switchAddLanguageCode, Se.Language.Video.AudioToText.AddLanguageCodeToFileNameHint);
+            ToolTip.SetTip(labelAddLanguageCode, Se.Language.Video.AudioToText.AddLanguageCodeToFileNameHint);
+        }
+
+        var rowAddLanguageCode = EditorChrome.MakeSwitchRow(switchAddLanguageCode, labelAddLanguageCode);
+        rowAddLanguageCode.Margin = new Thickness(0, 8, 0, 0);
 
         // hack to make drag and drop work on the grid - also on empty rows
         var dropHost = new Border
@@ -644,302 +655,156 @@ public class SpeechToTextWindow : Window
         dropHost.AddHandler(DragDrop.DragOverEvent, vm.FileGridOnDragOver, RoutingStrategies.Bubble);
         dropHost.AddHandler(DragDrop.DropEvent, vm.FileGridOnDrop, RoutingStrategies.Bubble);
 
-        gridBatch.Add(dropHost, 0, 0);
-        gridBatch.Add(panelFileControls, 1, 0);
-
-        var borderBatch = UiUtil.MakeBorderForControl(gridBatch);
+        var batchHeader = SpeechToTextChrome.ListHeader(Se.Language.General.BatchMode, buttonAdd, buttonRemove, buttonClear);
+        batchHeader.Margin = new Thickness(0, 14, 0, 8);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Console log
+                new RowDefinition { Height = GridLength.Auto }, // Batch header + actions
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Batch view
+                new RowDefinition { Height = GridLength.Auto }, // Add language code
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = new Thickness(10),
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(textBoxConsoleLog, 0, 0);
-        grid.Add(borderBatch, 1, 0);
+        grid.Add(EditorChrome.MakeListFrame(textBoxConsoleLog), 0, 0);
+        grid.Add(batchHeader, 1, 0);
+        grid.Add(EditorChrome.MakeListFrame(dropHost), 2, 0);
+        grid.Add(rowAddLanguageCode, 3, 0);
 
         grid.WithBindVisible(vm, nameof(vm.IsBatchMode));
 
         return grid;
     }
 
-    private static TextBox MakeConsoleLogOnlyView(SpeechToTextViewModel vm)
+    private static Border MakeConsoleLogOnlyView(SpeechToTextViewModel vm)
     {
-        var textBoxConsoleLog = new TextBox()
-        {
-            Width = double.NaN,
-            Height = double.NaN,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            IsReadOnly = true,
-            Margin = new Thickness(10),
-        };
-        AutomationProperties.SetName(textBoxConsoleLog, Se.Language.General.ConsoleLog);
-        textBoxConsoleLog.Bind(TextBox.TextProperty, new Binding
-        {
-            Path = nameof(vm.ConsoleLog),
-            Mode = BindingMode.OneWay,
-            Source = vm,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-        });
-        textBoxConsoleLog.WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance);
+        var textBoxConsoleLog = MakeConsoleLogTextBox(vm);
         vm.TextBoxConsoleLogSingle = textBoxConsoleLog;
 
-        return textBoxConsoleLog;
+        var frame = EditorChrome.MakeListFrame(textBoxConsoleLog);
+        frame.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsBatchMode)) { Source = vm, Converter = InverseBooleanConverter.Instance });
+        return frame;
     }
 
-    private static (Control Label, Control Control)[] MakeOpenAiCompatibleSttRows(SpeechToTextViewModel vm)
+    private Border MakeProgressView(SpeechToTextViewModel vm)
     {
-        Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
-
-        TextBox MakeText(string property, double width)
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.WithPlatformProgress(this, nameof(vm.IsTranscribeEnabled), InverseBooleanConverter.Instance);
+        AutomationProperties.SetName(progressBar, Se.Language.Video.AudioToText.Transcribe);
+        progressBar.Margin = new Thickness(0);
+        progressBar.Width = double.NaN;
+        progressBar.VerticalAlignment = VerticalAlignment.Center;
+        progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding
         {
-            var tb = new TextBox
+            Path = nameof(vm.ProgressValue),
+            Mode = BindingMode.OneWay,
+            Source = vm,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+        });
+
+        var progressText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
+        var elapsedTimeText = EditorChrome.MakeBoundHint(nameof(vm.ElapsedText), 12);
+        var estimatedTimeText = EditorChrome.MakeBoundHint(nameof(vm.EstimatedText), 12);
+
+        var times = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 16, VerticalAlignment = VerticalAlignment.Center };
+        times.Children.Add(elapsedTimeText);
+        times.Children.Add(estimatedTimeText);
+
+        var grid = new Grid
+        {
+            ColumnSpacing = 12,
+            RowSpacing = 4,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto) },
+        };
+        grid.Add(progressBar, 0, 0);
+        grid.Add(times, 0, 1);
+        grid.Add(progressText, 1, 0, 1, 2);
+
+        // Shown while the view model shows its progress (ProgressOpacity), like the old fading
+        // progress bar and texts.
+        return new Border
+        {
+            Name = ProgressPanelName,
+            Child = grid,
+            Background = EditorChrome.StatusBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 8),
+            [!Border.IsVisibleProperty] = new Binding(nameof(vm.ProgressOpacity))
             {
-                DataContext = vm,
-                Width = width,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0, 10, 0, 0),
-                [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
+                Source = vm,
+                Converter = new FuncValueConverter<double, bool>(opacity => opacity > 0),
+            },
+        };
+    }
+
+    private static Border MakeButtonBar(SpeechToTextViewModel vm)
+    {
+        // Single / batch switch. Without a video only batch mode is possible, and the view model
+        // hides both (IsBatchModeVisible and IsSingleModeVisible false).
+        Button Mode(string text, System.Windows.Input.ICommand command, bool batch)
+        {
+            var button = new Button
+            {
+                Content = new TextBlock { Text = text, FontSize = 12.5, Margin = new Thickness(12, 0) },
+                Height = 28,
+                Command = command,
+                VerticalContentAlignment = VerticalAlignment.Center,
             };
-            return tb.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
+            button.Classes.Add("tool");
+            AutomationProperties.SetName(button, text);
+
+            void Update()
+            {
+                button.Classes.Set("active", vm.IsBatchMode == batch);
+                button.IsEnabled = vm.IsTranscribeEnabled;
+            }
+
+            Update();
+            vm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName is nameof(vm.IsBatchMode) or nameof(vm.IsTranscribeEnabled))
+                {
+                    Update();
+                }
+            };
+            return button;
         }
 
-        var numericTimeout = new NumericUpDown
+        var modeButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
+        modeButtons.Children.Add(Mode(Se.Language.General.SingleMode, vm.SingleModeCommand, false));
+        modeButtons.Children.Add(Mode(Se.Language.General.BatchMode, vm.BatchModeCommand, true));
+        var modes = new Border
         {
-            DataContext = vm,
-            Width = 120,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(2),
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            Minimum = 10,
-            Maximum = 3600,
-            FormatString = "F0",
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.OpenAiCompatibleSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
-        }.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
-
-        var numericTemperature = new NumericUpDown
-        {
-            DataContext = vm,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            Minimum = 0,
-            Maximum = 1,
-            Increment = 0.1m,
-            FormatString = "F2",
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.OpenAiCompatibleSttTemperature)) { Mode = BindingMode.TwoWay }
-        }.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
-
-        var textExtraHeaders = new TextBox
-        {
-            DataContext = vm,
-            Width = 400,
-            Height = 60,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            AcceptsReturn = true,
-            TextWrapping = TextWrapping.Wrap,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.OpenAiCompatibleSttExtraHeaders)) { Mode = BindingMode.TwoWay }
-        }.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
-
-        var checkStream = UiUtil.MakeCheckBox(vm, nameof(vm.OpenAiCompatibleSttStream))
-            .BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
-        ToolTip.SetTip(checkStream, Se.Language.General.OpenAiCompatibleSttStreamHint);
-
-        var comboAudioFormat = UiUtil.MakeComboBox(vm.OpenAiCompatibleSttAudioFormats, vm, nameof(vm.OpenAiCompatibleSttAudioFormat))
-            .WithMinWidth(120)
-            .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
-        ToolTip.SetTip(comboAudioFormat, Se.Language.General.OpenAiCompatibleSttAudioFormatHint);
-
-        return new (Control, Control)[]
-        {
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttEndpoint), MakeText(nameof(vm.OpenAiCompatibleSttUrl), 400)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), UiUtil.MakeApiKeyTextBox(400, vm, nameof(vm.OpenAiCompatibleSttApiKey), nameof(vm.IsOpenAiCompatibleSttVisible)).WithMarginTop(10)),
-            (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.OpenAiCompatibleSttModel), 250)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.OpenAiCompatibleSttLanguage), 150)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTemperature), numericTemperature),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttPrompt), MakeText(nameof(vm.OpenAiCompatibleSttPrompt), 400)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttExtraHeaders), textExtraHeaders),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttAudioFormat), comboAudioFormat),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttStream), checkStream),
+            Child = modeButtons,
         };
-    }
-
-    private static (Control Label, Control Control)[] MakeOpenRouterSttRows(SpeechToTextViewModel vm)
-    {
-        Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
-
-        TextBox MakeText(string property, double width)
+        modes.Bind(Visual.IsVisibleProperty, new MultiBinding
         {
-            var tb = new TextBox
+            Converter = BoolConverters.Or,
+            Bindings =
             {
-                DataContext = vm,
-                Width = width,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0, 10, 0, 0),
-                [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
-            };
-            return tb.BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
-        }
+                new Binding(nameof(vm.IsBatchModeVisible)) { Source = vm },
+                new Binding(nameof(vm.IsSingleModeVisible)) { Source = vm },
+            },
+        });
 
-        var numericTimeout = new NumericUpDown
-        {
-            DataContext = vm,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            Minimum = 10,
-            Maximum = 3600,
-            FormatString = "F0",
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.OpenRouterSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
-        }.BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
-
-        var numericTemperature = new NumericUpDown
-        {
-            DataContext = vm,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            Minimum = 0,
-            Maximum = 1,
-            Increment = 0.1m,
-            FormatString = "F2",
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.OpenRouterSttTemperature)) { Mode = BindingMode.TwoWay }
-        }.BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
-
-        return new (Control, Control)[]
-        {
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), UiUtil.MakeApiKeyTextBox(400, vm, nameof(vm.OpenRouterSttApiKey), nameof(vm.IsOpenRouterSttVisible)).WithMarginTop(10)),
-            (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.OpenRouterSttModel), 250)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.OpenRouterSttLanguage), 150)),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTemperature), numericTemperature),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttPrompt), MakeText(nameof(vm.OpenRouterSttPrompt), 400)),
-        };
-    }
-
-    private static (Control Label, Control Control)[] MakeDashScopeSttRows(SpeechToTextViewModel vm)
-    {
-        Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
-
-        TextBox MakeText(string property, double width)
-        {
-            var tb = new TextBox
-            {
-                DataContext = vm,
-                Width = width,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0, 10, 0, 0),
-                [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
-            };
-            return tb.BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
-        }
-
-        var comboRegion = UiUtil.MakeComboBox(vm.DashScopeSttRegions, vm, nameof(vm.DashScopeSttRegion))
-            .WithMinWidth(150)
-            .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
-
-        var checkEnableWords = UiUtil.MakeCheckBox(vm, nameof(vm.DashScopeSttEnableWords))
-            .BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
-
-        var numericTimeout = new NumericUpDown
-        {
-            DataContext = vm,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            Minimum = 30,
-            Maximum = 21600,
-            FormatString = "F0",
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.DashScopeSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
-        }.BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
-
-        return new (Control, Control)[]
-        {
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), UiUtil.MakeApiKeyTextBox(400, vm, nameof(vm.DashScopeSttApiKey), nameof(vm.IsDashScopeSttVisible)).WithMarginTop(10)),
-            (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.DashScopeSttModel), 250)),
-            (MakeLabel(Se.Language.General.DashScopeSttRegion), comboRegion),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.DashScopeSttLanguage), 150)),
-            (MakeLabel(Se.Language.General.DashScopeSttEnableWords), checkEnableWords),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
-        };
-    }
-
-    private static (Control Label, Control Control)[] MakeGoogleCloudSttRows(SpeechToTextViewModel vm)
-    {
-        Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
-
-        TextBox MakeText(string property, double width) => new TextBox
-        {
-            DataContext = vm,
-            Width = width,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
-        };
-
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseGoogleCloudSttKeyFileCommand, accessibleName: Se.Language.General.KeyFile);
-        buttonBrowse.Margin = new Thickness(5, 10, 0, 0);
-        var keyFilePanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { MakeText(nameof(vm.GoogleCloudSttKeyFile), 400), buttonBrowse }
-        }.BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
-
-        var numericTimeout = new NumericUpDown
-        {
-            DataContext = vm,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
-            Minimum = 30,
-            Maximum = 21600,
-            FormatString = "F0",
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.GoogleCloudSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
-        }.BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
-
-        var checkDynamicBatching = UiUtil.MakeCheckBox(vm, nameof(vm.GoogleCloudSttDynamicBatching))
-            .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible));
-
-        return new (Control, Control)[]
-        {
-            (MakeLabel(Se.Language.General.KeyFile), keyFilePanel),
-            (MakeLabel(Se.Language.General.GoogleCloudSttProjectId), MakeText(nameof(vm.GoogleCloudSttProjectId), 250).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
-            (MakeLabel(Se.Language.General.Region), MakeText(nameof(vm.GoogleCloudSttRegion), 150).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
-            (MakeLabel(Se.Language.General.Model), MakeText(nameof(vm.GoogleCloudSttModel), 250).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.GoogleCloudSttLanguage), 150).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
-            (MakeLabel(Se.Language.General.GoogleCloudSttBucketName), MakeText(nameof(vm.GoogleCloudSttBucketName), 250).BindIsVisible(vm, nameof(vm.IsGoogleCloudSttVisible))),
-            (MakeLabel(Se.Language.General.GoogleCloudSttDynamicBatching), checkDynamicBatching),
-            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
-        };
+        var transcribeButton = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.Video.AudioToText.Transcribe, vm.TranscribeCommand))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+        var bar = EditorChrome.MakeFlushButtonBar(modes, UiUtil.MakeButtonCancel(vm.CancelCommand), transcribeButton);
+        bar.Name = ButtonBarName;
+        return bar;
     }
 
     // Engine combo item template: each row gets a small install-status dot (green = ready,

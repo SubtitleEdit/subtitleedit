@@ -46,7 +46,9 @@ public partial class AssSetBackgroundViewModel : ObservableObject
     [ObservableProperty] private Color _shadowColor = Color.FromRgb(128, 128, 128);
     [ObservableProperty] private int _outlineWidth = 2;
     [ObservableProperty] private int _shadowDistance = 1;
-    [ObservableProperty] private int _boxStyleIndex; // 0=square, 1=rounded, 2=circle
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsRadiusEnabled), nameof(BoxStyleName))]
+    private int _boxStyleIndex; // 0=square, 1=rounded, 2=circle
     [ObservableProperty] private ObservableCollection<string> _boxStyles = [];
     [ObservableProperty] private int _radius = 10;
 
@@ -75,6 +77,13 @@ public partial class AssSetBackgroundViewModel : ObservableObject
 
     public Subtitle ResultSubtitle => _subtitle;
 
+    /// <summary>
+    /// Only the rounded corners style uses the radius.
+    /// </summary>
+    public bool IsRadiusEnabled => BoxStyleIndex == 1;
+
+    public string BoxStyleName => BoxStyleIndex >= 0 && BoxStyleIndex < BoxStyles.Count ? BoxStyles[BoxStyleIndex] : string.Empty;
+
     public AssSetBackgroundViewModel()
     {
         BoxStyles.Add(Se.Language.Assa.ProgressBarSquareCorners);
@@ -89,6 +98,18 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxTornPaperDouble);
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxStarburst);
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxScroll);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxPill);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxCutCorners);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxSlanted);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxTicket);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxSpeechBubble);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxRibbon);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxBrushStroke);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxCornerBrackets);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxUnderline);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxFrame);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxArrowTag);
+        BoxStyles.Add(Se.Language.Assa.BackgroundBoxSideBar);
 
         VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
 
@@ -112,6 +133,8 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         BoxStyleIndex = Se.Settings.Assa.BackgroundBoxesStyleIndex;
         Radius = Se.Settings.Assa.BackgroundBoxesStyleRadius;
 
+        OutlineWidth = Se.Settings.Assa.BackgroundBoxesOutlineWidth;
+        ShadowDistance = Se.Settings.Assa.BackgroundBoxesShadowDistance;
         BoxColor = Se.Settings.Assa.BackgroundBoxesBoxColor.FromHexToColor();
         ShadowColor = Se.Settings.Assa.BackgroundBoxesShadowColor.FromHexToColor();
         OutlineColor = Se.Settings.Assa.BackgroundBoxesOutlineColor.FromHexToColor();
@@ -131,6 +154,8 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         Se.Settings.Assa.BackgroundBoxesStyleIndex = BoxStyleIndex;
         Se.Settings.Assa.BackgroundBoxesStyleRadius = Radius;
 
+        Se.Settings.Assa.BackgroundBoxesOutlineWidth = OutlineWidth;
+        Se.Settings.Assa.BackgroundBoxesShadowDistance = ShadowDistance;
         Se.Settings.Assa.BackgroundBoxesBoxColor = BoxColor.FromColorToHex();
         Se.Settings.Assa.BackgroundBoxesShadowColor = ShadowColor.FromColorToHex();
         Se.Settings.Assa.BackgroundBoxesOutlineColor = OutlineColor.FromColorToHex();
@@ -315,18 +340,24 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         };
     }
 
-    private string GenerateBackgroundBox(int left, int right, int top, int bottom)
+    private string GenerateBackgroundBox(int left, int right, int top, int bottom) =>
+        GenerateBackgroundBox(BoxStyleIndex, Radius, left, right, top, bottom);
+
+    /// <summary>
+    /// The box drawing for a style (index in <see cref="BoxStyles"/>) - also draws the style gallery thumbnails.
+    /// </summary>
+    internal static string GenerateBackgroundBox(int boxStyleIndex, int radius, int left, int right, int top, int bottom)
     {
         var width = right - left;
         var height = bottom - top;
 
-        if (BoxStyleIndex == 1 && Radius > 0) // Rounded corners
+        if (boxStyleIndex == 1 && radius > 0) // Rounded corners
         {
-            var r = Math.Min(Radius, Math.Min(width / 2, height / 2));
+            var r = Math.Min(radius, Math.Min(width / 2, height / 2));
             return
                 $"{{\\p1}}m {left + r} {top} l {right - r} {top} b {right} {top} {right} {top + r} {right} {top + r} l {right} {bottom - r} b {right} {bottom} {right - r} {bottom} {right - r} {bottom} l {left + r} {bottom} b {left} {bottom} {left} {bottom - r} {left} {bottom - r} l {left} {top + r} b {left} {top} {left + r} {top} {left + r} {top}{{\\p0}}";
         }
-        else if (BoxStyleIndex == 2) // Circle
+        else if (boxStyleIndex == 2) // Circle
         {
             var centerX = (left + right) / 2;
             var centerY = (top + bottom) / 2;
@@ -341,46 +372,240 @@ public partial class AssSetBackgroundViewModel : ObservableObject
             return
                 $"{{\\p1}}m {centerX} {centerY - radiusY} b {centerX + ox} {centerY - radiusY} {centerX + radiusX} {centerY - oy} {centerX + radiusX} {centerY} b {centerX + radiusX} {centerY + oy} {centerX + ox} {centerY + radiusY} {centerX} {centerY + radiusY} b {centerX - ox} {centerY + radiusY} {centerX - radiusX} {centerY + oy} {centerX - radiusX} {centerY} b {centerX - radiusX} {centerY - oy} {centerX - ox} {centerY - radiusY} {centerX} {centerY - radiusY}{{\\p0}}";
         }
-        else if (BoxStyleIndex == 3) // Spikes
+        else if (boxStyleIndex == 3) // Spikes
         {
             return GenerateSpikesBox(left, right, top, bottom);
         }
-        else if (BoxStyleIndex == 4) // Bubbles
+        else if (boxStyleIndex == 4) // Bubbles
         {
             return GenerateBubblesBox(left, right, top, bottom);
         }
 
-        else if (BoxStyleIndex == 5) // Wave
+        else if (boxStyleIndex == 5) // Wave
         {
             return GenerateWaveBox(left, right, top, bottom);
         }
-        else if (BoxStyleIndex == 6) // Hexagon
+        else if (boxStyleIndex == 6) // Hexagon
         {
             return GenerateHexagonBox(left, right, top, bottom);
         }
-        else if (BoxStyleIndex == 7) // Torn paper
+        else if (boxStyleIndex == 7) // Torn paper
         {
             return GenerateTornPaperBox(left, right, top, bottom);
         }
-        else if (BoxStyleIndex == 8) // Cloud
+        else if (boxStyleIndex == 8) // Cloud
         {
             return GenerateCloudBox(left, right, top, bottom);
         }
-        else if (BoxStyleIndex == 9) // Torn paper (top & bottom)
+        else if (boxStyleIndex == 9) // Torn paper (top & bottom)
         {
             return GenerateTornPaperDoubleBox(left, right, top, bottom);
         }
-        else if (BoxStyleIndex == 10) // Starburst
+        else if (boxStyleIndex == 10) // Starburst
         {
             return GenerateStarburstBox(left, right, top, bottom);
         }
-        else if (BoxStyleIndex == 11) // Scroll / Parchment
+        else if (boxStyleIndex == 11) // Scroll / Parchment
         {
             return GenerateScrollBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 12) // Pill: fully round ends
+        {
+            return GenerateBackgroundBox(1, Math.Max(1, height / 2), left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 13)
+        {
+            return GenerateCutCornersBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 14)
+        {
+            return GenerateSlantedBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 15)
+        {
+            return GenerateTicketBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 16)
+        {
+            return GenerateSpeechBubbleBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 17)
+        {
+            return GenerateRibbonBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 18)
+        {
+            return GenerateBrushStrokeBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 19)
+        {
+            return GenerateCornerBracketsBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 20)
+        {
+            return GenerateUnderlineBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 21)
+        {
+            return GenerateFrameBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 22)
+        {
+            return GenerateArrowTagBox(left, right, top, bottom);
+        }
+        else if (boxStyleIndex == 23)
+        {
+            return GenerateSideBarBox(left, right, top, bottom);
         }
 
         // Square corners (default)
         return $"{{\\p1}}m {left} {top} l {right} {top} {right} {bottom} {left} {bottom}{{\\p0}}";
+    }
+
+    private static string GenerateCutCornersBox(int left, int right, int top, int bottom)
+    {
+        var c = Math.Max(2, Math.Min((bottom - top) / 3, (right - left) / 4));
+        return $"{{\\p1}}m {left + c} {top} l {right - c} {top} {right} {top + c} {right} {bottom - c} {right - c} {bottom} {left + c} {bottom} {left} {bottom - c} {left} {top + c}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// A parallelogram leaning right, wide enough that the text stays inside.
+    /// </summary>
+    private static string GenerateSlantedBox(int left, int right, int top, int bottom)
+    {
+        var s = Math.Max(2, (bottom - top) * 35 / 100);
+        return $"{{\\p1}}m {left} {top} l {right + s} {top} {right} {bottom} {left - s} {bottom}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// A ticket: half-round notches cut into the middle of both ends.
+    /// </summary>
+    private static string GenerateTicketBox(int left, int right, int top, int bottom)
+    {
+        var cy = (top + bottom) / 2;
+        var n = Math.Max(2, (bottom - top) / 4);
+        var k = (int)Math.Round(n * 1.333);
+        return $"{{\\p1}}m {left} {top} l {right} {top} {right} {cy - n} b {right - k} {cy - n} {right - k} {cy + n} {right} {cy + n} " +
+               $"l {right} {bottom} {left} {bottom} {left} {cy + n} b {left + k} {cy + n} {left + k} {cy - n} {left} {cy - n}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// A rounded box with a tail under its left part, pointing down at the speaker.
+    /// </summary>
+    private static string GenerateSpeechBubbleBox(int left, int right, int top, int bottom)
+    {
+        var width = right - left;
+        var height = bottom - top;
+        var r = Math.Max(1, Math.Min(18, Math.Min(width / 4, height / 3)));
+        var tailLeft = left + width / 5;
+        var tailRight = tailLeft + Math.Max(8, width / 10);
+        var tipX = tailLeft - Math.Max(4, width / 30);
+        var tipY = bottom + Math.Max(10, height * 45 / 100);
+        return $"{{\\p1}}m {left + r} {top} l {right - r} {top} b {right} {top} {right} {top} {right} {top + r} " +
+               $"l {right} {bottom - r} b {right} {bottom} {right} {bottom} {right - r} {bottom} " +
+               $"l {tailRight} {bottom} {tipX} {tipY} {tailLeft} {bottom} {left + r} {bottom} b {left} {bottom} {left} {bottom} {left} {bottom - r} " +
+               $"l {left} {top + r} b {left} {top} {left} {top} {left + r} {top}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// A banner with V-cut ends, reaching out past the text on both sides.
+    /// </summary>
+    private static string GenerateRibbonBox(int left, int right, int top, int bottom)
+    {
+        var d = Math.Max(4, (bottom - top) * 40 / 100);
+        var cy = (top + bottom) / 2;
+        return $"{{\\p1}}m {left - d} {top} l {right + d} {top} {right} {cy} {right + d} {bottom} {left - d} {bottom} {left} {cy}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// A rough paint stroke: uneven top and bottom edges and ragged ends. The roughness is seeded
+    /// by the box size, so the preview doesn't jitter and lines of equal size match.
+    /// </summary>
+    private static string GenerateBrushStrokeBox(int left, int right, int top, int bottom)
+    {
+        var width = right - left;
+        var height = bottom - top;
+        var random = new Random(width * 7919 + height);
+        var amplitude = Math.Max(2, height / 12);
+        var step = Math.Max(8, height / 3);
+        var sb = new StringBuilder();
+        sb.Append($"m {left} {top + random.Next(0, amplitude)} l ");
+        for (var x = left + step; x < right; x += step)
+        {
+            sb.Append($"{x} {top + random.Next(-amplitude, amplitude + 1)} ");
+        }
+
+        // Ragged right end
+        for (var i = 0; i <= 3; i++)
+        {
+            sb.Append($"{right + random.Next(-amplitude, amplitude * 2 + 1)} {top + height * i / 3} ");
+        }
+
+        for (var x = right - step; x > left; x -= step)
+        {
+            sb.Append($"{x} {bottom + random.Next(-amplitude, amplitude + 1)} ");
+        }
+
+        // Ragged left end
+        for (var i = 3; i >= 1; i--)
+        {
+            sb.Append($"{left - random.Next(-amplitude, amplitude * 2 + 1)} {top + height * i / 3} ");
+        }
+
+        return $"{{\\p1}}{sb.ToString().TrimEnd()}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// Four L-shaped corner marks framing the text, no fill in between.
+    /// </summary>
+    private static string GenerateCornerBracketsBox(int left, int right, int top, int bottom)
+    {
+        var t = Math.Max(3, (bottom - top) / 12);
+        var a = Math.Max(t * 2, Math.Min(right - left, bottom - top) / 3);
+        return "{\\p1}" +
+               $"m {left} {top} l {left + a} {top} {left + a} {top + t} {left + t} {top + t} {left + t} {top + a} {left} {top + a} " +
+               $"m {right} {top} l {right} {top + a} {right - t} {top + a} {right - t} {top + t} {right - a} {top + t} {right - a} {top} " +
+               $"m {right} {bottom} l {right - a} {bottom} {right - a} {bottom - t} {right - t} {bottom - t} {right - t} {bottom - a} {right} {bottom - a} " +
+               $"m {left} {bottom} l {left} {bottom - a} {left + t} {bottom - a} {left + t} {bottom - t} {left + a} {bottom - t} {left + a} {bottom}" +
+               "{\\p0}";
+    }
+
+    /// <summary>
+    /// Just a bar along the bottom of the padded box, under the text.
+    /// </summary>
+    private static string GenerateUnderlineBox(int left, int right, int top, int bottom)
+    {
+        var t = Math.Max(4, (bottom - top) / 10);
+        return $"{{\\p1}}m {left} {bottom - t} l {right} {bottom - t} {right} {bottom} {left} {bottom}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// Only the border: the inner rectangle is wound the other way, so it is a hole.
+    /// </summary>
+    private static string GenerateFrameBox(int left, int right, int top, int bottom)
+    {
+        var t = Math.Max(3, (bottom - top) / 10);
+        return $"{{\\p1}}m {left} {top} l {right} {top} {right} {bottom} {left} {bottom} " +
+               $"m {left + t} {top + t} l {left + t} {bottom - t} {right - t} {bottom - t} {right - t} {top + t}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// A label tag: square on the left, pointed on the right.
+    /// </summary>
+    private static string GenerateArrowTagBox(int left, int right, int top, int bottom)
+    {
+        var d = Math.Max(4, (bottom - top) / 2);
+        var cy = (top + bottom) / 2;
+        return $"{{\\p1}}m {left} {top} l {right} {top} {right + d} {cy} {right} {bottom} {left} {bottom}{{\\p0}}";
+    }
+
+    /// <summary>
+    /// A vertical accent bar at the left of the padded box, lower-third style.
+    /// </summary>
+    private static string GenerateSideBarBox(int left, int right, int top, int bottom)
+    {
+        var t = Math.Max(4, (bottom - top) / 8);
+        return $"{{\\p1}}m {left} {top} l {left + t} {top} {left + t} {bottom} {left} {bottom}{{\\p0}}";
     }
 
     private static string GenerateWaveBox(int left, int right, int top, int bottom)

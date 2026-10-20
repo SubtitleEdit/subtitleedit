@@ -724,25 +724,10 @@ public class WavePeakGenerator2 : IDisposable
 
     #endregion Movie Hasher
 
-    public static bool IsFileValidForVisualizer(string fileName)
-    {
-        if (!fileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        using (var wpg = new WavePeakGenerator2(fileName))
-        {
-            return wpg.IsSupported;
-        }
-    }
-
     private readonly Stream _stream;
     public readonly WaveHeader2 Header;
 
     private delegate int ReadSampleDataValue(byte[] data, ref int index);
-
-    private delegate void WriteSampleDataValue(byte[] buffer, int offset, int value);
 
     /// <summary>
     /// Constructor
@@ -1202,32 +1187,6 @@ public class WavePeakGenerator2 : IDisposable
         return (int)(Math.Clamp(value, -1.0, 1.0) * int.MaxValue);
     }
 
-    private static void WriteValue8Bit(byte[] buffer, int offset, int value)
-    {
-        buffer[offset] = (byte)(value - sbyte.MinValue);
-    }
-
-    private static void WriteValue16Bit(byte[] buffer, int offset, int value)
-    {
-        buffer[offset] = (byte)value;
-        buffer[offset + 1] = (byte)(value >> 8);
-    }
-
-    private static void WriteValue24Bit(byte[] buffer, int offset, int value)
-    {
-        buffer[offset] = (byte)value;
-        buffer[offset + 1] = (byte)(value >> 8);
-        buffer[offset + 2] = (byte)(value >> 16);
-    }
-
-    private static void WriteValue32Bit(byte[] buffer, int offset, int value)
-    {
-        buffer[offset] = (byte)value;
-        buffer[offset + 1] = (byte)(value >> 8);
-        buffer[offset + 2] = (byte)(value >> 16);
-        buffer[offset + 3] = (byte)(value >> 24);
-    }
-
     private double GetSampleScale()
     {
         // Float samples arrive already normalized to the 32-bit integer range from the readers
@@ -1264,23 +1223,6 @@ public class WavePeakGenerator2 : IDisposable
                 return ReadValue32Bit;
             default:
                 throw new InvalidDataException("Cannot read bits per sample of " + Header.BitsPerSample);
-        }
-    }
-
-    private WriteSampleDataValue GetSampleDataWriter()
-    {
-        switch (Header.BytesPerSample)
-        {
-            case 1:
-                return WriteValue8Bit;
-            case 2:
-                return WriteValue16Bit;
-            case 3:
-                return WriteValue24Bit;
-            case 4:
-                return WriteValue32Bit;
-            default:
-                throw new InvalidDataException("Cannot write bits per sample of " + Header.BitsPerSample);
         }
     }
 

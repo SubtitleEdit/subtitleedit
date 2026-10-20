@@ -139,7 +139,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             return id;
         }
 
-        private void ReplaceNames1Remove(IEnumerable<string> nameList, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        [ThreadStatic]
+        private static List<int> _nameCandidates;
+
+        private void ReplaceNames1Remove(IEnumerable<string> nameList, NameListIndex nameIndex, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
         {
             if (Post.StartsWith('.'))
             {
@@ -150,55 +153,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             string lower = StrippedText.ToLowerInvariant();
             GetNameStartMask(lower, out var startMaskLow, out var startMaskHigh);
             int idName = 0;
-            foreach (string name in nameList)
+            if (nameIndex != null)
             {
-                // A name can only be replaced where it starts at a name start (see "startOk"
-                // below), so a name whose first letter is at none of them can be skipped without
-                // searching - the name list has thousands of entries, and this loop used to scan
-                // the line once for every one of them.
-                if (name.Length > 0 && name[0] < 128 && !MayStartName(name[0], startMaskLow, startMaskHigh))
+                // Only the names that are a token of the line (or contain a separator) can match.
+                var candidates = _nameCandidates ?? (_nameCandidates = new List<int>());
+                nameIndex.GetCandidates(lower, candidates);
+                var names = nameIndex.Names;
+                foreach (var position in candidates)
                 {
-                    continue;
+                    ReplaceName(names[position], ref lower, startMaskLow, startMaskHigh, ref idName, replaceIds, replaceNames, originalNames);
                 }
-
-                // "lower" is already lower case, so an ignore-case search finds the same
-                // positions as the lower-cased name did - without allocating one string per name.
-                int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
-                while (start >= 0 && start < lower.Length)
+            }
+            else
+            {
+                foreach (string name in nameList)
                 {
-                    bool startOk = start == 0 || IsNameStartBoundary(lower[start - 1]);
-
-                    if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.AsSpan(start).StartsWith("don't".AsSpan(), StringComparison.Ordinal))
-                    {
-                        startOk = false;
-                    }
-
-                    if (startOk)
-                    {
-                        int end = start + name.Length;
-                        bool endOk = end <= lower.Length;
-                        if (endOk)
-                        {
-                            endOk = end == lower.Length || NameEndChars.Contains(lower[end]);
-                        }
-
-                        if (endOk && StrippedText.Length >= start + name.Length)
-                        {
-                            string originalName = StrippedText.Substring(start, name.Length);
-                            originalNames.Add(originalName);
-                            StrippedText = StrippedText.Remove(start, name.Length);
-                            StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name, idName++));
-                            lower = StrippedText.ToLowerInvariant();
-                        }
-                    }
-                    if (start + 3 > lower.Length)
-                    {
-                        start = lower.Length + 1;
-                    }
-                    else
-                    {
-                        start = lower.IndexOf(name, start + 3, StringComparison.OrdinalIgnoreCase);
-                    }
+                    ReplaceName(name, ref lower, startMaskLow, startMaskHigh, ref idName, replaceIds, replaceNames, originalNames);
                 }
             }
 
@@ -206,6 +176,58 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 Post = "." + Post;
                 StrippedText = StrippedText.TrimEnd('.');
+            }
+        }
+
+        private void ReplaceName(string name, ref string lower, ulong startMaskLow, ulong startMaskHigh, ref int idName, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        {
+            // A name can only be replaced where it starts at a name start (see "startOk"
+            // below), so a name whose first letter is at none of them can be skipped without
+            // searching - the name list has thousands of entries, and this loop used to scan
+            // the line once for every one of them.
+            if (name.Length > 0 && name[0] < 128 && !MayStartName(name[0], startMaskLow, startMaskHigh))
+            {
+                return;
+            }
+
+            // "lower" is already lower case, so an ignore-case search finds the same
+            // positions as the lower-cased name did - without allocating one string per name.
+            int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+            while (start >= 0 && start < lower.Length)
+            {
+                bool startOk = start == 0 || IsNameStartBoundary(lower[start - 1]);
+
+                if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.AsSpan(start).StartsWith("don't".AsSpan(), StringComparison.Ordinal))
+                {
+                    startOk = false;
+                }
+
+                if (startOk)
+                {
+                    int end = start + name.Length;
+                    bool endOk = end <= lower.Length;
+                    if (endOk)
+                    {
+                        endOk = end == lower.Length || NameEndChars.Contains(lower[end]);
+                    }
+
+                    if (endOk && StrippedText.Length >= start + name.Length)
+                    {
+                        string originalName = StrippedText.Substring(start, name.Length);
+                        originalNames.Add(originalName);
+                        StrippedText = StrippedText.Remove(start, name.Length);
+                        StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name, idName++));
+                        lower = StrippedText.ToLowerInvariant();
+                    }
+                }
+                if (start + 3 > lower.Length)
+                {
+                    start = lower.Length + 1;
+                }
+                else
+                {
+                    start = lower.IndexOf(name, start + 3, StringComparison.OrdinalIgnoreCase);
+                }
             }
         }
 
@@ -307,10 +329,24 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly char[] ExpectedCharsArray = { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' };
         public void FixCasing(IEnumerable<string> nameList, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine, double millisecondsFromLast = 0)
         {
+            FixCasing(nameList, null, changeNameCases, makeUppercaseAfterBreak, checkLastLine, lastLine, millisecondsFromLast);
+        }
+
+        /// <summary>
+        /// Same as the name list overload, but only searches the names that can match the line -
+        /// build the <see cref="NameListIndex"/> once and reuse it for every line.
+        /// </summary>
+        public void FixCasing(NameListIndex nameIndex, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine, double millisecondsFromLast = 0)
+        {
+            FixCasing(null, nameIndex, changeNameCases, makeUppercaseAfterBreak, checkLastLine, lastLine, millisecondsFromLast);
+        }
+
+        private void FixCasing(IEnumerable<string> nameList, NameListIndex nameIndex, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine, double millisecondsFromLast)
+        {
             var replaceIds = new List<string>();
             var replaceNames = new List<string>();
             var originalNames = new List<string>();
-            ReplaceNames1Remove(nameList, replaceIds, replaceNames, originalNames);
+            ReplaceNames1Remove(nameList, nameIndex, replaceIds, replaceNames, originalNames);
             ReplaceAssaTagsRemove(replaceIds, replaceNames, originalNames);
 
             if (checkLastLine && ShouldStartWithUpperCase(lastLine, millisecondsFromLast))
@@ -415,7 +451,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                     lastWasBreak = true;
                                 }
                             }
-                            else if (s == ']' && idx == -1 && Pre.IndexOf('[') >= 0)
+                            else if (s == ']' && idx == -1 && Pre.Contains('['))
                             { // [ Motor roaring ] Hallo!
                                 lastWasBreak = true;
                             }
@@ -436,7 +472,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                                 }
                             }
                         }
-                        else if (s == '-' && Pre.IndexOf('-') >= 0)
+                        else if (s == '-' && Pre.Contains('-'))
                         {
                             if (sb.EndsWith(NewLineDash))
                             {

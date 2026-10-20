@@ -7,6 +7,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
 
+/// <summary>
+/// Teletext line/alignment, in the editor look (see <see cref="EditorChrome"/>): the opt-in
+/// edit rows in one section, the view options as switches below.
+/// </summary>
 public class PickTeletextAlignmentWindow : Window
 {
     public PickTeletextAlignmentWindow(PickTeletextAlignmentViewModel vm)
@@ -16,12 +20,13 @@ public class PickTeletextAlignmentWindow : Window
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 520;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
         var lineCheckBox = MakeApplyCheckBox(Se.Language.General.TeletextLine, nameof(vm.ApplyTeletextLine));
-        var lineBox = MakeLineBox(1, 23, nameof(vm.TeletextLine));
-        lineBox.HorizontalAlignment = HorizontalAlignment.Right;
+        var lineBox = MakeLineBox(1, 23, nameof(vm.TeletextLine), Se.Language.General.TeletextLine);
+        lineBox.HorizontalAlignment = HorizontalAlignment.Left;
 
         var alignmentCheckBox = MakeApplyCheckBox(Se.Language.General.Alignment, nameof(vm.ApplyHorizontalAlignment));
         var alignmentBox = new ComboBox
@@ -33,54 +38,39 @@ public class PickTeletextAlignmentWindow : Window
                 Se.Language.General.Right,
             },
             Width = 150,
-            HorizontalAlignment = HorizontalAlignment.Right,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
+        Avalonia.Automation.AutomationProperties.SetName(alignmentBox, Se.Language.General.Alignment);
         alignmentBox.Bind(ComboBox.SelectedItemProperty, new Binding(nameof(vm.HorizontalAlignment))
         {
             Mode = BindingMode.TwoWay,
         });
 
         var shiftCheckBox = MakeApplyCheckBox(Se.Language.General.ShiftLineBy, nameof(vm.ApplyLineShift));
-        var shiftBox = MakeLineBox(-22, 22, nameof(vm.LineShift));
-        shiftBox.HorizontalAlignment = HorizontalAlignment.Right;
+        var shiftBox = MakeLineBox(-22, 22, nameof(vm.LineShift), Se.Language.General.ShiftLineBy);
+        shiftBox.HorizontalAlignment = HorizontalAlignment.Left;
 
         var replaceLineCheckBox = MakeApplyCheckBox(Se.Language.General.ReplaceLine, nameof(vm.ApplyLineReplace));
         var replaceLinePanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
-            HorizontalAlignment = HorizontalAlignment.Right,
+            HorizontalAlignment = HorizontalAlignment.Left,
             Children =
             {
-                new Label
-                {
-                    Content = Se.Language.General.From + ":",
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
-                MakeLineBox(1, 23, nameof(vm.ReplaceFromLine)),
-                new Label
-                {
-                    Content = Se.Language.General.To + ":",
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
-                MakeLineBox(1, 23, nameof(vm.ReplaceToLine)),
+                EditorChrome.MakeDimLabel(Se.Language.General.From + ":", new Thickness(0)),
+                MakeLineBox(1, 23, nameof(vm.ReplaceFromLine), Se.Language.General.From),
+                EditorChrome.MakeDimLabel(Se.Language.General.To + ":", new Thickness(0)),
+                MakeLineBox(1, 23, nameof(vm.ReplaceToLine), Se.Language.General.To),
             },
         };
 
-        var previewCheckBox = UiUtil.MakeCheckBox(Se.Language.General.PreviewAlignmentInListView, vm, nameof(vm.Preview));
-        var showTeletextCheckBox = UiUtil.MakeCheckBox(Se.Language.General.ShowTeletext, vm, nameof(vm.ShowTeletextColumn));
+        // View options, separated from the opt-in edit rows above.
+        var previewSwitch = EditorChrome.MakeSwitchRow(nameof(vm.Preview), Se.Language.General.PreviewAlignmentInListView);
+        var showTeletextSwitch = EditorChrome.MakeSwitchRow(nameof(vm.ShowTeletextColumn), Se.Language.General.ShowTeletext);
 
-        var buttonPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Children =
-            {
-                UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand).WithMinWidth(100),
-                UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand).WithMinWidth(100),
-            },
-        };
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand));
+        var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand);
 
         var grid = new Grid
         {
@@ -90,19 +80,14 @@ public class PickTeletextAlignmentWindow : Window
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Auto),
-                new RowDefinition(GridLength.Auto),
-                new RowDefinition(GridLength.Auto),
-                new RowDefinition(GridLength.Auto),
-                new RowDefinition(GridLength.Auto),
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition(GridLength.Auto),
-                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
+            ColumnSpacing = 16,
+            RowSpacing = 8,
         };
 
         grid.Add(lineCheckBox, 0, 0);
@@ -117,13 +102,22 @@ public class PickTeletextAlignmentWindow : Window
         grid.Add(replaceLineCheckBox, 3, 0);
         grid.Add(replaceLinePanel, 3, 1);
 
-        // View options, separated from the opt-in edit rows above.
-        grid.Add(UiUtil.MakeHorizontalSeparator(margin: new Thickness(0, 2)), 4, 0, 1, 2);
-        grid.Add(previewCheckBox, 5, 0, 1, 2);
-        grid.Add(showTeletextCheckBox, 6, 0, 1, 2);
-        grid.Add(buttonPanel, 7, 1);
+        var viewPanel = new StackPanel
+        {
+            Spacing = 8,
+            Children = { previewSwitch, showTeletextSwitch },
+        };
 
-        Content = grid;
+        var sections = new StackPanel
+        {
+            Children =
+            {
+                EditorChrome.MakeEditorSection(Se.Language.General.TeletextAlignment, grid, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.General.Preview, viewPanel),
+            },
+        };
+
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, lineBox);
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -139,6 +133,7 @@ public class PickTeletextAlignmentWindow : Window
             Content = header + ":",
             VerticalAlignment = VerticalAlignment.Center,
         };
+        Avalonia.Automation.AutomationProperties.SetName(checkBox, header);
 
         checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(applyPropertyName)
         {
@@ -148,7 +143,7 @@ public class PickTeletextAlignmentWindow : Window
         return checkBox;
     }
 
-    private static NumericUpDown MakeLineBox(decimal minimum, decimal maximum, string propertyName)
+    private static NumericUpDown MakeLineBox(decimal minimum, decimal maximum, string propertyName, string accessibleName)
     {
         var numericUpDown = new NumericUpDown
         {
@@ -157,6 +152,8 @@ public class PickTeletextAlignmentWindow : Window
             Increment = 1,
             Width = 120,
         };
+        numericUpDown.Classes.Add("field"); // the compact field, not the theme's big spinner
+        Avalonia.Automation.AutomationProperties.SetName(numericUpDown, accessibleName);
 
         numericUpDown.Bind(NumericUpDown.ValueProperty, new Binding(propertyName)
         {

@@ -1,8 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LibSETests.SubtitleFormats;
 
@@ -403,6 +400,94 @@ public class ScenaristClosedCaptionsTest
 
         Assert.Contains("9470 9470", scc); // row 15, column 0
         Assert.DoesNotContain("94fe", scc); // row 15, column 28
+    }
+
+    // #16038: every caption's load was placed "pre-roll" frames before its start without
+    // looking at the caption before it, so timecodes went backwards and a load (which starts
+    // with 94ae, erase non-displayed memory) could wipe the previous caption before its 942f.
+    [Fact]
+    public void SaveKeepsTimelineMonotonicAndLoadsAfterPreviousDisplay()
+    {
+        WithFrameRate(29.97, () =>
+        {
+            var format = new ScenaristClosedCaptionsDropFrame();
+            var subtitle = new Subtitle();
+            format.LoadSubtitle(subtitle, File.ReadAllLines(Path.Combine("Files", "scc_16038_pop_on.scc")).ToList(), "scc_16038_pop_on.scc");
+            Assert.Equal(73, subtitle.Paragraphs.Count);
+
+            var scc = format.ToText(subtitle, "test");
+            var lines = scc.SplitToLines().Where(l => l.Contains('\t')).ToList();
+            var previousEnd = -1;
+            var displayEnd = -1;
+            foreach (var line in lines)
+            {
+                var parts = line.Split('\t');
+                var frame = LabelToFrame(parts[0]);
+                var codes = parts[1].Split(' ');
+                Assert.True(frame >= previousEnd, $"Line overlaps or goes back in time: {line}");
+                if (codes[0] == "94ae")
+                {
+                    Assert.True(frame >= displayEnd, $"Load before the previous caption was displayed: {line}");
+                }
+
+                if (codes[0] == "942f")
+                {
+                    displayEnd = frame + codes.Length;
+                }
+
+                previousEnd = frame + codes.Length;
+            }
+
+            var reloaded = new Subtitle();
+            format.LoadSubtitle(reloaded, scc.SplitToLines(), "test.scc");
+            Assert.Equal(subtitle.Paragraphs.Count, reloaded.Paragraphs.Count);
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+            {
+                Assert.Equal(Utilities.UnbreakLine(subtitle.Paragraphs[i].Text), Utilities.UnbreakLine(reloaded.Paragraphs[i].Text));
+            }
+        });
+    }
+
+    [Fact]
+    public void SaveDropsClearWhenNextCaptionFollowsDirectly()
+    {
+        WithFrameRate(30, () =>
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("One", 1000, 1967));
+            subtitle.Paragraphs.Add(new Paragraph("Two", 2000, 3000));
+            var scc = new ScenaristClosedCaptions().ToText(subtitle, "test");
+
+            Assert.Equal(1, scc.Split(new[] { "942c 942c" }, StringSplitOptions.None).Length - 1);
+        });
+    }
+
+    [Fact]
+    public void SaveKeepsClearBetweenCaptionsWithGap()
+    {
+        WithFrameRate(30, () =>
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("One", 1000, 2000));
+            subtitle.Paragraphs.Add(new Paragraph("Two", 4000, 5000));
+            var format = new ScenaristClosedCaptions();
+            var scc = format.ToText(subtitle, "test");
+
+            Assert.Equal(2, scc.Split(new[] { "942c 942c" }, StringSplitOptions.None).Length - 1);
+            Assert.Contains("00:00:02:00\t942c 942c", scc);
+            var reloaded = new Subtitle();
+            format.LoadSubtitle(reloaded, scc.SplitToLines(), "test.scc");
+            Assert.Equal(2, reloaded.Paragraphs.Count);
+            Assert.Equal(1000, reloaded.Paragraphs[0].StartTime.TotalMilliseconds, 0);
+            Assert.Equal(2000, reloaded.Paragraphs[0].EndTime.TotalMilliseconds, 0);
+            Assert.Equal(4000, reloaded.Paragraphs[1].StartTime.TotalMilliseconds, 0);
+        });
+    }
+
+    private static int LabelToFrame(string timeCode)
+    {
+        var arr = timeCode.Split(':', ';');
+        return ((int.Parse(arr[0]) * 60 + int.Parse(arr[1])) * 60 + int.Parse(arr[2])) * 30 + int.Parse(arr[3]);
     }
 }
 

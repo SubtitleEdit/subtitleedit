@@ -1,10 +1,10 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Styling;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Progress;
@@ -30,32 +30,26 @@ public class ShotChangesWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).BindIsEnabled(vm, nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).BindIsEnabled(vm, nameof(vm.IsGenerating), InverseBooleanConverter.Instance).AsPrimary();
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress, while generating
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
         var tabControl = new TabControl
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+            Padding = new Thickness(0),
             Items =
             {
                 new TabItem
@@ -71,8 +65,14 @@ public class ShotChangesWindow : Window
             }
         };
 
-        grid.Add(tabControl, 0);
-        grid.Add(panelButtons, 1);
+        grid.Add(new Border
+        {
+            Background = EditorChrome.PanelBrush,
+            Padding = new Thickness(8, 4, 8, 0),
+            Child = tabControl,
+        }, 0);
+        grid.Add(MakeProgressView(vm), 1);
+        grid.Add(EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk), 2);
 
         Content = grid;
 
@@ -86,26 +86,8 @@ public class ShotChangesWindow : Window
         });
     }
 
-    private Grid MakeGenerateView(ShotChangesViewModel vm)
+    private static Grid MakeGenerateView(ShotChangesViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
         var tableView = TableViewExtras.MakeTableView();
         tableView.Height = double.NaN; // auto size inside scroll viewer
         tableView.Margin = new Thickness(2);
@@ -130,7 +112,6 @@ public class ShotChangesWindow : Window
         });
         vm.FfmpegLinesGrid = tableView;
 
-        var labelSensitivity = UiUtil.MakeLabel(Se.Language.General.Sensitivity);
         // Same range and step as the SE 4 numeric box (0.05 - 0.95 in 0.01 steps). A floor of 0.1
         // silently dropped about half the cuts for users who relied on 0.05 (issue #15190).
         var sliderSensitivity = new Slider
@@ -154,108 +135,122 @@ public class ShotChangesWindow : Window
             Source = vm,
             Mode = BindingMode.OneWay,
         });
+        AutomationProperties.SetName(sliderSensitivity, Se.Language.General.Sensitivity);
         var labelSensitivityValue = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(ShotChangesViewModel.Sensitivity), new DoubleToTwoDecimalConverter());
-        var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.ShotChanges.GenerateShotChangesWithFfmpeg, vm.GenerateShotChangesFfmpegCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        labelSensitivityValue.MinWidth = 36;
+        labelSensitivityValue.FontSize = 12.5;
+        var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.ShotChanges.GenerateShotChangesWithFfmpeg, vm.GenerateShotChangesFfmpegCommand)
+            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
+        buttonGenerate.Margin = new Thickness(12, 0, 0, 0);
         var panelSensitivity = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 5,
+            Spacing = 8,
             Children =
             {
-                labelSensitivity,
+                EditorChrome.MakeDimLabel(Se.Language.General.Sensitivity, new Thickness(0)),
                 sliderSensitivity,
                 labelSensitivityValue,
                 buttonGenerate,
             }
         };
 
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.WithPlatformProgress(this, nameof(vm.IsGenerating));
-        progressBar.MinWidth = 400;
-        progressBar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.ProgressValue)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged };
-        var progressText = UiUtil.MakeLabel().WithBindText(vm, nameof(ShotChangesViewModel.ProgressText)).WithAlignmentCenter();
-        var gridProgress = new Grid
-        {
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            RowSpacing = 5,
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-        };
-        gridProgress.Add(progressBar, 0);
-        gridProgress.Add(progressText, 1);
-
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(tableView), 0);
-        grid.Add(panelSensitivity, 1);
-        grid.Add(gridProgress, 2);
-
-        return grid;
-    }
-
-    private static Grid MakeImportView(ShotChangesViewModel vm)
-    {
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
+        };
+        grid.Add(EditorChrome.MakeListPane(Se.Language.General.ShotChanges, tableView, margin: new Thickness(6, 12, 6, 12)), 0);
+        var settings = EditorChrome.MakeEditorSection(Se.Language.General.Settings, panelSensitivity);
+        settings.Padding = new Thickness(6, 12, 6, 14);
+        grid.Add(settings, 1);
+
+        return grid;
+    }
+
+    /// <summary>
+    /// Progress bar and text in a strip above the buttons, while ffmpeg looks for shot changes.
+    /// </summary>
+    private Border MakeProgressView(ShotChangesViewModel vm)
+    {
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.WithPlatformProgress(this, nameof(vm.IsGenerating));
+        progressBar.VerticalAlignment = VerticalAlignment.Center;
+        progressBar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.ProgressValue)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged };
+        var progressText = EditorChrome.MakeBoundHint(nameof(ShotChangesViewModel.ProgressText), 12);
+        progressText.MinWidth = 60;
+        var gridProgress = new Grid
+        {
+            ColumnSpacing = 12,
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        gridProgress.Add(progressBar, 0, 0);
+        gridProgress.Add(progressText, 0, 1);
 
-        var buttonImport = UiUtil.MakeButton(Se.Language.Video.ShotChanges.ImportShotChangesFromFile, vm.ImportFromTextFileCommand).WithLeftAlignment();
+        var strip = EditorChrome.MakeProgressStrip(gridProgress);
+        strip.Bind(IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
+        return strip;
+    }
 
-        var labelTimeCodeFormat = UiUtil.MakeLabel(Se.Language.Video.ShotChanges.TimeCodeFormatColon);
+    private static Grid MakeImportView(ShotChangesViewModel vm)
+    {
+        var buttonImport = EditorChrome.MakeActionButton("fa-solid fa-file-import", Se.Language.Video.ShotChanges.ImportShotChangesFromFile, vm.ImportFromTextFileCommand);
+
         var radioButtonFrames = UiUtil.MakeRadioButton(Se.Language.General.Frames, vm, nameof(ShotChangesViewModel.TimeCodeFrames), "TimeCode");
         var radioButtonSeconds = UiUtil.MakeRadioButton(Se.Language.General.Seconds, vm, nameof(ShotChangesViewModel.TimeCodeSeconds), "TimeCode");
         var radioButtonMilliseconds = UiUtil.MakeRadioButton(Se.Language.General.Milliseconds, vm, nameof(ShotChangesViewModel.TimeCodeMilliseconds), "TimeCode");
         var radioButtonTHhMmSsMs = UiUtil.MakeRadioButton(Se.Language.General.HoursMinutesSecondsMilliseconds, vm, nameof(ShotChangesViewModel.TimeCodeHhMmSsMs), "TimeCode");
 
-        var panelTimeCodeFormat = new StackPanel
+        var panelTimeCodeFormat = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 10,
+            ItemSpacing = 14,
             Children =
             {
-                labelTimeCodeFormat,
+                EditorChrome.MakeDimLabel(Se.Language.Video.ShotChanges.TimeCodeFormatColon, new Thickness(0)),
                 radioButtonFrames,
                 radioButtonSeconds,
                 radioButtonMilliseconds,
                 radioButtonTHhMmSsMs,
             }
         };
+        foreach (var radioButton in new[] { radioButtonFrames, radioButtonSeconds, radioButtonMilliseconds, radioButtonTHhMmSsMs })
+        {
+            radioButton.FontSize = 12.5;
+        }
 
         var textBoxImport = new TextBox
         {
             Width = double.NaN,
             Height = double.NaN,
             IsReadOnly = true,
+            BorderThickness = new Thickness(0),
+            Background = Brushes.Transparent,
         };
         textBoxImport.Bind(TextBox.TextProperty, new Binding(nameof(ShotChangesViewModel.ImportText)) { Source = vm, Mode = BindingMode.TwoWay });
         textBoxImport.WithAccessibleName(Se.Language.Video.ShotChanges.ImportShotChanges); // the tab header; the box has no label (#12087)
 
-        grid.Add(textBoxImport, 0);
-        grid.Add(panelTimeCodeFormat, 1);
-        grid.Add(buttonImport, 2);
-
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        grid.Add(EditorChrome.MakeListPane(Se.Language.General.ShotChanges, EditorChrome.MakeListFrame(textBoxImport), buttonImport, new Thickness(6, 12, 6, 12)), 0);
+        var settings = EditorChrome.MakeEditorSection(Se.Language.General.Settings, panelTimeCodeFormat);
+        settings.Padding = new Thickness(6, 12, 6, 14);
+        grid.Add(settings, 1);
 
         return grid;
     }

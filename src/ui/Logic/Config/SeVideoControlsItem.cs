@@ -30,6 +30,9 @@ public class SeVideoControlsItem
         [
             new SeVideoControlsItem { Type = SeVideoControlsItemType.Play, SortOrder = 10 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.Stop, SortOrder = 20 },
+            new SeVideoControlsItem { Type = SeVideoControlsItemType.PreviousSubtitle, IsVisible = false, SortOrder = 22 },
+            new SeVideoControlsItem { Type = SeVideoControlsItemType.NextSubtitle, IsVisible = false, SortOrder = 24 },
+            new SeVideoControlsItem { Type = SeVideoControlsItemType.ToggleSubtitles, IsVisible = false, SortOrder = 26 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.FullScreen, SortOrder = 30 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.PositionSlider, SortOrder = 40 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.Volume, SortOrder = 50 },
@@ -42,7 +45,8 @@ public class SeVideoControlsItem
     /// <summary>
     /// Returns the items in display order with exactly one entry per type: unknown and duplicate
     /// entries (hand-edited settings file) are dropped and types missing from an older settings
-    /// file are appended with their defaults.
+    /// file are added with their defaults, right after the item they follow in the defaults
+    /// (appended when there is none).
     /// </summary>
     public static List<SeVideoControlsItem> Normalize(IEnumerable<SeVideoControlsItem>? items)
     {
@@ -55,12 +59,27 @@ public class SeVideoControlsItem
             }
         }
 
-        foreach (var item in MakeDefaults())
+        var defaults = MakeDefaults();
+        for (var i = 0; i < defaults.Count; i++)
         {
-            if (!result.Exists(p => p.Type == item.Type))
+            var item = defaults[i];
+            if (result.Exists(p => p.Type == item.Type))
             {
-                result.Add(item);
+                continue;
             }
+
+            var insertAt = result.Count;
+            for (var j = i - 1; j >= 0; j--)
+            {
+                var index = result.FindIndex(p => p.Type == defaults[j].Type);
+                if (index >= 0)
+                {
+                    insertAt = index + 1;
+                    break;
+                }
+            }
+
+            result.Insert(insertAt, item);
         }
 
         for (var i = 0; i < result.Count; i++)

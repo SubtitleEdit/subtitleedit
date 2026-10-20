@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Options.CustomErrorRules;
 using Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 using Nikse.SubtitleEdit.Features.Options.Settings.MinGapCalculate;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
@@ -102,6 +103,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ContinuationStyleDisplay _continuationStyle;
     [ObservableProperty] private ObservableCollection<CpsLineLengthStrategyDisplay> _cpsLineLengthStrategies;
     [ObservableProperty] private CpsLineLengthStrategyDisplay _cpsLineLengthStrategy;
+    [ObservableProperty] private string _cpsLineLengthIgnoreTagsRegex = string.Empty;
     [ObservableProperty] private ObservableCollection<string> _fonts;
     [ObservableProperty] private string _mpvPreviewFontName;
     [ObservableProperty] private int _mpvPreviewFontSize;
@@ -137,10 +139,17 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsMsMode))]
     [NotifyPropertyChangedFor(nameof(MinGapLabel))]
+    [NotifyPropertyChangedFor(nameof(GapRangeLabel))]
     private bool _useFrameMode;
 
     [ObservableProperty] private ObservableCollection<TimeCodeModeDisplay> _timeCodeModes;
-    [ObservableProperty] private TimeCodeModeDisplay _selectedTimeCodeMode;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsFramesTimeCodeMode))]
+    private TimeCodeModeDisplay _selectedTimeCodeMode;
+
+    [ObservableProperty] private bool _frameModeSnapToVideoFrames;
+
+    public bool IsFramesTimeCodeMode => SelectedTimeCodeMode?.Mode == TimeCodeMode.Frames;
 
     // Frames and frame numbers are both frame mode (frame stepping, snapping, min gap in frames);
     // frame numbers only changes how a time code is shown and typed.
@@ -153,7 +162,11 @@ public partial class SettingsViewModel : ObservableObject
     public string MinGapLabel => UseFrameMode
         ? Se.Language.Options.Settings.MinGapFrames
         : Se.Language.Options.Settings.MinGapMs;
+    public string GapRangeLabel => UseFrameMode
+        ? Se.Language.Options.Settings.GapRangeFrames
+        : Se.Language.Options.Settings.GapRangeMs;
     [ObservableProperty] private bool _textBoxLimitNewLines;
+    [ObservableProperty] private bool _textBoxAutoWrapWhileTyping;
     [ObservableProperty] private bool _autoSave;
     [ObservableProperty] private bool _autoBackupOn;
     [ObservableProperty] private int? _autoBackupIntervalMinutes;
@@ -204,6 +217,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _defaultSaveLocationCustomFolder = string.Empty;
     [ObservableProperty] private bool _isDefaultSaveLocationCustomFolderEnabled;
     [ObservableProperty] private string _selectedSaveAsBehaviorType;
+    [ObservableProperty] private ObservableCollection<FileChangedOutsideActionDisplay> _fileChangedOutsideActions;
+    [ObservableProperty] private FileChangedOutsideActionDisplay _selectedFileChangedOutsideAction;
 
     [ObservableProperty] private ObservableCollection<string> _saveAsAppendLanguageCode;
     [ObservableProperty] private string _selectedSaveAsAppendLanguageCode;
@@ -250,6 +265,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _textBoxButtonShowColor;
     [ObservableProperty] private bool _textBoxButtonShowRemoveFormatting;
     [ObservableProperty] private bool _textBoxButtonShowAiAssistant;
+    [ObservableProperty] private bool _textBoxButtonShowRecordSpeech;
 
     [ObservableProperty] private bool _colorDurationTooShort;
     [ObservableProperty] private bool _colorDurationTooLong;
@@ -263,6 +279,13 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _colorWordsPerMinute;
     [ObservableProperty] private bool _colorOverlap;
     [ObservableProperty] private bool _colorGapTooShort;
+    [ObservableProperty] private bool _colorGapInRange;
+    [ObservableProperty] private int? _gapRangeMinMs;
+    [ObservableProperty] private int? _gapRangeMaxMs;
+    [ObservableProperty] private int? _gapRangeMinFrames;
+    [ObservableProperty] private int? _gapRangeMaxFrames;
+    [ObservableProperty] private bool _colorCustomErrorRules;
+    private List<SeCustomErrorRule> _customErrorRules = new();
     [ObservableProperty] private Color _errorColor;
 
     [ObservableProperty] private ObservableCollection<VideoPlayerItem> _videoPlayers;
@@ -474,6 +497,13 @@ public partial class SettingsViewModel : ObservableObject
     /// </summary>
     public bool SettingsImported { get; private set; }
 
+    /// <summary>
+    /// True once an import or a reset has replaced the settings wholesale. The main window then
+    /// applies the layout sizes and the waveform zoom *from* the settings instead of carrying its
+    /// current on-screen state over them, which is what a plain OK does (#16213).
+    /// </summary>
+    public bool SettingsReplaced { get; private set; }
+
     public Window? Window { get; internal set; }
     public ScrollViewer ScrollView { get; internal set; }
     public List<SettingsSection> Sections { get; internal set; }
@@ -530,13 +560,16 @@ public partial class SettingsViewModel : ObservableObject
         ];
         SelectedUpdateChannel = UpdateChannels[0];
 
-        Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel"];
+        Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel", "Nord", "Midnight Cinema", "Sakura"];
         SelectedTheme = Themes[0];
 
         // Themes.zip is unpacked into the data folder at start-up; if that failed (or has not run)
         // the folder is missing, which must not take the whole Settings window down with it.
         var iconFolders = Directory.Exists(Se.ThemesFolder)
-            ? Directory.GetDirectories(Se.ThemesFolder).Select(p => Path.GetFileName(p)).ToList()
+            ? Directory.GetDirectories(Se.ThemesFolder)
+                // Nord's folder holds only background art - not an icon set to pick
+                .Where(p => File.Exists(Path.Combine(p, "Open.png")))
+                .Select(p => Path.GetFileName(p)).ToList()
             : new List<string>();
         iconFolders.Insert(0, Se.Language.General.Auto);
         IconThemes = new ObservableCollection<string>(iconFolders);
@@ -688,6 +721,8 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.General.Name,
         ];
         SelectedSaveAsBehaviorType = SaveAsBehaviorTypes[0];
+        FileChangedOutsideActions = new ObservableCollection<FileChangedOutsideActionDisplay>(FileChangedOutsideActionDisplay.List());
+        SelectedFileChangedOutsideAction = FileChangedOutsideActions[0];
 
         DefaultSaveLocationTypes =
         [
@@ -822,6 +857,7 @@ public partial class SettingsViewModel : ObservableObject
         ContinuationStyle = ContinuationStyles.FirstOrDefault(p => p.Code == general.ContinuationStyle) ?? ContinuationStyles.First();
         IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
         CpsLineLengthStrategy = CpsLineLengthStrategies.FirstOrDefault(p => p.Code == general.CpsLineLengthStrategy) ?? CpsLineLengthStrategies.First();
+        CpsLineLengthIgnoreTagsRegex = general.CpsLineLengthIgnoreTagsRegex ?? string.Empty;
 
         // The persisted choice, not the effective value - EBU STL may have frame mode forced on
         // temporarily, and that must not stick just because the settings dialog was OK'ed.
@@ -829,7 +865,9 @@ public partial class SettingsViewModel : ObservableObject
             ? TimeCodeMode.Time
             : general.UseFrameNumbersPersisted ? TimeCodeMode.FrameNumbers : TimeCodeMode.Frames;
         SelectedTimeCodeMode = TimeCodeModes.First(p => p.Mode == timeCodeMode);
+        FrameModeSnapToVideoFrames = general.FrameModeSnapToVideoFrames;
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
+        TextBoxAutoWrapWhileTyping = general.SubtitleTextBoxAutoWrapWhileTyping;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
         TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;
         MoveSelectedLinesStepMs = general.MoveSelectedLinesStepMs;
@@ -854,6 +892,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedSubtitleDoubleClickActionType = MapFromSelectedSubtitleDoubleClickAction(Se.Settings.General.SubtitleDoubleClickAction);
         SubtitleGridCenterSelectedRow = Se.Settings.General.SubtitleGridCenterSelectedRow;
         SelectedSaveAsBehaviorType = MapFromSelectedSaveAsBehavior(Se.Settings.General.SaveAsBehavior);
+        SelectedFileChangedOutsideAction = FileChangedOutsideActions.FirstOrDefault(p => p.Action.ToString() == general.FileChangedOutsideAction) ?? FileChangedOutsideActions[0];
         SelectedSaveAsAppendLanguageCode = MapFromSelectedSaveAsAppendLanguageCode(Se.Settings.General.SaveAsAppendLanguageCode);
         SelectedDefaultSaveLocationType = MapFromDefaultSaveLocation(Se.Settings.General.DefaultSaveLocation);
         DefaultSaveLocationCustomFolder = Se.Settings.General.DefaultSaveLocationCustomFolder ?? string.Empty;
@@ -971,6 +1010,7 @@ public partial class SettingsViewModel : ObservableObject
         TextBoxButtonShowColor = appearance.TextBoxShowButtonColor;
         TextBoxButtonShowRemoveFormatting = appearance.TextBoxShowButtonRemoveFormatting;
         TextBoxButtonShowAiAssistant = appearance.TextBoxShowButtonAiAssistant;
+        TextBoxButtonShowRecordSpeech = appearance.TextBoxShowButtonRecordSpeech;
         ShowButtonHints = appearance.ShowHints;
         GridCompactMode = appearance.GridCompactMode;
         GridAlternatingRows = appearance.GridAlternatingRows;
@@ -1115,7 +1155,14 @@ public partial class SettingsViewModel : ObservableObject
         ColorWordsPerMinute = general.ColorWordsPerMinute;
         ColorOverlap = general.ColorTimeCodeOverlap;
         ColorGapTooShort = general.ColorGapTooShort;
+        ColorGapInRange = general.ColorGapInRange;
+        GapRangeMinMs = general.GapRangeMin.Milliseconds;
+        GapRangeMaxMs = general.GapRangeMax.Milliseconds;
+        GapRangeMinFrames = general.GapRangeMin.Frames;
+        GapRangeMaxFrames = general.GapRangeMax.Frames;
         ErrorColor = general.ErrorColor.FromHexToColor();
+        ColorCustomErrorRules = general.ColorCustomErrorRules;
+        _customErrorRules = general.CustomErrorRules.Select(CopyCustomErrorRule).ToList();
 
         _editCustomContinuationStyle = new CustomContinuationStyle(general.CustomContinuationStyle);
 
@@ -1165,9 +1212,7 @@ public partial class SettingsViewModel : ObservableObject
         ProxyUseDefaultCredentials = Se.Settings.General.ProxyUseDefaultCredentials;
         ProxyBypassList = Se.Settings.General.ProxyBypassList ?? string.Empty;
         CheckForUpdatesOnStartup = Se.Settings.General.CheckForUpdatesOnStartup;
-        SelectedUpdateChannel = UpdateCheckService.IncludePrereleases()
-            ? Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
-            : Se.Language.Options.Settings.CheckForUpdatesChannelStable;
+        SelectedUpdateChannel = UpdateCheckService.ChannelDisplayName();
         _loadedUpdateChannel = SelectedUpdateChannel;
         SetFfmpegStatus();
         SetLibMpvStatus();
@@ -1278,26 +1323,6 @@ public partial class SettingsViewModel : ObservableObject
         return _waveformDoubleClickActionToTextMap.TryGetValue(doubleClickAction, out var text)
             ? text
             : Se.Language.General.None;
-    }
-
-    private string GetTranslationModifierFromSetting(string modifier)
-    {
-        if (modifier == "Control" || modifier == "Ctrl")
-        {
-            return OperatingSystem.IsMacOS() ? Se.Language.Options.Shortcuts.ControlMac : Se.Language.Options.Shortcuts.Control;
-        }
-        else if (modifier == "Shift")
-        {
-            return Se.Language.Options.Shortcuts.Shift;
-        }
-        else if (modifier == "Alt")
-        {
-            return Se.Language.Options.Shortcuts.Alt;
-        }
-        else
-        {
-            return string.Empty;
-        }
     }
 
     private static string MapFromSpellCheckEngine(string engine)
@@ -1475,13 +1500,25 @@ public partial class SettingsViewModel : ObservableObject
         {
             return UiTheme.ThemeNamePastel;
         }
+        else if (translation == "Nord")
+        {
+            return UiTheme.ThemeNameNord;
+        }
+        else if (translation == "Midnight Cinema")
+        {
+            return UiTheme.ThemeNameMidnightCinema;
+        }
+        else if (translation == "Sakura")
+        {
+            return UiTheme.ThemeNameSakura;
+        }
         else
         {
             return UiTheme.ThemeNameSystem;
         }
     }
 
-    private string MapThemeToTranslation(string theme)
+    internal static string MapThemeToTranslation(string theme)
     {
         if (theme == UiTheme.ThemeNameSystem)
         {
@@ -1502,6 +1539,18 @@ public partial class SettingsViewModel : ObservableObject
         else if (theme == UiTheme.ThemeNamePastel)
         {
             return "Pastel";
+        }
+        else if (theme == UiTheme.ThemeNameNord)
+        {
+            return "Nord";
+        }
+        else if (theme == UiTheme.ThemeNameMidnightCinema)
+        {
+            return "Midnight Cinema";
+        }
+        else if (theme == UiTheme.ThemeNameSakura)
+        {
+            return "Sakura";
         }
         else
         {
@@ -1740,10 +1789,13 @@ public partial class SettingsViewModel : ObservableObject
         general.DialogStyle = DialogStyle.Code;
         general.ContinuationStyle = ContinuationStyle.Code;
         general.CpsLineLengthStrategy = CpsLineLengthStrategy.Code;
+        general.CpsLineLengthIgnoreTagsRegex = CpsLineLengthIgnoreTagsRegex?.Trim() ?? string.Empty;
 
         general.UseFrameMode = UseFrameMode;
         general.UseFrameNumbersPersisted = SelectedTimeCodeMode.Mode == TimeCodeMode.FrameNumbers;
+        general.FrameModeSnapToVideoFrames = FrameModeSnapToVideoFrames;
         general.SubtitleTextBoxLimitNewLines = TextBoxLimitNewLines;
+        general.SubtitleTextBoxAutoWrapWhileTyping = TextBoxAutoWrapWhileTyping;
         general.NewEmptyDefaultMs = NewEmptyDefaultMs ?? general.NewEmptyDefaultMs;
         general.TimeCodeUpDownStepMs = TimeCodeUpDownStepMs ?? general.TimeCodeUpDownStepMs;
         general.MoveSelectedLinesStepMs = MoveSelectedLinesStepMs ?? general.MoveSelectedLinesStepMs;
@@ -1776,6 +1828,7 @@ public partial class SettingsViewModel : ObservableObject
         general.SubtitleDoubleClickAction = MapToSelectedSubtitleDoubleClickAction(SelectedSubtitleDoubleClickActionType);
         general.SubtitleGridCenterSelectedRow = SubtitleGridCenterSelectedRow;
         general.SaveAsBehavior = MapToSaveAsBehavior(SelectedSaveAsBehaviorType);
+        general.FileChangedOutsideAction = SelectedFileChangedOutsideAction.Action.ToString();
         general.SaveAsAppendLanguageCode = MapToSaveAsAppendLanguageCode(SelectedSaveAsAppendLanguageCode);
         general.DefaultSaveLocation = MapToDefaultSaveLocation(SelectedDefaultSaveLocationType);
         general.DefaultSaveLocationCustomFolder = DefaultSaveLocationCustomFolder;
@@ -1870,6 +1923,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.TextBoxShowButtonColor = TextBoxButtonShowColor;
         appearance.TextBoxShowButtonRemoveFormatting = TextBoxButtonShowRemoveFormatting;
         appearance.TextBoxShowButtonAiAssistant = TextBoxButtonShowAiAssistant;
+        appearance.TextBoxShowButtonRecordSpeech = TextBoxButtonShowRecordSpeech;
         appearance.ShowHints = ShowButtonHints;
         appearance.DarkModeBackgroundColor = DarkModeBackgroundColor.FromColorToHex();
         appearance.DarkModeForegroundColor = DarkModeForegroundColor.FromColorToHex();
@@ -1997,7 +2051,14 @@ public partial class SettingsViewModel : ObservableObject
         general.ColorWordsPerMinute = ColorWordsPerMinute;
         general.ColorTimeCodeOverlap = ColorOverlap;
         general.ColorGapTooShort = ColorGapTooShort;
+        general.ColorGapInRange = ColorGapInRange;
+        general.GapRangeMin.Milliseconds = GapRangeMinMs ?? general.GapRangeMin.Milliseconds;
+        general.GapRangeMax.Milliseconds = GapRangeMaxMs ?? general.GapRangeMax.Milliseconds;
+        general.GapRangeMin.Frames = GapRangeMinFrames ?? general.GapRangeMin.Frames;
+        general.GapRangeMax.Frames = GapRangeMaxFrames ?? general.GapRangeMax.Frames;
         general.ErrorColor = ErrorColor.FromColorToHex();
+        general.ColorCustomErrorRules = ColorCustomErrorRules;
+        general.CustomErrorRules = _customErrorRules.Select(CopyCustomErrorRule).ToList();
 
         general.CustomContinuationStyle = new CustomContinuationStyle(_editCustomContinuationStyle);
 
@@ -2037,9 +2098,7 @@ public partial class SettingsViewModel : ObservableObject
         {
             // Only an actual change is stored, so an untouched dropdown keeps the
             // "auto" default (beta users follow betas, stable users stable only).
-            general.CheckForUpdatesChannel = SelectedUpdateChannel == Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
-                ? UpdateCheckService.ChannelBeta
-                : UpdateCheckService.ChannelStable;
+            general.CheckForUpdatesChannel = UpdateCheckService.ChannelFromDisplayName(SelectedUpdateChannel);
         }
 
         general.CurrentProfile = SelectedProfile;
@@ -2365,6 +2424,35 @@ public partial class SettingsViewModel : ObservableObject
 
         return animation.RunAsync(control);
     }
+
+    [RelayCommand]
+    private async Task EditCustomErrorRules()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var viewModel = await _windowService.ShowDialogAsync<CustomErrorRulesWindow, CustomErrorRulesViewModel>(Window, vm =>
+        {
+            vm.Initialize(ColorCustomErrorRules, _customErrorRules);
+        });
+
+        if (viewModel.OkPressed)
+        {
+            ColorCustomErrorRules = viewModel.IsHighlightEnabled;
+            _customErrorRules = viewModel.GetRules();
+        }
+    }
+
+    private static SeCustomErrorRule CopyCustomErrorRule(SeCustomErrorRule rule) => new()
+    {
+        Enabled = rule.Enabled,
+        Name = rule.Name,
+        Pattern = rule.Pattern,
+        MatchCase = rule.MatchCase,
+        Color = rule.Color,
+    };
 
     [RelayCommand]
     private async Task EditTextTooWideSettings()
@@ -3039,12 +3127,17 @@ public partial class SettingsViewModel : ObservableObject
                 Se.Settings.General.ColorWordsPerMinute = g.ColorWordsPerMinute;
                 Se.Settings.General.ColorTimeCodeOverlap = g.ColorTimeCodeOverlap;
                 Se.Settings.General.ColorGapTooShort = g.ColorGapTooShort;
+                Se.Settings.General.ColorGapInRange = g.ColorGapInRange;
+                Se.Settings.General.GapRangeMin = g.GapRangeMin;
+                Se.Settings.General.GapRangeMax = g.GapRangeMax;
                 Se.Settings.General.ErrorColor = g.ErrorColor;
+                Se.Settings.General.ColorCustomErrorRules = g.ColorCustomErrorRules; // the rules themselves are user data and stay
             }
         }
 
         Se.SaveSettings();
         OkPressed = true;
+        SettingsReplaced = true;
         Window?.Close();
     }
 
@@ -3105,10 +3198,12 @@ public partial class SettingsViewModel : ObservableObject
         // rebuilds the layout (and the video player) a second time (issue #14218).
         AppliedSettingsSnapshot = SettingsChangeSnapshot.Take();
 
-        // Icon theme and recoloring can change without changing the actual theme variant.
+        // Icon theme and recoloring can change without changing the actual theme variant, and
+        // the editor styles bake in the font scale when applied (#16242) - follow both here.
         if (Window != null &&
             UiTheme.GetUnscaledContent(Window) is SettingsPage page)
         {
+            SettingsChrome.Apply(Window);
             page.RefreshSections();
         }
     }
@@ -3274,6 +3369,7 @@ public partial class SettingsViewModel : ObservableObject
             // Reload the settings from disk since they were updated
             LoadSettings();
             SettingsImported = true;
+            SettingsReplaced = true;
         }
     }
 

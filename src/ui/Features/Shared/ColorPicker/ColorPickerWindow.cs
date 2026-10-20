@@ -1,4 +1,5 @@
-﻿using Avalonia;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -9,60 +10,56 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 
+/// <summary>
+/// Color picker, in the editor look (see <see cref="EditorChrome"/>): wheel, brightness bar and
+/// preview on the left, the R/G/B(/A) sliders and hex on the right, recent colors below.
+/// </summary>
 public class ColorPickerWindow : Window
 {
     public ColorPickerWindow(ColorPickerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Tools.ColorPickerTitle;
+        Title = Se.Language.General.ChooseColor;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var colorView = MakeColorView(vm, out var hexTextBox);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(colorView, 0);
-        grid.Add(panelButtons, 1);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(colorView, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, hexTextBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
+        Opened += (_, _) => ConfigureImagePicker(vm);
     }
 
-    private static Grid MakeColorView(ColorPickerViewModel vm, out TextBox hexTextBox)
+    private void ConfigureImagePicker(ColorPickerViewModel vm)
     {
-        // Main layout grid
-        var mainGrid = new Grid
+        // Use this dialog's editor, including when opened through a style/settings dialog
+        // or from a second editor window.
+        var source = ImageColorSource.Find(this);
+        if (source != null)
         {
-            ColumnDefinitions = new ColumnDefinitions("Auto,10,*"),
-            RowDefinitions = new RowDefinitions("Auto,10,Auto"),
-        };
+            vm.CanSelectFromImage = source.CanPick();
+            vm.PickFromImageAsync = source.PickAsync;
+        }
+    }
 
+    private static StackPanel MakeColorView(ColorPickerViewModel vm, out TextBox hexTextBox)
+    {
         // Color wheel
         var colorWheel = new ColorWheelControl
         {
             Width = 200,
             Height = 200,
-            Margin = new Thickness(10),
+            Margin = new Thickness(0, 0, 12, 0),
         };
         colorWheel.Bind(ColorWheelControl.HueProperty, new Binding
         {
@@ -81,7 +78,6 @@ public class ColorPickerWindow : Window
         var brightnessBar = new ColorBrightnessBar
         {
             Height = 200,
-            Margin = new Thickness(0, 10, 10, 10),
         };
         brightnessBar.Bind(ColorBrightnessBar.ValueProperty, new Binding
         {
@@ -107,8 +103,10 @@ public class ColorPickerWindow : Window
             Width = 80,
             Height = 80,
             BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Colors.Gray),
-            Margin = new Thickness(10, 10, 10, 0),
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(8),
+            Margin = new Thickness(0, 14, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
         };
         selectedColorBorder.Bind(Border.BackgroundProperty, new Binding
@@ -123,25 +121,24 @@ public class ColorPickerWindow : Window
             Orientation = Orientation.Vertical,
             Children = { wheelPanel, selectedColorBorder }
         };
-        Grid.SetColumn(leftPanel, 0);
-        Grid.SetRow(leftPanel, 0);
 
         // RGBA Sliders
         var slidersPanel = CreateSlidersPanel(vm, out hexTextBox);
-        Grid.SetColumn(slidersPanel, 2);
-        Grid.SetRow(slidersPanel, 0);
+
+        var sections = EditorChrome.MakeSideBySide(new Border { Child = leftPanel, Padding = new Thickness(16, 16, 16, 14) }, new Border { Child = slidersPanel, Padding = new Thickness(16, 16, 16, 14) });
 
         // Recent colors
         var recentColorsPanel = CreateLastColorsPanel(vm);
-        Grid.SetColumn(recentColorsPanel, 0);
-        Grid.SetRow(recentColorsPanel, 2);
-        Grid.SetColumnSpan(recentColorsPanel, 3);
 
-        mainGrid.Children.Add(leftPanel);
-        mainGrid.Children.Add(slidersPanel);
-        mainGrid.Children.Add(recentColorsPanel);
-
-        return mainGrid;
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Children =
+            {
+                sections,
+                recentColorsPanel,
+            },
+        };
     }
 
     private static StackPanel CreateSlidersPanel(ColorPickerViewModel vm, out TextBox hexInputTextBox)
@@ -247,12 +244,7 @@ public class ColorPickerWindow : Window
         });
 
         // Hex input
-        var hexLabel = new TextBlock
-        {
-            Text = Se.Language.General.Hex,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 10, 0),
-        };
+        var hexLabel = EditorChrome.MakeDimLabel(Se.Language.General.Hex, new Thickness(0, 10, 10, 0));
 
         var hexTextBox = new TextBox
         {
@@ -263,6 +255,8 @@ public class ColorPickerWindow : Window
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Left,
         };
+        hexTextBox.Classes.Add("text");
+        AutomationProperties.SetName(hexTextBox, Se.Language.General.Hex);
         hexTextBox.Bind(TextBox.TextProperty, new Binding
         {
             Source = vm,
@@ -284,16 +278,17 @@ public class ColorPickerWindow : Window
         panel.Children.Add(alphaSlider);
         panel.Children.Add(hexPanel);
 
+        var selectFromImage = UiUtil.MakeButton(Se.Language.Assa.ImageColorPicker + "...", vm.SelectFromImageCommand);
+        selectFromImage.HorizontalAlignment = HorizontalAlignment.Left;
+        selectFromImage.Margin = new Thickness(0, 8, 0, 0);
+        selectFromImage.Bind(IsVisibleProperty, new Binding(nameof(vm.CanSelectFromImage)));
+        panel.Children.Add(selectFromImage);
+
         return panel;
     }
 
-    private static StackPanel CreateLastColorsPanel(ColorPickerViewModel vm)
+    private static Border CreateLastColorsPanel(ColorPickerViewModel vm)
     {
-        var label = new TextBlock
-        {
-            Text = Se.Language.Tools.RecentColors,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
 
         var colorsGrid = new Grid
         {
@@ -321,14 +316,7 @@ public class ColorPickerWindow : Window
             colorsGrid.Children.Add(box);
         }
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Margin = new Thickness(10, 10, 10, 0),
-            Children = { label, colorsGrid }
-        };
-
-        return panel;
+        return EditorChrome.MakeEditorSection(Se.Language.Tools.RecentColors, colorsGrid);
     }
 
     private static Border CreateColorBox(ColorPickerViewModel vm, string propertyName, int column)
@@ -336,7 +324,8 @@ public class ColorPickerWindow : Window
         var border = new Border
         {
             BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Colors.Gray),
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(5),
             Margin = new Thickness(2),
             Cursor = new Cursor(StandardCursorType.Hand),
         };

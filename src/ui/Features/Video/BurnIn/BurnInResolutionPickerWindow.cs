@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -11,6 +11,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
+/// <summary>
+/// Pick a video resolution from a list, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class BurnInResolutionPickerWindow : Window
 {
     private readonly BurnInResolutionPickerViewModel _vm;
@@ -22,6 +25,7 @@ public class BurnInResolutionPickerWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         MaxHeight = 900;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -31,7 +35,8 @@ public class BurnInResolutionPickerWindow : Window
         {
             ItemsSource = vm.Resolutions,
             SelectedItem = vm.SelectedResolution,
-            VerticalAlignment = VerticalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Background = Avalonia.Media.Brushes.Transparent,
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedResolution)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
             // Recycling-safe template: everything binds and nothing dereferences the build
             // parameter - a recycled container gets a different item as its DataContext, so a
@@ -55,6 +60,8 @@ public class BurnInResolutionPickerWindow : Window
 
                 var textBlock = new TextBlock
                 {
+                    FontSize = 12.5,
+                    Margin = new Thickness(10, 0),
                     // Use the theme-appropriate text color (white in dark mode, black in
                     // light mode). Previously the foreground was bound to
                     // ResolutionItem.TextColor, which was never assigned, so it fell back to
@@ -102,9 +109,12 @@ public class BurnInResolutionPickerWindow : Window
             }
         };
 
+        Avalonia.Automation.AutomationProperties.SetName(listBoxResolutions, Se.Language.General.PickResolution);
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -113,19 +123,15 @@ public class BurnInResolutionPickerWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(listBoxResolutions, 0, 0);
-        grid.Add(panelButtons, 1, 0);
+        grid.Add(new Border
+        {
+            Child = EditorChrome.MakeListFrame(listBoxResolutions),
+            Background = EditorChrome.PanelBrush,
+            Padding = new Thickness(14),
+        }, 0);
+        grid.Add(panelButtons, 1);
 
         Content = grid;
 

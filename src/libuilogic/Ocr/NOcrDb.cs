@@ -65,9 +65,10 @@ public class NOcrDb
         private readonly bool _deepSeek;
         private readonly bool _lastDitch;
         private readonly double _italicFactor;
+        private readonly BaselinePlacement _placement;
         private readonly int _hashCode;
 
-        public MatchCacheKey(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor)
+        public MatchCacheKey(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor, BaselinePlacement placement)
         {
             _pixels = bitmap.GetPixelData().ToArray();
             _width = bitmap.Width;
@@ -76,6 +77,7 @@ public class NOcrDb
             _deepSeek = deepSeek;
             _lastDitch = lastDitch;
             _italicFactor = italicFactor;
+            _placement = placement;
 
             // FNV-1a over the pixel bytes plus the match parameters.
             var hash = unchecked((int)2166136261);
@@ -89,6 +91,7 @@ public class NOcrDb
             hash = unchecked((hash ^ _maxWrongPixels) * 16777619);
             hash = unchecked((hash ^ (_deepSeek ? 1 : 0) ^ (_lastDitch ? 2 : 0)) * 16777619);
             hash = unchecked((hash ^ _italicFactor.GetHashCode()) * 16777619);
+            hash = unchecked((hash ^ (int)_placement) * 16777619);
             _hashCode = hash;
         }
 
@@ -101,6 +104,7 @@ public class NOcrDb
                    _deepSeek == other._deepSeek &&
                    _lastDitch == other._lastDitch &&
                    _italicFactor.Equals(other._italicFactor) &&
+                   _placement == other._placement &&
                    _pixels.AsSpan().SequenceEqual(other._pixels);
         }
 
@@ -255,7 +259,8 @@ public class NOcrDb
                 IsExpandedLineMatch(oc, targetItem, nikseBitmap, list, listIndex))
             {
                 var size = GetTotalSize(listIndex, list, oc.ExpandCount);
-                if (Math.Abs(size.X - oc.Width) < 3 && Math.Abs(size.Y - oc.Height) < 3)
+                if (Math.Abs(size.X - oc.Width) < 3 && Math.Abs(size.Y - oc.Height) < 3 &&
+                    IsPlausibleGroup(oc, list, listIndex))
                 {
                     return oc;
                 }
@@ -278,7 +283,8 @@ public class NOcrDb
                 if (Math.Abs(heightToWidthPercent - oc.HeightToWidthPercent) < 15 &&
                     Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20 &&
                     IsScaleRatioSane(size.X, oc.Width) && IsScaleRatioSane(size.Y, oc.Height) &&
-                    IsExpandedLineMatchScaled(oc, targetItem, nikseBitmap, size.X, size.Y, list, listIndex))
+                    IsExpandedLineMatchScaled(oc, targetItem, nikseBitmap, size.X, size.Y, list, listIndex) &&
+                    IsPlausibleGroup(oc, list, listIndex))
                 {
                     return oc;
                 }
@@ -286,6 +292,32 @@ public class NOcrDb
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// An accented letter split into parts ("û" as "u" plus a separate "^") has every part but
+    /// the letter itself above the letter's top. Two bars side by side ("ll") or a bar with an
+    /// apostrophe next to its top ("I'") fit a slanted "û"/"ù" entry scaled onto them, but no
+    /// part of those sits above the other.
+    /// </summary>
+    private static bool IsPlausibleGroup(NOcrChar oc, List<ImageSplitterItem2> list, int listIndex)
+    {
+        if (oc.Text.Length != 1 || !char.IsLetter(oc.Text[0]) ||
+            oc.Text.Normalize(System.Text.NormalizationForm.FormD).Length < 2 ||
+            listIndex < 0 || listIndex + oc.ExpandCount > list.Count)
+        {
+            return true;
+        }
+
+        var parts = list.GetRange(listIndex, oc.ExpandCount);
+        if (parts.Any(p => p.NikseBitmap == null))
+        {
+            return true;
+        }
+
+        var letter = parts.MaxBy(p => p.NikseBitmap!.Height)!;
+        var tolerance = Math.Max(2, letter.NikseBitmap!.Height / 6);
+        return parts.All(p => p == letter || p.Top + p.NikseBitmap!.Height <= letter.Top + tolerance);
     }
 
     /// <summary>
@@ -317,12 +349,22 @@ public class NOcrDb
     /// trained "fi" pair swallowing "t"+"i") runs at 9%+. An area-based budget grows with the
     /// group being claimed, so it was loosest exactly for those letter-pair steals.
     /// </summary>
+    /// <summary>
+    /// The scaled pass stretches an entry over a group up to 25 px wider than it was drawn
+    /// with, and tolerates a few misplaced points. An entry drawn with a handful of lines then
+    /// fits almost any group of the right size: a shipped "%" with five lines claimed a dialog
+    /// dash plus an opening quote, its lines all landing on the dash and one quote stroke. A
+    /// match that claims a piece none of its foreground lines touches says nothing about that
+    /// piece, so every claimed piece must be hit. (The exact pass keeps its own, stricter walk.)
+    /// </summary>
     private static bool IsExpandedLineMatchScaled(NOcrChar oc, ImageSplitterItem2 targetItem, NikseBitmap2 nikseBitmap, int targetWidth, int targetHeight, List<ImageSplitterItem2> list, int listIndex)
     {
         var errors = 0;
         var points = 0;
         var scaledMarginTop = (int)Math.Round(oc.MarginTop * targetHeight / (double)Math.Max(1, oc.Height), MidpointRounding.AwayFromZero);
         var originY = targetItem.Y - scaledMarginTop;
+        var pieceCount = Math.Min(oc.ExpandCount, list.Count - listIndex);
+        Span<bool> touched = pieceCount <= 16 ? stackalloc bool[pieceCount] : new bool[pieceCount];
 
         foreach (var op in oc.LinesForeground)
         {
@@ -331,11 +373,25 @@ public class NOcrDb
                 points++;
                 var p = new OcrPoint(point.X + targetItem.X, point.Y + originY);
                 // Out-of-bounds foreground points can't be on text - count them as errors.
-                if (p.X < 0 || p.Y < 0 || p.X >= nikseBitmap.Width || p.Y >= nikseBitmap.Height ||
-                    !IsGroupForeground(list, listIndex, oc.ExpandCount, p.X, p.Y))
+                var piece = p.X < 0 || p.Y < 0 || p.X >= nikseBitmap.Width || p.Y >= nikseBitmap.Height
+                    ? -1
+                    : GroupForegroundPiece(list, listIndex, oc.ExpandCount, p.X, p.Y);
+                if (piece < 0)
                 {
                     errors++;
                 }
+                else
+                {
+                    touched[piece] = true;
+                }
+            }
+        }
+
+        for (var i = 0; i < pieceCount; i++)
+        {
+            if (!touched[i] && list[listIndex + i].NikseBitmap != null)
+            {
+                return false;
             }
         }
 
@@ -418,6 +474,12 @@ public class NOcrDb
     /// </summary>
     private static bool IsGroupForeground(List<ImageSplitterItem2> list, int listIndex, int count, int x, int y)
     {
+        return GroupForegroundPiece(list, listIndex, count, x, y) >= 0;
+    }
+
+    /// <summary>Index (from the group start) of the claimed piece with ink at (x, y), or -1.</summary>
+    private static int GroupForegroundPiece(List<ImageSplitterItem2> list, int listIndex, int count, int x, int y)
+    {
         var end = Math.Min(list.Count, listIndex + count);
         for (var i = listIndex; i < end; i++)
         {
@@ -432,11 +494,11 @@ public class NOcrDb
             var localY = y - item.Y;
             if (localX >= 0 && localY >= 0 && localX < bmp.Width && localY < bmp.Height && bmp.GetAlpha(localX, localY) > 150)
             {
-                return true;
+                return i - listIndex;
             }
         }
 
-        return false;
+        return -1;
     }
 
     private static OcrPoint GetTotalSize(int listIndex, List<ImageSplitterItem2> items, int count)
@@ -495,7 +557,67 @@ public class NOcrDb
             return null;
         }
 
-        var key = new MatchCacheKey(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor);
+        var placement = GetBaselinePlacement(list, item);
+        var match = GetMatch(parentBitmap, list, item, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement);
+        if (placement == BaselinePlacement.OnBaseline && match is { Text: "„", ExpandCount: 2 })
+        {
+            // Both halves of a low quote are commas. A comma and a period side by side (",..")
+            // fit a two-part "„" entry too - keep the first glyph on its own then.
+            var index = list.IndexOf(item);
+            if (index + 1 < list.Count && !HangsBelowBaseline(list[index + 1]))
+            {
+                match = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, placement: placement);
+            }
+        }
+
+        match ??= MatchUnplacedMark(item, placement);
+        return PlaceMark(match, placement, item);
+    }
+
+    // Share of wrong points a comma/apostrophe shape may have when its position is ignored.
+    private const double UnplacedMarkMaxRate = 0.15;
+
+    // An upright match with a higher share of wrong points than this is challenged by the
+    // straightened glyph (sheared by the italic factor and by 1.5 x it), which wins when its
+    // share is at most two thirds of the upright one. Measured on 38 Blu-ray discs: a steep bold
+    // italic went from "/f* accogd/ng fo plan" to "/t* accord/ng to plan" while upright discs
+    // were byte-identical.
+    private const double ItalicChallengeMinRate = 0.02;
+    private const double ItalicChallengeRatio = 1.5;
+    private const double ItalicChallengeSteeperShear = 1.5;
+
+    /// <summary>
+    /// A small mark that matched nothing, tried against the comma and apostrophe shapes without
+    /// their trained position: a curly apostrophe is a raised comma, and comma entries sit at the
+    /// baseline, so the top-margin gate kept them off it ("You*ll", "didn*t"). Where the mark
+    /// sits then decides what it is (<see cref="PlaceMark"/>).
+    /// </summary>
+    private NOcrChar? MatchUnplacedMark(ImageSplitterItem2 item, BaselinePlacement placement)
+    {
+        if (placement == BaselinePlacement.Unknown || item.NikseBitmap is not { } bitmap ||
+            item.Baseline is not { } baseline || bitmap.Height * 2 > baseline)
+        {
+            return null;
+        }
+
+        var (comma, commaRate) = FindBestByText(bitmap, ",", UnplacedMarkMaxRate);
+        var (apostrophe, apostropheRate) = FindBestByText(bitmap, "'", UnplacedMarkMaxRate);
+        return comma != null && (apostrophe == null || commaRate <= apostropheRate) ? comma : apostrophe;
+    }
+
+    /// <summary>
+    /// The glyph reaches more than a twentieth of the line height below the baseline, like a
+    /// comma's tail (a period sits on it).
+    /// </summary>
+    private static bool HangsBelowBaseline(ImageSplitterItem2 item) =>
+        item.Baseline is { } baseline && item.NikseBitmap != null &&
+        item.Top + item.NikseBitmap.Height - baseline > Math.Max(1, baseline / 20);
+
+    private NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor, BaselinePlacement placement)
+    {
+        // The public GetMatch returns early for an item without a bitmap.
+        var bitmap = item.NikseBitmap!;
+        var key = new MatchCacheKey(bitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor, placement);
         MatchCacheEntry? cached;
         lock (_lock)
         {
@@ -516,7 +638,7 @@ public class NOcrDb
 
         // A perfect single match (exact size, 0 errors) means the user has explicitly added an
         // entry for this bitmap, so prefer it over a possibly-greedy expanded match.
-        var exactSingle = GetExactMatchSingle(item.NikseBitmap, topMargin);
+        var exactSingle = GetExactMatchSingle(bitmap, topMargin, placement);
         if (exactSingle != null)
         {
             CacheMatch(key, new MatchCacheEntry { ExactMatch = exactSingle });
@@ -534,17 +656,75 @@ public class NOcrDb
         // skipExactCheck: the exact scan already ran (and missed) above - without the flag,
         // GetMatchSingle re-scanned the whole single-character list a second time for every
         // glyph that wasn't an exact match.
-        var single = GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true);
+        var single = GetMatchSingle(bitmap, topMargin, deepSeek, maxWrongPixels, lastDitch: false, skipExactCheck: true, placement, out var singleRate);
+
+        // A slanted glyph often still fits some entry loosely - an italic "t" read as an italic
+        // "f", "r" as "g", "y" as "x" - and a loose hit used to end the search before the
+        // straightened glyph was ever tried. When the upright match is not a close one, match the
+        // straightened glyph too and keep whichever fits clearly better.
+        if (single != null && italicFactor > 0 && singleRate > ItalicChallengeMinRate &&
+            bitmap.Width * bitmap.Height >= SmallGlyphAreaLimit)
+        {
+            // Slants differ between fonts: a bold italic sheared by the configured factor is
+            // still half slanted, and a half-straightened "h" fits "b". Try a steeper shear too
+            // and keep the better fit.
+            NOcrChar? challenger = null;
+            var challengerRate = double.MaxValue;
+            foreach (var factor in new[] { italicFactor, italicFactor * ItalicChallengeSteeperShear })
+            {
+                var straightened = bitmap.UnItalic(factor);
+                if (straightened.Width <= 0 || straightened.Height <= 0)
+                {
+                    continue;
+                }
+
+                var candidate = GetMatchSingle(straightened, topMargin, deepSeek, maxWrongPixels, lastDitch: false, skipExactCheck: false, placement, out var candidateRate);
+                if (candidate != null && candidateRate < challengerRate)
+                {
+                    challenger = candidate;
+                    challengerRate = candidateRate;
+                }
+            }
+
+            // A mark may not replace a mark: a straightened comma is a period, which says
+            // nothing about slant.
+            if (challenger != null && challengerRate * ItalicChallengeRatio <= singleRate &&
+                (single.Text.All(char.IsLetterOrDigit) || challenger.Text.All(char.IsLetterOrDigit)))
+            {
+                single = new NOcrChar(challenger) { Italic = true };
+            }
+        }
+
+        // Two letters drawn touching ("av", "wt", "As") are one glyph that fits nothing. Read it
+        // as two unless the last-ditch pass finds a single character that fits better than the
+        // worse of the two halves: a touching "ay" beat a loose "U" ("alwUs"), while a "D" the
+        // last-ditch pass read right must not turn into "77".
+        if (single == null)
+        {
+            var pair = MatchTouchingLetters(bitmap, topMargin, maxWrongPixels, depth: 0, out var pairRate);
+            NOcrChar? guess = null;
+            var guessRate = double.MaxValue;
+            if (lastDitch)
+            {
+                guess = GetMatchSingle(bitmap, topMargin, deepSeek, maxWrongPixels, true, true, placement, out guessRate);
+            }
+
+            single = pair != null && (guess == null || pairRate < guessRate) ? pair : guess;
+        }
 
         if (single == null && italicFactor > 0)
         {
             // Nothing matched upright. Straighten the glyph and try once more - this is how an
             // italic 'l' stops being read as an 'i'. A hit is italic by construction, so flag a
-            // copy; the database entry itself must stay upright.
-            var unItalic = item.NikseBitmap.UnItalic(italicFactor);
+            // copy; the database entry itself must stay upright. Two touching italic letters
+            // ("fa", "is", "ts", "rs" in a bold italic) are cut along a vertical column too, which
+            // on the slanted pair leaves ragged halves that fit nothing - so the straightened
+            // glyph gets the touching-pair split as well.
+            var unItalic = bitmap.UnItalic(italicFactor);
             if (unItalic.Width > 0 && unItalic.Height > 0)
             {
-                var italicMatch = GetMatchSingle(unItalic, topMargin, deepSeek, maxWrongPixels, lastDitch);
+                var italicMatch = GetMatchSingle(unItalic, topMargin, deepSeek, maxWrongPixels, lastDitch, placement: placement)
+                                  ?? MatchTouchingLetters(unItalic, topMargin, maxWrongPixels, depth: 0, out _, returnStrokeEnds: true);
                 if (italicMatch != null)
                 {
                     single = new NOcrChar(italicMatch) { Italic = true };
@@ -557,15 +737,352 @@ public class NOcrDb
     }
 
     /// <summary>
+    /// Reads a glyph that matched nothing as two touching letters: cut it at one of the
+    /// thinnest columns of its middle half, trim each side to its ink and match both strictly
+    /// (no deep-seek or last-ditch guessing). One side may itself be a touching pair ("ryw").
+    /// Only letters and digits count, so a stray mark can't make a split look good.
+    /// </summary>
+    private NOcrChar? MatchTouchingLetters(NikseBitmap2 bitmap, int topMargin, int maxWrongPixels, int depth, out double rate, bool returnStrokeEnds = false)
+    {
+        rate = double.MaxValue;
+        var width = bitmap.Width;
+        var height = bitmap.Height;
+        if (width < 10 || width * 10 < height * 7)
+        {
+            return null;
+        }
+
+        var ink = new int[width];
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    ink[x]++;
+                }
+            }
+        }
+
+        var cuts = Enumerable.Range(width / 4, width / 2 + 1)
+            .Where(x => x > 0 && x < width - 1)
+            .OrderBy(x => ink[x])
+            .ThenBy(x => Math.Abs(x - width / 2))
+            .ToList();
+        // Up to three cuts; for a straightened italic glyph (returnStrokeEnds) each is tried with
+        // and without a stroke end given back to its letter (see ReturnStrokeEnds; a cut through
+        // the dot of an "i" moves the dot's remainder too). The best fit over all of them wins
+        // rather than the first that fits: the thinnest column of "fw" is inside the "w".
+        var tried = new List<int>();
+        NOcrChar? bestPair = null;
+        var bestPairRate = double.MaxValue;
+        foreach (var cut in cuts)
+        {
+            if (tried.Count == 3)
+            {
+                break;
+            }
+
+            if (tried.Any(t => Math.Abs(t - cut) <= 2))
+            {
+                continue;
+            }
+
+            tried.Add(cut);
+            var plainLeft = bitmap.CopyRectangle(new NikseRectangle(0, 0, cut, height));
+            var plainRight = bitmap.CopyRectangle(new NikseRectangle(cut + 1, 0, width - cut - 1, height));
+            var returnedRight = returnStrokeEnds ? new NikseBitmap2(plainRight) : plainRight;
+            var returnedLeft = returnStrokeEnds ? ReturnStrokeEnds(bitmap, cut, plainLeft, returnedRight) : plainLeft;
+            var attempts = ReferenceEquals(returnedLeft, plainLeft)
+                ? new[] { (plainLeft, plainRight) }
+                : new[] { (returnedLeft, returnedRight), (plainLeft, plainRight) };
+            foreach (var (leftHalf, rightHalf) in attempts)
+            {
+                var left = TrimToInk(leftHalf, out var leftTop);
+                var right = TrimToInk(rightHalf, out var rightTop);
+                if (left == null || right == null)
+                {
+                    continue;
+                }
+
+                var leftMatch = MatchLetterOrPair(left, topMargin + leftTop, maxWrongPixels, depth, out var leftRate, returnStrokeEnds);
+                if (leftMatch == null || leftRate >= bestPairRate)
+                {
+                    continue;
+                }
+
+                var rightMatch = MatchLetterOrPair(right, topMargin + rightTop, maxWrongPixels, depth, out var rightRate, returnStrokeEnds);
+                if (rightMatch == null ||
+                    leftMatch.Text.All(char.IsDigit) != rightMatch.Text.All(char.IsDigit))
+                {
+                    // Touching letters or touching digits, never one of each: an "M" cut in two
+                    // read as "b1" or "A4".
+                    continue;
+                }
+
+                var attemptRate = Math.Max(leftRate, rightRate);
+                if (attemptRate >= bestPairRate)
+                {
+                    continue;
+                }
+
+                // A "w" cut down its middle is two "v"s - it was one letter all along.
+                var text = HarmonizeCase(leftMatch.Text, rightMatch.Text, left, right, leftTop, rightTop) switch
+                {
+                    "vv" => "w",
+                    "VV" => "W",
+                    var pair => pair,
+                };
+
+                bestPairRate = attemptRate;
+                bestPair = new NOcrChar(text)
+                {
+                    Width = width,
+                    Height = height,
+                    MarginTop = topMargin,
+                    Italic = leftMatch.Italic && rightMatch.Italic,
+                };
+            }
+        }
+
+        rate = bestPairRate;
+        return bestPair;
+    }
+
+    // Letters whose capital is the same shape as the lowercase, only taller.
+    private const string SameShapeCapitals = "CKOPSUVWXZ";
+
+    /// <summary>
+    /// Each half is matched on its own, so a lowercase "s" the height of its neighbour "r" can
+    /// come back as a scaled "S" ("rS", "Vv"). Two halves of the same height and top are the
+    /// same case: a capital is taller than an x-height letter next to it.
+    /// </summary>
+    internal static string HarmonizeCase(string leftText, string rightText, NikseBitmap2 left, NikseBitmap2 right, int leftTop, int rightTop)
+    {
+        if (leftText.Length != 1 || rightText.Length != 1)
+        {
+            return leftText + rightText;
+        }
+
+        var tolerance = Math.Max(2, Math.Max(left.Height, right.Height) / 8);
+        var sameSize = Math.Abs(left.Height - right.Height) <= tolerance && Math.Abs(leftTop - rightTop) <= tolerance;
+        if (!sameSize)
+        {
+            return leftText + rightText;
+        }
+
+        var l = leftText[0];
+        var r = rightText[0];
+        if (char.IsLower(l) && char.IsUpper(r) && SameShapeCapitals.Contains(r))
+        {
+            r = char.ToLowerInvariant(r);
+        }
+        else if (char.IsUpper(l) && char.IsLower(r) && SameShapeCapitals.Contains(l))
+        {
+            l = char.ToLowerInvariant(l);
+        }
+
+        return string.Concat(l, r);
+    }
+
+    /// <summary>
+    /// The cut runs down a column, so the arm of an "f" or the crossbar of a "t" reaching over
+    /// the next letter leaves its end on that letter's side ("fa": a stub above the "a" that
+    /// reads as an accent, "Ià", while the "f" without its arm reads as "I"). A piece of ink in
+    /// the right half that is not that half's main body, touches the cut, and continues through
+    /// the cut column in the whole glyph is such a stroke end: it goes back to the left half.
+    /// The dot of an "i" or an accent next to the cut does not continue through it and stays.
+    /// </summary>
+    internal static NikseBitmap2 ReturnStrokeEnds(NikseBitmap2 whole, int cut, NikseBitmap2 left, NikseBitmap2 right)
+    {
+        var width = right.Width;
+        var height = right.Height;
+        if (width <= 0 || height <= 0)
+        {
+            return left;
+        }
+
+        var label = new int[width * height];
+        var sizes = new List<int> { 0 };
+        var continues = new List<bool> { false };
+        var maxX = new List<int> { 0 };
+        var minY = new List<int> { 0 };
+        var maxY = new List<int> { 0 };
+        var stack = new Stack<int>();
+        for (var start = 0; start < label.Length; start++)
+        {
+            if (label[start] != 0 || right.GetAlpha(start % width, start / width) <= 150)
+            {
+                continue;
+            }
+
+            var id = sizes.Count;
+            sizes.Add(0);
+            continues.Add(false);
+            maxX.Add(0);
+            minY.Add(height);
+            maxY.Add(0);
+            label[start] = id;
+            stack.Push(start);
+            while (stack.Count > 0)
+            {
+                var index = stack.Pop();
+                var x = index % width;
+                var y = index / width;
+                sizes[id]++;
+                maxX[id] = Math.Max(maxX[id], x);
+                minY[id] = Math.Min(minY[id], y);
+                maxY[id] = Math.Max(maxY[id], y);
+                if (x == 0 && whole.GetAlpha(cut, y) > 150)
+                {
+                    continues[id] = true;
+                }
+
+                for (var dy = -1; dy <= 1; dy++)
+                {
+                    for (var dx = -1; dx <= 1; dx++)
+                    {
+                        var nx = x + dx;
+                        var ny = y + dy;
+                        if (nx < 0 || ny < 0 || nx >= width || ny >= height)
+                        {
+                            continue;
+                        }
+
+                        var n = ny * width + nx;
+                        if (label[n] == 0 && right.GetAlpha(nx, ny) > 150)
+                        {
+                            label[n] = id;
+                            stack.Push(n);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (sizes.Count <= 2)
+        {
+            return left; // one piece: nothing to give back
+        }
+
+        var main = 1;
+        for (var id = 2; id < sizes.Count; id++)
+        {
+            if (sizes[id] > sizes[main])
+            {
+                main = id;
+            }
+        }
+
+        // A stroke end is a sliver: no taller than a stroke is thick and far smaller than the
+        // letter. The top curl of an "s" cut through its spine, or the middle of a "w", is
+        // neither and stays where it is.
+        var extent = 0;
+        for (var id = 1; id < sizes.Count; id++)
+        {
+            if (id != main && continues[id] && (maxY[id] - minY[id] + 1) * 4 <= height && sizes[id] * 4 <= sizes[main])
+            {
+                extent = Math.Max(extent, maxX[id] + 1);
+            }
+            else
+            {
+                continues[id] = false;
+            }
+        }
+
+        if (extent == 0)
+        {
+            return left;
+        }
+
+        // Widen the left half over the cut column and the stroke ends, and move them across.
+        var widened = new NikseBitmap2(cut + 1 + extent, height);
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < cut; x++)
+            {
+                var alpha = left.GetAlpha(x, y);
+                if (alpha > 0)
+                {
+                    widened.SetPixel(x, y, left.GetPixel(x, y));
+                }
+            }
+        }
+
+        for (var index = 0; index < label.Length; index++)
+        {
+            var id = label[index];
+            if (id == 0 || id == main || !continues[id])
+            {
+                continue;
+            }
+
+            var x = index % width;
+            var y = index / width;
+            widened.SetPixel(cut + 1 + x, y, right.GetPixel(x, y));
+            right.SetAlpha(x, y, 0);
+            if (x == 0 && whole.GetAlpha(cut, y) > 150)
+            {
+                widened.SetPixel(cut, y, whole.GetPixel(cut, y));
+            }
+        }
+
+        return widened;
+    }
+
+    private NOcrChar? MatchLetterOrPair(NikseBitmap2 part, int topMargin, int maxWrongPixels, int depth, out double rate, bool returnStrokeEnds)
+    {
+        var match = GetMatchSingle(part, topMargin, false, maxWrongPixels, false, false, BaselinePlacement.Unknown, out rate);
+        if (match != null)
+        {
+            return match.Text.All(char.IsLetterOrDigit) ? match : null;
+        }
+
+        rate = double.MaxValue;
+        return depth == 0 ? MatchTouchingLetters(part, topMargin, maxWrongPixels, depth + 1, out rate, returnStrokeEnds) : null;
+    }
+
+    /// <summary>The part of <paramref name="bitmap"/> that has ink, and how many rows were cut off its top.</summary>
+    private static NikseBitmap2? TrimToInk(NikseBitmap2 bitmap, out int top)
+    {
+        top = 0;
+        int minX = bitmap.Width, minY = bitmap.Height, maxX = -1, maxY = -1;
+        for (var y = 0; y < bitmap.Height; y++)
+        {
+            for (var x = 0; x < bitmap.Width; x++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    minX = Math.Min(minX, x);
+                    maxX = Math.Max(maxX, x);
+                    minY = Math.Min(minY, y);
+                    maxY = Math.Max(maxY, y);
+                }
+            }
+        }
+
+        // Too small to be a letter: a sliver of the neighbour's stroke.
+        if (maxX < 0 || maxX - minX + 1 < 3 || maxY - minY + 1 < bitmap.Height / 3)
+        {
+            return null;
+        }
+
+        top = minY;
+        return bitmap.CopyRectangle(new NikseRectangle(minX, minY, maxX - minX + 1, maxY - minY + 1));
+    }
+
+    /// <summary>
     /// "ы"/"Ы" is a soft sign plus a separate bar. The trained two-part entries only fit fonts
     /// with a similar gap and weight - in a heavy outlined font the pair is far wider than any
     /// trained one and came out as "ьІ". A soft sign directly followed (no space) by a dotless bar
     /// of the same height and top is that letter in any font: a capital "І" after a lowercase
-    /// "ь" is taller, and the dotted "і" isn't a bar.
+    /// "ь" is taller, and a dotted "і"/"ї" is taller than its neighbours too. In heavy italic the
+    /// soft sign half can read as a hard sign and the bar as "Ї" or "/" ("тъЇ", "мъ/"); neither
+    /// "ъ" nor "ь" is ever followed by such a bar, so those count as well.
     /// </summary>
     private NOcrChar? ComposeYery(NOcrChar? softSign, List<ImageSplitterItem2> list, ImageSplitterItem2 item, bool deepSeek, int maxWrongPixels, bool lastDitch)
     {
-        if (softSign?.Text is not ("ь" or "Ь") || item.NikseBitmap == null)
+        if (softSign?.Text is not ("ь" or "Ь" or "ъ" or "Ъ") || item.NikseBitmap == null)
         {
             return softSign;
         }
@@ -587,14 +1104,14 @@ public class NOcrDb
         }
 
         var bar = GetMatchSingle(next.NikseBitmap, next.Top, deepSeek, maxWrongPixels, lastDitch);
-        if (bar?.Text is not ("І" or "l" or "I" or "|" or "/" or "1"))
+        if (bar?.Text is not ("І" or "і" or "Ї" or "ї" or "l" or "I" or "|" or "/" or "1"))
         {
             return softSign;
         }
 
         return new NOcrChar(softSign)
         {
-            Text = softSign.Text == "ь" ? "ы" : "Ы",
+            Text = softSign.Text is "ь" or "ъ" ? "ы" : "Ы",
             ExpandCount = 2,
         };
     }
@@ -612,7 +1129,7 @@ public class NOcrDb
         }
     }
 
-    private NOcrChar? GetExactMatchSingle(NikseBitmap2 bitmap, int topMargin)
+    private NOcrChar? GetExactMatchSingle(NikseBitmap2 bitmap, int topMargin, BaselinePlacement placement = BaselinePlacement.Unknown)
     {
         var index = _exactSizeIndex;
         if (index == null)
@@ -647,7 +1164,8 @@ public class NOcrDb
 
         foreach (var oc in candidates)
         {
-            if (Math.Abs(oc.MarginTop - topMargin) < 5 && IsMatch(bitmap, oc, 0))
+            if ((Math.Abs(oc.MarginTop - topMargin) < 5 || MatchesByBaseline(bitmap, oc, placement)) &&
+                FitsBaselinePlacement(oc, placement) && IsMatch(bitmap, oc, 0))
             {
                 return oc;
             }
@@ -656,13 +1174,21 @@ public class NOcrDb
         return null;
     }
 
-    public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false, bool skipExactCheck = false)
+    public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false, bool skipExactCheck = false, BaselinePlacement placement = BaselinePlacement.Unknown)
     {
+        return GetMatchSingle(bitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck, placement, out _);
+    }
+
+    /// <param name="matchRate">The winner's share of wrong points (0 for an exact match, <see cref="double.MaxValue"/> for none).</param>
+    private NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, bool skipExactCheck, BaselinePlacement placement, out double matchRate)
+    {
+        matchRate = double.MaxValue;
         if (!skipExactCheck)
         {
-            var exact = GetExactMatchSingle(bitmap, topMargin);
+            var exact = GetExactMatchSingle(bitmap, topMargin, placement);
             if (exact != null)
             {
+                matchRate = 0;
                 return exact;
             }
         }
@@ -675,6 +1201,7 @@ public class NOcrDb
         // of area leaves normal letters unaffected and only tightens tiny glyphs; the floor of 8
         // keeps cross-size matching of small glyphs possible.
         var areaErrorCap = Math.Max(8, bitmap.Width * bitmap.Height / 8);
+        var hasRowGap = HasGapOrNeck(bitmap);
 
         foreach (var pass in MatchPasses)
         {
@@ -711,7 +1238,8 @@ public class NOcrDb
             var bestLowerRate = double.MaxValue;
             foreach (var oc in OcrCharacters)
             {
-                if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass))
+                if (!PassFilter(bitmap, heightToWidthPercent, oc, topMargin, pass, placement) || !FitsBaselinePlacement(oc, placement) ||
+                    !hasRowGap && IsDottedOrAccentedI(oc.Text))
                 {
                     continue;
                 }
@@ -788,14 +1316,114 @@ public class NOcrDb
             }
 
             best = ResolveCaseTwin(best, bestRate, bestUpper, bestUpperRate, bestLower, bestLowerRate, bitmap.Height, topMargin);
+            best = PreferUnaccented(bitmap, best, bestRate);
 
             if (best != null)
             {
+                matchRate = bestRate;
                 return best;
             }
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Where a glyph's bottom is relative to its line's baseline: dots, commas and low quotes
+    /// sit on it, dashes and raised quotes float above it. Pixels alone can't tell a heavy dot
+    /// from a short dash (both a solid blob), and the loose passes' top-margin tolerance let a
+    /// dash entry claim the period at the end of a line.
+    /// </summary>
+    public enum BaselinePlacement
+    {
+        Unknown,
+        OnBaseline,
+        AboveBaseline,
+    }
+
+    /// <summary>
+    /// For a small mark in a line of text: <see cref="BaselinePlacement.OnBaseline"/> when its
+    /// bottom is within a tenth of the line height of the baseline (or below it),
+    /// <see cref="BaselinePlacement.AboveBaseline"/> when it is at least a fifth of the line height
+    /// above it, otherwise unknown. Also unknown unless at least three glyphs in the line are half
+    /// as tall again as this one - in a line of nothing but marks ("■ ■ ■") the median bottom is
+    /// no baseline, and letters don't need the check.
+    /// </summary>
+    public static BaselinePlacement GetBaselinePlacement(List<ImageSplitterItem2> list, ImageSplitterItem2 item)
+    {
+        if (item.Baseline is not { } baseline || item.NikseBitmap == null || baseline <= 0)
+        {
+            return BaselinePlacement.Unknown;
+        }
+
+        var index = list.IndexOf(item);
+        var start = index;
+        while (start > 0 && list[start - 1].SpecialCharacter != Environment.NewLine)
+        {
+            start--;
+        }
+
+        var tallerGlyphs = 0;
+        for (var i = start; i < list.Count && list[i].SpecialCharacter != Environment.NewLine; i++)
+        {
+            if (list[i].NikseBitmap is { } bitmap && bitmap.Height * 2 >= item.NikseBitmap.Height * 3)
+            {
+                tallerGlyphs++;
+            }
+        }
+
+        if (index < 0 || tallerGlyphs < 3)
+        {
+            return BaselinePlacement.Unknown;
+        }
+
+        var gap = baseline - (item.Top + item.NikseBitmap.Height);
+        if (gap <= Math.Max(2, baseline / 10))
+        {
+            return BaselinePlacement.OnBaseline;
+        }
+
+        if (gap >= Math.Max(3, baseline / 5))
+        {
+            return BaselinePlacement.AboveBaseline;
+        }
+
+        return BaselinePlacement.Unknown;
+    }
+
+    /// <summary>
+    /// Marks whose shape has no lookalike at the other height: a dash or a degree sign never sits
+    /// on the baseline, a period, ellipsis or underscore never floats above it.
+    /// </summary>
+    private static bool FitsBaselinePlacement(NOcrChar oc, BaselinePlacement placement) => placement switch
+    {
+        BaselinePlacement.OnBaseline => oc.Text is not ("-" or "‐" or "–" or "—" or "°" or "^"),
+        BaselinePlacement.AboveBaseline => oc.Text is not ("." or "…" or "_"),
+        _ => true,
+    };
+
+    /// <summary>
+    /// Commas and quotes are the same shapes at different heights: a comma above the baseline
+    /// is an apostrophe ("we,ve"), a raised quote on the baseline is a comma or a low quote. A
+    /// "comma" that doesn't hang below the baseline and is about as wide as tall is a period -
+    /// in heavy fonts a solid dot fits a comma entry scaled down.
+    /// </summary>
+    private static NOcrChar? PlaceMark(NOcrChar? match, BaselinePlacement placement, ImageSplitterItem2 item)
+    {
+        var text = (placement, match?.Text) switch
+        {
+            (BaselinePlacement.OnBaseline, ",") when !HangsBelowBaseline(item) &&
+                                                     item.NikseBitmap!.Height * 2 <= item.NikseBitmap.Width * 3 => ".",
+            (BaselinePlacement.AboveBaseline, ",") => "'",
+            (BaselinePlacement.AboveBaseline, "„") => "\"",
+            (BaselinePlacement.OnBaseline, "'" or "’" or "‘" or "`" or "´") => ",",
+            (BaselinePlacement.OnBaseline, "\"" or "“" or "”") => "„",
+            _ => null,
+        };
+
+        // The copy constructor doesn't carry ExpandCount - a two-part quote must still consume
+        // both parts.
+        return text == null ? match : new NOcrChar(match!) { Text = text, ExpandCount = match!.ExpandCount };
     }
 
     // Below this pixel area a glyph is a "small glyph" (dot, comma, dash, apostrophe, ...):
@@ -805,7 +1433,22 @@ public class NOcrDb
     private const double SmallGlyphMaxAspectRatio = 2.0;
     private const int SmallGlyphMaxAreaRatio = 5;
 
-    private static bool PassFilter(NikseBitmap2 bitmap, double heightToWidthPercent, NOcrChar oc, int topMargin, in MatchPass pass)
+    /// <summary>
+    /// A period, comma or low quote sitting on the baseline is matched by that position instead of
+    /// by the top margin it was trained at. The trained margin is a line-height artefact - a "."
+    /// learnt in a 90 px line (top 54) can't fit a dot of the same pixel size in a 57 px line (top
+    /// 32) through any pass's top gate, although the baseline already says what it is. Only marks
+    /// that <see cref="FitsBaselinePlacement"/> keeps on the baseline anyway; dashes, apostrophes
+    /// and quotes still have to be at the right height, or a dash entry could claim a dot.
+    /// </summary>
+    private static bool MatchesByBaseline(NikseBitmap2 bitmap, NOcrChar oc, BaselinePlacement placement) =>
+        placement == BaselinePlacement.OnBaseline &&
+        bitmap.Width * bitmap.Height < SmallGlyphAreaLimit &&
+        IsBaselineMark(oc.Text);
+
+    private static bool IsBaselineMark(string text) => text is "." or "…" or "," or "„" or "_";
+
+    private static bool PassFilter(NikseBitmap2 bitmap, double heightToWidthPercent, NOcrChar oc, int topMargin, in MatchPass pass, BaselinePlacement placement)
     {
         // A small entry (dot, comma, apostrophe) carries only a few lines of evidence, and since
         // every gate below scales with the glyph, it fits a much bigger glyph once stretched
@@ -864,7 +1507,7 @@ public class NOcrDb
         var scale = bitmap.Height / (double)oc.Height;
         var expectedTop = oc.MarginTop * scale;
         var topTolerance = pass.MarginTopMaxDelta * Math.Max(1.0, scale);
-        if (Math.Abs(expectedTop - topMargin) >= topTolerance)
+        if (Math.Abs(expectedTop - topMargin) >= topTolerance && !MatchesByBaseline(bitmap, oc, placement))
         {
             return false;
         }
@@ -985,6 +1628,77 @@ public class NOcrDb
     // more of them than Latin ("о"/"О", "т"/"Т", "и"/"И", ...).
     private const string CaseTwinLetters = "cCoOsSuUvVwWxXzZøØ" + NOcrCaseFixer.CyrillicCaseTwins;
     private const double CaseTwinRateMargin = 0.01;
+
+    /// <summary>
+    /// "i", "j" and their accented forms are a stem with a separate dot or accent above it, so the
+    /// glyph has an empty row between them. A slanted italic "l" is one solid stroke and fitted
+    /// an italic "ì"/"Ì" entry, whose grave continues the slant of the stem ("shouìders").
+    /// </summary>
+    private static bool IsDottedOrAccentedI(string text) =>
+        text.Length == 1 && "iìíîïjĵÌÍÎÏĴ".Contains(text[0]);
+
+    /// <summary>
+    /// The glyph has a row between a top part and the rest that is empty, or a neck: at most 40%
+    /// of the ink of both the widest row above it and the row below it. In rounded bold fonts the
+    /// corners of the stem reach into the gap under the dot of "i", so the gap row isn't quite
+    /// empty. A solid stroke ("l") keeps its width, and a "t" is wider at the crossbar than below.
+    /// </summary>
+    private static bool HasGapOrNeck(NikseBitmap2 bitmap)
+    {
+        var counts = new int[bitmap.Height];
+        for (var y = 0; y < bitmap.Height; y++)
+        {
+            for (var x = 0; x < bitmap.Width; x++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    counts[y]++;
+                }
+            }
+        }
+
+        var maxAbove = counts.Length > 0 ? counts[0] : 0;
+        for (var y = 1; y < counts.Length - 1; y++)
+        {
+            if (counts[y] == 0 ||
+                counts[y] * 10 <= Math.Min(maxAbove, counts[y + 1]) * 4)
+            {
+                return true;
+            }
+
+            maxAbove = Math.Max(maxAbove, counts[y]);
+        }
+
+        return false;
+    }
+
+    // How much worse (share of wrong points) "i"/"I" may fit and still beat "ì"/"Ì".
+    private const double UnaccentedRateMargin = 0.02;
+
+    /// <summary>
+    /// "ì"/"Ì" must clearly beat "i"/"I". Scaled onto the glyph's box they differ only in the
+    /// shape of the mark on top, so the big round dot of a font the database wasn't trained on
+    /// read as a grave ("thìs", "ìs") all through English text. Only the grave "i": it is rare
+    /// (Italian, word-final), while "í", "Á", "Å", ... are everyday letters whose plain twin
+    /// can fit about as well and must not win.
+    /// </summary>
+    private NOcrChar? PreferUnaccented(NikseBitmap2 bitmap, NOcrChar? best, double bestRate)
+    {
+        var plainText = best?.Text switch
+        {
+            "ì" => "i",
+            "Ì" => "I",
+            _ => null,
+        };
+
+        if (plainText == null)
+        {
+            return best;
+        }
+
+        var (plain, _) = FindBestByText(bitmap, plainText, bestRate + UnaccentedRateMargin);
+        return plain ?? best;
+    }
 
     private static bool IsCaseTwinLetter(string text) => text.Length == 1 && CaseTwinLetters.Contains(text[0]);
 

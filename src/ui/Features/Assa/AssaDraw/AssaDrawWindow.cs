@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Controls.Templates;
@@ -16,39 +15,20 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using static Nikse.SubtitleEdit.Logic.EditorChrome;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 
 /// <summary>
 /// ASSA draw - laid out like a vector editor: options bar on top, tool strip on the left, canvas,
-/// shapes/properties panel on the right. Always dark, like most drawing programs, so the artwork
-/// stands out; the colors below are the editor palette.
+/// shapes/properties panel on the right. The chrome follows the app theme (the editor palette
+/// below, dark or light), and so does the canvas workspace.
 /// </summary>
 public class AssaDrawWindow : Window
 {
-    private static readonly IBrush WindowBrush = new ImmutableSolidColorBrush(Color.FromRgb(30, 31, 36));
-    private static readonly IBrush PanelBrush = new ImmutableSolidColorBrush(Color.FromRgb(36, 38, 44));
-    private static readonly IBrush StatusBrush = new ImmutableSolidColorBrush(Color.FromRgb(27, 28, 33));
-    private static readonly IBrush ButtonBarBrush = new ImmutableSolidColorBrush(Color.FromRgb(32, 34, 39));
-    private static readonly IBrush LineBrush = new ImmutableSolidColorBrush(Color.FromRgb(47, 50, 58));
-    private static readonly IBrush SeparatorBrush = new ImmutableSolidColorBrush(Color.FromRgb(55, 58, 67));
-    private static readonly IBrush DimTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(140, 146, 160));
-    private static readonly IBrush FaintTextBrush = new ImmutableSolidColorBrush(Color.FromRgb(111, 117, 131));
-    private static readonly IBrush IconBrush = new ImmutableSolidColorBrush(Color.FromRgb(174, 180, 194));
-    private static readonly IBrush HoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(51, 54, 63));
-    private static readonly IBrush PressedBrush = new ImmutableSolidColorBrush(Color.FromRgb(59, 62, 71));
-    private static readonly IBrush AccentBrush = new ImmutableSolidColorBrush(Color.FromRgb(76, 110, 245));
-    private static readonly IBrush AccentHoverBrush = new ImmutableSolidColorBrush(Color.FromRgb(92, 124, 250));
-    private static readonly IBrush AccentSoftBrush = new ImmutableSolidColorBrush(Color.FromArgb(70, 76, 110, 245));
-    private static readonly IBrush FieldBrush = new ImmutableSolidColorBrush(Color.FromRgb(27, 28, 33));
-    private static readonly IBrush FieldBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(54, 57, 68));
-    private static readonly IBrush MenuBrush = new ImmutableSolidColorBrush(Color.FromRgb(42, 44, 51));
-    private static readonly IBrush MenuBorderBrush = new ImmutableSolidColorBrush(Color.FromRgb(66, 69, 79));
-
     private readonly AssaDrawViewModel _vm;
     private readonly AssaDrawCanvas _canvas;
     private readonly ContextMenu _canvasMenu;
@@ -63,7 +43,6 @@ public class AssaDrawWindow : Window
         MinWidth = 900;
         MinHeight = 600;
         CanResize = true;
-        RequestedThemeVariant = ThemeVariant.Dark;
         Background = WindowBrush;
         vm.Window = this;
         DataContext = vm;
@@ -117,7 +96,18 @@ public class AssaDrawWindow : Window
         AddHandler(DragDrop.DropEvent, vm.OnDrop, RoutingStrategies.Bubble);
 
         Loaded += OnLoaded;
-        Closing += (_, e) => vm.OnClosing();
+        Closing += (_, e) =>
+        {
+            // The X button asks before discarding changes too (OK and a confirmed Cancel/Esc don't)
+            if (vm.ShouldAskBeforeClosing)
+            {
+                e.Cancel = true;
+                _ = vm.CloseAfterConfirm();
+                return;
+            }
+
+            vm.OnClosing();
+        };
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
@@ -126,123 +116,6 @@ public class AssaDrawWindow : Window
         // Setup the canvas after the window is loaded
         _vm.SetCanvas(_canvas);
         _vm.Initialize();
-    }
-
-    /// <summary>
-    /// Flat icon buttons with an accent "active" state, compact number fields and accent menus.
-    /// </summary>
-    private static void AddEditorStyles(Styles styles)
-    {
-        static Style ToolPresenter(Func<Selector?, Selector> button, params (AvaloniaProperty Property, object Value)[] setters)
-        {
-            var style = new Style(x => button(x).Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"));
-            foreach (var (property, value) in setters)
-            {
-                style.Setters.Add(new Setter(property, value));
-            }
-
-            return style;
-        }
-
-        styles.Add(new Style(x => x.OfType<Button>().Class("tool"))
-        {
-            Setters =
-            {
-                new Setter(Button.BackgroundProperty, Brushes.Transparent),
-                new Setter(Button.BorderThicknessProperty, new Thickness(0)),
-                new Setter(Button.CornerRadiusProperty, new CornerRadius(7)),
-                new Setter(Button.ForegroundProperty, IconBrush),
-                new Setter(Button.PaddingProperty, new Thickness(0)),
-            },
-        });
-        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":pointerover"),
-            (ContentPresenter.BackgroundProperty, HoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
-        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":pressed"),
-            (ContentPresenter.BackgroundProperty, PressedBrush)));
-        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class(":disabled"),
-            (ContentPresenter.BackgroundProperty, Brushes.Transparent), (ContentPresenter.ForegroundProperty, SeparatorBrush)));
-        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class("active"),
-            (ContentPresenter.BackgroundProperty, AccentBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
-        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("tool").Class("active").Class(":pointerover"),
-            (ContentPresenter.BackgroundProperty, AccentHoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
-
-        // Primary button (OK) in the editor accent
-        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("primary"),
-            (ContentPresenter.BackgroundProperty, AccentBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
-        styles.Add(ToolPresenter(x => x.OfType<Button>().Class("primary").Class(":pointerover"),
-            (ContentPresenter.BackgroundProperty, AccentHoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
-
-        // Compact number fields
-        styles.Add(new Style(x => x.OfType<NumericUpDown>().Class("field"))
-        {
-            Setters =
-            {
-                new Setter(NumericUpDown.ShowButtonSpinnerProperty, false),
-                new Setter(NumericUpDown.MinHeightProperty, 28.0),
-                new Setter(NumericUpDown.HeightProperty, 28.0),
-                new Setter(NumericUpDown.FontSizeProperty, 12.5),
-                new Setter(NumericUpDown.BackgroundProperty, FieldBrush),
-                new Setter(NumericUpDown.BorderBrushProperty, FieldBorderBrush),
-                new Setter(NumericUpDown.CornerRadiusProperty, new CornerRadius(6)),
-            },
-        });
-        styles.Add(new Style(x => x.OfType<NumericUpDown>().Class("field").Template().OfType<TextBox>())
-        {
-            Setters =
-            {
-                new Setter(TextBox.MinHeightProperty, 0.0),
-                new Setter(TextBox.HeightProperty, 28.0),
-                new Setter(TextBox.PaddingProperty, new Thickness(6, 0)),
-                new Setter(TextBox.VerticalContentAlignmentProperty, VerticalAlignment.Center),
-                new Setter(TextBox.BackgroundProperty, FieldBrush),
-            },
-        });
-
-        // Menus: rounded, darker, accent highlight
-        foreach (var menuType in new[] { typeof(ContextMenu), typeof(MenuFlyoutPresenter) })
-        {
-            styles.Add(new Style(x => x.OfType(menuType))
-            {
-                Setters =
-                {
-                    new Setter(TemplatedControl.BackgroundProperty, MenuBrush),
-                    new Setter(TemplatedControl.BorderBrushProperty, MenuBorderBrush),
-                    new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(9)),
-                    new Setter(TemplatedControl.PaddingProperty, new Thickness(4)),
-                },
-            });
-        }
-
-        styles.Add(new Style(x => x.OfType<MenuItem>())
-        {
-            Setters = { new Setter(MenuItem.CornerRadiusProperty, new CornerRadius(5)) },
-        });
-        styles.Add(new Style(x => x.OfType<MenuItem>().Class(":pointerover").Template().OfType<Border>().Name("PART_LayoutRoot"))
-        {
-            Setters = { new Setter(Border.BackgroundProperty, AccentBrush) },
-        });
-        styles.Add(new Style(x => x.OfType<MenuItem>().Class(":open").Template().OfType<Border>().Name("PART_LayoutRoot"))
-        {
-            Setters = { new Setter(Border.BackgroundProperty, AccentBrush) },
-        });
-
-        // Tree: rounded rows, soft accent selection
-        styles.Add(new Style(x => x.OfType<TreeViewItem>().Template().OfType<Border>().Name("PART_LayoutRoot"))
-        {
-            Setters =
-            {
-                new Setter(Border.CornerRadiusProperty, new CornerRadius(6)),
-                new Setter(Border.MinHeightProperty, 28.0),
-            },
-        });
-        styles.Add(new Style(x => x.OfType<TreeViewItem>().Class(":selected").Template().OfType<Border>().Name("PART_LayoutRoot"))
-        {
-            Setters = { new Setter(Border.BackgroundProperty, AccentSoftBrush) },
-        });
-        styles.Add(new Style(x => x.OfType<TreeViewItem>().Class(":selected").Class(":pointerover").Template().OfType<Border>().Name("PART_LayoutRoot"))
-        {
-            Setters = { new Setter(Border.BackgroundProperty, AccentSoftBrush) },
-        });
     }
 
     private void OnCanvasContextMenuRequested(object? sender, CanvasContextEventArgs e)
@@ -282,6 +155,10 @@ public class AssaDrawWindow : Window
         if (item?.IsLayer == true)
         {
             AddLayerItems(items, item);
+        }
+        else if (item?.IsGroup == true)
+        {
+            AddGroupNodeItems(items);
         }
         else if (item?.Point != null)
         {
@@ -328,6 +205,7 @@ public class AssaDrawWindow : Window
     private void AddShapeItems(List<Control> items, DrawShape shape)
     {
         items.Add(MakeMenuItem(Se.Language.General.Duplicate, "fa-regular fa-clone", _vm.DuplicateShapeCommand, new KeyGesture(Key.D, KeyModifiers.Control)));
+        AddGroupItems(items);
 
         var moveToLayer = MakeMenuItem(Se.Language.Assa.DrawMoveToLayer, "fa-solid fa-layer-group", null);
         var layerItems = new List<Control>();
@@ -375,6 +253,40 @@ public class AssaDrawWindow : Window
         items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawDeleteShape), "fa-solid fa-trash", _vm.DeleteShapeCommand, new KeyGesture(Key.Delete)));
     }
 
+    /// <summary>
+    /// Group / Ungroup, each shown only when it can do something.
+    /// </summary>
+    private void AddGroupItems(List<Control> items)
+    {
+        if (_vm.GroupShapesCommand.CanExecute(null))
+        {
+            items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawGroup), "fa-regular fa-object-group", _vm.GroupShapesCommand, new KeyGesture(Key.G, KeyModifiers.Control)));
+        }
+
+        if (_vm.UngroupShapesCommand.CanExecute(null))
+        {
+            items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawUngroup), "fa-regular fa-object-ungroup", _vm.UngroupShapesCommand, new KeyGesture(Key.G, KeyModifiers.Control | KeyModifiers.Shift)));
+        }
+    }
+
+    /// <summary>
+    /// A group node in the tree: what acts on the whole group.
+    /// </summary>
+    private void AddGroupNodeItems(List<Control> items)
+    {
+        items.Add(MakeMenuItem(Se.Language.General.Duplicate, "fa-regular fa-clone", _vm.DuplicateShapeCommand, new KeyGesture(Key.D, KeyModifiers.Control)));
+        AddGroupItems(items);
+        AddSeparator(items);
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawRotateClockwise, "fa-solid fa-rotate-right", _vm.RotateShapeClockwiseCommand));
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawRotateCounterClockwise, "fa-solid fa-rotate-left", _vm.RotateShapeCounterClockwiseCommand));
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawFlipHorizontal, "fa-solid fa-left-right", _vm.FlipShapeHorizontalCommand));
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawFlipVertical, "fa-solid fa-up-down", _vm.FlipShapeVerticalCommand));
+        AddSeparator(items);
+        items.Add(MakeMenuItem(Se.Language.Assa.DrawAddToLibrary, "fa-solid fa-shapes", _vm.AddToLibraryCommand));
+        AddSeparator(items);
+        items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawDeleteShape), "fa-solid fa-trash", _vm.DeleteShapeCommand, new KeyGesture(Key.Delete)));
+    }
+
     private void AddLayerItems(List<Control> items, ShapeTreeItem layerItem)
     {
         items.Add(MakeMenuItem(
@@ -410,7 +322,7 @@ public class AssaDrawWindow : Window
         items.Add(MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawResetView), "fa-solid fa-expand", _vm.ResetViewCommand, new KeyGesture(Key.D0, KeyModifiers.Control)));
         AddSeparator(items);
 
-        var grid = MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawToggleGrid), null, _vm.ToggleGridCommand, new KeyGesture(Key.G, KeyModifiers.Control));
+        var grid = MakeMenuItem(WithoutShortcut(Se.Language.Assa.DrawToggleGrid), null, _vm.ToggleGridCommand, new KeyGesture(Key.OemQuotes, KeyModifiers.Control));
         grid.ToggleType = MenuItemToggleType.CheckBox;
         grid.IsChecked = _vm.ShowGrid;
         items.Add(grid);
@@ -422,7 +334,7 @@ public class AssaDrawWindow : Window
 
         AddSeparator(items);
         items.Add(MakeMenuItem(Se.Language.Assa.DrawImportSvg, "fa-solid fa-file-import", _vm.ImportSvgCommand));
-        var background = MakeMenuItem(Se.Language.Assa.DrawBackground, "fa-regular fa-image", null);
+        var background = MakeMenuItem(Se.Language.General.Background, "fa-regular fa-image", null);
         background.ItemsSource = MakeBackgroundItems(_vm);
         items.Add(background);
 
@@ -441,29 +353,32 @@ public class AssaDrawWindow : Window
         }
     }
 
-    private static MenuItem MakeMenuItem(string header, string? icon, System.Windows.Input.ICommand? command, KeyGesture? gesture = null)
-    {
-        var item = new MenuItem
-        {
-            Header = header,
-            Command = command,
-            InputGesture = gesture,
-        };
-
-        if (icon != null)
-        {
-            item.Icon = new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 13 };
-        }
-
-        return item;
-    }
-
     /// <summary>
     /// The tool tip texts end with their shortcut, e.g. "Delete Shape (Del)" - menus show the shortcut in their own column.
     /// </summary>
     private static string WithoutShortcut(string text)
     {
         return Regex.Replace(text, @"\s*\([^()]*\)\s*$", string.Empty);
+    }
+
+    /// <summary>
+    /// The tool's translated name, for the status bar (older translations still end in "(F4)" etc.).
+    /// </summary>
+    internal static string GetToolName(DrawingTool tool)
+    {
+        var l = Se.Language.Assa;
+        return WithoutShortcut(tool switch
+        {
+            DrawingTool.Select => l.DrawSelectTool,
+            DrawingTool.Line => l.DrawLineTool,
+            DrawingTool.Bezier => l.DrawBezierTool,
+            DrawingTool.Rectangle => l.DrawRectangleTool,
+            DrawingTool.Circle => l.DrawCircleTool,
+            DrawingTool.Shape => l.DrawShapeTool,
+            DrawingTool.Text => l.DrawTextTool,
+            DrawingTool.ColorPicker => l.DrawColorPickerToolName,
+            _ => tool.ToString(),
+        });
     }
 
     private static List<Control> MakeBackgroundItems(AssaDrawViewModel vm)
@@ -503,6 +418,8 @@ public class AssaDrawWindow : Window
         // Shape actions
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-check", Se.Language.Assa.DrawCloseShape, vm.CloseShapeCommand));
         leftPanel.Children.Add(CreateToolButton("fa-regular fa-clone", Se.Language.General.Duplicate + " (Ctrl+D)", vm.DuplicateShapeCommand));
+        leftPanel.Children.Add(CreateToolButton("fa-regular fa-object-group", Se.Language.Assa.DrawGroup, vm.GroupShapesCommand));
+        leftPanel.Children.Add(CreateToolButton("fa-regular fa-object-ungroup", Se.Language.Assa.DrawUngroup, vm.UngroupShapesCommand));
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-trash", Se.Language.Assa.DrawDeleteShape, vm.DeleteShapeCommand));
         leftPanel.Children.Add(CreateToolButton("fa-solid fa-eraser", Se.Language.Assa.DrawClearAll, vm.ClearAllCommand));
         leftPanel.Children.Add(MakeToolbarSeparator());
@@ -517,7 +434,7 @@ public class AssaDrawWindow : Window
         leftPanel.Children.Add(MakeToolbarSeparator());
 
         // Background: video frame or image to trace over, with its opacity
-        var backgroundButton = CreateToolButton("fa-regular fa-image", Se.Language.Assa.DrawBackground, null);
+        var backgroundButton = CreateToolButton("fa-regular fa-image", Se.Language.General.Background, null);
         BindHighlight(backgroundButton, vm, () => vm.HasBackground, nameof(vm.HasBackground));
         // Items depend on the current state (video loaded, background set), so the menu is built on
         // click - a MenuFlyout filled in its Opening event showed up empty.
@@ -564,8 +481,8 @@ public class AssaDrawWindow : Window
         vm.CopyToClipboardButton = copyButton;
         rightPanel.Children.Add(CreateToolButton("fa-solid fa-file-import", Se.Language.Assa.DrawImportSvg, vm.ImportSvgCommand));
         rightPanel.Children.Add(copyButton);
-        rightPanel.Children.Add(CreateToolButton("fa-solid fa-folder-open", "Load", vm.LoadCommand));
-        rightPanel.Children.Add(CreateToolButton("fa-solid fa-floppy-disk", "Save", vm.SaveCommand));
+        rightPanel.Children.Add(CreateToolButton("fa-solid fa-folder-open", Se.Language.Assa.DrawOpenDrawing, vm.LoadCommand));
+        rightPanel.Children.Add(CreateToolButton("fa-solid fa-floppy-disk", Se.Language.Assa.DrawSaveDrawing, vm.SaveCommand));
 
         var grid = new Grid
         {
@@ -587,103 +504,6 @@ public class AssaDrawWindow : Window
             BorderThickness = new Thickness(0, 0, 0, 1),
             Padding = new Thickness(10, 6),
         };
-    }
-
-    private static TextBlock MakeDimLabel(string text, Thickness margin)
-    {
-        return new TextBlock
-        {
-            Text = text,
-            Foreground = DimTextBrush,
-            FontSize = 12,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = margin,
-        };
-    }
-
-    /// <summary>
-    /// Compact number field without spinner buttons, optionally with a dim prefix like "X".
-    /// </summary>
-    private static NumericUpDown MakeField(string property, double minimum, double maximum, double width = double.NaN, string? prefix = null, string format = "0")
-    {
-        var field = new NumericUpDown
-        {
-            Minimum = (decimal)minimum,
-            Maximum = (decimal)maximum,
-            Increment = 1,
-            Width = width,
-            FormatString = format,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!NumericUpDown.ValueProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
-        };
-        field.Classes.Add("field");
-        if (prefix != null)
-        {
-            field.InnerLeftContent = new TextBlock
-            {
-                Text = prefix,
-                Foreground = FaintTextBrush,
-                FontSize = 11,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(8, 0, 0, 0),
-            };
-        }
-
-        return field;
-    }
-
-    private static Border MakeToolbarSeparator()
-    {
-        return new Border
-        {
-            Width = 1,
-            Height = 22,
-            Background = SeparatorBrush,
-            Margin = new Thickness(8, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-    }
-
-    private static Button CreateToolButton(string icon, string tooltip, System.Windows.Input.ICommand? command, double size = 30, string? shortcut = null)
-    {
-        Control content = new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = size > 34 ? 15 : 13 };
-        if (shortcut != null)
-        {
-            // Shortcut letter in the corner, like the tool palettes of drawing programs
-            var grid = new Grid { Width = size, Height = size };
-            content.HorizontalAlignment = HorizontalAlignment.Center;
-            content.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(content);
-            grid.Children.Add(new TextBlock
-            {
-                Text = shortcut,
-                FontSize = 8,
-                Opacity = 0.6,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom,
-                Margin = new Thickness(0, 0, 4, 2),
-            });
-            content = grid;
-        }
-
-        var button = new Button
-        {
-            Content = content,
-            Width = size,
-            Height = size,
-            Command = command,
-            HorizontalContentAlignment = HorizontalAlignment.Center,
-            VerticalContentAlignment = VerticalAlignment.Center,
-        };
-        button.Classes.Add("tool");
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(button, tooltip);
-        }
-
-        // Icon-only, so the tool tip text is the only text there is for a screen reader (#12087).
-        AutomationProperties.SetName(button, tooltip);
-        return button;
     }
 
     /// <summary>
@@ -710,22 +530,24 @@ public class AssaDrawWindow : Window
             HorizontalAlignment = HorizontalAlignment.Center,
         };
 
-        void AddTool(string icon, string tooltip, System.Windows.Input.ICommand command, DrawingTool tool, string shortcut)
+        // Each tool's shortcut shown once: the letter, plus the function key where there is one
+        void AddTool(string icon, string tooltip, System.Windows.Input.ICommand command, DrawingTool tool, string shortcut, string? functionKey = null)
         {
-            var button = CreateToolButton(icon, tooltip + " (" + shortcut + ")", command, 38, shortcut);
+            var keys = functionKey == null ? shortcut : shortcut + ", " + functionKey;
+            var button = CreateToolButton(icon, WithoutShortcut(tooltip) + " (" + keys + ")", command, 38, shortcut);
             BindHighlight(button, vm, () => vm.CurrentTool == tool, nameof(vm.CurrentTool));
             panel.Children.Add(button);
         }
 
         AddTool("fa-solid fa-arrow-pointer", Se.Language.Assa.DrawSelectTool, vm.SelectToolCommand, DrawingTool.Select, "V");
         panel.Children.Add(MakeStripSeparator());
-        AddTool("fa-solid fa-pen-nib", Se.Language.Assa.DrawLineTool, vm.LineToolCommand, DrawingTool.Line, "L");
-        AddTool("fa-solid fa-bezier-curve", Se.Language.Assa.DrawBezierTool, vm.BezierToolCommand, DrawingTool.Bezier, "B");
-        AddTool("fa-regular fa-square", Se.Language.Assa.DrawRectangleTool, vm.RectangleToolCommand, DrawingTool.Rectangle, "R");
-        AddTool("fa-regular fa-circle", Se.Language.Assa.DrawCircleTool, vm.CircleToolCommand, DrawingTool.Circle, "C");
+        AddTool("fa-solid fa-pen-nib", Se.Language.Assa.DrawLineTool, vm.LineToolCommand, DrawingTool.Line, "L", "F4");
+        AddTool("fa-solid fa-bezier-curve", Se.Language.Assa.DrawBezierTool, vm.BezierToolCommand, DrawingTool.Bezier, "B", "F5");
+        AddTool("fa-regular fa-square", Se.Language.Assa.DrawRectangleTool, vm.RectangleToolCommand, DrawingTool.Rectangle, "R", "F6");
+        AddTool("fa-regular fa-circle", Se.Language.Assa.DrawCircleTool, vm.CircleToolCommand, DrawingTool.Circle, "C", "F7");
 
         // Shape tool: picks a shape from the library palette that opens next to the strip
-        var shapeButton = CreateToolButton("fa-solid fa-shapes", Se.Language.Assa.DrawShapeTool + " (S)", null, 38, "S");
+        var shapeButton = CreateToolButton("fa-solid fa-shapes", WithoutShortcut(Se.Language.Assa.DrawShapeTool) + " (S)", null, 38, "S");
         BindHighlight(shapeButton, vm, () => vm.CurrentTool == DrawingTool.Shape, nameof(vm.CurrentTool));
         var palette = new Popup
         {
@@ -742,6 +564,7 @@ public class AssaDrawWindow : Window
         };
         panel.Children.Add(shapeButton);
         panel.Children.Add(palette);
+        AddTool("fa-solid fa-font", Se.Language.Assa.DrawTextTool, vm.TextToolCommand, DrawingTool.Text, "T");
         AddTool("fa-solid fa-eye-dropper", Se.Language.Assa.DrawColorPickerTool, vm.ColorPickerToolCommand, DrawingTool.ColorPicker, "I");
         panel.Children.Add(MakeStripSeparator());
         panel.Children.Add(CreateToolButton("fa-solid fa-magnifying-glass-plus", Se.Language.Assa.DrawZoomIn, vm.ZoomInCommand, 38));
@@ -754,7 +577,7 @@ public class AssaDrawWindow : Window
             Width = 24,
             Height = 24,
             CornerRadius = new CornerRadius(5),
-            BorderBrush = Brushes.White,
+            BorderBrush = StrongTextBrush,
             BorderThickness = new Thickness(2),
             HorizontalAlignment = HorizontalAlignment.Center,
             [!Border.BackgroundProperty] = new Binding(nameof(vm.LayerColor)) { Converter = new FuncValueConverter<Color, IBrush>(c => new SolidColorBrush(c)) },
@@ -808,23 +631,34 @@ public class AssaDrawWindow : Window
             var wrap = new WrapPanel { Width = columns * (cell + 4) };
             foreach (var item in list)
             {
-                var path = new Avalonia.Controls.Shapes.Path
+                Control thumbnail;
+                if (item.HasOwnColors)
                 {
-                    Data = item.ToGeometry(),
-                    Fill = item.UserShape != null ? null : new SolidColorBrush(Color.FromRgb(214, 218, 226)),
-                    Stretch = Stretch.Uniform,
-                    Margin = new Thickness(9),
-                };
-                if (item.UserShape != null)
+                    // Saved shapes and clip art show all their colors: one path per layer, in one
+                    // coordinate space, scaled together
+                    var (left, top, right, bottom) = item.Bounds;
+                    var parts = new Canvas { Width = Math.Max(1, right - left), Height = Math.Max(1, bottom - top) };
+                    foreach (var (color, geometry) in item.ToColoredGeometries())
+                    {
+                        parts.Children.Add(new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = new SolidColorBrush(color) });
+                    }
+
+                    thumbnail = new Viewbox { Child = parts, Stretch = Stretch.Uniform, Margin = new Thickness(7) };
+                }
+                else
                 {
-                    // Saved shapes show their own (first) color
-                    var color = item.Template.FirstOrDefault(s => !s.IsEraser)?.ForeColor ?? Colors.White;
-                    path.Fill = new SolidColorBrush(color);
+                    thumbnail = new Avalonia.Controls.Shapes.Path
+                    {
+                        Data = item.ToGeometry(),
+                        Fill = ThumbnailBrush,
+                        Stretch = Stretch.Uniform,
+                        Margin = new Thickness(9),
+                    };
                 }
 
                 var button = new Button
                 {
-                    Content = path,
+                    Content = thumbnail,
                     Width = cell,
                     Height = cell,
                     Margin = new Thickness(0, 0, 4, 4),
@@ -844,6 +678,7 @@ public class AssaDrawWindow : Window
                     vm.PickLibraryShapeCommand.Execute(item);
                     close();
                 };
+                AddPaletteDrag(button, item, close);
 
                 if (item.UserShape != null)
                 {
@@ -891,6 +726,59 @@ public class AssaDrawWindow : Window
         };
     }
 
+    /// <summary>
+    /// Dragging a palette shape (instead of clicking it) drops it on the canvas where it is released.
+    /// </summary>
+    private static void AddPaletteDrag(Button button, ShapeLibraryItem item, Action close)
+    {
+        PointerPressedEventArgs? press = null;
+        Point start = default;
+        button.AddHandler(PointerPressedEvent, (_, e) =>
+        {
+            if (e.GetCurrentPoint(button).Properties.IsLeftButtonPressed)
+            {
+                press = e;
+                start = e.GetPosition(button);
+            }
+        }, RoutingStrategies.Tunnel);
+        button.AddHandler(PointerReleasedEvent, (_, _) => press = null, RoutingStrategies.Tunnel);
+        button.AddHandler(PointerMovedEvent, async (_, e) =>
+        {
+            if (press == null || !e.GetCurrentPoint(button).Properties.IsLeftButtonPressed)
+            {
+                return;
+            }
+
+            var position = e.GetPosition(button);
+            if (Math.Abs(position.X - start.X) < 6 && Math.Abs(position.Y - start.Y) < 6)
+            {
+                return;
+            }
+
+            var pressed = press;
+            press = null;
+            try
+            {
+                // macOS aborts the app on a drag with nothing it can put on its pasteboard (an
+                // in-process format only) - the shape's name goes along as text
+                var dataItem = new DataTransferItem();
+                dataItem.Set(AssaDrawViewModel.LibraryShapeFormat, item);
+                dataItem.SetText(item.Name);
+                var transfer = new DataTransfer();
+                transfer.Add(dataItem);
+                await DragDrop.DoDragDropAsync(pressed, transfer, DragDropEffects.Copy);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "ASSA draw: could not drag shape from palette");
+            }
+            finally
+            {
+                close();
+            }
+        }, RoutingStrategies.Tunnel);
+    }
+
     private static Border MakeStripSeparator()
     {
         return new Border
@@ -928,19 +816,6 @@ public class AssaDrawWindow : Window
         return contentGrid;
     }
 
-    private static TextBlock MakeSectionHeader(string text)
-    {
-        return new TextBlock
-        {
-            Text = text.ToUpperInvariant(),
-            FontSize = 11,
-            FontWeight = FontWeight.SemiBold,
-            LetterSpacing = 0.6,
-            Foreground = DimTextBrush,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-    }
-
     private Border CreateSidePanel(AssaDrawViewModel vm)
     {
         var panelGrid = new Grid
@@ -949,8 +824,6 @@ public class AssaDrawWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
@@ -972,6 +845,21 @@ public class AssaDrawWindow : Window
             [!TreeView.ItemsSourceProperty] = new Binding(nameof(vm.ShapeTreeItems)),
             [!TreeView.SelectedItemProperty] = new Binding(nameof(vm.SelectedTreeItem)) { Mode = BindingMode.TwoWay },
             Margin = new Thickness(6, 0, 6, 6),
+
+            // Ctrl/Shift+click picks several shapes or groups; a plain click still picks one
+            SelectionMode = SelectionMode.Multiple,
+        };
+        treeView.SelectionChanged += (_, _) =>
+        {
+            if (treeView.SelectedItems is { Count: > 1 } selectedItems)
+            {
+                vm.SetTreeMultiSelection(selectedItems.OfType<ShapeTreeItem>().ToList());
+            }
+            else if (treeView.SelectedItems is { Count: 1 } single && single[0] is ShapeTreeItem item)
+            {
+                // A plain click on the row that was already the tree's current item ends the multi-selection
+                vm.OnTreeSingleSelection(item);
+            }
         };
         treeView.Styles.Add(new Style(x => x.OfType<TreeViewItem>())
         {
@@ -1032,6 +920,8 @@ public class AssaDrawWindow : Window
                     Width = 13,
                     Height = 13,
                     CornerRadius = new CornerRadius(4),
+                    BorderThickness = new Thickness(1),
+                    BorderBrush = SeparatorBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     [!Border.BackgroundProperty] = new Binding(nameof(ShapeTreeItem.Swatch)),
                     [!Border.IsVisibleProperty] = new Binding(nameof(ShapeTreeItem.HasSwatch)),
@@ -1069,17 +959,23 @@ public class AssaDrawWindow : Window
         Grid.SetRow(treeView, 1);
         panelGrid.Children.Add(treeView);
 
-        var shapePanel = CreateShapePropertiesPanel(vm);
-        Grid.SetRow(shapePanel, 2);
-        panelGrid.Children.Add(shapePanel);
+        // Properties scroll when shape, text and point sections don't fit under the tree
+        var properties = new StackPanel();
+        properties.Children.Add(CreateShapePropertiesPanel(vm));
+        properties.Children.Add(CreateTextPropertiesPanel(vm));
+        properties.Children.Add(CreateLayerPropertiesPanel(vm));
+        properties.Children.Add(AssaDrawAnimationPanel.Create(vm));
+        properties.Children.Add(CreatePointPropertiesPanel(vm));
+        var propertiesScroll = new ScrollViewer
+        {
+            Content = properties,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+        Grid.SetRow(propertiesScroll, 2);
+        panelGrid.Children.Add(propertiesScroll);
 
-        var layerPanel = CreateLayerPropertiesPanel(vm);
-        Grid.SetRow(layerPanel, 3);
-        panelGrid.Children.Add(layerPanel);
-
-        var pointPanel = CreatePointPropertiesPanel(vm);
-        Grid.SetRow(pointPanel, 4);
-        panelGrid.Children.Add(pointPanel);
+        // An Auto row never scrolls - cap it so the tree keeps some room
+        panelGrid.SizeChanged += (_, e) => propertiesScroll.MaxHeight = Math.Max(120, e.NewSize.Height - header.Bounds.Height - 140);
 
         return new Border
         {
@@ -1105,39 +1001,23 @@ public class AssaDrawWindow : Window
         };
     }
 
-    /// <summary>
-    /// A "Label  [field] [field]" row of the properties panel.
-    /// </summary>
-    private static Grid MakePropertyRow(string label, params Control[] fields)
-    {
-        var grid = new Grid { ColumnSpacing = 6 };
-        grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(70)));
-        grid.Children.Add(MakeDimLabel(label, new Thickness(0)));
-        for (var i = 0; i < fields.Length; i++)
-        {
-            grid.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star));
-            Grid.SetColumn(fields[i], i + 1);
-            grid.Children.Add(fields[i]);
-        }
-
-        return grid;
-    }
-
     private static Border CreateShapePropertiesPanel(AssaDrawViewModel vm)
     {
         var rows = new StackPanel { Spacing = 6 };
-        rows.Children.Add(MakePropertyRow(Se.Language.Assa.DrawPosition,
+        rows.Children.Add(MakePropertyRow(Se.Language.General.Position,
             MakeField(nameof(vm.ShapeX), -10000, 10000, prefix: "X", format: "0.#"),
             MakeField(nameof(vm.ShapeY), -10000, 10000, prefix: "Y", format: "0.#")));
-        rows.Children.Add(MakePropertyRow(Se.Language.Assa.DrawSize,
+        rows.Children.Add(MakePropertyRow(Se.Language.General.Size,
             MakeField(nameof(vm.ShapeWidth), 0, 10000, prefix: "W", format: "0.#"),
             MakeField(nameof(vm.ShapeHeight), 0, 10000, prefix: "H", format: "0.#")));
 
         var colorButton = UiUtil.MakeColorPickerButton(vm, nameof(vm.LayerColor));
         colorButton.HorizontalAlignment = HorizontalAlignment.Left;
-        rows.Children.Add(MakePropertyRow(Se.Language.Assa.DrawLayer,
+        colorButton.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsDrawShapeSelected)));
+        rows.Children.Add(MakePropertyRow(Se.Language.General.Layer,
             MakeField(nameof(vm.ShapeLayer), 0, 1000),
             colorButton));
+        rows.Children.Add(MakeOutlineRow(vm));
 
         var eraser = new ToggleSwitch
         {
@@ -1148,12 +1028,111 @@ public class AssaDrawWindow : Window
             [!ToggleSwitch.IsCheckedProperty] = new Binding(nameof(vm.ShapeIsEraser)) { Mode = BindingMode.TwoWay },
         };
         AutomationProperties.SetName(eraser, Se.Language.Assa.DrawUseShapeForErase);
-        var eraserRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        var eraserRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.IsDrawShapeSelected)),
+        };
         eraserRow.Children.Add(eraser);
         eraserRow.Children.Add(new TextBlock { Text = Se.Language.Assa.DrawUseShapeForErase, VerticalAlignment = VerticalAlignment.Center, FontSize = 12.5 });
         rows.Children.Add(eraserRow);
 
         return MakePropertySection(Se.Language.Assa.DrawSelectedShape, rows, nameof(vm.IsShapeSelected));
+    }
+
+    /// <summary>
+    /// Outline width and color: of the layer for drawing shapes, of the text for a text box.
+    /// </summary>
+    private static Grid MakeOutlineRow(AssaDrawViewModel vm)
+    {
+        var outlineColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.ShapeOutlineColor));
+        outlineColor.HorizontalAlignment = HorizontalAlignment.Left;
+        var width = MakeField(nameof(vm.ShapeOutlineWidth), 0, 100, format: "0.#");
+        width.Increment = 0.5m;
+        AutomationProperties.SetName(width, Se.Language.General.Outline);
+        var row = MakePropertyRow(Se.Language.General.Outline, width, outlineColor);
+        row.Bind(Grid.IsVisibleProperty, new Binding(nameof(vm.CanEditOutline)));
+        return row;
+    }
+
+    private Border CreateTextPropertiesPanel(AssaDrawViewModel vm)
+    {
+        var rows = new StackPanel { Spacing = 6 };
+
+        var textBox = new TextBox
+        {
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            MinHeight = 56,
+            MaxHeight = 120,
+            FontSize = 13,
+            Background = FieldBrush,
+            BorderBrush = FieldBorderBrush,
+            CornerRadius = new CornerRadius(6),
+            [!TextBox.TextProperty] = new Binding(nameof(vm.ShapeText)) { Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(textBox, Se.Language.General.Text);
+        rows.Children.Add(textBox);
+        vm.TextEditRequested += (_, _) => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            textBox.Focus();
+            textBox.SelectAll();
+        });
+
+        var fontCombo = new ComboBox
+        {
+            ItemsSource = vm.FontNames,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinHeight = 28,
+            FontSize = 12.5,
+            [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.TextFontName)) { Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(fontCombo, Se.Language.General.FontName);
+        rows.Children.Add(MakePropertyRow(Se.Language.General.FontName, fontCombo));
+
+        var bold = new ToggleButton
+        {
+            Content = new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-bold", FontSize = 12 },
+            Width = 28,
+            Height = 28,
+            Padding = new Thickness(0),
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.TextBold)) { Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(bold, Se.Language.General.Bold);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(bold, Se.Language.General.Bold);
+        }
+
+        var size = MakeField(nameof(vm.TextFontSize), AssaTextLayout.MinFontSize, 1000, format: "0.#");
+        AutomationProperties.SetName(size, Se.Language.General.FontSize);
+        var sizeAndBold = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+        size.Width = 70;
+        sizeAndBold.Children.Add(size);
+        sizeAndBold.Children.Add(bold);
+        var textColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.TextColor));
+        textColor.HorizontalAlignment = HorizontalAlignment.Left;
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(textColor, Se.Language.General.TextColor);
+        }
+
+        AutomationProperties.SetName(textColor, Se.Language.General.TextColor);
+        rows.Children.Add(MakePropertyRow(Se.Language.General.FontSize, sizeAndBold, textColor));
+
+        var shrink = new CheckBox
+        {
+            Content = Se.Language.Assa.DrawShrinkToFit,
+            FontSize = 12.5,
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.TextShrinkToFit)) { Mode = BindingMode.TwoWay },
+        };
+        rows.Children.Add(shrink);
+
+        return MakePropertySection(Se.Language.General.Text, rows, nameof(vm.CanEditText));
     }
 
     private static Border CreateLayerPropertiesPanel(AssaDrawViewModel vm)
@@ -1167,12 +1146,15 @@ public class AssaDrawWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
         row.Children.Add(changeLayer);
-        return MakePropertySection(Se.Language.Assa.DrawSelectedLayer, row, nameof(vm.IsLayerSelected));
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(row);
+        rows.Children.Add(MakeOutlineRow(vm));
+        return MakePropertySection(Se.Language.Assa.DrawSelectedLayer, rows, nameof(vm.IsLayerSelected));
     }
 
     private static Border CreatePointPropertiesPanel(AssaDrawViewModel vm)
     {
-        var row = MakePropertyRow(Se.Language.Assa.DrawPosition,
+        var row = MakePropertyRow(Se.Language.General.Position,
             MakeField(nameof(vm.PointX), -10000, 10000, prefix: "X", format: "0.#"),
             MakeField(nameof(vm.PointY), -10000, 10000, prefix: "Y", format: "0.#"));
         return MakePropertySection(Se.Language.Assa.DrawSelectedPoint, row, nameof(vm.IsPointSelected));
@@ -1208,7 +1190,7 @@ public class AssaDrawWindow : Window
         var toolLabel = StatusText(nameof(vm.CurrentTool));
         toolLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CurrentTool))
         {
-            Converter = new FuncValueConverter<DrawingTool, string>(tool => string.Format(Se.Language.Assa.DrawToolX, tool)),
+            Converter = new FuncValueConverter<DrawingTool, string>(tool => string.Format(Se.Language.Assa.DrawToolX, GetToolName(tool))),
         });
         left.Children.Add(MakeStatusItem("fa-solid fa-pen-ruler", toolLabel));
 
@@ -1310,6 +1292,10 @@ public class AssaDrawWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
+
+        // Not the default button: Enter means "close shape" on the canvas, and closing the
+        // editor from wherever focus happens to be (layer tree, check box...) is a surprise.
+        buttonOk.IsDefault = false;
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
         buttons.Children.Add(buttonCancel);

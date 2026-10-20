@@ -1,65 +1,75 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaProgressBar;
 
+/// <summary>
+/// Progress bar generator, styled like ASSA draw: settings on the left with the bar
+/// styles as a gallery, the libass preview on the right.
+/// </summary>
 public class AssaProgressBarWindow : Window
 {
+
     public AssaProgressBarWindow(AssaProgressBarViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Assa.ProgressBarTitle;
         CanResize = true;
-        Width = 1100;
-        Height = 700;
-        MinWidth = 900;
-        MinHeight = 600;
+        Width = 1250;
+        Height = 800;
+        MinWidth = 950;
+        MinHeight = 650;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
+
+        vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
+        vm.VideoPlayerControl.FullScreenIsVisible = false;
+
+        // No clip or rounded corners around the player: on macOS the video is a native surface
+        // (composition child visual), and a clipped parent kept it from showing
+        var videoPanel = new Border
+        {
+            Child = vm.VideoPlayerControl,
+            Margin = new Thickness(12),
+        };
+
+        var content = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(340)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+        };
+        content.Add(CreateSettingsPanel(vm, out var firstInput), 0, 0);
+        content.Add(videoPanel, 0, 1);
 
         var mainGrid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
         };
-
-        // Main content area (settings and preview)
-        var contentArea = CreateContentArea(vm, out var firstInput);
-        Grid.SetRow(contentArea, 0);
-        mainGrid.Children.Add(contentArea);
-
-        // Buttons
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonReset = new Button
-        {
-            Content = Se.Language.General.Reset,
-            Command = vm.ResetCommand,
-            Margin = new Thickness(0, 0, 10, 0),
-        };
-        var panelButtons = UiUtil.MakeButtonBar(buttonReset, buttonOk, buttonCancel);
-        Grid.SetRow(panelButtons, 1);
-        mainGrid.Children.Add(panelButtons);
-
+        mainGrid.Add(content, 0, 0);
+        mainGrid.Add(CreateButtonBar(vm), 1, 0);
         Content = mainGrid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
@@ -68,489 +78,311 @@ public class AssaProgressBarWindow : Window
         KeyDown += vm.KeyDown;
     }
 
-    private static Grid CreateContentArea(AssaProgressBarViewModel vm, out Control firstInput)
+    private static Border CreateSettingsPanel(AssaProgressBarViewModel vm, out Control firstInput)
     {
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(450, GridUnitType.Pixel) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 15,
-        };
-
-        // Left panel with settings
-        var settingsPanel = CreateSettingsPanel(vm, out firstInput);
-        Grid.SetColumn(settingsPanel, 0);
-        grid.Children.Add(settingsPanel);
-
-        // Right panel with preview
-        var previewPanel = CreatePreviewPanel(vm);
-        Grid.SetColumn(previewPanel, 1);
-        grid.Children.Add(previewPanel);
-
-        return grid;
-    }
-
-    private static ScrollViewer CreateSettingsPanel(AssaProgressBarViewModel vm, out Control firstInput)
-    {
-        var stackPanel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 12,
-        };
-
-        // Progress bar settings
-        stackPanel.Children.Add(CreateProgressBarSettings(vm, out firstInput));
-
-        // Chapters settings
-        stackPanel.Children.Add(CreateChaptersSettings(vm));
-
-        // Chapters formatting
-        stackPanel.Children.Add(CreateChaptersFormattingSettings(vm));
-
-        return new ScrollViewer
-        {
-            Content = stackPanel,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-        };
-    }
-
-    private static Border CreateProgressBarSettings(AssaProgressBarViewModel vm, out Control firstInput)
-    {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 8,
-            ColumnSpacing = 10,
-        };
-
-        var titleLabel = new TextBlock
-        {
-            Text = Se.Language.Assa.ProgressBarSettings,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        Grid.SetRow(titleLabel, 0);
-        Grid.SetColumnSpan(titleLabel, 2);
-        grid.Children.Add(titleLabel);
-
-        // Position radio buttons
-        var posLabel = new TextBlock { Text = Se.Language.General.Position + ":", VerticalAlignment = VerticalAlignment.Center };
-        Grid.SetRow(posLabel, 1);
-        grid.Children.Add(posLabel);
-
-        var posPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 15 };
-        var radioTop = new RadioButton
-        {
-            Content = Se.Language.General.Top,
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.PositionTop)) { Mode = BindingMode.TwoWay },
-            GroupName = "Position",
-        };
-        firstInput = radioTop;
-        var radioBottom = new RadioButton
-        {
-            Content = Se.Language.General.Bottom,
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.PositionBottom)) { Mode = BindingMode.TwoWay },
-            GroupName = "Position",
-        };
-        posPanel.Children.Add(radioTop);
-        posPanel.Children.Add(radioBottom);
-        Grid.SetRow(posPanel, 1);
-        Grid.SetColumn(posPanel, 1);
-        grid.Children.Add(posPanel);
-
-        // Height
-        var heightLabel = new TextBlock { Text = Se.Language.General.Height + ":", VerticalAlignment = VerticalAlignment.Center };
-        Grid.SetRow(heightLabel, 2);
-        grid.Children.Add(heightLabel);
-
-        var heightBox = new NumericUpDown
-        {
-            Minimum = 1,
-            Maximum = 200,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.BarHeight)) { Mode = BindingMode.TwoWay },
-        };
-        Grid.SetRow(heightBox, 2);
-        Grid.SetColumn(heightBox, 1);
-        grid.Children.Add(heightBox);
-
-        // Colors
-        var fgLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarForeColor + ":", VerticalAlignment = VerticalAlignment.Center };
-        Grid.SetRow(fgLabel, 3);
-        grid.Children.Add(fgLabel);
-
-        var fgPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.ForegroundColor));
-        fgPicker.HorizontalAlignment = HorizontalAlignment.Left;
-        Grid.SetRow(fgPicker, 3);
-        Grid.SetColumn(fgPicker, 1);
-        grid.Children.Add(fgPicker);
-
-        var bgLabel = new TextBlock { Text = Se.Language.General.BackgroundColor + ":", VerticalAlignment = VerticalAlignment.Center };
-        Grid.SetRow(bgLabel, 4);
-        grid.Children.Add(bgLabel);
-
-        var bgPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.BackgroundColor));
-        bgPicker.HorizontalAlignment = HorizontalAlignment.Left;
-        Grid.SetRow(bgPicker, 4);
-        Grid.SetColumn(bgPicker, 1);
-        grid.Children.Add(bgPicker);
-
-        // Style
-        var styleLabel = new TextBlock { Text = Se.Language.General.Style + ":", VerticalAlignment = VerticalAlignment.Center };
-        Grid.SetRow(styleLabel, 5);
-        grid.Children.Add(styleLabel);
-
-        var styleCombo = new ComboBox
-        {
-            Width = 150,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.CornerStyles)),
-            [!ComboBox.SelectedIndexProperty] = new Binding(nameof(vm.CornerStyleIndex)) { Mode = BindingMode.TwoWay },
-        };
-        Grid.SetRow(styleCombo, 5);
-        Grid.SetColumn(styleCombo, 1);
-        grid.Children.Add(styleCombo);
+        var sections = new StackPanel();
+        sections.Children.Add(CreateStyleSection(vm));
+        sections.Children.Add(CreatePositionSection(vm, out firstInput));
+        sections.Children.Add(CreateColorsSection(vm));
+        sections.Children.Add(CreateChaptersSection(vm));
+        sections.Children.Add(CreateChapterTextSection(vm));
 
         return new Border
         {
-            Child = grid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(12),
+            Child = new ScrollViewer { Content = sections, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled },
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
         };
     }
 
-    private static Border CreateChaptersSettings(AssaProgressBarViewModel vm)
+    /// <summary>
+    /// Shows a tool button as pressed (accent colored) while <paramref name="isOn"/> is true.
+    /// </summary>
+    private static void BindActive(Button button, AssaProgressBarViewModel vm, Func<bool> isOn, params string[] properties)
     {
-        var mainGrid = new Grid
+        button.Classes.Set("active", isOn());
+        vm.PropertyChanged += (_, e) =>
         {
-            RowDefinitions =
+            if (Array.IndexOf(properties, e.PropertyName) >= 0)
             {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = new GridLength(180, GridUnitType.Pixel) },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            RowSpacing = 8,
+                button.Classes.Set("active", isOn());
+            }
         };
+    }
 
-        var titleLabel = new TextBlock
+    private static NumericUpDown Field(string property, double min, double max, string? prefix, string name, double width = double.NaN)
+    {
+        var field = EditorChrome.MakeField(property, min, max, width, prefix);
+        AutomationProperties.SetName(field, name);
+        if (Se.Settings.Appearance.ShowHints)
         {
-            Text = Se.Language.Assa.ProgressBarChapters,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        Grid.SetRow(titleLabel, 0);
-        mainGrid.Children.Add(titleLabel);
+            ToolTip.SetTip(field, name);
+        }
 
-        // Chapter list
+        return field;
+    }
+
+    /// <summary>
+    /// The bar styles as a gallery; each thumbnail is the real bar shape, filled part of the way.
+    /// </summary>
+    private static Border CreateStyleSection(AssaProgressBarViewModel vm)
+    {
+        var gallery = new UniformGrid { Columns = 3 };
+        var tiles = new List<Button>();
+        for (var i = 0; i < vm.CornerStyles.Count; i++)
+        {
+            var index = i;
+            var button = new Button
+            {
+                Content = MakeThumbnail(index),
+                Height = 40,
+                Margin = new Thickness(0, 0, 6, 6),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
+            };
+            button.Classes.Add("tool");
+            AutomationProperties.SetName(button, vm.CornerStyles[index]);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(button, vm.CornerStyles[index]);
+            }
+
+            button.Click += (_, _) => vm.CornerStyleIndex = index;
+            BindActive(button, vm, () => vm.CornerStyleIndex == index, nameof(vm.CornerStyleIndex));
+            tiles.Add(button);
+            gallery.Children.Add(button);
+        }
+
+        var name = new TextBlock
+        {
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.BarStyleName)),
+        };
+        return EditorChrome.MakeEditorSection(Se.Language.General.Style, gallery, name, first: true);
+    }
+
+    /// <summary>
+    /// A bar style 200 x 14, 60% filled - like the bar part way through the video.
+    /// </summary>
+    internal static Control MakeThumbnail(int styleIndex)
+    {
+        const double width = 200;
+        const double height = 14;
+        var geometry = AssaDrawingGeometry.FromDrawing(ProgressBarStyles.Drawing(styleIndex, (int)width, (int)height));
+        var canvas = new Canvas { Width = width, Height = height };
+        canvas.Children.Add(new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = EditorChrome.ThumbnailMutedBrush });
+        canvas.Children.Add(new Avalonia.Controls.Shapes.Path
+        {
+            Data = geometry,
+            Fill = EditorChrome.ThumbnailBrush,
+            Clip = new RectangleGeometry(new Rect(0, 0, width * 0.6, height)),
+        });
+
+        return new Viewbox { Child = canvas, Stretch = Stretch.Uniform, Margin = new Thickness(8, 6) };
+    }
+
+    private static Border CreatePositionSection(AssaProgressBarViewModel vm, out Control firstInput)
+    {
+        var top = EditorChrome.CreateToolButton("fa-solid fa-arrow-up", Se.Language.General.Top, null, 28);
+        var bottom = EditorChrome.CreateToolButton("fa-solid fa-arrow-down", Se.Language.General.Bottom, null, 28);
+        top.Click += (_, _) => vm.PositionTop = true;
+        bottom.Click += (_, _) => vm.PositionBottom = true;
+        BindActive(top, vm, () => vm.PositionTop, nameof(vm.PositionTop), nameof(vm.PositionBottom));
+        BindActive(bottom, vm, () => vm.PositionBottom, nameof(vm.PositionTop), nameof(vm.PositionBottom));
+        var topBottom = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        topBottom.Children.Add(top);
+        topBottom.Children.Add(bottom);
+
+        var height = Field(nameof(vm.BarHeight), 1, 200, "H", Se.Language.General.Height);
+        var margin = Field(nameof(vm.EdgeMargin), 0, 1000, "M", Se.Language.Assa.ProgressBarEdgeMargin);
+        firstInput = height;
+
+        var playhead = new ToggleSwitch
+        {
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleSwitch.IsCheckedProperty] = new Binding(nameof(vm.ShowPlayhead)) { Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(playhead, Se.Language.Assa.ProgressBarPlayhead);
+        var playheadRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        playheadRow.Children.Add(playhead);
+        playheadRow.Children.Add(new TextBlock { Text = Se.Language.Assa.ProgressBarPlayhead, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Position, topBottom, new Control()));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Size, height, margin));
+        content.Children.Add(playheadRow);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Position, content);
+    }
+
+    private static Border CreateColorsSection(AssaProgressBarViewModel vm)
+    {
+        Button Swatch(string property, string name)
+        {
+            var button = UiUtil.MakeColorPickerButton(vm, property);
+            button.HorizontalAlignment = HorizontalAlignment.Left;
+            AutomationProperties.SetName(button, name);
+            return button;
+        }
+
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.Assa.ProgressBarForeColor, Swatch(nameof(vm.ForegroundColor), Se.Language.Assa.ProgressBarForeColor)));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.BackgroundColor, Swatch(nameof(vm.BackgroundColor), Se.Language.General.BackgroundColor)));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Text, Swatch(nameof(vm.TextColor), Se.Language.General.Text)));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Color, content);
+    }
+
+    private static Border CreateChaptersSection(AssaProgressBarViewModel vm)
+    {
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
+        buttons.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.Add, vm.AddChapterCommand, 24));
+        buttons.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Remove, vm.RemoveChapterCommand, 24));
+        buttons.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-eraser", Se.Language.General.Remove + " " + Se.Language.General.All, vm.RemoveAllChaptersCommand, 24));
+
         var listBox = new ListBox
         {
+            Height = 140,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.Chapters)),
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedChapter)) { Mode = BindingMode.TwoWay },
         };
-        listBox.ItemTemplate = new FuncDataTemplate<ProgressBarChapter>((chapter, _) =>
-            new StackPanel
+        listBox.ItemTemplate = new FuncDataTemplate<ProgressBarChapter>((_, _) =>
+        {
+            var row = new DockPanel();
+            var time = new TextBlock
             {
-                Orientation = Orientation.Horizontal,
-                Spacing = 10,
-                Children =
-                {
-                    new TextBlock { [!TextBlock.TextProperty] = new Binding(nameof(ProgressBarChapter.Text)), MinWidth = 150 },
-                    new TextBlock { [!TextBlock.TextProperty] = new Binding(nameof(ProgressBarChapter.StartTimeDisplay)), Foreground = Brushes.Gray },
-                }
+                FontSize = 11.5,
+                Foreground = EditorChrome.FaintTextBrush,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!TextBlock.TextProperty] = new Binding(nameof(ProgressBarChapter.StartTimeDisplay)),
+            };
+            DockPanel.SetDock(time, Dock.Right);
+            row.Children.Add(time);
+            row.Children.Add(new TextBlock
+            {
+                FontSize = 12.5,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!TextBlock.TextProperty] = new Binding(nameof(ProgressBarChapter.Text)),
             });
-
-        var listBorder = new Border
-        {
-            Child = listBox,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-        };
-        Grid.SetRow(listBorder, 1);
-        mainGrid.Children.Add(listBorder);
-
-        // Buttons
-        var buttonPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-        };
-
-        var btnAdd = new Button { Content = Se.Language.General.Add, Command = vm.AddChapterCommand };
-        var btnRemove = new Button { Content = Se.Language.General.Remove, Command = vm.RemoveChapterCommand };
-        var btnRemoveAll = new Button { Content = Se.Language.General.Remove + " " + Se.Language.General.All, Command = vm.RemoveAllChaptersCommand };
-
-        buttonPanel.Children.Add(btnAdd);
-        buttonPanel.Children.Add(btnRemove);
-        buttonPanel.Children.Add(btnRemoveAll);
-
-        Grid.SetRow(buttonPanel, 2);
-        mainGrid.Children.Add(buttonPanel);
-
-        // Chapter editor
-        var editorGrid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 5,
-            ColumnSpacing = 8,
-            Margin = new Thickness(0, 5, 0, 0),
-            [!Grid.IsVisibleProperty] = new Binding(nameof(vm.SelectedChapter)) { Converter = new Avalonia.Data.Converters.FuncValueConverter<object?, bool>(o => o != null) },
-        };
-
-        var textLabel = new TextBlock { Text = Se.Language.General.Text + ":", VerticalAlignment = VerticalAlignment.Center };
-        Grid.SetRow(textLabel, 0);
-        editorGrid.Children.Add(textLabel);
+            return row;
+        });
 
         var textBox = new TextBox
         {
+            FontSize = 12.5,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(6),
             [!TextBox.TextProperty] = new Binding(nameof(vm.ChapterText)) { Mode = BindingMode.TwoWay },
         };
-        Grid.SetRow(textBox, 0);
-        Grid.SetColumn(textBox, 1);
-        editorGrid.Children.Add(textBox);
-
-        var timeLabel = new TextBlock { Text = Se.Language.General.StartTime + ":", VerticalAlignment = VerticalAlignment.Center };
-        Grid.SetRow(timeLabel, 1);
-        editorGrid.Children.Add(timeLabel);
+        AutomationProperties.SetName(textBox, Se.Language.General.Text);
 
         var timeBox = new TextBox
         {
-            Width = 150,
-            HorizontalAlignment = HorizontalAlignment.Left,
+            FontSize = 12.5,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(6),
             PlaceholderText = "hh:mm:ss.fff",
         };
         timeBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.ChapterStartTime))
         {
             Mode = BindingMode.TwoWay,
-            Converter = new Avalonia.Data.Converters.FuncValueConverter<TimeSpan, string>(
+            Converter = new FuncValueConverter<TimeSpan, string>(
                 ts => ts.ToString(@"hh\:mm\:ss\.fff"),
-                s => TimeSpan.TryParse(s, out var result) ? result : TimeSpan.Zero)
+                s => TimeSpan.TryParse(s, out var result) ? result : TimeSpan.Zero),
         });
-        Grid.SetRow(timeBox, 1);
-        Grid.SetColumn(timeBox, 1);
-        editorGrid.Children.Add(timeBox);
+        AutomationProperties.SetName(timeBox, Se.Language.General.StartTime);
 
-        Grid.SetRow(editorGrid, 3);
-        mainGrid.Children.Add(editorGrid);
-
-        return new Border
+        var editor = new StackPanel
         {
-            Child = mainGrid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(12),
+            Spacing = 6,
+            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.SelectedChapter)) { Converter = ObjectConverters.IsNotNull },
         };
+        editor.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Text, textBox));
+        editor.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.StartTime, timeBox));
+
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(listBox);
+        content.Children.Add(editor);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Chapters, content, buttons);
     }
 
-    private static Border CreateChaptersFormattingSettings(AssaProgressBarViewModel vm)
+    private static Border CreateChapterTextSection(AssaProgressBarViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 8,
-            ColumnSpacing = 10,
-        };
-
-        var titleLabel = new TextBlock
-        {
-            Text = Se.Language.Assa.ProgressBarChapters + " - Format",
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        grid.Add(titleLabel, 0, 0, 1, 2);
-
-        // Splitter width
-        var splitterWidthLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarSplitterWidth + ":", VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(splitterWidthLabel, 1);
-
-        var splitterWidthBox = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 50,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.SplitterWidth)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(splitterWidthBox, 1, 1);
-
-        // Splitter height
-        var splitterHeightLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarSplitterHeight + ":", VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(splitterHeightLabel, 2);
-
-        var splitterHeightBox = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 200,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.SplitterHeight)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(splitterHeightBox, 2, 1);
-
-        // Font
-        var fontLabel = new TextBlock { Text = Se.Language.General.Font + ":", VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(fontLabel, 3);
-
         var fontCombo = new ComboBox
         {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinHeight = 28,
+            FontSize = 12.5,
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Fonts)),
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.FontName)) { Mode = BindingMode.TwoWay },
-            MinWidth = 150,
-            HorizontalAlignment = HorizontalAlignment.Left,
         };
-        grid.Add(fontCombo, 3, 1);
+        AutomationProperties.SetName(fontCombo, Se.Language.General.Font);
 
-        // Font size
-        var sizeLabel = new TextBlock { Text = Se.Language.General.Size + ":", VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(sizeLabel, 4);
+        var size = Field(nameof(vm.FontSize), 1, 200, null, Se.Language.General.Size, 70);
 
-        var sizeBox = new NumericUpDown
+        // Left / center / right as icon buttons
+        var alignment = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        var icons = new[] { "fa-solid fa-align-left", "fa-solid fa-align-center", "fa-solid fa-align-right" };
+        for (var i = 0; i < icons.Length; i++)
         {
-            Minimum = 6,
-            Maximum = 200,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.FontSize)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(sizeBox, 4, 1);
+            var index = i;
+            var button = EditorChrome.CreateToolButton(icons[i], vm.TextAlignments[i], null, 28);
+            button.Click += (_, _) => vm.TextAlignmentIndex = index;
+            BindActive(button, vm, () => vm.TextAlignmentIndex == index, nameof(vm.TextAlignmentIndex));
+            alignment.Children.Add(button);
+        }
 
-        // Text color
-        var colorLabel = new TextBlock { Text = Se.Language.General.Color + ":", VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(colorLabel, 5);
+        var x = Field(nameof(vm.XAdjustment), -2000, 2000, "X", Se.Language.Assa.ProgressBarXAdjustment);
+        var y = Field(nameof(vm.YAdjustment), -2000, 2000, "Y", Se.Language.Assa.ProgressBarYAdjustment);
+        var splitterWidth = Field(nameof(vm.SplitterWidth), 0, 100, "W", Se.Language.Assa.ProgressBarSplitterWidth);
+        var splitterHeight = Field(nameof(vm.SplitterHeight), 0, 500, "H", Se.Language.Assa.ProgressBarSplitterHeight);
 
-        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.TextColor));
-        colorPicker.HorizontalAlignment = HorizontalAlignment.Left;
-        grid.Add(colorPicker, 5, 1);
-
-        // X adjustment
-        var xLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarXAdjustment + ":", VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(xLabel, 6);
-
-        var xBox = new NumericUpDown
-        {
-            Minimum = -500,
-            Maximum = 500,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.XAdjustment)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(xBox, 6, 1);
-
-        // Y adjustment
-        var yLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarYAdjustment + ":", VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(yLabel, 7);
-
-        var yBox = new NumericUpDown
-        {
-            Minimum = -500,
-            Maximum = 500,
-            Width = 120,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.YAdjustment)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(yBox, 7, 1);
-
-        // Text alignment
-        var alignLabel = new TextBlock { Text = Se.Language.Assa.ProgressBarTextAlignment + ":", VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(alignLabel, 8);
-
-        var alignCombo = new ComboBox
-        {
-            Width = 150,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.TextAlignments)),
-            [!ComboBox.SelectedIndexProperty] = new Binding(nameof(vm.TextAlignmentIndex)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(alignCombo, 8, 1);
-
-        return new Border
-        {
-            Child = grid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(12),
-        };
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Font, fontCombo));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Size, size, alignment));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Position, x, y));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.Assa.ProgressBarSplitter, splitterWidth, splitterHeight));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Chapters + " - " + Se.Language.General.Text, content);
     }
 
-    private static Border CreatePreviewPanel(AssaProgressBarViewModel vm)
+    private static Border CreateButtonBar(AssaProgressBarViewModel vm)
     {
+        var reset = new Button
+        {
+            Content = Se.Language.General.Reset,
+            Command = vm.ResetCommand,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
+        buttons.Children.Add(buttonCancel);
+        buttons.Children.Add(buttonOk);
+
         var grid = new Grid
         {
-            RowDefinitions =
+            ColumnDefinitions =
             {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
             },
-            RowSpacing = 8,
         };
-
-        var titleLabel = new TextBlock
-        {
-            Text = Se.Language.General.Preview,
-            FontWeight = FontWeight.Bold,
-        };
-        Grid.SetRow(titleLabel, 0);
-        grid.Children.Add(titleLabel);
-
-        vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
-        vm.VideoPlayerControl.FullScreenIsVisible = false;
-        Grid.SetRow(vm.VideoPlayerControl, 1);
-        grid.Children.Add(vm.VideoPlayerControl);
-
-        return new Border
-        {
-            Child = grid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(12),
-        };
+        grid.Add(reset, 0, 0);
+        grid.Add(buttons, 0, 1);
+        return EditorChrome.WrapButtonBar(grid);
     }
 }

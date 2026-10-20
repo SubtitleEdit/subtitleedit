@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
-using Xunit;
 
 namespace UITests.Features.Video.SpeechToText;
 

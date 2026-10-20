@@ -1,4 +1,3 @@
-using System;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Logic;

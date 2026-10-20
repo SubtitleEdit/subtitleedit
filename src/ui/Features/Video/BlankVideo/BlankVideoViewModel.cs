@@ -21,7 +21,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
-using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.BlankVideo;
 
@@ -34,6 +33,9 @@ public partial class BlankVideoViewModel : ObservableObject
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isGenerating;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.GenerateBlankVideoTitle);
+
     [ObservableProperty] private bool _useSourceResolution;
     [ObservableProperty] private ObservableCollection<double> _frameRates;
     [ObservableProperty] private double _selectedFrameRate;
@@ -573,6 +575,8 @@ public partial class BlankVideoViewModel : ObservableObject
         Window?.Close();
     }
 
+    partial void OnIsGeneratingChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     internal void OnClosing()
     {
         // The subtitle files handed to ffmpeg live as long as the window does - nothing else
@@ -582,6 +586,7 @@ public partial class BlankVideoViewModel : ObservableObject
         // Stop the poll timer and any still-running encode - closing the window used to
         // leave the ffmpeg process encoding to completion in the background.
         _isClosing = true;
+        _sleepInhibitor.Dispose();
         _doAbort = true;
         _timerGenerate.StopAndDispose(TimerGenerateElapsed);
         if (_ffmpegProcess != null)

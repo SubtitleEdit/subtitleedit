@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -15,7 +14,6 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
@@ -838,7 +836,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
         var position = SelectedRow != null ? changed.IndexOf(SelectedRow) : -1;
         ChangePositionLabel = position >= 0
-            ? string.Format(Se.Language.Tools.ImproveTimeCodes.ChangeXOfY, position + 1, changed.Count)
+            ? string.Format(Se.Language.General.ChangeXOfY, position + 1, changed.Count)
             : string.Empty;
     }
 

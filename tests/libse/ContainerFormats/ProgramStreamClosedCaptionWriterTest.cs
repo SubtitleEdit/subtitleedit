@@ -2,9 +2,6 @@ using Nikse.SubtitleEdit.Core.Cea608;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace LibSETests.ContainerFormats;
 

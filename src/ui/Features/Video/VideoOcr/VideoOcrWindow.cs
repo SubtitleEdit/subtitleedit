@@ -14,7 +14,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Linq;
-using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
@@ -39,6 +38,7 @@ public class VideoOcrWindow : Window
         MinHeight = 650;
         vm.Window = this;
         DataContext = vm;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
 
         var previewView = MakePreviewView(vm);
         var settingsView = MakeSettingsView(vm);
@@ -46,13 +46,23 @@ public class VideoOcrWindow : Window
         var progressView = MakeProgressView(vm);
 
         var buttonStart = UiUtil.MakeButton(Se.Language.Video.VideoOcr.StartOcr, vm.StartOcrCommand)
-            .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance);
+            .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance).AsPrimary();
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
             .WithBindEnabled(nameof(vm.IsOkEnabled));
-        var buttonPanel = UiUtil.MakeButtonBar(
-            buttonStart,
-            buttonOk,
-            UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonPanel = EditorChrome.MakeButtonBar(MakeStatusText(vm), UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk, buttonStart);
+
+        // Preview on the left, the settings column on the right (it scrolls on its own), the
+        // result lines under both; the lines give up height first on a short screen.
+        var top = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, // preview
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // settings
+            },
+        };
+        top.Add(previewView, 0, 0);
+        top.Add(settingsView, 0, 1);
 
         var grid = new Grid
         {
@@ -63,22 +73,19 @@ public class VideoOcrWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, // preview
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // settings
-            },
-            Margin = UiUtil.MakeWindowMargin(),
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            ColumnSpacing = 5,
-            RowSpacing = 5,
         };
 
-        grid.Add(previewView, 0, 0);
-        grid.Add(settingsView, 0, 1);
-        grid.Add(linesView, 1, 0, 1, 2);
-        grid.Add(progressView, 2, 0, 1, 2);
-        grid.Add(buttonPanel, 3, 0, 1, 2);
+        grid.Add(top, 0, 0);
+        grid.Add(new Border
+        {
+            Child = linesView,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+        }, 1, 0);
+        grid.Add(progressView, 2, 0);
+        grid.Add(buttonPanel, 3, 0);
 
         Content = grid;
 
@@ -118,7 +125,10 @@ public class VideoOcrWindow : Window
             Background = Brushes.Black,
             Children = { image, cropSelector },
         };
-        ToolTip.SetTip(imageArea, Se.Language.Video.VideoOcr.ScanAreaInfo);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(imageArea, Se.Language.Video.VideoOcr.ScanAreaInfo);
+        }
 
         var slider = new Slider
         {
@@ -133,12 +143,14 @@ public class VideoOcrWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 60,
+            FontSize = 12.5,
             Margin = new Thickness(5, 0, 0, 0),
         };
         positionText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.PreviewPositionText)) { Source = vm });
 
         var sliderRow = new Grid
         {
+            ColumnSpacing = 8,
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
@@ -146,7 +158,7 @@ public class VideoOcrWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        var sliderLabel = UiUtil.MakeLabel(Se.Language.Video.VideoOcr.PreviewPosition);
+        var sliderLabel = EditorChrome.MakeDimLabel(Se.Language.Video.VideoOcr.PreviewPosition, new Thickness(0));
         sliderRow.Add(sliderLabel, 0, 0);
         sliderRow.Add(slider.WithLabeledBy(sliderLabel), 0, 1);
         sliderRow.Add(positionText, 0, 2);
@@ -154,8 +166,9 @@ public class VideoOcrWindow : Window
         var scanAreaText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.7,
-            Margin = new Thickness(10, 0, 0, 0),
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            Margin = new Thickness(8, 0, 0, 0),
         };
         scanAreaText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ScanAreaText)) { Source = vm });
 
@@ -165,15 +178,15 @@ public class VideoOcrWindow : Window
         var scanAreaRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
+            Spacing = 4,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Video.VideoOcr.ScanArea),
-                UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomThird, vm.SetScanAreaBottomThirdCommand)
+                EditorChrome.MakeDimLabel(Se.Language.Video.VideoOcr.ScanArea, new Thickness(0, 0, 6, 0)),
+                MakePresetButton(Se.Language.Video.VideoOcr.BottomThird, vm.SetScanAreaBottomThirdCommand)
                     .WithAccessibleName($"{Se.Language.Video.VideoOcr.ScanArea}: {Se.Language.Video.VideoOcr.BottomThird}"),
-                UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomHalf, vm.SetScanAreaBottomHalfCommand)
+                MakePresetButton(Se.Language.Video.VideoOcr.BottomHalf, vm.SetScanAreaBottomHalfCommand)
                     .WithAccessibleName($"{Se.Language.Video.VideoOcr.ScanArea}: {Se.Language.Video.VideoOcr.BottomHalf}"),
-                UiUtil.MakeButton(Se.Language.Video.VideoOcr.FullFrame, vm.SetScanAreaFullFrameCommand)
+                MakePresetButton(Se.Language.Video.VideoOcr.FullFrame, vm.SetScanAreaFullFrameCommand)
                     .WithAccessibleName($"{Se.Language.Video.VideoOcr.ScanArea}: {Se.Language.Video.VideoOcr.FullFrame}"),
                 scanAreaText,
             },
@@ -183,7 +196,7 @@ public class VideoOcrWindow : Window
         // screen reader user cannot reach or hear (#12087). The button is disabled while the test
         // runs, which drops keyboard focus to nothing - put it back on the button when the test
         // is done, with the result as its description, so NVDA reads the result right away.
-        var testButton = UiUtil.MakeButton(Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
+        var testButton = EditorChrome.MakeActionButton("fa-solid fa-flask", Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
             .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance);
         testButton.Bind(AutomationProperties.HelpTextProperty, new Binding(nameof(vm.TestOcrResult)) { Source = vm });
         RefocusWhenReEnabled(testButton);
@@ -200,99 +213,128 @@ public class VideoOcrWindow : Window
             },
         };
 
+        // A plain border around the frame (no rounded clipping), like the video players
+        var frame = new Border
+        {
+            Child = imageArea,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1),
+        };
+
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            RowSpacing = 5,
+            RowSpacing = 6,
+            Margin = new Thickness(14, 12, 14, 10),
         };
-        grid.Add(imageArea, 0, 0);
-        grid.Add(sliderRow, 1, 0);
-        grid.Add(scanAreaRow, 2, 0);
-        grid.Add(testRow, 3, 0);
+        var header = EditorChrome.MakeSectionHeader(Se.Language.General.Preview);
+        header.Margin = new Thickness(0, 0, 0, 4);
+        grid.Add(header, 0, 0);
+        grid.Add(frame, 1, 0);
+        grid.Add(sliderRow, 2, 0);
+        grid.Add(scanAreaRow, 3, 0);
+        grid.Add(testRow, 4, 0);
 
-        return UiUtil.MakeBorderForControl(grid);
+        return new Border
+        {
+            Child = grid,
+            Background = EditorChrome.PanelBrush,
+        };
     }
+
+    /// <summary>
+    /// Flat text button for the scan area presets.
+    /// </summary>
+    private static Button MakePresetButton(string text, System.Windows.Input.ICommand command)
+    {
+        var button = new Button
+        {
+            Content = text,
+            Command = command,
+            Height = 28,
+            FontSize = 12.5,
+            Padding = new Thickness(10, 0),
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+        };
+        button.Classes.Add("tool");
+        return button;
+    }
+
+    private const double SettingsWidth = 370;
+    private const double FieldWidth = 330;
 
     private Border MakeSettingsView(VideoOcrViewModel vm)
     {
-        var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine)).WithWidth(220)
+        var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine))
             .WithAccessibleName(Se.Language.Video.VideoOcr.Engine);
+        comboEngine.HorizontalAlignment = HorizontalAlignment.Stretch;
         comboEngine.ItemTemplate = BuildEngineItemTemplate();
         _comboEngine = comboEngine;
 
         var comboPaddleLanguage = UiUtil.MakeComboBox(vm.PaddleLanguages, vm, nameof(vm.SelectedPaddleLanguage)).WithWidth(220);
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 4,
-            Width = 390,
-
-            // Gutter between the controls and the scrollbar - without it the bar sits
-            // flush against the numeric up/downs.
-            Margin = new Thickness(0, 0, 12, 0),
-        };
-
         // The engine picker, plus a settings/info button for the selected engine - like the
         // speech-to-text and text-to-speech windows.
-        var enginePanel = new StackPanel
+        var enginePanel = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Children =
-            {
-                comboEngine,
-                UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings,
-                    $"{Se.Language.Video.VideoOcr.Engine} - {Se.Language.General.Settings}"),
-            },
+            ColumnSpacing = 4,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
         };
+        enginePanel.Add(comboEngine, 0, 0);
+        enginePanel.Add(EditorChrome.CreateToolButton(IconNames.Settings,
+            $"{Se.Language.Video.VideoOcr.Engine} - {Se.Language.General.Settings}", vm.ShowEngineSettingsCommand, 28), 0, 1);
 
-        panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Engine, isFirst: true));
-        panel.Children.Add(enginePanel);
+        var engineRows = new StackPanel { Spacing = 8 };
+        engineRows.Children.Add(enginePanel);
 
         // What the selected engine actually is - each engine carries a one-line description
         // (local vs cloud, what it needs installed) that had no home in the window until now.
         var engineDescription = new TextBlock
         {
-            Opacity = 0.7,
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
-            Margin = new Thickness(0, 2, 0, 4),
         };
         engineDescription.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectedEngineDescription)) { Source = vm });
-        panel.Children.Add(engineDescription);
+        engineRows.Children.Add(engineDescription);
 
         // Paddle OCR settings
         var paddlePanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
         AddLabeledSetting(paddlePanel, Se.Language.General.Language, comboPaddleLanguage);
         paddlePanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsPaddleEngine)) { Source = vm });
-        panel.Children.Add(paddlePanel);
+        engineRows.Children.Add(paddlePanel);
 
         // Ollama settings
         var ollamaPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        AddLabeledSetting(ollamaPanel, Se.Language.General.Url, UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaUrl)));
-        AddLabeledSetting(ollamaPanel, Se.Language.General.Model, UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaModel)));
-        AddLabeledSetting(ollamaPanel, Se.Language.General.Language, UiUtil.MakeTextBox(330, vm, nameof(vm.OllamaLanguage)));
+        AddLabeledSetting(ollamaPanel, Se.Language.General.Url, TextField(vm, nameof(vm.OllamaUrl)));
+        AddLabeledSetting(ollamaPanel, Se.Language.General.Model, TextField(vm, nameof(vm.OllamaModel)));
+        AddLabeledSetting(ollamaPanel, Se.Language.General.Language, TextField(vm, nameof(vm.OllamaLanguage)));
         ollamaPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsOllamaEngine)) { Source = vm });
-        panel.Children.Add(ollamaPanel);
+        engineRows.Children.Add(ollamaPanel);
 
         // GLM settings
         var glmPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        AddLabeledSetting(glmPanel, Se.Language.General.Url, UiUtil.MakeTextBox(330, vm, nameof(vm.GlmUrl)));
-        AddLabeledSetting(glmPanel, Se.Language.General.Model, UiUtil.MakeTextBox(330, vm, nameof(vm.GlmModel)));
-        glmPanel.Children.Add(UiUtil.MakeLabel(Se.Language.General.ApiKey));
+        AddLabeledSetting(glmPanel, Se.Language.General.Url, TextField(vm, nameof(vm.GlmUrl)));
+        AddLabeledSetting(glmPanel, Se.Language.General.Model, TextField(vm, nameof(vm.GlmModel)));
+        glmPanel.Children.Add(EditorChrome.MakeDimLabel(Se.Language.General.ApiKey, new Thickness(0)));
         glmPanel.Children.Add(UiUtil.MakeApiKeyTextBox(290, vm, nameof(vm.GlmApiKey)));
-        AddLabeledSetting(glmPanel, Se.Language.General.Language, UiUtil.MakeTextBox(330, vm, nameof(vm.GlmLanguage)));
+        AddLabeledSetting(glmPanel, Se.Language.General.Language, TextField(vm, nameof(vm.GlmLanguage)));
         glmPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsGlmEngine)) { Source = vm });
-        panel.Children.Add(glmPanel);
+        engineRows.Children.Add(glmPanel);
 
         // llama.cpp settings
-        var comboLlamaCppModel = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel)).WithWidth(330);
+        var comboLlamaCppModel = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel)).WithWidth(FieldWidth);
         comboLlamaCppModel.ItemTemplate = BuildLlamaCppModelItemTemplate();
         _comboLlamaCppModel = comboLlamaCppModel;
 
@@ -306,68 +348,66 @@ public class VideoOcrWindow : Window
         llamaCppLocalPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppLocalVisible)) { Source = vm });
         llamaCppPanel.Children.Add(llamaCppLocalPanel);
         var llamaCppRemotePanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        AddLabeledSetting(llamaCppRemotePanel, Se.Language.General.Url, UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppUrl)));
+        AddLabeledSetting(llamaCppRemotePanel, Se.Language.General.Url, TextField(vm, nameof(vm.LlamaCppUrl)));
         llamaCppRemotePanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppRemoteVisible)) { Source = vm });
         llamaCppPanel.Children.Add(llamaCppRemotePanel);
-        AddLabeledSetting(llamaCppPanel, Se.Language.General.Language, UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppLanguage)));
+        AddLabeledSetting(llamaCppPanel, Se.Language.General.Language, TextField(vm, nameof(vm.LlamaCppLanguage)));
         llamaCppPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppEngine)) { Source = vm });
-        panel.Children.Add(llamaCppPanel);
+        engineRows.Children.Add(llamaCppPanel);
 
         // CrispEmbed settings
-        var comboCrispEmbedModel = UiUtil.MakeComboBox(vm.CrispEmbedModels, vm, nameof(vm.SelectedCrispEmbedModel)).WithWidth(330);
+        var comboCrispEmbedModel = UiUtil.MakeComboBox(vm.CrispEmbedModels, vm, nameof(vm.SelectedCrispEmbedModel)).WithWidth(FieldWidth);
         comboCrispEmbedModel.ItemTemplate = BuildCrispEmbedModelItemTemplate();
         _comboCrispEmbedModel = comboCrispEmbedModel;
 
         var crispEmbedPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        AddLabeledSetting(crispEmbedPanel, Se.Language.General.Backend, UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend)).WithWidth(330));
+        AddLabeledSetting(crispEmbedPanel, Se.Language.General.Backend, UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend)).WithWidth(FieldWidth));
         AddLabeledSetting(crispEmbedPanel, Se.Language.General.Model, comboCrispEmbedModel);
         // No download buttons here - engine build and model downloads live in the CrispEmbed
         // settings dialog opened from the gear button next to the engine combo.
         crispEmbedPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsCrispEmbedEngine)) { Source = vm });
-        panel.Children.Add(crispEmbedPanel);
+        engineRows.Children.Add(crispEmbedPanel);
 
         // Apple Vision settings - language only: the engine is part of macOS, so there is no
         // model to pick, nothing to download and no server to start.
         var appleVisionPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
-        AddLabeledSetting(appleVisionPanel, Se.Language.General.Language, UiUtil.MakeComboBox(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage)).WithWidth(330));
+        AddLabeledSetting(appleVisionPanel, Se.Language.General.Language, UiUtil.MakeComboBox(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage)).WithWidth(FieldWidth));
         appleVisionPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsAppleVisionEngine)) { Source = vm });
-        panel.Children.Add(appleVisionPanel);
+        engineRows.Children.Add(appleVisionPanel);
 
         // Scan settings
-        panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Scan));
-        panel.Children.Add(MakeSettingRow(
+        var scanRows = new StackPanel { Spacing = 8 };
+        scanRows.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.FramesPerSecond,
-            UiUtil.MakeNumericUpDownInt(1, 30, 5, 120, vm, nameof(vm.FramesPerSecond)),
+            NumberField(vm, nameof(vm.FramesPerSecond), 1, 30, 5),
             Se.Language.Video.VideoOcr.FramesPerSecondHint));
-        panel.Children.Add(MakeSettingRow(
+        scanRows.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.TextBrightnessMinimum,
-            UiUtil.MakeNumericUpDownInt(0, 255, 190, 120, vm, nameof(vm.BrightnessMinimum)),
+            NumberField(vm, nameof(vm.BrightnessMinimum), 0, 255, 190),
             Se.Language.Video.VideoOcr.TextBrightnessMinimumHint));
 
         // Post-processing settings
-        panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.PostProcessing));
-        panel.Children.Add(MakeSettingRow(
+        var postRows = new StackPanel { Spacing = 8 };
+        postRows.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.TextSimilarityPercent,
-            UiUtil.MakeNumericUpDownInt(0, 100, 80, 120, vm, nameof(vm.TextSimilarityPercent)),
+            NumberField(vm, nameof(vm.TextSimilarityPercent), 0, 100, 80),
             Se.Language.Video.VideoOcr.TextSimilarityPercentHint));
-        panel.Children.Add(MakeSettingRow(
+        postRows.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.MaxGapMs,
-            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MaxGapMs)),
+            NumberField(vm, nameof(vm.MaxGapMs), 0, 10_000, 250),
             Se.Language.Video.VideoOcr.MaxGapHint));
-        panel.Children.Add(MakeSettingRow(
+        postRows.Children.Add(MakeSettingRow(
             Se.Language.Video.VideoOcr.MinDurationMs,
-            UiUtil.MakeNumericUpDownInt(0, 10_000, 250, 120, vm, nameof(vm.MinDurationMs)),
+            NumberField(vm, nameof(vm.MinDurationMs), 0, 10_000, 250),
             Se.Language.Video.VideoOcr.MinDurationHint));
-        panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.AddAssaPositionTag, vm, nameof(vm.AddAssaPositionTag)));
-        panel.Children.Add(UiUtil.MakeCheckBox(Se.Language.Video.VideoOcr.FixOcrErrors, vm, nameof(vm.DoFixOcrErrors)));
-        var buttonDownloadDictionary = UiUtil.MakeButton("...", vm.DownloadDictionaryCommand)
+        postRows.Children.Add(EditorChrome.MakeSwitchRow(nameof(vm.AddAssaPositionTag), Se.Language.Video.VideoOcr.AddAssaPositionTag));
+        postRows.Children.Add(EditorChrome.MakeSwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.General.FixOcrErrors));
+        var buttonDownloadDictionary = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.Video.VideoOcr.DownloadDictionaryHint, vm.DownloadDictionaryCommand, 28)
             .WithBindEnabled(nameof(vm.DoFixOcrErrors));
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(buttonDownloadDictionary, Se.Language.Video.VideoOcr.DownloadDictionaryHint);
-        }
 
-        panel.Children.Add(MakeSettingRow(
+        var comboDictionary = UiUtil.MakeComboBox(vm.Dictionaries, vm, nameof(vm.SelectedDictionary)).WithWidth(170)
+            .WithBindEnabled(nameof(vm.DoFixOcrErrors));
+        postRows.Children.Add(MakeSettingRow(
             Se.Language.General.Dictionary,
             new StackPanel
             {
@@ -375,12 +415,23 @@ public class VideoOcrWindow : Window
                 Spacing = 3,
                 Children =
                 {
-                    UiUtil.MakeComboBox(vm.Dictionaries, vm, nameof(vm.SelectedDictionary)).WithWidth(190)
-                        .WithBindEnabled(nameof(vm.DoFixOcrErrors)),
+                    comboDictionary,
                     buttonDownloadDictionary,
                 },
             },
             Se.Language.Video.VideoOcr.DictionaryHint));
+
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Width = SettingsWidth,
+            Children =
+            {
+                EditorChrome.MakeEditorSection(Se.Language.Video.VideoOcr.Engine, engineRows, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.Video.VideoOcr.Scan, scanRows),
+                EditorChrome.MakeEditorSection(Se.Language.Video.VideoOcr.PostProcessing, postRows),
+            },
+        };
 
         var scrollViewer = new ScrollViewer
         {
@@ -392,7 +443,27 @@ public class VideoOcrWindow : Window
             AllowAutoHide = false,
         };
 
-        return UiUtil.MakeBorderForControl(scrollViewer);
+        return new Border
+        {
+            Child = scrollViewer,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        };
+    }
+
+    private static TextBox TextField(VideoOcrViewModel vm, string property)
+    {
+        var textBox = UiUtil.MakeTextBox(FieldWidth, vm, property);
+        textBox.Classes.Add("text");
+        return textBox;
+    }
+
+    private static NumericUpDown NumberField(VideoOcrViewModel vm, string property, int min, int max, int defaultValue)
+    {
+        var field = UiUtil.MakeNumericUpDownInt(min, max, defaultValue, 90, vm, property);
+        field.Classes.Add("field");
+        return field;
     }
 
     private static Button MakeLlamaCppServerButton(VideoOcrViewModel vm)
@@ -470,27 +541,19 @@ public class VideoOcrWindow : Window
         }
     }
 
-    private static TextBlock MakeHeader(string text, bool isFirst = false)
-    {
-        return new TextBlock
-        {
-            Text = text,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, isFirst ? 0 : 12, 0, 2),
-        };
-    }
-
     private static Grid MakeSettingRow(string label, Control control, string? hint = null)
     {
         var grid = new Grid
         {
+            ColumnSpacing = 8,
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        var labelControl = UiUtil.MakeLabel(label);
+        var labelControl = EditorChrome.MakeDimLabel(label, new Thickness(0));
+        labelControl.TextWrapping = TextWrapping.Wrap;
         grid.Add(labelControl, 0, 0);
 
         // Link the control to its visible label so a screen reader announces what the
@@ -515,12 +578,12 @@ public class VideoOcrWindow : Window
     /// </summary>
     private static void AddLabeledSetting(Panel panel, string label, Control control)
     {
-        var labelControl = UiUtil.MakeLabel(label);
+        var labelControl = EditorChrome.MakeDimLabel(label, new Thickness(0));
         panel.Children.Add(labelControl);
         panel.Children.Add(control.WithLabeledBy(labelControl));
     }
 
-    private static Border MakeLinesView(VideoOcrViewModel vm)
+    private static Grid MakeLinesView(VideoOcrViewModel vm)
     {
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
@@ -590,11 +653,16 @@ public class VideoOcrWindow : Window
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Width = new GridLength(1, GridUnitType.Star),
             CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<VideoOcrLineItem>((_, _) =>
-                new ContentControl
+            {
+                var contentControl = new ContentControl
                 {
                     VerticalContentAlignment = VerticalAlignment.Center,
                     [!ContentControl.ContentProperty] = new Binding(nameof(VideoOcrLineItem.FormattedText)),
-                }, supportsRecycling: true),
+                };
+
+                ScreenPrivacyBlurConverter.BlurUnlessSelected(contentControl, tableView);
+                return contentControl;
+            }, supportsRecycling: true),
         });
 
         var flyout = new MenuFlyout();
@@ -680,7 +748,7 @@ public class VideoOcrWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControl(tableView);
+        return EditorChrome.MakeListPane(Se.Language.General.Lines, tableView);
     }
 
     /// <summary>
@@ -716,36 +784,47 @@ public class VideoOcrWindow : Window
         };
     }
 
-    private static Grid MakeProgressView(VideoOcrViewModel vm)
+    /// <summary>
+    /// Progress bar and status in a strip above the buttons while the OCR runs.
+    /// </summary>
+    private static Border MakeProgressView(VideoOcrViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
+        progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsRunning)));
         progressBar.DataContext = vm;
 
-        var statusText = new TextBlock
-        {
-            Margin = new Thickness(5, 0, 0, 0),
-            DataContext = vm,
-        };
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
+        statusText.DataContext = vm;
+        statusText.MaxWidth = 420;
 
-        // Bar and text each get their own row - overlaying them in one cell with a fixed
-        // top margin on the text made the two collide.
         var grid = new Grid
         {
-            RowDefinitions =
+            ColumnSpacing = 12,
+            ColumnDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // status text
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, // progress bar
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // status text
             },
-            RowSpacing = 3,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
         grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 1, 0);
+        grid.Add(statusText, 0, 1);
 
-        return grid;
+        var strip = EditorChrome.MakeProgressStrip(grid);
+        strip.Bind(IsVisibleProperty, new Binding(nameof(vm.IsRunning)));
+        return strip;
+    }
+
+    /// <summary>
+    /// The status (test result, lines found) in the button bar while the OCR is not running -
+    /// while it runs the text is in the progress strip.
+    /// </summary>
+    private static TextBlock MakeStatusText(VideoOcrViewModel vm)
+    {
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
+        statusText.Bind(IsVisibleProperty, new Binding(nameof(vm.IsRunning)) { Converter = InverseBooleanConverter.Instance });
+        return statusText;
     }
 }

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -439,6 +440,52 @@ public static class TableViewExtras
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(propertyPath) { Mode = BindingMode.OneWay },
             [!TextBlock.FlowDirectionProperty] = new Binding(propertyPath) { Converter = TextToFlowDirection, Mode = BindingMode.OneWay },
+        });
+    }
+
+    /// <summary>
+    /// Cell template for a TableView check-box column: a transparent, padded border (so the
+    /// cell itself does not highlight) holding a centred <see cref="CheckBox"/> bound two-way
+    /// to <paramref name="isCheckedProperty"/> on the row. Pair with <see cref="UiUtil.TableViewNoPaddingCellTheme"/>.
+    /// </summary>
+    /// <param name="isCheckedProperty">Row property the check box toggles.</param>
+    /// <param name="accessibleNameProperty">
+    /// Row property announced as the check box's name. A content-less check box is read by a
+    /// screen reader as a bare "check box", so pass the row's name/text where there is one (#11745, #12087).
+    /// </param>
+    /// <param name="focusable">
+    /// False (default) keeps keyboard focus on the row, so Space toggles through the table's
+    /// <see cref="AddSpaceToggle{TItem}(TableView, Func{TItem, bool}, Action{TItem, bool})"/> handler;
+    /// true lets the check box itself take focus and handle Space.
+    /// </param>
+    /// <param name="configure">Extra setup for the check box, e.g. an IsEnabled or IsVisible binding.</param>
+    public static FuncDataTemplate<T> MakeCheckBoxCellTemplate<T>(
+        string isCheckedProperty,
+        string? accessibleNameProperty = null,
+        bool focusable = false,
+        Action<CheckBox>? configure = null)
+    {
+        return new FuncDataTemplate<T>((_, _) =>
+        {
+            var checkBox = new CheckBox
+            {
+                Focusable = focusable,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                [!ToggleButton.IsCheckedProperty] = new Binding(isCheckedProperty) { Mode = BindingMode.TwoWay },
+            };
+            if (accessibleNameProperty != null)
+            {
+                checkBox[!AutomationProperties.NameProperty] = new Binding(accessibleNameProperty);
+            }
+
+            configure?.Invoke(checkBox);
+
+            return new Border
+            {
+                Background = Brushes.Transparent,
+                Padding = new Thickness(4),
+                Child = checkBox,
+            };
         });
     }
 

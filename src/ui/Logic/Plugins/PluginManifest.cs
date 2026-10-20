@@ -41,6 +41,14 @@ public class PluginManifest
     /// <summary>Entry assembly file name (relative to the plugin folder) used with <see cref="Runtime"/>.</summary>
     public string? Entry { get; set; }
 
+    /// <summary>
+    /// True when the plugin can run without user interaction from Batch convert: it handles
+    /// the "batch" request type (no UI, apply saved settings to all lines) and the
+    /// "configure" request type (show settings only, return them without a subtitle).
+    /// Only plugins that set this are offered in Batch convert.
+    /// </summary>
+    public bool Batch { get; set; }
+
     /// <summary>Native executable file names per operating system.</summary>
     public PluginExecutables? Executables { get; set; }
 }

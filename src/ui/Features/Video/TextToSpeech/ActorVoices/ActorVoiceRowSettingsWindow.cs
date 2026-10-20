@@ -1,9 +1,9 @@
 using System.Collections.ObjectModel;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
@@ -26,9 +26,9 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 //   │ Voice design  (OmniVoice only)                         │
 //   │   Gender [Female ▾]  Age [Adult ▾]                     │
 //   │   Pitch  [Low    ▾]  Accent [British ▾]                │
-//   │   ☐ Whisper                                            │
+//   │   (o) Whisper                                          │
 //   ├────────────────────────────────────────────────────────┤
-//   │                                       [OK] [Cancel]    │
+//   │                                       [Cancel] [OK]    │
 //   └────────────────────────────────────────────────────────┘
 public class ActorVoiceRowSettingsWindow : Window
 {
@@ -41,6 +41,7 @@ public class ActorVoiceRowSettingsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 460;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
         _vm = vm;
         vm.Window = this;
@@ -51,18 +52,36 @@ public class ActorVoiceRowSettingsWindow : Window
         var omniBlock = BuildOmniVoicePicker(vm);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttons = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
 
-        var stack = new StackPanel
+        var sections = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 12,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children = { header, instructionBlock, omniBlock, buttons },
+            Children = { instructionBlock, omniBlock },
         };
 
-        Content = stack;
+        // Sections scroll on a short screen, so the buttons stay reachable.
+        var root = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
+            },
+        };
+        root.Add(header, 0, 0);
+        root.Add(new ScrollViewer
+        {
+            Content = new Border { Background = EditorChrome.PanelBrush, Child = sections },
+            VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
+        }, 1, 0);
+        root.Add(buttons, 2, 0);
+
+        Content = root;
 
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
     }
@@ -71,7 +90,7 @@ public class ActorVoiceRowSettingsWindow : Window
     {
         var title = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(15),
+            FontSize = 15,
             FontWeight = FontWeight.SemiBold,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Actor))
             {
@@ -82,8 +101,8 @@ public class ActorVoiceRowSettingsWindow : Window
 
         var sub = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = UiUtil.GetTextColor(0.6d),
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new MultiBinding
             {
                 StringFormat = "{0} / {1}",
@@ -95,23 +114,29 @@ public class ActorVoiceRowSettingsWindow : Window
             },
         };
 
-        return new StackPanel { Orientation = Orientation.Vertical, Spacing = 2, Children = { title, sub } };
+        return new Border
+        {
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(16, 12),
+            Child = new StackPanel { Orientation = Orientation.Vertical, Spacing = 2, Children = { title, sub } },
+        };
     }
 
     private static Border BuildInstructionBlock(ActorVoiceRowSettingsViewModel vm)
     {
-        var label = new Label
-        {
-            Content = Se.Language.Video.TextToSpeech.VoiceInstruction,
-            FontWeight = FontWeight.SemiBold,
-        };
-
         var textBox = new TextBox
         {
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
             Height = 90,
             Width = double.NaN,
+            MinWidth = 420,
+            FontSize = 12.5,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(6),
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalContentAlignment = VerticalAlignment.Top,
             PlaceholderText = Se.Language.Video.TextToSpeech.VoiceInstructionHint,
@@ -121,35 +146,26 @@ public class ActorVoiceRowSettingsWindow : Window
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             },
         };
+        AutomationProperties.SetName(textBox, Se.Language.Video.TextToSpeech.VoiceInstruction);
 
-        var hint = new TextBlock
-        {
-            Text = Se.Language.Video.TextToSpeech.VoiceInstructionFreeTextHint,
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = UiUtil.GetTextColor(0.55d),
-            TextWrapping = TextWrapping.Wrap,
-        };
+        var hint = EditorChrome.MakeHint(Se.Language.Video.TextToSpeech.VoiceInstructionFreeTextHint);
+        hint.MaxWidth = 430;
+        hint.HorizontalAlignment = HorizontalAlignment.Left;
 
         var inner = new StackPanel
         {
             Orientation = Orientation.Vertical,
             Spacing = 6,
-            Children = { label, textBox, hint },
+            Children = { textBox, hint },
         };
 
-        var border = UiUtil.MakeBorderForControl(inner);
+        var border = EditorChrome.MakeEditorSection(Se.Language.Video.TextToSpeech.VoiceInstruction, inner, first: true);
         border.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInstructionTextVisible)) { Mode = BindingMode.OneWay });
         return border;
     }
 
     private static Border BuildOmniVoicePicker(ActorVoiceRowSettingsViewModel vm)
     {
-        var label = new Label
-        {
-            Content = Se.Language.Video.TextToSpeech.VoiceDesign,
-            FontWeight = FontWeight.SemiBold,
-        };
-
         var grid = new Grid
         {
             ColumnDefinitions =
@@ -175,21 +191,19 @@ public class ActorVoiceRowSettingsWindow : Window
         AddPickerRow(grid, 2, Se.Language.Video.TextToSpeech.VoicePitch, vm, vm.OmniVoicePitches, nameof(vm.SelectedOmniVoicePitch));
         AddPickerRow(grid, 3, Se.Language.Video.TextToSpeech.VoiceAccent, vm, vm.OmniVoiceAccents, nameof(vm.SelectedOmniVoiceAccent));
 
-        var whisper = new CheckBox
-        {
-            // Use the engine's own constant — same label as the main TTS window and Review window.
-            Content = OmniVoiceTtsCpp.InstructionWhisper,
-            Margin = new Thickness(0, 4, 0, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.OmniVoiceWhisper)) { Mode = BindingMode.TwoWay },
-        };
+        // Use the engine's own constant — same label as the main TTS window and Review window.
+        var whisper = EditorChrome.MakeToggleRow(nameof(vm.OmniVoiceWhisper), OmniVoiceTtsCpp.InstructionWhisper);
+        whisper.Margin = new Thickness(0, 4, 0, 0);
         grid.Add(whisper, 4, 0, 1, 2);
 
         var clonedNote = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.VoiceInstructionClonedVoiceNote,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = UiUtil.GetTextColor(0.7d),
+            FontSize = 11.5,
+            Foreground = EditorChrome.DimTextBrush,
+            MaxWidth = 430,
+            HorizontalAlignment = HorizontalAlignment.Left,
             Margin = new Thickness(0, 6, 0, 0),
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsClonedVoiceNoteVisible)) { Mode = BindingMode.OneWay },
         };
@@ -198,10 +212,16 @@ public class ActorVoiceRowSettingsWindow : Window
         {
             Orientation = Orientation.Vertical,
             Spacing = 6,
-            Children = { label, grid, clonedNote },
+            Children = { grid, clonedNote },
         };
 
-        var border = UiUtil.MakeBorderForControl(inner);
+        // A top line only when the instruction section is shown above it.
+        var border = EditorChrome.MakeEditorSection(Se.Language.Video.TextToSpeech.VoiceDesign, inner);
+        border.Bind(Border.BorderThicknessProperty, new Binding(nameof(vm.IsInstructionTextVisible))
+        {
+            Mode = BindingMode.OneWay,
+            Converter = new Avalonia.Data.Converters.FuncValueConverter<bool, Thickness>(v => new Thickness(0, v ? 1 : 0, 0, 0)),
+        });
         border.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsOmniVoicePickerVisible)) { Mode = BindingMode.OneWay });
         return border;
     }
@@ -209,13 +229,10 @@ public class ActorVoiceRowSettingsWindow : Window
     private static void AddPickerRow(Grid grid, int row, string label, object vm,
         ObservableCollection<string> items, string selectedPropertyPath)
     {
-        grid.Add(new Label
-        {
-            Content = label,
-            VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 60,
-        }, row, 0);
-        grid.Add(UiUtil.MakeComboBox(items, vm, selectedPropertyPath).WithWidth(200), row, 1);
+        grid.Add(EditorChrome.MakeDimLabel(label, new Thickness(0)).WithMinWidth(70), row, 0);
+        var combo = UiUtil.MakeComboBox(items, vm, selectedPropertyPath).WithWidth(200);
+        AutomationProperties.SetName(combo, label);
+        grid.Add(combo, row, 1);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

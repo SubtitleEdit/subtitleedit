@@ -1,7 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
 using System.Globalization;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 

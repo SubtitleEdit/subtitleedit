@@ -1,5 +1,3 @@
-using System.Linq;
-using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 
 namespace UITests.Features.Ocr.FixEngine;

@@ -1,10 +1,12 @@
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.FormatProperties.RosettaProperties;
 
+/// <summary>
+/// Rosetta properties in the editor look (see <see cref="FormatPropertiesChrome"/>), Import in the button bar.
+/// </summary>
 public class RosettaPropertiesWindow : Window
 {
     public RosettaPropertiesWindow(RosettaPropertiesViewModel vm)
@@ -13,83 +15,26 @@ public class RosettaPropertiesWindow : Window
         Title = Se.Language.File.RosettaProperties;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
-        MinWidth = 400;
-        MinHeight = 200;
+        MinWidth = 420;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
-        var labelWidth = 200;
-        
-        var labelLanguage = UiUtil.MakeLabel(Se.Language.General.Language).WithMinWidth(labelWidth);
-        var comboBoxLanguage = UiUtil.MakeComboBox<string>(vm.Languages, vm, nameof(vm.SelectedLanguage)).WithMinWidth(100);
-        var panelLangyage = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelLanguage,
-                comboBoxLanguage,
-            }
-        };
+        var comboBoxLanguage = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox<string>(vm.Languages, vm, nameof(vm.SelectedLanguage)), Se.Language.General.Language, 160);
+        var textBoxLineHeight = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.SelectedLineHeight)), Se.Language.General.LineHeight);
+        var numericUpDownFontSize = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownOneDecimal(1, 100, 120, vm, nameof(vm.SelectedFontSize)), Se.Language.File.RosettaFontSize, 120);
 
-        var labelLineHeight = UiUtil.MakeLabel(Se.Language.General.LineHeight).WithMinWidth(labelWidth);
-        var textBoxLineHeight = UiUtil.MakeTextBox(100, vm, nameof(vm.SelectedLineHeight));
-        var panelLineHeight = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelLineHeight,
-                textBoxLineHeight,
-            }
-        };
+        var rows = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(Se.Language.General.Language, comboBoxLanguage),
+            FormatPropertiesChrome.Row(Se.Language.General.LineHeight, textBoxLineHeight),
+            FormatPropertiesChrome.Row(Se.Language.File.RosettaFontSize, numericUpDownFontSize));
 
-        var labelFontSize = UiUtil.MakeLabel(Se.Language.File.RosettaFontSize).WithMinWidth(labelWidth);
-        var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 100, 120, vm, nameof(vm.SelectedFontSize));
-        var panelFontSize = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelFontSize,
-                numericUpDownFontSize,
-            }
-        };
+        var buttonImport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand);
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(buttonImport, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
-        var buttonImport = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonImport, buttonOk, buttonCancel);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelLangyage, 0);
-        grid.Add(panelLineHeight, 1);
-        grid.Add(panelFontSize, 2);
-        grid.Add(buttonPanel, 5);
-
-        Content = grid;
+        Content = FormatPropertiesChrome.MakeRoot(
+            buttonBar,
+            EditorChrome.MakeEditorSection(Se.Language.General.Settings, rows, first: true));
 
         UiUtil.FocusOnFirstActivation(this, comboBoxLanguage); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

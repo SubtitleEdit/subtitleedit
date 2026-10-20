@@ -28,6 +28,9 @@ public static class XlsxWriter
     /// <summary>Body style (top aligned) - cellXfs index 2.</summary>
     private const int BodyStyle = 2;
 
+    /// <summary>Body style that wraps, so line breaks inside a cell show - cellXfs index 3.</summary>
+    private const int BodyWrapStyle = 3;
+
     /// <summary>
     /// Builds the workbook in memory. Cells are strings unless the value is a number
     /// (int/long/double/decimal), and null becomes an empty cell.
@@ -36,13 +39,17 @@ public static class XlsxWriter
     /// <param name="headers">The first row, written bold and frozen.</param>
     /// <param name="rows">One list of cell values per row; must be at most <paramref name="headers"/> long.</param>
     /// <param name="columnWidths">Optional width (in characters) per column.</param>
+    /// <param name="includeHeader">False writes no header row (the headers still set the column count).</param>
+    /// <param name="wrapText">Wrap the body cells, so a line break inside a cell shows as one.</param>
     public static byte[] Create(
         string sheetName,
         IReadOnlyList<string> headers,
         IEnumerable<IReadOnlyList<object?>> rows,
-        IReadOnlyList<double>? columnWidths = null)
+        IReadOnlyList<double>? columnWidths = null,
+        bool includeHeader = true,
+        bool wrapText = false)
     {
-        var sheet = MakeSheetXml(headers, rows, columnWidths);
+        var sheet = MakeSheetXml(headers, rows, columnWidths, includeHeader, wrapText);
 
         using (var ms = new MemoryStream())
         {
@@ -85,18 +92,25 @@ public static class XlsxWriter
     private static string MakeSheetXml(
         IReadOnlyList<string> headers,
         IEnumerable<IReadOnlyList<object?>> rows,
-        IReadOnlyList<double>? columnWidths)
+        IReadOnlyList<double>? columnWidths,
+        bool includeHeader,
+        bool wrapText)
     {
         var body = new StringBuilder();
-        var rowNumber = 1;
+        var rowNumber = 0;
+        var bodyStyle = wrapText ? BodyWrapStyle : BodyStyle;
 
-        body.Append("<row r=\"1\">");
-        for (var i = 0; i < headers.Count; i++)
+        if (includeHeader)
         {
-            AppendInlineString(body, ColumnName(i) + "1", HeaderStyle, headers[i]);
-        }
+            rowNumber++;
+            body.Append("<row r=\"1\">");
+            for (var i = 0; i < headers.Count; i++)
+            {
+                AppendInlineString(body, ColumnName(i) + "1", HeaderStyle, headers[i]);
+            }
 
-        body.Append("</row>");
+            body.Append("</row>");
+        }
 
         foreach (var row in rows)
         {
@@ -113,13 +127,13 @@ public static class XlsxWriter
 
                 if (TryGetNumber(value, out var number))
                 {
-                    body.Append("<c r=\"").Append(reference).Append("\" s=\"").Append(BodyStyle).Append("\"><v>")
+                    body.Append("<c r=\"").Append(reference).Append("\" s=\"").Append(bodyStyle).Append("\"><v>")
                         .Append(number.ToString("R", CultureInfo.InvariantCulture))
                         .Append("</v></c>");
                 }
                 else
                 {
-                    AppendInlineString(body, reference, BodyStyle, value.ToString() ?? string.Empty);
+                    AppendInlineString(body, reference, bodyStyle, value.ToString() ?? string.Empty);
                 }
             }
 
@@ -127,7 +141,7 @@ public static class XlsxWriter
         }
 
         var lastColumn = ColumnName(Math.Max(headers.Count - 1, 0));
-        var dimension = "A1:" + lastColumn + rowNumber.ToString(CultureInfo.InvariantCulture);
+        var dimension = "A1:" + lastColumn + Math.Max(rowNumber, 1).ToString(CultureInfo.InvariantCulture);
 
         var cols = new StringBuilder();
         if (columnWidths != null && columnWidths.Count > 0)
@@ -146,13 +160,15 @@ public static class XlsxWriter
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
                "<worksheet xmlns=\"" + MainNs + "\">" +
                "<dimension ref=\"" + dimension + "\"/>" +
-               "<sheetViews><sheetView workbookViewId=\"0\">" +
-               "<pane ySplit=\"1\" topLeftCell=\"A2\" activePane=\"bottomLeft\" state=\"frozen\"/>" +
-               "</sheetView></sheetViews>" +
+               (includeHeader
+                   ? "<sheetViews><sheetView workbookViewId=\"0\">" +
+                     "<pane ySplit=\"1\" topLeftCell=\"A2\" activePane=\"bottomLeft\" state=\"frozen\"/>" +
+                     "</sheetView></sheetViews>"
+                   : "<sheetViews><sheetView workbookViewId=\"0\"/></sheetViews>") +
                "<sheetFormatPr defaultRowHeight=\"15\"/>" +
                cols +
                "<sheetData>" + body + "</sheetData>" +
-               "<autoFilter ref=\"" + dimension + "\"/>" +
+               (includeHeader ? "<autoFilter ref=\"" + dimension + "\"/>" : string.Empty) +
                "</worksheet>";
     }
 
@@ -254,7 +270,7 @@ public static class XlsxWriter
         var sb = new StringBuilder();
         foreach (var ch in sheetName)
         {
-            sb.Append("[]:*?/\\".IndexOf(ch) >= 0 ? '-' : ch);
+            sb.Append("[]:*?/\\".Contains(ch) ? '-' : ch);
         }
 
         var name = sb.ToString().Trim('\'');
@@ -311,10 +327,11 @@ public static class XlsxWriter
         "</fills>" +
         "<borders count=\"1\"><border><left/><right/><top/><bottom/><diagonal/></border></borders>" +
         "<cellStyleXfs count=\"1\"><xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\"/></cellStyleXfs>" +
-        "<cellXfs count=\"3\">" +
+        "<cellXfs count=\"4\">" +
         "<xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\" xfId=\"0\"/>" +
         "<xf numFmtId=\"0\" fontId=\"1\" fillId=\"2\" borderId=\"0\" xfId=\"0\" applyFont=\"1\" applyFill=\"1\" applyAlignment=\"1\"><alignment vertical=\"center\"/></xf>" +
         "<xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\" xfId=\"0\" applyAlignment=\"1\"><alignment vertical=\"top\"/></xf>" +
+        "<xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\" xfId=\"0\" applyAlignment=\"1\"><alignment vertical=\"top\" wrapText=\"1\"/></xf>" +
         "</cellXfs>" +
         "<cellStyles count=\"1\"><cellStyle name=\"Normal\" xfId=\"0\" builtinId=\"0\"/></cellStyles>" +
         "</styleSheet>";

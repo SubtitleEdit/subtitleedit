@@ -1,4 +1,3 @@
-using System;
 using Nikse.SubtitleEdit.Features.Main;
 
 namespace UITests.Features.Main;

@@ -16,8 +16,8 @@ public class SeWaveform
     // scrubbing walks the waveform as one continuous strip.
     public bool CenterVideoPositionAlsoWhenPaused { get; set; }
 
-    // With the above on, also select the line under the cursor while scrubbing paused.
-    // Off by default: SE 4 never changed the selection while paused (#15513).
+    // Also select the line under the play-head when it moves while paused (scrubbing, seek/step
+    // commands), as long as "select current subtitle while playing" is on (#16048). Off by default: SE 4 never changed the selection while paused (#15513).
     public bool SelectCurrentSubtitleWhilePaused { get; set; }
 
     // Keep the main waveform's horizontal/vertical zoom across restarts (#15748).
@@ -240,6 +240,7 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.AutoSelectOnPlay, IsVisible = true, SortOrder = 140 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Center, IsVisible = true, SortOrder = 150 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TimelineTrackGrouping, IsVisible = true, SortOrder = 155 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.RuleProfile, IsVisible = false, SortOrder = 157 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.More, IsVisible = true, SortOrder = 160 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak1, IsVisible = false, SortOrder = 170 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak2, IsVisible = false, SortOrder = 180 },

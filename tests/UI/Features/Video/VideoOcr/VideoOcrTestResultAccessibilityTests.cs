@@ -7,8 +7,6 @@ using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
-using System.Linq;
-using Xunit;
 
 namespace UITests.Features.Video.VideoOcr;
 

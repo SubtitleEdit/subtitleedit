@@ -290,7 +290,6 @@
     <Word from="ﬁck" to="fick" />
     <Word from="ﬁnns" to="finns" />
     <Word from="ﬁn" to="fin" />
-    <Word from="Fa" to="Bra." />
     <Word from="bori" to="bor i" />
     <Word from="fiendeplanl" to="fiendeplan!" />
     <Word from="iförnamn" to="i förnamn" />
@@ -469,7 +468,7 @@
   </BeginLines>
   <EndLines />
   <RegularExpressions>
-    <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="(?&lt;=\p{Lu})\|(?=\p{Lu})" replaceWith="I" />
   </RegularExpressions>
   <RegularExpressionsIfSpelledCorrectly>
 
@@ -531,7 +530,7 @@
     <RegEx find="\b([A-ZÅÄÖ][a-zåäöé]*[sxzSXZ])['']s\b" spellCheck="$1" replaceWith="$1'" />
 
     <!-- David's → Davids : remove apostrophe from normal genitive -->
-    <RegEx find="\b([A-ZÅÄÖ][a-zåäöé]+)['']s\b" spellCheck="$1s" replaceWith="$1s" />
+    <RegEx find="\b(?!(?:He|She|It|That|What|There|Here|Who|Where|How|Let|This)['’]s\b)([A-ZÅÄÖ][a-zåäöé]+)['']s\b" spellCheck="$1s" replaceWith="$1s" />
 
     <!-- ============================================================ -->
     <!-- SWEDISH COMPOUND WORDS — NOTE                                -->

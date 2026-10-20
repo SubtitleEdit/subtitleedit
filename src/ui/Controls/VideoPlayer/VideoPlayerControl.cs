@@ -53,6 +53,21 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public static readonly StyledProperty<ICommand> FullScreenCommandProperty =
             AvaloniaProperty.Register<VideoPlayerControl, ICommand>(nameof(FullScreenCommand));
 
+        public static readonly StyledProperty<ICommand?> PreviousSubtitleCommandProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(PreviousSubtitleCommand));
+
+        public static readonly StyledProperty<ICommand?> NextSubtitleCommandProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(NextSubtitleCommand));
+
+        public static readonly StyledProperty<ICommand?> ToggleSubtitlesCommandProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(ToggleSubtitlesCommand));
+
+        public static readonly StyledProperty<bool> SubtitlesOnVideoIsVisibleProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitlesOnVideoIsVisible), true);
+
+        public static readonly StyledProperty<bool> SubtitleButtonsIsVisibleProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitleButtonsIsVisible));
+
         public static readonly StyledProperty<bool> StopIsVisibleProperty =
             AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(StopIsVisible));
 
@@ -63,6 +78,40 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         {
             get => GetValue(PlayerContentProperty);
             set => SetValue(PlayerContentProperty, value);
+        }
+
+        /// <summary>
+        /// Theme art shown in the video area while no video is loaded.
+        /// </summary>
+        public IImage? EmptyBackground
+        {
+            get => _emptyBackground.Source;
+            set
+            {
+                _emptyBackground.Source = value;
+                UpdateEmptyBackground();
+            }
+        }
+
+        private readonly Image _emptyBackground;
+
+        // From the start of Open until Close - the file name is only set once the file is loaded
+        private bool _hasVideo;
+
+        private void UpdateEmptyBackground()
+        {
+            var showArt = _emptyBackground.Source != null && !_hasVideo;
+            _emptyBackground.IsVisible = showArt;
+
+            // A native player window (mpv "wid" - the Windows default - and VLC) is drawn on top
+            // of everything Avalonia draws, so it is hidden while the art shows. Hiding only hides
+            // the native window: the window and the player in it live until the control is
+            // detached. The presenter is hidden rather than the control itself, as mpv's Linux
+            // resize workaround toggles the control's own IsVisible.
+            if (_contentPresenter != null && PlayerContent is NativeControlHost)
+            {
+                _contentPresenter.IsVisible = !showArt;
+            }
         }
 
         public double Volume
@@ -127,6 +176,45 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             set => SetValue(FullScreenCommandProperty, value);
         }
 
+        public ICommand? PreviousSubtitleCommand
+        {
+            get => GetValue(PreviousSubtitleCommandProperty);
+            set => SetValue(PreviousSubtitleCommandProperty, value);
+        }
+
+        public ICommand? NextSubtitleCommand
+        {
+            get => GetValue(NextSubtitleCommandProperty);
+            set => SetValue(NextSubtitleCommandProperty, value);
+        }
+
+        public ICommand? ToggleSubtitlesCommand
+        {
+            get => GetValue(ToggleSubtitlesCommandProperty);
+            set => SetValue(ToggleSubtitlesCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Whether the subtitles are shown on the video - the checked state of the toggle
+        /// subtitles button. Set by the owner after <see cref="ToggleSubtitlesCommand"/> runs.
+        /// </summary>
+        public bool SubtitlesOnVideoIsVisible
+        {
+            get => GetValue(SubtitlesOnVideoIsVisibleProperty);
+            set => SetValue(SubtitlesOnVideoIsVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// The previous/next subtitle and toggle subtitles buttons need the main window's
+        /// subtitle, so only its players (and the controls preview) show them - when the
+        /// controls layout does (#16047).
+        /// </summary>
+        public bool SubtitleButtonsIsVisible
+        {
+            get => GetValue(SubtitleButtonsIsVisibleProperty);
+            set => SetValue(SubtitleButtonsIsVisibleProperty, value);
+        }
+
         public bool StopIsVisible
         {
             get => GetValue(StopIsVisibleProperty);
@@ -183,6 +271,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Button _buttonFullScreen;
         private readonly Button _buttonFullScreenCollapse;
         private readonly Button _buttonStop;
+        private readonly Button _buttonPreviousSubtitle;
+        private readonly Button _buttonNextSubtitle;
+        private readonly NonSpaceToggleButton _buttonToggleSubtitles;
         private readonly StackPanel _panelFullScreen;
         private readonly Slider _sliderPosition;
         private readonly StackPanel _panelVolume;
@@ -202,7 +293,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private int _durationProbeGeneration;
         private readonly Grid _gridProgress; // Reference to the controls grid
         private DispatcherTimer? _autoHideTimer;
-        private DateTime _lastActivityTime;
 
         // True while the user is dragging (or arrow-keying) the position slider. The position
         // timer must leave the slider alone for as long as it is set - see StartPositionTimer.
@@ -436,7 +526,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             _videoPlayerInstance = videoPlayerInstance;
             _videoFileName = string.Empty;
-            _lastActivityTime = DateTime.UtcNow;
 
             var mainGrid = new Grid
             {
@@ -453,6 +542,15 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _contentPresenter = contentPresenter;
             mainGrid.Children.Add(contentPresenter);
             Grid.SetRow(contentPresenter, 0);
+
+            _emptyBackground = new Image
+            {
+                Stretch = Stretch.UniformToFill,
+                IsHitTestVisible = false,
+                IsVisible = false,
+            };
+            mainGrid.Children.Add(_emptyBackground);
+            Grid.SetRow(_emptyBackground, 0);
 
             // Row with buttons + position slider + volume slider - the columns are made by
             // ApplyControlsLayout, from the user's order and visibility (#15286)
@@ -523,6 +621,30 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 Path = nameof(StopCommand),
                 Source = this
+            });
+
+            // Previous/next subtitle and toggle subtitles on the video (#16047)
+            _buttonPreviousSubtitle = MakeSubtitleButton(
+                new NonSpaceButton(),
+                Se.Language.Options.Settings.VideoControlsPreviousSubtitle,
+                "fa-solid fa-backward-step",
+                nameof(PreviousSubtitleCommand));
+            _buttonNextSubtitle = MakeSubtitleButton(
+                new NonSpaceButton(),
+                Se.Language.Options.Settings.VideoControlsNextSubtitle,
+                "fa-solid fa-forward-step",
+                nameof(NextSubtitleCommand));
+            // Checked (and a filled icon) while the subtitles are shown on the video.
+            _buttonToggleSubtitles = MakeSubtitleButton(
+                new NonSpaceToggleButton(),
+                Se.Language.Video.ToggleSubtitlesOnVideoPlayer,
+                "fa-solid fa-closed-captioning",
+                nameof(ToggleSubtitlesCommand));
+            _buttonToggleSubtitles.Bind(ToggleButton.IsCheckedProperty, new Binding
+            {
+                Path = nameof(SubtitlesOnVideoIsVisible),
+                Source = this,
+                Mode = BindingMode.OneWay,
             });
 
             // Fullscreen
@@ -753,6 +875,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         // Enable/disable click-to-toggle behavior (default on)
         public bool ClickToTogglePlay { get; set; } = true;
+
+        // Mouse wheel / trackpad scroll over the video seeks (default on)
+        public bool WheelToSeek { get; set; } = true;
         public bool IsSmpteTimingEnabled { get; set; }
         private bool _surfaceLeftButtonDown;
 
@@ -822,6 +947,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private void OnVideoWheelChanged(object? sender, PointerWheelEventArgs e)
         {
+            if (!WheelToSeek)
+            {
+                return;
+            }
+
             // Ignore wheel events over the controls row (sliders, buttons).
             try
             {
@@ -952,6 +1082,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // meanwhile (issue #14218). Callers that seek only after the open have already
             // announced their target - a start-less open must not clear it.
             BeginPositionRestore(startPositionSeconds);
+            _hasVideo = true;
+            UpdateEmptyBackground();
 
             // Reset slider state before LoadFile. Otherwise, when the new file's
             // Duration arrives on the next timer tick, the slider's Maximum drops
@@ -1022,6 +1154,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 {
                     SeVideoControlsItemType.Play => _buttonPlay,
                     SeVideoControlsItemType.Stop => _buttonStop,
+                    SeVideoControlsItemType.PreviousSubtitle => _buttonPreviousSubtitle,
+                    SeVideoControlsItemType.NextSubtitle => _buttonNextSubtitle,
+                    SeVideoControlsItemType.ToggleSubtitles => _buttonToggleSubtitles,
                     SeVideoControlsItemType.FullScreen => _panelFullScreen,
                     SeVideoControlsItemType.PositionSlider => _sliderPosition,
                     SeVideoControlsItemType.Volume => _panelVolume,
@@ -1108,10 +1243,47 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             UpdateVideoFileNameMaxWidth();
         }
 
+        private T MakeSubtitleButton<T>(T button, string name, string iconName, string commandPropertyName) where T : Button
+        {
+            button.VerticalAlignment = VerticalAlignment.Center;
+            AutomationProperties.SetName(button, name);
+            button.Bind(IsVisibleProperty, new Binding
+            {
+                Path = nameof(SubtitleButtonsIsVisible),
+                Source = this
+            });
+            Attached.SetIcon(button, iconName);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(button, name);
+            }
+
+            button.Bind(Button.CommandProperty, new Binding
+            {
+                Path = commandPropertyName,
+                Source = this
+            });
+            return button;
+        }
+
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        {
+            base.OnPropertyChanged(change);
+
+            if (change.Property == SubtitlesOnVideoIsVisibleProperty)
+            {
+                Attached.SetIcon(_buttonToggleSubtitles, SubtitlesOnVideoIsVisible
+                    ? "fa-solid fa-closed-captioning"
+                    : "fa-regular fa-closed-captioning");
+            }
+        }
+
         private static double GetControlsSpacing(SeVideoControlsItemType left, SeVideoControlsItemType right)
         {
             static bool IsButton(SeVideoControlsItemType type) =>
-                type is SeVideoControlsItemType.Play or SeVideoControlsItemType.Stop or SeVideoControlsItemType.FullScreen;
+                type is SeVideoControlsItemType.Play or SeVideoControlsItemType.Stop or SeVideoControlsItemType.FullScreen or
+                    SeVideoControlsItemType.PreviousSubtitle or SeVideoControlsItemType.NextSubtitle or
+                    SeVideoControlsItemType.ToggleSubtitles;
 
             if (IsButton(left) && IsButton(right))
             {
@@ -1185,6 +1357,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             ProgressText = string.Empty;
             _videoFileName = string.Empty;
             _textBlockVideoFileName.Text = string.Empty;
+            _hasVideo = false;
+            UpdateEmptyBackground();
             SetPositionDisplayOnly(0);
             Duration = 0;
             StartDurationProbe(null);
@@ -1501,8 +1675,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private void StartAutoHideControls()
         {
-            _lastActivityTime = DateTime.UtcNow;
-
             // When the user opts to hide controls in full-screen, never show them —
             // not even briefly on entry — and don't bother arming the auto-hide timer.
             if (Se.Settings.Video.FullscreenHideControls)
@@ -1517,7 +1689,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             // Single one-shot timer reset on each user activity. Stops itself on tick so
             // Stop()+Start() reliably reschedules a fresh 3-second wait from "now" — a
-            // free-running periodic timer can drift out of phase with _lastActivityTime
+            // free-running periodic timer can drift out of phase with the last activity
             // and fail to hide after the user re-shows controls during playback.
             if (_autoHideTimer == null)
             {
@@ -1543,7 +1715,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private void OnUserActivity()
         {
-            _lastActivityTime = DateTime.UtcNow;
             if (IsFullScreen)
             {
                 // If the user opted to hide controls in full-screen, don't reveal them on activity.

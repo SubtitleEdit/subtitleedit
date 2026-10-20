@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -11,7 +11,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
-using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -19,13 +18,11 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using MenuItem = Avalonia.Controls.MenuItem;
-using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -45,34 +42,39 @@ public class OcrWindow : Window
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         DataContext = vm;
 
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
+        AddOcrStyles(Styles);
+
         var topControlsView = MakeTopControlsView(vm);
         var subtitleView = MakeSubtitleView(vm);
         var editView = MakeEditView(vm);
+        var progressView = MakeProgressView(vm);
         var buttonView = MakeBottomView(vm);
 
-        var editViewHeight = 215;
+        var editViewHeight = 240;
         var editViewRow = new RowDefinition
         {
             Height = new GridLength(editViewHeight, GridUnitType.Pixel),
             MinHeight = 150
         };
 
+        // Engine toolbar, image subtitle list, splitter, edit area (text, options, unknown
+        // words), progress strip and button bar.
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 100 },
-                new RowDefinition { Height = new GridLength(5, GridUnitType.Pixel) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 editViewRow,
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
@@ -143,6 +145,7 @@ public class OcrWindow : Window
             Height = UiUtil.SplitterWidthOrHeight,
             ResizeDirection = GridResizeDirection.Rows,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+            Background = EditorChrome.LineBrush,
         };
         splitter.Bind(GridSplitter.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = InverseBooleanConverter.Instance });
 
@@ -150,7 +153,8 @@ public class OcrWindow : Window
         grid.Add(subtitleView, 1, 0);
         grid.Add(splitter, 2, 0);
         grid.Add(editView, 3, 0);
-        grid.Add(buttonView, 4, 0);
+        grid.Add(progressView, 4, 0);
+        grid.Add(buttonView, 5, 0);
 
         Content = grid;
 
@@ -158,66 +162,40 @@ public class OcrWindow : Window
         Loaded += (s, e) => vm.OnLoaded();
         Closing += (s, e) => vm.OnClosing(e);
         KeyDown += (s, e) => vm.OnKeyDown(e);
-        KeyUp += (s, e) => vm.OnWindowKeyUp(e);
     }
 
-    private static Grid MakeTopControlsView(OcrViewModel vm)
+    private static Border MakeTopControlsView(OcrViewModel vm)
     {
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
+            ColumnSpacing = 8,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var toggleButtonCaptureAlignment = new ToggleButton();
-        Attached.SetIcon(toggleButtonCaptureAlignment, IconNames.DockTop);
-        ToolTip.SetTip(toggleButtonCaptureAlignment, Se.Language.Ocr.CaptureTopAlign);
-        AutomationProperties.SetName(toggleButtonCaptureAlignment, Se.Language.Ocr.CaptureTopAlign);
+        var toggleButtonCaptureAlignment = MakeToolToggle(IconNames.DockTop, Se.Language.Ocr.CaptureTopAlign);
         toggleButtonCaptureAlignment.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasCaptureAlignment)));
 
-        var toggleButtonPreProcessing = new ToggleButton
-        {
-            Command = vm.ShowPreProcessingCommand,
-        };
+        var toggleButtonPreProcessing = MakeToolToggle(IconNames.Image, Se.Language.Ocr.ImagePreProcessing);
+        toggleButtonPreProcessing.Command = vm.ShowPreProcessingCommand;
         toggleButtonPreProcessing.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasPreProcessingSettings)));
-        Attached.SetIcon(toggleButtonPreProcessing, IconNames.Image);
-        ToolTip.SetTip(toggleButtonPreProcessing, Se.Language.Ocr.ImagePreProcessing);
-        AutomationProperties.SetName(toggleButtonPreProcessing, Se.Language.Ocr.ImagePreProcessing);
 
-        var toggleButtonVobSubColors = new ToggleButton
-        {
-            Command = vm.PickVobSubColorsCommand,
-            Margin = new Thickness(2, 0, 0, 0),
-        };
+        var toggleButtonVobSubColors = MakeToolToggle(IconNames.Palette, Se.Language.Ocr.VobSubColors);
+        toggleButtonVobSubColors.Command = vm.PickVobSubColorsCommand;
         toggleButtonVobSubColors.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasCustomVobSubColors)));
         toggleButtonVobSubColors.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsVobSubVisible)));
-        Attached.SetIcon(toggleButtonVobSubColors, IconNames.Palette);
-        ToolTip.SetTip(toggleButtonVobSubColors, Se.Language.Ocr.VobSubColors);
-        AutomationProperties.SetName(toggleButtonVobSubColors, Se.Language.Ocr.VobSubColors);
 
-        var toggleButtonFallbackDatabase = new ToggleButton
-        {
-            Command = vm.PickFallbackDatabaseCommand,
-            Margin = new Thickness(2, 0, 0, 0),
-        };
+        var toggleButtonFallbackDatabase = MakeToolToggle(IconNames.DatabaseArrowRight, Se.Language.Ocr.FallbackOcrDatabase);
+        toggleButtonFallbackDatabase.Command = vm.PickFallbackDatabaseCommand;
         toggleButtonFallbackDatabase.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasFallbackDatabase)));
         toggleButtonFallbackDatabase.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFallbackDatabaseVisible)));
-        Attached.SetIcon(toggleButtonFallbackDatabase, IconNames.DatabaseArrowRight);
-        ToolTip.SetTip(toggleButtonFallbackDatabase, Se.Language.Ocr.FallbackOcrDatabase);
-        AutomationProperties.SetName(toggleButtonFallbackDatabase, Se.Language.Ocr.FallbackOcrDatabase);
 
-        var toggleButtonShowOnlyForced = new ToggleButton();
-        Attached.SetIcon(toggleButtonShowOnlyForced, IconNames.Filter);
-        ToolTip.SetTip(toggleButtonShowOnlyForced, Se.Language.Ocr.ShowOnlyForcedSubtitles);
-        AutomationProperties.SetName(toggleButtonShowOnlyForced, Se.Language.Ocr.ShowOnlyForcedSubtitles);
+        var toggleButtonShowOnlyForced = MakeToolToggle(IconNames.Filter, Se.Language.Ocr.ShowOnlyForcedSubtitles);
         toggleButtonShowOnlyForced.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.ShowOnlyForced)));
         toggleButtonShowOnlyForced.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasForcedSubtitles)));
         toggleButtonShowOnlyForced.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsOcrRunning)) { Converter = InverseBooleanConverter.Instance });
@@ -226,8 +204,11 @@ public class OcrWindow : Window
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 2,
             Children =
             {
+                EditorChrome.MakeToolbarSeparator(),
                 toggleButtonShowOnlyForced,
                 toggleButtonCaptureAlignment,
                 toggleButtonPreProcessing,
@@ -259,144 +240,120 @@ public class OcrWindow : Window
         comboBoxLlamaCppModels.ItemTemplate = LlamaCppDownloadHelper.ModelItemTemplate();
         vm.RefreshLlamaCppOcrModelCombo = () => comboBoxLlamaCppModels.ItemTemplate = LlamaCppDownloadHelper.ModelItemTemplate();
 
+        // The engine picker followed by the selected engine's settings - each engine's
+        // controls are bound visible only while that engine is picked.
         var panel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 5,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 10),
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Ocr.OcrEngine),
+                EditorChrome.MakeDimLabel(Se.Language.Ocr.OcrEngine, new Thickness(0, 0, 3, 0)),
                 comboBoxEngines,
 
                 // NOcr settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.Database, vm => vm.IsNOcrVisible),
+                MakeEngineLabel(vm, Se.Language.Ocr.Database, nameof(vm.IsNOcrVisible)),
                 UiUtil.MakeComboBox(vm.NOcrDatabases, vm, nameof(vm.SelectedNOcrDatabase), nameof(vm.IsNOcrVisible))
                     .WithMarginRight(0)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeButton(vm.ShowNOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
-                    .WithMarginRight(20)
-                    .WithMarginBottom(2)
-                    .WithBottomAlignment()
-                    .WithBindIsVisible(nameof(vm.IsNOcrVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.MaxWrongPixels, vm => vm.IsNOcrVisible),
+                MakeEngineToolButton(vm, IconNames.Settings, Se.Language.General.Settings, vm.ShowNOcrSettingsCommand, nameof(vm.IsNOcrVisible))
+                    .WithMarginRight(10),
+                MakeEngineLabel(vm, Se.Language.Ocr.MaxWrongPixels, nameof(vm.IsNOcrVisible)),
                 UiUtil.MakeComboBox(vm.NOcrMaxWrongPixelsList, vm, nameof(vm.SelectedNOcrMaxWrongPixels),
                         nameof(vm.IsNOcrVisible))
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.NumberOfPixelsIsSpace, vm => vm.IsNOcrVisible),
+                MakeEngineLabel(vm, Se.Language.Ocr.NumberOfPixelsIsSpace, nameof(vm.IsNOcrVisible)),
                 WithPixelsAreSpaceItemTemplate(UiUtil.MakeComboBox(vm.NOcrPixelsAreSpaceList, vm, nameof(vm.SelectedNOcrPixelsAreSpace),
                         nameof(vm.IsNOcrVisible)))
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Image Compare settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.Database, vm => vm.IsBinaryImageCompareVisible),
+                MakeEngineLabel(vm, Se.Language.Ocr.Database, nameof(vm.IsBinaryImageCompareVisible)),
                 UiUtil.MakeComboBox(vm.ImageCompareDatabases, vm, nameof(vm.SelectedImageCompareDatabase), nameof(vm.IsBinaryImageCompareVisible))
                     .WithMarginRight(0)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeButton(vm.ShowBinaryOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
-                    .WithMarginRight(20)
-                    .WithMarginBottom(2)
-                    .WithBottomAlignment()
-                    .WithBindIsVisible(nameof(vm.IsBinaryImageCompareVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.NumberOfPixelsIsSpace, vm => vm.IsBinaryImageCompareVisible),
+                MakeEngineToolButton(vm, IconNames.Settings, Se.Language.General.Settings, vm.ShowBinaryOcrSettingsCommand, nameof(vm.IsBinaryImageCompareVisible))
+                    .WithMarginRight(10),
+                MakeEngineLabel(vm, Se.Language.Ocr.NumberOfPixelsIsSpace, nameof(vm.IsBinaryImageCompareVisible)),
                 UiUtil.MakeComboBox(vm.BinaryOcrPixelsAreSpaceList, vm, nameof(vm.SelectedBinaryOcrPixelsAreSpace),
                         nameof(vm.IsBinaryImageCompareVisible))
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.MaxErrorPct, vm => vm.IsBinaryImageCompareVisible),
-                UiUtil.MakeNumericUpDownOneDecimal(0, 50, 120, vm, nameof(vm.BinaryOcrMaxErrorPercent), nameof(vm.IsBinaryImageCompareVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
+                MakeEngineLabel(vm, Se.Language.Ocr.MaxErrorPct, nameof(vm.IsBinaryImageCompareVisible)),
+                MakeEngineField(UiUtil.MakeNumericUpDownOneDecimal(0, 50, 90, vm, nameof(vm.BinaryOcrMaxErrorPercent), nameof(vm.IsBinaryImageCompareVisible))
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance)),
 
                 // Tesseract settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsTesseractVisible),
+                MakeEngineLabel(vm, Se.Language.General.Language, nameof(vm.IsTesseractVisible)),
                 UiUtil.MakeComboBox(vm.TesseractDictionaryItems, vm, nameof(vm.SelectedTesseractDictionaryItem),
                         nameof(vm.IsTesseractVisible))
                     .WithWidth(100)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeBrowseButton(vm.PickTesseractModelCommand).BindIsVisible(vm, nameof(vm.IsTesseractVisible))
-                    .BindIsEnabled(vm, nameof(vm.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.TesseractEngineMode, vm => vm.IsTesseractVisible)
-                    .WithMarginLeft(10),
+                MakeEngineToolButton(vm, IconNames.Download, Se.Language.General.Download, vm.PickTesseractModelCommand, nameof(vm.IsTesseractVisible))
+                    .WithMarginRight(10),
+                MakeEngineLabel(vm, Se.Language.Ocr.TesseractEngineMode, nameof(vm.IsTesseractVisible)),
                 UiUtil.MakeComboBox(vm.TesseractEngineModes, vm, nameof(vm.SelectedTesseractEngineMode),
                         nameof(vm.IsTesseractVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Ollama settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsOllamaVisible),
+                MakeEngineLabel(vm, Se.Language.General.Language, nameof(vm.IsOllamaVisible)),
                 UiUtil.MakeComboBox(vm.OllamaLanguages, vm, nameof(vm.SelectedOllamaLanguage),
                         nameof(vm.IsOllamaVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsOllamaVisible),
-                UiUtil.MakeTextBox(160, vm, nameof(vm.OllamaModel))
-                    .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeBrowseButton(vm.PickOllamaModelCommand)
-                    .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Url, vm => vm.IsOllamaVisible),
-                UiUtil.MakeTextBox(220, vm, nameof(vm.OllamaUrl))
-                    .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
+                MakeEngineLabel(vm, Se.Language.General.Model, nameof(vm.IsOllamaVisible)),
+                MakeEngineTextBox(160, vm, nameof(vm.OllamaModel), nameof(vm.IsOllamaVisible)),
+                MakeEngineToolButton(vm, "fa-solid fa-ellipsis", Se.Language.General.PickOllamaModel, vm.PickOllamaModelCommand, nameof(vm.IsOllamaVisible))
+                    .WithMarginRight(10),
+                MakeEngineLabel(vm, Se.Language.General.Url, nameof(vm.IsOllamaVisible)),
+                MakeEngineTextBox(220, vm, nameof(vm.OllamaUrl), nameof(vm.IsOllamaVisible)),
 
                 // llama.cpp settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsLlamaCppVisible),
+                MakeEngineLabel(vm, Se.Language.General.Language, nameof(vm.IsLlamaCppVisible)),
                 UiUtil.MakeComboBox(vm.OllamaLanguages, vm, nameof(vm.SelectedOllamaLanguage),
                         nameof(vm.IsLlamaCppVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsLlamaCppLocalVisible),
+                MakeEngineLabel(vm, Se.Language.General.Model, nameof(vm.IsLlamaCppLocalVisible)),
                 comboBoxLlamaCppModels,
-                UiUtil.MakeButton(vm.DownloadLlamaCppOcrCommand, IconNames.Download, Se.Language.General.Download)
-                    .WithMarginRight(5)
-                    .BindIsVisible(vm, nameof(vm.IsLlamaCppLocalVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
+                MakeEngineToolButton(vm, IconNames.Download, Se.Language.General.Download, vm.DownloadLlamaCppOcrCommand, nameof(vm.IsLlamaCppLocalVisible)),
                 MakeLlamaCppOcrToggleServerButton(vm)
                     .WithMarginRight(5)
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppLocalVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Url, vm => vm.IsLlamaCppRemoteVisible),
-                UiUtil.MakeTextBox(220, vm, nameof(vm.LlamaCppUrl))
-                    .WithMarginRight(5)
-                    .BindIsVisible(vm, nameof(vm.IsLlamaCppRemoteVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeButton(vm.ShowLlamaCppOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
-                    .WithMarginRight(10)
-                    .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
+                MakeEngineLabel(vm, Se.Language.General.Url, nameof(vm.IsLlamaCppRemoteVisible)),
+                MakeEngineTextBox(220, vm, nameof(vm.LlamaCppUrl), nameof(vm.IsLlamaCppRemoteVisible))
+                    .WithMarginRight(5),
+                MakeEngineToolButton(vm, IconNames.Settings, Se.Language.General.Settings, vm.ShowLlamaCppOcrSettingsCommand, nameof(vm.IsLlamaCppVisible))
+                    .WithMarginRight(10),
 
                 // CrispEmbed settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Backend, vm => vm.IsCrispEmbedVisible),
+                MakeEngineLabel(vm, Se.Language.General.Backend, nameof(vm.IsCrispEmbedVisible)),
                 UiUtil.MakeComboBox(vm.CrispEmbedBackends, vm, nameof(vm.SelectedCrispEmbedBackend),
                         nameof(vm.IsCrispEmbedVisible))
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsCrispEmbedVisible),
+                MakeEngineLabel(vm, Se.Language.General.Model, nameof(vm.IsCrispEmbedVisible)),
                 comboBoxCrispEmbedModels,
-                UiUtil.MakeButton(vm.DownloadCrispEmbedCommand, IconNames.Download, Se.Language.General.Download)
-                    .WithMarginRight(5)
-                    .BindIsVisible(vm, nameof(vm.IsCrispEmbedVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
+                MakeEngineToolButton(vm, IconNames.Download, Se.Language.General.Download, vm.DownloadCrispEmbedCommand, nameof(vm.IsCrispEmbedVisible)),
                 // Separate from the download button above, which fetches the selected *model*:
                 // this one re-fetches the engine binaries and re-asks CPU/Vulkan/CUDA, the only
                 // way to change hardware build after the first install (issue #13400).
-                UiUtil.MakeButton(vm.ReDownloadCrispEmbedEngineCommand, IconNames.CloudDownload,
-                        string.Format(Se.Language.General.ReDownloadX, CrispEmbedEngine.StaticName))
-                    .WithMarginRight(10)
-                    .BindIsVisible(vm, nameof(vm.IsCrispEmbedVisible))
-                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
+                MakeEngineToolButton(vm, IconNames.CloudDownload,
+                        string.Format(Se.Language.General.ReDownloadX, CrispEmbedEngine.StaticName),
+                        vm.ReDownloadCrispEmbedEngineCommand, nameof(vm.IsCrispEmbedVisible))
+                    .WithMarginRight(10),
 
                 // Apple Vision settings - language only: the engine ships with macOS, so there is
                 // nothing to download, no key to enter and no model to pick.
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsAppleVisionVisible),
+                MakeEngineLabel(vm, Se.Language.General.Language, nameof(vm.IsAppleVisionVisible)),
                 UiUtil.MakeComboBox(vm.AppleVisionLanguages, vm, nameof(vm.SelectedAppleVisionLanguage),
                         nameof(vm.IsAppleVisionVisible))
                     .WithWidth(180)
@@ -404,17 +361,17 @@ public class OcrWindow : Window
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Google vision settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsGoogleVisionVisible),
+                MakeEngineLabel(vm, Se.Language.General.Language, nameof(vm.IsGoogleVisionVisible)),
                 UiUtil.MakeComboBox(vm.GoogleVisionLanguages, vm, nameof(vm.SelectedGoogleVisionLanguage),
                         nameof(vm.IsGoogleVisionVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.ApiKey, vm => vm.IsGoogleVisionVisible),
+                MakeEngineLabel(vm, Se.Language.General.ApiKey, nameof(vm.IsGoogleVisionVisible)),
                 MakeApiKeyBox(vm, nameof(vm.GoogleVisionApiKey), nameof(vm.IsGoogleVisionVisible)),
 
                 // Google Lens settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsGoogleLensVisible),
+                MakeEngineLabel(vm, Se.Language.General.Language, nameof(vm.IsGoogleLensVisible)),
                 UiUtil.MakeComboBox(vm.GoogleLensLanguages, vm, nameof(vm.SelectedGoogleLensLanguage),
                         nameof(vm.IsGoogleLensVisible))
                     .WithWidth(100)
@@ -422,7 +379,7 @@ public class OcrWindow : Window
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Paddle OCR settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsPaddleOcrVisible),
+                MakeEngineLabel(vm, Se.Language.General.Language, nameof(vm.IsPaddleOcrVisible)),
                 UiUtil.MakeComboBox(vm.PaddleOcrLanguages, vm, nameof(vm.SelectedPaddleOcrLanguage),
                         nameof(vm.IsPaddleOcrVisible))
                     .WithWidth(100)
@@ -430,15 +387,85 @@ public class OcrWindow : Window
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance),
 
                 // Mistral OCR settings
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.ApiKey, vm => vm.IsMistralOcrVisible),
+                MakeEngineLabel(vm, Se.Language.General.ApiKey, nameof(vm.IsMistralOcrVisible)),
                 MakeApiKeyBox(vm, nameof(vm.MistralApiKey), nameof(vm.IsMistralOcrVisible)),
             }
         };
 
-        grid.Add(panel, 0);
-        grid.Add(panelRight, 0);
+        // On a narrow window the engine settings are clipped rather than pushed under the
+        // toggles on the right.
+        var panelHost = new Panel { ClipToBounds = true, Children = { panel } };
+        grid.Add(panelHost, 0, 0);
+        grid.Add(panelRight, 0, 1);
 
-        return grid;
+        return new Border
+        {
+            Child = grid,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(14, 10),
+        };
+    }
+
+    /// <summary>
+    /// Dim label of an engine setting, shown only while that engine is picked.
+    /// </summary>
+    private static TextBlock MakeEngineLabel(OcrViewModel vm, string text, string isVisiblePath)
+    {
+        var label = EditorChrome.MakeDimLabel(text, new Thickness(0));
+        label.Bind(Visual.IsVisibleProperty, new Binding(isVisiblePath) { Source = vm, Mode = BindingMode.OneWay });
+        return label;
+    }
+
+    /// <summary>
+    /// Flat icon button of an engine setting (settings, download, pick), shown only while that
+    /// engine is picked and disabled while OCR runs.
+    /// </summary>
+    private static Button MakeEngineToolButton(OcrViewModel vm, string icon, string tooltip, System.Windows.Input.ICommand command, string isVisiblePath)
+    {
+        return EditorChrome.CreateToolButton(icon, tooltip, command, 28)
+            .BindIsVisible(vm, isVisiblePath)
+            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
+    }
+
+    private static TextBox MakeEngineTextBox(double width, OcrViewModel vm, string textPath, string isVisiblePath)
+    {
+        var textBox = UiUtil.MakeTextBox(width, vm, textPath)
+            .BindIsVisible(vm, isVisiblePath)
+            .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
+        textBox.Classes.Add("text");
+        return textBox;
+    }
+
+    private static NumericUpDown MakeEngineField(NumericUpDown field)
+    {
+        field.Classes.Add("field");
+        return field;
+    }
+
+    /// <summary>
+    /// Flat icon toggle for the toolbar; lit in the accent while on.
+    /// </summary>
+    private static ToggleButton MakeToolToggle(string icon, string name)
+    {
+        var toggle = new ToggleButton
+        {
+            Width = 30,
+            Height = 30,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        toggle.Classes.Add("tool");
+        Attached.SetIcon(toggle, icon);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(toggle, name);
+        }
+
+        AutomationProperties.SetName(toggle, name);
+        return toggle;
     }
 
     /// <summary>
@@ -447,6 +474,11 @@ public class OcrWindow : Window
     private static StackPanel MakeApiKeyBox(OcrViewModel vm, string apiKeyPath, string isVisiblePath)
     {
         var panel = UiUtil.MakeApiKeyTextBox(200, vm, apiKeyPath, isVisiblePath);
+        if (panel.Children.Count > 0 && panel.Children[0] is TextBox textBox)
+        {
+            textBox.Classes.Add("text");
+        }
+
         panel.Bind(StackPanel.IsEnabledProperty, new Binding
         {
             Path = nameof(OcrViewModel.IsOcrRunning),
@@ -600,6 +632,7 @@ public class OcrWindow : Window
                                 Padding = new Thickness(3),
                                 Child = image,
                             };
+                            ScreenPrivacyBlurConverter.BlurUnlessSelected(imageContainer, dataGridSubtitle);
                             stackPanel.Children.Add(imageContainer);
                         }
 
@@ -617,9 +650,9 @@ public class OcrWindow : Window
                     {
                         var contentPresenter = new ContentPresenter
                         {
-                            VerticalAlignment = VerticalAlignment.Center
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(3, 1, 3, 1)
                         };
-                        contentPresenter.Margin = new Thickness(3, 1, 3, 1);
 
                         // Bind to HasFormattedText to trigger updates when FixResult changes
                         var binding = new Binding(nameof(OcrSubtitleItem.HasFormattedText))
@@ -630,6 +663,7 @@ public class OcrWindow : Window
                         };
 
                         contentPresenter.Bind(ContentPresenter.ContentProperty, binding);
+                        ScreenPrivacyBlurConverter.BlurUnlessSelected(contentPresenter, dataGridSubtitle);
                         return contentPresenter;
                     })
                 },
@@ -650,7 +684,7 @@ public class OcrWindow : Window
         // panel re-estimates its pixel extent, and the grid scrolled away from the line.
         TableViewScrollAnchor.Attach(dataGridSubtitle);
 
-        // The image thumbnails scale with Ctrl+plus/minus (Image.MaxWidth/MaxHeight are
+        // The image thumbnails scale with Ctrl+plus/minus/0 and Ctrl+wheel (Image.MaxWidth/MaxHeight are
         // bound to the VM) - keep the pixel-sized image column in step with the zoom.
         var imageColumn = dataGridSubtitle.Columns[dataGridSubtitle.Columns.Count - 2];
         vm.PropertyChanged += (_, args) =>
@@ -673,6 +707,7 @@ public class OcrWindow : Window
         dataGridSubtitle.DoubleTapped += (s, e) => vm.SubtitleGridDoubleTapped();
         dataGridSubtitle.AddHandler(InputElement.PointerPressedEvent, vm.DataGridSubtitleMacPointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.AddHandler(InputElement.PointerReleasedEvent, vm.DataGridSubtitleMacPointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+        dataGridSubtitle.AddHandler(InputElement.PointerWheelChangedEvent, vm.SubtitleGridPointerWheelChanged, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.SelectionChanged += vm.SubtitleGridSelectionChanged;
         vm.SubtitleGrid = dataGridSubtitle;
 
@@ -704,6 +739,7 @@ public class OcrWindow : Window
             Header = Se.Language.Ocr.ShowImage,
             DataContext = vm,
             Command = vm.ViewSelectedImageCommand,
+            InputGesture = new KeyGesture(Key.P, KeyModifiers.Control), // handled in SubtitleGridKeyDown
         };
         menuItemShowImage.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(menuItemShowImage);
@@ -827,7 +863,11 @@ public class OcrWindow : Window
 
         vm.SubtitleGrid.ContextFlyout = flyout;
 
-        return UiUtil.MakeBorderForControlNoPadding(scrollBarHost).WithMarginBottom(5);
+        return new Border
+        {
+            Child = EditorChrome.MakeListPane(Se.Language.General.ImageBasedSubtitles, scrollBarHost, margin: new Thickness(14, 10, 14, 12)),
+            Background = EditorChrome.PanelBrush,
+        };
     }
 
     private static Border MakeEditView(OcrViewModel vm)
@@ -857,7 +897,9 @@ public class OcrWindow : Window
             VerticalAlignment = VerticalAlignment.Stretch,
             AcceptsReturn = true,
             TextWrapping = Avalonia.Media.TextWrapping.NoWrap,
-            Margin = new Thickness(0, 0, 10, 0),
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(6),
             [!TextBox.TextProperty] = new Binding($"{nameof(vm.SelectedOcrSubtitleItem)}.{nameof(OcrSubtitleItem.Text)}")
             {
                 Source = vm,
@@ -902,106 +944,126 @@ public class OcrWindow : Window
         textBoxText.KeyDown += vm.TextBoxKeyDown;
 
         textBoxText.TextChanged += vm.TextBoxTextChanged;
-        var panelText = new StackPanel
+        var labelText = EditorChrome.MakeSectionHeader(Se.Language.General.Text);
+        labelText.Margin = new Thickness(0, 0, 0, 8);
+        textBoxText.WithLabeledBy(labelText);
+        var panelText = new Grid
         {
-            Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(10),
-            Children =
+            RowDefinitions =
             {
-                UiUtil.MakeLabel(Se.Language.General.Text).WithAlignmentTop(),
-                textBoxText,
-            }
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+            },
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Margin = new Thickness(14, 12, 14, 14),
         };
+        panelText.Add(labelText, 0, 0);
+        panelText.Add(textBoxText, 1, 0);
 
-        var labelDictionary = UiUtil.MakeLabel(Se.Language.General.Dictionary);
         var comboBoxDictionary = UiUtil.MakeComboBox(vm.Dictionaries, vm, nameof(vm.SelectedDictionary))
-            .WithWidth(175)
-            .WithMarginRight(3);
+            .WithWidth(190)
+            .WithAccessibleName(Se.Language.General.Dictionary);
         comboBoxDictionary.SelectionChanged += (sender, args) => vm.DictionaryChanged();
-        var buttonDictionaryBrowse = UiUtil.MakeBrowseButton(vm.PickDictionaryCommand);
+        var buttonDictionaryBrowse = EditorChrome.CreateToolButton("fa-solid fa-ellipsis",
+            Se.Language.Video.VideoOcr.DownloadDictionaryHint, vm.PickDictionaryCommand, 28);
         var panelDictionary = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 3,
+            Margin = new Thickness(0, 0, 0, 4),
             Children =
             {
-                labelDictionary,
                 comboBoxDictionary,
                 buttonDictionaryBrowse,
             }
         };
 
-        var checkBoxFixOcrErrors = UiUtil.MakeCheckBox(Se.Language.Ocr.FixOcrErrors, vm, nameof(vm.DoFixOcrErrors))
-            .WithBindIsVisible(nameof(vm.IsDictionaryLoaded));
-        var checkBoxPromptForUnknownWords = UiUtil.MakeCheckBox(Se.Language.Ocr.PromptForUknownWords, vm, nameof(vm.DoPromptForUnknownWords))
-            .WithBindIsVisible(nameof(vm.IsDictionaryLoaded));
-        var checkBoxTryToGuessUnknownWords = UiUtil.MakeCheckBox(Se.Language.Ocr.TryToGuessUnknownWords, vm, nameof(vm.DoTryToGuessUnknownWords))
-            .WithBindIsVisible(nameof(vm.IsDictionaryLoaded));
-        var checkBoxAutoBreak = UiUtil.MakeCheckBox(string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines), vm, nameof(vm.DoAutoBreak));
+        var switchFixOcrErrors = EditorChrome.MakeSwitchRow(nameof(vm.DoFixOcrErrors), Se.Language.General.FixOcrErrors);
+        switchFixOcrErrors.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
+        var switchPromptForUnknownWords = EditorChrome.MakeSwitchRow(nameof(vm.DoPromptForUnknownWords), Se.Language.Ocr.PromptForUknownWords);
+        switchPromptForUnknownWords.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
+        var switchTryToGuessUnknownWords = EditorChrome.MakeSwitchRow(nameof(vm.DoTryToGuessUnknownWords), Se.Language.Ocr.TryToGuessUnknownWords);
+        switchTryToGuessUnknownWords.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
+        var switchAutoBreak = EditorChrome.MakeSwitchRow(nameof(vm.DoAutoBreak), string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines));
 
         var panelOptions = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Spacing = 2,
+            Width = 300,
             Children =
             {
                 panelDictionary,
-                checkBoxFixOcrErrors,
-                checkBoxPromptForUnknownWords,
-                checkBoxTryToGuessUnknownWords,
-                checkBoxAutoBreak,
+                switchFixOcrErrors,
+                switchPromptForUnknownWords,
+                switchTryToGuessUnknownWords,
+                switchAutoBreak,
             }
+        };
+
+        // Scrolls on its own when the edit area is dragged short with the splitter.
+        var optionsView = new ScrollViewer
+        {
+            Content = EditorChrome.MakeEditorSection(Se.Language.General.Dictionary, panelOptions, first: true),
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
 
         var tabControl = new TabControl
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+            Padding = new Thickness(0, 6, 0, 0),
+            Margin = new Thickness(10, 4, 14, 12),
             Items =
             {
                 new TabItem
                 {
-                    Header = new TextBlock
-                    {
-                        Text = Se.Language.Ocr.UnknownWords,
-                        FontSize = UiUtil.ScaledFontSize(16),
-                        FontWeight = Avalonia.Media.FontWeight.Bold,
-                    },
+                    Header = Se.Language.Ocr.UnknownWords,
                     Content = MakeUnknownWordsView(vm),
                 },
                 new TabItem
                 {
-                    Header = new TextBlock
-                    {
-                        Text = Se.Language.Ocr.AllFixes,
-                        FontSize = UiUtil.ScaledFontSize(16),
-                        FontWeight = Avalonia.Media.FontWeight.Bold,
-                    },
+                    Header = Se.Language.Ocr.AllFixes,
                     Content = MakeAllFixesView(vm)
                 },
                 new TabItem
                 {
-                    Header = new TextBlock
-                    {
-                        Text = Se.Language.Ocr.GuessesUsed,
-                        FontSize = UiUtil.ScaledFontSize(16),
-                        FontWeight = Avalonia.Media.FontWeight.Bold,
-                    },
+                    Header = Se.Language.Ocr.GuessesUsed,
                     Content = MakeGuessesUsedView(vm)
                 },
             }
         };
         tabControl.Bind(TabControl.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
 
-        grid.Add(panelText, 0, 0);
-        grid.Add(panelOptions, 0, 1);
-        grid.Add(tabControl, 0, 2);
+        var tabsView = new Border
+        {
+            Child = tabControl,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        };
+        tabsView.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
 
-        var border = UiUtil.MakeBorderForControl(grid).WithMarginBottom(5);
+        grid.Add(panelText, 0, 0);
+        grid.Add(new Border
+        {
+            Child = optionsView,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
+        grid.Add(tabsView, 0, 2);
+
+        var border = new Border
+        {
+            Child = grid,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 0),
+        };
         border.ClipToBounds = true; // Prevent content from pushing the parent row larger
         border.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = InverseBooleanConverter.Instance });
 
@@ -1077,27 +1139,33 @@ public class OcrWindow : Window
         listBox.ContextFlyout = flyout;
 
 
-        var buttonAddToNamesList = UiUtil.MakeButton(Se.Language.General.AddToNamesListCaseSensitive, vm.AddUnknownWordToNamesCommand)
+        var buttonAddToNamesList = MakeFlatTextButton(Se.Language.General.AddToNamesListCaseSensitive, vm.AddUnknownWordToNamesCommand)
             .WithBindEnabled(nameof(vm.IsUnknownWordSelected))
             .WithHorizontalAlignmentStretch();
-        var buttonAddToUserDictionary = UiUtil.MakeButton(Se.Language.General.AddToUserDictionary, vm.AddUnknownWordToUserDictionaryCommand)
+        var buttonAddToUserDictionary = MakeFlatTextButton(Se.Language.General.AddToUserDictionary, vm.AddUnknownWordToUserDictionaryCommand)
             .WithBindEnabled(nameof(vm.IsUnknownWordSelected))
             .WithHorizontalAlignmentStretch();
-        var buttonAddToOcrPair = UiUtil.MakeButton(Se.Language.Ocr.AddToOcrPair, vm.AddUnknownWordToOcrPairCommand)
+        var buttonAddToOcrPair = MakeFlatTextButton(Se.Language.Ocr.AddToOcrPair, vm.AddUnknownWordToOcrPairCommand)
             .WithBindEnabled(nameof(vm.IsUnknownWordSelected))
             .WithHorizontalAlignmentStretch();
-        var buttonGoogleIt = UiUtil.MakeButton(Se.Language.General.GoogleIt, vm.GoogleUnknowWordCommand)
+        var buttonGoogleIt = MakeFlatTextButton(Se.Language.General.GoogleIt, vm.GoogleUnknowWordCommand)
             .WithBindEnabled(nameof(vm.IsUnknownWordSelected))
             .WithHorizontalAlignmentStretch();
-        var panelButtons = UiUtil.MakeVerticalPanel
-        (
-            buttonAddToNamesList,
-            buttonAddToUserDictionary,
-            buttonAddToOcrPair,
-            buttonGoogleIt
-        );
+        var panelButtons = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 4,
+            Children =
+            {
+                buttonAddToNamesList,
+                buttonAddToUserDictionary,
+                buttonAddToOcrPair,
+                buttonGoogleIt,
+            },
+        };
 
-        grid.Add(listBox, 0, 0);
+        grid.ColumnSpacing = 8;
+        grid.Add(EditorChrome.MakeListFrame(listBox), 0, 0);
         grid.Add(panelButtons, 0, 1);
 
         return grid;
@@ -1148,7 +1216,7 @@ public class OcrWindow : Window
         listBox.SelectionChanged += (s, e) => vm.AllFixesTapped();
         listBox.Tapped += (s, e) => vm.AllFixesTapped();
 
-        grid.Add(listBox, 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(listBox), 0, 0);
 
         return grid;
     }
@@ -1196,7 +1264,7 @@ public class OcrWindow : Window
         listBox.SelectionChanged += (s, e) => vm.GuessUsedTapped();
         listBox.Tapped += (s, e) => vm.GuessUsedTapped();
 
-        grid.Add(listBox, 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(listBox), 0, 0);
 
         return grid;
     }
@@ -1210,70 +1278,72 @@ public class OcrWindow : Window
             : vm.Title;
     }
 
-    private static Grid MakeBottomView(OcrViewModel vm)
+    /// <summary>
+    /// Progress bar and status in a strip above the buttons while the OCR runs.
+    /// </summary>
+    private static Border MakeProgressView(OcrViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.Width = double.NaN;
         progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
-        progressBar.VerticalAlignment = VerticalAlignment.Top;
+        progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
 
-        var statusText = new TextBlock().WithMarginTop(14).WithAlignmentTop();
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
-        statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
+        statusText.HorizontalAlignment = HorizontalAlignment.Left;
 
-        var buttonStart = UiUtil.MakeButton(Se.Language.Ocr.StartOcr, vm.StartOcrCommand)
-            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance).WithBottomAlignment();
-        var buttonPause = UiUtil.MakeButton(Se.Language.Ocr.PauseOcr, vm.PauseOcrCommand)
-            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning)).WithBottomAlignment();
-        var buttonInspect = UiUtil.MakeButton(Se.Language.Ocr.InspectLine, vm.InspectLineCommand)
-            .WithBindIsVisible(nameof(OcrViewModel.IsInspectLineVisible))
-            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance)
-            .WithBottomAlignment();
-        var buttonInspectAdditions = UiUtil.MakeButton(Se.Language.General.InspectAdditions, vm.InspectAdditionsCommand)
-            .WithBindIsVisible(nameof(vm.IsInspectAdditionsVisible))
-            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance)
-            .WithBottomAlignment();
-        var buttonExport = UiUtil.MakeButton(Se.Language.Ocr.EditExportDotDotDot, vm.EditExportCommand)
-            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance).WithBottomAlignment();
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
-            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance).WithBottomAlignment();
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBottomAlignment();
+        // Stable UI Automation ids for external automation (#15769)
+        AutomationProperties.SetAutomationId(progressBar, "OcrProgressBar");
+        AutomationProperties.SetAutomationId(statusText, "OcrProgressText");
 
         var grid = new Grid
         {
+            RowSpacing = 4,
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = GridLength.Auto }, // progress bar
+                new RowDefinition { Height = GridLength.Auto }, // status text
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        grid.Add(progressBar, 0, 0);
+        grid.Add(statusText, 1, 0);
+
+        var strip = EditorChrome.MakeProgressStrip(grid);
+        strip.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
+        return strip;
+    }
+
+    private static Border MakeBottomView(OcrViewModel vm)
+    {
+        var buttonStart = UiUtil.MakeButton(Se.Language.Ocr.StartOcr, vm.StartOcrCommand)
+            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance).AsPrimary();
+        var buttonPause = UiUtil.MakeButton(Se.Language.Ocr.PauseOcr, vm.PauseOcrCommand)
+            .WithBindIsVisible(nameof(OcrViewModel.IsOcrRunning)).AsPrimary();
+        var buttonInspect = UiUtil.MakeButton(Se.Language.Ocr.InspectLine, vm.InspectLineCommand)
+            .WithBindIsVisible(nameof(OcrViewModel.IsInspectLineVisible))
+            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
+        var buttonInspectAdditions = UiUtil.MakeButton(Se.Language.General.InspectAdditions, vm.InspectAdditionsCommand)
+            .WithBindIsVisible(nameof(vm.IsInspectAdditionsVisible))
+            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
+        var buttonExport = UiUtil.MakeButton(Se.Language.Ocr.EditExportDotDotDot, vm.EditExportCommand)
+            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
+            .WithBindIsEnabled(nameof(OcrViewModel.IsOcrRunning), InverseBooleanConverter.Instance);
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var subtitleCountText = new TextBlock
         {
+            FontSize = 12,
+            Foreground = EditorChrome.DimTextBrush,
+            TextTrimming = TextTrimming.CharacterEllipsis,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0, 0, 0),
         };
         subtitleCountText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectionStatus)) { Source = vm });
         subtitleCountText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = InverseBooleanConverter.Instance });
 
         // Stable UI Automation ids for external automation (#15769)
-        AutomationProperties.SetAutomationId(progressBar, "OcrProgressBar");
-        AutomationProperties.SetAutomationId(statusText, "OcrProgressText");
         AutomationProperties.SetAutomationId(subtitleCountText, "OcrSelectionStatus");
         AutomationProperties.SetAutomationId(buttonStart, "OcrStartButton");
         AutomationProperties.SetAutomationId(buttonPause, "OcrPauseButton");
@@ -1283,23 +1353,81 @@ public class OcrWindow : Window
         AutomationProperties.SetAutomationId(buttonOk, "OcrOkButton");
         AutomationProperties.SetAutomationId(buttonCancel, "OcrCancelButton");
 
-        grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
-        grid.Add(subtitleCountText, 0, 0);
-        grid.Add(buttonStart, 0, 1);
-        grid.Add(buttonPause, 0, 2);
-        grid.Add(buttonInspect, 0, 3);
-        grid.Add(buttonInspectAdditions, 0, 4);
-        grid.Add(buttonExport, 0, 5);
-        grid.Add(buttonOk, 0, 6);
-        grid.Add(buttonCancel, 0, 7);
+        return EditorChrome.MakeButtonBar(subtitleCountText, buttonInspect, buttonInspectAdditions, buttonExport, buttonStart, buttonPause, buttonOk, buttonCancel);
+    }
 
-        return grid;
+    /// <summary>
+    /// Flat bordered text button (llama.cpp server toggle, unknown word actions).
+    /// </summary>
+    private static Button MakeFlatTextButton(string text, System.Windows.Input.ICommand? command)
+    {
+        var button = new Button
+        {
+            Content = text,
+            Command = command,
+            Height = 28,
+            FontSize = 12.5,
+            Padding = new Thickness(10, 0),
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+        };
+        return button;
+    }
+
+    /// <summary>
+    /// Flat icon toggles: the editor "tool" look for toggle buttons, lit in the accent while on.
+    /// </summary>
+    private static void AddOcrStyles(Styles styles)
+    {
+        static Style Presenter(Func<Selector?, Selector> toggle, params (AvaloniaProperty Property, object Value)[] setters)
+        {
+            var style = new Style(x => toggle(x).Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"));
+            foreach (var (property, value) in setters)
+            {
+                style.Setters.Add(new Setter(property, value));
+            }
+
+            return style;
+        }
+
+        styles.Add(new Style(x => x.OfType<ToggleButton>().Class("tool"))
+        {
+            Setters =
+            {
+                new Setter(ToggleButton.BackgroundProperty, Brushes.Transparent),
+                new Setter(ToggleButton.BorderThicknessProperty, new Thickness(0)),
+                new Setter(ToggleButton.CornerRadiusProperty, new CornerRadius(7)),
+                new Setter(ToggleButton.ForegroundProperty, EditorChrome.IconBrush),
+                new Setter(ToggleButton.PaddingProperty, new Thickness(0)),
+                new Setter(ToggleButton.FontSizeProperty, 15.0),
+            },
+        });
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("tool").Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.HoverBrush), (ContentPresenter.ForegroundProperty, EditorChrome.StrongTextBrush)));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("tool").Class(":pressed"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.PressedBrush)));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("tool").Class(":checked"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.AccentBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("tool").Class(":checked").Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.AccentHoverBrush), (ContentPresenter.ForegroundProperty, Brushes.White)));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("tool").Class(":disabled"),
+            (ContentPresenter.BackgroundProperty, Brushes.Transparent), (ContentPresenter.ForegroundProperty, EditorChrome.SeparatorBrush)));
+
+        // The lists in the unknown words tabs sit in a field-colored frame
+        styles.Add(new Style(x => x.OfType<ListBox>())
+        {
+            Setters = { new Setter(ListBox.BackgroundProperty, Brushes.Transparent) },
+        });
     }
 
     private static Button MakeLlamaCppOcrToggleServerButton(OcrViewModel vm)
     {
-        var button = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppOcrServerCommand);
+        var button = MakeFlatTextButton(string.Empty, vm.ToggleLlamaCppOcrServerCommand);
         button.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppOcrServerButtonText)));
         return button;
     }
@@ -1337,11 +1465,17 @@ public class OcrWindow : Window
     // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the
     // model's download size - same treatment as the speech-to-text model combo.
     // 0 = auto: word spaces relative to the text size (NOcrSpaceDetector).
+    // Text is bound (not set once) - the template recycles, so the closed combo's presenter
+    // keeps its TextBlock and only gets a new DataContext when the selection changes (#16187).
     private static ComboBox WithPixelsAreSpaceItemTemplate(ComboBox comboBox)
     {
-        comboBox.ItemTemplate = new FuncDataTemplate<int>((value, _) => new TextBlock
+        comboBox.ItemTemplate = new FuncDataTemplate<int>((_, _) => new TextBlock
         {
-            Text = value <= 0 ? Se.Language.General.Auto : value.ToString(System.Globalization.CultureInfo.CurrentCulture),
+            [!TextBlock.TextProperty] = new Binding(".")
+            {
+                Converter = new FuncValueConverter<int, string>(value =>
+                    value <= 0 ? Se.Language.General.Auto : value.ToString(CultureInfo.CurrentCulture)),
+            },
         }, true);
         return comboBox;
     }
