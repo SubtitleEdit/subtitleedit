@@ -2143,7 +2143,7 @@
       "playPause": "Odtwarzaj / Wstrzymaj",
       "playAligned": "Wyrównane",
       "playAlignedHint": "Odtwórz wybraną linię wraz z dopasowanymi kodami czasowymi",
-      "applyHint": "Odznacz linię, aby zachować jego oryginalne znaczniki czasowe. Kliknij dwukrotnie linię, aby ją odtworzyć. W wyrównanym przebiegu falowym linie można również przesuwać lub zmieniać ich rozmiar."
+      "applyHint": "Odznacz linię, aby zachować jej oryginalne znaczniki czasowe. Kliknij dwukrotnie linię, aby ją odtworzyć. W wyrównanym przebiegu falowym linie można również przesuwać lub zmieniać ich rozmiar."
     },
     "beautifyTimeCodesProfile": {
       "title": "Edycja profilu ulepszania kodów czasowych",
@@ -4369,7 +4369,7 @@
   },
   "assa": {
     "assaDraw": "Rysuj ASSA",
-    "drawSelectTool": "Zaznaczanie i przesuwanie kształtów)",
+    "drawSelectTool": "Zaznaczanie i przesuwanie kształtów",
     "drawUseShapeForErase": "Użyj kształtu do wymazywania (iclip)",
     "drawLineTool": "Narzędzie linii",
     "drawBezierTool": "Krzywa Béziera",
