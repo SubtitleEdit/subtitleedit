@@ -43,6 +43,11 @@ public class SeAssa
     public string StylesPreviewText { get; set; }
     public bool SetPositionShowCenterLines { get; set; }
     public bool SetPositionSnapToGuides { get; set; }
+
+    /// <summary>
+    /// Set position: the text follows the mouse over the frame and a click places it (SE4 style), instead of dragging.
+    /// </summary>
+    public bool SetPositionClickToPlace { get; set; }
     public bool SetPositionShowSelection { get; set; }
     public int BackgroundBoxesShadowDistance { get; set; }
     public bool HideLayersFromWaveform { get; set; }

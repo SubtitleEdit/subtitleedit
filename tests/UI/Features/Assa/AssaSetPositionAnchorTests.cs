@@ -68,4 +68,17 @@ public class AssaSetPositionAnchorTests
         vm.IsPreviewReady = true;
         Assert.True(vm.OkCommand.CanExecute(null));
     }
+
+    [AvaloniaFact]
+    public void CenterAt_PutsTheBoxCenterOnThePoint()
+    {
+        // Click-to-place (#16289): the 1x1 box is centered on the mouse point (no guide near it)
+        var vm = new AssaSetPositionViewModel { IsPreviewReady = true };
+
+        vm.CenterAt(500.4, 300.6);
+
+        Assert.Equal(500, vm.ScreenshotX);
+        Assert.Equal(300, vm.ScreenshotY);
+        Assert.Equal(-1, vm.AnchorIndex);
+    }
 }
