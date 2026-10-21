@@ -6,6 +6,8 @@ public class LanguageSettingsWordLists
     public string AddName { get; set; }
     public string NameAndIgnoreList { get; set; }
     public string UserWords { get; set; }
+    public string RemovedWords { get; set; }
+    public string AddRemovedWord { get; set; }
     public string OcrFixList { get; set; }
     public string UnableToAddItem { get; set; }
     public string UnableToRemoveItem { get; set; }
@@ -16,6 +18,8 @@ public class LanguageSettingsWordLists
         AddName = "Add name";
         NameAndIgnoreList = "Name/ignore list";
         UserWords = "User word list";
+        RemovedWords = "Removed from dictionary";
+        AddRemovedWord = "Add removed word";
         OcrFixList = "OCR fix list";
         UnableToAddItem = "Unable to add item, it probably already exists!";
         UnableToRemoveItem = "Unable to remove item!";

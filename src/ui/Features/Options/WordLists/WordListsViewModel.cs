@@ -35,6 +35,10 @@ public partial class WordListsViewModel : ObservableObject
     [ObservableProperty] private string? _selectedUserWord;
     [ObservableProperty] private string _newUserWord;
 
+    [ObservableProperty] private ObservableCollection<string> _removedWords;
+    [ObservableProperty] private string? _selectedRemovedWord;
+    [ObservableProperty] private string _newRemovedWord;
+
     [ObservableProperty] private ObservableCollection<OcrFixItem> _ocrFixes;
     [ObservableProperty] private OcrFixItem? _selectedOcrFix;
     [ObservableProperty] private string _newOcrFixFind;
@@ -53,9 +57,11 @@ public partial class WordListsViewModel : ObservableObject
         Languages = new ObservableCollection<LanguageItem>();
         Names = new ObservableCollection<string>();
         UserWords = new ObservableCollection<string>();
+        RemovedWords = new ObservableCollection<string>();
         OcrFixes = new ObservableCollection<OcrFixItem>();
         NewName = string.Empty;
         NewUserWord = string.Empty;
+        NewRemovedWord = string.Empty;
         NewOcrFixFind = string.Empty;
         NewOcrFixReplace = string.Empty;
 
@@ -213,6 +219,9 @@ public partial class WordListsViewModel : ObservableObject
         UserWords.Insert(insertIndex, word);
         SelectedUserWord = word;
         NewUserWord = string.Empty;
+
+        // Adding a user word takes it off the removed list (see UserWordsHelper).
+        RemovedWords.Remove(Utilities.NormalizeUserDictionaryWord(word));
     }
 
     [RelayCommand]
@@ -246,6 +255,55 @@ public partial class WordListsViewModel : ObservableObject
         {
             SelectedUserWord = UserWords[idx];
         }
+    }
+
+    [RelayCommand]
+    private async Task AddRemovedWord()
+    {
+        var word = Utilities.NormalizeUserDictionaryWord(NewRemovedWord);
+        if (string.IsNullOrEmpty(word) || SelectedLanguage == null || Window == null)
+        {
+            return;
+        }
+
+        if (RemovedWords.Contains(word) || !UserWordsHelper.AddRemovedWord(word, SelectedLanguage.CultureSpecificCode))
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Options.WordLists.UnableToAddItem, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        int insertIndex = 0;
+        while (insertIndex < RemovedWords.Count && string.Compare(RemovedWords[insertIndex], word, StringComparison.OrdinalIgnoreCase) < 0)
+        {
+            insertIndex++;
+        }
+
+        RemovedWords.Insert(insertIndex, word);
+        SelectedRemovedWord = word;
+        NewRemovedWord = string.Empty;
+
+        // A removed word is no longer an accepted user word (see UserWordsHelper).
+        UserWords.Remove(word);
+    }
+
+    [RelayCommand]
+    private async Task RemoveRemovedWord()
+    {
+        var selected = SelectedRemovedWord;
+        if (selected == null || SelectedLanguage == null || Window == null)
+        {
+            return;
+        }
+
+        if (!UserWordsHelper.RemoveRemovedWord(selected, SelectedLanguage.CultureSpecificCode))
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Options.WordLists.UnableToRemoveItem, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        var idx = RemovedWords.IndexOf(selected);
+        RemovedWords.Remove(selected);
+        SelectedRemovedWord = RemovedWords.Count == 0 ? null : RemovedWords[Math.Min(idx, RemovedWords.Count - 1)];
     }
 
     [RelayCommand]
@@ -441,11 +499,12 @@ public partial class WordListsViewModel : ObservableObject
             {
                 Names = new ObservableCollection<string>();
                 UserWords = new ObservableCollection<string>();
+                RemovedWords = new ObservableCollection<string>();
                 OcrFixes = new ObservableCollection<OcrFixItem>();
                 return;
             }
 
-            var (names, userWords, ocrFixes) = await Task.Run(() => (LoadNames(lang), LoadUserWords(lang), LoadOcrFixList(lang)));
+            var (names, userWords, removedWords, ocrFixes) = await Task.Run(() => (LoadNames(lang), LoadUserWords(lang), LoadRemovedWords(lang), LoadOcrFixList(lang)));
             if (version != _loadVersion)
             {
                 return;
@@ -453,6 +512,7 @@ public partial class WordListsViewModel : ObservableObject
 
             Names = new ObservableCollection<string>(names);
             UserWords = new ObservableCollection<string>(userWords);
+            RemovedWords = new ObservableCollection<string>(removedWords);
             OcrFixes = new ObservableCollection<OcrFixItem>(ocrFixes);
         }
         catch (Exception exception)
@@ -473,6 +533,14 @@ public partial class WordListsViewModel : ObservableObject
     {
         var list = new List<string>();
         UserWordsHelper.LoadUserWordList(list, lang.CultureSpecificCode);
+        list.Sort();
+        return list;
+    }
+
+    private List<string> LoadRemovedWords(LanguageItem lang)
+    {
+        var list = new List<string>();
+        UserWordsHelper.LoadRemovedWordList(list, lang.CultureSpecificCode);
         list.Sort();
         return list;
     }
@@ -534,6 +602,15 @@ public partial class WordListsViewModel : ObservableObject
         {
             e.Handled = true;
             _ = AddWord();
+        }
+    }
+
+    internal void RemovedWordTextBoxKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            e.Handled = true;
+            _ = AddRemovedWord();
         }
     }
 

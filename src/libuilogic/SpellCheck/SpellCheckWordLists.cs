@@ -39,6 +39,7 @@ public class SpellCheckWordLists
     private readonly Dictionary<string, List<string>> _wordsWithDashesOrPeriodsByPart = new Dictionary<string, List<string>>();
     private readonly HashSet<string> _userWordList = new HashSet<string>();
     private readonly HashSet<string> _userPhraseList = new HashSet<string>();
+    private readonly HashSet<string> _removedWords = new HashSet<string>();
     private readonly string _dictionaryFolder;
     private readonly Dictionary<string, string> _useAlwaysList = new Dictionary<string, string>();
     private readonly string _languageName;
@@ -91,6 +92,12 @@ public class SpellCheckWordLists
             Path.Combine(_dictionaryFolder, twoLetterName + "_se.xml"),
         }.Distinct().ToArray();
 
+        // Each file can also list words to reject (<removed>), for dictionary words that hide a
+        // common error - Dutch "weetje" for an OCR'd "weet je" (#16031). The user's own files win
+        // over the shipped "_se.xml" ones; within one file a removed word wins.
+        var userFileWords = new HashSet<string>();
+        var shippedRemovedWords = new HashSet<string>();
+        var userRemovedWords = new HashSet<string>();
         var xmlDoc = new XmlDocument();
         foreach (var path in paths)
         {
@@ -100,28 +107,30 @@ public class SpellCheckWordLists
             }
 
             xmlDoc.Load(path);
-            var xmlNodeList = xmlDoc.DocumentElement?.SelectNodes("word");
-            if (xmlNodeList != null)
+            var isUserFile = path.EndsWith("_user.xml", StringComparison.OrdinalIgnoreCase);
+            foreach (var word in UserDictionaryXml.ReadWords(xmlDoc))
             {
-                foreach (XmlNode node in xmlNodeList)
+                if (word.Contains(' '))
                 {
-                    var word = Utilities.NormalizeUserDictionaryWord(node.InnerText);
-                    if (word.Length == 0)
+                    _userPhraseList.Add(word);
+                }
+                else
+                {
+                    _userWordList.Add(word);
+                    if (isUserFile)
                     {
-                        continue;
-                    }
-
-                    if (word.Contains(' '))
-                    {
-                        _userPhraseList.Add(word);
-                    }
-                    else
-                    {
-                        _userWordList.Add(word);
+                        userFileWords.Add(word);
                     }
                 }
             }
+
+            (isUserFile ? userRemovedWords : shippedRemovedWords).UnionWith(UserDictionaryXml.ReadRemovedWords(xmlDoc));
         }
+
+        shippedRemovedWords.ExceptWith(userFileWords);
+        _removedWords.UnionWith(userRemovedWords);
+        _removedWords.UnionWith(shippedRemovedWords);
+        _userWordList.ExceptWith(_removedWords);
 
         // Add names/userdic with "." or " " or "-"
         foreach (var word in GetSingleUnifiedCollection(namesMultiWordList))
@@ -389,6 +398,8 @@ public class SpellCheckWordLists
             _userWordList.Add(word);
         }
 
+        // Utilities.AddToUserDictionary also takes the word out of the file's <removed> list.
+        _removedWords.Remove(word);
         Utilities.AddToUserDictionary(word, _languageName);
         return true;
     }
@@ -439,6 +450,21 @@ public class SpellCheckWordLists
     {
         string s = Utilities.NormalizeUserDictionaryWord(word);
         return _userWordList.Contains(s) || (s.StartsWith('\'') || s.EndsWith('\'')) && _userWordList.Contains(s.Trim('\''));
+    }
+
+    /// <summary>
+    /// True when the user (or a shipped "_se.xml" list) removed <paramref name="word"/> from the
+    /// dictionary, so it must count as misspelled even when Hunspell accepts it. Case-insensitive,
+    /// like the user word list.
+    /// </summary>
+    public bool IsRemovedWord(string word)
+    {
+        if (_removedWords.Count == 0 || string.IsNullOrEmpty(word))
+        {
+            return false;
+        }
+
+        return _removedWords.Contains(Utilities.NormalizeUserDictionaryWord(word));
     }
 
     public static List<SpellCheckWord> Split(string s)

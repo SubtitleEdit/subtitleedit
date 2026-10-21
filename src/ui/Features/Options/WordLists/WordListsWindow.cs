@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -13,7 +13,7 @@ using System.Windows.Input;
 namespace Nikse.SubtitleEdit.Features.Options.WordLists;
 
 /// <summary>
-/// Names, user words and OCR fixes of a language in the editor look (see <see cref="EditorChrome"/>):
+/// Names, user words, removed words and OCR fixes of a language in the editor look (see <see cref="EditorChrome"/>):
 /// language on top, the three lists side by side, each with its add row, and OK in the button bar.
 /// </summary>
 public class WordListsWindow : Window
@@ -57,7 +57,7 @@ public class WordListsWindow : Window
             },
         };
         lists.Add(MakeViewNames(vm), 0, 0);
-        lists.Add(WithLeftLine(MakeViewWords(vm)), 0, 1);
+        lists.Add(WithLeftLine(MakeViewUserAndRemovedWords(vm)), 0, 1);
         lists.Add(WithLeftLine(MakeViewOcrFixes(vm)), 0, 2);
 
         var sections = new Grid
@@ -243,6 +243,44 @@ public class WordListsWindow : Window
         var buttonRemove = EditorChrome.CreateToolButton(IconNames.Trash, Se.Language.General.Remove, vm.RemoveWordCommand, 28);
 
         return MakeListSection(panelTitle, listBox, MakeAddRow(buttonAdd, buttonRemove, textBox));
+    }
+
+    // Words the dictionary should reject (#16031) share the column with the user words: both
+    // live in "<lang>_user.xml", and adding a word to one list takes it off the other.
+    private static Grid MakeViewRemovedWords(WordListsViewModel vm)
+    {
+        var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.RemovedWords, IconNames.Close, "#e0707a",
+            new Binding(nameof(vm.RemovedWords) + ".Count") { Source = vm, Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
+
+        var listBox = MakeListBox(Se.Language.Options.WordLists.RemovedWords, nameof(vm.RemovedWords), nameof(vm.SelectedRemovedWord), vm.RemoveRemovedWordCommand);
+
+        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewRemovedWord)).AsTextField(Se.Language.Options.WordLists.AddRemovedWord);
+        textBox.PlaceholderText = Se.Language.Options.WordLists.AddRemovedWord;
+        textBox.KeyDown += (s, e) => vm.RemovedWordTextBoxKeyDown(e);
+        var buttonAdd = EditorChrome.CreateToolButton(IconNames.Plus, Se.Language.General.New, vm.AddRemovedWordCommand, 28);
+        var buttonRemove = EditorChrome.CreateToolButton(IconNames.Trash, Se.Language.General.Remove, vm.RemoveRemovedWordCommand, 28);
+
+        return MakeListSection(panelTitle, listBox, MakeAddRow(buttonAdd, buttonRemove, textBox));
+    }
+
+    private static Grid MakeViewUserAndRemovedWords(WordListsViewModel vm)
+    {
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
+            },
+        };
+        grid.Add(MakeViewWords(vm), 0);
+        grid.Add(new Border
+        {
+            Child = MakeViewRemovedWords(vm),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+        }, 1);
+        return grid;
     }
 
     private static Grid MakeViewOcrFixes(WordListsViewModel vm)
