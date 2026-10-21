@@ -568,7 +568,7 @@ public partial class SettingsViewModel : ObservableObject
         // the folder is missing, which must not take the whole Settings window down with it.
         var iconFolders = Directory.Exists(Se.ThemesFolder)
             ? Directory.GetDirectories(Se.ThemesFolder)
-                // Nord's folder holds only background art - not an icon set to pick
+                // A folder unpacked before its theme had icons holds only background art - not an icon set to pick
                 .Where(p => File.Exists(Path.Combine(p, "Open.png")))
                 .Select(p => Path.GetFileName(p)).ToList()
             : new List<string>();
