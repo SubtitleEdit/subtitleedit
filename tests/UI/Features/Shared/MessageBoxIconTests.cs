@@ -16,7 +16,7 @@ namespace UITests.Features.Shared;
 public class MessageBoxIconTests
 {
     /// <summary>Image folders shipped in Themes.zip; MessageBox may resolve to any of them.</summary>
-    private static readonly string[] ThemeFolders = ["Classic", "Dark", "Light", "MidnightCinema", "Pastel", "Sakura"];
+    private static readonly string[] ThemeFolders = ["Classic", "Dark", "Light", "MidnightCinema", "Nord", "Pastel", "Sakura"];
 
     public static TheoryData<string> ThemeFolderNames()
     {

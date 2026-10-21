@@ -113,25 +113,17 @@ public static class UiTheme
     }
 
     /// <summary>
-    /// Themes that ship an icon set of their own in Themes.zip (plus background art).
+    /// Themes that ship a folder of their own in Themes.zip: an icon set plus background art.
     /// </summary>
     private static bool HasIconFolder(string themeName)
     {
-        return themeName == ThemeNameMidnightCinema || themeName == ThemeNameSakura || themeName == ThemeNamePastel;
-    }
-
-    /// <summary>
-    /// Themes that ship background art in a folder of their own in Themes.zip. The Nord folder
-    /// holds only the art - its icons are Dark's.
-    /// </summary>
-    private static bool HasThemeFolder(string themeName)
-    {
-        return HasIconFolder(themeName) || themeName == ThemeNameNord;
+        return themeName == ThemeNameMidnightCinema || themeName == ThemeNameSakura ||
+               themeName == ThemeNamePastel || themeName == ThemeNameNord;
     }
 
     /// <summary>
     /// True when the toolbar and message box images come from the theme's own folder (Midnight
-    /// Cinema, Sakura, Pastel) - those are drawn in the theme's colors and must not be recolored.
+    /// Cinema, Sakura, Pastel, Nord) - those are drawn in the theme's colors and must not be recolored.
     /// </summary>
     public static bool HasOwnIcons
     {
@@ -148,8 +140,7 @@ public static class UiTheme
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
     /// be reached through an avares:// URI. A theme that ships no image folder of its own
     /// falls back to Light - or Dark for a dark theme, as the Dark glyphs are near-white and
-    /// vanish on a light background - as does Nord, whose folder holds only background art.
-    /// An explicit icon theme wins over both.
+    /// vanish on a light background. An explicit icon theme wins over both.
     /// </summary>
     public static string ImageFolder
     {
@@ -157,16 +148,15 @@ public static class UiTheme
         {
             var themeName = ThemeName;
             var folder = Path.Combine(Se.ThemesFolder, themeName);
-            if ((!Directory.Exists(folder) && HasThemeFolder(themeName)) ||
-                (HasIconFolder(themeName) && Directory.Exists(folder) && !File.Exists(Path.Combine(folder, "Open.png"))))
+            if (HasIconFolder(themeName) && !File.Exists(Path.Combine(folder, "Open.png")))
             {
-                // A theme (or a theme's icons, as with Pastel's once art-only folder) added after
-                // the folder was last unpacked (same version, so the start-up check saw nothing to
-                // do) - unpack Themes.zip again.
+                // A theme (or a theme's icons, as with Pastel's and Nord's once art-only folders)
+                // added after the folder was last unpacked (same version, so the start-up check
+                // saw nothing to do) - unpack Themes.zip again.
                 Initializers.ThemeInitializer.TryRepair(folder);
             }
 
-            if (!Directory.Exists(folder) || (HasThemeFolder(themeName) && !HasIconFolder(themeName)))
+            if (!Directory.Exists(folder))
             {
                 folder = Path.Combine(Se.ThemesFolder, IsDarkThemeEnabled() ? ThemeNameDark : ThemeNameLight);
             }
@@ -1962,7 +1952,7 @@ public static class UiTheme
     public static Bitmap? GetThemeArt(string fileName)
     {
         var theme = Se.Settings.Appearance.Theme;
-        if (!HasThemeFolder(theme))
+        if (!HasIconFolder(theme))
         {
             return null;
         }
