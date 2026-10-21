@@ -12,7 +12,19 @@ namespace Nikse.SubtitleEdit.Logic;
 
 internal static class SubtitleGridCopyPasteHelper
 {
+    // The last copy and the video offset it was made with: pasting that same text subtracts the
+    // offset it carries, so the lines land on their own times even if the offset changed between
+    // copy and paste. Anything else on the clipboard gets the current offset taken off.
+    private static string? _lastCopyText;
+    private static long _lastCopyOffsetMs;
+
     internal static async Task Copy(Window window, List<SubtitleLineViewModel> selectedItems, SubtitleFormat subtitleFormat, Subtitle sourceSubtitle)
+    {
+        var text = GetCopyText(selectedItems, subtitleFormat, sourceSubtitle);
+        await ClipboardHelper.SetTextAsync(window, text);
+    }
+
+    internal static string GetCopyText(List<SubtitleLineViewModel> selectedItems, SubtitleFormat subtitleFormat, Subtitle sourceSubtitle)
     {
         var subtitle = new Subtitle();
         subtitle.Header = sourceSubtitle.Header;
@@ -22,8 +34,25 @@ internal static class SubtitleGridCopyPasteHelper
             subtitle.Paragraphs.Add(item.ToParagraph(subtitleFormat));
         }
 
+        // The rows are video-relative; the grid shows and a save writes them with the video
+        // offset added, so the clipboard gets the same time codes. ParseClipboardSubtitle takes
+        // the offset off again, so copy + paste inside SE keeps the timing.
+        var offsetMs = Se.Settings.General.CurrentVideoOffsetInMs;
+        if (offsetMs != 0)
+        {
+            subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(offsetMs));
+        }
+
         var text = GetClipboardText(subtitleFormat, subtitle);
-        await ClipboardHelper.SetTextAsync(window, text);
+        _lastCopyText = NormalizeForCompare(text);
+        _lastCopyOffsetMs = offsetMs;
+        return text;
+    }
+
+    // The clipboard may hand the text back with other line endings or trailing whitespace.
+    private static string NormalizeForCompare(string text)
+    {
+        return text.Replace("\r\n", "\n").Replace('\r', '\n').Trim();
     }
 
     // When copying ASSA/SSA lines, only the event lines ("Dialogue:"/"Comment:") belong on the
@@ -84,8 +113,25 @@ internal static class SubtitleGridCopyPasteHelper
     /// text lines (translations copied out of a text document) end up here. Both the paste that
     /// inserts lines and the paste that overwrites the selection have to tell those two apart, so
     /// they ask the same question here (#13682).
+    /// Clipboard time codes are file time codes (what the grid shows, video offset included), so
+    /// the offset is taken off to get the video-relative times the rows hold - the offset SE's
+    /// own last copy was made with when the clipboard still holds that copy, else the current one.
     /// </summary>
     internal static Subtitle? ParseClipboardSubtitle(string? text, SubtitleFormat subtitleFormat)
+    {
+        var subtitle = ParseClipboardSubtitleAsIs(text, subtitleFormat);
+        var offsetMs = _lastCopyText != null && text != null && NormalizeForCompare(text) == _lastCopyText
+            ? _lastCopyOffsetMs
+            : Se.Settings.General.CurrentVideoOffsetInMs;
+        if (subtitle != null && offsetMs != 0)
+        {
+            subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-offsetMs));
+        }
+
+        return subtitle;
+    }
+
+    private static Subtitle? ParseClipboardSubtitleAsIs(string? text, SubtitleFormat subtitleFormat)
     {
         if (string.IsNullOrEmpty(text))
         {

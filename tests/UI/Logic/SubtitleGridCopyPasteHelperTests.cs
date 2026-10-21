@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -295,6 +295,66 @@ public class SubtitleGridCopyPasteHelperTests
         Assert.Single(inserted);
         Assert.Equal(1000, inserted[0].StartTime.TotalMilliseconds);
         Assert.Equal(2000, inserted[0].EndTime.TotalMilliseconds);
+    }
+
+    // The rows are video-relative, the grid and a save add the video offset - the clipboard
+    // must carry the same time codes the grid shows, and a paste must take the offset off again.
+    [Fact]
+    public void Copy_AddsVideoOffset_AndPasteRemovesIt()
+    {
+        var format = new SubRip();
+        try
+        {
+            Se.Settings.General.CurrentVideoOffsetInMs = 10_000;
+            var rows = new List<SubtitleLineViewModel> { new(new Paragraph("One", 1000, 2000), format) };
+
+            var clipboard = SubtitleGridCopyPasteHelper.GetCopyText(rows, format, new Subtitle());
+
+            Assert.Contains("00:00:11,000 --> 00:00:12,000", clipboard);
+
+            var subtitles = new ObservableCollection<SubtitleLineViewModel>();
+            var inserted = SubtitleGridCopyPasteHelper.PasteText(subtitles, 0, format, clipboard);
+
+            Assert.Single(inserted);
+            Assert.Equal(1000, inserted[0].StartTime.TotalMilliseconds);
+            Assert.Equal(2000, inserted[0].EndTime.TotalMilliseconds);
+
+            var parsed = SubtitleGridCopyPasteHelper.ParseClipboardSubtitle(clipboard, format);
+            Assert.NotNull(parsed);
+            Assert.Equal(1000, parsed.Paragraphs[0].StartTime.TotalMilliseconds);
+        }
+        finally
+        {
+            Se.Settings.General.CurrentVideoOffsetInMs = 0;
+        }
+    }
+
+    // Copy, change the offset, paste: SE's own copy carries the offset it was made with, so the
+    // lines must land on their original times. Text from elsewhere uses the current offset.
+    [Fact]
+    public void Paste_UsesOffsetOfOwnCopy_WhenOffsetChangedSinceCopy()
+    {
+        var format = new SubRip();
+        try
+        {
+            Se.Settings.General.CurrentVideoOffsetInMs = 10_000;
+            var rows = new List<SubtitleLineViewModel> { new(new Paragraph("One", 1000, 2000), format) };
+            var clipboard = SubtitleGridCopyPasteHelper.GetCopyText(rows, format, new Subtitle());
+
+            Se.Settings.General.CurrentVideoOffsetInMs = 4_000;
+
+            var own = SubtitleGridCopyPasteHelper.ParseClipboardSubtitle(clipboard.Replace("\r\n", "\n") + "\n", format);
+            Assert.NotNull(own);
+            Assert.Equal(1000, own.Paragraphs[0].StartTime.TotalMilliseconds);
+
+            var external = SubtitleGridCopyPasteHelper.ParseClipboardSubtitle("1\n00:00:11,000 --> 00:00:12,000\nOther\n", format);
+            Assert.NotNull(external);
+            Assert.Equal(7000, external.Paragraphs[0].StartTime.TotalMilliseconds);
+        }
+        finally
+        {
+            Se.Settings.General.CurrentVideoOffsetInMs = 0;
+        }
     }
 
     private static Subtitle BuildSubtitle(params (string Text, int Start, int End)[] paragraphs)
