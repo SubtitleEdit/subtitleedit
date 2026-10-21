@@ -4,6 +4,8 @@ using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Options.Settings.VideoControlsItems;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -188,6 +190,32 @@ public class VideoPlayerControlLayoutTests
 
         control.ApplyControlsLayout(SeVideoControlsItem.MakeDefaults());
         Assert.DoesNotContain(speed, GetControlsGrid(control).Children);
+    }
+
+    [AvaloniaFact]
+    public void FullScreen_ControlsScaledUpOverlaidAndFadeWithoutCollapsing()
+    {
+        var control = new VideoPlayerControl(new EmptyVideoPlayer()) { PlayerContent = new Border() };
+        var bar = (Border)GetControlsGrid(control).Parent!.Parent!;
+        var scale = (LayoutTransformControl)bar.Child!;
+        Assert.Equal(1, Grid.GetRow(bar));
+        Assert.Null(scale.LayoutTransform);
+
+        control.IsFullScreen = true;
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(0, Grid.GetRow(bar)); // over the video
+        Assert.NotNull(bar.Background);
+        var transform = Assert.IsType<ScaleTransform>(scale.LayoutTransform);
+        Assert.Equal(VideoPlayerControl.FullScreenControlsScale, transform.ScaleX);
+
+        control.IsFullScreen = false;
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(1, Grid.GetRow(bar));
+        Assert.Null(bar.Background);
+        Assert.Null(scale.LayoutTransform);
+        Assert.True(bar.IsVisible);
+        Assert.Equal(1, bar.Opacity);
+        Assert.True(bar.IsHitTestVisible);
     }
 
     [Fact]
