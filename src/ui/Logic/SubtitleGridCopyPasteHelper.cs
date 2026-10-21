@@ -12,6 +12,12 @@ namespace Nikse.SubtitleEdit.Logic;
 
 internal static class SubtitleGridCopyPasteHelper
 {
+    // The last copy and the video offset it was made with: pasting that same text subtracts the
+    // offset it carries, so the lines land on their own times even if the offset changed between
+    // copy and paste. Anything else on the clipboard gets the current offset taken off.
+    private static string? _lastCopyText;
+    private static long _lastCopyOffsetMs;
+
     internal static async Task Copy(Window window, List<SubtitleLineViewModel> selectedItems, SubtitleFormat subtitleFormat, Subtitle sourceSubtitle)
     {
         var text = GetCopyText(selectedItems, subtitleFormat, sourceSubtitle);
@@ -37,7 +43,16 @@ internal static class SubtitleGridCopyPasteHelper
             subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(offsetMs));
         }
 
-        return GetClipboardText(subtitleFormat, subtitle);
+        var text = GetClipboardText(subtitleFormat, subtitle);
+        _lastCopyText = NormalizeForCompare(text);
+        _lastCopyOffsetMs = offsetMs;
+        return text;
+    }
+
+    // The clipboard may hand the text back with other line endings or trailing whitespace.
+    private static string NormalizeForCompare(string text)
+    {
+        return text.Replace("\r\n", "\n").Replace('\r', '\n').Trim();
     }
 
     // When copying ASSA/SSA lines, only the event lines ("Dialogue:"/"Comment:") belong on the
@@ -99,12 +114,15 @@ internal static class SubtitleGridCopyPasteHelper
     /// inserts lines and the paste that overwrites the selection have to tell those two apart, so
     /// they ask the same question here (#13682).
     /// Clipboard time codes are file time codes (what the grid shows, video offset included), so
-    /// the offset is taken off to get the video-relative times the rows hold.
+    /// the offset is taken off to get the video-relative times the rows hold - the offset SE's
+    /// own last copy was made with when the clipboard still holds that copy, else the current one.
     /// </summary>
     internal static Subtitle? ParseClipboardSubtitle(string? text, SubtitleFormat subtitleFormat)
     {
         var subtitle = ParseClipboardSubtitleAsIs(text, subtitleFormat);
-        var offsetMs = Se.Settings.General.CurrentVideoOffsetInMs;
+        var offsetMs = _lastCopyText != null && text != null && NormalizeForCompare(text) == _lastCopyText
+            ? _lastCopyOffsetMs
+            : Se.Settings.General.CurrentVideoOffsetInMs;
         if (subtitle != null && offsetMs != 0)
         {
             subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-offsetMs));
