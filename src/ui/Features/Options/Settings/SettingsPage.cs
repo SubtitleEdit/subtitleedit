@@ -983,6 +983,7 @@ public class SettingsPage : UserControl
                     Mode = BindingMode.TwoWay,
                 }
             }),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SplitAtVideoAndTextBoxPositionAllowEmptySecond, nameof(_vm.SplitAtVideoAndTextBoxPositionAllowEmptySecond)),
             new SettingsItem(Se.Language.Options.Settings.SpellCheckEngine, () => new ComboBox
             {
                 MinWidth = 200,

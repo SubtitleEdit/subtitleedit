@@ -232,6 +232,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _mergeAutoBreak;
     [ObservableProperty] private ObservableCollection<string> _splitOddNumberOfLinesActions;
     [ObservableProperty] private string _selectedSplitOddNumberOfLinesAction;
+    [ObservableProperty] private bool _splitAtVideoAndTextBoxPositionAllowEmptySecond;
     [ObservableProperty] private bool _ocrUseWordSplitList;
     [ObservableProperty] private bool _spellCheckRememberUseAlwaysList;
     [ObservableProperty] private bool _fixShortDisplayTimesAllowMoveStartTime;
@@ -956,6 +957,7 @@ public partial class SettingsViewModel : ObservableObject
         MergeKeepEndTimeOnlyAssa = Se.Settings.Tools.MergeKeepEndTimeOnlyAssa;
         MergeAutoBreak = Se.Settings.Tools.MergeAutoBreak;
         SelectedSplitOddNumberOfLinesAction = MapFromSplitOddActionToLanguageCode(Se.Settings.Tools.SplitOddLinesAction);
+        SplitAtVideoAndTextBoxPositionAllowEmptySecond = Se.Settings.Tools.SplitAtVideoAndTextBoxPositionAllowEmptySecond;
         SelectedSpellCheckEngine = MapFromSpellCheckEngine(Se.Settings.SpellCheck.SpellCheckProvider);
         OcrUseWordSplitList = Se.Settings.Ocr.UseWordSplitList;
         SpellCheckRememberUseAlwaysList = Se.Settings.Tools.SpellCheckRememberUseAlwaysList;
@@ -1864,6 +1866,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.MergeKeepEndTimeOnlyAssa = MergeKeepEndTimeOnlyAssa;
         Se.Settings.Tools.MergeAutoBreak = MergeAutoBreak;
         Se.Settings.Tools.SplitOddLinesAction = MapFromSplitOddActionTranslationToCode(SelectedSplitOddNumberOfLinesAction);
+        Se.Settings.Tools.SplitAtVideoAndTextBoxPositionAllowEmptySecond = SplitAtVideoAndTextBoxPositionAllowEmptySecond;
         Se.Settings.SpellCheck.SpellCheckProvider = MapFromUISpellCheckEngineToCode(SelectedSpellCheckEngine);
         Se.Settings.Ocr.UseWordSplitList = OcrUseWordSplitList;
         Se.Settings.Tools.SpellCheckRememberUseAlwaysList = SpellCheckRememberUseAlwaysList;

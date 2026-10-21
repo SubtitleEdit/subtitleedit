@@ -24358,10 +24358,14 @@ public partial class MainViewModel :
         var videoPositionSeconds = atVideoPosition && vp != null ? vp.Position : -1;
         var originalSplit = GetOriginalSplit(s, language, originalHasFocus ? EditTextBoxOriginal.SelectionStart : -1);
 
+        // #16095: optionally SE 4's split at video and text box position - a caret at the end of
+        // the text keeps it all in the first line. Plain "split at cursor" never does (SE 4 too).
+        var allowEmptySecond = atVideoPosition && atTextBoxPosition && Se.Settings.Tools.SplitAtVideoAndTextBoxPositionAllowEmptySecond;
+
         var countBefore = Subtitles.Count;
         RunWithoutChangeDetection(() =>
         {
-            _splitManager.Split(Subtitles, s, videoPositionSeconds, textIndex, language, originalSplit);
+            _splitManager.Split(Subtitles, s, videoPositionSeconds, textIndex, language, originalSplit, allowEmptySecond);
             Renumber();
         });
 

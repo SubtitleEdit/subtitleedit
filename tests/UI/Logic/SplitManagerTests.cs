@@ -152,6 +152,47 @@ public class SplitManagerTests : IDisposable
         Assert.Equal(2.5, subtitles[1].StartTime.TotalSeconds, 3);
     }
 
+    [Theory]
+    [InlineData(-1)] // at the end of the text
+    [InlineData(-2)] // before trailing whitespace
+    public void Split_AllowEmptySecond_CaretAtEnd_KeepsAllTextInFirst(int fromEnd)
+    {
+        // #16095: SE 4's split at video and text box position with the caret at the end.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle("My assistant and\nmy effects supervisor. ", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, 2.5, subtitle.Text.Length + fromEnd + 1, "en", null, allowEmptySecond: true);
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal("My assistant and\nmy effects supervisor.", subtitles[0].Text);
+        Assert.Equal(string.Empty, subtitles[1].Text);
+        Assert.Equal(2.5, subtitles[1].StartTime.TotalSeconds, 3);
+    }
+
+    [Theory]
+    [InlineData(0)] // caret at the start still falls back to the line break
+    [InlineData(5)] // caret inside the text splits there as usual
+    public void Split_AllowEmptySecond_CaretNotAtEnd_Unchanged(int textIndex)
+    {
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle("Hello there\nmy friend.", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, 2.5, textIndex, "en", null, allowEmptySecond: true);
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.False(string.IsNullOrWhiteSpace(subtitles[0].Text));
+        Assert.False(string.IsNullOrWhiteSpace(subtitles[1].Text));
+        if (textIndex == 0)
+        {
+            Assert.Equal("Hello there", subtitles[0].Text);
+            Assert.Equal("my friend.", subtitles[1].Text);
+        }
+    }
+
     [Fact]
     public void Split_WithVideoPosition_UsesVideoPositionAsTimeSplitPoint()
     {

@@ -326,6 +326,7 @@ public class LanguageSettings
     public string SplitOddLineActionWeightTop { get; set; }
     public string SplitOddLineActionWeightBottom { get; set; }
     public string SplitOddLinesAction { get; set; }
+    public string SplitAtVideoAndTextBoxPositionAllowEmptySecond { get; set; }
     public string OcrUseWordSplitList { get; set; }
     public string OcrGuessUnknownWords { get; set; }
     public string SpellCheckRememberUseAlwaysList { get; set; }
@@ -708,6 +709,7 @@ public class LanguageSettings
         SplitOddLineActionWeightTop = "Weight top";
         SplitOddLineActionWeightBottom = "Weight bottom";
         SplitOddLinesAction = "Split odd lines action";
+        SplitAtVideoAndTextBoxPositionAllowEmptySecond = "Split at video and text box position: cursor at the end keeps all text in the first line (second line empty)";
         OcrUseWordSplitList = "OCR: use word split list";
         OcrGuessUnknownWords = "OCR: try to guess unknown words";
         SpellCheckRememberUseAlwaysList = "Spell check: remember \"Use always\" list";
