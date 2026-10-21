@@ -1590,6 +1590,36 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Speed picked from the video controls' playback speed button (#16306). Goes through
+    /// <see cref="SelectedSpeed"/>, so the waveform toolbar's speed dropdown follows.
+    /// </summary>
+    [RelayCommand]
+    private void SetPlaybackSpeed(string? speed)
+    {
+        if (speed == null || !Speeds.Contains(speed))
+        {
+            return;
+        }
+
+        SelectedSpeed = speed;
+        ReapplyPlaybackSpeed();
+        ShowStatus(string.Format(Se.Language.Main.SpeedIsNowX, SelectedSpeed));
+    }
+
+    // The video controls' playback speed button shows the speed (#16306); the docked and the
+    // fullscreen player can both exist, so update every one.
+    partial void OnSelectedSpeedChanged(string value)
+    {
+        foreach (var control in new[] { VideoPlayerControl, _fullScreenVideoPlayerControl, _videoPlayerUndockedViewModel?.VideoPlayerControl })
+        {
+            if (control != null)
+            {
+                control.PlaybackSpeedText = value;
+            }
+        }
+    }
+
     private bool TryGetSelectedPlaybackSpeed(out double speed)
     {
         speed = 1.0;
@@ -20495,6 +20525,10 @@ public partial class MainViewModel :
         _fullScreenVideoPlayerControl.ToggleSubtitlesCommand = ToggleSubtitlesOnVideoPlayerCommand;
         _fullScreenVideoPlayerControl.SubtitlesOnVideoIsVisible = _mpvReloader.SubtitlesVisible;
         _fullScreenVideoPlayerControl.SubtitleButtonsIsVisible = true;
+        _fullScreenVideoPlayerControl.PlaybackSpeedCommand = SetPlaybackSpeedCommand;
+        _fullScreenVideoPlayerControl.PlaybackSpeeds = Speeds;
+        _fullScreenVideoPlayerControl.PlaybackSpeedText = SelectedSpeed;
+        _fullScreenVideoPlayerControl.PlaybackSpeedIsVisible = true;
         // The fullscreen player is created bare (not via MakeLayoutVideoPlayer), so wire the
         // pause/stop cursor-freeze here as well (issue #12233).
         _fullScreenVideoPlayerControl.PlayPauseRequested += willPause =>
@@ -20555,6 +20589,9 @@ public partial class MainViewModel :
             ReapplySelectedAudioTrack(control);
             var _ = Task.Run(LoadAudioTrackMenuItems);
 
+            // The speed may have been changed while fullscreen (#16306).
+            ReapplyPlaybackSpeed();
+
             // Same for subtitle visibility: the toggle shortcut only reached the fullscreen
             // player, so the docked player must be brought back in line with the shared state.
             if (control!.VideoPlayer is LibMpvDynamicPlayer dockedMpv)
@@ -20580,6 +20617,7 @@ public partial class MainViewModel :
             // over with, and both have to wait for that point:
             ReapplySelectedAudioTrack(readyPlayer); // the selected audio track (#12844)
             RefreshSubtitlePreview();               // and the subtitle itself (#13407)
+            ReapplyPlaybackSpeed();                 // and the playback speed (#16306)
         });
         // Keys that still reach the main window while fullscreen is up are forwarded there (see
         // TryForwardKeyDownToFullScreen) until the user goes back to the main window on purpose -

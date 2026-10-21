@@ -104,6 +104,10 @@ public static class InitVideoPlayer
         control.ToggleSubtitlesCommand = vm.ToggleSubtitlesOnVideoPlayerCommand;
         control.SubtitlesOnVideoIsVisible = vm.SubtitlesOnVideoPlayerVisible;
         control.SubtitleButtonsIsVisible = true;
+        control.PlaybackSpeedCommand = vm.SetPlaybackSpeedCommand;
+        control.PlaybackSpeeds = vm.Speeds;
+        control.PlaybackSpeedText = vm.SelectedSpeed;
+        control.PlaybackSpeedIsVisible = true;
         videoPlayerControl = control;
         vm.VideoPlayerControl = control;
         control.VideoPlayerDisplayTimeLeft = Se.Settings.Video.VideoPlayerDisplayTimeLeft;
