@@ -169,6 +169,87 @@ public class BurnedInMaskBuilderTests
     }
 
     [Fact]
+    public void ShortLineInLongPaddingIsFound()
+    {
+        // 40 frames incl. 15 frames of padding on each side: the text is only on screen for the
+        // 10 frames of the line itself - still found (stability counts the line's own frames).
+        byte[] F(int i)
+        {
+            var luma = Frame();
+            if (i >= 15 && i < 25)
+            {
+                DrawText(luma, 30, 55, 60, 8);
+            }
+
+            return luma;
+        }
+
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 39L) }, 190, true, 2, padFrames: 15);
+        for (var i = 0; i < 40; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(F(i), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        Assert.Equal(1, builder.LinesWithText);
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(20, ToRgb(F(20)), mask));
+        Assert.Equal(255, mask[59 * W + 60]);
+    }
+
+    [Fact]
+    public void SemiTransparentShadowOnBrightBackgroundIsCovered()
+    {
+        // Bright background (220), shadow band at 120: above the absolute dark threshold, but
+        // well below 65% of the background - must be grown into.
+        byte[] F(int i)
+        {
+            var luma = Frame(220);
+            DrawText(luma, 30, 55, 60, 8);
+            return luma;
+        }
+
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L) }, 230, true, 2);
+        for (var i = 0; i < 30; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(F(i), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        var luma = F(5);
+        FillRect(luma, 30, 65, 62, 3, 120);
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(5, ToRgb(luma), mask));
+        Assert.Equal(255, mask[67 * W + 60]);
+        Assert.Equal(0, mask[76 * W + 60]);
+    }
+
+    [Fact]
+    public void MaskFollowsTheTextBeyondInexactOcrTiming()
+    {
+        // OCR says frames 0..29, the text is still on screen at frame 45: with a 30-frame apply
+        // margin the mask follows it there (text visible), but not to a frame without text.
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L) }, 190, true, 2, applyMarginFrames: 30);
+        for (var i = 0; i < 30; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(TextFrame(i), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(45, ToRgb(TextFrame(10)), mask));
+        Assert.Equal(255, mask[59 * W + 60]);
+        Assert.False(builder.GetFrameMask(45, ToRgb(Frame()), new byte[W * H]));
+        Assert.False(builder.GetFrameMask(70, ToRgb(TextFrame(10)), new byte[W * H]));
+    }
+
+    [Fact]
     public void RegionIsSnappedToEvenValues()
     {
         // 346 * 33.2% = 115 rows: ffmpeg crops 4:2:0 video to 114, so the builder must too.

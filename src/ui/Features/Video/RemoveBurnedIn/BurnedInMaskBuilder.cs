@@ -39,12 +39,16 @@ public sealed class BurnedInMaskBuilder
     private readonly int _outlineRadius;
     private readonly int _outlineSteps;
     private readonly int _grow;
+    private readonly int _padFrames;
+    private readonly int _applyMargin;
     private readonly List<LineMask> _lines = new();
 
     private sealed class LineMask
     {
         public long StartFrame;
         public long EndFrame;
+        public int CoreFrames; // frames of the OCR line itself, without the padding
+        public long CoreOffset; // first core frame - StartFrame
         public int Frames;
         public ushort[]? BrightCount;
         public uint[]? LumaSum;
@@ -59,7 +63,8 @@ public sealed class BurnedInMaskBuilder
 
     /// <param name="spans">Frame spans (inclusive) of the OCR lines, already padded.</param>
     public BurnedInMaskBuilder(int videoWidth, int videoHeight, int regionX, int regionY, int regionWidth, int regionHeight,
-        IEnumerable<(long StartFrame, long EndFrame)> spans, int brightnessMinimum, bool requireOutline, int grow)
+        IEnumerable<(long StartFrame, long EndFrame)> spans, int brightnessMinimum, bool requireOutline, int grow, int padFrames = 0,
+        int applyMarginFrames = 0)
     {
         _videoWidth = videoWidth;
         _videoHeight = videoHeight;
@@ -75,12 +80,25 @@ public sealed class BurnedInMaskBuilder
         _outlineRadius = Math.Max(2, (int)Math.Round(videoHeight / 270.0));
         _outlineSteps = Math.Max(3, (int)Math.Round(videoHeight / 60.0));
         _grow = Math.Max(0, grow);
+        _padFrames = Math.Max(0, padFrames);
+        _applyMargin = Math.Max(0, applyMarginFrames);
         foreach (var (start, end) in spans)
         {
-            if (end >= start)
+            if (end < start)
             {
-                _lines.Add(new LineMask { StartFrame = Math.Max(0, start), EndFrame = end });
+                continue;
             }
+
+            var first = Math.Max(0, start);
+            var coreFirst = Math.Max(first, Math.Min(end, start + _padFrames));
+            var coreLast = Math.Max(coreFirst, end - _padFrames);
+            _lines.Add(new LineMask
+            {
+                StartFrame = first,
+                EndFrame = end,
+                CoreOffset = coreFirst - first,
+                CoreFrames = (int)(coreLast - coreFirst + 1),
+            });
         }
 
         _lines.Sort((a, b) => a.StartFrame.CompareTo(b.StartFrame));
@@ -138,6 +156,14 @@ public sealed class BurnedInMaskBuilder
                 continue;
             }
 
+            // The text pixels come from the line's own frames only: the padding (OCR timing
+            // slack) may show the background, the previous or the next line, and counting it
+            // let bright background into the "text" (then the per-frame presence check failed).
+            if (frameIndex < line.StartFrame + line.CoreOffset || frameIndex >= line.StartFrame + line.CoreOffset + line.CoreFrames)
+            {
+                continue;
+            }
+
             line.BrightCount ??= new ushort[n];
             line.LumaSum ??= new uint[n];
             for (var i = 0; i < n; i++)
@@ -191,15 +217,18 @@ public sealed class BurnedInMaskBuilder
     /// </summary>
     public bool GetFrameMask(long frameIndex, ReadOnlySpan<byte> rgb, Span<byte> mask)
     {
+        // OCR timings can be off by a second or more (sampled frames, merged/split lines), so a
+        // line's mask is applied up to applyMarginFrames outside its span - but only on frames
+        // where that line's text is actually visible (IsTextPresent).
         var any = false;
         foreach (var line in _lines)
         {
-            if (line.StartFrame > frameIndex)
+            if (line.StartFrame - _applyMargin > frameIndex)
             {
                 break;
             }
 
-            if (frameIndex > line.EndFrame || line.MaskRuns.Length == 0 || !IsTextPresent(line, rgb))
+            if (frameIndex > line.EndFrame + _applyMargin || line.MaskRuns.Length == 0 || !IsTextPresent(line, rgb))
             {
                 continue;
             }
@@ -224,7 +253,7 @@ public sealed class BurnedInMaskBuilder
     }
 
     // Per frame, the mask also takes the text's dark outline / drop shadow in *this* frame:
-    // it grows through pixels darker than DarkOutlineMaximum, a few px (by video height), then
+    // it grows through dark pixels (see below), a few px (by video height), then
     // one more px. The per-line growth uses the line's average brightness, which misses the
     // outline when the line spans a scene cut; any outline left on the rim of the hole makes
     // the models fill it dark (a black bar on a bright background).
@@ -242,8 +271,12 @@ public sealed class BurnedInMaskBuilder
             return;
         }
 
+        // "Dark" relative to the background around the text: a semi-transparent shadow on a
+        // bright picture is far above an absolute threshold but still clearly darker than its
+        // surroundings.
         var cur = new bool[w * h];
-        var dark = new bool[w * h];
+        var luma = new int[w * h];
+        var background = new List<int>();
         for (var y = 0; y < h; y++)
         {
             for (var x = 0; x < w; x++)
@@ -251,8 +284,25 @@ public sealed class BurnedInMaskBuilder
                 var i = (y0 + y) * _videoWidth + x0 + x;
                 cur[y * w + x] = mask[i] != 0;
                 var o = i * 3;
-                dark[y * w + x] = (rgb[o] * 299 + rgb[o + 1] * 587 + rgb[o + 2] * 114) / 1000 <= DarkOutlineMaximum;
+                luma[y * w + x] = (rgb[o] * 299 + rgb[o + 1] * 587 + rgb[o + 2] * 114) / 1000;
+                if (!cur[y * w + x])
+                {
+                    background.Add(luma[y * w + x]);
+                }
             }
+        }
+
+        var darkMaximum = DarkOutlineMaximum;
+        if (background.Count > 0)
+        {
+            background.Sort();
+            darkMaximum = Math.Clamp((int)(background[background.Count / 2] * 0.65), DarkOutlineMaximum, 160);
+        }
+
+        var dark = new bool[w * h];
+        for (var i = 0; i < dark.Length; i++)
+        {
+            dark[i] = luma[i] <= darkMaximum;
         }
 
         for (var step = 0; step <= steps; step++)
