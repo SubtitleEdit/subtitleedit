@@ -168,6 +168,28 @@ public class VideoPlayerControlLayoutTests
         Assert.DoesNotContain(previous, GetControlsGrid(control).Children);
     }
 
+    [AvaloniaFact]
+    public void PlaybackSpeedButton_ShownOnlyWhenEnabledAndInLayout_ShowsSpeed()
+    {
+        var control = new VideoPlayerControl(new EmptyVideoPlayer());
+        var items = SeVideoControlsItem.MakeDefaults();
+        items.Single(p => p.Type == SeVideoControlsItemType.PlaybackSpeed).IsVisible = true;
+
+        control.ApplyControlsLayout(items);
+        var speed = GetButton(control, Se.Language.General.PlaybackSpeed);
+        Assert.Equal(5, Grid.GetColumn(speed)); // after the volume
+        Assert.False(speed.IsVisible); // dialogs without a speed owner
+
+        control.PlaybackSpeedIsVisible = true;
+        Assert.True(speed.IsVisible);
+        Assert.Equal("1.0x", speed.Content);
+        control.PlaybackSpeedText = "1.4x";
+        Assert.Equal("1.4x", speed.Content);
+
+        control.ApplyControlsLayout(SeVideoControlsItem.MakeDefaults());
+        Assert.DoesNotContain(speed, GetControlsGrid(control).Children);
+    }
+
     [Fact]
     public void Dialog_OkReturnsOrderAndVisibility()
     {

@@ -38,6 +38,7 @@ public class VideoControlsItemsWindow : Window
             StopIsVisible = true,
             FullScreenIsVisible = true,
             SubtitleButtonsIsVisible = true,
+            PlaybackSpeedIsVisible = true,
         };
         KeyboardNavigation.SetTabNavigation(preview, KeyboardNavigationMode.None);
         preview.SetPreviewCaptions("00:01:23.456 / 01:39:43.040", "movie.mkv", "libmpv");
