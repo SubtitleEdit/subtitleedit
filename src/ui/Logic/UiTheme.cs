@@ -117,21 +117,21 @@ public static class UiTheme
     /// </summary>
     private static bool HasIconFolder(string themeName)
     {
-        return themeName == ThemeNameMidnightCinema || themeName == ThemeNameSakura;
+        return themeName == ThemeNameMidnightCinema || themeName == ThemeNameSakura || themeName == ThemeNamePastel;
     }
 
     /// <summary>
-    /// Themes that ship background art in a folder of their own in Themes.zip. The Nord and
-    /// Pastel folders hold only the art - their icons are Dark's and Light's.
+    /// Themes that ship background art in a folder of their own in Themes.zip. The Nord folder
+    /// holds only the art - its icons are Dark's.
     /// </summary>
     private static bool HasThemeFolder(string themeName)
     {
-        return HasIconFolder(themeName) || themeName == ThemeNameNord || themeName == ThemeNamePastel;
+        return HasIconFolder(themeName) || themeName == ThemeNameNord;
     }
 
     /// <summary>
     /// True when the toolbar and message box images come from the theme's own folder (Midnight
-    /// Cinema, Sakura) - those are drawn in the theme's colors and must not be recolored.
+    /// Cinema, Sakura, Pastel) - those are drawn in the theme's colors and must not be recolored.
     /// </summary>
     public static bool HasOwnIcons
     {
@@ -147,9 +147,9 @@ public static class UiTheme
     /// Folder holding the current theme's images. These are unpacked from Themes.zip into
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
     /// be reached through an avares:// URI. A theme that ships no image folder of its own
-    /// (Pastel, for instance) falls back to Light - or Dark for a dark theme, as the Dark glyphs
-    /// are near-white and vanish on a light background - as do Nord and Pastel, whose folders
-    /// hold only background art. An explicit icon theme wins over both.
+    /// falls back to Light - or Dark for a dark theme, as the Dark glyphs are near-white and
+    /// vanish on a light background - as does Nord, whose folder holds only background art.
+    /// An explicit icon theme wins over both.
     /// </summary>
     public static string ImageFolder
     {
@@ -157,10 +157,12 @@ public static class UiTheme
         {
             var themeName = ThemeName;
             var folder = Path.Combine(Se.ThemesFolder, themeName);
-            if (!Directory.Exists(folder) && HasThemeFolder(themeName))
+            if ((!Directory.Exists(folder) && HasThemeFolder(themeName)) ||
+                (HasIconFolder(themeName) && Directory.Exists(folder) && !File.Exists(Path.Combine(folder, "Open.png"))))
             {
-                // A theme added after the folder was last unpacked (same version, so the start-up
-                // check saw nothing to do) - unpack Themes.zip again.
+                // A theme (or a theme's icons, as with Pastel's once art-only folder) added after
+                // the folder was last unpacked (same version, so the start-up check saw nothing to
+                // do) - unpack Themes.zip again.
                 Initializers.ThemeInitializer.TryRepair(folder);
             }
 
