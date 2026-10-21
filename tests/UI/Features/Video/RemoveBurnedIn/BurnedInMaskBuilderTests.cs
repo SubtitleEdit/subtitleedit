@@ -250,6 +250,33 @@ public class BurnedInMaskBuilderTests
     }
 
     [Fact]
+    public void ExtraWidthWidensLeftAndRightOnly()
+    {
+        var narrow = new byte[W * H];
+        var wide = new byte[W * H];
+        foreach (var (extra, mask) in new[] { (0, narrow), (5, wide) })
+        {
+            var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L) }, 190, true, 2, extraWidth: extra);
+            for (var i = 0; i < 30; i++)
+            {
+                var region = new byte[W * 40];
+                Array.Copy(TextFrame(i), 40 * W, region, 0, region.Length);
+                builder.AddRegionFrame(i, region);
+            }
+
+            builder.Finish();
+            builder.GetFrameMask(10, ToRgb(TextFrame(10)), mask);
+        }
+
+        int Right(byte[] m) => Enumerable.Range(0, W).Last(x => m[59 * W + x] != 0);
+        int Left(byte[] m) => Enumerable.Range(0, W).First(x => m[59 * W + x] != 0);
+        int Bottom(byte[] m) => Enumerable.Range(0, H).Last(y => m[y * W + 60] != 0);
+        Assert.Equal(Right(narrow) + 5, Right(wide));
+        Assert.Equal(Left(narrow) - 5, Left(wide));
+        Assert.Equal(Bottom(narrow), Bottom(wide));
+    }
+
+    [Fact]
     public void RegionIsSnappedToEvenValues()
     {
         // 346 * 33.2% = 115 rows: ffmpeg crops 4:2:0 video to 114, so the builder must too.

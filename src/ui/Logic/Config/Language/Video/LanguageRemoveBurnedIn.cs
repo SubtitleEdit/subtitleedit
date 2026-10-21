@@ -13,6 +13,8 @@ public class LanguageRemoveBurnedIn
     public string RequireOutlineHint { get; set; }
     public string GrowMask { get; set; }
     public string GrowMaskHint { get; set; }
+    public string ExtraWidth { get; set; }
+    public string ExtraWidthHint { get; set; }
     public string TemporalConsistency { get; set; }
     public string TemporalConsistencyHint { get; set; }
     public string OutputFile { get; set; }
@@ -46,6 +48,8 @@ public class LanguageRemoveBurnedIn
         RequireOutlineHint = "Only remove bright pixels next to a dark outline - keeps bright picture details out of the mask";
         GrowMask = "Grow mask (pixels)";
         GrowMaskHint = "Extra pixels around the text, to cover its outline and soft edges";
+        ExtraWidth = "Extra width (pixels)";
+        ExtraWidthHint = "Widen the mask this much on the left and right of each line - for outlines or shadows at the first and last letter";
         TemporalConsistency = "Temporal consistency (less flicker)";
         TemporalConsistencyHint = "Reuse the real background from nearby frames and the previous fill while the picture is still";
         OutputFile = "Output file";

@@ -41,6 +41,7 @@ public sealed class BurnedInMaskBuilder
     private readonly int _grow;
     private readonly int _padFrames;
     private readonly int _applyMargin;
+    private readonly int _extraWidth;
     private readonly List<LineMask> _lines = new();
 
     private sealed class LineMask
@@ -64,7 +65,7 @@ public sealed class BurnedInMaskBuilder
     /// <param name="spans">Frame spans (inclusive) of the OCR lines, already padded.</param>
     public BurnedInMaskBuilder(int videoWidth, int videoHeight, int regionX, int regionY, int regionWidth, int regionHeight,
         IEnumerable<(long StartFrame, long EndFrame)> spans, int brightnessMinimum, bool requireOutline, int grow, int padFrames = 0,
-        int applyMarginFrames = 0)
+        int applyMarginFrames = 0, int extraWidth = 0)
     {
         _videoWidth = videoWidth;
         _videoHeight = videoHeight;
@@ -82,6 +83,7 @@ public sealed class BurnedInMaskBuilder
         _grow = Math.Max(0, grow);
         _padFrames = Math.Max(0, padFrames);
         _applyMargin = Math.Max(0, applyMarginFrames);
+        _extraWidth = Math.Max(0, extraWidth);
         foreach (var (start, end) in spans)
         {
             if (end < start)
@@ -419,7 +421,7 @@ public sealed class BurnedInMaskBuilder
         // size relative to the video height. Left out, a thick outline stays as "known" context
         // and the fill comes out as a dark smear in the shape of the text.
         var withOutline = GrowInto(text, dark, _outlineSteps);
-        var grown = Dilate(withOutline, _grow);
+        var grown = DilateHorizontal(Dilate(withOutline, _grow), _extraWidth);
         var textCount = 0;
         foreach (var t in text)
         {
@@ -517,6 +519,37 @@ public sealed class BurnedInMaskBuilder
         }
 
         return current;
+    }
+
+    // Extra width left and right of the text (user setting): the first and last letters'
+    // outline/shadow can reach further sideways than the normal margin covers.
+    private bool[] DilateHorizontal(bool[] source, int radius)
+    {
+        if (radius <= 0)
+        {
+            return source;
+        }
+
+        var result = new bool[source.Length];
+        for (var y = 0; y < _rh; y++)
+        {
+            var last = int.MinValue / 2;
+            for (var x = 0; x < _rw + radius; x++)
+            {
+                if (x < _rw && source[y * _rw + x])
+                {
+                    last = x;
+                }
+
+                var ox = x - radius;
+                if (ox >= 0 && x - last <= 2 * radius)
+                {
+                    result[y * _rw + ox] = true;
+                }
+            }
+        }
+
+        return result;
     }
 
     // Square dilation (max filter) of a scan-area bitmap, separable.

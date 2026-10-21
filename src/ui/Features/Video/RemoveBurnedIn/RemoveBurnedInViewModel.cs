@@ -50,6 +50,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     [ObservableProperty] private int _brightnessMinimum;
     [ObservableProperty] private bool _requireOutline;
     [ObservableProperty] private int _grow;
+    [ObservableProperty] private int _extraWidth;
     [ObservableProperty] private bool _temporal;
     [ObservableProperty] private int _crf;
     [ObservableProperty] private ObservableCollection<LineDisplay> _lines = new();
@@ -114,6 +115,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         BrightnessMinimum = brightnessMinimum > 0 ? brightnessMinimum : 190;
         RequireOutline = settings.RemoveBurnedInRequireOutline;
         Grow = settings.RemoveBurnedInGrow > 0 ? settings.RemoveBurnedInGrow : BurnedInMaskBuilder.DefaultGrow(videoHeight);
+        ExtraWidth = settings.RemoveBurnedInExtraWidth is >= 0 and <= 100 ? settings.RemoveBurnedInExtraWidth : 5;
         Temporal = settings.RemoveBurnedInTemporal;
         Crf = settings.RemoveBurnedInCrf is >= 0 and <= 51 ? settings.RemoveBurnedInCrf : 18;
 
@@ -166,6 +168,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         BrightnessMinimum = BrightnessMinimum,
         RequireOutline = RequireOutline,
         Grow = Grow,
+        ExtraWidth = ExtraWidth,
         Temporal = Temporal,
         Crf = Crf,
         CrispEmbedExecutable = CrispEmbedEngine.GetCliExecutable(),
@@ -523,6 +526,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         settings.RemoveBurnedInRequireOutline = RequireOutline;
         settings.RemoveBurnedInGrow = Grow == BurnedInMaskBuilder.DefaultGrow(_videoHeight) ? 0 : Grow;
         settings.RemoveBurnedInTemporal = Temporal;
+        settings.RemoveBurnedInExtraWidth = ExtraWidth;
         settings.RemoveBurnedInCrf = Crf;
         settings.RemoveBurnedInModel = SelectedModel?.Model.Name ?? CrispEmbedEngine.InpaintModelLama;
         Se.SaveSettings();

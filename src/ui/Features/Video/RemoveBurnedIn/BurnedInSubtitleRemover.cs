@@ -33,6 +33,9 @@ public sealed class BurnedInRemovalOptions
     public int BrightnessMinimum { get; init; } = 190;
     public bool RequireOutline { get; init; } = true;
     public int Grow { get; init; } = 6;
+
+    /// <summary>Extra mask width in px on the left and right of each line.</summary>
+    public int ExtraWidth { get; init; } = 5;
     public bool Temporal { get; init; } = true;
     public int Crf { get; init; } = 18;
     public string CrispEmbedExecutable { get; init; } = string.Empty;
@@ -81,7 +84,7 @@ public sealed class BurnedInSubtitleRemover
     public static BurnedInMaskBuilder MakeMaskBuilder(BurnedInRemovalOptions o, IEnumerable<(long StartFrame, long EndFrame)> spans)
     {
         return new BurnedInMaskBuilder(o.VideoWidth, o.VideoHeight, o.RegionX, o.RegionY, o.RegionWidth, o.RegionHeight,
-            spans, o.BrightnessMinimum, o.RequireOutline, o.Grow, GetPadFrames(o), (int)Math.Round(1.5 * o.FrameRate));
+            spans, o.BrightnessMinimum, o.RequireOutline, o.Grow, GetPadFrames(o), (int)Math.Round(1.5 * o.FrameRate), o.ExtraWidth);
     }
 
     /// <summary>BT.709 for HD, BT.601 below - used for both the RGB decode and the encode, so

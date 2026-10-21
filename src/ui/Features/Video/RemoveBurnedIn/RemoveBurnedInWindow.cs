@@ -63,6 +63,9 @@ public class RemoveBurnedInWindow : Window
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.Model, modelCombo, LabelWidth));
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Video.VideoOcr.TextBrightnessMinimum, brightness, LabelWidth));
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.GrowMask, grow, LabelWidth));
+        var extraWidth = EditorChrome.MakeField(nameof(vm.ExtraWidth), 0, 100, 90);
+        ToolTip.SetTip(extraWidth, l.ExtraWidthHint);
+        maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.ExtraWidth, extraWidth, LabelWidth));
         maskRows.Children.Add(outline);
         maskRows.Children.Add(temporal);
 

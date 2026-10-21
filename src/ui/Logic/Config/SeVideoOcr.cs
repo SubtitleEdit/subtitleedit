@@ -43,6 +43,9 @@ public class SeVideoOcr
     public int RemoveBurnedInGrow { get; set; }
     public bool RemoveBurnedInRequireOutline { get; set; }
     public bool RemoveBurnedInTemporal { get; set; }
+
+    /// <summary>Remove burned-in subtitles: extra mask width in px left and right of each line.</summary>
+    public int RemoveBurnedInExtraWidth { get; set; }
     public int RemoveBurnedInCrf { get; set; }
 
     /// <summary>Inpainting model file name (CrispEmbedEngine.InpaintModelLama / InpaintModelMiGan).</summary>
@@ -92,6 +95,7 @@ public class SeVideoOcr
         RemoveBurnedInGrow = 0;
         RemoveBurnedInRequireOutline = true;
         RemoveBurnedInTemporal = true;
+        RemoveBurnedInExtraWidth = 5;
         RemoveBurnedInCrf = 18;
         RemoveBurnedInModel = CrispEmbedEngine.InpaintModelLama;
     }
