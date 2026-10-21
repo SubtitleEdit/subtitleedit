@@ -2996,7 +2996,8 @@ public partial class SettingsViewModel : ObservableObject
                 page.RefreshSections();
             }
 
-            return SelectedSection?.Panel;
+            // Include the section border's padding when positioning the header.
+            return SelectedSection?.Panel?.Parent as Control;
         }, navigationMethod);
     }
 
