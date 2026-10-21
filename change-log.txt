@@ -3,6 +3,31 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-beta4 (21st of October 2026)
+
+* Add Midnight Cinema and Sakura themes, theme background art for video/waveform, Cycle theme shortcut
+* Add Syntax coloring: color the gap when it falls inside a user-defined range (ms or frames)
+* Add Set position: SE4-style click-to-place mode, toggle to hide selection box, remember window size - thx 114562175
+* Add Video player: optional playback speed button - thx benshgit
+* Add Spell check: remove words from the dictionary (Word lists "Removed from dictionary") - thx fraternl
+* Add setting: split at video and text box position keeps text at caret end - thx kadrimarzouki
+* Copy from the grid includes the video offset, pasting SE's own copy removes it again
+* One 13 px text size for all windows, main window in the editor look - thx GrampaWildWilly
+* SubRip reader rewritten: tolerant of damaged files, 2.6-12x faster
+* Set position: opens at once, frame rendered in the background, arrow keys nudge right away
+* Batch convert: change frame rate saves at the target frame rate - thx michi987654
+* ITT: source header timing parameters follow the current frame rate - thx michi987654
+* OCR replace lists: fix rules that damage correct text (10 languages), Dutch GLM-OCR word errors - thx fraternl
+* OCR fix: keep Dutch "Eén" - thx fraternl
+* Text to speech: context line on its own row, long video names trimmed
+* Performance: name casing, speech to text names, teletext, OCR splitter
+* Fix crashes and hangs found by fuzzing subtitle format parsers
+* Update Hungarian translation
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
 v5.4.0-beta3 (20th of October 2026)
 
 * Add Settings: visual theme picker with preview cards
