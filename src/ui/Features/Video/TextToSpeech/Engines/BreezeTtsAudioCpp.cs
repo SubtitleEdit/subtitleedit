@@ -77,10 +77,10 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
     /// loader rejects with "GGUF tensor data range is out of bounds", so size is checked
     /// before the server is ever started. Same guard as <see cref="IndexTts25AudioCpp"/>.
     /// </summary>
-    private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly Dictionary<string, long[]> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
     {
-        [ModelQ8_0FileName] = 5079668352L,
-        [ModelBf16FileName] = 7342916800L,
+        [ModelQ8_0FileName] = [5079670336L, 5079668352L],
+        [ModelBf16FileName] = [7342918784L, 7342916800L],
     };
 
     /// <summary>
@@ -308,7 +308,7 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
                 ? target.Length
                 : info.Length;
 
-            return length == expected;
+            return Array.IndexOf(expected, length) >= 0;
         }
         catch
         {

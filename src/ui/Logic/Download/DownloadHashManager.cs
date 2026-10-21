@@ -2522,37 +2522,44 @@ public static class DownloadHashManager
             // sha256sum of the downloaded file; F16 is the HF LFS oid.
             [IndexTts25AudioCpp.ModelQ8_0] = new[]
             {
-                "5e827b2072042e4a1b21ccf24a5cb4f71cb1011403067a0a9b039311d8b38628", // index-tts2_5-q8_0.gguf
+                "d1ab7b5c3f5ecf2bcd285753be76c7290b0a54939a76b7c39e8f886f80cf6b5c", // index-tts2_5-q8_0.gguf (rev 6f45df32, 2026-10-19)
+                "5e827b2072042e4a1b21ccf24a5cb4f71cb1011403067a0a9b039311d8b38628", // index-tts2_5-q8_0.gguf (before 2026-10-19)
             },
             [IndexTts25AudioCpp.ModelF16] = new[]
             {
-                "87bed9b82fc8f22119a1a1042332091016c28e37f29b0e93343ccdbfa76ef66a", // index-tts2_5-f16.gguf
+                "505f896d83aa5d309a3180e5e72f95a9b192c95930d6d9d534b93c0ca8b42e73", // index-tts2_5-f16.gguf (rev 6f45df32, 2026-10-19)
+                "87bed9b82fc8f22119a1a1042332091016c28e37f29b0e93343ccdbfa76ef66a", // index-tts2_5-f16.gguf (before 2026-10-19)
             },
 
             // Higgs Audio v3 TTS 4B weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
             [HiggsTtsAudioCpp.ModelQ8_0] = new[]
             {
-                "79746822045b5bf8f9ab2bda87b16cd3f8ea3d9e319cbcf887a87aa1b537a74a", // higgs-audio-v3-tts-4b-q8_0.gguf
+                "cfa5cc01adcd199dfcf1baf0f610aa474cda83418fd1802aa6defa82d956a0e4", // higgs-audio-v3-tts-4b-q8_0.gguf (rev 6f45df32, 2026-10-19)
+                "79746822045b5bf8f9ab2bda87b16cd3f8ea3d9e319cbcf887a87aa1b537a74a", // higgs-audio-v3-tts-4b-q8_0.gguf (before 2026-10-19)
             },
             [HiggsTtsAudioCpp.ModelBf16] = new[]
             {
-                "2c04410d9ae6af9a48ce989c1b6d7dfaa0320c8e09ff7da8d3e04b8d9b0669dc", // higgs-audio-v3-tts-4b-bf16.gguf
+                "d9fc55bee3e0d1e84eb9ffec779355c870190487bdaa4a2d26b99c1b1f40c12b", // higgs-audio-v3-tts-4b-bf16.gguf (rev 6f45df32, 2026-10-19)
+                "2c04410d9ae6af9a48ce989c1b6d7dfaa0320c8e09ff7da8d3e04b8d9b0669dc", // higgs-audio-v3-tts-4b-bf16.gguf (before 2026-10-19)
             },
 
             // Fish Audio S2 Pro weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
             [FishTtsAudioCpp.ModelQ8_0] = new[]
             {
-                "4ffc169447b7a26df8bf49e8637adb4000bfa763a22c018b6c03968564259d0b", // fish-audio-s2-pro-q8_0.gguf
+                "4f051347079cfb61f9ef2996f67057229e486fefce31374721b5690940dfc34a", // fish-audio-s2-pro-q8_0.gguf (rev 6f45df32, 2026-10-19)
+                "4ffc169447b7a26df8bf49e8637adb4000bfa763a22c018b6c03968564259d0b", // fish-audio-s2-pro-q8_0.gguf (before 2026-10-19)
             },
             [FishTtsAudioCpp.ModelBf16] = new[]
             {
-                "781fdece3ff837838c48f7d5a7b37e37c4d661a6416416ad57fe92fed47d96ff", // fish-audio-s2-pro-bf16.gguf
+                "b938ecf9968fc0a432c04d2b05cc6f729663017d1b1c0a079c90e3c504750447", // fish-audio-s2-pro-bf16.gguf (rev 6f45df32, 2026-10-19)
+                "781fdece3ff837838c48f7d5a7b37e37c4d661a6416416ad57fe92fed47d96ff", // fish-audio-s2-pro-bf16.gguf (before 2026-10-19)
             },
 
             // ACE-Step 1.5 Turbo music weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
             [AceStepAudioCpp.ModelQ8_0] = new[]
             {
-                "cd7bf272588f548d4a253f57483132ef0f8f54a549f26471b09caa72c654270b", // ace-step-1.5-turbo-q8_0.gguf
+                "1f0015f81c10a1182531e6207c7aeaa060b8cad3470a2f88daa3cb74ed636e63", // ace-step-1.5-turbo-q8_0.gguf (rev 6f45df32, 2026-10-19)
+                "cd7bf272588f548d4a253f57483132ef0f8f54a549f26471b09caa72c654270b", // ace-step-1.5-turbo-q8_0.gguf (before 2026-10-19)
             },
 
             // Sidon v0.1 speech restoration weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
@@ -2564,21 +2571,25 @@ public static class DownloadHashManager
             // FireRedTTS3-Base weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
             [FireRedTts3AudioCpp.ModelQ8_0] = new[]
             {
-                "68acd5bce0d87a53bb5b88255c65e19df4cbc6017b4bab0824e96f1e2351c3a7", // fireredtts3-base-q8_0.gguf
+                "936b7c8f717e734d2f4333060c3ff905c0eee03d83d80b0038548a461251aafa", // fireredtts3-base-q8_0.gguf (rev 6f45df32, 2026-10-19)
+                "68acd5bce0d87a53bb5b88255c65e19df4cbc6017b4bab0824e96f1e2351c3a7", // fireredtts3-base-q8_0.gguf (before 2026-10-19)
             },
             [FireRedTts3AudioCpp.ModelOrig] = new[]
             {
-                "1af06f341044121ddebb389c1e6e5181a43f65e2591f77c7eda2ca5810e484c8", // fireredtts3-base-orig.gguf
+                "6702457ded13b49ae7c5bfe1e783bb2f88cc06872d4bb11dd4860cc25d04167b", // fireredtts3-base-orig.gguf (rev 6f45df32, 2026-10-19)
+                "1af06f341044121ddebb389c1e6e5181a43f65e2591f77c7eda2ca5810e484c8", // fireredtts3-base-orig.gguf (before 2026-10-19)
             },
 
             // Breeze TTS 2 weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).
             [BreezeTtsAudioCpp.ModelQ8_0] = new[]
             {
-                "0de52d61560f9f6b2dfeca79f9100f8fce0c2b17c52ec30622e23e150df1ad88", // breeze-tts-2-q8_0.gguf
+                "b17b89b1c21107c44e8d556ab0a856d7acd06bdd0c914e68e0e57f6e33f555a3", // breeze-tts-2-q8_0.gguf (rev 6f45df32, 2026-10-19)
+                "0de52d61560f9f6b2dfeca79f9100f8fce0c2b17c52ec30622e23e150df1ad88", // breeze-tts-2-q8_0.gguf (before 2026-10-19)
             },
             [BreezeTtsAudioCpp.ModelBf16] = new[]
             {
-                "a00c9f678b4c5ae03d1dcd228f636b329352cda200823faef4e01d3bd97c0a89", // breeze-tts-2-bf16.gguf
+                "5620623371e2011e9bb22389f12252d3969061adad139b3cdda6b1473a82a0d5", // breeze-tts-2-bf16.gguf (rev 6f45df32, 2026-10-19)
+                "a00c9f678b4c5ae03d1dcd228f636b329352cda200823faef4e01d3bd97c0a89", // breeze-tts-2-bf16.gguf (before 2026-10-19)
             },
 
             // KugelAudio-0-Open weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).

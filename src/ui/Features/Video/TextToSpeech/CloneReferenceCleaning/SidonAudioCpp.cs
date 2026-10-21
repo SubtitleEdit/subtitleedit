@@ -31,7 +31,7 @@ public static class SidonAudioCpp
     public const string ModelFileName = "sidon-v0.1-f32.gguf";
     public const long ModelFileSize = 984_276_544;
     public const string ModelSizeText = "940 MB";
-    public const string ModelUrl = "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/Sidon-GGUF/" + ModelFileName;
+    public const string ModelUrl = AudioCppRuntime.ModelRepoBaseUrl + "Sidon-GGUF/" + ModelFileName;
 
     public static string GetSetModelsFolder()
     {
