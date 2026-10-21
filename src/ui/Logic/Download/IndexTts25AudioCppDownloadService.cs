@@ -69,9 +69,9 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
     private static readonly Dictionary<string, string> ModelUrls = new(StringComparer.OrdinalIgnoreCase)
     {
         [IndexTts25AudioCpp.ModelQ8_0FileName] =
-            "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/IndexTTS2.5-GGUF/index-tts2_5-q8_0.gguf",
+            AudioCppRuntime.ModelRepoBaseUrl + "IndexTTS2.5-GGUF/index-tts2_5-q8_0.gguf",
         [IndexTts25AudioCpp.ModelF16FileName] =
-            "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/IndexTTS2.5-GGUF/index-tts2_5-f16.gguf",
+            AudioCppRuntime.ModelRepoBaseUrl + "IndexTTS2.5-GGUF/index-tts2_5-f16.gguf",
     };
 
     public IndexTts25AudioCppDownloadService(HttpClient httpClient)
