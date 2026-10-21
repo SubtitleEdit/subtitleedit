@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta2",
-  "translatedBy": "Adam Malich (ostatnia aktualizacja: 20.10.2026)",
+  "version": "v5.4.0-beta4",
+  "translatedBy": "Adam Malich (ostatnia aktualizacja: 21.10.2026)",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -1724,7 +1724,7 @@
     "propertyDefaultColor": "Domyślny kolor",
     "propertyDefaultColorTemplateHint": "Kolory pochodzą z pliku szablonu",
     "pickTemplateFile": "Wybierz plik szablonu",
-    "ttmlFiles": "Pliki z napisami czasowymi"
+    "ttmlFiles": "Pliki TTML"
   },
   "edit": {
     "modifySelection": {
@@ -1791,7 +1791,12 @@
       "addRulesToX": "Dodaj reguły do '{0}'",
       "xRules": "{0:#,##0} reguły",
       "discardXRules": "Odrzucić wprowadzone reguły {0}?",
-      "enterAddsRule": "Klawisz Enter dodaje regułę do listy, przycisk OK dodaje listę do kategorii (Ctrl+Enter)"
+      "enterAddsRule": "Klawisz Enter dodaje regułę do listy, przycisk OK dodaje listę do kategorii (Ctrl+Enter)",
+      "categories": "Kategorie",
+      "newestFirst": "Najpierw najnowsze",
+      "filterRules": "Reguły filtrowania...",
+      "rulesInX": "Reguł w '{0}'",
+      "enterAddsRuleToCategory": "Klawisz Enter dodaje regułę na końcu kategorii"
     },
     "find": {
       "searchTextWatermark": "Wyszukaj tekst...",
@@ -3533,6 +3538,9 @@
       "colorWordsPerMinute": "Koloruj \"Słów/minutę\", jeśli jest ich zbyt dużo",
       "colorOverlap": "Koloruj nakładające się kody czasowe",
       "colorGapTooShort": "Koloruj odstępy, jeśli są zbyt krótkie",
+      "colorGapInRange": "Zaznacz kolorem, jeśli odstęp mieści się w zakresie",
+      "gapRangeMs": "Zakres odstępu (ms)",
+      "gapRangeFrames": "Zakres odstępu (klatki)",
       "errorBackgroundColor": "Kolor tła błędu",
       "customErrorRules": "Niestandardowe reguły błędów",
       "customErrorRulesHighlight": "Kolorowanie wierszy zgodnie z niestandardową regułą błędów",
@@ -3723,6 +3731,7 @@
       "splitOddLineActionWeightTop": "Szersza górna",
       "splitOddLineActionWeightBottom": "Szersza dolna",
       "splitOddLinesAction": "Dzielenie nieparzystych linii",
+      "splitAtVideoAndTextBoxPositionAllowEmptySecond": "Podział w pozycji wideo i pola tekstowego: umieszczenie kursora na końcu sprawia, że ​​cały tekst pozostaje w pierwszej linii (druga linia pozostaje pusta)",
       "ocrUseWordSplitList": "OCR: użyj listy podziału na słowa",
       "ocrGuessUnknownWords": "OCR: spróbuj odgadnąć nieznane słowa",
       "spellCheckRememberUseAlwaysList": "Sprawdzanie pisowni: zapamiętaj listę \"Zawsze używaj\"",
@@ -3887,6 +3896,7 @@
       "clearBookmarks": "Wyczyść zakładki",
       "goToNextEmptyLine": "Przejdź do następnej pustej linii",
       "toggleWaveformToolbar": "Włącz/wyłącz pasek narzędzi przebiegu fali",
+      "cycleTheme": "Motyw cykliczny",
       "toggleSubtitleGridFormatting": "Włącz/Wyłącz formatowanie siatki (pokaż formatowanie/pokaż tagi/bez formatowania/ukryj tagi)",
       "waveformSetStartAndSetEndOfPreviousMinusGap": "Ustaw początek i koniec poprzedniego minus odstęp",
       "waveformSetEndAndStartOfNextAfterGap": "Ustaw koniec i początek następnego plus odstęp",
@@ -4134,6 +4144,8 @@
       "addName": "Dodaj nazwę",
       "nameAndIgnoreList": "Nazwy/lista ignorowanych",
       "userWords": "Lista słów użytkownika",
+      "removedWords": "Usunięto ze słownika",
+      "addRemovedWord": "Dodaj usunięte słowo",
       "ocrFixList": "Lista poprawek OCR",
       "unableToAddItem": "Nie można dodać elementu, prawdopodobnie już istnieje!",
       "unableToRemoveItem": "Nie można usunąć elementu!"
@@ -4369,7 +4381,7 @@
   },
   "assa": {
     "assaDraw": "Rysuj ASSA",
-    "drawSelectTool": "Zaznaczanie i przesuwanie kształtów",
+    "drawSelectTool": "Zaznaczanie i przesuwanie kształtów)",
     "drawUseShapeForErase": "Użyj kształtu do wymazywania (iclip)",
     "drawLineTool": "Narzędzie linii",
     "drawBezierTool": "Krzywa Béziera",
@@ -4782,6 +4794,8 @@
     "setPositionSafeArea": "Strefa bezpieczna",
     "setPositionCenterLines": "Linie środkowe",
     "setPositionSnapToGuides": "Przyciąganie do prowadnic",
+    "setPositionClickToPlace": "Tekst podąża za kursorem myszy, kliknij, aby ustawić",
+    "setPositionShowSelection": "Pole wyboru i punkt zakotwiczenia",
     "setPositionNudgeHint": "Klawisze strzałek przesuwają o 1 px, z klawiszem Shift – o 10 px",
     "scaleX": "Skala X",
     "scaleY": "Skala Y",
@@ -4926,6 +4940,7 @@
     "lineTooLong": "Linia jest za długa",
     "lineTooWide": "Linia jest za szeroka",
     "gapTooShort": "Zbyt krótki odstęp",
+    "gapInRange": "Odstęp w zakresie",
     "customRule": "Reguła niestandardowa",
     "tooManyLinesHint": "Więcej linii niż maksymalna liczba linii",
     "charactersPerSecondHint": "Znaków na sekundę powyżej maksimum",
@@ -4935,6 +4950,7 @@
     "lineTooWideHint": "Linia jest szersza (w pikselach) niż maksymalna szerokość",
     "overlapHint": "Nakłada się na poprzednią lub następną linię",
     "gapTooShortHint": "Odstęp między poprzednią lub następną linią jest mniejszy niż minimum",
+    "gapInRangeHint": "Odstęp do poprzedniej lub następnej linii mieści się w zakresie, którego należy unikać",
     "customRuleHint": "Tekst pasuje do jednej z Twoich niestandardowych reguł błędów",
     "detailXGreaterThanY": "{0} > {1}",
     "detailXLessThanY": "{0} < {1}",
@@ -4942,6 +4958,8 @@
     "detailOverlapToNext": "do następnej: {0} ms",
     "detailGapToPrevious": "do poprzedniej: {0} < {1} ms",
     "detailGapToNext": "do następnej: {0} < {1} ms",
+    "detailGapInRangeToPrevious": "do poprzedniej: {0} ms (zakres {1}-{2} ms)",
+    "detailGapInRangeToNext": "do następnej: {0} ms (zakres {1}-{2} ms)",
     "tip": "Kliknij dwukrotnie linię (lub naciśnij klawisz Enter), aby uzyskać do niej dostęp. Informacje o tym, które sprawdzenia są uruchamiane oraz jakie są ich limity, można ustawić w sekcji Ustawienia > Ogólne.",
     "exportAsText": "Plik tekstowy (.txt)...",
     "exportAsExcel": "Plik excel (.xlsx)...",
