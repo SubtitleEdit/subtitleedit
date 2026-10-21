@@ -153,6 +153,22 @@ public class BurnedInMaskBuilderTests
     }
 
     [Fact]
+    public void FrameMaskTakesThisFramesDarkShadow()
+    {
+        // The line mask is built over 30 frames; frame 20 also has a dark shadow band right
+        // under the text that the line average does not see. Left on the rim, the models
+        // would fill the hole dark - the per-frame growth must take it.
+        var builder = Build(true, TextFrame);
+        var luma = TextFrame(20);
+        FillRect(luma, 30, 65, 60, 2, 20); // directly under the outline (outline ends at y 64)
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(20, ToRgb(luma), mask));
+        Assert.Equal(255, mask[66 * W + 60]);
+        Assert.Equal(255, mask[67 * W + 60]); // + 1 px rim
+        Assert.Equal(0, mask[75 * W + 60]);
+    }
+
+    [Fact]
     public void RegionIsSnappedToEvenValues()
     {
         // 346 * 33.2% = 115 rows: ffmpeg crops 4:2:0 video to 114, so the builder must too.

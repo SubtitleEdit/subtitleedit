@@ -29,6 +29,7 @@ public sealed class BurnedInMaskBuilder
     private const double PresentFraction = 0.2;
 
     private readonly int _videoWidth;
+    private readonly int _videoHeight;
     private readonly int _rx;
     private readonly int _ry;
     private readonly int _rw;
@@ -61,6 +62,7 @@ public sealed class BurnedInMaskBuilder
         IEnumerable<(long StartFrame, long EndFrame)> spans, int brightnessMinimum, bool requireOutline, int grow)
     {
         _videoWidth = videoWidth;
+        _videoHeight = videoHeight;
         // Even position and size: ffmpeg's crop rounds odd values down for 4:2:0 video, and the
         // decoded frames must have exactly the size the builder reads (an odd scan area height
         // otherwise shifted every frame after the first and garbled all masks).
@@ -202,15 +204,105 @@ public sealed class BurnedInMaskBuilder
                 continue;
             }
 
+            int x0 = int.MaxValue, y0 = int.MaxValue, x1 = 0, y1 = 0;
             for (var r = 0; r < line.MaskRuns.Length; r += 3)
             {
-                mask.Slice((_ry + line.MaskRuns[r]) * _videoWidth + _rx + line.MaskRuns[r + 1], line.MaskRuns[r + 2]).Fill(255);
+                var y = _ry + line.MaskRuns[r];
+                var x = _rx + line.MaskRuns[r + 1];
+                mask.Slice(y * _videoWidth + x, line.MaskRuns[r + 2]).Fill(255);
+                x0 = Math.Min(x0, x);
+                y0 = Math.Min(y0, y);
+                x1 = Math.Max(x1, x + line.MaskRuns[r + 2]);
+                y1 = Math.Max(y1, y + 1);
             }
 
+            GrowIntoDarkPixels(rgb, mask, x0, y0, x1, y1);
             any = true;
         }
 
         return any;
+    }
+
+    // Per frame, the mask also takes the text's dark outline / drop shadow in *this* frame:
+    // it grows through pixels darker than DarkOutlineMaximum, a few px (by video height), then
+    // one more px. The per-line growth uses the line's average brightness, which misses the
+    // outline when the line spans a scene cut; any outline left on the rim of the hole makes
+    // the models fill it dark (a black bar on a bright background).
+    private void GrowIntoDarkPixels(ReadOnlySpan<byte> rgb, Span<byte> mask, int x0, int y0, int x1, int y1)
+    {
+        var steps = _outlineSteps;
+        x0 = Math.Max(0, x0 - steps - 1);
+        y0 = Math.Max(0, y0 - steps - 1);
+        x1 = Math.Min(_videoWidth, x1 + steps + 1);
+        y1 = Math.Min(_videoHeight, y1 + steps + 1);
+        var w = x1 - x0;
+        var h = y1 - y0;
+        if (w <= 0 || h <= 0)
+        {
+            return;
+        }
+
+        var cur = new bool[w * h];
+        var dark = new bool[w * h];
+        for (var y = 0; y < h; y++)
+        {
+            for (var x = 0; x < w; x++)
+            {
+                var i = (y0 + y) * _videoWidth + x0 + x;
+                cur[y * w + x] = mask[i] != 0;
+                var o = i * 3;
+                dark[y * w + x] = (rgb[o] * 299 + rgb[o + 1] * 587 + rgb[o + 2] * 114) / 1000 <= DarkOutlineMaximum;
+            }
+        }
+
+        for (var step = 0; step <= steps; step++)
+        {
+            var next = (bool[])cur.Clone();
+            var last = step == steps; // final step: plain 1 px dilation
+            for (var y = 0; y < h; y++)
+            {
+                for (var x = 0; x < w; x++)
+                {
+                    var i = y * w + x;
+                    if (cur[i] || (!last && !dark[i]))
+                    {
+                        continue;
+                    }
+
+                    for (var dy = -1; dy <= 1 && !next[i]; dy++)
+                    {
+                        var yy = y + dy;
+                        if (yy < 0 || yy >= h)
+                        {
+                            continue;
+                        }
+
+                        for (var dx = -1; dx <= 1; dx++)
+                        {
+                            var xx = x + dx;
+                            if (xx >= 0 && xx < w && cur[yy * w + xx])
+                            {
+                                next[i] = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            cur = next;
+        }
+
+        for (var y = 0; y < h; y++)
+        {
+            for (var x = 0; x < w; x++)
+            {
+                if (cur[y * w + x])
+                {
+                    mask[(y0 + y) * _videoWidth + x0 + x] = 255;
+                }
+            }
+        }
     }
 
     private bool IsTextPresent(LineMask line, ReadOnlySpan<byte> rgb)
