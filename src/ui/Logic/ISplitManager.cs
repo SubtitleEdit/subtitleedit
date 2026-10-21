@@ -32,7 +32,12 @@ public interface ISplitManager
     /// <see cref="SubtitleLineViewModel.OriginalText"/> too. With null the original is copied
     /// whole onto both halves, which is what a read-only reference wants.
     /// </summary>
-    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode, OriginalSplit? original);
+    /// <param name="allowEmptySecond">
+    /// A <paramref name="textIndex"/> at the end of the text keeps all of it in the first half and
+    /// leaves the second empty (SE 4's split at video and text box position, #16095) instead of
+    /// falling back to the line break.
+    /// </param>
+    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode, OriginalSplit? original, bool allowEmptySecond = false);
 }
 
 public class SplitManager : ISplitManager
@@ -42,7 +47,7 @@ public class SplitManager : ISplitManager
         Split(subtitles, subtitle, videoPositionSeconds, textIndex, languageCode, original: null);
     }
 
-    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode, OriginalSplit? original)
+    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode, OriginalSplit? original, bool allowEmptySecond = false)
     {
         var idx = subtitles.IndexOf(subtitle);
         if (idx < 0 || idx >= subtitles.Count)
@@ -59,7 +64,9 @@ public class SplitManager : ISplitManager
             && videoPositionSeconds > subtitle.StartTime.TotalSeconds
             && videoPositionSeconds < subtitle.EndTime.TotalSeconds;
 
-        var (firstText, secondText) = SplitText(subtitle.Text, textIndex, languageCode);
+        var (firstText, secondText) = allowEmptySecond && IsAtEndOfText(subtitle.Text, textIndex)
+            ? (subtitle.Text.Trim(), string.Empty)
+            : SplitText(subtitle.Text, textIndex, languageCode);
         subtitle.Text = firstText;
         newSubtitle.Text = secondText;
 
@@ -153,6 +160,14 @@ public class SplitManager : ISplitManager
         newSubtitle.SetStartTimeOnly(TimeSpan.FromMilliseconds(newSubtitleStartMs));
 
         subtitles.Insert(idx + 1, newSubtitle);
+    }
+
+    /// <summary>True when <paramref name="textIndex"/> has text before it and only whitespace (or nothing) after it.</summary>
+    private static bool IsAtEndOfText(string text, int textIndex)
+    {
+        return textIndex > 0 && textIndex <= text.Length &&
+               !string.IsNullOrWhiteSpace(text.Substring(0, textIndex)) &&
+               string.IsNullOrWhiteSpace(text.Substring(textIndex));
     }
 
     /// <summary>
