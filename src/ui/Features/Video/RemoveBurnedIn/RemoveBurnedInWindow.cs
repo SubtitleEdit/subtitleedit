@@ -53,8 +53,14 @@ public class RemoveBurnedInWindow : Window
         var temporal = EditorChrome.MakeSwitchRow(nameof(vm.Temporal), l.TemporalConsistency);
         ToolTip.SetTip(temporal, l.TemporalConsistencyHint);
 
+        var modelCombo = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel));
+        modelCombo.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.Models)));
+        modelCombo.MinWidth = 220;
+        AutomationProperties.SetName(modelCombo, l.Model);
+
         var maskRows = new StackPanel { Spacing = 8 };
         maskRows.Children.Add(info);
+        maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.Model, modelCombo, LabelWidth));
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Video.VideoOcr.TextBrightnessMinimum, brightness, LabelWidth));
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.GrowMask, grow, LabelWidth));
         maskRows.Children.Add(outline);

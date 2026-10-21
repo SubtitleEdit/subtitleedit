@@ -48,5 +48,7 @@ public class RemoveBurnedInWindowTests : IDisposable
         Assert.Equal(200, vm.BrightnessMinimum);
         Assert.Equal(BurnedInMaskBuilder.DefaultGrow(1080), vm.Grow);
         Assert.EndsWith("movie.no-subs.mp4", vm.OutputFileName.Replace('\\', '/'));
+        Assert.Equal(2, vm.Models.Count);
+        Assert.NotNull(vm.SelectedModel);
     }
 }

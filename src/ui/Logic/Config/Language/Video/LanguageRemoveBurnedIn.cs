@@ -6,6 +6,9 @@ public class LanguageRemoveBurnedIn
     public string RemoveBurnedInDotDotDot { get; set; }
     public string Info { get; set; }
     public string TextMask { get; set; }
+    public string Model { get; set; }
+    public string ModelLama { get; set; }
+    public string ModelMiGan { get; set; }
     public string RequireOutline { get; set; }
     public string RequireOutlineHint { get; set; }
     public string GrowMask { get; set; }
@@ -36,6 +39,9 @@ public class LanguageRemoveBurnedIn
         RemoveBurnedInDotDotDot = "Remove burned-in subtitles...";
         Info = "Paints over the burned-in subtitle text found by OCR with the MI-GAN inpainting model (CrispEmbed). Only the scan area is changed, and only while an OCR line is shown. The video is re-encoded; the audio is copied.";
         TextMask = "Text mask";
+        Model = "Model";
+        ModelLama = "LaMa - best quality, slower";
+        ModelMiGan = "MI-GAN - fast";
         RequireOutline = "Text has a dark outline";
         RequireOutlineHint = "Only remove bright pixels next to a dark outline - keeps bright picture details out of the mask";
         GrowMask = "Grow mask (pixels)";

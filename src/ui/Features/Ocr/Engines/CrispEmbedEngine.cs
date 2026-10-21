@@ -116,21 +116,35 @@ public static class CrispEmbedEngine
         return File.Exists(GetServerExecutable());
     }
 
+    public const string InpaintModelLama = "lama-big-f16.gguf";
+    public const string InpaintModelMiGan = "migan-512-f16.gguf";
+
     /// <summary>
-    /// MI-GAN image inpainting (Picsart-AI-Research, MIT code + weights), used to remove
-    /// burned-in subtitles after Video OCR. Not an OCR backend - kept out of <see cref="GetBackends"/>.
-    /// Needs a CrispEmbed build with --inpaint-stream (see <see cref="SupportsInpainting"/>).
+    /// Image inpainting models used to remove burned-in subtitles after Video OCR - not OCR
+    /// backends, so kept out of <see cref="GetBackends"/>. Needs a CrispEmbed build with
+    /// --inpaint-stream (see <see cref="SupportsInpainting"/>).
+    /// <list type="bullet">
+    /// <item>LaMa (big-lama, advimman/lama, Apache-2.0): best quality, ~1 s per 512x512 window on Metal.</item>
+    /// <item>MI-GAN (Picsart-AI-Research, MIT): ~7x faster, visibly worse colours on large masks.</item>
+    /// </list>
     /// </summary>
     public static CrispEmbedBackend GetInpaintBackend()
     {
         return new CrispEmbedBackend
         {
-            Name = "MI-GAN",
+            Name = "Inpainting",
             Models = new List<CrispEmbedModel>
             {
                 new()
                 {
-                    Name = "migan-512-f16.gguf",
+                    Name = InpaintModelLama,
+                    Size = "102 MB",
+                    Url = "https://huggingface.co/niksedk/big-lama-GGUF/resolve/main/lama-big-f16.gguf",
+                    MinimumSizeBytes = 90_000_000,
+                },
+                new()
+                {
+                    Name = InpaintModelMiGan,
                     Size = "15 MB",
                     Url = "https://huggingface.co/niksedk/migan-512-GGUF/resolve/main/migan-512-f16.gguf",
                     MinimumSizeBytes = 10_000_000,

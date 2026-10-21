@@ -26,6 +26,14 @@ namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 
 public partial class RemoveBurnedInViewModel : ObservableObject
 {
+    public sealed class ModelDisplay
+    {
+        public required CrispEmbedModel Model { get; init; }
+        public required string DisplayName { get; init; }
+
+        public override string ToString() => $"{DisplayName} ({Model.Size})";
+    }
+
     public sealed class LineDisplay
     {
         public required TimeSpan Start { get; init; }
@@ -36,6 +44,8 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             $"{Start:hh\\:mm\\:ss\\.fff}  {Text.Replace(Environment.NewLine, " ").Replace("\n", " ")}";
     }
 
+    [ObservableProperty] private ObservableCollection<ModelDisplay> _models = new();
+    [ObservableProperty] private ModelDisplay? _selectedModel;
     [ObservableProperty] private string _outputFileName = string.Empty;
     [ObservableProperty] private int _brightnessMinimum;
     [ObservableProperty] private bool _requireOutline;
@@ -92,6 +102,15 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         _ocrFramesPerSecond = ocrFramesPerSecond;
 
         var settings = Se.Settings.Video.VideoOcr;
+        var backend = CrispEmbedEngine.GetInpaintBackend();
+        Models = new ObservableCollection<ModelDisplay>(backend.Models.Select(m => new ModelDisplay
+        {
+            Model = m,
+            DisplayName = m.Name == CrispEmbedEngine.InpaintModelMiGan
+                ? Se.Language.Video.RemoveBurnedIn.ModelMiGan
+                : Se.Language.Video.RemoveBurnedIn.ModelLama,
+        }));
+        SelectedModel = Models.FirstOrDefault(m => m.Model.Name == settings.RemoveBurnedInModel) ?? Models.First();
         BrightnessMinimum = brightnessMinimum > 0 ? brightnessMinimum : 190;
         RequireOutline = settings.RemoveBurnedInRequireOutline;
         Grow = settings.RemoveBurnedInGrow > 0 ? settings.RemoveBurnedInGrow : BurnedInMaskBuilder.DefaultGrow(videoHeight);
@@ -153,16 +172,16 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         ModelFileName = GetModelFileName(),
     };
 
-    private static string GetModelFileName()
+    private string GetModelFileName()
     {
         var backend = CrispEmbedEngine.GetInpaintBackend();
-        return backend.GetModelPath(backend.Models[0]);
+        return backend.GetModelPath(SelectedModel?.Model ?? backend.Models[0]);
     }
 
     private async Task<bool> EnsureEngineReady()
     {
         var backend = CrispEmbedEngine.GetInpaintBackend();
-        if (!await CrispEmbedDownloadHelper.EnsureReadyAsync(Window!, _windowService, backend, backend.Models[0]))
+        if (!await CrispEmbedDownloadHelper.EnsureReadyAsync(Window!, _windowService, backend, SelectedModel?.Model ?? backend.Models[0]))
         {
             return false;
         }
@@ -505,6 +524,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         settings.RemoveBurnedInGrow = Grow == BurnedInMaskBuilder.DefaultGrow(_videoHeight) ? 0 : Grow;
         settings.RemoveBurnedInTemporal = Temporal;
         settings.RemoveBurnedInCrf = Crf;
+        settings.RemoveBurnedInModel = SelectedModel?.Model.Name ?? CrispEmbedEngine.InpaintModelLama;
         Se.SaveSettings();
     }
 

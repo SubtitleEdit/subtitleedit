@@ -45,6 +45,9 @@ public class SeVideoOcr
     public bool RemoveBurnedInTemporal { get; set; }
     public int RemoveBurnedInCrf { get; set; }
 
+    /// <summary>Inpainting model file name (CrispEmbedEngine.InpaintModelLama / InpaintModelMiGan).</summary>
+    public string RemoveBurnedInModel { get; set; }
+
     public SeVideoOcr()
     {
         // Unlike the other two, this setting stores the enum name rather than the display name.
@@ -90,5 +93,6 @@ public class SeVideoOcr
         RemoveBurnedInRequireOutline = true;
         RemoveBurnedInTemporal = true;
         RemoveBurnedInCrf = 18;
+        RemoveBurnedInModel = CrispEmbedEngine.InpaintModelLama;
     }
 }
