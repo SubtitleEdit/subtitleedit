@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -294,6 +295,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 _buttonFullScreenCollapse.IsVisible = value;
                 _buttonFullScreen.IsVisible = !value;
                 _isFullScreen = value;
+                ApplyFullScreenLayout();
 
                 // Start or stop the auto-hide mechanism based on full screen state
                 if (value)
@@ -343,6 +345,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private double _probedDuration;
         private int _durationProbeGeneration;
         private readonly Grid _gridProgress; // Reference to the controls grid
+        private readonly LayoutTransformControl _controlsScale; // scales the controls up in full screen
+        private readonly Border _controlsBar; // holds the controls; fades, and overlays the video in full screen
         private DispatcherTimer? _autoHideTimer;
         private bool _isPlaybackSpeedMenuOpen;
 
@@ -610,8 +614,21 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 Margin = new Thickness(10, 4)
             };
-            Grid.SetRow(_gridProgress, 1);
-            mainGrid.Children.Add(_gridProgress);
+
+            // In full screen the controls are scaled up, laid over the video when the player
+            // allows it, and fade in and out instead of popping (#16306) - see ApplyFullScreenLayout.
+            _controlsScale = new LayoutTransformControl { Child = _gridProgress };
+            _controlsBar = new Border
+            {
+                Child = _controlsScale,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Transitions =
+                [
+                    new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(250) },
+                ],
+            };
+            Grid.SetRow(_controlsBar, 1);
+            mainGrid.Children.Add(_controlsBar);
 
             // Attach a tunnel handler so we see clicks even if child handles them.
             mainGrid.AddHandler(InputElement.PointerPressedEvent, OnMainGridPointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -964,21 +981,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             }
 
             // If the click is inside the controls row (_gridProgress), ignore it
-            var inControls = false;
-            try
-            {
-                var ptInControls = e.GetPosition(_gridProgress);
-                inControls =
-                    ptInControls.X >= 0 && ptInControls.Y >= 0 &&
-                    ptInControls.X <= _gridProgress.Bounds.Width &&
-                    ptInControls.Y <= _gridProgress.Bounds.Height;
-            }
-            catch
-            {
-                // ignore
-            }
-
-            if (inControls)
+            if (IsPointerOverControls(e))
             {
                 return;
             }
@@ -1019,6 +1022,27 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             }
         }
 
+        // Faded-out full-screen controls don't count: a click there goes to the video.
+        private bool IsPointerOverControls(PointerEventArgs e)
+        {
+            if (!_gridProgress.IsVisible || !_controlsBar.IsVisible || !_controlsBar.IsHitTestVisible)
+            {
+                return false;
+            }
+
+            try
+            {
+                var ptInControls = e.GetPosition(_gridProgress);
+                return ptInControls.X >= 0 && ptInControls.Y >= 0 &&
+                       ptInControls.X <= _gridProgress.Bounds.Width &&
+                       ptInControls.Y <= _gridProgress.Bounds.Height;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private void OnVideoWheelChanged(object? sender, PointerWheelEventArgs e)
         {
             if (!WheelToSeek)
@@ -1027,22 +1051,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             }
 
             // Ignore wheel events over the controls row (sliders, buttons).
-            try
+            if (IsPointerOverControls(e))
             {
-                if (_gridProgress.IsVisible)
-                {
-                    var ptInControls = e.GetPosition(_gridProgress);
-                    if (ptInControls.X >= 0 && ptInControls.Y >= 0 &&
-                        ptInControls.X <= _gridProgress.Bounds.Width &&
-                        ptInControls.Y <= _gridProgress.Bounds.Height)
-                    {
-                        return;
-                    }
-                }
-            }
-            catch
-            {
-                // ignore
+                return;
             }
 
             var delta = e.Delta.Y;
@@ -1885,7 +1896,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         {
             Dispatcher.UIThread.Post(() =>
             {
-                _gridProgress.IsVisible = true;
+                _controlsBar.IsVisible = true;
+                _controlsBar.IsHitTestVisible = true;
+                _controlsBar.Opacity = 1;
                 SetVideoCursorHidden(false);
             });
         }
@@ -1894,9 +1907,34 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         {
             Dispatcher.UIThread.Post(() =>
             {
-                _gridProgress.IsVisible = false;
+                // Faded out but still laid out, so the video keeps its size (#16306). With
+                // "hide controls in full screen" they are never shown, so the video gets the room.
+                _controlsBar.IsHitTestVisible = false;
+                _controlsBar.Opacity = 0;
+                _controlsBar.IsVisible = !Se.Settings.Video.FullscreenHideControls;
                 SetVideoCursorHidden(true);
             });
+        }
+
+        internal const double FullScreenControlsScale = 1.4;
+
+        /// <summary>
+        /// Full screen: bigger controls that are easier to hit on a large screen, laid over the
+        /// bottom of the video on a translucent bar (#16306). A native player window (mpv "wid",
+        /// VLC) is drawn on top of anything Avalonia draws, so with those the controls keep their
+        /// own row below the video - which stays put when they fade out.
+        /// </summary>
+        private void ApplyFullScreenLayout()
+        {
+            _controlsScale.LayoutTransform = _isFullScreen
+                ? new ScaleTransform(FullScreenControlsScale, FullScreenControlsScale)
+                : null;
+
+            var overlay = _isFullScreen && PlayerContent is not NativeControlHost;
+            Grid.SetRow(_controlsBar, overlay ? 0 : 1);
+            _controlsBar.Background = overlay && EditorChrome.WindowBrush is ISolidColorBrush window
+                ? new SolidColorBrush(window.Color, 0.8)
+                : null;
         }
 
         /// <summary>
