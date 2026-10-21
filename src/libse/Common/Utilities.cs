@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using SkiaSharp;
@@ -1374,19 +1375,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
-                words.Sort();
-
-                if (userWords.DocumentElement != null)
-                {
-                    userWords.DocumentElement.RemoveAll();
-                    foreach (string w in words)
-                    {
-                        XmlNode node = userWords.CreateElement("word");
-                        node.InnerText = w;
-                        userWords.DocumentElement.AppendChild(node);
-                    }
-                }
-
+                // Only the accepted words are rewritten - RemoveAll() also dropped the
+                // <removed> section (words the dictionary should reject).
+                UserDictionaryXml.WriteWords(userWords, words);
                 userWords.Save(userWordsXmlFileName);
             }
         }
@@ -1437,15 +1428,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                         words.Add(word);
                     }
 
-                    words.Sort();
-
-                    userWords.DocumentElement.RemoveAll();
-                    foreach (string w in words)
-                    {
-                        XmlNode node = userWords.CreateElement("word");
-                        node.InnerText = w;
-                        userWords.DocumentElement.AppendChild(node);
-                    }
+                    UserDictionaryXml.WriteWords(userWords, words);
+                    UserDictionaryXml.RemoveFromRemovedWords(userWords, word);
                 }
 
                 userWords.Save(userWordsXmlFileName);

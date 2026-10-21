@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
@@ -53,6 +53,7 @@ public class WordListsTypeAheadTests : IDisposable
 
         vm.Names = new ObservableCollection<string>(["Anna", "Mark", "Mette", "Zoe"]);
         vm.UserWords = new ObservableCollection<string>(["apple", "melon", "mesh", "zebra"]);
+        vm.RemovedWords = new ObservableCollection<string>(["moetje", "watje", "weetje"]);
         vm.OcrFixes = new ObservableCollection<OcrFixItem>([new("ab", "x"), new("me", "y"), new("rn", "m")]);
         Dispatcher.UIThread.RunJobs();
 
@@ -103,7 +104,7 @@ public class WordListsTypeAheadTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void UserWordsAndOcrFixes_JumpToFirstMatch()
+    public void UserWordsRemovedWordsAndOcrFixes_JumpToFirstMatch()
     {
         var (window, vm, listBoxes) = ShowWindow();
         try
@@ -114,6 +115,11 @@ public class WordListsTypeAheadTests : IDisposable
             Assert.Equal("mesh", vm.SelectedUserWord);
 
             FocusItem(listBoxes[2]);
+            window.KeyTextInput("we");
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("weetje", vm.SelectedRemovedWord);
+
+            FocusItem(listBoxes[3]);
             window.KeyTextInput("r");
             Dispatcher.UIThread.RunJobs();
             Assert.Equal("rn", vm.SelectedOcrFix?.Find);
