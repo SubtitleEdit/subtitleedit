@@ -117,6 +117,62 @@ public static class CrispEmbedEngine
     }
 
     /// <summary>
+    /// MI-GAN image inpainting (Picsart-AI-Research, MIT code + weights), used to remove
+    /// burned-in subtitles after Video OCR. Not an OCR backend - kept out of <see cref="GetBackends"/>.
+    /// Needs a CrispEmbed build with --inpaint-stream (see <see cref="SupportsInpainting"/>).
+    /// </summary>
+    public static CrispEmbedBackend GetInpaintBackend()
+    {
+        return new CrispEmbedBackend
+        {
+            Name = "MI-GAN",
+            Models = new List<CrispEmbedModel>
+            {
+                new()
+                {
+                    Name = "migan-512-f16.gguf",
+                    Size = "15 MB",
+                    Url = "https://huggingface.co/niksedk/migan-512-GGUF/resolve/main/migan-512-f16.gguf",
+                    MinimumSizeBytes = 10_000_000,
+                },
+            },
+        };
+    }
+
+    /// <summary>True when the installed CLI knows --inpaint-stream (CrispEmbed with MI-GAN).</summary>
+    public static bool SupportsInpainting()
+    {
+        var exe = GetCliExecutable();
+        if (!File.Exists(exe))
+        {
+            return false;
+        }
+
+        try
+        {
+            using var process = new System.Diagnostics.Process
+            {
+                StartInfo = new System.Diagnostics.ProcessStartInfo(exe, "--help")
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                },
+            };
+            process.Start();
+            var stdout = process.StandardOutput.ReadToEndAsync();
+            var stderr = process.StandardError.ReadToEndAsync();
+            process.WaitForExit(15_000);
+            return (stdout.Result + stderr.Result).Contains("--inpaint-stream", StringComparison.Ordinal);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     /// The OCR backends offered in Subtitle Edit - the CrispEmbed models best suited for
     /// subtitle OCR. Model URLs/sizes match cstr's HuggingFace repos as referenced by the
     /// CrispEmbed model registry.

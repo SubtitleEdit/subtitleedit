@@ -1,0 +1,367 @@
+using System;
+using System.Collections.Generic;
+
+namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
+
+/// <summary>
+/// Builds the inpainting masks for burned-in subtitles from the Video OCR result: one mask per
+/// OCR line, taken from the scan area of every frame in the line's (padded) time span.
+/// <para>
+/// A pixel is subtitle text when it is at least <c>brightnessMinimum</c> bright in at least half
+/// of the span's frames - the text stands still while the picture moves, so moving bright
+/// background drops out - and, optionally, has a pixel within a few px that is dark on average
+/// over the span (the text outline). The mask is that text grown by <c>grow</c> px, which also
+/// covers the outline and anti-aliasing.
+/// </para>
+/// <para>
+/// OCR timings are only as exact as its sample rate, so spans are padded. Per frame,
+/// <see cref="GetFrameMask"/> applies a line's mask only when most of its text pixels are bright
+/// in that very frame; frames inside the padding without the text stay untouched (and serve as
+/// clean background for the temporal fill).
+/// </para>
+/// </summary>
+public sealed class BurnedInMaskBuilder
+{
+    public const int DarkOutlineMaximum = 80;
+    private const double StableFraction = 0.5;
+    private const double PresentFraction = 0.5;
+
+    private readonly int _videoWidth;
+    private readonly int _rx;
+    private readonly int _ry;
+    private readonly int _rw;
+    private readonly int _rh;
+    private readonly int _brightnessMinimum;
+    private readonly bool _requireOutline;
+    private readonly int _outlineRadius;
+    private readonly int _grow;
+    private readonly List<LineMask> _lines = new();
+
+    private sealed class LineMask
+    {
+        public long StartFrame;
+        public long EndFrame;
+        public int Frames;
+        public ushort[]? BrightCount;
+        public uint[]? LumaSum;
+
+        // Final result, in scan-area coordinates: a sample of the text pixels (presence check,
+        // indexes into the scan area) and the grown mask as row runs (y, x, length) - compact
+        // enough to keep for every line of a film.
+        public int[] TextPixels = Array.Empty<int>();
+        public int[] MaskRuns = Array.Empty<int>();
+        public bool Done;
+    }
+
+    /// <param name="spans">Frame spans (inclusive) of the OCR lines, already padded.</param>
+    public BurnedInMaskBuilder(int videoWidth, int videoHeight, int regionX, int regionY, int regionWidth, int regionHeight,
+        IEnumerable<(long StartFrame, long EndFrame)> spans, int brightnessMinimum, bool requireOutline, int grow)
+    {
+        _videoWidth = videoWidth;
+        _rx = Math.Clamp(regionX, 0, videoWidth - 1);
+        _ry = Math.Clamp(regionY, 0, videoHeight - 1);
+        _rw = Math.Clamp(regionWidth, 1, videoWidth - _rx);
+        _rh = Math.Clamp(regionHeight, 1, videoHeight - _ry);
+        _brightnessMinimum = brightnessMinimum > 0 ? brightnessMinimum : 190;
+        _requireOutline = requireOutline;
+        _outlineRadius = Math.Max(2, (int)Math.Round(videoHeight / 270.0));
+        _grow = Math.Max(0, grow);
+        foreach (var (start, end) in spans)
+        {
+            if (end >= start)
+            {
+                _lines.Add(new LineMask { StartFrame = Math.Max(0, start), EndFrame = end });
+            }
+        }
+
+        _lines.Sort((a, b) => a.StartFrame.CompareTo(b.StartFrame));
+    }
+
+    public int RegionX => _rx;
+    public int RegionY => _ry;
+    public int RegionWidth => _rw;
+    public int RegionHeight => _rh;
+
+    /// <summary>Default mask growth for a video height: covers a typical 2-4 px outline at 1080p.</summary>
+    public static int DefaultGrow(int videoHeight) => Math.Max(3, (int)Math.Round(videoHeight / 180.0));
+
+    /// <summary>True when the frame is inside any line span (the caller only needs to feed those).</summary>
+    public bool NeedsFrame(long frameIndex)
+    {
+        foreach (var line in _lines)
+        {
+            if (line.StartFrame > frameIndex)
+            {
+                break;
+            }
+
+            if (frameIndex <= line.EndFrame)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Feeds the 8-bit luma of the scan area (regionWidth x regionHeight, row-major) of one
+    /// frame. Frames must come in increasing order; lines whose span ended are finalized.
+    /// </summary>
+    public void AddRegionFrame(long frameIndex, ReadOnlySpan<byte> regionLuma)
+    {
+        var n = _rw * _rh;
+        foreach (var line in _lines)
+        {
+            if (line.StartFrame > frameIndex)
+            {
+                break;
+            }
+
+            if (line.Done)
+            {
+                continue;
+            }
+
+            if (frameIndex > line.EndFrame)
+            {
+                Finalize(line);
+                continue;
+            }
+
+            line.BrightCount ??= new ushort[n];
+            line.LumaSum ??= new uint[n];
+            for (var i = 0; i < n; i++)
+            {
+                var v = regionLuma[i];
+                line.LumaSum[i] += v;
+                if (v >= _brightnessMinimum && line.BrightCount[i] < ushort.MaxValue)
+                {
+                    line.BrightCount[i]++;
+                }
+            }
+
+            line.Frames++;
+        }
+    }
+
+    /// <summary>Finalizes every line (call after the last frame).</summary>
+    public void Finish()
+    {
+        foreach (var line in _lines)
+        {
+            if (!line.Done)
+            {
+                Finalize(line);
+            }
+        }
+    }
+
+    /// <summary>Number of lines with a non-empty mask.</summary>
+    public int LinesWithText
+    {
+        get
+        {
+            var count = 0;
+            foreach (var line in _lines)
+            {
+                if (line.MaskRuns.Length > 0)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+    }
+
+    /// <summary>
+    /// Writes the full-frame mask (videoWidth x videoHeight, 255 = fill) for a frame, given the
+    /// frame's RGB24 pixels for the presence check. Returns false (mask untouched) when no line
+    /// with visible text covers the frame. <paramref name="mask"/> must be cleared by the caller.
+    /// </summary>
+    public bool GetFrameMask(long frameIndex, ReadOnlySpan<byte> rgb, Span<byte> mask)
+    {
+        var any = false;
+        foreach (var line in _lines)
+        {
+            if (line.StartFrame > frameIndex)
+            {
+                break;
+            }
+
+            if (frameIndex > line.EndFrame || line.MaskRuns.Length == 0 || !IsTextPresent(line, rgb))
+            {
+                continue;
+            }
+
+            for (var r = 0; r < line.MaskRuns.Length; r += 3)
+            {
+                mask.Slice((_ry + line.MaskRuns[r]) * _videoWidth + _rx + line.MaskRuns[r + 1], line.MaskRuns[r + 2]).Fill(255);
+            }
+
+            any = true;
+        }
+
+        return any;
+    }
+
+    private bool IsTextPresent(LineMask line, ReadOnlySpan<byte> rgb)
+    {
+        var bright = 0;
+        foreach (var p in line.TextPixels)
+        {
+            var o = ((_ry + p / _rw) * _videoWidth + _rx + p % _rw) * 3;
+            if ((rgb[o] * 299 + rgb[o + 1] * 587 + rgb[o + 2] * 114) / 1000 >= _brightnessMinimum)
+            {
+                bright++;
+            }
+        }
+
+        return bright >= line.TextPixels.Length * PresentFraction;
+    }
+
+    private void Finalize(LineMask line)
+    {
+        line.Done = true;
+        if (line.Frames == 0 || line.BrightCount == null || line.LumaSum == null)
+        {
+            return;
+        }
+
+        var n = _rw * _rh;
+        var minCount = Math.Max(1, (int)Math.Ceiling(line.Frames * StableFraction));
+        var text = new bool[n];
+        var any = false;
+        for (var i = 0; i < n; i++)
+        {
+            if (line.BrightCount[i] >= minCount)
+            {
+                text[i] = true;
+                any = true;
+            }
+        }
+
+        if (any && _requireOutline)
+        {
+            var dark = new bool[n];
+            for (var i = 0; i < n; i++)
+            {
+                dark[i] = line.LumaSum[i] / (uint)line.Frames <= DarkOutlineMaximum;
+            }
+
+            var nearDark = Dilate(dark, _outlineRadius);
+            any = false;
+            for (var i = 0; i < n; i++)
+            {
+                text[i] &= nearDark[i];
+                any |= text[i];
+            }
+        }
+
+        line.BrightCount = null;
+        line.LumaSum = null;
+        if (!any)
+        {
+            return;
+        }
+
+        var grown = Dilate(text, _grow);
+        var textCount = 0;
+        foreach (var t in text)
+        {
+            if (t)
+            {
+                textCount++;
+            }
+        }
+
+        const int maxSamples = 4000;
+        var step = Math.Max(1, textCount / maxSamples);
+        var textPixels = new List<int>();
+        var k = 0;
+        for (var i = 0; i < n; i++)
+        {
+            if (text[i] && k++ % step == 0)
+            {
+                textPixels.Add(i);
+            }
+        }
+
+        var runs = new List<int>();
+        for (var y = 0; y < _rh; y++)
+        {
+            var x = 0;
+            while (x < _rw)
+            {
+                if (!grown[y * _rw + x])
+                {
+                    x++;
+                    continue;
+                }
+
+                var start = x;
+                while (x < _rw && grown[y * _rw + x])
+                {
+                    x++;
+                }
+
+                runs.Add(y);
+                runs.Add(start);
+                runs.Add(x - start);
+            }
+        }
+
+        line.TextPixels = textPixels.ToArray();
+        line.MaskRuns = runs.ToArray();
+    }
+
+    // Square dilation (max filter) of a scan-area bitmap, separable.
+    private bool[] Dilate(bool[] source, int radius)
+    {
+        if (radius <= 0)
+        {
+            return (bool[])source.Clone();
+        }
+
+        var tmp = new bool[source.Length];
+        for (var y = 0; y < _rh; y++)
+        {
+            var last = int.MinValue / 2;
+            for (var x = 0; x < _rw + radius; x++)
+            {
+                if (x < _rw && source[y * _rw + x])
+                {
+                    last = x;
+                }
+
+                var ox = x - radius;
+                if (ox >= 0 && x - last <= 2 * radius)
+                {
+                    tmp[y * _rw + ox] = true;
+                }
+            }
+        }
+
+        var result = new bool[source.Length];
+        for (var x = 0; x < _rw; x++)
+        {
+            var last = int.MinValue / 2;
+            for (var y = 0; y < _rh + radius; y++)
+            {
+                if (y < _rh && tmp[y * _rw + x])
+                {
+                    last = y;
+                }
+
+                var oy = y - radius;
+                if (oy >= 0 && y - last <= 2 * radius)
+                {
+                    result[oy * _rw + x] = true;
+                }
+            }
+        }
+
+        return result;
+    }
+}

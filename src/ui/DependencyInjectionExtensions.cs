@@ -178,6 +178,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SpeakFromLine;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SkipNoiseLines;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
+using Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
@@ -434,6 +435,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<CutVideoViewModel>();
         collection.AddTransient<CutVideoPreviewViewModel>();
         collection.AddTransient<VideoOcrViewModel>();
+        collection.AddTransient<RemoveBurnedInViewModel>();
         collection.AddTransient<DCinemaInteropPropertiesViewModel>();
         collection.AddTransient<DCinemaSmptePropertiesViewModel>();
         collection.AddTransient<DownloadFfmpegViewModel>();
