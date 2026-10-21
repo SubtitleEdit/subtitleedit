@@ -68,7 +68,7 @@ public class BurnedInMaskBuilderTests
         Assert.Equal(255, mask[59 * W + 60]); // text
         Assert.Equal(255, mask[54 * W + 60]); // outline (1 px above the text)
         Assert.Equal(255, mask[64 * W + 28]); // grown corner (text ends at y 62 / x 30, grow 2)
-        Assert.Equal(0, mask[65 * W + 27]); // just outside the grown mask
+        Assert.Equal(0, mask[70 * W + 20]); // background outside text + outline + grow
         Assert.Equal(0, mask[70 * W + 60]); // background below
         Assert.Equal(0, mask[20 * W + 60]); // outside the scan area
     }
@@ -131,6 +131,36 @@ public class BurnedInMaskBuilderTests
         var builder = Build(true, _ => Frame());
         Assert.Equal(0, builder.LinesWithText);
         Assert.False(builder.GetFrameMask(3, ToRgb(Frame()), new byte[W * H]));
+    }
+
+    [Fact]
+    public void ThickOutlineIsCovered()
+    {
+        // 5 px black box around the text; grow is only 2, the outline growth takes the rest.
+        byte[] F(int i)
+        {
+            var luma = Frame();
+            FillRect(luma, 25, 50, 70, 18, 10);
+            FillRect(luma, 30, 55, 60, 8, 240);
+            return luma;
+        }
+
+        var mask = new byte[W * H];
+        Assert.True(Build(true, F).GetFrameMask(5, ToRgb(F(5)), mask));
+        Assert.Equal(255, mask[50 * W + 25]); // outer corner of the box
+        Assert.Equal(255, mask[67 * W + 94]);
+        Assert.Equal(0, mask[77 * W + 60]); // background well below
+    }
+
+    [Fact]
+    public void RegionIsSnappedToEvenValues()
+    {
+        // 346 * 33.2% = 115 rows: ffmpeg crops 4:2:0 video to 114, so the builder must too.
+        var builder = new BurnedInMaskBuilder(640, 346, 1, 231, 639, 115, new[] { (0L, 10L) }, 190, true, 2);
+        Assert.Equal(0, builder.RegionX);
+        Assert.Equal(230, builder.RegionY);
+        Assert.Equal(638, builder.RegionWidth);
+        Assert.Equal(114, builder.RegionHeight);
     }
 
     [Fact]

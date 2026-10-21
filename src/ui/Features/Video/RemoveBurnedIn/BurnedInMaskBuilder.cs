@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 /// <para>
 /// OCR timings are only as exact as its sample rate, so spans are padded. Per frame,
 /// <see cref="GetFrameMask"/> applies a line's mask only when most of its text pixels are bright
-/// in that very frame; frames inside the padding without the text stay untouched (and serve as
+/// (at least 20% of them) in that very frame; frames inside the padding without the text stay untouched (and serve as
 /// clean background for the temporal fill).
 /// </para>
 /// </summary>
@@ -24,7 +24,9 @@ public sealed class BurnedInMaskBuilder
 {
     public const int DarkOutlineMaximum = 80;
     private const double StableFraction = 0.5;
-    private const double PresentFraction = 0.5;
+    // Lenient on purpose: a frame where the text is fading in or out must still be masked,
+    // or the temporal fill copies its faint text as "clean background" into other frames.
+    private const double PresentFraction = 0.2;
 
     private readonly int _videoWidth;
     private readonly int _rx;
@@ -34,6 +36,7 @@ public sealed class BurnedInMaskBuilder
     private readonly int _brightnessMinimum;
     private readonly bool _requireOutline;
     private readonly int _outlineRadius;
+    private readonly int _outlineSteps;
     private readonly int _grow;
     private readonly List<LineMask> _lines = new();
 
@@ -58,13 +61,17 @@ public sealed class BurnedInMaskBuilder
         IEnumerable<(long StartFrame, long EndFrame)> spans, int brightnessMinimum, bool requireOutline, int grow)
     {
         _videoWidth = videoWidth;
-        _rx = Math.Clamp(regionX, 0, videoWidth - 1);
-        _ry = Math.Clamp(regionY, 0, videoHeight - 1);
-        _rw = Math.Clamp(regionWidth, 1, videoWidth - _rx);
-        _rh = Math.Clamp(regionHeight, 1, videoHeight - _ry);
+        // Even position and size: ffmpeg's crop rounds odd values down for 4:2:0 video, and the
+        // decoded frames must have exactly the size the builder reads (an odd scan area height
+        // otherwise shifted every frame after the first and garbled all masks).
+        _rx = Math.Clamp(regionX, 0, videoWidth - 2) & ~1;
+        _ry = Math.Clamp(regionY, 0, videoHeight - 2) & ~1;
+        _rw = Math.Max(2, Math.Clamp(regionWidth, 2, videoWidth - _rx) & ~1);
+        _rh = Math.Max(2, Math.Clamp(regionHeight, 2, videoHeight - _ry) & ~1);
         _brightnessMinimum = brightnessMinimum > 0 ? brightnessMinimum : 190;
         _requireOutline = requireOutline;
         _outlineRadius = Math.Max(2, (int)Math.Round(videoHeight / 270.0));
+        _outlineSteps = Math.Max(3, (int)Math.Round(videoHeight / 60.0));
         _grow = Math.Max(0, grow);
         foreach (var (start, end) in spans)
         {
@@ -242,14 +249,14 @@ public sealed class BurnedInMaskBuilder
             }
         }
 
+        var dark = new bool[n];
+        for (var i = 0; i < n; i++)
+        {
+            dark[i] = line.LumaSum[i] / (uint)line.Frames <= DarkOutlineMaximum;
+        }
+
         if (any && _requireOutline)
         {
-            var dark = new bool[n];
-            for (var i = 0; i < n; i++)
-            {
-                dark[i] = line.LumaSum[i] / (uint)line.Frames <= DarkOutlineMaximum;
-            }
-
             var nearDark = Dilate(dark, _outlineRadius);
             any = false;
             for (var i = 0; i < n; i++)
@@ -266,7 +273,11 @@ public sealed class BurnedInMaskBuilder
             return;
         }
 
-        var grown = Dilate(text, _grow);
+        // The outline / shadow: grow the text through pixels that are dark on average, up to a
+        // size relative to the video height. Left out, a thick outline stays as "known" context
+        // and the fill comes out as a dark smear in the shape of the text.
+        var withOutline = GrowInto(text, dark, _outlineSteps);
+        var grown = Dilate(withOutline, _grow);
         var textCount = 0;
         foreach (var t in text)
         {
@@ -314,6 +325,56 @@ public sealed class BurnedInMaskBuilder
 
         line.TextPixels = textPixels.ToArray();
         line.MaskRuns = runs.ToArray();
+    }
+
+    // Grows `seed` one pixel (8-neighbour) per step, but only into `allowed` pixels.
+    private bool[] GrowInto(bool[] seed, bool[] allowed, int steps)
+    {
+        var current = (bool[])seed.Clone();
+        for (var step = 0; step < steps; step++)
+        {
+            var next = (bool[])current.Clone();
+            var changed = false;
+            for (var y = 0; y < _rh; y++)
+            {
+                for (var x = 0; x < _rw; x++)
+                {
+                    var i = y * _rw + x;
+                    if (current[i] || !allowed[i])
+                    {
+                        continue;
+                    }
+
+                    for (var dy = -1; dy <= 1 && !next[i]; dy++)
+                    {
+                        var yy = y + dy;
+                        if (yy < 0 || yy >= _rh)
+                        {
+                            continue;
+                        }
+
+                        for (var dx = -1; dx <= 1; dx++)
+                        {
+                            var xx = x + dx;
+                            if (xx >= 0 && xx < _rw && current[yy * _rw + xx])
+                            {
+                                next[i] = true;
+                                changed = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            current = next;
+            if (!changed)
+            {
+                break;
+            }
+        }
+
+        return current;
     }
 
     // Square dilation (max filter) of a scan-area bitmap, separable.

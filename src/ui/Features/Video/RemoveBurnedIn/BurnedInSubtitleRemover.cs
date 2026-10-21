@@ -85,6 +85,12 @@ public sealed class BurnedInSubtitleRemover
     /// untouched pixels survive the round trip whatever the source is tagged as.</summary>
     public static string ColorMatrix(int videoHeight) => videoHeight >= 720 ? "bt709" : "bt601";
 
+    /// <summary>Output color tags for the matrix (the scale filter says "bt601", the
+    /// -colorspace option only knows "smpte170m"/"bt470bg").</summary>
+    public static string ColorTags(string matrix) => matrix == "bt709"
+        ? "-colorspace bt709 -color_primaries bt709 -color_trc bt709"
+        : "-colorspace smpte170m -color_primaries smpte170m -color_trc smpte170m";
+
     public async Task<bool> RunAsync(BurnedInRemovalOptions o, IProgress<ProgressInfo> progress, CancellationToken cancellationToken)
     {
         var totalFrames = Math.Max(1, (long)Math.Round(o.DurationSeconds * o.FrameRate));
@@ -169,7 +175,7 @@ public sealed class BurnedInSubtitleRemover
         var rate = o.FrameRate.ToString("0.######", CultureInfo.InvariantCulture);
         var encoderArgs = $"-nostdin -v error -y -f rawvideo -pix_fmt rgb24 -s {w}x{h} -framerate {rate} -i - -i \"{o.VideoFileName}\" " +
                           "-map 0:v:0 -map 1:a? -c:a copy " +
-                          $"-vf \"scale=out_color_matrix={matrix}:out_range=tv,format=yuv420p\" -colorspace {matrix} -color_primaries {(matrix == "bt709" ? "bt709" : "smpte170m")} -color_trc {(matrix == "bt709" ? "bt709" : "smpte170m")} " +
+                          $"-vf \"scale=out_color_matrix={matrix}:out_range=tv,format=yuv420p\" {ColorTags(matrix)} " +
                           $"-c:v libx264 -crf {o.Crf} -preset medium \"{o.OutputFileName}\"";
 
         AppendLog("ffmpeg " + decoderArgs);
@@ -189,6 +195,43 @@ public sealed class BurnedInSubtitleRemover
                 Kill(p);
             }
         });
+
+        // If any process dies early (bad argument, codec error), the others block on a pipe nobody
+        // reads any more - kill them all so the pipe tasks end and the error is reported.
+        var failed = 0;
+        void KillAll()
+        {
+            Interlocked.Exchange(ref failed, 1);
+            foreach (var p in all)
+            {
+                Kill(p);
+            }
+        }
+
+        foreach (var p in all)
+        {
+            var process = p;
+            process.EnableRaisingEvents = true;
+            process.Exited += (_, _) =>
+            {
+                try
+                {
+                    if (process.ExitCode != 0)
+                    {
+                        KillAll();
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            };
+
+            if (process.HasExited && process.ExitCode != 0)
+            {
+                KillAll();
+            }
+        }
 
         var frameBytes = w * h * 3;
         long framesOut = 0;
@@ -258,13 +301,16 @@ public sealed class BurnedInSubtitleRemover
             }
         }, token);
 
+        _ = feed.ContinueWith(_ => KillAll(), TaskContinuationOptions.OnlyOnFaulted);
+        _ = drain.ContinueWith(_ => KillAll(), TaskContinuationOptions.OnlyOnFaulted);
+
         long framesIn;
         try
         {
             framesIn = await feed;
             await drain;
         }
-        catch (Exception exception) when (exception is IOException or OperationCanceledException)
+        catch (Exception exception)
         {
             foreach (var p in all)
             {
@@ -283,7 +329,7 @@ public sealed class BurnedInSubtitleRemover
 
         cancellationToken.ThrowIfCancellationRequested();
         AppendLog($"Frames: {framesIn} decoded, {Interlocked.Read(ref framesOut)} encoded in {stopwatch.Elapsed.TotalSeconds:0.0} s");
-        var ok = decoder.ExitCode == 0 && crisp.ExitCode == 0 && encoder.ExitCode == 0 &&
+        var ok = Interlocked.CompareExchange(ref failed, 0, 0) == 0 && decoder.ExitCode == 0 && crisp.ExitCode == 0 && encoder.ExitCode == 0 &&
                  framesIn > 0 && framesIn == Interlocked.Read(ref framesOut) && File.Exists(o.OutputFileName);
         if (!ok)
         {
