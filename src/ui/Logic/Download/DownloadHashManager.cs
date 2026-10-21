@@ -2403,14 +2403,15 @@ public static class DownloadHashManager
             },
 
             // VibeVoice (CrispASR) — cstr/vibevoice-1.5b-GGUF on HuggingFace.
-            // Hashes are HF LFS oid (= SHA-256); Q8_0 verified by local sha256sum.
+            // Hashes are HF LFS oid (= SHA-256). Q8_0/Q4_K re-uploaded upstream 2026-07-03 (full-precision
+            // diffusion head); F16 unchanged.
             [VibeVoiceCrispAsr.TalkerQ4K] = new[]
             {
-                "fb034200191b7f593b0675302cceba38d209dd01c3e339a25cb1f143926d18ff", // vibevoice-1.5b-tts-q4_k.gguf
+                "7c10b41322d43b423930af8076fa1f23af4f1fad4b0972c2a80e39c38e122f34", // vibevoice-1.5b-tts-q4_k.gguf
             },
             [VibeVoiceCrispAsr.TalkerQ8_0] = new[]
             {
-                "d402c7afe796dddbac4a28c721fd9a8f14915a4f63b0a5120916bf287450dc99", // vibevoice-1.5b-tts-q8_0.gguf
+                "b52e2e2559c399fdbe7c5e221f05cdb7f1da2dd98e157394d2ca8c1c4801801f", // vibevoice-1.5b-tts-q8_0.gguf
             },
             [VibeVoiceCrispAsr.TalkerF16] = new[]
             {
