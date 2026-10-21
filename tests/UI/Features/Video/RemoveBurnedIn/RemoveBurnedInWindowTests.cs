@@ -30,7 +30,7 @@ public class RemoveBurnedInWindowTests : IDisposable
     [AvaloniaFact]
     public void Window_Constructs_And_Shows_Lines()
     {
-        var vm = new RemoveBurnedInViewModel(new WindowService(new NullServiceProvider()), new FileHelper());
+        var vm = new RemoveBurnedInViewModel(new WindowService(new NullServiceProvider()), new FileHelper(), new FolderHelper());
         vm.Initialize("/videos/movie.mp4", 1920, 1080, 60, 0, 720, 1920, 360, 200, 5, new[]
         {
             new VideoOcrLineItem { StartTime = TimeSpan.FromSeconds(3), EndTime = TimeSpan.FromSeconds(5), Text = "Second" },
@@ -50,5 +50,14 @@ public class RemoveBurnedInWindowTests : IDisposable
         Assert.EndsWith("movie.no-subs.mp4", vm.OutputFileName.Replace('\\', '/'));
         Assert.Equal(2, vm.Models.Count);
         Assert.NotNull(vm.SelectedModel);
+        Assert.NotNull(vm.AudioVisualizer); // the timeline is built with the window
+        Assert.Equal(1.5, vm.PositionSeconds, 3); // middle of the first (selected) line
+
+        // Leaving a line out is reflected in the summary, and the next line moves the position.
+        vm.Lines[0].IsIncluded = false;
+        Assert.StartsWith("1 ", vm.LinesSummary);
+        vm.NextLineCommand.Execute(null);
+        Assert.Equal("Second", vm.SelectedLine?.Text);
+        Assert.Equal(4.0, vm.PositionSeconds, 3);
     }
 }

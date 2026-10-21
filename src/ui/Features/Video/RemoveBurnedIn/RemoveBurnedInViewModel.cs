@@ -4,6 +4,8 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -11,12 +13,10 @@ using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -24,6 +24,16 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 
+/// <summary>
+/// Remove burned-in subtitles (opened from Video OCR) in two steps:
+/// <list type="number">
+/// <item>Review: a frame preview with the mask on top (or the inpainted result), a timeline with
+/// the OCR lines as boxes on the waveform (drag to fix timings), and the lines list to leave lines
+/// out. Every mask/model setting is previewed live.</item>
+/// <item>Remove: the full run (<see cref="BurnedInSubtitleRemover"/>); when done, open the video
+/// or show it in its folder.</item>
+/// </list>
+/// </summary>
 public partial class RemoveBurnedInViewModel : ObservableObject
 {
     public sealed class ModelDisplay
@@ -32,16 +42,6 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         public required string DisplayName { get; init; }
 
         public override string ToString() => $"{DisplayName} ({Model.Size})";
-    }
-
-    public sealed class LineDisplay
-    {
-        public required TimeSpan Start { get; init; }
-        public required TimeSpan End { get; init; }
-        public required string Text { get; init; }
-
-        public override string ToString() =>
-            $"{Start:hh\\:mm\\:ss\\.fff}  {Text.Replace(Environment.NewLine, " ").Replace("\n", " ")}";
     }
 
     [ObservableProperty] private ObservableCollection<ModelDisplay> _models = new();
@@ -53,23 +53,33 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     [ObservableProperty] private int _extraWidth;
     [ObservableProperty] private bool _temporal;
     [ObservableProperty] private int _crf;
-    [ObservableProperty] private ObservableCollection<LineDisplay> _lines = new();
-    [ObservableProperty] private LineDisplay? _selectedLine;
-    [ObservableProperty] private Bitmap? _previewBefore;
-    [ObservableProperty] private Bitmap? _previewAfter;
+    [ObservableProperty] private ObservableCollection<RemoveBurnedInLineItem> _lines = new();
+    [ObservableProperty] private RemoveBurnedInLineItem? _selectedLine;
+    [ObservableProperty] private Bitmap? _previewBitmap;
+    [ObservableProperty] private bool _showResult;
+    [ObservableProperty] private double _positionSeconds;
+    [ObservableProperty] private string _positionText = string.Empty;
+    [ObservableProperty] private string _previewStatus = string.Empty;
+    [ObservableProperty] private bool _isPreviewBusy;
+    [ObservableProperty] private string _waveformStatus = string.Empty;
+    [ObservableProperty] private string _linesSummary = string.Empty;
     [ObservableProperty] private bool _isRunning;
-    [ObservableProperty] private bool _isPreviewing;
+    [ObservableProperty] private bool _isDone;
+    [ObservableProperty] private string _doneText = string.Empty;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText = string.Empty;
-    [ObservableProperty] private string _previewStatus = string.Empty;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
+    public AudioVisualizer? AudioVisualizer { get; set; }
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
+    private readonly IFolderHelper _folderHelper;
     private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.RemoveBurnedIn.Title);
     private CancellationTokenSource _cancellationTokenSource = new();
+    private CancellationTokenSource _previewCancellation = new();
+    private readonly DispatcherTimer _timer;
 
     private string _videoFileName = string.Empty;
     private int _videoWidth;
@@ -82,10 +92,21 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     private int _regionHeight;
     private double _ocrFramesPerSecond;
 
-    public RemoveBurnedInViewModel(IWindowService windowService, IFileHelper fileHelper)
+    // Preview state: a mask builder per line (keyed by the line's times and every mask setting,
+    // so a timing drag or a setting change rebuilds it), and a dirty flag the timer turns into
+    // one refresh once the user stops scrubbing.
+    private readonly Dictionary<Guid, (string Key, BurnedInMaskBuilder Builder, double StartSeconds)> _masks = new();
+    private bool _previewDirty;
+    private DateTime _previewDirtySince;
+    private bool _waveformDirty = true;
+
+    public RemoveBurnedInViewModel(IWindowService windowService, IFileHelper fileHelper, IFolderHelper folderHelper)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
+        _folderHelper = folderHelper;
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(80) };
+        _timer.Tick += (_, _) => OnTimerTick();
     }
 
     public void Initialize(string videoFileName, int videoWidth, int videoHeight, double durationSeconds,
@@ -119,10 +140,25 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         Temporal = settings.RemoveBurnedInTemporal;
         Crf = settings.RemoveBurnedInCrf is >= 0 and <= 51 ? settings.RemoveBurnedInCrf : 18;
 
-        Lines = new ObservableCollection<LineDisplay>(lines
+        var number = 1;
+        Lines = new ObservableCollection<RemoveBurnedInLineItem>(lines
             .Where(l => !string.IsNullOrWhiteSpace(l.Text))
             .OrderBy(l => l.StartTime)
-            .Select(l => new LineDisplay { Start = l.StartTime, End = l.EndTime, Text = l.Text }));
+            .Select(l => new RemoveBurnedInLineItem(number++, l.StartTime, l.EndTime, l.Text)));
+        foreach (var item in Lines)
+        {
+            item.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(RemoveBurnedInLineItem.IsIncluded))
+                {
+                    UpdateLinesSummary();
+                    _waveformDirty = true;
+                    InvalidatePreview();
+                }
+            };
+        }
+
+        UpdateLinesSummary();
         SelectedLine = Lines.FirstOrDefault();
 
         var extension = Path.GetExtension(videoFileName).ToLowerInvariant() is ".mp4" or ".mkv" or ".mov"
@@ -135,7 +171,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     internal void OnLoaded()
     {
         UiUtil.RestoreWindowPosition(Window);
-        Task.Run(() =>
+        _ = Task.Run(() =>
         {
             try
             {
@@ -148,8 +184,332 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                 Se.LogError(exception, "Remove burned-in subtitles: could not read the frame rate of " + _videoFileName);
                 _frameRate = 25;
             }
+
+            Dispatcher.UIThread.Post(InvalidatePreview);
         });
+        _ = LoadWaveformAsync();
+        _timer.Start();
     }
+
+    // ── review: timeline ─────────────────────────────────────────────
+
+    private async Task LoadWaveformAsync()
+    {
+        if (string.IsNullOrEmpty(_videoFileName) || !File.Exists(_videoFileName))
+        {
+            return;
+        }
+
+        var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(_videoFileName);
+        WavePeakData2? peaks = null;
+        try
+        {
+            if (File.Exists(peakWaveFileName))
+            {
+                peaks = await Task.Run(() => WavePeakData2.FromDisk(peakWaveFileName));
+            }
+            else if (FfmpegHelper.IsFfmpegInstalled())
+            {
+                WaveformStatus = Se.Language.Video.RemoveBurnedIn.GeneratingWaveform;
+                peaks = await Task.Run(async () =>
+                {
+                    var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
+                    try
+                    {
+                        using (var process = WaveFileExtractor.GetCommandLineProcess(_videoFileName, -1, tempWaveFileName, "acodec=s16l", out _))
+                        {
+                            process.Start();
+                            await process.WaitForExitAsync();
+                        }
+
+                        if (!File.Exists(tempWaveFileName))
+                        {
+                            return null;
+                        }
+
+                        using var waveFile = new WavePeakGenerator2(tempWaveFileName);
+                        return waveFile.GeneratePeaks(0, peakWaveFileName);
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            File.Delete(tempWaveFileName);
+                        }
+                        catch
+                        {
+                            // ignore
+                        }
+                    }
+                });
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Remove burned-in subtitles: could not load the waveform");
+        }
+
+        WaveformStatus = string.Empty;
+        if (AudioVisualizer != null && peaks != null)
+        {
+            AudioVisualizer.WavePeaks = peaks;
+            _waveformDirty = true;
+        }
+    }
+
+    private void OnTimerTick()
+    {
+        var av = AudioVisualizer;
+        if (av != null)
+        {
+            var included = Lines.Where(l => l.IsIncluded).Select(l => l.Line).OrderBy(l => l.StartTime).ToList();
+            var selected = new List<SubtitleLineViewModel> { SelectedLine?.Line ?? new SubtitleLineViewModel() };
+            av.CurrentVideoPositionSeconds = PositionSeconds;
+            var outside = PositionSeconds > av.EndPositionSeconds || PositionSeconds < av.StartPositionSeconds;
+            if (_waveformDirty || (!av.IsScrolling && outside))
+            {
+                var start = outside
+                    ? Math.Max(0, PositionSeconds - (av.EndPositionSeconds - av.StartPositionSeconds) / 3)
+                    : av.StartPositionSeconds;
+                av.SetPosition(start, included, PositionSeconds, 0, selected);
+                _waveformDirty = false;
+            }
+            else
+            {
+                av.SetPosition(av.StartPositionSeconds, included, PositionSeconds, -1, selected);
+            }
+
+            av.InvalidateVisual();
+        }
+
+        if (_previewDirty && !IsPreviewBusy && (DateTime.UtcNow - _previewDirtySince).TotalMilliseconds > 220)
+        {
+            _previewDirty = false;
+            _ = RefreshPreviewAsync();
+        }
+    }
+
+    internal void AudioVisualizerPositionChanged(object sender, AudioVisualizer.PositionEventArgs e)
+    {
+        PositionSeconds = Math.Clamp(e.PositionInSeconds, 0, Math.Max(0, _durationSeconds));
+    }
+
+    internal void AudioVisualizerParagraphClicked(object sender, ParagraphNullableEventArgs e)
+    {
+        if (e.Paragraph == null)
+        {
+            return;
+        }
+
+        var item = Lines.FirstOrDefault(l => l.Line.Id == e.Paragraph.Id);
+        if (item != null && item != SelectedLine)
+        {
+            SelectedLine = item;
+        }
+    }
+
+    internal void AudioVisualizerDragEnded(object? sender, EventArgs e)
+    {
+        // A box was moved or resized: its mask is rebuilt from the new span (MaskKey changes).
+        InvalidatePreview();
+    }
+
+    partial void OnSelectedLineChanged(RemoveBurnedInLineItem? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        PositionSeconds = (value.Line.StartTime.TotalSeconds + value.Line.EndTime.TotalSeconds) / 2.0;
+        _waveformDirty = true;
+    }
+
+    partial void OnPositionSecondsChanged(double value)
+    {
+        PositionText = TimeSpan.FromSeconds(value).ToString(@"h\:mm\:ss\.fff");
+        InvalidatePreview();
+    }
+
+    partial void OnShowResultChanged(bool value) => InvalidatePreview();
+    partial void OnBrightnessMinimumChanged(int value) => InvalidatePreview();
+    partial void OnRequireOutlineChanged(bool value) => InvalidatePreview();
+    partial void OnGrowChanged(int value) => InvalidatePreview();
+    partial void OnExtraWidthChanged(int value) => InvalidatePreview();
+
+    partial void OnSelectedModelChanged(ModelDisplay? value)
+    {
+        if (ShowResult)
+        {
+            InvalidatePreview();
+        }
+    }
+
+    private void InvalidatePreview()
+    {
+        _previewDirty = true;
+        _previewDirtySince = DateTime.UtcNow;
+    }
+
+    private void UpdateLinesSummary()
+    {
+        LinesSummary = string.Format(Se.Language.Video.RemoveBurnedIn.LinesIncludedXY, Lines.Count(l => l.IsIncluded), Lines.Count);
+    }
+
+    [RelayCommand]
+    private void PreviousLine() => MoveLine(-1);
+
+    [RelayCommand]
+    private void NextLine() => MoveLine(1);
+
+    private void MoveLine(int delta)
+    {
+        if (Lines.Count == 0)
+        {
+            return;
+        }
+
+        var index = SelectedLine == null ? -1 : Lines.IndexOf(SelectedLine);
+        SelectedLine = Lines[Math.Clamp(index + delta, 0, Lines.Count - 1)];
+    }
+
+    [RelayCommand]
+    private void PreviousFrame() => StepFrames(-1);
+
+    [RelayCommand]
+    private void NextFrame() => StepFrames(1);
+
+    private void StepFrames(int frames)
+    {
+        var fps = _frameRate > 0 ? _frameRate : 25;
+        PositionSeconds = Math.Clamp(PositionSeconds + frames / fps, 0, Math.Max(0, _durationSeconds));
+    }
+
+    // ── review: preview ──────────────────────────────────────────────
+
+    private string MaskKey(RemoveBurnedInLineItem item) =>
+        $"{item.Line.StartTime.Ticks}|{item.Line.EndTime.Ticks}|{BrightnessMinimum}|{RequireOutline}|{Grow}|{ExtraWidth}|{_frameRate}";
+
+    private async Task RefreshPreviewAsync()
+    {
+        if (string.IsNullOrEmpty(_videoFileName) || _frameRate <= 0 || IsRunning)
+        {
+            return;
+        }
+
+        IsPreviewBusy = true;
+        await _previewCancellation.CancelAsync();
+        _previewCancellation = new CancellationTokenSource();
+        var token = _previewCancellation.Token;
+        var seconds = PositionSeconds;
+        var showResult = ShowResult;
+        var options = MakeOptions(new List<(TimeSpan, TimeSpan)>());
+        const double margin = 1.5; // same apply margin as the run (BurnedInSubtitleRemover.MakeMaskBuilder)
+        var candidates = Lines
+            .Where(l => l.IsIncluded &&
+                        seconds >= l.Line.StartTime.TotalSeconds - margin &&
+                        seconds <= l.Line.EndTime.TotalSeconds + margin)
+            .ToList();
+
+        try
+        {
+            // Mask builders for the lines around this position (cached per line + settings).
+            foreach (var item in candidates)
+            {
+                var key = MaskKey(item);
+                if (_masks.TryGetValue(item.Line.Id, out var cached) && cached.Key == key)
+                {
+                    continue;
+                }
+
+                PreviewStatus = Se.Language.Video.RemoveBurnedIn.FindingText;
+                var o = MakeOptions(new List<(TimeSpan, TimeSpan)> { (item.Line.StartTime, item.Line.EndTime) });
+                var span = BurnedInSubtitleRemover.GetSpans(o)[0];
+                var startFrame = Math.Max(0, span.StartFrame);
+                var startSeconds = startFrame / o.FrameRate;
+                var frames = span.EndFrame - startFrame + 1;
+                var builder = BurnedInSubtitleRemover.MakeMaskBuilder(o, new[] { (0L, frames - 1) });
+                var ok = await Task.Run(() => new BurnedInSubtitleRemover().BuildMasksAsync(o, builder, startSeconds, null, token, frames / o.FrameRate), token);
+                if (ok)
+                {
+                    _masks[item.Line.Id] = (key, builder, startSeconds);
+                }
+            }
+
+            var rgb = await Task.Run(() => BurnedInPreviewRenderer.DecodeFrame(options, seconds), token);
+            if (rgb == null || token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            var mask = new byte[_videoWidth * _videoHeight];
+            var masked = 0;
+            foreach (var item in candidates)
+            {
+                if (!_masks.TryGetValue(item.Line.Id, out var m))
+                {
+                    continue;
+                }
+
+                var relative = (long)Math.Round((seconds - m.StartSeconds) * options.FrameRate);
+                if (m.Builder.GetFrameMask(relative, rgb, mask))
+                {
+                    masked++;
+                }
+            }
+
+            var pixels = mask.Count(v => v != 0);
+            if (showResult && pixels > 0)
+            {
+                if (!await EnsureEngineReady())
+                {
+                    ShowResult = false;
+                    return;
+                }
+
+                PreviewStatus = Se.Language.Video.RemoveBurnedIn.Inpainting;
+                var stopwatch = Stopwatch.StartNew();
+                var result = await BurnedInPreviewRenderer.InpaintAsync(options, rgb, mask, token);
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                SetPreview(BurnedInPreviewRenderer.Compose(result ?? rgb, null, options, false));
+                PreviewStatus = result == null
+                    ? Se.Language.Video.RemoveBurnedIn.Failed
+                    : string.Format(Se.Language.Video.RemoveBurnedIn.ResultInXMs, stopwatch.ElapsedMilliseconds);
+                return;
+            }
+
+            SetPreview(BurnedInPreviewRenderer.Compose(rgb, mask, options, true));
+            PreviewStatus = masked == 0
+                ? Se.Language.Video.RemoveBurnedIn.NoSubtitleHere
+                : string.Format(Se.Language.Video.RemoveBurnedIn.MaskedXPixels, pixels);
+        }
+        catch (OperationCanceledException)
+        {
+            // a newer refresh took over
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Remove burned-in subtitles: preview failed");
+            PreviewStatus = exception.Message;
+        }
+        finally
+        {
+            IsPreviewBusy = false;
+        }
+    }
+
+    private void SetPreview(Bitmap bitmap)
+    {
+        var old = PreviewBitmap;
+        PreviewBitmap = bitmap;
+        old?.Dispose();
+    }
+
+    // ── run ──────────────────────────────────────────────────────────
 
     private BurnedInRemovalOptions MakeOptions(IReadOnlyList<(TimeSpan, TimeSpan)> lines) => new()
     {
@@ -213,215 +573,10 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task Preview()
-    {
-        var line = SelectedLine;
-        if (line == null || IsRunning || IsPreviewing || !await EnsureEngineReady())
-        {
-            return;
-        }
-
-        IsPreviewing = true;
-        PreviewStatus = Se.Language.General.PleaseWait;
-        var options = MakeOptions(new List<(TimeSpan, TimeSpan)> { (line.Start, line.End) });
-        try
-        {
-            var (before, after, status) = await Task.Run(() => MakePreview(options, line));
-            var oldBefore = PreviewBefore;
-            var oldAfter = PreviewAfter;
-            PreviewBefore = before;
-            PreviewAfter = after;
-            oldBefore?.Dispose();
-            oldAfter?.Dispose();
-            PreviewStatus = status;
-        }
-        catch (Exception exception)
-        {
-            Se.LogError(exception, "Remove burned-in subtitles: preview failed");
-            PreviewStatus = exception.Message;
-        }
-        finally
-        {
-            IsPreviewing = false;
-        }
-    }
-
-    private static async Task<(Bitmap? Before, Bitmap? After, string Status)> MakePreview(BurnedInRemovalOptions o, LineDisplay line)
-    {
-        // Masks from the line's own span, decoded from its (padded) start.
-        var span = BurnedInSubtitleRemover.GetSpans(o)[0];
-        var startFrame = Math.Max(0, span.StartFrame);
-        var startSeconds = startFrame / o.FrameRate;
-        var frames = span.EndFrame - startFrame + 1;
-        var builder = BurnedInSubtitleRemover.MakeMaskBuilder(o, new[] { (0L, frames - 1) });
-        var remover = new BurnedInSubtitleRemover();
-        if (!await remover.BuildMasksAsync(o, builder, startSeconds, null, CancellationToken.None, frames / o.FrameRate))
-        {
-            return (null, null, Se.Language.Video.RemoveBurnedIn.NoTextInPreviewFrame);
-        }
-
-        // One full frame in the middle of the line, converted exactly like the real run.
-        var midSeconds = (line.Start.TotalSeconds + line.End.TotalSeconds) / 2.0;
-        var midFrame = (long)Math.Round((midSeconds - startSeconds) * o.FrameRate);
-        var rgb = DecodeFrame(o, midSeconds);
-        if (rgb == null)
-        {
-            return (null, null, "Could not decode the preview frame");
-        }
-
-        var mask = new byte[o.VideoWidth * o.VideoHeight];
-        if (!builder.GetFrameMask(midFrame, rgb, mask))
-        {
-            return (CropToBitmap(rgb, null, o), null, Se.Language.Video.RemoveBurnedIn.NoTextInPreviewFrame);
-        }
-
-        var folder = Path.Combine(Path.GetTempPath(), "se-remove-burned-in-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(folder);
-        try
-        {
-            var framePng = Path.Combine(folder, "frame.png");
-            var maskPng = Path.Combine(folder, "mask.png");
-            var outPng = Path.Combine(folder, "out.png");
-            SavePng(framePng, rgb, o.VideoWidth, o.VideoHeight, 3);
-            SavePng(maskPng, mask, o.VideoWidth, o.VideoHeight, 1);
-
-            var stopwatch = Stopwatch.StartNew();
-            using var process = new Process
-            {
-                StartInfo = new ProcessStartInfo(o.CrispEmbedExecutable,
-                    $"--inpaint-model \"{o.ModelFileName}\" --inpaint \"{framePng}\" --mask \"{maskPng}\"")
-                {
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    WorkingDirectory = Path.GetDirectoryName(o.CrispEmbedExecutable) ?? string.Empty,
-                },
-            };
-            process.Start();
-            var stderr = process.StandardError.ReadToEndAsync();
-            await using (var file = File.Create(outPng))
-            {
-                await process.StandardOutput.BaseStream.CopyToAsync(file);
-            }
-
-            await process.WaitForExitAsync();
-            if (process.ExitCode != 0 || new FileInfo(outPng).Length == 0)
-            {
-                Se.LogError("Remove burned-in subtitles: crispembed --inpaint failed: " + await stderr);
-                return (CropToBitmap(rgb, mask, o), null, Se.Language.Video.RemoveBurnedIn.Failed);
-            }
-
-            using var result = SKBitmap.Decode(outPng);
-            var resultRgb = new byte[rgb.Length];
-            for (var y = 0; y < o.VideoHeight; y++)
-            {
-                for (var x = 0; x < o.VideoWidth; x++)
-                {
-                    var c = result.GetPixel(x, y);
-                    var i = (y * o.VideoWidth + x) * 3;
-                    resultRgb[i] = c.Red;
-                    resultRgb[i + 1] = c.Green;
-                    resultRgb[i + 2] = c.Blue;
-                }
-            }
-
-            var status = $"{line.Start:hh\\:mm\\:ss\\.fff} - {stopwatch.ElapsedMilliseconds:#,##0} ms";
-            return (CropToBitmap(rgb, mask, o), CropToBitmap(resultRgb, null, o), status);
-        }
-        finally
-        {
-            try
-            {
-                Directory.Delete(folder, true);
-            }
-            catch
-            {
-                // ignore
-            }
-        }
-    }
-
-    private static byte[]? DecodeFrame(BurnedInRemovalOptions o, double seconds)
-    {
-        var matrix = BurnedInSubtitleRemover.ColorMatrix(o.VideoHeight);
-        var args = $"-nostdin -v error -ss {seconds.ToString("0.###", CultureInfo.InvariantCulture)} -i \"{o.VideoFileName}\" -map 0:v:0 -frames:v 1 " +
-                   $"-vf \"scale=in_color_matrix={matrix}:in_range=tv,format=rgb24\" -f rawvideo -pix_fmt rgb24 -";
-        using var process = new Process
-        {
-            StartInfo = new ProcessStartInfo(FfmpegHelper.GetFfmpegLocation(), args)
-            {
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-            },
-        };
-        process.Start();
-        process.BeginErrorReadLine();
-        using var memory = new MemoryStream();
-        process.StandardOutput.BaseStream.CopyTo(memory);
-        process.WaitForExit();
-        var bytes = memory.ToArray();
-        return bytes.Length >= o.VideoWidth * o.VideoHeight * 3 ? bytes : null;
-    }
-
-    private static void SavePng(string fileName, byte[] pixels, int width, int height, int channels)
-    {
-        using var bitmap = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Opaque);
-        for (var y = 0; y < height; y++)
-        {
-            for (var x = 0; x < width; x++)
-            {
-                var i = (y * width + x) * channels;
-                bitmap.SetPixel(x, y, channels == 3
-                    ? new SKColor(pixels[i], pixels[i + 1], pixels[i + 2])
-                    : new SKColor(pixels[i], pixels[i], pixels[i]));
-            }
-        }
-
-        using var data = bitmap.Encode(SKEncodedImageFormat.Png, 100);
-        using var stream = File.Create(fileName);
-        data.SaveTo(stream);
-    }
-
-    /// <summary>The scan area (with some margin) as an Avalonia bitmap; mask pixels tinted red.</summary>
-    private static Bitmap CropToBitmap(byte[] rgb, byte[]? mask, BurnedInRemovalOptions o)
-    {
-        var margin = o.VideoHeight / 40;
-        var x0 = Math.Max(0, o.RegionX - margin);
-        var y0 = Math.Max(0, o.RegionY - margin);
-        var x1 = Math.Min(o.VideoWidth, o.RegionX + o.RegionWidth + margin);
-        var y1 = Math.Min(o.VideoHeight, o.RegionY + o.RegionHeight + margin);
-        using var bitmap = new SKBitmap(x1 - x0, y1 - y0, SKColorType.Rgba8888, SKAlphaType.Opaque);
-        for (var y = y0; y < y1; y++)
-        {
-            for (var x = x0; x < x1; x++)
-            {
-                var i = y * o.VideoWidth + x;
-                var r = rgb[i * 3];
-                var g = rgb[i * 3 + 1];
-                var b = rgb[i * 3 + 2];
-                if (mask != null && mask[i] != 0)
-                {
-                    r = (byte)((r + 255) / 2);
-                    g = (byte)(g / 2);
-                    b = (byte)(b / 2);
-                }
-
-                bitmap.SetPixel(x - x0, y - y0, new SKColor(r, g, b));
-            }
-        }
-
-        using var data = bitmap.Encode(SKEncodedImageFormat.Png, 100);
-        using var stream = new MemoryStream(data.ToArray());
-        return new Bitmap(stream);
-    }
-
-    [RelayCommand]
     private async Task Start()
     {
-        if (IsRunning || IsPreviewing || Lines.Count == 0 || string.IsNullOrWhiteSpace(OutputFileName))
+        var included = Lines.Where(l => l.IsIncluded).ToList();
+        if (IsRunning || included.Count == 0 || string.IsNullOrWhiteSpace(OutputFileName))
         {
             return;
         }
@@ -438,9 +593,10 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         }
 
         SaveSettings();
+        await _previewCancellation.CancelAsync();
         _cancellationTokenSource = new CancellationTokenSource();
         var token = _cancellationTokenSource.Token;
-        var options = MakeOptions(Lines.Select(l => (l.Start, l.End)).ToList());
+        var options = MakeOptions(included.Select(l => (l.Line.StartTime, l.Line.EndTime)).ToList());
         var remover = new BurnedInSubtitleRemover();
         var progress = new Progress<BurnedInSubtitleRemover.ProgressInfo>(p =>
         {
@@ -450,9 +606,11 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                 : string.Format(Se.Language.Video.RemoveBurnedIn.RemovingXYZ, p.Frame, p.TotalFrames, p.FramesPerSecond);
         });
 
+        IsDone = false;
         IsRunning = true;
         ProgressValue = 0;
         ProgressText = string.Format(Se.Language.Video.RemoveBurnedIn.BuildingMasksX, string.Empty);
+        var stopwatch = Stopwatch.StartNew();
         bool ok;
         var cancelled = false;
         try
@@ -493,10 +651,36 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             return;
         }
 
-        await MessageBox.Show(Window!, Se.Language.Video.RemoveBurnedIn.Title,
-            string.Format(Se.Language.Video.RemoveBurnedIn.DoneX, Environment.NewLine, options.OutputFileName),
-            MessageBoxButtons.OK, MessageBoxIcon.Information);
+        var elapsed = stopwatch.Elapsed;
+        DoneText = string.Format(Se.Language.Video.RemoveBurnedIn.DoneInXY, Path.GetFileName(options.OutputFileName),
+            elapsed.TotalHours >= 1 ? elapsed.ToString(@"h\:mm\:ss") : elapsed.ToString(@"m\:ss"));
+        IsDone = true;
         OkPressed = true;
+    }
+
+    [RelayCommand]
+    private void OpenVideo()
+    {
+        try
+        {
+            if (File.Exists(OutputFileName))
+            {
+                FileHelper.OpenFileWithDefaultProgram(OutputFileName);
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Remove burned-in subtitles: could not open " + OutputFileName);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowInFolder()
+    {
+        if (File.Exists(OutputFileName) && Window != null)
+        {
+            await _folderHelper.OpenFolderWithFileSelected(Window, OutputFileName);
+        }
     }
 
     private static string LastLines(string text, int count)
@@ -558,15 +742,46 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         {
             e.Handled = true;
             _ = Cancel();
+            return;
+        }
+
+        if (IsRunning || e.KeyModifiers != KeyModifiers.None || e.Source is TextBox or NumericUpDown or ComboBox)
+        {
+            return;
+        }
+
+        switch (e.Key)
+        {
+            case Key.Left:
+                StepFrames(-1);
+                e.Handled = true;
+                break;
+            case Key.Right:
+                StepFrames(1);
+                e.Handled = true;
+                break;
+            case Key.PageUp:
+                MoveLine(-1);
+                e.Handled = true;
+                break;
+            case Key.PageDown:
+                MoveLine(1);
+                e.Handled = true;
+                break;
+            case Key.R:
+                ShowResult = !ShowResult;
+                e.Handled = true;
+                break;
         }
     }
 
     internal void OnClosing()
     {
+        _timer.Stop();
         _cancellationTokenSource.Cancel();
+        _previewCancellation.Cancel();
         _sleepInhibitor.Dispose();
-        PreviewBefore?.Dispose();
-        PreviewAfter?.Dispose();
+        PreviewBitmap?.Dispose();
         UiUtil.SaveWindowPosition(Window);
     }
 }

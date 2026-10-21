@@ -5,6 +5,8 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -12,112 +14,85 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 
 /// <summary>
-/// Remove burned-in subtitles (opened from Video OCR): mask and output settings on the left,
-/// a before/after preview of one OCR line on the right, progress and Start at the bottom.
+/// Remove burned-in subtitles - review, then remove. Left: the frame preview (mask on top, or
+/// the inpainted result) with frame/line navigation, and the timeline below it with the OCR
+/// lines as boxes on the waveform. Right: the lines (include/leave out) and the settings.
+/// Bottom: progress, and once done "Open video" / "Show in folder".
 /// </summary>
 public class RemoveBurnedInWindow : Window
 {
     private readonly RemoveBurnedInViewModel _vm;
-    private const double LabelWidth = 170;
+    private const double LabelWidth = 150;
 
     public RemoveBurnedInWindow(RemoveBurnedInViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.RemoveBurnedIn.Title;
-        Width = 1100;
-        Height = 640;
-        MinWidth = 800;
-        MinHeight = 520;
+        Width = 1320;
+        Height = 880;
+        MinWidth = 980;
+        MinHeight = 640;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var l = Se.Language.Video.RemoveBurnedIn;
-        var info = new TextBlock
+        var left = new Grid
         {
-            Text = l.Info,
-            FontSize = 12.5,
-            TextWrapping = TextWrapping.Wrap,
-            MaxWidth = 380,
-            HorizontalAlignment = HorizontalAlignment.Left,
-        };
-
-        var brightness = EditorChrome.MakeField(nameof(vm.BrightnessMinimum), 1, 255, 90);
-        ToolTip.SetTip(brightness, Se.Language.Video.VideoOcr.TextBrightnessMinimumHint);
-        var grow = EditorChrome.MakeField(nameof(vm.Grow), 0, 40, 90);
-        ToolTip.SetTip(grow, l.GrowMaskHint);
-        var outline = EditorChrome.MakeSwitchRow(nameof(vm.RequireOutline), l.RequireOutline);
-        ToolTip.SetTip(outline, l.RequireOutlineHint);
-        var temporal = EditorChrome.MakeSwitchRow(nameof(vm.Temporal), l.TemporalConsistency);
-        ToolTip.SetTip(temporal, l.TemporalConsistencyHint);
-
-        var modelCombo = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel));
-        modelCombo.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.Models)));
-        modelCombo.MinWidth = 220;
-        AutomationProperties.SetName(modelCombo, l.Model);
-
-        var maskRows = new StackPanel { Spacing = 8 };
-        maskRows.Children.Add(info);
-        maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.Model, modelCombo, LabelWidth));
-        maskRows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Video.VideoOcr.TextBrightnessMinimum, brightness, LabelWidth));
-        maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.GrowMask, grow, LabelWidth));
-        var extraWidth = EditorChrome.MakeField(nameof(vm.ExtraWidth), 0, 100, 90);
-        ToolTip.SetTip(extraWidth, l.ExtraWidthHint);
-        maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.ExtraWidth, extraWidth, LabelWidth));
-        maskRows.Children.Add(outline);
-        maskRows.Children.Add(temporal);
-
-        var outputBox = EditorChrome.MakeTextField(nameof(vm.OutputFileName), l.OutputFile);
-        outputBox.MinWidth = 220;
-        var outputPanel = new DockPanel { LastChildFill = true };
-        var browse = UiUtil.MakeButtonBrowse(vm.BrowseOutputCommand);
-        DockPanel.SetDock(browse, Dock.Right);
-        browse.Margin = new Thickness(6, 0, 0, 0);
-        outputPanel.Children.Add(browse);
-        outputPanel.Children.Add(outputBox);
-        var crf = EditorChrome.MakeField(nameof(vm.Crf), 0, 51, 90);
-        ToolTip.SetTip(crf, l.QualityHint);
-        var outputRows = new StackPanel { Spacing = 8 };
-        outputRows.Children.Add(EditorChrome.MakeLabeledRow(l.OutputFile, outputPanel, LabelWidth));
-        outputRows.Children.Add(EditorChrome.MakeLabeledRow(l.Quality, crf, LabelWidth));
-
-        var settings = new StackPanel
-        {
-            Children =
+            RowDefinitions =
             {
-                EditorChrome.MakeEditorSection(l.TextMask, maskRows, first: true),
-                EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.VideoOutput, outputRows),
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // preview
+                new RowDefinition { Height = new GridLength(170) }, // timeline
             },
         };
+        left.Add(MakePreviewSection(vm), 0);
+        left.Add(MakeTimelineSection(vm), 1);
 
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        var progressView = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsRunning));
-
-        var buttonStart = UiUtil.MakeButton(l.Start, vm.StartCommand)
-            .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance).AsPrimary();
-        var buttonPanel = EditorChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonStart);
+        var right = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // lines
+                new RowDefinition { Height = GridLength.Auto }, // settings
+            },
+        };
+        right.Add(MakeLinesSection(vm), 0);
+        right.Add(MakeSettingsSections(vm), 1);
 
         var columns = new Grid
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(430) },
             },
         };
-        columns.Add(new ScrollViewer { Content = settings, MaxWidth = 470 }, 0, 0);
-        columns.Add(MakePreviewView(vm), 0, 1);
+        columns.Add(left, 0, 0);
+        columns.Add(new Border
+        {
+            Child = right,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
+
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        var progressView = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsRunning));
+
+        var l = Se.Language.Video.RemoveBurnedIn;
+        var buttonStart = EditorChrome.MakeActionButton(IconNames.PlayCircle, l.Start, vm.StartCommand)
+            .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance).AsPrimary();
+        var buttonClose = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttonPanel = EditorChrome.MakeButtonBar(MakeDonePanel(vm), buttonClose, buttonStart);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
             },
         };
         grid.Add(EditorChrome.MakePanel(columns), 0);
@@ -126,58 +101,262 @@ public class RemoveBurnedInWindow : Window
         Content = grid;
 
         Loaded += (_, _) => vm.OnLoaded();
-        UiUtil.FocusOnFirstActivation(this, () => brightness.Focus());
     }
 
-    private static Control MakePreviewView(RemoveBurnedInViewModel vm)
+    // ── preview ──────────────────────────────────────────────────────
+
+    private static Control MakePreviewSection(RemoveBurnedInViewModel vm)
     {
         var l = Se.Language.Video.RemoveBurnedIn;
-        var lineCombo = UiUtil.MakeComboBox(vm.Lines, vm, nameof(vm.SelectedLine));
-        lineCombo.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.Lines)));
-        lineCombo.MinWidth = 260;
-        lineCombo.MaxWidth = 420;
-        AutomationProperties.SetName(lineCombo, l.PreviewLine);
-        var previewButton = UiUtil.MakeButton(l.Preview, vm.PreviewCommand)
-            .WithBindEnabled(nameof(vm.IsPreviewing), InverseBooleanConverter.Instance);
-        var status = EditorChrome.MakeBoundHint(nameof(vm.PreviewStatus));
-        status.VerticalAlignment = VerticalAlignment.Center;
-        var header = new StackPanel
+
+        var image = new Image
+        {
+            Stretch = Stretch.Uniform,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!Image.SourceProperty] = new Binding(nameof(vm.PreviewBitmap)),
+        };
+        AutomationProperties.SetName(image, l.Preview);
+
+        var busy = new ProgressBar
+        {
+            IsIndeterminate = true,
+            Height = 3,
+            MinHeight = 3,
+            VerticalAlignment = VerticalAlignment.Top,
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsPreviewBusy)),
+        };
+
+        var status = new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(170, 0, 0, 0)),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(8, 3),
+            Margin = new Thickness(10),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Child = new TextBlock
+            {
+                Foreground = Brushes.White,
+                FontSize = 12,
+                [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewStatus)),
+            },
+        };
+
+        var frame = new Panel
+        {
+            Background = Brushes.Black,
+            ClipToBounds = true,
+            Children = { image, busy, status },
+        };
+
+        var navigation = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Children = { lineCombo, previewButton, status },
-        };
-
-        var images = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
+            Spacing = 4,
+            HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(0, 8, 0, 0),
+            Children =
+            {
+                EditorChrome.CreateToolButton(IconNames.ChevronDoubleLeft, l.PreviousLine, vm.PreviousLineCommand, 30, "PageUp"),
+                EditorChrome.CreateToolButton(IconNames.ChevronLeft, l.PreviousFrame, vm.PreviousFrameCommand, 30, "←"),
+                new TextBlock
+                {
+                    MinWidth = 110,
+                    TextAlignment = TextAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontFamily = new FontFamily("Menlo, Consolas, monospace"),
+                    [!TextBlock.TextProperty] = new Binding(nameof(vm.PositionText)),
+                },
+                EditorChrome.CreateToolButton(IconNames.ChevronRight, l.NextFrame, vm.NextFrameCommand, 30, "→"),
+                EditorChrome.CreateToolButton(IconNames.ChevronDoubleRight, l.NextLine, vm.NextLineCommand, 30, "PageDown"),
+            },
         };
-        images.Add(EditorChrome.MakeHint(l.Before), 0);
-        images.Add(MakeImage(nameof(vm.PreviewBefore)), 1);
-        images.Add(EditorChrome.MakeHint(l.After), 2);
-        images.Add(MakeImage(nameof(vm.PreviewAfter)), 3);
 
-        var panel = new DockPanel { LastChildFill = true, Margin = new Thickness(12, 0, 0, 0) };
-        DockPanel.SetDock(header, Dock.Top);
-        panel.Children.Add(header);
-        panel.Children.Add(images);
-        return EditorChrome.MakeFillSection(l.Preview, panel, first: true);
+        var content = new DockPanel { LastChildFill = true };
+        DockPanel.SetDock(navigation, Dock.Bottom);
+        content.Children.Add(navigation);
+        content.Children.Add(EditorChrome.MakeVideoFrame(frame));
+
+        var resultToggle = EditorChrome.MakeSwitchRow(nameof(vm.ShowResult), l.ShowResult);
+        ToolTip.SetTip(resultToggle, l.ShowResultHint);
+        return EditorChrome.MakeDockedFillSection(l.Preview, content, resultToggle, first: true);
     }
 
-    private static Image MakeImage(string property) => new()
+    // ── timeline ─────────────────────────────────────────────────────
+
+    private static Control MakeTimelineSection(RemoveBurnedInViewModel vm)
     {
-        Stretch = Stretch.Uniform,
-        HorizontalAlignment = HorizontalAlignment.Left,
-        VerticalAlignment = VerticalAlignment.Top,
-        [!Image.SourceProperty] = new Binding(property),
-    };
+        var l = Se.Language.Video.RemoveBurnedIn;
+        var colors = WaveformColors.Current;
+        var av = new AudioVisualizer
+        {
+            Width = double.NaN,
+            IsReadOnly = false,
+            DrawGridLines = Se.Settings.Waveform.DrawGridLines,
+            WaveformColor = colors.Waveform,
+            WaveformSelectedColor = colors.Selected,
+            WaveformGridColor = colors.Grid,
+        };
+        av.OnVideoPositionChanged += vm.AudioVisualizerPositionChanged;
+        av.OnPrimarySingleClicked += vm.AudioVisualizerParagraphClicked;
+        av.OnDragEnded += vm.AudioVisualizerDragEnded;
+        AutomationProperties.SetName(av, Se.Language.General.Waveform);
+        vm.AudioVisualizer = av;
+
+        var hint = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 12,
+            Children =
+            {
+                EditorChrome.MakeBoundHint(nameof(vm.WaveformStatus)),
+                EditorChrome.MakeHint(l.TimelineHint),
+            },
+        };
+
+        var frame = new Border
+        {
+            Child = av,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1),
+        };
+        return EditorChrome.MakeDockedFillSection(l.Timeline, frame, hint, headerGap: 6);
+    }
+
+    // ── lines ────────────────────────────────────────────────────────
+
+    private static Control MakeLinesSection(RemoveBurnedInViewModel vm)
+    {
+        var l = Se.Language.Video.RemoveBurnedIn;
+        var timeConverter = new TimeSpanToDisplayFullConverter();
+        var table = TableViewExtras.MakeTableView(multiSelect: false);
+        table.DataContext = vm;
+        table.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Lines)) { Source = vm });
+        table.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedLine)) { Source = vm, Mode = BindingMode.TwoWay });
+        AutomationProperties.SetName(table, l.Lines);
+        table.Columns.Add(new SeTableViewColumn
+        {
+            Header = string.Empty,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<RemoveBurnedInLineItem>(nameof(RemoveBurnedInLineItem.IsIncluded), focusable: true),
+            Width = new GridLength(36),
+        });
+        table.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(RemoveBurnedInLineItem.Number)),
+            Width = new GridLength(40),
+        });
+        table.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Show,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding("Line.StartTime") { Converter = timeConverter },
+            Width = new GridLength(96),
+        });
+        table.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Text,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(RemoveBurnedInLineItem.Text)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+
+        return EditorChrome.MakeDockedFillSection(l.Lines, EditorChrome.MakeListFrame(table), EditorChrome.MakeBoundHint(nameof(vm.LinesSummary)), first: true);
+    }
+
+    // ── settings ─────────────────────────────────────────────────────
+
+    private static Control MakeSettingsSections(RemoveBurnedInViewModel vm)
+    {
+        var l = Se.Language.Video.RemoveBurnedIn;
+
+        var modelCombo = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel));
+        modelCombo.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.Models)));
+        modelCombo.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(modelCombo, l.Model);
+
+        var brightness = EditorChrome.MakeField(nameof(vm.BrightnessMinimum), 1, 255, 90);
+        ToolTip.SetTip(brightness, Se.Language.Video.VideoOcr.TextBrightnessMinimumHint);
+        var grow = EditorChrome.MakeField(nameof(vm.Grow), 0, 40, 90);
+        ToolTip.SetTip(grow, l.GrowMaskHint);
+        var extraWidth = EditorChrome.MakeField(nameof(vm.ExtraWidth), 0, 100, 90);
+        ToolTip.SetTip(extraWidth, l.ExtraWidthHint);
+        var outline = EditorChrome.MakeSwitchRow(nameof(vm.RequireOutline), l.RequireOutline);
+        ToolTip.SetTip(outline, l.RequireOutlineHint);
+        var temporal = EditorChrome.MakeSwitchRow(nameof(vm.Temporal), l.TemporalConsistency);
+        ToolTip.SetTip(temporal, l.TemporalConsistencyHint);
+
+        var maskRows = new StackPanel { Spacing = 8 };
+        maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.Model, modelCombo, LabelWidth));
+        maskRows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Video.VideoOcr.TextBrightnessMinimum, brightness, LabelWidth));
+        maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.GrowMask, grow, LabelWidth));
+        maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.ExtraWidth, extraWidth, LabelWidth));
+        maskRows.Children.Add(outline);
+        maskRows.Children.Add(temporal);
+
+        var outputBox = EditorChrome.MakeTextField(nameof(vm.OutputFileName), l.OutputFile);
+        var browse = UiUtil.MakeButtonBrowse(vm.BrowseOutputCommand);
+        browse.Margin = new Thickness(6, 0, 0, 0);
+        var outputPanel = new DockPanel { LastChildFill = true };
+        DockPanel.SetDock(browse, Dock.Right);
+        outputPanel.Children.Add(browse);
+        outputPanel.Children.Add(outputBox);
+        var crf = EditorChrome.MakeField(nameof(vm.Crf), 0, 51, 90);
+        ToolTip.SetTip(crf, l.QualityHint);
+        var outputRows = new StackPanel { Spacing = 8 };
+        outputRows.Children.Add(EditorChrome.MakeLabeledRow(l.OutputFile, outputPanel, LabelWidth));
+        outputRows.Children.Add(EditorChrome.MakeLabeledRow(l.Quality, crf, LabelWidth));
+
+        return new ScrollViewer
+        {
+            MaxHeight = 430,
+            Content = new StackPanel
+            {
+                Children =
+                {
+                    EditorChrome.MakeEditorSection(l.TextMask, maskRows),
+                    EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.VideoOutput, outputRows),
+                },
+            },
+        };
+    }
+
+    // ── done ─────────────────────────────────────────────────────────
+
+    private static Control MakeDonePanel(RemoveBurnedInViewModel vm)
+    {
+        var l = Se.Language.Video.RemoveBurnedIn;
+        var icon = new Optris.Icons.Avalonia.Icon
+        {
+            Value = IconNames.CheckCircle,
+            FontSize = 18,
+            Foreground = new SolidColorBrush(Color.FromRgb(80, 190, 110)),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        var text = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            MaxWidth = 460,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.DoneText)),
+        };
+        var open = EditorChrome.MakeActionButton(IconNames.MovieOpenOutline, l.OpenVideo, vm.OpenVideoCommand);
+        var folder = EditorChrome.MakeActionButton(IconNames.FolderOpen, l.ShowInFolder, vm.ShowInFolderCommand);
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            Children = { icon, text, open, folder },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsDone)),
+        };
+    }
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
