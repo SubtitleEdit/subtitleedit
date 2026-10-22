@@ -568,7 +568,7 @@
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "SkiaSharp.HarfBuzz": "[3.119.4, )",
           "WeCantSpell.Hunspell": "[7.0.1, )",
-          "libse": "[5.2.0, )"
+          "libse": "[5.3.0, )"
         }
       }
     }
