@@ -734,4 +734,24 @@ public class SubtitleRetimerTests : IDisposable
             "The forced aligner failed (exit code 1).",
             ForcedAlignerException.FormatExitFailure("The forced aligner failed", 1, string.Empty));
     }
+
+    // An engine that exits normally without writing its output is not an engine crash: it must
+    // not count towards stopping early, nor say "exit code 0".
+    [Fact]
+    public void FromProcessExit_ExitCodeZero_IsNoOutputNotEngineFailure()
+    {
+        var exception = ForcedAlignerException.FromProcessExit("The forced aligner failed", 0, string.Empty);
+
+        Assert.Null(exception.ExitCode);
+        Assert.Equal("The forced aligner failed (the engine produced no output).", exception.Message);
+    }
+
+    [Fact]
+    public void FromProcessExit_NonZeroExitCode_IsEngineFailure()
+    {
+        var exception = ForcedAlignerException.FromProcessExit("The forced aligner failed", 1, string.Empty);
+
+        Assert.Equal(1, exception.ExitCode);
+        Assert.Equal("The forced aligner failed (exit code 1).", exception.Message);
+    }
 }

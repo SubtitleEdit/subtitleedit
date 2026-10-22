@@ -102,6 +102,32 @@ public class WaveformToolbarRuleProfileTests : IDisposable
         }
     }
 
+    // A current profile that is not in the list (renamed, deleted, stale settings) must not
+    // make the picker apply the first profile, overwriting the user's limits.
+    [AvaloniaFact]
+    public void MissingCurrentProfile_DoesNotApplyTheFirstProfile()
+    {
+        var defaultProfile = Se.Settings.General.Profiles.Single(p => p.Name == "Default");
+        Se.ApplyRuleProfile(defaultProfile);
+        Se.ApplyRuleSettingsToLibSe();
+        Se.Settings.General.CurrentProfile = "Deleted profile";
+        Se.Settings.General.SubtitleLineMaximumLength = 99;
+
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Null(vm.SelectedRuleProfile);
+            Assert.Equal("Deleted profile", Se.Settings.General.CurrentProfile);
+            Assert.Equal(99, Se.Settings.General.SubtitleLineMaximumLength);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     private static string? GetSelectionBoxText(ComboBox comboBox)
     {
         Dispatcher.UIThread.RunJobs();

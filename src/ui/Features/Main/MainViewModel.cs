@@ -22958,11 +22958,11 @@ public partial class MainViewModel :
     private void RefreshRuleProfiles()
     {
         var names = Se.Settings.General.Profiles.Select(p => p.Name).ToList();
-        var current = Se.Settings.General.CurrentProfile;
-        if (!names.Contains(current))
-        {
-            current = names.FirstOrDefault();
-        }
+
+        // A current profile that is not in the list (renamed, deleted, stale settings) shows as
+        // no selection: picking the first name here would apply that profile and overwrite the
+        // user's limits without them choosing it.
+        var current = names.Contains(Se.Settings.General.CurrentProfile) ? Se.Settings.General.CurrentProfile : null;
 
         if (!RuleProfiles.SequenceEqual(names))
         {
