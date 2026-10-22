@@ -9,6 +9,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class LibreTranslate : IAutoTranslator, IDisposable
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public LibreTranslate() { }
+        public LibreTranslate(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "LibreTranslate";
@@ -24,7 +29,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.AutoTranslateLibreUrl);
+            _httpClient.BaseAddress = new Uri(TranslationSettings.AutoTranslateLibreUrl);
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
@@ -56,7 +61,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 text = text.CapitalizeFirstLetter();
             }
 
-            var input = MakeRequestBody(text, sourceLanguageCode, targetLanguageCode, Configuration.Settings.Tools.AutoTranslateLibreApiKey);
+            var input = MakeRequestBody(text, sourceLanguageCode, targetLanguageCode, TranslationSettings.AutoTranslateLibreApiKey);
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync("translate", content, cancellationToken);

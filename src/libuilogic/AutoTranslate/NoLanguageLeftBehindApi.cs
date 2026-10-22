@@ -8,6 +8,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class NoLanguageLeftBehindApi : IAutoTranslator, IDisposable
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public NoLanguageLeftBehindApi() { }
+        public NoLanguageLeftBehindApi(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "winstxnhdw-nllb-api";
@@ -26,7 +31,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             // The endpoint is a relative URI against BaseAddress, and .NET drops the base's
             // last path segment when it lacks a trailing slash - a user-entered
             // ".../api/v4" then silently posts to ".../api/..." and 404s (#12641).
-            var url = Configuration.Settings.Tools.AutoTranslateNllbApiUrl;
+            var url = TranslationSettings.AutoTranslateNllbApiUrl;
             if (!string.IsNullOrEmpty(url) && !url.EndsWith('/'))
             {
                 url += "/";

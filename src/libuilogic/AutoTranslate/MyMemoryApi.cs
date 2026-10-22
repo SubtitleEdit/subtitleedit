@@ -8,6 +8,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class MyMemoryApi : IAutoTranslator, IDisposable
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public MyMemoryApi() { }
+        public MyMemoryApi(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         private HttpClient _httpClient = null!;
         private readonly SeJsonParser _jsonParser = new SeJsonParser();
 
@@ -216,7 +221,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var url = MakeUrl(text, sourceLanguageCode, targetLanguageCode, Configuration.Settings.Tools.AutoTranslateMyMemoryApiKey);
+            var url = MakeUrl(text, sourceLanguageCode, targetLanguageCode, TranslationSettings.AutoTranslateMyMemoryApiKey);
             var jsonResultString = await _httpClient.GetStringAsync(url, cancellationToken);
             var textResult = _jsonParser.GetFirstObject(jsonResultString, "translatedText");
             var result = Json.DecodeJsonText(textResult);

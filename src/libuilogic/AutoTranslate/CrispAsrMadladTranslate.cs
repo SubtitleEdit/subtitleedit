@@ -12,6 +12,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class CrispAsrMadladTranslate : IAutoTranslator
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public CrispAsrMadladTranslate() { }
+        public CrispAsrMadladTranslate(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         public static string StaticName { get; set; } = "CrispASR MADLAD";
         public override string ToString() => StaticName;
         public string Name => StaticName;
@@ -35,8 +40,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public void Initialize()
         {
-            _executablePath = Configuration.Settings.Tools.AutoTranslateCrispAsrExe;
-            _modelPath = Configuration.Settings.Tools.AutoTranslateCrispAsrModel;
+            _executablePath = TranslationSettings.AutoTranslateCrispAsrExe;
+            _modelPath = TranslationSettings.AutoTranslateCrispAsrModel;
         }
 
         /// <summary>

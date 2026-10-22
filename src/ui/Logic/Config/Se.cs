@@ -1284,6 +1284,7 @@ public class Se
         Settings.Tools.RemoveTextForHi.MigrateFullInterjectionLists();
 
         MigrateProviderApiKeys(Settings);
+        TranslationProfileMigration.EnsureMigrated(Settings);
 
         if (Settings.Tools.FixCommonErrors.Profiles.Count == 0)
         {
