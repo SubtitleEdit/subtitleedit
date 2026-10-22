@@ -263,7 +263,7 @@ public class ExportHandlerBluRaySupOverlapTests : IDisposable
         var pcs = segments.Where(s => s.Type == Pcs).ToList();
         Assert.Equal(new long[] { 1000 * 90, 3040 * 90, 3040 * 90, 5000 * 90 }, pcs.Select(p => p.Pts));
         Assert.Equal(new[] { 1, 0, 1, 0 }, pcs.Select(ObjectCount));
-        Assert.Single(segments.Where(s => s.Type == Ods && s.Pts == 1000 * 90));
+        Assert.Single(segments, s => s.Type == Ods && s.Pts == 1000 * 90);
     }
 
     [Fact]

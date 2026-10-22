@@ -178,6 +178,11 @@ public partial class MainViewModel
             return false;
         }
 
+        if (Window == null)
+        {
+            return false;
+        }
+
         var answer = await MessageBox.Show(Window, Se.Language.General.Warning,
             string.Format(Se.Language.General.SubtitleFileChangedOutsideOverwriteX, fileName),
             MessageBoxButtons.YesNo, MessageBoxIcon.Question);

@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
 using System;
 using System.Collections.Generic;
@@ -489,7 +489,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         private const string FontWithoutColor = "font";
-        private const string TtmlNamespace = "http://www.w3.org/ns/ttml";
 
         private static XmlNamespaceManager MakeNamespaceManager(XmlDocument xml)
         {

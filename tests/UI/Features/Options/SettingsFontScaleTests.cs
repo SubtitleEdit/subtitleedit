@@ -52,11 +52,11 @@ public class SettingsFontScaleTests : IDisposable
             Assert.Equal(expectedFontSize, field.FontSize);
             Assert.Equal(expectedHeight, field.Height);
 
-            var combo = rules.Panel.GetVisualDescendants().OfType<ComboBox>().First();
+            var combo = rules.Panel!.GetVisualDescendants().OfType<ComboBox>().First();
             Assert.Equal(expectedFontSize, combo.FontSize);
             Assert.Equal(expectedHeight, combo.MinHeight);
 
-            var label = rules.Panel.GetVisualDescendants().OfType<TextBlock>()
+            var label = rules.Panel!.GetVisualDescendants().OfType<TextBlock>()
                 .First(t => t.Text == Se.Language.Options.Settings.SingleLineMaxLength);
             Assert.Equal(expectedFontSize, label.FontSize);
 

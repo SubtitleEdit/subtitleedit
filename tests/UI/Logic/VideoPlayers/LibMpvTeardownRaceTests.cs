@@ -53,7 +53,7 @@ public class LibMpvTeardownRaceTests
         player.MarkForDispose();
         var graphicsThread = new Thread(player.FreeRenderContextIfDisposePending);
         graphicsThread.Start();
-        Assert.True(fake.FreeStarted.Wait(TimeSpan.FromSeconds(5)));
+        Assert.True(fake.FreeStarted.Wait(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));
 
         // ...while the owner's worker thread disposes the player
         var disposeThread = new Thread(player.Dispose);

@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.UiLogic.Export;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -1805,6 +1805,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         if (!config.RunPlugin.IsActive || config.RunPlugin.Plugin is { CanRun: true })
         {
             return true;
+        }
+
+        if (Window == null)
+        {
+            return false;
         }
 
         await MessageBox.Show(

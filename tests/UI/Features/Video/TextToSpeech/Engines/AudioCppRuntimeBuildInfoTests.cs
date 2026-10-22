@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
+using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CloneReferenceCleaning;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
@@ -129,6 +129,6 @@ public class AudioCppRuntimeBuildInfoTests
     [Fact]
     public void PreviousBuild_LacksAceStep_SoMusicAsksForTheUpdate()
     {
-        Assert.False(AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_09_17)!.Contains(AceStepAudioCpp.FamilyName));
+        Assert.DoesNotContain(AceStepAudioCpp.FamilyName, AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_09_17)!);
     }
 }

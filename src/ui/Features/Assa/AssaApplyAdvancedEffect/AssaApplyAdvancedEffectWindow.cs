@@ -41,7 +41,7 @@ public class AssaApplyAdvancedEffectWindow : Window
         // ── Left: search, categories, effect gallery ──────────────────────────
         var searchBox = new TextBox
         {
-            Watermark = Se.Language.Assa.AdvancedEffectSearchWatermark,
+            PlaceholderText = Se.Language.Assa.AdvancedEffectSearchWatermark,
             InnerLeftContent = new Icon
             {
                 Value = IconNames.Find,

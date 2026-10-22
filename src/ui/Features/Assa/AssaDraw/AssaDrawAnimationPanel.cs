@@ -343,7 +343,7 @@ internal sealed class AnimationThumbnail : Control
     private static readonly IBrush BlueBrush = new SolidColorBrush(Color.FromRgb(0x1E, 0x88, 0xE5));
     private static readonly IBrush StarBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0xC1, 0x07));
 
-    public DrawAnimationEffect Effect { get; set; }
+    public new DrawAnimationEffect Effect { get; set; }
 
     /// <summary>
     /// Shows this loop instead of the in/out effect.
