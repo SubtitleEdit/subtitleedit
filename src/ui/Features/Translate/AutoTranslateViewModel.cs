@@ -118,6 +118,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     private List<string> _apiUrls = new();
     private List<string> _apiModels = new();
     private bool _onlyCurrentLine;
+    private List<int> _onlyRowIndices = new(); // "Translate rows": the selected rows, in order (empty = selected row only)
     private bool _autoStart;
     private bool _translationFailed;
     private Subtitle _subtitle = new Subtitle();
@@ -834,6 +835,30 @@ public partial class AutoTranslateViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task TranslateRows()
+    {
+        // Same guard as TranslateRow - a running translation must not be switched to selected-rows mode.
+        if (_translationInProgress)
+        {
+            return;
+        }
+
+        var indices = RowGrid?.SelectedItems?
+            .OfType<TranslateRow>()
+            .Select(row => Rows.IndexOf(row))
+            .Where(index => index >= 0)
+            .Distinct()
+            .OrderBy(index => index)
+            .ToList() ?? new List<int>();
+        if (indices.Count == 0)
+        {
+            return;
+        }
+
+        await DoTranslate(onlyCurrentLine: true, indices);
+    }
+
+    [RelayCommand]
     private async Task BrowseModel()
     {
         // OpenAI-compatible servers list their models at GET {base}/v1/models; Ollama uses /api/tags.
@@ -1318,7 +1343,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
     }
 
-    private async Task<bool> DoTranslate(bool onlyCurrentLine)
+    private async Task<bool> DoTranslate(bool onlyCurrentLine, List<int>? onlyRowIndices = null)
     {
         // The pre-flight below awaits (model download, server startup) before
         // _translationInProgress is set - block re-entry for that whole window so a
@@ -1356,6 +1381,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         _onlyCurrentLine = onlyCurrentLine;
+        _onlyRowIndices = onlyRowIndices ?? new List<int>();
         _translationStarting = true;
         try
         {
@@ -1508,6 +1534,14 @@ public partial class AutoTranslateViewModel : ObservableObject
                 start = Rows.IndexOf(selectedItem);
             }
 
+            // "Translate rows" walks the selected rows one by one, each in single-line mode.
+            var rowQueue = new Queue<int>(_onlyRowIndices);
+            var rowQueueTotal = rowQueue.Count;
+            if (rowQueue.Count > 0)
+            {
+                start = rowQueue.Dequeue();
+            }
+
             // Single-line mode forced by the user setting or the engine itself is permanent;
             // forceSingleLineMode may additionally be turned on temporarily after errors and
             // is only allowed to fall back to merged mode when the permanent flag is off.
@@ -1618,7 +1652,24 @@ public partial class AutoTranslateViewModel : ObservableObject
                 {
                     index += translateCount;
                     noProgressCount = 0;
-                    EnqueueTranslateProgress(index);
+
+                    if (_onlyCurrentLine && rowQueueTotal > 0)
+                    {
+                        // Progress over the selected rows; no follow-along select, so the selection stays.
+                        var progressValue = (double)(rowQueueTotal - rowQueue.Count) * 100 / rowQueueTotal;
+                        TranslateUiUpdates.EnqueueProgress(progressValue, $"{(int)progressValue} %");
+                        TranslateUiUpdates.EnqueueUpdate(() => HasTranslatedSomething = true);
+                        if (rowQueue.Count > 0)
+                        {
+                            index = rowQueue.Dequeue();
+                            errorCount = 0;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        EnqueueTranslateProgress(index);
+                    }
 
                     if (_onlyCurrentLine)
                     {

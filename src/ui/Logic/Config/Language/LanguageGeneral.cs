@@ -710,6 +710,7 @@ public class LanguageGeneral
     public string Translate { get; set; }
     public string TranslatePercentX { get; set; }
     public string TranslateRow { get; set; }
+    public string TranslateRows { get; set; }
     public string Translation { get; set; }
     public string TwoLetterLanguageCode { get; set; }
     public string Type { get; set; }
@@ -1608,6 +1609,7 @@ public class LanguageGeneral
         Translate = "Translate";
         TranslatePercentX = "Translating: {0}%";
         TranslateRow = "Translate row";
+        TranslateRows = "Translate rows";
         Translation = "Translation";
         TwoLetterLanguageCode = "Two-letter language code";
         Type = "Type";

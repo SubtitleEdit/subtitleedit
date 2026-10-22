@@ -363,19 +363,33 @@ public class AutoTranslateWindow : Window
 
     private Border BuildRowGrid(AutoTranslateViewModel vm)
     {
+        var menuItemTranslateRow = new MenuItem
+        {
+            Header = Se.Language.General.TranslateRow,
+            Command = vm.TranslateRowCommand,
+        };
+        var menuItemTranslateRows = new MenuItem
+        {
+            Header = Se.Language.General.TranslateRows,
+            Command = vm.TranslateRowsCommand,
+        };
         var contextMenu = new MenuFlyout
         {
             Items =
             {
-                new MenuItem
-                {
-                    Header = Se.Language.General.TranslateRow,
-                    Command = vm.TranslateRowCommand,
-                },
+                menuItemTranslateRow,
+                menuItemTranslateRows,
             }
         };
 
         var tableView = TableViewExtras.MakeTableView();
+        contextMenu.Opening += (_, _) =>
+        {
+            // "Translate rows" only when more than one row is selected - one row keeps "Translate row".
+            var multipleSelected = (tableView.SelectedItems?.Count ?? 0) > 1;
+            menuItemTranslateRow.IsVisible = !multipleSelected;
+            menuItemTranslateRows.IsVisible = multipleSelected;
+        };
         tableView.Height = double.NaN;
         tableView.ContextFlyout = contextMenu;
         tableView.DataContext = vm;
