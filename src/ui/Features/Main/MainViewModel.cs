@@ -1355,6 +1355,8 @@ public partial class MainViewModel :
     {
         Se.ApplyRuleSettingsToLibSe();
 
+        Configuration.Settings.General.DefaultEncoding = Se.Settings.General.DefaultEncoding;
+
         TimedTextImscRosetta.LineHeight = Se.Settings.Formats.RosettaLineHeight;
         TimedTextImscRosetta.FontSize = Se.Settings.Formats.RosettaFontSize;
         if (Se.Settings.Formats.RosettaLanguageAutoDetect)
