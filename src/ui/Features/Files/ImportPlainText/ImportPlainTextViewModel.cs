@@ -578,6 +578,8 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         }
         catch (ForcedAlignerException exception)
         {
+            // Always kept: the engine's own output is what a bug report needs.
+            Se.WriteToolsLog($"{exception.Message}{Environment.NewLine}{exception.Detail}", true);
             await MessageBox.Show(
                 Window!,
                 Se.Language.General.Error,

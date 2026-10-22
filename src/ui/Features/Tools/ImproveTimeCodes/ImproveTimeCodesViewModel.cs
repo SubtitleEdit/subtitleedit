@@ -402,7 +402,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         }
         catch (Exception exception)
         {
-            Se.WriteToolsLog(exception is ForcedAlignerException e ? $"{e.Message}{Environment.NewLine}{e.Detail}" : exception.ToString());
+            Se.WriteToolsLog(exception is ForcedAlignerException e ? $"{e.Message}{Environment.NewLine}{e.Detail}" : exception.ToString(), true);
             return null;
         }
     }
@@ -582,7 +582,8 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         }
         catch (ForcedAlignerException exception)
         {
-            Se.WriteToolsLog(exception.Detail);
+            // Always kept: the engine's own output is what a bug report needs.
+            Se.WriteToolsLog($"{exception.Message}{Environment.NewLine}{exception.Detail}", true);
             StatusText = exception.Message;
             await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
