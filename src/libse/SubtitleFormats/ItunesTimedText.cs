@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Settings;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -157,6 +158,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 xml = templateXml;
                 nsmgr = MakeNamespaceManager(xml);
                 ClearBodyDiv(xml, nsmgr);
+                if (GetRootParameter(xml, "timeBase") == null)
+                {
+                    SetRootParameter(xml, "timeBase", "smpte"); // the time codes are written as frames
+                }
+
                 SetRootParameter(xml, "frameRate", frameRate);
                 SetRootParameter(xml, "frameRateMultiplier", frameRateMultiplier);
                 SetRootParameter(xml, "dropMode", dropMode);
@@ -180,10 +186,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (ClearBodyDiv(xml, nsmgr))
                     {
                         // The time codes are written at the current frame rate, so the source's
-                        // timing parameters must follow it (e.g. after a frame rate change, #16257).
-                        SetRootParameter(xml, "frameRate", frameRate);
-                        SetRootParameter(xml, "frameRateMultiplier", frameRateMultiplier);
-                        SetRootParameter(xml, "dropMode", dropMode);
+                        // timing parameters must follow it after a frame rate change (#16257).
+                        // When the rate is unchanged the source's own values are kept, so a
+                        // round trip does not turn "1000 1001"/"nonDrop" into "999 1000"/"dropNTSC".
+                        var headerFrameRate = GetHeaderFrameRate(xml);
+                        if (headerFrameRate == null || Math.Abs(headerFrameRate.Value - Configuration.Settings.General.CurrentFrameRate) >= 0.01)
+                        {
+                            SetRootParameter(xml, "frameRate", frameRate);
+                            SetRootParameter(xml, "frameRateMultiplier", frameRateMultiplier);
+                            SetRootParameter(xml, "dropMode", dropMode);
+                        }
                         ApplyRegionSettings(xml, nsmgr, settings);
                     }
                     else
@@ -639,7 +651,63 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ns = "http://www.w3.org/ns/ttml#parameter";
             }
 
-            root.SetAttribute(localName, ns, value);
+            // with the "ttp" prefix, so a template without an xmlns:ttp declaration does not get
+            // a generated "p2" prefix
+            var newAttribute = xml.CreateAttribute("ttp", localName, ns);
+            newAttribute.Value = value;
+            root.Attributes.Append(newAttribute);
+        }
+
+        private static string GetRootParameter(XmlDocument xml, string localName)
+        {
+            foreach (XmlAttribute attr in xml.DocumentElement.Attributes)
+            {
+                if (attr.LocalName == localName && attr.NamespaceURI.Contains("ttml#parameter"))
+                {
+                    return attr.Value;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// The frame rate a header's ttp:frameRate and ttp:frameRateMultiplier describe, read the
+        /// same way as when loading (TimedText10), or null when there is none.
+        /// </summary>
+        private static double? GetHeaderFrameRate(XmlDocument xml)
+        {
+            var frameRateText = GetRootParameter(xml, "frameRate");
+            if (frameRateText == null ||
+                !double.TryParse(frameRateText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var fr))
+            {
+                return null;
+            }
+
+            var multiplier = GetRootParameter(xml, "frameRateMultiplier");
+            if (multiplier == "999 1000" || multiplier == "1000 1001")
+            {
+                if (Math.Abs(fr - 30) < 0.01)
+                {
+                    return 29.97;
+                }
+
+                if (Math.Abs(fr - 24) < 0.01)
+                {
+                    return 23.976;
+                }
+            }
+
+            if (multiplier != null)
+            {
+                var arr = multiplier.Split();
+                if (arr.Length == 2 && int.TryParse(arr[0], out var numerator) && int.TryParse(arr[1], out var denominator) && denominator > 0)
+                {
+                    fr = fr * numerator / denominator;
+                }
+            }
+
+            return fr;
         }
 
         private static void SetRootLanguage(XmlDocument xml, string language)
