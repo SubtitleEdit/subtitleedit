@@ -865,8 +865,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsKorean =
         {
-            "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", "일어나", "잘했어", "뭐라고", "있어요",
-            "있어요", "보여줘", "괜찮아요", "목소릴", "기억이", "저주를", "좋아요"
+            "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", 
+            "일어나", "잘했어", "뭐라고", "있어요", "있어요", "보여줘", "괜찮아요", "목소릴", "기억이", "저주를", 
+            "좋아요", "조사관", "회장님", "새끼야", "사모님", "가정부", "숨소리", "잠수부", "어떻게", "의미심장한",
+            "양장점", "긴장감", "거예요", "그래요", "없어요", "고마워요", "알았어요", "안녕하세요", "모르겠어요"
         };
 
         // Everyday Macedonian words, preferring the ones Bulgarian and Serbian spell
@@ -1125,18 +1127,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     best = languageCode;
                     bestScore = score;
                 }
-            }
-
-            // "mk", "sr", "uk", "bg", "ru" or null, scanning the letters once no matter how many blocks ask.
-            string CyrillicByLetters()
-            {
-                if (!cyrillicChecked)
-                {
-                    cyrillicByLetters = GetCyrillicLanguageByLetters(text, counts);
-                    cyrillicChecked = true;
-                }
-
-                return cyrillicByLetters;
             }
 
             var count = counts.Get(AutoDetectWordsEnglish);
@@ -1610,6 +1600,18 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             score = bestScore;
             return best;
+
+            // "mk", "sr", "uk", "bg", "ru" or null, scanning the letters once no matter how many blocks ask.
+            string CyrillicByLetters()
+            {
+                if (!cyrillicChecked)
+                {
+                    cyrillicByLetters = GetCyrillicLanguageByLetters(text, counts);
+                    cyrillicChecked = true;
+                }
+
+                return cyrillicByLetters;
+            }
         }
 
         public static string AutoDetectGoogleLanguage(Subtitle subtitle)
@@ -2432,13 +2434,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var cyrillicCount = counts1251.Get(AutoDetectWordsRussianShort) + counts1251.Get(AutoDetectWordsSerbianCyrillic) +
                                     counts1251.Get(AutoDetectWordsBulgarianShort) + counts1251.Get(AutoDetectWordsMacedonian) +
                                     counts1251.Get(AutoDetectWordsUkrainian);
-
+                var koreanCount = GetCount(Encoding.GetEncoding(949).GetString(buffer), AutoDetectWordsKorean);
+                
                 // Cyrillic bytes read as 1253 are Greek letters too, and two-letter Greek words
                 // (να, το, με, ...) match such junk by chance - so Greek has to beat the Cyrillic count.
                 var greekEncoding = Encoding.GetEncoding(1253); // Greek
                 var greekCount = GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek);
                 if (greekCount > 5 && greekCount > cyrillicCount)
                 {
+                    if (koreanCount > greekCount)
+                    {
+                        return Encoding.GetEncoding(949); // Korean
+                    }
+
                     return greekEncoding;
                 }
 
@@ -2562,7 +2570,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var thaiEncoding = Encoding.GetEncoding(874); // Thai
                 var thaiCount = GetCount(thaiEncoding.GetString(buffer), AutoDetectWordsThai);
                 var koreanEncoding = Encoding.GetEncoding(949); // Korean
-                var koreanCount = GetCount(koreanEncoding.GetString(buffer), AutoDetectWordsKorean);
                 if (thaiCount > 10 || koreanCount > 10)
                 {
                     return thaiCount > koreanCount ? thaiEncoding : koreanEncoding;
