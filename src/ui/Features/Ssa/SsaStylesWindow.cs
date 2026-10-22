@@ -524,7 +524,7 @@ public class SsaStylesWindow : Window
             {
                 Content = new TextBlock { Text = text, FontWeight = weight, FontStyle = style, FontSize = EditorChrome.FieldFontSize },
                 Width = 28,
-                Height = 28,
+                Height = EditorChrome.ScaledSize(28),
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 [!ToggleButton.IsCheckedProperty] = new Binding(Current + property) { Mode = BindingMode.TwoWay },

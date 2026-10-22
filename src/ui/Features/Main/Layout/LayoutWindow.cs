@@ -69,7 +69,7 @@ public class LayoutWindow : Window
             var badge = new Border
             {
                 MinWidth = 26,
-                Height = 26,
+                Height = EditorChrome.ScaledSize(26),
                 CornerRadius = new CornerRadius(13),
                 Padding = new Thickness(6, 0),
                 Background = new SolidColorBrush(Color.FromArgb(0xb0, 0x10, 0x12, 0x18)),

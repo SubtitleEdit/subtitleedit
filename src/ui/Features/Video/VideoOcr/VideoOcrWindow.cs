@@ -258,7 +258,7 @@ public class VideoOcrWindow : Window
         {
             Content = text,
             Command = command,
-            Height = 28,
+            Height = EditorChrome.ScaledSize(28),
             FontSize = EditorChrome.FieldFontSize,
             Padding = new Thickness(10, 0),
             VerticalContentAlignment = VerticalAlignment.Center,

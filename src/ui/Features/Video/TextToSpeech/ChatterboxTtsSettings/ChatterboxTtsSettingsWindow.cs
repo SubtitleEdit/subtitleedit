@@ -117,7 +117,7 @@ public class ChatterboxTtsSettingsWindow : Window
             CornerRadius = new CornerRadius(6),
             Padding = new Thickness(8, 0),
             MinHeight = 28,
-            Height = 28,
+            Height = EditorChrome.ScaledSize(28),
             VerticalAlignment = VerticalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
             FontSize = EditorChrome.FieldFontSize,

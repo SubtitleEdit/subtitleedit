@@ -161,7 +161,7 @@ public class VideoOcrEngineSettingsWindow : Window
         foreach (var button in new[] { redownload, openFolder })
         {
             button.Classes.Add("tool");
-            button.Height = 30;
+            button.Height = EditorChrome.ScaledSize(30);
             button.Padding = new Thickness(10, 0);
             button.FontSize = EditorChrome.FieldFontSize;
         }

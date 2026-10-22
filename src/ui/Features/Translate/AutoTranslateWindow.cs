@@ -602,7 +602,7 @@ public class AutoTranslateWindow : Window
     private static Button Flat(Button button)
     {
         button.Classes.Add("tool");
-        button.Height = 28;
+        button.Height = EditorChrome.ScaledSize(28);
         button.MinWidth = 0;
         button.Padding = new Thickness(10, 0);
         button.FontSize = EditorChrome.FieldFontSize;
@@ -614,7 +614,7 @@ public class AutoTranslateWindow : Window
     private static Button Compact(Button button)
     {
         button.MinHeight = 28;
-        button.Height = 28;
+        button.Height = EditorChrome.ScaledSize(28);
         button.MinWidth = 0;
         button.Padding = new Thickness(10, 0);
         button.FontSize = EditorChrome.FieldFontSize;

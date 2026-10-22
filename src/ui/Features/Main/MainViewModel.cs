@@ -15256,6 +15256,7 @@ public partial class MainViewModel :
         UiUtil.SetFontName(Se.Settings.Appearance.FontName);
         UiTheme.SetCurrentTheme();
         InitMenu.ApplyFontSize(Menu);
+        MainView?.ApplyEditorStyles(); // field font size and height follow the UI font size
 
         if (ToolbarTopSeparator != null)
         {

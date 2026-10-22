@@ -643,7 +643,7 @@ public class AiReviewWindow : Window
     private static void CompactButton(Button button)
     {
         button.MinHeight = 28;
-        button.Height = 28;
+        button.Height = EditorChrome.ScaledSize(28);
         button.Padding = new Thickness(10, 0);
         button.FontSize = EditorChrome.FieldFontSize;
         button.VerticalContentAlignment = VerticalAlignment.Center;

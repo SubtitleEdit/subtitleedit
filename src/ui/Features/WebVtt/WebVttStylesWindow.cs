@@ -270,7 +270,7 @@ public class WebVttStylesWindow : Window
             {
                 Content = new TextBlock { Text = text, FontWeight = weight, FontStyle = style, TextDecorations = decorations, FontSize = EditorChrome.FieldFontSize },
                 Width = 28,
-                Height = 28,
+                Height = EditorChrome.ScaledSize(28),
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 [!ToggleButton.IsCheckedProperty] = new Binding(Current + property) { Mode = BindingMode.TwoWay },

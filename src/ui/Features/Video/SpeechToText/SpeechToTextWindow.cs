@@ -753,7 +753,7 @@ public class SpeechToTextWindow : Window
             var button = new Button
             {
                 Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(12, 0) },
-                Height = 28,
+                Height = EditorChrome.ScaledSize(28),
                 Command = command,
                 VerticalContentAlignment = VerticalAlignment.Center,
             };

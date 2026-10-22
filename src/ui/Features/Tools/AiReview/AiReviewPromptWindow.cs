@@ -58,7 +58,7 @@ public class AiReviewPromptWindow : Window
         buttonGenerate.Bind(Button.ContentProperty, new Binding(nameof(vm.GenerateButtonText)));
         buttonGenerate.Bind(IsVisibleProperty, new Binding(nameof(vm.CanGenerate)));
         buttonGenerate.MinHeight = 28;
-        buttonGenerate.Height = 28;
+        buttonGenerate.Height = EditorChrome.ScaledSize(28);
         buttonGenerate.Padding = new Thickness(10, 0);
         buttonGenerate.FontSize = EditorChrome.FieldFontSize;
         buttonGenerate.VerticalContentAlignment = VerticalAlignment.Center;

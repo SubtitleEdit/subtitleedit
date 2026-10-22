@@ -100,7 +100,7 @@ public class FontCollectorWindow : Window
         var button = new Button
         {
             Content = content,
-            Height = 30,
+            Height = EditorChrome.ScaledSize(30),
             Command = command,
             VerticalContentAlignment = VerticalAlignment.Center,
         };
