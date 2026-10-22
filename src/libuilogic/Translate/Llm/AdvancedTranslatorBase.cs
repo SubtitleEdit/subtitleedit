@@ -12,9 +12,9 @@ using Nikse.SubtitleEdit.UiLogic.Translate;
 namespace Nikse.SubtitleEdit.UiLogic.Translate.Llm;
 
 /// <summary>
-/// Shared batch/context translation loop of the "advanced" local-LLM engines: sends numbered
+/// Shared batch/context translation policy for local and cloud LLM clients: sends numbered
 /// batches with a rolling history of already-translated lines plus user-configured
-/// synopsis/glossary/style, and requires a schema-constrained JSON reply so line alignment is
+/// synopsis/glossary/style, and validates a numbered JSON reply so line alignment is
 /// guaranteed. The Auto-translate loop and batch convert both call <see cref="TranslateBatchAsync"/>
 /// (via <see cref="IBatchContextTranslator"/>); the plain <see cref="Translate"/> path (used for
 /// "translate current line") is a context-free batch of one. Subclasses only supply the endpoint
@@ -24,7 +24,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 {
     private ILlmClient? _client;
     protected abstract AdvancedTranslationSettings Settings { get; }
-    protected virtual ILlmClient CreateClient() => new LlamaCppAdvancedClient(Settings);
+    protected virtual ILlmClient CreateClient() => new OpenAiLlmClient(Settings);
     public Action<Action> ApplyResults { get; set; } = action => action();
 
     public abstract string Name { get; }
@@ -57,8 +57,8 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
     {
         var stripped = StrippedLine.Strip(text.Trim());
-        var lines = new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, stripped.Text) };
-        var map = await TranslateLinesAsync(lines, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken);
+        var lines = new List<AdvancedTranslationProtocol.BatchLine> { new(1, stripped.Text) };
+        var map = await TranslateLinesAsync(lines, new List<AdvancedTranslationProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken);
         // An echo that survived the warmer retry in TranslateLinesAsync is accepted: the line may
         // legitimately read the same in both languages, and failing it would abort the translation.
         return map.TryGetValue(1, out var translation) && translation.Length > 0
@@ -102,17 +102,17 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         // they cost a lot of tokens, and small models "normalize" them into something that no
         // longer matches the source (#13927). A pure override/drawing line strips to empty, and
         // IsComplete then accepts the model's empty answer for it rather than failing the batch.
-        var lines = new List<LlamaCppAdvancedProtocol.BatchLine>(count);
+        var lines = new List<AdvancedTranslationProtocol.BatchLine>(count);
         var stripped = new StrippedLine[count];
         for (var i = 0; i < count; i++)
         {
             stripped[i] = StrippedLine.Strip(rows[index + i].Text);
-            lines.Add(new LlamaCppAdvancedProtocol.BatchLine(i + 1, stripped[i].Text));
+            lines.Add(new AdvancedTranslationProtocol.BatchLine(i + 1, stripped[i].Text));
         }
 
         // Translation-tuned models (TranslateGemma) can echo history into a lone line's
         // translation, so the single-line case - including bisection retries - goes context-free.
-        var history = count > 1 ? CollectHistory(rows, index) : new List<LlamaCppAdvancedProtocol.HistoryPair>();
+        var history = count > 1 ? CollectHistory(rows, index) : new List<AdvancedTranslationProtocol.HistoryPair>();
         var map = await TranslateLinesAsync(lines, history, sourceLanguageCode, targetLanguageCode, cancellationToken);
 
         // An echoed line in a batch is bisected down to that line; a single line that still comes
@@ -147,7 +147,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                                        (string.IsNullOrEmpty(Error) ? string.Empty : ": " + Error));
     }
 
-    private async Task<Dictionary<int, string>> TranslateLinesAsync(List<LlamaCppAdvancedProtocol.BatchLine> lines, List<LlamaCppAdvancedProtocol.HistoryPair> history, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+    private async Task<Dictionary<int, string>> TranslateLinesAsync(List<AdvancedTranslationProtocol.BatchLine> lines, List<AdvancedTranslationProtocol.HistoryPair> history, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
     {
         var client = _client ?? throw new InvalidOperationException("Initialize() not called");
         var settings = Settings;
@@ -155,9 +155,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
         // The "codes" this engine receives are English language names (ListLanguages puts the
         // name in TranslationPair.Code), which is what the prompt expects.
-        var systemPrompt = LlamaCppAdvancedProtocol.BuildSystemPrompt(sourceLanguageCode, targetLanguageCode, settings);
-        var userContent = LlamaCppAdvancedProtocol.BuildUserContent(history, lines);
-        var responseFormat = LlamaCppAdvancedProtocol.BuildResponseFormatJson(lines);
+        var systemPrompt = AdvancedTranslationProtocol.BuildSystemPrompt(sourceLanguageCode, targetLanguageCode, settings);
+        var userContent = AdvancedTranslationProtocol.BuildUserContent(history, lines);
+        var responseFormat = AdvancedTranslationProtocol.BuildResponseFormatJson(lines);
 
         // Generous output budget for the batch (a translation is roughly source-sized; the JSON
         // wrapper adds a little per line). Only a fallback: the user's MaxTokens setting wins in
@@ -181,7 +181,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                 // temperature the same request tends to echo again.
                 var temperatureBump = echoed ? EchoRetryTemperatureBump : 0;
                 var reply = await client.ChatAsync(url, systemPrompt, userContent, responseFormat, cancellationToken, GetModel(), defaultMaxTokens, temperatureBump);
-                map = LlamaCppAdvancedProtocol.ParseTranslations(reply);
+                map = AdvancedTranslationProtocol.ParseTranslations(reply);
                 if (IsComplete(map, lines))
                 {
                     var echoedLine = FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode);
@@ -200,9 +200,10 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
                 Error = DescribeUnusableReply(reply, client.ReplyFromReasoning, client.LastRequestDisabledThinking);
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException ex)
             {
                 Error = client.Error;
+                if (ex.StatusCode != null) throw;
                 if (attempt == 1)
                 {
                     throw;
@@ -243,11 +244,11 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// <summary>
     /// The rolling context: the last N already-translated rows immediately before the batch.
     /// </summary>
-    private List<LlamaCppAdvancedProtocol.HistoryPair> CollectHistory(ObservableCollection<TranslateRow> rows, int index)
+    private List<AdvancedTranslationProtocol.HistoryPair> CollectHistory(ObservableCollection<TranslateRow> rows, int index)
     {
         var settings = Settings;
         var maxPairs = Math.Clamp(settings.HistoryPairs, 0, 50);
-        var history = new List<LlamaCppAdvancedProtocol.HistoryPair>(maxPairs);
+        var history = new List<AdvancedTranslationProtocol.HistoryPair>(maxPairs);
         for (var i = index - 1; i >= 0 && history.Count < maxPairs; i--)
         {
             if (string.IsNullOrEmpty(rows[i].TranslatedText))
@@ -264,7 +265,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                 continue; // a pure override/drawing line is no use as an example pair
             }
 
-            history.Add(new LlamaCppAdvancedProtocol.HistoryPair(source, target));
+            history.Add(new AdvancedTranslationProtocol.HistoryPair(source, target));
         }
 
         history.Reverse();
@@ -277,7 +278,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// The number of the first line whose translation is just its source text again (see
     /// <see cref="TranslationEchoGuard"/>), or -1 when there is none.
     /// </summary>
-    internal static int FindUntranslatedEcho(Dictionary<int, string> map, List<LlamaCppAdvancedProtocol.BatchLine> lines, string sourceLanguageCode, string targetLanguageCode)
+    internal static int FindUntranslatedEcho(Dictionary<int, string> map, List<AdvancedTranslationProtocol.BatchLine> lines, string sourceLanguageCode, string targetLanguageCode)
     {
         foreach (var line in lines)
         {
@@ -292,7 +293,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     }
 
     /// <summary>Every requested line number must be present, and non-empty for non-empty sources.</summary>
-    private static bool IsComplete(Dictionary<int, string> map, List<LlamaCppAdvancedProtocol.BatchLine> lines)
+    private static bool IsComplete(Dictionary<int, string> map, List<AdvancedTranslationProtocol.BatchLine> lines)
     {
         if (map.Count != lines.Count) return false;
         foreach (var line in lines)

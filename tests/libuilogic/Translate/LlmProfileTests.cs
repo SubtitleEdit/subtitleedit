@@ -28,7 +28,7 @@ public class LlmProfileTests
     public async Task OpenAiAuthenticatesWithoutLocalServerFields()
     {
         var handler = new RecordingHandler(_ => new(HttpStatusCode.OK) { Content = new StringContent("{\"choices\":[{\"message\":{\"content\":\"你好\"}}]}") });
-        using var client = new LlamaCppAdvancedClient(new() { TopK = 10, RepeatPenalty = 1.2 }, "secret", false, new HttpClient(handler));
+        using var client = new OpenAiLlmClient(new() { TopK = 10, RepeatPenalty = 1.2 }, "secret", false, new HttpClient(handler));
         Assert.Equal("你好", await client.ChatAsync("https://example.test/custom/chat", "system", "hello", null, TestContext.Current.CancellationToken, "model"));
         Assert.Equal("Bearer secret", handler.Authorization);
         Assert.DoesNotContain("cache_prompt", handler.Bodies[0]);
@@ -40,8 +40,8 @@ public class LlmProfileTests
     public async Task AuthenticationFailureDoesNotTryWeakerFormats()
     {
         var handler = new RecordingHandler(_ => new(HttpStatusCode.Unauthorized) { Content = new StringContent("invalid API key") });
-        using var client = new LlamaCppAdvancedClient(new(), "bad", false, new HttpClient(handler));
-        await Assert.ThrowsAsync<HttpRequestException>(() => client.ChatAsync("https://example.test/chat", "system", "hello", "{}", default));
+        using var client = new OpenAiLlmClient(new(), "bad", false, new HttpClient(handler));
+        await Assert.ThrowsAsync<HttpRequestException>(() => client.ChatAsync("https://example.test/chat", "system", "hello", "{}", TestContext.Current.CancellationToken));
         Assert.Single(handler.Bodies);
     }
 
@@ -51,8 +51,8 @@ public class LlmProfileTests
         var handler = new RecordingHandler(n => n == 1
             ? new(HttpStatusCode.BadRequest) { Content = new StringContent("response_format json_schema unsupported") }
             : new(HttpStatusCode.OK) { Content = new StringContent("{\"choices\":[{\"message\":{\"content\":\"{}\"}}]}") });
-        using var client = new LlamaCppAdvancedClient(new(), "", false, new HttpClient(handler));
-        await client.ChatAsync("https://example.test/chat", "system", "hello", "{\"type\":\"json_schema\"}", default);
+        using var client = new OpenAiLlmClient(new(), "", false, new HttpClient(handler));
+        await client.ChatAsync("https://example.test/chat", "system", "hello", "{\"type\":\"json_schema\"}", TestContext.Current.CancellationToken);
         Assert.Equal(2, handler.Bodies.Count);
         Assert.Contains("json_object", handler.Bodies[1]);
     }

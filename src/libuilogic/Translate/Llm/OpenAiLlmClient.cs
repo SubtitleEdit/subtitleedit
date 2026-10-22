@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.UiLogic.Http;
 namespace Nikse.SubtitleEdit.UiLogic.Translate.Llm;
 
 /// <summary>
-/// OpenAI-compatible chat-completions client for the advanced llama.cpp translate engine.
+/// OpenAI-compatible chat-completions client shared by cloud and local translation profiles.
 /// Requests grammar-constrained structured output (response_format json_schema); servers that
 /// reject it (older llama.cpp, Ollama, other OpenAI-compatible endpoints) get a json_object and
 /// finally a plain retry. cache_prompt is set explicitly so llama-server reuses the KV cache for
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate.Llm;
 /// "--reasoning off" for (a self-supplied .gguf, custom server arguments, a server SE did not
 /// start) otherwise spends the whole token budget thinking and never reaches the translation.
 /// </summary>
-public class LlamaCppAdvancedClient : ILlmClient
+public class OpenAiLlmClient : ILlmClient
 {
     private readonly HttpClient _httpClient;
     private readonly AdvancedTranslationSettings _settings;
@@ -62,7 +62,7 @@ public class LlamaCppAdvancedClient : ILlmClient
     /// </summary>
     public bool LastRequestDisabledThinking { get; private set; }
 
-    public LlamaCppAdvancedClient(AdvancedTranslationSettings? settings = null, string apiKey = "", bool llamaCpp = true, HttpClient? httpClient = null)
+    public OpenAiLlmClient(AdvancedTranslationSettings? settings = null, string apiKey = "", bool llamaCpp = true, HttpClient? httpClient = null)
     {
         _settings = settings ?? new();
         _llamaCpp = llamaCpp;
@@ -77,6 +77,11 @@ public class LlamaCppAdvancedClient : ILlmClient
         ReplyFromReasoning = false;
 
         var response = await PostWithThinkingFallbackAsync(url, systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, cancellationToken);
+        for (var retry = 0; retry < 2 && (response.status == 429 || response.status >= 500); retry++)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(retry + 1), cancellationToken).ConfigureAwait(false);
+            response = await PostWithThinkingFallbackAsync(url, systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, cancellationToken);
+        }
 
         // A stall is not a format rejection - retrying the same prompt with a looser format
         // would just burn another watchdog period, so only the format fallbacks run here.
@@ -93,8 +98,8 @@ public class LlamaCppAdvancedClient : ILlmClient
         if (!response.ok)
         {
             Error = response.body;
-            SeLogger.Error("llama.cpp advanced translate: engine call failed: " + response.body);
-            throw new HttpRequestException(ShortError(response.body), null, (System.Net.HttpStatusCode)response.status);
+            SeLogger.Error("OpenAI translation: engine call failed: " + response.body);
+            throw new HttpRequestException(ShortError(response.body), null, response.status > 0 ? (System.Net.HttpStatusCode)response.status : null);
         }
 
         // Streamed replies arrive already assembled from the deltas; a server that ignored
@@ -130,7 +135,7 @@ public class LlamaCppAdvancedClient : ILlmClient
             return response;
         }
 
-        SeLogger.Error("llama.cpp advanced translate: server rejected chat_template_kwargs.enable_thinking, sending requests without it: " + response.body);
+        SeLogger.Error("OpenAI translation: server rejected chat_template_kwargs.enable_thinking, sending requests without it: " + response.body);
         DisableThinking = false;
         LastRequestDisabledThinking = false;
         return retry;

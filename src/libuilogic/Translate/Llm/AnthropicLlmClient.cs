@@ -35,11 +35,18 @@ public sealed class AnthropicLlmClient : ILlmClient
         // Anthropic rejects simultaneous temperature and top_p on some models; prefer explicit top_p.
         if (_settings.TopP >= 0) { request.Remove("temperature"); request["top_p"] = _settings.TopP; }
         if (_settings.TopK >= 0) request["top_k"] = _settings.TopK;
-        using var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-        using var response = await _httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
-        var body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        if (!response.IsSuccessStatusCode)
+        var body = "";
+        for (var attempt = 0; ; attempt++)
         {
+            using var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            using var response = await _httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
+            body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            if (response.IsSuccessStatusCode) break;
+            if (attempt < 2 && ((int)response.StatusCode == 429 || (int)response.StatusCode >= 500))
+            {
+                await Task.Delay(TimeSpan.FromSeconds(attempt + 1), cancellationToken).ConfigureAwait(false);
+                continue;
+            }
             Error = $"HTTP {(int)response.StatusCode}: {body[..Math.Min(body.Length, 500)]}";
             throw new HttpRequestException(Error, null, response.StatusCode);
         }

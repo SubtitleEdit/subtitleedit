@@ -1,3 +1,3 @@
 namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 
-public class LlamaCppAdvancedProtocol : UiLogic.Translate.Llm.LlamaCppAdvancedProtocol { }
+public class LlamaCppAdvancedProtocol : UiLogic.Translate.Llm.AdvancedTranslationProtocol { }

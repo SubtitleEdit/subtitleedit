@@ -18,7 +18,7 @@ public class ProfileLlmTranslator : IAutoTranslator, IDisposable
     }
     internal static ILlmClient CreateClient(TranslationProfile profile) => profile.Protocol == LlmApiProtocol.Anthropic
         ? new AnthropicLlmClient(profile.Policy, profile.ApiKey)
-        : new LlamaCppAdvancedClient(profile.Policy, profile.ApiKey, profile.Location == LlmLocation.Local && profile.EngineId == "LlamaCpp");
+        : new OpenAiLlmClient(profile.Policy, profile.ApiKey, profile.Location == LlmLocation.Local && profile.EngineId == "LlamaCpp");
     public List<TranslationPair> GetSupportedSourceLanguages() => ChatGptTranslate.ListLanguages();
     public List<TranslationPair> GetSupportedTargetLanguages() => ChatGptTranslate.ListLanguages();
     public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)

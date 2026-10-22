@@ -9,12 +9,12 @@ using Nikse.SubtitleEdit.Core.Common;
 namespace Nikse.SubtitleEdit.UiLogic.Translate.Llm;
 
 /// <summary>
-/// The wire format for the advanced llama.cpp engine: numbered lines in, a JSON object mapping
+/// The numbered-batch format shared by the advanced LLM translation clients: numbered lines in, a JSON object mapping
 /// each line number to its translation out. The system prompt is deliberately ordered
 /// stable-parts-first (instructions, synopsis, glossary) so llama-server's automatic prefix
 /// KV-cache reuse (cache_prompt) only has to re-ingest the per-batch tail of each request.
 /// </summary>
-public class LlamaCppAdvancedProtocol
+public class AdvancedTranslationProtocol
 {
     public const string DefaultPrompt =
         "You are a professional subtitle translator. Translate each subtitle line from {0} to {1}. " +
@@ -194,11 +194,10 @@ public class LlamaCppAdvancedProtocol
 
         foreach (var property in doc.RootElement.EnumerateObject())
         {
-            if (property.Value.ValueKind == JsonValueKind.String &&
-                int.TryParse(property.Name, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number))
-            {
-                result[number] = FromWireText(property.Value.GetString());
-            }
+            if (property.Value.ValueKind != JsonValueKind.String ||
+                !int.TryParse(property.Name, NumberStyles.None, CultureInfo.InvariantCulture, out var number) ||
+                property.Name != number.ToString(CultureInfo.InvariantCulture) ||
+                !result.TryAdd(number, FromWireText(property.Value.GetString()))) return new();
         }
 
         return result;
