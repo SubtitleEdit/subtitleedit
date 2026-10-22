@@ -205,9 +205,20 @@ public partial class MainViewModel
 
         // A successful open takes a new stamp; none means the new content could not be read and
         // the open left the current work alone (it already told the user why).
+        var previousStamp = _subtitleFileStamp;
         _subtitleFileStamp = null;
         await SubtitleOpen(fileName, selectedSubtitleIndex: selectedLine, textEncoding: SelectedEncoding, skipLoadVideo: true);
-        if (_subtitleFileStamp == null || !IsSameFile(_subtitleFileName, fileName))
+        if (_subtitleFileStamp == null)
+        {
+            // The subtitle in memory is still SE's version: keep checking saves against it, or the
+            // next activation would take the outside version as SE's own and a save would
+            // overwrite it without asking. Do not offer the same unreadable change again.
+            _subtitleFileStamp = previousStamp;
+            _declinedReloadStamp = SubtitleFileStamp.Read(fileName);
+            return;
+        }
+
+        if (!IsSameFile(_subtitleFileName, fileName))
         {
             return;
         }

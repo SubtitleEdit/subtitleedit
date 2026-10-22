@@ -97,10 +97,7 @@ public sealed class CrispAsrAlignOnlyRunner : ForcedAligner.IRunner
                     "The forced aligner ran out of memory on this window. Try a shorter window length.", detail, process.ExitCode);
             }
 
-            throw new ForcedAlignerException(
-                ForcedAlignerException.FormatExitFailure("The forced aligner failed", process.ExitCode, detail),
-                detail,
-                process.ExitCode);
+            throw ForcedAlignerException.FromProcessExit("The forced aligner failed", process.ExitCode, detail);
         }
 
         return await File.ReadAllTextAsync(outputFileName, cancellationToken).ConfigureAwait(false);
@@ -136,6 +133,24 @@ public sealed class ForcedAlignerException : Exception
     {
         Detail = detail;
         ExitCode = exitCode;
+    }
+
+    /// <summary>
+    /// For an engine run that failed or wrote no output file. Only a non-zero exit code is an
+    /// engine failure (<see cref="ExitCode"/> set, counted towards stopping early); an engine that
+    /// exited normally without output gets its own message instead of "exit code 0".
+    /// </summary>
+    public static ForcedAlignerException FromProcessExit(string what, int exitCode, string detail)
+    {
+        if (exitCode == 0)
+        {
+            var tail = GetDetailTail(detail);
+            var message = $"{what} (the engine produced no output).";
+            return new ForcedAlignerException(
+                tail.Length > 0 ? message + Environment.NewLine + Environment.NewLine + tail : message, detail);
+        }
+
+        return new ForcedAlignerException(FormatExitFailure(what, exitCode, detail), detail, exitCode);
     }
 
     /// <summary>
