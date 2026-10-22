@@ -259,6 +259,15 @@ public class MultipleReplaceWindow : Window
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.NewestFirst)) { Source = vm, Mode = BindingMode.TwoWay },
         };
         var textBoxFilter = EditorChrome.MakeSearchBox(vm, nameof(vm.RulesFilter), Se.Language.Edit.MultipleReplace.FilterRules, 220);
+        textBoxFilter.KeyDown += (_, e) =>
+        {
+            // the list filters while typing - Enter must not reach the window, where it means OK
+            // and would apply the replacements and close
+            if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None)
+            {
+                e.Handled = true;
+            }
+        };
 
         var headerRight = new StackPanel
         {
