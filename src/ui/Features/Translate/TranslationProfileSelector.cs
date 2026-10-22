@@ -17,6 +17,7 @@ public sealed class TranslationProfileSelector : StackPanel
     private readonly Func<Window?> _owner;
     private readonly Action<TranslationProfile?> _changed;
     private bool _refreshing;
+    private bool _subscribed;
 
     public TranslationProfileSelector(Func<Window?> owner, string selectedId, Action<TranslationProfile?> changed, bool batch = false)
     {
@@ -26,26 +27,19 @@ public sealed class TranslationProfileSelector : StackPanel
         _combo = new ComboBox { ItemsSource = _profiles, MinWidth = 180, MaxWidth = 240 }.WithAccessibleName(Se.Language.General.Profile);
         _combo.SelectionChanged += (_, _) => { if (!_refreshing) _changed(_combo.SelectedItem as TranslationProfile); };
         Children.Add(_combo);
-        var add = Tool("+", Se.Language.General.NewProfile);
-        add.Click += async (_, _) => await Edit(new TranslationProfile { Name = TranslationProfileFactory.UniqueName(_profiles, Se.Language.General.NewProfile) });
-        var edit = Tool("…", Se.Language.General.Edit);
-        edit.Click += async (_, _) => { if (_combo.SelectedItem is TranslationProfile p) await Edit(p); };
-        var more = Tool("▾", Se.Language.General.Profiles);
-        var copy = new MenuItem { Header = Se.Language.General.Copy };
-        copy.Click += async (_, _) => { if (_combo.SelectedItem is TranslationProfile p) await Edit(p.Copy(TranslationProfileFactory.UniqueName(_profiles, p.Name))); };
-        var rename = new MenuItem { Header = Se.Language.General.Rename };
-        rename.Click += async (_, _) => { if (_combo.SelectedItem is TranslationProfile p) await Edit(p); };
-        var delete = new MenuItem { Header = Se.Language.General.Delete };
-        delete.Click += (_, _) =>
+        var manage = Tool("…", Se.Language.Translate.ManageProfiles);
+        manage.Name = "ManageTranslationProfiles";
+        manage.Click += async (_, _) => await Manage();
+        Children.Add(manage);
+        AttachedToVisualTree += (_, _) =>
         {
-            if (_combo.SelectedItem is not TranslationProfile p) return;
-            Se.Settings.AutoTranslate.Profiles.RemoveAll(x => x.Id == p.Id);
-            if (Se.Settings.AutoTranslate.SelectedProfileId == p.Id) Se.Settings.AutoTranslate.SelectedProfileId = "";
-            if (Se.Settings.AutoTranslate.BatchProfileId == p.Id) Se.Settings.AutoTranslate.BatchProfileId = "";
-            Se.SaveSettings(); Refresh("");
+            if (!_subscribed) { TranslationProfileStore.Changed += ProfilesChanged; _subscribed = true; }
+            ProfilesChanged();
         };
-        more.Flyout = new MenuFlyout { Items = { copy, rename, delete } };
-        Children.Add(add); Children.Add(edit); Children.Add(more);
+        DetachedFromVisualTree += (_, _) =>
+        {
+            if (_subscribed) { TranslationProfileStore.Changed -= ProfilesChanged; _subscribed = false; }
+        };
         Refresh(string.IsNullOrEmpty(selectedId) ? (batch ? Se.Settings.AutoTranslate.BatchProfileId : Se.Settings.AutoTranslate.SelectedProfileId) : selectedId);
     }
     private static Button Tool(string text, string label)
@@ -53,17 +47,17 @@ public sealed class TranslationProfileSelector : StackPanel
         var button = new Button { Content = text, MinWidth = 28 }.WithAccessibleName(label);
         ToolTip.SetTip(button, label); return button;
     }
-    private async Task Edit(TranslationProfile profile)
+    private async Task Manage()
     {
         if (_owner() is not Window owner) return;
-        var editor = new TranslationProfileEditorWindow(profile);
-        await editor.ShowDialog(owner);
-        if (editor.Result is not TranslationProfile result) return;
-        var store = Se.Settings.AutoTranslate.Profiles;
-        var index = store.FindIndex(p => p.Id == result.Id);
-        if (index >= 0) store[index] = result; else store.Add(result);
-        Se.SaveSettings(); Refresh(result.Id);
+        var selectedId = (_combo.SelectedItem as TranslationProfile)?.Id ?? "";
+        var manager = new TranslationProfileManagerWindow(selectedId);
+        await manager.ShowDialog(owner);
+        if (manager.Saved && !_subscribed) Refresh(selectedId);
     }
+
+    private void ProfilesChanged() => Refresh((_combo.SelectedItem as TranslationProfile)?.Id ?? "");
+
     private void Refresh(string id)
     {
         _refreshing = true;
