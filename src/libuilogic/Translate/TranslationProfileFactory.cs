@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Settings;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Translate.Llm;
 
@@ -31,6 +32,7 @@ public static class TranslationProfileFactory
     public static IAutoTranslator Create(TranslationProfile profile, Action<Action>? applyResults = null)
     {
         var snapshot = profile.Snapshot();
+        Validate(snapshot);
         if (snapshot.Kind == TranslationEngineKind.Llm)
         {
             if (snapshot.NeedsReview) throw new InvalidOperationException("Review this migrated connection's API URL and choose a chat-compatible model before translating.");
@@ -44,6 +46,37 @@ public static class TranslationProfileFactory
             if (snapshot.Parameters.TryGetValue(field.Property, out var value))
                 typeof(ToolsSettings).GetProperty(field.Property)!.SetValue(settings, value);
         return engine.Create(settings);
+    }
+
+    public static void ApplyModelDefaults(AdvancedTranslationSettings settings, LlamaCppModel? model)
+    {
+        if (model == null) return;
+        if (settings.Temperature < 0) settings.Temperature = model.Temperature;
+        if (settings.TopP < 0) settings.TopP = model.TopP;
+        if (settings.TopK < 0) settings.TopK = model.TopK;
+        if (settings.RepeatPenalty < 0) settings.RepeatPenalty = model.RepeatPenalty;
+    }
+
+    public static void Validate(TranslationProfile profile)
+    {
+        if (profile.Kind == TranslationEngineKind.Llm)
+        {
+            if (profile.NeedsReview) throw new InvalidOperationException("Review the migrated connection URL and choose a chat-compatible model before translating.");
+            if (!Uri.TryCreate(profile.ApiUrl, UriKind.Absolute, out var uri) || (uri.Scheme != "http" && uri.Scheme != "https"))
+                throw new InvalidOperationException("Enter a valid HTTP or HTTPS API URL in the translation profile.");
+            return;
+        }
+        var engine = TraditionalEngines.FirstOrDefault(e => e.Id == profile.EngineId)
+            ?? throw new InvalidOperationException("Unknown translation engine: " + profile.EngineId);
+        foreach (var field in engine.Fields)
+        {
+            var value = profile.Parameters.GetValueOrDefault(field.Property) ?? "";
+            if (field.Secret && profile.EngineId is not ("LibreTranslate" or "MyMemoryApi") && string.IsNullOrWhiteSpace(value))
+                throw new InvalidOperationException(engine.Name + " requires " + field.Label + ". Edit the translation profile.");
+            if (field.Label is "API URL" or "Token endpoint" &&
+                (!Uri.TryCreate(value, UriKind.Absolute, out var uri) || (uri.Scheme != "http" && uri.Scheme != "https")))
+                throw new InvalidOperationException(engine.Name + " requires a valid HTTP or HTTPS " + field.Label + ".");
+        }
     }
 
     public static string UniqueName(IEnumerable<TranslationProfile> profiles, string name)

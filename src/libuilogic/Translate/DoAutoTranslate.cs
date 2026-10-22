@@ -25,7 +25,7 @@ public class DoAutoTranslate
             // Single-line mode forced by the user setting or the engine itself is permanent;
             // forceSingleLineMode may additionally be turned on temporarily after errors and
             // is only allowed to fall back to merged mode when the permanent flag is off.
-            var alwaysSingleLineMode = TranslateEachLineSeparately ||
+            var alwaysSingleLineMode = translator is Llm.ProfileLlmTranslator || TranslateEachLineSeparately ||
                                        translator.Name ==
                                        NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
                                        translator.Name == NoLanguageLeftBehindServe.StaticName ||

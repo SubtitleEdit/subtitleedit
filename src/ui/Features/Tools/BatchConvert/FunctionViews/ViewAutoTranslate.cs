@@ -15,25 +15,9 @@ public static class ViewAutoTranslate
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var cbEngines = new ComboBox
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalContentAlignment = HorizontalAlignment.Left,
-            VerticalContentAlignment = VerticalAlignment.Center,
-            MinWidth = 220,
-        };
-        AutomationProperties.SetName(cbEngines, Se.Language.General.Engine);
+        var cbEngines = new TranslationProfileSelector(() => vm.Window, Se.Settings.AutoTranslate.BatchProfileId, vm.SelectTranslationProfile, batch: true);
         cbEngines.DataContext = vm;
-        cbEngines.Bind(ComboBox.ItemsSourceProperty, new Binding(nameof(vm.AutoTranslators)));
-        cbEngines.Bind(ComboBox.SelectedItemProperty, new Binding(nameof(vm.SelectedAutoTranslator)) { Mode = BindingMode.TwoWay });
-        cbEngines.SelectionChanged += (s, e) => vm.OnAutoTranslatorChanged();
-
-        // Install-status dots for the engines Subtitle Edit downloads itself, same as in the
-        // Auto-translate window. Re-assigning the template is what re-evaluates them, so the view
-        // model gets a hook to call after a run has downloaded the engine.
-        cbEngines.ItemTemplate = AutoTranslateCombos.EngineItemTemplate();
-        vm.RefreshAutoTranslateEngineDots = () => cbEngines.ItemTemplate = AutoTranslateCombos.EngineItemTemplate();
+        cbEngines.Bind(Control.IsEnabledProperty, new Binding(nameof(vm.AreControlsEnabled)));
 
         // Model gets a row of its own - the engine row is already crowded with the engine combo and
         // its settings buttons, and the three model editors (Ollama text box + browse, the CrispASR

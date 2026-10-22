@@ -12,10 +12,11 @@ internal static class TranslationProfileMigration
     internal static void EnsureMigrated(Se settings)
     {
         var old = settings.AutoTranslate;
-        if (old.ProfileMigrationVersion >= 1) return;
         old.Profiles ??= new();
+        if (old.ProfileMigrationVersion >= 1) return;
         var defaults = new SeAutoTranslate();
         var batchName = settings.Tools.BatchConvert.AutoTranslateEngine;
+        var batchWasSelected = !string.IsNullOrEmpty(batchName) && batchName != new SeBatchConvert().AutoTranslateEngine;
         void Add(TranslationProfile profile, string oldName)
         {
             profile.Name = TranslationProfileFactory.UniqueName(old.Profiles, profile.Name);
@@ -28,6 +29,7 @@ internal static class TranslationProfileMigration
             var translator = engine.Create(new());
             var profile = new TranslationProfile { Name = engine.Name, EngineId = engine.Id };
             var configured = false;
+            if (old.EngineStrategies.TryGetValue(translator.Name, out var strategy)) profile.Parameters["TranslateStrategy"] = strategy;
             foreach (var field in engine.Fields)
             {
                 var property = typeof(SeAutoTranslate).GetProperty(field.LegacyProperty)!;
@@ -35,7 +37,7 @@ internal static class TranslationProfileMigration
                 profile.Parameters[field.Property] = value;
                 configured |= value != ((string?)property.GetValue(defaults) ?? "");
             }
-            if (configured || translator.Name == old.AutoTranslateLastName || translator.Name == batchName)
+            if (configured || translator.Name == old.AutoTranslateLastName || (batchWasSelected && translator.Name == batchName))
                 Add(profile, translator.Name);
         }
         var candidates = new[]
@@ -73,7 +75,7 @@ internal static class TranslationProfileMigration
             var url = Read(old, "Url");
             var model = Read(old, "Model");
             var prompt = Read(old, "Prompt");
-            if (name != old.AutoTranslateLastName && name != batchName && string.IsNullOrEmpty(key) &&
+            if (name != old.AutoTranslateLastName && (!batchWasSelected || name != batchName) && string.IsNullOrEmpty(key) &&
                 url == Read(defaults, "Url") && model == Read(defaults, "Model") && prompt == Read(defaults, "Prompt")) continue;
             var local = prefix.StartsWith("Ollama") || prefix.StartsWith("LmStudio") || prefix.StartsWith("LlamaCpp");
             var engineId = local ? prefix.Replace("Advanced", "") : "Custom";
@@ -99,7 +101,13 @@ internal static class TranslationProfileMigration
             if (engineId == "LlamaCpp") profile.Parameters["UseRemoteServer"] = old.LlamaCppUseRemoteServer.ToString();
             Add(profile, name);
         }
-        if (old.Profiles.Count == 0) Add(new TranslationProfile { Name = "Google Translate" }, "");
+        if (old.Profiles.Count == 0 || (string.IsNullOrEmpty(old.AutoTranslateLastName) && string.IsNullOrEmpty(old.SelectedProfileId)))
+        {
+            var google = old.Profiles.FirstOrDefault(p => p.EngineId == "GoogleTranslateV1");
+            if (google == null) { Add(new TranslationProfile { Name = "Google Translate" }, ""); google = old.Profiles[^1]; }
+            old.SelectedProfileId = google.Id;
+        }
+        if (!batchWasSelected && string.IsNullOrEmpty(old.BatchProfileId)) old.BatchProfileId = old.SelectedProfileId;
         // Unknown legacy selections require a new choice instead of silently changing the engine.
         if (string.IsNullOrEmpty(old.AutoTranslateLastName) && string.IsNullOrEmpty(old.SelectedProfileId)) old.SelectedProfileId = old.Profiles[0].Id;
         old.ProfileMigrationVersion = 1;

@@ -47,6 +47,7 @@ public class TranslateSettingsWindow : Window
         var comboMerge = UiUtil.MakeComboBox(vm.MergeOptions, vm, nameof(vm.SelectedMergeOptions))
             .WithAccessibleName(Se.Language.Translate.LineMerge);
         comboMerge.HorizontalAlignment = HorizontalAlignment.Stretch;
+        comboMerge.IsEnabled = vm.MergeIsVisible;
 
         var delayNumericUpDown = new NumericUpDown
         {

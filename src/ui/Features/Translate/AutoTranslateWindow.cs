@@ -33,7 +33,7 @@ public class AutoTranslateWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = UiUtil.MakeWindowTitle(Se.Language.General.AutoTranslate);
-        Width = 1050;
+        Width = 1200;
         MinWidth = 800;
         Height = 780;
         MinHeight = 480;
@@ -55,7 +55,9 @@ public class AutoTranslateWindow : Window
         _vm = vm;
 
         var toolbar = BuildToolbar(vm);
+        toolbar.Bind(IsEnabledProperty, new Binding(nameof(vm.IsProgressEnabled)) { Converter = Avalonia.Data.Converters.BoolConverters.Not });
         var engineSettings = BuildEngineSettingsStrip(vm);
+        engineSettings.Bind(IsEnabledProperty, new Binding(nameof(vm.IsProgressEnabled)) { Converter = Avalonia.Data.Converters.BoolConverters.Not });
         var rows = BuildRowGrid(vm);
         var progress = BuildProgressStrip(vm);
         var buttonBar = BuildButtonBar(vm);
@@ -129,22 +131,9 @@ public class AutoTranslateWindow : Window
     /// </summary>
     private static Border BuildToolbar(AutoTranslateViewModel vm)
     {
-        var engineLabel = EditorChrome.MakeDimLabel(Se.Language.General.Engine, new Thickness(4, 0, 0, 0));
+        var engineLabel = EditorChrome.MakeDimLabel(Se.Language.General.Profile, new Thickness(4, 0, 0, 0));
 
-        var engineCombo = UiUtil.MakeComboBox(vm.AutoTranslators, vm, nameof(vm.SelectedAutoTranslator));
-        engineCombo.MinWidth = 210;
-        engineCombo.WithLabeledBy(engineLabel);
-        engineCombo.WithAccessibleName(Se.Language.General.Engine);
-        engineCombo.ItemTemplate = BuildTranslatorItemTemplate();
-        engineCombo.SelectionChanged += (s, e) =>
-        {
-            vm.AutoTranslatorChanged(engineCombo);
-        };
-
-        // Re-evaluate the engine combo's install-status dots after a download finishes - the
-        // FuncDataTemplate caches each row's dot when first realised, so a fresh template is
-        // the simplest way to refresh. The model combos already rebuild via PopulateModels.
-        vm.RefreshDownloadDots = () => engineCombo.ItemTemplate = BuildTranslatorItemTemplate();
+        var engineCombo = new TranslationProfileSelector(() => vm.Window, Se.Settings.AutoTranslate.SelectedProfileId, vm.SelectProfile);
 
         // Appears only when the selected SE-managed engine (CrispASR/MADLAD or llama.cpp) is installed
         // but outdated - i.e. it shows the amber "update available" dot - giving the user a way to act on it.

@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
@@ -29,6 +30,17 @@ public partial class TranslateSettingsViewModel : ObservableObject
     public TranslateSettingsWindow? Window { get; internal set; }
     public IAutoTranslator? AutoTranslator { get; internal set; }
     public bool OkPressed { get; private set; }
+    public UiLogic.Translate.TranslationProfile? Profile { get; private set; }
+    [ObservableProperty] private bool _mergeIsVisible = true;
+
+    public void LoadProfile(UiLogic.Translate.TranslationProfile profile)
+    {
+        LoadValues(new GoogleTranslateV1());
+        Profile = profile;
+        PromptIsVisible = false;
+        MergeIsVisible = profile.Kind == UiLogic.Translate.TranslationEngineKind.Traditional;
+        SelectedMergeOptions = profile.Parameters.GetValueOrDefault("TranslateStrategy") == nameof(TranslateStrategy.TranslateEachLineSeparately) ? MergeOptions[1] : MergeOptions[0];
+    }
 
     public TranslateSettingsViewModel()
     {
@@ -122,6 +134,13 @@ public partial class TranslateSettingsViewModel : ObservableObject
         Configuration.Settings.Tools.AutoTranslateMaxBytes = MaxBytesRequest ?? 0;
         Se.Settings.AutoTranslate.KeepMusicLinesUntranslated = KeepMusicLinesUntranslated;
         Configuration.Settings.Tools.AutoTranslateKeepMusicLines = KeepMusicLinesUntranslated;
+        if (Profile != null)
+        {
+            Profile.Parameters["TranslateStrategy"] = SelectedMergeOptions == Se.Language.Translate.TranslateEachLineSeparately
+                ? nameof(TranslateStrategy.TranslateEachLineSeparately) : nameof(TranslateStrategy.Default);
+            Se.SaveSettings();
+            return;
+        }
         Se.Settings.AutoTranslate.EngineStrategies[AutoTranslator.Name] =
             SelectedMergeOptions == Se.Language.Translate.TranslateEachLineSeparately
                 ? nameof(TranslateStrategy.TranslateEachLineSeparately)

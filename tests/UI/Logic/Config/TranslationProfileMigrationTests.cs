@@ -10,7 +10,6 @@ public class TranslationProfileMigrationTests
     public void FreshSettingsCreateOneDefaultAndDoNotDuplicateOnReload()
     {
         var settings = new Se();
-        settings.Tools.BatchConvert.AutoTranslateEngine = "";
         TranslationProfileMigration.EnsureMigrated(settings);
         Assert.Single(settings.AutoTranslate.Profiles);
         var id = settings.AutoTranslate.Profiles[0].Id;

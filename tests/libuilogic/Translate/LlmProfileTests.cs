@@ -69,6 +69,20 @@ public class LlmProfileTests
         Assert.True(json.RootElement.GetProperty("max_tokens").GetInt32() > 0);
     }
 
+    [Fact]
+    public void CuratedSamplingFillsOnlyUnsetValuesInTheRunSnapshot()
+    {
+        var profile = new TranslationProfile();
+        profile.Policy.TopP = 0.9;
+        var snapshot = profile.Snapshot();
+        var model = new Nikse.SubtitleEdit.UiLogic.LlamaCpp.LlamaCppModel("Test", "test.gguf", "", "", Temperature: 0.7, TopP: 0.6, TopK: 20);
+        TranslationProfileFactory.ApplyModelDefaults(snapshot.Policy, model);
+        Assert.Equal(0.7, snapshot.Policy.Temperature);
+        Assert.Equal(0.9, snapshot.Policy.TopP);
+        Assert.Equal(20, snapshot.Policy.TopK);
+        Assert.Equal(-1, profile.Policy.Temperature);
+    }
+
     private sealed class RecordingHandler(Func<int, HttpResponseMessage> response) : HttpMessageHandler
     {
         public List<string> Bodies { get; } = new();

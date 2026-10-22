@@ -327,6 +327,12 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     public void SaveSettings()
     {
+        if (UsesProfiles)
+        {
+            Se.Settings.AutoTranslate.SelectedProfileId = SelectedProfile?.Id ?? "";
+            Se.SaveSettings();
+            return;
+        }
         var translator = SelectedAutoTranslator;
         if (translator == null)
         {
@@ -799,7 +805,8 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         await _windowService.ShowDialogAsync<TranslateSettingsWindow, TranslateSettingsViewModel>(Window!, vm =>
         {
-            vm.LoadValues(SelectedAutoTranslator);
+            if (UsesProfiles && SelectedProfile != null) vm.LoadProfile(SelectedProfile);
+            else vm.LoadValues(SelectedAutoTranslator);
         });
     }
 
@@ -963,6 +970,8 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         ModelText = new CrispAsrMadlad().GetModelForCmdLine(value.Model.Name);
+        if (UsesProfiles && !_applyingProfile && SelectedProfile is { EngineId: nameof(CrispAsrMadladTranslate) } profile)
+            profile.Parameters["AutoTranslateCrispAsrModel"] = ModelText;
     }
 
     // "Download" when the selected model is not on disk, "Re-download" when it is.
@@ -981,7 +990,15 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
+        if (SelectedProfile is { EngineId: nameof(CrispAsrMadladTranslate) } profile &&
+            File.Exists(profile.Parameters.GetValueOrDefault("AutoTranslateCrispAsrExe")) &&
+            File.Exists(profile.Parameters.GetValueOrDefault("AutoTranslateCrispAsrModel"))) return true;
         var ready = await CrispAsrTranslateDownloadHelper.EnsureReadyAsync(Window, _windowService, SelectedCrispAsrModel?.Model.Name);
+        if (ready && SelectedProfile is { EngineId: nameof(CrispAsrMadladTranslate) } crispProfile)
+        {
+            crispProfile.Parameters["AutoTranslateCrispAsrExe"] = Configuration.Settings.Tools.AutoTranslateCrispAsrExe;
+            crispProfile.Parameters["AutoTranslateCrispAsrModel"] = Configuration.Settings.Tools.AutoTranslateCrispAsrModel;
+        }
         if (ready)
         {
             PopulateCrispAsrModels(Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
@@ -1001,6 +1018,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
+        if (UsesProfiles)
+        {
+            if (!_applyingProfile && SelectedProfile != null) SelectedProfile.Model = LlamaCppServerManager.GetModelPath(value.Model.FileName);
+            return;
+        }
         Se.Settings.AutoTranslate.LlamaCppModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
     }
 
@@ -1188,11 +1210,12 @@ public partial class AutoTranslateViewModel : ObservableObject
             // The advanced engine stuffs history/synopsis/glossary into every request, so it gets
             // a user-configurable (default larger) server context; everything else keeps the default.
             var isAdvanced = SelectedAutoTranslator is LlamaCppAdvancedTranslate;
+            var policy = SelectedProfile?.Policy ?? Se.Settings.AutoTranslate.LlamaCppAdvanced;
             var contextSize = isAdvanced
-                ? Math.Clamp(Se.Settings.AutoTranslate.LlamaCppAdvanced.ContextSize, 2048, 262144)
+                ? Math.Clamp(policy.ContextSize, 2048, 262144)
                 : LlamaCppServerManager.DefaultContextSize;
-            var extraArguments = isAdvanced ? Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArguments : null;
-            var extraArgumentsOnly = isAdvanced && Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArgumentsOnly;
+            var extraArguments = isAdvanced ? policy.ServerArguments : null;
+            var extraArgumentsOnly = isAdvanced && policy.ServerArgumentsOnly;
             await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token, contextSize, extraArguments, extraArgumentsOnly);
         }
         catch (Exception ex)
@@ -1399,10 +1422,20 @@ public partial class AutoTranslateViewModel : ObservableObject
         _translationFailed = false;
         IsProgressEnabled = true;
         var engineType = translator.GetType();
+        if (UsesProfiles)
+        {
+            try { TranslationProfileFactory.Validate(SelectedProfile!); }
+            catch (Exception ex)
+            {
+                IsProgressEnabled = false;
+                await MessageBox.Show(Window!, Se.Language.General.Error, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
 
         // LibreTranslate and MyMemory keys are optional: MyMemory works without one (anonymous
         // daily quota), the key only raises the limit, and MakeUrl leaves it out when empty.
-        if (ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) &&
+        if (!UsesProfiles && ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) &&
             engineType != typeof(LibreTranslate) && engineType != typeof(MyMemoryApi))
         {
             IsProgressEnabled = false;
@@ -1454,7 +1487,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
         {
-            if (Se.Settings.AutoTranslate.LlamaCppUseRemoteServer)
+            if (UsesProfiles ? LlamaCppUseRemoteServer : Se.Settings.AutoTranslate.LlamaCppUseRemoteServer)
             {
                 // Remote server: use the configured endpoint directly, skip local server management.
                 Configuration.Settings.Tools.LlamaCppApiUrl = (ApiUrlText ?? string.Empty).Trim();
@@ -1478,6 +1511,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         try
         {
+            if (UsesProfiles) translator = CreateProfileTranslator();
             translator.Initialize();
         }
         catch (Exception exception)
@@ -1545,7 +1579,9 @@ public partial class AutoTranslateViewModel : ObservableObject
             // Single-line mode forced by the user setting or the engine itself is permanent;
             // forceSingleLineMode may additionally be turned on temporarily after errors and
             // is only allowed to fall back to merged mode when the permanent flag is off.
-            var alwaysSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
+            var alwaysSingleLineMode = SelectedProfile?.Parameters.GetValueOrDefault("TranslateStrategy") == nameof(TranslateStrategy.TranslateEachLineSeparately) ||
+                                       translator is UiLogic.Translate.Llm.ProfileLlmTranslator ||
+                                       Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
                                        translator.Name ==
                                        NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
                                        translator.Name == NoLanguageLeftBehindServe.StaticName ||
@@ -1559,7 +1595,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             // schema-forced JSON reply and rolling context, so MergeAndSplitHelper's merge/split
             // heuristics are not needed (and would break the line alignment the schema guarantees).
             // "Translate current line" still goes through the regular single-line path below.
-            if (translator is AdvancedTranslatorBase advancedTranslator && !_onlyCurrentLine)
+            if (translator is IBatchContextTranslator advancedTranslator && !_onlyCurrentLine && _onlyRowIndices.Count == 0)
             {
                 while (index < Rows.Count)
                 {
@@ -1750,6 +1786,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
         finally
         {
+            if (!ReferenceEquals(translator, SelectedAutoTranslator) && translator is IDisposable disposable) disposable.Dispose();
             _translationInProgress = false;
 
             Dispatcher.UIThread.Invoke(() =>
@@ -2753,7 +2790,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             // Restore the engine before building its language lists. Building them for the
             // constructor's default engine first let the engine-change carry-over (#13943) replace
             // the saved target with whatever that other engine had fallen back to (#14903).
-            if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastName))
+            if (!UsesProfiles && !string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastName))
             {
                 var autoTranslator = AutoTranslators.FirstOrDefault(x => x.Name == Se.Settings.AutoTranslate.AutoTranslateLastName);
                 if (autoTranslator != null)

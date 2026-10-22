@@ -2,6 +2,21 @@
 
 public class LanguageTranslate
 {
+    public string TraditionalEngine { get; set; } = "Traditional Engine";
+    public string LlmEngine { get; set; } = "LLM-based Engine";
+    public string Local { get; set; } = "Local";
+    public string Cloud { get; set; } = "Cloud";
+    public string Location { get; set; } = "Location";
+    public string ChooseInferenceEngine { get; set; } = "Choose Inference Engine";
+    public string ChooseProvider { get; set; } = "Choose Provider";
+    public string ApiProtocol { get; set; } = "API protocol";
+    public string TranslationPolicy { get; set; } = "Translation policy";
+    public string UniqueProfileNameRequired { get; set; } = "Enter a unique, non-empty profile name.";
+    public string ValidApiUrlRequired { get; set; } = "Enter a valid HTTP or HTTPS API URL.";
+    public string ModelNameRequired { get; set; } = "Enter a model name.";
+    public string ReviewMigratedConnection { get; set; } = "Review the migrated API URL and select a chat-compatible model before saving.";
+    public string ChatCompatibleModelRequired { get; set; } = "This completion-only model cannot use the chat API. Choose a chat-compatible model.";
+
     public string TranslateViaCopyPaste { get; set; }
     public string MaxBlockSize { get; set; }
     public string LineSeparator { get; set; }

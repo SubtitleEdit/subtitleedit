@@ -283,6 +283,10 @@ public static class Se4SettingsXmlImporter
         }
 
         var t = Se.Settings.AutoTranslate;
+        var imported = new Se();
+        imported.Tools.BatchConvert.AutoTranslateEngine = "";
+        var importedFields = AutoTranslateMap(imported.AutoTranslate, imported.Providers).ToDictionary(p => p.Name, p => p.Apply);
+        var hasImportedConnection = false;
 
         foreach (var (se4Name, apply) in AutoTranslateMap(t, Se.Settings.Providers))
         {
@@ -290,6 +294,17 @@ public static class Se4SettingsXmlImporter
             if (!string.IsNullOrWhiteSpace(value))
             {
                 apply(value);
+                importedFields[se4Name](value);
+                hasImportedConnection = true;
+            }
+        }
+        if (hasImportedConnection)
+        {
+            TranslationProfileMigration.EnsureMigrated(imported);
+            foreach (var profile in imported.AutoTranslate.Profiles)
+            {
+                profile.Name = UiLogic.Translate.TranslationProfileFactory.UniqueName(t.Profiles, "Imported - " + profile.Name);
+                t.Profiles.Add(profile);
             }
         }
 
