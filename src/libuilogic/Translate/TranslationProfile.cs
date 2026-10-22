@@ -12,7 +12,7 @@ public enum LlmTranslationMode { Advanced, LineByLine }
 public sealed class TranslationProfile
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
-    public string Name { get; set; } = "Translation";
+    public string Name { get; set; } = "Default";
     public TranslationEngineKind Kind { get; set; }
     public string EngineId { get; set; } = "GoogleTranslateV1";
     public LlmLocation Location { get; set; } = LlmLocation.Cloud;

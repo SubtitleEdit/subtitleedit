@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text.Json;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.UiLogic.Translate.Llm;
@@ -13,7 +14,12 @@ internal static class TranslationProfileMigration
     {
         var old = settings.AutoTranslate;
         old.Profiles ??= new();
-        if (old.ProfileMigrationVersion >= 1) return;
+        if (old.ProfileMigrationVersion >= 1)
+        {
+            // Existing profiles belong to the user; upgrades must not infer or rewrite their names.
+            old.ProfileMigrationVersion = Math.Max(old.ProfileMigrationVersion, 2);
+            return;
+        }
         var defaults = new SeAutoTranslate();
         var batchName = settings.Tools.BatchConvert.AutoTranslateEngine;
         var batchWasSelected = !string.IsNullOrEmpty(batchName) && batchName != new SeBatchConvert().AutoTranslateEngine;
@@ -27,7 +33,7 @@ internal static class TranslationProfileMigration
         foreach (var engine in TranslationProfileFactory.TraditionalEngines)
         {
             var translator = engine.Create(new());
-            var profile = new TranslationProfile { Name = engine.Name, EngineId = engine.Id };
+            var profile = new TranslationProfile { Name = translator.Name, EngineId = engine.Id };
             var configured = false;
             if (old.EngineStrategies.TryGetValue(translator.Name, out var strategy)) profile.Parameters["TranslateStrategy"] = strategy;
             foreach (var field in engine.Fields)
@@ -56,9 +62,9 @@ internal static class TranslationProfileMigration
             ("Ollama", new OllamaTranslate().Name, "http://localhost:11434/v1/chat/completions"),
             ("LmStudio", new LmStudioTranslate().Name, "http://localhost:1234/v1/chat/completions"),
             ("LlamaCpp", new LlamaCppTranslate().Name, "http://localhost:8080/v1/chat/completions"),
-            ("OllamaAdvanced", "Ollama advanced (local LLM)", "http://localhost:11434/v1/chat/completions"),
-            ("LmStudioAdvanced", "LM Studio advanced (local LLM)", "http://localhost:1234/v1/chat/completions"),
-            ("LlamaCppAdvanced", "llama.cpp advanced (local LLM)", "http://localhost:8080/v1/chat/completions"),
+            ("OllamaAdvanced", OllamaAdvancedTranslate.StaticName, "http://localhost:11434/v1/chat/completions"),
+            ("LmStudioAdvanced", LmStudioAdvancedTranslate.StaticName, "http://localhost:1234/v1/chat/completions"),
+            ("LlamaCppAdvanced", LlamaCppAdvancedTranslate.StaticName, "http://localhost:8080/v1/chat/completions"),
         };
         foreach (var (prefix, name, endpoint) in candidates)
         {
@@ -104,12 +110,17 @@ internal static class TranslationProfileMigration
         if (old.Profiles.Count == 0 || (string.IsNullOrEmpty(old.AutoTranslateLastName) && string.IsNullOrEmpty(old.SelectedProfileId)))
         {
             var google = old.Profiles.FirstOrDefault(p => p.EngineId == "GoogleTranslateV1");
-            if (google == null) { Add(new TranslationProfile { Name = "Google Translate" }, ""); google = old.Profiles[^1]; }
+            if (google == null)
+            {
+                var fresh = old.Profiles.Count == 0 && string.IsNullOrEmpty(old.AutoTranslateLastName) && !batchWasSelected;
+                Add(new TranslationProfile { Name = fresh ? "Default" : new GoogleTranslateV1().Name }, "");
+                google = old.Profiles[^1];
+            }
             old.SelectedProfileId = google.Id;
         }
         if (!batchWasSelected && string.IsNullOrEmpty(old.BatchProfileId)) old.BatchProfileId = old.SelectedProfileId;
         // Unknown legacy selections require a new choice instead of silently changing the engine.
         if (string.IsNullOrEmpty(old.AutoTranslateLastName) && string.IsNullOrEmpty(old.SelectedProfileId)) old.SelectedProfileId = old.Profiles[0].Id;
-        old.ProfileMigrationVersion = 1;
+        old.ProfileMigrationVersion = 2;
     }
 }
