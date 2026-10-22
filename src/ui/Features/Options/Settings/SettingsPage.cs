@@ -1107,6 +1107,26 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowAssaLayer, nameof(_vm.ShowAssaLayer)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowHorizontalLineAboveToolbar, nameof(_vm.ShowHorizontalLineAboveToolbar)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowPluginsMenu, nameof(_vm.ShowPluginsMenu)),
+            new SettingsItem(!OperatingSystem.IsWindows(), Se.Language.Options.Settings.WindowsRenderingMode, () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Children =
+                {
+                    new ComboBox
+                    {
+                        MinWidth = 250,
+                        DataContext = _vm,
+                        [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.WindowsRenderingModes)),
+                        [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedWindowsRenderingMode))
+                        {
+                            Mode = BindingMode.TwoWay,
+                        },
+                        ItemTemplate = new FuncDataTemplate<WindowsRenderingModeDisplay>((f, _) =>
+                            new TextBlock { Text = f?.Name }, true),
+                    },
+                    UiUtil.MakeLabel(Se.Language.General.RequiresRestart).WithMarginLeft(5).WithOpacity(0.6),
+                }
+            }),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Toolbar, IconNames.DotsHorizontal, "#58c9b4",
