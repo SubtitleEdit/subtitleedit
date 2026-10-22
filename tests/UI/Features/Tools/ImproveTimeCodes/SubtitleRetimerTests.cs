@@ -42,6 +42,7 @@ public class SubtitleRetimerTests : IDisposable
         public Dictionary<string, (double Start, double End)> Truth { get; } = new();
         public List<string[]> Fed { get; } = new();
         public Func<int, bool>? FailBatch { get; init; }
+        public int? FailExitCode { get; init; }
 
         public OracleRunner(FakeAudio audio) => _audio = audio;
 
@@ -51,7 +52,7 @@ public class SubtitleRetimerTests : IDisposable
             Fed.Add(texts);
             if (FailBatch?.Invoke(Fed.Count - 1) == true)
             {
-                throw new ForcedAlignerException("boom");
+                throw new ForcedAlignerException("boom", string.Empty, FailExitCode);
             }
 
             var windowStart = _audio.Windows[^1].Start;
@@ -680,5 +681,57 @@ public class SubtitleRetimerTests : IDisposable
 
         await Assert.ThrowsAsync<ForcedAlignerException>(() =>
             new SubtitleRetimer(runner, audio).RetimeAsync(lines, null, TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task Retime_EngineCrashingOnEveryBatch_StopsEarly()
+    {
+        var lines = MakeLines(80);
+        var audio = new FakeAudio(_folder);
+        var runner = new OracleRunner(audio) { FailBatch = _ => true, FailExitCode = -1073740791 };
+
+        await Assert.ThrowsAsync<ForcedAlignerException>(() =>
+            new SubtitleRetimer(runner, audio, new SubtitleRetimer.Options { BatchLines = 8 })
+                .RetimeAsync(lines, null, TestContext.Current.CancellationToken));
+
+        Assert.Equal(3, runner.Fed.Count);
+    }
+
+    [Fact]
+    public async Task Retime_EngineCrashAfterAWorkingBatch_CarriesOn()
+    {
+        var lines = MakeLines(40);
+        var audio = new FakeAudio(_folder);
+        var runner = new OracleRunner(audio) { FailBatch = b => b > 0, FailExitCode = -1073740791 };
+        foreach (var l in lines)
+        {
+            runner.Truth[l.Text] = (l.StartSeconds + 0.3, l.EndSeconds);
+        }
+
+        var results = await new SubtitleRetimer(runner, audio, new SubtitleRetimer.Options { BatchLines = 8 })
+            .RetimeAsync(lines, null, TestContext.Current.CancellationToken);
+
+        Assert.True(runner.Fed.Count > 3);
+        Assert.All(results.Take(8), r => Assert.Equal(SubtitleRetimer.LineStatus.Retimed, r.Status));
+    }
+
+    [Fact]
+    public void FormatExitFailure_WindowsCrash_ShowsHexHintAndStderrTail()
+    {
+        var detail = "line 1\nline 2\n\nline 3\nline 4\nGGML_ASSERT(x) failed\n";
+
+        var message = ForcedAlignerException.FormatExitFailure("The forced aligner failed", -1073740791, detail);
+
+        Assert.StartsWith("The forced aligner failed (exit code 0xC0000409 - the engine crashed).", message);
+        Assert.Contains("GGML_ASSERT(x) failed", message);
+        Assert.DoesNotContain("line 1", message);
+    }
+
+    [Fact]
+    public void FormatExitFailure_PlainExitCode_StaysDecimal()
+    {
+        Assert.Equal(
+            "The forced aligner failed (exit code 1).",
+            ForcedAlignerException.FormatExitFailure("The forced aligner failed", 1, string.Empty));
     }
 }
