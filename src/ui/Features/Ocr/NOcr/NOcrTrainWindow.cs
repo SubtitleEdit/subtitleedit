@@ -261,7 +261,7 @@ public class NOcrTrainWindow : Window
                     Converter = fontNameToFontFamily,
                 },
                 FontSize = UiUtil.ScaledFontSize(15),
-                Height = 26,
+                Height = EditorChrome.ScaledSize(26),
                 VerticalContentAlignment = VerticalAlignment.Center,
                 ClipToBounds = true,
             }, supportsRecycling: true),

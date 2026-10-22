@@ -129,7 +129,7 @@ public class SsaPropertiesWindow : Window
             var button = new Button
             {
                 Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(8, 0) },
-                Height = 26,
+                Height = EditorChrome.ScaledSize(26),
                 VerticalContentAlignment = VerticalAlignment.Center,
             };
             button.Classes.Add("tool");

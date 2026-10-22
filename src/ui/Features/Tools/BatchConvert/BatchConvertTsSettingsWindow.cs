@@ -85,7 +85,7 @@ public class BatchConvertTsSettingsWindow : Window
         {
             Content = new TextBlock { Text = "{ }", FontSize = EditorChrome.FieldFontSize, FontWeight = FontWeight.SemiBold },
             Width = 34,
-            Height = 28,
+            Height = EditorChrome.ScaledSize(28),
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,

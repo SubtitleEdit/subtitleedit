@@ -234,7 +234,7 @@ public class AssSetBackgroundWindow : Window
             BorderBrush = EditorChrome.AccentBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(5),
-            Height = 28,
+            Height = EditorChrome.ScaledSize(28),
             Child = new TextBlock
             {
                 Text = Se.Language.General.Text,

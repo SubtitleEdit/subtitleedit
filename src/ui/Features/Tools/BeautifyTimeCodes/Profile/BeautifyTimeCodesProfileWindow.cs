@@ -518,7 +518,7 @@ public class BeautifyTimeCodesProfileWindow : Window
             var button = new Button
             {
                 Content = new TextBlock { Text = titles[i], FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center },
-                Height = 26,
+                Height = EditorChrome.ScaledSize(26),
                 Padding = new Thickness(10, 0),
                 VerticalContentAlignment = VerticalAlignment.Center,
             };

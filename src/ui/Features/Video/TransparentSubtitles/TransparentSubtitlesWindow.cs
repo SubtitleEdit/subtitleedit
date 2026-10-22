@@ -307,7 +307,7 @@ public class TransparentSubtitlesWindow : Window
         {
             Content = new TextBlock { Text = "B", FontWeight = FontWeight.Bold, FontSize = EditorChrome.FieldFontSize },
             Width = 28,
-            Height = 28,
+            Height = EditorChrome.ScaledSize(28),
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.FontIsBold)) { Mode = BindingMode.TwoWay },
@@ -692,7 +692,7 @@ public class TransparentSubtitlesWindow : Window
             var button = new Button
             {
                 Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(12, 0) },
-                Height = 28,
+                Height = EditorChrome.ScaledSize(28),
                 Command = command,
                 VerticalContentAlignment = VerticalAlignment.Center,
             };

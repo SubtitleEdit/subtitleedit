@@ -124,7 +124,7 @@ public class AssaImageColorPickerWindow : Window
         var button = new Button
         {
             Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(9, 0) },
-            Height = 26,
+            Height = EditorChrome.ScaledSize(26),
             Command = command,
             VerticalContentAlignment = VerticalAlignment.Center,
         };
