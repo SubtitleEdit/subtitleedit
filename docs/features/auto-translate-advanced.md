@@ -1,16 +1,16 @@
-# Auto Translate: Advanced Local Engines
+# Advanced Translation
 
-The **llama.cpp advanced (local LLM)**, **Ollama advanced (local LLM)** and **LM Studio advanced (local LLM)** engines translate in batches with surrounding context, a synopsis, and a glossary — giving more consistent names, pronouns, and terminology than line-by-line translation. This page covers their **Advanced...** settings dialog and the llama.cpp engine settings.
+Every **LLM-based Engine** profile, whether Local or Cloud, defaults to Advanced translation. Open the profile editor and click **Advanced...** to edit that profile's independent policy. Copying a profile copies its policy; edits to one profile do not affect another.
 
-LM Studio advanced talks to LM Studio's OpenAI-compatible endpoint (default `http://localhost:1234/v1/chat/completions`). LM Studio can have several models loaded; leave the model empty to use the loaded one.
+Advanced sends numbered subtitle batches with recent translated context, an optional synopsis, and a glossary. The response is checked against the requested line numbers. Invalid replies are retried and batches can shrink to one line, still using the Advanced protocol. If that fails, translation stops with an error and completed results remain available. To use ordinary single-line requests, select **Translate each line separately** yourself in the profile editor.
 
-See [Auto Translate](auto-translate.md) for the translation window itself.
+OpenAI-compatible servers can reject structured-output constraints. For an explicit format rejection, the client tries a JSON object and then an unconstrained response, with the same result validation throughout. Authentication failures do not trigger this format downgrade.
+
+See [Auto Translate](auto-translate.md) for profiles, protocols, migration, and local model management.
 
 ## Advanced Settings
 
-With an advanced engine selected, click **Advanced...** in the engine settings row.
-
-![Advanced Settings](../screenshots/auto-translate-advanced.png)
+With **Advanced** selected as the profile translation policy, click **Advanced...** in the profile editor.
 
 ### Context
 
@@ -24,6 +24,8 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 
 ### Sampling Parameters
 
+Only parameters supported by the selected client are shown. Server launch options appear only for a locally managed llama.cpp server.
+
 `-1` means the model/server default is used.
 
 - **Temperature** — Randomness. When unset, Subtitle Edit uses the curated value for the model, or 0.2 — low temperatures keep terminology consistent across batches
@@ -35,7 +37,7 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 
 ## llama.cpp Engine Settings
 
-For the local llama.cpp engines, the gear button opens an info dialog about the bundled llama.cpp server build:
+For a locally managed llama.cpp profile, the gear button opens an info dialog about the bundled llama.cpp server build:
 
 - **Backend** — The detected build (e.g. CUDA, Vulkan, CPU, or Metal on macOS)
 - **Status** — Whether the pinned release is installed and up to date
