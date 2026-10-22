@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAlpha;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -411,7 +412,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
         return startSeconds;
     }
 
-    public void Initialize(Subtitle subtitle, SubtitleLineViewModel line, string? videoFileName, int? videoWidth, int? videoHeight, double? videoPositionSeconds = null)
+    public void Initialize(Subtitle subtitle, SubtitleLineViewModel line, string? videoFileName, int? videoWidth, int? videoHeight, double? videoPositionSeconds = null, IVideoPlayer? videoPlayer = null)
     {
         _subtitle = new Subtitle(subtitle, false);
 
@@ -476,17 +477,17 @@ public partial class AssaSetPositionViewModel : ObservableObject
         Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
         var previewSubtitle = MakePreviewSubtitle(_subtitle, line);
         var seconds = GetScreenshotSeconds(line, videoPositionSeconds);
-        _ = LoadPreviewAsync(previewSubtitle, videoFileName, seconds);
+        _ = LoadPreviewAsync(previewSubtitle, videoFileName, seconds, videoPlayer, videoWidth, videoHeight);
     }
 
-    private async Task LoadPreviewAsync(Subtitle previewSubtitle, string? videoFileName, double seconds)
+    private async Task LoadPreviewAsync(Subtitle previewSubtitle, string? videoFileName, double seconds, IVideoPlayer? videoPlayer, int? videoWidth, int? videoHeight)
     {
         var renderWidth = _renderWidth;
         var renderHeight = _renderHeight;
         var textTask = Task.Run(() => RenderText(previewSubtitle, renderWidth, renderHeight));
         var frameTask = string.IsNullOrEmpty(videoFileName)
             ? Task.FromResult<Bitmap?>(null)
-            : Task.Run(() => LoadFrame(videoFileName, seconds));
+            : Task.Run(() => LoadFrameFromPlayer(videoPlayer, videoFileName, seconds, videoWidth, videoHeight) ?? LoadFrame(videoFileName, seconds));
 
         try
         {
@@ -559,6 +560,58 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
         using var trimResult = skBitmap.TrimTransparentPixels();
         return (trimResult.TrimmedBitmap.ToAvaloniaBitmap(), trimResult.Left, trimResult.Top);
+    }
+
+    /// <summary>
+    /// The paused player usually already shows the wanted frame (the dialog uses the player
+    /// position when it is inside the line). Saving that takes ~40-190 ms whatever the keyframe
+    /// distance, where ffmpeg has to seek and decode again - the checkered background lingered
+    /// for seconds on some lines (#16289). Null falls back to ffmpeg.
+    /// </summary>
+    private static Bitmap? LoadFrameFromPlayer(IVideoPlayer? videoPlayer, string videoFileName, double seconds, int? videoWidth, int? videoHeight)
+    {
+        if (videoPlayer == null || !string.Equals(videoPlayer.FileName, videoFileName, StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        var fileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
+        try
+        {
+            if (!videoPlayer.TrySaveCurrentFrame(fileName, seconds) || !File.Exists(fileName))
+            {
+                return null;
+            }
+
+            var bitmap = new Bitmap(fileName);
+
+            // The overlay is placed in the video's pixel space; a frame of another size (e.g. an
+            // anamorphic video scaled to display aspect) would not line up with it.
+            if (videoWidth is > 0 && videoHeight is > 0 &&
+                (bitmap.PixelSize.Width != videoWidth.Value || bitmap.PixelSize.Height != videoHeight.Value))
+            {
+                bitmap.Dispose();
+                return null;
+            }
+
+            return bitmap;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Set position: saving the player frame failed");
+            return null;
+        }
+        finally
+        {
+            try
+            {
+                File.Delete(fileName);
+            }
+            catch
+            {
+                // ignore cleanup errors
+            }
+        }
     }
 
     private static Bitmap? LoadFrame(string videoFileName, double seconds)

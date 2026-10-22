@@ -602,7 +602,7 @@ public class FfmpegGenerator
             return outputFileName;
         }
 
-        var stderr2 = RunFfmpegScreenShot($"-y -i \"{inputFileName}\" -ss {timeCode} {vfMatrix} -frames:v 1 -c:v png \"{outputFileName}\"");
+        var stderr2 = RunFfmpegScreenShot(GetScreenShotFallbackArguments(inputFileName, timeCode, vfMatrix, outputFileName));
         if (HasFrame(outputFileName))
         {
             return outputFileName;
@@ -613,6 +613,52 @@ public class FfmpegGenerator
                     "input-seek: " + stderr + Environment.NewLine +
                     "output-seek: " + stderr2);
         return outputFileName;
+    }
+
+    // Seconds before the wanted time where the fallback starts decoding.
+    private const double ScreenShotFallbackPreRollSeconds = 10;
+
+    /// <summary>
+    /// Arguments for the accurate retry when input seeking gave no frame. Pure output seeking
+    /// decodes from the start of the file, which took 13-18 s for a line a few minutes in and
+    /// left the Set position preview on its checkered background meanwhile (#16289). Input seek
+    /// to a bit before the time, then output seek the rest, so the cost no longer grows with
+    /// the position (same frame; 720p at 13 min: 18 s -> 0.9 s).
+    /// </summary>
+    internal static string GetScreenShotFallbackArguments(string inputFileName, string timeCode, string vfMatrix, string outputFileName)
+    {
+        var seekArguments = $"-i \"{inputFileName}\" -ss {timeCode}";
+        if (TryGetFfmpegSeconds(timeCode, out var seconds) && seconds > ScreenShotFallbackPreRollSeconds)
+        {
+            var inputSeek = (seconds - ScreenShotFallbackPreRollSeconds).ToString("0.###", CultureInfo.InvariantCulture);
+            var outputSeek = ScreenShotFallbackPreRollSeconds.ToString(CultureInfo.InvariantCulture);
+            seekArguments = $"-ss {inputSeek} -i \"{inputFileName}\" -ss {outputSeek}";
+        }
+
+        return $"-y {seekArguments} {vfMatrix} -frames:v 1 -c:v png \"{outputFileName}\"";
+    }
+
+    // Parses a normalized ffmpeg time ("123.4", "MM:SS.ms" or "HH:MM:SS.ms") to seconds.
+    private static bool TryGetFfmpegSeconds(string timeCode, out double seconds)
+    {
+        seconds = 0;
+        var parts = timeCode.Split(':');
+        if (parts.Length > 3)
+        {
+            return false;
+        }
+
+        foreach (var part in parts)
+        {
+            if (!double.TryParse(part, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) || value < 0)
+            {
+                return false;
+            }
+
+            seconds = seconds * 60 + value;
+        }
+
+        return true;
     }
 
     private static string RunFfmpegScreenShot(string arguments)
