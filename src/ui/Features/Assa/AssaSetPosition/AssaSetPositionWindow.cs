@@ -395,12 +395,16 @@ public class AssaSetPositionWindow : Window
                 hasPlaced = false;
                 UpdateCursor();
             }
+            else if (e.PropertyName == nameof(vm.IsPreviewReady))
+            {
+                hasPlaced = false; // the position only means something once the frame is rendered
+            }
         };
         UpdateCursor();
 
         videoGrid.PointerMoved += (_, e) =>
         {
-            if (!vm.ClickToPlace || !following || !TryGetRenderPoint(e, out var point))
+            if (!vm.ClickToPlace || !vm.IsPreviewReady || !following || !TryGetRenderPoint(e, out var point))
             {
                 return;
             }
@@ -414,7 +418,7 @@ public class AssaSetPositionWindow : Window
         };
         videoGrid.PointerPressed += (_, e) =>
         {
-            if (!vm.ClickToPlace || !e.GetCurrentPoint(videoGrid).Properties.IsLeftButtonPressed || !TryGetRenderPoint(e, out var point))
+            if (!vm.ClickToPlace || !vm.IsPreviewReady || !e.GetCurrentPoint(videoGrid).Properties.IsLeftButtonPressed || !TryGetRenderPoint(e, out var point))
             {
                 return;
             }
@@ -441,6 +445,10 @@ public class AssaSetPositionWindow : Window
             {
                 vm.ScreenshotX = placedX; // exactly back, no snapping
                 vm.ScreenshotY = placedY;
+
+                // remember again on the next entry, so anchor picks, centering, typed X/Y and
+                // nudges made outside the frame are not undone the next time the mouse leaves it
+                hasPlaced = false;
             }
         };
 

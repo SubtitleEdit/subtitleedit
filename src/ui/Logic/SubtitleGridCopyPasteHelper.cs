@@ -120,15 +120,25 @@ internal static class SubtitleGridCopyPasteHelper
     internal static Subtitle? ParseClipboardSubtitle(string? text, SubtitleFormat subtitleFormat)
     {
         var subtitle = ParseClipboardSubtitleAsIs(text, subtitleFormat);
-        var offsetMs = _lastCopyText != null && text != null && NormalizeForCompare(text) == _lastCopyText
-            ? _lastCopyOffsetMs
-            : Se.Settings.General.CurrentVideoOffsetInMs;
-        if (subtitle != null && offsetMs != 0)
+        if (subtitle != null)
         {
-            subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-offsetMs));
+            RemoveClipboardVideoOffset(text, subtitle);
         }
 
         return subtitle;
+    }
+
+    // Takes the video offset that copy added back off a subtitle parsed from the clipboard
+    // text - SE's own copy with the offset it was copied with, other text with the current one.
+    internal static void RemoveClipboardVideoOffset(string? text, Subtitle subtitle)
+    {
+        var offsetMs = _lastCopyText != null && text != null && NormalizeForCompare(text) == _lastCopyText
+            ? _lastCopyOffsetMs
+            : Se.Settings.General.CurrentVideoOffsetInMs;
+        if (offsetMs != 0)
+        {
+            subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-offsetMs));
+        }
     }
 
     private static Subtitle? ParseClipboardSubtitleAsIs(string? text, SubtitleFormat subtitleFormat)
