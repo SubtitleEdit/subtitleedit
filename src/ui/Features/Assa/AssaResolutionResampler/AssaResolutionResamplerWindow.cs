@@ -76,7 +76,7 @@ public class AssaResolutionResamplerWindow : Window
         row.Children.Add(new TextBlock
         {
             Text = text,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 490,
         });
@@ -119,7 +119,7 @@ public class AssaResolutionResamplerWindow : Window
             var text = $"{w} × {h}";
             var button = new Button
             {
-                Content = new TextBlock { Text = text, FontSize = 12, Margin = new Thickness(8, 0) },
+                Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(8, 0) },
                 Height = 26,
                 VerticalContentAlignment = VerticalAlignment.Center,
             };
@@ -165,7 +165,7 @@ public class AssaResolutionResamplerWindow : Window
         // How much everything is scaled, e.g. "×5 · ×3.75"
         var scale = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };

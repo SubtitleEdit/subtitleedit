@@ -63,7 +63,7 @@ public class LayoutWindow : Window
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 Foreground = Brushes.White,
-                FontSize = 13,
+                FontSize = EditorChrome.FieldFontSize,
                 FontWeight = FontWeight.Bold,
             };
             var badge = new Border

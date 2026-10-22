@@ -98,7 +98,7 @@ public class PickTeletextColorWindow : Window
         var label = new TextBlock
         {
             Text = text,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             HorizontalAlignment = HorizontalAlignment.Center,
         };
 

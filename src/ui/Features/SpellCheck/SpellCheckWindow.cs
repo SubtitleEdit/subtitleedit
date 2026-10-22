@@ -110,7 +110,7 @@ public class SpellCheckWindow : Window
     {
         var labelLine = new TextBlock
         {
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             FontWeight = FontWeight.SemiBold,
             LetterSpacing = 0.6,
             Foreground = EditorChrome.DimTextBrush,
@@ -372,7 +372,7 @@ public class SpellCheckWindow : Window
         // What the last action did ("Change x to y"), cleared again after a few seconds
         var labelStatus = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,

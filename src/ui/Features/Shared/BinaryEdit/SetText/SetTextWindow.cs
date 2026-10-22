@@ -78,7 +78,7 @@ public class SetTextWindow : Window
             MinHeight = 100,
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 13,
+            FontSize = EditorChrome.FieldFontSize,
             Padding = new Thickness(8, 6),
             CornerRadius = new CornerRadius(6),
             Background = EditorChrome.FieldBrush,

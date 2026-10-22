@@ -145,7 +145,7 @@ public class TextToSpeechWindow : Window
         };
         var contextText = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -171,7 +171,7 @@ public class TextToSpeechWindow : Window
                 videoIcon,
                 new TextBlock
                 {
-                    FontSize = 11.5,
+                    FontSize = EditorChrome.ScaledFont(11.5),
                     Foreground = EditorChrome.DimTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
@@ -401,7 +401,7 @@ public class TextToSpeechWindow : Window
 
         var voiceCount = TtsMainEditorLook.MakeChip(new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Voices)}.{nameof(vm.Voices.Count)}")
             {
@@ -544,7 +544,7 @@ public class TextToSpeechWindow : Window
         {
             Content = OmniVoiceTtsCpp.InstructionWhisper,
             DataContext = vm,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(0, 2, 0, 0),
         };
         whisper.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.OmniVoiceWhisper)) { Mode = BindingMode.TwoWay });
@@ -612,7 +612,7 @@ public class TextToSpeechWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressPercentText)) { Mode = BindingMode.OneWay },
         };
 
@@ -621,7 +621,7 @@ public class TextToSpeechWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Right,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressEtaText)) { Mode = BindingMode.OneWay },
         };
 
@@ -632,7 +632,7 @@ public class TextToSpeechWindow : Window
             TextAlignment = TextAlignment.Left,
             TextTrimming = TextTrimming.CharacterEllipsis,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressText)) { Mode = BindingMode.OneWay },
         };
 

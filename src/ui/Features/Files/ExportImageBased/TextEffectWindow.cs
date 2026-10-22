@@ -83,7 +83,7 @@ public class TextEffectWindow : Window
 
         var valueLabel = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextAlignment = TextAlignment.Right,
             MinWidth = 45,

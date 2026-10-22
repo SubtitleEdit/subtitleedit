@@ -90,7 +90,7 @@ public class ElevenLabsSettingsWindow : Window
         text.TextTrimming = TextTrimming.CharacterEllipsis;
         var value = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             MinWidth = 40,
             TextAlignment = TextAlignment.Right,
             VerticalAlignment = VerticalAlignment.Center,

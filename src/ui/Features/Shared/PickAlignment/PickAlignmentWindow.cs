@@ -102,7 +102,7 @@ public class PickAlignmentWindow : Window
         var label = new TextBlock
         {
             Text = text,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             HorizontalAlignment = horizontal,
             TextAlignment = horizontal switch
             {

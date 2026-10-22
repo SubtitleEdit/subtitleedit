@@ -104,7 +104,7 @@ public class OpenAiCompatibleSettingsWindow : Window
 
     private static TextBox MakeTextBox(TextBox textBox, string name)
     {
-        textBox.FontSize = 12.5;
+        textBox.FontSize = EditorChrome.FieldFontSize;
         textBox.MinHeight = 28;
         textBox.Background = EditorChrome.FieldBrush;
         textBox.BorderBrush = EditorChrome.FieldBorderBrush;

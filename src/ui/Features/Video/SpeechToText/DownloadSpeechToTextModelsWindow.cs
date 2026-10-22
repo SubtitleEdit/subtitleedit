@@ -43,7 +43,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         {
             Text = Se.Language.Video.AudioToText.CustomModelHelp,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             MaxWidth = 460,
             HorizontalAlignment = HorizontalAlignment.Left,
@@ -66,7 +66,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         var statusText = new TextBlock
         {
             Margin = new Thickness(0, 1, 0, 1),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             HorizontalAlignment = HorizontalAlignment.Center,
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
@@ -89,7 +89,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         var fileText = new TextBlock
         {
             Margin = new Thickness(0, 1, 0, 1),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             HorizontalAlignment = HorizontalAlignment.Center,
             Foreground = EditorChrome.FaintTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,

@@ -79,7 +79,7 @@ public class SyncAudioTrackWindow : Window
         var textHint = new TextBlock
         {
             Text = lang.SyncAudioTrackHint,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(0, 10, 0, 0),
@@ -87,14 +87,14 @@ public class SyncAudioTrackWindow : Window
         var textPreviewNeedsMpv = new TextBlock
         {
             Text = lang.SyncAudioTrackPreviewNeedsMpv,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 6, 0, 0),
         };
         textPreviewNeedsMpv.Bind(IsVisibleProperty, new Binding(nameof(vm.IsPreviewNotSupported)));
         var textError = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 6, 0, 0),
         };

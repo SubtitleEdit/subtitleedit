@@ -28,7 +28,7 @@ public class ForcedAlignerSetupWindow : Window
 
         var labelIntro = UiUtil.MakeTextBlock(Se.Language.File.Import.ForcedAlignerSetupIntro);
         labelIntro.TextWrapping = TextWrapping.Wrap;
-        labelIntro.FontSize = 12.5;
+        labelIntro.FontSize = EditorChrome.FieldFontSize;
         labelIntro.VerticalAlignment = VerticalAlignment.Center;
 
         var introIcon = new ContentControl
@@ -71,7 +71,7 @@ public class ForcedAlignerSetupWindow : Window
 
         var labelEngineStatus = UiUtil.MakeTextBlock(string.Empty, vm, nameof(vm.EngineStatus), null);
         labelEngineStatus.VerticalAlignment = VerticalAlignment.Center;
-        labelEngineStatus.FontSize = 12.5;
+        labelEngineStatus.FontSize = EditorChrome.FieldFontSize;
         labelEngineStatus.TextWrapping = TextWrapping.Wrap;
 
         var panelEngineStatus = new StackPanel
@@ -104,7 +104,7 @@ public class ForcedAlignerSetupWindow : Window
 
         var labelAlignerStatusText = UiUtil.MakeTextBlock(string.Empty, vm, nameof(vm.AlignerStatus), null);
         labelAlignerStatusText.VerticalAlignment = VerticalAlignment.Center;
-        labelAlignerStatusText.FontSize = 12.5;
+        labelAlignerStatusText.FontSize = EditorChrome.FieldFontSize;
         labelAlignerStatusText.Foreground = EditorChrome.DimTextBrush;
 
         var labelAlignerStatus = new StackPanel

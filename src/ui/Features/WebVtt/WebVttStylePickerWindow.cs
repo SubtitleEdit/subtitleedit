@@ -57,7 +57,7 @@ public class WebVttStylePickerWindow : Window
             Child = new TextBlock
             {
                 FontFamily = MonoFont,
-                FontSize = 11.5,
+                FontSize = EditorChrome.ScaledFont(11.5),
                 TextWrapping = TextWrapping.Wrap,
                 [!TextBlock.TextProperty] = new Binding(nameof(vm.SelectedStyleCss)),
             },

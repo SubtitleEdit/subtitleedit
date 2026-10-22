@@ -41,10 +41,10 @@ public class GetPluginsWindow : Window
             var name = new TextBlock { FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Bottom };
             name.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Name)));
 
-            var version = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = 11.5, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var version = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = EditorChrome.ScaledFont(11.5), Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             version.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Version)));
 
-            var author = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = 11.5, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var author = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = EditorChrome.ScaledFont(11.5), Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             author.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Author)));
 
             // Small accent-coloured "Update" pill that appears only when an update is available.
@@ -58,7 +58,7 @@ public class GetPluginsWindow : Window
                 Child = new TextBlock
                 {
                     Text = Se.Language.General.Update,
-                    FontSize = 10.5,
+                    FontSize = EditorChrome.ScaledFont(10.5),
                     FontWeight = FontWeight.SemiBold,
                     Foreground = Brushes.White,
                 },
@@ -71,10 +71,10 @@ public class GetPluginsWindow : Window
                 Children = { name, version, author, updateBadge },
             };
 
-            var description = new TextBlock { FontSize = 12.5, Foreground = EditorChrome.DimTextBrush, TextWrapping = TextWrapping.Wrap };
+            var description = new TextBlock { FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush, TextWrapping = TextWrapping.Wrap };
             description.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Description)));
 
-            var status = new TextBlock { FontSize = 11 };
+            var status = new TextBlock { FontSize = EditorChrome.ScaledFont(11) };
             status.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.StatusText)));
             status.Bind(TextBlock.ForegroundProperty, new Binding(nameof(GetPluginsDisplayItem.StatusBrush)));
             status.Bind(TextBlock.FontWeightProperty, new Binding(nameof(GetPluginsDisplayItem.StatusFontWeight)));
@@ -88,7 +88,7 @@ public class GetPluginsWindow : Window
 
             var actionLabel = new TextBlock
             {
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
@@ -201,7 +201,7 @@ public class GetPluginsWindow : Window
 
         var statusMessage = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center,

@@ -44,7 +44,7 @@ public class TranslationErrorWindow : Window
 
         var titleBlock = new TextBlock
         {
-            FontSize = 15,
+            FontSize = EditorChrome.ScaledFont(15),
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
@@ -55,7 +55,7 @@ public class TranslationErrorWindow : Window
         var hintBlock = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
         };
         hintBlock.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Hint)));

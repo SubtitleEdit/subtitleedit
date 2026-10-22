@@ -155,7 +155,7 @@ public class VoiceManagerWindow : Window
 
                 var name = new TextBlock
                 {
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     [!TextBlock.TextProperty] = new Binding(nameof(VoiceManagerEngineItem.Name)),
@@ -424,7 +424,7 @@ public class VoiceManagerWindow : Window
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Center,
             MaxWidth = 420,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.FaintTextBrush,
             IsHitTestVisible = false,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.EmptyText)),
@@ -489,7 +489,7 @@ public class VoiceManagerWindow : Window
 
         var infoText = new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.VoiceInfoText)),
@@ -498,7 +498,7 @@ public class VoiceManagerWindow : Window
         var transcriptHeader = EditorChrome.MakeSectionHeader(Se.Language.Video.TextToSpeech.Transcript);
         var transcriptHint = new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -530,7 +530,7 @@ public class VoiceManagerWindow : Window
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
             Height = 64,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Background = EditorChrome.FieldBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
@@ -563,7 +563,7 @@ public class VoiceManagerWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
         };
@@ -571,7 +571,7 @@ public class VoiceManagerWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             Foreground = EditorChrome.FaintTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.VoiceCountText)),
         };
         var buttonClose = UiUtil.MakeButtonDone(vm.CloseCommand);

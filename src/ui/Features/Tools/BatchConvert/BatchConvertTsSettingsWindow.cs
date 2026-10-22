@@ -83,7 +83,7 @@ public class BatchConvertTsSettingsWindow : Window
         };
         var buttonInsertPlaceholder = new Button
         {
-            Content = new TextBlock { Text = "{ }", FontSize = 12.5, FontWeight = FontWeight.SemiBold },
+            Content = new TextBlock { Text = "{ }", FontSize = EditorChrome.FieldFontSize, FontWeight = FontWeight.SemiBold },
             Width = 34,
             Height = 28,
             HorizontalContentAlignment = HorizontalAlignment.Center,
@@ -164,7 +164,7 @@ public class BatchConvertTsSettingsWindow : Window
             {
                 Text = prefix,
                 Foreground = EditorChrome.FaintTextBrush,
-                FontSize = 11,
+                FontSize = EditorChrome.ScaledFont(11),
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(8, 0, 0, 0),
             };

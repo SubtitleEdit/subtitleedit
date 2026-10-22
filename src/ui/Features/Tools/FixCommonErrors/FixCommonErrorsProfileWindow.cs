@@ -49,7 +49,7 @@ public class FixCommonErrorsProfileWindow : Window
                 {
                     VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     [!TextBlock.TextProperty] = new Binding(nameof(ProfileDisplayItem.Name))
                 };
                 Grid.SetColumn(nameText, 0);

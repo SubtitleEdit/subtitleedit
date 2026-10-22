@@ -55,7 +55,7 @@ public class BurnInLogoWindow : Window
 
         var buttonPickLogo = EditorChrome.MakeActionButton("fa-solid fa-image", Se.Language.General.OpenImageFile + "...", vm.PickLogoCommand);
         var labelLogoPosition = EditorChrome.MakeBoundHint(nameof(vm.LogoPositionText));
-        labelLogoPosition.FontSize = 12;
+        labelLogoPosition.FontSize = EditorChrome.FieldFontSize;
         labelLogoPosition.MinWidth = 110;
         labelLogoPosition.Margin = new Thickness(8, 0, 0, 0);
 
@@ -79,7 +79,7 @@ public class BurnInLogoWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(6, 0, 0, 0),
             MinWidth = 40,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Alpha)}") { StringFormat = "{0}%" },
         };
 
@@ -103,7 +103,7 @@ public class BurnInLogoWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(6, 0, 0, 0),
             MinWidth = 40,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding($"{nameof(vm.BurnInLogo)}.{nameof(vm.BurnInLogo.Size)}") { StringFormat = "{0}%" },
         };
 
@@ -235,7 +235,7 @@ public class BurnInLogoWindow : Window
         var instructionsLabel = new TextBlock
         {
             Text = Se.Language.Video.BurnIn.LogoInfo,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };

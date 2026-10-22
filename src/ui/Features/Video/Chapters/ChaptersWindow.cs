@@ -140,7 +140,7 @@ public class ChaptersWindow : Window
     {
         var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 7, Margin = new Thickness(10, 0) };
         content.Children.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 13, VerticalAlignment = VerticalAlignment.Center });
-        content.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        content.Children.Add(new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center });
         var button = new Button
         {
             Content = content,
@@ -209,7 +209,7 @@ public class ChaptersWindow : Window
         var videoName = new TextBlock
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.VideoFileNameDisplay)),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -391,7 +391,7 @@ public class ChaptersWindow : Window
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Center,
             MaxWidth = 320,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.FaintTextBrush,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -561,7 +561,7 @@ public class ChaptersWindow : Window
             Text = text,
             TextWrapping = TextWrapping.Wrap,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Margin = margin ?? new Thickness(0),
         };
     }

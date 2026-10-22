@@ -48,7 +48,7 @@ public class FixCommonErrorsWindow : Window
         var labelStep1 = new TextBlock
         {
             Text = Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep1,
-            FontSize = 13,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -58,7 +58,7 @@ public class FixCommonErrorsWindow : Window
 
         var labelStep2 = new TextBlock
         {
-            FontSize = 13,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -86,7 +86,7 @@ public class FixCommonErrorsWindow : Window
             Children =
             {
                 switchGuessUnknownWords,
-                new TextBlock { Text = Se.Language.Ocr.TryToGuessUnknownWords, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center },
+                new TextBlock { Text = Se.Language.Ocr.TryToGuessUnknownWords, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center },
             },
         };
         panelGuessUnknownWords.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
@@ -216,7 +216,7 @@ public class FixCommonErrorsWindow : Window
         buttonDone.Classes.Add("primary");
 
         var labelFixesApplied = EditorChrome.MakeBoundHint(nameof(vm.FixesAppliedText));
-        labelFixesApplied.FontSize = 12;
+        labelFixesApplied.FontSize = EditorChrome.FieldFontSize;
         labelFixesApplied.Bind(IsVisibleProperty, new Binding(nameof(vm.FixesAppliedText)) { Converter = StringConverters.IsNotNullOrEmpty });
 
         // Green check + "Nothing to fix" so an empty re-scan gives visible feedback; the counters
@@ -225,7 +225,7 @@ public class FixCommonErrorsWindow : Window
         var nothingToFixText = new TextBlock
         {
             Text = Se.Language.Tools.FixCommonErrors.NothingToFix,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = nothingToFixBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -262,7 +262,7 @@ public class FixCommonErrorsWindow : Window
         };
         errorsFoundIcon.PointerPressed += (_, _) => vm.ShowLogCommand.Execute(null);
         var errorsFoundText = UiUtil.MakeLink(string.Empty, vm.ShowLogCommand);
-        errorsFoundText.FontSize = 12;
+        errorsFoundText.FontSize = EditorChrome.FieldFontSize;
         errorsFoundText.Foreground = errorsFoundBrush;
         errorsFoundText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ErrorsFoundText)));
         var errorsFoundPanel = new StackPanel
@@ -282,7 +282,7 @@ public class FixCommonErrorsWindow : Window
         // The log also holds what the applies changed, so it stays reachable when a subtitle has
         // no errors left - the warning above links to the same window when it does.
         var logLink = UiUtil.MakeLink(Se.Language.Tools.FixCommonErrors.Log, vm.ShowLogCommand);
-        logLink.FontSize = 12;
+        logLink.FontSize = EditorChrome.FieldFontSize;
         logLink.Bind(IsVisibleProperty, new Binding(nameof(vm.LogIsVisible)));
 
         // "Analyzing..." while a re-scan runs, so a scan that ends in the same state as it started
@@ -290,7 +290,7 @@ public class FixCommonErrorsWindow : Window
         var analysingText = new TextBlock
         {
             Text = Se.Language.Tools.FixCommonErrors.Analysing,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -536,7 +536,7 @@ public class FixCommonErrorsWindow : Window
         _buttonApplySelectedFixes.Margin = new Thickness(6, 0, 0, 0);
         _buttonApplySelectedFixes.MinHeight = 28;
         _buttonApplySelectedFixes.Padding = new Thickness(10, 4);
-        _buttonApplySelectedFixes.FontSize = 12.5;
+        _buttonApplySelectedFixes.FontSize = EditorChrome.FieldFontSize;
         _buttonApplySelectedFixes.VerticalAlignment = VerticalAlignment.Center;
 
         var fixesActions = new StackPanel
@@ -582,7 +582,7 @@ public class FixCommonErrorsWindow : Window
                 var toggle = new ToggleButton
                 {
                     Classes = { "chip" },
-                    FontSize = 12,
+                    FontSize = EditorChrome.FieldFontSize,
                     Padding = new Thickness(10, 3),
                     CornerRadius = new CornerRadius(12),
                     Command = _vm.SetFixFilterCommand,

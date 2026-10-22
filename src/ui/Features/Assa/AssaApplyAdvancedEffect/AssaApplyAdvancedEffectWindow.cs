@@ -249,7 +249,7 @@ public class AssaApplyAdvancedEffectWindow : Window
                 };
                 var icon = new ContentControl
                 {
-                    FontSize = 13,
+                    FontSize = EditorChrome.FieldFontSize,
                     Foreground = Brushes.White,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,

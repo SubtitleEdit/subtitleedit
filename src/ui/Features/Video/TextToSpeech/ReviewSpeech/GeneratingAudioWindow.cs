@@ -33,7 +33,7 @@ public class GeneratingAudioWindow : Window
         var titleText = new TextBlock
         {
             Text = Se.Language.General.PleaseWait,
-            FontSize = 15,
+            FontSize = EditorChrome.ScaledFont(15),
             FontWeight = FontWeight.SemiBold,
             HorizontalAlignment = HorizontalAlignment.Center,
         };

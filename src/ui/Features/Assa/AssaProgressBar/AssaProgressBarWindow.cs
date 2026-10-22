@@ -157,7 +157,7 @@ public class AssaProgressBarWindow : Window
 
         var name = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.BarStyleName)),
@@ -212,7 +212,7 @@ public class AssaProgressBarWindow : Window
         AutomationProperties.SetName(playhead, Se.Language.Assa.ProgressBarPlayhead);
         var playheadRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
         playheadRow.Children.Add(playhead);
-        playheadRow.Children.Add(new TextBlock { Text = Se.Language.Assa.ProgressBarPlayhead, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        playheadRow.Children.Add(new TextBlock { Text = Se.Language.Assa.ProgressBarPlayhead, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center });
 
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Position, topBottom, new Control()));
@@ -260,7 +260,7 @@ public class AssaProgressBarWindow : Window
             var row = new DockPanel();
             var time = new TextBlock
             {
-                FontSize = 11.5,
+                FontSize = EditorChrome.ScaledFont(11.5),
                 Foreground = EditorChrome.FaintTextBrush,
                 VerticalAlignment = VerticalAlignment.Center,
                 [!TextBlock.TextProperty] = new Binding(nameof(ProgressBarChapter.StartTimeDisplay)),
@@ -269,7 +269,7 @@ public class AssaProgressBarWindow : Window
             row.Children.Add(time);
             row.Children.Add(new TextBlock
             {
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 VerticalAlignment = VerticalAlignment.Center,
                 [!TextBlock.TextProperty] = new Binding(nameof(ProgressBarChapter.Text)),
@@ -279,7 +279,7 @@ public class AssaProgressBarWindow : Window
 
         var textBox = new TextBox
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Background = EditorChrome.FieldBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
@@ -289,7 +289,7 @@ public class AssaProgressBarWindow : Window
 
         var timeBox = new TextBox
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Background = EditorChrome.FieldBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
@@ -324,7 +324,7 @@ public class AssaProgressBarWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             MinHeight = 28,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Fonts)),
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.FontName)) { Mode = BindingMode.TwoWay },
         };

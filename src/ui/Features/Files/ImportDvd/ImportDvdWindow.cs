@@ -111,7 +111,7 @@ public class ImportDvdWindow : Window
         var infoIcon = new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-circle-info", FontSize = 12, Foreground = EditorChrome.FaintTextBrush, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) };
         var infoText = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             VerticalAlignment = VerticalAlignment.Center,
@@ -213,14 +213,14 @@ public class ImportDvdWindow : Window
             Spacing = 8,
             IsHitTestVisible = false,
         };
-        var hintIcon = new ContentControl { FontSize = 40, Foreground = EditorChrome.FaintTextBrush, HorizontalAlignment = HorizontalAlignment.Center };
+        var hintIcon = new ContentControl { FontSize = EditorChrome.ScaledFont(40), Foreground = EditorChrome.FaintTextBrush, HorizontalAlignment = HorizontalAlignment.Center };
         Attached.SetIcon(hintIcon, IconNames.Disc);
         hint.Children.Add(hintIcon);
         hint.Children.Add(new TextBlock
         {
             Text = Se.Language.File.Import.DvdDropHint,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Center,
             MaxWidth = 380,
@@ -272,7 +272,7 @@ public class ImportDvdWindow : Window
                 new RadioButton
                 {
                     Content = "PAL (25 fps)",
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     GroupName = "DvdVideoStandard",
                     [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.IsPal)) { Mode = BindingMode.TwoWay },
                     [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsNotRipping)),
@@ -280,7 +280,7 @@ public class ImportDvdWindow : Window
                 new RadioButton
                 {
                     Content = "NTSC (29.97 fps)",
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     GroupName = "DvdVideoStandard",
                     [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.IsNtsc)) { Mode = BindingMode.TwoWay },
                     [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsNotRipping)),
@@ -320,7 +320,7 @@ public class ImportDvdWindow : Window
 
     private static TextBlock MakeStatusText(ImportDvdViewModel vm) => new()
     {
-        FontSize = 12,
+        FontSize = EditorChrome.FieldFontSize,
         Foreground = EditorChrome.DimTextBrush,
         TextWrapping = TextWrapping.Wrap,
         VerticalAlignment = VerticalAlignment.Center,

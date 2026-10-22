@@ -33,7 +33,7 @@ public sealed class DownloadVoicePacksWindow : Window
         EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
         var intro = EditorChrome.MakeHint(Se.Language.Video.TextToSpeech.VoicePackIntro);
-        intro.FontSize = 12.5;
+        intro.FontSize = EditorChrome.FieldFontSize;
 
         var listBox = new ListBox
         {
@@ -55,10 +55,10 @@ public sealed class DownloadVoicePacksWindow : Window
                 var name = new TextBlock { FontWeight = FontWeight.SemiBold };
                 name.Bind(TextBlock.TextProperty, new Binding(nameof(VoicePackItem.Name)));
 
-                var description = new TextBlock { TextWrapping = TextWrapping.Wrap, FontSize = 12.5, Foreground = EditorChrome.DimTextBrush };
+                var description = new TextBlock { TextWrapping = TextWrapping.Wrap, FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush };
                 description.Bind(TextBlock.TextProperty, new Binding(nameof(VoicePackItem.Description)));
 
-                var details = new TextBlock { FontSize = 11, Foreground = EditorChrome.FaintTextBrush };
+                var details = new TextBlock { FontSize = EditorChrome.ScaledFont(11), Foreground = EditorChrome.FaintTextBrush };
                 details.Bind(TextBlock.TextProperty, new Binding(nameof(VoicePackItem.Details)));
 
                 var status = new TextBlock { FontSize = UiUtil.ScaledFontSize(11), Foreground = new SolidColorBrush(Color.FromRgb(0x2E, 0x8B, 0x57)) };
@@ -99,7 +99,7 @@ public sealed class DownloadVoicePacksWindow : Window
         // installed, when the strip is gone.
         var progressText = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
@@ -109,7 +109,7 @@ public sealed class DownloadVoicePacksWindow : Window
         {
             Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
         };
         errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
         errorText.Bind(IsVisibleProperty, new Binding(nameof(vm.Error)) { Converter = new FuncValueConverter<string?, bool>(s => !string.IsNullOrEmpty(s)) });

@@ -46,7 +46,7 @@ public class MultipleReplaceWindow : Window
 
         // How many lines the checked fixes change, on the left of the button bar.
         var labelFixesInfo = EditorChrome.MakeBoundHint(nameof(vm.FixesInfo));
-        labelFixesInfo.FontSize = 12;
+        labelFixesInfo.FontSize = EditorChrome.FieldFontSize;
         var panelButtons = EditorChrome.MakeButtonBar(labelFixesInfo, buttonApply, buttonCancel, buttonOk);
 
         // The rules of the selected category on top, the preview of what they change under them.
@@ -157,7 +157,7 @@ public class MultipleReplaceWindow : Window
                     VerticalAlignment = VerticalAlignment.Center,
                     Child = new TextBlock
                     {
-                        FontSize = 11.5,
+                        FontSize = EditorChrome.ScaledFont(11.5),
                         Foreground = EditorChrome.DimTextBrush,
                         [!TextBlock.TextProperty] = new Binding(nameof(RuleTreeNode.RuleCount)),
                     },
@@ -615,7 +615,7 @@ public class MultipleReplaceWindow : Window
             Children =
             {
                 switchWholeWord,
-                new TextBlock { Text = Se.Language.Edit.Find.WholeWord, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center },
+                new TextBlock { Text = Se.Language.Edit.Find.WholeWord, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center },
             },
         };
 

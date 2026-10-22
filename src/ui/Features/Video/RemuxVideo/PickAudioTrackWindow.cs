@@ -36,7 +36,7 @@ public class PickAudioTrackWindow : Window
         var messageBlock = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             MaxWidth = 560,
             HorizontalAlignment = HorizontalAlignment.Left,

@@ -174,7 +174,7 @@ public class BlankVideoWindow : Window
         var source = new TextBlock
         {
             Text = Se.Language.General.UseSourceResolution,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.UseSourceResolution)),
         };
@@ -218,7 +218,7 @@ public class BlankVideoWindow : Window
 
         foreach (var radioButton in new[] { radioButtonCheckeredImage, radioButtonUseSolidColor, radioButtonImage })
         {
-            radioButton.FontSize = 12.5;
+            radioButton.FontSize = EditorChrome.FieldFontSize;
         }
 
         var rows = new StackPanel { Spacing = 4 };
@@ -238,7 +238,7 @@ public class BlankVideoWindow : Window
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
-        statusText.FontSize = 12;
+        statusText.FontSize = EditorChrome.FieldFontSize;
         statusText.MaxWidth = 320;
 
         var grid = new Grid

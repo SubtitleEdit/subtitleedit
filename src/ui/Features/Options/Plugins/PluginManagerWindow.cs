@@ -51,10 +51,10 @@ public class PluginManagerWindow : Window
             var name = new TextBlock { FontWeight = FontWeight.SemiBold };
             name.Bind(TextBlock.TextProperty, new Binding(nameof(PluginDisplayItem.Name)));
 
-            var version = new TextBlock { FontSize = 11.5, Foreground = EditorChrome.FaintTextBrush, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var version = new TextBlock { FontSize = EditorChrome.ScaledFont(11.5), Foreground = EditorChrome.FaintTextBrush, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             version.Bind(TextBlock.TextProperty, new Binding(nameof(PluginDisplayItem.Version)));
 
-            var author = new TextBlock { FontSize = 11.5, Foreground = EditorChrome.FaintTextBrush, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var author = new TextBlock { FontSize = EditorChrome.ScaledFont(11.5), Foreground = EditorChrome.FaintTextBrush, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             author.Bind(TextBlock.TextProperty, new Binding(nameof(PluginDisplayItem.Author)));
 
             var titleRow = new StackPanel
@@ -63,10 +63,10 @@ public class PluginManagerWindow : Window
                 Children = { name, version, author },
             };
 
-            var description = new TextBlock { FontSize = 12.5, Foreground = EditorChrome.DimTextBrush, TextWrapping = TextWrapping.Wrap };
+            var description = new TextBlock { FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush, TextWrapping = TextWrapping.Wrap };
             description.Bind(TextBlock.TextProperty, new Binding(nameof(PluginDisplayItem.Description)));
 
-            var status = new TextBlock { FontSize = 11, Foreground = EditorChrome.FaintTextBrush };
+            var status = new TextBlock { FontSize = EditorChrome.ScaledFont(11), Foreground = EditorChrome.FaintTextBrush };
             status.Bind(TextBlock.TextProperty, new Binding(nameof(PluginDisplayItem.StatusText)));
 
             var textPanel = new StackPanel

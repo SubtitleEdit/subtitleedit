@@ -72,7 +72,7 @@ public class SortByWindow : Window
             var textBlock = new TextBlock
             {
                 Margin = new Thickness(5),
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
             };
             textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(SortCriterion.DisplayText)));
             return textBlock;

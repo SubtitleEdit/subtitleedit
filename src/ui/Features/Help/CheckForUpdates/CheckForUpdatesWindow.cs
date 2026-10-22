@@ -38,7 +38,7 @@ public class CheckForUpdatesWindow : Window
 
         var statusLabel = new TextBlock
         {
-            FontSize = 13.5,
+            FontSize = EditorChrome.ScaledFont(13.5),
             FontWeight = FontWeight.SemiBold,
             TextWrapping = TextWrapping.Wrap,
             VerticalAlignment = VerticalAlignment.Center,
@@ -101,7 +101,7 @@ public class CheckForUpdatesWindow : Window
             IsReadOnly = true,
             AcceptsReturn = true,
             TextWrapping = TextWrapping.NoWrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             BorderThickness = new Thickness(0),
             Background = Brushes.Transparent,
             Padding = new Thickness(10, 8),

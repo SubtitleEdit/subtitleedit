@@ -166,7 +166,7 @@ public class NOcrTrainWindow : Window
                 new TextBlock
                 {
                     Text = Se.Language.Ocr.TrainNOcrSubtitle,
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     Foreground = EditorChrome.DimTextBrush,
                     TextWrapping = TextWrapping.Wrap,
                     Margin = new Thickness(0, 2, 0, 0),
@@ -198,7 +198,7 @@ public class NOcrTrainWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Child = new TextBlock
             {
-                FontSize = 11,
+                FontSize = EditorChrome.ScaledFont(11),
                 FontWeight = FontWeight.SemiBold,
                 Foreground = EditorChrome.StrongTextBrush,
                 [!TextBlock.TextProperty] = new Binding(nameof(vm.SelectedFontsText)),
@@ -210,7 +210,7 @@ public class NOcrTrainWindow : Window
     {
         return new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -455,7 +455,7 @@ public class NOcrTrainWindow : Window
     {
         var status = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -496,7 +496,7 @@ public class NOcrTrainWindow : Window
                     new Icon { Value = iconName, FontSize = 12, Foreground = brush, VerticalAlignment = VerticalAlignment.Center },
                     new TextBlock
                     {
-                        FontSize = 11.5,
+                        FontSize = EditorChrome.ScaledFont(11.5),
                         FontWeight = FontWeight.SemiBold,
                         Foreground = brush,
                         VerticalAlignment = VerticalAlignment.Center,

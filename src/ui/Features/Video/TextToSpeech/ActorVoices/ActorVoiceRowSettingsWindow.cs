@@ -90,7 +90,7 @@ public class ActorVoiceRowSettingsWindow : Window
     {
         var title = new TextBlock
         {
-            FontSize = 15,
+            FontSize = EditorChrome.ScaledFont(15),
             FontWeight = FontWeight.SemiBold,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Actor))
             {
@@ -101,7 +101,7 @@ public class ActorVoiceRowSettingsWindow : Window
 
         var sub = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new MultiBinding
             {
@@ -133,7 +133,7 @@ public class ActorVoiceRowSettingsWindow : Window
             Height = 90,
             Width = double.NaN,
             MinWidth = 420,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Background = EditorChrome.FieldBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
@@ -200,7 +200,7 @@ public class ActorVoiceRowSettingsWindow : Window
         {
             Text = Se.Language.Video.TextToSpeech.VoiceInstructionClonedVoiceNote,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
             MaxWidth = 430,
             HorizontalAlignment = HorizontalAlignment.Left,
