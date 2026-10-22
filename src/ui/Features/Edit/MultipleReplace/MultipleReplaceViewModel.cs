@@ -233,9 +233,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
             _refreshingRules = false;
         }
 
-        SelectedCategoryTitle = category == null
-            ? Se.Language.General.Rules
-            : string.Format(Se.Language.Edit.MultipleReplace.RulesInX, category.CategoryName);
+        UpdateSelectedCategoryTitle();
 
         // Reordering inside a filtered list would move rules past ones that are not shown.
         CanReorderRules = filter.Length == 0;
@@ -263,6 +261,13 @@ public partial class MultipleReplaceViewModel : ObservableObject
         SelectedNode = RulesTable.SelectedItem as RuleTreeNode;
     }
 
+    private void UpdateSelectedCategoryTitle()
+    {
+        SelectedCategoryTitle = SelectedCategory == null
+            ? Se.Language.General.Rules
+            : string.Format(Se.Language.Edit.MultipleReplace.RulesInX, SelectedCategory.CategoryName);
+    }
+
     /// <summary>
     /// The type-in row: adds the rule to the end of the selected category, shows it, and empties
     /// the fields for the next one - type and whole word stay as they are (#16215).
@@ -284,7 +289,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
             ReplaceWith = NewReplaceWith ?? string.Empty,
             Description = string.Empty,
             Type = NewRuleType?.Type ?? MultipleReplaceType.CaseInsensitive,
-            WholeWord = NewWholeWord,
+            // the check box is only disabled for regular expressions, so a tick from before stays
+            WholeWord = NewWholeWord && NewRuleType?.Type != MultipleReplaceType.RegularExpression,
         });
 
         if (SelectedCategory != category)
@@ -305,7 +311,8 @@ public partial class MultipleReplaceViewModel : ObservableObject
     internal void NewRuleTextBoxKeyDown(object? sender, KeyEventArgs e)
     {
         // Enter in the type-in row adds the rule - without this it reached the window and meant OK.
-        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None)
+        // With nothing typed it still means OK, as the row has the initial focus (#14586).
+        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && !string.IsNullOrEmpty(NewFind))
         {
             e.Handled = true;
             AddNewRule();
@@ -743,6 +750,10 @@ public partial class MultipleReplaceViewModel : ObservableObject
         {
             node.CategoryName = result.CategoryName;
             _dirty = true;
+            if (node == SelectedCategory)
+            {
+                UpdateSelectedCategoryTitle(); // "Rules in <name>"
+            }
         }
     }
 
@@ -1454,10 +1465,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
         else if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None)
         {
-            // Initial focus is on the rules tree, not the OK button (a focused button clicks on bare
-            // Space), so Enter has to reach OK from the window - the rules tree and preview grid do
-            // not use Enter themselves. A focused Cancel/Apply button consumes Enter before it bubbles
-            // here, so those keep their own meaning (#14586).
+            // Initial focus is on the empty type-in row, not the OK button (a focused button clicks
+            // on bare Space), so Enter has to reach OK from the window - the type-in row lets Enter
+            // through while it is empty, the rules filter keeps it, and the rules list and preview
+            // grid do not use Enter themselves. A focused Cancel/Apply button consumes Enter before
+            // it bubbles here, so those keep their own meaning (#14586).
             e.Handled = true;
             Ok();
         }
