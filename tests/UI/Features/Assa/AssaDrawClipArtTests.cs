@@ -14,7 +14,17 @@ namespace UITests.Features.Assa;
 public class AssaDrawClipArtTests
 {
     private static List<ShapeLibraryItem> ClipArt =>
-        ShapeLibrary.BuiltIn.Where(i => i.Category == Se.Language.Assa.DrawCategoryClipArt).ToList();
+        ShapeLibrary.BuiltIn.Where(i => i.Category == Se.Language.Assa.DrawCategoryClipArt || i.Category == Se.Language.Assa.DrawCategoryAnimatedClipArt).ToList();
+
+    [Fact]
+    public void AnimatedClipArt_IsInItsOwnSection()
+    {
+        var animated = ShapeLibrary.BuiltIn.Where(i => i.Category == Se.Language.Assa.DrawCategoryAnimatedClipArt).ToList();
+        Assert.Equal(12, animated.Count);
+        Assert.All(animated, i => Assert.NotNull(i.Animation));
+        Assert.DoesNotContain(ShapeLibrary.BuiltIn, i => i.Category == Se.Language.Assa.DrawCategoryClipArt && i.Animation != null);
+        Assert.Contains(Se.Language.Assa.DrawCategoryAnimatedClipArt, ShapeLibrary.BuiltInCategories);
+    }
 
     [Fact]
     public void ClipArt_KeepsItsColors_InAFewLayers()

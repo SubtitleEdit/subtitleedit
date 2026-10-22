@@ -54,6 +54,7 @@ public class LanguageAssa
     public string DrawCategoryBasicShapes { get; set; }
     public string DrawCategorySymbols { get; set; }
     public string DrawCategoryClipArt { get; set; }
+    public string DrawCategoryAnimatedClipArt { get; set; }
     public string DrawClipArtRedHeart { get; set; }
     public string DrawClipArtAngerMark { get; set; }
     public string DrawClipArtSweatDrop { get; set; }
@@ -605,6 +606,7 @@ public class LanguageAssa
         DrawCategoryBasicShapes = "Basic shapes";
         DrawCategorySymbols = "Symbols";
         DrawCategoryClipArt = "Clip art";
+        DrawCategoryAnimatedClipArt = "Animated clip art";
         DrawClipArtRedHeart = "Red heart";
         DrawClipArtAngerMark = "Anger mark";
         DrawClipArtSweatDrop = "Sweat drop";

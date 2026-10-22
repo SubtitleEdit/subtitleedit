@@ -249,6 +249,7 @@ public static class ShapeLibrary
         Se.Language.Assa.DrawCategoryBasicShapes,
         Se.Language.Assa.DrawCategorySymbols,
         Se.Language.Assa.DrawCategoryClipArt,
+        Se.Language.Assa.DrawCategoryAnimatedClipArt,
     ];
 
     public static List<ShapeLibraryItem> GetUserShapes()
@@ -331,7 +332,9 @@ public static class ShapeLibrary
 
         // Imported at 1000 x 1000, so the view box is scaled by 10 like the path data shapes
         (float, float, float, float)? area = textArea is { } a ? (a.Left * 10, a.Top * 10, a.Right * 10, a.Bottom * 10) : null;
-        return new ShapeLibraryItem(name, Se.Language.Assa.DrawCategoryClipArt, () => SvgImporter.Import(svg, 1000, 1000, 0).Shapes,
+        // Clip art with a loop gets its own section
+        var category = loop == DrawLoopEffect.None ? Se.Language.Assa.DrawCategoryClipArt : Se.Language.Assa.DrawCategoryAnimatedClipArt;
+        return new ShapeLibraryItem(name, category, () => SvgImporter.Import(svg, 1000, 1000, 0).Shapes,
             textArea: area, ownColors: true)
         {
             Animation = loop == DrawLoopEffect.None ? null : new DrawAnimation { Loop = loop, LoopMs = loopMs },
@@ -607,7 +610,7 @@ public static class ShapeLibrary
             Clip(l.DrawClipArtLoveIt, null,
                 """<circle fill="#FFCA28" cx="50" cy="50" r="44"/><g fill="#E53935"><path d="M33 50.4 C17.4 40 20 27 33 34.8 C46 27 48.6 40 33 50.4 Z"/><path d="M67 50.4 C51.4 40 54 27 67 34.8 C80 27 82.6 40 67 50.4 Z"/></g><path fill="#5D4037" d="M28 58 Q50 84 72 58 Z"/>"""),
 
-            // Animated: these come with a loop
+            // Animated: these come with a loop (own section)
             Clip(l.DrawClipArtLoadingSpinner, null,
                 """<g fill="#1565C0"><circle cx="50" cy="16" r="9"/><circle cx="25.96" cy="25.96" r="8.4"/></g><g fill="#1E88E5"><circle cx="16" cy="50" r="7.8"/><circle cx="25.96" cy="74.04" r="7.2"/></g><g fill="#64B5F6"><circle cx="50" cy="84" r="6.6"/><circle cx="74.04" cy="74.04" r="6"/></g><g fill="#BBDEFB"><circle cx="84" cy="50" r="5.4"/><circle cx="74.04" cy="25.96" r="4.8"/></g>""", DrawLoopEffect.Spin, 1000),
             Clip(l.DrawClipArtRec, null,
