@@ -357,6 +357,31 @@ public class SubtitleGridCopyPasteHelperTests
         }
     }
 
+    // Column paste parses the clipboard with its own format detection - it must take the video
+    // offset that grid copy added off again, or every pasted time code moves by the offset.
+    [Fact]
+    public void RemoveClipboardVideoOffset_TakesCopyOffsetOff()
+    {
+        var format = new SubRip();
+        try
+        {
+            Se.Settings.General.CurrentVideoOffsetInMs = 10_000;
+            var rows = new List<SubtitleLineViewModel> { new(new Paragraph("One", 1000, 2000), format) };
+            var clipboard = SubtitleGridCopyPasteHelper.GetCopyText(rows, format, new Subtitle());
+
+            var subtitle = new Subtitle();
+            format.LoadSubtitle(subtitle, clipboard.SplitToLines(), null);
+            SubtitleGridCopyPasteHelper.RemoveClipboardVideoOffset(clipboard, subtitle);
+
+            Assert.Equal(1000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+            Assert.Equal(2000, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+        }
+        finally
+        {
+            Se.Settings.General.CurrentVideoOffsetInMs = 0;
+        }
+    }
+
     private static Subtitle BuildSubtitle(params (string Text, int Start, int End)[] paragraphs)
     {
         var subtitle = new Subtitle();

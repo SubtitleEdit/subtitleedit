@@ -7946,6 +7946,11 @@ public partial class MainViewModel :
                 subtitle.Paragraphs.Add(new Paragraph(lines[i], 0, 0));
             }
         }
+        else
+        {
+            // grid copy adds the video offset to the clipboard time codes, so take it off again
+            SubtitleGridCopyPasteHelper.RemoveClipboardVideoOffset(text, subtitle);
+        }
 
         if (subtitle.Paragraphs.Count == 0)
         {
