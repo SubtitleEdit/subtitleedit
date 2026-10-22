@@ -21,9 +21,12 @@ public class OcrFixItalicSpacingTests : IDisposable
             "SeOcrFixItalicSpacingTest_" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(_tempDictionariesFolder);
         SpellCheckConfig.DictionariesFolder = () => _tempDictionariesFolder;
-        File.WriteAllText(
-            Path.Combine(_tempDictionariesFolder, "nld_OCRFixReplaceList.xml"),
-            "<ReplaceList></ReplaceList>");
+        foreach (var language in new[] { "nld", "fra" })
+        {
+            File.WriteAllText(
+                Path.Combine(_tempDictionariesFolder, language + "_OCRFixReplaceList.xml"),
+                "<ReplaceList></ReplaceList>");
+        }
     }
 
     [Theory]
@@ -79,6 +82,31 @@ public class OcrFixItalicSpacingTests : IDisposable
         Assert.Equal(input, result.GetText());
     }
 
+    // French puts a space before the closing guillemet - next to a « (any language) and on
+    // every French line.
+    [Theory]
+    [InlineData("nld", "« Il est parti. »")]
+    [InlineData("nld", "Il a dit : « Non ! »")]
+    [InlineData("fra", "Non ! »")]
+    public void FixOcrErrors_FrenchClosingGuillemetSpace_IsKept(string language, string input)
+    {
+        var engine = CreateEngine(language: language);
+
+        var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
+
+        Assert.Equal(input, result.GetText());
+    }
+
+    [Fact]
+    public void FixOcrErrors_SpaceBeforeLoneClosingGuillemet_IsRemoved()
+    {
+        var engine = CreateEngine();
+
+        var result = engine.FixOcrErrors(0, "Det är slut. »", doTryToGuessUnknownWords: false);
+
+        Assert.Equal("Det är slut.»", result.GetText());
+    }
+
     [Theory]
     [InlineData("<i>en klim tot 20. 000.</i>")]
     [InlineData("<i>\"De Engelse strijd gaat nu beginnen. \"</i>")]
@@ -91,10 +119,10 @@ public class OcrFixItalicSpacingTests : IDisposable
         Assert.Equal(input, result.GetText());
     }
 
-    private static IOcrFixEngine CreateEngine(bool fixImageMatcherMisreads = true)
+    private static IOcrFixEngine CreateEngine(bool fixImageMatcherMisreads = true, string language = "nld")
     {
         IOcrFixEngine engine = new OcrFixEngine(new AcceptAllSpellChecker()) { FixImageMatcherMisreads = fixImageMatcherMisreads };
-        engine.Initialize(new Subtitle(), "nld", new SpellCheckDictionaryDisplay());
+        engine.Initialize(new Subtitle(), language, new SpellCheckDictionaryDisplay());
         return engine;
     }
 

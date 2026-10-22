@@ -135,10 +135,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             var serbianOnly = 0;         // ћ ђ
             var ukrainianOnly = 0;       // і ї є ґ
             var russianOnly = 0;         // ы э ё
-            var hardSign = 0;            // ъ
+            var hardSign = 0;            // ъ, not before е/ё/ю/я
             var eastSlavic = 0;          // ъ ы э ё й щ ь ю я - none of them in Macedonian or Serbian
-            foreach (var c in text)
+            for (var i = 0; i < text.Length; i++)
             {
+                var c = text[i];
                 switch (c)
                 {
                     case 'ј': case 'Ј': case 'љ': case 'Љ': case 'њ': case 'Њ': case 'џ': case 'Џ':
@@ -160,7 +161,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                         eastSlavic++;
                         break;
                     case 'ъ': case 'Ъ':
-                        hardSign++;
+                        // Russian writes ъ only before е/ё/ю/я (съел, подъезд, объявление),
+                        // Bulgarian mostly before consonants (дъжд, къде, със) - only the latter
+                        // says Bulgarian.
+                        if (i + 1 >= text.Length || "еёюяЕЁЮЯ".IndexOf(text[i + 1]) < 0)
+                        {
+                            hardSign++;
+                        }
+
                         eastSlavic++;
                         break;
                     case 'й': case 'Й': case 'щ': case 'Щ': case 'ь': case 'Ь': case 'ю': case 'Ю': case 'я': case 'Я':
@@ -269,8 +277,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         /// <summary>
         /// Arabic, Persian or Urdu by the letters each script adds: Persian and Urdu write
-        /// پ/چ/ژ/گ and the Persian ye/kaf (ی U+06CC, ک U+06A9), Arabic its own ye/kaf
-        /// (ي U+064A, ك U+0643) plus ة/ذ/ض/ظ/ء; Urdu alone has ٹ/ڈ/ڑ/ں/ے/ھ/ہ.
+        /// پ/چ/ژ/گ and the Persian ye/kaf (ی U+06CC, ک U+06A9), Arabic has ة; Urdu alone has
+        /// ٹ/ڈ/ڑ/ں/ے/ھ/ہ. The Arabic ye/kaf (ي U+064A, ك U+0643) and ذ/ض/ظ/ء say nothing: older
+        /// Persian files (Windows-1256) are typed with that ye/kaf, and ذ/ض/ظ/ء are common in
+        /// Persian loanwords.
         /// </summary>
         /// <param name="text">The text to look at.</param>
         /// <returns>"ur", "fa", "ar", or null when the letters do not say.</returns>
@@ -283,7 +293,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 switch (c)
                 {
-                    case 'ي': case 'ك': case 'ة': case 'ذ': case 'ض': case 'ظ': case 'ء':
+                    case 'ة':
                         arabic++;
                         break;
                     case 'ی': case 'ک': case 'پ': case 'چ': case 'ژ': case 'گ':
@@ -758,7 +768,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "djevojka", "umrijeti", "čovjeka", "mjesta", "djeca", "osjećam", "uopće", "djecu", "naprijed", "obitelji", "doista", "mjestu", "lijepa", "također", "riječ", "tijelo",
             "vrijeme", "mlijeko", "lijepo",
             "stol", "slijedite", "izvrsna", "sjeveru", "tijekom", "cestama", "jučer", "tisuću", "tjedan", "mjesec", "svjetlo", "glazba", "zrak", "kruh", "tvrtka",
-            "siječanj", "vjetar", "snijeg", "rijeka", "cijena", "vrijedi", "pješice", "sljedeći", "prijatelj", "prijatelji",
+            "siječanj", "vjetar", "snijeg", "rijeka", "cijena", "vrijedi", "pješice", "sljedeći",
         };
 
         private static readonly string[] AutoDetectWordsSerbian =
@@ -767,7 +777,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "verovatno", "verujem", "tačno", "razumem", "videla", "ceo", "svet", "porodica", "voleo", "srećan", "dođavola", "svetu", "htela", "videli", "negde", "želeo", "ponovo", "devojka", "umreti", "čoveka", "mesta", "deca", "osećam",
             "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo",
             "sto", "veče", "pratite", "odlična", "severu", "tokom", "putevima", "juče", "hiljadu", "nedelja", "mesec", "svetlo", "muzika", "vazduh", "hleb", "firma",
-            "januar", "trebalo", "budu", "vetar", "sneg", "reka", "cena", "vredi", "peške", "sledeći", "prijatelj", "prijatelji",
+            "januar", "trebalo", "budu", "vetar", "sneg", "reka", "cena", "vredi", "peške", "sledeći",
         };
 
         private static readonly string[] AutoDetectWordsSerbianCyrillic =

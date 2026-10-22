@@ -109,7 +109,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             text = FixHashMisreadAsApostrophe(text);
             text = FixSlashMisreadAsL(text);
             text = FixSpacedThousandsSeparator(text);
-            text = FixSpaceBeforeClosingQuote(text);
+            text = FixSpaceBeforeClosingQuote(text, _threeLetterIsoLanguageName is "fra" or "fre");
         }
 
         var replacedLine = ReplaceLineFixes(index, text, wordsToIgnore);
@@ -466,16 +466,19 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     /// <summary>
     /// A closing quote after an italic period gets a word space in front of it ("voorbij. '",
     /// "beginnen. \""): drop it. A quote that opens the next word ("Kom.' 'Nee.'", "'s avonds")
-    /// is not followed by whitespace and stays.
+    /// is not followed by whitespace and stays. French typography puts a space before the
+    /// closing guillemet ("« Il est parti. »"), so that one stays in French and next to a «.
     /// </summary>
-    internal static string FixSpaceBeforeClosingQuote(string text)
+    internal static string FixSpaceBeforeClosingQuote(string text, bool isFrench = false)
     {
         if (string.IsNullOrEmpty(text) || !text.Contains(' '))
         {
             return text;
         }
 
-        return SpaceBeforeClosingQuote().Replace(text, "$1$2");
+        var keepGuillemetSpace = isFrench || text.Contains('«');
+        return SpaceBeforeClosingQuote().Replace(text, m =>
+            keepGuillemetSpace && m.Groups[2].Value == "»" ? m.Value : m.Groups[1].Value + m.Groups[2].Value);
     }
 
     /// <summary>
