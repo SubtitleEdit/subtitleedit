@@ -3,6 +3,35 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-beta5 (22nd of October 2026)
+
+* Add Video OCR: scan only chosen time ranges - thx kadrimarzouki
+* Add Auto-translate: "Translate rows" context menu item for multiple selected rows
+* Add Settings: Windows window rendering mode (fixes desktop background bleeding through) - thx 114562175
+* Add ASSA draw: "Animated clip art" section in Shapes
+* Add Pastel and Nord themes: own icon sets
+* UI font size is now set in px, and dialog text follows it - thx GrampaWildWilly
+* Full screen video: controls fade in over the video, bigger, also on native players - thx benshgit
+* Set position: frame taken from the paused player, faster ffmpeg fallback - thx 114562175
+* Forced aligner: show why the engine failed, stop early on repeated crashes
+* Multiple replace: Enter in filter and empty type-in row, regex whole word
+* Language auto-detect: Persian with Arabic ye/kaf, Russian with hard sign
+* Text to speech: audio.cpp model downloads pinned to a fixed revision - thx ProjectKTC
+* Fix VibeVoice (CrispASR) Q8_0/Q4_K model integrity check failure - thx mh82
+* Fix rule profile applied at startup without being chosen
+* Fix failed reload of a file changed outside SE letting the next save overwrite it
+* Fix column paste ignoring the video offset from copy
+* Fix Set position click-to-place snapping to top-left or undoing other edits
+* Fix SubRip reader regressions and ITT header timing round trip
+* Fix OCR fix removing space before French closing quote
+* Fix main window fields not following a UI font size change
+* Fix Settings category navigation scroll alignment - thx pdjdev
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
 v5.4.0-beta4 (21st of October 2026)
 
 * Add Midnight Cinema and Sakura themes, theme background art for video/waveform, Cycle theme shortcut
