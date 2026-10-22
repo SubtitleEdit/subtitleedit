@@ -86,6 +86,35 @@ public class SubRipTest
     }
 
     [Fact]
+    public void LastParagraphWithNumberAsText()
+    {
+        var s = Load("1\n00:00:01,000 --> 00:00:02,000\nHello\n\n2\n00:00:03,000 --> 00:00:04,000\n1999\n");
+        Assert.Equal(new[] { "Hello", "1999" }, s.Paragraphs.Select(p => p.Text));
+    }
+
+    [Theory]
+    [InlineData("10:30 --> 11:00")]
+    [InlineData("10:30:00 - 11:00:00")]
+    [InlineData("-10:00 --> 11:00")]
+    public void TextLineLookingLikeTimeRangeStaysText(string text)
+    {
+        var s = Load("1\n00:00:01,000 --> 00:00:02,000\n" + text + "\n\n2\n00:00:03,000 --> 00:00:04,000\nWorld\n");
+        Assert.Equal(new[] { text, "World" }, s.Paragraphs.Select(p => p.Text));
+    }
+
+    [Theory]
+    [InlineData("00:00:01,000 --> 00:00:02,000Hello")]
+    [InlineData("00:00:01,000 --> 00:00:02,000\tHello")]
+    [InlineData("00:00:01:00 - 00:00:03:12  \tHello")]
+    [InlineData("00.00.01.00-00.00.03.12")]
+    [InlineData("00:00:01:0000 – 00:00:03:5000")]
+    [InlineData("00:00:01.000 ===> 00:00:03.500                    0001\\par")]
+    public void OtherFormatTimeCodeLineIsNotSubRip(string line)
+    {
+        Assert.Empty(Load("1\n" + line + "\nHello\n").Paragraphs);
+    }
+
+    [Fact]
     public void EmptyParagraphs()
     {
         var s = Load("1\n00:00:01,000 --> 00:00:02,000\n\n2\n00:00:03,000 --> 00:00:04,000\n\n3\n00:00:05,000 --> 00:00:06,000\nC");

@@ -247,10 +247,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             // At the end of the file there is no next paragraph, so a last number line is only a
-            // (dangling) paragraph number when a blank line separates it from the text.
+            // (dangling) paragraph number when a blank line separates it from the text - a
+            // paragraph whose only text is a number ("1999") keeps it.
             var number = -1;
             if (end > from && TryParseNumber(lines[end - 1], out var n) &&
-                (to < lines.Count || end - 1 == from || IsBlank(lines[end - 2])))
+                (to < lines.Count || paragraph == null || end - 1 > from && IsBlank(lines[end - 2])))
             {
                 number = n;
                 end--;
@@ -445,8 +446,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public int EndMsDigits;
 
             /// <summary>
-            /// Set when parsing failed but the line starts with a digit and contains both ':' and
-            /// '>' - a damaged time code rather than a text line.
+            /// Set when parsing failed but the line starts with a digit and contains '>' and at least
+            /// three ':' - a damaged time code rather than a text line.
             /// </summary>
             public bool LooksLikeTimeCode;
         }
@@ -482,17 +483,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return true;
             }
 
-            result.LooksLikeTimeCode = first != '-' && line.IndexOf('>', pos) >= 0 && line.IndexOf(':', pos) >= 0;
+            result.LooksLikeTimeCode = first != '-' && line.IndexOf('>', pos) >= 0 && CountColons(line, pos) >= 3;
             return false;
         }
 
-        // "hh:mm:ss,mmm --> hh:mm:ss,mmm", optionally followed by white space and anything else.
+        // A damaged time code line has the colons of two time codes; text such as
+        // "10:30 --> 11:00" does not.
+        private static int CountColons(string line, int pos)
+        {
+            var count = 0;
+            for (var i = pos; i < line.Length; i++)
+            {
+                if (line[i] == ':')
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        // "hh:mm:ss,mmm --> hh:mm:ss,mmm", optionally followed by a space and anything else
+        // (position info).
         private static bool TryParseCanonical(string s, int p, ref TimeCodeLine result)
         {
             if (s[p + 2] != ':' || s[p + 5] != ':' || s[p + 8] != ',' ||
                 s[p + 12] != ' ' || s[p + 13] != '-' || s[p + 14] != '-' || s[p + 15] != '>' || s[p + 16] != ' ' ||
                 s[p + 19] != ':' || s[p + 22] != ':' || s[p + 25] != ',' ||
-                s.Length > p + 29 && !IsSpace(s[p + 29]))
+                !IsValidTail(s, p + 29, allowAnyAfterSpace: true))
             {
                 return false;
             }
@@ -540,6 +558,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public int Ms;
             public int MsDigits;
             public int Groups;
+            public bool MsAfterDecimal; // ',' or '.' before the milliseconds
         }
 
         private static bool TryParseTolerant(string s, int pos, ref TimeCodeLine result)
@@ -588,10 +607,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            // Without a '>' only accept full-looking time codes, so text such as "10:30 - 11:00"
-            // does not turn into a paragraph.
-            var minGroups = hasGreaterThan ? 2 : 3;
-            if (start.Groups < minGroups || end.Groups < minGroups)
+            // Only accept full-looking time codes, so text such as "10:30 --> 11:00" or
+            // "10:30:00 - 11:00:00" does not turn into a paragraph. Without a '>' they must be
+            // complete "hh:mm:ss,mmm" - other formats use "-" or "–" between frame time codes.
+            if (hasGreaterThan
+                    ? start.Groups < 3 || end.Groups < 3
+                    : !IsCompleteWithMilliseconds(start) || !IsCompleteWithMilliseconds(end))
+            {
+                return false;
+            }
+
+            if (!IsValidTail(s, pos, allowAnyAfterSpace: false))
             {
                 return false;
             }
@@ -604,6 +630,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             result.EndMsDigits = end.MsDigits;
             return true;
         }
+
+        // After the end time: nothing but white space, or position info ("X1:100 X2:200 Y1:10
+        // Y2:20"). The canonical line also keeps the old reader's "a space
+        // and anything". Other text there is another format's line (Sony DVDArchitect,
+        // Unknown 101...), not SubRip.
+        private static bool IsValidTail(string s, int pos, bool allowAnyAfterSpace)
+        {
+            var len = s.Length;
+            var i = pos;
+            while (i < len && IsSpace(s[i]))
+            {
+                i++;
+            }
+
+            if (i >= len)
+            {
+                return true;
+            }
+
+            if ((s[i] == 'X' || s[i] == 'x') && i + 1 < len && (uint)(s[i + 1] - '0') <= 9)
+            {
+                return true;
+            }
+
+            return allowAnyAfterSpace && s[pos] == ' ';
+        }
+
+        private static bool IsCompleteWithMilliseconds(TimeCodeSide side) =>
+            side.Groups == 4 && side.MsDigits == 3 && side.MsAfterDecimal;
 
         private static bool IsGroupSeparator(char c)
         {
@@ -757,6 +812,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             side.Ms = ms;
             side.MsDigits = msDigits;
             side.Groups = groups;
+            side.MsAfterDecimal = msDigits > 0 && IsDecimalSeparator(lastSeparator);
             return true;
         }
     }
