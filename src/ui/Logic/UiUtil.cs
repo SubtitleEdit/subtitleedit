@@ -1753,7 +1753,7 @@ public static class UiUtil
     }
 
     /// <summary>
-    /// Scales a design-time font size by the user's "Font scale (%)" setting (#14812). Route every
+    /// Scales a design-time font size by the user's "UI font size" setting (#14812). Route every
     /// explicit control font size through this so it follows the setting; the window-inherited
     /// default is scaled by <see cref="UiTheme.ApplyScaleToWindow"/>. Icons undo this again via
     /// the icon style in <see cref="UiTheme"/>, so icon sizes stay put.

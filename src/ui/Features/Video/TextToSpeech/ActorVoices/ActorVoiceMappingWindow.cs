@@ -97,7 +97,7 @@ public class ActorVoiceMappingWindow : Window
         var title = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.ActorVoicesTitle,
-            FontSize = 16,
+            FontSize = EditorChrome.ScaledFont(16),
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -105,14 +105,14 @@ public class ActorVoiceMappingWindow : Window
         var subtitle = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.ActorVoicesSubtitle,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
 
         var status = new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 4, 0, 0),

@@ -59,7 +59,7 @@ public class BinaryChangeResolutionWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SizeText)),
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             Margin = new Thickness(0, 6, 0, 0),
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = Avalonia.Media.FontWeight.SemiBold,
         });
 
@@ -67,7 +67,7 @@ public class BinaryChangeResolutionWindow : Window
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ScaleText)),
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
         });
 

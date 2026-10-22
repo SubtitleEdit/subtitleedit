@@ -1334,7 +1334,7 @@ public class OcrWindow : Window
 
         var subtitleCountText = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
             HorizontalAlignment = HorizontalAlignment.Left,
@@ -1366,7 +1366,7 @@ public class OcrWindow : Window
             Content = text,
             Command = command,
             Height = 28,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Padding = new Thickness(10, 0),
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,

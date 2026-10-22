@@ -68,7 +68,7 @@ public class CrispEmbedSettingsWindow : Window
             Background = Brushes.Transparent,
             Padding = new Thickness(0),
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             [!TextBox.TextProperty] = new Binding(nameof(vm.InstallFolder)),
         };
@@ -125,7 +125,7 @@ public class CrispEmbedSettingsWindow : Window
                 var backend = new TextBlock
                 {
                     Width = 120,
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     Foreground = EditorChrome.DimTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
@@ -134,7 +134,7 @@ public class CrispEmbedSettingsWindow : Window
                 var name = new TextBlock
                 {
                     Width = 260,
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     [!TextBlock.TextProperty] = new Binding(nameof(CrispEmbedModelStatusViewModel.ModelName)),
@@ -142,7 +142,7 @@ public class CrispEmbedSettingsWindow : Window
                 var size = new TextBlock
                 {
                     Width = 70,
-                    FontSize = 12,
+                    FontSize = EditorChrome.FieldFontSize,
                     Foreground = EditorChrome.FaintTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     [!TextBlock.TextProperty] = new Binding(nameof(CrispEmbedModelStatusViewModel.SizeText)),

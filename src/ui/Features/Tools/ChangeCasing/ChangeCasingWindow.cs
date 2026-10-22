@@ -72,7 +72,7 @@ public class ChangeCasingWindow : Window
         return new RadioButton
         {
             Content = text,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(property) { Mode = BindingMode.TwoWay },
         };

@@ -62,7 +62,7 @@ public class SpeechToTextAdvancedWindow : Window
         {
             var button = new Button
             {
-                Content = new TextBlock { Text = engine.Name, FontSize = 12.5, TextTrimming = TextTrimming.CharacterEllipsis },
+                Content = new TextBlock { Text = engine.Name, FontSize = EditorChrome.FieldFontSize, TextTrimming = TextTrimming.CharacterEllipsis },
                 Command = vm.EngineClickedCommand,
                 CommandParameter = engine,
                 Height = 30,
@@ -94,7 +94,7 @@ public class SpeechToTextAdvancedWindow : Window
         {
             IsReadOnly = true,
             Margin = new Thickness(0),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Background = Brushes.Transparent,
             BorderThickness = new Thickness(0),
             Padding = new Thickness(10, 8),
@@ -178,7 +178,7 @@ public class SpeechToTextAdvancedWindow : Window
                 Margin = new Thickness(0),
                 Padding = new Thickness(12, 0),
                 Height = 30,
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
                 MinWidth = 80,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,

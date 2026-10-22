@@ -228,11 +228,11 @@ public class JoinSubtitlesWindow : Window
     private static Border MakeControlsView(JoinSubtitlesViewModel vm)
     {
         var radioKeepTimeCodes = UiUtil.MakeRadioButton(Se.Language.Tools.JoinSubtitles.KeepTimeCodes, vm, nameof(vm.KeepTimeCodes), "TimeCodes");
-        radioKeepTimeCodes.FontSize = 12.5;
+        radioKeepTimeCodes.FontSize = EditorChrome.FieldFontSize;
 
         var radioAppendTimeCodes = UiUtil.MakeRadioButton(Se.Language.Tools.JoinSubtitles.AppendTimeCodes, vm, nameof(vm.AppendTimeCodes), "TimeCodes")
             .WithMarginRight(12);
-        radioAppendTimeCodes.FontSize = 12.5;
+        radioAppendTimeCodes.FontSize = EditorChrome.FieldFontSize;
         var numericUpDownAppendMilliseconds = UiUtil.MakeNumericUpDownInt(0, 10000, 0, 90, vm, nameof(vm.AppendTimeCodesAddMilliseconds))
             .WithBindEnabled(nameof(vm.AppendTimeCodes))
             .WithAccessibleName(Se.Language.Tools.JoinSubtitles.AddMsAfterEachFile);

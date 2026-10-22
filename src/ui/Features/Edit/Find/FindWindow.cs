@@ -122,7 +122,7 @@ public class FindWindow : Window
         RadioButton Make(string text, FindService.FindMode mode) => new()
         {
             Content = text,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(FindViewModel.FindMode))
             {

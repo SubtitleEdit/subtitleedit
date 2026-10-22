@@ -44,7 +44,7 @@ public class ImageBasedProfileWindow : Window
                 // Name text (left-aligned)
                 var nameText = new TextBlock
                 {
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     [!TextBlock.TextProperty] = new Binding(nameof(ProfileDisplayItem.Name))

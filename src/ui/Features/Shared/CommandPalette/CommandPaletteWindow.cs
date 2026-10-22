@@ -60,7 +60,7 @@ public class CommandPaletteWindow : Window
         var labelNothingFound = new TextBlock
         {
             Text = Se.Language.Main.CommandPaletteNoCommandsFound,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Top,
@@ -114,7 +114,7 @@ public class CommandPaletteWindow : Window
         {
             Text = item.GroupName,
             Foreground = EditorChrome.FaintTextBrush,
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(10, 0, 0, 0),
         };
@@ -123,7 +123,7 @@ public class CommandPaletteWindow : Window
         {
             Text = item.ShortcutText,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(15, 0, 0, 0),
         };

@@ -94,21 +94,21 @@ public class AutoCastSpeakersWindow : Window
         var title = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.AutoCastSpeakersTitle,
-            FontSize = 15,
+            FontSize = EditorChrome.ScaledFont(15),
             FontWeight = FontWeight.SemiBold,
         };
 
         var subtitle = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.AutoCastSpeakersSubtitle,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
 
         var summary = new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.FaintTextBrush,
             Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SummaryText)) { Mode = BindingMode.OneWay },

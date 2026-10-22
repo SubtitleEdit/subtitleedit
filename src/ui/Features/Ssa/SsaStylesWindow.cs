@@ -441,13 +441,13 @@ public class SsaStylesWindow : Window
         var editing = new TextBlock
         {
             Text = Se.Language.Assa.StylesEditing,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
         var name = new TextBlock
         {
-            FontSize = 13.5,
+            FontSize = EditorChrome.ScaledFont(13.5),
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -455,7 +455,7 @@ public class SsaStylesWindow : Window
         };
         var badgeText = new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             FontWeight = FontWeight.SemiBold,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.CurrentTitle)),
         };
@@ -492,7 +492,7 @@ public class SsaStylesWindow : Window
     {
         var name = new TextBox
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Background = EditorChrome.FieldBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
@@ -522,7 +522,7 @@ public class SsaStylesWindow : Window
         {
             var toggle = new ToggleButton
             {
-                Content = new TextBlock { Text = text, FontWeight = weight, FontStyle = style, FontSize = 13 },
+                Content = new TextBlock { Text = text, FontWeight = weight, FontStyle = style, FontSize = EditorChrome.FieldFontSize },
                 Width = 28,
                 Height = 28,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
@@ -570,7 +570,7 @@ public class SsaStylesWindow : Window
             cell.Children.Add(new TextBlock
             {
                 Text = name,
-                FontSize = 11,
+                FontSize = EditorChrome.ScaledFont(11),
                 Foreground = EditorChrome.DimTextBrush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis,
@@ -655,7 +655,7 @@ public class SsaStylesWindow : Window
         // "2 styles in file · 5 saved"
         var summary = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };

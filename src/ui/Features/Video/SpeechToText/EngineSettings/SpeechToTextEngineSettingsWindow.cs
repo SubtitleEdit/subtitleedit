@@ -167,7 +167,7 @@ public class SpeechToTextEngineSettingsWindow : Window
     private static TextBlock MakeLabel(string text) => new()
     {
         Text = text,
-        FontSize = 12,
+        FontSize = EditorChrome.FieldFontSize,
         Foreground = EditorChrome.DimTextBrush,
         VerticalAlignment = VerticalAlignment.Center,
     };

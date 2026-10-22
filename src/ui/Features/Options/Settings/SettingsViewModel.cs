@@ -420,7 +420,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedIconTheme;
     [ObservableProperty] private bool _matchIconColorToDarkTheme;
     [ObservableProperty] private int _layoutScale;
-    [ObservableProperty] private int _fontScale;
+    [ObservableProperty] private int _uiFontSize;
     [ObservableProperty] private int _textSelectionOpacity;
     [ObservableProperty] private ObservableCollection<string> _fontNames;
     [ObservableProperty] private string _selectedFontName;
@@ -979,7 +979,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
         MatchIconColorToDarkTheme = appearance.MatchIconColorToDarkTheme;
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
-        FontScale = (int)Math.Round(appearance.FontScale * 100.0, MidpointRounding.AwayFromZero);
+        UiFontSize = UiTheme.FontSizeFromScale(appearance.FontScale);
         TextSelectionOpacity = appearance.TextSelectionOpacity;
         if (OperatingSystem.IsMacOS())
         {
@@ -1889,7 +1889,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.IconTheme = SelectedIconTheme;
         appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
-        appearance.FontScale = FontScale / 100.0;
+        appearance.FontScale = UiTheme.FontScaleFromSize(UiFontSize, appearance.FontScale);
         appearance.TextSelectionOpacity = Math.Clamp(TextSelectionOpacity, UiTheme.MinTextSelectionOpacity, 100);
         if (OperatingSystem.IsMacOS())
         {

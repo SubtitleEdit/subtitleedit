@@ -418,7 +418,7 @@ public class ReviewSpeechWindow : Window
         {
             Content = OmniVoiceTtsCpp.InstructionWhisper,
             DataContext = vm,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(0, 2, 0, 0),
         };
         whisper.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.OmniVoiceWhisper)) { Mode = BindingMode.TwoWay });
@@ -480,7 +480,7 @@ public class ReviewSpeechWindow : Window
     {
         return new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             FontFeatures = new FontFeatureCollection { FontFeature.Parse("tnum") },
             [!TextBlock.TextProperty] = new Binding(property) { Converter = new DoubleToTwoDecimalConverter(), Source = vm },
@@ -549,7 +549,7 @@ public class ReviewSpeechWindow : Window
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.PositionText)),
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 15,
+            FontSize = EditorChrome.ScaledFont(15),
             FontFeatures = new FontFeatureCollection { FontFeature.Parse("tnum") },
             Background = Brushes.Transparent, // hit-testable between the digits
             Cursor = new Cursor(StandardCursorType.Hand),

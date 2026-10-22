@@ -67,7 +67,7 @@ public class HearingImpairedRuleSettingsWindow : Window
         var labelHint = new TextBlock
         {
             Text = l.HearingImpairedSettingsHint,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.FaintTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 340,

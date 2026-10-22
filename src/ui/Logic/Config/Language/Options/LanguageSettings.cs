@@ -356,7 +356,7 @@ public class LanguageSettings
     public string WaveformDoubleClickAction { get; set; }
     public string AllSettings { get; set; }
     public string UiScale { get; set; }
-    public string FontScale { get; set; }
+    public string UiFontSize { get; set; }
     public string TextSelectionOpacity { get; set; }
     public string WaveformToolbarItems { get; set; }
     public string MatchIconColorToDarkTheme { get; set; }
@@ -739,7 +739,7 @@ public class LanguageSettings
         WaveformDoubleClickAction = "Waveform double-click action (after single-click action)";
         AllSettings = "All settings";
         UiScale = "UI scale (%)";
-        FontScale = "Font scale (%)";
+        UiFontSize = "UI font size";
         TextSelectionOpacity = "Text selection opacity (%)";
         WaveformToolbarItems = "Waveform toolbar items";
         MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";

@@ -52,7 +52,7 @@ public class AboutWindow : Window
         var licenseText = new TextBlock
         {
             Text = vm.LicenseText,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
@@ -145,7 +145,7 @@ public class AboutWindow : Window
         var descriptionText = new TextBlock
         {
             Text = vm.DescriptionText,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
         };
 

@@ -144,7 +144,7 @@ public class SpeechToTextQualityReportWindow : Window
         var labelTip = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(0, 10, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Tip)),
@@ -237,7 +237,7 @@ public class SpeechToTextQualityReportWindow : Window
         return new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ExportStatus)),
         };

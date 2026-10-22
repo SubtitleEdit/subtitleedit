@@ -47,7 +47,7 @@ public class LlamaCppEngineSettingsWindow : Window
             TextWrapping = TextWrapping.Wrap,
             MinHeight = 0,
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBox.TextProperty] = new Binding(nameof(vm.InstallFolder)),
         };
         AutomationProperties.SetName(folderText, Se.Language.General.InstallFolder);
@@ -55,7 +55,7 @@ public class LlamaCppEngineSettingsWindow : Window
         var releaseText = new TextBlock
         {
             FontFamily = new FontFamily("Cascadia Mono,Consolas,Menlo,Monaco,monospace"),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ReleaseTag)),
         };
@@ -98,7 +98,7 @@ public class LlamaCppEngineSettingsWindow : Window
 
     private static TextBlock MakeValue(string bindingPath) => new()
     {
-        FontSize = 12.5,
+        FontSize = EditorChrome.FieldFontSize,
         FontWeight = FontWeight.SemiBold,
         VerticalAlignment = VerticalAlignment.Center,
         [!TextBlock.TextProperty] = new Binding(bindingPath),

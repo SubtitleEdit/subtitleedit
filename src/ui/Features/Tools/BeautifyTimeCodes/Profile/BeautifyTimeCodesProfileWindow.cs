@@ -398,7 +398,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             GroupName = "chaining_" + useZonesPath,
             Content = _l.MaxGap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             MinWidth = 110,
             VerticalAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(useMaxGapPath) { Source = _vm, Mode = BindingMode.TwoWay },
@@ -416,7 +416,7 @@ public class BeautifyTimeCodesProfileWindow : Window
         {
             GroupName = "chaining_" + useZonesPath,
             Content = _l.Zones,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             MinWidth = 110,
             VerticalAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(useZonesPath) { Source = _vm, Mode = BindingMode.TwoWay },
@@ -517,7 +517,7 @@ public class BeautifyTimeCodesProfileWindow : Window
             var index = i;
             var button = new Button
             {
-                Content = new TextBlock { Text = titles[i], FontSize = 12, VerticalAlignment = VerticalAlignment.Center },
+                Content = new TextBlock { Text = titles[i], FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center },
                 Height = 26,
                 Padding = new Thickness(10, 0),
                 VerticalContentAlignment = VerticalAlignment.Center,

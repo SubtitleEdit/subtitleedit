@@ -282,13 +282,15 @@ public static class UiTheme
     public const double MaxScale = 2.0;
 
     /// <summary>
-    /// Font scale (#14812): scales text only, leaving layout metrics alone, unlike
-    /// <see cref="ApplyScaleToWindow"/>'s layout transform. Applied through the inherited
-    /// window <see cref="TemplatedControl.FontSize"/>, so controls that set an explicit
-    /// FontSize keep it. Kept to a modest range as fixed-width controls clip at large values.
+    /// UI font size in pixels (#16314), shown in Settings instead of a percentage. Stored as
+    /// <see cref="SeAppearance.FontScale"/> = size / <see cref="BaseFontSize"/>, which scales text
+    /// only (#14812), leaving layout metrics alone, unlike <see cref="ApplyScaleToWindow"/>'s
+    /// layout transform. Kept to a modest range as fixed-width controls clip at large values.
     /// </summary>
-    public const double MinFontScale = 0.8;
-    public const double MaxFontScale = 1.5;
+    public const int MinFontSize = 10;
+    public const int MaxFontSize = 20;
+    public const double MinFontScale = MinFontSize / BaseFontSize;
+    public const double MaxFontScale = MaxFontSize / BaseFontSize;
 
     /// <summary>
     /// The text size of every window at 100 % font scale (#16276): the main window, the dialogs'
@@ -298,6 +300,27 @@ public static class UiTheme
     public const double BaseFontSize = 13.0;
 
     public static double FontScale => Math.Clamp(Se.Settings.Appearance.FontScale <= 0 ? 1.0 : Se.Settings.Appearance.FontScale, MinFontScale, MaxFontScale);
+
+    /// <summary>The UI font size in whole pixels that Settings shows for a stored font scale.</summary>
+    public static int FontSizeFromScale(double fontScale)
+    {
+        var scale = Math.Clamp(fontScale <= 0 ? 1.0 : fontScale, MinFontScale, MaxFontScale);
+        return (int)Math.Round(BaseFontSize * scale, MidpointRounding.AwayFromZero);
+    }
+
+    /// <summary>
+    /// The font scale to store for a UI font size picked in Settings. An untouched size keeps the
+    /// current scale, so an older percentage (120 % shows as 16 px) is not rounded on save.
+    /// </summary>
+    public static double FontScaleFromSize(int fontSize, double currentFontScale)
+    {
+        if (fontSize == FontSizeFromScale(currentFontScale))
+        {
+            return currentFontScale;
+        }
+
+        return Math.Clamp(fontSize, MinFontSize, MaxFontSize) / BaseFontSize;
+    }
 
     /// <summary>Font size for popup menu/combo items rendered outside the layout transform.</summary>
     private static double PopupFontSize(double layoutFactor) => BaseFontSize * layoutFactor * FontScale;

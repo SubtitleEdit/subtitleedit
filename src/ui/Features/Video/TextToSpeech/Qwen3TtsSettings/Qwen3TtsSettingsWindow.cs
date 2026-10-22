@@ -60,13 +60,13 @@ public class Qwen3TtsSettingsWindow : Window
         panel.Children.Add(new TextBlock
         {
             Text = title,
-            FontSize = 16,
+            FontSize = EditorChrome.ScaledFont(16),
             FontWeight = FontWeight.SemiBold,
         });
         panel.Children.Add(new TextBlock
         {
             Text = description,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 480,
@@ -82,7 +82,7 @@ public class Qwen3TtsSettingsWindow : Window
 
         rows.Children.Add(Row(Se.Language.General.Backend, new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.BackendLabel)),
@@ -98,7 +98,7 @@ public class Qwen3TtsSettingsWindow : Window
         rows.Children.Add(Row(Se.Language.General.Release, new TextBlock
         {
             FontFamily = new FontFamily("Cascadia Mono,Consolas,Menlo,Monaco,monospace"),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ReleaseTag)),
         }));
@@ -137,7 +137,7 @@ public class Qwen3TtsSettingsWindow : Window
         };
         var text = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 6, 0),
@@ -168,7 +168,7 @@ public class Qwen3TtsSettingsWindow : Window
             Height = 28,
             VerticalAlignment = VerticalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBox.TextProperty] = new Binding(folderBindingPath),
         };
         AutomationProperties.SetName(folderText, Se.Language.General.InstallFolder);

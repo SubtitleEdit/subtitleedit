@@ -55,7 +55,7 @@ public class ImportImagesWindow : Window
 
         var count = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Images)}.Count") { StringFormat = "{0} " + Se.Language.General.Images.ToLowerInvariant() },
@@ -238,7 +238,7 @@ public class ImportImagesWindow : Window
         {
             Text = Se.Language.File.Import.ImportFileLabel,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Center,
             MaxWidth = 380,

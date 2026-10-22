@@ -79,7 +79,7 @@ public class GetDictionariesWindow : Window
     private static StackPanel BuildDetails(GetDictionariesViewModel vm)
     {
         var instructions = EditorChrome.MakeWrappingDimLabel(Se.Language.SpellCheck.GetDictionaryInstructions);
-        instructions.FontSize = 12.5;
+        instructions.FontSize = EditorChrome.FieldFontSize;
         instructions.MaxWidth = LabelWidth + ContentWidth + 12;
         instructions.HorizontalAlignment = HorizontalAlignment.Left;
 
@@ -120,7 +120,7 @@ public class GetDictionariesWindow : Window
             VerticalAlignment = VerticalAlignment.Top,
             MinHeight = 32,
             MaxWidth = ContentWidth,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBox.DataContextProperty] = new Binding(nameof(vm.SelectedDictionary)),
             [!TextBlock.TextProperty] = new Binding(nameof(GetSpellCheckDictionaryDisplay.Description)),
         };
@@ -130,7 +130,7 @@ public class GetDictionariesWindow : Window
         var folder = new SelectableTextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             MaxWidth = ContentWidth - 36,
             HorizontalAlignment = HorizontalAlignment.Left,
@@ -194,7 +194,7 @@ public class GetDictionariesWindow : Window
     /// </summary>
     private static TextBlock BuildStatus(GetDictionariesViewModel vm) => new()
     {
-        FontSize = 12,
+        FontSize = EditorChrome.FieldFontSize,
         Foreground = EditorChrome.DimTextBrush,
         VerticalAlignment = VerticalAlignment.Center,
         TextTrimming = TextTrimming.CharacterEllipsis,
@@ -249,7 +249,7 @@ public class GetDictionariesWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(8, 0, 0, 0),
             [!TextBlock.TextProperty] = new Binding(textBindingPath),
         };

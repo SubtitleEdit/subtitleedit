@@ -55,7 +55,7 @@ public class SsaPropertiesWindow : Window
     {
         var textBox = new TextBox
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             MinHeight = 28,
             Background = EditorChrome.FieldBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
@@ -73,7 +73,7 @@ public class SsaPropertiesWindow : Window
     {
         textBox = MakeTextBox(label, property);
         var panel = new StackPanel { Spacing = 4 };
-        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = EditorChrome.DimTextBrush });
+        panel.Children.Add(new TextBlock { Text = label, FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush });
         panel.Children.Add(textBox);
         return panel;
     }
@@ -128,7 +128,7 @@ public class SsaPropertiesWindow : Window
         {
             var button = new Button
             {
-                Content = new TextBlock { Text = text, FontSize = 12, Margin = new Thickness(8, 0) },
+                Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(8, 0) },
                 Height = 26,
                 VerticalContentAlignment = VerticalAlignment.Center,
             };
@@ -187,7 +187,7 @@ public class SsaPropertiesWindow : Window
     private static StackPanel Labeled(string label, Control control)
     {
         var panel = new StackPanel { Spacing = 4 };
-        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = EditorChrome.DimTextBrush, TextTrimming = TextTrimming.CharacterEllipsis });
+        panel.Children.Add(new TextBlock { Text = label, FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush, TextTrimming = TextTrimming.CharacterEllipsis });
         panel.Children.Add(control);
         return panel;
     }

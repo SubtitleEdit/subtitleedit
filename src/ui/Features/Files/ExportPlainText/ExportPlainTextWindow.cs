@@ -120,7 +120,7 @@ public class ExportPlainTextWindow : Window
         };
         foreach (var radioButton in panelFormatText.Children)
         {
-            ((RadioButton)radioButton).FontSize = 12.5;
+            ((RadioButton)radioButton).FontSize = EditorChrome.FieldFontSize;
         }
 
         var rowRemoveStyling = EditorChrome.MakeToggleRow(nameof(vm.TextRemoveStyling), Se.Language.General.RemoveStyling, out var switchRemoveStyling);

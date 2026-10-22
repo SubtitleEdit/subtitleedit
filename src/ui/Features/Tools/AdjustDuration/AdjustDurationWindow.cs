@@ -56,7 +56,7 @@ public class AdjustDurationWindow : Window
         var labelInfo = new TextBlock
         {
             Text = Se.Language.Tools.AdjustDurations.Note,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 360,
@@ -201,7 +201,7 @@ public class AdjustDurationWindow : Window
             Children =
             {
                 toggleExtendOnly,
-                new TextBlock { Text = Se.Language.Tools.AdjustDurations.ExtendOnly, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center },
+                new TextBlock { Text = Se.Language.Tools.AdjustDurations.ExtendOnly, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center },
             },
         };
 

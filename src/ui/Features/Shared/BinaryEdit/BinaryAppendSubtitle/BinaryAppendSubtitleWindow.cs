@@ -28,7 +28,7 @@ public class BinaryAppendSubtitleWindow : Window
         var radioAppend = new RadioButton
         {
             Content = Se.Language.Tools.ImageBasedEdit.ShiftTimeCodes,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AppendTimeCodes)) { Mode = BindingMode.TwoWay },
         };
 
@@ -44,7 +44,7 @@ public class BinaryAppendSubtitleWindow : Window
         var radioKeep = new RadioButton
         {
             Content = Se.Language.Tools.JoinSubtitles.KeepTimeCodes,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.KeepTimeCodes)) { Mode = BindingMode.TwoWay },
         };
 

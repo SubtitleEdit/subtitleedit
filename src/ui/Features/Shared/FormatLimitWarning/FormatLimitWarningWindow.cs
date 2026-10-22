@@ -75,7 +75,7 @@ public class FormatLimitWarningWindow : Window
             Text = Se.Language.Main.FormatLimitWarningTextWillBeRewrapped,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 460,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             HorizontalAlignment = HorizontalAlignment.Left,
         };
@@ -99,7 +99,7 @@ public class FormatLimitWarningWindow : Window
                 new TextBlock
                 {
                     Text = Se.Language.Main.FormatLimitWarningDoNotShowAgain,
-                    FontSize = 12,
+                    FontSize = EditorChrome.FieldFontSize,
                     Foreground = EditorChrome.DimTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                 },

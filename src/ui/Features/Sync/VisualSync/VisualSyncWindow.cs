@@ -170,7 +170,7 @@ public class VisualSyncWindow : Window
         var comboBox = UiUtil.MakeComboBoxBindText(vm.Paragraphs, vm, nameof(SubtitleDisplayItem.Text), selectedIndexProperty);
         comboBox.Width = double.NaN;
         comboBox.MinHeight = 50;
-        comboBox.FontSize = 12.5;
+        comboBox.FontSize = EditorChrome.FieldFontSize;
         comboBox.CornerRadius = new CornerRadius(6);
         comboBox.HorizontalAlignment = HorizontalAlignment.Stretch;
         AutomationProperties.SetName(comboBox, name);

@@ -258,7 +258,7 @@ public class CompareWindow : Window
             {
                 Orientation = Orientation.Horizontal,
                 Spacing = 7,
-                Children = { new TextBlock { Text = label, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center }, count },
+                Children = { new TextBlock { Text = label, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center }, count },
             },
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(CompareViewModel.SelectedCompareVisual))
             {
@@ -281,7 +281,7 @@ public class CompareWindow : Window
             Orientation = Orientation.Horizontal,
             Spacing = 8,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { toggle, new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center } },
+            Children = { toggle, new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center } },
         };
         AddHint(row, hint);
         return row;
@@ -289,7 +289,7 @@ public class CompareWindow : Window
 
     private static Control MakeTimeToleranceOption(CompareViewModel vm)
     {
-        var label = new TextBlock { Text = Se.Language.File.IgnoreTimeDifferenceMs, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center };
+        var label = new TextBlock { Text = Se.Language.File.IgnoreTimeDifferenceMs, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center };
         var numericUpDown = UiUtil.MakeNumericUpDownInt(0, 10_000, 0, 72, vm, nameof(vm.IgnoreTimeDifferenceMs));
         numericUpDown.Classes.Add("field");
         numericUpDown.Increment = 10;
@@ -1043,7 +1043,7 @@ public class CompareWindow : Window
     {
         var statusText = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -1116,7 +1116,7 @@ public class CompareWindow : Window
         };
         var message = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SyncPointMessage)),

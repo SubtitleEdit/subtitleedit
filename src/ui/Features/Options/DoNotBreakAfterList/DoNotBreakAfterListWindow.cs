@@ -79,14 +79,14 @@ public class DoNotBreakAfterListWindow : Window
         var radioText = new RadioButton
         {
             Content = Se.Language.General.Text,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.IsTextItem)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };
         var radioRegex = new RadioButton
         {
             Content = Se.Language.General.RegularExpression,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.IsRegexItem)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };

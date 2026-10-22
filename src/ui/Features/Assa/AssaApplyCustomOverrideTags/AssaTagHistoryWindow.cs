@@ -43,7 +43,7 @@ public class AssaTagHistoryWindow : Window
             ItemTemplate = new FuncDataTemplate<string>((_, _) => new TextBlock
             {
                 FontFamily = MonoFont,
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 [!TextBlock.TextProperty] = new Binding("."),
             }),

@@ -509,7 +509,7 @@ public class SpeechToTextWindow : Window
         var textBoxAdvancedSettings = new TextBox
         {
             IsReadOnly = true,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             Background = Brushes.Transparent,
             BorderThickness = new Thickness(0),
@@ -568,7 +568,7 @@ public class SpeechToTextWindow : Window
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             IsReadOnly = true,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Background = Brushes.Transparent,
             BorderThickness = new Thickness(0),
             Padding = new Thickness(10, 8),
@@ -752,7 +752,7 @@ public class SpeechToTextWindow : Window
         {
             var button = new Button
             {
-                Content = new TextBlock { Text = text, FontSize = 12.5, Margin = new Thickness(12, 0) },
+                Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(12, 0) },
                 Height = 28,
                 Command = command,
                 VerticalContentAlignment = VerticalAlignment.Center,

@@ -145,7 +145,7 @@ public class AiReviewWindow : Window
         };
 
         var languageText = MakeBoundTextBlock(nameof(vm.LanguageDisplay));
-        languageText.FontSize = 12.5;
+        languageText.FontSize = EditorChrome.FieldFontSize;
         var languageChip = new Border
         {
             Background = EditorChrome.AccentSoftBrush,
@@ -206,7 +206,7 @@ public class AiReviewWindow : Window
                     });
                 }
 
-                var chipText = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = 12.5 };
+                var chipText = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = EditorChrome.FieldFontSize };
                 chipText.Bind(TextBlock.TextProperty, new Binding(nameof(ReviewFilterChip.Display)));
                 content.Children.Add(chipText);
 
@@ -229,7 +229,7 @@ public class AiReviewWindow : Window
         var warningBrush = ReviewSuggestionItem.GetWarningBrush();
         var warningText = MakeBoundTextBlock(nameof(vm.WarningNoteText));
         warningText.Foreground = warningBrush;
-        warningText.FontSize = 12.5;
+        warningText.FontSize = EditorChrome.FieldFontSize;
         var warningNote = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -391,7 +391,7 @@ public class AiReviewWindow : Window
 
         // ---------- reason strip ----------
         var reasonTextBlock = MakeBoundTextBlock(nameof(vm.ReasonText));
-        reasonTextBlock.FontSize = 12.5;
+        reasonTextBlock.FontSize = EditorChrome.FieldFontSize;
         reasonTextBlock.TextWrapping = TextWrapping.Wrap;
         var reasonText = new Grid
         {
@@ -435,17 +435,17 @@ public class AiReviewWindow : Window
         }, 1, 0);
         var contextPreviousLabel = MakeBoundTextBlock(nameof(vm.ContextPreviousLabel));
         contextPreviousLabel.Foreground = EditorChrome.FaintTextBrush;
-        contextPreviousLabel.FontSize = 12;
+        contextPreviousLabel.FontSize = EditorChrome.FieldFontSize;
         var contextNextLabel = MakeBoundTextBlock(nameof(vm.ContextNextLabel));
         contextNextLabel.Foreground = EditorChrome.FaintTextBrush;
-        contextNextLabel.FontSize = 12;
+        contextNextLabel.FontSize = EditorChrome.FieldFontSize;
         var contextPreviousText = MakeBoundTextBlock(nameof(vm.ContextPreviousText));
         contextPreviousText.Foreground = EditorChrome.DimTextBrush;
-        contextPreviousText.FontSize = 12.5;
+        contextPreviousText.FontSize = EditorChrome.FieldFontSize;
         contextPreviousText.TextWrapping = TextWrapping.Wrap;
         var contextNextText = MakeBoundTextBlock(nameof(vm.ContextNextText));
         contextNextText.Foreground = EditorChrome.DimTextBrush;
-        contextNextText.FontSize = 12.5;
+        contextNextText.FontSize = EditorChrome.FieldFontSize;
         contextNextText.TextWrapping = TextWrapping.Wrap;
         contextGrid.Add(contextPreviousLabel, 0, 1);
         contextGrid.Add(contextPreviousText, 0, 2);
@@ -483,7 +483,7 @@ public class AiReviewWindow : Window
         };
         progressBar.WithPlatformProgress(this, nameof(vm.IsReviewing));
         var statusText = MakeBoundTextBlock(nameof(vm.StatusText));
-        statusText.FontSize = 12;
+        statusText.FontSize = EditorChrome.FieldFontSize;
         statusText.Foreground = EditorChrome.DimTextBrush;
         statusText.TextTrimming = TextTrimming.CharacterEllipsis;
 
@@ -517,7 +517,7 @@ public class AiReviewWindow : Window
 
         // ---------- bottom bar ----------
         var summaryText = EditorChrome.MakeBoundHint(nameof(vm.SummaryText));
-        summaryText.FontSize = 12;
+        summaryText.FontSize = EditorChrome.FieldFontSize;
 
         // Plays the selected suggestion's line in the main window's video player - hidden when no
         // video is loaded (the view model gets no play hook then).
@@ -645,7 +645,7 @@ public class AiReviewWindow : Window
         button.MinHeight = 28;
         button.Height = 28;
         button.Padding = new Thickness(10, 0);
-        button.FontSize = 12.5;
+        button.FontSize = EditorChrome.FieldFontSize;
         button.VerticalContentAlignment = VerticalAlignment.Center;
     }
 

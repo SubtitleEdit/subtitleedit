@@ -476,11 +476,11 @@ public class AutoTranslateWindow : Window
         progressBar.WithAccessibleName(Se.Language.General.Translation);
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText));
-        statusText.FontSize = 12;
+        statusText.FontSize = EditorChrome.FieldFontSize;
         statusText.MaxWidth = 300;
 
         var progressLabel = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
-        progressLabel.FontSize = 12;
+        progressLabel.FontSize = EditorChrome.FieldFontSize;
         progressLabel.MinWidth = 40;
         progressLabel.TextAlignment = TextAlignment.Right;
 
@@ -518,10 +518,10 @@ public class AutoTranslateWindow : Window
     private Border BuildButtonBar(AutoTranslateViewModel vm)
     {
         var poweredByLabel = EditorChrome.MakeDimLabel(Se.Language.General.PoweredBy, new Thickness(0));
-        poweredByLabel.FontSize = 11.5;
+        poweredByLabel.FontSize = EditorChrome.ScaledFont(11.5);
 
         var poweredByLink = UiUtil.MakeLink("Google Translate V1", vm.GoToAutoTranslatorUriCommand, vm, nameof(vm.AutoTranslatorLinkText));
-        poweredByLink.FontSize = 11.5;
+        poweredByLink.FontSize = EditorChrome.ScaledFont(11.5);
         poweredByLink.VerticalAlignment = VerticalAlignment.Center;
 
         var poweredByPanel = new StackPanel
@@ -591,7 +591,7 @@ public class AutoTranslateWindow : Window
         button.Height = 28;
         button.MinWidth = 0;
         button.Padding = new Thickness(10, 0);
-        button.FontSize = 12.5;
+        button.FontSize = EditorChrome.FieldFontSize;
         button.Margin = new Thickness(0);
         button.VerticalAlignment = VerticalAlignment.Center;
         return button;
@@ -603,7 +603,7 @@ public class AutoTranslateWindow : Window
         button.Height = 28;
         button.MinWidth = 0;
         button.Padding = new Thickness(10, 0);
-        button.FontSize = 12.5;
+        button.FontSize = EditorChrome.FieldFontSize;
         button.Margin = new Thickness(0);
         button.VerticalContentAlignment = VerticalAlignment.Center;
         return button;

@@ -28,7 +28,7 @@ public class DownloadVideoFromUrlWindow : Window
 
         var fileName = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.FileNameDisplay)),
         };
@@ -46,7 +46,7 @@ public class DownloadVideoFromUrlWindow : Window
         {
             Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
         };
         errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
         errorText.Bind(IsVisibleProperty, new Binding(nameof(vm.Error))

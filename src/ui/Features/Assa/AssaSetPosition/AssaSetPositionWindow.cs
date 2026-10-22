@@ -88,7 +88,7 @@ public class AssaSetPositionWindow : Window
 
     private static TextBlock MakeHeaderValue(string property, string? format = null) => new()
     {
-        FontSize = 12,
+        FontSize = EditorChrome.FieldFontSize,
         Foreground = EditorChrome.DimTextBrush,
         VerticalAlignment = VerticalAlignment.Center,
         [!TextBlock.TextProperty] = new Binding(property) { StringFormat = format },
@@ -162,7 +162,7 @@ public class AssaSetPositionWindow : Window
         content.Children.Add(new TextBlock
         {
             Text = Se.Language.Assa.SetPositionNudgeHint,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.FaintTextBrush,
             TextWrapping = TextWrapping.Wrap,
         });
@@ -447,7 +447,7 @@ public class AssaSetPositionWindow : Window
         var info = new DockPanel { Margin = new Thickness(2, 8, 2, 0) };
         info.Children.Add(new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LineInfo)),
         });
@@ -463,7 +463,7 @@ public class AssaSetPositionWindow : Window
         var tags = new TextBlock
         {
             FontFamily = new FontFamily("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace"),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,

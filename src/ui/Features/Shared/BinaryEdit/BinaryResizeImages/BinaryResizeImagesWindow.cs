@@ -63,7 +63,7 @@ public class BinaryResizeImagesWindow : Window
         percentageUpDown.InnerRightContent = new TextBlock
         {
             Text = "%",
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 8, 0),
@@ -76,7 +76,7 @@ public class BinaryResizeImagesWindow : Window
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ImageSizeText)),
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = Avalonia.Media.FontWeight.SemiBold,
         };
         panel.Children.Add(imageSizeLabel);

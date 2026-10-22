@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using static Nikse.SubtitleEdit.Logic.EditorChrome;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 
@@ -90,7 +91,7 @@ internal static class AssaDrawAnimationPanel
         rows.Children.Add(new TextBlock
         {
             Text = Se.Language.Assa.DrawAnimationLoopBlocked,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             TextWrapping = TextWrapping.Wrap,
             Foreground = new SolidColorBrush(Color.FromRgb(230, 160, 40)),
             [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.IsLoopBlocked)),
@@ -99,7 +100,7 @@ internal static class AssaDrawAnimationPanel
         rows.Children.Add(new TextBlock
         {
             Text = Se.Language.Assa.DrawAnimationLayerHint,
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             TextWrapping = TextWrapping.Wrap,
             Foreground = FaintTextBrush,
         });
@@ -135,7 +136,7 @@ internal static class AssaDrawAnimationPanel
         };
         var summary = new TextBlock
         {
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             Foreground = AccentBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -193,7 +194,7 @@ internal static class AssaDrawAnimationPanel
             HorizontalAlignment = HorizontalAlignment.Stretch,
             HorizontalContentAlignment = HorizontalAlignment.Center,
             Padding = new Thickness(6, 3),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             CornerRadius = new CornerRadius(6),
             BorderThickness = new Thickness(1),
             [!Button.BackgroundProperty] = Selected(selected => selected ? AccentSoftBrush : Brushes.Transparent),
@@ -211,7 +212,7 @@ internal static class AssaDrawAnimationPanel
         var label = new TextBlock
         {
             Text = name,
-            FontSize = 10.5,
+            FontSize = EditorChrome.ScaledFont(10.5),
             HorizontalAlignment = HorizontalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             Foreground = DimTextBrush,
@@ -265,7 +266,7 @@ internal static class AssaDrawAnimationPanel
         thumbnail.Bind(AnimationThumbnail.IsOutProperty, new Binding(nameof(vm.IsEditingOutEffect)));
         var label = new TextBlock
         {
-            FontSize = 10.5,
+            FontSize = EditorChrome.ScaledFont(10.5),
             HorizontalAlignment = HorizontalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             Foreground = DimTextBrush,

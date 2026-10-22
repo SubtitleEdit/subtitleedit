@@ -63,7 +63,7 @@ public static class SelectLinesWindowBuilder
 
         var labelInfo = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.RowsInfo)),

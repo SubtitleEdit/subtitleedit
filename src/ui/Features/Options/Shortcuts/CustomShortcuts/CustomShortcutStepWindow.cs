@@ -76,8 +76,8 @@ public class CustomShortcutStepWindow : Window
             Background = Brushes.Transparent, // the frame's field color shows through
             ItemTemplate = new FuncDataTemplate<CustomShortcutCommandItem>((item, _) =>
             {
-                var name = new TextBlock { Text = item?.DisplayName, FontSize = 12.5, TextTrimming = TextTrimming.CharacterEllipsis };
-                var group = new TextBlock { Text = item?.GroupName, Foreground = EditorChrome.DimTextBrush, FontSize = 11, TextTrimming = TextTrimming.CharacterEllipsis };
+                var name = new TextBlock { Text = item?.DisplayName, FontSize = EditorChrome.FieldFontSize, TextTrimming = TextTrimming.CharacterEllipsis };
+                var group = new TextBlock { Text = item?.GroupName, Foreground = EditorChrome.DimTextBrush, FontSize = EditorChrome.ScaledFont(11), TextTrimming = TextTrimming.CharacterEllipsis };
                 return new StackPanel { Children = { name, group } };
             }),
         };

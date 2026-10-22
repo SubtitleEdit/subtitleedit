@@ -22,7 +22,7 @@ public class TransparentSettingsWindow : Window
         var checkBoxUseSourceFolder = new RadioButton
         {
             Content = Se.Language.General.UseSourceFolder,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             IsChecked = vm.UseSourceFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseSourceFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
@@ -31,7 +31,7 @@ public class TransparentSettingsWindow : Window
         var checkBoxUseOutputFolder = new RadioButton
         {
             Content = Se.Language.General.UseOutputFolder,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             IsChecked = vm.UseOutputFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },

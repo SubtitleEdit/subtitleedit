@@ -144,7 +144,7 @@ public class SplitSubtitleWindow : Window
         radioTime.IsCheckedChanged += (s, e) => vm.SetDirty();
         foreach (var radio in new[] { radioLines, radioCharacters, radioTime })
         {
-            radio.FontSize = 12.5;
+            radio.FontSize = EditorChrome.FieldFontSize;
         }
 
         var panelSplitBy = new StackPanel()

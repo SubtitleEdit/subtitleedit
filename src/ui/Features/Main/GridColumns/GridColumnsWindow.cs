@@ -45,7 +45,7 @@ public class GridColumnsWindow : Window
             // reader announces a bare "check box" (#12087).
             checkBox.Bind(AutomationProperties.NameProperty, new Binding(nameof(GridColumnDisplay.Name)));
 
-            var textBlock = new TextBlock { Margin = new Thickness(2, 0, 0, 0), FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center };
+            var textBlock = new TextBlock { Margin = new Thickness(2, 0, 0, 0), FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center };
             textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(GridColumnDisplay.Name)));
 
             return new StackPanel

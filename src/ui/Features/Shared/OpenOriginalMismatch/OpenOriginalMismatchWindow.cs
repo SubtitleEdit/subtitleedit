@@ -75,7 +75,7 @@ public class OpenOriginalMismatchWindow : Window
                 new TextBlock
                 {
                     Text = Se.Language.Main.AllowEditOfOriginalSubtitle,
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     VerticalAlignment = VerticalAlignment.Center,
                 },
             },
@@ -90,7 +90,7 @@ public class OpenOriginalMismatchWindow : Window
             Margin = new Thickness(60, 0, 0, 0), // under the label, past the switch
             HorizontalAlignment = HorizontalAlignment.Left,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.AllowEditHint)),
         };
 
@@ -134,7 +134,7 @@ public class OpenOriginalMismatchWindow : Window
         {
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = ContentWidth - 40,
-            FontSize = 13,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.InfoText)),
         };
@@ -205,7 +205,7 @@ public class OpenOriginalMismatchWindow : Window
             Margin = new Thickness(28, 0, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Left,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(hintProperty),
         };
 
@@ -214,7 +214,7 @@ public class OpenOriginalMismatchWindow : Window
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = ContentWidth - 90,
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(noteProperty),
         };
 

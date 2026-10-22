@@ -119,7 +119,7 @@ public class BackgroundMusicWindow : Window
 
         var textOutputLength = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.OutputLengthText)),
@@ -187,7 +187,7 @@ public class BackgroundMusicWindow : Window
         };
         var textResult = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ResultText)),
@@ -255,7 +255,7 @@ public class BackgroundMusicWindow : Window
         var engine = new TextBlock
         {
             Text = l.EngineInfo,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.FaintTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };

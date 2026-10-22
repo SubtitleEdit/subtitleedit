@@ -82,7 +82,7 @@ public class AssaImageColorPickerWindow : Window
         // Pointer position, or how to pick before the pointer has been over the frame
         var info = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(2, 8, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ScreenshotOverlayPosiion))
@@ -114,7 +114,7 @@ public class AssaImageColorPickerWindow : Window
     private static TextBlock Mono(string property, IBrush? foreground = null) => new()
     {
         FontFamily = new FontFamily("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace"),
-        FontSize = 12.5,
+        FontSize = EditorChrome.FieldFontSize,
         Foreground = foreground ?? EditorChrome.StrongTextBrush,
         [!TextBlock.TextProperty] = new Binding(property),
     };
@@ -123,7 +123,7 @@ public class AssaImageColorPickerWindow : Window
     {
         var button = new Button
         {
-            Content = new TextBlock { Text = text, FontSize = 12, Margin = new Thickness(9, 0) },
+            Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(9, 0) },
             Height = 26,
             Command = command,
             VerticalContentAlignment = VerticalAlignment.Center,
@@ -178,7 +178,7 @@ public class AssaImageColorPickerWindow : Window
         picked.Children.Add(copyButtons);
         picked.Children.Add(new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.CopiedText)),
         });

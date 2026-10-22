@@ -623,7 +623,7 @@ public class AssaDrawWindow : Window
             content.Children.Add(new TextBlock
             {
                 Text = title,
-                FontSize = 12,
+                FontSize = EditorChrome.FieldFontSize,
                 Foreground = DimTextBrush,
                 Margin = new Thickness(2, 6, 0, 0),
             });
@@ -707,7 +707,7 @@ public class AssaDrawWindow : Window
         content.Children.Add(new TextBlock
         {
             Text = Se.Language.Assa.DrawShapeLibraryHint,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = FaintTextBrush,
             TextWrapping = TextWrapping.Wrap,
             Width = columns * (cell + 4),
@@ -940,7 +940,7 @@ public class AssaDrawWindow : Window
 
                 var meta = new TextBlock
                 {
-                    FontSize = 11,
+                    FontSize = EditorChrome.ScaledFont(11),
                     Foreground = FaintTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(0, 0, 6, 0),
@@ -1035,7 +1035,7 @@ public class AssaDrawWindow : Window
             [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.IsDrawShapeSelected)),
         };
         eraserRow.Children.Add(eraser);
-        eraserRow.Children.Add(new TextBlock { Text = Se.Language.Assa.DrawUseShapeForErase, VerticalAlignment = VerticalAlignment.Center, FontSize = 12.5 });
+        eraserRow.Children.Add(new TextBlock { Text = Se.Language.Assa.DrawUseShapeForErase, VerticalAlignment = VerticalAlignment.Center, FontSize = EditorChrome.FieldFontSize });
         rows.Children.Add(eraserRow);
 
         return MakePropertySection(Se.Language.Assa.DrawSelectedShape, rows, nameof(vm.IsShapeSelected));
@@ -1066,7 +1066,7 @@ public class AssaDrawWindow : Window
             TextWrapping = TextWrapping.Wrap,
             MinHeight = 56,
             MaxHeight = 120,
-            FontSize = 13,
+            FontSize = EditorChrome.FieldFontSize,
             Background = FieldBrush,
             BorderBrush = FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
@@ -1085,7 +1085,7 @@ public class AssaDrawWindow : Window
             ItemsSource = vm.FontNames,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             MinHeight = 28,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.TextFontName)) { Mode = BindingMode.TwoWay },
         };
         AutomationProperties.SetName(fontCombo, Se.Language.General.FontName);
@@ -1127,7 +1127,7 @@ public class AssaDrawWindow : Window
         var shrink = new CheckBox
         {
             Content = Se.Language.Assa.DrawShrinkToFit,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.TextShrinkToFit)) { Mode = BindingMode.TwoWay },
         };
         rows.Children.Add(shrink);
@@ -1179,7 +1179,7 @@ public class AssaDrawWindow : Window
 
         TextBlock StatusText(string property) => new()
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(property),
@@ -1202,7 +1202,7 @@ public class AssaDrawWindow : Window
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewStatusText)),
             Foreground = Brushes.OrangeRed,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
         });
 
@@ -1210,7 +1210,7 @@ public class AssaDrawWindow : Window
         {
             Text = Se.Language.Assa.DrawHelpText,
             Foreground = FaintTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             Margin = new Thickness(18, 0),
@@ -1234,7 +1234,7 @@ public class AssaDrawWindow : Window
         zoom.Children.Add(new TextBlock
         {
             Width = 44,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             TextAlignment = TextAlignment.Right,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ZoomPercent)) { StringFormat = "{0:0}%" },
@@ -1243,7 +1243,7 @@ public class AssaDrawWindow : Window
         {
             Content = WithoutShortcut(Se.Language.Assa.DrawResetView),
             Command = vm.ResetViewCommand,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Padding = new Thickness(10, 2),
             MinHeight = 0,
             Margin = new Thickness(6, 0, 0, 0),
@@ -1282,7 +1282,7 @@ public class AssaDrawWindow : Window
         var code = new TextBlock
         {
             FontFamily = new FontFamily("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace"),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,

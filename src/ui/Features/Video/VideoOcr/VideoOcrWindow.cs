@@ -143,7 +143,7 @@ public class VideoOcrWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 60,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(5, 0, 0, 0),
         };
         positionText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.PreviewPositionText)) { Source = vm });
@@ -166,7 +166,7 @@ public class VideoOcrWindow : Window
         var scanAreaText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(8, 0, 0, 0),
         };
@@ -259,7 +259,7 @@ public class VideoOcrWindow : Window
             Content = text,
             Command = command,
             Height = 28,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Padding = new Thickness(10, 0),
             VerticalContentAlignment = VerticalAlignment.Center,
             Background = EditorChrome.FieldBrush,
@@ -302,7 +302,7 @@ public class VideoOcrWindow : Window
         // (local vs cloud, what it needs installed) that had no home in the window until now.
         var engineDescription = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
