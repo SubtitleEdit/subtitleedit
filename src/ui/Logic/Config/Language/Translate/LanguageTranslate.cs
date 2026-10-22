@@ -19,8 +19,6 @@ public class LanguageTranslate
     public string TranslationPolicy { get; set; } = "Translation policy";
     public string UniqueProfileNameRequired { get; set; } = "Enter a unique, non-empty profile name.";
     public string ValidApiUrlRequired { get; set; } = "Enter a valid HTTP or HTTPS API URL.";
-    public string LoadingModels { get; set; } = "Loading models...";
-    public string NoModelsReturned { get; set; } = "No models were returned. You can enter the model name manually.";
     public string ModelNameRequired { get; set; } = "Enter a model name.";
     public string ReviewMigratedConnection { get; set; } = "Review the migrated API URL and select a chat-compatible model before saving.";
     public string ChatCompatibleModelRequired { get; set; } = "This completion-only model cannot use the chat API. Choose a chat-compatible model.";

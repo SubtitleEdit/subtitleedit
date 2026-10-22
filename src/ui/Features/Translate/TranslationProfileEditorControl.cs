@@ -2,10 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Threading;
 using System.Text.Json;
-using System.Net.Http.Headers;
-using Nikse.SubtitleEdit.UiLogic.Http;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -14,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
+using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
@@ -29,12 +27,7 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
     private readonly TextBlock _error = new() { TextWrapping = Avalonia.Media.TextWrapping.Wrap };
     private bool _disposed;
     private readonly TranslationProfile _draft;
-    private readonly Func<CancellationToken, Task<string[]>> _fetchModels;
-    private readonly TextBlock _modelStatus = new() { Name = "ModelListStatus", IsVisible = false, TextWrapping = TextWrapping.Wrap };
-    private CancellationTokenSource? _modelRequest;
-    private int _modelRequestVersion;
-    private bool _attached;
-    private string[] _presetModels = Array.Empty<string>();
+    private Window? _modelPicker;
     private readonly TextBox _name;
     private readonly ComboBox _engine;
     private readonly ComboBox _protocol;
@@ -69,17 +62,9 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
         new("Gemini", "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", GeminiTranslate.Models),
     };
 
-    public TranslationProfileEditorControl(TranslationProfile profile) : this(profile, null) { }
-
-    internal TranslationProfileEditorControl(TranslationProfile profile, Func<CancellationToken, Task<string[]>>? fetchModels)
+    public TranslationProfileEditorControl(TranslationProfile profile)
     {
         _draft = profile.Snapshot();
-        _fetchModels = fetchModels ?? FetchModelsAsync;
-        DetachedFromVisualTree += (_, _) =>
-        {
-            _attached = false;
-            CancelModelReload();
-        };
         _name = Field(profile.Name, Se.Language.General.Name);
         var engines = TranslationProfileFactory.TraditionalEngines
             .Select(e => new EngineChoice(e.Id, e.Name, TranslationEngineKind.Traditional, Definition: e))
@@ -143,16 +128,14 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
         {
             if (provider.SelectedItem is not Provider preset) return;
             if (preset.Url.Length > 0) _url.Text = preset.Url;
-            SetPresetModels(preset.Models);
-            QueueModelReload();
+            SetModelChoices(preset.Models);
         };
         _url.PropertyChanged += (_, e) =>
         {
             if (e.Property != TextBox.TextProperty) return;
             var preset = FindProvider(_url.Text ?? "");
             provider.SelectedItem = preset;
-            SetPresetModels(preset.Models);
-            QueueModelReload();
+            SetModelChoices(preset.Models);
         };
         var advanced = new Button { Content = Se.Language.General.AdvancedDotDotDot };
         advanced.Click += async (_, _) =>
@@ -171,13 +154,15 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
         llm.Children.Add(providerRow);
         llm.Children.Add(Row(Se.Language.Translate.ApiProtocol, _protocol));
         llm.Children.Add(Row(Se.Language.General.Url, _url)); llm.Children.Add(Row(Se.Language.General.ApiKey, _key));
-        _model.DropDownOpened += (_, _) => QueueModelReload(immediate: true);
-        _key.PropertyChanged += (_, e) => { if (e.Property == TextBox.TextProperty) QueueModelReload(); };
-        _protocol.SelectionChanged += (_, _) => QueueModelReload();
-        _url.LostFocus += (_, _) => QueueModelReload();
-        _key.LostFocus += (_, _) => QueueModelReload();
-        llm.Children.Add(Row(Se.Language.General.Model, _model));
-        llm.Children.Add(_modelStatus);
+        var browseModels = new Button { Name = "BrowseTranslationModels", Content = "…", MinWidth = 28 }
+            .WithAccessibleName(Se.Language.General.PickModel);
+        ToolTip.SetTip(browseModels, Se.Language.General.PickModel);
+        browseModels.Click += async (_, _) => await BrowseModelAsync();
+        var modelPanel = new DockPanel();
+        DockPanel.SetDock(browseModels, Dock.Right);
+        modelPanel.Children.Add(browseModels);
+        modelPanel.Children.Add(_model);
+        llm.Children.Add(Row(Se.Language.General.Model, modelPanel));
         llm.Children.Add(_remote);
         llm.Children.Add(Row(Se.Language.Translate.TranslationPolicy, _mode));
         var promptRow = Row(Se.Language.Translate.PromptText, _prompt);
@@ -192,6 +177,10 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
             llm.IsVisible = isLlm;
             _traditional.IsVisible = !isLlm;
             providerRow.IsVisible = selected.Location == LlmLocation.Cloud;
+            // Keep the original model discovery flow: presets for hosted providers, Browse for compatible servers.
+            browseModels.IsVisible = isLlm && _protocol.SelectedIndex == (int)LlmApiProtocol.OpenAi &&
+                (selected.Id is "Ollama" or "LmStudio" or "LocalApi" ||
+                 selected.Location == LlmLocation.Cloud && provider.SelectedIndex == 0);
             if (locationRow != null) locationRow.IsVisible = isLlm;
             engineRow.IsVisible = !isLlm || selected.Location == LlmLocation.Local;
             engineLabel.Text = isLlm ? Se.Language.Translate.ChooseInferenceEngine : Se.Language.General.Engine;
@@ -201,6 +190,8 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
             advanced.IsVisible = _mode.SelectedIndex == 0;
         }
         _mode.SelectionChanged += (_, _) => Refresh();
+        _protocol.SelectionChanged += (_, _) => Refresh();
+        provider.SelectionChanged += (_, _) => Refresh();
         void PopulateParameters()
         {
             foreach (var (name, field) in _parameters) _draft.Parameters[name] = field.Text ?? "";
@@ -234,7 +225,6 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
                 _url.Text = urls.GetValueOrDefault(selected.Id) ?? selected.DefaultUrl;
             PopulateParameters();
             Refresh();
-            QueueModelReload();
             Changed?.Invoke();
         }
         _engine.SelectionChanged += (_, _) =>
@@ -258,15 +248,11 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
         content.Children.Add(_error);
         if (profile.NeedsReview) _error.Text = Se.Language.Translate.ReviewMigratedConnection;
         Content = new ScrollViewer { Content = content, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
-        SetPresetModels(initialProvider.Models);
+        SetModelChoices(initialProvider.Models);
         PopulateParameters(); Refresh();
         _initialForm = JsonSerializer.Serialize(CaptureForm());
         _name.PropertyChanged += (_, e) => { if (e.Property == TextBox.TextProperty) Changed?.Invoke(); };
-        AttachedToVisualTree += (_, _) =>
-        {
-            _attached = true;
-            QueueModelReload();
-        };
+
     }
 
     private TranslationProfile CaptureForm()
@@ -329,73 +315,25 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
     {
         if (_disposed) return;
         _disposed = true;
-        CancelModelReload();
+        _modelPicker?.Close();
     }
 
-    private void SetPresetModels(string[] models)
+    private async Task BrowseModelAsync()
     {
-        _presetModels = models;
-        SetModelChoices(models);
-    }
-
-    private void CancelModelReload()
-    {
-        _modelRequestVersion++;
-        _modelRequest?.Cancel();
-        _modelRequest = null;
-    }
-
-    private void QueueModelReload(bool immediate = false)
-    {
-        CancelModelReload();
-        if (_disposed || !_attached) return;
-        _modelStatus.Text = "";
-        _modelStatus.IsVisible = false;
-        if (!immediate) SetModelChoices(_presetModels);
-        if ((_engine.SelectedItem as EngineChoice)?.Kind != TranslationEngineKind.Llm) return;
-        if (!Uri.TryCreate((_url.Text ?? "").Trim(), UriKind.Absolute, out var uri) || uri.Scheme is not ("http" or "https")) return;
-        // Commit connection edits on leaving the field; don't query partially typed URLs or keys.
-        if (!immediate && (_url.IsKeyboardFocusWithin || _key.IsKeyboardFocusWithin)) return;
-        var request = new CancellationTokenSource();
-        _modelRequest = request;
-        _ = ReloadModelsAsync(_modelRequestVersion, request, immediate);
-    }
-
-    private async Task ReloadModelsAsync(int version, CancellationTokenSource request, bool immediate)
-    {
-        bool IsCurrent() => !_disposed && _attached && version == _modelRequestVersion && !request.IsCancellationRequested;
+        if (_disposed || _modelPicker != null || TopLevel.GetTopLevel(this) is not Window owner) return;
+        var vm = new PickOllamaModelViewModel();
+        if ((_engine.SelectedItem as EngineChoice)?.Id == "Ollama")
+            vm.Initialize(Se.Language.General.PickOllamaModel, _model.Text, _url.Text ?? "");
+        else
+            vm.InitializeOpenAiCompatible(Se.Language.General.PickModel, _model.Text, _url.Text ?? "", _key.Text);
+        var picker = new PickOllamaModelWindow(vm);
+        _modelPicker = picker;
         try
         {
-            if (!immediate) await Task.Delay(400, request.Token);
-            request.Token.ThrowIfCancellationRequested();
-            _modelStatus.Text = Se.Language.Translate.LoadingModels;
-            _modelStatus.IsVisible = true;
-            var models = await _fetchModels(request.Token);
-            if (!IsCurrent()) return;
-            if (models.Length > 0)
-            {
-                SetModelChoices(models);
-                _modelStatus.IsVisible = false;
-            }
-            else
-            {
-                _modelStatus.Text = Se.Language.Translate.NoModelsReturned;
-            }
+            await picker.ShowDialog(owner);
+            if (!_disposed && vm.OkPressed && vm.SelectedModel != null) _model.Text = vm.SelectedModel;
         }
-        catch (OperationCanceledException) when (request.IsCancellationRequested) { }
-        catch (Exception ex)
-        {
-            if (IsCurrent())
-            {
-                _modelStatus.Text = ex.Message;
-                _modelStatus.IsVisible = true;
-            }
-        }
-        finally
-        {
-            if (ReferenceEquals(_modelRequest, request)) _modelRequest = null;
-            request.Dispose();
-        }
+        finally { _modelPicker = null; }
     }
 
     private void SetModelChoices(IEnumerable<string> models)
@@ -410,30 +348,6 @@ public sealed class TranslationProfileEditorControl : UserControl, IDisposable
             _model.Text = text;
         }
         finally { _updatingModels = false; }
-    }
-
-    private async Task<string[]> FetchModelsAsync(CancellationToken cancellationToken)
-    {
-        var url = (_url.Text ?? "").Trim();
-        var endpoint = _protocol.SelectedIndex == 1 ? AnthropicTranslate.DefaultUrl : ChatGptTranslate.DefaultUrl;
-        url = AutoTranslateUrl.Complete(url, endpoint);
-        var suffix = _protocol.SelectedIndex == 1 ? "/messages" : "/chat/completions";
-        if (!url.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException("For a custom route, enter the model name manually.");
-        using var client = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
-        client.Timeout = TimeSpan.FromSeconds(30);
-        var key = (_key.Text ?? "").Trim();
-        if (_protocol.SelectedIndex == 1)
-        {
-            client.DefaultRequestHeaders.TryAddWithoutValidation("anthropic-version", "2023-06-01");
-            if (key.Length > 0) client.DefaultRequestHeaders.TryAddWithoutValidation("x-api-key", key);
-        }
-        else if (key.Length > 0) client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", key);
-        using var response = await client.GetAsync(url[..^suffix.Length] + "/models", cancellationToken);
-        response.EnsureSuccessStatusCode();
-        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync(cancellationToken));
-        if (!json.RootElement.TryGetProperty("data", out var data)) return Array.Empty<string>();
-        return data.EnumerateArray().Where(item => item.TryGetProperty("id", out _))
-            .Select(item => item.GetProperty("id").GetString() ?? "").Where(id => id.Length > 0).OrderBy(id => id).ToArray();
     }
 
     private static Control Segments(string leftLabel, string leftName, string rightLabel, string rightName,
