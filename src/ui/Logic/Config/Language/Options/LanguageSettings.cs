@@ -357,6 +357,11 @@ public class LanguageSettings
     public string AllSettings { get; set; }
     public string UiScale { get; set; }
     public string UiFontSize { get; set; }
+    public string WindowsRenderingMode { get; set; }
+    public string WindowsRenderingModeDefault { get; set; }
+    public string WindowsRenderingModeRedirectionSurface { get; set; }
+    public string WindowsRenderingModeLowLatencySwapChain { get; set; }
+    public string WindowsRenderingModeSoftware { get; set; }
     public string TextSelectionOpacity { get; set; }
     public string WaveformToolbarItems { get; set; }
     public string MatchIconColorToDarkTheme { get; set; }
@@ -740,6 +745,11 @@ public class LanguageSettings
         AllSettings = "All settings";
         UiScale = "UI scale (%)";
         UiFontSize = "UI font size";
+        WindowsRenderingMode = "Window rendering";
+        WindowsRenderingModeDefault = "Default (WinUI composition)";
+        WindowsRenderingModeRedirectionSurface = "Redirection surface (try if the desktop flickers through)";
+        WindowsRenderingModeLowLatencySwapChain = "Low-latency swap chain";
+        WindowsRenderingModeSoftware = "Software (no GPU, no libmpv OpenGL)";
         TextSelectionOpacity = "Text selection opacity (%)";
         WaveformToolbarItems = "Waveform toolbar items";
         MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";

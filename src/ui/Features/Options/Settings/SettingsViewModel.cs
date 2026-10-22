@@ -444,6 +444,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showHorizontalLineAboveToolbar;
     [ObservableProperty] private ObservableCollection<GridLinesVisibilityDisplay> _gridLinesVisibilities;
     [ObservableProperty] private GridLinesVisibilityDisplay _selectedGridLinesVisibility;
+    [ObservableProperty] private ObservableCollection<WindowsRenderingModeDisplay> _windowsRenderingModes;
+    [ObservableProperty] private WindowsRenderingModeDisplay _selectedWindowsRenderingMode;
     [ObservableProperty] private ObservableCollection<SubtitleGridTextDisplayModeDisplay> _subtitleGridTextDisplayModes;
     [ObservableProperty] private SubtitleGridTextDisplayModeDisplay _selectedSubtitleGridTextDisplayMode;
     [ObservableProperty] private Color _darkModeForegroundColor;
@@ -765,6 +767,8 @@ public partial class SettingsViewModel : ObservableObject
 
         GridLinesVisibilities = new ObservableCollection<GridLinesVisibilityDisplay>(GridLinesVisibilityDisplay.GetAll());
         SelectedGridLinesVisibility = GridLinesVisibilities[0];
+        WindowsRenderingModes = new ObservableCollection<WindowsRenderingModeDisplay>(WindowsRenderingModeDisplay.List());
+        SelectedWindowsRenderingMode = WindowsRenderingModes[0];
 
         SubtitleGridTextDisplayModes = new ObservableCollection<SubtitleGridTextDisplayModeDisplay>(SubtitleGridTextDisplayModeDisplay.GetAll());
         SelectedSubtitleGridTextDisplayMode = SubtitleGridTextDisplayModes[0];
@@ -1019,6 +1023,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowAssaLayer = appearance.ShowLayer;
         ShowHorizontalLineAboveToolbar = appearance.ShowHorizontalLineAboveToolbar;
         SelectedGridLinesVisibility = GridLinesVisibilities.FirstOrDefault(p => p.Type.ToString() == appearance.GridLinesAppearance) ?? GridLinesVisibilities[0];
+        SelectedWindowsRenderingMode = WindowsRenderingModes.FirstOrDefault(p => p.Mode.ToString() == appearance.WindowsRenderingMode) ?? WindowsRenderingModes[0];
         SelectedSubtitleGridTextDisplayMode = SubtitleGridTextDisplayModes.FirstOrDefault(p => p.Mode.ToString() == appearance.SubtitleGridTextDisplay) ?? SubtitleGridTextDisplayModes[0];
         DarkModeBackgroundColor = appearance.DarkModeBackgroundColor.FromHexToColor();
         DarkModeForegroundColor = appearance.DarkModeForegroundColor.FromHexToColor();
@@ -1943,6 +1948,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.GridCompactMode = GridCompactMode;
         appearance.GridAlternatingRows = GridAlternatingRows;
         appearance.GridLinesAppearance = SelectedGridLinesVisibility.Type.ToString();
+        appearance.WindowsRenderingMode = SelectedWindowsRenderingMode.Mode.ToString();
         appearance.SubtitleGridTextDisplay = SelectedSubtitleGridTextDisplayMode.Mode.ToString();
         appearance.ShowLayer = ShowAssaLayer;
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
