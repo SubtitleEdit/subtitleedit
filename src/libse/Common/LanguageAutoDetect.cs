@@ -1473,7 +1473,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (count > bestCount * 2)
             {
                 var script = "zh";
-                if (detectChineseScript == null)
+                if (detectChineseScript)
                 {
                     script = DetermineChineseScript(text);
                 }
@@ -1621,40 +1621,72 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         private static string DetermineChineseScript(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return "zh"; // Default to Simplified/generic
-            }
+{
+    if (string.IsNullOrEmpty(text))
+    {
+        return "zh"; // Default to Simplified/generic
+    }
 
-            // Comprehensive list of high-frequency Traditional Chinese character markers
-            int traditionalCount = GetCountContains(text, 
-                "們", "國", "發", "麼", "廣", "裡", 
-                "學", "經", "愛", "時", "對", "過", 
-                "這", "體", "灣", "與", "後", "開",
-                "說", "話", "點", "實", "產", "廠",
-                "關", "應", "該", "視", "頻", "醫",
-                "藥", "買", "賣", "萬", "錢", "臺"
-            );
+    // Comprehensive Traditional Chinese character markers
+    int traditionalCount = GetCountContains(text, 
+        // Pronouns, Demographics & Measure Words
+        "們", "這", "個", "樣", "兩", "幾", "誰", "什", "傢", "伙",
+        // Verbs & Actions
+        "說", "聽", "看", "見", "會", "能", "開", "關", "讓", "給", 
+        "過", "來", "進", "帶", "選", "問", "愛", "買", "賣", "辦",
+        "寫", "讀", "講", "說", "試", "尋", "找", "換", "換", "搬",
+        "跑", "飛", "走", "過", "進", "出", "回", "到", "起", "坐",
+        // Adverbs, Prepositions & Particles
+        "還", "與", "後", "點", "為", "著", "麼", "裡", "裏", "邊",
+        "對", "從", "向", "往", "把", "被", "比", "象", "像", "經",
+        // Everyday Nouns & Objects
+        "國", "學", "書", "車", "門", "電", "機", "話", "語", "時",
+        "廣", "體", "灣", "臺", "台", "視", "頻", "錢", "萬", "東",
+        "風", "飯", "頭", "長", "遠", "親", "樂", "報", "隊", "師",
+        "員", "網", "劃", "園", "難", "雙", "無", "義", "業", "廠",
+        "產", "醫", "藥", "點", "實", "際", "關", "應", "該", "發",
+        // Additional Media, Emotion & Abstract Concepts
+        "歡", "迎", "愛", "情", "感", "覺", "意", "思", "想", "法",
+        "聲", "音", "樂", "器", "戲", "劇", "影", "片", "圖", "畫",
+        "燈", "鏡", "筆", "紙", "類", "別", "種", "類", "結", "構"
+    );
 
-            // Corresponding Simplified Chinese character markers for contrast
-            int simplifiedCount = GetCountContains(text, 
-                "们", "国", "发", "么", "广", "里", 
-                "学", "经", "爱", "时", "对", "过", 
-                "这", "体", "湾", "与", "后", "开",
-                "说", "话", "点", "实", "产", "厂",
-                "关", "应", "该", "视", "频", "医",
-                "药", "买", "卖", "万", "钱", "台"
-            );
+    // Corresponding Simplified Chinese character markers for contrast
+    int simplifiedCount = GetCountContains(text, 
+        // Pronouns, Demographics & Measure Words
+        "们", "这", "个", "样", "两", "几", "谁", "什", "家", "伙",
+        // Verbs & Actions
+        "说", "听", "看", "见", "会", "能", "开", "关", "让", "给", 
+        "过", "来", "进", "带", "选", "问", "爱", "买", "卖", "办",
+        "写", "读", "讲", "说", "试", "寻", "找", "换", "换", "搬",
+        "跑", "飞", "走", "过", "进", "出", "回", "到", "起", "坐",
+        // Adverbs, Prepositions & Particles
+        "还", "与", "后", "点", "为", "着", "么", "里", "里", "边",
+        "对", "从", "向", "往", "把", "被", "比", "象", "像", "经",
+        // Everyday Nouns & Objects
+        "国", "学", "书", "车", "门", "电", "机", "话", "语", "时",
+        "广", "体", "湾", "台", "台", "视", "频", "钱", "万", "东",
+        "风", "饭", "头", "长", "远", "亲", "乐", "报", "队", "师",
+        "员", "网", "划", "园", "难", "双", "无", "义", "业", "厂",
+        "产", "医", "药", "点", "实", "际", "关", "应", "该", "发",
+        // Additional Media, Emotion & Abstract Concepts
+        "欢", "迎", "爱", "情", "感", "觉", "意", "思", "想", "法",
+        "声", "音", "乐", "器", "戏", "剧", "影", "片", "图", "画",
+        "灯", "镜", "笔", "纸", "类", "别", "种", "类", "结", "构"
+    );
 
-            // If Traditional markers clearly outweigh Simplified markers, classify as zh-Hant
-            if (traditionalCount > simplifiedCount && traditionalCount >= 3)
-            {
-                return "zh-Hant";
-            }
+    if (traditionalCount > simplifiedCount && traditionalCount >= 2)
+    {
+        return "zh-Hant";
+    }
 
-            return "zh"; // Default / Simplified Chinese
-        }
+    if (simplifiedCount > traditionalCount && simplifiedCount >= 2)
+    {
+        return "zh-Hans";
+    }
+
+    return "zh"; // Default / Simplified Chinese
+}
         
         public static string AutoDetectGoogleLanguage(Subtitle subtitle, bool detectChineseScript = false)
         {

@@ -460,6 +460,16 @@ internal sealed class AutoTranslateRunner
         var match = languages.FirstOrDefault(p => p.Code.Equals(requested, StringComparison.OrdinalIgnoreCase))
                     ?? languages.FirstOrDefault(p => p.TwoLetterIsoLanguageName.Equals(requested, StringComparison.OrdinalIgnoreCase))
                     ?? languages.FirstOrDefault(p => p.Name.Equals(requested, StringComparison.OrdinalIgnoreCase));
+       
+        if (match == null && requested == "zh-Hans")
+        {
+            match = languages.FirstOrDefault(p => p.Code.Equals("zh-CN", StringComparison.OrdinalIgnoreCase) || p.TwoLetterIsoLanguageName.Equals("zh-CN", StringComparison.OrdinalIgnoreCase));
+        }
+        else if (match == null && requested == "zh-Hant")
+        {
+            match = languages.FirstOrDefault(p => p.Code.Equals("zh-TW", StringComparison.OrdinalIgnoreCase) || p.TwoLetterIsoLanguageName.Equals("zh-TW", StringComparison.OrdinalIgnoreCase));
+        }
+        
         if (match == null)
         {
             var known = string.Join(", ", languages.Select(p => p.Code).Take(30));
