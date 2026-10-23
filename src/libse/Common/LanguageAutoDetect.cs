@@ -1104,6 +1104,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="text">The text to detect the language of.</param>
         /// <param name="bestCount">The minimum number of keyword hits for a match.</param>
         /// <param name="score">The number of keyword hits for the returned language.</param>
+        /// <param name="detectChineseScript">Whether to detect Chinese sub (Simplified/Traditional) script.</param>
         private static string AutoDetectGoogleLanguage(string text, int bestCount, out int score, bool detectChineseScript = false)
         {
             // Score-based selection instead of first-match-wins: every language block below is
