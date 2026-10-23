@@ -1139,7 +1139,9 @@ internal class SubtitleConverter
                 options.Operations,
                 options.FixCommonErrorsRules,
                 options.FixCommonErrorsLanguage,
-                options.RemoveFormattingRules);
+                options.RemoveFormattingRules,
+                options.MergeContinuationLinesMaxGapMs,
+                options.MergeContinuationLinesMaxCharacters);
         }
 
         if (options.BridgeGapsMaxMs.HasValue && options.BridgeGapsMaxMs.Value > 0)
@@ -1391,6 +1393,15 @@ internal record class ConversionOptions
     /// <see cref="RemoveFormattingRunner.ResolveRuleIds"/>.
     /// </summary>
     public IReadOnlyList<string>? RemoveFormattingRules { get; init; }
+
+    /// <summary>Merge continuation lines: max gap in ms (<c>--merge-continuation-lines-max-gap</c>). Null = 250, like batch convert.</summary>
+    public int? MergeContinuationLinesMaxGapMs { get; init; }
+
+    /// <summary>
+    /// Merge continuation lines: max characters of a merged pair (<c>--merge-continuation-lines-max-chars</c>).
+    /// Null = max line length x max number of lines, like batch convert.
+    /// </summary>
+    public int? MergeContinuationLinesMaxCharacters { get; init; }
     public int? DeleteFirst { get; init; }
     public int? DeleteLast { get; init; }
     public string? DeleteContains { get; init; }
