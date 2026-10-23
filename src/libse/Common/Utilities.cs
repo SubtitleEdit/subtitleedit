@@ -11,7 +11,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -1116,42 +1115,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
-        public static List<string> GetDictionaryLanguagesCultureNeutral()
-        {
-            var list = new List<string>();
-            if (Directory.Exists(DictionaryFolder))
-            {
-                foreach (string dic in Directory.GetFiles(DictionaryFolder, "*.dic"))
-                {
-                    string name = Path.GetFileNameWithoutExtension(dic);
-                    if (!name.StartsWith("hyph", StringComparison.Ordinal))
-                    {
-                        try
-                        {
-                            var ci = CultureInfo.GetCultureInfo(name.Replace('_', '-'));
-                            var displayName = ci.DisplayName;
-                            if (displayName.Contains("("))
-                            {
-                                displayName = displayName.Remove(displayName.IndexOf('(')).TrimEnd();
-                            }
-                            name = displayName + " [" + ci.TwoLetterISOLanguageName + "]";
-                        }
-                        catch (Exception exception)
-                        {
-                            System.Diagnostics.Debug.WriteLine(exception.Message);
-                            name = "[" + name + "]";
-                        }
-                        if (!list.Contains(name))
-                        {
-                            list.Add(name);
-                        }
-                    }
-                }
-            }
-
-            return list;
-        }
-
         public static IEnumerable<CultureInfo> GetSubtitleLanguageCultures(bool useFilter)
         {
             var prospects = new List<CultureInfo>();
@@ -1267,29 +1230,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return lastLineLength > maxLength ? lastLineLength : maxLength;
         }
 
-        public static bool IsRunningOnMono()
-        {
-            return Type.GetType("Mono.Runtime") != null;
-        }
-
         public static string AssemblyVersion => Assembly.GetEntryAssembly()?.GetName().Version.ToString();
-
-        public static string AssemblyDescription
-        {
-            get
-            {
-                var assembly = Assembly.GetEntryAssembly();
-                if (assembly != null && Attribute.IsDefined(assembly, typeof(AssemblyDescriptionAttribute)))
-                {
-                    var descriptionAttribute = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyDescriptionAttribute));
-                    if (descriptionAttribute != null)
-                    {
-                        return descriptionAttribute.Description;
-                    }
-                }
-                return null;
-            }
-        }
 
         private static string TrimUserDictionaryWord(string word)
         {
@@ -1436,40 +1377,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static string LoadUserWordList(List<string> userWordList, string languageName)
-        {
-            userWordList.Clear();
-            var userWordDictionary = new XmlDocument();
-            var userWordListXmlFileName = DictionaryFolder + languageName + "_user.xml";
-
-            if (!File.Exists(userWordListXmlFileName) && languageName != null && languageName.Length > 2)
-            {
-                var newFileName = DictionaryFolder + languageName.Substring(0, 2).ToLowerInvariant() + "_user.xml";
-                if (File.Exists(newFileName))
-                {
-                    userWordListXmlFileName = newFileName;
-                }
-            }
-
-            if (File.Exists(userWordListXmlFileName))
-            {
-                userWordDictionary.Load(userWordListXmlFileName);
-                var seen = new HashSet<string>(); // List.Contains per word was quadratic in the user dictionary
-                foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
-                {
-                    string s = NormalizeUserDictionaryWord(node.InnerText);
-                    if (s.Length > 0 && seen.Add(s))
-                    {
-                        userWordList.Add(s);
-                    }
-                }
-            }
-
-
-
-            return userWordListXmlFileName;
-        }
-
         public static readonly string UppercaseLetters = Configuration.Settings.General.UppercaseLetters.ToUpperInvariant() + "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
         public static readonly string LowercaseLetters = Configuration.Settings.General.UppercaseLetters.ToLowerInvariant() + "αβγδεζηθικλμνξοπρσςτυφχψωήάόέ";
         public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
@@ -1493,65 +1400,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var category = char.GetUnicodeCategory(c);
             return category == UnicodeCategory.NonSpacingMark || category == UnicodeCategory.SpacingCombiningMark;
         }
+
         public static readonly string AllLettersAndNumbers = UppercaseLetters + LowercaseLettersWithNumbers;
-
-        public static SKColor GetColorFromUserName(string userName)
-        {
-            if (string.IsNullOrEmpty(userName))
-            {
-                return SKColors.Pink;
-            }
-
-            byte[] buffer = Encoding.UTF8.GetBytes(userName);
-            long number = 0;
-            foreach (byte b in buffer)
-            {
-                number += b;
-            }
-
-            switch (number % 20)
-            {
-                case 0: return SKColors.Red;
-                case 1: return SKColors.Blue;
-                case 2: return SKColors.Green;
-                case 3: return SKColors.DarkCyan;
-                case 4: return SKColors.DarkGreen;
-                case 5: return SKColors.DarkBlue;
-                case 6: return SKColors.DarkTurquoise;
-                case 7: return SKColors.DarkViolet;
-                case 8: return SKColors.DeepPink;
-                case 9: return SKColors.DodgerBlue;
-                case 10: return SKColors.ForestGreen;
-                case 11: return SKColors.Fuchsia;
-                case 12: return SKColors.DarkOrange;
-                case 13: return SKColors.GreenYellow;
-                case 14: return SKColors.IndianRed;
-                case 15: return SKColors.Indigo;
-                case 16: return SKColors.LawnGreen;
-                case 17: return SKColors.LightBlue;
-                case 18: return SKColors.DarkGoldenrod;
-                case 19: return SKColors.Magenta;
-                default:
-                    return SKColors.Black;
-            }
-        }
-
-        public static int GetNumber0To7FromUserName(string userName)
-        {
-            if (string.IsNullOrEmpty(userName))
-            {
-                return 0;
-            }
-
-            byte[] buffer = Encoding.UTF8.GetBytes(userName);
-            long number = 0;
-            foreach (byte b in buffer)
-            {
-                number += b;
-            }
-
-            return (int)(number % 8);
-        }
 
         public static string LowercaseVowels => "aeiouyæøåéóáôèòæøåäöïɤəɛʊʉɨ";
 
@@ -1632,59 +1482,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return text.AsSpan(0, endIndex + 1).EndsWith(endTag);
-        }
-
-        public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
-        {
-            if (index < 0)
-            {
-                return null;
-            }
-
-            var middle = paragraph.StartTime.TotalMilliseconds + paragraph.DurationTotalMilliseconds / 2.0;
-            if (index < originalParagraphs.Count)
-            {
-                var o = originalParagraphs[index];
-                if (Math.Abs(o.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 50)
-                {
-                    return o;
-                }
-
-                if (Math.Abs(o.EndTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds) < 50 &&
-                    paragraph.StartTime.TotalMilliseconds < o.EndTime.TotalMilliseconds)
-                {
-                    return o;
-                }
-
-                if (o.StartTime.TotalMilliseconds < middle && o.EndTime.TotalMilliseconds > middle)
-                {
-                    return o;
-                }
-            }
-
-            if (paragraph.StartTime.IsMaxTime && index < originalParagraphs.Count && originalParagraphs[index].StartTime.IsMaxTime)
-            {
-                return originalParagraphs[index];
-            }
-
-            foreach (var p in originalParagraphs)
-            {
-                if (!p.StartTime.IsMaxTime && Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 0.01)
-                {
-                    return p;
-                }
-            }
-
-            foreach (var p in originalParagraphs)
-            {
-                if (!p.StartTime.IsMaxTime &&
-                    p.StartTime.TotalMilliseconds < middle && p.EndTime.TotalMilliseconds > middle)
-                {
-                    return p;
-                }
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -1940,215 +1737,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString().Trim();
         }
 
-        public static string ToSuperscript(string text)
-        {
-            var sb = new StringBuilder();
-            var superscript = new List<char>{
-                                              '⁰',
-                                              '¹',
-                                              '²',
-                                              '³',
-                                              '⁴',
-                                              '⁵',
-                                              '⁶',
-                                              '⁷',
-                                              '⁸',
-                                              '⁹',
-                                              '⁺',
-                                              '⁻',
-                                              '⁼',
-                                              '⁽',
-                                              '⁾',
-                                              'ᵃ',
-                                              'ᵇ',
-                                              'ᶜ',
-                                              'ᵈ',
-                                              'ᵉ',
-                                              'ᶠ',
-                                              'ᵍ',
-                                              'ʰ',
-                                              'ⁱ',
-                                              'ʲ',
-                                              'ᵏ',
-                                              'ˡ',
-                                              'ᵐ',
-                                              'ⁿ',
-                                              'ᵒ',
-                                              'ᵖ',
-                                              'ʳ',
-                                              'ˢ',
-                                              'ᵗ',
-                                              'ᵘ',
-                                              'ᵛ',
-                                              'ʷ',
-                                              'ˣ',
-                                              'ʸ',
-                                              'ᶻ',
-                                              'ᴬ',
-                                              'ᴮ',
-                                              'ᴰ',
-                                              'ᴱ',
-                                              'ᴳ',
-                                              'ᴴ',
-                                              'ᴵ',
-                                              'ᴶ',
-                                              'ᴷ',
-                                              'ᴸ',
-                                              'ᴹ',
-                                              'ᴺ',
-                                              'ᴼ',
-                                              'ᴾ',
-                                              'ᴿ',
-                                              'ᵀ',
-                                              'ᵁ',
-                                              'ᵂ'
-                                            };
-            var normal = new List<char>{
-                                         '0', // "⁰"
-                                         '1', // "¹"
-                                         '2', // "²"
-                                         '3', // "³"
-                                         '4', // "⁴"
-                                         '5', // "⁵"
-                                         '6', // "⁶"
-                                         '7', // "⁷"
-                                         '8', // "⁸"
-                                         '9', // "⁹"
-                                         '+', // "⁺"
-                                         '-', // "⁻"
-                                         '=', // "⁼"
-                                         '(', // "⁽"
-                                         ')', // "⁾"
-                                         'a', // "ᵃ"
-                                         'b', // "ᵇ"
-                                         'c', // "ᶜ"
-                                         'd', // "ᵈ"
-                                         'e', // "ᵉ"
-                                         'f', // "ᶠ"
-                                         'g', // "ᵍ"
-                                         'h', // "ʰ"
-                                         'i', // "ⁱ"
-                                         'j', // "ʲ"
-                                         'k', // "ᵏ"
-                                         'l', // "ˡ"
-                                         'm', // "ᵐ"
-                                         'n', // "ⁿ"
-                                         'o', // "ᵒ"
-                                         'p', // "ᵖ"
-                                         'r', // "ʳ"
-                                         's', // "ˢ"
-                                         't', // "ᵗ"
-                                         'u', // "ᵘ"
-                                         'v', // "ᵛ"
-                                         'w', // "ʷ"
-                                         'x', // "ˣ"
-                                         'y', // "ʸ"
-                                         'z', // "ᶻ"
-                                         'A', // "ᴬ"
-                                         'B', // "ᴮ"
-                                         'D', // "ᴰ"
-                                         'E', // "ᴱ"
-                                         'G', // "ᴳ"
-                                         'H', // "ᴴ"
-                                         'I', // "ᴵ"
-                                         'J', // "ᴶ"
-                                         'K', // "ᴷ"
-                                         'L', // "ᴸ"
-                                         'M', // "ᴹ"
-                                         'N', // "ᴺ"
-                                         'O', // "ᴼ"
-                                         'P', // "ᴾ"
-                                         'R', // "ᴿ"
-                                         'T', // "ᵀ"
-                                         'U', // "ᵁ"
-                                         'W', // "ᵂ"
-                                            };
-            for (int i = 0; i < text.Length; i++)
-            {
-                char s = text[i];
-                int index = normal.IndexOf(s);
-                if (index >= 0)
-                {
-                    sb.Append(superscript[index]);
-                }
-                else
-                {
-                    sb.Append(s);
-                }
-            }
-            return sb.ToString();
-        }
-
-        public static string ToSubscript(string text)
-        {
-            var sb = new StringBuilder();
-            var subcript = new List<char>{
-                                           '₀',
-                                           '₁',
-                                           '₂',
-                                           '₃',
-                                           '₄',
-                                           '₅',
-                                           '₆',
-                                           '₇',
-                                           '₈',
-                                           '₉',
-                                           '₊',
-                                           '₋',
-                                           '₌',
-                                           '₍',
-                                           '₎',
-                                           'ₐ',
-                                           'ₑ',
-                                           'ᵢ',
-                                           'ₒ',
-                                           'ᵣ',
-                                           'ᵤ',
-                                           'ᵥ',
-                                           'ₓ',
-                                            };
-            var normal = new List<char>
-                             {
-                               '0',  // "₀"
-                               '1',  // "₁"
-                               '2',  // "₂"
-                               '3',  // "₃"
-                               '4',  // "₄"
-                               '5',  // "₅"
-                               '6',  // "₆"
-                               '7',  // "₇"
-                               '8',  // "₈"
-                               '9',  // "₉"
-                               '+',  // "₊"
-                               '-',  // "₋"
-                               '=',  // "₌"
-                               '(',  // "₍"
-                               ')',  // "₎"
-                               'a',  // "ₐ"
-                               'e',  // "ₑ"
-                               'i',  // "ᵢ"
-                               'o',  // "ₒ"
-                               'r',  // "ᵣ"
-                               'u',  // "ᵤ"
-                               'v',  // "ᵥ"
-                               'x',  // "ₓ"
-                             };
-            for (int i = 0; i < text.Length; i++)
-            {
-                char s = text[i];
-                int index = normal.IndexOf(s);
-                if (index >= 0)
-                {
-                    sb.Append(subcript[index]);
-                }
-                else
-                {
-                    sb.Append(s);
-                }
-            }
-            return sb.ToString();
-        }
-
         public static string FixQuotes(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -2167,73 +1755,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return text.Replace("\"\"", "\"");
-        }
-
-        public static SKColor GetColorFromAssa(string text, SKColor defaultColor)
-        {
-            var start = text.IndexOf(@"\c", StringComparison.Ordinal);
-            if (start < 0)
-            {
-                start = text.IndexOf(@"\1c", StringComparison.Ordinal);
-            }
-
-            if (start < 0 || text.Substring(start).StartsWith(@"\clip", StringComparison.Ordinal))
-            {
-                return defaultColor;
-            }
-
-            var end = text.IndexOf('}', start);
-            if (end < 0)
-            {
-                return defaultColor;
-            }
-
-            var nextTagIdx = text.IndexOf('\\', start + 2);
-            if (nextTagIdx > 0 && nextTagIdx < end)
-            {
-                end = nextTagIdx;
-            }
-
-            if (end > 0)
-            {
-                var color = text.Substring(start, end - start).TrimStart('\\').TrimStart('1').TrimStart('c');
-                color = color.RemoveChar('&').TrimStart('H');
-                color = color.PadLeft(6, '0');
-                var c = AdvancedSubStationAlpha.GetSsaColor("h" + color, defaultColor);
-
-
-                // alpha
-                start = text.IndexOf(@"\alpha", StringComparison.Ordinal);
-                if (start >= 0)
-                {
-                    end = text.IndexOf('}', start);
-                    if (end < 0)
-                    {
-                        return defaultColor;
-                    }
-
-                    nextTagIdx = text.IndexOf('\\', start + 2);
-                    if (nextTagIdx > 0 && nextTagIdx < end)
-                    {
-                        end = nextTagIdx;
-                    }
-
-                    if (end > 0)
-                    {
-                        var alpha = text.Substring(start, end - start).TrimStart('\\').Trim();
-                        alpha = alpha.Remove(0, "alpha".Length).Trim('&').TrimStart('H');
-                        if (int.TryParse(alpha, NumberStyles.HexNumber, null, out var a))
-                        {
-                            var realAlpha = byte.MaxValue - a;
-                            c = new SKColor(c.Red, c.Green, c.Blue, (byte)realAlpha);
-                        }
-                    }
-                }
-
-                return c;
-            }
-
-            return defaultColor;
         }
 
         public static SKColor GetColorFromFontString(string text, SKColor defaultColor)
@@ -2314,11 +1835,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return defaultColor;
             }
-        }
-
-        public static SKColor FromHtml(string htmlColor)
-        {
-            return ColorTranslator.FromHtml(htmlColor);
         }
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
@@ -3591,49 +3107,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             "複製",       // zh-TW - Traditional Chinese
         };
 
-        // CopyWords is constant, but the ~400-char alternation was escaped, joined and
-        // interpolated (twice per loop) on every call - once per candidate file in a folder scan.
-        private static readonly Regex CopySuffixRegex = new Regex($@"(\s*[-_]?\s*({string.Join("|", CopyWords.Select(Regex.Escape))})(?:\s*\(\d+\))?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex NumberSuffixRegex = new Regex(@"\s*\(\d+\)$", RegexOptions.Compiled);
-
-        public static string GetLenientPathAndFileNameWithoutExtension(string fileName)
-        {
-            var strictName = GetPathAndFileNameWithoutExtension(fileName);
-
-            // Remove common suffixes like " - Copy", " - Copy (2)"
-            while (CopySuffixRegex.IsMatch(strictName))
-            {
-                strictName = CopySuffixRegex.Replace(strictName, "");
-            }
-
-            // Remove common suffixes like "(2)", "(3)", etc.
-            strictName = NumberSuffixRegex.Replace(strictName, "");
-
-            return strictName;
-        }
-
-        public static string GetFileNameWithoutExtension(string fileName)
-        {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return fileName;
-            }
-
-            var indexOfDirectorySeparatorChar = fileName.LastIndexOf(Path.DirectorySeparatorChar);
-            if (indexOfDirectorySeparatorChar >= 0)
-            {
-                fileName = fileName.Remove(0, indexOfDirectorySeparatorChar).TrimStart(Path.DirectorySeparatorChar);
-            }
-
-            var indexOfPeriod = fileName.LastIndexOf('.');
-            if (indexOfPeriod > 0)
-            {
-                return fileName.Substring(0, indexOfPeriod);
-            }
-
-            return fileName;
-        }
-
         public static string ReSplit(string text, int selectionStart)
         {
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(" ") || selectionStart == 0)
@@ -3829,47 +3302,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 .Replace("\u00A0", " "); // no break space
         }
 
-        public static bool HasNoGaps(int[] array)
-        {
-            if (array.Length == 0)
-            {
-                return false;
-            }
-
-            var numbers = (int[])array.Clone();
-            Array.Sort(numbers);
-            var current = numbers[0];
-            foreach (var n in numbers)
-            {
-                if (n != current)
-                {
-                    return false;
-                }
-
-                current++;
-            }
-
-            return true;
-        }
-
-        public static string GetSha512Hash(byte[] buffer)
-        {
-            using (var ms = new MemoryStream(buffer))
-            {
-                using (var sha512 = SHA512.Create())
-                {
-                    var hash = sha512.ComputeHash(ms);
-                    var hashString = new StringBuilder(128);
-                    foreach (var x in hash)
-                    {
-                        hashString.Append($"{x:x2}");
-                    }
-
-                    return hashString.ToString();
-                }
-            }
-        }
-
         public static string ToggleSymbols(string tag, string text, string endTag, out bool added)
         {
             var pre = string.Empty;
@@ -4053,14 +3485,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return s;
-        }
-
-        public static string PngToBase64String(SKBitmap bitmap)
-        {
-            using (SKData data = bitmap.Encode(SKEncodedImageFormat.Png, 100))
-            {
-                return Convert.ToBase64String(data.ToArray());
-            }
         }
     }
 }
