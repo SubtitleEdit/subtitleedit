@@ -2107,7 +2107,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                     var d = Duration;
                     if (d > 0 && !double.IsInfinity(d) && !double.IsNaN(d))
                     {
-                        SetOptionString("end", d.ToString(CultureInfo.InvariantCulture));
+                        var rounded = Math.Round(d + 0.05, 1);
+                        var str = rounded.ToString(CultureInfo.InvariantCulture);
+                        SetOptionString("end", str);
                         _audioEndBound = d;
                         break;
                     }
