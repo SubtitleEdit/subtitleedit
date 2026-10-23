@@ -146,6 +146,9 @@ internal static class HelpDisplay
         ShowParameter(console, "--fce-language:<code>", "Force language for FCE language-gated rules (e.g. es or Spanish); default: auto-detect");
         ShowParameter(console, "--dictionary-folder:<path>", "Hunspell dictionaries + *_OCRFixReplaceList.xml; enables the 'Fix common OCR errors' FCE pass");
         ShowParameter(console, "--fix-rtl-via-unicode-chars", "Fix RTL via Unicode characters");
+        ShowParameter(console, "--merge-continuation-lines", "Merge lines that continue a sentence into the next line");
+        ShowParameter(console, "--merge-continuation-lines-max-gap:<ms>", "Only merge continuation lines closer than N ms (default: 250)");
+        ShowParameter(console, "--merge-continuation-lines-max-chars:<n>", "Max characters of a merged pair (default: max line length x max number of lines)");
         ShowParameter(console, "--merge-same-texts", "Merge entries with same text");
         ShowParameter(console, "--merge-same-time-codes", "Merge entries with same time codes");
         ShowParameter(console, "--merge-short-lines", "Merge short lines");

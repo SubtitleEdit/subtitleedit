@@ -645,6 +645,9 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 | `--fix-common-errors-rules:<list>` | Run a subset of FCE rules (CSV; supports `all,-RuleId`) |
 | `--fce-language:<code>` | Force the language for FCE language-gated rules (code or English name, e.g. `es` / `Spanish`); default: auto-detect from content |
 | `--fix-rtl-via-unicode-chars` | Fix RTL via Unicode characters |
+| `--merge-continuation-lines` | Merge lines that continue a sentence into the next line - the same rules as [Merge continuation lines](../features/merge-continuation-lines.md#what-counts-as-a-continuation) in the GUI, with every candidate merged |
+| `--merge-continuation-lines-max-gap:<ms>` | Merge continuation lines: only merge lines less than N ms apart (default: 250, like Batch Convert) |
+| `--merge-continuation-lines-max-chars:<n>` | Merge continuation lines: the two texts together must be shorter than N characters (default: `subtitleLineMaximumLength` × `maxNumberOfLines` from `--settings`, 86 with the libse defaults) |
 | `--merge-same-texts` | Merge entries with same text |
 | `--merge-same-time-codes` | Merge entries with same time codes |
 | `--merge-short-lines` | Merge short lines |
