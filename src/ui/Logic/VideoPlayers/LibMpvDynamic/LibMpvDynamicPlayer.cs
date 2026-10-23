@@ -2088,10 +2088,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             {
                 bound = Media.Mp3DurationReader.TryGetDurationSeconds(path);
             }
+            else if (ext.Equals(".aac", StringComparison.OrdinalIgnoreCase))
+            {
+                bound = Media.AacDurationReader.TryGetDurationSeconds(path);
+            }
 
             if (bound.HasValue && bound.Value > 0)
             {
-                SetOptionString("end", bound.Value.ToString(CultureInfo.InvariantCulture));
+                var rounded = Math.Round(bound.Value + 0.05, 1);
+                var str = bound.Value.ToString(CultureInfo.InvariantCulture);
+                SetOptionString("end", str);
                 _audioEndBound = bound.Value;
             }
             else
