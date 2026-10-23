@@ -2096,7 +2096,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             if (bound.HasValue && bound.Value > 0)
             {
                 var rounded = Math.Round(bound.Value + 0.05, 1);
-                var str = bound.Value.ToString(CultureInfo.InvariantCulture);
+                var str = rounded.ToString(CultureInfo.InvariantCulture);
                 SetOptionString("end", str);
                 _audioEndBound = bound.Value;
             }
