@@ -413,7 +413,7 @@ internal sealed class AutoTranslateRunner
         var sourceCode = _options.TranslateFrom;
         if (string.IsNullOrWhiteSpace(sourceCode))
         {
-            sourceCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            sourceCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle, true);
         }
 
         var source = ResolveLanguage(_translator.GetSupportedSourceLanguages(), sourceCode!, "source");

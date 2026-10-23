@@ -1104,7 +1104,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="text">The text to detect the language of.</param>
         /// <param name="bestCount">The minimum number of keyword hits for a match.</param>
         /// <param name="score">The number of keyword hits for the returned language.</param>
-        private static string AutoDetectGoogleLanguage(string text, int bestCount, out int score)
+        private static string AutoDetectGoogleLanguage(string text, int bestCount, out int score, bool detectChineseScript = false)
         {
             // Score-based selection instead of first-match-wins: every language block below is
             // evaluated and records a candidate via Consider(); the candidate with the most
@@ -1472,7 +1472,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             count += GetCountContains(text, "来", "卡", "拉", "吐", "滚", "他");
             if (count > bestCount * 2)
             {
-                Consider("zh", count); // Chinese (simplified) - not tested...
+                var script = "zh";
+                if (detectChineseScript == null)
+                {
+                    script = DetermineChineseScript(text);
+                }
+                
+                Consider(script, count); // Chinese (simplified) - not tested...
             }
 
             count = counts.Get(AutoDetectWordsCzechAndSlovak);
@@ -1614,9 +1620,45 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static string AutoDetectGoogleLanguage(Subtitle subtitle)
+        private static string DetermineChineseScript(string text)
         {
-            return AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
+            if (string.IsNullOrEmpty(text))
+            {
+                return "zh"; // Default to Simplified/generic
+            }
+
+            // Comprehensive list of high-frequency Traditional Chinese character markers
+            int traditionalCount = GetCountContains(text, 
+                "們", "國", "發", "麼", "廣", "裡", 
+                "學", "經", "愛", "時", "對", "過", 
+                "這", "體", "灣", "與", "後", "開",
+                "說", "話", "點", "實", "產", "廠",
+                "關", "應", "該", "視", "頻", "醫",
+                "藥", "買", "賣", "萬", "錢", "臺"
+            );
+
+            // Corresponding Simplified Chinese character markers for contrast
+            int simplifiedCount = GetCountContains(text, 
+                "们", "国", "发", "么", "广", "里", 
+                "学", "经", "爱", "时", "对", "过", 
+                "这", "体", "湾", "与", "后", "开",
+                "说", "话", "点", "实", "产", "厂",
+                "关", "应", "该", "视", "频", "医",
+                "药", "买", "卖", "万", "钱", "台"
+            );
+
+            // If Traditional markers clearly outweigh Simplified markers, classify as zh-Hant
+            if (traditionalCount > simplifiedCount && traditionalCount >= 3)
+            {
+                return "zh-Hant";
+            }
+
+            return "zh"; // Default / Simplified Chinese
+        }
+        
+        public static string AutoDetectGoogleLanguage(Subtitle subtitle, bool detectChineseScript = false)
+        {
+            return AutoDetectGoogleLanguageOrNull(subtitle, detectChineseScript) ?? "en";
         }
 
         public static string AutoDetectGoogleLanguage(Subtitle subtitle, int maxNumberOfSubtitlesToCheck)
@@ -1908,10 +1950,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
-        public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
+        public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle, bool detectChineseScript = false)
         {
             var allText = GetNonEmptyTexts(subtitle, 500000, out var nonEmptyCount);
-            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14);
+            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14, out var score, detectChineseScript);
             if (string.IsNullOrEmpty(languageId))
             {
                 languageId = GetEncodingViaLetter(allText);
