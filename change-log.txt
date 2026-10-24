@@ -7,7 +7,7 @@ v5.4.0-beta6 (24th of October 2026)
 
 * Fix duration for aac audio files in the mpv player - thx benshgit
 * Improve language auto-detect for Korean - thx minsk999
-* Add --merge-continuation-lines to seconv - thx  svarga91
+* Add --merge-continuation-lines to seconv - thx svarga91
 * Add setting for subtitle file watcher
 * Update Turkish translation - thx bilimiyorum
 * Update Japanese translation - thx hisui3393
