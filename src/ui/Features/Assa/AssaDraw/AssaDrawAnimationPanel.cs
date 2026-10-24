@@ -254,6 +254,7 @@ internal static class AssaDrawAnimationPanel
             DrawLoopEffect.Blink => l.DrawAnimationBlink,
             DrawLoopEffect.Bounce => l.DrawAnimationBounce,
             DrawLoopEffect.Shake => l.DrawAnimationShake,
+            DrawLoopEffect.ShakeHorizontal => l.DrawAnimationShakeHorizontal,
             DrawLoopEffect.Swing => l.DrawAnimationSwing,
             DrawLoopEffect.Flip => l.DrawAnimationFlip,
             _ => Se.Language.General.None,

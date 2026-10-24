@@ -145,6 +145,7 @@ public class LanguageAssa
     public string DrawAnimationBlink { get; set; }
     public string DrawAnimationBounce { get; set; }
     public string DrawAnimationShake { get; set; }
+    public string DrawAnimationShakeHorizontal { get; set; }
     public string DrawAnimationSwing { get; set; }
     public string DrawAnimationFlip { get; set; }
     public string DrawAnimationLoopBlocked { get; set; }
@@ -697,6 +698,7 @@ public class LanguageAssa
         DrawAnimationBlink = "Blink";
         DrawAnimationBounce = "Bounce";
         DrawAnimationShake = "Shake";
+        DrawAnimationShakeHorizontal = "Shake horizontal";
         DrawAnimationSwing = "Swing";
         DrawAnimationFlip = "Flip";
         DrawAnimationLoopBlocked = "This loop turns around another point than the in/out effect, so it is left out.";
