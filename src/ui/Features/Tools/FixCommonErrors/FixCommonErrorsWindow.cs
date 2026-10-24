@@ -54,7 +54,7 @@ public class FixCommonErrorsWindow : Window
             TextTrimming = TextTrimming.CharacterEllipsis,
             Margin = new Thickness(4, 0, 12, 0),
         };
-        labelStep1.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
+        labelStep1.Bind(IsVisibleProperty, new Binding(nameof(vm.IsStepOne)));
 
         var labelStep2 = new TextBlock
         {
@@ -65,7 +65,7 @@ public class FixCommonErrorsWindow : Window
             Margin = new Thickness(4, 0, 12, 0),
         };
         labelStep2.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Step2Title)));
-        labelStep2.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
+        labelStep2.Bind(IsVisibleProperty, new Binding("!" + nameof(vm.IsStepOne)));
 
         var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(16)
             .WithAccessibleName(Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot)
@@ -73,7 +73,7 @@ public class FixCommonErrorsWindow : Window
         textBoxSearch.Classes.Add("text");
         textBoxSearch.VerticalAlignment = VerticalAlignment.Center;
         textBoxSearch.PlaceholderText = Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot;
-        textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
+        textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.IsStepOne)));
         // Off by default (#12441) - keep it reachable here, next to the language it depends on,
         // instead of only in the OCR window where a Fix-common-errors user would never look.
         var switchGuessUnknownWords = EditorChrome.MakeSwitch(nameof(vm.TryToGuessUnknownWords), Se.Language.Ocr.TryToGuessUnknownWords);
@@ -89,7 +89,7 @@ public class FixCommonErrorsWindow : Window
                 new TextBlock { Text = Se.Language.Ocr.TryToGuessUnknownWords, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center },
             },
         };
-        panelGuessUnknownWords.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
+        panelGuessUnknownWords.Bind(IsVisibleProperty, new Binding("!" + nameof(vm.IsStepOne)));
 
         var comboLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
             .WithAccessibleName(Se.Language.General.Language);
@@ -197,22 +197,22 @@ public class FixCommonErrorsWindow : Window
         rulesPanel.Add(rulesHeader, 0);
         rulesPanel.Add(EditorChrome.MakeListFrame(rulesGrid, clearListBackground: true), 1);
         var step1View = EditorChrome.MakePanel(rulesPanel);
-        step1View.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
+        step1View.Bind(IsVisibleProperty, new Binding(nameof(vm.IsStepOne)));
 
         var step2Grid = MakeStep2Grid();
-        step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
+        step2Grid.Bind(IsVisibleProperty, new Binding("!" + nameof(_vm.IsStepOne)));
 
         var buttonToApplyFixes = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.GoToApplyFixes, vm.ToApplyFixesCommand)
             .WithIconRight("fa-solid fa-arrow-right")
-            .BindIsVisible(vm, nameof(vm.Step1IsVisible));
+            .BindIsVisible(vm, nameof(vm.IsStepOne));
         buttonToApplyFixes.Classes.Add("primary");
 
         var buttonBackToFixList = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.BackToFixList, vm.BackToFixListCommand)
             .WithIconLeft("fa-solid fa-arrow-left")
-            .BindIsVisible(vm, nameof(vm.Step2IsVisible));
+            .BindIsVisible(vm, "!" + nameof(vm.IsStepOne));
 
         var buttonDone = UiUtil.MakeButton(Se.Language.General.Done, vm.OkCommand)
-            .BindIsVisible(vm, nameof(vm.Step2IsVisible));
+            .BindIsVisible(vm, "!" + nameof(vm.IsStepOne));
         buttonDone.Classes.Add("primary");
 
         var labelFixesApplied = EditorChrome.MakeBoundHint(nameof(vm.FixesAppliedText));
@@ -304,7 +304,7 @@ public class FixCommonErrorsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children = { labelFixesApplied, nothingToFixPanel, errorsFoundPanel, logLink, analysingText },
         };
-        panelStep2Status.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
+        panelStep2Status.Bind(IsVisibleProperty, new Binding("!" + nameof(vm.IsStepOne)));
 
         var buttonBar = EditorChrome.MakeButtonBar(panelStep2Status, buttonBackToFixList, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonToApplyFixes, buttonDone);
 
@@ -331,7 +331,7 @@ public class FixCommonErrorsWindow : Window
         // the window) still lets the window's OnKeyDown fire, as key events bubble up. (#12029)
         void FocusStepButton()
         {
-            var step2 = vm.Step2IsVisible;
+            var step2 = !vm.IsStepOne;
             buttonToApplyFixes.IsDefault = !step2;
             buttonDone.IsDefault = false;
             if (_buttonApplySelectedFixes != null)
@@ -348,11 +348,11 @@ public class FixCommonErrorsWindow : Window
 
         vm.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName is nameof(vm.Step1IsVisible) or nameof(vm.Step2IsVisible))
+            if (e.PropertyName == nameof(vm.IsStepOne))
             {
                 FocusStepButton();
             }
-            else if (e.PropertyName == nameof(vm.FixesAppliedText) && vm.Step2IsVisible && !string.IsNullOrEmpty(vm.FixesAppliedText))
+            else if (e.PropertyName == nameof(vm.FixesAppliedText) && !vm.IsStepOne && !string.IsNullOrEmpty(vm.FixesAppliedText))
             {
                 // After "Apply selected fixes": if nothing is left to fix, move focus/default to
                 // "Done" so the next Return finishes; otherwise keep it on "Apply selected fixes"

@@ -140,7 +140,7 @@ public class FixCommonErrorsRuleSearchTests
             Assert.Equal("gaps", vm.SearchText);
             Assert.Equal(new[] { "Fix short gaps" }, profile.FixRules.Select(r => r.Name));
 
-            vm.Step1IsVisible = false;
+            vm.IsStepOne = false;
             Assert.False(searchBox.IsVisible);
         }
         finally
