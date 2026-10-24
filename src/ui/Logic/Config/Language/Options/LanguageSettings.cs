@@ -104,6 +104,8 @@ public class LanguageSettings
     public string ShowRecentFiles { get; set; }
     public string OpenLastFileOnStart { get; set; }
     public string AutoSave { get; set; }
+    public string CheckSubtitleFileChangedOutside { get; set; }
+    public string ConfirmOverwriteSubtitleFileChangedOutside { get; set; }
     public string AutoBackupOn { get; set; }
     public string AutoBackupIntervalMinutes { get; set; }
     public string AutoBackupDeleteAfterDays { get; set; }
@@ -493,6 +495,8 @@ public class LanguageSettings
         ShowRecentFiles = "Show recent files (for reopen)";
         OpenLastFileOnStart = "Open last recent file on start";
         AutoSave = "Auto-save (save the open file while editing)";
+        CheckSubtitleFileChangedOutside = "Check for subtitle file changed by another program when activating window";
+        ConfirmOverwriteSubtitleFileChangedOutside = "Ask before overwriting subtitle file changed by another program";
         AutoBackupOn = "Auto-backup";
         AutoBackupIntervalMinutes = "Auto-backup interval (minutes)";
         AutoBackupDeleteAfterDays = "Auto-backup retention (days)";

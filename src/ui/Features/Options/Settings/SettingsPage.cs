@@ -595,6 +595,8 @@ public class SettingsPage : UserControl
 
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoSave, nameof(_vm.AutoSave)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.CheckSubtitleFileChangedOutside, nameof(_vm.CheckSubtitleFileChangedOutside)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ConfirmOverwriteSubtitleFileChangedOutside, nameof(_vm.ConfirmOverwriteSubtitleFileChangedOutside)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBackupOn, nameof(_vm.AutoBackupOn)),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupIntervalMinutes, nameof(_vm.AutoBackupIntervalMinutes), 1),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupDeleteAfterDays, nameof(_vm.AutoBackupDeleteAfterDays), 1),
