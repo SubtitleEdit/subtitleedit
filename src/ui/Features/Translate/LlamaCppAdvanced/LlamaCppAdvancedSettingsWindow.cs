@@ -175,6 +175,9 @@ public class LlamaCppAdvancedSettingsWindow : Window
         sampling.Add(Label(Se.Language.Translate.RepeatPenalty, new Thickness(16, 0, 0, 0)), 1, 2);
         sampling.Add(Field(UiUtil.MakeNumericUpDownTwoDecimals(-1, 3, 110, vm, nameof(vm.RepeatPenalty)), Se.Language.Translate.RepeatPenalty), 1, 3);
 
+        sampling.Children[4].IsVisible = sampling.Children[5].IsVisible = vm.ShowTopK;
+        sampling.Children[6].IsVisible = sampling.Children[7].IsVisible = vm.ShowRepeatPenalty;
+
         var maxTokens = Field(UiUtil.MakeNumericUpDownInt(-1, 32768, -1, 150, vm, nameof(vm.MaxTokens)), Se.Language.Translate.MaxTokensPerReply);
 
         var contextSize = Field(UiUtil.MakeNumericUpDownInt(2048, 262144, 16384, 150, vm, nameof(vm.ContextSize)), Se.Language.Translate.ServerContextSizeTokens);
@@ -201,12 +204,14 @@ public class LlamaCppAdvancedSettingsWindow : Window
             {
                 sampling,
                 EditorChrome.MakeLabeledRow(Se.Language.Translate.MaxTokensPerReply, maxTokens, LabelWidth, spacing: 10),
-                EditorChrome.MakeLabeledRow(Se.Language.Translate.ServerContextSizeTokens, contextSize, LabelWidth, spacing: 10),
-                EditorChrome.MakeLabeledRow(Se.Language.Translate.ExtraServerParameters, serverArguments, LabelWidth, spacing: 10),
-                EditorChrome.MakeLabeledRow(string.Empty, rowServerArgumentsOnly, LabelWidth, spacing: 10),
+                Visible(EditorChrome.MakeLabeledRow(Se.Language.Translate.ServerContextSizeTokens, contextSize, LabelWidth, spacing: 10), vm.ShowServerOptions),
+                Visible(EditorChrome.MakeLabeledRow(Se.Language.Translate.ExtraServerParameters, serverArguments, LabelWidth, spacing: 10), vm.ShowServerOptions),
+                Visible(EditorChrome.MakeLabeledRow(string.Empty, rowServerArgumentsOnly, LabelWidth, spacing: 10), vm.ShowServerOptions),
             },
         };
     }
+
+    private static Control Visible(Control control, bool visible) { control.IsVisible = visible; return control; }
 
     private static TextBlock Label(string text, Thickness? margin = null)
     {

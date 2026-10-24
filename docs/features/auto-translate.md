@@ -1,133 +1,66 @@
 # Auto Translate
 
-Automatically translate subtitles using various translation engines and AI services.
+Open **Translate → Auto-translate...**, choose a named **Profile**, select the source and target languages, and click **Translate**. Review the results in the grid, then click **OK** to apply them.
 
-- **Menu:** Translate → Auto-translate...
-- **Shortcut:** Configurable
+## Named profiles
 
-<!-- Screenshot: Auto translate window -->
-![Auto Translate](../screenshots/auto-translate.png)
+The initial profile is named **Default**. New profiles start with **Default**, **Default (2)**, and so on until you give them your own name. The profile selector is shared by Auto Translate and Batch Convert. Each window remembers its own selected profile.
 
-## How to Use
+Click **…** beside the Profile dropdown to open **Manage profiles**. The list shows each profile's name and engine in its saved order. Selecting a row edits it on the right; this does not change the profile used for translation.
 
-1. Open **Translate → Auto-translate...**
-2. Select a translation engine
-3. Select the source and target languages (the button between them swaps the two)
-4. Click **Translate** to start
-5. Review the translations in the grid
-6. Click **OK** to apply
+- **New** and **Copy** append an independent profile and select it for editing. Copy includes the connection, API key, and Advanced policy.
+- Edit **Name** to rename a profile. Names must be non-empty and unique, ignoring case and surrounding spaces.
+- Use Ctrl/Shift to select several profiles, or Ctrl+A to select all, then **Delete**. With several rows selected, the editor shows the selection count.
 
-### Translating selected lines
+Edits stay in drafts while switching rows. **Save** applies the whole session at once; **Cancel**, Esc, or closing the window discards it. Validation selects the profile needing correction. Unchanged legacy connections do not block saving other changes, and a failed write keeps the drafts available for retry.
 
-Right-click selected lines in the grid and choose **Auto-translate** to translate only those lines. With no original column open, the dialog offers **Translate in place (do not create original)**: the translated text replaces the selected lines' text instead of turning the subtitle into the original. Otherwise the whole subtitle becomes the original, as with a whole-file translation.
+After saving, both open profile selectors refresh and keep their selected profile by ID. Deleting a profile in use clears that selector without choosing a replacement. You can delete every profile and create another through **…**. Running translations use a snapshot of their connection and policy.
 
-The shortcut **Auto-translate selected lines (no prompt, use last engine/languages)** (no default key; set it in [Shortcuts](shortcuts.md)) starts right away with the last used engine and languages; the dialog only shows progress and closes when done. Until a translation has been run once, it prompts as usual.
+![Manage translation profiles](../screenshots/translation-profile-manager.png)
 
-## Supported Engines
+## Engine
 
-- **Google Translate V1 API** — Free Google Translate. When Google answers with its "unusual traffic" block page, Subtitle Edit retries the request through a fallback endpoint (`clients5.google.com`) before giving up; a block is on Google's side and is usually lifted again after minutes to a few hours
-- **Google Translate V2 API** — Google Cloud Translation (requires API key)
-- **Bing Microsoft Translator** — Azure Cognitive Services (requires API key)
-- **DeepL V2 translate** — DeepL translation (requires API key). Every language the DeepL API offers is listed, as source and as target (including the target-only regional variants such as fr-CA and de-CH). A **Formality** dropdown — Default, More formal, Less formal, More formal (fall back to default), Less formal (fall back to default) — appears for target languages that support it
-- **LibreTranslate** — Open-source, self-hosted translation
-- **MyMemory Translate** — Free translation memory
-- **ChatGPT** — OpenAI AI translation (requires API key)
-- **LM Studio (local LLM)** — Local LLM translation
-- **LM Studio advanced (local LLM)** — LM Studio translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
-- **Ollama (local LLM)** — Local LLM-based translation
-- **Ollama advanced (local LLM)** — Ollama translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
-- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT, Hy-MT2 or TranslatePsy-AfriSLM for English ↔ 19 African languages) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
-- **llama.cpp advanced (local LLM)** — The managed llama.cpp server translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
-- **OpenAI Compatible API** — Generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...); configure URL, model, prompt, and an optional API key
-- **Anthropic Claude** — AI translation (requires API key)
-- **Groq** — AI translation (requires API key)
-- **OpenRouter** — AI translation (requires API key)
-- **API Route** — AI translation through [api-route.com](https://www.api-route.com) (requires API key)
-- **Lara** — AI translation (requires API key)
-- **Perplexity** — AI translation (requires API key)
-- **Google Gemini** — AI translation (requires API key)
-- **NVIDIA** — AI translation (requires API key)
-- **Mistral AI Translate** — AI translation (requires API key)
-- **DeepSeek** — AI translation (requires API key)
-- **Papago Translate** — Naver Papago translation (requires API key)
-- **thammegowda-nllb-serve** — Self-hosted NLLB (No Language Left Behind) server
-- **winstxnhdw-nllb-api** — NLLB (No Language Left Behind) API
-- **Baidu Translate** — Baidu translation (requires App ID and secret)
-- **CrispASR MADLAD** — Local MADLAD-based translation with downloadable models (shown with size and install status); also available in Batch Convert. The language list is the 419 languages the MADLAD-400 model itself knows, so it is both longer and shorter than the usual one: it adds languages such as Iloko, Waray, Papiamento, Moroccan Arabic and Latin, and leaves out ones MADLAD cannot produce — including Cantonese, for which Google Translate, NLLB or any of the LLM engines are the alternatives. Quality varies a lot across that long tail — Google evaluated only about half of the languages the model claims
+The editor starts with a horizontal **Translation services / Language models** switch. The selected segment is highlighted; click either side or use the left/right arrow keys to switch. **Translation services** shows a dedicated Engine list. **Language models** shows a second **Local / Cloud** switch: Local offers llama.cpp, Ollama, LM Studio, and **Local API**, while Cloud offers provider presets.
 
-## llama.cpp: using your own model
+Services include Google Translate V1/V2, Microsoft Translator, DeepL, LibreTranslate, MyMemory, Lara, Papago, Baidu, NLLB API/Serve, and CrispASR MADLAD. For example, DeepL profiles save their API key, API URL, and formality independently. LibreTranslate and MyMemory allow an empty API key. CrispASR MADLAD profiles can use executable/model files directly or the existing model download controls.
 
-The models offered in the download list are deliberately kept small enough to run on an ordinary
-machine (mostly under 8 GB, the largest around 12 GB). You are not limited to them — larger models such as TranslateGemma
-27B work fine if your hardware can handle them.
+## API connections
 
-Two ways to use one:
+![Translation profile editor](../screenshots/translation-profile-editor.png)
 
-1. **Drop a `.gguf` into the models folder.** Copy the file into Subtitle Edit's `llama.cpp/models`
-   folder and it appears in the model list marked *(custom)*. Subtitle Edit recognizes the model
-   family from the file name and starts `llama-server` with the right chat template, so a
-   self-downloaded TranslateGemma or Qwen quant behaves like the curated ones.
-2. **Run your own server.** Tick **Use remote server** and point Subtitle Edit at any
-   `llama-server` you started yourself (the default is `http://localhost:8080/v1/chat/completions`).
-   Subtitle Edit then does no model management at all.
+For hosted models, choose **Language models → Cloud**, then choose a provider preset or **Custom**. For a local service, choose **Language models → Local**, then choose an inference engine. Switching between these choices preserves each engine's draft URL.
 
-Be aware of what a bigger model costs. TranslateGemma 27B at Q4_K_M is roughly a 16 GB download and
-needs about 20 GB of VRAM to run fully on the GPU — a 24 GB card in practice. Google's own figures
-put the 12B ahead of the Gemma 3 27B baseline, so the 12B in the download list is already a strong
-choice and the jump to 27B buys less than the size difference suggests.
+A provider preset fills **API URL** and offers model suggestions in an editable **Model** dropdown. Select **OpenAI Chat Completions** or **Anthropic Messages** separately, then enter the API key. You can edit the URL to use a compatible proxy or any other compatible service.
 
-## Prompts: chat models and completion models
+Hosted provider presets use built-in model suggestions without requesting a model list. For a custom OpenAI-compatible endpoint, LM Studio, or Ollama, click **…** beside Model to open the original model picker and fetch the server list on demand. Ollama uses its native model-list API; compatible servers use `/models`. Fetch failures are logged and leave the picker empty. Opening profiles, editing connection settings, and opening the Model dropdown do not make model-list requests. You can always type a model name manually, including when a proxy does not expose a model-list route. Changing providers preserves an already-entered model and API key. LM Studio and a managed llama.cpp server can use their loaded model without a model identifier.
 
-Every local-LLM engine (LM Studio, Ollama, llama.cpp, OpenAI Compatible API) has a
-**prompt** you can edit in the engine's Settings dialog (gear button). `{0}` is replaced with the source language and `{1}` with the target
-language, both as English names.
+All LLM profiles default to **Advanced** translation. The profile editor's **Advanced...** button configures batches, context, synopsis, glossary, prompts, and sampling. See [Advanced translation](auto-translate-advanced.md).
 
-By default the prompt is an instruction and Subtitle Edit appends the subtitle text after it — what
-a chat-tuned model expects.
+Choose **Translate each line separately** explicitly to use the independent single-line prompt instead. Advanced translation never automatically switches to this mode after an error.
 
-Some translation models are trained on a *completion* format instead: the text has to sit inside the
-prompt, followed by a cue for the target language. Write `{2}` where the text belongs and Subtitle
-Edit sends the filled-in template as one block instead of appending anything. For example
-[MiLMMT-46](https://huggingface.co/xiaomi-research/MiLMMT-46-12B-v1.0) (Xiaomi's 46-language
-translation model) is trained on:
+### Local llama.cpp
 
-```
-Translate this from {0} to {1}:
-{0}: {2}
-{1}:
-```
+Subtitle Edit retains its model download, install status, server start/stop, and engine settings controls. Select a chat-compatible model from the list, or place a custom `.gguf` in the llama.cpp models folder.
 
-The trailing `{1}:` cue is what makes such a model translate at all — without it, it tends to echo
-the source. Set the model's temperature to 0 where the engine offers it. Curated MiLMMT models in
-the llama.cpp engine's download list carry this prompt already; for LM Studio, Ollama or
-your own OpenAI-compatible server (vLLM, KoboldCpp, ...), paste it into the engine's prompt field.
+To connect to a server you manage yourself, enable **Use remote server** in the profile editor and enter its API endpoint. In this mode Subtitle Edit does not download a model or start a server.
 
-Headless runs take the same prompt via `seconv --translate-prompt:<text|file>` — see
-[Auto-translate (command line)](../reference/command-line.md#custom-prompt).
+The new desktop profiles use chat APIs for both Advanced and single-line translation. Completion-only models such as MiLMMT require a replacement chat-compatible model. The command-line interface retains its existing options and behavior; see [command-line translation](../reference/command-line.md).
 
-## Engine Configuration
+## Existing settings and imports
 
-Depending on the selected engine, you may need to provide:
+Configured engines are migrated once into named profiles using their original engine display names (for example, **Google Translate V1 API**, **DeepL V2 translate**, or **OpenRouter**). Name collisions receive numeric suffixes. **Default** is reserved for a fresh initial profile and manually created profiles; existing profile names are preserved on later loads. Different classic and advanced configurations remain separate. Existing LLM profiles also default to Advanced after migration; their old prompt is retained for manual single-line mode. URLs that cannot be safely converted from a completion route are preserved and marked for review.
 
-- **API Key** — Authentication key for cloud services
-- **API URL** — Custom endpoint URL (for self-hosted services)
-- **Model** — Specific model to use (for AI engines)
+Gemini profiles use its OpenAI-compatible endpoint. Mistral and OpenRouter keys are copied from the effective shared provider settings into the translation profile; subsequent translation edits do not change OCR or speech credentials. JSON and SE4 XML settings imports also create profiles from legacy translation settings.
 
-The gear button opens the engine's **Settings** dialog with **Line merge**, **Delay in seconds between requests**, **Max bytes per request** and, for engines that have one, the **Prompt text** with a reset-to-default button. **Do not translate lines in music symbols (♪ ... ♪)** leaves song lines untranslated.
+## Selected lines and review
 
-The **llama.cpp advanced**, **Ollama advanced** and **LM Studio advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
+Right-click selected subtitle lines and choose **Auto-translate** to translate those lines. With no original column open, **Translate in place (do not create original)** replaces their text directly. The no-prompt shortcut uses the last selected profile and languages.
 
-## Translation Review
+The grid shows source and translated text side by side and allows editing before acceptance. Source and target language choices are carried across profiles when supported by the new engine.
 
-The translation grid shows the original text alongside the translated text. You can edit individual translations before accepting them.
-
-Engines keep the source's line breaks and often add their own, so a two-line source can come back as three short lines that no long-line tool would touch. After translating, a row with more lines than the *maximum number of lines* or a line longer than the single-line limit is un-broken and auto-broken again with the target language's rules. Rows that already fit are left alone, and lyrics (♪) and CJK targets are never re-broken.
-
-Switching engine to compare results keeps the source and target languages you picked, as long as the new engine offers them - only then does the default derived from the subtitle take over.
-
-## Keyboard Shortcuts
+The main Settings button controls request delay, maximum request size, and whether music lines (`♪ ... ♪`) remain untranslated. Traditional profiles can also choose their line-merge strategy there. LLM translation mode and prompts belong to the profile editor.
 
 | Key | Action |
 |-----|--------|
 | Escape | Close / Cancel |
-| F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |
+| F1 | Show help |

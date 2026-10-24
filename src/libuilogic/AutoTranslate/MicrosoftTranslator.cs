@@ -13,6 +13,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class MicrosoftTranslator : IAutoTranslator, IDisposable
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public MicrosoftTranslator() { }
+        public MicrosoftTranslator(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         public const string SignUpUrl = "https://learn.microsoft.com/en-us/azure/ai-services/translator/create-translator-resource";
         public const string GoToUrl = "https://www.bing.com/translator";
         private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
@@ -38,9 +43,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public void Initialize()
         {
-            _apiKey = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
-            _tokenEndpoint = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
-            _category = Configuration.Settings.Tools.MicrosoftTranslatorCategory;
+            _apiKey = TranslationSettings.MicrosoftTranslatorApiKey;
+            _tokenEndpoint = TranslationSettings.MicrosoftTranslatorTokenEndpoint;
+            _category = TranslationSettings.MicrosoftTranslatorCategory;
 
             try
             {

@@ -554,7 +554,10 @@ public partial class SettingsImportExportViewModel : ObservableObject
         {
             if (importData.AutoTranslate != null)
             {
-                Se.Settings.AutoTranslate = importData.AutoTranslate;
+                var imported = new Se { AutoTranslate = importData.AutoTranslate, Providers = importData.Providers ?? new SeProviders() };
+                Se.MigrateProviderApiKeys(imported);
+                TranslationProfileMigration.EnsureMigrated(imported);
+                Se.Settings.AutoTranslate = imported.AutoTranslate;
             }
         }
 

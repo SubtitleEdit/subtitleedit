@@ -239,6 +239,7 @@ public class BatchConvertConfig
 
     public class AutoTranslateSettings
     {
+        public UiLogic.Translate.TranslationProfile? Profile { get; set; }
         public bool IsActive { get; set; }
         public TranslationPair SourceLanguage { get; internal set; }
         public TranslationPair TargetLanguage { get; internal set; }

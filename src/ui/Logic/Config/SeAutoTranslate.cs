@@ -7,6 +7,11 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class SeAutoTranslate
 {
+    public List<Nikse.SubtitleEdit.UiLogic.Translate.TranslationProfile> Profiles { get; set; } = new();
+    public int ProfileMigrationVersion { get; set; }
+    public string SelectedProfileId { get; set; } = string.Empty;
+    public string BatchProfileId { get; set; } = string.Empty;
+
     public string AutoTranslateLastName { get; set; } = string.Empty;
     public string AutoTranslateLastSource { get; set; } = string.Empty;
     public string AutoTranslateLastTarget { get; set; } = string.Empty;

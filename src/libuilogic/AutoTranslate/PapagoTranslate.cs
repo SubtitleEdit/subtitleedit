@@ -8,6 +8,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class PapagoTranslate : IAutoTranslator, IDisposable
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public PapagoTranslate() { }
+        public PapagoTranslate(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         private HttpClient _httpClient = null!;
 
         public static string StaticName { get; set; } = "Papago Translate";
@@ -28,8 +33,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
 
             // Updated authentication headers for the current Papago API
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Naver-Client-Id", Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId);
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Naver-Client-Secret", Configuration.Settings.Tools.AutoTranslatePapagoApiKey);
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Naver-Client-Id", TranslationSettings.AutoTranslatePapagoApiKeyId);
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Naver-Client-Secret", TranslationSettings.AutoTranslatePapagoApiKey);
 
             // Updated base address for the current API
             _httpClient.BaseAddress = new Uri("https://openapi.naver.com/v1/papago/");

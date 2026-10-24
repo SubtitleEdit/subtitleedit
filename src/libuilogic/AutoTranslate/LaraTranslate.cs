@@ -10,6 +10,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {
     public class LaraTranslate : IAutoTranslator, IDisposable
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public LaraTranslate() { }
+        public LaraTranslate(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         private HttpClient _httpClient = null!;
 
         public const string SdkVersion = "1.1.0";
@@ -29,11 +34,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.BaseAddress = new Uri(Configuration.Settings.Tools.LaraUrl.TrimEnd('/'));
+            _httpClient.BaseAddress = new Uri(TranslationSettings.LaraUrl.TrimEnd('/'));
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
-            _accessKeyId = Configuration.Settings.Tools.LaraApiId;
-            _signingKey = Encoding.UTF8.GetBytes(Configuration.Settings.Tools.LaraApiSecret);
+            _accessKeyId = TranslationSettings.LaraApiId;
+            _signingKey = Encoding.UTF8.GetBytes(TranslationSettings.LaraApiSecret);
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()

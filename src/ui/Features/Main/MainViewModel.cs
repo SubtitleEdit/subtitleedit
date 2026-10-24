@@ -14310,7 +14310,8 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task AutoTranslateSelectedLinesNoPrompt()
     {
-        var hasLastUsed = !string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastName) &&
+        TranslationProfileMigration.EnsureMigrated(Se.Settings);
+        var hasLastUsed = Se.Settings.AutoTranslate.Profiles.Any(p => p.Id == Se.Settings.AutoTranslate.SelectedProfileId) &&
                           !string.IsNullOrEmpty(Se.Settings.AutoTranslate.AutoTranslateLastTarget);
         await AutoTranslateSelectedLines(autoStart: hasLastUsed);
     }

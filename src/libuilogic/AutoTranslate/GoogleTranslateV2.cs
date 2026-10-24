@@ -13,6 +13,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class GoogleTranslateV2 : IAutoTranslator, IDisposable
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public GoogleTranslateV2() { }
+        public GoogleTranslateV2(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         private string _apiKey = string.Empty;
         private HttpClient _httpClient = null!;
 
@@ -25,7 +30,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public void Initialize()
         {
-            _apiKey = Configuration.Settings.Tools.GoogleApiV2Key;
+            _apiKey = TranslationSettings.GoogleApiV2Key;
             _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
             _httpClient.BaseAddress = new Uri("https://translation.googleapis.com/language/translate/v2/");
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

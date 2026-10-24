@@ -9,6 +9,8 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.Logic.Media;
 
 namespace UITests.Features.Main;
@@ -85,6 +87,28 @@ public class AutoTranslateSelectedLinesTests
         }
     }
 
+    [AvaloniaFact]
+    public async Task NoPromptShortcutUsesSelectedProfileWithoutLegacyEngineName()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var previous = Se.Settings.AutoTranslate;
+        try
+        {
+            var profile = new TranslationProfile { Name = "Saved account" };
+            Se.Settings.AutoTranslate = new SeAutoTranslate
+            {
+                Profiles = new() { profile }, ProfileMigrationVersion = 1,
+                SelectedProfileId = profile.Id, AutoTranslateLastTarget = "de", AutoTranslateLastName = "",
+            };
+            AddLine(vm, "One", 0, 1000);
+            vm.SubtitleGrid.SelectedItems?.Add(vm.Subtitles[0]);
+            FakeTranslateWindowService.Install(vm, translateInPlace: true);
+            await vm.AutoTranslateSelectedLinesNoPromptCommand.ExecuteAsync(null);
+            Assert.True(FakeTranslateWindowService.LastAutoStart);
+        }
+        finally { Se.Settings.AutoTranslate = previous; CloseWindow(window, vm); }
+    }
+
     private static List<string> GridCellTexts(MainViewModel vm)
     {
         return vm.SubtitleGrid.GetVisualDescendants().OfType<TextBlock>()
@@ -99,6 +123,7 @@ public class AutoTranslateSelectedLinesTests
         private static bool _translateInPlace;
 
         public static bool LastInPlaceOffered { get; private set; }
+        public static bool LastAutoStart { get; private set; }
 
         public static void Install(MainViewModel vm, bool translateInPlace)
         {
@@ -118,6 +143,7 @@ public class AutoTranslateSelectedLinesTests
 
             var translateVm = new AutoTranslateViewModel(new WindowService(new NullServiceProvider()), new FolderHelper());
             ((Action<AutoTranslateViewModel>?)args![1])?.Invoke(translateVm);
+            LastAutoStart = (bool)typeof(AutoTranslateViewModel).GetField("_autoStart", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(translateVm)!;
             translateVm.OnLoaded();
             LastInPlaceOffered = translateVm.TranslateInPlaceIsVisible;
             translateVm.TranslateInPlace = _translateInPlace;

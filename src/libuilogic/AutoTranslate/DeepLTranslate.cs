@@ -10,6 +10,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class DeepLTranslate : IAutoTranslator, ILineBreakPreservingTranslator, IDisposable
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public DeepLTranslate() { }
+        public DeepLTranslate(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         private string _apiKey = string.Empty;
         private string _apiUrl = string.Empty;
         private string _formality = string.Empty;
@@ -24,9 +29,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         public void Initialize()
         {
-            _apiKey = Configuration.Settings.Tools.AutoTranslateDeepLApiKey;
-            _apiUrl = Configuration.Settings.Tools.AutoTranslateDeepLUrl;
-            _formality = Configuration.Settings.Tools.AutoTranslateDeepLFormality;
+            _apiKey = TranslationSettings.AutoTranslateDeepLApiKey;
+            _apiUrl = TranslationSettings.AutoTranslateDeepLUrl;
+            _formality = TranslationSettings.AutoTranslateDeepLFormality;
 
             if (string.IsNullOrEmpty(_apiKey) || string.IsNullOrEmpty(_apiUrl))
             {

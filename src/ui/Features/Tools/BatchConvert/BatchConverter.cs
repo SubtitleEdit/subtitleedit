@@ -3791,7 +3791,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var statusBeforeTranslate = item.Status;
         var doAutoTranslate = new DoAutoTranslate
         {
-            TranslateEachLineSeparately = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(_config.AutoTranslate.Translator.Name),
+            TranslateEachLineSeparately = _config.AutoTranslate.Profile != null
+                ? _config.AutoTranslate.Profile.Parameters.GetValueOrDefault("TranslateStrategy") == nameof(UiLogic.AutoTranslate.TranslateStrategy.TranslateEachLineSeparately)
+                : Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(_config.AutoTranslate.Translator.Name),
             Progress = (done, total) =>
             {
                 var percent = total > 0 ? done * 100 / total : 0;
@@ -3805,8 +3807,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 }
             },
         };
-        var translatedSubtitle = await doAutoTranslate.DoTranslate(subtitle, _config.AutoTranslate.SourceLanguage, CurrentTargetLanguage,
-            _config.AutoTranslate.Translator, cancellationToken);
+        List<TranslateRow> translatedSubtitle;
+        try
+        {
+            translatedSubtitle = await doAutoTranslate.DoTranslate(subtitle, _config.AutoTranslate.SourceLanguage, CurrentTargetLanguage,
+                _config.AutoTranslate.Translator, cancellationToken);
+        }
+        finally
+        {
+            // Profile translators own their HTTP client. Initialize creates a fresh client for the next file.
+            if (_config.AutoTranslate.Profile != null && _config.AutoTranslate.Translator is IDisposable disposable) disposable.Dispose();
+        }
 
         // Translating is only one step of the run - the item still goes through the remaining
         // convert functions and the save before it can say "Converted". Leaving the last progress

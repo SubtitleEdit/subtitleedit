@@ -494,9 +494,6 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         };
         SelectedSortByOption = SortByOptions[0];
 
-        BatchFunctions = new ObservableCollection<BatchConvertFunction>(BatchConvertFunction.List(this));
-        ApplyFunctionFilter();
-
         _cancellationTokenSource = new CancellationTokenSource();
         _cancellationToken = _cancellationTokenSource.Token;
 
@@ -523,6 +520,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         ];
         SelectedAutoTranslator = AutoTranslators[0];
         OnAutoTranslatorChanged();
+
+        BatchFunctions = new ObservableCollection<BatchConvertFunction>(BatchConvertFunction.List(this));
+        ApplyFunctionFilter();
 
         SelectedFromFrameRate = FromFrameRates[0];
         SelectedToFrameRate = ToFrameRates[1];
@@ -655,7 +655,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     {
         return config.AutoTranslate.IsActive &&
                config.AutoTranslate.Translator is LlamaCppTranslate or LlamaCppAdvancedTranslate &&
-               !Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer;
+               !(config.AutoTranslate.Profile?.Parameters.GetValueOrDefault("UseRemoteServer") == "True" || (config.AutoTranslate.Profile == null && Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer));
     }
 
     private void UpdateFilteredFiles()
@@ -1022,7 +1022,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         AdjustPercent = Se.Settings.Tools.BatchConvert.AdjustDurationPercentage;
 
         var translator = AutoTranslators.FirstOrDefault(p => p.Name == Se.Settings.Tools.BatchConvert.AutoTranslateEngine);
-        if (translator != null)
+        if (!UsesTranslationProfiles && translator != null)
         {
             SelectedAutoTranslator = translator;
         }
@@ -1414,6 +1414,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         SaveSettings();
 
+        if (UsesTranslationProfiles && SelectedTranslationProfile == null && BatchFunctions.Any(p => p.IsSelected && p.Type == BatchConvertFunctionType.AutoTranslate))
+        {
+            await ShowStatus("Choose a translation profile.");
+            return;
+        }
         var config = MakeBatchConvertConfig();
 
         // Set before the ensure-chain below: starting the server is itself the slow part a user
@@ -1442,6 +1447,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         if (!await EnsureLlamaCppAvailable(config))
         {
+            return;
+        }
+
+        try { ApplyTranslationProfile(config); }
+        catch (Exception ex)
+        {
+            await ShowStatus(ex.Message);
             return;
         }
 
@@ -1758,7 +1770,15 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return true;
         }
 
+        if (config.AutoTranslate.Profile is { } profile &&
+            File.Exists(profile.Parameters.GetValueOrDefault("AutoTranslateCrispAsrExe")) &&
+            File.Exists(profile.Parameters.GetValueOrDefault("AutoTranslateCrispAsrModel"))) return true;
         var ready = await CrispAsrTranslateDownloadHelper.EnsureReadyAsync(Window, _windowService, SelectedCrispAsrModel?.Model.Name);
+        if (ready && config.AutoTranslate.Profile is { } crispProfile)
+        {
+            crispProfile.Parameters["AutoTranslateCrispAsrExe"] = Configuration.Settings.Tools.AutoTranslateCrispAsrExe;
+            crispProfile.Parameters["AutoTranslateCrispAsrModel"] = Configuration.Settings.Tools.AutoTranslateCrispAsrModel;
+        }
         if (ready)
         {
             SelectedCrispAsrModel = CrispAsrTranslateDownloadHelper.PopulateModels(
@@ -1777,6 +1797,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     {
         if (Window == null || !config.AutoTranslate.IsActive || config.AutoTranslate.Translator == null)
         {
+            return true;
+        }
+
+        if (config.AutoTranslate.Profile != null)
+        {
+            try { TranslationProfileFactory.Validate(config.AutoTranslate.Profile); }
+            catch (Exception ex) { await ShowStatus(ex.Message); return false; }
             return true;
         }
 
@@ -1918,7 +1945,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // batch convert's own LlamaCppUseRemoteServer flag (#14005) - not by whether AutoTranslateUrl
         // is set, since that is pre-filled with the default localhost URL and so is never empty
         // (which previously short-circuited the whole auto-start path).
-        if (LlamaCppUseRemoteServer)
+        if (config.AutoTranslate.Profile != null ? config.AutoTranslate.Profile.Parameters.GetValueOrDefault("UseRemoteServer") == "True" : LlamaCppUseRemoteServer)
         {
             return true;
         }
@@ -1927,17 +1954,20 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // when its model, context size and launch arguments match what this run asks for. Deciding
         // that here (as "any running server with a big enough context") reused a server started for
         // OCR, or one still running with the arguments from before the user edited them (#13865).
-        var contextSize = GetLlamaCppContextSize(config.AutoTranslate.Translator);
+        var policy = config.AutoTranslate.Profile?.Policy ?? Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        var contextSize = config.AutoTranslate.Profile != null ? Math.Clamp(policy.ContextSize, 2048, 262144) : GetLlamaCppContextSize(config.AutoTranslate.Translator);
 
         // Pick the last-used model, else the first available translate model.
-        var models = LlamaCppServerManager.GetAllTranslateModels();
-        var configuredName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
+        var models = LlamaCppServerManager.GetAllTranslateModels().Where(m => config.AutoTranslate.Profile == null || !m.CompletionOnly).ToList();
+        var configuredName = Path.GetFileName(config.AutoTranslate.Profile?.Model ?? Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
         var model = models.FirstOrDefault(m => string.Equals(m.FileName, configuredName, StringComparison.OrdinalIgnoreCase))
                     ?? models.FirstOrDefault();
         if (model == null)
         {
             return true;
         }
+
+        if (config.AutoTranslate.Profile != null) TranslationProfileFactory.ApplyModelDefaults(policy, model);
 
         // The engine reads the per-model prompt/sampling from settings; re-point them at the model
         // picked here, since the last value persisted by the Auto-translate window may belong to a
@@ -1954,8 +1984,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         try
         {
             var isAdvanced = config.AutoTranslate.Translator is LlamaCppAdvancedTranslate;
-            var extraArguments = isAdvanced ? Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArguments : null;
-            var extraArgumentsOnly = isAdvanced && Se.Settings.AutoTranslate.LlamaCppAdvanced.ServerArgumentsOnly;
+            var extraArguments = isAdvanced ? policy.ServerArguments : null;
+            var extraArgumentsOnly = isAdvanced && policy.ServerArgumentsOnly;
             await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationToken, contextSize, extraArguments, extraArgumentsOnly);
         }
         catch (Exception ex)
@@ -3561,6 +3591,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             {
                 IsActive = activeFunctions.Contains(BatchConvertFunctionType.AutoTranslate),
                 Translator = SelectedAutoTranslator,
+                Profile = SelectedTranslationProfile?.Snapshot(),
                 SourceLanguage = SelectedSourceLanguage ?? SourceLanguages.First(),
                 TargetLanguage = SelectedTargetLanguage ?? TargetLanguages.First(),
                 ExtraTargetLanguages = GetExtraTargetLanguages(),
@@ -3845,6 +3876,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
     private void UpdateAutoTranslateSettings()
     {
+        if (UsesTranslationProfiles) return;
         var translator = SelectedAutoTranslator;
         if (translator == null)
         {
@@ -4153,6 +4185,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        if (UsesTranslationProfiles)
+        {
+            if (!_applyingTranslationProfile && SelectedTranslationProfile is { EngineId: nameof(CrispAsrMadladTranslate) } profile)
+                profile.Parameters["AutoTranslateCrispAsrModel"] = new CrispAsrMadlad().GetModelForCmdLine(value.Model.Name);
+            return;
+        }
         Se.Settings.AutoTranslate.CrispAsrModel = new CrispAsrMadlad().GetModelForCmdLine(value.Model.Name);
         Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
     }
@@ -4166,6 +4204,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        if (UsesTranslationProfiles)
+        {
+            if (!_applyingTranslationProfile && SelectedTranslationProfile != null) SelectedTranslationProfile.Model = LlamaCppServerManager.GetModelPath(value.Model.FileName);
+            return;
+        }
         Se.Settings.AutoTranslate.LlamaCppModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
     }
 

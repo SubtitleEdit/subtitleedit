@@ -1,4 +1,5 @@
 using System;
+using Nikse.SubtitleEdit.UiLogic.Translate.Llm;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -35,9 +36,15 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
-    public void Initialize()
+    public bool ShowServerOptions { get; private set; } = true;
+    public bool ShowTopK { get; private set; } = true;
+    public bool ShowRepeatPenalty { get; private set; } = true;
+    private AdvancedTranslationSettings? _profilePolicy;
+    public void Initialize(AdvancedTranslationSettings? policy = null, bool serverOptions = true, bool topK = true, bool repeatPenalty = true)
     {
-        var settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        _profilePolicy = policy;
+        ShowServerOptions = serverOptions; ShowTopK = topK; ShowRepeatPenalty = repeatPenalty;
+        var settings = policy ?? Se.Settings.AutoTranslate.LlamaCppAdvanced;
 
         Formalities = new ObservableCollection<string>
         {
@@ -66,7 +73,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        var settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        var settings = _profilePolicy ?? Se.Settings.AutoTranslate.LlamaCppAdvanced;
         settings.Synopsis = Synopsis?.Trim() ?? string.Empty;
         settings.Glossary = Glossary?.Trim() ?? string.Empty;
         settings.HistoryPairs = Math.Clamp(HistoryPairs, 0, 50);
@@ -82,7 +89,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
         settings.ContextSize = Math.Clamp(ContextSize, 2048, 262144);
         settings.ServerArguments = ServerArguments?.Trim() ?? string.Empty;
         settings.ServerArgumentsOnly = ServerArgumentsOnly;
-        Se.SaveSettings();
+        if (_profilePolicy == null) Se.SaveSettings();
 
         OkPressed = true;
         Window?.Close();

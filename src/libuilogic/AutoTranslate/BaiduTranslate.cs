@@ -13,6 +13,11 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     /// </summary>
     public class BaiduTranslate : IAutoTranslator, IDisposable
     {
+        private readonly Nikse.SubtitleEdit.Core.Settings.ToolsSettings? _profileSettings;
+        private Nikse.SubtitleEdit.Core.Settings.ToolsSettings TranslationSettings => _profileSettings ?? Configuration.Settings.Tools;
+        public BaiduTranslate() { }
+        public BaiduTranslate(Nikse.SubtitleEdit.Core.Settings.ToolsSettings settings) => _profileSettings = settings;
+
         private HttpClient _httpClient = null!;
         private string _appId = string.Empty;
         private string _secretKey = string.Empty;
@@ -29,7 +34,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _httpClient?.Dispose();
             _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
 
-            var apiUrl = Configuration.Settings.Tools.BaiduUrl;
+            var apiUrl = TranslationSettings.BaiduUrl;
             if (string.IsNullOrEmpty(apiUrl))
             {
                 apiUrl = "https://fanyi-api.baidu.com";
@@ -39,9 +44,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
 
             // BaiduApiKey should contain "appid|secretKey" format
-            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.BaiduApiKey))
+            if (!string.IsNullOrEmpty(TranslationSettings.BaiduApiKey))
             {
-                var parts = Configuration.Settings.Tools.BaiduApiKey.Split('|');
+                var parts = TranslationSettings.BaiduApiKey.Split('|');
                 if (parts.Length == 2)
                 {
                     _appId = parts[0].Trim();
@@ -49,7 +54,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 }
                 else
                 {
-                    _appId = Configuration.Settings.Tools.BaiduApiKey;
+                    _appId = TranslationSettings.BaiduApiKey;
                     _secretKey = string.Empty;
                 }
             }
