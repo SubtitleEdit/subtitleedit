@@ -125,8 +125,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 outputText = outputText.Trim('"').Trim();
             }
 
-            outputText = outputText.Replace("<br />", Environment.NewLine);
-            outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            outputText = ChatGptTranslate.FixNewLines(outputText);
             outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             outputText = ChatGptTranslate.DecodeUnicodeEscapes(outputText);
             return outputText.Trim();

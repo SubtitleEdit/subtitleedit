@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     {
         private static readonly Regex UnicodeRegex = new Regex(@"\\u([0-9a-fA-F]{4})", RegexOptions.Compiled);
         private static readonly Regex PreambleRegex = new Regex(@"^(Here is|Here's) [a-zA-Z ,]+:", RegexOptions.Compiled);
+        private static readonly Regex BrTagRegex = new Regex(@"<br\s*/?>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private HttpClient _httpClient = null!;
 
@@ -514,9 +515,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         internal static string FixNewLines(string outputText)
         {
-            outputText = outputText.Replace("<br/>", Environment.NewLine);
-            outputText = outputText.Replace("<br />", Environment.NewLine);
-            outputText = outputText.Replace("<br  />", Environment.NewLine);
+            outputText = BrTagRegex.Replace(outputText, Environment.NewLine);
             outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             return outputText.Trim();
         }
