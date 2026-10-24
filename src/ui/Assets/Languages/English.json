@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta5",
+  "version": "v5.4.0-beta6",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -4535,6 +4535,7 @@
     "drawAnimationBlink": "Blink",
     "drawAnimationBounce": "Bounce",
     "drawAnimationShake": "Shake",
+    "drawAnimationShakeHorizontal": "Shake horizontal",
     "drawAnimationSwing": "Swing",
     "drawAnimationFlip": "Flip",
     "drawAnimationLoopBlocked": "This loop turns around another point than the in/out effect, so it is left out.",
