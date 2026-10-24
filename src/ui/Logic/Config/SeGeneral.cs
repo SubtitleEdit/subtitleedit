@@ -152,6 +152,8 @@ public class SeGeneral
     public bool UndockVideoControls { get; set; }
     public List<SeWindowPosition> WindowPositions { get; set; } = new List<SeWindowPosition>();
     public bool AutoSave { get; set; }
+    public bool CheckSubtitleFileChangedOutside { get; set; }
+    public bool ConfirmOverwriteSubtitleFileChangedOutside { get; set; }
     public bool AutoBackupOn { get; set; }
     public int AutoBackupIntervalMinutes { get; set; }
     public int AutoBackupDeleteAfterDays { get; set; }
@@ -342,6 +344,8 @@ public class SeGeneral
         MoveAllLinesCustom1Ms = 10;
         MoveAllLinesCustom2Ms = 1000;
         PromptBeforeDelete = true;
+        CheckSubtitleFileChangedOutside = true;
+        ConfirmOverwriteSubtitleFileChangedOutside = true;
         AutoBackupOn = true;
         AutoBackupIntervalMinutes = 5;
         AutoBackupDeleteAfterDays = 90;

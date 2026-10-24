@@ -3524,6 +3524,8 @@
       "showRecentFiles": "Show recent files (for reopen)",
       "openLastFileOnStart": "Open last recent file on start",
       "autoSave": "Auto-save (save the open file while editing)",
+      "checkSubtitleFileChangedOutside": "Check for subtitle file changed by another program when activating window",
+      "confirmOverwriteSubtitleFileChangedOutside": "Ask before overwriting subtitle file changed by another program",
       "autoBackupOn": "Auto-backup",
       "autoBackupIntervalMinutes": "Auto-backup interval (minutes)",
       "autoBackupDeleteAfterDays": "Auto-backup retention (days)",

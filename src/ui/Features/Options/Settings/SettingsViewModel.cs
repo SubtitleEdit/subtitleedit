@@ -168,6 +168,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _textBoxLimitNewLines;
     [ObservableProperty] private bool _textBoxAutoWrapWhileTyping;
     [ObservableProperty] private bool _autoSave;
+    [ObservableProperty] private bool _checkSubtitleFileChangedOutside;
+    [ObservableProperty] private bool _confirmOverwriteSubtitleFileChangedOutside;
     [ObservableProperty] private bool _autoBackupOn;
     [ObservableProperty] private int? _autoBackupIntervalMinutes;
     [ObservableProperty] private int? _autoBackupDeleteAfterDays;
@@ -885,6 +887,8 @@ public partial class SettingsViewModel : ObservableObject
         ShowRecentFiles = Se.Settings.File.ShowRecentFiles;
         OpenLastFileOnStart = Se.Settings.File.OpenLastFileOnStart;
         AutoSave = general.AutoSave;
+        CheckSubtitleFileChangedOutside = general.CheckSubtitleFileChangedOutside;
+        ConfirmOverwriteSubtitleFileChangedOutside = general.ConfirmOverwriteSubtitleFileChangedOutside;
         AutoBackupOn = general.AutoBackupOn;
         AutoBackupIntervalMinutes = general.AutoBackupIntervalMinutes;
         AutoBackupDeleteAfterDays = general.AutoBackupDeleteAfterDays;
@@ -1823,6 +1827,8 @@ public partial class SettingsViewModel : ObservableObject
 
         Se.Settings.File.OpenLastFileOnStart = OpenLastFileOnStart;
         general.AutoSave = AutoSave;
+        general.CheckSubtitleFileChangedOutside = CheckSubtitleFileChangedOutside;
+        general.ConfirmOverwriteSubtitleFileChangedOutside = ConfirmOverwriteSubtitleFileChangedOutside;
         general.AutoBackupOn = AutoBackupOn;
         general.AutoBackupIntervalMinutes = AutoBackupIntervalMinutes ?? general.AutoBackupIntervalMinutes;
         general.AutoBackupDeleteAfterDays = AutoBackupDeleteAfterDays ?? general.AutoBackupDeleteAfterDays;

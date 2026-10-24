@@ -3,13 +3,15 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Main;
 
 // Picks up edits made to the open subtitle file by another program (#15828). No live file
 // watcher: the file's time stamp and size are compared when the main window is activated again,
-// which is when the user comes back from the other editor. By default unchanged work is reloaded
+// which is when the user comes back from the other editor. The content is compared (not just the
+// time stamp, which cloud sync such as OneDrive touches after SE saves). By default unchanged work is reloaded
 // right away and unsaved work is only replaced after asking; the "file changed by another
 // program" setting can make it always ask, or leave the subtitle alone (#16216). Saving over a
 // file another program wrote in the meantime asks as well, like SE 4 did.
@@ -26,14 +28,20 @@ public partial class MainViewModel
     private SubtitleFileStamp? _declinedReloadStamp;
     private bool _checkingSubtitleFileChangedOutside;
 
-    private sealed record SubtitleFileStamp(string FileName, DateTime LastWriteTimeUtc, long Length)
+    private sealed record SubtitleFileStamp(string FileName, long Length, string ContentHash)
     {
         public static SubtitleFileStamp? Read(string fileName)
         {
             try
             {
                 var fileInfo = new FileInfo(fileName);
-                return fileInfo.Exists ? new SubtitleFileStamp(fileName, fileInfo.LastWriteTimeUtc, fileInfo.Length) : null;
+                if (!fileInfo.Exists)
+                {
+                    return null;
+                }
+
+                var bytes = File.ReadAllBytes(fileName);
+                return new SubtitleFileStamp(fileName, bytes.Length, Convert.ToHexString(SHA256.HashData(bytes)));
             }
             catch
             {
@@ -42,7 +50,7 @@ public partial class MainViewModel
         }
 
         public bool IsSameContentAs(SubtitleFileStamp other) =>
-            LastWriteTimeUtc == other.LastWriteTimeUtc && Length == other.Length;
+            Length == other.Length && ContentHash == other.ContentHash;
     }
 
     /// <summary>
@@ -94,7 +102,7 @@ public partial class MainViewModel
 
     private async Task CheckSubtitleFileChangedOutside()
     {
-        if (_checkingSubtitleFileChangedOutside || _opening || _loading || Window is not { IsActive: true } || WindowService.IsModalDialogOpen)
+        if (!Se.Settings.General.CheckSubtitleFileChangedOutside || _checkingSubtitleFileChangedOutside || _opening || _loading || Window is not { IsActive: true } || WindowService.IsModalDialogOpen)
         {
             return;
         }
@@ -160,7 +168,7 @@ public partial class MainViewModel
     private async Task<bool> ConfirmOverwriteFileChangedOutside(bool isAutoSave)
     {
         var fileName = GetWatchedSubtitleFileName();
-        if (fileName == null || _subtitleFileStamp is not { } stamp || !IsSameFile(stamp.FileName, fileName))
+        if (!Se.Settings.General.ConfirmOverwriteSubtitleFileChangedOutside || fileName == null || _subtitleFileStamp is not { } stamp || !IsSameFile(stamp.FileName, fileName))
         {
             return true;
         }
