@@ -2499,6 +2499,66 @@ namespace Nikse.SubtitleEdit.Core.Common
             return languageName;
         }
 
+        private static Encoding DetectJapaneseOrChineseEncoding(byte[] buffer)
+        {
+            var shiftJisText = Encoding.GetEncoding(932).GetString(buffer);
+            if (CountCharsInRange(shiftJisText, '\u3040', '\u30FF') > 10 && CountChars(shiftJisText, "\uFFFD") < 3) // Japanese kana
+            {
+                return Encoding.GetEncoding(932);
+            }
+
+            var gbkText = Encoding.GetEncoding(936).GetString(buffer);
+            var big5Text = Encoding.GetEncoding(950).GetString(buffer);
+            var isGbk = IsCjkText(gbkText);
+            var isBig5 = IsCjkText(big5Text);
+            var simplifiedCount = CountChars(gbkText, "\u4EEC\u8FD9\u8BF4\u6765\u4E3A\u5BF9\u6CA1\u8FC7\u56FD\u65F6\u4E2A\u4F1A\u5B66\u8BF7");
+            var traditionalCount = CountChars(big5Text, "\u5011\u9019\u8AAA\u4F86\u70BA\u5C0D\u6C92\u904E\u570B\u6642\u500B\u6703\u5B78\u8ACB");
+            if (isGbk && (!isBig5 || simplifiedCount >= traditionalCount))
+            {
+                return Encoding.GetEncoding(936); // Simplified Chinese
+            }
+
+            if (isBig5)
+            {
+                return Encoding.GetEncoding(950); // Traditional Chinese
+            }
+
+            return null;
+        }
+
+        private static bool IsCjkText(string text)
+        {
+            return CountCharsInRange(text, '\u4E00', '\u9FFF') > 10 && CountChars(text, "\uFFFD") < 3;
+        }
+
+        private static int CountCharsInRange(string text, char from, char to)
+        {
+            var count = 0;
+            foreach (var ch in text)
+            {
+                if (ch >= from && ch <= to)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private static int CountChars(string text, string chars)
+        {
+            var count = 0;
+            foreach (var ch in text)
+            {
+                if (chars.IndexOf(ch) >= 0)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         public static Encoding DetectAnsiEncoding(byte[] buffer)
         {
             try
@@ -2664,6 +2724,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
                 {
                     return hebrewEncoding;
+                }
+
+                if (DetectJapaneseOrChineseEncoding(buffer) is { } cjkEncoding)
+                {
+                    return cjkEncoding;
                 }
 
                 if (counts1250.Get(AutoDetectWordsRomanianShort) > 99)
