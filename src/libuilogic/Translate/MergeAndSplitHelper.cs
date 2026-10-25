@@ -271,7 +271,7 @@ public static partial class MergeAndSplitHelper
         // Strategy 1: Split by line ending chars where period count matches
         var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
-            HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations))
+            (mergeResult.NoSentenceEndingSource || HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations)))
         {
             return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate);
         }
@@ -287,7 +287,7 @@ public static partial class MergeAndSplitHelper
         var noPeriodsInNumbersTranslation = FixPeriodInNumbers(mergedTranslation);
         splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, target.Code);
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
-            HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations))
+            (mergeResult.NoSentenceEndingSource || HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations)))
         {
             return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate, restorePeriodPlaceholder: true);
         }
