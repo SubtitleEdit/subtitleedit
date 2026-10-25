@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta6",
+  "version": "v5.4.0-beta7",
   "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
@@ -3524,6 +3524,8 @@
       "showRecentFiles": "最近使ったファイルを表示（再度開く）",
       "openLastFileOnStart": "起動時に最後に開いたファイルを開く",
       "autoSave": "自動保存（編集中のファイルを自動的に保存）",
+      "checkSubtitleFileChangedOutside": "ウィンドウをアクティブにしたとき 他のプログラムによる字幕ファイルの変更を確認する",
+      "confirmOverwriteSubtitleFileChangedOutside": "他のプログラムによって変更された字幕ファイルを上書きする前に確認する",
       "autoBackupOn": "自動バックアップ",
       "autoBackupIntervalMinutes": "自動バックアップ間隔 (分)",
       "autoBackupDeleteAfterDays": "自動バックアップの保持期間(日数)",
@@ -4981,4 +4983,3 @@
     "exportMadeWithSubtitleEdit": "Subtitle Editで作成"
   }
 }
-
