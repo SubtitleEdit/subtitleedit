@@ -45,8 +45,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private SubtitleLineViewModel? _selectedParagraph;
     [ObservableProperty] private ObservableCollection<ProfileDisplayItem> _profiles;
     [ObservableProperty] private ProfileDisplayItem? _selectedProfile;
-    [ObservableProperty] private bool _step1IsVisible;
-    [ObservableProperty] private bool _step2IsVisible;
+    [ObservableProperty] private bool _isStepOne;
     [ObservableProperty] private bool _tryToGuessUnknownWords;
     [ObservableProperty] private string _step2Title;
     [ObservableProperty] private string _fixesAppliedText = string.Empty;
@@ -123,7 +122,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         ApplySelectedFixesText = Se.Language.Tools.FixCommonErrors.ApplySelectedFixes;
         Paragraphs = new ObservableCollection<SubtitleLineViewModel>();
         _language = Se.Language.Tools.FixCommonErrors;
-        Step1IsVisible = true;
+        IsStepOne = true;
         _subtitleFormat = new SubRip();
         Profiles = new ObservableCollection<ProfileDisplayItem>();
         Step2Title = Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep2;
@@ -259,8 +258,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [RelayCommand]
     private void BackToFixList()
     {
-        Step2IsVisible = false;
-        Step1IsVisible = true;
+        IsStepOne = true;
     }
 
     // Used when step 1 is skipped at startup - the window is not up yet, so there is nothing to flash on.
@@ -278,8 +276,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
     private void EnterStep2()
     {
-        Step1IsVisible = false;
-        Step2IsVisible = true;
+        IsStepOne = false;
         _totalFixes = 0;
         _appliedLogEntries.Clear();
         FixesAppliedText = string.Empty;
@@ -560,7 +557,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Se.Settings.Tools.FixCommonErrors.TryToGuessUnknownWords = value;
 
         // Re-scan so the fix list reflects the toggle right away; while step 1 is up there is no list yet.
-        if (Step2IsVisible)
+        if (!IsStepOne)
         {
             _ = RunScanWithFeedbackAsync(RefreshFixes);
         }
