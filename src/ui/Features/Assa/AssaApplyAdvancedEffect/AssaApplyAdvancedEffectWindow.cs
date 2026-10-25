@@ -599,6 +599,7 @@ public class AssaApplyAdvancedEffectWindow : Window
                 AddRow(l.AdvancedEffectFillColor, UiUtil.MakeColorPickerButton(smoothFill, nameof(AdvancedEffectSmoothFill.FillColor), false));
                 AddRow(Se.Language.General.TextColor, UiUtil.MakeColorPickerButton(smoothFill, nameof(AdvancedEffectSmoothFill.BaseColor), false));
                 AddRow(l.AdvancedEffectUpperCase, UiUtil.MakeCheckBox(smoothFill, nameof(AdvancedEffectSmoothFill.UpperCase)));
+                AddRow(l.AdvancedEffectKaraokeRightToLeft, UiUtil.MakeCheckBox(smoothFill, nameof(AdvancedEffectSmoothFill.RightToLeft)));
                 break;
             case AdvancedEffectBlurInWords blurInWords:
                 AddRow(l.AdvancedEffectRise, UiUtil.MakeCheckBox(blurInWords, nameof(AdvancedEffectBlurInWords.Rise)));

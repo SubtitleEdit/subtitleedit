@@ -84,6 +84,22 @@ public class CaptionWordEffectsTests
     }
 
     [Fact]
+    public void SmoothFill_RightToLeft_UsesWholeLineBidiAndFillsFromTheRight()
+    {
+        var effect = new AdvancedEffectSmoothFill { RightToLeft = true };
+        var lines = Lines("صد سال تنهایی");
+        lines.Add(new SubtitleLineViewModel { Text = "Hi there", StartTime = TimeSpan.FromSeconds(14), EndTime = TimeSpan.FromSeconds(16) });
+
+        var result = effect.ApplyEffect(AdvancedSubStationAlpha.DefaultHeader, lines, 1920, 1080, null);
+
+        Assert.Equal(2, result.Count);
+        Assert.Contains("\\fe-1\\frx180\\fry180\\frz180", result[0].Text);
+        Assert.Contains("{\\kf", result[0].Text);
+        Assert.True(result[0].Text.IndexOf("صد", StringComparison.Ordinal) < result[0].Text.IndexOf("تنهایی", StringComparison.Ordinal));
+        Assert.DoesNotContain("\\frz", result[1].Text); // left-to-right lines are untouched
+    }
+
+    [Fact]
     public void BlurInWords_RevealsEachWordAtItsTime()
     {
         var result = new AdvancedEffectBlurInWords().ApplyEffect(AdvancedSubStationAlpha.DefaultHeader, Lines("Hi there"), 1920, 1080, null);
