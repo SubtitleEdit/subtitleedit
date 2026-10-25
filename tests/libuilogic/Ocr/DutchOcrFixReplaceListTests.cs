@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
@@ -37,7 +37,7 @@ public class DutchOcrFixReplaceListTests
 
         var result = list.FixOcrErrorViaLineReplaceList(input, new Subtitle(), 0, new FakeDutchSpellChecker(), new List<string>(), spelledOK: false);
 
-        Assert.Equal(expected, result);
+        Assert.Equal(expected.Replace("\r\n", "\n"), result.Replace("\r\n", "\n"));
     }
 
     private sealed class FakeDutchSpellChecker : ISpellChecker

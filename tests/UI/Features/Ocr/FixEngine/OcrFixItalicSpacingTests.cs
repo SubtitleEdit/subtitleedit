@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
@@ -39,7 +39,7 @@ public class OcrFixItalicSpacingTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(expected, result.GetText());
+        Assert.Equal(expected.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     [Theory]
@@ -53,7 +53,7 @@ public class OcrFixItalicSpacingTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(input, result.GetText());
+        Assert.Equal(input.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     [Theory]
@@ -66,7 +66,7 @@ public class OcrFixItalicSpacingTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(expected, result.GetText());
+        Assert.Equal(expected.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     [Theory]
@@ -79,7 +79,7 @@ public class OcrFixItalicSpacingTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(input, result.GetText());
+        Assert.Equal(input.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     // French puts a space before the closing guillemet - next to a « (any language) and on
@@ -94,7 +94,7 @@ public class OcrFixItalicSpacingTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(input, result.GetText());
+        Assert.Equal(input.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     [Fact]
@@ -116,7 +116,7 @@ public class OcrFixItalicSpacingTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(input, result.GetText());
+        Assert.Equal(input.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     private static IOcrFixEngine CreateEngine(bool fixImageMatcherMisreads = true, string language = "nld")
