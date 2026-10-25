@@ -93,10 +93,40 @@ public class CaptionWordEffectsTests
         var result = effect.ApplyEffect(AdvancedSubStationAlpha.DefaultHeader, lines, 1920, 1080, null);
 
         Assert.Equal(2, result.Count);
-        Assert.Contains("\\fe-1\\frx180\\fry180\\frz180", result[0].Text);
-        Assert.Contains("{\\kf", result[0].Text);
+        Assert.Contains("\\fe-1", result[0].Text);
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(result[0].Text, @"\\frx180\\fry180\\frz180[\\}]"));
+        Assert.Equal(3, System.Text.RegularExpressions.Regex.Matches(result[0].Text, @"\\kf\d+").Count);
         Assert.True(result[0].Text.IndexOf("صد", StringComparison.Ordinal) < result[0].Text.IndexOf("تنهایی", StringComparison.Ordinal));
-        Assert.DoesNotContain("\\frz", result[1].Text); // left-to-right lines are untouched
+        Assert.DoesNotContain("\\fr", result[1].Text); // left-to-right lines are untouched
+        Assert.DoesNotContain("\\fe", result[1].Text);
+    }
+
+    [Fact]
+    public void SmoothFill_RightToLeft_LatinWordsInAMixedLineStillFillLeftToRight()
+    {
+        var effect = new AdvancedEffectSmoothFill { RightToLeft = true };
+
+        var result = effect.ApplyEffect(AdvancedSubStationAlpha.DefaultHeader, Lines("سلام John 2024 دنیا"), 1920, 1080, null);
+
+        var text = Assert.Single(result).Text;
+        var blocks = System.Text.RegularExpressions.Regex.Matches(text, @"\{\\kf\d+([^}]*)\}").Select(m => m.Groups[1].Value).ToList();
+        Assert.Equal(new[] { "\\frx180\\fry180\\frz180", "\\frx0\\fry0\\frz0", "", "\\frx180\\fry180\\frz180" }, blocks);
+    }
+
+    [Fact]
+    public void SmoothFill_RightToLeft_KeepsTheStyleAngle()
+    {
+        var header = AdvancedSubStationAlpha.DefaultHeader;
+        var defaultStyle = AdvancedSubStationAlpha.GetSsaStyle("Default", header);
+        defaultStyle.Angle = 25;
+        header = AdvancedSubStationAlpha.UpdateOrAddStyle(header, defaultStyle);
+        var effect = new AdvancedEffectSmoothFill { RightToLeft = true };
+
+        var result = effect.ApplyEffect(header, Lines("سلام John"), 1920, 1080, null);
+
+        var text = Assert.Single(result).Text;
+        Assert.Contains("\\frx180\\fry180\\frz205", text); // a half turn on top of frx180\fry180 nets out at 25 degrees
+        Assert.Contains("\\frx0\\fry0\\frz25", text);
     }
 
     [Fact]

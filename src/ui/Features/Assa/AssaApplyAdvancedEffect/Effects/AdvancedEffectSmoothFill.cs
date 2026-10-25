@@ -32,9 +32,13 @@ public class AdvancedEffectSmoothFill : IAdvancedEffectDisplay
     // libass splits the text into separate bidi runs at every \kf, so RTL words come out in
     // left-to-right order; \fe-1 (libass 0.17+) lays out the whole line as one bidi paragraph.
     // libass always sweeps \kf from a word's left edge, except under a \frz of 90-270 degrees
-    // where it sweeps from the right - \frx180\fry180\frz180 is such a rotation that still
-    // renders the text unrotated (the three half turns cancel out).
-    private const string RightToLeftTags = "\\fe-1\\frx180\\fry180\\frz180";
+    // where it sweeps from the right. \frx180\fry180 is itself a half turn around z, so
+    // \frx180\fry180\frz(angle+180) renders at the style's own angle with the sweep reversed.
+    // The rotation is set per word, so Latin words and numbers in a mixed line still fill
+    // left to right.
+    private static string FillDirectionTags(bool rightToLeft, decimal angle) => rightToLeft
+        ? "\\frx180\\fry180\\frz" + AdvancedEffectUtil.Tag(angle + 180)
+        : "\\frx0\\fry0\\frz" + AdvancedEffectUtil.Tag(angle);
 
     public override string ToString() => Name;
 
@@ -51,21 +55,37 @@ public class AdvancedEffectSmoothFill : IAdvancedEffectDisplay
                 continue;
             }
 
+            var rightToLeft = RightToLeft && LanguageAutoDetect.ContainsRightToLeftLetter(sub.Text);
+            var angle = rightToLeft ? CaptionWords.GetStyle(header, sub).Angle : 0;
+
             sb.Clear();
             sb.Append(AdvancedEffectUtil.ExtractPositionalTags(sub.Text))
               .Append("{\\1c").Append(AdvancedEffectUtil.ToAssColor(FillColor))
               .Append("\\2c").Append(AdvancedEffectUtil.ToAssColor(BaseColor))
-              .Append(RightToLeft && LanguageAutoDetect.ContainsRightToLeftLetter(sub.Text) ? RightToLeftTags : string.Empty).Append('}');
+              .Append(rightToLeft ? "\\fe-1" : string.Empty).Append('}');
 
             // \kf durations are centiseconds; round the running total so the sweep ends with the line
             var doneCs = 0;
+            bool? wordRightToLeft = null;
             foreach (var token in words.Tokens)
             {
                 if (token.IsWord)
                 {
                     var endCs = (int)Math.Round(words.WordStartMs[token.WordIndex + 1] / 10.0);
-                    sb.Append("{\\kf").Append(Math.Max(0, endCs - doneCs)).Append('}');
+                    sb.Append("{\\kf").Append(Math.Max(0, endCs - doneCs));
                     doneCs = Math.Max(doneCs, endCs);
+
+                    if (rightToLeft)
+                    {
+                        var isRightToLeft = LanguageAutoDetect.ContainsRightToLeftLetter(token.Text);
+                        if (isRightToLeft != wordRightToLeft)
+                        {
+                            sb.Append(FillDirectionTags(isRightToLeft, angle));
+                            wordRightToLeft = isRightToLeft;
+                        }
+                    }
+
+                    sb.Append('}');
                 }
 
                 sb.Append(token.Text);
