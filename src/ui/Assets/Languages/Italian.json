@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v5.4.0-beta5",
-  "translatedBy": "v. 24.10.2026 di bovirus e GitGianluc",
+  "version": "v5.4.0-beta6",
+  "translatedBy": "v. 25.10.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -4535,6 +4535,7 @@
     "drawAnimationBlink": "Lampeggio",
     "drawAnimationBounce": "Rimbalzo",
     "drawAnimationShake": "Scuoti",
+    "drawAnimationShakeHorizontal": "Agita in orizzontale",
     "drawAnimationSwing": "Oscilla",
     "drawAnimationFlip": "Capovolgi",
     "drawAnimationLoopBlocked": "Questo ciclo continuo gira attorno a un altro punto rispetto all'effetto in/out, quindi viene escluso.",
