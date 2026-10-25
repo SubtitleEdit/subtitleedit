@@ -42,6 +42,7 @@ public class LanguageOcr
     public string FillSelectedLinesWithClipboard { get; set; }
     public string ShowImage { get; set; }
     public string PromptForUknownWords { get; set; }
+    public string VideoPreview { get; set; }
     public string TryToGuessUnknownWords { get; set; }
     public string AutoBreakIfMoreThanXLines { get; set; }
     public string UnknownWords { get; set; }
@@ -214,6 +215,7 @@ public class LanguageOcr
         FillSelectedLinesWithClipboard = "Fill selected lines with clipboard text";
         ShowImage = "Show image";
         PromptForUknownWords = "Prompt for unknown words";
+        VideoPreview = "Video preview";
         TryToGuessUnknownWords = "Try to guess unknown words";
         AutoBreakIfMoreThanXLines = "Auto break if more than {0} lines";
         UnknownWords = "Unknown words";

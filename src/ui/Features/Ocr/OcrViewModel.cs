@@ -100,6 +100,52 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private string _selectionStatus;
     [ObservableProperty] private Bitmap? _currentImageSource;
     [ObservableProperty] private string _currentBitmapInfo;
+    [ObservableProperty] private bool _showVideoPreview;
+    [ObservableProperty] private Bitmap? _videoPreviewBitmap;
+    [ObservableProperty] private double _videoPreviewScreenWidth = 1920;
+    [ObservableProperty] private double _videoPreviewScreenHeight = 1080;
+    [ObservableProperty] private double _videoPreviewLeft;
+    [ObservableProperty] private double _videoPreviewTop;
+    [ObservableProperty] private double _videoPreviewImageWidth;
+    [ObservableProperty] private double _videoPreviewImageHeight;
+
+    partial void OnSelectedOcrSubtitleItemChanged(OcrSubtitleItem? value)
+    {
+        UpdateVideoPreview();
+    }
+
+    partial void OnShowVideoPreviewChanged(bool value)
+    {
+        UpdateVideoPreview();
+    }
+
+    private void UpdateVideoPreview()
+    {
+        var item = SelectedOcrSubtitleItem;
+        if (!ShowVideoPreview || item == null)
+        {
+            VideoPreviewBitmap = null;
+            return;
+        }
+
+        try
+        {
+            using var skBitmap = item.GetSkBitmapClean();
+            var position = item.GetPosition();
+            var screen = item.GetScreenSize();
+            VideoPreviewImageWidth = skBitmap.Width;
+            VideoPreviewImageHeight = skBitmap.Height;
+            VideoPreviewLeft = position.X;
+            VideoPreviewTop = position.Y;
+            VideoPreviewScreenWidth = screen.Width > 0 ? screen.Width : Math.Max(1920, position.X + skBitmap.Width);
+            VideoPreviewScreenHeight = screen.Height > 0 ? screen.Height : Math.Max(1080, position.Y + skBitmap.Height);
+            VideoPreviewBitmap = skBitmap.ToAvaloniaBitmap();
+        }
+        catch (Exception)
+        {
+            VideoPreviewBitmap = null;
+        }
+    }
     [ObservableProperty] private string _currentText;
     [ObservableProperty] private bool _isOcrRunning;
     [ObservableProperty] private bool _hasForcedSubtitles;

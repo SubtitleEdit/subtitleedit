@@ -883,6 +883,7 @@ public class OcrWindow : Window
                 new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
             },
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -989,7 +990,9 @@ public class OcrWindow : Window
         switchTryToGuessUnknownWords.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
         var switchAutoBreak = EditorChrome.MakeSwitchRow(nameof(vm.DoAutoBreak), string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines));
 
-        var panelOptions = new StackPanel
+        var switchVideoPreview = EditorChrome.MakeSwitchRow(nameof(vm.ShowVideoPreview), Se.Language.Ocr.VideoPreview);
+
+        var panelOptions = new StackPanel        
         {
             Orientation = Orientation.Vertical,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -1002,6 +1005,7 @@ public class OcrWindow : Window
                 switchPromptForUnknownWords,
                 switchTryToGuessUnknownWords,
                 switchAutoBreak,
+                switchVideoPreview,
             }
         };
 
@@ -1056,6 +1060,26 @@ public class OcrWindow : Window
             BorderThickness = new Thickness(1, 0, 0, 0),
         }, 0, 1);
         grid.Add(tabsView, 0, 2);
+
+        var previewImage = new Image { Stretch = Avalonia.Media.Stretch.Fill };
+        previewImage.Bind(Image.SourceProperty, new Binding(nameof(vm.VideoPreviewBitmap)) { Source = vm });
+        previewImage.Bind(Layoutable.WidthProperty, new Binding(nameof(vm.VideoPreviewImageWidth)) { Source = vm });
+        previewImage.Bind(Layoutable.HeightProperty, new Binding(nameof(vm.VideoPreviewImageHeight)) { Source = vm });
+        previewImage.Bind(Canvas.LeftProperty, new Binding(nameof(vm.VideoPreviewLeft)) { Source = vm });
+        previewImage.Bind(Canvas.TopProperty, new Binding(nameof(vm.VideoPreviewTop)) { Source = vm });
+        var previewCanvas = new Canvas { Background = Avalonia.Media.Brushes.Black, ClipToBounds = true };
+        previewCanvas.Bind(Layoutable.WidthProperty, new Binding(nameof(vm.VideoPreviewScreenWidth)) { Source = vm });
+        previewCanvas.Bind(Layoutable.HeightProperty, new Binding(nameof(vm.VideoPreviewScreenHeight)) { Source = vm });
+        previewCanvas.Children.Add(previewImage);
+        var previewView = new Border
+        {
+            Child = new Viewbox { Stretch = Avalonia.Media.Stretch.Uniform, Child = previewCanvas },
+            Padding = new Thickness(10),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        };
+        previewView.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowVideoPreview)) { Source = vm });
+        grid.Add(previewView, 0, 3);
 
         var border = new Border
         {
