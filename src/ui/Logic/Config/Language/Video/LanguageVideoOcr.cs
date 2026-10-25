@@ -14,6 +14,7 @@ public class LanguageVideoOcr
     public string TimeRanges { get; set; }
     public string TimeRangesWatermark { get; set; }
     public string TimeRangesHint { get; set; }
+    public string KeepExistingLines { get; set; }
     public string InsertPreviewTime { get; set; }
     public string InvalidTimeRangeX { get; set; }
     public string TextBrightnessMinimum { get; set; }
@@ -67,6 +68,7 @@ public class LanguageVideoOcr
         FramesPerSecond = "Frames per second";
         TimeRanges = "Time ranges";
         TimeRangesWatermark = "Whole video";
+        KeepExistingLines = "Keep existing lines";
         TimeRangesHint = "Only scan these parts of the video, e.g. \"16:00-32:00; 36:00-41:00\". Times are m:ss or h:mm:ss, and an empty side means the start or end of the video (\"36:00-\"). Empty scans the whole video.";
         InsertPreviewTime = "Insert preview position as range start/end";
         InvalidTimeRangeX = "Invalid time range: \"{0}\"{1}{1}{2}";

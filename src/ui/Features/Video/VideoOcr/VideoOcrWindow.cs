@@ -404,7 +404,14 @@ public class VideoOcrWindow : Window
             .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance), 0, 1);
         var timeRangesLabel = EditorChrome.MakeDimLabel(Se.Language.Video.VideoOcr.TimeRanges, new Thickness(0));
         timeRangesTextBox.WithLabeledBy(timeRangesLabel);
-        var timeRangesPanel = new StackPanel { Spacing = 4, Children = { timeRangesLabel, timeRangesRow } };
+        var keepLinesCheckBox = new CheckBox
+        {
+            Content = Se.Language.Video.VideoOcr.KeepExistingLines,
+            DataContext = vm,
+        };
+        keepLinesCheckBox.Bind(CheckBox.IsCheckedProperty, new Avalonia.Data.Binding(nameof(vm.KeepExistingLines)) { Mode = Avalonia.Data.BindingMode.TwoWay });
+        keepLinesCheckBox.WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance);
+        var timeRangesPanel = new StackPanel { Spacing = 4, Children = { timeRangesLabel, timeRangesRow, keepLinesCheckBox } };
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(timeRangesPanel, Se.Language.Video.VideoOcr.TimeRangesHint);

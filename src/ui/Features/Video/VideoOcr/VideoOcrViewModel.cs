@@ -85,7 +85,8 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private string _timeRanges = string.Empty;
     [ObservableProperty] private ObservableCollection<VideoOcrLineItem> _lines;
     [ObservableProperty] private bool _isRunning;
-    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    [ObservableProperty] private bool _keepExistingLines;
+    // Hold off
     private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.VideoOcr.Title);
 
     [ObservableProperty] private bool _isOkEnabled;
@@ -839,6 +840,7 @@ public partial class VideoOcrViewModel : ObservableObject
         IsRunning = true;
         IsOkEnabled = false;
         ProgressValue = 0;
+        var keptLines = KeepExistingLines ? Lines.ToList() : new List<VideoOcrLineItem>();
         Lines.Clear();
 
         var framesFolder = Path.Combine(Path.GetTempPath(), "se_video_ocr_" + Guid.NewGuid());
@@ -942,6 +944,17 @@ public partial class VideoOcrViewModel : ObservableObject
 
             ApplyOcrFixes();
 
+            if (keptLines.Count > 0)
+            {
+                var all = keptLines.Concat(Lines).OrderBy(p => p.StartTime).ThenBy(p => p.EndTime).ToList();
+                Lines.Clear();
+                for (var i = 0; i < all.Count; i++)
+                {
+                    all[i].Number = i + 1;
+                    Lines.Add(all[i]);
+                }
+            }
+
             IsRunning = false;
             IsOkEnabled = Lines.Count > 0;
             ProgressValue = 0;
@@ -973,7 +986,8 @@ public partial class VideoOcrViewModel : ObservableObject
             // refine pipeline only rebuilds it on completion. Inserting those would produce
             // near-duplicate paragraphs on the scan grid with no position tag, so a cancelled
             // scan offers nothing to apply.
-            IsOkEnabled = false;
+            RestoreKeptLines(keptLines);
+            IsOkEnabled = Lines.Count > 0;
             ProgressValue = 0;
             ProgressText = string.Empty;
         }
@@ -981,6 +995,8 @@ public partial class VideoOcrViewModel : ObservableObject
         {
             Se.LogError(exception, "Video OCR failed");
 
+            RestoreKeptLines(keptLines);
+            IsOkEnabled = Lines.Count > 0;
             IsRunning = false;
             ProgressValue = 0;
             ProgressText = string.Empty;
@@ -1005,7 +1021,16 @@ public partial class VideoOcrViewModel : ObservableObject
         }
     }
 
-    /// <summary>The crop (and optional downscale) part of the extraction filter - shared by
+    private void RestoreKeptLines(List<VideoOcrLineItem> keptLines)
+    {
+        Lines.Clear();
+        foreach (var line in keptLines)
+        {
+            Lines.Add(line);
+        }
+    }
+
+    /// <summary>The crop (and optional downscale) part
     /// the scan, the test frame and the timing refinement so they all see the same pixels.</summary>
     private string GetCropAndScaleFilter()
     {
