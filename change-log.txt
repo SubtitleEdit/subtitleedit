@@ -3,6 +3,23 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-beta7 (26th of October 2026)
+
+* Add option to keep existing line in video OCR - thx IvanaGyro
+* Add optional video preview to OCR window
+* Fix for new original text not showing up in waveform
+* Add ASSA draw loop animation "shake horizontal"
+* Improve language auto-detect - thx Makar8000
+* Fix right-to-left text in the "Smooth fill" ASSA effect - thx ayouqi
+* Adjust switch control label color to match chrome theme - thx kadrimarzouki 
+* Improve translation result split for Chinese/Japanese - thx a5768549
+* seconv fallback reading to text formats for mp4 files - thx heniowise
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update German translation - thx FunkyKnilch
+                                                
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-beta6 (24th of October 2026)
 
 * Fix duration for aac audio files in the mpv player - thx benshgit
