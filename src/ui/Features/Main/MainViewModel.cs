@@ -29220,6 +29220,22 @@ public partial class MainViewModel :
             cues.Add(new WaveformOriginalSubtitleCue(start, end, text));
         }
 
+        var addedUnlinkedRows = false;
+        foreach (var row in Subtitles)
+        {
+            if (row.ReferenceParagraphId == null && !string.IsNullOrEmpty(row.OriginalText))
+            {
+                cues.Add(new WaveformOriginalSubtitleCue(
+                    row.StartTime.TotalSeconds, row.EndTime.TotalSeconds, row.OriginalText));
+                addedUnlinkedRows = true;
+            }
+        }
+
+        if (addedUnlinkedRows)
+        {
+            cues.Sort((a, b) => a.StartSeconds.CompareTo(b.StartSeconds));
+        }
+
         audioVisualizer.SetOriginalSubtitleCues(cues);
     }
 
