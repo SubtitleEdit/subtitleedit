@@ -3992,7 +3992,7 @@ public class AudioVisualizer : Control
                 context.DrawLine(_paintRight, new Point(right - 1, top), new Point(right - 1, top + height));
                 using (context.PushClip(new Rect(left + 1, top, right - left - 3, height)))
                 {
-                    DrawParagraphText(context, cue.Text, left + 3, top + 14);
+                    DrawParagraphText(context, cue.Text, left + 3, top);
                 }
             }
         }
