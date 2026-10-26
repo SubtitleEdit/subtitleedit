@@ -12,6 +12,7 @@ using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Windows.Input;
 
@@ -635,6 +636,7 @@ public class RemuxVideoWindow : Window
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsFinalizing)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsRemuxing));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
         statusText.FontSize = EditorChrome.FieldFontSize;
