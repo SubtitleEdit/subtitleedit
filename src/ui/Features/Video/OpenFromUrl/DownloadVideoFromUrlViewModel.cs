@@ -22,6 +22,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingC
 {
     [ObservableProperty] private double _progress;
     [ObservableProperty] private bool _isProgressIndeterminate;
+    [ObservableProperty] private bool _isDownloading;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private string _error;
     [ObservableProperty] private string _fileNameDisplay;
@@ -125,6 +126,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingC
         // regardless of what we ask for), so we need FindProducedVideo to locate the
         // actual produced file and move it to the user's chosen OutputPath.
         _downloadTask = DownloadViaTempDirectoryAsync(progress, stageProgress, _cancellationTokenSource.Token);
+        IsDownloading = true;
 
         _timer.Start();
     }
@@ -290,6 +292,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingC
             {
                 _timer.Stop();
                 _done = true;
+                IsDownloading = false;
                 Success = File.Exists(OutputPath);
                 if (!Success)
                 {
@@ -304,6 +307,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingC
             {
                 _timer.Stop();
                 _done = true;
+                IsDownloading = false;
 
                 IsProgressIndeterminate = false; // stop the bar animating under an error message
 
@@ -334,6 +338,7 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject, IClosingC
             {
                 _timer.Stop();
                 _done = true;
+                IsDownloading = false;
                 TryDeletePartial();
                 Close();
             }

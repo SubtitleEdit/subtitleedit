@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Linq;
 
@@ -820,12 +821,13 @@ public class VideoOcrWindow : Window
     /// <summary>
     /// Progress bar and status in a strip above the buttons while the OCR runs.
     /// </summary>
-    private static Border MakeProgressView(VideoOcrViewModel vm)
+    private Border MakeProgressView(VideoOcrViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.DataContext = vm;
+        progressBar.WithPlatformProgress(this, nameof(vm.IsRunning));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
         statusText.DataContext = vm;

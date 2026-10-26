@@ -8,6 +8,7 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Files.ImportPlainText;
@@ -74,6 +75,7 @@ public class ImportPlainTextWindow : Window
             Margin = new Thickness(0, 0, 12, 0),
         };
         progressBarAlign.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.AlignPercent)));
+        progressBarAlign.WithPlatformProgress(this, nameof(vm.IsAligning));
 
         var panelAlignProgress = new DockPanel();
         DockPanel.SetDock(progressBarAlign, Dock.Left);

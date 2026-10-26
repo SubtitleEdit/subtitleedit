@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 
 namespace Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 
@@ -172,12 +173,13 @@ public class BackgroundMusicWindow : Window
     /// <summary>
     /// Progress while generating, the result after it, and what to do with the music.
     /// </summary>
-    private static Border MakeResultSection(BackgroundMusicViewModel vm)
+    private Border MakeResultSection(BackgroundMusicViewModel vm)
     {
         var l = Se.Language.Video.BackgroundMusic;
 
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsBusy));
         var textProgress = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
         var panelBusy = new StackPanel
         {

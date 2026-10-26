@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ImproveTimeCodes;
@@ -583,11 +584,12 @@ public class ImproveTimeCodesWindow : Window
     /// <summary>
     /// Progress bar and status while aligning, on the status color above the button bar.
     /// </summary>
-    private static Control BuildProgressStrip(ImproveTimeCodesViewModel vm)
+    private Control BuildProgressStrip(ImproveTimeCodesViewModel vm)
     {
         var progress = UiUtil.MakeProgressBar(6);
         progress.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)) { Source = vm });
         progress.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsProgressIndeterminate)) { Source = vm });
+        progress.WithPlatformProgress(this, nameof(vm.IsAligning));
 
         var strip = EditorChrome.MakeProgressStrip(progress, nameof(vm.StatusText), nameof(vm.IsAligning));
         strip.DataContext = vm;

@@ -5,6 +5,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 
 namespace Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 
@@ -39,6 +40,7 @@ public class DownloadVideoFromUrlWindow : Window
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.Progress)));
         // Post-processing reports nothing, so the bar animates instead of sitting frozen at 100%.
         progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsProgressIndeterminate)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsDownloading));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText), 12);
 
