@@ -500,7 +500,7 @@ public class LanguageSettings
         AutoBackupOn = "Auto-backup";
         AutoBackupIntervalMinutes = "Auto-backup interval (minutes)";
         AutoBackupDeleteAfterDays = "Auto-backup retention (days)";
-        SettingsBackupOn = "Auto-backup settings";
+        SettingsBackupOn = "Auto-backup settings (Settings.json)";
         SettingsBackupIntervalDays = "Settings backup interval (days, 0 = every start)";
         SettingsBackupMaxCount = "Settings backups to keep";
         AutoConvertToUtf8 = "Auto-convert encoding to UTF-8 on open";
