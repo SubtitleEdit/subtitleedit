@@ -2,10 +2,6 @@
 
 Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. It keeps the familiar subtitle editing workflow from the Windows Forms version, but many features were expanded.
 
-The first section lists the highlights of 5.3. The sections after it describe what Subtitle Edit 5 (up to 5.2) added compared to Subtitle Edit 4.
-
-## What's New in 5.3
-
 ### Editing
 
 - **Command palette** - **Edit → Command palette...** (Ctrl+Shift+K) finds any command by name (with its shortcut) and runs it (see [Command palette](command-palette.md)).
@@ -86,7 +82,7 @@ The first section lists the highlights of 5.3. The sections after it describe wh
 
 ### ASSA
 
-- **ASSA draw** has a new layout with menus, undo/redo, scale/rotate, a shape library, backgrounds and SVG import (see [ASSA draw](assa-draw.md)).
+- **ASSA draw** has a new layout with menus, undo/redo, scale/rotate, a shape library (also text and animated), backgrounds and SVG import (see [ASSA draw](assa-draw.md)).
 - Styles: overwrite or keep both on import, *Replace style with*, move up/down, and a *Set style...* quick-pick shortcut.
 
 ### Batch convert
