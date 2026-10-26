@@ -104,7 +104,7 @@ jobs:
       # upload - exactly the run whose trx files were needed.
       - name: Upload test results
         if: ${{ !cancelled() && steps.test.outcome == 'failure' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: test-results-${{ matrix.name }}
           path: '**/TestResults/*.trx'
