@@ -37,7 +37,7 @@ public class AdvancedEffectSmoothFill : IAdvancedEffectDisplay
     // The rotation is set per word, so Latin words and numbers in a mixed line still fill
     // left to right.
     private static string FillDirectionTags(bool rightToLeft, decimal angle) => rightToLeft
-        ? "\\frx180\\fry180\\frz" + AdvancedEffectUtil.Tag(angle + 180)
+        ? "\\frx180\\fry180\\frz" + AdvancedEffectUtil.Tag(((angle + 180) % 360 + 360) % 360)
         : "\\frx0\\fry0\\frz" + AdvancedEffectUtil.Tag(angle);
 
     public override string ToString() => Name;
