@@ -669,6 +669,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SpeechToTextPostProcessingViewModel>();
         collection.AddTransient<SpeechToTextQualityReportViewModel>();
         collection.AddTransient<WordListsViewModel>();
+        collection.AddTransient<RegexRulesViewModel>();
     }
 
     /// <summary>

@@ -192,12 +192,29 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
             if (VideoPlayer != null && File.Exists(_videoFileName))
             {
-                _ = VideoPlayer.Open(_videoFileName);
+                _ = OpenVideoPlayerAsync(VideoPlayer);
             }
 
             PushParagraphsToVisualizers();
             StartPositionTimer();
         });
+    }
+
+    private async Task OpenVideoPlayerAsync(VideoPlayerControl player)
+    {
+        await player.Open(_videoFileName);
+
+        if (_disposed || !ReferenceEquals(VideoPlayer, player) || _audioTrackNumber < 0)
+        {
+            return;
+        }
+
+        var audioTrack = player.VideoPlayer?.GetAudioTracks()
+            .FirstOrDefault(track => track.FfIndex == _audioTrackNumber);
+        if (audioTrack != null)
+        {
+            player.VideoPlayer?.SetAudioTrack(audioTrack.Id);
+        }
     }
 
     /// <summary>

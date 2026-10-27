@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Collections.ObjectModel;
 
@@ -611,11 +612,12 @@ public class ExportImageBasedWindow : Window
         };
     }
 
-    private static Border MakeProgressView(ExportImageBasedViewModel vm)
+    private Border MakeProgressView(ExportImageBasedViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsGenerating));
 
         var statusText = new TextBlock
         {

@@ -15,6 +15,7 @@ using System.Linq;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 
@@ -76,6 +77,7 @@ public class BatchConvertWindow : Window
         var progressBar = UiUtil.MakeProgressBar(6);
         progressBar.Maximum = 1; // ProgressValue is the converted fraction
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsConverting));
         var progressStrip = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsConverting));
 
         // The file list and the functions share the height, resizable with the splitter between them,

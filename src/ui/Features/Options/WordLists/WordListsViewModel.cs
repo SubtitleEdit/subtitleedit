@@ -410,6 +410,23 @@ public partial class WordListsViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task EditRegexRules()
+    {
+        var lang = SelectedLanguage;
+        if (Window == null || lang == null)
+        {
+            return;
+        }
+
+        var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang.TwoLetterISOLanguageName);
+        var fileName = Path.Combine(Se.DictionariesFolder, threeLetterCode + "_OCRFixReplaceList.xml");
+        await _windowService.ShowDialogAsync<RegexRulesWindow, RegexRulesViewModel>(Window, vm =>
+        {
+            vm.Initialize(fileName, lang.Name);
+        });
+    }
+
+    [RelayCommand]
     private void Ok()
     {
         Window?.Close();

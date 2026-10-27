@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
@@ -1305,13 +1306,14 @@ public class OcrWindow : Window
     /// <summary>
     /// Progress bar and status in a strip above the buttons while the OCR runs.
     /// </summary>
-    private static Border MakeProgressView(OcrViewModel vm)
+    private Border MakeProgressView(OcrViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.Width = double.NaN;
         progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsOcrRunning));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
         statusText.HorizontalAlignment = HorizontalAlignment.Left;
