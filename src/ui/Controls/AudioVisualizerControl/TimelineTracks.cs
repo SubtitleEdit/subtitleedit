@@ -68,6 +68,7 @@ public class TimelineTracks : Control, IDisposable
     private readonly TimelineThumbnailCache _thumbnails = new();
     private readonly List<SubtitleLineViewModel> _paragraphs = new();
     private readonly HashSet<SubtitleLineViewModel> _selectedRenderSet = new();
+    private readonly HashSet<Guid> _selectedIds = new();
     private readonly Dictionary<SubtitleLineViewModel, (string Source, FormattedText Text)> _textCache = new();
     private readonly Dictionary<SubtitleLineViewModel, (string Source, FormattedText Text)> _originalTextCache = new();
     private readonly Dictionary<string, FormattedText> _labelCache = new();
@@ -105,6 +106,22 @@ public class TimelineTracks : Control, IDisposable
 
     /// <summary>Whether an original subtitle is loaded, which adds the original row.</summary>
     public Func<bool>? GetHasOriginal { get; set; }
+
+    /// <summary>
+    /// Whether the original row may be dragged: an editable original is open and its time codes
+    /// are not locked to the translation's. The waveform only drags the translation, so this
+    /// control drags the original row itself.
+    /// </summary>
+    public Func<bool>? GetCanEditOriginalTimeCodes { get; set; }
+
+    /// <summary>Whether a row stands for a line of the original, which gives it a block in the original row.</summary>
+    public Func<SubtitleLineViewModel, bool>? HasOriginalLine { get; set; }
+
+    /// <summary>Writes new time codes to the original line a row stands for.</summary>
+    public Action<SubtitleLineViewModel, TimeSpan, TimeSpan>? SetOriginalTimeCodes { get; set; }
+
+    /// <summary>Selects a row in the grid, for a block this control drags itself.</summary>
+    public Action<SubtitleLineViewModel>? SelectParagraph { get; set; }
 
     /// <summary>Label of the original row.</summary>
     public string OriginalLabel { get; set; } = string.Empty;
@@ -148,14 +165,26 @@ public class TimelineTracks : Control, IDisposable
         };
 
         PointerEntered += (_, e) => Forward(e, e.GetPosition(this));
-        PointerMoved += (_, e) => Forward(e, e.GetPosition(this));
+        PointerMoved += OnPointerMoved;
         PointerPressed += OnPointerPressed;
-        PointerReleased += (_, e) => Forward(e, null);
-        PointerCaptureLost += (_, e) => Forward(e, null);
+        PointerReleased += OnPointerReleased;
+        PointerCaptureLost += OnPointerCaptureLost;
         PointerWheelChanged += (_, e) => Forward(e, null);
         PointerExited += OnPointerExited;
-        Tapped += (_, e) => Forward(e, e.GetPosition(this));
-        DoubleTapped += (_, e) => Forward(e, e.GetPosition(this));
+        Tapped += (_, e) =>
+        {
+            if (!_ownPress)
+            {
+                Forward(e, e.GetPosition(this));
+            }
+        };
+        DoubleTapped += (_, e) =>
+        {
+            if (!_ownPress)
+            {
+                Forward(e, e.GetPosition(this));
+            }
+        };
     }
 
     /// <summary>The waveform whose time axis, paragraphs and colors this control follows.</summary>
@@ -663,24 +692,51 @@ public class TimelineTracks : Control, IDisposable
             }
         }
 
-        var originalTrack = _tracks.FindIndex(static t => t.IsOriginal);
+        // The original row is drawn from all rows (display-only reference rows included), and
+        // the selection is not culled by the translation's times, which may be off screen.
+        _selectedIds.Clear();
+        if (selected != null)
+        {
+            foreach (var paragraph in selected)
+            {
+                _selectedIds.Add(paragraph.Id);
+            }
+        }
+
         foreach (var paragraph in _paragraphs)
         {
             var x1 = (paragraph.StartTime.TotalSeconds - startSeconds) * pixelsPerSecond;
             var x2 = (paragraph.EndTime.TotalSeconds - startSeconds) * pixelsPerSecond;
-            if (x2 < 0 || x1 > width)
+            if (!(x2 < 0 || x1 > width))
+            {
+                DrawBlock(context, paragraph, GetTrackRect(GetGroupTrackIndex(paragraph), width), x1, x2, _selectedRenderSet.Contains(paragraph), false);
+            }
+        }
+
+        var rows = GetAllParagraphs?.Invoke();
+        var originalTrack = _tracks.FindIndex(static t => t.IsOriginal);
+        if (originalTrack < 0 || rows == null)
+        {
+            return;
+        }
+
+        foreach (var row in rows)
+        {
+            if (!RowHasOriginalLine(row))
             {
                 continue;
             }
 
-            var isSelected = _selectedRenderSet.Contains(paragraph);
-            DrawBlock(context, paragraph, GetTrackRect(GetGroupTrackIndex(paragraph), width), x1, x2, isSelected, false);
-            if (originalTrack >= 0)
+            var x1 = (row.EffectiveOriginalStartTime.TotalSeconds - startSeconds) * pixelsPerSecond;
+            var x2 = (row.EffectiveOriginalEndTime.TotalSeconds - startSeconds) * pixelsPerSecond;
+            if (!(x2 < 0 || x1 > width))
             {
-                DrawBlock(context, paragraph, GetTrackRect(originalTrack, width), x1, x2, isSelected, true);
+                DrawBlock(context, row, GetTrackRect(originalTrack, width), x1, x2, _selectedIds.Contains(row.Id), true);
             }
         }
     }
+
+    private bool RowHasOriginalLine(SubtitleLineViewModel row) => HasOriginalLine?.Invoke(row) ?? !row.IsReferenceOnly;
 
     private void DrawBlock(DrawingContext context, SubtitleLineViewModel paragraph, Rect row, double x1, double x2, bool isSelected, bool original)
     {
@@ -844,7 +900,8 @@ public class TimelineTracks : Control, IDisposable
     }
 
     // Every subtitle has a block in the original row.
-    private bool IsInTrack(SubtitleLineViewModel paragraph, int track) => _tracks[track].IsOriginal || GetGroupTrackIndex(paragraph) == track;
+    private bool IsInTrack(SubtitleLineViewModel paragraph, int track) =>
+        _tracks[track].IsOriginal || GetGroupTrackIndex(paragraph) == track;
 
     /// <summary>
     /// Hands a pointer event to the waveform. With a position, the waveform's hit test is first
@@ -863,7 +920,7 @@ public class TimelineTracks : Control, IDisposable
         if (position != null)
         {
             var track = GetTrackIndexAt(position.Value.Y);
-            if (track < 0)
+            if (track < 0 || IsDraggableOriginalTrack(track))
             {
                 source.HitTestFilter = static _ => false;
             }
@@ -881,12 +938,205 @@ public class TimelineTracks : Control, IDisposable
         Cursor = source.Cursor;
     }
 
+    // ------------------------------------------------------- original drag
+
+    // The waveform drags the translation's time codes; the original row is dragged here, so both
+    // can be edited side by side.
+
+    private enum DragEdge
+    {
+        Start,
+        End,
+        Move,
+    }
+
+    private const double EdgeGrabPixels = 6;
+    private static readonly TimeSpan MinDragDuration = TimeSpan.FromMilliseconds(100);
+    private static readonly Cursor ResizeCursor = new(StandardCursorType.SizeWestEast);
+    private static readonly Cursor MoveCursor = new(StandardCursorType.Hand);
+
+    private SubtitleLineViewModel? _dragRow;
+    private DragEdge _dragEdge;
+    private double _dragPressX;
+    private TimeSpan _dragStart;
+    private TimeSpan _dragEnd;
+    private bool _ownPress;
+
+    private bool IsDraggableOriginalTrack(int track)
+    {
+        if (track < 0 || track >= _tracks.Count || _source == null || _source.IsReadOnly)
+        {
+            return false;
+        }
+
+        return _tracks[track].IsOriginal && GetCanEditOriginalTimeCodes?.Invoke() == true;
+    }
+
+    /// <summary>The original block at a point, and which part of it.</summary>
+    private SubtitleLineViewModel? HitTestOriginalBlock(Point point, int track, out DragEdge edge)
+    {
+        edge = DragEdge.Move;
+        var rows = GetAllParagraphs?.Invoke();
+        var source = _source;
+        if (rows == null || source == null || !TryGetSeconds(point.X, out var seconds))
+        {
+            return null;
+        }
+
+        var tolerance = EdgeGrabPixels / (source.SampleRate * source.ZoomFactor);
+        SubtitleLineViewModel? best = null;
+        var bestDistance = double.MaxValue;
+        foreach (var row in rows)
+        {
+            if (!RowHasOriginalLine(row))
+            {
+                continue;
+            }
+
+            var startSeconds = row.EffectiveOriginalStartTime.TotalSeconds;
+            var endSeconds = row.EffectiveOriginalEndTime.TotalSeconds;
+            if (seconds < startSeconds - tolerance || seconds > endSeconds + tolerance)
+            {
+                continue;
+            }
+
+            var toStart = Math.Abs(seconds - startSeconds);
+            var toEnd = Math.Abs(seconds - endSeconds);
+            DragEdge rowEdge;
+            double distance;
+            if (toStart <= tolerance && toStart <= toEnd)
+            {
+                rowEdge = DragEdge.Start;
+                distance = toStart;
+            }
+            else if (toEnd <= tolerance)
+            {
+                rowEdge = DragEdge.End;
+                distance = toEnd;
+            }
+            else
+            {
+                rowEdge = DragEdge.Move;
+                distance = tolerance;
+            }
+
+            if (distance < bestDistance)
+            {
+                best = row;
+                edge = rowEdge;
+                bestDistance = distance;
+            }
+        }
+
+        return best;
+    }
+
+    private void ApplyDrag(double x)
+    {
+        var source = _source;
+        var row = _dragRow;
+        if (row == null || source == null || source.SampleRate == 0 || source.ZoomFactor <= 0)
+        {
+            return;
+        }
+
+        var delta = TimeSpan.FromSeconds((x - _dragPressX) / (source.SampleRate * source.ZoomFactor));
+        var start = _dragStart;
+        var end = _dragEnd;
+        switch (_dragEdge)
+        {
+            case DragEdge.Start:
+                start = TimeSpan.FromTicks(Math.Max(0, Math.Min((_dragStart + delta).Ticks, (_dragEnd - MinDragDuration).Ticks)));
+                break;
+            case DragEdge.End:
+                end = TimeSpan.FromTicks(Math.Max((_dragEnd + delta).Ticks, (_dragStart + MinDragDuration).Ticks));
+                break;
+            default:
+                if (_dragStart + delta < TimeSpan.Zero)
+                {
+                    delta = -_dragStart;
+                }
+
+                start = _dragStart + delta;
+                end = _dragEnd + delta;
+                break;
+        }
+
+        SetOriginalTimeCodes?.Invoke(row, start, end);
+        InvalidateVisual();
+    }
+
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         // A press focuses the focusable control it lands on; this one is not, and keyboard
         // shortcuts for the waveform should work after a click on its rows too.
         _source?.Focus();
-        Forward(e, e.GetPosition(this));
+        _ownPress = false;
+
+        var point = e.GetPosition(this);
+        var track = GetTrackIndexAt(point.Y);
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && IsDraggableOriginalTrack(track))
+        {
+            var row = HitTestOriginalBlock(point, track, out var edge);
+            if (row != null)
+            {
+                _ownPress = true;
+                _dragRow = row;
+                _dragEdge = edge;
+                _dragPressX = point.X;
+                (_dragStart, _dragEnd) = (row.EffectiveOriginalStartTime, row.EffectiveOriginalEndTime);
+                SelectParagraph?.Invoke(row);
+                e.Pointer.Capture(this);
+                e.Handled = true;
+                return;
+            }
+        }
+
+        Forward(e, point);
+    }
+
+    private void OnPointerMoved(object? sender, PointerEventArgs e)
+    {
+        var point = e.GetPosition(this);
+        if (_dragRow != null)
+        {
+            ApplyDrag(point.X);
+            e.Handled = true;
+            return;
+        }
+
+        var track = GetTrackIndexAt(point.Y);
+        if (IsDraggableOriginalTrack(track) && HitTestOriginalBlock(point, track, out var edge) != null)
+        {
+            Cursor = edge == DragEdge.Move ? MoveCursor : ResizeCursor;
+            return;
+        }
+
+        Forward(e, point);
+    }
+
+    private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (_dragRow != null)
+        {
+            _dragRow = null;
+            e.Pointer.Capture(null);
+            e.Handled = true;
+            return;
+        }
+
+        Forward(e, null);
+    }
+
+    private void OnPointerCaptureLost(object? sender, PointerCaptureLostEventArgs e)
+    {
+        if (_dragRow != null)
+        {
+            _dragRow = null;
+            return;
+        }
+
+        Forward(e, null);
     }
 
     private void OnPointerExited(object? sender, PointerEventArgs e)

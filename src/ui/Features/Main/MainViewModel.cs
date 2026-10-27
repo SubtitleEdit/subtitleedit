@@ -3485,6 +3485,9 @@ public partial class MainViewModel :
             InsertReferenceOnlyRows(match.Unmatched);
         }
 
+        ClearOriginalTimeCodes();
+        SyncOriginalTimeCodesFromLinkedLines();
+
         _changeSubtitleHashOriginal = GetFastHashOriginal();
         ShowColumnOriginalText = true;
 
@@ -3692,6 +3695,7 @@ public partial class MainViewModel :
             }
 
             RepositionReferenceOnlyRows();
+            SyncOriginalTimeCodesFromLinkedLines();
         }
         finally
         {
@@ -4056,7 +4060,14 @@ public partial class MainViewModel :
             line.ReferenceParagraphId is { } id &&
             linesById.TryGetValue(id, out var originalLine))
         {
-            return new Paragraph(originalLine) { Text = line.OriginalText.TrimEnd() };
+            var p = new Paragraph(originalLine) { Text = line.OriginalText.TrimEnd() };
+            if (line.HasOwnOriginalTimeCodes)
+            {
+                p.StartTime = new TimeCode(line.EffectiveOriginalStartTime);
+                p.EndTime = new TimeCode(line.EffectiveOriginalEndTime);
+            }
+
+            return p;
         }
 
         return line.ToParagraphOriginal(format);
@@ -4240,6 +4251,9 @@ public partial class MainViewModel :
             {
                 InsertReferenceOnlyRows(match.Unmatched);
             }
+
+            ClearOriginalTimeCodes();
+            SyncOriginalTimeCodesFromLinkedLines();
         }
         finally
         {
@@ -4281,6 +4295,7 @@ public partial class MainViewModel :
             {
                 line.OriginalText = string.Empty;
                 line.ReferenceParagraphId = null;
+                line.SetOriginalTimeCodes(null, null);
             }
 
             _changeSubtitleHashOriginal = GetFastHashOriginal();
@@ -28526,6 +28541,10 @@ public partial class MainViewModel :
     {
         DetachSubtitleGridItemsSource(SubtitleGrid);
 
+        var originalTimeCodes = subtitleOriginal != null && Subtitles.Count == subtitle.Paragraphs.Count
+            ? Subtitles.Select(p => (p.OriginalStartTime, p.OriginalEndTime, p.StartTime, p.EndTime)).ToList()
+            : null;
+
         Subtitles.Clear();
         foreach (var p in subtitle.Paragraphs)
         {
@@ -28539,6 +28558,17 @@ public partial class MainViewModel :
                 var p = subtitle.Paragraphs[i];
                 var original = subtitleOriginal.Paragraphs[i];
                 Subtitles[i].OriginalText = original.Text;
+                if (originalTimeCodes != null)
+                {
+                    var (originalStart, originalEnd, oldStart, oldEnd) = originalTimeCodes[i];
+                    if (Se.Settings.General.LockOriginalToTranslation)
+                    {
+                        originalStart += Subtitles[i].StartTime - oldStart;
+                        originalEnd += Subtitles[i].EndTime - oldEnd;
+                    }
+
+                    Subtitles[i].SetOriginalTimeCodes(originalStart, originalEnd);
+                }
             }
         }
 
@@ -29189,7 +29219,7 @@ public partial class MainViewModel :
                 if (row.ReferenceParagraphId != null || !string.IsNullOrEmpty(row.OriginalText))
                 {
                     editedCues.Add(new WaveformOriginalSubtitleCue(
-                        row.StartTime.TotalSeconds, row.EndTime.TotalSeconds, row.OriginalText));
+                        row.EffectiveOriginalStartTime.TotalSeconds, row.EffectiveOriginalEndTime.TotalSeconds, row.OriginalText));
                 }
             }
 
@@ -29215,26 +29245,23 @@ public partial class MainViewModel :
             if (paragraph.Id is { } id && rowsByReferenceId.TryGetValue(id, out var row))
             {
                 text = row.OriginalText;
+                start = row.EffectiveOriginalStartTime.TotalSeconds;
+                end = row.EffectiveOriginalEndTime.TotalSeconds;
             }
 
             cues.Add(new WaveformOriginalSubtitleCue(start, end, text));
         }
 
-        var addedUnlinkedRows = false;
         foreach (var row in Subtitles)
         {
             if (row.ReferenceParagraphId == null && !string.IsNullOrEmpty(row.OriginalText))
             {
                 cues.Add(new WaveformOriginalSubtitleCue(
-                    row.StartTime.TotalSeconds, row.EndTime.TotalSeconds, row.OriginalText));
-                addedUnlinkedRows = true;
+                    row.EffectiveOriginalStartTime.TotalSeconds, row.EffectiveOriginalEndTime.TotalSeconds, row.OriginalText));
             }
         }
 
-        if (addedUnlinkedRows)
-        {
-            cues.Sort((a, b) => a.StartSeconds.CompareTo(b.StartSeconds));
-        }
+        cues.Sort((a, b) => a.StartSeconds.CompareTo(b.StartSeconds));
 
         audioVisualizer.SetOriginalSubtitleCues(cues);
     }
@@ -31522,6 +31549,8 @@ public partial class MainViewModel :
                 hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
                 hash = hash * 23 + (p.Text?.GetHashCode() ?? 0);
                 hash = hash * 23 + (p.OriginalText?.GetHashCode() ?? 0);
+                hash = hash * 23 + p.OriginalStartTime.GetHashCode();
+                hash = hash * 23 + p.OriginalEndTime.GetHashCode();
                 hash = hash * 23 + (p.Style?.GetHashCode() ?? 0);
                 hash = hash * 23 + (p.Extra?.GetHashCode() ?? 0);
                 hash = hash * 23 + (p.Actor?.GetHashCode() ?? 0);
@@ -31632,6 +31661,9 @@ public partial class MainViewModel :
                 {
                     hash = hash * 23 + p.OriginalText.GetHashCode();
                 }
+
+                hash = hash * 23 + p.OriginalStartTime.GetHashCode();
+                hash = hash * 23 + p.OriginalEndTime.GetHashCode();
 
                 hash = hash * 23 + (p.Style?.GetHashCode() ?? 0);
                 hash = hash * 23 + (p.Extra?.GetHashCode() ?? 0);
@@ -34961,6 +34993,7 @@ public partial class MainViewModel :
 
     private void OnSubtitleItemChangedForMpv(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
+
         if (e.PropertyName is nameof(SubtitleLineViewModel.StartTime))
         {
             _mpvPreviewDirty = true;
@@ -34988,7 +35021,9 @@ public partial class MainViewModel :
             // the edit box or dragged an end time in the waveform.
             _mpvPreviewDirty = true;
         }
-        else if (e.PropertyName is nameof(SubtitleLineViewModel.OriginalText))
+        else if (e.PropertyName is nameof(SubtitleLineViewModel.OriginalText)
+            or nameof(SubtitleLineViewModel.OriginalStartTime)
+            or nameof(SubtitleLineViewModel.OriginalEndTime))
         {
             // Original cues are snapshots, so rebuild them after the original text changes.
             _updateAudioVisualizer = true;
@@ -35560,6 +35595,7 @@ public partial class MainViewModel :
                     // O(n log n) sort after a cheap early-exit ordered check.
                     ListSortUtil.SortIfNeeded(subtitle, static (a, b) => a.StartTime.Ticks.CompareTo(b.StartTime.Ticks));
                 }
+
 
                 // The playhead cursor is interpolated and applied by the dedicated high-frequency
                 // _cursorTimer (see UpdatePlayheadEstimate) so it moves at ~60 fps instead of this
@@ -37422,6 +37458,9 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerCloneVoice.IsVisible = false;
         MenuItemAudioVisualizerCopy.IsVisible = false;
         MenuItemAudioVisualizerCopyText.IsVisible = false;
+
+        MenuItemAudioVisualizerLockOriginalToTranslation.IsVisible = CanEditOriginalTimeCodes;
+        MenuItemAudioVisualizerLockOriginalToTranslation.IsChecked = Se.Settings.General.LockOriginalToTranslation;
 
         if (e.NewParagraph != null)
         {

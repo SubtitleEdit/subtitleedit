@@ -82,6 +82,42 @@ public partial class SubtitleLineViewModel : ObservableObject
     [ObservableProperty]
     private string _originalText;
 
+    /// <summary>
+    /// The original line's own time codes, when they differ from this row's. Null means the
+    /// original line follows the row.
+    /// </summary>
+    [ObservableProperty]
+    private TimeSpan? _originalStartTime;
+
+    [ObservableProperty]
+    private TimeSpan? _originalEndTime;
+
+    public bool HasOwnOriginalTimeCodes => OriginalStartTime.HasValue && OriginalEndTime.HasValue;
+    public TimeSpan EffectiveOriginalStartTime => HasOwnOriginalTimeCodes ? OriginalStartTime!.Value : StartTime;
+    public TimeSpan EffectiveOriginalEndTime => HasOwnOriginalTimeCodes ? OriginalEndTime!.Value : EndTime;
+
+    public void SetOriginalTimeCodes(TimeSpan? start, TimeSpan? end)
+    {
+        OriginalStartTime = start;
+        OriginalEndTime = end;
+    }
+
+    partial void OnStartTimeChanged(TimeSpan oldValue, TimeSpan newValue)
+    {
+        if (OriginalStartTime is { } originalStart && Se.Settings.General.LockOriginalToTranslation)
+        {
+            OriginalStartTime = originalStart + (newValue - oldValue);
+        }
+    }
+
+    partial void OnEndTimeChanged(TimeSpan oldValue, TimeSpan newValue)
+    {
+        if (OriginalEndTime is { } originalEnd && Se.Settings.General.LockOriginalToTranslation)
+        {
+            OriginalEndTime = originalEnd + (newValue - oldValue);
+        }
+    }
+
     [ObservableProperty]
     private string _style;
 
@@ -252,6 +288,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         // what _duration is set to below.
         _text = p.Text;
         _originalText = p.OriginalText;
+        _originalStartTime = p.OriginalStartTime;
+        _originalEndTime = p.OriginalEndTime;
         _startTime = p.StartTime;
         _endTime = p.EndTime;
         _duration = p.EndTime - p.StartTime;
@@ -348,7 +386,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public Paragraph ToParagraphOriginal(SubtitleFormat? subtitleFormat = null)
     {
-        var p = new Paragraph(new TimeCode(StartTime), new TimeCode(EndTime), OriginalText.TrimEnd())
+        var p = new Paragraph(new TimeCode(EffectiveOriginalStartTime), new TimeCode(EffectiveOriginalEndTime), OriginalText.TrimEnd())
         {
             Number = Number,
             Actor = Actor,
@@ -561,19 +599,21 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return 0;
             }
 
-            if (Duration.TotalMilliseconds <= 1.0)
+            var start = EffectiveOriginalStartTime;
+            var end = EffectiveOriginalEndTime;
+            if ((end - start).TotalMilliseconds <= 1.0)
             {
                 return 999.0;
             }
 
             if (!ReferenceEquals(_cpsOriginalCacheText, OriginalText) ||
-                _cpsOriginalCacheStart != StartTime ||
-                _cpsOriginalCacheEnd != EndTime)
+                _cpsOriginalCacheStart != start ||
+                _cpsOriginalCacheEnd != end)
             {
                 _cpsOriginalCacheText = OriginalText;
-                _cpsOriginalCacheStart = StartTime;
-                _cpsOriginalCacheEnd = EndTime;
-                _cpsOriginalCacheValue = SubtitleTextInfoHelper.GetCharactersPerSecond(OriginalText, StartTime, EndTime);
+                _cpsOriginalCacheStart = start;
+                _cpsOriginalCacheEnd = end;
+                _cpsOriginalCacheValue = SubtitleTextInfoHelper.GetCharactersPerSecond(OriginalText, start, end);
             }
 
             return _cpsOriginalCacheValue;
