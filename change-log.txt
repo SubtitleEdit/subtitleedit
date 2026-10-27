@@ -3,6 +3,17 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-beta8 (27th of October 2026)
+
+* Add editing word list regex in Options > Word lists
+* Extend taskbar and Dock progress indicators to more tasks - thx pdjdev
+* Do not uppercase "iFuera" in "Fix first letter to uppercase after paragraph" - thx fraternl/Ironship
+* Add some missing language tags - thx FunkyKnilch
+* Fix audio-track for preview video player in "Improve time codes" - thx VaLvOnAuTa1981
+* Update German translation - thx FunkyKnilch
+                                                
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-beta7 (26th of October 2026)
 
 * Add option to keep existing line in video OCR - thx IvanaGyro
