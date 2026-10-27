@@ -727,6 +727,12 @@ public class FixCommonErrorsWindow : Window
         // (this replaces the hand-rolled tunnel handler the DataGrid needed).
         TableViewExtras.AttachListNavigation(dataGridSubtitles);
 
+        var flyout = new MenuFlyout();
+        dataGridSubtitles.ContextFlyout = flyout;
+        var deleteMenuItem = new MenuItem { Header = Se.Language.General.Delete, DataContext = _vm };
+        deleteMenuItem.Command = _vm.DeleteSelectedLinesCommand;
+        flyout.Items.Add(deleteMenuItem);
+
         var gridCurrentSubtbtitle = MakeStep2EditPanel();
 
         var gridSubtitles = new Grid

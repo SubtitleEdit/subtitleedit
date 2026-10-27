@@ -14,13 +14,14 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using TagLib;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 
@@ -259,6 +260,66 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private void BackToFixList()
     {
         IsStepOne = true;
+    }
+
+    [RelayCommand]
+    private async Task DeleteSelectedLines()
+    {
+        await DeleteSelectedItems();
+    }
+
+    private async Task DeleteSelectedItems()
+    {
+        var selectedItems = GetSelectedEditableSubtitles();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        if (Se.Settings.General.PromptBeforeDelete)
+        {
+            var title = Se.Language.General.Delete;
+
+            var message = string.Format(Se.Language.General.DeleteXLinesPrompt, selectedItems.Count);
+            if (selectedItems.Count == 1)
+            {
+                var idx = Paragraphs.IndexOf(selectedItems[0]);
+                message = string.Format(Se.Language.General.DeleteLineXPrompt, idx + 1);
+            }
+
+            var answer = await MessageBox.Show(
+                Window!,
+                title,
+                message,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        foreach (var item in selectedItems)
+        {
+            if (item.Paragraph != null)
+            {
+                FixedSubtitle.Paragraphs.Remove(item.Paragraph);
+            }
+        }
+
+        RefreshFixes();
+    }
+
+    private List<SubtitleLineViewModel> GetSelectedEditableSubtitles()
+    {
+        var selected = SelectedParagraph;
+        if (selected == null)
+        {
+            return [];
+        }
+
+        return new List<SubtitleLineViewModel>() { selected };
     }
 
     // Used when step 1 is skipped at startup - the window is not up yet, so there is nothing to flash on.
