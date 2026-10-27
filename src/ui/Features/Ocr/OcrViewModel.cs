@@ -15,7 +15,6 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
-using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
@@ -44,7 +43,11 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -55,9 +58,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
-using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -5688,8 +5688,8 @@ public partial class OcrViewModel : ObservableObject
 
         var answer = await MessageBox.Show(
             Window,
-            "Update CrispEmbed?",
-            $"A newer version of CrispEmbed is available.{Environment.NewLine}{Environment.NewLine}Download it now?",
+            Se.Language.Ocr.UpdateCrispEmbedQuestion,
+            Se.Language.Ocr.UpdateCrispEmbedDetailsQuestion,
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 
@@ -5731,8 +5731,8 @@ public partial class OcrViewModel : ObservableObject
             {
                 var result = await MessageBox.Show(
                     Window!,
-                    "Discard OCR result?",
-                    "Some items have OCR text. Close and discard the OCR result?",
+                    Se.Language.Ocr.DiscardOcrResultQuestion,
+                    Se.Language.Ocr.DiscardOcrResultDetaulsQuestion,
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
 

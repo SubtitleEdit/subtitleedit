@@ -9,13 +9,14 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
-using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.UiLogic.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,7 +30,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.CutVideo;
 
@@ -967,8 +967,8 @@ public partial class CutVideoViewModel : ObservableObject
         {
             await MessageBox.Show(
                 Window!,
-                "No segments added",
-                $"Add one or more segments - e.g. via the waveform",
+                Se.Language.Video.CutNoSegmentsAdded,
+                Se.Language.Video.CutNoSegmentsAddedDetails,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
 
@@ -1283,7 +1283,7 @@ public partial class CutVideoViewModel : ObservableObject
 
         if (Segments.Count > 0)
         {
-            var message = "Are you sure you want to discard segments and close window? All segments will be lost.";
+            var message = Se.Language.Video.CutDiscardSegments;
             var result = await MessageBox.Show(Window!, Se.Language.General.Cancel.Replace("_", string.Empty), message, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result != MessageBoxResult.Yes)
             {

@@ -552,6 +552,7 @@ public class LanguageAssa
     public string AdvancedEffectFillColor { get; set; }
     public string AdvancedEffectRise { get; set; }
     public string OverrideTagsHistory { get; set; }
+    public string DeleteAttachmentQuestion { get; set; }
 
     public LanguageAssa()
     {
@@ -1104,5 +1105,6 @@ public class LanguageAssa
         OverrideTagsHistory = "Override tags history";
         MouseOverColor = "Mouse-over color";
         ClickedColor = "Clicked color";
+        DeleteAttachmentQuestion = "Delete attachment?";
     }
 }

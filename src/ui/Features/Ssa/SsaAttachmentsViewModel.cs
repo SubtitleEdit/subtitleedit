@@ -255,8 +255,8 @@ public partial class SsaAttachmentsViewModel : ObservableObject
         {
             var answer = await MessageBox.Show(
             Window!,
-            "Delete attachment?",
-            $"Do you want to delete {selectedStyle.FileName}?",
+             Se.Language.Assa.DeleteAttachmentQuestion,
+            string.Format(Se.Language.General.DoYouWantToDeleteX, selectedStyle.FileName),
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 

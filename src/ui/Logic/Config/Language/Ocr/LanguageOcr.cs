@@ -174,6 +174,17 @@ public class LanguageOcr
     public string NOcrZoomOut { get; set; }
     public string NOcrLineAlgorithm { get; set; }
     public string NOcrLineAlgorithmHint { get; set; }
+    public string NOcrSelectAction { get; set; }
+    public string NOcrDeleteDatabase { get; set; }
+    public string NOcrDeleteDatabaseDetails { get; set; }
+    public string NOcrDeleteItem { get; set; }
+    public string NOcrDeleteItemDetails { get; set; }
+    public string NOcrCharacterSaved { get; set; }
+    public string GeneratedForegroundXBackgroundY { get; set; }
+    public string DiscardOcrResultQuestion { get; set; }
+    public string DiscardOcrResultDetaulsQuestion { get; set; }
+    public string UpdateCrispEmbedQuestion { get; set; }
+    public string UpdateCrispEmbedDetailsQuestion { get; set; }
 
     public LanguageOcr()
     {
@@ -355,5 +366,16 @@ public class LanguageOcr
         NOcrZoomOut = "Zoom out";
         NOcrLineAlgorithm = "Algorithm";
         NOcrLineAlgorithmHint = "Algorithm used by Auto-draw to generate foreground/background lines";
+        NOcrSelectAction = "Select action to perform on nOCR database \"{0}\"";
+        NOcrDeleteDatabase = "Delete nOCR database?";
+        NOcrDeleteDatabaseDetails = "Do you want to delete the current nOCR database \"{0}\" with {1:#,###,##0} items?";
+        NOcrDeleteItem = "Delete nOCR item?";
+        NOcrDeleteItemDetails = "Do you want to delete the current nOCR item?";
+        NOcrCharacterSaved = "nOCR character saved";
+        GeneratedForegroundXBackgroundY = "Generated: {0} foreground, {1} background";
+        DiscardOcrResultQuestion = "Discard OCR result?";
+        DiscardOcrResultDetaulsQuestion = "Some items have OCR text. Close and discard the OCR result?";
+        UpdateCrispEmbedQuestion = "Update CrispEmbed?";
+        UpdateCrispEmbedDetailsQuestion = "A newer version of CrispEmbed is available.\n\nDownload it now?";
     }
 }

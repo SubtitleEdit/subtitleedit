@@ -437,7 +437,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
 
     private void UpdateLinesGeneratedInfo()
     {
-        LinesGeneratedInfo = $"Generated: {NOcrChar.LinesForeground.Count} foreground, {NOcrChar.LinesBackground.Count} background";
+        LinesGeneratedInfo = string.Format(Se.Language.Ocr.GeneratedForegroundXBackgroundY, NOcrChar.LinesForeground.Count, NOcrChar.LinesBackground.Count);
     }
 
     partial void OnSelectedLineAlgorithmChanged(NOcrLineAlgorithmItem value)

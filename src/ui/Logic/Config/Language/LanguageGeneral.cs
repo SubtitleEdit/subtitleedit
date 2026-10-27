@@ -900,6 +900,7 @@ public class LanguageGeneral
     public string FixOcrErrors { get; set; }
     public string RunningOcrXY { get; set; }
     public string LlamaCppDownloadEnginePrompt { get; set; }
+    public string DoYouWantToDeleteX { get; set; }
 
     public LanguageGeneral()
     {
@@ -1799,5 +1800,6 @@ public class LanguageGeneral
         FixOcrErrors = "Fix OCR errors";
         RunningOcrXY = "Running OCR... {0}/{1}";
         LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+        DoYouWantToDeleteX = "Do you want to delete \"{0}\"?";
     }
 }

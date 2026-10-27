@@ -142,6 +142,9 @@ public class LanguageVideo
     public string CutVideoSegments { get; set; }
     public string CutVideoTransitions { get; set; }
     public string CutVideoCutType { get; set; }
+    public string CutNoSegmentsAdded { get; set; }
+    public string CutNoSegmentsAddedDetails { get; set; }
+    public string CutDiscardSegments { get; set; }
     public string ImportCurrentSubtitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesTitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesMp4Title { get; set; }
@@ -354,6 +357,10 @@ public class LanguageVideo
         CutVideoSegments = "Segments";
         CutVideoTransitions = "Transitions";
         CutVideoCutType = "Cut type";
+        CutNoSegmentsAdded = "No segments added";
+        CutNoSegmentsAddedDetails = "Add one or more segments - e.g. via the waveform";
+        CutDiscardSegments = "Are you sure you want to discard segments and close window? All segments will be lost.";
+
         ImportCurrentSubtitle = "Import current subtitle";
         AddRemoveEmbeddedSubtitlesTitle = "Add/remove embedded subtitles";
         AddRemoveEmbeddedSubtitlesMp4Title = "Add/remove embedded subtitles (MP4)";

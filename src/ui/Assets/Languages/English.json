@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta6",
+  "version": "v5.4.0-beta8",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -899,7 +899,8 @@
     "detail": "Detail",
     "fixOcrErrors": "Fix OCR errors",
     "runningOcrXY": "Running OCR... {0}/{1}",
-    "llamaCppDownloadEnginePrompt": "llama.cpp requires the llama-server engine to be downloaded. Download now?"
+    "llamaCppDownloadEnginePrompt": "llama.cpp requires the llama-server engine to be downloaded. Download now?",
+    "doYouWantToDeleteX": "Do you want to delete \"{0}\"?"
   },
   "main": {
     "menu": {
@@ -2999,6 +3000,7 @@
       "timeRanges": "Time ranges",
       "timeRangesWatermark": "Whole video",
       "timeRangesHint": "Only scan these parts of the video, e.g. \"16:00-32:00; 36:00-41:00\". Times are m:ss or h:mm:ss, and an empty side means the start or end of the video (\"36:00-\"). Empty scans the whole video.",
+      "keepExistingLines": "Keep existing lines",
       "insertPreviewTime": "Insert preview position as range start/end",
       "invalidTimeRangeX": "Invalid time range: \"{0}\"{1}{1}{2}",
       "textBrightnessMinimum": "Text brightness minimum (0=off)",
@@ -3212,6 +3214,9 @@
     "cutVideoSegments": "Segments",
     "cutVideoTransitions": "Transitions",
     "cutVideoCutType": "Cut type",
+    "cutNoSegmentsAdded": "No segments added",
+    "cutNoSegmentsAddedDetails": "Add one or more segments - e.g. via the waveform",
+    "cutDiscardSegments": "Are you sure you want to discard segments and close window? All segments will be lost.",
     "importCurrentSubtitle": "Import current subtitle",
     "addRemoveEmbeddedSubtitlesTitle": "Add/remove embedded subtitles",
     "addRemoveEmbeddedSubtitlesMp4Title": "Add/remove embedded subtitles (MP4)",
@@ -4260,6 +4265,7 @@
     "fillSelectedLinesWithClipboard": "Fill selected lines with clipboard text",
     "showImage": "Show image",
     "promptForUknownWords": "Prompt for unknown words",
+    "videoPreview": "Video preview",
     "tryToGuessUnknownWords": "Try to guess unknown words",
     "autoBreakIfMoreThanXLines": "Auto break if more than {0} lines",
     "unknownWords": "Unknown words",
@@ -4390,7 +4396,18 @@
     "nOcrZoomIn": "Zoom in",
     "nOcrZoomOut": "Zoom out",
     "nOcrLineAlgorithm": "Algorithm",
-    "nOcrLineAlgorithmHint": "Algorithm used by Auto-draw to generate foreground/background lines"
+    "nOcrLineAlgorithmHint": "Algorithm used by Auto-draw to generate foreground/background lines",
+    "nOcrSelectAction": "Select action to perform on nOCR database \"{0}\"",
+    "nOcrDeleteDatabase": "Delete nOCR database?",
+    "nOcrDeleteDatabaseDetails": "Do you want to delete the current nOCR database \"{0}\" with {1:#,###,##0} items?",
+    "nOcrDeleteItem": "Delete nOCR item?",
+    "nOcrDeleteItemDetails": "Do you want to delete the current nOCR item?",
+    "nOcrCharacterSaved": "nOCR character saved",
+    "generatedForegroundXBackgroundY": "Generated: {0} foreground, {1} background",
+    "discardOcrResultQuestion": "Discard OCR result?",
+    "discardOcrResultDetaulsQuestion": "Some items have OCR text. Close and discard the OCR result?",
+    "updateCrispEmbedQuestion": "Update CrispEmbed?",
+    "updateCrispEmbedDetailsQuestion": "A newer version of CrispEmbed is available.\n\nDownload it now?"
   },
   "assa": {
     "assaDraw": "ASSA Draw",
@@ -4930,7 +4947,8 @@
     "advancedEffectRollingCaptionsDescription": "Each line slides up into place and pushes the previous line up, like a live chat or teleprompter",
     "advancedEffectFillColor": "Fill color",
     "advancedEffectRise": "Rise from baseline",
-    "overrideTagsHistory": "Override tags history"
+    "overrideTagsHistory": "Override tags history",
+    "deleteAttachmentQuestion": "Delete attachment?"
   },
   "about": {
     "title": "About Subtitle Edit",
