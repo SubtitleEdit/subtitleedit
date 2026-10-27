@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Linq;
 
 namespace UITests.Features.Video.VideoOcr;
 

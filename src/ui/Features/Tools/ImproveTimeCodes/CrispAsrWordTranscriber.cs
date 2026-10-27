@@ -125,7 +125,7 @@ public sealed class CrispAsrWordTranscriber
                 detail = errors.ToString().Trim();
             }
 
-            throw new ForcedAlignerException($"Speech-to-text failed (exit code {process.ExitCode}).", detail);
+            throw ForcedAlignerException.FromProcessExit("Speech-to-text failed", process.ExitCode, detail);
         }
 
         var lines = await File.ReadAllLinesAsync(outputFileName, cancellationToken).ConfigureAwait(false);

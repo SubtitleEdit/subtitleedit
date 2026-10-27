@@ -54,7 +54,7 @@ With **Output format** `.mpg`, the subtitles are embedded as CEA-608 (and CEA-70
 - The video must be MPEG-2. Any other video (H.264, HEVC, ...) is re-encoded to MPEG-2 after asking, which takes longer and lowers the quality a little
 - The audio is copied when it is MP2, MP3 or AC-3, and converted to AC-3 (192 kb/s) otherwise
 - Caption data the video already has is replaced
-- Caption times are taken from the video's first frame, so SCC/MCC timecodes should start at 00:00:00:00 (not at a 01:00:00:00 tape start)
+- Caption times are taken from the video's first frame. Broadcast SCC/MCC files often start at a 01:00:00:00 tape time instead; **Caption offset** is taken off every caption time, and is filled in with that whole hour when the file's first caption lies past the end of the video (captions that would come before the video are dropped)
 
 ffmpeg first writes the MPEG program stream, then Subtitle Edit adds the captions to the video; the progress bar shows both steps. To check the result: MediaInfo lists *Text* tracks "EIA-608" (and "EIA-708") muxed in the video, and `ffmpeg -f lavfi -i "movie=out.mpg[out0+subcc]" -map 0:1 out.srt` extracts it.
 

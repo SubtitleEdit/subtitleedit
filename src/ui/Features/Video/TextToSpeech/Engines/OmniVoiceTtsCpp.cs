@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
+﻿using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;

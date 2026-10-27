@@ -5,7 +5,6 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -69,10 +68,10 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
     /// loader rejects with "GGUF tensor data range is out of bounds", so size is checked
     /// before the server is ever started. Same guard as IndexTtsCrispAsr.ExpectedFileSizes.
     /// </summary>
-    private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly Dictionary<string, long[]> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
     {
-        [ModelQ8_0FileName] = 3502955328L,
-        [ModelF16FileName] = 4547355072L,
+        [ModelQ8_0FileName] = [3502960096L, 3502955328L],
+        [ModelF16FileName] = [4547359840L, 4547355072L],
     };
 
     /// <summary>
@@ -250,7 +249,7 @@ public class IndexTts25AudioCpp : ITtsEngine, IPerLineCloneEngine
                 ? target.Length
                 : info.Length;
 
-            return length == expected;
+            return Array.IndexOf(expected, length) >= 0;
         }
         catch
         {

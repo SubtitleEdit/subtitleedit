@@ -1,9 +1,9 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Media;
 using System.Collections;
 using System.Windows.Input;
 using Nikse.SubtitleEdit.Logic;
@@ -12,6 +12,11 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.JoinSubtitles;
 
+/// <summary>
+/// Join subtitles, in the editor look (see <see cref="EditorChrome"/>): the file list (drop files on
+/// it) with add/remove/clear on its header, the time code mode below, the file count, Cancel and
+/// Join at the bottom.
+/// </summary>
 public class JoinSubtitlesWindow : Window
 {
     private TableView _tableViewFiles = null!;
@@ -25,37 +30,35 @@ public class JoinSubtitlesWindow : Window
         Height = 700;
         MinWidth = 600;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButton(Se.Language.Tools.JoinSubtitles.Join, vm.OkCommand).WithBindEnabled(nameof(vm.IsJoinEnabled));
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        var labelFileCount = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
+        labelFileCount.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.JoinItems)}.{nameof(vm.JoinItems.Count)}")
+        {
+            Source = vm,
+            Mode = BindingMode.OneWay,
+            StringFormat = Se.Language.General.XFiles,
+        });
+
+        var sections = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeFilesView(vm), 0);
-        grid.Add(MakeControlsView(vm), 1);
-        grid.Add(panelButtons, 2);
+        sections.Add(MakeFilesView(vm), 0);
+        sections.Add(MakeControlsView(vm), 1);
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(labelFileCount, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(_tableViewFiles); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -63,20 +66,18 @@ public class JoinSubtitlesWindow : Window
 
     private Border MakeFilesView(JoinSubtitlesViewModel vm)
     {
+        // The list fills the rest of the window, so the section header and list are laid out
+        // in a grid rather than in a section's stack panel.
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
+            RowSpacing = 8,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
         };
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
@@ -85,7 +86,7 @@ public class JoinSubtitlesWindow : Window
         // by iterating this list in order (the VM sorts it by start time itself), so the
         // list must not be reordered by clicking a header. Reordering is done explicitly
         // instead, through the move items in the context menu.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.SubtitleFiles);
         _tableViewFiles = dataGrid;
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
@@ -158,25 +159,36 @@ public class JoinSubtitlesWindow : Window
 
         AddMoveMenuItems(flyout, vm);
 
-        var buttonAdd = UiUtil.MakeButton(vm.AddCommand, IconNames.Plus, Se.Language.General.New);
-        var buttonRemove = UiUtil.MakeButton(vm.RemoveCommand, IconNames.Trash, Se.Language.General.Remove);
-        var buttonClear = UiUtil.MakeButton(vm.ClearCommand, IconNames.Close, Se.Language.General.Clear);
-        var panelButtons = UiUtil.MakeButtonBar(buttonAdd, buttonRemove, buttonClear).WithAlignmentLeft();
-
-        // hack to make drag and drop work on the DataGrid - also on empty rows
-        var dropHost = new Border
+        var buttonAdd = EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.Add, vm.AddCommand, 28);
+        var buttonRemove = EditorChrome.CreateToolButton("fa-solid fa-trash-can", Se.Language.General.Remove, vm.RemoveCommand, 28);
+        var buttonClear = EditorChrome.CreateToolButton("fa-solid fa-xmark", Se.Language.General.Clear, vm.ClearCommand, 28);
+        var panelButtons = new StackPanel
         {
-            Background = Brushes.Transparent,
-            Child = dataGrid,
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            Children = { buttonAdd, buttonRemove, buttonClear },
         };
+
+        var header = new DockPanel();
+        DockPanel.SetDock(panelButtons, Dock.Right);
+        header.Children.Add(panelButtons);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.SubtitleFiles));
+
+        // hack to make drag and drop work on the DataGrid - also on empty rows (the frame has
+        // a background, so it is hit-tested everywhere)
+        var dropHost = EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
         DragDrop.SetAllowDrop(dropHost, true);
         dropHost.AddHandler(DragDrop.DragOverEvent, vm.FileGridOnDragOver, RoutingStrategies.Bubble);
         dropHost.AddHandler(DragDrop.DropEvent, vm.FileGridOnDrop, RoutingStrategies.Bubble);
 
-        grid.Add(dropHost, 0);
-        grid.Add(panelButtons, 1);
+        grid.Add(header, 0);
+        grid.Add(dropHost, 1);
 
-        return UiUtil.MakeBorderForControlNoPadding(grid);
+        return new Border
+        {
+            Child = grid,
+            Padding = new Thickness(14, 10, 14, 14),
+        };
     }
 
     /// <summary>
@@ -213,14 +225,19 @@ public class JoinSubtitlesWindow : Window
         }
     }
 
-    private static StackPanel MakeControlsView(JoinSubtitlesViewModel vm)
+    private static Border MakeControlsView(JoinSubtitlesViewModel vm)
     {
         var radioKeepTimeCodes = UiUtil.MakeRadioButton(Se.Language.Tools.JoinSubtitles.KeepTimeCodes, vm, nameof(vm.KeepTimeCodes), "TimeCodes");
+        radioKeepTimeCodes.FontSize = EditorChrome.FieldFontSize;
 
         var radioAppendTimeCodes = UiUtil.MakeRadioButton(Se.Language.Tools.JoinSubtitles.AppendTimeCodes, vm, nameof(vm.AppendTimeCodes), "TimeCodes")
-            .WithMarginRight(5);
-        var labelAddMilliseconds = UiUtil.MakeLabel(Se.Language.Tools.JoinSubtitles.AddMsAfterEachFile);
-        var numericUpDownAppendMilliseconds = UiUtil.MakeNumericUpDownInt(0, 10000, 0, 140, vm, nameof(vm.AppendTimeCodesAddMilliseconds)).WithBindEnabled(nameof(vm.AppendTimeCodes));
+            .WithMarginRight(12);
+        radioAppendTimeCodes.FontSize = EditorChrome.FieldFontSize;
+        var numericUpDownAppendMilliseconds = UiUtil.MakeNumericUpDownInt(0, 10000, 0, 90, vm, nameof(vm.AppendTimeCodesAddMilliseconds))
+            .WithBindEnabled(nameof(vm.AppendTimeCodes))
+            .WithAccessibleName(Se.Language.Tools.JoinSubtitles.AddMsAfterEachFile);
+        numericUpDownAppendMilliseconds.Classes.Add("field");
+        var labelAddMilliseconds = EditorChrome.MakeDimLabel(Se.Language.Tools.JoinSubtitles.AddMsAfterEachFile, new Thickness(8, 0, 0, 0));
 
         var stackPanelAppend = new StackPanel
         {
@@ -229,7 +246,8 @@ public class JoinSubtitlesWindow : Window
             Children =
             {
                 radioAppendTimeCodes,
-                numericUpDownAppendMilliseconds
+                numericUpDownAppendMilliseconds,
+                labelAddMilliseconds,
             }
         };
 
@@ -244,6 +262,6 @@ public class JoinSubtitlesWindow : Window
             }
         };
 
-        return stackPanel;
+        return EditorChrome.MakeEditorSection(Se.Language.General.TimeCodes, stackPanel);
     }
 }

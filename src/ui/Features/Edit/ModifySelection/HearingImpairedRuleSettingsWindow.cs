@@ -1,11 +1,19 @@
-﻿using Avalonia.Controls;
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 
+/// <summary>
+/// Settings of the "Hearing impaired" modify-selection rule, in the editor look (see
+/// <see cref="EditorChrome"/>): which brackets and which other kinds of lines count, Cancel and OK
+/// at the bottom.
+/// </summary>
 public class HearingImpairedRuleSettingsWindow : Window
 {
     private readonly HearingImpairedRuleSettingsViewModel _vm;
@@ -16,6 +24,7 @@ public class HearingImpairedRuleSettingsWindow : Window
         Title = Se.Language.Edit.ModifySelection.HearingImpaired;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
@@ -23,80 +32,68 @@ public class HearingImpairedRuleSettingsWindow : Window
 
         var l = Se.Language.Edit.ModifySelection;
 
-        var labelBetween = UiUtil.MakeLabel(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveTextBetween);
-        var checkBoxBrackets = UiUtil.MakeCheckBox(l.HearingImpairedBrackets, vm, nameof(vm.IsBracketsOn));
-        var checkBoxCurlyBrackets = UiUtil.MakeCheckBox(l.HearingImpairedCurlyBrackets, vm, nameof(vm.IsCurlyBracketsOn));
-        var checkBoxParentheses = UiUtil.MakeCheckBox(l.HearingImpairedParentheses, vm, nameof(vm.IsParenthesesOn));
-        var checkBoxCustom = UiUtil.MakeCheckBox(l.HearingImpairedCustom, vm, nameof(vm.IsCustomOn));
-        var labelCustom = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.CustomText)).WithMarginLeft(5);
-        var panelCustom = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children =
-            {
-                checkBoxCustom,
-                labelCustom,
-            }
-        };
+        var rowBrackets = EditorChrome.MakeToggleRow(nameof(vm.IsBracketsOn), l.HearingImpairedBrackets);
+        var rowCustom = EditorChrome.MakeToggleRow(nameof(vm.IsCustomOn), l.HearingImpairedCustom);
+        var labelCustom = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0)).WithBindText(vm, nameof(vm.CustomText));
+        rowCustom.Children.Add(labelCustom);
 
         var betweenPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
+            Spacing = 6,
             Children =
             {
-                labelBetween,
-                checkBoxBrackets,
-                checkBoxCurlyBrackets,
-                checkBoxParentheses,
-                panelCustom,
+                rowBrackets,
+                EditorChrome.MakeToggleRow(nameof(vm.IsCurlyBracketsOn), l.HearingImpairedCurlyBrackets),
+                EditorChrome.MakeToggleRow(nameof(vm.IsParenthesesOn), l.HearingImpairedParentheses),
+                rowCustom,
             }
         };
 
         var otherPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
+            Spacing = 6,
             Children =
             {
-                UiUtil.MakeCheckBox(l.HearingImpairedTextBeforeColon, vm, nameof(vm.IsTextBeforeColonOn)),
-                UiUtil.MakeCheckBox(l.HearingImpairedUppercaseLine, vm, nameof(vm.IsUppercaseLineOn)),
-                UiUtil.MakeCheckBox(l.HearingImpairedLineContains, vm, nameof(vm.IsLineContainsOn)),
-                UiUtil.MakeCheckBox(l.HearingImpairedMusicSymbols, vm, nameof(vm.IsMusicSymbolsOn)),
-                UiUtil.MakeCheckBox(l.HearingImpairedInterjections, vm, nameof(vm.IsInterjectionsOn)),
+                EditorChrome.MakeToggleRow(nameof(vm.IsTextBeforeColonOn), l.HearingImpairedTextBeforeColon),
+                EditorChrome.MakeToggleRow(nameof(vm.IsUppercaseLineOn), l.HearingImpairedUppercaseLine),
+                EditorChrome.MakeToggleRow(nameof(vm.IsLineContainsOn), l.HearingImpairedLineContains),
+                EditorChrome.MakeToggleRow(nameof(vm.IsMusicSymbolsOn), l.HearingImpairedMusicSymbols),
+                EditorChrome.MakeToggleRow(nameof(vm.IsInterjectionsOn), Se.Language.General.Interjections),
             }
         };
 
-        var labelHint = UiUtil.MakeLabel(l.HearingImpairedSettingsHint).WithMarginTop(5);
-
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
+        var labelHint = new TextBlock
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 5,
-            MinWidth = 320,
+            Text = l.HearingImpairedSettingsHint,
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.FaintTextBrush,
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 340,
+            HorizontalAlignment = HorizontalAlignment.Left,
+        };
+        var hintSection = new Border
+        {
+            Child = labelHint,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 10, 14, 12),
         };
 
-        grid.Add(UiUtil.MakeBorderForControl(betweenPanel), 0);
-        grid.Add(UiUtil.MakeBorderForControl(otherPanel), 1);
-        grid.Add(labelHint, 2);
-        grid.Add(panelButtons, 3);
+        var sections = new StackPanel { MinWidth = 320 };
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveTextBetween, betweenPanel, first: true));
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Other, otherPanel));
+        sections.Children.Add(hintSection);
 
-        Content = grid;
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        UiUtil.FocusOnFirstActivation(this, checkBoxBrackets); // not an action button - a focused button clicks on bare Space
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
+
+        // not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, rowBrackets.Children.OfType<ToggleSwitch>().First());
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

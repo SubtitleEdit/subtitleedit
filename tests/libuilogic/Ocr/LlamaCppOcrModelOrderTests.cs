@@ -1,5 +1,5 @@
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using System.Linq;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace LibUiLogicTests.Ocr;
 
@@ -19,9 +19,35 @@ public class LlamaCppOcrModelOrderTests
     }
 
     [Fact]
-    public void LightOnOcr_IsLast_TheWeakestAndSlowestOfTheCuratedModels()
+    public void LightOnOcr3_4B_IsSecond_AsAccurateAsGlmOcrButFourTimesTheDownload()
     {
-        Assert.Equal("LightOnOCR-1B-1025-Q8_0.gguf", LlamaCppServerManager.OcrModels[^1].FileName);
+        Assert.Equal("LightOnOCR-3-4B.Q8_0.gguf", LlamaCppServerManager.OcrModels[1].FileName);
+    }
+
+    [Fact]
+    public void LightOnOcr3_08B_IsLast_TheFastestButLeastAccurateOnRealSubtitles()
+    {
+        Assert.Equal("LightOnOCR-3-0.8B-Q8_0.gguf", LlamaCppServerManager.OcrModels[^1].FileName);
+    }
+
+    [Theory]
+    [InlineData("LightOnOCR-3-4B.Q8_0.gguf")]
+    [InlineData("LightOnOCR-3-0.8B-Q8_0.gguf")]
+    public void LightOnOcr3_RunsWithoutThinkingAndWithTheBorder(string fileName)
+    {
+        // Qwen 3.5 VL thinks by default and then answers into reasoning_content, leaving the
+        // content field the OCR engines read empty; the square pad cost accuracy on every corpus.
+        var model = LlamaCppServerManager.OcrModels.Single(m => m.FileName == fileName);
+        Assert.True(model.NoThinking);
+        Assert.Equal(AiOcrPadding.Border, LlamaCppServerManager.GetOcrPadding(System.IO.Path.GetFileNameWithoutExtension(fileName)));
+    }
+
+    [Fact]
+    public void QariOcr_RanksBehindTheGeneralModels_BecauseItIsAnArabicSpecialist()
+    {
+        // Best on Arabic, but it merges every two-line subtitle, so it must not become the
+        // headless fallback ahead of GLM-OCR/LFM2.5-VL/PaddleOCR-VL/HunyuanOCR.
+        Assert.Equal("Qari-OCR-0.2.2.1-VL-2B-Instruct-merged.Q8_0.gguf", LlamaCppServerManager.OcrModels[^2].FileName);
     }
 
     [Fact]

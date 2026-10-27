@@ -1,65 +1,49 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
+/// <summary>
+/// Downloads libVLC, in the editor download layout (see <see cref="Chrome"/>): title, progress,
+/// status and error on the panel color, Retry (after a failure) and Cancel in the button bar.
+/// </summary>
 public class DownloadLibVlcWindow : Window
 {
     public DownloadLibVlcWindow(DownloadLibVlcViewModel vm)
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = string.Format(Se.Language.General.DownloadingX,  "libVLC");
+        Title = string.Format(Se.Language.General.DownloadingX, "libVLC");
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         DataContext = vm;
 
-        var titleText = new TextBlock
-        {
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
-        }.WithBindText(vm, nameof(vm.StatusText));
+        // The title shows the current step ("Downloading...", "Unpacking..."), the status line the progress.
+        var titleText = EditorChrome.MakeDownloadTitle();
+        titleText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(vm.ProgressValue));
+        progressBar.Bind(Avalonia.Visual.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(vm.ProgressText));
 
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.MinWidth = 450;
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.Bind(ProgressBar.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
-
-        var statusText = new TextBlock();
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
-
-        var errorText = DownloadWindowUi.MakeErrorText();
+        // Download/unpack failures (no data, file in use, ...) - otherwise the window just sits there.
+        var errorText = EditorChrome.MakeDownloadError(DownloadWindowUi.ErrorPropertyName);
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
         var buttonRetry = DownloadWindowUi.MakeButtonRetry(vm.RetryCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonRetry, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonRetry, buttonCancel);
 
-        Content = new StackPanel
-        {
-            Spacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
-            {
-                titleText,
-                progressBar,
-                statusText,
-                errorText,
-                buttonBar,
-            }
-        };
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         Loaded += delegate
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
             vm.StartDownload();
-        }; 
+        };
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

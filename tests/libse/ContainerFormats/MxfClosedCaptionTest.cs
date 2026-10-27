@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
-using System.IO;
 
 namespace LibSETests.ContainerFormats;
 

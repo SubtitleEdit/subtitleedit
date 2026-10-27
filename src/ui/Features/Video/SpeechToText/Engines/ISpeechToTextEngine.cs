@@ -53,6 +53,21 @@ public interface ISpeechToTextEngine
     bool CustomModelIsFolder => false;
 
     /// <summary>
+    /// File-picker filter name for a single-file custom model (see <see cref="CustomModelIsFolder"/>).
+    /// </summary>
+    string CustomModelFileTypeName => "Whisper model (*.bin)";
+
+    /// <summary>
+    /// File-picker patterns for a single-file custom model, e.g. "*.bin" or "*.gguf".
+    /// </summary>
+    IReadOnlyList<string> CustomModelFilePatterns => ["*.bin"];
+
+    /// <summary>
+    /// Help text shown under the "Add custom model..." button in the models window.
+    /// </summary>
+    string CustomModelHelpText => Nikse.SubtitleEdit.Logic.Config.Se.Language.Video.AudioToText.CustomModelHelp;
+
+    /// <summary>
     /// Copies a user-provided custom model (a file or a folder, per <see cref="CustomModelIsFolder"/>)
     /// into this engine's model folder, validating it, and returns the resulting model display
     /// name. Throws with a user-facing message when the source is not a valid model.

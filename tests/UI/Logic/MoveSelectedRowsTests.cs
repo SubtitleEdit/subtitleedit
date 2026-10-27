@@ -3,7 +3,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace UITests.Logic;
 

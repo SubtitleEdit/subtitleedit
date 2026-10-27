@@ -1,10 +1,7 @@
-using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -22,71 +19,56 @@ public class DownloadTesseractModelWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         DataContext = vm;
 
-        var titleText = new TextBlock
-        {
-            Text = string.Format(Se.Language.General.DownloadingX, "Tesseract model"),
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
-        };
+        // Before the download: pick the dictionary. While downloading: title, progress and status.
+        var titleText = EditorChrome.MakeDownloadTitle(string.Format(Se.Language.General.DownloadingX, "Tesseract model"));
         titleText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)));
+
+        var comboBoxDictionary = new ComboBox
+        {
+            MinWidth = 440,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            IsTextSearchEnabled = true,
+            ItemsSource = vm.TesseractDictionaryItems,
+            SelectedItem = vm.SelectedTesseractDictionaryItem
+        }.WithBindSelected(nameof(vm.SelectedTesseractDictionaryItem));
+        var dictionaryLabel = Se.Language.Ocr.SelectTesseractDictionary.TrimEnd(':', ' ');
+        AutomationProperties.SetName(comboBoxDictionary, dictionaryLabel);
 
         var panelPickDictionary = new StackPanel
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Margin = new Thickness(0, 0, 0, 8),
+            Spacing = 10,
             Children =
             {
-                new TextBlock
-                {
-                    Text = Se.Language.Ocr.SelectTesseractDictionary,
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
-                new ComboBox
-                {
-                    Margin = new Thickness(0, 0, 0, 0),
-                    IsTextSearchEnabled = true,
-                    ItemsSource = vm.TesseractDictionaryItems,
-                    SelectedItem = vm.SelectedTesseractDictionaryItem
-                }.WithBindSelected(nameof(vm.SelectedTesseractDictionaryItem)),
-                UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand),
+                EditorChrome.MakeSectionHeader(dictionaryLabel),
+                comboBoxDictionary,
             }
         };
         panelPickDictionary.Bind(Panel.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = InverseBooleanConverter.Instance });
 
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.MinWidth = 400;
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(DownloadFfmpegViewModel.Progress)));
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(DownloadFfmpegViewModel.Progress));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)));
 
-        var statusText = new TextBlock();
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(DownloadFfmpegViewModel.StatusText)));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(DownloadFfmpegViewModel.StatusText));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)));
 
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
+        var errorText = EditorChrome.MakeDownloadError(nameof(vm.Error));
 
-        Content = new StackPanel
-        {
-            Spacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
-            {
-                titleText,
-                panelPickDictionary,
-                progressBar,
-                statusText,
-                buttonBar,
-            }
-        };
+        var buttonDownload = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand));
+        buttonDownload.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = InverseBooleanConverter.Instance });
+
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonDownload);
+
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, panelPickDictionary, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
-        }); 
-        KeyDown += (s, e) => vm.OnKeyDown(e);   
+        });
+        KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 }

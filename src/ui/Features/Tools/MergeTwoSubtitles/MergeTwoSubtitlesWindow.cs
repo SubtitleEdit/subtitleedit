@@ -12,6 +12,11 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
 
+/// <summary>
+/// Merge two subtitles, in the editor look (see <see cref="EditorChrome"/>): the two subtitles side
+/// by side, the two ASSA styles and the preview below them (ASSA output only), the output format,
+/// Cancel and Merge in the bar at the bottom.
+/// </summary>
 public class MergeTwoSubtitlesWindow : Window
 {
     private TableView? _tableViewSubtitle1;
@@ -25,57 +30,30 @@ public class MergeTwoSubtitlesWindow : Window
         Height = 800;
         MinWidth = 950;
         MinHeight = 600;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var listsView = MakeListsView(vm);
-        var formatRow = MakeFormatRow(vm);
         var stylesView = MakeStylesView(vm);
-        var previewView = MakePreviewView(vm);
 
         var buttonOk = UiUtil.MakeButton(Se.Language.Tools.MergeTwoSubtitles.Merge, vm.OkCommand)
             .WithBindEnabled(nameof(vm.IsMergeEnabled));
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var bottomGrid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-        bottomGrid.Add(stylesView, 0, 0);
-        bottomGrid.Add(previewView, 0, 1);
-
-        var grid = new Grid
+        var sections = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // lists
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // format combo
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // styles + preview
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        sections.Add(listsView, 0, 0);
+        sections.Add(stylesView, 1, 0);
 
-        grid.Add(listsView, 0, 0);
-        grid.Add(formatRow, 1, 0);
-        grid.Add(bottomGrid, 2, 0);
-        grid.Add(buttonPanel, 3, 0);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(MakeFormatRow(vm), buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
@@ -93,7 +71,7 @@ public class MergeTwoSubtitlesWindow : Window
         AddHandler(DragDrop.DropEvent, (object? _, DragEventArgs e) => vm.FileOnDrop(0, e), RoutingStrategies.Bubble);
     }
 
-    private Border MakeListsView(MergeTwoSubtitlesViewModel vm)
+    private Grid MakeListsView(MergeTwoSubtitlesViewModel vm)
     {
         var grid = new Grid
         {
@@ -102,7 +80,6 @@ public class MergeTwoSubtitlesWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnSpacing = 10,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
         };
@@ -123,7 +100,7 @@ public class MergeTwoSubtitlesWindow : Window
             vm.LoadFile2Command,
             2), 0, 1);
 
-        return UiUtil.MakeBorderForControlNoPadding(grid);
+        return grid;
     }
 
     private Border MakeOneListView(MergeTwoSubtitlesViewModel vm,
@@ -134,9 +111,10 @@ public class MergeTwoSubtitlesWindow : Window
         CommunityToolkit.Mvvm.Input.IRelayCommand loadCommand,
         int slot)
     {
-        var labelTitle = UiUtil.MakeLabel(title);
-        var labelFile = UiUtil.MakeLabel(string.Empty).WithBindText(vm, fileNamePath);
-        var buttonLoad = UiUtil.MakeButton(Se.Language.Tools.MergeTwoSubtitles.LoadFromFile, loadCommand);
+        var labelTitle = EditorChrome.MakeSectionHeader(title);
+        var labelFile = EditorChrome.MakeDimLabel(string.Empty, new Thickness(10, 0, 0, 0)).WithBindText(vm, fileNamePath);
+        labelFile.TextTrimming = TextTrimming.CharacterEllipsis;
+        var buttonLoad = EditorChrome.MakeTextToolButton("fa-solid fa-folder-open", Se.Language.Tools.MergeTwoSubtitles.LoadFromFile, loadCommand);
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
 
@@ -181,7 +159,7 @@ public class MergeTwoSubtitlesWindow : Window
 
         dataGrid.Bind(TableView.ItemsSourceProperty, new Binding(itemsPath) { Source = vm });
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(selectedItemPath) { Source = vm });
-        dataGrid.WithLabeledBy(labelTitle);
+        dataGrid.WithAccessibleName(title);
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
             if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0 &&
@@ -193,16 +171,13 @@ public class MergeTwoSubtitlesWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        var headerPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Children =
-            {
-                labelTitle,
-                labelFile,
-            },
-        };
+        // Title and file name on the left, the load button on the right
+        var header = new DockPanel();
+        DockPanel.SetDock(buttonLoad, Dock.Right);
+        header.Children.Add(buttonLoad);
+        DockPanel.SetDock(labelTitle, Dock.Left);
+        header.Children.Add(labelTitle);
+        header.Children.Add(labelFile);
 
         var grid = new Grid
         {
@@ -210,23 +185,23 @@ public class MergeTwoSubtitlesWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 5,
+            RowSpacing = 8,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
         };
-        grid.Add(headerPanel, 0, 0);
-        grid.Add(dataGrid, 1, 0);
-        grid.Add(buttonLoad, 2, 0);
+        grid.Add(header, 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
 
         // Drop a file onto this side to load it into this slot.
-        var border = UiUtil.MakeBorderForControl(grid);
-        border.Background = Brushes.Transparent; // hit-test the empty parts of the area too
+        var border = new Border
+        {
+            Child = grid,
+            Background = Brushes.Transparent, // hit-test the empty parts of the area too
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(slot == 2 ? 1 : 0, 0, 0, 0),
+            Padding = new Thickness(14, 10, 14, 14),
+        };
         DragDrop.SetAllowDrop(border, true);
         border.AddHandler(DragDrop.DragOverEvent, vm.FileOnDragOver, RoutingStrategies.Bubble);
         border.AddHandler(DragDrop.DropEvent, (object? _, DragEventArgs e) => vm.FileOnDrop(slot, e), RoutingStrategies.Bubble);
@@ -235,9 +210,10 @@ public class MergeTwoSubtitlesWindow : Window
 
     private static StackPanel MakeFormatRow(MergeTwoSubtitlesViewModel vm)
     {
-        var label = UiUtil.MakeLabel(Se.Language.Tools.MergeTwoSubtitles.OutputFormat);
+        var label = EditorChrome.MakeDimLabel(Se.Language.General.OutputFormat, new Thickness(0));
         var combo = UiUtil.MakeComboBox(vm.OutputFormats, vm, nameof(vm.SelectedOutputFormat))
-            .WithMinWidth(260);
+            .WithMinWidth(260)
+            .WithAccessibleName(Se.Language.General.OutputFormat);
 
         return new StackPanel
         {
@@ -252,6 +228,9 @@ public class MergeTwoSubtitlesWindow : Window
         };
     }
 
+    /// <summary>
+    /// Style 1, style 2 and the preview side by side, with a line on top - ASSA output only.
+    /// </summary>
     private static Border MakeStylesView(MergeTwoSubtitlesViewModel vm)
     {
         var l = Se.Language.Tools.MergeTwoSubtitles;
@@ -276,19 +255,35 @@ public class MergeTwoSubtitlesWindow : Window
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1.4, GridUnitType.Star) }, // the preview scales down to fit
             },
-            ColumnSpacing = 10,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-        grid.Add(col1, 0, 0);
-        grid.Add(col2, 0, 1);
+        grid.Add(EditorChrome.MakeEditorSection(l.Style1, col1, first: true), 0, 0);
+        grid.Add(WithLineLeft(EditorChrome.MakeEditorSection(l.Style2, col2, first: true)), 0, 1);
+        grid.Add(WithLineLeft(MakePreviewView(vm)), 0, 2);
 
-        var border = UiUtil.MakeBorderForControl(grid);
+        var border = new Border
+        {
+            Child = grid,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+        };
         border.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsAssaSelected)) { Source = vm });
         return border;
     }
 
-    private static Grid MakeStyleColumn(MergeTwoSubtitlesViewModel vm,
+    private static Border WithLineLeft(Control content)
+    {
+        return new Border
+        {
+            Child = content,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        };
+    }
+
+    private static StackPanel MakeStyleColumn(MergeTwoSubtitlesViewModel vm,
         string title,
         string fontNamePath, string fontSizePath,
         string boldPath, string italicPath,
@@ -296,37 +291,37 @@ public class MergeTwoSubtitlesWindow : Window
         string outlineWidthPath, string shadowWidthPath,
         string alignTopPath, string alignGroupName)
     {
-        var l = Se.Language.Tools.MergeTwoSubtitles;
+        const double labelWidth = 84;
 
-        var labelTitle = UiUtil.MakeLabel(title);
-        labelTitle.FontWeight = FontWeight.Bold;
+        var comboFontName = UiUtil.MakeComboBox(vm.FontNames, vm, fontNamePath)
+            .WithAccessibleName($"{title} - {Se.Language.General.FontName}");
+        comboFontName.HorizontalAlignment = HorizontalAlignment.Stretch;
 
-        var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName);
-        var comboFontName = UiUtil.MakeComboBox(vm.FontNames, vm, fontNamePath).WithMinWidth(180);
-
-        var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
-        var numFontSize = UiUtil.MakeNumericUpDownInt(6, 200, 20, 140, vm, fontSizePath);
+        var numFontSize = UiUtil.MakeNumericUpDownInt(6, 200, 20, 90, vm, fontSizePath)
+            .WithAccessibleName($"{title} - {Se.Language.General.FontSize}");
+        numFontSize.Classes.Add("field");
 
         var checkBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, boldPath);
         var checkItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, italicPath);
         var stylePanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 8,
+            Spacing = 12,
             Children = { checkBold, checkItalic },
         };
 
-        var labelPrimary = UiUtil.MakeLabel(Se.Language.General.TextColor);
-        var primaryPicker = UiUtil.MakeColorPickerButton(vm, primaryColorPath, false);
+        var primaryPicker = UiUtil.MakeColorPickerButton(vm, primaryColorPath, false)
+            .WithAccessibleName($"{title} - {Se.Language.General.TextColor}");
+        var outlinePicker = UiUtil.MakeColorPickerButton(vm, outlineColorPath, false)
+            .WithAccessibleName($"{title} - {Se.Language.General.OutlineColor}");
 
-        var labelOutline = UiUtil.MakeLabel(Se.Language.General.OutlineColor);
-        var outlinePicker = UiUtil.MakeColorPickerButton(vm, outlineColorPath, false);
+        var numOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 20, 90, vm, outlineWidthPath)
+            .WithAccessibleName($"{title} - {Se.Language.General.OutlineWidth}");
+        numOutlineWidth.Classes.Add("field");
 
-        var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.OutlineWidth);
-        var numOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 20, 140, vm, outlineWidthPath);
-
-        var labelShadowWidth = UiUtil.MakeLabel(Se.Language.General.ShadowWidth);
-        var numShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 20, 140, vm, shadowWidthPath);
+        var numShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 20, 90, vm, shadowWidthPath)
+            .WithAccessibleName($"{title} - {Se.Language.General.ShadowWidth}");
+        numShadowWidth.Classes.Add("field");
 
         var radioTop = UiUtil.MakeRadioButton(Se.Language.General.Top, vm, alignTopPath, alignGroupName);
         var radioBottom = new RadioButton
@@ -344,77 +339,39 @@ public class MergeTwoSubtitlesWindow : Window
         var alignPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 8,
+            Spacing = 12,
             Children = { radioTop, radioBottom },
         };
 
-        var grid = new Grid
+        return new StackPanel
         {
-            RowDefinitions =
+            Spacing = 6,
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontName, comboFontName, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, numFontSize, labelWidth),
+                EditorChrome.MakeLabeledRow(string.Empty, stylePanel, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.TextColor, primaryPicker, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.OutlineColor, outlinePicker, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.OutlineWidth, numOutlineWidth, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.ShadowWidth, numShadowWidth, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Alignment, alignPanel, labelWidth),
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 6,
         };
-
-        grid.Add(labelTitle, 0, 0, 1, 2);
-        grid.Add(labelFontName, 1, 0); grid.Add(comboFontName, 1, 1);
-        grid.Add(labelFontSize, 2, 0); grid.Add(numFontSize, 2, 1);
-        grid.Add(stylePanel, 3, 1);
-        grid.Add(labelPrimary, 4, 0); grid.Add(primaryPicker, 4, 1);
-        grid.Add(labelOutline, 5, 0); grid.Add(outlinePicker, 5, 1);
-        grid.Add(labelOutlineWidth, 6, 0); grid.Add(numOutlineWidth, 6, 1);
-        grid.Add(labelShadowWidth, 7, 0); grid.Add(numShadowWidth, 7, 1);
-        grid.Add(alignPanel, 8, 1);
-
-        return grid;
     }
 
     private static Border MakePreviewView(MergeTwoSubtitlesViewModel vm)
     {
-        var labelPreview = UiUtil.MakeLabel(Se.Language.General.Preview);
-
         var image = new Image
         {
             [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
             DataContext = vm,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
-            Stretch = Stretch.None,
+            Stretch = Stretch.Uniform,
+            StretchDirection = StretchDirection.DownOnly, // 480 wide, smaller in a narrow window
         };
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            RowSpacing = 5,
-        };
-        grid.Add(labelPreview, 0, 0);
-        grid.Add(image, 1, 0);
-
-        var border = UiUtil.MakeBorderForControl(grid);
-        border.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsAssaSelected)) { Source = vm });
-        return border;
+        return EditorChrome.MakeEditorSection(Se.Language.General.Preview, image, first: true);
     }
 }

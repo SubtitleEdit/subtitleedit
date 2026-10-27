@@ -1,6 +1,7 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -8,6 +9,11 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 
+/// <summary>
+/// Edit the binary image compare database, in the editor look (see <see cref="EditorChrome"/>):
+/// the characters and their images on the left, the selected image with its text on the right,
+/// OK in the button bar.
+/// </summary>
 public class BinaryOcrDbEditWindow : Window
 {
     public BinaryOcrDbEditWindow(BinaryOcrDbEditViewModel vm)
@@ -17,42 +23,32 @@ public class BinaryOcrDbEditWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         DataContext = vm;
         Width = 955;
         Height = 800;
         MinWidth = 950;
         MinHeight = 600;
 
-        var grid = new Grid
+        var body = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Controls
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(280) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            Height = double.NaN,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
         };
 
         var charactersView = MakeCharacterControlsView(vm);
         var currentItemView = MakeCurrentItemControlsView(vm);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk);
+        body.Add(charactersView, 0, 0);
+        body.Add(currentItemView, 0, 1);
 
-        grid.Add(charactersView, 0, 0);
-        grid.Add(currentItemView, 0, 1);
-        grid.Add(buttonBar, 1, 0, 1, 2);
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonBar = EditorChrome.MakeDockedButtonBar(null, buttonOk);
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(body, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
@@ -64,61 +60,36 @@ public class BinaryOcrDbEditWindow : Window
 
     private static Border MakeCharacterControlsView(BinaryOcrDbEditViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
-        };
-
-        var labelCharacters = UiUtil.MakeLabel("Character(s)");
-        var charactersComboBox = UiUtil.MakeComboBox(vm.Characters, vm, nameof(vm.SelectedCharacter));
+        var charactersComboBox = UiUtil.MakeComboBox(vm.Characters, vm, nameof(vm.SelectedCharacter))
+            .WithAccessibleName(Se.Language.General.Characters);
+        charactersComboBox.HorizontalAlignment = HorizontalAlignment.Stretch;
+        charactersComboBox.Width = double.NaN;
         charactersComboBox.SelectionChanged += vm.CharactersChanged;
-        var listBoxCurrentItems = new ListBox
-        {
-            Margin = new Thickness(0, 5, 0, 0),
-        };
+        var listBoxCurrentItems = new ListBox().WithAccessibleName(Se.Language.General.Images);
         listBoxCurrentItems.Bind(Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedCurrentCharacterItem)));
         listBoxCurrentItems.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.CurrentCharacterItems)));
         listBoxCurrentItems.SelectionChanged += vm.CurrentCharacterItemsChanged;
 
-        grid.Add(labelCharacters, 0, 0);
-        grid.Add(charactersComboBox, 1, 0);
-        grid.Add(listBoxCurrentItems, 2, 0);
-
-        return UiUtil.MakeBorderForControl(grid);
-    }
-
-    private static Border MakeCurrentItemControlsView(BinaryOcrDbEditViewModel vm)
-    {
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 20,
-            Width = double.NaN,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+            RowSpacing = 8,
         };
+        grid.Add(charactersComboBox, 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(listBoxCurrentItems, clearListBackground: true), 1, 0);
 
-        vm.TextBoxItem = UiUtil.MakeTextBox(100, vm, nameof(vm.ItemText)).WithAccessibleName(Se.Language.General.Text);
+        return EditorChrome.MakeDockedFillSection(Se.Language.General.Characters, grid, first: true);
+    }
+
+    private static Border MakeCurrentItemControlsView(BinaryOcrDbEditViewModel vm)
+    {
+        vm.TextBoxItem = BinaryOcrChrome.AsField(UiUtil.MakeTextBox(100, vm, nameof(vm.ItemText))).WithAccessibleName(Se.Language.General.Text);
+        vm.TextBoxItem.Width = 220;
+        vm.TextBoxItem.HorizontalAlignment = HorizontalAlignment.Left;
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxItem.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
@@ -127,39 +98,48 @@ public class BinaryOcrDbEditWindow : Window
 
         var image = new Image
         {
-            Margin = new Thickness(0, 5, 0, 0),
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            StretchDirection = StretchDirection.DownOnly, // natural size, as in the old auto-sized column
         };
         image.Bind(Image.SourceProperty, new Binding(nameof(vm.ItemBitmap)));
-        var imageBorder = new Border
-        {
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            Padding = new Thickness(5),
-            Child = image,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-        };
+        var imageBorder = BinaryOcrChrome.MakeImageFrame(image, ImagePreviewBackground.CreateBrush());
+        imageBorder.HorizontalAlignment = HorizontalAlignment.Left;
+        imageBorder.MinWidth = 40;
+        imageBorder.MinHeight = 40;
+
+        var switchItalic = EditorChrome.MakeSwitch(nameof(vm.IsItemItalic), Se.Language.General.Italic);
 
         var panelCurrent = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+            Spacing = 8,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Ocr.CurrentImage).WithBold(),
                 imageBorder,
+                BinaryOcrChrome.MakeInfo(nameof(vm.ResolutionAndTopMargin)),
+                BinaryOcrChrome.MakeInfo(nameof(vm.ExpandInfo)),
                 vm.TextBoxItem,
-                UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.IsItemItalic)),
-                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ResolutionAndTopMargin)),
-                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ExpandInfo)),
-                UiUtil.MakeButton(Se.Language.General.Update, vm.UpdateCommand).WithMarginTop(25).WithLeftAlignment(),
-                UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand).WithMarginTop(5).WithLeftAlignment(),
+                BinaryOcrChrome.MakeSwitchRow(switchItalic, Se.Language.General.Italic),
+                new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 6,
+                    Margin = new Thickness(0, 8, 0, 0),
+                    Children =
+                    {
+                        BinaryOcrChrome.MakeActionButton(Se.Language.General.Update, IconNames.Check, vm.UpdateCommand),
+                        BinaryOcrChrome.MakeActionButton(Se.Language.General.Delete, IconNames.Trash, vm.DeleteCommand),
+                    },
+                },
             },
-            Spacing = 5,
         };
 
-        grid.Add(panelCurrent, 0, 0);
-
-        return UiUtil.MakeBorderForControl(grid);
+        var section = EditorChrome.MakeEditorSection(Se.Language.Ocr.CurrentImage, panelCurrent, first: true);
+        return new Border
+        {
+            Child = new ScrollViewer { Content = section },
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        };
     }
 }

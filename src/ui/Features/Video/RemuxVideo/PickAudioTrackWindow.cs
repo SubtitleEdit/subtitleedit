@@ -7,6 +7,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.RemuxVideo;
 
+/// <summary>
+/// Pick one of the audio tracks of a video, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class PickAudioTrackWindow : Window
 {
     public PickAudioTrackWindow(PickAudioTrackViewModel vm)
@@ -18,13 +21,14 @@ public class PickAudioTrackWindow : Window
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         MinWidth = 500;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         DataContext = vm;
 
         var titleBlock = new TextBlock
         {
             FontSize = UiUtil.ScaledFontSize(14),
-            FontWeight = FontWeight.Bold,
+            FontWeight = FontWeight.SemiBold,
             TextWrapping = TextWrapping.Wrap,
         };
         titleBlock.Bind(TextBlock.TextProperty, new Binding(nameof(PickAudioTrackViewModel.TitleText)));
@@ -32,6 +36,10 @@ public class PickAudioTrackWindow : Window
         var messageBlock = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            MaxWidth = 560,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
         messageBlock.Bind(TextBlock.TextProperty, new Binding(nameof(PickAudioTrackViewModel.MessageText)));
 
@@ -42,22 +50,36 @@ public class PickAudioTrackWindow : Window
         };
         comboBox.Bind(ComboBox.ItemsSourceProperty, new Binding(nameof(PickAudioTrackViewModel.Tracks)));
         comboBox.Bind(ComboBox.SelectedItemProperty, new Binding(nameof(PickAudioTrackViewModel.SelectedTrack)));
+        Avalonia.Automation.AutomationProperties.SetName(comboBox, Se.Language.Video.RemuxVideoSelectAudioTrack);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
-        Content = new StackPanel
+        var panel = new StackPanel
         {
             Spacing = 10,
-            Margin = UiUtil.MakeWindowMargin(),
+            Margin = new Avalonia.Thickness(16, 14, 16, 16),
             Children =
             {
                 titleBlock,
                 messageBlock,
                 comboBox,
-                buttonBar,
             }
         };
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        grid.Add(EditorChrome.MakePanel(panel), 0);
+        grid.Add(buttonBar, 1);
+
+        Content = grid;
     }
 }

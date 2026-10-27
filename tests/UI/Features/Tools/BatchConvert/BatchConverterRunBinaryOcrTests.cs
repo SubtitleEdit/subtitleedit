@@ -1,4 +1,3 @@
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert;

@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
@@ -8,23 +7,6 @@ public static class ViewAutoBalanceLines
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var labelHeader = new Label
-        {
-            Content = Se.Language.General.AutoBalanceLines,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
-        var panel = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
-            Margin = new Avalonia.Thickness(10),
-            Children =
-            {
-                labelHeader,
-            }
-        };
-
-        return panel;
+        return FunctionViewChrome.MakePanel(vm, Se.Language.General.AutoBalanceLines);
     }
 }

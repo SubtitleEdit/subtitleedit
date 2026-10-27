@@ -1,6 +1,8 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Settings;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -35,9 +37,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
+            var settings = Configuration.Settings.SubtitleSettings;
+
+            // A template header (File > Properties > "Header source: template file") replaces whatever
+            // header the source file carries, so every saved .itt gets the same styling/layout (#16257).
+            var templateXml = LoadHeaderTemplate(settings.TimedTextItunesHeaderTemplate);
+            var useTemplate = templateXml != null;
+            var sourceIsSubStationAlpha = subtitle.Header != null && (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]"));
+
             XmlNode styleHead = null;
             var convertedFromSubStationAlpha = false;
-            if (subtitle.Header != null)
+            if (!useTemplate && subtitle.Header != null)
             {
                 try
                 {
@@ -91,11 +101,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var xml = new XmlDocument { XmlResolver = null };
-            var nsmgr = new XmlNamespaceManager(xml.NameTable);
-            nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-            nsmgr.AddNamespace("ttp", "http://www.w3.org/ns/10/ttml#parameter");
-            nsmgr.AddNamespace("tts", "http://www.w3.org/ns/ttml#styling");
-            nsmgr.AddNamespace("ttm", "http://www.w3.org/ns/10/ttml#metadata");
+            var nsmgr = MakeNamespaceManager(xml);
 
             var frameRate = ((int)Math.Round(Configuration.Settings.General.CurrentFrameRate)).ToString();
             var frameRateMultiplier = "999 1000";
@@ -110,30 +116,65 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            if (!string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesLanguage))
+            if (!string.IsNullOrEmpty(settings.TimedTextItunesLanguage))
             {
-                language = Configuration.Settings.SubtitleSettings.TimedTextItunesLanguage;
+                language = settings.TimedTextItunesLanguage;
+            }
+
+            var defaultColor = XmlAttributeValueOrDefault(settings.TimedTextItunesDefaultColor, "white");
+            var bodyAttributes = string.Empty;
+            if (BuiltInStyles.Contains(settings.TimedTextItunesDefaultStyle ?? string.Empty))
+            {
+                bodyAttributes += " style=\"" + settings.TimedTextItunesDefaultStyle + "\"";
+            }
+
+            if (BuiltInRegions.Contains(settings.TimedTextItunesDefaultRegion ?? string.Empty))
+            {
+                bodyAttributes += " region=\"" + settings.TimedTextItunesDefaultRegion + "\"";
             }
 
             var xmlStructure = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + Environment.NewLine +
             "<tt xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tt=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"" + language + "\" ttp:timeBase=\"smpte\" ttp:frameRate=\"" + frameRate + "\" ttp:frameRateMultiplier=\"" + frameRateMultiplier + "\" ttp:dropMode=\"" + dropMode + "\">" + Environment.NewLine +
             "   <head>" + Environment.NewLine +
             "       <styling>" + Environment.NewLine +
-            "         <style tts:fontSize=\"100%\" tts:color=\"white\" tts:fontStyle=\"normal\" tts:fontWeight=\"normal\" tts:fontFamily=\"sansSerif\" xml:id=\"normal\"/>" + Environment.NewLine +
-            "         <style tts:fontSize=\"100%\" tts:color=\"white\" tts:fontStyle=\"normal\" tts:fontWeight=\"bold\" tts:fontFamily=\"sansSerif\" xml:id=\"bold\"/>" + Environment.NewLine +
-            "         <style tts:fontSize=\"100%\" tts:color=\"white\" tts:fontStyle=\"italic\" tts:fontWeight=\"normal\" tts:fontFamily=\"sansSerif\" xml:id=\"italic\"/>" + Environment.NewLine +
+            "         <style tts:fontSize=\"100%\" tts:color=\"" + defaultColor + "\" tts:fontStyle=\"normal\" tts:fontWeight=\"normal\" tts:fontFamily=\"sansSerif\" xml:id=\"normal\"/>" + Environment.NewLine +
+            "         <style tts:fontSize=\"100%\" tts:color=\"" + defaultColor + "\" tts:fontStyle=\"normal\" tts:fontWeight=\"bold\" tts:fontFamily=\"sansSerif\" xml:id=\"bold\"/>" + Environment.NewLine +
+            "         <style tts:fontSize=\"100%\" tts:color=\"" + defaultColor + "\" tts:fontStyle=\"italic\" tts:fontWeight=\"normal\" tts:fontFamily=\"sansSerif\" xml:id=\"italic\"/>" + Environment.NewLine +
             "      </styling>" + Environment.NewLine +
             "      <layout>" + Environment.NewLine +
-            "        <region xml:id=\"top\" tts:origin=\"" + Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin + "\" tts:extent=\"" + Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent + "\" tts:textAlign=\"center\" tts:displayAlign=\"before\"/>" + Environment.NewLine +
-            "        <region xml:id=\"bottom\" tts:origin=\"" + Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin + "\" tts:extent=\"" + Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent + "\" tts:textAlign=\"center\" tts:displayAlign=\"after\"/>" + Environment.NewLine +
+            "        <region xml:id=\"top\" tts:origin=\"" + settings.TimedTextItunesTopOrigin + "\" tts:extent=\"" + settings.TimedTextItunesTopExtent + "\" tts:textAlign=\"center\" tts:displayAlign=\"before\"/>" + Environment.NewLine +
+            "        <region xml:id=\"bottom\" tts:origin=\"" + settings.TimedTextItunesBottomOrigin + "\" tts:extent=\"" + settings.TimedTextItunesBottomExtent + "\" tts:textAlign=\"center\" tts:displayAlign=\"after\"/>" + Environment.NewLine +
             "      </layout>" + Environment.NewLine +
             "   </head>" + Environment.NewLine +
-            "   <body>" + Environment.NewLine +
+            "   <body" + bodyAttributes + ">" + Environment.NewLine +
             "       <div />" + Environment.NewLine +
             "   </body>" + Environment.NewLine +
             "</tt>";
 
-            if (styleHead == null)
+            if (useTemplate)
+            {
+                // The template defines look, layout and metadata; the timing parameters follow the
+                // current frame rate like the built-in header, and the language setting wins when set.
+                xml = templateXml;
+                nsmgr = MakeNamespaceManager(xml);
+                ClearBodyDiv(xml, nsmgr);
+                if (GetRootParameter(xml, "timeBase") == null)
+                {
+                    SetRootParameter(xml, "timeBase", "smpte"); // the time codes are written as frames
+                }
+
+                SetRootParameter(xml, "frameRate", frameRate);
+                SetRootParameter(xml, "frameRateMultiplier", frameRateMultiplier);
+                SetRootParameter(xml, "dropMode", dropMode);
+                if (!string.IsNullOrEmpty(settings.TimedTextItunesLanguage))
+                {
+                    SetRootLanguage(xml, settings.TimedTextItunesLanguage);
+                }
+
+                ApplyRegionSettings(xml, nsmgr, settings);
+                ApplyBodyDefaults(xml, nsmgr, settings);
+            }
+            else if (styleHead == null)
             {
                 xml.LoadXml(xmlStructure);
             }
@@ -142,57 +183,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 try
                 {
                     xml.LoadXml(subtitle.Header);
-                    XmlNode divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
-                    if (divNode == null)
+                    if (ClearBodyDiv(xml, nsmgr))
                     {
-                        divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
-                    }
-
-                    if (divNode != null)
-                    {
-                        var lst = new List<XmlNode>();
-                        foreach (XmlNode child in divNode.ChildNodes)
+                        // The time codes are written at the current frame rate, so the source's
+                        // timing parameters must follow it after a frame rate change (#16257).
+                        // When the rate is unchanged the source's own values are kept, so a
+                        // round trip does not turn "1000 1001"/"nonDrop" into "999 1000"/"dropNTSC".
+                        var headerFrameRate = GetHeaderFrameRate(xml);
+                        if (headerFrameRate == null || Math.Abs(headerFrameRate.Value - Configuration.Settings.General.CurrentFrameRate) >= 0.01)
                         {
-                            lst.Add(child);
+                            SetRootParameter(xml, "frameRate", frameRate);
+                            SetRootParameter(xml, "frameRateMultiplier", frameRateMultiplier);
+                            SetRootParameter(xml, "dropMode", dropMode);
                         }
-
-                        foreach (var child in lst)
-                        {
-                            divNode.RemoveChild(child);
-                        }
-
-                        foreach (XmlNode child in xml.DocumentElement.SelectNodes("//ttml:region", nsmgr))
-                        {
-                            var id = child.Attributes["xml:id"];
-                            if (id?.Value == "top")
-                            {
-                                var originAttr = child.Attributes["tts:origin"];
-                                if (originAttr != null && !string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin))
-                                {
-                                    originAttr.Value = Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin;
-                                }
-
-                                var extentAttr = child.Attributes["tts:extent"];
-                                if (extentAttr != null && !string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent))
-                                {
-                                    extentAttr.Value = Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent;
-                                }
-                            }
-                            else if (id?.Value == "bottom")
-                            {
-                                var originAttr = child.Attributes["tts:origin"];
-                                if (originAttr != null && !string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin))
-                                {
-                                    originAttr.Value = Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin;
-                                }
-
-                                var extentAttr = child.Attributes["tts:extent"];
-                                if (extentAttr != null && !string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent))
-                                {
-                                    extentAttr.Value = Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent;
-                                }
-                            }
-                        }
+                        ApplyRegionSettings(xml, nsmgr, settings);
                     }
                     else
                     {
@@ -243,35 +247,38 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            var hasAlignmentTags = subtitle.Paragraphs.Any(p => p.Text.Contains("{\\an", StringComparison.Ordinal));
-            var headerStyles = GetStylesFromHeader(subtitle.Header);
-            var isDefaultAlignmentBottom = body != null && body.Attributes != null && body.Attributes["region"] != null && body.Attributes["region"].InnerText == "bottom";
+            var headerStyles = useTemplate ? GetStylesFromHeader(xml) : GetStylesFromHeader(subtitle.Header);
+            var bodyRegion = body?.Attributes?["region"]?.InnerText;
             foreach (var p in subtitle.Paragraphs)
             {
                 var paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
                 var text = p.Text;
 
-                if (hasAlignmentTags || !isDefaultAlignmentBottom) 
+                // A line only names its region when it differs from the body's - with
+                // <body region="bottom"> just the top-aligned lines get region="top" (#16257).
+                string wantedRegion = null;
+                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
+                {
+                    if (hasTopRegion)
+                    {
+                        wantedRegion = "top";
+                    }
+                }
+                else if (hasBottomRegion)
+                {
+                    wantedRegion = "bottom";
+                }
+
+                if (wantedRegion != null && wantedRegion != bodyRegion)
                 {
                     var regionP = xml.CreateAttribute("region");
-                    if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
-                    {
-                        if (hasTopRegion)
-                        {
-                            regionP.InnerText = "top";
-                            paragraph.Attributes.Append(regionP);
-                        }
-                    }
-                    else if (hasBottomRegion)
-                    {
-                        regionP.InnerText = "bottom";
-                        paragraph.Attributes.Append(regionP);
-                    }
+                    regionP.InnerText = wantedRegion;
+                    paragraph.Attributes.Append(regionP);
+                }
 
-                    if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6 && text[5] == '}')
-                    {
-                        text = text.Remove(0, 6);
-                    }
+                if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6 && text[5] == '}')
+                {
+                    text = text.Remove(0, 6);
                 }
 
                 if (convertedFromSubStationAlpha)
@@ -282,7 +289,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                if (subtitle.Header != null && p.Style != null && headerStyles.Contains(p.Style))
+                if (useTemplate)
+                {
+                    // Only styles the template knows are referenced; the rest fall back to the body default.
+                    var styleName = p.Style;
+                    if (string.IsNullOrEmpty(styleName) && sourceIsSubStationAlpha)
+                    {
+                        styleName = p.Extra;
+                    }
+
+                    if (!string.IsNullOrEmpty(styleName) && styleName != defaultStyle && headerStyles.Contains(styleName))
+                    {
+                        var styleAttr = xml.CreateAttribute("style");
+                        styleAttr.InnerText = styleName;
+                        paragraph.Attributes.Append(styleAttr);
+                    }
+                }
+                else if (subtitle.Header != null && p.Style != null && headerStyles.Contains(p.Style))
                 {
                     if (p.Style != defaultStyle)
                     {
@@ -466,6 +489,251 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         private const string FontWithoutColor = "font";
+
+        private static XmlNamespaceManager MakeNamespaceManager(XmlDocument xml)
+        {
+            var nsmgr = new XmlNamespaceManager(xml.NameTable);
+            nsmgr.AddNamespace("ttml", TtmlNamespace);
+            nsmgr.AddNamespace("ttp", "http://www.w3.org/ns/10/ttml#parameter");
+            nsmgr.AddNamespace("tts", "http://www.w3.org/ns/ttml#styling");
+            nsmgr.AddNamespace("ttm", "http://www.w3.org/ns/10/ttml#metadata");
+            return nsmgr;
+        }
+
+        private static readonly string[] BuiltInStyles = { "normal", "bold", "italic" };
+        private static readonly string[] BuiltInRegions = { "top", "bottom" };
+
+        /// <summary>
+        /// Parses a template header (see <see cref="SubtitleSettings.TimedTextItunesHeaderTemplate"/>):
+        /// a TTML document with a head and a body. Null when there is none or it does not parse.
+        /// </summary>
+        public static XmlDocument LoadHeaderTemplate(string template)
+        {
+            if (string.IsNullOrWhiteSpace(template))
+            {
+                return null;
+            }
+
+            try
+            {
+                var xml = new XmlDocument { XmlResolver = null };
+                xml.LoadXml(template.Trim());
+                if (xml.DocumentElement == null || xml.DocumentElement.NamespaceURI != TtmlNamespace)
+                {
+                    return null;
+                }
+
+                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("ttml", TtmlNamespace);
+                if (xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr) == null)
+                {
+                    return null;
+                }
+
+                var body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
+                if (body == null)
+                {
+                    body = xml.CreateElement("body", TtmlNamespace);
+                    xml.DocumentElement.AppendChild(body);
+                }
+
+                if (body.SelectSingleNode("ttml:div", nsmgr) == null)
+                {
+                    body.AppendChild(xml.CreateElement("div", TtmlNamespace));
+                }
+
+                return xml;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Empties the body's div (or the body's first child), where the lines go. False when there is no such node.
+        /// </summary>
+        private static bool ClearBodyDiv(XmlDocument xml, XmlNamespaceManager nsmgr)
+        {
+            var bodyNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr);
+            var divNode = bodyNode?.SelectSingleNode("ttml:div", nsmgr) ?? bodyNode?.FirstChild;
+            if (divNode == null)
+            {
+                return false;
+            }
+
+            var lst = new List<XmlNode>();
+            foreach (XmlNode child in divNode.ChildNodes)
+            {
+                lst.Add(child);
+            }
+
+            foreach (var child in lst)
+            {
+                divNode.RemoveChild(child);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// The top/bottom region origin and extent from the settings win over a header's own.
+        /// </summary>
+        private static void ApplyRegionSettings(XmlDocument xml, XmlNamespaceManager nsmgr, SubtitleSettings settings)
+        {
+            foreach (XmlNode child in xml.DocumentElement.SelectNodes("//ttml:region", nsmgr))
+            {
+                var id = child.Attributes["xml:id"];
+                if (id?.Value == "top")
+                {
+                    SetAttributeIfPresent(child, "tts:origin", settings.TimedTextItunesTopOrigin);
+                    SetAttributeIfPresent(child, "tts:extent", settings.TimedTextItunesTopExtent);
+                }
+                else if (id?.Value == "bottom")
+                {
+                    SetAttributeIfPresent(child, "tts:origin", settings.TimedTextItunesBottomOrigin);
+                    SetAttributeIfPresent(child, "tts:extent", settings.TimedTextItunesBottomExtent);
+                }
+            }
+        }
+
+        private static void SetAttributeIfPresent(XmlNode node, string attributeName, string value)
+        {
+            var attr = node.Attributes[attributeName];
+            if (attr != null && !string.IsNullOrEmpty(value))
+            {
+                attr.Value = value;
+            }
+        }
+
+        /// <summary>
+        /// The default style/region settings override the template body's own style/region
+        /// attributes - only when the template actually defines them.
+        /// </summary>
+        private static void ApplyBodyDefaults(XmlDocument xml, XmlNamespaceManager nsmgr, SubtitleSettings settings)
+        {
+            var bodyNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr) as XmlElement;
+            if (bodyNode == null)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(settings.TimedTextItunesDefaultStyle) && GetStylesFromHeader(xml).Contains(settings.TimedTextItunesDefaultStyle))
+            {
+                bodyNode.SetAttribute("style", settings.TimedTextItunesDefaultStyle);
+            }
+
+            if (!string.IsNullOrEmpty(settings.TimedTextItunesDefaultRegion) && GetRegionsFromHeader(xml).Contains(settings.TimedTextItunesDefaultRegion))
+            {
+                bodyNode.SetAttribute("region", settings.TimedTextItunesDefaultRegion);
+            }
+        }
+
+        /// <summary>
+        /// Sets a ttp:* attribute on the root, matched by local name so a template's own prefix/namespace is kept.
+        /// </summary>
+        private static void SetRootParameter(XmlDocument xml, string localName, string value)
+        {
+            var root = xml.DocumentElement;
+            foreach (XmlAttribute attr in root.Attributes)
+            {
+                if (attr.LocalName == localName && attr.NamespaceURI.Contains("ttml#parameter"))
+                {
+                    attr.Value = value;
+                    return;
+                }
+            }
+
+            var ns = root.GetNamespaceOfPrefix("ttp");
+            if (string.IsNullOrEmpty(ns))
+            {
+                ns = "http://www.w3.org/ns/ttml#parameter";
+            }
+
+            // with the "ttp" prefix, so a template without an xmlns:ttp declaration does not get
+            // a generated "p2" prefix
+            var newAttribute = xml.CreateAttribute("ttp", localName, ns);
+            newAttribute.Value = value;
+            root.Attributes.Append(newAttribute);
+        }
+
+        private static string GetRootParameter(XmlDocument xml, string localName)
+        {
+            foreach (XmlAttribute attr in xml.DocumentElement.Attributes)
+            {
+                if (attr.LocalName == localName && attr.NamespaceURI.Contains("ttml#parameter"))
+                {
+                    return attr.Value;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// The frame rate a header's ttp:frameRate and ttp:frameRateMultiplier describe, read the
+        /// same way as when loading (TimedText10), or null when there is none.
+        /// </summary>
+        private static double? GetHeaderFrameRate(XmlDocument xml)
+        {
+            var frameRateText = GetRootParameter(xml, "frameRate");
+            if (frameRateText == null ||
+                !double.TryParse(frameRateText, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var fr))
+            {
+                return null;
+            }
+
+            var multiplier = GetRootParameter(xml, "frameRateMultiplier");
+            if (multiplier == "999 1000" || multiplier == "1000 1001")
+            {
+                if (Math.Abs(fr - 30) < 0.01)
+                {
+                    return 29.97;
+                }
+
+                if (Math.Abs(fr - 24) < 0.01)
+                {
+                    return 23.976;
+                }
+            }
+
+            if (multiplier != null)
+            {
+                var arr = multiplier.Split();
+                if (arr.Length == 2 && int.TryParse(arr[0], out var numerator) && int.TryParse(arr[1], out var denominator) && denominator > 0)
+                {
+                    fr = fr * numerator / denominator;
+                }
+            }
+
+            return fr;
+        }
+
+        private static void SetRootLanguage(XmlDocument xml, string language)
+        {
+            var root = xml.DocumentElement;
+            var attr = root.Attributes["xml:lang"];
+            if (attr != null)
+            {
+                attr.Value = language;
+                return;
+            }
+
+            root.SetAttribute("lang", "http://www.w3.org/XML/1998/namespace", language);
+        }
+
+        /// <summary>
+        /// A settings value that goes straight into an XML attribute; anything that could break the markup falls back.
+        /// </summary>
+        private static string XmlAttributeValueOrDefault(string value, string defaultValue)
+        {
+            if (string.IsNullOrWhiteSpace(value) || value.IndexOfAny(new[] { '"', '<', '>', '&' }) >= 0)
+            {
+                return defaultValue;
+            }
+
+            return value.Trim();
+        }
 
         private static XmlNode OpenSpan(XmlDocument xml, XmlNode container, XmlAttribute tag)
         {

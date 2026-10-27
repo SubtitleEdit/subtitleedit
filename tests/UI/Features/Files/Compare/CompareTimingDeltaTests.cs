@@ -5,10 +5,8 @@ using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 
 namespace UITests.Features.Files.Compare;
 

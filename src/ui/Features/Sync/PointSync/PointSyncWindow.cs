@@ -1,15 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Input;
-using Avalonia.Interactivity;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Features.Sync.PointSyncViaOther;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using System.Collections;
 
 namespace Nikse.SubtitleEdit.Features.Sync.PointSync;
 
@@ -20,21 +15,39 @@ public class PointSyncWindow : Window
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = UiUtil.MakeWindowTitle(Se.Language.Sync.PointSync);
-        Width = 800;
+        Width = 900;
         Height = 600;
-        MinWidth = 600;
-        MinHeight = 600;
+        MinWidth = 700;
+        MinHeight = 480;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         DataContext = vm;
 
-        var subtitleViewView = MakeSubtitleView(vm);
+        var subtitleView = PointSyncChrome.MakeListPane(
+            PointSyncChrome.MakeHeaderRow(
+                PointSyncChrome.MakeHeaderWithCount(Se.Language.General.Lines, $"{nameof(vm.Subtitles)}.Count"),
+                null),
+            MakeSubtitleView(vm));
         var controlView = MakeControlView(vm);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsEnabled(nameof(vm.IsOkEnabled));
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = EditorChrome.MakeButtonBar(MakeFileInfo(vm), buttonCancel, buttonOk);
 
+        var content = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        content.Add(subtitleView, 0, 0);
+        content.Add(controlView, 0, 1);
+
+        // The lists give up height first, so the button bar stays reachable on a short screen.
         var grid = new Grid
         {
             RowDefinitions =
@@ -42,20 +55,9 @@ public class PointSyncWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-
-        grid.Add(subtitleViewView, 0);
-        grid.Add(controlView, 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        grid.Add(content, 0, 0);
+        grid.Add(panelButtons, 1, 0);
 
         Content = grid;
 
@@ -68,74 +70,33 @@ public class PointSyncWindow : Window
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Control MakeControlView(PointSyncViewModel vm)
+    /// <summary>
+    /// The subtitle being synced, on the left of the button bar.
+    /// </summary>
+    private static Control MakeFileInfo(PointSyncViewModel vm)
     {
+        var label = PointSyncChrome.MakeFileNameLabel(vm, nameof(vm.FileName));
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(50, GridUnitType.Pixel) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Margin = new Thickness(0, 60, 0, 0),
         };
-
-        // The DataGrid this replaces hid its header (HeadersVisibility.None); TableView
-        // has no such switch, so the single column's header now doubles as the panel title.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
-        dataGrid.CanUserResizeColumns = false; // single star column, nothing to resize
-        // Fixed width: this panel sits in an Auto-sized outer column, and a TableView
-        // with a star column measured without a width constraint demands more than the
-        // whole window (star columns have no content-based size), squeezing the
-        // subtitle grids to slivers and overflowing the right edge.
-        dataGrid.Width = 280;
-        dataGrid.DataContext = vm;
-        dataGrid.ItemsSource = vm.SyncPoints;
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.Sync.SyncPoints,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(SyncPoint.Text)),
-            Width = new GridLength(1, GridUnitType.Star),
-        });
-
-        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSyncPoint)));
-        dataGrid.WithAccessibleName(Se.Language.Sync.SyncPoints);
-        TableViewExtras.AttachListNavigation(dataGrid);
-
-        var menuItemDelete = new MenuItem
-        {
-            Header = Se.Language.General.Delete,
-            DataContext = vm,
-            Command = vm.DeleteSelectedPointSyncCommand,
-        };
-        var flyout = new MenuFlyout { Items = { menuItemDelete } };
-        flyout.Opening += (_, _) => menuItemDelete.IsEnabled = vm.SelectedSyncPoint != null;
-        dataGrid.ContextFlyout = flyout;
-        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
-        dataGrid.KeyDown += (_, e) =>
-        {
-            if (e.Key is Key.Delete or Key.Back)
-            {
-                e.Handled = true;
-                vm.DeleteSelectedPointSyncCommand.Execute(null);
-            }
-        };
-
-        var buttonSetSyncPoint = UiUtil.MakeButton(Se.Language.Sync.SetSyncPoint, vm.SetSyncPointCommand)
-            .WithIconLeft(IconNames.ArrowLeftRightBold);
-
-        grid.Add(buttonSetSyncPoint, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
-
+        grid.Add(PointSyncChrome.MakeFileIcon(), 0, 0);
+        grid.Add(label, 0, 1);
         return grid;
+    }
+
+    private static Control MakeControlView(PointSyncViewModel vm)
+    {
+        var syncPointList = PointSyncChrome.MakeSyncPointList(vm, vm.SyncPoints, nameof(vm.SelectedSyncPoint),
+            vm.DeleteSelectedPointSyncCommand, () => vm.SelectedSyncPoint != null);
+
+        var buttonSetSyncPoint = PointSyncChrome.MakeWideAction(IconNames.ArrowLeftRightBold, Se.Language.Sync.SetSyncPoint, vm.SetSyncPointCommand);
+
+        return PointSyncChrome.MakeSidePanel(syncPointList, $"{nameof(vm.SyncPoints)}.Count", new Thickness(1, 0, 0, 0), buttonSetSyncPoint);
     }
 
     private static Border MakeSubtitleView(PointSyncViewModel vm)
@@ -200,7 +161,6 @@ public class PointSyncWindow : Window
             }
         };
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid);
     }
-
 }

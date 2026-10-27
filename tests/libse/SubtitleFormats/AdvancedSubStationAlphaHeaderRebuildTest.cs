@@ -1,7 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LibSETests.SubtitleFormats;
 
@@ -49,7 +47,7 @@ public class AdvancedSubStationAlphaHeaderRebuildTest
         Assert.Equal(new[] { "Default", "Gothic" }, StyleNames(header));
         Assert.Contains("Title: my film", header);
         Assert.Contains("PlayResX: 1234", header);
-        Assert.Single(header.SplitToLines().Where(l => l.StartsWith("ScriptType:")));
+        Assert.Single(header.SplitToLines(), l => l.StartsWith("ScriptType:"));
         Assert.Contains("ScriptType: v4.00+", header);
     }
 
@@ -65,7 +63,7 @@ public class AdvancedSubStationAlphaHeaderRebuildTest
         Assert.Equal(new[] { "Default", "Gothic" }, StyleNames(header));
         Assert.Contains("Title: my film", header);
         Assert.Contains("PlayResY: 516", header);
-        Assert.Single(header.SplitToLines().Where(l => l.StartsWith("ScriptType:", System.StringComparison.OrdinalIgnoreCase)));
+        Assert.Single(header.SplitToLines(), l => l.StartsWith("ScriptType:", System.StringComparison.OrdinalIgnoreCase));
         Assert.Contains("ScriptType: v4.00+", header);
     }
 

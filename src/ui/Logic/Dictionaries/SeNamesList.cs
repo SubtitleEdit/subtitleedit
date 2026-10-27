@@ -279,7 +279,7 @@ public class SeNamesList : INamesList
             return false;
         }
 
-        foreach (var n in name.IndexOf(' ') >= 0 ? _namesMultiList : _namesList)
+        foreach (var n in name.Contains(' ') ? _namesMultiList : _namesList)
         {
             if (name.Equals(n, StringComparison.OrdinalIgnoreCase))
             {
@@ -363,7 +363,7 @@ public class SeNamesList : INamesList
                     var name = reader.ReadElementContentAsString().Trim();
                     if (name.Length > 0)
                     {
-                        if (name.IndexOf(' ') >= 0)
+                        if (name.Contains(' '))
                         {
                             _namesMultiList.Add(name);
                         }

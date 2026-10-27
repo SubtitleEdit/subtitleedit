@@ -33,8 +33,52 @@ public static class FrameModeTimeSnapper
             return FrameNumbers.Snap(time);
         }
 
+        // Already on a video frame (the video position, a frame step): keep it - near the edge
+        // of a time code frame two video frames can show the same hh:mm:ss:ff.
+        if (IsSnappingToVideoFrames() && FrameNumbers.Snap(time) == time)
+        {
+            return time;
+        }
+
         var timeCode = new TimeCode(time.TotalMilliseconds);
-        return TimeSpan.FromMilliseconds(TimeCode.ParseHHMMSSFFToMilliseconds(timeCode.ToHHMMSSFF()));
+        return ToVideoFrame(TimeSpan.FromMilliseconds(TimeCode.ParseHHMMSSFFToMilliseconds(timeCode.ToHHMMSSFF())));
+    }
+
+    /// <summary>
+    /// With "snap times to video frames" on, moves a time on the hh:mm:ss:ff grid (whole seconds
+    /// plus the frame within the second) to the video frame nearest to it (#16007), the frame a
+    /// Blu-ray sup export puts it on. Every video frame keeps its own hh:mm:ss:ff, so typing the
+    /// displayed time code back in lands on the same frame. Otherwise the time is returned as is.
+    /// </summary>
+    public static TimeSpan ToVideoFrame(TimeSpan time)
+    {
+        if (!IsSnappingToVideoFrames() || time < TimeSpan.Zero || time.IsMaxTime())
+        {
+            return time;
+        }
+
+        // The nearest video frame, unless that shows as another hh:mm:ss:ff - the time code's
+        // whole milliseconds can sit right between two frames, and the neighbour is the one with
+        // this time code.
+        var timeCode = new TimeCode(time.TotalMilliseconds).ToHHMMSSFF();
+        var nearest = FrameNumbers.FromMilliseconds(time.TotalMilliseconds);
+        foreach (var frame in new[] { nearest, nearest - 1, nearest + 1 })
+        {
+            var frameMs = FrameNumbers.ToMilliseconds(frame);
+            if (frame >= 0 && new TimeCode(frameMs).ToHHMMSSFF() == timeCode)
+            {
+                return TimeSpan.FromMilliseconds(frameMs);
+            }
+        }
+
+        return TimeSpan.FromMilliseconds(FrameNumbers.ToMilliseconds(nearest));
+    }
+
+    private static bool IsSnappingToVideoFrames()
+    {
+        var general = Config.Se.Settings.General;
+        return general.FrameModeSnapToVideoFrames && !general.UseFrameNumbers &&
+               Configuration.Settings.General.CurrentFrameRate >= 1;
     }
 
     /// <summary>

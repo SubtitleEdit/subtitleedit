@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Data;
@@ -24,40 +25,31 @@ public class SpeechToTextEngineSettingsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 540;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        Content = BuildContent(vm);
-
-        var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        UiUtil.FocusOnFirstActivation(this, ok);
+        var close = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand));
+        Content = BuildContent(vm, close);
     }
 
-    private Border BuildContent(SpeechToTextEngineSettingsViewModel vm)
+    private static StackPanel BuildContent(SpeechToTextEngineSettingsViewModel vm, Button close)
     {
         var header = BuildHeader(vm);
-        var details = BuildDetails(vm);
-        var actions = BuildActions(vm);
+        header.Margin = new Thickness(16, 14, 16, 14);
 
-        var stack = new StackPanel
+        var details = new Border
+        {
+            Child = EditorChrome.MakeEditorSection(Se.Language.General.Information, BuildDetails(vm)),
+            Background = EditorChrome.PanelBrush,
+        };
+
+        return new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 14,
-            Children = { header, details, actions },
-        };
-
-        var outerGrid = new Grid
-        {
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-        outerGrid.Children.Add(stack);
-
-        return new Border
-        {
-            Child = outerGrid,
-            Padding = new Thickness(4),
+            Children = { header, details, BuildActions(vm, close) },
         };
     }
 
@@ -73,7 +65,7 @@ public class SpeechToTextEngineSettingsWindow : Window
         var subtitle = new TextBlock
         {
             FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.75,
+            Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(0, 2, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SubtitleText)),
         };
@@ -86,7 +78,7 @@ public class SpeechToTextEngineSettingsWindow : Window
         };
     }
 
-    private static Border BuildDetails(SpeechToTextEngineSettingsViewModel vm)
+    private static Grid BuildDetails(SpeechToTextEngineSettingsViewModel vm)
     {
         var grid = new Grid
         {
@@ -144,61 +136,41 @@ public class SpeechToTextEngineSettingsWindow : Window
             FontSize = UiUtil.ScaledFontSize(12),
             [!TextBox.TextProperty] = new Binding(nameof(vm.InstallFolder)),
         };
+        AutomationProperties.SetName(folderText, Se.Language.General.InstallFolder);
         grid.Add(folderText, 2, 1);
 
-        return new Border
-        {
-            Child = grid,
-            Padding = new Thickness(14),
-            CornerRadius = new CornerRadius(6),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
-        };
+        return grid;
     }
 
-    private static Grid BuildActions(SpeechToTextEngineSettingsViewModel vm)
+    /// <summary>
+    /// Re-download and open folder on the left, Close on the right.
+    /// </summary>
+    private static Border BuildActions(SpeechToTextEngineSettingsViewModel vm, Button close)
     {
         var redownload = UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
             .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel));
         var openFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen);
-        var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
+        redownload.Margin = new Thickness(0);
+        openFolder.Margin = new Thickness(0);
 
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
             Children = { redownload, openFolder },
         };
 
-        var rightPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Spacing = 8,
-            Children = { close },
-        };
-
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-        };
-        grid.Add(leftPanel, 0, 0);
-        grid.Add(rightPanel, 0, 2);
-        return grid;
+        return EditorChrome.MakeFlushButtonBar(leftPanel, close);
     }
 
     private static TextBlock MakeLabel(string text) => new()
     {
         Text = text,
-        Opacity = 0.7,
+        FontSize = EditorChrome.FieldFontSize,
+        Foreground = EditorChrome.DimTextBrush,
         VerticalAlignment = VerticalAlignment.Center,
     };
-
     private static TextBlock MakeValue(string bindingPath) => new()
     {
         FontWeight = FontWeight.SemiBold,

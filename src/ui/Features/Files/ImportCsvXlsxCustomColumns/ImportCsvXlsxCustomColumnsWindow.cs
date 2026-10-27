@@ -29,16 +29,25 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var buttonPickFile = UiUtil.MakeButton(Se.Language.General.OpenFile, vm.PickFileCommand).WithMinWidth(140);
-        var labelFile = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.FilePath)).WithAlignmentTop();
-        var labelSeparator = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.SeparatorDisplay)).WithAlignmentTop();
-        var topPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Children = { buttonPickFile, labelFile, labelSeparator },
-            Spacing = 10,
-        };
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+
+        var buttonPickFile = EditorChrome.MakeTextToolButton("fa-regular fa-folder-open", Se.Language.General.OpenFile, vm.PickFileCommand);
+        var labelFile = EditorChrome.MakeDimText();
+        labelFile.DataContext = vm;
+        labelFile.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FilePath)));
+        var labelSeparator = EditorChrome.MakeDimText();
+        labelSeparator.DataContext = vm;
+        labelSeparator.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SeparatorDisplay)));
+        labelSeparator.Margin = new Thickness(12, 0, 0, 0);
+
+        // Open file on the left, then the file name (trimmed) and the detected separator
+        var toolbar = new DockPanel();
+        DockPanel.SetDock(buttonPickFile, Dock.Left);
+        DockPanel.SetDock(labelSeparator, Dock.Right);
+        toolbar.Children.Add(buttonPickFile);
+        toolbar.Children.Add(labelSeparator);
+        labelFile.Margin = new Thickness(10, 0, 0, 0);
+        toolbar.Children.Add(labelFile);
 
         _sourceGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.File.Import.TitleImportCsvXlsxCustomColumns); // source rows (#12087)
         _sourceGrid.Width = double.NaN;
@@ -53,53 +62,42 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         _previewGrid.ItemsSource = vm.PreviewSubtitles;
         BuildPreviewColumns(_previewGrid);
 
-        var labelPreview = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.PreviewSubtitles)}.{nameof(vm.PreviewSubtitles.Count)}")
+        var labelPreview = EditorChrome.MakeDimText();
+        labelPreview.DataContext = vm;
+        labelPreview.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.PreviewSubtitles)}.{nameof(vm.PreviewSubtitles.Count)}")
         {
             StringFormat = Se.Language.File.Import.NumberOfSubtitlesX,
-        }).WithAlignmentTop();
+        });
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)) { Source = vm });
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         var splitter = new GridSplitter
         {
             ResizeDirection = GridResizeDirection.Rows,
             Height = 4,
+            Background = EditorChrome.LineBrush,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var grid = new Grid
+        var sections = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 120 },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 120 },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(topPanel, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(_sourceGrid), 1);
-        grid.Add(splitter, 2);
-        grid.Add(labelPreview, 3);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(_previewGrid), 4);
-        grid.Add(panelButtons, 5);
+        sections.Add(new Border { Padding = new Thickness(10, 8, 14, 8), Child = toolbar }, 0);
+        sections.Add(EditorChrome.MakeListSection(Se.Language.General.Columns, _sourceGrid), 1);
+        sections.Add(splitter, 2);
+        sections.Add(EditorChrome.MakeListSection(Se.Language.General.Preview, _previewGrid, first: true), 3);
 
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(sections, labelPreview, buttonCancel, buttonOk);
 
         vm.ColumnsRebuilt += (_, _) => RebuildSourceGridColumns(vm);
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(_sourceGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
@@ -141,6 +139,7 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         var combo = new ComboBox
         {
             ItemsSource = MakeRoleOptions(),
+            [Avalonia.Automation.AutomationProperties.NameProperty] = def.HeaderName,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             MinWidth = 110,
             Margin = new Thickness(0, 4, 0, 0),

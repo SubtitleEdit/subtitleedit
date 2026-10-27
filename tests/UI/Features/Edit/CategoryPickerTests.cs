@@ -3,8 +3,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UITests.Features.Edit;
 

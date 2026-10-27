@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           # Any .NET 10 SDK can perform the restore; the exact runtime pack version is
           # forced via DOTNET_RUNTIME_VERSION above, not by the SDK selection.
@@ -47,7 +47,7 @@ jobs:
           fi
 
       - name: Upload regenerated nuget-sources.json
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: nuget-sources
           path: installer/flatpak/nuget-sources.json
@@ -65,7 +65,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Download regenerated nuget-sources.json
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: nuget-sources
           path: installer/flatpak/
@@ -82,7 +82,7 @@ jobs:
           arch: x86_64
 
       - name: Upload flatpak bundle artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: flatpak-bundle
           path: SubtitleEdit-linux-x64.flatpak

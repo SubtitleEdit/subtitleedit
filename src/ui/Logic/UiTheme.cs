@@ -5,9 +5,9 @@ using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
@@ -40,6 +40,38 @@ public static class UiTheme
     public const string ThemeNameDark = "Dark";
     public const string ThemeNameClassic = "Classic";
     public const string ThemeNamePastel = "Pastel";
+    public const string ThemeNameNord = "Nord";
+    public const string ThemeNameMidnightCinema = "MidnightCinema";
+    public const string ThemeNameSakura = "Sakura";
+
+    /// <summary>
+    /// The themes the "Cycle theme" shortcut steps through, in the Settings order. System is left
+    /// out - it is always one of Light and Dark.
+    /// </summary>
+    public static readonly string[] CycleThemeNames =
+    [
+        ThemeNameLight, ThemeNameDark, ThemeNameClassic, ThemeNamePastel, ThemeNameNord,
+        ThemeNameMidnightCinema, ThemeNameSakura,
+    ];
+
+    /// <summary>The theme after <paramref name="currentTheme"/> in <see cref="CycleThemeNames"/>.</summary>
+    public static string GetNextTheme(string currentTheme)
+    {
+        // From System, continue after the theme it currently shows
+        if (currentTheme == ThemeNameSystem)
+        {
+            currentTheme = ThemeName;
+        }
+
+        var index = Array.IndexOf(CycleThemeNames, currentTheme);
+        return CycleThemeNames[(index + 1) % CycleThemeNames.Length];
+    }
+
+    /// <summary>Theme art in a theme's image folder, for the empty video area.</summary>
+    public const string VideoBackgroundFileName = "VideoBackground.jpg";
+
+    /// <summary>Theme art in a theme's image folder, tiled across the empty waveform.</summary>
+    public const string WaveformBackgroundFileName = "WaveformBackground.png";
 
     public static FluentTheme? FluentTheme { get; set; }
 
@@ -70,23 +102,60 @@ public static class UiTheme
         }
     }
 
+    /// <summary>
+    /// True for every dark theme - Dark, Nord and Midnight Cinema. The last two are fixed-palette
+    /// variants of Dark: same Fluent dark variant and dark syntax colors, their own colors.
+    /// </summary>
     public static bool IsDarkThemeEnabled()
     {
-        return ThemeName == ThemeNameDark;
+        var themeName = ThemeName;
+        return themeName == ThemeNameDark || themeName == ThemeNameNord || themeName == ThemeNameMidnightCinema;
+    }
+
+    /// <summary>
+    /// Themes that ship a folder of their own in Themes.zip: an icon set plus background art.
+    /// </summary>
+    private static bool HasIconFolder(string themeName)
+    {
+        return themeName == ThemeNameMidnightCinema || themeName == ThemeNameSakura ||
+               themeName == ThemeNamePastel || themeName == ThemeNameNord;
+    }
+
+    /// <summary>
+    /// True when the toolbar and message box images come from the theme's own folder (Midnight
+    /// Cinema, Sakura, Pastel, Nord) - those are drawn in the theme's colors and must not be recolored.
+    /// </summary>
+    public static bool HasOwnIcons
+    {
+        get
+        {
+            var themeName = ThemeName;
+            return HasIconFolder(themeName) &&
+                   string.Equals(ImageFolder, Path.Combine(Se.ThemesFolder, themeName), StringComparison.Ordinal);
+        }
     }
 
     /// <summary>
     /// Folder holding the current theme's images. These are unpacked from Themes.zip into
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
     /// be reached through an avares:// URI. A theme that ships no image folder of its own
-    /// (Pastel, for instance) falls back to Light - or Dark for a dark theme, as the Dark glyphs
-    /// are near-white and vanish on a light background. An explicit icon theme wins over both.
+    /// falls back to Light - or Dark for a dark theme, as the Dark glyphs are near-white and
+    /// vanish on a light background. An explicit icon theme wins over both.
     /// </summary>
     public static string ImageFolder
     {
         get
         {
-            var folder = Path.Combine(Se.ThemesFolder, ThemeName);
+            var themeName = ThemeName;
+            var folder = Path.Combine(Se.ThemesFolder, themeName);
+            if (HasIconFolder(themeName) && !File.Exists(Path.Combine(folder, "Open.png")))
+            {
+                // A theme (or a theme's icons, as with Pastel's and Nord's once art-only folders)
+                // added after the folder was last unpacked (same version, so the start-up check
+                // saw nothing to do) - unpack Themes.zip again.
+                Initializers.ThemeInitializer.TryRepair(folder);
+            }
+
             if (!Directory.Exists(folder))
             {
                 folder = Path.Combine(Se.ThemesFolder, IsDarkThemeEnabled() ? ThemeNameDark : ThemeNameLight);
@@ -137,10 +206,27 @@ public static class UiTheme
             Application.Current!.RequestedThemeVariant = ThemeVariant.Dark;
             ApplyLighterDark();
         }
+        else if (themeSetting == ThemeNameNord)
+        {
+            Application.Current!.RequestedThemeVariant = ThemeVariant.Dark;
+            ApplyLighterDark();
+            ApplyNordAccent();
+        }
+        else if (themeSetting == ThemeNameMidnightCinema)
+        {
+            Application.Current!.RequestedThemeVariant = ThemeVariant.Dark;
+            ApplyLighterDark();
+            ApplyMidnightCinemaAccent();
+        }
         else if (themeSetting == ThemeNameClassic)
         {
             Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
             ApplyWindowsClassicGray();
+        }
+        else if (themeSetting == ThemeNameSakura)
+        {
+            Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+            ApplySakura();
         }
         else if (themeSetting == ThemeNamePastel)
         {
@@ -152,6 +238,10 @@ public static class UiTheme
             Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         }
 
+        // The editor palette follows the theme, the dark background color and the accent set above
+        EditorChrome.InvalidatePalette();
+
+        ApplyFieldStyle();
         ApplyMenuScaleStyle(Se.Settings.Appearance.LayoutScale);
         ApplyTextSelectionStyle();
         ApplyProgressBarContrastStyle();
@@ -180,6 +270,8 @@ public static class UiTheme
             ApplyLighterDark();
         }
 
+        EditorChrome.InvalidatePalette();
+        ApplyFieldStyle();
         ApplyTextSelectionStyle();
         ApplyProgressBarContrastStyle();
         SystemThemeChangedCallback?.Invoke();
@@ -190,19 +282,48 @@ public static class UiTheme
     public const double MaxScale = 2.0;
 
     /// <summary>
-    /// Font scale (#14812): scales text only, leaving layout metrics alone, unlike
-    /// <see cref="ApplyScaleToWindow"/>'s layout transform. Applied through the inherited
-    /// window <see cref="TemplatedControl.FontSize"/>, so controls that set an explicit
-    /// FontSize keep it. Kept to a modest range as fixed-width controls clip at large values.
+    /// UI font size in pixels (#16314), shown in Settings instead of a percentage. Stored as
+    /// <see cref="SeAppearance.FontScale"/> = size / <see cref="BaseFontSize"/>, which scales text
+    /// only (#14812), leaving layout metrics alone, unlike <see cref="ApplyScaleToWindow"/>'s
+    /// layout transform. Kept to a modest range as fixed-width controls clip at large values.
     /// </summary>
-    public const double MinFontScale = 0.8;
-    public const double MaxFontScale = 1.5;
-    private const double DefaultFontSize = 14.0;
+    public const int MinFontSize = 10;
+    public const int MaxFontSize = 20;
+    public const double MinFontScale = MinFontSize / BaseFontSize;
+    public const double MaxFontScale = MaxFontSize / BaseFontSize;
+
+    /// <summary>
+    /// The text size of every window at 100 % font scale (#16276): the main window, the dialogs'
+    /// editor look (<see cref="EditorChrome.FieldFontSize"/>) and the menus share it, so text
+    /// reads the same size everywhere. Fluent's own default is 14.
+    /// </summary>
+    public const double BaseFontSize = 13.0;
 
     public static double FontScale => Math.Clamp(Se.Settings.Appearance.FontScale <= 0 ? 1.0 : Se.Settings.Appearance.FontScale, MinFontScale, MaxFontScale);
 
+    /// <summary>The UI font size in whole pixels that Settings shows for a stored font scale.</summary>
+    public static int FontSizeFromScale(double fontScale)
+    {
+        var scale = Math.Clamp(fontScale <= 0 ? 1.0 : fontScale, MinFontScale, MaxFontScale);
+        return (int)Math.Round(BaseFontSize * scale, MidpointRounding.AwayFromZero);
+    }
+
+    /// <summary>
+    /// The font scale to store for a UI font size picked in Settings. An untouched size keeps the
+    /// current scale, so an older percentage (120 % shows as 16 px) is not rounded on save.
+    /// </summary>
+    public static double FontScaleFromSize(int fontSize, double currentFontScale)
+    {
+        if (fontSize == FontSizeFromScale(currentFontScale))
+        {
+            return currentFontScale;
+        }
+
+        return Math.Clamp(fontSize, MinFontSize, MaxFontSize) / BaseFontSize;
+    }
+
     /// <summary>Font size for popup menu/combo items rendered outside the layout transform.</summary>
-    private static double PopupFontSize(double layoutFactor) => DefaultFontSize * layoutFactor * FontScale;
+    private static double PopupFontSize(double layoutFactor) => BaseFontSize * layoutFactor * FontScale;
 
     /// <summary>
     /// Returns the logical content of a window, unwrapping the
@@ -226,16 +347,8 @@ public static class UiTheme
         var factor = Se.Settings.Appearance.LayoutScale;
 
         // Font scale rides on FontSize inheritance: every control without an explicit FontSize
-        // picks it up from the window. Clearing back to the theme default at 100% keeps
-        // windows with locally restyled fonts untouched.
-        if (Math.Abs(FontScale - 1.0) < 0.0001)
-        {
-            window.ClearValue(TemplatedControl.FontSizeProperty);
-        }
-        else
-        {
-            window.FontSize = DefaultFontSize * FontScale;
-        }
+        // picks it up from the window.
+        window.FontSize = BaseFontSize * FontScale;
 
         // Explicit sizes are baked in at creation; long-lived controls that opted in via
         // DesignFontSize get theirs re-derived here.
@@ -353,7 +466,7 @@ public static class UiTheme
         // by the transform). Only direct Menu children: submenu and context menu items are
         // logical descendants of the LTC too, but render in popups outside the transform.
         var ltcMenuItemStyle = new Style(x => x.OfType<Menu>().Child().OfType<MenuItem>());
-        ltcMenuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, DefaultFontSize * FontScale));
+        ltcMenuItemStyle.Setters.Add(new Setter(TemplatedControl.FontSizeProperty, BaseFontSize * FontScale));
         ltcMenuItemStyle.Setters.Add(new Setter(Layoutable.MinHeightProperty, 32.0));
         styles.Add(ltcMenuItemStyle);
 
@@ -418,6 +531,7 @@ public static class UiTheme
     }
 
     private static Styles? _scrollBarStyle;
+    private static Styles? _fieldStyle;
     private static Styles? _textSelectionStyle;
     private static Styles? _progressBarContrastStyle;
 
@@ -573,7 +687,104 @@ public static class UiTheme
 
         Application.Current.Styles.Add(_textSelectionStyle);
     }
-    private static bool _scrollBarAllowAutoHide;
+    /// <summary>
+    /// Text boxes, combo boxes, number fields and lists (list boxes, table views, trees) in one
+    /// field look all over the app: the editor field color, a subtle border and rounded corners.
+    /// Not for the Classic, Pastel and Sakura themes, which have their own field colors. Added after the
+    /// theme override styles so it wins over them - call it again after re-adding those.
+    /// </summary>
+    public static void ApplyFieldStyle()
+    {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
+        if (_fieldStyle != null)
+        {
+            Application.Current.Styles.Remove(_fieldStyle);
+            _fieldStyle = null;
+        }
+
+        var theme = Se.Settings.Appearance.Theme;
+        if (theme == ThemeNameClassic || theme == ThemeNamePastel || theme == ThemeNameSakura)
+        {
+            return;
+        }
+
+        var cornerRadius = new CornerRadius(6);
+        _fieldStyle = new Styles();
+        foreach (var fieldType in new[] { typeof(TextBox), typeof(ComboBox), typeof(NumericUpDown) })
+        {
+            _fieldStyle.Add(new Style(x => x.Is(fieldType))
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, EditorChrome.FieldBrush),
+                    new Setter(TemplatedControl.BorderBrushProperty, EditorChrome.FieldBorderBrush),
+                    new Setter(TemplatedControl.CornerRadiusProperty, cornerRadius),
+                },
+            });
+        }
+
+        foreach (var listType in new[] { typeof(ListBox), typeof(TableView), typeof(TreeView) })
+        {
+            _fieldStyle.Add(new Style(x => x.Is(listType))
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, EditorChrome.FieldBrush),
+                    new Setter(TemplatedControl.BorderBrushProperty, EditorChrome.FieldBorderBrush),
+                    new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(1)),
+                    new Setter(TemplatedControl.CornerRadiusProperty, cornerRadius),
+                },
+            });
+        }
+
+        // The combo box arrow in the same blue-gray as the field border, light enough to read;
+        // brighter while hovered. Disabled keeps the theme's dimmed arrow.
+        _fieldStyle.Add(new Style(x => x.OfType<ComboBox>().Not(y => y.Class(":disabled")).Template().OfType<PathIcon>().Name("DropDownGlyph"))
+        {
+            Setters = { new Setter(TemplatedControl.ForegroundProperty, EditorChrome.FaintTextBrush) },
+        });
+        _fieldStyle.Add(new Style(x => x.OfType<ComboBox>().Class(":pointerover").Not(y => y.Class(":disabled")).Template().OfType<PathIcon>().Name("DropDownGlyph"))
+        {
+            Setters = { new Setter(TemplatedControl.ForegroundProperty, EditorChrome.IconBrush) },
+        });
+
+        // A text box keeps its own background while hovered/focused - the theme paints its own
+        // hover/focus colors there
+        foreach (var state in new[] { ":pointerover", ":focus" })
+        {
+            _fieldStyle.Add(new Style(x => x.Is<TextBox>().Class(state).Template().OfType<Border>().Name("PART_BorderElement"))
+            {
+                Setters =
+                {
+                    new Setter(Border.BackgroundProperty, new Binding(nameof(TextBox.Background))
+                    {
+                        RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent),
+                    }),
+                },
+            });
+        }
+
+        // ...except the text box of an editable combo box: it covers the combo's border, so an
+        // opaque fill would wipe that out (see ApplyLighterDark)
+        _fieldStyle.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>())
+        {
+            Setters = { new Setter(TemplatedControl.BackgroundProperty, Brushes.Transparent) },
+        });
+        foreach (var state in new[] { ":pointerover", ":focus" })
+        {
+            _fieldStyle.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>().Class(state).Template().OfType<Border>().Name("PART_BorderElement"))
+            {
+                Setters = { new Setter(Border.BackgroundProperty, Brushes.Transparent) },
+            });
+        }
+
+        Application.Current.Styles.Add(_fieldStyle);
+    }
+
     /// <summary>
     /// Applies scrollbar visibility styles based on the OS preference.
     /// On macOS, reads "Show scroll bars" system setting. When set to "Always",
@@ -597,8 +808,6 @@ public static class UiTheme
             var pref = MacHelper.GetShowScrollBarsPreference();
             allowAutoHide = pref != "Always";
         }
-
-        _scrollBarAllowAutoHide = allowAutoHide;
 
         _scrollBarStyle = new Styles
         {
@@ -721,6 +930,17 @@ public static class UiTheme
 
         _themeOverrideStyle = new Styles
         {
+            // Window background. The Fluent palette's RegionColor (UpdateRegionColor) only
+            // reaches windows when the theme variant changes, so switching between two dark
+            // themes - Dark and Nord - left the old background behind until a restart.
+            new Style(x => x.OfType<Window>())
+            {
+                Setters =
+                {
+                    new Setter(Window.BackgroundProperty, new SolidColorBrush(bgColor))
+                }
+            },
+
             // TextBox
             new Style(x => x.OfType<TextBox>())
             {
@@ -969,6 +1189,134 @@ public static class UiTheme
             Application.Current!.Styles.Remove(_themeOverrideStyle);
             _themeOverrideStyle = null;
         }
+    }
+
+    /// <summary>
+    /// Nord's frost blues for everything Fluent derives from the accent (selection, focus
+    /// rings, check boxes, sliders, progress bars), and its polar-night shades for buttons and
+    /// headers. Runs after <see cref="ApplyLighterDark"/>, which already set the Nord window,
+    /// input and text colors through <see cref="GetDarkThemeBackgroundColor"/> - this adds to
+    /// its resource dictionary and style collection so RemoveLighterDark removes both.
+    /// </summary>
+    private static void ApplyNordAccent()
+    {
+        if (Application.Current == null || _resourceOverrides == null || _themeOverrideStyle is not Styles styles)
+        {
+            return;
+        }
+
+        var button = Color.FromRgb(0x43, 0x4C, 0x5E); // nord2
+        var buttonHover = Color.FromRgb(0x4C, 0x56, 0x6A); // nord3
+        var buttonPressed = Color.FromRgb(0x56, 0x61, 0x77);
+        var border = Color.FromRgb(0x4C, 0x56, 0x6A); // nord3
+        var header = Color.FromRgb(0x3B, 0x42, 0x52); // nord1
+        var frost = Color.FromRgb(0x88, 0xC0, 0xD0); // nord8
+
+        // The dark Fluent variant fills accent controls with the Light1-3 shades and puts
+        // dark text on them, so the brighter frost blues go there.
+        _resourceOverrides["SystemAccentColor"] = Color.FromRgb(0x5E, 0x81, 0xAC); // nord10
+        _resourceOverrides["SystemAccentColorLight1"] = Color.FromRgb(0x81, 0xA1, 0xC1); // nord9
+        _resourceOverrides["SystemAccentColorLight2"] = frost;
+        _resourceOverrides["SystemAccentColorLight3"] = Color.FromRgb(0x8F, 0xBC, 0xBB); // nord7
+        _resourceOverrides["SystemAccentColorDark1"] = Color.FromRgb(0x4F, 0x6F, 0x96);
+        _resourceOverrides["SystemAccentColorDark2"] = Color.FromRgb(0x42, 0x5E, 0x80);
+        _resourceOverrides["SystemAccentColorDark3"] = Color.FromRgb(0x35, 0x4C, 0x6A);
+
+        // Hover/pressed are template-level in Fluent, so a Background setter alone would
+        // leave them Fluent gray.
+        _resourceOverrides["ButtonBackground"] = new SolidColorBrush(button);
+        _resourceOverrides["ButtonBackgroundPointerOver"] = new SolidColorBrush(buttonHover);
+        _resourceOverrides["ButtonBackgroundPressed"] = new SolidColorBrush(buttonPressed);
+        _resourceOverrides["ButtonBorderBrushPointerOver"] = new SolidColorBrush(frost);
+        _resourceOverrides["ToggleButtonBackground"] = new SolidColorBrush(button);
+        _resourceOverrides["ToggleButtonBackgroundPointerOver"] = new SolidColorBrush(buttonHover);
+        _resourceOverrides["ToggleButtonBackgroundPressed"] = new SolidColorBrush(buttonPressed);
+
+        styles.Add(new Style(x => x.OfType<TableViewColumnHeader>())
+        {
+            Setters =
+            {
+                new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(header)),
+            }
+        });
+        styles.Add(new Style(x => x.OfType<ContextMenu>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(header)),
+                new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(border)),
+            }
+        });
+        styles.Add(new Style(x => x.OfType<FlyoutPresenter>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(header)),
+                new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(border)),
+            }
+        });
+    }
+
+    /// <summary>
+    /// Midnight Cinema: projector amber for everything Fluent derives from the accent, warm
+    /// plum-black shades for buttons, headers and menus. Like <see cref="ApplyNordAccent"/> it
+    /// runs after <see cref="ApplyLighterDark"/>, which already set the window, input and text
+    /// colors through <see cref="GetDarkThemeBackgroundColor"/>.
+    /// </summary>
+    private static void ApplyMidnightCinemaAccent()
+    {
+        if (Application.Current == null || _resourceOverrides == null || _themeOverrideStyle is not Styles styles)
+        {
+            return;
+        }
+
+        var button = Color.FromRgb(0x2A, 0x26, 0x31);
+        var buttonHover = Color.FromRgb(0x35, 0x30, 0x40);
+        var buttonPressed = Color.FromRgb(0x40, 0x3A, 0x4C);
+        var border = Color.FromRgb(0x3A, 0x34, 0x42);
+        var amber = Color.FromRgb(0xE8, 0xA3, 0x3D);
+
+        // The dark Fluent variant fills accent controls with the Light1-3 shades and puts
+        // dark text on them.
+        _resourceOverrides["SystemAccentColor"] = amber;
+        _resourceOverrides["SystemAccentColorLight1"] = Color.FromRgb(0xED, 0xB4, 0x5E);
+        _resourceOverrides["SystemAccentColorLight2"] = Color.FromRgb(0xF2, 0xC4, 0x7F);
+        _resourceOverrides["SystemAccentColorLight3"] = Color.FromRgb(0xF7, 0xD6, 0xA3);
+        _resourceOverrides["SystemAccentColorDark1"] = Color.FromRgb(0xC9, 0x8A, 0x2E);
+        _resourceOverrides["SystemAccentColorDark2"] = Color.FromRgb(0xA8, 0x71, 0x24);
+        _resourceOverrides["SystemAccentColorDark3"] = Color.FromRgb(0x87, 0x59, 0x1B);
+
+        _resourceOverrides["ButtonBackground"] = new SolidColorBrush(button);
+        _resourceOverrides["ButtonBackgroundPointerOver"] = new SolidColorBrush(buttonHover);
+        _resourceOverrides["ButtonBackgroundPressed"] = new SolidColorBrush(buttonPressed);
+        _resourceOverrides["ButtonBorderBrushPointerOver"] = new SolidColorBrush(amber);
+        _resourceOverrides["ToggleButtonBackground"] = new SolidColorBrush(button);
+        _resourceOverrides["ToggleButtonBackgroundPointerOver"] = new SolidColorBrush(buttonHover);
+        _resourceOverrides["ToggleButtonBackgroundPressed"] = new SolidColorBrush(buttonPressed);
+
+        styles.Add(new Style(x => x.OfType<TableViewColumnHeader>())
+        {
+            Setters =
+            {
+                new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(MidnightCinemaHeaderColor)),
+            }
+        });
+        styles.Add(new Style(x => x.OfType<ContextMenu>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(MidnightCinemaHeaderColor)),
+                new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(border)),
+            }
+        });
+        styles.Add(new Style(x => x.OfType<FlyoutPresenter>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(MidnightCinemaHeaderColor)),
+                new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(border)),
+            }
+        });
     }
 
     private static void ApplyWindowsClassicGray()
@@ -1253,8 +1601,216 @@ public static class UiTheme
         Application.Current.Styles.Add(_themeOverrideStyle);
     }
 
-    private static Color GetDarkThemeBackgroundColor()
+    /// <summary>
+    /// Sakura: cherry blossom pinks on a blush window, plum text and a cherry accent. Built like
+    /// <see cref="ApplyPastel"/>. Keep bgColor in sync with SakuraBackgroundColor.
+    /// </summary>
+    private static void ApplySakura()
     {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
+        var bgColor = SakuraBackgroundColor;
+        var surface = Color.FromRgb(255, 252, 253); // Text input
+        var blush = Color.FromRgb(250, 226, 234); // Buttons
+        var blushHover = Color.FromRgb(246, 212, 224);
+        var blushPressed = Color.FromRgb(240, 196, 212);
+        var field = Color.FromRgb(253, 241, 245); // Combo boxes and spinners
+        var header = Color.FromRgb(248, 228, 235); // Grid header
+        var borderColor = Color.FromRgb(236, 196, 210);
+        var accent = SakuraAccentColor;
+        var text = SakuraForegroundColor;
+        var textBrush = new SolidColorBrush(text);
+
+        _resourceOverrides = new ResourceDictionary
+        {
+            ["SystemAccentColor"] = accent,
+            ["SystemAccentColorLight1"] = Color.FromRgb(226, 104, 138),
+            ["SystemAccentColorLight2"] = Color.FromRgb(235, 140, 166),
+            ["SystemAccentColorLight3"] = Color.FromRgb(244, 180, 198),
+            ["SystemAccentColorDark1"] = Color.FromRgb(194, 56, 95),
+            ["SystemAccentColorDark2"] = Color.FromRgb(168, 44, 80),
+            ["SystemAccentColorDark3"] = Color.FromRgb(140, 34, 66),
+
+            // Hover/pressed are template-level in Fluent, so a Background setter alone would
+            // leave them gray.
+            ["ButtonBackgroundPointerOver"] = new SolidColorBrush(blushHover),
+            ["ButtonBackgroundPressed"] = new SolidColorBrush(blushPressed),
+            ["ButtonBorderBrushPointerOver"] = new SolidColorBrush(accent),
+            ["ButtonBorderBrushPressed"] = new SolidColorBrush(accent),
+            ["ButtonForegroundPointerOver"] = textBrush,
+            ["ButtonForegroundPressed"] = textBrush,
+            ["ToggleButtonBackground"] = new SolidColorBrush(blush),
+            ["ToggleButtonBackgroundPointerOver"] = new SolidColorBrush(blushHover),
+            ["ToggleButtonBackgroundPressed"] = new SolidColorBrush(blushPressed),
+            ["ToggleButtonBorderBrush"] = new SolidColorBrush(borderColor),
+
+            ["TextControlForeground"] = textBrush,
+            ["TextControlForegroundPointerOver"] = textBrush,
+            ["TextControlForegroundFocused"] = textBrush,
+
+            ["ControlCornerRadius"] = new CornerRadius(8),
+            ["OverlayCornerRadius"] = new CornerRadius(10),
+        };
+        Application.Current.Resources.MergedDictionaries.Add(_resourceOverrides);
+
+        _themeOverrideStyle = new Styles
+        {
+            new Style(x => x.OfType<Window>())
+            {
+                Setters =
+                {
+                    new Setter(Window.BackgroundProperty, new SolidColorBrush(bgColor)),
+                    new Setter(Window.ForegroundProperty, textBrush),
+                }
+            },
+
+            // Plum text instead of black - set on the text elements too, as the Fluent
+            // templates give many of them their own foreground
+            new Style(x => x.OfType<TextBlock>())
+            {
+                Setters = { new Setter(TextBlock.ForegroundProperty, textBrush) }
+            },
+            new Style(x => x.OfType<Label>())
+            {
+                Setters = { new Setter(Label.ForegroundProperty, textBrush) }
+            },
+            new Style(x => x.OfType<Avalonia.Controls.MenuItem>())
+            {
+                Setters = { new Setter(Avalonia.Controls.MenuItem.ForegroundProperty, textBrush) }
+            },
+            new Style(x => x.OfType<Optris.Icons.Avalonia.Icon>())
+            {
+                Setters = { new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty, new SolidColorBrush(Color.FromRgb(107, 78, 91))) }
+            },
+
+            // Icons on a colored accent square keep their white glyph (#12717)
+            new Style(x => x.OfType<ContentControl>().Class(IconOnAccentClassName)
+                    .Descendant().OfType<Optris.Icons.Avalonia.Icon>())
+            {
+                Setters = { new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty, Brushes.White) }
+            },
+
+            new Style(x => x.OfType<TextBox>())
+            {
+                Setters =
+                {
+                    new Setter(TextBox.BackgroundProperty, new SolidColorBrush(surface)),
+                    new Setter(TextBox.BorderBrushProperty, new SolidColorBrush(borderColor)),
+                    new Setter(TextBox.BorderThicknessProperty, new Thickness(1))
+                }
+            },
+
+            new Style(x => x.OfType<Button>())
+            {
+                Setters =
+                {
+                    new Setter(Button.BackgroundProperty, new SolidColorBrush(blush)),
+                    new Setter(Button.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
+
+            new Style(x => x.OfType<NumericUpDown>())
+            {
+                Setters =
+                {
+                    new Setter(NumericUpDown.BackgroundProperty, new SolidColorBrush(field)),
+                    new Setter(NumericUpDown.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
+
+            new Style(x => x.OfType<ComboBox>())
+            {
+                Setters =
+                {
+                    new Setter(ComboBox.BackgroundProperty, new SolidColorBrush(field)),
+                    new Setter(ComboBox.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
+
+            // Menus and flyouts pop up over the blush window - plain white looks foreign
+            new Style(x => x.OfType<ContextMenu>())
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(surface)),
+                    new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
+            new Style(x => x.OfType<FlyoutPresenter>())
+            {
+                Setters =
+                {
+                    new Setter(TemplatedControl.BackgroundProperty, new SolidColorBrush(surface)),
+                    new Setter(TemplatedControl.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
+
+            new Style(x => x.OfType<TableViewColumnHeader>())
+            {
+                Setters =
+                {
+                    new Setter(TableViewColumnHeader.BackgroundProperty, new SolidColorBrush(header)),
+                    new Setter(TableViewColumnHeader.ForegroundProperty, textBrush),
+                }
+            },
+
+            new Style(x => x.OfType<ButtonSpinner>())
+            {
+                Setters =
+                {
+                    new Setter(ButtonSpinner.BackgroundProperty, new SolidColorBrush(field)),
+                    new Setter(ButtonSpinner.BorderBrushProperty, new SolidColorBrush(borderColor))
+                }
+            },
+
+            new Style(x => x.OfType<Nikse.SubtitleEdit.Controls.SecondsUpDown>())
+            {
+                Setters =
+                {
+                    new Setter(Nikse.SubtitleEdit.Controls.SecondsUpDown.BackgroundProperty, new SolidColorBrush(field))
+                }
+            },
+
+            new Style(x => x.OfType<Nikse.SubtitleEdit.Controls.TimeCodeUpDown>())
+            {
+                Setters =
+                {
+                    new Setter(Nikse.SubtitleEdit.Controls.TimeCodeUpDown.BackgroundProperty, new SolidColorBrush(field))
+                }
+            },
+
+            new Style(x => x.OfType<SyntaxTextEditor>())
+            {
+                Setters =
+                {
+                    new Setter(SyntaxTextEditor.BackgroundProperty, new SolidColorBrush(surface))
+                }
+            },
+        };
+
+        Application.Current.Styles.Add(_themeOverrideStyle);
+    }
+
+    /// <summary>
+    /// Nord and Midnight Cinema ignore the user's dark-mode colors: their palette is the point
+    /// of picking them.
+    /// </summary>
+    internal static Color GetDarkThemeBackgroundColor()
+    {
+        var theme = Se.Settings.Appearance.Theme;
+        if (theme == ThemeNameNord)
+        {
+            return NordBackgroundColor;
+        }
+
+        if (theme == ThemeNameMidnightCinema)
+        {
+            return MidnightCinemaBackgroundColor;
+        }
+
         return Se.Settings.Appearance.DarkModeBackgroundColor.FromHexToColor();
     }
 
@@ -1278,10 +1834,23 @@ public static class UiTheme
             return Color.FromRgb(0x21, 0x21, 0x21);
         }
 
-        var themeSetting = Se.Settings.Appearance.Theme;
+        return GetLightThemeBackgroundColor(Se.Settings.Appearance.Theme);
+    }
+
+    /// <summary>
+    /// The window background of a light theme by its setting name: Classic, Pastel and Sakura
+    /// have their own, every other light theme is white.
+    /// </summary>
+    internal static Color GetLightThemeBackgroundColor(string? themeSetting)
+    {
         if (themeSetting == ThemeNameClassic)
         {
             return ClassicBackgroundColor;
+        }
+
+        if (themeSetting == ThemeNameSakura)
+        {
+            return SakuraBackgroundColor;
         }
 
         return themeSetting == ThemeNamePastel ? PastelBackgroundColor : Colors.White;
@@ -1289,9 +1858,166 @@ public static class UiTheme
 
     private static readonly Color ClassicBackgroundColor = Color.FromRgb(236, 233, 216);
     private static readonly Color PastelBackgroundColor = Color.FromRgb(240, 235, 255);
+    internal static readonly Color NordBackgroundColor = Color.FromRgb(0x2E, 0x34, 0x40); // nord0
+    internal static readonly Color NordForegroundColor = Color.FromRgb(0xE5, 0xE9, 0xF0); // nord5
+    private static readonly Color NordAlternatingRowColor = Color.FromRgb(0x34, 0x3B, 0x48);
+    internal static readonly Color MidnightCinemaBackgroundColor = Color.FromRgb(0x14, 0x12, 0x18);
+    internal static readonly Color MidnightCinemaForegroundColor = Color.FromRgb(0xEC, 0xE6, 0xD9);
+    internal static readonly Color MidnightCinemaHeaderColor = Color.FromRgb(0x1E, 0x1B, 0x24);
+    internal static readonly Color MidnightCinemaAccentColor = Color.FromRgb(0xE8, 0xA3, 0x3D);
+    private static readonly Color MidnightCinemaAlternatingRowColor = Color.FromRgb(0x1A, 0x17, 0x20);
+    internal static readonly Color SakuraBackgroundColor = Color.FromRgb(0xFF, 0xF7, 0xF9);
+    internal static readonly Color SakuraForegroundColor = Color.FromRgb(0x3A, 0x2A, 0x31);
+    internal static readonly Color SakuraAccentColor = Color.FromRgb(0xD9, 0x46, 0x6F);
+    private static readonly Color SakuraAlternatingRowColor = Color.FromRgb(0xFD, 0xEF, 0xF3);
+
+    /// <summary>
+    /// The subtitle grid's alternating row color. The fixed-palette themes have their own - the
+    /// gray settings read as stray gray stripes on their tinted rows.
+    /// </summary>
+    public static string GetGridAlternatingRowColorHex(bool isDark)
+    {
+        var theme = Se.Settings.Appearance.Theme;
+        if (!isDark)
+        {
+            return theme == ThemeNameSakura
+                ? SakuraAlternatingRowColor.FromColorToHex()
+                : Se.Settings.Appearance.GridAlternatingRowColor;
+        }
+
+        if (theme == ThemeNameNord)
+        {
+            return NordAlternatingRowColor.FromColorToHex();
+        }
+
+        return theme == ThemeNameMidnightCinema
+            ? MidnightCinemaAlternatingRowColor.FromColorToHex()
+            : Se.Settings.Appearance.GridAlternatingRowColorDark;
+    }
+
+    private static readonly WaveformColors MidnightCinemaWaveformColors = new(
+        TextHex: MidnightCinemaForegroundColor.FromColorToHex(),
+        Waveform: Color.FromArgb(230, 0xE8, 0xA3, 0x3D),
+        Background: Color.FromRgb(0x0F, 0x0D, 0x12),
+        Selected: Color.FromArgb(110, 0xE8, 0xA3, 0x3D),
+        Cursor: Color.FromRgb(0xFF, 0x6B, 0x4A),
+        ShotChange: Color.FromArgb(200, 0xEC, 0xE6, 0xD9),
+        Grid: Color.FromArgb(55, 0xE8, 0xA3, 0x3D),
+        ParagraphLeft: Color.FromArgb(120, 0xE8, 0xA3, 0x3D),
+        ParagraphRight: Color.FromArgb(120, 0xFF, 0x6B, 0x4A),
+        FancyHigh: Color.FromRgb(0xFF, 0xD2, 0x7A),
+        ParagraphBackground: Color.FromArgb(130, 0x3A, 0x32, 0x42),
+        ParagraphSelectedBackground: Color.FromArgb(150, 0x6E, 0x50, 0x26));
+
+    private static readonly WaveformColors SakuraWaveformColors = new(
+        TextHex: SakuraForegroundColor.FromColorToHex(),
+        Waveform: Color.FromRgb(0xC2, 0x5A, 0x7C),
+        Background: Color.FromRgb(0xFF, 0xF1, 0xF5),
+        Selected: Color.FromArgb(80, 0xD9, 0x46, 0x6F),
+        Cursor: Color.FromRgb(0x6B, 0x4B, 0xC2),
+        ShotChange: Color.FromArgb(170, 0x6B, 0x4E, 0x5B),
+        Grid: Color.FromArgb(45, 0xC2, 0x5A, 0x7C),
+        ParagraphLeft: Color.FromArgb(130, 0xD9, 0x46, 0x6F),
+        ParagraphRight: Color.FromArgb(130, 0x6B, 0x4B, 0xC2),
+        FancyHigh: Color.FromRgb(0xD9, 0x46, 0x6F),
+        ParagraphBackground: Color.FromArgb(70, 0xE8, 0xB4, 0xC6),
+        ParagraphSelectedBackground: Color.FromArgb(110, 0xF0, 0x9C, 0xB6));
+
+    private static readonly WaveformColors NordWaveformColors = new(
+        TextHex: Color.FromRgb(0xEC, 0xEF, 0xF4).FromColorToHex(), // nord6
+        Waveform: Color.FromArgb(220, 0x88, 0xC0, 0xD0), // nord8
+        Background: Color.FromRgb(0x24, 0x29, 0x33),
+        Selected: Color.FromArgb(100, 0x5E, 0x81, 0xAC), // nord10
+        Cursor: Color.FromRgb(0xEB, 0xCB, 0x8B), // nord13
+        ShotChange: Color.FromArgb(200, 0xD8, 0xDE, 0xE9), // nord4
+        Grid: Color.FromArgb(50, 0x88, 0xC0, 0xD0),
+        ParagraphLeft: Color.FromArgb(130, 0xA3, 0xBE, 0x8C), // nord14
+        ParagraphRight: Color.FromArgb(130, 0xBF, 0x61, 0x6A), // nord11
+        FancyHigh: Color.FromRgb(0x8F, 0xBC, 0xBB), // nord7
+        ParagraphBackground: Color.FromArgb(130, 0x3B, 0x42, 0x52), // nord1
+        ParagraphSelectedBackground: Color.FromArgb(150, 0x5E, 0x81, 0xAC));
+
+    private static readonly WaveformColors PastelWaveformColors = new(
+        TextHex: Color.FromRgb(0x3A, 0x30, 0x55).FromColorToHex(),
+        Waveform: Color.FromRgb(142, 111, 216),
+        Background: Color.FromRgb(247, 244, 255),
+        Selected: Color.FromArgb(70, 142, 111, 216),
+        Cursor: Color.FromRgb(77, 166, 220),
+        ShotChange: Color.FromArgb(160, 90, 74, 150),
+        Grid: Color.FromArgb(40, 142, 111, 216),
+        ParagraphLeft: Color.FromArgb(140, 95, 191, 150),
+        ParagraphRight: Color.FromArgb(140, 224, 127, 168),
+        FancyHigh: Color.FromRgb(95, 191, 150),
+        ParagraphBackground: Color.FromArgb(70, 200, 185, 240),
+        ParagraphSelectedBackground: Color.FromArgb(110, 180, 160, 240));
+
+    /// <summary>
+    /// The waveform colors of a theme with a palette of its own, or null to use the settings.
+    /// </summary>
+    internal static WaveformColors? GetThemeWaveformColors()
+    {
+        return Se.Settings.Appearance.Theme switch
+        {
+            ThemeNameMidnightCinema => MidnightCinemaWaveformColors,
+            ThemeNameSakura => SakuraWaveformColors,
+            ThemeNameNord => NordWaveformColors,
+            ThemeNamePastel => PastelWaveformColors,
+            _ => null,
+        };
+    }
+
+    private static readonly System.Collections.Generic.Dictionary<string, Bitmap?> ThemeArtCache = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// A background image shipped in the current theme's folder (see
+    /// <see cref="VideoBackgroundFileName"/>), or null when the theme has none.
+    /// </summary>
+    public static Bitmap? GetThemeArt(string fileName)
+    {
+        var theme = Se.Settings.Appearance.Theme;
+        if (!HasIconFolder(theme))
+        {
+            return null;
+        }
+
+        var path = Path.Combine(Se.ThemesFolder, theme, fileName);
+        if (ThemeArtCache.TryGetValue(path, out var cached))
+        {
+            return cached;
+        }
+
+        if (!File.Exists(path) && !Initializers.ThemeInitializer.TryRepair(path))
+        {
+            return null;
+        }
+
+        try
+        {
+            var bitmap = new Bitmap(path);
+            ThemeArtCache[path] = bitmap;
+            return bitmap;
+        }
+        catch (Exception e)
+        {
+            Se.LogError(e, $"Could not load theme image \"{path}\"");
+            ThemeArtCache[path] = null;
+            return null;
+        }
+    }
 
     public static Color GetDarkThemeForegroundColor()
     {
+        var theme = Se.Settings.Appearance.Theme;
+        if (theme == ThemeNameNord)
+        {
+            return NordForegroundColor;
+        }
+
+        if (theme == ThemeNameMidnightCinema)
+        {
+            return MidnightCinemaForegroundColor;
+        }
+
         return Se.Settings.Appearance.DarkModeForegroundColor.FromHexToColor();
     }
 }

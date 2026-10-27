@@ -20,7 +20,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
-using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 
@@ -67,7 +66,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         SplitAtOptions = new ObservableCollection<string>
         {
             Se.Language.General.Auto,
-            Se.Language.File.Import.BlankLines,
+            Se.Language.General.BlankLines,
             Se.Language.File.Import.OneLineIsOneSubtitle,
             Se.Language.File.Import.TwoLinesAreOneSubtitle,
         };
@@ -213,7 +212,7 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         {
             return PlainTextSplitter.AutomaticSplit(plainText, Se.Settings.General.MaxNumberOfLines, Se.Settings.General.SubtitleLineMaximumLength);
         }
-        else if (splitAtOption == Se.Language.File.Import.BlankLines)
+        else if (splitAtOption == Se.Language.General.BlankLines)
         {
             var blocks = plainText.SplitToLines();
             var sb = new System.Text.StringBuilder();
@@ -579,6 +578,8 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
         }
         catch (ForcedAlignerException exception)
         {
+            // Always kept: the engine's own output is what a bug report needs.
+            Se.WriteToolsLog($"{exception.Message}{Environment.NewLine}{exception.Detail}", true);
             await MessageBox.Show(
                 Window!,
                 Se.Language.General.Error,

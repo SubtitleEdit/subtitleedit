@@ -3,27 +3,45 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Main;
 
 // Picks up edits made to the open subtitle file by another program (#15828). No live file
 // watcher: the file's time stamp and size are compared when the main window is activated again,
-// which is when the user comes back from the other editor. Unchanged work is reloaded right
-// away, unsaved work is only replaced after asking.
+// which is when the user comes back from the other editor. The content is compared (not just the
+// time stamp, which cloud sync such as OneDrive touches after SE saves). By default unchanged work is reloaded
+// right away and unsaved work is only replaced after asking; the "file changed by another
+// program" setting can make it always ask, or leave the subtitle alone (#16216). Saving over a
+// file another program wrote in the meantime asks as well, like SE 4 did.
 public partial class MainViewModel
 {
+    /// <summary>The file as SE last read or wrote it - what the subtitle in memory came from.</summary>
     private SubtitleFileStamp? _subtitleFileStamp;
+
+    /// <summary>
+    /// The outside change the user chose not to reload, so it is not asked about again until
+    /// the file changes once more. <see cref="_subtitleFileStamp"/> stays at SE's own version,
+    /// which is what a later save is checked against.
+    /// </summary>
+    private SubtitleFileStamp? _declinedReloadStamp;
     private bool _checkingSubtitleFileChangedOutside;
 
-    private sealed record SubtitleFileStamp(string FileName, DateTime LastWriteTimeUtc, long Length)
+    private sealed record SubtitleFileStamp(string FileName, long Length, string ContentHash)
     {
         public static SubtitleFileStamp? Read(string fileName)
         {
             try
             {
                 var fileInfo = new FileInfo(fileName);
-                return fileInfo.Exists ? new SubtitleFileStamp(fileName, fileInfo.LastWriteTimeUtc, fileInfo.Length) : null;
+                if (!fileInfo.Exists)
+                {
+                    return null;
+                }
+
+                var bytes = File.ReadAllBytes(fileName);
+                return new SubtitleFileStamp(fileName, bytes.Length, Convert.ToHexString(SHA256.HashData(bytes)));
             }
             catch
             {
@@ -32,7 +50,7 @@ public partial class MainViewModel
         }
 
         public bool IsSameContentAs(SubtitleFileStamp other) =>
-            LastWriteTimeUtc == other.LastWriteTimeUtc && Length == other.Length;
+            Length == other.Length && ContentHash == other.ContentHash;
     }
 
     /// <summary>
@@ -58,6 +76,7 @@ public partial class MainViewModel
     {
         var fileName = GetWatchedSubtitleFileName();
         _subtitleFileStamp = fileName == null ? null : SubtitleFileStamp.Read(fileName);
+        _declinedReloadStamp = null;
     }
 
     /// <summary>
@@ -70,18 +89,20 @@ public partial class MainViewModel
         if (fileName == null)
         {
             _subtitleFileStamp = null;
+            _declinedReloadStamp = null;
             return;
         }
 
         if (_subtitleFileStamp == null || !IsSameFile(_subtitleFileStamp.FileName, fileName))
         {
             _subtitleFileStamp = SubtitleFileStamp.Read(fileName);
+            _declinedReloadStamp = null;
         }
     }
 
     private async Task CheckSubtitleFileChangedOutside()
     {
-        if (_checkingSubtitleFileChangedOutside || _opening || _loading || Window is not { IsActive: true } || WindowService.IsModalDialogOpen)
+        if (!Se.Settings.General.CheckSubtitleFileChangedOutside || _checkingSubtitleFileChangedOutside || _opening || _loading || Window is not { IsActive: true } || WindowService.IsModalDialogOpen)
         {
             return;
         }
@@ -102,18 +123,29 @@ public partial class MainViewModel
 
         // Ask once per change: answering "No" keeps the edits and does not ask again until the
         // file is changed outside once more.
-        _subtitleFileStamp = current;
+        if (_declinedReloadStamp != null && current.IsSameContentAs(_declinedReloadStamp))
+        {
+            return;
+        }
+
+        var action = Se.Settings.General.FileChangedOutsideAction;
+        if (action == nameof(FileChangedOutsideActionType.Never))
+        {
+            return;
+        }
 
         _checkingSubtitleFileChangedOutside = true;
         try
         {
-            if (HasChanges())
+            var hasChanges = HasChanges();
+            if (hasChanges || action == nameof(FileChangedOutsideActionType.AlwaysAsk))
             {
                 var answer = await MessageBox.Show(Window, Se.Language.General.Warning,
-                    string.Format(Se.Language.General.SubtitleFileChangedOutsideX, fileName),
+                    string.Format(hasChanges ? Se.Language.General.SubtitleFileChangedOutsideX : Se.Language.General.SubtitleFileChangedOutsideReloadX, fileName),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (answer != MessageBoxResult.Yes)
                 {
+                    _declinedReloadStamp = current;
                     return;
                 }
             }
@@ -125,6 +157,44 @@ public partial class MainViewModel
             _checkingSubtitleFileChangedOutside = false;
             _shortcutManager.ClearKeys();
         }
+    }
+
+    /// <summary>
+    /// Run before the subtitle is written back to its file: when another program wrote the file
+    /// since SE last read or wrote it, saving would silently throw those edits away. A manual save
+    /// asks first; the auto-save timer must not pop a dialog, so it skips this round and says so
+    /// in the status bar (the next manual save asks).
+    /// </summary>
+    private async Task<bool> ConfirmOverwriteFileChangedOutside(bool isAutoSave)
+    {
+        var fileName = GetWatchedSubtitleFileName();
+        if (!Se.Settings.General.ConfirmOverwriteSubtitleFileChangedOutside || fileName == null || _subtitleFileStamp is not { } stamp || !IsSameFile(stamp.FileName, fileName))
+        {
+            return true;
+        }
+
+        // A missing file is simply written again.
+        var current = SubtitleFileStamp.Read(fileName);
+        if (current == null || current.IsSameContentAs(stamp))
+        {
+            return true;
+        }
+
+        if (isAutoSave)
+        {
+            ShowStatus(string.Format(Se.Language.General.SubtitleFileChangedOutsideAutoSaveSkippedX, fileName));
+            return false;
+        }
+
+        if (Window == null)
+        {
+            return false;
+        }
+
+        var answer = await MessageBox.Show(Window, Se.Language.General.Warning,
+            string.Format(Se.Language.General.SubtitleFileChangedOutsideOverwriteX, fileName),
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        return answer == MessageBoxResult.Yes;
     }
 
     /// <summary>
@@ -148,9 +218,20 @@ public partial class MainViewModel
 
         // A successful open takes a new stamp; none means the new content could not be read and
         // the open left the current work alone (it already told the user why).
+        var previousStamp = _subtitleFileStamp;
         _subtitleFileStamp = null;
         await SubtitleOpen(fileName, selectedSubtitleIndex: selectedLine, textEncoding: SelectedEncoding, skipLoadVideo: true);
-        if (_subtitleFileStamp == null || !IsSameFile(_subtitleFileName, fileName))
+        if (_subtitleFileStamp == null)
+        {
+            // The subtitle in memory is still SE's version: keep checking saves against it, or the
+            // next activation would take the outside version as SE's own and a save would
+            // overwrite it without asking. Do not offer the same unreadable change again.
+            _subtitleFileStamp = previousStamp;
+            _declinedReloadStamp = SubtitleFileStamp.Read(fileName);
+            return;
+        }
+
+        if (!IsSameFile(_subtitleFileName, fileName))
         {
             return;
         }

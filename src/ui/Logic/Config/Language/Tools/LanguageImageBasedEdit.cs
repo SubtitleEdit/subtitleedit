@@ -10,7 +10,6 @@ public class LanguageImageBasedEdit
     public string AdjustBrightnessDotDotDot { get; set; }
     public string AdjustAlphaDotDotDot { get; set; }
     public string CropImages { get; set; }
-    public string ImportTimeCodes { get; set; }
     public string SetText { get; set; }
     public string ScreenWidth { get; set; }
     public string ScreenHeight { get; set; }
@@ -18,7 +17,6 @@ public class LanguageImageBasedEdit
     public string ResetToDefaults { get; set; }
     public string AlphaAdjustmentInfo { get; set; }
     public string AdjustBrightness { get; set; }
-    public string Brightness { get; set; }
     public string Contrast { get; set; }
     public string Gamma { get; set; }
     public string BrightnessAdjustmentInfo { get; set; }
@@ -73,7 +71,6 @@ public class LanguageImageBasedEdit
         AdjustBrightnessDotDotDot = "Adjust brightness...";
         AdjustAlphaDotDotDot = "Adjust alpha...";
         CropImages = "Crop images";
-        ImportTimeCodes = "Import time codes...";
         SetText = "Set text";
         ScreenWidth = "Screen width";
         ScreenHeight = "Screen height";
@@ -81,7 +78,6 @@ public class LanguageImageBasedEdit
         ResetToDefaults = "Reset to defaults";
         AlphaAdjustmentInfo = "Alpha adjustment: Add/subtract from alpha channel.\nPreview updates automatically and shows with checkered background to visualize transparency.";
         AdjustBrightness = "Adjust brightness";
-        Brightness = "Brightness";
         Contrast = "Contrast";
         Gamma = "Gamma";
         BrightnessAdjustmentInfo = "Adjust the sliders to modify brightness, contrast, and gamma.\nPreview updates automatically and shows the first selected subtitle.";

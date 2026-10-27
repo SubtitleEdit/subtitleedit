@@ -1,7 +1,5 @@
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Main;
-using System;
-using System.Collections.Generic;
 
 namespace UITests.Features.Main;
 

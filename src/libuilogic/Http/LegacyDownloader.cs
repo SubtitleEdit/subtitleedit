@@ -1,10 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 
 #pragma warning disable SYSLIB0014 // this downloader intentionally uses the legacy WebRequest/WebClient stack (Settings.General.UseLegacyDownloader fallback)

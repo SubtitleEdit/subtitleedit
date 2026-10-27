@@ -175,8 +175,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     if (handlerType != "soun")
                     {
-                        Buffer = new byte[Size - 4];
-                        fs.ReadFully(Buffer, 0, Buffer.Length);
+                        Buffer = ReadPayload(fs, Size - 4);
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
 
@@ -196,8 +195,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     if (handlerType != "soun")
                     {
-                        Buffer = new byte[Size - 4];
-                        fs.ReadFully(Buffer, 0, Buffer.Length);
+                        Buffer = ReadPayload(fs, Size - 4);
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
 
@@ -213,8 +211,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 }
                 else if (Name == "stsz") // sample sizes
                 {
-                    Buffer = new byte[Size - 4];
-                    fs.ReadFully(Buffer, 0, Buffer.Length);
+                    Buffer = ReadPayload(fs, Size - 4);
                     int version = Buffer[0];
                     var uniformSizeOfEachSample = GetUInt(4);
                     var numberOfSampleSizes = GetUInt(8);
@@ -249,8 +246,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     // packed into 4, 8 or 16 bits each instead of a full word. Bento4's
                     // mp4compact rewrites a file this way, and without this the track came out
                     // with no sample sizes at all, i.e. no subtitles.
-                    Buffer = new byte[Size - 4];
-                    fs.ReadFully(Buffer, 0, Buffer.Length);
+                    Buffer = ReadPayload(fs, Size - 4);
                     var fieldSize = Buffer[7]; // 3 bytes reserved, then the field size
                     var sampleCount = GetUInt(8);
                     StszSampleCount = sampleCount;
@@ -283,8 +279,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 {
                     //https://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-SW1
 
-                    Buffer = new byte[Size - 4];
-                    fs.ReadFully(Buffer, 0, Buffer.Length);
+                    Buffer = ReadPayload(fs, Size - 4);
                     int version = Buffer[0];
                     var numberOfSampleTimes = GetUInt(4);
                     var entries = ClampEntries(numberOfSampleTimes, 15, 8);
@@ -310,8 +305,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 }
                 else if (Name == "ctts") // composition time offset (PTS = DTS + offset); needed when B-frames make storage order differ from display order
                 {
-                    Buffer = new byte[Size - 4];
-                    fs.ReadFully(Buffer, 0, Buffer.Length);
+                    Buffer = ReadPayload(fs, Size - 4);
                     int version = Buffer[0];
                     var numberOfEntries = GetUInt(4);
                     var entries = ClampEntries(numberOfEntries, 15, 8);
@@ -334,8 +328,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 }
                 else if (Name == "stsc") // sample table sample to chunk map
                 {
-                    Buffer = new byte[Size - 4];
-                    fs.ReadFully(Buffer, 0, Buffer.Length);
+                    Buffer = ReadPayload(fs, Size - 4);
                     int version = Buffer[0];
                     var numberOfSampleTimes = GetUInt(4);
                     var entries = ClampEntries(numberOfSampleTimes, 20, 12);

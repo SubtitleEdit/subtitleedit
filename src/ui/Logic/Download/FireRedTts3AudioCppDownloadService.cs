@@ -25,7 +25,7 @@ public class FireRedTts3AudioCppDownloadService : IFireRedTts3AudioCppDownloadSe
     private readonly HttpClient _httpClient;
 
     private const string ModelUrlBase =
-        "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/FireRedTTS3-Base-GGUF/";
+        AudioCppRuntime.ModelRepoBaseUrl + "FireRedTTS3-Base-GGUF/";
 
     public FireRedTts3AudioCppDownloadService(HttpClient httpClient)
     {

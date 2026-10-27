@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 
 namespace UITests.Logic.Ocr.GoogleLens;

@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Main.Layout;
-using Xunit;
 
 namespace UITests.Features.Main;
 

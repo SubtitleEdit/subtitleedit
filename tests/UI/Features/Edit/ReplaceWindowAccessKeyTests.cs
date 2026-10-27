@@ -9,7 +9,6 @@ using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Edit.Replace;
 using Nikse.SubtitleEdit.Logic;
-using System.Linq;
 
 namespace UITests.Features.Edit;
 

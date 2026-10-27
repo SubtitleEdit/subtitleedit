@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Controls.Templates;
@@ -11,6 +12,11 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 
+/// <summary>
+/// Spell check dictionary download, in the editor look (see <see cref="EditorChrome"/>): the
+/// dictionary picker and its details in a section, a progress strip while downloading, and
+/// Close/Cancel + Download in the button bar with the download status on the left.
+/// </summary>
 public class GetDictionariesWindow : Window
 {
     private const int LabelWidth = 90;
@@ -23,49 +29,60 @@ public class GetDictionariesWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 520;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var downloadButton = UiUtil.MakeButton(string.Empty, vm.DownloadCommand)
             .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonText))
             .WithBindEnabled(nameof(vm.IsDownloadEnabled));
+        downloadButton.Classes.Add("primary");
+        AutomationProperties.SetName(downloadButton, Se.Language.General.Download);
 
-        var stack = new StackPanel
+        var uninstallButton = UiUtil.MakeButton(Se.Language.General.Uninstall, vm.UninstallCommand)
+            .WithIconLeft(IconNames.Trash)
+            .WithBindIsVisible(nameof(vm.IsUninstallVisible));
+        AutomationProperties.SetName(uninstallButton, Se.Language.General.Uninstall);
+
+        var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand)
+            .WithBindIsVisible(nameof(vm.IsDownloadEnabled));
+        var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand)
+            .WithBindIsVisible(nameof(vm.IsProgressVisible));
+
+        var sections = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 14,
             Children =
             {
-                BuildHeader(),
-                BuildDetails(vm),
-                BuildProgress(vm),
-                BuildActions(vm, downloadButton),
+                EditorChrome.MakeEditorSection(Se.Language.General.Dictionary, BuildDetails(vm), first: true),
             },
         };
 
-        var outerGrid = new Grid { Margin = UiUtil.MakeWindowMargin() };
-        outerGrid.Children.Add(stack);
-
-        Content = new Border
+        var root = new Grid
         {
-            Child = outerGrid,
-            Padding = new Thickness(4),
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+            },
         };
+        root.Add(new Border { Background = EditorChrome.PanelBrush, Child = sections }, 0, 0);
+        root.Add(BuildProgress(vm), 1, 0);
+        root.Add(EditorChrome.MakeDockedButtonBar(BuildStatus(vm), close, cancel, uninstallButton, downloadButton), 2, 0);
+        Content = root;
 
         UiUtil.FocusOnFirstActivation(this, downloadButton); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static TextBlock BuildHeader() => new()
+    private static StackPanel BuildDetails(GetDictionariesViewModel vm)
     {
-        Text = Se.Language.SpellCheck.GetDictionaryInstructions,
-        TextWrapping = TextWrapping.Wrap,
-        Opacity = 0.85,
-        MaxWidth = LabelWidth + ContentWidth + 12,
-    };
+        var instructions = EditorChrome.MakeWrappingDimLabel(Se.Language.SpellCheck.GetDictionaryInstructions);
+        instructions.FontSize = EditorChrome.FieldFontSize;
+        instructions.MaxWidth = LabelWidth + ContentWidth + 12;
+        instructions.HorizontalAlignment = HorizontalAlignment.Left;
 
-    private static Border BuildDetails(GetDictionariesViewModel vm)
-    {
         var grid = new Grid
         {
             ColumnDefinitions =
@@ -83,7 +100,7 @@ public class GetDictionariesWindow : Window
                 new RowDefinition { Height = GridLength.Auto },
             },
             ColumnSpacing = 12,
-            RowSpacing = 12,
+            RowSpacing = 10,
         };
 
         var combo = new ComboBox
@@ -95,29 +112,40 @@ public class GetDictionariesWindow : Window
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedDictionary)),
             [!ComboBox.IsEnabledProperty] = new Binding(nameof(vm.IsDownloadEnabled)),
         };
+        AutomationProperties.SetName(combo, Se.Language.General.Dictionary);
 
         var description = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            VerticalAlignment = VerticalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Top,
             MinHeight = 32,
             MaxWidth = ContentWidth,
-            Opacity = 0.85,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBox.DataContextProperty] = new Binding(nameof(vm.SelectedDictionary)),
             [!TextBlock.TextProperty] = new Binding(nameof(GetSpellCheckDictionaryDisplay.Description)),
         };
 
-        var folder = new TextBox
+        // Selectable (to copy), and a long path loses its middle ("…") instead of being cut off;
+        // the tooltip has all of it
+        var folder = new SelectableTextBlock
         {
-            IsReadOnly = true,
-            BorderThickness = new Thickness(0),
-            Background = Brushes.Transparent,
-            Padding = new Thickness(0),
-            VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = UiUtil.ScaledFontSize(12),
-            MaxWidth = ContentWidth,
+            VerticalAlignment = VerticalAlignment.Center,
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            MaxWidth = ContentWidth - 36,
             HorizontalAlignment = HorizontalAlignment.Left,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.DictionariesFolder)),
+            TextTrimming = TextTrimming.PathSegmentEllipsis,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.DictionariesFolder)),
+            [!ToolTip.TipProperty] = new Binding(nameof(vm.DictionariesFolder)),
+        };
+        AutomationProperties.SetName(folder, Se.Language.General.InstallFolder);
+
+        var openFolder = EditorChrome.CreateToolButton(IconNames.FolderOpen, Se.Language.General.OpenDictionaryFolder, vm.OpenFolderCommand, 28);
+        var folderRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            Children = { folder, openFolder },
         };
 
         grid.Add(MakeLabel(Se.Language.General.Dictionary), 0, 0);
@@ -126,80 +154,52 @@ public class GetDictionariesWindow : Window
         grid.Add(MakeLabel(Se.Language.General.Status), 1, 0);
         grid.Add(MakeStatusPanel(nameof(vm.SelectedStatusText)), 1, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.Description), 2, 0);
+        var labelDescription = MakeLabel(Se.Language.General.Description);
+        labelDescription.VerticalAlignment = VerticalAlignment.Top; // lines up with the first line of a wrapped description
+        grid.Add(labelDescription, 2, 0);
         grid.Add(description, 2, 1);
 
         grid.Add(MakeLabel(Se.Language.General.InstallFolder), 3, 0);
-        grid.Add(folder, 3, 1);
-
-        return new Border
-        {
-            Child = grid,
-            Padding = new Thickness(14),
-            CornerRadius = new CornerRadius(6),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
-        };
-    }
-
-    private static StackPanel BuildProgress(GetDictionariesViewModel vm)
-    {
-        var bar = UiUtil.MakeProgressBar();
-        bar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.Progress));
-        bar[!Visual.OpacityProperty] = new Binding(nameof(vm.ProgressOpacity));
-
-        var status = new TextBlock
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 8, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
-        };
+        grid.Add(folderRow, 3, 1);
 
         return new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Children = { bar, status },
+            Spacing = 14,
+            Children = { instructions, grid },
         };
     }
 
-    private static Grid BuildActions(GetDictionariesViewModel vm, Button downloadButton)
+    private static Border BuildProgress(GetDictionariesViewModel vm)
     {
-        var openFolder = UiUtil.MakeButton(Se.Language.General.OpenDictionaryFolder, vm.OpenFolderCommand)
-            .WithIconLeft(IconNames.FolderOpen);
+        var bar = UiUtil.MakeProgressBar();
+        bar.VerticalAlignment = VerticalAlignment.Center;
+        bar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.Progress));
+        bar[!Visual.OpacityProperty] = new Binding(nameof(vm.ProgressOpacity));
 
-        var leftPanel = new StackPanel
+        return new Border
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Children = { downloadButton, openFolder },
+            Child = bar,
+            Background = EditorChrome.StatusBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 10),
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsProgressVisible)),
         };
-
-        var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand)
-            .WithBindIsVisible(nameof(vm.IsDownloadEnabled));
-        var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand)
-            .WithBindIsVisible(nameof(vm.IsProgressVisible));
-
-        var rightPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Spacing = 8,
-            Children = { close, cancel },
-        };
-
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-        };
-        grid.Add(leftPanel, 0, 0);
-        grid.Add(rightPanel, 0, 2);
-        return grid;
     }
+
+    /// <summary>
+    /// In the button bar rather than the progress strip: "Download failed" stays after the strip
+    /// is gone.
+    /// </summary>
+    private static TextBlock BuildStatus(GetDictionariesViewModel vm) => new()
+    {
+        FontSize = EditorChrome.FieldFontSize,
+        Foreground = EditorChrome.DimTextBrush,
+        VerticalAlignment = VerticalAlignment.Center,
+        TextTrimming = TextTrimming.CharacterEllipsis,
+        [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
+    };
 
     private static FuncDataTemplate<GetSpellCheckDictionaryDisplay> BuildDictionaryItemTemplate()
     {
@@ -207,8 +207,8 @@ public class GetDictionariesWindow : Window
         {
             var dot = new Ellipse
             {
-                Width = 10,
-                Height = 10,
+                Width = 8,
+                Height = 8,
                 VerticalAlignment = VerticalAlignment.Center,
                 [!Shape.FillProperty] = new Binding(nameof(GetSpellCheckDictionaryDisplay.IsInstalled))
                 {
@@ -230,13 +230,13 @@ public class GetDictionariesWindow : Window
             };
         }, true);
     }
-    
+
     private static StackPanel MakeStatusPanel(string textBindingPath)
     {
         var dot = new Ellipse
         {
-            Width = 10,
-            Height = 10,
+            Width = 8,
+            Height = 8,
             VerticalAlignment = VerticalAlignment.Center,
             [!Shape.FillProperty] = new Binding(nameof(GetDictionariesViewModel.SelectedDictionary) + "." +
                 nameof(GetSpellCheckDictionaryDisplay.IsInstalled))
@@ -249,6 +249,7 @@ public class GetDictionariesWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(8, 0, 0, 0),
             [!TextBlock.TextProperty] = new Binding(textBindingPath),
         };
@@ -260,10 +261,5 @@ public class GetDictionariesWindow : Window
         };
     }
 
-    private static TextBlock MakeLabel(string text) => new()
-    {
-        Text = text,
-        Opacity = 0.7,
-        VerticalAlignment = VerticalAlignment.Center,
-    };
+    private static TextBlock MakeLabel(string text) => EditorChrome.MakeDimLabel(text, new Thickness(0));
 }

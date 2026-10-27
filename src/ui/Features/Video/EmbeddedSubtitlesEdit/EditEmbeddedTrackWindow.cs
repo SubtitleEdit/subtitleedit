@@ -1,72 +1,57 @@
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 
+/// <summary>
+/// Track properties (name, language, forced, default), in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class EditEmbeddedTrackWindow : Window
 {
+    private const double LabelWidth = 84;
+
     public EditEmbeddedTrackWindow(EditEmbeddedTrackViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.General.Settings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         vm.Window = this;
         DataContext = vm;
 
-        var labelName = UiUtil.MakeLabel(Se.Language.General.Name);
-        var textBoxName = UiUtil.MakeTextBox(300, vm, nameof(vm.Name)); 
+        var textBoxName = EditorChrome.MakeTextField(nameof(vm.Name), Se.Language.General.Name, 300);
+        var textBoxTitleOrLanguage = EditorChrome.MakeTextField(nameof(vm.TitleOrlanguage), Se.Language.General.Language, 300);
 
-        var labelTitleOrLanguage = UiUtil.MakeLabel(Se.Language.General.Language);
-        var textBoxTitleOrLanguage = UiUtil.MakeTextBox(300, vm, nameof(vm.TitleOrlanguage));
+        var switchForced = EditorChrome.MakeSwitch(nameof(vm.IsForced), Se.Language.General.Forced);
+        var switchDefault = EditorChrome.MakeSwitch(nameof(vm.IsDefault), Se.Language.General.Default);
 
-        var checkBoxForced = UiUtil.MakeCheckBox(Se.Language.General.Forced, vm, nameof(vm.IsForced));
-        var checkBoxDefault = UiUtil.MakeCheckBox(Se.Language.General.Default, vm, nameof(vm.IsDefault));
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Name, textBoxName, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Language, textBoxTitleOrLanguage, LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(string.Empty, EditorChrome.MakeSwitchRow(switchForced, Se.Language.General.Forced), LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(string.Empty, EditorChrome.MakeSwitchRow(switchDefault, Se.Language.General.Default), LabelWidth, spacing: 6));
 
-        var buttonPanel = UiUtil.MakeButtonBar(
-            UiUtil.MakeButtonOk(vm.OkCommand),
-            UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonPanel = EditorChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(labelName, 0, 0);
-        grid.Add(textBoxName, 0, 1);
-
-        grid.Add(labelTitleOrLanguage, 1, 0);
-        grid.Add(textBoxTitleOrLanguage, 1, 1);
-
-        grid.Add(checkBoxForced, 2, 1);
-
-        grid.Add(checkBoxDefault, 3, 1);
-
-        grid.Add(buttonPanel, 4, 0, 1, 2);
-
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.Settings, rows, first: true)), 0);
+        grid.Add(buttonPanel, 1);
 
         Content = grid;
 
-        Loaded += (_,e) => vm.EditEmbeddedTrackWindowLoaded(e);
+        Loaded += (_, e) => vm.EditEmbeddedTrackWindowLoaded(e);
         KeyDown += (_, args) => vm.OnKeyDown(args);
     }
 }

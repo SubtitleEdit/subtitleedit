@@ -11,9 +11,6 @@ using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using UITests.Features.Sync.PointSync;
 
 namespace UITests.Features.Sync;

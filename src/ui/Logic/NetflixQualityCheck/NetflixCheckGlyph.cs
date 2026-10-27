@@ -5,7 +5,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 

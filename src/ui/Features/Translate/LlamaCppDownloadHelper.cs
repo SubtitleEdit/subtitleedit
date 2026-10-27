@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -304,7 +303,7 @@ public static class LlamaCppDownloadHelper
         }
         else if (!engineInstalled)
         {
-            message = Se.Language.Translate.LlamaCppDownloadEnginePrompt;
+            message = Se.Language.General.LlamaCppDownloadEnginePrompt;
         }
         else
         {

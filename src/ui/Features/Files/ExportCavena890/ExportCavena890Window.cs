@@ -1,83 +1,48 @@
 using Avalonia.Controls;
-using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Files.FormatProperties;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportCavena890;
 
+/// <summary>
+/// Cavena 890 export header in the editor look (see <see cref="FormatPropertiesChrome"/>).
+/// </summary>
 public class ExportCavena890Window : Window
 {
+    private const double FieldWidth = 300;
+
     public ExportCavena890Window(ExportCavena890ViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.File.Export.TitleExportCavena890;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-        
-        var labelTranslatedTitle = UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaTranslatedTitle);
-        var textBoxTranslatedTitle = UiUtil.MakeTextBox(300, vm, nameof(vm.TranslatedTitle));
-        
-        var labelOriginalTitle = UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaOriginalTitle);
-        var textBoxOriginalTitle = UiUtil.MakeTextBox(300, vm, nameof(vm.OriginalTitle));
-        
-        var labelTranslator = UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaTranslator);
-        var textBoxTranslator = UiUtil.MakeTextBox(300, vm, nameof(vm.Translator));
-        
-        var labelComment =  UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaComment);
-        var textBoxComment = UiUtil.MakeTextBox(300, vm, nameof(vm.Comment));
-        
-        var labelLanguage = UiUtil.MakeLabel(Se.Language.General.Language);
-        var textBoxLanguage = UiUtil.MakeTextBox(300, vm, nameof(vm.Language));
-        
-        var labelStartOfProgramme = UiUtil.MakeLabel(Se.Language.File.Export.ExportCavenaStartOfProgramme);
-        var textBoxStartOfProgramme = UiUtil.MakeTextBox(300, vm, nameof(vm.StartOfProgramme));
-        
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar( buttonOk, buttonCancel);
+        var l = Se.Language.File.Export;
+        var textBoxTranslatedTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.TranslatedTitle)), l.ExportCavenaTranslatedTitle);
+        var textBoxOriginalTitle = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.OriginalTitle)), l.ExportCavenaOriginalTitle);
+        var textBoxTranslator = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Translator)), l.ExportCavenaTranslator);
+        var textBoxComment = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Comment)), l.ExportCavenaComment);
+        var textBoxLanguage = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.Language)), Se.Language.General.Language);
+        var textBoxStartOfProgramme = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, nameof(vm.StartOfProgramme)), l.ExportCavenaStartOfProgramme);
 
-        grid.Add(labelTranslatedTitle, 1, 0);
-        grid.Add(textBoxTranslatedTitle, 1, 1);
-        grid.Add(labelOriginalTitle, 2, 0);
-        grid.Add(textBoxOriginalTitle, 2, 1);
-        grid.Add(labelTranslator, 3, 0);
-        grid.Add(textBoxTranslator, 3, 1);
-        grid.Add(labelComment, 4, 0);
-        grid.Add(textBoxComment, 4, 1);
-        grid.Add(labelLanguage, 5, 0);
-        grid.Add(textBoxLanguage, 5, 1);
-        grid.Add(labelStartOfProgramme, 6, 0);
-        grid.Add(textBoxStartOfProgramme, 6, 1);
-        grid.Add(panelButtons, 7, 0, 1, 2);
+        var rows = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(l.ExportCavenaTranslatedTitle, textBoxTranslatedTitle),
+            FormatPropertiesChrome.Row(l.ExportCavenaOriginalTitle, textBoxOriginalTitle),
+            FormatPropertiesChrome.Row(l.ExportCavenaTranslator, textBoxTranslator),
+            FormatPropertiesChrome.Row(l.ExportCavenaComment, textBoxComment),
+            FormatPropertiesChrome.Row(Se.Language.General.Language, textBoxLanguage),
+            FormatPropertiesChrome.Row(l.ExportCavenaStartOfProgramme, textBoxStartOfProgramme));
 
-        Content = grid;
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
+
+        Content = FormatPropertiesChrome.MakeRoot(
+            buttonBar,
+            EditorChrome.MakeEditorSection(Se.Language.General.Header, rows, first: true));
 
         UiUtil.FocusOnFirstActivation(this, textBoxTranslatedTitle); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;

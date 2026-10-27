@@ -1,13 +1,8 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.UiLogic.Http;
 
@@ -43,10 +38,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "nvidia/nvidia-nemotron-nano-9b-v2",
 
             // NVIDIA Riva (translation-specific)
+            "nvidia/riva-translate-4b-instruct-v2",
             "nvidia/riva-translate-4b-instruct-v1.1",
             "nvidia/riva-translate-4b-instruct",
 
             // DeepSeek
+            "deepseek-ai/deepseek-v4.1-flash",
             "deepseek-ai/deepseek-v4-pro",
             "deepseek-ai/deepseek-v4-flash",
 
@@ -69,6 +66,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "moonshotai/kimi-k2.6",
 
             // Zhipu GLM
+            "z-ai/glm-5.3",
             "z-ai/glm-5.2",
 
             // OpenAI (open weights)

@@ -56,8 +56,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 }
                 else if (Name == "hdlr")
                 {
-                    Buffer = new byte[Size - 4];
-                    fs.ReadFully(Buffer, 0, Buffer.Length);
+                    Buffer = ReadPayload(fs, Size - 4);
                     HandlerType = GetString(8, 4);
                     if (Size > 25)
                     {

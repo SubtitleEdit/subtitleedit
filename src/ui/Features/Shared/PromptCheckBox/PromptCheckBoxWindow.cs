@@ -7,6 +7,9 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PromptCheckBox;
 
+/// <summary>
+/// A yes/no option prompt in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class PromptCheckBoxWindow : Window
 {
     public PromptCheckBoxWindow(PromptCheckBoxViewModel vm)
@@ -16,40 +19,27 @@ public class PromptCheckBoxWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 300;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
         var checkBox = new CheckBox
         {
-            Margin = new Thickness(0, 0, 10, 0),
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.IsChecked)) { Mode = BindingMode.TwoWay },
             [!ContentControl.ContentProperty] = new Binding(nameof(vm.CheckBoxText)),
         };
         AutomationProperties.SetName(checkBox, vm.CheckBoxText);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        var panel = new Border
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
+            Child = checkBox,
+            Padding = new Thickness(16, 16, 16, 18),
         };
 
-        grid.Add(checkBox, 0);
-        grid.Add(buttonPanel, 1);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, checkBox); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);

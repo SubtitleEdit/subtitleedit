@@ -1,12 +1,18 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 
+/// <summary>
+/// Edit one custom text format, in the editor look (see <see cref="EditorChrome"/>): name,
+/// extension and time code/new line formats on top, the header/text/footer templates below
+/// (right-click inserts a tag), the preview to the right, Cancel and OK in the button bar.
+/// </summary>
 public class EditCustomTextFormatWindow : Window
 {
     public EditCustomTextFormatWindow(EditCustomTextFormatViewModel vm)
@@ -21,42 +27,23 @@ public class EditCustomTextFormatWindow : Window
         Bind(Window.TitleProperty, new Binding(nameof(vm.Title)));
         vm.Window = this;
         DataContext = vm;
-
-        var label = new Label
-        {
-            Content = Se.Language.Tools.AdjustDurations.AdjustVia,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        var sections = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        sections.Add(MakeFormatsView(vm, out var textBoxName), 0, 0);
+        sections.Add(MakePreviewView(vm), 0, 1);
 
-        grid.Add(MakeFormatsView(vm, out var textBoxName), 0);
-        grid.Add(MakePreviewView(vm), 0, 1);
-        grid.Add(panelButtons, 2, 0, 1, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(sections, null, buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, textBoxName); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
@@ -64,166 +51,125 @@ public class EditCustomTextFormatWindow : Window
 
     private static Grid MakeFormatsView(EditCustomTextFormatViewModel vm, out TextBox textBoxName)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // header
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // text
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // footer
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        textBoxName = EditorChrome.AsCenteredTextField(UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Name)))
+            .WithAccessibleName(Se.Language.General.Name);
+        textBoxName.HorizontalAlignment = HorizontalAlignment.Stretch;
 
-        var labelName = UiUtil.MakeLabel(Se.Language.General.Name).WithMinWidth(100);
-        textBoxName = UiUtil.MakeTextBox(200, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Name));
-        var panelName = UiUtil.MakeHorizontalPanel(labelName, textBoxName);
-        grid.Add(panelName, 0);
+        // The extension keeps its dot handling in CustomFormatItem (#15699).
+        var textBoxFileExtension = EditorChrome.AsCenteredTextField(UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Extension)))
+            .WithAccessibleName(Se.Language.General.FileExtension);
+        textBoxFileExtension.HorizontalAlignment = HorizontalAlignment.Stretch;
 
-        var labelFileExtension = UiUtil.MakeLabel(Se.Language.General.FileExtension).WithMinWidth(100);
-        var textBoxFileExtension = UiUtil.MakeTextBox(200, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.Extension));
-        var panelFileExtension = UiUtil.MakeHorizontalPanel(labelFileExtension, textBoxFileExtension).WithMarginTop(5);
-        grid.Add(panelFileExtension, 1);
-
-        var labelHeader = UiUtil.MakeLabel(Se.Language.General.Header).WithMarginTop(5);
-        var textBoxHeader = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.FormatHeader));
-        textBoxHeader.HorizontalAlignment = HorizontalAlignment.Stretch;
-        textBoxHeader.VerticalAlignment = VerticalAlignment.Stretch;
-        textBoxHeader.AcceptsReturn = true;
+        var textBoxHeader = MakeTemplateBox(vm, nameof(CustomFormatItem.FormatHeader), Se.Language.General.Header);
         vm.TextBoxHeader = textBoxHeader;
-        grid.Add(labelHeader, 2);
-        grid.Add(textBoxHeader, 3);
 
-        var labelText = UiUtil.MakeLabel(Se.Language.General.Text).WithMarginTop(5);
-        var textBoxParagraph = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.FormatParagraph));
-        textBoxParagraph.HorizontalAlignment = HorizontalAlignment.Stretch;
-        textBoxParagraph.VerticalAlignment = VerticalAlignment.Stretch;
-        textBoxParagraph.AcceptsReturn = true;
+        var textBoxParagraph = MakeTemplateBox(vm, nameof(CustomFormatItem.FormatParagraph), Se.Language.General.Text);
         vm.TextBoxParagraph = textBoxParagraph;
-        grid.Add(labelText, 4);
-        grid.Add(textBoxParagraph, 5);
 
-        var labelTimeCodeFormat = UiUtil.MakeLabel(Se.Language.File.Export.TimeCodeFormat).WithMinWidth(120);
         var textBoxTimeCode = new AutoCompleteBox
         {
             DataContext = vm,
             VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 200,
-            Margin = new Thickness(0, 0, 0, 3),
-            PlaceholderText = Se.Language.File.Export.TimeCodeFormat,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinWidth = 160,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            PlaceholderText = Se.Language.General.TimeCodeFormat,
             ItemsSource = vm.TimeCodeList,
             [!AutoCompleteBox.TextProperty] = new Binding(nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.FormatTimeCode)),
             MinimumPrefixLength = 0,
-        };
+        }.WithAccessibleName(Se.Language.General.TimeCodeFormat);
 
-        var panelTimeCode = UiUtil.MakeHorizontalPanel(labelTimeCodeFormat, textBoxTimeCode).WithMarginTop(4);
-        grid.Add(panelTimeCode, 6);
-
-        var labelNewLineFormat = UiUtil.MakeLabel(Se.Language.File.Export.NewLineFormat).WithMinWidth(120);
         var textBoxNewLine = new AutoCompleteBox
         {
             DataContext = vm,
             VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 200,
-            Margin = new Thickness(0, 0, 0, 3),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinWidth = 160,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             PlaceholderText = Se.Language.File.Export.NewLineFormat,
             ItemsSource = vm.NewLineList,
             [!AutoCompleteBox.TextProperty] = new Binding(nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.FormatNewLine)),
             MinimumPrefixLength = 0,
-        };
+        }.WithAccessibleName(Se.Language.File.Export.NewLineFormat);
 
-        var panelNewLine = UiUtil.MakeHorizontalPanel(labelNewLineFormat, textBoxNewLine).WithMarginTop(4);
-        grid.Add(panelNewLine, 7);
-
-        var labelFooter = UiUtil.MakeLabel(Se.Language.General.Footer).WithMarginTop(5);
-        var textBoxFooter = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + nameof(CustomFormatItem.FormatFooter));
-        textBoxFooter.HorizontalAlignment = HorizontalAlignment.Stretch;
-        textBoxFooter.VerticalAlignment = VerticalAlignment.Stretch;
-        textBoxFooter.AcceptsReturn = true;
+        var textBoxFooter = MakeTemplateBox(vm, nameof(CustomFormatItem.FormatFooter), Se.Language.General.Footer);
         vm.TextBoxFooter = textBoxFooter;
-        grid.Add(labelFooter, 8);
-        grid.Add(textBoxFooter, 9);
 
+        AddTagMenu(textBoxHeader, vm, vm.HeaderFooterTags, vm.InsertHeaderTagCommand);
+        AddTagMenu(textBoxParagraph, vm, vm.ParagraphTags, vm.InsertParagraphTagCommand);
+        AddTagMenu(textBoxFooter, vm, vm.HeaderFooterTags, vm.InsertFooterTagCommand);
 
-        var flyoutHeader = new MenuFlyout();
-        textBoxHeader.ContextFlyout = flyoutHeader;
-        UiUtil.AttachMacContextFlyoutHandler(textBoxHeader);
-        foreach (var item in vm.HeaderFooterTags)
+        // Name, extension and the formats: labels in a column sized to the longest one, so
+        // translations do not get clipped.
+        var fields = new Grid
         {
-            var menuItem = new MenuItem
-            {
-                Header = item,
-                DataContext = vm,
-                Command = vm.InsertHeaderTagCommand,
-                CommandParameter = item,
-            };
-            flyoutHeader.Items.Add(menuItem);
+            ColumnSpacing = 12,
+            RowSpacing = 8,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+        };
+        var rows = new (string Label, Control Field)[]
+        {
+            (Se.Language.General.Name, textBoxName),
+            (Se.Language.General.FileExtension, textBoxFileExtension),
+            (Se.Language.General.TimeCodeFormat, textBoxTimeCode),
+            (Se.Language.File.Export.NewLineFormat, textBoxNewLine),
+        };
+        for (var i = 0; i < rows.Length; i++)
+        {
+            fields.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+            fields.Add(EditorChrome.MakeDimLabel(rows[i].Label.TrimEnd(':'), new Thickness(0)), i, 0);
+            fields.Add(rows[i].Field, i, 1);
         }
 
-        var flyoutParagraph = new MenuFlyout();
-        textBoxParagraph.ContextFlyout = flyoutParagraph;
-        UiUtil.AttachMacContextFlyoutHandler(textBoxParagraph);
-        foreach (var item in vm.ParagraphTags)
-        {
-            var menuItem = new MenuItem
-            {
-                Header = item,
-                DataContext = vm,
-                Command = vm.InsertParagraphTagCommand,
-                CommandParameter = item,
-            };
-            flyoutParagraph.Items.Add(menuItem);
-        }
-
-        var flyoutFooter = new MenuFlyout();
-        textBoxFooter.ContextFlyout = flyoutFooter;
-        UiUtil.AttachMacContextFlyoutHandler(textBoxFooter);
-        foreach (var item in vm.HeaderFooterTags)
-        {
-            var menuItem = new MenuItem
-            {
-                Header = item,
-                DataContext = vm,
-                Command = vm.InsertFooterTagCommand,
-                CommandParameter = item,
-            };
-            flyoutFooter.Items.Add(menuItem);
-        }
-
-        return grid;
-    }
-
-    private static Grid MakePreviewView(EditCustomTextFormatViewModel vm)
-    {
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 90 }, // header
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 90 }, // text
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 90 }, // footer
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        grid.Add(EditorChrome.MakeEditorSection(Se.Language.General.Format, fields, first: true), 0, 0);
+        grid.Add(EditorChrome.MakeFillSection(Se.Language.General.Header, textBoxHeader), 1, 0);
+        grid.Add(EditorChrome.MakeFillSection(Se.Language.General.Text, textBoxParagraph), 2, 0);
+        grid.Add(EditorChrome.MakeFillSection(Se.Language.General.Footer, textBoxFooter), 3, 0);
+        return grid;
+    }
 
-        grid.Add(UiUtil.MakeLabel(Se.Language.General.Preview), 0);
-        var textBox = new TextBox
+    private static TextBox MakeTemplateBox(EditCustomTextFormatViewModel vm, string property, string accessibleName)
+    {
+        var textBox = EditorChrome.AsTextArea(UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.SelectedCustomFormat) + "." + property));
+        textBox.AcceptsReturn = true;
+        textBox.Margin = new Thickness(0);
+        return textBox.WithAccessibleName(accessibleName);
+    }
+
+    /// <summary>
+    /// Right-click on a template box inserts one of its tags.
+    /// </summary>
+    private static void AddTagMenu(TextBox textBox, EditCustomTextFormatViewModel vm, IEnumerable<string> tags, System.Windows.Input.ICommand command)
+    {
+        var flyout = new MenuFlyout();
+        textBox.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(textBox);
+        foreach (var item in tags)
+        {
+            var menuItem = new MenuItem
+            {
+                Header = item,
+                DataContext = vm,
+                Command = command,
+                CommandParameter = item,
+            };
+            flyout.Items.Add(menuItem);
+        }
+    }
+
+    private static Border MakePreviewView(EditCustomTextFormatViewModel vm)
+    {
+        var textBox = EditorChrome.AsTextArea(new TextBox
         {
             AcceptsReturn = true,
             // Read-only preview - see ManualChosenEncodingWindow (#14313).
@@ -231,11 +177,9 @@ public class EditCustomTextFormatWindow : Window
             IsReadOnly = true,
             Width = double.NaN,
             Height = double.NaN,
-        };
+        }).WithAccessibleName(Se.Language.General.Preview);
         textBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.PreviewText)));
 
-        grid.Add(textBox, 1);
-
-        return grid;
+        return EditorChrome.MakeFillSection(Se.Language.General.Preview, textBox, lineLeft: true);
     }
 }

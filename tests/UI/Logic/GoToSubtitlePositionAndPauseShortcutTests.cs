@@ -1,8 +1,5 @@
-using System;
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
-using Xunit;
 
 namespace UITests.Logic;
 

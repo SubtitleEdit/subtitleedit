@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Ocr.Paddle;
 using SkiaSharp;

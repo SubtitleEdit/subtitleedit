@@ -15,6 +15,11 @@ public static class PluginConstants
     /// <summary>JSON index of plugins available to download.</summary>
     public const string OnlineIndexUrl = "https://raw.githubusercontent.com/SubtitleEdit/plugins/main/se5-plugins.json";
 
+    // Request type values.
+    public const string RequestTypeRun = "run";
+    public const string RequestTypeBatch = "batch";
+    public const string RequestTypeConfigure = "configure";
+
     // Response status values.
     public const string StatusOk = "ok";
     public const string StatusCancelled = "cancelled";

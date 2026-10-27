@@ -105,6 +105,8 @@ internal static class CliSchema
         "--fix-common-errors-rules",
         "--fce-language",
         "--dictionary-folder",
+        "--merge-continuation-lines-max-gap",
+        "--merge-continuation-lines-max-chars",
         "--remove-formatting-rules",
     };
 

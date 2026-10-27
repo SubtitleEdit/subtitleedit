@@ -8,8 +8,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
-using System.Linq;
 
 namespace UITests.Features.Translate;
 

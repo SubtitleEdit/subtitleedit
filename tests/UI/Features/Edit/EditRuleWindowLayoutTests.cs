@@ -6,9 +6,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UITests.Features.Edit;
 
@@ -95,7 +92,8 @@ public class EditRuleWindowLayoutTests : IDisposable
         window.Show();
         window.UpdateLayout();
 
-        var grid = Assert.IsType<Grid>(window.Content);
+        // The grid that holds the labels and the find/replace/description boxes.
+        var grid = Assert.IsType<Grid>(TextBoxes(window)[0].Parent);
         var fieldColumn = grid.ColumnDefinitions[1];
         Assert.Equal(GridUnitType.Star, fieldColumn.Width.GridUnitType);
 

@@ -23,16 +23,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nikse.SubtitleEdit.Features.Main.Layout;
-using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
 public class SettingsPage : UserControl
 {
+    private const double SidePanelMinWidth = 210;
+    private const double SidePanelMaxWidth = 280;
+    private const string StretchInGroupClass = "stretch-in-group";
+
     private readonly TextBox _searchBox;
     private readonly StackPanel _contentPanel;
     private readonly SettingsViewModel _vm;
     private readonly Dictionary<SettingsSection, Button> _menuButtons = new();
+    private readonly Border _sidePanel;
+    private readonly Border _contentBorder;
+    private readonly Border _buttonBar;
 
     public SettingsPage(SettingsViewModel vm)
     {
@@ -43,49 +49,36 @@ public class SettingsPage : UserControl
         _searchBox = new TextBox
         {
             PlaceholderText = Se.Language.Options.Settings.SearchSettingsDotDotDot,
-            Margin = new Thickness(10),
-            MaxWidth = 500,
-            MinWidth = 360,
-            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(10, 12, 10, 8),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
             // The placeholder text is not exposed as the UIA Name, so screen readers announce a
             // bare "edit" without this (#12087).
             [AutomationProperties.NameProperty] = Se.Language.Options.Settings.SearchSettingsDotDotDot,
         }.WithSearchAndClearIcons();
+        _searchBox.Classes.Add("text");
 
         _contentPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 15,
-            Margin = new Thickness(10)
         };
 
         var scrollViewer = new ScrollViewer
         {
             Content = _contentPanel,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
         };
         _vm.ScrollView = scrollViewer;
-
-        var grid = new Grid
-        {
-            RowDefinitions = new RowDefinitions("Auto,*,Auto"),
-            ColumnDefinitions = new ColumnDefinitions("Auto,*")
-        };
-        grid.Children.Add(_searchBox);
-        Grid.SetRow(_searchBox, 0);
-        Grid.SetColumn(_searchBox, 1);
-        Grid.SetColumnSpan(_searchBox, 2);
-
-        Content = grid;
+        _contentBorder = EditorChrome.MakePanel(scrollViewer);
 
         // One menu item per section - built from the sections so title, icon and color always
         // match the section headers in the scroll view (and the Windows-only sections follow).
         var menu = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 10,
-            Margin = new Thickness(10, 10, 40, 10),
+            Spacing = 2,
+            Margin = new Thickness(8, 0, 8, 10),
         };
         foreach (var section in _vm.Sections)
         {
@@ -94,13 +87,36 @@ public class SettingsPage : UserControl
             menu.Children.Add(menuItem);
         }
 
-        grid.Children.Add(menu);
-        Grid.SetRow(menu, 1);
-        Grid.SetColumn(menu, 0);
+        // Side panel: the search box on top, the categories below (they scroll on a short screen)
+        var menuScrollViewer = new ScrollViewer
+        {
+            Content = menu,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+        var sideGrid = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,*"),
+        };
+        sideGrid.Add(_searchBox, 0, 0);
+        sideGrid.Add(menuScrollViewer, 1, 0);
+        _sidePanel = new Border
+        {
+            Child = sideGrid,
+            MinWidth = SidePanelMinWidth,
+            MaxWidth = SidePanelMaxWidth,
+            BorderThickness = new Thickness(0, 0, 1, 0),
+        };
 
-        grid.Children.Add(scrollViewer);
-        Grid.SetRow(scrollViewer, 1);
-        Grid.SetColumn(scrollViewer, 1);
+        var grid = new Grid
+        {
+            RowDefinitions = new RowDefinitions("*,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("Auto,*")
+        };
+
+        // The side panel (with the search box) first, so it is first in the tab order
+        grid.Add(_sidePanel, 0, 0);
+        grid.Add(_contentBorder, 0, 1);
 
         var buttonReset = new SeSplitButton
         {
@@ -126,18 +142,31 @@ public class SettingsPage : UserControl
 
         var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.CommandOkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonReset, buttonApply, buttonOk, buttonCancel);
-        grid.Children.Add(buttonBar);
-        Grid.SetRow(buttonBar, 2);
-        Grid.SetColumn(buttonBar, 0);
-        Grid.SetColumnSpan(buttonBar, 2);
+
+        // Reset (with import/export) on the left, Apply, Cancel and the accent OK on the right
+        _buttonBar = SettingsChrome.MakeButtonBar(buttonReset, buttonApply, buttonCancel, buttonOk);
+        grid.Add(_buttonBar, 1, 0, 1, 2);
+
+        Content = grid;
+        ApplyChromeBrushes();
 
         UpdateVisibleSections(string.Empty);
 
         // Search updates immediately, without the category navigation fade.
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
-        ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(RefreshSections);
+        ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(() =>
+        {
+            // The editor brushes are picked when used - follow a theme changed with Apply.
+            if (TopLevel.GetTopLevel(this) is Window window)
+            {
+                SettingsChrome.Apply(window);
+            }
+
+            ApplyChromeBrushes();
+            RefreshSections();
+        });
         _vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(SettingsViewModel.SelectedSection))
@@ -154,6 +183,14 @@ public class SettingsPage : UserControl
         };
     }
 
+    private void ApplyChromeBrushes()
+    {
+        _sidePanel.BorderBrush = EditorChrome.LineBrush;
+        _contentBorder.Background = EditorChrome.PanelBrush;
+        _buttonBar.Background = EditorChrome.ButtonBarBrush;
+        _buttonBar.BorderBrush = EditorChrome.LineBrush;
+    }
+
     public void RefreshSections()
     {
         UpdateVisibleSections(_searchBox.Text ?? string.Empty);
@@ -166,17 +203,18 @@ public class SettingsPage : UserControl
 
     private static Button MakeMenuItem(SettingsSection section, IRelayCommand command)
     {
-        var label = new Label
+        var label = new TextBlock
         {
-            Content = section.Title,
-            Padding = new Thickness(6, 0, 0, 0),
+            Text = section.Title,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
         };
 
         // Icon on a colored rounded square, matching the section header in the scroll view.
         var image = new ContentControl
         {
-            FontSize = UiUtil.ScaledFontSize(13),
+            FontSize = EditorChrome.ScaledFont(11),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -186,34 +224,32 @@ public class SettingsPage : UserControl
         image.Classes.Add(UiTheme.IconOnAccentClassName);
         var glyph = new Border
         {
-            Width = 22,
-            Height = 22,
-            CornerRadius = new CornerRadius(6),
+            Width = 20,
+            Height = 20,
+            CornerRadius = new CornerRadius(5),
             Background = section.Brush,
             VerticalAlignment = VerticalAlignment.Center,
             Child = image,
         };
 
-        var stackPanel = new StackPanel
+        var content = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Children = { glyph, label }
+            ColumnSpacing = 10,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
         };
+        content.Add(glyph, 0, 0);
+        content.Add(label, 0, 1);
 
         var link = new Button
         {
-            Content = stackPanel,
-            FontWeight = FontWeight.DemiBold,
-            Margin = new Thickness(0),
-            Padding = new Thickness(10, 5, 10, 5),
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
+            Content = content,
             Command = command,
             CommandParameter = section.Title,
             // The content is an icon + label panel, so the button gets no computed UIA Name and a
             // screen reader would announce a nameless button (#12087).
             [AutomationProperties.NameProperty] = section.Title,
         };
+        link.Classes.Add(SettingsChrome.NavClass);
 
         return link;
     }
@@ -234,7 +270,7 @@ public class SettingsPage : UserControl
             section.Filter(filter);
             if (section.IsVisible && (showAllSections || section == _vm.SelectedSection))
             {
-                _contentPanel.Children.Add(section.Build());
+                _contentPanel.Children.Add(section.Build(first: _contentPanel.Children.Count == 0));
             }
             else
             {
@@ -245,18 +281,22 @@ public class SettingsPage : UserControl
         UpdateMenuHighlight();
     }
 
+    /// <summary>
+    /// The selected category is highlighted. While searching it is only when it has a match -
+    /// otherwise the first category with a match is (none when nothing matches), so the side
+    /// panel does not point at a category that is not in the results.
+    /// </summary>
     private void UpdateMenuHighlight()
     {
+        var highlighted = _vm.SelectedSection;
+        if (!string.IsNullOrWhiteSpace(_searchBox.Text) && highlighted is not { IsVisible: true })
+        {
+            highlighted = _vm.Sections.FirstOrDefault(section => section.IsVisible);
+        }
+
         foreach (var (section, button) in _menuButtons)
         {
-            if (section == _vm.SelectedSection)
-            {
-                button.Background = new SolidColorBrush(((SolidColorBrush)section.Brush).Color, 0.18);
-            }
-            else
-            {
-                button.ClearValue(BackgroundProperty);
-            }
+            button.Classes.Set(SettingsChrome.SelectedClass, section == highlighted);
         }
     }
 
@@ -264,16 +304,11 @@ public class SettingsPage : UserControl
     {
         if (item.ImageName == null)
         {
-            return new SettingsItem(item.Name, () =>
+            return new SettingsItem(item.Name, () => EditorChrome.MakeSwitch(nameof(item.IsVisible), null, item))
             {
-                var checkBox = new CheckBox();
-                checkBox.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(item.IsVisible))
-                {
-                    Source = item,
-                    Mode = BindingMode.TwoWay,
-                });
-                return checkBox;
-            }) { IsFullWidth = true };
+                IsFullWidth = true,
+                IsSwitch = true,
+            };
         }
 
         return new SettingsItem(item.Name, () =>
@@ -335,10 +370,11 @@ public class SettingsPage : UserControl
                 Mode = BindingMode.TwoWay,
             });
 
-            var accent = UiUtil.GetAccentBrush();
-            var accentColor = accent is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
-            var background = new SolidColorBrush(Color.Parse("#3f808080"));
-            var selectedBackground = new SolidColorBrush(accentColor, 0x26 / 255.0);
+            // Tiles in the editor colors: field color with a line, the shown ones in the soft accent
+            var accent = EditorChrome.AccentBrush;
+            var background = EditorChrome.FieldBrush;
+            var selectedBackground = EditorChrome.AccentSoftBrush;
+            toggle.BorderThickness = new Thickness(1);
             var lightResources = new ResourceDictionary();
             var darkResources = new ResourceDictionary();
             toggle.Resources.ThemeDictionaries[ThemeVariant.Light] = lightResources;
@@ -346,13 +382,18 @@ public class SettingsPage : UserControl
             check.Foreground = accent;
             foreach (var state in new[] { "", "PointerOver", "Pressed" })
             {
-                toggle.Resources["ToggleButtonBackground" + state] = background;
+                toggle.Resources["ToggleButtonBackground" + state] = state switch
+                {
+                    "PointerOver" => EditorChrome.HoverBrush,
+                    "Pressed" => EditorChrome.PressedBrush,
+                    _ => background,
+                };
                 toggle.Resources["ToggleButtonBackgroundChecked" + state] = selectedBackground;
                 lightResources["ToggleButtonForeground" + state] = Brushes.Black;
                 lightResources["ToggleButtonForegroundChecked" + state] = Brushes.Black;
                 darkResources["ToggleButtonForeground" + state] = Brushes.White;
                 darkResources["ToggleButtonForegroundChecked" + state] = Brushes.White;
-                toggle.Resources["ToggleButtonBorderBrush" + state] = Brushes.Transparent;
+                toggle.Resources["ToggleButtonBorderBrush" + state] = state == "PointerOver" ? EditorChrome.SeparatorBrush : EditorChrome.LineBrush;
                 toggle.Resources["ToggleButtonBorderBrushChecked" + state] = accent;
             }
 
@@ -380,7 +421,7 @@ public class SettingsPage : UserControl
 
             new SettingsItem(Se.Language.Options.Settings.SingleLineMaxLength, () => MakeNumericUpDownInt(nameof(_vm.SingleLineMaxLength), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.OptimalCharsPerSec, () => MakeNumericUpDown(nameof(_vm.OptimalCharsPerSec), _vm.RuleValueChanged)),
-            new SettingsItem(Se.Language.Options.Settings.MaxCharsPerSec, () => MakeNumericUpDown(nameof(_vm.MaxCharsPerSec), _vm.RuleValueChanged)),
+            new SettingsItem(Se.Language.General.MaxCharsPerSec, () => MakeNumericUpDown(nameof(_vm.MaxCharsPerSec), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.MaxWordsPerMin, () => MakeNumericUpDown(nameof(_vm.MaxWordsPerMin), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.MinDurationMs, () => MakeNumericUpDownInt(nameof(_vm.MinDurationMs), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.MaxDurationMs, () => MakeNumericUpDownInt(nameof(_vm.MaxDurationMs), _vm.RuleValueChanged)),
@@ -408,7 +449,7 @@ public class SettingsPage : UserControl
             {
                 EnglishLabel = EnglishLabelLookup.English.Options.Settings.MinGapMs + " " + EnglishLabelLookup.English.Options.Settings.MinGapFrames,
             },
-            new SettingsItem(Se.Language.Options.Settings.MaxLines,() => MakeNumericUpDownInt(nameof(_vm.MaxLines), _vm.RuleValueChanged)),
+            new SettingsItem(Se.Language.General.MaxNumberOfLines,() => MakeNumericUpDownInt(nameof(_vm.MaxLines), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.UnbreakSubtitlesShortThan, () => MakeNumericUpDownInt(nameof(_vm.UnbreakLinesShorterThan), _vm.RuleValueChanged)),
 
             new SettingsItem(Se.Language.Options.Settings.DialogStyle, () => MakeComboBoxDialogStyle()),
@@ -424,6 +465,7 @@ public class SettingsPage : UserControl
                 }
             }),
             new SettingsItem(Se.Language.Options.Settings.CpsLineLengthStyle, () => MakeComboBoxCpsLineLengthStyle()),
+            new SettingsItem(Se.Language.Options.Settings.CpsLineLengthIgnoreTagsRegex, () => UiUtil.MakeEditableComboBox(250, IgnoreTagsRegexPresets, _vm, nameof(_vm.CpsLineLengthIgnoreTagsRegex))),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.General, IconNames.Cogs, "#8494a4",
@@ -435,7 +477,10 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.MoveLinesShortenNeighbor, nameof(_vm.MoveLinesShortenNeighbor)),
             MakeCheckboxSetting(Se.Language.Options.Settings.PromptBeforeDelete, nameof(_vm.PromptBeforeDelete)),
             new SettingsItem(Se.Language.Options.Settings.TimeCodeMode, () => MakeComboBoxTimeCodeMode()),
+            MakeCheckboxSetting(Se.Language.Options.Settings.FrameModeSnapToVideoFrames, nameof(_vm.FrameModeSnapToVideoFrames),
+                new Binding(nameof(_vm.IsFramesTimeCodeMode)) { Source = _vm }),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxLimitNewLines, nameof(_vm.TextBoxLimitNewLines)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxAutoWrapWhileTyping, nameof(_vm.TextBoxAutoWrapWhileTyping)),
             MakeCheckboxSetting(Se.Language.General.LockTimeCodes, nameof(_vm.LockTimeCodes)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RememberPositionAndSize, nameof(_vm.RememberPositionAndSize)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TitleBarFullFileName, nameof(_vm.TitleBarFullFileName)),
@@ -444,11 +489,23 @@ public class SettingsPage : UserControl
                 new Binding(nameof(_vm.ShowRecentFiles)) { Source = _vm }),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
+            new SettingsItem(Se.Language.Options.Settings.FileChangedOutsideAction, () => new ComboBox
+            {
+                MinWidth = 250,
+                DataContext = _vm,
+                [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.FileChangedOutsideActions)),
+                [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedFileChangedOutsideAction))
+                {
+                    Mode = BindingMode.TwoWay,
+                },
+                ItemTemplate = new FuncDataTemplate<FileChangedOutsideActionDisplay>((f, _) =>
+                    new TextBlock { Text = f?.Name }, true),
+            }),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowFormatLimitWarning, nameof(_vm.ShowFormatLimitWarning)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoTrimWhiteSpace, nameof(_vm.AutoTrimWhiteSpace)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RemoveBlankLinesWhenOpening, nameof(_vm.RemoveBlankLinesWhenOpening)),
             new SettingsItem(!OperatingSystem.IsLinux(), Se.Language.Options.Settings.LinuxClipboardUseExternalTool,
-                () => UiUtil.MakeCheckBox(_vm, nameof(_vm.LinuxClipboardUseExternalTool))),
+                () => EditorChrome.MakeSwitch(nameof(_vm.LinuxClipboardUseExternalTool), null, _vm)) { IsSwitch = true },
             new SettingsItem(Se.Language.Options.Settings.DefaultEncoding, () => new ComboBox
             {
                 Width = 200,
@@ -538,6 +595,8 @@ public class SettingsPage : UserControl
 
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoSave, nameof(_vm.AutoSave)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.CheckSubtitleFileChangedOutside, nameof(_vm.CheckSubtitleFileChangedOutside)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ConfirmOverwriteSubtitleFileChangedOutside, nameof(_vm.ConfirmOverwriteSubtitleFileChangedOutside)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBackupOn, nameof(_vm.AutoBackupOn)),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupIntervalMinutes, nameof(_vm.AutoBackupIntervalMinutes), 1),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupDeleteAfterDays, nameof(_vm.AutoBackupDeleteAfterDays), 1),
@@ -586,15 +645,11 @@ public class SettingsPage : UserControl
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorTextTooLong, nameof(_vm.ColorTextTooLong)),
 
-            new SettingsItem(Se.Language.Options.Settings.ColorTextTooWide, () =>
-                UiUtil.MakeHorizontalPanel(
-                    new CheckBox
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.ColorTextTooWide)) { Source = _vm, Mode = BindingMode.TwoWay }
-                    },
-                    UiUtil.MakeButtonBrowse(_vm.EditTextTooWideSettingsCommand, accessibleName: Se.Language.Options.Settings.ColorTextTooWide)
-                )),
+            new SettingsItem(Se.Language.Options.Settings.ColorTextTooWide, () => EditorChrome.MakeSwitch(nameof(_vm.ColorTextTooWide), null, _vm))
+            {
+                IsSwitch = true,
+                TrailingFactory = () => UiUtil.MakeButtonBrowse(_vm.EditTextTooWideSettingsCommand, accessibleName: Se.Language.Options.Settings.ColorTextTooWide),
+            },
 
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorTextTooManyLines, nameof(_vm.ColorTextTooManyLines),
                 labelBindingPath: nameof(_vm.ColorTextTooManyLinesLabel)),
@@ -605,19 +660,37 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorOverlap, nameof(_vm.ColorOverlap)),
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorGapTooShort, nameof(_vm.ColorGapTooShort)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ColorGapInRange, nameof(_vm.ColorGapInRange)),
+            new SettingsItem(Se.Language.Options.Settings.GapRangeMs + " " + Se.Language.Options.Settings.GapRangeFrames, _vm, nameof(_vm.GapRangeLabel), () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                [!Control.IsEnabledProperty] = new Binding(nameof(_vm.ColorGapInRange)) { Source = _vm },
+                Children =
+                {
+                    MakeNumericUpDownInt(nameof(_vm.GapRangeMinMs), 0, 10_000).WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
+                    MakeNumericUpDownInt(nameof(_vm.GapRangeMinFrames), 0, 1_000).WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
+                    new TextBlock { Text = "-", VerticalAlignment = VerticalAlignment.Center },
+                    MakeNumericUpDownInt(nameof(_vm.GapRangeMaxMs), 0, 10_000).WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
+                    MakeNumericUpDownInt(nameof(_vm.GapRangeMaxFrames), 0, 1_000).WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
+                }
+            })
+            {
+                EnglishLabel = EnglishLabelLookup.English.Options.Settings.GapRangeMs + " " + EnglishLabelLookup.English.Options.Settings.GapRangeFrames,
+            },
+            MakeSeparator(),
+            new SettingsItem(Se.Language.Options.Settings.CustomErrorRules, () => EditorChrome.MakeSwitch(nameof(_vm.ColorCustomErrorRules), null, _vm))
+            {
+                IsSwitch = true,
+                TrailingFactory = () => UiUtil.MakeButtonBrowse(_vm.EditCustomErrorRulesCommand, accessibleName: Se.Language.Options.Settings.CustomErrorRules),
+            },
             MakeSeparator(),
             new SettingsItem(Se.Language.Options.Settings.ErrorBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.ErrorColor))),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.VideoPlayer, IconNames.PlayBox, "#a78bfa",
         [
-            new SettingsItem(Se.Language.General.VideoPlayer, () => new StackPanel
-            {
-                Children =
-                {
-                    MakeVideoPlayerComboBox()
-                }
-            }),
+            new SettingsItem(Se.Language.General.VideoPlayer, MakeVideoPlayerComboBox),
             new SettingsItem(Se.Language.Options.Settings.VideoControls,
                 () => UiUtil.MakeButton(Se.Language.Options.Settings.VideoControlsEdit, _vm.EditVideoControlsCommand)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FullscreenHideControls, nameof(_vm.FullscreenHideControls)),
@@ -652,9 +725,10 @@ public class SettingsPage : UserControl
                     {
                         DataContext = _vm,
                         [!TextBlock.TextProperty] = new Binding(nameof(_vm.LibMpvPath)),
-                        Margin = new Thickness(10, 0, 0, 0),
+                        Margin = new Thickness(0, 4, 0, 0),
                         VerticalAlignment = VerticalAlignment.Center,
-                        Opacity = 0.5,
+                        Foreground = EditorChrome.FaintTextBrush,
+                        TextWrapping = TextWrapping.Wrap,
                         FontSize = UiUtil.ScaledFontSize(10),
                     }
                 },
@@ -757,15 +831,11 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformRightClickSelectsSubtitle, nameof(_vm.WaveformRightClickSelectsSubtitle)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformAllowOverlap, nameof(_vm.WaveformAllowOverlap)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSetVideoPositionOnMoveStartEnd, nameof(_vm.WaveformSetVideoPositionOnMoveStartEnd)),
-            new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChanges, () =>
-                UiUtil.MakeHorizontalPanel(
-                    new CheckBox
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.WaveformSnapToShotChanges)) { Source = _vm, Mode = BindingMode.TwoWay }
-                    },
-                    UiUtil.MakeButton(_vm.EditBeautifyTimeCodesProfileCommand, IconNames.Cogs, Se.Language.Tools.BeautifyTimeCodesProfile.Title)
-                )),
+            new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChanges, () => EditorChrome.MakeSwitch(nameof(_vm.WaveformSnapToShotChanges), null, _vm))
+            {
+                IsSwitch = true,
+                TrailingFactory = () => UiUtil.MakeButton(_vm.EditBeautifyTimeCodesProfileCommand, IconNames.Cogs, Se.Language.Tools.BeautifyTimeCodesProfile.Title),
+            },
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSnapToFrames, nameof(_vm.WaveformSnapToFrames)),
             new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChangesPixels, () => UiUtil.MakeNumericUpDownInt(
                 1, 100, 8, 120, _vm, nameof(_vm.WaveformSnapToShotChangesPixels))),
@@ -843,9 +913,10 @@ public class SettingsPage : UserControl
                     {
                         DataContext = _vm,
                         [!TextBlock.TextProperty] = new Binding(nameof(_vm.FfmpegPath)),
-                        Margin = new Thickness(10, 0, 0, 0),
+                        Margin = new Thickness(0, 4, 0, 0),
                         VerticalAlignment = VerticalAlignment.Center,
-                        Opacity = 0.5,
+                        Foreground = EditorChrome.FaintTextBrush,
+                        TextWrapping = TextWrapping.Wrap,
                         FontSize = UiUtil.ScaledFontSize(10),
                     }
                 }
@@ -899,20 +970,11 @@ public class SettingsPage : UserControl
                 };
                 return nud;
             }),
-            new SettingsItem(Se.Language.Options.Settings.UseDoNotBreakAfterList, () => new StackPanel
+            new SettingsItem(Se.Language.Options.Settings.UseDoNotBreakAfterList, () => EditorChrome.MakeSwitch(nameof(_vm.UseNoLineBreakAfter), null, _vm))
             {
-                Orientation = Orientation.Horizontal,
-                Spacing = 10,
-                Children =
-                {
-                    new CheckBox
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.UseNoLineBreakAfter)) { Source = _vm, Mode = BindingMode.TwoWay },
-                    },
-                    UiUtil.MakeButton(Se.Language.General.Edit, _vm.EditDoNotBreakAfterListCommand),
-                }
-            }),
+                IsSwitch = true,
+                TrailingFactory = () => UiUtil.MakeButton(Se.Language.General.Edit, _vm.EditDoNotBreakAfterListCommand),
+            },
             new SettingsItem(Se.Language.Options.Settings.SplitOddLinesAction, () => new ComboBox
             {
                 MinWidth = 200,
@@ -923,6 +985,7 @@ public class SettingsPage : UserControl
                     Mode = BindingMode.TwoWay,
                 }
             }),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SplitAtVideoAndTextBoxPositionAllowEmptySecond, nameof(_vm.SplitAtVideoAndTextBoxPositionAllowEmptySecond)),
             new SettingsItem(Se.Language.Options.Settings.SpellCheckEngine, () => new ComboBox
             {
                 MinWidth = 200,
@@ -954,7 +1017,7 @@ public class SettingsPage : UserControl
 
         sections.Add(new SettingsSection(Se.Language.General.Appearance, IconNames.EyeSettings, "#4fc3e8",
         [
-            new SettingsItem(Se.Language.Options.Settings.Theme, () => UiUtil.MakeComboBox(_vm.Themes, _vm, nameof(_vm.SelectedTheme))),
+            new SettingsItem(Se.Language.General.Theme, () => ThemePicker.Make(_vm)),
             new SettingsItem(Se.Language.Options.Settings.IconTheme, () => UiUtil.MakeComboBox(_vm.IconThemes, _vm, nameof(_vm.SelectedIconTheme))),
             MakeCheckboxSetting(Se.Language.Options.Settings.MatchIconColorToDarkTheme, nameof(_vm.MatchIconColorToDarkTheme)),
             new SettingsItem(Se.Language.Options.Settings.UiScale, () => UiUtil.MakeNumericUpDownInt(
@@ -964,13 +1027,13 @@ public class SettingsPage : UserControl
                 120,
                 _vm,
                 nameof(_vm.LayoutScale))),
-            new SettingsItem(Se.Language.Options.Settings.FontScale, () => UiUtil.MakeNumericUpDownInt(
-                (int)Math.Round(UiTheme.MinFontScale * 100.0, MidpointRounding.AwayFromZero),
-                (int)Math.Round(UiTheme.MaxFontScale * 100.0, MidpointRounding.AwayFromZero),
-                100,
+            new SettingsItem(Se.Language.Options.Settings.UiFontSize, () => UiUtil.MakeNumericUpDownInt(
+                UiTheme.MinFontSize,
+                UiTheme.MaxFontSize,
+                (int)UiTheme.BaseFontSize,
                 120,
                 _vm,
-                nameof(_vm.FontScale))),
+                nameof(_vm.UiFontSize))),
             new SettingsItem(Se.Language.Options.Settings.TextSelectionOpacity, () => UiUtil.MakeNumericUpDownInt(
                 UiTheme.MinTextSelectionOpacity,
                 100,
@@ -1029,6 +1092,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxButtonShowColor, nameof(_vm.TextBoxButtonShowColor)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxButtonShowRemoveFormatting, nameof(_vm.TextBoxButtonShowRemoveFormatting)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxButtonShowAiAssistant, nameof(_vm.TextBoxButtonShowAiAssistant)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxButtonShowRecordSpeech, nameof(_vm.TextBoxButtonShowRecordSpeech)),
 
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowUpDownStartTime, nameof(_vm.ShowUpDownStartTime)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowUpDownEndTime, nameof(_vm.ShowUpDownEndTime)),
@@ -1045,6 +1109,26 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowAssaLayer, nameof(_vm.ShowAssaLayer)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowHorizontalLineAboveToolbar, nameof(_vm.ShowHorizontalLineAboveToolbar)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowPluginsMenu, nameof(_vm.ShowPluginsMenu)),
+            new SettingsItem(!OperatingSystem.IsWindows(), Se.Language.Options.Settings.WindowsRenderingMode, () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Children =
+                {
+                    new ComboBox
+                    {
+                        MinWidth = 250,
+                        DataContext = _vm,
+                        [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.WindowsRenderingModes)),
+                        [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedWindowsRenderingMode))
+                        {
+                            Mode = BindingMode.TwoWay,
+                        },
+                        ItemTemplate = new FuncDataTemplate<WindowsRenderingModeDisplay>((f, _) =>
+                            new TextBlock { Text = f?.Name }, true),
+                    },
+                    UiUtil.MakeLabel(Se.Language.General.RequiresRestart).WithMarginLeft(5).WithOpacity(0.6),
+                }
+            }),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Toolbar, IconNames.DotsHorizontal, "#58c9b4",
@@ -1137,13 +1221,13 @@ public class SettingsPage : UserControl
         sections.Add(new SettingsSection(Se.Language.Options.Settings.FilesAndLogs, IconNames.FileMultiple, "#5fa8e0",
         [
             new SettingsItem(Se.Language.Options.Settings.ShowErrorLogFile,
-                () => UiUtil.MakeLink(Se.GetErrorLogFilePath(), _vm.ShowErrorLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsErrorLogFile))),
+                () => UiUtil.MakeLink(Se.GetErrorLogFilePath(), _vm.ShowErrorLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsErrorLogFile)).WithEllipsis()),
             new SettingsItem(Se.Language.Options.Settings.ShowToolsLogFile,
-                () => UiUtil.MakeLink(Se.GetToolsLogFilePath(), _vm.ShowToolsLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsToolsLogFile))),
+                () => UiUtil.MakeLink(Se.GetToolsLogFilePath(), _vm.ShowToolsLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsToolsLogFile)).WithEllipsis()),
             new SettingsItem(Se.Language.Options.Settings.WriteToolsLog,
-                () => UiUtil.MakeCheckBox(_vm, nameof(_vm.WriteToolsLog))),
+                () => EditorChrome.MakeSwitch(nameof(_vm.WriteToolsLog), null, _vm)) { IsSwitch = true },
             new SettingsItem(Se.Language.Options.Settings.ShowSettingsFile,
-                () => UiUtil.MakeLink(Se.GetSettingsFilePath(), _vm.ShowSettingsFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsSettingsFile))),
+                () => UiUtil.MakeLink(Se.GetSettingsFilePath(), _vm.ShowSettingsFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsSettingsFile)).WithEllipsis()),
         ]));
 
 
@@ -1152,27 +1236,10 @@ public class SettingsPage : UserControl
 
     private Grid MakeFavoritesGrid(SettingsViewModel vm)
     {
-        // Grid with list of favorite formats, with buttons to add/remove/move-up/move-down
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = new Thickness(0, 5, 0, 0),
-        };
-
+        // List of favorite formats, with buttons to add/remove/move-up/move-down
         var listBox = new ListBox
         {
             DataContext = vm,
-            Height = 250,
-            Width = 250,
             [AutomationProperties.NameProperty] = Se.Language.Options.Settings.FavoriteSubtitleFormats,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.FavoriteSubtitleFormats)),
             [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.SelectedFavoriteSubtitleFormat)) { Mode = BindingMode.TwoWay },
@@ -1180,49 +1247,19 @@ public class SettingsPage : UserControl
                 new TextBlock { Text = f }, true)
         };
 
-        var buttonAdd = UiUtil.MakeButton(Se.Language.General.Add, vm.AddFavoriteSubtitleFormatCommand).WithMinWidth(100);
-        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteSubtitleFormatCommand).WithMinWidth(100);
-        var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteSubtitleFormatCommand).WithMinWidth(100);
-        var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteSubtitleFormatCommand).WithMinWidth(100);
-        NameListButtons(Se.Language.Options.Settings.FavoriteSubtitleFormats, buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown);
-
-        var buttonStack = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 5,
-            Margin = new Thickness(5, 0, 0, 0),
-            Children = { buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown }
-        };
-
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(listBox), 0, 0);
-        grid.Add(buttonStack, 0, 1);
-
-        return grid;
+        return MakeFavoritesList(listBox, Se.Language.Options.Settings.FavoriteSubtitleFormats,
+            vm.AddFavoriteSubtitleFormatCommand,
+            vm.RemoveFavoriteSubtitleFormatCommand,
+            vm.MoveUpFavoriteSubtitleFormatCommand,
+            vm.MoveDownFavoriteSubtitleFormatCommand);
     }
 
     private Grid MakeLanguageFavoritesGrid(SettingsViewModel vm)
     {
-        // Grid with list of favorite languages, with buttons to add/remove/move-up/move-down
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = new Thickness(0, 5, 0, 0),
-        };
-
+        // List of favorite languages, with buttons to add/remove/move-up/move-down
         var listBox = new ListBox
         {
             DataContext = vm,
-            Height = 250,
-            Width = 250,
             [AutomationProperties.NameProperty] = Se.Language.Options.Settings.FavoriteLanguages,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.FavoriteLanguages)),
             [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.SelectedFavoriteLanguage)) { Mode = BindingMode.TwoWay },
@@ -1230,21 +1267,50 @@ public class SettingsPage : UserControl
                 new TextBlock { Text = l?.ToString() }, true)
         };
 
-        var buttonAdd = UiUtil.MakeButton(Se.Language.General.Add, vm.AddFavoriteLanguageCommand).WithMinWidth(100);
-        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteLanguageCommand).WithMinWidth(100);
-        var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteLanguageCommand).WithMinWidth(100);
-        var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteLanguageCommand).WithMinWidth(100);
-        NameListButtons(Se.Language.Options.Settings.FavoriteLanguages, buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown);
+        return MakeFavoritesList(listBox, Se.Language.Options.Settings.FavoriteLanguages,
+            vm.AddFavoriteLanguageCommand,
+            vm.RemoveFavoriteLanguageCommand,
+            vm.MoveUpFavoriteLanguageCommand,
+            vm.MoveDownFavoriteLanguageCommand);
+    }
+
+    /// <summary>
+    /// A favorites list in a field frame with a column of icon buttons beside it.
+    /// </summary>
+    private static Grid MakeFavoritesList(ListBox listBox, string listName, IRelayCommand add, IRelayCommand remove, IRelayCommand moveUp, IRelayCommand moveDown)
+    {
+        listBox.Height = 200;
+        listBox.Background = Brushes.Transparent;
+
+        var buttonAdd = EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.Add, add, 28);
+        var buttonRemove = EditorChrome.CreateToolButton("fa-solid fa-minus", Se.Language.General.Remove, remove, 28);
+        var buttonMoveUp = EditorChrome.CreateToolButton("fa-solid fa-arrow-up", Se.Language.General.MoveUp, moveUp, 28);
+        var buttonMoveDown = EditorChrome.CreateToolButton("fa-solid fa-arrow-down", Se.Language.General.MoveDown, moveDown, 28);
+        NameListButtons(listName,
+            (buttonAdd, Se.Language.General.Add),
+            (buttonRemove, Se.Language.General.Remove),
+            (buttonMoveUp, Se.Language.General.MoveUp),
+            (buttonMoveDown, Se.Language.General.MoveDown));
 
         var buttonStack = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 5,
-            Margin = new Thickness(5, 0, 0, 0),
+            Spacing = 2,
             Children = { buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown }
         };
 
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(listBox), 0, 0);
+        // The list is 250 wide where there is room and shrinks with a narrow window, the
+        // buttons stay beside it
+        var grid = new Grid
+        {
+            ColumnSpacing = 6,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star), MaxWidth = 250 },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+        };
+        grid.Add(EditorChrome.MakeListFrame(listBox), 0, 0);
         grid.Add(buttonStack, 0, 1);
 
         return grid;
@@ -1256,11 +1322,11 @@ public class SettingsPage : UserControl
     /// list to the next heard a second "Add, Remove, Move up, Move down" with nothing saying
     /// which list it belonged to (#12087).
     /// </summary>
-    private static void NameListButtons(string listName, params Button[] buttons)
+    private static void NameListButtons(string listName, params (Button Button, string Text)[] buttons)
     {
-        foreach (var button in buttons)
+        foreach (var (button, text) in buttons)
         {
-            AutomationProperties.SetName(button, $"{listName}: {button.Content}");
+            AutomationProperties.SetName(button, $"{listName}: {text}");
         }
     }
 
@@ -1279,65 +1345,71 @@ public class SettingsPage : UserControl
 
     private Control MakeMpvPreviewSettings(SettingsViewModel vm)
     {
-        var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName);
+        var labelFontName = SettingsChrome.MakeLabel(Se.Language.General.FontName);
         var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.MpvPreviewFontName)).WithMinWidth(150).WithLabeledBy(labelFontName);
+        comboBoxFontName.Classes.Add(StretchInGroupClass);
 
-        var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
+        var labelFontSize = SettingsChrome.MakeLabel(Se.Language.General.FontSize);
         var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewFontSize)).WithLabeledBy(labelFontSize);
         numericUpDownFontSize.Increment = 1;
 
-        var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.MpvPreviewFontBold));
+        var switchBold = SettingsChrome.MakeSwitchRow(EditorChrome.MakeSwitch(nameof(vm.MpvPreviewFontBold), null, vm), Se.Language.General.Bold);
 
-        var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment);
+        var labelAlignment = SettingsChrome.MakeLabel(Se.Language.General.Alignment);
         var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment)).WithLabeledBy(labelAlignment);
+        comboBoxAlignment.Classes.Add(StretchInGroupClass);
 
-        var labelJustify = UiUtil.MakeLabel(Se.Language.Options.Settings.TextJustify);
+        var labelJustify = SettingsChrome.MakeLabel(Se.Language.Options.Settings.TextJustify);
         var comboBoxJustify = UiUtil.MakeComboBox(vm.MpvPreviewJustifyItems, vm, nameof(vm.MpvPreviewSelectedJustify)).WithLabeledBy(labelJustify);
+        comboBoxJustify.Classes.Add(StretchInGroupClass);
 
-        var checkBoxUsePositionFromFile = UiUtil.MakeCheckBox(Se.Language.Options.Settings.UsePositionFromSubtitleFile, vm, nameof(vm.MpvPreviewUsePositionFromFile));
+        var switchUsePositionFromFile = SettingsChrome.MakeSwitchRow(
+            EditorChrome.MakeSwitch(nameof(vm.MpvPreviewUsePositionFromFile), null, vm), Se.Language.Options.Settings.UsePositionFromSubtitleFile);
 
-        var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
+        var labelMargin = SettingsChrome.MakeLabel(Se.Language.General.Margin);
         var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(0, 1000, 130, vm, nameof(vm.MpvPreviewMargin)).WithLabeledBy(labelMargin);
         numericUpDownMargin.Increment = 1;
 
-        var checkBoxMarginIsPartOfSubtitleArea = UiUtil.MakeCheckBox(
-            Se.Language.Options.Settings.MarginIsPartOfSubtitleArea, vm, nameof(vm.MpvPreviewMarginIsPartOfSubtitleArea));
+        var switchMarginIsPartOfSubtitleArea = SettingsChrome.MakeSwitchRow(
+            EditorChrome.MakeSwitch(nameof(vm.MpvPreviewMarginIsPartOfSubtitleArea), null, vm), Se.Language.Options.Settings.MarginIsPartOfSubtitleArea);
 
-        var labelColorPrimary = UiUtil.MakeLabel(Se.Language.Assa.Primary);
+        var labelColorPrimary = SettingsChrome.MakeLabel(Se.Language.Assa.Primary);
         var colorPickerPrimary = UiUtil.MakeColorPickerButton(vm, nameof(vm.MpvPreviewColorPrimary));
 
-        var labelColorOutline = UiUtil.MakeLabel(Se.Language.General.Outline);
+        var labelColorOutline = SettingsChrome.MakeLabel(Se.Language.General.Outline);
         var colorPickerOutline = UiUtil.MakeColorPickerButton(vm, nameof(vm.MpvPreviewColorOutline));
 
-        var labelColorShadow = UiUtil.MakeLabel(Se.Language.General.Shadow);
+        var labelColorShadow = SettingsChrome.MakeLabel(Se.Language.General.Shadow);
         var colorPickerShadow = UiUtil.MakeColorPickerButton(vm, nameof(vm.MpvPreviewColorShadow));
 
+        var labelBorderStyle = SettingsChrome.MakeLabel(Se.Language.General.BorderStyle);
+        var comboBoxBorderType = UiUtil.MakeComboBox(vm.MpvPreviewBorderTypes, vm, nameof(vm.MpvPreviewSelectedBorderType)).WithLabeledBy(labelBorderStyle);
+        comboBoxBorderType.Classes.Add(StretchInGroupClass);
+
+        var labelOutlineWidth = SettingsChrome.MakeLabel(Se.Language.General.OutlineWidth);
+        var numericUpDownOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewOutlineWidth)).WithLabeledBy(labelOutlineWidth);
+        numericUpDownOutlineWidth.Increment = 0.5m;
+
+        var labelShadowWidth = SettingsChrome.MakeLabel(Se.Language.General.ShadowWidth);
+        var numericUpDownShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewShadowWidth)).WithLabeledBy(labelShadowWidth);
+        numericUpDownShadowWidth.Increment = 0.5m;
+
+        // The fields take the rest of the group (a star column), so on a narrow window the combo
+        // boxes shrink with it instead of being cut off at the right edge.
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = new Thickness(0, 5, 0, 0),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
+            ColumnSpacing = 12,
+            RowSpacing = 6,
         };
+        for (var i = 0; i < 14; i++)
+        {
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+        }
 
         grid.Add(labelFontName, 0);
         grid.Add(comboBoxFontName, 0, 1);
@@ -1345,7 +1417,7 @@ public class SettingsPage : UserControl
         grid.Add(labelFontSize, 1);
         grid.Add(numericUpDownFontSize, 1, 1);
 
-        grid.Add(checkBoxBold, 2, 1);
+        grid.Add(switchBold, 2, 1);
 
         grid.Add(labelAlignment, 3);
         grid.Add(comboBoxAlignment, 3, 1);
@@ -1353,12 +1425,12 @@ public class SettingsPage : UserControl
         grid.Add(labelJustify, 4);
         grid.Add(comboBoxJustify, 4, 1);
 
-        grid.Add(checkBoxUsePositionFromFile, 5, 0, 1, 2);
+        grid.Add(switchUsePositionFromFile, 5, 0, 1, 2);
 
         grid.Add(labelMargin, 6);
         grid.Add(numericUpDownMargin, 6, 1);
 
-        grid.Add(checkBoxMarginIsPartOfSubtitleArea, 7, 0, 1, 2);
+        grid.Add(switchMarginIsPartOfSubtitleArea, 7, 0, 1, 2);
 
         grid.Add(labelColorPrimary, 8);
         grid.Add(colorPickerPrimary, 8, 1);
@@ -1369,52 +1441,35 @@ public class SettingsPage : UserControl
         grid.Add(labelColorShadow, 10);
         grid.Add(colorPickerShadow, 10, 1);
 
-        grid.Add(MakeBorderView(vm), 11, 0, 1, 2);
+        grid.Add(labelBorderStyle, 11);
+        grid.Add(comboBoxBorderType, 11, 1);
 
-        return UiUtil.MakeBorderForControl(grid);
-    }
+        grid.Add(labelOutlineWidth, 12);
+        grid.Add(numericUpDownOutlineWidth, 12, 1);
 
-    private static Border MakeBorderView(SettingsViewModel vm)
-    {
-        var grid = new Grid
+        grid.Add(labelShadowWidth, 13);
+        grid.Add(numericUpDownShadowWidth, 13, 1);
+
+        foreach (var child in grid.Children)
         {
-            RowDefinitions =
+            if (child is not Grid)
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            RowSpacing = 5,
-        };
+                // The combo boxes as wide as the widest of them, the rest as wide as they are
+                if (child.Classes.Contains(StretchInGroupClass))
+                {
+                    child.MinWidth = 0;
+                    child.HorizontalAlignment = HorizontalAlignment.Stretch;
+                }
+                else
+                {
+                    child.HorizontalAlignment = HorizontalAlignment.Left;
+                }
 
-        var label = UiUtil.MakeLabel(Se.Language.General.BorderStyle);
-        grid.Add(label, 1, 0);
+                child.VerticalAlignment = VerticalAlignment.Center;
+            }
+        }
 
-        var comboBoxBorderType = UiUtil.MakeComboBox(vm.MpvPreviewBorderTypes, vm, nameof(vm.MpvPreviewSelectedBorderType)).WithLabeledBy(label);
-        grid.Add(comboBoxBorderType, 2, 0, 1, 2);
-
-        var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.OutlineWidth);
-        var numericUpDownOutlineWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewOutlineWidth)).WithLabeledBy(labelOutlineWidth);
-        numericUpDownOutlineWidth.Increment = 0.5m;
-        grid.Add(labelOutlineWidth, 3, 0);
-        grid.Add(numericUpDownOutlineWidth, 3, 1);
-
-        var labelShadowWidth = UiUtil.MakeLabel(Se.Language.General.ShadowWidth);
-        var numericUpDownShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 100, 130, vm, nameof(vm.MpvPreviewShadowWidth)).WithLabeledBy(labelShadowWidth);
-        numericUpDownShadowWidth.Increment = 0.5m;
-        grid.Add(labelShadowWidth, 4, 0);
-        grid.Add(numericUpDownShadowWidth, 4, 1);
-
-        return UiUtil.MakeBorderForControl(grid);
+        return SettingsChrome.MakeGroupFrame(grid);
     }
 
     private ComboBox MakeVideoPlayerComboBox()
@@ -1422,7 +1477,6 @@ public class SettingsPage : UserControl
         var cb = new ComboBox
         {
             Width = 300,
-            Height = 30,
             [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.VideoPlayers)),
             [!SelectingItemsControl.SelectedItemProperty] =
                 new Binding(nameof(_vm.SelectedVideoPlayer)),
@@ -1431,7 +1485,7 @@ public class SettingsPage : UserControl
                 new TextBlock
                 {
                     [!TextBlock.TextProperty] = new Binding(nameof(VideoPlayerItem.Name)),
-                    Width = 250,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
                 }, true)
         };
 
@@ -1439,6 +1493,18 @@ public class SettingsPage : UserControl
 
         return cb;
     }
+
+    /// <summary>
+    /// Starting points for the "ignore custom tags" pattern (#16163): a client platform's own
+    /// markup like &lt;=title&gt;, &lt;@&gt; or &lt;?note&gt;, and every angle-bracket tag SE
+    /// does not strip itself. The field stays free text, so any other pattern can be typed.
+    /// </summary>
+    private static readonly string[] IgnoreTagsRegexPresets =
+    [
+        string.Empty,
+        "<[=?@][^<>]*>",
+        @"<[^\s<>][^<>]*>",
+    ];
 
     private ComboBox MakeComboBoxCpsLineLengthStyle()
     {
@@ -1518,7 +1584,7 @@ public class SettingsPage : UserControl
 
     private static SettingsItem MakeSeparator()
     {
-        return new SettingsItem(string.Empty, () => new Label());
+        return new SettingsItem(string.Empty, () => new Label()) { IsSeparator = true };
     }
 
     private SettingsItem MakeNumericSetting(string label, string bindingProperty)
@@ -1603,11 +1669,7 @@ public class SettingsPage : UserControl
     {
         Control Factory()
         {
-            var cb = new CheckBox
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                [!ToggleButton.IsCheckedProperty] = new Binding(bindingProperty) { Source = _vm, Mode = BindingMode.TwoWay }
-            };
+            var cb = EditorChrome.MakeSwitch(bindingProperty, null, _vm);
 
             if (bindingEnabled != null)
             {
@@ -1618,8 +1680,8 @@ public class SettingsPage : UserControl
         }
 
         return labelBindingPath != null
-            ? new SettingsItem(label, _vm, labelBindingPath, Factory)
-            : new SettingsItem(label, Factory);
+            ? new SettingsItem(label, _vm, labelBindingPath, Factory) { IsSwitch = true }
+            : new SettingsItem(label, Factory) { IsSwitch = true };
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

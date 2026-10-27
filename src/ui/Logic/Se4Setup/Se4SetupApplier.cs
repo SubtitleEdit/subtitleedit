@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;

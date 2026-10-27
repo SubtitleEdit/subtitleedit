@@ -10,7 +10,6 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;

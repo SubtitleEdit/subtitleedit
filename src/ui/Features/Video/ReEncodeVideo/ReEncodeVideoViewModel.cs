@@ -18,7 +18,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Nikse.SubtitleEdit.UiLogic.Media;
@@ -40,6 +39,9 @@ public partial class ReEncodeVideoViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<BurnInJobItem> _jobItems;
     [ObservableProperty] private BurnInJobItem? _selectedJobItem;
     [ObservableProperty] private bool _isGenerating;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.ReEncodeVideoForBetterSubtitlingTitle);
+
     [ObservableProperty] private bool _useSourceResolution;
     [ObservableProperty] private string _infoText;
     [ObservableProperty] private bool _promptForFfmpegParameters;
@@ -57,15 +59,12 @@ public partial class ReEncodeVideoViewModel : ObservableObject
     private bool _doAbort;
     private int _jobItemIndex = -1;
     private SubtitleFormat? _subtitleFormat;
-    private string _inputVideoFileName;
 
     private readonly IWindowService _windowService;
-    private readonly IFolderHelper _folderHelper;
     private readonly IFileHelper _fileHelper;
 
-    public ReEncodeVideoViewModel(IFolderHelper folderHelper, IFileHelper fileHelper, IWindowService windowService)
+    public ReEncodeVideoViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
-        _folderHelper = folderHelper;
         _fileHelper = fileHelper;
         _windowService = windowService;
 
@@ -97,14 +96,12 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         _timerGenerate.Elapsed += TimerGenerateElapsed;
         _timerGenerate.Interval = 100;
 
-        _inputVideoFileName = string.Empty;
         LoadSettings();
     }
 
     public void Initialize(string videoFileName, SubtitleFormat subtitleFormat)
     {
         VideoFileName = videoFileName;
-        _inputVideoFileName = videoFileName;
         _subtitleFormat = subtitleFormat;
         var fileExists = !string.IsNullOrWhiteSpace(videoFileName) && File.Exists(videoFileName);
         if (fileExists)
@@ -548,11 +545,14 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         Window?.Close();
     }
 
+    partial void OnIsGeneratingChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     internal void OnClosing()
     {
         // The subtitle files handed to ffmpeg live as long as the window does - nothing else
         // removes them, and they used to pile up in the temp folder run after run (#13332).
         _tempSubtitleFiles.Delete();
+        _sleepInhibitor.Dispose();
 
         // Stop the poll timer and any still-running encode - closing the window used to leave the
         // ffmpeg process encoding to completion in the background, with the timer still firing

@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace LibUiLogicTests.SpellCheck;

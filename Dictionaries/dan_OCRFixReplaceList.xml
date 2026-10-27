@@ -600,14 +600,14 @@
   </WholeWords>
   <PartialWordsAlways>
     <WordPart from="¤" to="o" />
-    <WordPart from="IVI" to="M" />
-    <WordPart from="lVI" to="M" />
-    <WordPart from="IVl" to="M" />
-    <WordPart from="lVl" to="M" />
   </PartialWordsAlways>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
     <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
+    <WordPart from="IVI" to="M" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="lVl" to="M" />
     <WordPart from="ﬁ" to="fi" />
     <WordPart from="ﬂ" to="fl" />
     <WordPart from="/" to="l" />
@@ -670,7 +670,7 @@
     <!-- SlNG to SING -->
   </RegularExpressionsIfSpelledCorrectly>
   <RegularExpressions>
-    <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="(?&lt;=\p{Lu})\|(?=\p{Lu})" replaceWith="I" />
   </RegularExpressions>
   <RegularExpressionsIfSpelledCorrectly language="da">
 

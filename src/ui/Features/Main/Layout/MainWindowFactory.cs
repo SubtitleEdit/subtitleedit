@@ -1,7 +1,10 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
@@ -79,6 +82,23 @@ public static class MainWindowFactory
         };
 
         return window;
+    }
+
+    /// <summary>
+    /// Closes every editor window the way the user would - each one still asks about unsaved
+    /// changes, and the process exits when the last one is gone (see <see cref="Create"/>).
+    /// </summary>
+    public static void CloseAllMainWindows()
+    {
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime lifetime)
+        {
+            return;
+        }
+
+        foreach (var window in lifetime.Windows.Where(p => p.Name == "MainWindow").ToList())
+        {
+            window.Close();
+        }
     }
 
     /// <summary>File &gt; New window: opens another independent editor window.</summary>

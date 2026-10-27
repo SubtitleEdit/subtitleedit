@@ -1,8 +1,5 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -10,14 +7,15 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 
 /// <summary>
-/// Shared layout for the select-lines dialogs (detect speakers, skip noise lines):
-/// info label on top, a checkable rows table, a selection panel, and the Ok/Cancel bar.
-/// The windows pass in only what differs - title, width, selection panel, extra columns.
+/// Shared layout for the select-lines dialogs (detect speakers, skip noise lines), in the editor
+/// look (see <see cref="EditorChrome"/>): a checkable rows table under a header with the selection
+/// actions, the rows info and Cancel/OK in the button bar. The windows pass in only what differs -
+/// title, width, extra options for the header, extra columns.
 /// </summary>
 public static class SelectLinesWindowBuilder
 {
     public static void Initialize<TRow>(Window window, SelectLinesViewModelBase<TRow> vm,
-        string title, double width, Control selectionPanel, Control rowsView)
+        string title, double width, Control? options, Control rowsView)
         where TRow : SelectLinesRowBase
     {
         UiUtil.InitializeWindow(window, window.GetType().Name);
@@ -27,39 +25,60 @@ public static class SelectLinesWindowBuilder
         window.Height = 600;
         window.MinWidth = 600;
         window.MinHeight = 400;
+        EditorChrome.ApplyWindow(window, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
         vm.Window = window;
         window.DataContext = vm;
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        // Selection actions on the right of the list header, after the window's own options
+        var actions = TtsMainEditorLook.Horizontal();
+        actions.Spacing = 2;
+        if (options != null)
+        {
+            actions.Children.Add(options);
+            actions.Children.Add(EditorChrome.MakeToolbarSeparator());
+        }
+
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-check-double", Se.Language.General.SelectAll, vm.SelectAllCommand, 26));
+        actions.Children.Add(EditorChrome.CreateToolButton("fa-solid fa-right-left", Se.Language.General.InvertSelection, vm.InverseSelectionCommand, 26));
+
+        var header = new DockPanel { Margin = new Avalonia.Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(actions, Dock.Right);
+        header.Children.Add(actions);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Lines));
+
+        var list = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Avalonia.Thickness(14, 10, 14, 14),
+        };
+        list.Add(header, 0);
+        list.Add(EditorChrome.MakeListFrame(rowsView), 1);
+
+        var labelInfo = new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.RowsInfo)),
         };
 
-        var labelInfo = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.RowsInfo));
-
-        grid.Add(labelInfo, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(rowsView), 1);
-        grid.Add(selectionPanel, 2);
-        grid.Add(panelButtons, 3);
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        grid.Add(new Border { Background = EditorChrome.PanelBrush, Child = list }, 0);
+        grid.Add(EditorChrome.MakeButtonBar(labelInfo, buttonCancel, buttonOk), 1);
 
         window.Content = grid;
 
@@ -89,6 +108,7 @@ public static class SelectLinesWindowBuilder
         where TRow : SelectLinesRowBase
     {
         var dataGrid = TableViewExtras.MakeTableView();
+        Avalonia.Automation.AutomationProperties.SetName(dataGrid, Se.Language.General.Lines);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -99,20 +119,7 @@ public static class SelectLinesWindowBuilder
             Header = checkBoxColumnHeader,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = new FuncDataTemplate<TRow>((_, _) => new Border
-            {
-                Background = Brushes.Transparent,
-                Padding = new Avalonia.Thickness(4),
-                Child = new CheckBox
-                {
-                    Focusable = false,
-                    [!ToggleButton.IsCheckedProperty] = new Binding(nameof(SelectLinesRowBase.IsSelected))
-                    {
-                        Mode = BindingMode.TwoWay,
-                    },
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                },
-            }),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<TRow>(nameof(SelectLinesRowBase.IsSelected)),
             Width = new GridLength(80),
         });
         dataGrid.Columns.Add(new SeTableViewColumn

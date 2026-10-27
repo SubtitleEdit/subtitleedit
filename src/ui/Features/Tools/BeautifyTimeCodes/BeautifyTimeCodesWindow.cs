@@ -1,14 +1,20 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes;
 
+/// <summary>
+/// Beautify time codes, in the editor look (see <see cref="EditorChrome"/>): the exact time codes
+/// toolbar on top, the original and beautified waveforms, the change navigator under them, Edit
+/// profile and Cancel/OK in the button bar.
+/// </summary>
 public class BeautifyTimeCodesWindow : Window
 {
     public BeautifyTimeCodesWindow(BeautifyTimeCodesViewModel vm)
@@ -20,29 +26,21 @@ public class BeautifyTimeCodesWindow : Window
         Height = 600;
         MinWidth = 900;
         MinHeight = 460;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
-        Content = new Grid
+        // The waveforms give up height first, so the change navigator and the buttons stay
+        // reachable on a short screen.
+        var sections = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
-            ColumnDefinitions = new ColumnDefinitions("*"),
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
-            Children =
-            {
-                BuildTopBar(vm),
-                BuildVisualizerArea(vm),
-                BuildChangeNavBar(vm),
-                BuildButtonBar(vm),
-            },
+            RowDefinitions = new RowDefinitions("Auto,*,Auto"),
         };
+        sections.Add(BuildTopBar(vm), 0, 0);
+        sections.Add(BuildVisualizerArea(vm), 1, 0);
+        sections.Add(BuildChangeNavBar(vm), 2, 0);
 
-        var c = (Grid)Content;
-        Grid.SetRow(c.Children[0], 0);
-        Grid.SetRow(c.Children[1], 1);
-        Grid.SetRow(c.Children[2], 2);
-        Grid.SetRow(c.Children[3], 3);
+        Content = EditorChrome.MakeRoot(sections, BuildButtonBar(vm));
 
         // Change navigation keys (arrows, PageUp/Down, Home/End) are handled at window level, so
         // they work whichever control has focus - nothing here needs to own them.
@@ -56,8 +54,10 @@ public class BeautifyTimeCodesWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Right,
-            Opacity = 0.8,
-            FontSize = UiUtil.ScaledFontSize(12),
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = EditorChrome.FieldFontSize,
+            Margin = new Thickness(12, 0, 0, 0),
+            TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatsLine)) { Source = vm },
         };
 
@@ -67,7 +67,13 @@ public class BeautifyTimeCodesWindow : Window
         };
         grid.Add(BuildTimeCodesBar(vm), 0, 0);
         grid.Add(stats, 0, 1);
-        return grid;
+        return new Border
+        {
+            Child = grid,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(14, 8),
+        };
     }
 
     /// <summary>
@@ -78,36 +84,42 @@ public class BeautifyTimeCodesWindow : Window
     {
         var l = Se.Language.Tools.BeautifyTimeCodes;
 
-        var checkBoxExact = new CheckBox
+        var toggleExact = new ToggleSwitch
         {
-            Content = l.UseExactTimeCodes,
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
             VerticalAlignment = VerticalAlignment.Center,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.UseExactTimeCodes))
+            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseExactTimeCodes))
             {
                 Source = vm,
                 Mode = BindingMode.TwoWay,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             },
         };
+        AutomationProperties.SetName(toggleExact, l.UseExactTimeCodes);
+        var labelExact = new TextBlock { Text = l.UseExactTimeCodes, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center };
 
         if (Se.Settings.Appearance.ShowHints)
         {
-            ToolTip.SetTip(checkBoxExact, l.TimeCodesHint);
+            ToolTip.SetTip(toggleExact, l.TimeCodesHint);
+            ToolTip.SetTip(labelExact, l.TimeCodesHint);
         }
 
         var status = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.8,
-            FontSize = UiUtil.ScaledFontSize(12),
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = EditorChrome.FieldFontSize,
+            Margin = new Thickness(6, 0, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.TimeCodesStatus)) { Source = vm },
         };
 
-        var buttonExtract = UiUtil.MakeButton(l.ExtractTimeCodes, vm.ExtractTimeCodesCommand);
+        var buttonExtract = EditorChrome.MakeTextToolButton("fa-solid fa-film", l.ExtractTimeCodes, vm.ExtractTimeCodesCommand);
         buttonExtract.VerticalAlignment = VerticalAlignment.Center;
         buttonExtract.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.CanExtractTimeCodes)) { Source = vm });
 
-        var progress = UiUtil.MakeProgressBar();
+        var progress = UiUtil.MakeProgressBar(6);
         progress.Width = 140;
         progress.VerticalAlignment = VerticalAlignment.Center;
         progress.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ExtractProgressValue)) { Source = vm });
@@ -118,7 +130,7 @@ public class BeautifyTimeCodesWindow : Window
             Orientation = Orientation.Horizontal,
             Spacing = 8,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { checkBoxExact, status, buttonExtract, progress },
+            Children = { toggleExact, labelExact, status, buttonExtract, progress },
         };
     }
 
@@ -126,7 +138,7 @@ public class BeautifyTimeCodesWindow : Window
     {
         var l = Se.Language.Tools.BeautifyTimeCodes;
 
-        var (labelOriginal, borderOriginal, avOriginal) = BuildLabeledVisualizer(l.Original);
+        var (labelOriginal, borderOriginal, avOriginal) = BuildLabeledVisualizer(Se.Language.General.Original);
         var (labelBeautified, borderBeautified, avBeautified) = BuildLabeledVisualizer(l.Beautified);
 
         vm.AudioVisualizerOriginal = avOriginal;
@@ -150,8 +162,9 @@ public class BeautifyTimeCodesWindow : Window
 
         var grid = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,3*,10,Auto,3*"),
+            RowDefinitions = new RowDefinitions("Auto,3*,14,Auto,3*"),
             ColumnDefinitions = new ColumnDefinitions("*"),
+            Margin = new Thickness(14, 12, 14, 14),
         };
         grid.Add(labelOriginal, 0, 0);
         grid.Add(borderOriginal, 1, 0);
@@ -162,12 +175,8 @@ public class BeautifyTimeCodesWindow : Window
 
     private static (TextBlock label, Border border, Controls.AudioVisualizerControl.AudioVisualizer av) BuildLabeledVisualizer(string title)
     {
-        var label = new TextBlock
-        {
-            Text = title,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(5, 5, 5, 2),
-        };
+        var label = EditorChrome.MakeSectionHeader(title);
+        label.Margin = new Thickness(0, 0, 0, 8);
 
         var av = new Controls.AudioVisualizerControl.AudioVisualizer
         {
@@ -179,10 +188,13 @@ public class BeautifyTimeCodesWindow : Window
             ParagraphSelectedBackground = Color.FromArgb(210, 230, 160, 40), // current change: amber
         };
 
+        // The waveform itself stays dark in both themes; only its frame follows the editor palette.
         var border = new Border
         {
-            BorderBrush = Brushes.Gray,
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            ClipToBounds = true,
             Background = Brushes.Black,
             Child = av,
         };
@@ -191,20 +203,19 @@ public class BeautifyTimeCodesWindow : Window
 
     private static Control BuildChangeNavBar(BeautifyTimeCodesViewModel vm)
     {
-        var l = Se.Language.Tools.BeautifyTimeCodes;
-
         // The same steps are on the keyboard (see BeautifyTimeCodesViewModel.OnKeyDown); the
         // tooltips are the only place that advertises it, so name the keys there.
-        var buttonPrev = UiUtil.MakeButton(vm.PreviousChangeCommand, IconNames.ArrowUpThin, $"{l.PreviousChange} (Up / PageUp)");
+        var buttonPrev = EditorChrome.CreateToolButton("fa-solid fa-chevron-up", $"{Se.Language.General.PreviousChange} (Up / PageUp)", vm.PreviousChangeCommand, 28);
         buttonPrev.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanGoPrevious)) { Source = vm });
 
-        var buttonNext = UiUtil.MakeButton(vm.NextChangeCommand, IconNames.ArrowDownThin, $"{l.NextChange} (Down / PageDown)");
+        var buttonNext = EditorChrome.CreateToolButton("fa-solid fa-chevron-down", $"{Se.Language.General.NextChange} (Down / PageDown)", vm.NextChangeCommand, 28);
         buttonNext.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanGoNext)) { Source = vm });
 
         var labelPosition = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
+            FontSize = EditorChrome.FieldFontSize,
             MinWidth = 120,
             TextAlignment = TextAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangePositionLabel)) { Source = vm },
@@ -215,7 +226,8 @@ public class BeautifyTimeCodesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             TextWrapping = TextWrapping.Wrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            Margin = new Thickness(0, 4, 0, 0),
+            FontSize = EditorChrome.FieldFontSize,
+            Margin = new Thickness(4, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeDetail)) { Source = vm },
         };
 
@@ -224,15 +236,17 @@ public class BeautifyTimeCodesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             TextWrapping = TextWrapping.Wrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            Opacity = 0.75,
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = EditorChrome.FieldFontSize,
             FontStyle = FontStyle.Italic,
+            Margin = new Thickness(4, 0, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeNotes)) { Source = vm },
         };
 
         var navRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
+            Spacing = 4,
             VerticalAlignment = VerticalAlignment.Center,
             Children = { buttonPrev, labelPosition, buttonNext },
         };
@@ -246,18 +260,20 @@ public class BeautifyTimeCodesWindow : Window
 
         return new Border
         {
-            BorderBrush = new SolidColorBrush(Color.FromArgb(120, 128, 128, 128)),
-            BorderThickness = new Thickness(0, 1, 0, 1),
-            Padding = new Thickness(6, 6, 6, 6),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(10, 8, 14, 10),
             Child = inner,
         };
     }
 
-    private static Control BuildButtonBar(BeautifyTimeCodesViewModel vm)
+    private static Border BuildButtonBar(BeautifyTimeCodesViewModel vm)
     {
-        var buttonEditProfile = UiUtil.MakeButton(Se.Language.Tools.BeautifyTimeCodes.EditProfile, vm.EditProfileCommand);
+        var buttonEditProfile = EditorChrome.MakeTextToolButton("fa-solid fa-sliders", Se.Language.Tools.BeautifyTimeCodes.EditProfile, vm.EditProfileCommand);
+        buttonEditProfile.HorizontalAlignment = HorizontalAlignment.Left;
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        return UiUtil.MakeButtonBar(buttonEditProfile, buttonOk, buttonCancel);
+        return EditorChrome.MakeDockedButtonBar(buttonEditProfile, buttonCancel, buttonOk);
     }
 }

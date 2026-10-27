@@ -1,7 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Media;
-using System;
-using System.IO;
 
 namespace LibUiLogicTests.Media;
 

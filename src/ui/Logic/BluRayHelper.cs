@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 
 namespace Nikse.SubtitleEdit.Logic;

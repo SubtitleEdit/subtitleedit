@@ -1,4 +1,3 @@
-using System.Linq;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Logic.Config;

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Ocr;
 
 namespace UITests.Features.Ocr.Engines;

@@ -1,11 +1,13 @@
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.FormatProperties.TmpegEncXmlProperties;
 
+/// <summary>
+/// TMPGEnc XML properties in the editor look (see <see cref="FormatPropertiesChrome"/>).
+/// </summary>
 public class TmpegEncXmlPropertiesWindow : Window
 {
     public TmpegEncXmlPropertiesWindow(TmpegEncXmlProperties.TmpegEncXmlPropertiesViewModel vm)
@@ -15,114 +17,36 @@ public class TmpegEncXmlPropertiesWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
-        MinHeight = 200;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
-        var labelWidth = 200;
+        var comboBoxFontName = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.FontNames, vm, nameof(vm.SelectedFontName)), Se.Language.General.FontName, 220);
 
-        var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName).WithMinWidth(labelWidth);
-        var comboBoxFontName = UiUtil.MakeComboBox(vm.FontNames, vm, nameof(vm.SelectedFontName));
-        var panelFontName = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelFontName,
-                comboBoxFontName,
-            }
-        };
-
-        var labelFontHeight = UiUtil.MakeLabel(Se.Language.General.FontHeight).WithMinWidth(labelWidth);
-        var numericUpDownFontHeight = UiUtil.MakeNumericUpDownThreeDecimals(0.04m, 1.0m, 150, vm, nameof(vm.FontHeight));
+        var numericUpDownFontHeight = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownThreeDecimals(0.04m, 1.0m, 120, vm, nameof(vm.FontHeight)), Se.Language.General.FontHeight, 120);
         numericUpDownFontHeight.Increment = 0.001m;
-        var panelFontHeight = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelFontHeight,
-                numericUpDownFontHeight,
-            }
-        };
 
-        var labelOffsetX = UiUtil.MakeLabel(Se.Language.General.OffsetX).WithMinWidth(labelWidth);
-        var numericUpDownOffsetX = UiUtil.MakeNumericUpDownThreeDecimals(-100.0m, 100.0m, 150, vm, nameof(vm.OffsetX));
+        var numericUpDownOffsetX = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownThreeDecimals(-100.0m, 100.0m, 120, vm, nameof(vm.OffsetX)), Se.Language.General.OffsetX, 120);
         numericUpDownOffsetX.Increment = 0.001m;
-        var panelOffsetX = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelOffsetX,
-                numericUpDownOffsetX,
-            }
-        };
 
-        var labelOffsetY = UiUtil.MakeLabel(Se.Language.General.OffsetY).WithMinWidth(labelWidth);
-        var numericUpDownOffsetY = UiUtil.MakeNumericUpDownThreeDecimals(-100.0m, 100.0m, 150, vm, nameof(vm.OffsetY));
+        var numericUpDownOffsetY = FormatPropertiesChrome.Number(UiUtil.MakeNumericUpDownThreeDecimals(-100.0m, 100.0m, 120, vm, nameof(vm.OffsetY)), Se.Language.General.OffsetY, 120);
         numericUpDownOffsetY.Increment = 0.001m;
-        var panelOffsetY = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelOffsetY,
-                numericUpDownOffsetY,
-            }
-        };
 
-        var labelCheckBoxIsBold = UiUtil.MakeLabel().WithMinWidth(labelWidth);
-        var checkBoxIsBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.IsFontBold));
-        var panelCheckBoxIsBold = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelCheckBoxIsBold,
-                checkBoxIsBold,
-            }
-        };
+        var font = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(Se.Language.General.FontName, comboBoxFontName),
+            FormatPropertiesChrome.Row(Se.Language.General.FontHeight, numericUpDownFontHeight),
+            FormatPropertiesChrome.Row(string.Empty, EditorChrome.MakeSwitchRow(nameof(vm.IsFontBold), Se.Language.General.Bold)));
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var position = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(Se.Language.General.OffsetX, numericUpDownOffsetX),
+            FormatPropertiesChrome.Row(Se.Language.General.OffsetY, numericUpDownOffsetY));
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
-        grid.Add(panelFontName, 0);
-        grid.Add(panelFontHeight, 1);
-        grid.Add(panelOffsetX, 2);
-        grid.Add(panelOffsetY, 3);
-        grid.Add(panelCheckBoxIsBold, 4);
-        grid.Add(buttonPanel, 5);
-
-        Content = grid;
+        Content = FormatPropertiesChrome.MakeRoot(
+            buttonBar,
+            EditorChrome.MakeEditorSection(Se.Language.General.Font, font, first: true),
+            EditorChrome.MakeEditorSection(Se.Language.General.Position, position));
 
         UiUtil.FocusOnFirstActivation(this, comboBoxFontName); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

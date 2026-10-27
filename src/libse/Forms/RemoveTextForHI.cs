@@ -650,7 +650,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 // arr came from SplitToLines, which accepts "\n", "\r" and "\r\n" alike, so on
                 // Windows a text broken with a bare "\n" reached the Substring below with an index
                 // of -1 and threw out of the whole Remove-text-for-HI run.
-                if (insertDash && newText.IndexOf(Environment.NewLine, StringComparison.Ordinal) >= 0)
+                if (insertDash && newText.Contains(Environment.NewLine))
                 {
                     if (indexOfDialogChar < 0 || indexOfDialogChar > 4)
                     {

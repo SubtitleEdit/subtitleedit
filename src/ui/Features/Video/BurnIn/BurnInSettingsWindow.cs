@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -17,6 +18,7 @@ public class BurnInSettingsWindow : Window
         Title = Se.Language.Video.OutputSettingsTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         
         _vm = vm;
         vm.Window = this;
@@ -25,6 +27,7 @@ public class BurnInSettingsWindow : Window
         var checkBoxUseSourceFolder = new RadioButton
         {
             Content = Se.Language.General.UseSourceFolder,
+            FontSize = EditorChrome.FieldFontSize,
             IsChecked = vm.UseSourceFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseSourceFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },  
@@ -33,6 +36,7 @@ public class BurnInSettingsWindow : Window
         var checkBoxUseOutputFolder = new RadioButton
         {
             Content = Se.Language.General.UseOutputFolder,
+            FontSize = EditorChrome.FieldFontSize,
             IsChecked = vm.UseOutputFolder,
             VerticalAlignment = VerticalAlignment.Center,
             [!Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },  
@@ -46,14 +50,17 @@ public class BurnInSettingsWindow : Window
             [!Control.IsEnabledProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.OneWay },
             Width = 400,
         };
+        textBoxOutputFolder.Classes.Add("text");
+        Avalonia.Automation.AutomationProperties.SetName(textBoxOutputFolder, Se.Language.General.OutputFolder);
 
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFolderCommand, accessibleName: Se.Language.General.UseOutputFolder);
+        var buttonBrowse = EditorChrome.CreateToolButton("fa-solid fa-folder-open", Se.Language.General.UseOutputFolder, vm.BrowseOutputFolderCommand, 28);
 
         var panelOutputFolder = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 5,
+            Spacing = 4,
+            Margin = new Thickness(28, 0, 0, 0), // under the radio button's text
             Children =
             {
                 textBoxOutputFolder,
@@ -62,36 +69,35 @@ public class BurnInSettingsWindow : Window
         };  
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
+
+        var rows = new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                checkBoxUseSourceFolder,
+                checkBoxUseOutputFolder,
+                panelOutputFolder,
+            },
+        };
+
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(checkBoxUseSourceFolder, 0, 0);
-        grid.Add(checkBoxUseOutputFolder, 1, 0);
-        grid.Add(panelOutputFolder, 2, 0);
-        grid.Add(panelButtons, 3, 0);
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.OutputFolder, rows, first: true)), 0);
+        grid.Add(panelButtons, 1);
 
         Content = grid;
-        
+
         UiUtil.FocusOnFirstActivation(this, checkBoxUseSourceFolder); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 

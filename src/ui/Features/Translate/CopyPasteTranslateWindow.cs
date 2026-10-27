@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -9,6 +10,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
+/// <summary>
+/// Translate via copy-paste in the editor look (see <see cref="EditorChrome"/>): block size and line
+/// separator in a toolbar, the lines in the middle, Translate, Cancel and OK in the button bar.
+/// </summary>
 public class CopyPasteTranslateWindow : Window
 {
     public CopyPasteTranslateWindow(CopyPasteTranslateViewModel vm)
@@ -23,33 +28,24 @@ public class CopyPasteTranslateWindow : Window
         vm.Window = this;
         DataContext = vm;
 
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+
+        var buttonTranslate = UiUtil.MakeButton(Se.Language.General.Translate, vm.TranslateCommand);
+        buttonTranslate.Classes.Add("primary");
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonTranslate, buttonCancel, buttonOk);
+
+        var listFrame = MakeSubtitlesView(vm);
+        listFrame.Margin = new Thickness(14, 12);
 
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            RowDefinitions = new RowDefinitions("Auto,*,Auto"),
         };
-
-        grid.Add(MakeControlsView(vm), 0);
-        grid.Add(MakeSubtitlesView(vm), 1);
-        grid.Add(panelButtons, 3);
+        grid.Add(MakeControlsView(vm), 0, 0);
+        grid.Add(EditorChrome.MakePanel(listFrame), 1, 0);
+        grid.Add(buttonBar, 2, 0);
 
         Content = grid;
 
@@ -57,57 +53,52 @@ public class CopyPasteTranslateWindow : Window
         KeyDown += vm.KeyDown;
     }
 
-    private StackPanel MakeControlsView(CopyPasteTranslateViewModel vm)
+    /// <summary>
+    /// Block size and line separator in a toolbar on top.
+    /// </summary>
+    private static Border MakeControlsView(CopyPasteTranslateViewModel vm)
     {
-        var labelMaxBlockSize = new TextBlock
-        {
-            Text = Se.Language.Translate.MaxBlockSize,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var numericUpDownMaxBlockSize = UiUtil.MakeNumericUpDownInt(100, 500_000, 5000, 125, vm, nameof(vm.MaxBlockSize));
+        var numericUpDownMaxBlockSize = UiUtil.MakeNumericUpDownInt(100, 500_000, 5000, 110, vm, nameof(vm.MaxBlockSize));
+        numericUpDownMaxBlockSize.Classes.Add("field");
+        AutomationProperties.SetName(numericUpDownMaxBlockSize, Se.Language.Translate.MaxBlockSize);
 
-        var labelLineSeparator = new TextBlock
-        {
-            Text = Se.Language.Translate.LineSeparator,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0)
-        };
         var textBoxLineSeparator = new TextBox
         {
             Width = 80,
+            VerticalAlignment = VerticalAlignment.Center,
         };
+        textBoxLineSeparator.Classes.Add("text");
+        AutomationProperties.SetName(textBoxLineSeparator, Se.Language.Translate.LineSeparator);
         textBoxLineSeparator.Bind(TextBox.TextProperty, new Binding(nameof(vm.LineSeparator))
         {
             Source = vm,
             Mode = BindingMode.TwoWay
         });
 
-        var buttonTranslate = UiUtil.MakeButton(Se.Language.General.Translate, vm.TranslateCommand)
-            .WithMarginLeft(10);
-
         var panel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Spacing = 5,
+            Spacing = 8,
             Children =
             {
-                labelMaxBlockSize,
+                EditorChrome.MakeDimLabel(Se.Language.Translate.MaxBlockSize, new Thickness(4, 0, 0, 0)),
                 numericUpDownMaxBlockSize,
-                labelLineSeparator,
+                EditorChrome.MakeToolbarSeparator(),
+                EditorChrome.MakeDimLabel(Se.Language.Translate.LineSeparator, new Thickness(0)),
                 textBoxLineSeparator,
-                buttonTranslate,
             }
         };
 
-        return panel;
+        var toolbar = EditorChrome.MakeToolbar(panel);
+        toolbar.Padding = new Thickness(12, 8);
+        return toolbar;
     }
 
     private static Border MakeSubtitlesView(CopyPasteTranslateViewModel vm)
     {
         vm.SubtitleGrid = TableViewExtras.MakeTableView(multiSelect: false);
         vm.SubtitleGrid.Height = double.NaN; // auto size inside scroll viewer
-        vm.SubtitleGrid.Margin = new Thickness(2);
+        AutomationProperties.SetName(vm.SubtitleGrid, Se.Language.General.Lines);
         vm.SubtitleGrid.ItemsSource = vm.Subtitles;
         vm.SubtitleGrid.DataContext = vm.Subtitles;
 
@@ -161,6 +152,6 @@ public class CopyPasteTranslateWindow : Window
             Mode = BindingMode.TwoWay
         });
 
-        return UiUtil.MakeBorderForControl(vm.SubtitleGrid);
+        return EditorChrome.MakeListFrame(vm.SubtitleGrid);
     }
 }

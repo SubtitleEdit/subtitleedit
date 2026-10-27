@@ -1,10 +1,14 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.UiLogic.MergeContinuationLines;
 using Nikse.SubtitleEdit.UiLogic.SubtitleLoading;
 using Spectre.Console;
+using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SeConv.Core;
 
@@ -477,6 +481,12 @@ internal static class LibSEIntegration
             return;
         }
 
+        if (IsDCinemaSmpte2014Mxf(formatName))
+        {
+            SaveDCinemaSmpte2014Mxf(subtitle, filePath, sourceFormat, options);
+            return;
+        }
+
         // Image-based output formats: render text → bitmaps → format-specific bytes
         var imageHandler = ImageOutputWriter.TryCreateHandler(formatName);
         if (imageHandler is not null)
@@ -565,6 +575,71 @@ internal static class LibSEIntegration
         SaveTextFormat(subtitle, filePath, targetFormat, encodingName);
     }
 
+    public const string DCinemaSmpte2014MxfName = "D-Cinema SMPTE 2014 MXF";
+
+    private static bool IsDCinemaSmpte2014Mxf(string formatName) =>
+        formatName.Replace(" ", "").Equals(DCinemaSmpte2014MxfName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// D-Cinema SMPTE 2014 XML wrapped as a SMPTE ST 429-5 timed text track file (the subtitle
+    /// asset of a SMPTE DCP) with the --dcinema-font embedded under the id the XML loads it by.
+    /// </summary>
+    private static void SaveDCinemaSmpte2014Mxf(Subtitle subtitle, string filePath, SubtitleFormat? sourceFormat, ConversionOptions? options)
+    {
+        var fontFile = options?.DCinemaFontFile;
+        if (string.IsNullOrWhiteSpace(fontFile))
+        {
+            throw new InvalidOperationException("D-Cinema SMPTE 2014 MXF output requires --dcinema-font=<font.ttf> - the track file embeds the font.");
+        }
+
+        if (!File.Exists(fontFile))
+        {
+            throw new FileNotFoundException($"D-Cinema font file not found: {fontFile}", fontFile);
+        }
+
+        var ss = Configuration.Settings.SubtitleSettings;
+        var oldFontUri = ss.CurrentDCinemaFontUri;
+        var xml = string.Empty;
+        try
+        {
+            // The track carries the font under a urn:uuid - an Interop-style file name won't do
+            if (!(ss.CurrentDCinemaFontUri ?? string.Empty).StartsWith("urn:uuid:", StringComparison.OrdinalIgnoreCase))
+            {
+                ss.CurrentDCinemaFontUri = ss.DCinemaLoadFontResource;
+            }
+
+            WithFreshDCinemaIdentity(subtitle, sourceFormat, () => xml = new DCinemaSmpte2014().ToText(subtitle, Path.GetFileNameWithoutExtension(filePath)));
+        }
+        finally
+        {
+            ss.CurrentDCinemaFontUri = oldFontUri;
+        }
+
+        var fontId = TimedTextMxfWriter.GetLoadFontIds(xml).FirstOrDefault();
+        if (fontId == Guid.Empty)
+        {
+            throw new InvalidOperationException("The D-Cinema font URI must be a urn:uuid to embed the font in the MXF.");
+        }
+
+        var writer = new TimedTextMxfWriter();
+        writer.Resources.Add(new TimedTextMxfResource(fontId, TimedTextMxfResource.MimeTypeFont, File.ReadAllBytes(fontFile)));
+        if (!string.IsNullOrWhiteSpace(options?.ReelDuration))
+        {
+            var editRate = Regex.Match(xml, @"<(?:\w+:)?EditRate>\s*(\d+)\s+(\d+)\s*<");
+            var frameRate = editRate.Success
+                ? (int)Math.Round(double.Parse(editRate.Groups[1].Value, CultureInfo.InvariantCulture) / double.Parse(editRate.Groups[2].Value, CultureInfo.InvariantCulture), MidpointRounding.AwayFromZero)
+                : 24;
+            if (!TimedTextMxfWriter.TryParseTimeCode(options.ReelDuration, frameRate, out var frames))
+            {
+                throw new InvalidOperationException($"--reel-duration must be hh:mm:ss:ff, not '{options.ReelDuration}'.");
+            }
+
+            writer.ContainerDuration = frames;
+        }
+
+        AtomicFileWriter.Write(filePath, stream => writer.Write(stream, xml));
+    }
+
     private static bool IsDCinemaTextFormat(SubtitleFormat? format) =>
         format is DCinemaInterop or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014;
 
@@ -575,6 +650,11 @@ internal static class LibSEIntegration
     /// was D-Cinema (its loaded title is kept).
     /// </summary>
     private static void SaveWithFreshDCinemaIdentity(Subtitle subtitle, string filePath, SubtitleFormat format, string? encodingName, SubtitleFormat? sourceFormat)
+    {
+        WithFreshDCinemaIdentity(subtitle, sourceFormat, () => SaveTextFormat(subtitle, filePath, format, encodingName));
+    }
+
+    private static void WithFreshDCinemaIdentity(Subtitle subtitle, SubtitleFormat? sourceFormat, Action save)
     {
         var ss = Configuration.Settings.SubtitleSettings;
         var oldId = ss.CurrentDCinemaSubtitleId;
@@ -587,7 +667,7 @@ internal static class LibSEIntegration
                 ss.CurrentDCinemaMovieTitle = string.Empty;
             }
 
-            SaveTextFormat(subtitle, filePath, format, encodingName);
+            save();
         }
         finally
         {
@@ -657,13 +737,17 @@ internal static class LibSEIntegration
     /// OCR-fix (from <c>--fce-language</c>); pass <c>null</c> to auto-detect from content.
     /// <paramref name="removeFormattingRules"/> is consulted only when <c>removeformatting</c>
     /// is in the operation list — pass <c>null</c> to strip every tag wholesale.
+    /// <paramref name="mergeContinuationLinesMaxGapMs"/> / <paramref name="mergeContinuationLinesMaxCharacters"/>
+    /// are consulted only for <c>mergecontinuationlines</c>; pass <c>null</c> for the batch convert defaults.
     /// </summary>
     public static void ApplyOperations(
         Subtitle subtitle,
         List<string> operations,
         IReadOnlyList<string>? fixCommonErrorsRules = null,
         string? fixCommonErrorsLanguage = null,
-        IReadOnlyList<string>? removeFormattingRules = null)
+        IReadOnlyList<string>? removeFormattingRules = null,
+        int? mergeContinuationLinesMaxGapMs = null,
+        int? mergeContinuationLinesMaxCharacters = null)
     {
         if (subtitle == null || operations == null || operations.Count == 0)
         {
@@ -672,7 +756,7 @@ internal static class LibSEIntegration
 
         foreach (var operation in operations)
         {
-            ApplyOperation(subtitle, operation, fixCommonErrorsRules, fixCommonErrorsLanguage, removeFormattingRules);
+            ApplyOperation(subtitle, operation, fixCommonErrorsRules, fixCommonErrorsLanguage, removeFormattingRules, mergeContinuationLinesMaxGapMs, mergeContinuationLinesMaxCharacters);
         }
     }
 
@@ -681,7 +765,9 @@ internal static class LibSEIntegration
         string operation,
         IReadOnlyList<string>? fixCommonErrorsRules,
         string? fixCommonErrorsLanguage,
-        IReadOnlyList<string>? removeFormattingRules)
+        IReadOnlyList<string>? removeFormattingRules,
+        int? mergeContinuationLinesMaxGapMs,
+        int? mergeContinuationLinesMaxCharacters)
     {
         switch (operation.ToLowerInvariant())
         {
@@ -706,6 +792,24 @@ internal static class LibSEIntegration
                         hiIndex--;
                     }
                     subtitle.Renumber();
+                }
+                break;
+
+            case "mergecontinuationlines":
+                {
+                    // Defaults are batch convert's (SeBatchConvert): 250 ms, and 0 characters there
+                    // means max line length x max number of lines.
+                    var maxGapMs = mergeContinuationLinesMaxGapMs ?? 250;
+                    var maxCharacters = mergeContinuationLinesMaxCharacters
+                        ?? Configuration.Settings.General.SubtitleLineMaximumLength * Configuration.Settings.General.MaxNumberOfLines;
+                    var language = SubtitleLanguageDetector.Detect(subtitle);
+                    var merged = MergeContinuationLinesUtils.MergeContinuationLinesInSubtitle(subtitle, language, maxGapMs, maxCharacters);
+                    if (merged.Paragraphs.Count != subtitle.Paragraphs.Count)
+                    {
+                        subtitle.Paragraphs.Clear();
+                        subtitle.Paragraphs.AddRange(merged.Paragraphs);
+                        subtitle.Renumber();
+                    }
                 }
                 break;
 
@@ -825,9 +929,14 @@ internal static class LibSEIntegration
                 break;
 
             case "fixrtlviaunicodechars":
-                foreach (var p in subtitle.Paragraphs)
+                // Only meaningful for Hebrew/Arabic text; on a Latin-only subtitle it would just
+                // wrap every line in RTL control characters (same guard as Batch convert in the UI).
+                if (ContainsRightToLeftLetter(subtitle))
                 {
-                    p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
+                    foreach (var p in subtitle.Paragraphs)
+                    {
+                        p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
+                    }
                 }
                 break;
 
@@ -836,9 +945,14 @@ internal static class LibSEIntegration
                 break;
 
             case "reversertlstartend":
-                foreach (var p in subtitle.Paragraphs)
+                // Moves the punctuation of every line from the end to the start, which scrambles
+                // a Latin-only subtitle (".Hello world") - skip those (same guard as Batch convert).
+                if (ContainsRightToLeftLetter(subtitle))
                 {
-                    p.Text = Utilities.ReverseStartAndEndingForRightToLeft(p.Text);
+                    foreach (var p in subtitle.Paragraphs)
+                    {
+                        p.Text = Utilities.ReverseStartAndEndingForRightToLeft(p.Text);
+                    }
                 }
                 break;
 
@@ -846,6 +960,19 @@ internal static class LibSEIntegration
                 // Unknown operation - ignore or log warning
                 break;
         }
+    }
+
+    private static bool ContainsRightToLeftLetter(Subtitle subtitle)
+    {
+        foreach (var p in subtitle.Paragraphs)
+        {
+            if (LanguageAutoDetect.ContainsRightToLeftLetter(p.Text))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static void RemoveUnicodeControlChars(Subtitle subtitle)
@@ -1212,6 +1339,11 @@ internal static class LibSEIntegration
             return ".txt";
         }
 
+        if (IsDCinemaSmpte2014Mxf(normalized))
+        {
+            return ".mxf";
+        }
+
         var imageHandler = ImageOutputWriter.TryCreateHandler(normalized);
         if (imageHandler is not null)
         {
@@ -1254,6 +1386,8 @@ internal static class LibSEIntegration
             "fcp" or "fcpimage" => "FCP/image",
             "dcinemainterop" or "dcinema-interop" => "D-Cinema interop/png",
             "dcinemasmpte2014" or "dcinema-smpte" => "D-Cinema SMPTE 2014/png",
+            "dcinemasmpte2014mxf" or "dcinema-smpte-mxf" => DCinemaSmpte2014MxfName,
+            "dcinemasmpte2014pngmxf" or "dcinema-smpte-png-mxf" => ImageOutputWriter.DCinemaSmpte2014PngMxfName,
             "imageswithtimecode" or "imagesintc" => "Images with time codes in file name",
             "webvttthumbnail" or "webvtt-thumbnail" or "vttthumb" => "WebVTT Thumbnail",
             "plaintext" or "text" or "txt" => "Plain text",

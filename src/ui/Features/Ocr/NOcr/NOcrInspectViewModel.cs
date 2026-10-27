@@ -244,7 +244,7 @@ public partial class NOcrInspectViewModel : ObservableObject
         await MessageBox.Show(
             Window!,
             "nOCR",
-            "nOCR character saved",
+            Se.Language.Ocr.NOcrCharacterSaved,
             MessageBoxButtons.OK,
             MessageBoxIcon.Information);
     }
@@ -260,8 +260,8 @@ public partial class NOcrInspectViewModel : ObservableObject
 
         var answer = await MessageBox.Show(
             Window!,
-            "Delete nOCR item?",
-            $"Do you want to delete the current nOCR item?",
+            Se.Language.Ocr.NOcrDeleteItem,
+            Se.Language.Ocr.NOcrDeleteItemDetails,
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 

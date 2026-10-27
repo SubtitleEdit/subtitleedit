@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System;
 
 namespace Nikse.SubtitleEdit.UiLogic.Ocr
 {
@@ -44,6 +43,27 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr
             }
 
             return text;
+        }
+
+        /// <summary>
+        /// Trims every line of an AI OCR result, not only the whole text. LightOnOCR-3 ends each
+        /// line but the last with a markdown hard break (two spaces), which would otherwise stay in
+        /// the subtitle text.
+        /// </summary>
+        public static string TrimAiOcrLines(string? input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
+            var lines = input.SplitToLines();
+            for (var i = 0; i < lines.Count; i++)
+            {
+                lines[i] = lines[i].Trim();
+            }
+
+            return string.Join(Environment.NewLine, lines).Trim();
         }
 
         /// <summary>

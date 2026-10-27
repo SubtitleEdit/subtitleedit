@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Nikse.SubtitleEdit.Logic.Config;
+﻿using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 

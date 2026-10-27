@@ -28,25 +28,6 @@ internal static class SkBitmapExtensions
         return SKBitmap.Decode(codec, info) ?? new SKBitmap(1, 1, SKColorType.Bgra8888, SKAlphaType.Premul);
     }
 
-    public static SKBitmap MakeImageBrighter(SKBitmap bitmap, float brightnessIncrease = 0.25f)
-    {
-        using var canvas = new SKCanvas(bitmap);
-        using var paint = new SKPaint();
-        var colorMatrix = new[]
-        {
-            1 + brightnessIncrease, 0, 0, 0, 0,
-            0, 1 + brightnessIncrease, 0, 0, 0,
-            0, 0, 1 + brightnessIncrease, 0, 0,
-            0, 0, 0, 1, 0 // Alpha stays the same
-        };
-
-        paint.ColorFilter = SKColorFilter.CreateColorMatrix(colorMatrix);
-
-        canvas.DrawBitmap(bitmap, 0, 0, paint);
-
-        return bitmap;
-    }
-
     public static SKBitmap CropTransparentColors(this SKBitmap originalBitmap, byte alphaThreshold = 0)
     {
         return originalBitmap.CropTransparentColors(out _, out _, alphaThreshold);

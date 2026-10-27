@@ -626,7 +626,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     assStyle = GetAssStyleFromRegion(region.InnerText, headIndex);
                 }
 
-                var text = assStyle + ReadParagraph(node, headIndex).TrimEnd();
+                var text = assStyle + ReadParagraph(node, headIndex);
 
                 // Keep the region name: the alignment tag above only snaps to the screen thirds,
                 // the video preview positions the line from the region box itself.
@@ -637,9 +637,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        /// <summary>
+        /// Reads one TTML <c>p</c> element into subtitle text. Trailing source whitespace is
+        /// trimmed here, but the line breaks a trailing <br/> adds are content: in TTML they are
+        /// forced breaks with layout meaning, so dropping them changes the cue (#15289). Nested
+        /// spans are read raw - only the finished paragraph is trimmed, so a space inside the
+        /// last span still survives.
+        /// </summary>
         private static string ReadParagraph(XmlNode node, TtmlHeadIndex headIndex)
         {
+            var raw = BuildParagraph(node, headIndex, out var forcedBreakEnd);
+            if (forcedBreakEnd < 0)
+            {
+                return raw.TrimEnd();
+            }
+
+            // Everything before the last forced break already ends in a line break, so only the
+            // text behind it can be source formatting - that tail is trimmed as before.
+            return raw[..forcedBreakEnd] + raw[forcedBreakEnd..].TrimEnd();
+        }
+
+        private static string BuildParagraph(XmlNode node, TtmlHeadIndex headIndex, out int forcedBreakEnd)
+        {
             var pText = new StringBuilder();
+            forcedBreakEnd = -1;
             foreach (XmlNode child in node.ChildNodes)
             {
                 if (child.NodeType == XmlNodeType.Text)
@@ -649,6 +670,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (child.Name == "br" || child.Name == "tt:br")
                 {
                     pText.AppendLine();
+                    forcedBreakEnd = pText.Length;
                 }
                 else if (child.Name == "#significant-whitespace" || child.Name == "tt:#significant-whitespace")
                 {
@@ -787,7 +809,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append(">");
                     }
 
-                    pText.Append(ReadParagraph(child, headIndex));
+                    var contentStart = pText.Length;
+                    var content = BuildParagraph(child, headIndex, out var nestedBreakEnd);
+                    pText.Append(content);
+                    if (nestedBreakEnd >= 0)
+                    {
+                        forcedBreakEnd = contentStart + nestedBreakEnd;
+                    }
 
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
                     {

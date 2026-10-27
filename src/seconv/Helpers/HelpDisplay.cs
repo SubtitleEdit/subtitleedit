@@ -41,7 +41,11 @@ internal static class HelpDisplay
         ShowSection(console, "Optional Parameters", null);
         ShowParameter(console, "--adjust-duration:<ms>", "Adjust duration in milliseconds");
         ShowParameter(console, "--assa-style-file:<file name>", "ASSA style file");
+        ShowParameter(console, "--burn-in-video:<file name>", "Burn the ass output into this video with ffmpeg (-> <name>_burn-in.<ext>)");
+        ShowParameter(console, "--burn-in-ffmpeg-args:<args>", "Encoder args for --burn-in-video (default: libx264 CRF 23, audio copy)");
+        ShowParameter(console, "--burn-in-effects:<list>", "Effects for the ass output: fade[:<ms>], font-kerning, font-size-change, scroll-up, scroll-down, rotate-in, tilt-bounce, font-size-bounce-in, fix-rtl");
         ShowParameter(console, "--change-speed:<percent>", "Change speed by percent (e.g. 125 = 1.25x faster)");
+        ShowParameter(console, "--dcinema-font:<file name>", "Font (.ttf/.otf) embedded in dcinemasmpte2014mxf output");
         ShowParameter(console, "--ebu-header-file:<file name>", "EBU header file");
         ShowParameter(console, "--encoding:<encoding name>", "Character encoding (e.g., utf-8, windows-1252, or 'source' to keep the input file's encoding)");
         ShowParameter(console, "--input-encoding-fallback:<name>", "Assumed input encoding when no BOM and not UTF-8 (skips ANSI guess)");
@@ -58,6 +62,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--pac-codepage:<code page>", "PAC code page");
         ShowParameter(console, "--pac-secondary-codepage:<code page>", "PAC code page for lines in another script (e.g. Cyrillic lines in a Hebrew file)");
         ShowParameter(console, "--profile:<profile name>", "Profile name");
+        ShowParameter(console, "--reel-duration:<hh:mm:ss:ff>", "D-Cinema MXF output: reel (picture) length, which every asset of a DCP reel must have (default: until the last subtitle)");
         ShowParameter(console, "--renumber:<starting number>", "Renumber subtitles from this number");
         ShowParameter(console, "--resolution:<width>x<height>", "Video resolution (e.g., 1920x1080)");
         ShowParameter(console, "--target-fps:<frame rate>", "Target frame rate");
@@ -141,6 +146,9 @@ internal static class HelpDisplay
         ShowParameter(console, "--fce-language:<code>", "Force language for FCE language-gated rules (e.g. es or Spanish); default: auto-detect");
         ShowParameter(console, "--dictionary-folder:<path>", "Hunspell dictionaries + *_OCRFixReplaceList.xml; enables the 'Fix common OCR errors' FCE pass");
         ShowParameter(console, "--fix-rtl-via-unicode-chars", "Fix RTL via Unicode characters");
+        ShowParameter(console, "--merge-continuation-lines", "Merge lines that continue a sentence into the next line");
+        ShowParameter(console, "--merge-continuation-lines-max-gap:<ms>", "Only merge continuation lines closer than N ms (default: 250)");
+        ShowParameter(console, "--merge-continuation-lines-max-chars:<n>", "Max characters of a merged pair (default: max line length x max number of lines)");
         ShowParameter(console, "--merge-same-texts", "Merge entries with same text");
         ShowParameter(console, "--merge-same-time-codes", "Merge entries with same time codes");
         ShowParameter(console, "--merge-short-lines", "Merge short lines");

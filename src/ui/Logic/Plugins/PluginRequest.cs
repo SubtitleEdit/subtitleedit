@@ -11,8 +11,14 @@ public class PluginRequest
 {
     public int ApiVersion { get; set; } = PluginConstants.ApiVersion;
 
-    /// <summary>Currently always "run".</summary>
-    public string RequestType { get; set; } = "run";
+    /// <summary>
+    /// "run" from the main window (the plugin may show its own UI), "batch" from Batch convert
+    /// (no UI - apply the saved settings to all lines), or "configure" from Batch convert (show
+    /// settings only and return them without a subtitle). See <see cref="PluginConstants"/>
+    /// RequestType* values; "batch" and "configure" are only sent to plugins whose manifest
+    /// sets <see cref="PluginManifest.Batch"/>.
+    /// </summary>
+    public string RequestType { get; set; } = PluginConstants.RequestTypeRun;
 
     /// <summary>Absolute path where the plugin must write its <see cref="PluginResponse"/>.</summary>
     public string ResponseFilePath { get; set; } = string.Empty;

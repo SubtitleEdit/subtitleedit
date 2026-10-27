@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
-using System.Linq;
 
 namespace LibUiLogicTests.Ocr;
 
@@ -55,8 +54,8 @@ public class LlamaCppOcrPromptResolveTests
     }
 
     [Fact]
-    public void Lfm_IsRankedSecond_BehindGlmOcr()
+    public void Lfm_IsRankedThird_BehindGlmOcrAndLightOnOcr3_4B()
     {
-        Assert.Equal("LFM2.5-VL-3B-Q8_0.gguf", LlamaCppServerManager.OcrModels[1].FileName);
+        Assert.Equal("LFM2.5-VL-3B-Q8_0.gguf", LlamaCppServerManager.OcrModels[2].FileName);
     }
 }

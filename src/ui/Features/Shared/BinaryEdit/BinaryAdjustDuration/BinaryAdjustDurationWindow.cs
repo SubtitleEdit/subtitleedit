@@ -1,18 +1,25 @@
-using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustDuration;
 
+/// <summary>
+/// Adjust durations of image-based subtitles, in the editor look (see <see cref="EditorChrome"/>):
+/// how to adjust and the value(s) for the chosen way in one section, the notes under it, Cancel/OK
+/// at the bottom.
+/// </summary>
 public class BinaryAdjustDurationWindow : Window
 {
-    private const int LabelMinWidth = 100;
-    private const int NumericUpDownWidth = 150;
+    private const double LabelWidth = 200;
+    // The value field lines up with the "Adjust via" box above it
+    private const double NumericUpDownWidth = 180;
 
     public BinaryAdjustDurationWindow(BinaryAdjustDurationViewModel vm)
     {
@@ -20,21 +27,16 @@ public class BinaryAdjustDurationWindow : Window
         Title = Se.Language.Tools.AdjustDurations.Title;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        BinaryEditChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
-
-        var label = new Label
-        {
-            Content = Se.Language.Tools.AdjustDurations.AdjustVia,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
 
         var combo = new ComboBox
         {
             ItemsSource = vm.AdjustTypes,
             VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 180,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = NumericUpDownWidth,
         };
         combo.Bind(SelectingItemsControl.SelectedValueProperty, new Binding
         {
@@ -42,93 +44,67 @@ public class BinaryAdjustDurationWindow : Window
             Mode = BindingMode.TwoWay,
             Source = vm,
         });
+        AutomationProperties.SetName(combo, Se.Language.Tools.AdjustDurations.AdjustVia);
 
         var panelSeconds = MakeAdjustSeconds(vm);
         var panelPercent = MakeAdjustPercent(vm);
         var panelFixed = MakeAdjustFixed(vm);
         var panelRecalculate = MakeAdjustRecalculate(vm);
 
+        // Only one of the four is visible at a time - the one for the chosen way to adjust.
+        var panelValues = new Panel { Children = { panelSeconds, panelPercent, panelFixed, panelRecalculate } };
+
         var labelInfo = new TextBlock
         {
-            VerticalAlignment = VerticalAlignment.Bottom,
             HorizontalAlignment = HorizontalAlignment.Left,
             Text = Se.Language.Tools.AdjustDurations.Note,
-            Margin = new Thickness(10, 25, 10, 5),
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 380,
         };
         labelInfo.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowAdjustNote)) { Source = vm });
 
         var labelRecalculateNote = new TextBlock
         {
-            VerticalAlignment = VerticalAlignment.Bottom,
             HorizontalAlignment = HorizontalAlignment.Left,
             Text = Se.Language.Tools.AdjustDurations.RecalculateRequiresOcrNote,
-            Margin = new Thickness(10, 0, 10, 15),
-            Foreground = Avalonia.Media.Brushes.OrangeRed,
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = Brushes.OrangeRed,
+            TextWrapping = TextWrapping.Wrap,
             MaxWidth = 380,
         };
         labelRecalculateNote.Bind(IsVisibleProperty, new Binding(nameof(vm.IsRecalculateBlocked)) { Source = vm });
 
+        var rows = new StackPanel { Spacing = 10 };
+        rows.Children.Add(BinaryEditChrome.MakeRow(Se.Language.Tools.AdjustDurations.AdjustVia, combo, LabelWidth));
+        rows.Children.Add(panelValues);
+        rows.Children.Add(labelInfo);
+        rows.Children.Add(labelRecalculateNote);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Adjustment, rows, first: true);
+        section.MinWidth = 440;
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(label, 0);
-        grid.Add(combo, 0, 1);
-
-        grid.Add(panelSeconds, 1, 0, 1, 2);
-        grid.Add(panelPercent, 1, 0, 1, 2);
-        grid.Add(panelFixed, 1, 0, 1, 2);
-        grid.Add(panelRecalculate, 1, 0, 1, 2);
-
-        grid.Add(labelInfo, 2, 0, 1, 2);
-        grid.Add(labelRecalculateNote, 3, 0, 1, 2);
-
-        grid.Add(panelButtons, 4, 0, 1, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, combo); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static StackPanel MakeAdjustSeconds(BinaryAdjustDurationViewModel vm)
+    private static NumericUpDown MakeNumber(string label, decimal minimum, decimal maximum)
     {
-        var textBlockSeconds = new TextBlock
+        var numericUpDown = new NumericUpDown
         {
-            Text = Se.Language.General.Seconds,
-            VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = LabelMinWidth,
+            Minimum = minimum,
+            Maximum = maximum,
         };
-        var numericUpDownSeconds = new NumericUpDown
-        {
-            Minimum = -1000000,
-            Maximum = 1000000,
-            Width = NumericUpDownWidth,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        return EditorChrome.AsField(numericUpDown, label, NumericUpDownWidth, alignLeft: true, center: true);
+    }
+
+    private static Grid MakeAdjustSeconds(BinaryAdjustDurationViewModel vm)
+    {
+        var numericUpDownSeconds = MakeNumber(Se.Language.General.Seconds, -1000000, 1000000);
         numericUpDownSeconds.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Path = nameof(vm.AdjustSeconds),
@@ -137,18 +113,8 @@ public class BinaryAdjustDurationWindow : Window
             Converter = new DoubleToThreeDecimalConverter(),
         });
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 25, 0, 0),
-            Children =
-            {
-                textBlockSeconds,
-                numericUpDownSeconds
-            }
-        };
-        panel.Bind(StackPanel.IsVisibleProperty, new Binding()
+        var panel = BinaryEditChrome.MakeRow(Se.Language.General.Seconds, numericUpDownSeconds, LabelWidth);
+        panel.Bind(IsVisibleProperty, new Binding()
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(BinaryAdjustDurationDisplay.IsSecondsVisible)}",
             Source = vm,
@@ -158,22 +124,10 @@ public class BinaryAdjustDurationWindow : Window
         return panel;
     }
 
-    private static StackPanel MakeAdjustPercent(BinaryAdjustDurationViewModel vm)
+    private static Grid MakeAdjustPercent(BinaryAdjustDurationViewModel vm)
     {
-        var textBlockSeconds = new TextBlock
-        {
-            Text = Se.Language.General.Percent,
-            VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = LabelMinWidth,
-        };
-        var numericUpDownSeconds = new NumericUpDown
-        {
-            Minimum = -1000000,
-            Maximum = 1000000,
-            Width = NumericUpDownWidth,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        numericUpDownSeconds.Bind(NumericUpDown.ValueProperty, new Binding
+        var numericUpDownPercent = MakeNumber(Se.Language.General.Percent, -1000000, 1000000);
+        numericUpDownPercent.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Path = nameof(vm.AdjustPercent),
             Mode = BindingMode.TwoWay,
@@ -181,18 +135,8 @@ public class BinaryAdjustDurationWindow : Window
             Converter = new NullableIntConverter(),
         });
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 25, 0, 0),
-            Children =
-            {
-                textBlockSeconds,
-                numericUpDownSeconds
-            }
-        };
-        panel.Bind(StackPanel.IsVisibleProperty, new Binding
+        var panel = BinaryEditChrome.MakeRow(Se.Language.General.Percent, numericUpDownPercent, LabelWidth);
+        panel.Bind(IsVisibleProperty, new Binding
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(BinaryAdjustDurationDisplay.IsPercentVisible)}",
             Source = vm,
@@ -202,23 +146,10 @@ public class BinaryAdjustDurationWindow : Window
         return panel;
     }
 
-
-    private static StackPanel MakeAdjustFixed(BinaryAdjustDurationViewModel vm)
+    private static Grid MakeAdjustFixed(BinaryAdjustDurationViewModel vm)
     {
-        var textBlockSeconds = new TextBlock
-        {
-            Text = Se.Language.Tools.AdjustDurations.Fixed,
-            VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = LabelMinWidth,
-        };
-        var numericUpDownSeconds = new NumericUpDown
-        {
-            Minimum = -1000000,
-            Maximum = 1000000,
-            Width = NumericUpDownWidth,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        numericUpDownSeconds.Bind(NumericUpDown.ValueProperty, new Binding
+        var numericUpDownFixed = MakeNumber(Se.Language.Tools.AdjustDurations.Fixed, -1000000, 1000000);
+        numericUpDownFixed.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Mode = BindingMode.TwoWay,
             Source = vm,
@@ -226,18 +157,8 @@ public class BinaryAdjustDurationWindow : Window
             Converter = new DoubleToThreeDecimalConverter(),
         });
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 25, 0, 0),
-            Children =
-            {
-                textBlockSeconds,
-                numericUpDownSeconds
-            }
-        };
-        panel.Bind(StackPanel.IsVisibleProperty, new Binding
+        var panel = BinaryEditChrome.MakeRow(Se.Language.Tools.AdjustDurations.Fixed, numericUpDownFixed, LabelWidth);
+        panel.Bind(IsVisibleProperty, new Binding
         {
             Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(BinaryAdjustDurationDisplay.IsFixedVisible)}",
             Source = vm,
@@ -246,21 +167,9 @@ public class BinaryAdjustDurationWindow : Window
         return panel;
     }
 
-    private static Grid MakeAdjustRecalculate(BinaryAdjustDurationViewModel vm)
+    private static StackPanel MakeAdjustRecalculate(BinaryAdjustDurationViewModel vm)
     {
-        var textBlockMax = new TextBlock
-        {
-            Text = Se.Language.General.MaxCharactersPerSecond,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var numericUpDownMax = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 1000,
-            Width = NumericUpDownWidth,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
+        var numericUpDownMax = MakeNumber(Se.Language.General.MaxCharactersPerSecond, 0, 1000);
         numericUpDownMax.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Path = nameof(vm.AdjustRecalculateMaxCharacterPerSecond),
@@ -269,19 +178,7 @@ public class BinaryAdjustDurationWindow : Window
             Converter = new DoubleToOneDecimalConverter(),
         });
 
-        var textBlockOptimal = new TextBlock
-        {
-            Text = Se.Language.General.OptimalCharactersPerSecond,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var numericUpDownOptimal = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 1000,
-            Width = NumericUpDownWidth,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
+        var numericUpDownOptimal = MakeNumber(Se.Language.General.OptimalCharactersPerSecond, 0, 1000);
         numericUpDownOptimal.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Path = nameof(vm.AdjustRecalculateOptimalCharacterPerSecond),
@@ -290,40 +187,18 @@ public class BinaryAdjustDurationWindow : Window
             Converter = new DoubleToOneDecimalConverter(),
         });
 
-        var grid = new Grid
+        var panel = new StackPanel
         {
-            ColumnDefinitions =
+            Spacing = 10,
+            Children =
             {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
+                BinaryEditChrome.MakeRow(Se.Language.General.MaxCharactersPerSecond, numericUpDownMax, LabelWidth),
+                BinaryEditChrome.MakeRow(Se.Language.General.OptimalCharactersPerSecond, numericUpDownOptimal, LabelWidth),
             },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
-            RowSpacing = 10,
-            Margin = new Thickness(10, 25, 0, 0),
         };
 
-        grid.Children.Add(textBlockMax);
-        Grid.SetColumn(textBlockMax, 0);
+        panel.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowRecalculateControls)) { Source = vm });
 
-        grid.Children.Add(numericUpDownMax);
-        Grid.SetColumn(numericUpDownMax, 1);
-
-        grid.Children.Add(textBlockOptimal);
-        Grid.SetColumn(textBlockOptimal, 0);
-        Grid.SetRow(textBlockOptimal, 1);
-
-        grid.Children.Add(numericUpDownOptimal);
-        Grid.SetColumn(numericUpDownOptimal, 1);
-        Grid.SetRow(numericUpDownOptimal, 1);
-
-        grid.Bind(Grid.IsVisibleProperty, new Binding(nameof(vm.ShowRecalculateControls)) { Source = vm });
-
-        return grid;
+        return panel;
     }
 }

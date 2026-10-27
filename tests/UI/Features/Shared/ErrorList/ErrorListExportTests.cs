@@ -82,7 +82,7 @@ public class ErrorListExportTests
         // All + the two classes that have rows - not the six that have none.
         Assert.Equal(3, CountOf(html, "class=\"chip\""));
         Assert.Contains(Se.Language.ErrorList.CharactersPerSecond, html);
-        Assert.DoesNotContain(Se.Language.ErrorList.Overlap, html);
+        Assert.DoesNotContain(Se.Language.General.Overlapping, html);
     }
 
     [AvaloniaFact]

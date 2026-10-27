@@ -19,7 +19,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
-using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Options.WordLists;
 
@@ -35,6 +34,10 @@ public partial class WordListsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _userWords;
     [ObservableProperty] private string? _selectedUserWord;
     [ObservableProperty] private string _newUserWord;
+
+    [ObservableProperty] private ObservableCollection<string> _removedWords;
+    [ObservableProperty] private string? _selectedRemovedWord;
+    [ObservableProperty] private string _newRemovedWord;
 
     [ObservableProperty] private ObservableCollection<OcrFixItem> _ocrFixes;
     [ObservableProperty] private OcrFixItem? _selectedOcrFix;
@@ -54,9 +57,11 @@ public partial class WordListsViewModel : ObservableObject
         Languages = new ObservableCollection<LanguageItem>();
         Names = new ObservableCollection<string>();
         UserWords = new ObservableCollection<string>();
+        RemovedWords = new ObservableCollection<string>();
         OcrFixes = new ObservableCollection<OcrFixItem>();
         NewName = string.Empty;
         NewUserWord = string.Empty;
+        NewRemovedWord = string.Empty;
         NewOcrFixFind = string.Empty;
         NewOcrFixReplace = string.Empty;
 
@@ -214,6 +219,9 @@ public partial class WordListsViewModel : ObservableObject
         UserWords.Insert(insertIndex, word);
         SelectedUserWord = word;
         NewUserWord = string.Empty;
+
+        // Adding a user word takes it off the removed list (see UserWordsHelper).
+        RemovedWords.Remove(Utilities.NormalizeUserDictionaryWord(word));
     }
 
     [RelayCommand]
@@ -247,6 +255,55 @@ public partial class WordListsViewModel : ObservableObject
         {
             SelectedUserWord = UserWords[idx];
         }
+    }
+
+    [RelayCommand]
+    private async Task AddRemovedWord()
+    {
+        var word = Utilities.NormalizeUserDictionaryWord(NewRemovedWord);
+        if (string.IsNullOrEmpty(word) || SelectedLanguage == null || Window == null)
+        {
+            return;
+        }
+
+        if (RemovedWords.Contains(word) || !UserWordsHelper.AddRemovedWord(word, SelectedLanguage.CultureSpecificCode))
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Options.WordLists.UnableToAddItem, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        int insertIndex = 0;
+        while (insertIndex < RemovedWords.Count && string.Compare(RemovedWords[insertIndex], word, StringComparison.OrdinalIgnoreCase) < 0)
+        {
+            insertIndex++;
+        }
+
+        RemovedWords.Insert(insertIndex, word);
+        SelectedRemovedWord = word;
+        NewRemovedWord = string.Empty;
+
+        // A removed word is no longer an accepted user word (see UserWordsHelper).
+        UserWords.Remove(word);
+    }
+
+    [RelayCommand]
+    private async Task RemoveRemovedWord()
+    {
+        var selected = SelectedRemovedWord;
+        if (selected == null || SelectedLanguage == null || Window == null)
+        {
+            return;
+        }
+
+        if (!UserWordsHelper.RemoveRemovedWord(selected, SelectedLanguage.CultureSpecificCode))
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Options.WordLists.UnableToRemoveItem, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        var idx = RemovedWords.IndexOf(selected);
+        RemovedWords.Remove(selected);
+        SelectedRemovedWord = RemovedWords.Count == 0 ? null : RemovedWords[Math.Min(idx, RemovedWords.Count - 1)];
     }
 
     [RelayCommand]
@@ -353,6 +410,23 @@ public partial class WordListsViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task EditRegexRules()
+    {
+        var lang = SelectedLanguage;
+        if (Window == null || lang == null)
+        {
+            return;
+        }
+
+        var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(lang.TwoLetterISOLanguageName);
+        var fileName = Path.Combine(Se.DictionariesFolder, threeLetterCode + "_OCRFixReplaceList.xml");
+        await _windowService.ShowDialogAsync<RegexRulesWindow, RegexRulesViewModel>(Window, vm =>
+        {
+            vm.Initialize(fileName, lang.Name);
+        });
+    }
+
+    [RelayCommand]
     private void Ok()
     {
         Window?.Close();
@@ -410,21 +484,58 @@ public partial class WordListsViewModel : ObservableObject
         }
     }
 
+    // Arrowing through the language combo must not reload the lists on every key press: the
+    // synchronous load (file parsing + ~11k one-by-one Adds for English) kept the UI thread
+    // busy, so NVDA's query for the combo's new value went unanswered and nothing was
+    // announced (#12087). Wait for the selection to settle, load off the UI thread and swap
+    // in whole collections - one change per list instead of thousands.
+    private const int LanguageChangeDelayMs = 250;
+    private int _loadVersion;
+
     internal void SelectedLanguageChanged()
     {
-        Names.Clear();
-        UserWords.Clear();
-        OcrFixes.Clear();
+        _ = LoadListsAsync(LanguageChangeDelayMs);
+    }
 
-        var lang = SelectedLanguage;
-        if (lang == null)
+    private async Task LoadListsAsync(int delayMs)
+    {
+        var version = ++_loadVersion;
+        try
         {
-            return;
-        }
+            if (delayMs > 0)
+            {
+                await Task.Delay(delayMs);
+                if (version != _loadVersion)
+                {
+                    return;
+                }
+            }
 
-        Names.AddRange(LoadNames(lang));
-        UserWords.AddRange(LoadUserWords(lang));
-        OcrFixes.AddRange(LoadOcrFixList(lang));
+            var lang = SelectedLanguage;
+            if (lang == null)
+            {
+                Names = new ObservableCollection<string>();
+                UserWords = new ObservableCollection<string>();
+                RemovedWords = new ObservableCollection<string>();
+                OcrFixes = new ObservableCollection<OcrFixItem>();
+                return;
+            }
+
+            var (names, userWords, removedWords, ocrFixes) = await Task.Run(() => (LoadNames(lang), LoadUserWords(lang), LoadRemovedWords(lang), LoadOcrFixList(lang)));
+            if (version != _loadVersion)
+            {
+                return;
+            }
+
+            Names = new ObservableCollection<string>(names);
+            UserWords = new ObservableCollection<string>(userWords);
+            RemovedWords = new ObservableCollection<string>(removedWords);
+            OcrFixes = new ObservableCollection<OcrFixItem>(ocrFixes);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Word lists: failed to load lists for " + SelectedLanguage?.CultureSpecificCode);
+        }
     }
 
     private List<string> LoadNames(LanguageItem lang)
@@ -439,6 +550,14 @@ public partial class WordListsViewModel : ObservableObject
     {
         var list = new List<string>();
         UserWordsHelper.LoadUserWordList(list, lang.CultureSpecificCode);
+        list.Sort();
+        return list;
+    }
+
+    private List<string> LoadRemovedWords(LanguageItem lang)
+    {
+        var list = new List<string>();
+        UserWordsHelper.LoadRemovedWordList(list, lang.CultureSpecificCode);
         list.Sort();
         return list;
     }
@@ -480,7 +599,7 @@ public partial class WordListsViewModel : ObservableObject
 
     internal void Loaded()
     {
-        Dispatcher.UIThread.Post(SelectedLanguageChanged);
+        Dispatcher.UIThread.Post(() => _ = LoadListsAsync(0));
     }
 
     internal void NameTextBoxKeyDown(KeyEventArgs e)
@@ -500,6 +619,15 @@ public partial class WordListsViewModel : ObservableObject
         {
             e.Handled = true;
             _ = AddWord();
+        }
+    }
+
+    internal void RemovedWordTextBoxKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            e.Handled = true;
+            _ = AddRemovedWord();
         }
     }
 

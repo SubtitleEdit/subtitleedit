@@ -17,7 +17,8 @@ public class CrispAsrParakeet : CrispAsrEngineBase
     public override bool IncludeLanguage => true;
     public override bool HasNativeTimestamps => true;
 
-    // The 25 European languages of parakeet-tdt-0.6b-v3 (also Parakeet Ultra).
+    // The 25 European languages of parakeet-tdt-0.6b-v3 (also Parakeet Ultra), plus
+    // Japanese for the ja TDT, ja CTC and ReazonSpeech models (#15991).
     public override List<WhisperLanguage> Languages =>
        new()
        {
@@ -35,6 +36,7 @@ public class CrispAsrParakeet : CrispAsrEngineBase
             new WhisperLanguage("el", "greek"),
             new WhisperLanguage("hu", "hungarian"),
             new WhisperLanguage("it", "italian"),
+            new WhisperLanguage("ja", "japanese"),
             new WhisperLanguage("lv", "latvian"),
             new WhisperLanguage("lt", "lithuanian"),
             new WhisperLanguage("mt", "maltese"),

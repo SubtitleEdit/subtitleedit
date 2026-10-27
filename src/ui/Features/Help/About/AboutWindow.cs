@@ -14,16 +14,21 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Help.About;
 
+/// <summary>
+/// About in the editor look (see <see cref="EditorChrome"/>): the cycling picture beside the title
+/// and license, the description and links under it, OK in the button bar. Wording is unchanged.
+/// </summary>
 public class AboutWindow : Window
 {
     public AboutWindow(AboutViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Help.AboutSubtitleEdit;
-        Width = 480;
+        Width = 520;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
@@ -39,6 +44,7 @@ public class AboutWindow : Window
         {
             Text = vm.TranslatedBy,
             FontSize = UiUtil.ScaledFontSize(12),
+            Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
         translatedByText.IsVisible = !string.IsNullOrEmpty(Se.Language.TranslatedBy);
@@ -46,6 +52,8 @@ public class AboutWindow : Window
         var licenseText = new TextBlock
         {
             Text = vm.LicenseText,
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
 
@@ -82,9 +90,9 @@ public class AboutWindow : Window
 
         var imageAbout = new Panel
         {
-            Margin = new Thickness(10),
             Width = 128,
             Height = 128,
+            VerticalAlignment = VerticalAlignment.Top,
             Children = { layerA, layerB },
         };
 
@@ -114,10 +122,30 @@ public class AboutWindow : Window
             }
         };
 
+        var panelTitle = new StackPanel
+        {
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { titleText, translatedByText, licenseText },
+        };
+
+        var header = new Grid
+        {
+            ColumnSpacing = 18,
+            ColumnDefinitions = new ColumnDefinitions("Auto,*"),
+        };
+        header.Add(imageAbout, 0, 0);
+        header.Add(panelTitle, 0, 1);
+        var headerSection = new Border
+        {
+            Child = header,
+            Padding = new Thickness(18, 16),
+        };
+
         var descriptionText = new TextBlock
         {
             Text = vm.DescriptionText,
-            Margin = new Thickness(0, 10, 0, 10),
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
         };
 
@@ -167,25 +195,26 @@ public class AboutWindow : Window
             }
         };
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk);
-
-        Content = new StackPanel
+        var panelLinks = new StackPanel
         {
-            Spacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
-            {
-                titleText,
-                translatedByText,
-                licenseText,
-                imageAbout,
-                descriptionText,
-                panelGithub,
-                panelDonate,
-                panelButtons,
-            }
+            Spacing = 6,
+            Children = { panelGithub, panelDonate },
+            [TextBlock.FontSizeProperty] = 12.5,
         };
+
+        var bodySection = new Border
+        {
+            Child = new StackPanel { Spacing = 12, Children = { descriptionText, panelLinks } },
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(18, 14, 18, 16),
+        };
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+
+        var sections = new StackPanel { Children = { headerSection, bodySection } };
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;

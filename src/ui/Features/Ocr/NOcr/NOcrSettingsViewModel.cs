@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System.IO;
 using System.Threading.Tasks;
@@ -25,12 +26,8 @@ public partial class NOcrSettingsViewModel : ObservableObject
     public bool OptimizePressed { get; set; }
     private NOcrDb _nOcrDb;
 
-    private readonly IWindowService _windowService;
-
-    public NOcrSettingsViewModel(IWindowService windowService)
+    public NOcrSettingsViewModel()
     {
-        _windowService = windowService;
-
         ActionText = string.Empty;
         _nOcrDb = new NOcrDb(string.Empty);
     }
@@ -39,7 +36,7 @@ public partial class NOcrSettingsViewModel : ObservableObject
     {
         _nOcrDb = nOcrDb;
         var name = Path.GetFileNameWithoutExtension(nOcrDb.FileName);
-        ActionText = string.Format("Select action to perform on nOCR database \"{0}\"", name);
+        ActionText = string.Format(Se.Language.Ocr.NOcrSelectAction, name);
     }
 
     [RelayCommand]
@@ -56,8 +53,8 @@ public partial class NOcrSettingsViewModel : ObservableObject
         var totalItemsCount = _nOcrDb.TotalCharacterCount;
         var answer = await MessageBox.Show(
            Window!,
-           "Delete nOCR database?",
-           string.Format("Do you want to delete the current nOCR database \"{0}\" with {1:#,###,##0} items?", name, totalItemsCount),   
+           Se.Language.Ocr.NOcrDeleteDatabase,
+           string.Format(Se.Language.Ocr.NOcrDeleteDatabaseDetails, name, totalItemsCount),   
            MessageBoxButtons.YesNoCancel,
            MessageBoxIcon.Question);
 

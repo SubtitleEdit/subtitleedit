@@ -1,3 +1,5 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -6,6 +8,11 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.AddToNamesList;
 
+/// <summary>
+/// Add a name (or several, one per line) to a names list, in the editor look (see
+/// <see cref="EditorChrome"/>): the name and dictionary fields, the single/multi mode switch on
+/// the left of the button bar, Cancel and OK on the right.
+/// </summary>
 public class AddToNamesListWindow : Window
 {
     // One width for the name box, the multi-name box and the dictionary drop-down, so the
@@ -20,16 +27,19 @@ public class AddToNamesListWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var labelWord = UiUtil.MakeLabel(Se.Language.Ocr.NameToAdd);
-        labelWord.Bind(Label.IsVisibleProperty, new Binding(nameof(vm.IsSingleMode)));
+        var labelWord = EditorChrome.MakeWrappingDimLabel(Se.Language.Ocr.NameToAdd);
+        labelWord.Bind(IsVisibleProperty, new Binding(nameof(vm.IsSingleMode)));
 
         var textBoxWord = UiUtil.MakeTextBox(ContentWidth, vm, nameof(vm.Name), nameof(vm.IsSingleMode));
+        textBoxWord.Classes.Add("text");
+        AutomationProperties.SetName(textBoxWord, Se.Language.Ocr.NameToAdd);
 
-        var labelMultiNames = UiUtil.MakeLabel(Se.Language.SpellCheck.EnterOneNamePerLine);
-        labelMultiNames.Bind(Label.IsVisibleProperty, new Binding(nameof(vm.IsMultiMode)));
+        var labelMultiNames = EditorChrome.MakeWrappingDimLabel(Se.Language.SpellCheck.EnterOneNamePerLine);
+        labelMultiNames.Bind(IsVisibleProperty, new Binding(nameof(vm.IsMultiMode)));
 
         var textBoxMultiNames = new TextBox
         {
@@ -37,12 +47,16 @@ public class AddToNamesListWindow : Window
             Height = 250,
             AcceptsReturn = true,
             VerticalAlignment = VerticalAlignment.Stretch,
+            VerticalContentAlignment = VerticalAlignment.Top,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             [!TextBox.TextProperty] = new Binding(nameof(vm.MultiNames)) { Mode = BindingMode.TwoWay },
             [!TextBox.IsVisibleProperty] = new Binding(nameof(vm.IsMultiMode)),
         };
+        textBoxMultiNames.Classes.Add("text");
+        AutomationProperties.SetName(textBoxMultiNames, Se.Language.SpellCheck.EnterOneNamePerLine);
 
-        var labelDictionary = UiUtil.MakeLabel(Se.Language.General.Dictionary).WithMarginTop(20);
+        var labelDictionary = EditorChrome.MakeWrappingDimLabel(Se.Language.General.Dictionary);
+        labelDictionary.Margin = new Thickness(0, 8, 0, 0);
         var comboBoxDictionaries = new ComboBox
         {
             Width = ContentWidth,
@@ -50,47 +64,64 @@ public class AddToNamesListWindow : Window
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedDictionary)) { Mode = BindingMode.TwoWay },
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Dictionaries)) { Mode = BindingMode.TwoWay },
         };
+        AutomationProperties.SetName(comboBoxDictionaries, Se.Language.General.Dictionary);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonMultiMode = UiUtil.MakeButton(Se.Language.General.MultiMode, vm.ToggleMultiModeCommand);
-        buttonMultiMode.Bind(Button.ContentProperty, new Binding(nameof(vm.MultiModeButtonText)));
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonMultiMode, buttonCancel);
 
-        var grid = new Grid
+        var panel = new StackPanel
         {
-            RowDefinitions =
+            Spacing = 6,
+            Margin = new Thickness(16, 14, 16, 16),
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                labelWord,
+                textBoxWord,
+                labelMultiNames,
+                textBoxMultiNames,
+                labelDictionary,
+                comboBoxDictionaries,
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 2,
-            RowSpacing = 2,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(labelWord, 0);
-        grid.Add(textBoxWord, 1);
-        grid.Add(labelMultiNames, 2);
-        grid.Add(textBoxMultiNames, 3);
-        grid.Add(labelDictionary, 4);
-        grid.Add(comboBoxDictionaries, 5);
-        grid.Add(buttonPanel, 6);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeDockedButtonBar(MakeMultiModeButton(vm), buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () => { (vm.IsSingleMode ? textBoxWord : textBoxMultiNames).Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
+    }
+
+    /// <summary>
+    /// Flat "Multi mode" / "Single mode" toggle; the text follows the current mode.
+    /// </summary>
+    private static Button MakeMultiModeButton(AddToNamesListViewModel vm)
+    {
+        var text = new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.MultiModeButtonText)),
+        };
+        var button = new Button
+        {
+            Content = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 6,
+                Children =
+                {
+                    new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-list", FontSize = 12, VerticalAlignment = VerticalAlignment.Center },
+                    text,
+                },
+            },
+            Command = vm.ToggleMultiModeCommand,
+            Height = 28,
+            Padding = new Thickness(8, 0),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            [!AutomationProperties.NameProperty] = new Binding(nameof(vm.MultiModeButtonText)),
+        };
+        button.Classes.Add("tool");
+        return button;
     }
 }

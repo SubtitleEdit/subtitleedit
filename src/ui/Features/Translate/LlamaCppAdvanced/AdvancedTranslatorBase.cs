@@ -195,7 +195,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                     continue;
                 }
 
-                Error = DescribeUnusableReply(reply, client.ReplyFromReasoning);
+                Error = DescribeUnusableReply(reply, client.ReplyFromReasoning, client.LastRequestDisabledThinking);
             }
             catch (HttpRequestException)
             {
@@ -218,16 +218,23 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// none - an empty reply used to leave the message bare, which made a server that streams
     /// the answer somewhere else impossible to tell from a model that answered badly (#15009).
     /// </summary>
-    internal static string DescribeUnusableReply(string reply, bool fromReasoning)
+    internal static string DescribeUnusableReply(string reply, bool fromReasoning, bool requestDisabledThinking = true)
     {
         if (string.IsNullOrWhiteSpace(reply))
         {
             return "the server returned an empty reply (no \"content\" and no \"reasoning_content\")";
         }
 
-        return fromReasoning
-            ? "the server left \"content\" empty and answered in \"reasoning_content\" only - the model looks to be in thinking mode, turn thinking off on the server: " + reply
-            : reply;
+        if (!fromReasoning)
+        {
+            return reply;
+        }
+
+        // Only claim the model ignored "enable_thinking" off when this request actually sent it -
+        // the first reasoning-only reply is what switches it on for the following requests.
+        return requestDisabledThinking
+            ? "the server left \"content\" empty and answered in \"reasoning_content\" only - the model looks to be in thinking mode and kept thinking with \"enable_thinking\" off, turn thinking off on the server (e.g. \"--reasoning off\"): " + reply
+            : "the server left \"content\" empty and answered in \"reasoning_content\" only - the model looks to be in thinking mode, the next requests ask it to skip thinking (\"enable_thinking\" off); if that does not help, turn thinking off on the server (e.g. \"--reasoning off\"): " + reply;
     }
 
     /// <summary>

@@ -2,7 +2,6 @@
 
 public class LanguageImport
 {
-    public string ImportTimeCodes { get; set; }
     public string PlainTextDotDotDot { get; set; }
     public string TitleImportPlainText { get; set; }
     public string CsvXlsxCustomColumnsDotDotDot { get; set; }
@@ -36,12 +35,10 @@ public class LanguageImport
     public string DvdMenuIfoNoTitleSetsX { get; set; }
     public string DvdEncryptedXOfY { get; set; }
     public string SplitTextAt { get; set; }
-    public string BlankLines { get; set; }
     public string OneLineIsOneSubtitle { get; set; }
     public string TwoLinesAreOneSubtitle { get; set; }
     public string ImportFilesDotDotDot { get; set; }
     public string MultipleFiles { get; set; }
-    public string MaxLineLength { get; set; }
     public string MergeShortLines { get; set; }
     public string Fixed { get; set; }
     public string NumberOfSubtitlesX { get; set; }
@@ -66,7 +63,6 @@ public class LanguageImport
     {
         PlainTextDotDotDot = "Plain text...";
         TitleImportPlainText = "Import plain text";
-        ImportTimeCodes = "Import time codes...";
         ImagesForOcrDotDotDot = "Images for OCR...";
         TitleImportImages = "Import images";
         TimeCodesDotDotDot = "Time codes...";
@@ -102,12 +98,10 @@ Rules:
         DvdMenuIfoNoTitleSetsX = "No title sets (VTS_xx_0.IFO) found next to {0}";
         DvdEncryptedXOfY = "{0} of the {1} subtitle packets are still CSS encrypted - these VOB files were copied without decrypting, so some subtitle images will be garbled.\n\nDecrypt the DVD with a DVD ripping tool first for a clean result.\n\nContinue anyway?";
         SplitTextAt = "Split text at";
-        BlankLines = "Blank lines";
         OneLineIsOneSubtitle = "One line is one subtitle";
         TwoLinesAreOneSubtitle = "Two lines are one subtitle";
         ImportFilesDotDotDot = "Import files...";
         MultipleFiles = "Import from multiple text files (one file is one subtitle)";
-        MaxLineLength = "Max line length";
         MergeShortLines = "Merge short lines";
         Fixed = "Fixed";
         NumberOfSubtitlesX = "Number of subtitles: {0}";

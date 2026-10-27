@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -9,6 +10,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryChangeResolution;
 
+/// <summary>
+/// Change the video resolution in the editor look (see <see cref="EditorChrome"/>): preset and
+/// size in a settings column, the preview on the right, Cancel/OK at the bottom.
+/// </summary>
 public class BinaryChangeResolutionWindow : Window
 {
     public BinaryChangeResolutionWindow(BinaryChangeResolutionViewModel vm)
@@ -18,83 +23,43 @@ public class BinaryChangeResolutionWindow : Window
         Width = 800;
         Height = 600;
         CanResize = true;
+        BinaryEditChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var mainGrid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition(GridLength.Star),
-                new RowDefinition(GridLength.Auto),
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-
-        var contentGrid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition(new GridLength(300)),
-                new ColumnDefinition(GridLength.Star),
-            },
-            ColumnSpacing = 10,
-        };
-
-        contentGrid.Add(MakeControlsPanel(vm, out var presetComboBox), 0, 0);
-        contentGrid.Add(MakePreviewPanel(vm), 0, 1);
-        mainGrid.Add(contentGrid, 0, 0);
-
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        mainGrid.Add(UiUtil.MakeButtonBar(buttonOk, buttonCancel), 1, 0);
-
-        Content = mainGrid;
+        Content = BinaryEditChrome.MakePreviewDialogRoot(
+            MakeControlsPanel(vm, out var presetComboBox),
+            MakePreviewPanel(vm),
+            EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, presetComboBox); // an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static StackPanel MakeControlsPanel(BinaryChangeResolutionViewModel vm, out ComboBox presetComboBox)
+    private static Border MakeControlsPanel(BinaryChangeResolutionViewModel vm, out ComboBox presetComboBox)
     {
         var panel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 6,
+            Spacing = 10,
         };
-
-        panel.Children.Add(new TextBlock
-        {
-            Text = Se.Language.General.Resolution,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-        });
 
         presetComboBox = UiUtil.MakeComboBox(vm.Resolutions, vm, nameof(vm.SelectedResolution), null);
         presetComboBox.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(presetComboBox, Se.Language.General.Resolution);
         panel.Children.Add(presetComboBox);
 
-        panel.Children.Add(new TextBlock
-        {
-            Text = Se.Language.General.Width,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Thickness(0, 10, 0, 0),
-        });
-        panel.Children.Add(MakeSizeInput(vm, nameof(vm.NewWidth)));
-
-        panel.Children.Add(new TextBlock
-        {
-            Text = Se.Language.General.Height,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Thickness(0, 10, 0, 0),
-        });
-        panel.Children.Add(MakeSizeInput(vm, nameof(vm.NewHeight)));
+        panel.Children.Add(BinaryEditChrome.MakeRow(Se.Language.General.Width, MakeSizeInput(vm, nameof(vm.NewWidth), Se.Language.General.Width), 80));
+        panel.Children.Add(BinaryEditChrome.MakeRow(Se.Language.General.Height, MakeSizeInput(vm, nameof(vm.NewHeight), Se.Language.General.Height), 80));
 
         panel.Children.Add(new TextBlock
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SizeText)),
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            Margin = new Thickness(0, 20, 0, 0),
-            FontSize = UiUtil.ScaledFontSize(12),
+            Margin = new Thickness(0, 6, 0, 0),
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = Avalonia.Media.FontWeight.SemiBold,
         });
 
@@ -102,27 +67,28 @@ public class BinaryChangeResolutionWindow : Window
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ScaleText)),
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            FontSize = UiUtil.ScaledFontSize(12),
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
         });
 
-        return panel;
+        return EditorChrome.MakeEditorSection(Se.Language.General.Resolution, panel, first: true);
     }
 
-    private static NumericUpDown MakeSizeInput(BinaryChangeResolutionViewModel vm, string propertyName)
+    private static NumericUpDown MakeSizeInput(BinaryChangeResolutionViewModel vm, string propertyName, string name)
     {
-        return new NumericUpDown
+        var field = new NumericUpDown
         {
             Minimum = 1,
             Maximum = 16384,
             Increment = 2,
             FormatString = "0",
-            Width = double.NaN,
             [!NumericUpDown.ValueProperty] = new Binding(propertyName)
             {
                 Mode = BindingMode.TwoWay,
                 Converter = new NullableIntConverter(),
             },
         };
+        return EditorChrome.AsField(field, name, 100, alignLeft: true, center: true);
     }
 
     private static Border MakePreviewPanel(BinaryChangeResolutionViewModel vm)
@@ -141,8 +107,6 @@ public class BinaryChangeResolutionWindow : Window
         };
 
         // Light or dark text on transparency is invisible on a flat backdrop - checkerboard (issue #12692).
-        var border = UiUtil.MakeBorderForControl(scrollViewer);
-        border.Background = UiUtil.GetCheckerboardBrush();
-        return border;
+        return BinaryEditChrome.MakePreviewFrame(scrollViewer, UiUtil.GetCheckerboardBrush());
     }
 }

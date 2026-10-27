@@ -26,32 +26,6 @@ public static class WhisperCppJson
             return [];
         }
     }
-
-    public static List<SubtitleLineViewModel> ToSubtitleLineViewModels(string jsonContent)
-    {
-        var transcription = GetTranscription(jsonContent);
-        var result = new List<SubtitleLineViewModel>();
-
-        foreach (var segment in transcription)
-        {
-            result.Add(segment.ToSubtitleLineViewModel());
-        }
-
-        return result;
-    }
-
-    public static List<SubtitleLineViewModel> ToSubtitleLineViewModelsWithActiveWords(string jsonContent)
-    {
-        var transcription = GetTranscription(jsonContent);
-        var result = new List<SubtitleLineViewModel>();
-
-        foreach (var segment in transcription)
-        {
-            result.AddRange(segment.ToUnderlineActiveWords());
-        }
-
-        return result;
-    }
 }
 
 public class WhisperResult
@@ -73,19 +47,6 @@ public class TranscriptionSegment
 
     [JsonPropertyName("tokens")]
     public List<Token> Tokens { get; set; } = [];
-
-    public SubtitleLineViewModel ToSubtitleLineViewModel()
-    {
-        var startMs = TimeCode.ParseToMilliseconds(Timestamps.From);
-        var endMs = TimeCode.ParseToMilliseconds(Timestamps.To);
-
-        return new SubtitleLineViewModel
-        {
-            Text = Text,
-            StartTime = TimeSpan.FromMilliseconds(startMs),
-            EndTime = TimeSpan.FromMilliseconds(endMs)
-        };
-    }
 
     public List<SubtitleLineViewModel> ToUnderlineActiveWords()
     {

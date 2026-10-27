@@ -8,13 +8,17 @@ using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.NOcr;
 
+/// <summary>
+/// Train an nOCR database from installed fonts in the editor look (see <see cref="EditorChrome"/>):
+/// fonts, preview and options as sections with icons, characters below, the progress strip and the
+/// status with Done + Start training in the button bar.
+/// </summary>
 public class NOcrTrainWindow : Window
 {
     private static readonly Color PreviewBackground = Color.FromRgb(0x1E, 0x23, 0x2B);
@@ -30,9 +34,8 @@ public class NOcrTrainWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
-
-        var accent = GetAccentColor();
 
         var buttonTrain = new Button
         {
@@ -58,7 +61,7 @@ public class NOcrTrainWindow : Window
             Command = vm.StartOrAbortTrainingCommand,
             Padding = new Thickness(14, 6),
         };
-        buttonTrain.Classes.Add("accent");
+        buttonTrain.Classes.Add("primary");
         AutomationProperties.SetName(buttonTrain, Se.Language.Ocr.StartTraining);
         var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand);
 
@@ -69,11 +72,10 @@ public class NOcrTrainWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnSpacing = 12,
         };
-        columns.Add(MakeCard(BuildFontsSection(vm, accent)), 0, 0);
+        columns.Add(MakeSection(IconNames.FormatFont, Se.Language.General.Fonts, BuildFontsSection(vm), BuildFontsCount(vm)), 0, 0);
 
-        // The settings card stretches so both columns end level.
+        // The settings section stretches so both columns end level.
         var right = new Grid
         {
             RowDefinitions =
@@ -81,31 +83,46 @@ public class NOcrTrainWindow : Window
                 new RowDefinition(GridLength.Auto),
                 new RowDefinition(GridLength.Star),
             },
-            RowSpacing = 12,
         };
-        right.Add(MakeCard(BuildPreviewSection(vm, accent)), 0, 0);
-        right.Add(MakeCard(BuildSettingsSection(vm, accent)), 1, 0);
-        columns.Add(right, 0, 1);
+        right.Add(MakeSection(IconNames.Eye, Se.Language.General.Preview, BuildPreviewSection(vm), BuildPreviewFontName(vm)), 0, 0);
+        right.Add(MakeSection(IconNames.Tune, Se.Language.Ocr.TrainingOptions, BuildSettingsSection(vm), top: true), 1, 0);
+        columns.Add(new Border
+        {
+            Child = right,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
 
         var stack = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 12,
             Children =
             {
-                BuildHeader(accent),
+                BuildHeader(),
                 columns,
-                MakeCard(BuildCharactersSection(vm, accent)),
-                BuildProgressSection(vm),
-                UiUtil.MakeButtonBar(buttonTrain, buttonDone),
+                MakeSection(IconNames.AlphabeticalVariant, Se.Language.Ocr.CharactersToTrain, BuildCharactersSection(vm), top: true),
             },
         };
 
-        Content = new Border
+        var root = new Grid
         {
-            Child = stack,
-            Padding = UiUtil.MakeWindowMargin(),
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Star),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+            },
         };
+
+        // Sections scroll on short screens, so the progress and the buttons stay reachable
+        root.Add(new ScrollViewer
+        {
+            Content = new Border { Background = EditorChrome.PanelBrush, Child = stack },
+            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
+        }, 0, 0);
+        root.Add(BuildProgressStrip(vm), 1, 0);
+        root.Add(EditorChrome.MakeDockedButtonBar(BuildStatus(vm), buttonDone, buttonTrain), 2, 0);
+        Content = root;
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
@@ -115,29 +132,20 @@ public class NOcrTrainWindow : Window
         Closing += (_, _) => vm.OnClosing();
     }
 
-    private static Color GetAccentColor()
-    {
-        return Application.Current != null &&
-               Application.Current.TryGetResource("SystemAccentColor", Application.Current.ActualThemeVariant, out var value) &&
-               value is Color color
-            ? color
-            : Color.FromRgb(0x00, 0x78, 0xD4);
-    }
-
-    private static Control BuildHeader(Color accent)
+    private static Control BuildHeader()
     {
         var badge = new Border
         {
-            Width = 44,
-            Height = 44,
+            Width = 40,
+            Height = 40,
             CornerRadius = new CornerRadius(10),
-            Background = new SolidColorBrush(accent, 0.18),
+            Background = EditorChrome.AccentSoftBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Child = new Icon
             {
                 Value = IconNames.School,
-                FontSize = 24,
-                Foreground = new SolidColorBrush(accent),
+                FontSize = 22,
+                Foreground = EditorChrome.AccentBrush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             },
@@ -152,67 +160,84 @@ public class NOcrTrainWindow : Window
                 new TextBlock
                 {
                     Text = Se.Language.Ocr.TrainNOcrDatabase.TrimEnd('.'),
-                    FontSize = UiUtil.ScaledFontSize(18),
+                    FontSize = UiUtil.ScaledFontSize(17),
                     FontWeight = FontWeight.SemiBold,
                 },
                 new TextBlock
                 {
                     Text = Se.Language.Ocr.TrainNOcrSubtitle,
-                    FontSize = UiUtil.ScaledFontSize(12),
-                    Opacity = 0.75,
+                    FontSize = EditorChrome.FieldFontSize,
+                    Foreground = EditorChrome.DimTextBrush,
                     TextWrapping = TextWrapping.Wrap,
                     Margin = new Thickness(0, 2, 0, 0),
                 },
             },
         };
 
-        return new StackPanel
+        return new Border
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 12,
-            Children = { badge, texts },
+            Child = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 12,
+                Children = { badge, texts },
+            },
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+            Padding = new Thickness(14, 12),
         };
     }
 
-    private static Control BuildFontsSection(NOcrTrainViewModel vm, Color accent)
+    private static Control BuildFontsCount(NOcrTrainViewModel vm)
     {
-        var count = new Border
+        return new Border
         {
-            Padding = new Thickness(8, 1),
+            Padding = new Thickness(9, 2),
             CornerRadius = new CornerRadius(10),
-            Background = new SolidColorBrush(accent, 0.18),
+            Background = EditorChrome.AccentSoftBrush,
             VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Right,
             Child = new TextBlock
             {
-                FontSize = UiUtil.ScaledFontSize(12),
-                Foreground = new SolidColorBrush(accent),
+                FontSize = EditorChrome.ScaledFont(11),
                 FontWeight = FontWeight.SemiBold,
+                Foreground = EditorChrome.StrongTextBrush,
                 [!TextBlock.TextProperty] = new Binding(nameof(vm.SelectedFontsText)),
             },
         };
-        var titleRow = new Grid
-        {
-            ColumnDefinitions = { new ColumnDefinition(GridLength.Star), new ColumnDefinition(GridLength.Auto) },
-        };
-        titleRow.Add(MakeSectionTitle(IconNames.FormatFont, Se.Language.General.Fonts, accent), 0, 0);
-        titleRow.Add(count, 0, 1);
+    }
 
+    private static Control BuildPreviewFontName(NOcrTrainViewModel vm)
+    {
+        return new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            MaxWidth = 220,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewFontName)),
+        };
+    }
+
+    private static Control BuildFontsSection(NOcrTrainViewModel vm)
+    {
         var search = new TextBox
         {
             PlaceholderText = Se.Language.General.Search,
             [!TextBox.TextProperty] = new Binding(nameof(vm.FontSearchText)) { Mode = BindingMode.TwoWay },
         }.WithSearchAndClearIcons();
+        search.Classes.Add("text");
         AutomationProperties.SetName(search, Se.Language.General.Search);
 
         var buttons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
+            Spacing = 4,
+            Margin = new Thickness(-8, 0, 0, 0),
             Children =
             {
-                MakeIconTextButton(IconNames.AutoFix, Se.Language.Ocr.SubtitleFonts, vm.SelectSubtitleFontsCommand),
-                MakeIconTextButton(IconNames.Close, Se.Language.General.Clear, vm.ClearFontsCommand),
+                EditorChrome.MakeTextToolButton(IconNames.AutoFix, Se.Language.Ocr.SubtitleFonts, vm.SelectSubtitleFontsCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Close, Se.Language.General.Clear, vm.ClearFontsCommand),
             },
         };
 
@@ -226,7 +251,6 @@ public class NOcrTrainWindow : Window
         {
             Height = 336,
             ItemsSource = vm.FilteredFonts,
-            Background = Brushes.Transparent,
             [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.HighlightedFont)) { Mode = BindingMode.TwoWay },
             ItemTemplate = new FuncDataTemplate<NOcrTrainFontItem>((_, _) => new CheckBox
             {
@@ -237,11 +261,12 @@ public class NOcrTrainWindow : Window
                     Converter = fontNameToFontFamily,
                 },
                 FontSize = UiUtil.ScaledFontSize(15),
-                Height = 26,
+                Height = EditorChrome.ScaledSize(26),
                 VerticalContentAlignment = VerticalAlignment.Center,
                 ClipToBounds = true,
             }, supportsRecycling: true),
         };
+        AutomationProperties.SetName(fontsListBox, Se.Language.General.Fonts);
 
         return new StackPanel
         {
@@ -249,34 +274,16 @@ public class NOcrTrainWindow : Window
             Spacing = 10,
             Children =
             {
-                titleRow,
                 search,
                 buttons,
-                UiUtil.MakeBorderForControlNoPadding(fontsListBox),
+                EditorChrome.MakeListFrame(fontsListBox, clearListBackground: true),
             },
             [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsNotTraining)),
         };
     }
 
-    private static Control BuildPreviewSection(NOcrTrainViewModel vm, Color accent)
+    private static Control BuildPreviewSection(NOcrTrainViewModel vm)
     {
-        var fontName = new TextBlock
-        {
-            FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.7,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            MaxWidth = 220,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewFontName)),
-        };
-        var titleRow = new Grid
-        {
-            ColumnDefinitions = { new ColumnDefinition(GridLength.Star), new ColumnDefinition(GridLength.Auto) },
-        };
-        titleRow.Add(MakeSectionTitle(IconNames.Eye, Se.Language.General.Preview, accent), 0, 0);
-        titleRow.Add(fontName, 0, 1);
-
         var image = new Image
         {
             Stretch = Stretch.Uniform,
@@ -286,7 +293,9 @@ public class NOcrTrainWindow : Window
             MaxHeight = 150,
             [!Image.SourceProperty] = new Binding(nameof(vm.PreviewImage)),
         };
-        var imageBorder = new Border
+
+        // The preview renders white text, so it keeps its dark backdrop in both themes
+        return new Border
         {
             Child = image,
             Padding = new Thickness(6),
@@ -304,16 +313,9 @@ public class NOcrTrainWindow : Window
             ClipToBounds = true,
             MinHeight = 64,
         };
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 10,
-            Children = { titleRow, imageBorder },
-        };
     }
 
-    private static Control BuildSettingsSection(NOcrTrainViewModel vm, Color accent)
+    private static Control BuildSettingsSection(NOcrTrainViewModel vm)
     {
         var grid = new Grid
         {
@@ -330,23 +332,27 @@ public class NOcrTrainWindow : Window
             grid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
         }
 
-        var nameBox = UiUtil.MakeTextBox(220, vm, nameof(vm.DatabaseName));
+        var nameBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(220, vm, nameof(vm.DatabaseName)), Se.Language.General.Name);
         nameBox.HorizontalAlignment = HorizontalAlignment.Stretch;
         nameBox.Width = double.NaN;
+        nameBox.Margin = new Thickness(0);
         AddRow(grid, 0, Se.Language.General.Name, nameBox);
 
         var baseCombo = UiUtil.MakeComboBox(vm.BaseDatabases, vm, nameof(vm.SelectedBaseDatabase));
         baseCombo.HorizontalAlignment = HorizontalAlignment.Stretch;
+        baseCombo.Margin = new Thickness(0);
+        AutomationProperties.SetName(baseCombo, Se.Language.Ocr.StartFromDatabase);
         SetHint(baseCombo, Se.Language.Ocr.StartFromDatabaseHint);
         AddRow(grid, 1, Se.Language.Ocr.StartFromDatabase, baseCombo);
 
-        var sizesBox = UiUtil.MakeTextBox(220, vm, nameof(vm.FontSizes));
+        var sizesBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(220, vm, nameof(vm.FontSizes)), Se.Language.Ocr.FontSizes);
         sizesBox.HorizontalAlignment = HorizontalAlignment.Stretch;
         sizesBox.Width = double.NaN;
+        sizesBox.Margin = new Thickness(0);
         sizesBox.InnerRightContent = new TextBlock
         {
             Text = "px",
-            Opacity = 0.5,
+            Foreground = EditorChrome.FaintTextBrush,
             Margin = new Thickness(0, 0, 8, 0),
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -359,74 +365,51 @@ public class NOcrTrainWindow : Window
             Spacing = 6,
             Children =
             {
-                MakeStyleToggle(IconNames.Bold, Se.Language.General.Bold, nameof(vm.TrainBold)),
-                MakeStyleToggle(IconNames.Italic, Se.Language.General.Italic, nameof(vm.TrainItalic)),
+                NOcrChrome.MakeToggle(Se.Language.General.Bold, nameof(vm.TrainBold), vm, IconNames.Bold),
+                NOcrChrome.MakeToggle(Se.Language.General.Italic, nameof(vm.TrainItalic), vm, IconNames.Italic),
             },
         };
         AddRow(grid, 3, Se.Language.General.Styles, styles);
 
-        var segments = UiUtil.MakeNumericUpDownInt(10, 500, 100, 130, vm, nameof(vm.NumberOfSegments));
+        var segments = EditorChrome.MakeField(nameof(vm.NumberOfSegments), 10, 500, 130);
+        segments.HorizontalAlignment = HorizontalAlignment.Left;
+        AutomationProperties.SetName(segments, Se.Language.Ocr.NumberOfLineSegments);
         SetHint(segments, Se.Language.Ocr.NumberOfLineSegmentsHint);
         AddRow(grid, 4, Se.Language.Ocr.NumberOfLineSegments, segments);
 
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 12,
-            Children = { MakeSectionTitle(IconNames.Tune, Se.Language.Ocr.TrainingOptions, accent), grid },
-            [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsNotTraining)),
-        };
+        grid[!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsNotTraining));
+        return grid;
     }
 
-    /// <summary>A toggle button with an icon and a label - a bolder look than a check box.</summary>
-    private static ToggleButton MakeStyleToggle(string iconName, string text, string isCheckedPath)
+    private static Control BuildCharactersSection(NOcrTrainViewModel vm)
     {
-        var toggle = new ToggleButton
-        {
-            Content = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 6,
-                Children =
-                {
-                    new Icon { Value = iconName, FontSize = 16, VerticalAlignment = VerticalAlignment.Center },
-                    new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center },
-                },
-            },
-            Padding = new Thickness(10, 4),
-            [!ToggleButton.IsCheckedProperty] = new Binding(isCheckedPath) { Mode = BindingMode.TwoWay },
-        };
-        AutomationProperties.SetName(toggle, text);
-        return toggle;
-    }
-
-    private static Control BuildCharactersSection(NOcrTrainViewModel vm, Color accent)
-    {
-        var charactersTextBox = UiUtil.MakeTextBox(200, vm, nameof(vm.CharactersToTrain));
+        var charactersTextBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.CharactersToTrain)), Se.Language.Ocr.CharactersToTrain);
         charactersTextBox.Width = double.NaN;
+        charactersTextBox.Margin = new Thickness(0);
         charactersTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
         charactersTextBox.TextWrapping = TextWrapping.Wrap;
         charactersTextBox.AcceptsReturn = false;
         charactersTextBox.Height = 56;
+        charactersTextBox.VerticalContentAlignment = VerticalAlignment.Top;
         charactersTextBox.FontSize = UiUtil.ScaledFontSize(15);
-        AutomationProperties.SetName(charactersTextBox, Se.Language.Ocr.CharactersToTrain);
 
         var buttons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
+            Spacing = 4,
+            Margin = new Thickness(-8, 0, 0, 0),
             Children =
             {
-                MakeIconTextButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetCharactersCommand),
-                MakeIconTextButton(IconNames.Import, Se.Language.Ocr.ImportCharactersFromSubtitleFile, vm.ImportCharactersFromFileCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetCharactersCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Import, Se.Language.Ocr.ImportCharactersFromSubtitleFile, vm.ImportCharactersFromFileCommand),
             },
         };
 
-        var mergedTextBox = UiUtil.MakeTextBox(200, vm, nameof(vm.MergedLetters));
+        var mergedTextBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.MergedLetters)), Se.Language.Ocr.LetterCombinationsToTrain);
         mergedTextBox.Width = double.NaN;
+        mergedTextBox.Margin = new Thickness(0);
         mergedTextBox.HorizontalAlignment = HorizontalAlignment.Stretch;
         mergedTextBox.PlaceholderText = "fi ff fl rn";
-        AutomationProperties.SetName(mergedTextBox, Se.Language.Ocr.LetterCombinationsToTrain);
 
         return new StackPanel
         {
@@ -434,17 +417,16 @@ public class NOcrTrainWindow : Window
             Spacing = 8,
             Children =
             {
-                MakeSectionTitle(IconNames.AlphabeticalVariant, Se.Language.Ocr.CharactersToTrain, accent),
                 charactersTextBox,
                 buttons,
-                MakeSmallLabel(Se.Language.Ocr.LetterCombinationsToTrain).WithMarginTop(4),
+                EditorChrome.MakeDimLabel(Se.Language.Ocr.LetterCombinationsToTrain, new Thickness(0, 4, 0, 0)),
                 mergedTextBox,
             },
             [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.IsNotTraining)),
         };
     }
 
-    private static Control BuildProgressSection(NOcrTrainViewModel vm)
+    private static Control BuildProgressStrip(NOcrTrainViewModel vm)
     {
         var progressBar = new ProgressBar
         {
@@ -453,37 +435,47 @@ public class NOcrTrainWindow : Window
             Height = 6,
             MinHeight = 6,
             CornerRadius = new CornerRadius(3),
+            VerticalAlignment = VerticalAlignment.Center,
             [!RangeBase.ValueProperty] = new Binding(nameof(vm.ProgressValue)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsProgressVisible)),
         };
 
+        return new Border
+        {
+            Child = progressBar,
+            Background = EditorChrome.StatusBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 10),
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsProgressVisible)),
+        };
+    }
+
+    /// <summary>The learned/skipped badges and the status text, on the left of the button bar.</summary>
+    private static Control BuildStatus(NOcrTrainViewModel vm)
+    {
         var status = new TextBlock
         {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            Opacity = 0.85,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
         };
         var statusRow = new Grid
         {
             ColumnDefinitions =
             {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
                 new ColumnDefinition(GridLength.Star),
-                new ColumnDefinition(GridLength.Auto),
-                new ColumnDefinition(GridLength.Auto),
             },
             ColumnSpacing = 8,
+            Margin = new Thickness(0, 0, 12, 0),
         };
-        statusRow.Add(status, 0, 0);
-        statusRow.Add(MakeBadge(IconNames.CheckCircle, nameof(vm.LearnedText), LearnedColor), 0, 1);
-        statusRow.Add(MakeBadge(IconNames.SkipNext, nameof(vm.SkippedText), SkippedColor), 0, 2);
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 6,
-            Children = { progressBar, statusRow },
-        };
+        statusRow.Add(MakeBadge(IconNames.CheckCircle, nameof(vm.LearnedText), LearnedColor), 0, 0);
+        statusRow.Add(MakeBadge(IconNames.SkipNext, nameof(vm.SkippedText), SkippedColor), 0, 1);
+        statusRow.Add(status, 0, 2);
+        return statusRow;
     }
 
     private static Control MakeBadge(string iconName, string textPath, Color color)
@@ -493,9 +485,8 @@ public class NOcrTrainWindow : Window
         {
             Padding = new Thickness(8, 2),
             CornerRadius = new CornerRadius(10),
-            Background = new SolidColorBrush(color, 0.12),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(color, 0.5),
+            Background = new SolidColorBrush(color, 0.14),
+            VerticalAlignment = VerticalAlignment.Center,
             Child = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
@@ -505,7 +496,8 @@ public class NOcrTrainWindow : Window
                     new Icon { Value = iconName, FontSize = 12, Foreground = brush, VerticalAlignment = VerticalAlignment.Center },
                     new TextBlock
                     {
-                        FontSize = UiUtil.ScaledFontSize(12),
+                        FontSize = EditorChrome.ScaledFont(11.5),
+                        FontWeight = FontWeight.SemiBold,
                         Foreground = brush,
                         VerticalAlignment = VerticalAlignment.Center,
                         [!TextBlock.TextProperty] = new Binding(textPath),
@@ -516,68 +508,50 @@ public class NOcrTrainWindow : Window
         };
     }
 
-    private static Button MakeIconTextButton(string iconName, string text, IRelayCommand command)
-    {
-        var button = new Button
-        {
-            Content = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 6,
-                Children =
-                {
-                    new Icon { Value = iconName, FontSize = 14, VerticalAlignment = VerticalAlignment.Center },
-                    new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center },
-                },
-            },
-            Command = command,
-            Padding = new Thickness(10, 4),
-        };
-        AutomationProperties.SetName(button, text);
-        return button;
-    }
-
     private static void AddRow(Grid grid, int row, string label, Control control)
     {
-        var textBlock = MakeSmallLabel(label);
-        textBlock.VerticalAlignment = VerticalAlignment.Center;
-        grid.Add(textBlock, row, 0);
+        grid.Add(EditorChrome.MakeDimLabel(label, new Thickness(0)), row, 0);
         grid.Add(control, row, 1);
     }
 
-    private static Control MakeSectionTitle(string iconName, string text, Color accent)
+    /// <summary>
+    /// A section with an accent icon before the small caps header (the trainer's cards, in the
+    /// editor look), optional text on the right of the header, and a line on top.
+    /// </summary>
+    private static Border MakeSection(string iconName, string title, Control content, Control? headerRight = null, bool top = false)
     {
-        return new StackPanel
+        var headerTitle = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 8,
+            Spacing = 7,
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
                 new Icon
                 {
                     Value = iconName,
-                    FontSize = 16,
-                    Foreground = new SolidColorBrush(accent),
+                    FontSize = 14,
+                    Foreground = EditorChrome.AccentBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                 },
-                new TextBlock
-                {
-                    Text = text,
-                    FontSize = UiUtil.ScaledFontSize(14),
-                    FontWeight = FontWeight.SemiBold,
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
+                EditorChrome.MakeSectionHeader(title),
             },
         };
-    }
 
-    private static TextBlock MakeSmallLabel(string text)
-    {
-        return new TextBlock
+        var header = new DockPanel { MinHeight = 22 };
+        if (headerRight != null)
         {
-            Text = text,
-            Opacity = 0.85,
+            DockPanel.SetDock(headerRight, Dock.Right);
+            header.Children.Add(headerRight);
+        }
+
+        header.Children.Add(headerTitle);
+        return new Border
+        {
+            Child = new StackPanel { Spacing = 10, Children = { header, content } },
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, top ? 1 : 0, 0, 0),
+            Padding = new Thickness(14, 12, 14, 14),
         };
     }
 
@@ -587,18 +561,5 @@ public class NOcrTrainWindow : Window
         {
             ToolTip.SetTip(control, hint);
         }
-    }
-
-    private static Border MakeCard(Control child)
-    {
-        return new Border
-        {
-            Child = child,
-            Padding = new Thickness(16),
-            CornerRadius = new CornerRadius(8),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
-            Background = new SolidColorBrush(Color.FromArgb(0x0A, 0x80, 0x80, 0x80)),
-        };
     }
 }

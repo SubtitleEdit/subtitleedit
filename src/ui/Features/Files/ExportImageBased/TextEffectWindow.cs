@@ -1,6 +1,9 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -26,48 +29,29 @@ public class TextEffectWindow : Window
         // visible area. Only the width is fixed (SizeToContent.WidthAndHeight measures too
         // wide on macOS).
         SizeToContent = SizeToContent.Height;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-        };
-
-        var labelPreset = UiUtil.MakeLabel(Se.Language.File.Export.TextEffectPreset);
         var comboPreset = UiUtil.MakeComboBox(vm.Presets, vm, nameof(vm.SelectedPreset));
-        grid.Add(labelPreset, 0, 0);
-        grid.Add(comboPreset, 0, 1);
+        comboPreset.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(comboPreset, Se.Language.General.Preset);
 
-        AddSliderRow(grid, 1, Se.Language.File.Export.TextEffectStrength, nameof(vm.Strength), 25, 300, "{0}%");
-        AddSliderRow(grid, 2, Se.Language.File.Export.TextEffectLetterSpacing, nameof(vm.LetterSpacing), 0, 100, "{0}");
-        AddSliderRow(grid, 3, Se.Language.File.Export.TextEffectArcBend, nameof(vm.ArcBend), -100, 100, "{0}");
-        AddSliderRow(grid, 4, Se.Language.File.Export.TextEffectWave, nameof(vm.Wave), 0, 100, "{0}");
+        var sliders = new StackPanel { Spacing = 4 };
+        sliders.Children.Add(MakeSliderRow(Se.Language.File.Export.TextEffectStrength, nameof(vm.Strength), 25, 300, "{0}%"));
+        sliders.Children.Add(MakeSliderRow(Se.Language.File.Export.TextEffectLetterSpacing, nameof(vm.LetterSpacing), 0, 100, "{0}"));
+        sliders.Children.Add(MakeSliderRow(Se.Language.File.Export.TextEffectArcBend, nameof(vm.ArcBend), -100, 100, "{0}"));
+        sliders.Children.Add(MakeSliderRow(Se.Language.File.Export.TextEffectWave, nameof(vm.Wave), 0, 100, "{0}"));
 
-        var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCommand);
+        var sections = new StackPanel();
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Preset, comboPreset, first: true));
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Settings, sliders));
+
+        var buttonReset = EditorChrome.MakeTextToolButton("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonReset, buttonOk, buttonCancel);
-        grid.Add(panelButtons, 5, 0, 1, 3);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(buttonReset, buttonCancel, buttonOk));
 
         KeyDown += (_, e) => vm.OnKeyDown(e);
         UiUtil.FocusOnFirstActivation(this, buttonOk);
@@ -82,10 +66,10 @@ public class TextEffectWindow : Window
         _vm.OnWindowClosing();
     }
 
-    private static void AddSliderRow(Grid grid, int row, string label, string propertyName, double min, double max, string valueFormat)
+    private static Grid MakeSliderRow(string label, string propertyName, double min, double max, string valueFormat)
     {
-        var labelControl = UiUtil.MakeLabel(label);
-        labelControl.VerticalAlignment = VerticalAlignment.Center;
+        var labelControl = EditorChrome.MakeDimLabel(label, new Thickness(0));
+        labelControl.TextTrimming = TextTrimming.CharacterEllipsis;
 
         var slider = new Slider
         {
@@ -95,18 +79,30 @@ public class TextEffectWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             [!Slider.ValueProperty] = new Binding(propertyName),
         };
+        AutomationProperties.SetName(slider, label);
 
-        // A real TextBlock - UiUtil.MakeLabel returns a Label, and a TextBlock.Text binding
-        // set on a Label never renders.
         var valueLabel = new TextBlock
         {
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
+            TextAlignment = TextAlignment.Right,
             MinWidth = 45,
             [!TextBlock.TextProperty] = new Binding(propertyName) { StringFormat = valueFormat },
         };
 
-        grid.Add(labelControl, row, 0);
-        grid.Add(slider, row, 1);
-        grid.Add(valueLabel, row, 2);
+        var grid = new Grid
+        {
+            ColumnSpacing = 10,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(110)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
+            },
+        };
+        grid.Add(labelControl, 0, 0);
+        grid.Add(slider, 0, 1);
+        grid.Add(valueLabel, 0, 2);
+        return grid;
     }
 }

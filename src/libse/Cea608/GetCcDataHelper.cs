@@ -66,7 +66,15 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 return fieldData;
             }
 
-            var length = (int)size;
+            // The size comes from the file's sample table: a corrupt one asked the pool for more
+            // than the largest possible array (OutOfMemoryException). Nothing past the end of the
+            // stream can be read anyway.
+            if (fs.Length <= (long)startPos)
+            {
+                return fieldData;
+            }
+
+            var length = (int)Math.Min(size, (ulong)(fs.Length - (long)startPos));
 
             // Read the sample once instead of seeking and reading 5 bytes per NAL unit.
             // The walk below only ever moves forward inside the sample, so a single

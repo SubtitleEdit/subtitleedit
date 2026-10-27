@@ -1,7 +1,6 @@
 using System.Text.Json;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
-using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Features.Tools.BeautifyTimeCodes;

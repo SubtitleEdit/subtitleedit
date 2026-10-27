@@ -1,10 +1,13 @@
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Tools.Renumber;
 
+/// <summary>
+/// Renumber, in the editor look (see <see cref="EditorChrome"/>): the start number in a section,
+/// Cancel and OK in the button bar.
+/// </summary>
 public class RenumberWindow : Window
 {
     public RenumberWindow(RenumberViewModel vm)
@@ -12,41 +15,23 @@ public class RenumberWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = UiUtil.MakeWindowTitle(Se.Language.Tools.Renumber.Title);
         CanResize = false;
-        Width = 350;
-        Height = 180;
+        SizeToContent = SizeToContent.Height;
+        Width = 360;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var label = UiUtil.MakeLabel(Se.Language.Tools.Renumber.StartFromNumber);
-        var numericUpDown = UiUtil.MakeNumericUpDownInt(0, 99999, 1, 150, vm, nameof(vm.StartNumber));
+        var numericUpDown = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 99999, 1, 150, vm, nameof(vm.StartNumber)), Se.Language.Tools.Renumber.StartFromNumber.TrimEnd(':'), 100, alignLeft: true, center: true);
 
-        var panelInput = UiUtil.MakeVerticalPanel(label, numericUpDown);
+        var section = EditorChrome.MakeEditorSection(
+            Se.Language.Tools.Renumber.Title,
+            EditorChrome.MakeFieldGrid((Se.Language.Tools.Renumber.StartFromNumber, numericUpDown)),
+            first: true);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelInput, 0);
-        grid.Add(panelButtons, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(section, null, buttonCancel, buttonOk);
 
         Loaded += delegate { numericUpDown.Focus(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);

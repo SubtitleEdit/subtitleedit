@@ -7,7 +7,6 @@ using Avalonia.Platform;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Threading;
-using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 

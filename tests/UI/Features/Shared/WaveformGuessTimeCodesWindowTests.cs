@@ -145,12 +145,13 @@ public class WaveformGuessTimeCodesWindowTests : IDisposable
         window.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
 
+        // The section headers are small caps (upper case) text blocks
         var settings = Assert.Single(
-            window.GetLogicalDescendants().OfType<Label>(),
-            c => Equals(c.Content, Se.Language.General.Settings));
+            window.GetLogicalDescendants().OfType<TextBlock>(),
+            c => c.Text == Se.Language.General.Settings.ToUpperInvariant());
         var startFrom = Assert.Single(
-            window.GetLogicalDescendants().OfType<Label>(),
-            c => Equals(c.Content, Se.Language.General.StartFrom));
+            window.GetLogicalDescendants().OfType<TextBlock>(),
+            c => c.Text == Se.Language.General.StartFrom.ToUpperInvariant());
 
         var settingsLeft = settings.TranslatePoint(new Point(0, 0), window)!.Value.X;
         var startFromRight = startFrom.TranslatePoint(new Point(startFrom.Bounds.Width, 0), window)!.Value.X;

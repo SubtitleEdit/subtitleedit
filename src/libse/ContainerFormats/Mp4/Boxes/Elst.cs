@@ -33,8 +33,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 return;
             }
 
-            Buffer = new byte[size - 8];
-            fs.ReadFully(Buffer, 0, Buffer.Length);
+            Buffer = ReadPayload(fs, size - 8);
 
             var version = Buffer[0];
             var entryCount = GetUInt(4);

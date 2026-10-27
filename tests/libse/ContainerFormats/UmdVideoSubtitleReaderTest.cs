@@ -1,8 +1,5 @@
 using Nikse.SubtitleEdit.Core.ContainerFormats.ProgramStream;
 using SkiaSharp;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace LibSETests.ContainerFormats;

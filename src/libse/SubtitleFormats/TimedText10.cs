@@ -78,12 +78,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
                         var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
 
-                        if (paragraphs != null && (paragraphs.Count > 0 && new NetflixTimedText().IsMine(lines, fileName)))
-                        {
-                            return false;
-                        }
-
-                        if (paragraphs != null && (paragraphs.Count > 0 && new SmpteTt2052().IsMine(lines, fileName)))
+                        // Leave the repaired file to the more specific format. Check the marker, not that
+                        // format's IsMine: it calls this method again, which ran into this branch again
+                        // and recursed until a stack overflow killed the app (a bare '&' was enough).
+                        var isSpecificFormat = this is NetflixTimedText || this is SmpteTt2052;
+                        if (!isSpecificFormat && paragraphs != null && paragraphs.Count > 0 &&
+                            (NetflixTimedText.HasNetflixMarker(lines, fileName) || SmpteTt2052.HasSmpteTt2052Marker(lines, fileName)))
                         {
                             return false;
                         }

@@ -10,7 +10,7 @@
 - **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, MXF, AVI (`.avi` / `.divx`), transport stream teletext, Blu-Ray `.sup`.
 - **OCR for image-based sources** via seven engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, llama.cpp HTTP with automatic server start, PaddleOCR subprocess, Apple Vision built into macOS).
 - **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio), any OpenAI-compatible API, DeepL, or self-hosted services (LibreTranslate, NLLB).
-- **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014, images-with-time-code.
+- **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014 (also as a DCP-ready SMPTE MXF track file), images-with-time-code.
 - **Operations pipeline** — offset, fps change, change-speed, renumber, adjust-duration, fix-common-errors, merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text.
 - **Cross-platform** — Windows, Linux, macOS. Only requires the .NET runtime; no display or GUI needed.
 
@@ -159,9 +159,14 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 |---|---|---|
 | `--resolution:<WxH>` | ASSA, image-based | Sets `PlayResX`/`PlayResY` for ASSA; sets canvas for image outputs (default `1920x1080`) |
 | `--assa-style-file:<file>` | ASSA | Apply `[V4+ Styles]` block from another ASSA file |
+| `--burn-in-video:<file>` | ASSA | After writing the `.ass`, burn it into this video with ffmpeg's `ass` filter (needs ffmpeg on PATH). Output: `<subtitle name>_burn-in.<video ext>` next to the `.ass`; every converted subtitle (each input file, each container track) gets its own burned video. Without `--resolution` the video's size is used. An existing output is kept unless `--overwrite` is given; Ctrl+C stops ffmpeg and removes the partial video. Example: `seconv movie.srt ass --assa-style-file:style.ass --burn-in-video:movie.mp4` |
+| `--burn-in-ffmpeg-args:<args>` | ASSA + `--burn-in-video` | ffmpeg encoder arguments (default: `-c:v libx264 -preset medium -crf 23 -pix_fmt yuv420p -c:a copy`); for a `.webm` video, which cannot hold H.264, the default is `-c:v libvpx-vp9 -crf 32 -b:v 0 -pix_fmt yuv420p -c:a libopus`, e.g. `"-c:v h264_nvenc -cq 23 -c:a copy"` |
+| `--burn-in-effects:<list>` | ASSA | Comma-separated line effects, the same ones as the UI's Burn in > Effects: `fade` (fade in/out, 250 ms; `fade:<ms>` for another length), `font-kerning` (letter spacing slowly increases), `font-size-change` (text slowly grows to 120%), `scroll-up` / `scroll-down` (text drifts 20 px up or down, centered near the bottom), `rotate-in` (tilts in from 30° over the first half of the line), `tilt-bounce` (rocks left and right, settling over 1.25 s), `font-size-bounce-in` (grows from 50% with a bounce), `fix-rtl` (Unicode direction marks for right-to-left text). Written as override tags in the `.ass`, so they also work without `--burn-in-video`; sizes and positions use the style's font size and `PlayResX`/`PlayResY`. Example: `--burn-in-effects:fade,font-kerning` |
 | `--pac-codepage:<page>` | PAC | Code page name (`Latin`, `Greek`, `Hebrew`, …) or numeric (0–12). See `seconv list-pac-codepages` |
 | `--pac-secondary-codepage:<page>` | PAC | Code page for lines in another script (e.g. `Cyrillic` for the Russian lines of a Hebrew file); those lines are flagged "secondary code page". Reading detects it automatically |
 | `--ebu-header-file:<file>` | EBU STL | Reuse the GSI header block from an existing `.stl` file |
+| `--dcinema-font:<file>` | D-Cinema SMPTE MXF (`dcinemasmpte2014mxf`) | Font (`.ttf`/`.otf`) embedded in the track file under the `LoadFont` `urn:uuid` (required) |
+| `--reel-duration:<hh:mm:ss:ff>` | D-Cinema SMPTE MXF (text and png) | Reel (picture) length at the output frame rate. Every asset of a DCP reel must have it, so set it to the picture's length; default ends the track at the last subtitle |
 | `--plaintext-merge` | Plain text (`txt`) | Merge all subtitles into one space-separated block (no blank lines). Takes precedence over the two options below |
 | `--plaintext-unbreak` | Plain text (`txt`) | Unbreak each subtitle, joining its lines into one |
 | `--plaintext-no-blank-line` | Plain text (`txt`) | Do not put a blank line between subtitles (default keeps it) |
@@ -263,7 +268,7 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `nocr` | In-process | Built-in nOCR matcher. Required: `--ocr-db:<path-to-Latin.nocr>`. |
 | `binaryocr` *(alias: `binary`)* | In-process | Built-in BinaryOCR matcher (different accuracy profile, similar speed). Required: `--ocr-db:<path-to-Latin.db>`. |
 | `ollama` | HTTP | Local Ollama server with a vision-capable model (e.g. `llama3.2-vision`, `qwen2.5vl`). Configure via `--ollama-url` (default `http://localhost:11434/api/chat`) and `--ollama-model` (default `llama3.2-vision`). Pass `--ocr-language` as a human name like `English`. |
-| `llamacpp` *(aliases: `llama.cpp`, `llama`)* | HTTP | llama.cpp with a curated OCR vision model (best-first: GLM-OCR, LFM2.5-VL 3B, PaddleOCR-VL, HunyuanOCR 1.5, LightOnOCR). With no `--ocr-url`, seconv finds `llama-server` (SE data folder next to seconv, installed SE data folder, then `PATH`) and an OCR model — the first model in that order that is installed, unless `--ocr-model` names one — starts the server on a free loopback port, and stops it at exit. seconv never downloads engines/models — install them via the SE UI's OCR window (engine "llama.cpp") or point `--ocr-url` at a running server. Pass `--ocr-language` as a human name like `English`. |
+| `llamacpp` *(aliases: `llama.cpp`, `llama`)* | HTTP | llama.cpp with a curated OCR vision model (best-first: GLM-OCR, LightOnOCR-3 4B, LFM2.5-VL 3B, PaddleOCR-VL, HunyuanOCR 1.5, QARI-OCR 0.2.2.1 (Arabic), LightOnOCR-3 0.8B). With no `--ocr-url`, seconv finds `llama-server` (SE data folder next to seconv, installed SE data folder, then `PATH`) and an OCR model — the first model in that order that is installed, unless `--ocr-model` names one — starts the server on a free loopback port, and stops it at exit. seconv never downloads engines/models — install them via the SE UI's OCR window (engine "llama.cpp") or point `--ocr-url` at a running server. Pass `--ocr-language` as a human name like `English`. |
 | `paddle` *(alias: `paddleocr`)* | Subprocess | Install via `pip install paddleocr` (3.7 or newer, for the PP-OCRv6 models); ensure the `paddleocr` binary is on `PATH`. Pass `--ocr-language` as a short code (`en`, `de`, …). Images are OCR'ed in batches: the prepared images of a file are written to a folder and one `paddleocr` process reads the whole folder, so the roughly twenty-second model load is paid once per file rather than once per image. |
 | `applevision` *(alias: `apple-vision`)* | In-process (macOS only) | macOS's built-in Vision framework — the same recognizer as the GUI's "Apple Vision" engine. Nothing to install. Pass `--ocr-language` as a Vision tag (`en-US`, `de-DE`, `zh-Hans`, …; default `en-US`); `de`, `deu` and `German` are mapped to the matching tag too. `seconv list-ocr-engines --json` lists the tags this Mac supports. |
 
@@ -640,6 +645,9 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 | `--fix-common-errors-rules:<list>` | Run a subset of FCE rules (CSV; supports `all,-RuleId`) |
 | `--fce-language:<code>` | Force the language for FCE language-gated rules (code or English name, e.g. `es` / `Spanish`); default: auto-detect from content |
 | `--fix-rtl-via-unicode-chars` | Fix RTL via Unicode characters |
+| `--merge-continuation-lines` | Merge lines that continue a sentence into the next line - the same rules as [Merge continuation lines](../features/merge-continuation-lines.md#what-counts-as-a-continuation) in the GUI, with every candidate merged |
+| `--merge-continuation-lines-max-gap:<ms>` | Merge continuation lines: only merge lines less than N ms apart (default: 250, like Batch Convert) |
+| `--merge-continuation-lines-max-chars:<n>` | Merge continuation lines: the two texts together must be shorter than N characters (default: `subtitleLineMaximumLength` × `maxNumberOfLines` from `--settings`, 86 with the libse defaults) |
 | `--merge-same-texts` | Merge entries with same text |
 | `--merge-same-time-codes` | Merge entries with same time codes |
 | `--merge-short-lines` | Merge short lines |
@@ -797,6 +805,8 @@ This mirrors the desktop app, where batch convert's *Remove formatting* function
 | `fcpimage`, `fcp` | FCP/image |
 | `dcinemainterop`, `dcinema-interop` | D-Cinema interop/png |
 | `dcinemasmpte2014`, `dcinema-smpte` | D-Cinema SMPTE 2014/png |
+| `dcinemasmpte2014mxf`, `dcinema-smpte-mxf` | D-Cinema SMPTE 2014 as a SMPTE ST 429-5 MXF track file (DCP subtitle asset), font embedded (requires `--dcinema-font`) |
+| `dcinemasmpte2014pngmxf`, `dcinema-smpte-png-mxf` | D-Cinema SMPTE 2014/png as one MXF track file, PNGs embedded — image |
 | `imageswithtimecode`, `imagesintc` | Images with time codes in file name |
 | `webvttthumbnail`, `webvtt-thumbnail`, `vttthumb` | WebVTT Thumbnail — image (sprite sheet + `.vtt`) |
 | `plaintext`, `text`, `txt` | Plain text (HTML stripped) |
@@ -840,6 +850,14 @@ seconv subs.sup subrip \
   --remove-text-for-hi \
   --split-long-lines \
   --overwrite
+```
+
+### DCP subtitle track file (SMPTE MXF)
+```bash
+# text, font embedded; reel duration = the picture's length (here 1:32:10 + 4 frames at 24 fps)
+seconv movie.srt dcinemasmpte2014mxf --fps:24 --dcinema-font:Arial.ttf --reel-duration:01:32:10:04
+# rendered images instead of text, e.g. from a Blu-ray sup
+seconv movie.sup dcinemasmpte2014pngmxf --fps:24 --reel-duration:01:32:10:04
 ```
 
 ### Round-trip via image-based output

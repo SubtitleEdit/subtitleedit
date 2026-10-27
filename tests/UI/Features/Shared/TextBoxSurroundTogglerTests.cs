@@ -141,6 +141,25 @@ public class TextBoxSurroundTogglerTests
         Assert.True(TextBoxSurroundToggler.IsWholeTextSelected(wrapper));
     }
 
+    // #16015: the whole text is selected right away, and again after the rest of the key press -
+    // so a selection reset later in the same key handling does not leave the stale range behind.
+    [AvaloniaFact]
+    public void SelectAllAfterTextChange_SelectsAtOnceAndAgainAfterLaterReset()
+    {
+        var textBox = MakeTextBox("\"Hello?\"", 0, 6);
+        var wrapper = new TextBoxWrapper(textBox);
+
+        TextBoxSurroundToggler.SelectAllAfterTextChange(wrapper);
+        Assert.Equal(0, textBox.SelectionStart);
+        Assert.Equal(textBox.Text!.Length, textBox.SelectionEnd);
+
+        textBox.SelectionEnd = 6;
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(0, textBox.SelectionStart);
+        Assert.Equal(textBox.Text.Length, textBox.SelectionEnd);
+    }
+
     [AvaloniaFact]
     public void ToggleSelection_OnlyWhiteSpaceSelected_ReturnsFalseAndKeepsText()
     {

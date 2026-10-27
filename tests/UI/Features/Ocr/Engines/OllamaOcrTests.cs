@@ -1,6 +1,4 @@
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
-using System;
-using System.Linq;
 
 namespace UITests.Features.Ocr.Engines;
 

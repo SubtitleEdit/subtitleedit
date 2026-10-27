@@ -270,7 +270,8 @@ begin
   begin
     if MsgBox(
         'Subtitle Edit requires the .NET 10 Runtime, which is not installed on this computer.' + #13#10 + #13#10 +
-        'Please download and install the .NET 10 Runtime and run this setup again.' + #13#10 + #13#10 +
+        'Please download and install the ".NET Runtime 10" (Microsoft.NETCore.App) and run this setup again.' + #13#10 +
+        'Note: the "ASP.NET Core Runtime" alone does not include it.' + #13#10 + #13#10 +
         'Do you want to open the .NET 10 download page now?',
         mbConfirmation, MB_YESNO or MB_DEFBUTTON1) = IDYES then
       ShellExec('open', 'https://dotnet.microsoft.com/download/dotnet/10.0', '', '', SW_SHOW, ewNoWait, ErrorCode); 

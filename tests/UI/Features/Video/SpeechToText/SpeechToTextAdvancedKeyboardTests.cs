@@ -5,10 +5,6 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
-using Nikse.SubtitleEdit.Logic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UITests.Features.Video.SpeechToText;
 

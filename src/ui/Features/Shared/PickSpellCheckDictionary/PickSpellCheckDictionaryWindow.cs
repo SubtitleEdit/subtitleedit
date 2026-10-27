@@ -1,4 +1,3 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -7,6 +6,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
 
+/// <summary>
+/// Pick a spell check dictionary, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class PickSpellCheckDictionaryWindow : Window
 {
     public PickSpellCheckDictionaryWindow(PickSpellCheckDictionaryViewModel vm)
@@ -16,6 +18,7 @@ public class PickSpellCheckDictionaryWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -23,53 +26,35 @@ public class PickSpellCheckDictionaryWindow : Window
         {
             ItemsSource = vm.Dictionaries,
             VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 180,
-            Margin = new Thickness(0, 10, 10, 2),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinWidth = 260,
             [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Dictionary,
             [!ComboBox.SelectedValueProperty] = new Binding(nameof(vm.SelectedDictionary)),
         };
 
         var buttonDownload = UiUtil
             .MakeButtonBrowse(vm.BrowseDictionaryCommand, accessibleName: Se.Language.SpellCheck.ChooseSpellCheckDictionary)
-            .WithLeftAlignment()
-            .WithMargin(0, 10, 10, 2);
+            .WithLeftAlignment();
+        buttonDownload.Margin = new Avalonia.Thickness(0);
 
-        var panelDownload = new StackPanel
+        var panelDownload = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                combo,
-                buttonDownload
-            }
-        };
-
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
+            ColumnSpacing = 8,
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        panelDownload.Add(combo, 0, 0);
+        panelDownload.Add(buttonDownload, 0, 1);
 
-        grid.Add(panelDownload, 0, 0);
-        grid.Add(panelButtons, 1, 0);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Dictionary, panelDownload, first: true);
 
-        Content = grid;
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, combo); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

@@ -7,8 +7,6 @@ using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using System;
-using System.Collections.Generic;
 
 namespace UITests.Features.Sync;
 

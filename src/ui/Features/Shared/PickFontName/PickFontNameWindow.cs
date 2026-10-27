@@ -8,6 +8,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickFontName;
 
+/// <summary>
+/// Pick a font name, in the shared picker layout (see <see cref="EditorChrome"/>): the font
+/// lists with the search box in the header, the preview below, Cancel and OK at the bottom.
+/// </summary>
 public class PickFontNameWindow : Window
 {
     public PickFontNameWindow(PickFontNameViewModel vm)
@@ -19,61 +23,36 @@ public class PickFontNameWindow : Window
         Height = 700;
         MinWidth = 500;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
-        var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
-        var textBoxSearch = new TextBox
-        {
-            PlaceholderText = Se.Language.General.SearchFontNames,
-            Margin = new Thickness(10),
-            Width = 200,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        }.WithSearchAndClearIcons();
-        textBoxSearch.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
+        var textBoxSearch = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.SearchFontNames);
         textBoxSearch.TextChanged += (s, e) => vm.SearchTextChanged();
-        var panelSearch = new StackPanel
+
+        var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(5, 1000, 130, vm, nameof(vm.FontSize));
+        Avalonia.Automation.AutomationProperties.SetName(numericUpDownFontSize, Se.Language.General.FontSize);
+        var panelFontSize = EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, numericUpDownFontSize, 90)
+            .WithBindIsVisible(nameof(vm.IsFontSizeVisible));
+
+        var switchFontBold = EditorChrome.MakeSwitch(nameof(vm.IsFontBold), Se.Language.General.Bold);
+        switchFontBold.IsCheckedChanged += (s, e) => vm.FontBoldChanged();
+        var panelFontBold = EditorChrome.MakeSwitchRow(switchFontBold, Se.Language.General.Bold)
+            .WithBindIsVisible(nameof(vm.IsFontBoldVisible));
+
+        var panelOptions = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelSearch,
-                textBoxSearch,
-            }
+            Spacing = 24,
+            Margin = new Thickness(0, 0, 0, 8),
+            Children = { panelFontSize, panelFontBold },
         };
-
-        var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
-        var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(5, 1000, 200, vm, nameof(vm.FontSize));
-        var panelFontSize = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelFontSize,
-                numericUpDownFontSize,
-            }
-        }.WithBindVisible(vm, nameof(vm.IsFontSizeVisible));
-
-        var labelFontBold = UiUtil.MakeLabel(Se.Language.General.Bold);
-        var checkBoxFontBold = UiUtil.MakeCheckBox(string.Empty, vm, nameof(vm.IsFontBold));
-        checkBoxFontBold.IsCheckedChanged += (s, e) => vm.FontBoldChanged();    
-        var panelFontBold = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelFontBold,
-                checkBoxFontBold,
-            }
-        }.WithBindVisible(vm, nameof(vm.IsFontBoldVisible));
 
         var tabControlFonts = new TabControl
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+            Padding = new Thickness(0, 6, 0, 0),
             Items =
             {
                 new TabItem
@@ -90,42 +69,42 @@ public class PickFontNameWindow : Window
         };
         tabControlFonts.Bind(TabControl.SelectedIndexProperty, new Binding(nameof(vm.SelectedTabIndex)) { Source = vm, Mode = BindingMode.TwoWay });
 
-        var previewView = MakePreviewView(vm);
+        var header = new DockPanel { MinHeight = 28, Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(textBoxSearch, Dock.Right);
+        header.Children.Add(textBoxSearch);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Fonts));
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
+        var fontsSection = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+        fontsSection.Add(header, 0);
+        fontsSection.Add(panelOptions, 1);
+        fontsSection.Add(tabControlFonts, 2);
+
+        var previewSection = MakePreviewView(vm);
+
+        var sections = new Grid
+        {
+            RowDefinitions =
+            {
                 new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        sections.Add(fontsSection, 0);
+        sections.Add(previewSection, 1);
 
-        grid.Add(panelSearch, 0);
-        grid.Add(panelFontSize, 1);
-        grid.Add(panelFontBold, 2);
-        grid.Add(tabControlFonts, 3);
-        grid.Add(previewView, 4);
-        grid.Add(buttonPanel, 5);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBoxSearch); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -158,25 +137,11 @@ public class PickFontNameWindow : Window
         new TableViewHeaderSorter(dataGrid)
             .AddSortable<string, string>(fontNameColumn, x => x);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 
     private static Border MakePreviewView(PickFontNameViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
         var image = new Image
         {
             [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
@@ -186,8 +151,36 @@ public class PickFontNameWindow : Window
             Stretch = Stretch.Uniform,
         };
 
-        grid.Add(image, 0);
+        var frame = new Border
+        {
+            Child = image,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(8),
+            ClipToBounds = true,
+        };
 
-        return UiUtil.MakeBorderForControl(grid);
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+        };
+        var header = EditorChrome.MakeSectionHeader(Se.Language.General.Preview);
+        header.Margin = new Thickness(0, 0, 0, 8);
+        grid.Add(header, 0);
+        grid.Add(frame, 1);
+
+        return new Border
+        {
+            Child = grid,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 12, 14, 14),
+        };
     }
 }

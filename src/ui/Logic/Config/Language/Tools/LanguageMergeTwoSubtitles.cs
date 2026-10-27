@@ -8,7 +8,6 @@ public class LanguageMergeTwoSubtitles
     public string LoadFromCurrentText { get; set; }
     public string LoadFromCurrentTranslation { get; set; }
     public string LoadFromFile { get; set; }
-    public string OutputFormat { get; set; }
     public string OutputFormatSubRip { get; set; }
     public string OutputFormatAssa { get; set; }
     public string Style1 { get; set; }
@@ -23,7 +22,6 @@ public class LanguageMergeTwoSubtitles
         LoadFromCurrentText = "Load from current (text)";
         LoadFromCurrentTranslation = "Load from current (translation)";
         LoadFromFile = "Load from file...";
-        OutputFormat = "Output format";
         OutputFormatSubRip = "SubRip (.srt)";
         OutputFormatAssa = "Advanced Sub Station Alpha (.ass)";
         Style1 = "Style 1";

@@ -118,6 +118,282 @@ namespace Nikse.SubtitleEdit.Core.Common
             return CountWords(text).Get(words);
         }
 
+        /// <summary>
+        /// Tells the Cyrillic languages apart by spelling, which the shared short words
+        /// (не, да, за, нас, може, така, беше, ...) cannot: ј/љ/њ/џ are written only in
+        /// Macedonian and Serbian (ќ/ѓ/ѕ only in Macedonian, ћ/ђ only in Serbian), і/ї/є/ґ only
+        /// in Ukrainian, ы/э/ё only in Russian, and ъ is everywhere in Bulgarian but rare in
+        /// Russian and absent from the rest.
+        /// </summary>
+        /// <param name="text">The text to look at.</param>
+        /// <param name="counts">Word counts of the same text, for a Macedonian/Serbian tie; null to count on demand.</param>
+        /// <returns>"mk", "sr", "uk", "bg", "ru", or null when the letters do not say.</returns>
+        private static string GetCyrillicLanguageByLetters(string text, WordListCounts? counts)
+        {
+            var macedonianOrSerbian = 0; // ј љ њ џ ќ ѓ ѕ ћ ђ
+            var macedonianOnly = 0;      // ќ ѓ ѕ
+            var serbianOnly = 0;         // ћ ђ
+            var ukrainianOnly = 0;       // і ї є ґ
+            var russianOnly = 0;         // ы э ё
+            var hardSign = 0;            // ъ, not before е/ё/ю/я
+            var eastSlavic = 0;          // ъ ы э ё й щ ь ю я - none of them in Macedonian or Serbian
+            for (var i = 0; i < text.Length; i++)
+            {
+                var c = text[i];
+                switch (c)
+                {
+                    case 'ј': case 'Ј': case 'љ': case 'Љ': case 'њ': case 'Њ': case 'џ': case 'Џ':
+                        macedonianOrSerbian++;
+                        break;
+                    case 'ќ': case 'Ќ': case 'ѓ': case 'Ѓ': case 'ѕ': case 'Ѕ':
+                        macedonianOrSerbian++;
+                        macedonianOnly++;
+                        break;
+                    case 'ћ': case 'Ћ': case 'ђ': case 'Ђ':
+                        macedonianOrSerbian++;
+                        serbianOnly++;
+                        break;
+                    case 'і': case 'І': case 'ї': case 'Ї': case 'є': case 'Є': case 'ґ': case 'Ґ':
+                        ukrainianOnly++;
+                        break;
+                    case 'ы': case 'Ы': case 'э': case 'Э': case 'ё': case 'Ё':
+                        russianOnly++;
+                        eastSlavic++;
+                        break;
+                    case 'ъ': case 'Ъ':
+                        // Russian writes ъ only before е/ё/ю/я (съел, подъезд, объявление),
+                        // Bulgarian mostly before consonants (дъжд, къде, със) - only the latter
+                        // says Bulgarian.
+                        if (i + 1 >= text.Length || "еёюяЕЁЮЯ".IndexOf(text[i + 1]) < 0)
+                        {
+                            hardSign++;
+                        }
+
+                        eastSlavic++;
+                        break;
+                    case 'й': case 'Й': case 'щ': case 'Щ': case 'ь': case 'Ь': case 'ю': case 'Ю': case 'я': case 'Я':
+                        eastSlavic++;
+                        break;
+                }
+            }
+
+            // Strictly more, so that a few misread letters in an OCR'ed file cannot flip a
+            // Bulgarian or Russian text, where ъ/й/я/ю are everywhere.
+            if (macedonianOrSerbian > 0 && macedonianOrSerbian > eastSlavic)
+            {
+                if (macedonianOnly != serbianOnly)
+                {
+                    return macedonianOnly > serbianOnly ? "mk" : "sr";
+                }
+
+                // Neither ќ/ѓ/ѕ nor ћ/ђ, or as many of each (an OCR tie): the word lists decide.
+                var c2 = counts ?? CountWords(text);
+                var macedonianCount = c2.Get(AutoDetectWordsMacedonian);
+                var serbianCount = c2.Get(AutoDetectWordsSerbianCyrillic) + c2.Get(AutoDetectWordsSerbianCyrillicOnly);
+                return macedonianCount > serbianCount ? "mk" : "sr";
+            }
+
+            if (ukrainianOnly > 0 && ukrainianOnly > russianOnly + hardSign)
+            {
+                return "uk";
+            }
+
+            if (russianOnly != hardSign)
+            {
+                return russianOnly > hardSign ? "ru" : "bg";
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Lithuanian or Latvian by their own letters: ą/ę/ė/į/ų are Lithuanian, ā/ē/ī/ģ/ķ/ļ/ņ/ō
+        /// Latvian (č/š/ž/ū are both). The word lists overlap (kas, kur, kad, ir, jau, ...).
+        /// </summary>
+        /// <param name="text">The text to look at.</param>
+        /// <returns>"lt", "lv", or null when neither letter set is in the text.</returns>
+        private static string GetBalticLanguageByLetters(string text)
+        {
+            var lithuanian = 0;
+            var latvian = 0;
+            foreach (var c in text)
+            {
+                switch (c)
+                {
+                    case 'ą': case 'Ą': case 'ę': case 'Ę': case 'ė': case 'Ė': case 'į': case 'Į': case 'ų': case 'Ų':
+                        lithuanian++;
+                        break;
+                    case 'ā': case 'Ā': case 'ē': case 'Ē': case 'ī': case 'Ī': case 'ģ': case 'Ģ': case 'ķ': case 'Ķ':
+                    case 'ļ': case 'Ļ': case 'ņ': case 'Ņ': case 'ō': case 'Ō':
+                        latvian++;
+                        break;
+                }
+            }
+
+            if (lithuanian == latvian)
+            {
+                return null;
+            }
+
+            return lithuanian > latvian ? "lt" : "lv";
+        }
+
+        /// <summary>
+        /// Afrikaans or Dutch by spelling: Dutch writes z and ij all the time (zijn, zo, mij,
+        /// hij, zij), Afrikaans has no z and no ij but y instead (sy, hy, my, jy, altyd).
+        /// </summary>
+        /// <param name="text">The text to look at.</param>
+        /// <returns>"af", "nl", or null when the text has neither.</returns>
+        private static string GetAfrikaansOrDutchByLetters(string text)
+        {
+            var dutch = 0;
+            var afrikaans = 0;
+            var previous = '\0';
+            foreach (var c in text)
+            {
+                if (c == 'z' || c == 'Z')
+                {
+                    dutch++;
+                }
+                else if ((c == 'j' || c == 'J') && (previous == 'i' || previous == 'I'))
+                {
+                    dutch++;
+                }
+                else if (c == 'y' || c == 'Y')
+                {
+                    afrikaans++;
+                }
+
+                previous = c;
+            }
+
+            if (dutch == afrikaans)
+            {
+                return null;
+            }
+
+            return afrikaans > dutch ? "af" : "nl";
+        }
+
+        /// <summary>
+        /// Arabic, Persian or Urdu by the letters each script adds: Persian and Urdu write
+        /// پ/چ/ژ/گ and the Persian ye/kaf (ی U+06CC, ک U+06A9), Arabic has ة; Urdu alone has
+        /// ٹ/ڈ/ڑ/ں/ے/ھ/ہ. The Arabic ye/kaf (ي U+064A, ك U+0643) and ذ/ض/ظ/ء say nothing: older
+        /// Persian files (Windows-1256) are typed with that ye/kaf, and ذ/ض/ظ/ء are common in
+        /// Persian loanwords.
+        /// </summary>
+        /// <param name="text">The text to look at.</param>
+        /// <returns>"ur", "fa", "ar", or null when the letters do not say.</returns>
+        private static string GetArabicScriptLanguageByLetters(string text)
+        {
+            var arabic = 0;
+            var persian = 0;
+            var urdu = 0;
+            foreach (var c in text)
+            {
+                switch (c)
+                {
+                    case 'ة':
+                        arabic++;
+                        break;
+                    case 'ی': case 'ک': case 'پ': case 'چ': case 'ژ': case 'گ':
+                        persian++;
+                        break;
+                    case 'ٹ': case 'ڈ': case 'ڑ': case 'ں': case 'ے': case 'ھ': case 'ہ': case 'ۓ':
+                        urdu++;
+                        break;
+                }
+            }
+
+            if (urdu > 0 && urdu * 4 >= persian)
+            {
+                return "ur";
+            }
+
+            if (persian == arabic)
+            {
+                return null;
+            }
+
+            return persian > arabic ? "fa" : "ar";
+        }
+
+        /// <summary>
+        /// Latin-script languages with letters of their own, for the letter fallback when no
+        /// word list matched (a line or two). Shared letters are left out: ç (fr/pt/tr/ca/sq),
+        /// ş (ro/tr), ä/ö/ü (de/sv/fi/et), å (sv/da/no), æ/ø (da/no), ć/đ (hr/sr/bs),
+        /// č/š/ž (cs/sk/sl/hr/sr/lt/lv), õ (pt/et), ô (fr/sk), ą/ę (pl/lt).
+        /// </summary>
+        private static readonly KeyValuePair<string, string>[] LatinUniqueLetters =
+        {
+            new KeyValuePair<string, string>("pl", "łŁżŻźŹśŚńŃ"),
+            new KeyValuePair<string, string>("cs", "řŘěĚůŮ"),
+            new KeyValuePair<string, string>("sk", "ľĽŕŔ"),
+            new KeyValuePair<string, string>("hu", "őŐűŰ"),
+            new KeyValuePair<string, string>("ro", "ăĂșȘțȚţŢ"),
+            new KeyValuePair<string, string>("tr", "ığĞİ"),
+            new KeyValuePair<string, string>("lt", "ėĖįĮųŲ"),
+            new KeyValuePair<string, string>("lv", "āĀēĒīĪģĢķĶļĻņŅ"),
+            new KeyValuePair<string, string>("is", "þÞðÐ"),
+            new KeyValuePair<string, string>("vi", "ơƠưƯạẠảẢấẤầẦẩẨẫẪậẬắẮằẰẳẲẵẴặẶẹẸẻẺẽẼếẾềỀểỂễỄệỆỉỈịỊọỌỏỎốỐồỒổỔỗỖộỘớỚờỜởỞỡỠợỢụỤủỦứỨừỪửỬữỮựỰỳỲỵỴỷỶỹỸ"),
+            new KeyValuePair<string, string>("pt", "ãÃ"),
+            new KeyValuePair<string, string>("es", "ñÑ¿¡"),
+        };
+
+        /// <summary>
+        /// The Latin-script language whose own letters occur most in the text; Albanian when
+        /// ë (which French has only in a few words) outnumbers the French accents.
+        /// </summary>
+        /// <param name="text">The text to look at.</param>
+        /// <returns>A language code, or null when no language-specific letter is in the text.</returns>
+        private static string GetLatinLanguageByUniqueLetters(string text)
+        {
+            string best = null;
+            var bestCount = 0;
+            foreach (var pair in LatinUniqueLetters)
+            {
+                var count = 0;
+                foreach (var c in text)
+                {
+                    if (pair.Value.IndexOf(c) >= 0)
+                    {
+                        count++;
+                    }
+                }
+
+                if (count > bestCount)
+                {
+                    best = pair.Key;
+                    bestCount = count;
+                }
+            }
+
+            if (best == null)
+            {
+                var albanian = 0;
+                var french = 0;
+                foreach (var c in text)
+                {
+                    switch (c)
+                    {
+                        case 'ë': case 'Ë':
+                            albanian++;
+                            break;
+                        case 'é': case 'É': case 'è': case 'È': case 'ê': case 'Ê': case 'à': case 'À': case 'ù': case 'Ù':
+                            french++;
+                            break;
+                    }
+                }
+
+                if (albanian >= 2 && albanian > french)
+                {
+                    return "sq";
+                }
+            }
+
+            return best;
+        }
+
         private static int GetCountContains(string text, params string[] words)
         {
             var count = 0;
@@ -182,8 +458,18 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         // Short disambiguation lists: words that belong to one language but not its close
         // neighbour, probed only when the neighbour's main list already scored.
-        private static readonly string[] AutoDetectWordsNorwegianOnly = { "ut", "deg", "meg", "merkelig", "mye", "spørre" };
-        private static readonly string[] AutoDetectWordsDanishOnly = { "siger", "dig", "mig", "mærkelig", "tilbage", "spørge" };
+        private static readonly string[] AutoDetectWordsNorwegianOnly = { "ut", "deg", "meg", "merkelig", "mye", "spørre",
+            "vært", "sa", "noe", "noen", "hva", "etter", "uten", "mellom", "ble", "blitt", "vet", "dere", "seg", "oss", "henne", "nei", "takk", "unnskyld",
+            "liker", "trenger", "sier", "fjor", "sjanse", "aldri", "siste", "neste", "annen", "sånn", "enn", "å", "igjen", "gjøre", "gjør", "kanskje", "bra",
+            "veldig", "gutt", "jente", "elva", "vann", "jobbet", "jobb", "lei", "fikk", "sett", "ditt", "mitt", "sitt", "vårt", "kveld",
+            "natt", "uke", "penger", "redd", "kjære", "kjenner", "tilbake", "gjennom", "nesten", "nettopp", "dessverre", "viktig", "riktig", "ferdig", "trøtt", "liten", "litt", "hjelp", "hjelper", "begynner", "finner", "tar", "gir", "spør", "forteller", "arbeidet", };
+        private static readonly string[] AutoDetectWordsDanishOnly = { "siger", "dig", "mig", "mærkelig", "tilbage", "spørge",
+            "hvad", "noget", "nogen", "nu", "meget", "efter", "uden", "mellem", "gøre", "gør", "blev", "blevet", "sig", "os", "hende", "nej", "undskyld", "lide",
+            "behøver", "sidste", "næste", "anden", "sådan", "jer", "jeres", "dit", "mit", "sit", "vores", "ind", "ud", "sagde", "sige", "kender",
+            "kendt", "kære", "arbejde", "arbejder", "arbejdede", "åbner", "begynder", "finder", "tager", "giver", "lægger", "sætter", "sidder", "løber", "kører",
+            "hjælper", "hjælp", "bruger", "spørger", "fortæller", "svær", "lille", "pæn", "syg", "træt", "færdig", "rigtig", "fejl", "vigtig", "kedelig",
+            "pludselig", "desværre", "netop", "næsten", "gennem", "inden", "penge", "aften", "nat", "uge", "dreng", "pige", "vand", "ventede", "fik", "ked",
+            "mere", "bange", "vred", "håber", "væk", };
         private static readonly string[] AutoDetectWordsFrenchOnly = { "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque" };
         private static readonly string[] AutoDetectWordsPortugueseOnly =
         {
@@ -208,25 +494,49 @@ namespace Nikse.SubtitleEdit.Core.Common
             "strong", "simply", "situation","soldier", "somebody", "someone","something", "sometimes", "speak","statement", "perhaps",
             "piece", "picture", "police", "popular", "population", "suggest", "weapon", "water", "window", "woman", "talk", "security",
             "season", "remain", "relationship", "report" ,"user" ,"result", "this",
+            "the", "that", "with", "have", "not", "were", "they", "there", "their", "them", "then", "than", "been", "from", "into", "will", "should", "did", "does",
+            "has", "had", "he", "she", "him", "his", "where", "when", "why", "how", "who", "here", "just", "get", "got", "going", "need", "think", "right",
+            "never", "always", "maybe", "please", "thank", "thanks", "sorry", "look", "tell", "told", "said", "make", "made", "take", "took", "give", "gave", "back",
+            "time", "night", "life", "love", "good", "great", "little", "much", "many", "more", "only", "very", "but", "if", "I'm", "it's", "don't", "didn't", "doesn't",
+            "can't", "isn't", "wasn't", "won't", "we're", "they're", "I've", "you've", "nobody", "before", "after", "years", "closed", "expected", "quiet",
         };
 
         private static readonly string[] AutoDetectWordsDanish =
         {
             "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej", "længere", "gjorde", "dig", "havde", "[Uu]ndskyld", "arbejder", "vidste", "troede", "stadigvæk", "[Mm]åske", "første", "gik",
             "fortælle", "begyndt", "spørgsmål", "pludselig", "være", "fordi", "været", "sidste","også", "løb", "sagde", "hjem",
+            "ikke", "til", "hvor", "når", "hvis", "hvem", "hvorfor", "hvordan", "nok", "godt", "fra", "noget", "nogen", "hun", "mig", "deres",
+            "uden", "mellem", "næste", "anden", "meget", "lidt", "hvad", "nej", "gøre", "gør", "siger", "kender", "kunne", "måtte", "selv", "mere", "andre", "dette", "hele", "sammen", "væk", "penge", "arbejde", "ked", "ærlig",
+            "fik", "vand", "broen", "vejene", "husene", "senere", "komme", "kommet",
+            "ventes", "kraftig", "regn", "morgen", "nordlige", "temperaturen", "frysepunktet", "bilister", "forsigtige",
         };
 
         private static readonly string[] AutoDetectWordsNorwegian =
         {
             "vi", "og", "jeg", "var", "men", "igjen", "Nei", "Hei", "noen", "gjøre", "kanskje", "[Tt]renger", "tenker", "skjer", "møte", "veldig", "takk", "penger", "konsept", "hjelp", "forsvunnet",
-            "skutt", "sterkt", "minste", "første", "fortsette", "inneholder", "gikk", "fortelle", "begynt", "spørsmål", "plutselig"
+            "skutt", "sterkt", "minste", "første", "fortsette", "inneholder", "gikk", "fortelle", "begynt", "spørsmål", "plutselig",
+            "ikke", "til", "hvor", "når", "hvis", "hvem", "hvorfor", "hvordan", "også", "nok", "godt", "fra", "noe", "hun", "meg", "deg", "seg", "oss", "deres",
+            "uten", "mellom", "neste", "annen", "mye", "litt", "nå", "hva", "gjør", "ble", "sier", "kjenner", "kunne", "måtte",
+            "siste", "selv", "andre", "dette", "hele", "sammen", "vekk", "hjem", "tilbake", "jobb", "jobbet", "lei", "sjanse",
+            "ærlig", "etter", "aldri", "å", "være", "vært", "hadde", "dere", "fikk", "vann", "brua", "veiene", "husene", "elva", "ventet", "senere", "fjor",
+            "ventes", "kraftig", "regn", "morgen", "temperaturen", "faller", "løpet", "natten", "bilister", "forsiktige",
         };
 
         private static readonly string[] AutoDetectWordsSwedish =
         {
             "vi", "är", "och", "Jag", "inte", "för", "måste", "Öppna", "Förlåt", "nånting", "ingenting", "jävla", "Varför", "[Ss]nälla", "fattar", "själv", "säger", "öppna", "jävligt", "dörren", "göra", "behöver", "tillbaka", "Varför",
             "träffa", "kanske", "säga", "hände", "honom", "hennes", "veckor", "tänker", "själv", "pratar", "mycket", "mamma", "dödade", "Ursäkta", "säger", "senaste", "håller", "förstår", "veckan", "varför", "tycker", "första", "gick",
-            "berätta", "börjat", "människor", "frågor", "fråga", "plötsligt", "skämt"
+            "berätta", "börjat", "människor", "frågor", "fråga", "plötsligt", "skämt",
+            "hade", "varit", "att", "ska", "från", "också", "bara", "något", "någon", "någonting", "deras", "gång", "utan", "mellan", "nästa",
+            "andra", "vad", "tack", "gör", "känner", "kunde", "många", "dessa", "detta", "alla", "allt", "tillsammans", "pengar", "arbete", "ledsen", "chans", "ärlig",
+            "fick", "vatten", "bron", "vägarna", "husen", "komma", "kommit", "när", "hur", "vem", "vilken", "vilket", "väl", "redan", "ännu", "fortfarande", "sedan",
+            "innan", "medan", "eftersom", "därför", "stiga", "snabbt", "staden", "stängde", "tyst", "flera", "kullen", "ljug", "prata", "finns", "hon", "henne",
+            "våra", "vår", "okej", "visst", "precis", "dålig", "dåligt", "bättre", "bäst", "gamla", "unga", "människa", "kvinna", "flicka", "pojke",
+            "kväll", "vecka", "älskar", "hjälp", "hjälpa", "hejdå", "nån", "nåt", "nånstans", "överallt", "upp", "ner", "kvar", "länge", "ibland", "tidigt", "genast", "verkligen", "nästan", "väldigt", "alldeles", "lika", "annan", "annat", "varje", "båda", "några", "inga", "allting", "vilka", "vart",
+            "kände", "behövde", "såg", "hörde", "sade", "frågade", "svarade", "tänkte", "försökte", "började", "hjälpte",
+            "arbetade", "jobbade", "levde", "väntade", "hoppades", "köpte", "betalade", "körde", "träffade", "ringde", "läste", "hittade", "öppnade",
+            "väntas", "över", "norra", "morgon", "kraftigt", "delarna", "sjunker", "bör", "vara", "försiktiga", "noll", "bord", "två", "självklart", "följ", "menyn",
+            "först", "utmärkt",
         };
 
         private static readonly string[] AutoDetectWordsSpanish =
@@ -240,7 +550,16 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             "Buongiorno", "Grazie", "Cosa", "quest[ao]", "quell[ao]", "tutt[io]", "[st]uo", "qualcosa", "ancora", "sono", "bene", "più", "andare", "essere", "venire", "abbiamo", "andiamo", "ragazzi", "signore", "numero", "giorno",
             "propriamente", "sensitivo", "negativo", "davvero", "faccio", "voglio", "vuole", "perché", "allora", "niente", "anche", "stai", "detto", "fatto", "hanno", "molto", "stato", "siamo", "così", "vuoi", "noi", "vero", "loro",
-            "fare", "gli", "due"
+            "fare", "gli", "due",
+            "è", "sei", "siete", "erano", "stata", "stati", "state", "ho", "hai", "avete", "avevo", "aveva", "avevano", "io", "lui", "lei", "voi", "che", "chi",
+            "dove", "quanto", "quale", "quali", "qua", "lì", "adesso", "oggi", "domani", "ieri", "nulla", "nessuno", "qualcuno", "tutto", "tutti", "tutta", "tutte",
+            "troppo", "soltanto", "già", "dopo", "mentre", "quindi", "sì", "prego", "scusa", "scusi", "dispiace", "ciao", "arrivederci", "signora", "signorina", "uomo",
+            "donna", "ragazzo", "ragazza", "bambino", "bambini", "notte", "mattina", "sera", "anno", "anni", "volta", "amore", "soldi", "presto", "insieme", "peccato",
+            "forse", "d'accordo", "puoi", "può", "possiamo", "devo", "devi", "deve", "dobbiamo", "vogliamo", "sai", "sappiamo", "pensi", "credo", "credi", "dico",
+            "dici", "dice", "vedo", "vedi", "vede", "visto", "vieni", "vengo", "vai", "vado", "fai", "facciamo", "parlare", "parlo", "parli", "parla", "lavorare",
+            "lavoro", "lavoravo", "città", "fiume", "ponte", "acqua", "strade", "collina", "tardi", "mentire", "mentirmi", "possibilità", "onesto", "scorso",
+            "tranquilla", "rimasta", "fabbrica", "chiudesse", "aspettava", "salisse", "fretta", "sparito", "inondate", "guardava", "portava", "arrivare", "disse",
+            "averlo", "senti", "dammi", "avuto",
         };
 
         private static readonly string[] AutoDetectWordsFrench =
@@ -254,18 +573,39 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             "[Nn]ão", "[Ee]ntão", "uma", "ele", "bem", "isso", "você", "sim", "meu", "muito", "estou", "ela", "fazer", "tem", "já", "minha", "tudo", "só", "tenho", "agora", "vou", "seu", "quem", "há",
             "lhe", "quero", "nós", "são", "ter", "coisa", "dizer", "eles", "pode", "bom", "mesmo", "mim", "estava", "assim", "estão", "até", "quer", "temos", "acho", "obrigado", "também", "tens",
-            "deus", "quê", "ainda", "noite", "conversar", "Desculpe", "verdade"
+            "deus", "quê", "ainda", "noite", "conversar", "Desculpe", "verdade",
+            "é", "foi", "tinha", "têm", "eu", "elas", "vocês", "teu", "tua", "sua", "nosso", "nossa", "isto", "aquilo", "aquele", "aquela", "aqui", "lá", "cá", "hoje",
+            "amanhã", "ontem", "alguma", "muita", "tão", "apenas", "porquê", "pois", "obrigada", "desculpa", "adeus", "senhor", "senhora", "homem", "mulher",
+            "rapaz", "menino", "menina", "criança", "crianças", "pessoas", "manhã", "anos", "dinheiro", "sozinho", "coisas", "faço", "fazes", "faz", "fiz", "fez",
+            "feito", "disse", "diz", "vejo", "vês", "viu", "vem", "vai", "queres", "podes", "preciso", "precisas", "precisamos", "falar", "falo", "falas", "fala",
+            "falei", "trabalhar", "trabalho", "cidade", "água", "estradas", "ninguém", "subisse", "fechar", "depressa", "devagar", "mas", "onde", "qual", "mentas",
+            "está bem", "oportunidade", "tiveste", "estiveste", "disse-te", "dá-me", "esperava", "inundadas", "observava", "levava", "disseram", "tinham", "chegar",
         };
 
         private static readonly string[] AutoDetectWordsGerman =
         {
             "und", "auch", "sich", "bin", "hast", "möchte", "müssen", "weiß", "[Vv]ielleicht", "Warum", "jetzt", "Verdammt", "bist", "Darum", "sitzt", "Setz", "Das ist", "Du bist", "nicht", "Scheiße",
-            "Nein", "für", "gesagt", "zwei", "richtig"
+            "Nein", "für", "gesagt", "zwei", "richtig",
+            "ich", "sie", "wir", "ihr", "mich", "dich", "mir", "dir", "uns", "euch", "ihn", "ihm", "ihnen", "mein", "dein", "unser", "dem", "ein", "eine", "einen",
+            "einem", "einer", "kein", "keine", "nichts", "etwas", "jemand", "niemand", "immer", "niemals", "schon", "dort", "wo", "wohin", "woher", "wann", "wie", "wer",
+            "weil", "wenn", "dass", "ob", "aber", "oder", "sondern", "denn", "doch", "gut", "schlecht", "sehr", "zu", "von", "aus", "bei", "nach", "über", "unter",
+            "vor", "hinter", "zwischen", "ohne", "gegen", "durch", "um", "auf", "ist", "sind", "waren", "wird", "werden", "wurde", "habe", "haben", "hatte", "hatten",
+            "kann", "kannst", "können", "konnte", "muss", "musst", "soll", "sollte", "willst", "wollen", "wollte", "darf", "gehe", "geht", "gehen", "ging", "komme",
+            "kommt", "kommen", "kam", "mache", "macht", "machen", "gemacht", "sehe", "sieht", "sehen", "gesehen", "weißt", "wissen", "wusste", "denke", "denkst",
+            "dachte", "sage", "sagt", "sagen", "sagte", "glaube", "lass", "komm", "geh", "schau", "hör", "warte", "frau", "junge", "mädchen", "kinder", "leute",
+            "menschen", "abend", "zeit", "jahr", "jahre", "haus", "zuhause", "leben", "liebe", "schnell", "langsam", "zusammen", "allein", "schade", "danke", "bitte",
+            "entschuldigung", "tschüss", "herr", "stadt", "fluss", "brücke", "wasser", "häuser", "straßen", "später", "fabrik", "lange", "gearbeitet", "lüg", "leid",
+            "reden", "letztes", "ehrlich", "einmal", "ruhig", "jahrelang", "erwartet", "steigen", "hügel", "ganze", "nacht", "nochmal", "hattest", "schloss",
         };
 
         private static readonly string[] AutoDetectWordsDutch =
         {
-            "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n", "hebben", "alleen", "Waarom", "stripboeken", "Goed", "geweest"
+            "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n", "hebben", "alleen", "Waarom", "stripboeken", "geweest",
+            "niet", "ik", "jij", "wij", "ze", "zij", "hij", "deze", "zo", "zonder", "zijn", "waren", "bent", "wordt", "worden", "werd", "heb", "hebt", "heeft", "hadden", "kun",
+            "kunnen", "moeten", "moest", "wilt", "willen", "wilde", "zal", "zullen", "zou", "zouden", "gaat", "ging", "komt", "komen",
+            "kwam", "doe", "doet", "doen", "deed", "gedaan", "zie", "ziet", "zien", "zag", "gezien", "weten", "wist", "denk", "denkt", "dacht", "zeg", "zegt",
+            "zeggen", "zei", "gezegd", "praten", "mij", "jouw", "hem", "onze", "hun", "niets", "altijd", "misschien", "echt", "veel", "weinig", "slecht", "nieuw", "nacht", "avond", "gisteren", "vandaag", "tijd", "jaren", "thuis", "leven", "mensen", "vrouw", "jongen", "kinderen", "wegen", "huizen", "stijgen", "verwacht", "jarenlang",
+            "sloot", "liegen", "spijt", "eerlijk", "dank", "bedankt", "alsjeblieft", "tot ziens",
         };
 
         private static readonly string[] AutoDetectWordsPolish =
@@ -275,11 +615,28 @@ namespace Nikse.SubtitleEdit.Core.Common
             "wiadomości", "Dobrze", "będzie", "Dzień", "przyszłość", "Uratowałaś", "Cześć", "Trzeba", "zginąć", "walczyć",
             "ludzkość", "maszyny", "Jeszcze", "okrążenie", "wyścigu", "porządku", "detektywie", "przebieralni", "który",
             "śmierci", "zabić", "wiedźminie", "przeznaczenie",
+            "gdzie", "kiedy", "dlaczego", "kto", "wy", "mną", "ciebie", "cię", "tobie", "tobą", "jego", "jej", "wam", "są", "był", "była", "było", "byli", "byłeś",
+            "będę", "będziesz", "jestem", "jesteś", "jesteśmy", "masz", "mamy", "mają", "miał", "miała", "mogę", "możesz", "możemy", "muszę", "musisz", "musimy", "chcę",
+            "chcesz", "chciałem", "wiesz", "myślę", "myślisz", "mówię", "mówisz", "mówiłem", "mówiła", "mówili", "powiedz", "powiedział", "powiedziała", "widzę",
+            "widzisz", "widziałem", "chodź", "idź", "idziemy", "zrobić", "zrobiłem", "robisz", "pani", "człowiek", "ludzie", "mężczyzna", "kobieta", "chłopak",
+            "dziewczyna", "dziecko", "dzieci", "nocy", "rano", "czas", "czasu", "lata", "kocham", "pieniądze", "szybko", "razem", "źle", "bardzo", "tylko", "już",
+            "teraz", "tutaj", "zawsze", "nigdy", "nikt", "ktoś", "coś", "wszyscy", "ponieważ", "jeśli", "jeżeli", "żeby", "więc", "też", "także", "która", "które",
+            "całą", "późna", "pracowałem", "okłamuj", "słuchaj", "porozmawiać", "powiedzenia", "szansę", "zeszłym", "roku", "czego", "szczery", "miasto", "spokojne",
+            "zamknięto", "fabrykę", "rzeka", "mostu", "drogi", "wodą", "patrzyła", "zabiera", "domy", "później", "przewidzieli", "spodziewał", "podniesie",
         };
 
         private static readonly string[] AutoDetectWordsGreek =
         {
-            "μου", "[Εε]ίναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις"
+            "μου", "[Εε]ίναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις",
+            "και", "να", "το", "τα", "την", "τον", "της", "του", "τους", "τις", "με", "σε", "για", "από", "δεν", "μη", "μην", "θα", "ότι", "που", "πως", "πού", "τι",
+            "γιατί", "πότε", "ποιος", "ποια", "ποιο", "εγώ", "εσύ", "αυτός", "αυτή", "εμείς", "εσείς", "αυτοί", "μας", "σας", "εδώ", "εκεί", "τώρα", "σήμερα", "αύριο",
+            "χθες", "πάντα", "ποτέ", "κανείς", "κάποιος", "τίποτα", "κάτι", "όλα", "όλοι", "πολύ", "μόνο", "ακόμα", "ήδη", "μετά", "πριν", "επειδή", "αν", "αλλά", "ή",
+            "ναι", "όχι", "εντάξει", "ευχαριστώ", "παρακαλώ", "συγνώμη", "συγγνώμη", "γεια", "κύριε", "κυρία", "άνθρωπος", "άνθρωποι", "άντρας", "γυναίκα", "αγόρι",
+            "κορίτσι", "παιδί", "παιδιά", "μέρα", "νύχτα", "πρωί", "χρόνος", "χρόνια", "φορά", "σπίτι", "ζωή", "αγάπη", "λεφτά", "χρήματα", "νεκρός", "γρήγορα", "μαζί",
+            "μόνος", "είμαι", "είσαι", "είμαστε", "είστε", "ήταν", "ήμουν", "έχω", "έχεις", "έχει", "έχουμε", "είχα", "είχε", "μπορώ", "μπορείς", "μπορεί", "πρέπει",
+            "θέλω", "θέλεις", "ξέρω", "ξέρεις", "νομίζω", "λέω", "λες", "είπα", "είπε", "βλέπω", "είδα", "έλα", "πάμε", "κάνω", "κάνεις", "κάνει", "έκανα", "δουλειά",
+            "πόλη", "ποτάμι", "γέφυρα", "νερό", "σπίτια", "αργότερα", "εργοστάσιο", "ήσυχη", "περίμενε", "ανέβαινε", "δρόμοι", "λόφο", "έπαιρνε", "έλεγαν", "δουλεύω",
+            "ψέματα", "ευκαιρία", "ειλικρινής", "μιλήσουμε", "λυπάμαι", "κοίτα",
         };
 
         private static readonly string[] AutoDetectWordsRussian =
@@ -301,12 +658,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             "Вона", "мене", "[Нн]і", "[Пп]ривіт", "[Цц]е", "[Щщ]о", "[Йй]ого", "[Вв]ін", "[Яя]к", "[Гг]аразд", "[Яя]кщо", "[Мм]ені", "[Тт]вій", "[Її]х", "[Вв]ітаю", "[Дд]якую", "вже", "було", "був", "цього",
             "нічого", "немає", "може", "знову", "бо", "щось", "щоб", "цим", "тобі", "хотів", "твоїх", "мої", "мій", "має", "їм", "йому", "дуже",
             "Привіт", "побачення", "тобою", "побачення", "Гаразд", "повинні",
+            "ти", "ми", "ви", "вони", "він", "зараз", "сьогодні", "вчора", "завжди", "ніколи", "ніхто", "хтось", "усе", "всі", "тільки",
+            "лише", "ні", "погано", "будь ласка", "вибач", "вибачте", "пробач", "пан", "пані", "людина", "чоловік", "жінка", "хлопець",
+            "дівчина", "дитина", "діти", "ніч", "ранок", "рік", "роки", "дім", "додому", "життя", "кохаю", "гроші", "швидко", "повільно",
+            "разом", "шкода", "маю", "маєш", "можу", "можеш", "мусимо", "хочеш", "хоче", "хочемо", "знаєш", "кажу",
+            "кажеш", "сказав", "бачу", "бачиш", "бачив", "іди", "ходімо", "зробити", "зробив", "робиш", "місто", "роками", "тихим", "доки",
+            "закрився", "очікував", "річка", "підніметься", "ранку", "міст", "зник", "водою", "дивилася", "забирає", "будинки", "пізніше", "казали",
+            "передбачали", "усю", "казав", "працював", "пізна", "бреши", "сказати", "мав", "свій", "минулого", "чого", "чесним",
         };
 
         private static readonly string[] AutoDetectWordsAlbanian =
         {
-            "është", "këtë", "Unë", "mirë", "shumë", "Çfarë", "çfarë", "duhet", "Është", "mbrapa", "Faleminderit", "vërtet", "diçka", "gjithashtu", "gjithe", "eshte", "shume", "vetem", "tënde",
-            "çmendur", "vullnetin", "vdekur"
+            "është", "të", "një", "për", "nuk", "më", "që", "dhe", "në", "ku", "kush", "pse", "çfarë", "shumë", "mirë", "keq", "faleminderit", "zotëri", "zonjë", "këtu", "atje", "tani", "nesër", "dje", "gjithë", "gjithmonë", "kurrë", "asgjë", "dikush", "diçka", "ishte", "isha", "jemi", "janë", "kemi", "kanë", "kisha", "kishte", "duhet", "dua", "doja", "tha", "thuaj", "thashë", "shiko", "eja", "shko", "bëj", "bëri", "njeri", "njerëz", "burrë", "grua", "djalë", "vajzë", "fëmijë", "ditë", "natë", "natën", "kohë", "vitin", "herë", "shtëpi", "jetë", "dashuri", "edhe", "ose", "nga", "sepse", "nëse", "kështu", "ashtu", "vetëm", "gjë", "gjëra", "lutem", "falni", "kuptoj", "mendoj", "besoj", "shoh", "vij", "unë", "ata", "ato", "ajo", "këtë", "mbrapa", "vërtet", "gjithashtu", "tënde", "çmendur", "vullnetin", "vdekur", "qenë", "punoja", "deri", "vonë", "gënje", "vjen", "rregull", "flasim", "thënë", "jep", "shans", "pate", "kaluar", "sinqertë", "qetë", "lumi", "ura", "rrugët", "uji", "shtëpitë", "vonë", "qyteti",
         };
 
         private static readonly string[] AutoDetectWordsArabic =
@@ -316,7 +679,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsFarsi =
         {
-            "این", "برای", "اون", "سیب", "کال", "رو", "خيلي", "آره", "بود", "اون", "نيست", "اينجا", "باشه", "سلام", "ميکني", "داري", "چيزي", "چرا", "خوبه"
+            "این", "برای", "اون", "سیب", "کال", "رو", "خيلي", "آره", "بود", "اون", "نيست", "اينجا", "باشه", "سلام", "ميکني", "داري", "چيزي", "چرا", "خوبه",
+            "که", "را", "به", "از", "با", "در", "است", "هست", "نیست", "نبود", "باشد", "تو", "او", "شما", "آنها", "اونها", "اینجا", "آنجا", "اونجا", "حالا", "الان",
+            "امروز", "فردا", "دیروز", "همیشه", "هیچوقت", "هیچ", "چیزی", "کسی", "همه", "خیلی", "هنوز", "دیگه", "دیگر", "چی", "چه", "کجا", "کی", "چطور", "چقدر",
+            "کدام", "بله", "نه", "خوب", "بد", "ممنون", "مرسی", "متشکرم", "لطفا", "لطفاً", "ببخشید", "متأسفم", "متاسفم", "خداحافظ", "آقا", "خانم", "مرد", "زن", "پسر",
+            "دختر", "بچه", "مردم", "روز", "شب", "سال", "بار", "خانه", "خونه", "زندگی", "پول", "مرده", "زود", "دیر", "تنها", "درست", "البته", "واقعا", "واقعاً", "باید",
+            "نباید", "میدونم", "می‌دونم", "نمیدونم", "نمی‌دونم", "می‌دانم", "نمی‌دانم", "فکر", "می‌کنم", "میکنم", "می‌کنی", "میکنی", "می‌کردم", "می‌خواهم", "میخوام",
+            "می‌خوام", "می‌خواهی", "می‌خواهد", "می‌تونم", "می‌توانم", "نمی‌تونم", "گفتم", "گفت", "گفتی", "بگو", "ببین", "بیا", "برو", "کرد", "کردم", "کردی", "کار",
+            "شهر", "تا", "یک", "یه", "دو", "داری", "دارم", "داره", "می‌کنیم", "بودی", "بودم", "بودند", "دروغ", "نگو", "حرف", "بزنیم", "فرصت", "بده", "پارسال", "صادق",
+            "آرام", "کارخانه", "بسته", "رودخانه", "بالا", "بیاید", "جاده‌ها", "آب", "خانه‌ها", "تماشا", "می‌گفتند", "دیده", "آمدنش",
         };
 
         private static readonly string[] AutoDetectWordsHebrew =
@@ -324,11 +695,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב", "אֶת", "שֶׁל", "עַל", "הוּא",
             "אֲשֶׁר", "הִיא", "הַמְלֶט", "נָסִיךְ", "הֲלֹא", "עוֹד", "אֵין", "אֲנִי", "זֹאת", "וְלֹא",
             "כָּךְ", "הִנֵּה", "מְאֹד", "אֲדוֹנִי",
+            "אני", "את", "היא", "אנחנו", "אתם", "הם", "הן", "זה", "זאת", "של", "על", "עם", "לא", "כן", "מה", "מי", "איפה", "למה", "מתי", "איך", "כמה", "יש", "אין",
+            "היה", "הייתי", "היית", "יהיה", "רוצה", "יכול", "צריך", "חושב", "אומר", "אמרתי", "אמרת", "אמר", "רואה", "ראיתי", "בוא", "לך", "תן", "עשה", "עשיתי", "לעשות",
+            "לדבר", "עכשיו", "היום", "מחר", "אתמול", "תמיד", "אף פעם", "כלום", "משהו", "מישהו", "הכל", "כל", "רק", "גם", "עוד", "כבר", "מאוד", "רע", "תודה", "בבקשה",
+            "סליחה", "שלום", "אדוני", "גבירתי", "איש", "אנשים", "גבר", "אישה", "ילד", "ילדה", "ילדים", "יום", "לילה", "בוקר", "זמן", "שנה", "שנים", "פעם", "בית", "חיים",
+            "אהבה", "כסף", "מת", "מהר", "ביחד", "לבד", "חבל", "אבל", "כי", "אם", "או", "אז", "שם", "פה", "כאן", "הזדמנות", "לשקר", "תשקר", "עבדתי", "מאוחר", "לומר",
+            "מצטער", "להיות", "העיר", "שקטה", "המפעל", "נסגר", "הנהר", "יעלה", "הגשר", "נעלם", "הכבישים", "הוצפו", "הבתים", "המים", "הגבעה", "צפתה", "אמרו", "ראו",
+            "מגיע", "ממני", "ממך", "לי", "לו", "לה", "לנו", "לכם", "להם", "אותי", "אותך", "אותו", "אותה", "אותנו", "שלי", "שלך", "שלו", "שלה", "שלנו", "הלילה", "תראה",
+            "צריכים", "שעברה", "פעם אחת", "איש לא", "ציפה", "הייתה",
         };
 
         private static readonly string[] AutoDetectWordsVietnamese =
         {
-            "không", "[Tt]ôi", "anh", "đó", "ông", "tôi", "phải", "người", "được", "Cậu", "chúng", "chuyện", "muốn", "những", "nhiều"
+            "không", "[Tt]ôi", "anh", "đó", "ông", "tôi", "phải", "người", "được", "Cậu", "chúng", "chuyện", "muốn", "những", "nhiều",
+            "của", "và", "có", "một", "này", "cho", "với", "để", "cô", "bà", "chị", "nó", "họ", "mình", "gì", "sao", "đâu", "nào", "bao", "khi", "lúc", "giờ", "luôn",
+            "chưa", "đã", "sẽ", "đang", "rồi", "nữa", "cũng", "chỉ", "rất", "quá", "lắm", "vâng", "dạ", "đúng", "sai", "tốt", "xấu", "chào", "đi", "đến", "về", "làm",
+            "nói", "biết", "nghĩ", "thấy", "nhìn", "nghe", "cần", "thích", "yêu", "sống", "chết", "tiền", "nhà", "năm", "ngày", "đêm", "sáng", "tối", "lần", "nhanh",
+            "cùng", "nhau", "thật", "chắc", "thế", "vậy", "nhưng", "vì", "nếu", "hoặc", "đây", "đấy", "kia", "tại", "trong", "ngoài", "trên", "dưới", "trước", "giữa",
+            "sông", "cầu", "đường", "nước", "đồi", "muộn", "dối", "cảm ơn", "xin lỗi", "làm ơn", "có thể", "bây giờ", "hôm nay", "ngày mai", "hôm qua", "thị trấn",
+            "nhà máy", "đóng cửa", "yên tĩnh", "cơ hội", "thành thật", "chuyện này", "ở đâu", "nghe này", "còn", "ở", "ai đó", "chúng ta", "mọi người", "nhiều năm",
+            "trước khi", "sau đó",
         };
 
         private static readonly string[] AutoDetectWordsHungarian =
@@ -336,7 +722,18 @@ namespace Nikse.SubtitleEdit.Core.Common
             "hogy", "lesz", "tudom", "vagy", "mondtam", "még", "vagyok", "csak", "Hát", "felesége", "Csak", "utána", "jött",
             "Miért", "Akkor", "magát", "holnap", "Tudja", "Köszönöm", "élet", "Örvendek", "vissza", "hogy", "tudom", "Rendben",
             "Istenem", "Gyerünk", "értem", "vagyok", "hiszem", "történt", "rendben", "olyan", "őket", "vannak", "mindig", "Kérlek",
-            "Gyere", "kicsim", "vagyunk"
+            "Gyere", "kicsim", "vagyunk",
+            "nem", "és", "egy", "ez", "az", "volt", "nincs", "már", "itt", "ott", "mit", "hol", "ki", "én", "ő", "ők", "nekem", "neked", "neki", "engem", "velem",
+            "veled", "tudod", "akarom", "akarok", "kell", "lehet", "jó", "rossz", "kérem", "bocsánat", "sajnálom", "szia", "uram", "asszonyom", "ember", "emberek",
+            "férfi", "nő", "fiú", "lány", "gyerek", "éjjel", "éjszaka", "reggel", "idő", "év", "ház", "haza", "szeretlek", "pénz", "gyorsan", "lassan", "együtt",
+            "egyedül", "kár", "soha", "senki", "valaki", "semmi", "valami", "minden", "mindenki", "nagyon", "talán", "persze", "tényleg", "igazán", "biztos", "azt",
+            "ezt", "ezek", "azok", "sincs", "mert", "aki", "ami", "amit", "ide", "oda", "innen", "onnan", "után", "előtt", "alatt", "között", "nélkül", "miatt",
+            "szerint", "mondta", "mondd", "látom", "látod", "láttam", "menj", "menjünk", "csinálni", "csináltam", "csinálsz", "beszélnünk", "beszélni", "hazudj",
+            "esélyt", "esélyed", "tavaly", "őszinte", "város", "évekig", "csendes", "mielőtt", "gyár", "bezárt", "számított", "folyó", "megárad", "reggelre", "híd",
+            "eltűnt", "utak", "víz", "dombról", "nézte", "ahogy", "elviszi", "házakat", "később", "mondták", "látták", "előre", "voltál", "egész", "sokáig", "dolgoztam",
+            "nézd", "tőlem", "legyél", "egyszer",
+            "van", "estét", "asztaluk", "két", "természetesen", "kövessenek", "először", "étlapot", "hal", "ma", "este", "kiváló", "északon", "heves", "esőzés",
+            "várható", "hőmérséklet", "fagypont", "alá", "süllyed", "autósok", "legyenek", "különösen", "óvatosak", "utakon",
         };
 
         private static readonly string[] AutoDetectWordsTurkish =
@@ -356,7 +753,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsCroatianAndSerbian =
         {
-            "Hajde", "znam", "ćemo", "šta", "sam", "ali", "nije", "Nije", "samo", "ovo", "kako", "dobro", "Dobro", "sve", "tako", "će", "mogu", "ću", "zašto", "nešto", "za", "misliš", "možeš", "možemo", "ništa", "znaš", "ćemo", "znam"
+            "Hajde", "znam", "ćemo", "šta", "sam", "ali", "nije", "Nije", "samo", "ovo", "kako", "dobro", "Dobro", "sve", "tako", "će", "mogu", "ću", "zašto", "nešto", "za", "misliš", "možeš", "možemo", "ništa", "znaš", "ćemo", "znam",
+            "li", "ga", "mu", "joj", "vam", "ih", "ili", "kad", "koliko", "kao", "još", "već", "sada", "tamo", "danas", "sutra", "nikad", "nikada", "svi", "svaki",
+            "vrlo", "puno", "mnogo", "više", "manje", "loše", "hvala", "molim", "izvoli", "gospodin", "gospođa", "ljudi", "muškarac", "noć", "godina", "godine", "kuća",
+            "kući", "ljubav", "novac", "mrtav", "zajedno", "šteta", "imam", "imaš", "ima", "imamo", "imaju", "može", "moraš", "moramo", "hoću", "hoćeš", "hoće", "želim",
+            "želiš", "zna", "kažem", "kažeš", "rekao", "rekla", "reci", "vidim", "vidiš", "dođi", "idi", "idemo", "raditi", "radiš", "večeras", "jelovnik", "prvo",
+            "naravno", "očekuje", "jaka", "kiša", "noći", "ispod", "nule", "vozači", "trebali", "posebno", "oprezni", "pasti", "dvoje", "temperature",
         };
 
         private static readonly string[] AutoDetectWordsCroatian =
@@ -365,18 +767,28 @@ namespace Nikse.SubtitleEdit.Core.Common
             "poslije", "događa", "vjerovati", "vjerojatno", "vjerujem", "točno", "razumijem", "vidjela", "cijeli", "svijet", "obitelj", "volio", "sretan", "dovraga", "svijetu", "htjela", "vidjeli", "negdje", "želio", "ponovno",
             "djevojka", "umrijeti", "čovjeka", "mjesta", "djeca", "osjećam", "uopće", "djecu", "naprijed", "obitelji", "doista", "mjestu", "lijepa", "također", "riječ", "tijelo",
             "vrijeme", "mlijeko", "lijepo",
+            "stol", "slijedite", "izvrsna", "sjeveru", "tijekom", "cestama", "jučer", "tisuću", "tjedan", "mjesec", "svjetlo", "glazba", "zrak", "kruh", "tvrtka",
+            "siječanj", "vjetar", "snijeg", "rijeka", "cijena", "vrijedi", "pješice", "sljedeći",
         };
 
         private static readonly string[] AutoDetectWordsSerbian =
         {
             "šta", "ovde", "gde", "ko", "pre", "uvek", "vreme", "videti", "neko", "video", "niko", "ćao", "lepo", "izvini", "hteo", "mesto", "izvinite", "čovek", "dole", "čoveče", "dve", "dete", "deo", "posle", "dešava", "verovati",
             "verovatno", "verujem", "tačno", "razumem", "videla", "ceo", "svet", "porodica", "voleo", "srećan", "dođavola", "svetu", "htela", "videli", "negde", "želeo", "ponovo", "devojka", "umreti", "čoveka", "mesta", "deca", "osećam",
-            "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo"
+            "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo",
+            "sto", "veče", "pratite", "odlična", "severu", "tokom", "putevima", "juče", "hiljadu", "nedelja", "mesec", "svetlo", "muzika", "vazduh", "hleb", "firma",
+            "januar", "trebalo", "budu", "vetar", "sneg", "reka", "cena", "vredi", "peške", "sledeći",
         };
 
         private static readonly string[] AutoDetectWordsSerbianCyrillic =
         {
-            "ће", "ћемо", "Хоћу", "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу", "зашто", "нешто", "за", "шта", "овде", "бити", "чини", "учениче", "побегне", "остати", "Један", "Назад", "Молим"
+            "ће", "ћемо", "Хоћу", "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу", "зашто", "нешто", "за", "шта", "овде", "бити", "чини", "учениче", "побегне", "остати", "Један", "Назад", "Молим",
+            "сутра", "северу", "очекује", "јака", "киша", "температуре", "ноћи", "испод", "нуле", "возачи", "требало", "посебно", "опрезни", "путевима", "вече", "двоје",
+            "наравно", "пратите", "можемо", "прво", "јеловник", "вечерас", "одлична", "сада", "данас", "јуче", "увек", "никад", "нико", "неко", "ништа", "сви", "више",
+            "хвала", "људи", "дан", "ноћ", "кућа", "љубав", "новац", "заједно", "хоћеш", "хоће", "желим", "кажем", "рекао", "рекла", "дођи", "идемо", "хајде", "радити",
+            "радио", "лажеш", "жао", "реду", "морамо", "разговарамо", "каже", "прилику", "своју", "прошле", "једном", "будеш", "искрен", "годинама", "миран",
+            "затворила", "нарасти", "јутра", "нестао", "поплављени", "брда", "односи", "куће", "касније", "ја", "је", "су", "смо", "сте", "они", "она", "мене", "тебе",
+            "њега", "њу", "нас", "вас", "их", "ми", "ти", "ви", "ко", "где", "кад", "јер", "ако", "или", "па", "још", "већ", "много", "мало", "лоше",
         };
 
         private static readonly string[] AutoDetectWordsSerbianCyrillicOnly =
@@ -386,7 +798,16 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsIndonesian =
         {
-            "yang", "tahu", "bisa", "akan", "tahun", "tapi", "dengan", "untuk", "rumah", "dalam", "sudah", "bertemu"
+            "yang", "tahu", "bisa", "akan", "tahun", "tapi", "dengan", "untuk", "rumah", "dalam", "sudah", "bertemu",
+            "aku", "kamu", "kita", "mereka", "saya", "anda", "ini", "itu", "dari", "pada", "oleh", "atau", "tetapi", "karena", "kalau", "jika", "supaya", "agar", "apa",
+            "siapa", "mana", "kapan", "mengapa", "kenapa", "bagaimana", "berapa", "tidak", "bukan", "belum", "jangan", "ada", "adalah", "harus", "mau", "ingin", "boleh",
+            "dapat", "sedang", "masih", "lagi", "juga", "saja", "hanya", "sangat", "sekali", "sekarang", "nanti", "tadi", "kemarin", "besok", "hari", "malam", "pagi",
+            "waktu", "kali", "orang", "pria", "wanita", "anak", "ibu", "ayah", "teman", "hidup", "cinta", "uang", "mati", "cepat", "pelan", "bersama", "sendiri",
+            "sayang", "terima kasih", "maaf", "tolong", "selamat", "pak", "bu", "tuan", "nyonya", "semalaman", "kerja", "larut", "bohong", "dengar", "bicara", "soal",
+            "perlu", "dikatakan", "beri", "kesempatan", "lalu", "jujur", "kota", "sunyi", "pabrik", "ditutup", "menyangka", "sungai", "naik", "begitu", "menjelang",
+            "jembatan", "hilang", "jalan", "terendam", "menyaksikan", "bukit", "menyapu", "belakangan", "berkata", "menduganya", "kubilang", "padaku", "dariku", "oke",
+            "hujan", "turun", "utara", "diperkirakan", "suhu", "bawah", "nol", "pengemudi", "hati-hati", "ekstra", "meja", "tentu", "silakan", "ikuti", "lihat",
+            "menunya", "dulu", "ikannya", "enak", "deras",
         };
 
         // Catalan — distinctive words that don't collide with Spanish/French/Italian/Portuguese
@@ -396,8 +817,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             "què", "això", "amb", "però", "molt", "moltes", "molts", "gràcies", "aquest", "aquesta", "aquestes",
             "nosaltres", "vosaltres", "vull", "puc", "pots", "sóc", "ets", "són", "fer", "fas", "fem", "tinc",
             "tens", "seva", "teu", "meu", "ara", "res", "també", "perquè", "sisplau", "endavant", "ningú",
-            "sempre", "doncs", "gairebé", "cadascú"
-        };
+            "sempre", "doncs", "gairebé", "cadascú",
+            "estat", "estic", "estàs", "està", "estem", "estan", "sou", "és", "eren", "heu", "havia", "té", "tenim", "tenen", "tenia", "vols", "volem",
+            "podem", "cal", "saps", "sap", "crec", "creus", "dius", "diu", "vaig", "vam", "anar", "feu", "fet", "veig", "veus", "veure", "vine", "vinc",
+            "noia", "nen", "nit", "matí", "anys", "vegada", "ràpid", "perdó", "d'acord", "adéu", "senyor",
+            "senyora", "meva", "teva", "nostre", "vostre", "ells", "ell", "vostè", "ens", "allà", "allò", "més", "tampoc", "després",
+            "abans", "dins", "algú", "treballar", "treballava", "treballo", "mentis", "greu", "parlar", "oportunitat", "sincer", "poble",
+            "fàbrica", "tanqués", "riu", "carreteres", "turó", "aigua", "vist", "tothom", "encara", "només", "potser", "si us plau", "fer-ho",
+            "demà", "dels", "pels", "pel", "s'esperen", "baixaran", "d'anar", "pluges", "bona", "teniu", "taula", "seguiu-me", "podríem", "primer", "peix", "excel·lent",
+            "temperatures", "conductors", };
 
         // Tagalog / Filipino — distinctive Austronesian function words; low overlap with European
         // languages. Spanish loanwords ("para", "pero") are intentionally left out to avoid collisions.
@@ -406,7 +834,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             "ang", "ng", "mga", "ako", "ikaw", "siya", "kami", "tayo", "kayo", "sila", "ito", "iyan", "iyon",
             "dito", "diyan", "doon", "hindi", "wala", "mayroon", "meron", "salamat", "kumusta", "bakit", "ano",
             "sino", "saan", "kailan", "paano", "gusto", "alam", "ginagawa", "talaga", "naman", "kasi", "namin",
-            "natin", "ninyo", "nila", "niya", "kaya", "dahil", "ganito", "ganyan", "kung", "kapag", "mahal"
+            "natin", "ninyo", "nila", "niya", "kaya", "dahil", "ganito", "ganyan", "kung", "kapag", "mahal",
+            "ka", "rin", "daw", "nga", "pala", "yung", "yan", "yun", "oo", "opo", "sige", "pwede", "puwede", "huwag", "wag", "walang", "maraming", "marami", "konti",
+            "lahat", "kahit", "tungkol", "ngayon", "bukas", "kahapon", "gabi", "umaga", "araw", "oras", "taon", "beses", "bahay", "buhay", "patay", "mabilis", "mabagal",
+            "magkasama", "mag-isa", "totoo", "sigurado", "siguro", "mabuti", "masama", "maganda", "malaki", "maliit", "matanda", "bata", "tao", "lalaki", "babae",
+            "kaibigan", "sabi", "sinabi", "sabihin", "gawin", "ginawa", "ayaw", "akala", "tingin", "nakita", "halika", "tara", "pumunta", "nagpunta", "umuwi", "trabaho",
+            "pasensya", "pakiusap", "bigyan", "pagkakataon", "nagkaroon", "nakaraang", "maging", "tapat", "minsan", "tahimik", "bayan", "loob", "bago", "magsara",
+            "pabrika", "tataas", "ilog", "ganoon", "kabilis", "pagsapit", "tulay", "binaha", "kalsada", "pinagmasdan", "burol", "tinangay", "tubig", "kalaunan",
+            "darating", "buong", "kailangan", "sa'yo", "akong", "nating", "masasabi", "pag-usapan", "pagsinungalingan", "nag-overtime", "tingnan", "okay lang", "noong",
+            "mula",
         };
 
         // Afrikaans — only words that are NOT also valid Dutch, so a Dutch clip is never mistaken
@@ -415,8 +851,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             "nie", "baie", "jy", "jou", "ek", "moenie", "dankie", "asseblief", "hoekom", "hierdie", "daardie",
             "sal", "vir", "hulle", "saam", "gesels", "meisie", "altyd", "regtig", "aandag", "vinnig", "seblief",
-            "nogal", "sommer", "elkeen"
-        };
+            "nogal", "sommer", "elkeen",
+            "julle", "sy", "hy", "'n", "oukei", "verlede", "gesê", "sê", "gewerk", "gesluit", "gekyk", "dink", "glo", "gepraat", "gemaak", "gedoen", "gekom", "gegaan",
+            "gewees", "geword", "gevind", "gekry", "gegee", "gesien", "geneem", "verwag", "stadig", "almal", "seker", "miskien", "sou", "moes", "wou", "jare", "nag",
+            "môre", "vandag", "gister", "tyd", "lewe", "mense", "vrou", "seun", "kinders", "huise", "mekaar", "styg", "oggend", "paaie", "lank", "terwyl", "sodat",
+            "eers", "laaste", "homself", "hul", "sonder", "binne", "buite", "hieroor", "wegneem", "eerlik", };
 
         private static readonly string[] AutoDetectWordsThai =
         {
@@ -426,30 +865,60 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsKorean =
         {
-            "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", "일어나", "잘했어", "뭐라고", "있어요",
-            "있어요", "보여줘", "괜찮아요", "목소릴", "기억이", "저주를", "좋아요"
+            "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", 
+            "일어나", "잘했어", "뭐라고", "있어요", "있어요", "보여줘", "괜찮아요", "목소릴", "기억이", "저주를", 
+            "좋아요", "조사관", "회장님", "새끼야", "사모님", "가정부", "숨소리", "잠수부", "어떻게", "의미심장한",
+            "양장점", "긴장감", "거예요", "그래요", "없어요", "고마워요", "알았어요", "안녕하세요", "모르겠어요"
         };
 
+        // Everyday Macedonian words, preferring the ones Bulgarian and Serbian spell
+        // differently (ќе/ще/ће, јас/аз/ја, тоа/това/то, зошто/защо/зашто, ...). The old list
+        // was mostly words from one space film plus OCR misreads with Latin letters in them.
         private static readonly string[] AutoDetectWordsMacedonian =
         {
-            "господине", "Нема", "господине", "работа", "вселената", "Може", "треба", "Треба", "слетување", "капсулата", "време", "Френдшип", "Прием", "Добро", "пресметки", "Благодарам", "нешто", "Благодарам", "орбитата", "инженер",
-            "Харисон", "Фала", "тоалет", "орбита", "знаеме", "Супервизор", "жени", "Добра", "требаат", "што", "дeкa", "eшe", "кучe", "Руиз", "кучeто", "кучињa", "Бјути", "имa", "многу", "кучињaтa", "AДЗЖ", "Животни", "моЖe", "мaчe",
-            "мecто", "имaмe", "мaчињa", "пpвото", "пpaвaт", "нeшто", "колку",
-            "што", "тоа", "дека", "Што", "Дали", "треба", "беше", "таму"
+            "ќе", "што", "тоа", "дека", "дали", "јас", "тој", "таа", "тие", "сум", "треба", "требаат", "нема", "може", "можеби", "мора",
+            "многу", "нешто", "ништо", "некој", "никој", "сите", "колку", "каде", "зошто", "затоа", "тука", "таму", "уште", "веќе",
+            "сега", "денес", "секогаш", "никогаш", "сакам", "мислам", "знаеме", "одиме", "правиш", "знаеш", "имаш", "беше", "време",
+            "работа", "луѓе", "жени", "добро", "добра", "благодарам", "фала", "господине", "тоалет", "инженер", "вселената", "орбитата",
+            "очекуваат", "дождови", "температурите", "паднат", "нулата", "текот", "ноќта", "возачите", "бидат", "двајца", "секако", "следете", "видиме", "менито",
+            "вечерва", "повеќе", "молам", "госпоѓо", "ноќ", "куќа", "љубов", "заедно", "можам", "сакаш", "велам", "дојди", "ајде", "работев", "зборуваме", "својата",
+            "минатата", "шанса", "еднаш", "бидеш", "градот", "мирен", "фабриката", "реката", "издигне", "утрото", "мостот", "патиштата", "поплавени", "ридот", "водата",
+            "куќите", "подоцна", "велеа", "доаѓа", "утре", "дожд", "ветер", "снег", "цена", "пријател", "пријатели", "следниот", "недела", "месец", "илјада", "јануари",
+            "музика", "воздух", "леб", "фирма", "пешки", "вреди", "светло",
         };
 
         private static readonly string[] AutoDetectWordsFinnish =
         {
             "että", "kuin", "minä", "mitään", "Mutta", "siitä", "täällä", "poika", "Kiitos", "enää", "vielä", "tässä", "sulkeutuu", "Soitetaan", "Soita", "Onnistui", "Mitä", "Etuovi", "tippiä", "antaa", "Onko", "Hidasta", "tuntia",
             "tilata", "päästä", "palolaitokselle", "hätänumeroon", "aikaa", "Tämä", "Sinulla", "Palauttaa", "Kiitos", "Arvostele", "Älä", "toimi", "televisiota", "takaisin", "reitin", "pitäisi", "palauttaa", "nopeamman", "mitään",
-            "meidät", "maksaa", "kuullut", "kaikki", "jälkeen", "ihmiset", "hätäkeskukseen", "hiljaa", "haluat", "enää", "enemmän", "auttaa", "Tunkeilijahälytys", "Pysähdy", "Princen", "Käänny", "Kyllä", "Kiva", "Haluatko", "Haluan"
+            "meidät", "maksaa", "kuullut", "kaikki", "jälkeen", "ihmiset", "hätäkeskukseen", "hiljaa", "haluat", "enää", "enemmän", "auttaa", "Tunkeilijahälytys", "Pysähdy", "Princen", "Käänny", "Kyllä", "Kiva", "Haluatko", "Haluan",
+            "ei", "ole", "olen", "olet", "oli", "ollut", "olemme", "ovat", "olla", "olisi", "ennen", "jos", "vaan", "vai", "tai", "myös", "vain", "nyt", "sitten",
+            "tuolla", "siellä", "sinne", "tänne", "hän", "hänen", "häntä", "minun", "minua", "minulle", "sinun", "sinua", "sinulle", "sinä", "meidän", "meille",
+            "teidän", "heidän", "joku", "jotain", "mikään", "kukaan", "kaikkea", "paljon", "hyvin", "hyvä", "hyvää", "huomenta", "anteeksi", "totta", "ehkä", "varmasti",
+            "tietenkin", "koskaan", "aina", "ikinä", "juuri", "ihan", "niin", "näin", "sillä", "siksi", "koska", "vaikka", "kuitenkin", "eikä", "eivät", "emme", "voi",
+            "voin", "voit", "voimme", "voisi", "täytyy", "pitää", "tiedän", "tiedät", "tiedä", "luulen", "luulin", "tarkoitan", "ymmärrän", "tule", "tulee", "menee", "tehdä", "tein", "teit", "tehnyt", "sanoi", "sanoin", "sanoit", "sanoa", "nähdä", "näit", "nähnyt", "katso", "odota", "ota", "mies",
+            "nainen", "tyttö", "lapsi", "ihminen", "päivä", "päivää", "yö", "yöllä", "aamu", "aamulla", "aika", "vuosi", "vuotta", "vuoden", "kerran", "kertaa", "koko",
+            "kotiin", "koti", "elämä", "rakastan", "kuollut", "tapahtui", "tapahtunut", "tarvitsen", "apua", "rahaa", "hetki", "hetkinen", "nopeasti", "yhdessä",
+            "yksin", "miksi", "missä", "miten", "milloin", "kuka", "joka", "jotka", "mihin", "silta", "joen", "kaupunki", "vesi", "talot", "tiet", "myöhemmin", "töissä",
+            "myöhään", "valehtele", "mahdollisuus", "rehellinen",
+            "huomenna", "eilen", "tänään", "odotetaan", "pohjoisessa", "pohjoiseen", "etelässä", "sataa", "sadetta", "rankkasadetta", "lämpötila", "laskee", "pakkasen",
+            "puolelle", "autoilijoiden", "kannattaa", "erityisen", "varovaisia", "iltaa", "teillä", "pöytää", "kahdelle", "tietysti", "seuratkaa", "voisimmeko",
+            "ruokalistan", "ensin", "kala", "erinomaista",
         };
 
         private static readonly string[] AutoDetectWordsRomanian =
         {
             "pentru", "oamenii", "decât", "[Vv]reau", "[Ss]înt", "Asteaptã", "Fãrã", "aici", "domnule", "trãiascã", "niciodatã", "înseamnã", "vorbesti", "fãcut", "spune", "făcut", "când", "aici", "Asta", "văzut", "dacă", "câteva",
             "amândoi", "Când", "totuși", "mașină", "aceeași", "întâmplat", "niște", "ziua", "noastră", "cunoscut", "decat", "[Tt]rebuie", "[Aa]cum", "Poate", "vrea", "soare", "nevoie", "daca", "echilibrul", "vorbesti", "zeului",
-            "atunci", "memoria", "soarele"
+            "atunci", "memoria", "soarele",
+            "ești", "sunt", "suntem", "sunteți", "erau", "fost", "fie", "și", "sau", "dar", "că", "în", "despre", "până", "după", "înainte", "fără", "între", "peste",
+            "unde", "cine", "cât", "câte", "acolo", "azi", "astăzi", "mâine", "mereu", "niciodată", "nimic", "nimeni", "cineva", "ceva", "toți", "toate", "toată",
+            "foarte", "mult", "prea", "doar", "numai", "încă", "bine", "rău", "mulțumesc", "mersi", "scuze", "doamnă", "domnișoară", "ea", "mie", "ție", "tine", "nouă",
+            "lor", "mea", "tău", "său", "nostru", "vostru", "vrei", "vrem", "poți", "putem", "știu", "știi", "știe", "cred", "crezi", "spun", "spui", "spus", "zic",
+            "zis", "văd", "vezi", "haide", "fac", "faci", "oameni", "bărbat", "femeie", "băiat", "fată", "copil", "copii", "zi", "noapte", "noaptea", "dimineață",
+            "timp", "ani", "anul", "acasă", "casă", "viață", "viața", "dragoste", "bani", "repede", "încet", "împreună", "singur", "păcat", "sigur", "desigur", "chiar",
+            "deci", "așa", "astfel", "iar", "lucru", "lucrat", "lucrez", "târziu", "devreme", "orașul", "fabrica", "râul", "podul", "drumurile", "inundate", "privea",
+            "apa", "casele", "văzuseră", "venind", "minți", "vorbim", "șansă", "trecut", "măcar", "dată", "ai fost",
         };
 
         // Czech and Slovak languages have many common words (especially when non flexed)
@@ -462,14 +931,26 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly string[] AutoDetectWordsCzech =
         {
             ".*[Řř].*", ".*[ůě].*", "[Bb]ýt", "[Jj]sem", "[Jj]si", "[Jj]á", "[Mm]ít", "[Aa]no", "[Nn]e",  "[Nn]ic", "[Dd]en", "[Jj]en", "[Cc]o", "[Jj]ak[o]?", "[Nn]ebo",  "[Pp]ři", "[Pp]ro", "[Pp]řed.*", "[Jj](ít|du|de|deme|dou)",
-            "[Mm]ezi",  "[Jj]eště", "[Čč]lověk", "[Pp]odle", "[Dd]alší", "přejděte", "používat", "obrázky", "obrázek", "vašem", "vygenerovat"
-        };
+            "[Mm]ezi",  "[Jj]eště", "[Čč]lověk", "[Pp]odle", "[Dd]alší", "přejděte", "používat", "obrázky", "obrázek", "vašem", "vygenerovat",
+            "nikdo", "někdo", "něco", "všechno", "teď", "proč", "kdo", "kdy", "včera", "zítra", "děkuji", "promiň", "paní", "lidé", "peníze", "rychle", "pomalu", "řekl",
+            "řekla", "viděl", "udělat", "město", "řeka", "později", "viděli", "chci", "vím", "víš", "může", "můžu", "můžeš", "jsou", "byl", "byla", "bylo", "jsme", "jste", "nejsem", "jenom", "velmi", "moc", "dobře", "špatně", "pán", "dítě", "děti", "dívka", "holka", "kluk", "ráno", "domů", "miluji", "miluju",
+            "mají", "měl", "měla", "říkám", "říkal", "říkali", "řekni", "pojď", "jdi", "jdeme", "dělat", "dělám", "děláš", "udělal", "nevím", "nechci", "nemůžu",
+            "nemám", "potřebuju", "potřebuji", "jasně", "samozřejmě", "opravdu", "vážně", "tady", "pak", "protože", "jestli", "pokud", "nelži", "promluvit", "šanci",
+            "loni", "upřímný", "nečekal", "stoupne", "dívala", "kopce", "bere", "domy", "přicházet",
+            "očekává", "silný", "déšť", "teploty", "klesnou", "nulu", "řidiči", "měli", "silnicích", "zvlášť", "opatrní", "stůl", "pojďte",
+            "mnou", "bychom", "nejdřív", "jídelní", "lístek", "vynikající", };
         // differences between Czech and Slovak languages / Slovak words / please keep the words aligned between these languages for better comparison
         private static readonly string[] AutoDetectWordsSlovak =
         {
             ".*[Ôô].*", ".*[ä].*",  "[Bb]yť", "[Ss]om",  "[Ss]i",  "[Jj]a", "[Mm]ať", "[Áá]no", "[Nn]ie", "[Nn]ič", "[Dd]eň", "[Ll]en", "[Čč]o", "[Aa]ko", "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "[Pp]red.*", "([Íí]sť|[Ii](dem|de|deme|dú))",
-            "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)"
-        };
+            "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)",
+            "bolo", "bola", "bol", "boli", "sme", "ste", "sú", "nikto", "niečo", "niekto", "všetko", "všetci", "kým", "keď", "ak", "pretože", "kto", "kedy", "prečo",
+            "koľko", "ktorý", "ktorá", "ktoré", "teraz", "zajtra", "iba", "veľmi", "dobre", "zle", "ďakujem", "prepáč", "prepáčte", "pani", "ľudia", "dievča", "dieťa",
+            "deti", "roky", "milujem", "peniaze", "rýchlo", "pomaly", "majú", "mal", "môžem", "môžeš", "môže", "môžeme", "chcem", "viem", "vieš", "hovorím", "hovoríš", "hovoril", "hovorili", "povedz", "povedal", "povedala", "videl", "videli", "poď", "choď", "ideme", "urobiť", "urobil", "robíš",
+            "mesto", "nečakal", "rieka", "stúpne", "pozerala", "neskôr", "prichádzať", "celú", "pracoval", "dlho", "neklam", "pozri", "ľúto", "porozprávať", "povedať",
+            "šancu", "vlani", "odo", "mňa", "úprimný", "pokojné", "továreň", "nezavreli", "cesty", "vodou", "berie", "domy", "kopca",
+            "sa", "stôl", "dvoch", "samozrejme", "poďte", "najprv", "vidieť", "jedálny", "lístok", "vynikajúca", "severe", "očakáva", "dážď", "klesnú", "vodiči",
+            "cestách", "obzvlášť", "dobrý", "mohli", "jedlo", "práve", "aj", };
 
         private static readonly string[] AutoDetectWordsSlovenian =
         {
@@ -478,7 +959,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             "ugrabila", "ubila", "tvoja", "tudi", "tečna", "stvari", "rusko", "povedala", "obraz", "nalogo", "mislim", "govoriš",
             "Seveda", "Razmišljam", "Potem", "Nič", "Nisem", "Mogoče", "žensko", "žalostna", "človek", "Čisto", "znaš",
             "zlomi", "zgodilo", "zdaj", "zajtrk", "utrujena","ustrelila", "srečna", "čarovnik", "zaživeti",
-            "Torej", "plasti","kanjon", "več", "prišlo", "presenečeni", "največje"
+            "Torej", "plasti","kanjon", "več", "prišlo", "presenečeni", "največje",
+            "bo", "bil", "niso", "sva", "boš", "bomo", "boste", "bodo", "ki", "če", "ker", "kjer", "kaj", "kdo", "kdaj", "kateri", "katera", "tisti", "tista", "tukaj",
+            "danes", "jutri", "včeraj", "vedno", "nikoli", "nihče", "nekdo", "vse", "vsi", "vsak", "zelo", "še", "prav", "slabo", "živjo", "adijo", "gospod", "gospa",
+            "ljudje", "moški", "ženska", "fant", "punca", "dekle", "otrok", "otroci", "noč", "zjutraj", "enkrat", "življenje", "ljubim", "hitro", "počasi", "skupaj",
+            "imajo", "imel", "imela", "morem", "hočem", "hočeš", "hoče", "hočemo", "nočem", "vem", "veš", "vemo", "rekel", "videl", "pridi", "pojdi", "gremo",
+            "narediti", "naredil", "delaš", "preden", "pričakoval", "narasla", "pozneje", "prihajati", "hiše", "vodo", "tovarna", "zaprla", "celo", "delal", "pozno",
+            "poslušaj", "žal", "morava", "pogovoriti", "reči", "priložnost", "lani", "odnaša", "mostu",
+            "pričakujemo", "močan", "dež", "ponoči", "padle", "ničlo", "vozniki", "naj", "posebej", "previdni", "dober", "mizo", "sledite", "jedilnik", "nocoj", "odlična", "najprej", "videli",
         };
 
         private static readonly string[] AutoDetectWordsIcelandic =
@@ -555,13 +1043,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             "viņš", "viņa", "mēs", "jūs", "viņi", "viņas",
             "būt", "neesmu", "esmu", "varu", "nevaru", "gribu", "gaidi",
             "domāju", "zinu", "nezinu",
-            "cilvēks", "pasaulē", "dzīve", "laiks"
+            "cilvēks", "pasaulē", "dzīve", "laiks",
+            "bija", "pirms", "tika", "neviens", "ka", "tik", "ir", "nav", "būs", "būtu", "esi", "esam", "esat", "arī", "jau", "vēl", "tagad", "šeit", "tur",
+            "mani", "tev", "tevi", "viņam", "viņai", "mums", "viņiem", "šis", "šī", "tas", "tā", "tie", "tās", "visi", "viss", "visu", "kaut", "kāds", "kāda",
+            "neko", "nekas", "nekad", "vienmēr", "labi", "laba", "sveiki", "čau", "atvaino", "piedod", "vari", "varam", "varat", "jābūt", "vajag",
+            "gribi", "zini", "domā", "saki", "teica", "teicu", "runā", "redzu", "redzi", "redzēju", "nāc", "nāk", "ej", "iet", "darīt", "izdarīju", "vīrs", "vīrietis",
+            "sieviete", "puika", "meitene", "bērns", "cilvēki", "diena", "dienu", "nakts", "nakti", "rīts", "rītā", "laiku", "gads", "gadu", "gadiem", "reizi", "mājās",
+            "mājas", "mīlu", "miris", "notika", "nauda", "naudu", "ātri", "lēnām", "kopā", "viens", "pati", "žēl", "nē", "pilsēta", "fabrika", "slēgta", "upe",
+            "celsies", "strauji", "tilts", "ceļi", "ūdens", "vēlāk", "strādāju", "nemelo", "iespēja", "godīgs", "vairāk",
         };
 
         private static readonly string[] AutoDetectWordsLithuanian =
         {
-            "tavęs", "veidai", "apie", "jums", "Veidai", "Kaip", "kaip", "reikia", "Šūdas", "frensis", "Ačiū", "vilsonai", "Palauk", "Veidas", "viskas", "Tikrai", "manęs", "Tačiau", "žmogau", "Flagai", "Prašau", "Džiune", "Nakties",
-            "šviesybe", "Supratau", "komanda", "reikia", "apie", "Kodėl", "mūsų", "Ačiū", "vyksta"
+            "ir", "yra", "nėra", "aš", "jis", "ji", "jūs", "jie", "jos", "mane", "mano", "tau", "tave", "tavo", "jam", "jai", "mums", "jums", "jiems", "čia", "dabar", "jau", "dar", "tik", "taip", "labai", "gerai", "gal", "galbūt", "nes", "jei", "jeigu", "kai", "kada", "kodėl", "kaip", "kas", "ką", "kur", "kuris", "kuri", "kiek", "visi", "viskas", "viską", "nieko", "niekas", "niekada", "visada", "kažkas", "kažką", "kiti", "kitas", "šis", "ši", "tas", "tai", "tie", "tos", "ačiū", "prašau", "atsiprašau", "labas", "sveiki", "tikrai", "tiesa", "žinau", "žinai", "nežinau", "manau", "galiu", "gali", "galime", "negaliu", "noriu", "nori", "norėjau", "reikia", "turiu", "turi", "turėjai", "turėjo", "esu", "esi", "esame", "buvo", "buvau", "buvai", "būti", "būsiu", "sakiau", "sakė", "sakyk", "pasakyti", "matau", "matai", "mačiau", "eik", "eina", "ateik", "daryti", "padariau", "vyras", "moteris", "berniukas", "mergaitė", "vaikas", "žmogus", "žmonės", "diena", "dieną", "naktis", "naktį", "rytas", "ryte", "laikas", "laiko", "metai", "metų", "kartą", "namo", "namuose", "gyvenimas", "myliu", "miręs", "atsitiko", "pinigai", "pinigų", "greitai", "lėtai", "kartu", "vienas", "viena", "gaila", "šūdas", "velnias", "apie", "tačiau", "mūsų", "jūsų", "tavęs", "manęs", "palauk", "supratau", "vyksta", "miestas", "ramus", "gamykla", "užsidarė", "upė", "pakils", "tiltas", "dingo", "keliai", "vandeniu", "žiūrėjo", "neša", "namus", "vėliau", "numatė", "buvai", "dirbau", "nemeluok", "šansą", "sąžiningas", "turėjai",
         };
 
         private static readonly string[] AutoDetectWordsEstonian =
@@ -572,7 +1066,17 @@ namespace Nikse.SubtitleEdit.Core.Common
             "olen", "oota", "tahan", "mees", "naine", "poiss", "tüdruk",
             "ma", "sa", "tema", "meie", "teie", "nema", "nad",
             "see", "seda", "siin", "seal", "praegu", "veel", "päris",
-            "tõesti", "muidugi", "vabandust", "hee", "kuule"
+            "tõesti", "muidugi", "vabandust", "hee", "kuule",
+            "oli", "olnud", "olid", "oled", "oleme", "olete", "ole", "oleks", "enne", "kui", "keegi", "kedagi", "nii", "kes", "kus", "kuhu",
+            "millal", "sest", "aga", "siis", "juba", "ikka", "nüüd", "sinna", "siia", "minu", "mulle", "sinu", "sulle", "teda", "talle", "meid",
+            "meile", "teid", "teile", "neid", "neile", "kõik", "kõike", "hea", "võib", "võin", "võid", "võime", "saab", "saan", "saad", "saame", "peab",
+            "pean", "pead", "peame", "tahad", "tahab", "tean", "tead", "teab", "arvan", "arvad", "mõtlen", "ütlesin", "ütles", "ütlesid", "räägi", "rääkima", "rääkisin",
+            "näe", "näen", "näed", "nägin", "tule", "tuleb", "läheb", "teha", "tegin", "tegi", "tehtud", "inimene", "inimesed", "päev", "päeva", "öö",
+            "öösel", "hommik", "hommikul", "aeg", "aega", "aasta", "aastat", "aastaid", "kord", "korda", "kodu", "koju", "kodus", "elu", "armastan", "surnud", "juhtus",
+            "juhtunud", "raha", "hetk", "kiiresti", "aeglaselt", "koos", "üksi", "kahju", "olgu", "jah", "ei", "linn", "tehas", "suleti", "oodanud", "jõgi", "tõuseb",
+            "sild", "teed", "vesi", "majad", "hiljem", "terve", "valeta", "võimalus",
+            "homme", "oodatakse", "põhja", "poole", "tugevat", "vihma", "temperatuur", "langeb", "alla", "nulli", "autojuhid", "peaksid", "teedel", "eriti",
+            "ettevaatlikud", "olema", "õhtul", "täna", "laud", "kahele", "tulge", "kaasa", "võiksime", "menüüd", "näha", "kala", "suurepärane", "õhtust",
         };
 
         private static readonly string[] AutoDetectWordsHindi =
@@ -600,7 +1104,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="text">The text to detect the language of.</param>
         /// <param name="bestCount">The minimum number of keyword hits for a match.</param>
         /// <param name="score">The number of keyword hits for the returned language.</param>
-        private static string AutoDetectGoogleLanguage(string text, int bestCount, out int score)
+        /// <param name="detectChineseScript">Whether to detect Chinese sub (Simplified/Traditional) script.</param>
+        private static string AutoDetectGoogleLanguage(string text, int bestCount, out int score, bool detectChineseScript = false)
         {
             // Score-based selection instead of first-match-wins: every language block below is
             // evaluated and records a candidate via Consider(); the candidate with the most
@@ -613,6 +1118,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             var best = string.Empty;
             var bestScore = -1;
             var counts = CountWords(text);
+            var cyrillicChecked = false;
+            string cyrillicByLetters = null;
 
             void Consider(string languageCode, int score)
             {
@@ -633,14 +1140,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            var danishOnlyCount = counts.Get(AutoDetectWordsDanishOnly);
+            var norwegianOnlyCount = counts.Get(AutoDetectWordsNorwegianOnly);
             count = counts.Get(AutoDetectWordsDanish);
             if (count > bestCount)
             {
-                var norwegianCount = counts.Get(AutoDetectWordsNorwegianOnly);
                 var dutchCount = counts.Get(AutoDetectWordsDutch);
                 var swedishCount = counts.Get(AutoDetectWordsSwedish);
                 var icelandicCount = counts.Get(AutoDetectWordsIcelandic);
-                if (norwegianCount < 2 && dutchCount < count && swedishCount < count)
+                // Norwegian-only spellings outnumbering the Danish-only ones say Norwegian, unless
+                // there are too few of them to mean anything (one odd word in a long Danish file).
+                if ((norwegianOnlyCount < 2 || norwegianOnlyCount <= danishOnlyCount) && dutchCount < count && swedishCount < count)
                 {
                     if (icelandicCount > count * 1.5)
                     {
@@ -656,10 +1166,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = counts.Get(AutoDetectWordsNorwegian);
             if (count > bestCount)
             {
-                var danishCount = counts.Get(AutoDetectWordsDanishOnly);
                 var dutchCount = counts.Get(AutoDetectWordsDutch);
                 var swedishCount = counts.Get(AutoDetectWordsSwedish);
-                if (danishCount < 2 && dutchCount < count && swedishCount < count)
+                if ((danishOnlyCount < 2 || danishOnlyCount <= norwegianOnlyCount) && dutchCount < count && swedishCount < count)
                 {
                     Consider("no", count);
                 }
@@ -729,15 +1238,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             count = counts.Get(AutoDetectWordsDutch);
-            if (count > bestCount)
+            var afrikaansCount = counts.Get(AutoDetectWordsAfrikaans);
+            if (count > bestCount || afrikaansCount > bestCount)
             {
-                Consider("nl", count);
-            }
+                // Afrikaans text hits the Dutch list too (het, van, een, ...); the spelling tells.
+                var afrikaansOrDutch = GetAfrikaansOrDutchByLetters(text);
+                if (count > bestCount)
+                {
+                    Consider(afrikaansOrDutch ?? "nl", count);
+                }
 
-            count = counts.Get(AutoDetectWordsAfrikaans);
-            if (count > bestCount)
-            {
-                Consider("af", count); // Afrikaans
+                if (afrikaansCount > bestCount)
+                {
+                    Consider(afrikaansOrDutch ?? "af", afrikaansCount); // Afrikaans
+                }
             }
 
             count = counts.Get(AutoDetectWordsPolish);
@@ -766,7 +1280,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var bulgarianCount = counts.Get(AutoDetectWordsBulgarian);
                 var ukrainianCount = counts.Get(AutoDetectWordsUkrainian);
                 var macedonianCount = counts.Get(AutoDetectWordsMacedonian);
-                if (bulgarianCount > count)
+                var cyrillic = CyrillicByLetters();
+                if (cyrillic != null)
+                {
+                    Consider(cyrillic, count);
+                }
+                else if (bulgarianCount > count)
                 {
                     if (ukrainianCount > bulgarianCount && ukrainianCount > macedonianCount)
                     {
@@ -807,14 +1326,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = counts.Get(AutoDetectWordsUkrainian);
             if (count > bestCount)
             {
-                Consider("uk", count); // Ukrainian
+                Consider(CyrillicByLetters() ?? "uk", count); // Ukrainian
             }
 
             count = counts.Get(AutoDetectWordsBulgarian);
             if (count > bestCount)
             {
                 var macedonianCount = counts.Get(AutoDetectWordsMacedonian);
-                if (macedonianCount > count)
+                var cyrillic = CyrillicByLetters();
+                if (cyrillic != null)
+                {
+                    Consider(cyrillic, count);
+                }
+                else if (macedonianCount > count)
                 {
                     Consider("mk", count);
                 }
@@ -837,7 +1361,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var farsiCount = counts.Get(AutoDetectWordsFarsi);
                 if (hebrewCount < count && farsiCount < count)
                 {
-                    Consider("ar", count); // Arabic
+                    Consider(GetArabicScriptLanguageByLetters(text) ?? "ar", count); // Arabic
                 }
             }
 
@@ -850,7 +1374,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = counts.Get(AutoDetectWordsFarsi);
             if (count > bestCount)
             {
-                Consider("fa", count); // Farsi (Persian)
+                Consider(GetArabicScriptLanguageByLetters(text) ?? "fa", count); // Farsi (Persian)
             }
 
             count = counts.Get(AutoDetectWordsCroatianAndSerbian);
@@ -949,7 +1473,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             count += GetCountContains(text, "来", "卡", "拉", "吐", "滚", "他");
             if (count > bestCount * 2)
             {
-                Consider("zh", count); // Chinese (simplified) - not tested...
+                var script = "zh";
+                if (detectChineseScript)
+                {
+                    script = DetermineChineseScript(text);
+                }
+                
+                Consider(script, count); // Chinese (simplified) - not tested...
             }
 
             count = counts.Get(AutoDetectWordsCzechAndSlovak);
@@ -968,12 +1498,43 @@ namespace Nikse.SubtitleEdit.Core.Common
                     int slovakWordsCount = counts.Get(AutoDetectWordsSlovak);
                     if (czechWordsCount >= slovakWordsCount)
                     {
-                        Consider("cs", count); // Czech
+                        Consider("cs", Math.Max(count, czechWordsCount)); // Czech
                     }
                     else
                     {
-                        Consider("sk", count); // Slovak
+                        Consider("sk", Math.Max(count, slovakWordsCount)); // Slovak
                     }
+                }
+            }
+
+            // Czech and Slovak on their own lists too (the shared list above may miss a plain
+            // line), but not on a single hit: "[Jj]a", "[Nn]e" and "[Dd]en" are everyday words
+            // in German, Dutch and the Scandinavian languages as well.
+            count = counts.Get(AutoDetectWordsCzech);
+            if (count > bestCount && count > 1)
+            {
+                var slovakWordsCount = counts.Get(AutoDetectWordsSlovak);
+                if (slovakWordsCount > count)
+                {
+                    Consider("sk", slovakWordsCount);
+                }
+                else
+                {
+                    Consider("cs", count);
+                }
+            }
+
+            count = counts.Get(AutoDetectWordsSlovak);
+            if (count > bestCount && count > 1)
+            {
+                var czechWordsCount = counts.Get(AutoDetectWordsCzech);
+                if (czechWordsCount > count)
+                {
+                    Consider("cs", czechWordsCount);
+                }
+                else
+                {
+                    Consider("sk", count);
                 }
             }
 
@@ -998,15 +1559,20 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             count = counts.Get(AutoDetectWordsLatvian);
-            if (count > bestCount * 1.2)
+            var lithuanianWordCount = counts.Get(AutoDetectWordsLithuanian);
+            if (count > bestCount * 1.2 || lithuanianWordCount > bestCount)
             {
-                Consider("lv", count);
-            }
+                // kas, kur, kad, ir, jau, ... are both languages'; the letters are not.
+                var baltic = GetBalticLanguageByLetters(text);
+                if (count > bestCount * 1.2)
+                {
+                    Consider(baltic ?? "lv", count);
+                }
 
-            count = counts.Get(AutoDetectWordsLithuanian);
-            if (count > bestCount)
-            {
-                Consider("lt", count);
+                if (lithuanianWordCount > bestCount)
+                {
+                    Consider(baltic ?? "lt", lithuanianWordCount);
+                }
             }
 
             count = counts.Get(AutoDetectWordsHindi);
@@ -1018,7 +1584,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = counts.Get(AutoDetectWordsUrdu);
             if (count > bestCount)
             {
-                Consider("ur", count);
+                Consider(GetArabicScriptLanguageByLetters(text) ?? "ur", count);
             }
 
             count = counts.Get(AutoDetectWordsSinhalese);
@@ -1030,7 +1596,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             count = counts.Get(AutoDetectWordsMacedonian);
             if (count > bestCount)
             {
-                Consider("mk", count);
+                Consider(CyrillicByLetters() ?? "mk", count);
             }
 
             count = counts.Get(AutoDetectWordsIcelandic);
@@ -1041,11 +1607,91 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             score = bestScore;
             return best;
+
+            // "mk", "sr", "uk", "bg", "ru" or null, scanning the letters once no matter how many blocks ask.
+            string CyrillicByLetters()
+            {
+                if (!cyrillicChecked)
+                {
+                    cyrillicByLetters = GetCyrillicLanguageByLetters(text, counts);
+                    cyrillicChecked = true;
+                }
+
+                return cyrillicByLetters;
+            }
         }
 
-        public static string AutoDetectGoogleLanguage(Subtitle subtitle)
+        private static string DetermineChineseScript(string text)
+{
+    if (string.IsNullOrEmpty(text))
+    {
+        return "zh"; // Default to Simplified/generic
+    }
+
+    // Comprehensive Traditional Chinese character markers
+    int traditionalCount = GetCountContains(text, 
+        // Pronouns, Demographics & Measure Words
+        "們", "這", "個", "樣", "兩", "幾", "誰", "什", "傢", "伙",
+        // Verbs & Actions
+        "說", "聽", "看", "見", "會", "能", "開", "關", "讓", "給", 
+        "過", "來", "進", "帶", "選", "問", "愛", "買", "賣", "辦",
+        "寫", "讀", "講", "說", "試", "尋", "找", "換", "換", "搬",
+        "跑", "飛", "走", "過", "進", "出", "回", "到", "起", "坐",
+        // Adverbs, Prepositions & Particles
+        "還", "與", "後", "點", "為", "著", "麼", "裡", "裏", "邊",
+        "對", "從", "向", "往", "把", "被", "比", "象", "像", "經",
+        // Everyday Nouns & Objects
+        "國", "學", "書", "車", "門", "電", "機", "話", "語", "時",
+        "廣", "體", "灣", "臺", "台", "視", "頻", "錢", "萬", "東",
+        "風", "飯", "頭", "長", "遠", "親", "樂", "報", "隊", "師",
+        "員", "網", "劃", "園", "難", "雙", "無", "義", "業", "廠",
+        "產", "醫", "藥", "點", "實", "際", "關", "應", "該", "發",
+        // Additional Media, Emotion & Abstract Concepts
+        "歡", "迎", "愛", "情", "感", "覺", "意", "思", "想", "法",
+        "聲", "音", "樂", "器", "戲", "劇", "影", "片", "圖", "畫",
+        "燈", "鏡", "筆", "紙", "類", "別", "種", "類", "結", "構"
+    );
+
+    // Corresponding Simplified Chinese character markers for contrast
+    int simplifiedCount = GetCountContains(text, 
+        // Pronouns, Demographics & Measure Words
+        "们", "这", "个", "样", "两", "几", "谁", "什", "家", "伙",
+        // Verbs & Actions
+        "说", "听", "看", "见", "会", "能", "开", "关", "让", "给", 
+        "过", "来", "进", "带", "选", "问", "爱", "买", "卖", "办",
+        "写", "读", "讲", "说", "试", "寻", "找", "换", "换", "搬",
+        "跑", "飞", "走", "过", "进", "出", "回", "到", "起", "坐",
+        // Adverbs, Prepositions & Particles
+        "还", "与", "后", "点", "为", "着", "么", "里", "里", "边",
+        "对", "从", "向", "往", "把", "被", "比", "象", "像", "经",
+        // Everyday Nouns & Objects
+        "国", "学", "书", "车", "门", "电", "机", "话", "语", "时",
+        "广", "体", "湾", "台", "台", "视", "频", "钱", "万", "东",
+        "风", "饭", "头", "长", "远", "亲", "乐", "报", "队", "师",
+        "员", "网", "划", "园", "难", "双", "无", "义", "业", "厂",
+        "产", "医", "药", "点", "实", "际", "关", "应", "该", "发",
+        // Additional Media, Emotion & Abstract Concepts
+        "欢", "迎", "爱", "情", "感", "觉", "意", "思", "想", "法",
+        "声", "音", "乐", "器", "戏", "剧", "影", "片", "图", "画",
+        "灯", "镜", "笔", "纸", "类", "别", "种", "类", "结", "构"
+    );
+
+    if (traditionalCount > simplifiedCount && traditionalCount >= 2)
+    {
+        return "zh-Hant";
+    }
+
+    if (simplifiedCount > traditionalCount && simplifiedCount >= 2)
+    {
+        return "zh-Hans";
+    }
+
+    return "zh"; // Default / Simplified Chinese
+}
+        
+        public static string AutoDetectGoogleLanguage(Subtitle subtitle, bool detectChineseScript = false)
         {
-            return AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
+            return AutoDetectGoogleLanguageOrNull(subtitle, detectChineseScript) ?? "en";
         }
 
         public static string AutoDetectGoogleLanguage(Subtitle subtitle, int maxNumberOfSubtitlesToCheck)
@@ -1337,10 +1983,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
-        public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
+        public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle, bool detectChineseScript = false)
         {
             var allText = GetNonEmptyTexts(subtitle, 500000, out var nonEmptyCount);
-            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14);
+            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14, out var score, detectChineseScript);
             if (string.IsNullOrEmpty(languageId))
             {
                 languageId = GetEncodingViaLetter(allText);
@@ -1853,19 +2499,92 @@ namespace Nikse.SubtitleEdit.Core.Common
             return languageName;
         }
 
+        private static Encoding DetectJapaneseOrChineseEncoding(byte[] buffer)
+        {
+            var shiftJisText = Encoding.GetEncoding(932).GetString(buffer);
+            if (CountCharsInRange(shiftJisText, '\u3040', '\u30FF') > 10 && CountChars(shiftJisText, "\uFFFD") < 3) // Japanese kana
+            {
+                return Encoding.GetEncoding(932);
+            }
+
+            var gbkText = Encoding.GetEncoding(936).GetString(buffer);
+            var big5Text = Encoding.GetEncoding(950).GetString(buffer);
+            var isGbk = IsCjkText(gbkText);
+            var isBig5 = IsCjkText(big5Text);
+            var simplifiedCount = CountChars(gbkText, "\u4EEC\u8FD9\u8BF4\u6765\u4E3A\u5BF9\u6CA1\u8FC7\u56FD\u65F6\u4E2A\u4F1A\u5B66\u8BF7");
+            var traditionalCount = CountChars(big5Text, "\u5011\u9019\u8AAA\u4F86\u70BA\u5C0D\u6C92\u904E\u570B\u6642\u500B\u6703\u5B78\u8ACB");
+            if (isGbk && (!isBig5 || simplifiedCount >= traditionalCount))
+            {
+                return Encoding.GetEncoding(936); // Simplified Chinese
+            }
+
+            if (isBig5)
+            {
+                return Encoding.GetEncoding(950); // Traditional Chinese
+            }
+
+            return null;
+        }
+
+        private static bool IsCjkText(string text)
+        {
+            return CountCharsInRange(text, '\u4E00', '\u9FFF') > 10 && CountChars(text, "\uFFFD") < 3;
+        }
+
+        private static int CountCharsInRange(string text, char from, char to)
+        {
+            var count = 0;
+            foreach (var ch in text)
+            {
+                if (ch >= from && ch <= to)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private static int CountChars(string text, string chars)
+        {
+            var count = 0;
+            foreach (var ch in text)
+            {
+                if (chars.IndexOf(ch) >= 0)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         public static Encoding DetectAnsiEncoding(byte[] buffer)
         {
             try
             {
-                var greekEncoding = Encoding.GetEncoding(1253); // Greek
-                if (GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek) > 5)
-                {
-                    return greekEncoding;
-                }
-
                 var russianEncoding = Encoding.GetEncoding(1251); // Cyrillic
                 var textEnc1251 = russianEncoding.GetString(buffer);
                 var counts1251 = CountWords(textEnc1251);
+                var cyrillicCount = counts1251.Get(AutoDetectWordsRussianShort) + counts1251.Get(AutoDetectWordsSerbianCyrillic) +
+                                    counts1251.Get(AutoDetectWordsBulgarianShort) + counts1251.Get(AutoDetectWordsMacedonian) +
+                                    counts1251.Get(AutoDetectWordsUkrainian);
+                var koreanCount = GetCount(Encoding.GetEncoding(949).GetString(buffer), AutoDetectWordsKorean);
+                
+                // Cyrillic bytes read as 1253 are Greek letters too, and two-letter Greek words
+                // (να, το, με, ...) match such junk by chance - so Greek has to beat the Cyrillic count.
+                var greekEncoding = Encoding.GetEncoding(1253); // Greek
+                var greekCount = GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek);
+                if (greekCount > 5 && greekCount > cyrillicCount)
+                {
+                    if (koreanCount > greekCount)
+                    {
+                        return Encoding.GetEncoding(949); // Korean
+                    }
+
+                    return greekEncoding;
+                }
+
                 if (counts1251.Get(AutoDetectWordsRussianShort) > 5) // Russian
                 {
                     return russianEncoding;
@@ -1960,11 +2679,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 var spanishCount1252 = counts1252.Get(AutoDetectWordsSpanish);
-                if (textEnc1252.IndexOf('¡') >= 0)
+                if (textEnc1252.Contains('¡'))
                 {
                     spanishCount1252 += 5;
                 }
-                if (textEnc1252.IndexOf('¿') >= 0)
+                if (textEnc1252.Contains('¿'))
                 {
                     spanishCount1252 += 5;
                 }
@@ -1986,7 +2705,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var thaiEncoding = Encoding.GetEncoding(874); // Thai
                 var thaiCount = GetCount(thaiEncoding.GetString(buffer), AutoDetectWordsThai);
                 var koreanEncoding = Encoding.GetEncoding(949); // Korean
-                var koreanCount = GetCount(koreanEncoding.GetString(buffer), AutoDetectWordsKorean);
                 if (thaiCount > 10 || koreanCount > 10)
                 {
                     return thaiCount > koreanCount ? thaiEncoding : koreanEncoding;
@@ -2031,6 +2749,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (turkish1254Count > wordMinCount)
                 {
                     return encoding1254;
+                }
+
+                if (DetectJapaneseOrChineseEncoding(buffer) is { } cjkEncoding)
+                {
+                    return cjkEncoding;
                 }
 
                 var encoding = EncodingTools.DetectInputCodepage(buffer);
@@ -2285,7 +3008,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             return true;
         }
 
-        private static readonly char[] RightToLeftLetters = string.Concat(AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
+        // Letters only: the lists also hold phrases (a space), joiners and vowel marks.
+        private static readonly char[] RightToLeftLetters = string.Concat(AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Where(char.IsLetter).Distinct().ToArray();
 
 #if NET8_0_OR_GREATER
         private static readonly SearchValues<char> RightToLeftLetterSearchValues = SearchValues.Create(RightToLeftLetters);
@@ -2417,6 +3141,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
+            // Letters a single Latin-script language owns settle it outright.
+            var latin = GetLatinLanguageByUniqueLetters(text);
+            if (latin != null)
+            {
+                return latin;
+            }
+
             // Check for unique characters first
             var hasGermanUnique = ContainsAny(text, GermanUniqueSet);
             var hasSwedishUnique = ContainsAny(text, SwedishOnlySet);
@@ -2520,24 +3251,32 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            if (topCount == 1)
+            var result = LanguageCodes[firstTop];
+            for (var p = 0; topCount > 1 && p < PriorityOrder.Length; p++)
             {
-                return LanguageCodes[firstTop];
-            }
-
-            // Priority order for tie-breaking
-            foreach (var lang in PriorityOrder)
-            {
-                for (var i = 0; i < languageScores.Length; i++)
+                // Priority order for tie-breaking
+                var i = Array.IndexOf(LanguageCodes, PriorityOrder[p]);
+                if (i >= 0 && languageScores[i] == maxScore)
                 {
-                    if (languageScores[i] == maxScore && LanguageCodes[i] == lang)
-                    {
-                        return lang;
-                    }
+                    result = PriorityOrder[p];
+                    break;
                 }
             }
 
-            return LanguageCodes[firstTop];
+            if (result == "ru")
+            {
+                // The Cyrillic letter set is Russian's, so every Cyrillic text lands here;
+                // the other Cyrillic languages have letters of their own that say otherwise.
+                return GetCyrillicLanguageByLetters(text, null) ?? "ru";
+            }
+
+            if (result == "ar")
+            {
+                // Same for the Arabic script: Persian and Urdu have letters Arabic lacks.
+                return GetArabicScriptLanguageByLetters(text) ?? "ar";
+            }
+
+            return result;
         }
 
         public static bool IsLanguageWithoutPeriods(string language)

@@ -18,30 +18,12 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CloneReferenceCleaning;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.MossTtsCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PocketTtsCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SupertonicCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTts25AudioCppSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DetectSpeakers;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.SkipNoiseLines;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceCloneConsent;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
@@ -65,7 +47,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using ElevenLabsSettingsViewModel = Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings.ElevenLabsSettingsViewModel;
 using ReviewSpeechViewModel = Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech.ReviewSpeechViewModel;
 using Timer = System.Timers.Timer;
 using Nikse.SubtitleEdit.UiLogic.Media;
@@ -164,7 +145,6 @@ public partial class TextToSpeechViewModel : ObservableObject
     // Reference clip per paragraph for the per-line clone voice, cut before generation starts.
     private Dictionary<Paragraph, string> _perLineCloneClips = new();
     private readonly IFileHelper _fileHelper;
-    private readonly IFolderHelper _folderHelper;
     private readonly IAceStepAudioCppDownloadService _aceStepDownloadService;
 
     /// <summary>
@@ -188,11 +168,10 @@ public partial class TextToSpeechViewModel : ObservableObject
     private bool _suppressKeywordSync;
     private const string OmniVoiceAny = "(any)";
 
-    public TextToSpeechViewModel(ITtsDownloadService ttsDownloadService, IWindowService windowService, IFileHelper fileHelper, IFolderHelper folderHelper, IAceStepAudioCppDownloadService aceStepDownloadService)
+    public TextToSpeechViewModel(ITtsDownloadService ttsDownloadService, IWindowService windowService, IFileHelper fileHelper, IAceStepAudioCppDownloadService aceStepDownloadService)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
-        _folderHelper = folderHelper;
         _aceStepDownloadService = aceStepDownloadService;
 
         Engines = new ObservableCollection<ITtsEngine>();
@@ -407,6 +386,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.FishTtsAudioCppModel = SelectedModel ?? FishTtsAudioCpp.DefaultModelKey;
         }
+        else if (SelectedEngine is BreezeTtsAudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppModel = SelectedModel ?? BreezeTtsAudioCpp.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppInstruction = (Instruction ?? string.Empty).Trim();
+        }
         else if (SelectedEngine is FireRedTts3AudioCpp)
         {
             Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppModel = SelectedModel ?? FireRedTts3AudioCpp.DefaultModelKey;
@@ -418,6 +402,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             if (SelectedVoice?.EngineVoice is KugelAudioVoice kugelVoice && !string.IsNullOrEmpty(kugelVoice.Voice))
             {
                 Se.Settings.Video.TextToSpeech.KugelAudioAudioCppVoice = kugelVoice.Voice;
+            }
+        }
+        else if (SelectedEngine is VoxtralTtsAudioCpp)
+        {
+            Se.Settings.Video.TextToSpeech.VoxtralTtsAudioCppModel = SelectedModel ?? VoxtralTtsAudioCpp.DefaultModelKey;
+            if (SelectedVoice?.EngineVoice is VoxtralTtsVoice voxtralVoice && !string.IsNullOrEmpty(voxtralVoice.Voice))
+            {
+                Se.Settings.Video.TextToSpeech.VoxtralTtsAudioCppVoice = voxtralVoice.Voice;
             }
         }
         else if (SelectedEngine is CosyVoice3CrispAsr)
@@ -495,6 +487,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         Qwen3TtsCpp => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
         Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
         OmniVoiceTtsCpp => Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction ?? string.Empty,
+        BreezeTtsAudioCpp => Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppInstruction ?? string.Empty,
         _ => string.Empty,
     };
 
@@ -515,12 +508,14 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     // Qwen3's free-text instruction only does anything on the VoiceDesign model - the 0.6B and
-    // 1.7B Base models are not instruction-tuned. OmniVoice always shows its keyword picker.
+    // 1.7B Base models are not instruction-tuned. Breeze TTS 2 always takes one (voice design
+    // for "Default", delivery direction for a clone). OmniVoice always shows its keyword picker.
     private void RefreshInstructionVisibility()
     {
         IsInstructionTextVisible =
             (SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel))
-            || (SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(SelectedModel));
+            || (SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(SelectedModel))
+            || SelectedEngine is BreezeTtsAudioCpp;
         IsInstructionPickerVisible = SelectedEngine is OmniVoiceTtsCpp;
         HasInstruction = IsInstructionTextVisible || IsInstructionPickerVisible;
     }
@@ -1501,6 +1496,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             FishTtsAudioCpp.StopServer();
         }
+        if (keepAlive is not BreezeTtsAudioCpp)
+        {
+            BreezeTtsAudioCpp.StopServer();
+        }
         if (keepAlive is not FireRedTts3AudioCpp)
         {
             FireRedTts3AudioCpp.StopServer();
@@ -1508,6 +1507,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (keepAlive is not KugelAudioAudioCpp)
         {
             KugelAudioAudioCpp.StopServer();
+        }
+        if (keepAlive is not VoxtralTtsAudioCpp)
+        {
+            VoxtralTtsAudioCpp.StopServer();
         }
         if (keepAlive is not CosyVoice3CrispAsr)
         {
@@ -1835,11 +1838,17 @@ public partial class TextToSpeechViewModel : ObservableObject
             case FishTtsAudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadFishTtsAudioCppModels(FishTtsAudioCpp.ResolveModelKey(SelectedModel)));
                 break;
+            case BreezeTtsAudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadBreezeTtsAudioCppModels(BreezeTtsAudioCpp.ResolveModelKey(SelectedModel)));
+                break;
             case FireRedTts3AudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadFireRedTts3AudioCppModels(FireRedTts3AudioCpp.ResolveModelKey(SelectedModel)));
                 break;
             case KugelAudioAudioCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadKugelAudioAudioCppModels(KugelAudioAudioCpp.ResolveModelKey(SelectedModel)));
+                break;
+            case VoxtralTtsAudioCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVoxtralTtsAudioCppModels(VoxtralTtsAudioCpp.ResolveModelKey(SelectedModel)));
                 break;
             case CosyVoice3CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadCosyVoice3CrispAsrModels(CosyVoice3CrispAsr.ResolveModelKey(SelectedModel)));
@@ -1932,10 +1941,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             FishTtsAudioCpp => FishTtsAudioCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
+            BreezeTtsAudioCpp => BreezeTtsAudioCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
             FireRedTts3AudioCpp => FireRedTts3AudioCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             KugelAudioAudioCpp => KugelAudioAudioCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            VoxtralTtsAudioCpp => VoxtralTtsAudioCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             CosyVoice3CrispAsr => CosyVoice3CrispAsr.AreModelsInstalled(modelKey)
@@ -5145,6 +5160,16 @@ public partial class TextToSpeechViewModel : ObservableObject
                 IsEngineSettingsVisible = true;
                 IsModelDownloadVisible = true;
             }
+            else if (SelectedEngine is BreezeTtsAudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
             else if (SelectedEngine is FireRedTts3AudioCpp)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppModel);
@@ -5221,6 +5246,24 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 var savedVoice = Se.Settings.Video.TextToSpeech.KugelAudioAudioCppVoice;
                 var match = Voices.FirstOrDefault(v => v.EngineVoice is KugelAudioVoice kv && kv.Voice == savedVoice);
+                if (match != null)
+                {
+                    SelectedVoice = match;
+                }
+
+                IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is VoxtralTtsAudioCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.VoxtralTtsAudioCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+
+                var savedVoice = Se.Settings.Video.TextToSpeech.VoxtralTtsAudioCppVoice;
+                var match = Voices.FirstOrDefault(v => v.EngineVoice is VoxtralTtsVoice vv && vv.Voice == savedVoice);
                 if (match != null)
                 {
                     SelectedVoice = match;

@@ -154,7 +154,7 @@ public partial class CustomShortcutStepViewModel : ObservableObject
                 var regexError = CustomShortcutText.GetRegexError(step);
                 if (regexError != null)
                 {
-                    await ShowError(string.Format(language.CustomShortcutInvalidRegexX, regexError));
+                    await ShowError(string.Format(Se.Language.General.InvalidRegularExpressionX, regexError));
                     return;
                 }
 

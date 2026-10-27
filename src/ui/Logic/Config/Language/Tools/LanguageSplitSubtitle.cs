@@ -6,6 +6,7 @@ public class LanguageSplitSubtitle
     public string NumberOfEqualParts { get; set; }
     public string SaveSplitParts { get; set; }
     public string XPartsSavedInFormatYToFolder { get; set; }
+    public string SplitBy { get; set; }
 
     public LanguageSplitSubtitle()
     {
@@ -13,5 +14,6 @@ public class LanguageSplitSubtitle
         SaveSplitParts = "_Save split parts";
         NumberOfEqualParts = "Number of equal parts";
         XPartsSavedInFormatYToFolder = "{0} parts saved in format {1} to folder:";
+        SplitBy = "Split by";
     }
 }

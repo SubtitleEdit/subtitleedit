@@ -1,8 +1,5 @@
-using System;
-using System.Linq;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
-using Xunit;
 
 namespace UITests.Features.Files;
 

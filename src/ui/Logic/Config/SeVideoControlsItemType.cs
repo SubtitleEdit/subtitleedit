@@ -1,4 +1,4 @@
-namespace Nikse.SubtitleEdit.Logic.Config;
+﻿namespace Nikse.SubtitleEdit.Logic.Config;
 
 // The type is stored as a number in Settings.json, so every member has an explicit value
 // that must never change or be reused. New members get the next free number.
@@ -20,4 +20,14 @@ public enum SeVideoControlsItemType
 
     // Small label in the top right corner (e.g. "libmpv 2.5 sw").
     PlayerName = 7,
+
+    // Buttons that go to the previous/next subtitle and play it, and one that shows/hides the
+    // subtitles on the video (#16047). Hidden by default.
+    PreviousSubtitle = 8,
+    NextSubtitle = 9,
+    ToggleSubtitles = 10,
+
+    // Button with the current playback speed (e.g. "1.0x") that opens a menu with the speeds
+    // (#16306). Hidden by default.
+    PlaybackSpeed = 11,
 }

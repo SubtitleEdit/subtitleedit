@@ -1,10 +1,6 @@
-using System;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
 
 namespace UITests.Features.Video.SpeechToText.OpenRouter;

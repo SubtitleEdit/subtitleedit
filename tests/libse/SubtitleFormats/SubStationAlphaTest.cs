@@ -1,9 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using SkiaSharp;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 
 namespace LibSETests.SubtitleFormats;
 

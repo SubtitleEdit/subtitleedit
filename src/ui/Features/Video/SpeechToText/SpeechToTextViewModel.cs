@@ -37,7 +37,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Nikse.SubtitleEdit.UiLogic.Media;
-using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
@@ -1396,8 +1395,19 @@ public partial class SpeechToTextViewModel : ObservableObject
             var words = new List<Qwen3AsrWord>();
             foreach (var word in jsonDoc.RootElement.GetProperty("words").EnumerateArray())
             {
+                // The model prefixes its output with "language <Name><asr_text>"; qwen3-asr.cpp
+                // v0.1.9+ strips it, but older builds leak the "<asr_text>" marker into the word
+                // list for GGUFs that store that token as an ordinary (non-control) token, so it
+                // showed up at the start of subtitle lines. Strip it here regardless of engine.
+                var wordText = (word.GetProperty("word").GetString() ?? string.Empty)
+                    .Replace("<asr_text>", string.Empty, StringComparison.Ordinal);
+                if (string.IsNullOrWhiteSpace(wordText))
+                {
+                    continue;
+                }
+
                 words.Add(new Qwen3AsrWord(
-                    word.GetProperty("word").GetString() ?? string.Empty,
+                    wordText,
                     word.GetProperty("start").GetDouble(),
                     word.GetProperty("end").GetDouble()));
             }
@@ -4788,9 +4798,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             _engineExitCode = null;
             var qwen3ExtraArgs = engine.CommandLineParameter;
 
+            // qwen3-asr.cpp v0.1.9+ forces the spoken language from the prompt when -l is given
+            // (like the qwen-asr Python package); auto-detection is unreliable on short clips
+            // (Danish came out as Swedish or Chinese). Older builds only used -l for Korean word
+            // splitting, so passing it is harmless there. "auto" keeps detection.
+            var qwen3LanguageArg = string.IsNullOrWhiteSpace(language) || language.Equals("auto", StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : $"-l {language} ";
+
+            // qwen3-asr.cpp v0.1.10+ beam search: beam 3 trims about 2 WER points for roughly
+            // twice the decode time (greedy = 1). Older engine builds reject unknown arguments,
+            // so the flag is only passed when the installed build advertises it.
+            var qwen3BeamArg = qwen3Asr.SupportsBeamSearch ? "--beam-size 3 " : string.Empty;
+
             var qwen3Params = string.IsNullOrWhiteSpace(qwen3ExtraArgs)
-                ? $"-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\""
-                : $"{qwen3ExtraArgs} -m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
+                ? $"{qwen3LanguageArg}{qwen3BeamArg}-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\""
+                : $"{qwen3ExtraArgs} {qwen3LanguageArg}{qwen3BeamArg}-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
 
             return StartEngineProcess(exe, qwen3Params, dataReceivedHandler);
         }

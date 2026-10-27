@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
@@ -69,11 +67,11 @@ public class ExportImageBasedFullFrameTests : IDisposable
         return window;
     }
 
-    private static CheckBox FindFullFrameCheckBox(ExportImageBasedWindow window)
+    private static ToggleSwitch FindFullFrameSwitch(ExportImageBasedWindow window)
     {
         var checkBox = window.GetLogicalDescendants()
-            .OfType<CheckBox>()
-            .FirstOrDefault(c => Equals(c.Content, Se.Language.File.Export.FullFrameImage));
+            .OfType<ToggleSwitch>()
+            .FirstOrDefault(c => AutomationProperties.GetName(c) == Se.Language.File.Export.FullFrameImage);
         Assert.NotNull(checkBox);
         return checkBox;
     }
@@ -84,7 +82,7 @@ public class ExportImageBasedFullFrameTests : IDisposable
         var window = BuildWindow(new ExportHandlerFcp());
         window.Show();
 
-        var checkBox = FindFullFrameCheckBox(window);
+        var checkBox = FindFullFrameSwitch(window);
         Assert.True(checkBox.IsEffectivelyVisible);
     }
 
@@ -94,7 +92,7 @@ public class ExportImageBasedFullFrameTests : IDisposable
         var window = BuildWindow(new ExportHandlerBluRaySup());
         window.Show();
 
-        var checkBox = FindFullFrameCheckBox(window);
+        var checkBox = FindFullFrameSwitch(window);
         Assert.True(checkBox.IsEffectivelyVisible);
     }
 
@@ -104,7 +102,7 @@ public class ExportImageBasedFullFrameTests : IDisposable
         var window = BuildWindow(new ExportHandlerVobSub());
         window.Show();
 
-        var checkBox = FindFullFrameCheckBox(window);
+        var checkBox = FindFullFrameSwitch(window);
         Assert.False(checkBox.IsEffectivelyVisible);
     }
 

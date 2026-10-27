@@ -62,5 +62,9 @@ public enum SeWaveformToolbarItemType
     // Picks how the editor-style layout (layout 14) splits the subtitles over rows - one row, or
     // a row per layer, actor or style. Only rendered in that layout, like the audio-track picker
     // only renders for a multi-track video.
-    TimelineTrackGrouping = 31
+    TimelineTrackGrouping = 31,
+
+    // Compact rule-profile picker (#16236): an icon and a slim drop-down of the profiles from
+    // Options > Settings > Rules, the same switch as the Choose profile shortcut, without the dialog.
+    RuleProfile = 32
 }

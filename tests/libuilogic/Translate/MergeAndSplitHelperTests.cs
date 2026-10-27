@@ -69,6 +69,102 @@ public class MergeAndSplitHelperTests
         Assert.Equal(count, rowsWithText);
     }
 
+    // Issue #16384: separator lines, not sentence periods added by the translator,
+    // determine the row boundaries for sources without sentence endings.
+    [Theory]
+    [InlineData("zh", "今天天气很好", "我们去公园吧", "你觉得怎么样？")]
+    [InlineData("zh-CN", "今天天气很好", "我们去公园吧", "你觉得怎么样？")]
+    [InlineData("ja", "今日はいい天気です", "公園に行きましょう", "どう思いますか？")]
+    public async Task MergeAndTranslateIfPossible_PeriodMarkersKeepRowsWhenTranslationAddsPeriods(string sourceCode, params string[] texts)
+    {
+        var rows = MakeRows(texts);
+        var translator = new FixedResultTranslator
+        {
+            Result = "The weather is nice today.\n.\nLet's go to the park.\n.\nWhat do you think?",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("Source", sourceCode),
+            new TranslationPair("English", "en"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(3, count);
+        Assert.Equal(["The weather is nice today.", "Let's go to the park.", "What do you think?"], rows.Select(r => r.TranslatedText));
+    }
+
+    [Theory]
+    [InlineData("zh", "好的", "今天天气很好，我们一起去公园散步吧", "你觉得怎么样？")]
+    [InlineData("ja", "はい", "今日はいい天気なので、公園を散歩しましょう", "どう思いますか？")]
+    public async Task MergeAndTranslateIfPossible_PeriodMarkersKeepShortRowBeforeLongRow(string sourceCode, params string[] texts)
+    {
+        var rows = MakeRows(texts);
+        var translator = new FixedResultTranslator
+        {
+            Result = "OK.\n.\nThe weather is nice. Let's take a walk.\n.\nWhat do you think?",
+        };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("Source", sourceCode),
+            new TranslationPair("English", "en"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(3, count);
+        Assert.Equal(["OK.", "The weather is nice. Let's take a walk.", "What do you think?"], rows.Select(r => r.TranslatedText));
+    }
+
+    [Theory]
+    [InlineData("zh", "The weather is nice today.\n.\nLet's go to the park.\nWhat do you think?")]
+    [InlineData("ja", "The weather is nice today.\n.\nLet's go to the park.\nWhat do you think?")]
+    [InlineData("zh", "The weather is nice today.\n.\nLet's go to the park.\n.\nWhat do you think?\n.\nExtra row.")]
+    [InlineData("ja", "The weather is nice today.\n.\nLet's go to the park.\n.\nWhat do you think?\n.\nExtra row.")]
+    [InlineData("zh", "The weather is nice today.\n.\n.\nWhat do you think?")]
+    [InlineData("ja", "The weather is nice today.\n.\n.\nWhat do you think?")]
+    public async Task MergeAndTranslateIfPossible_InvalidPeriodMarkerSplitDoesNotUpdateRows(string sourceCode, string reply)
+    {
+        var rows = sourceCode == "ja"
+            ? MakeRows("今日はいい天気です", "公園に行きましょう", "どう思いますか？")
+            : MakeRows("今天天气很好", "我们去公园吧", "你觉得怎么样？");
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("Source", sourceCode),
+            new TranslationPair("English", "en"),
+            0,
+            new FixedResultTranslator { Result = reply },
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(0, count);
+        Assert.All(rows, r => Assert.Equal(string.Empty, r.TranslatedText));
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_EnglishSourceStillRejectsShiftedSentenceSplit()
+    {
+        using var _ = new FixedAbbreviations(NoAbbreviations);
+        var rows = MakeRows("Who?", "Mrs Meier is here.", "He wanted a woman.", "What's wrong?");
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("German", "de"),
+            0,
+            new FixedResultTranslator { Result = "Wer? Fr. Meier ist hier. Er wollte eine Frau. Was ist los?" },
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(0, count);
+        Assert.All(rows, r => Assert.Equal(string.Empty, r.TranslatedText));
+    }
+
     private sealed class EchoTranslator : IAutoTranslator
     {
         public string Name => "Echo";

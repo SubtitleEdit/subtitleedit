@@ -1,4 +1,3 @@
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -62,8 +61,8 @@ public class VibeVoiceCrispAsr : ITtsEngine, IPerLineCloneEngine
     // otherwise crash the loader at startup with a Windows access violation.
     private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
     {
-        [TalkerQ4KFileName] = 1706804128L,
-        [TalkerQ8_0FileName] = 2995704736L,
+        [TalkerQ4KFileName] = 1891216288L,
+        [TalkerQ8_0FileName] = 3115973536L,
         [TalkerF16FileName] = 5412393280L,
     };
 

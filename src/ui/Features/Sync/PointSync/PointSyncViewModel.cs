@@ -39,7 +39,6 @@ public partial class PointSyncViewModel : ObservableObject
     /// </summary>
     public string VideoFileName => _videoFileName;
 
-    private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
 
     private string _videoFileName;
@@ -51,9 +50,8 @@ public partial class PointSyncViewModel : ObservableObject
     // Only passed on to "Set sync point", which draws the subtitle on its video (#13767).
     private VideoPreviewSubtitleContext _previewContext = VideoPreviewSubtitleContext.Default;
 
-    public PointSyncViewModel(IFileHelper fileHelper, IWindowService windowService)
+    public PointSyncViewModel(IWindowService windowService)
     {
-        _fileHelper = fileHelper;
         _windowService = windowService;
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
         SyncPoints = new ObservableCollection<SyncPoint>();

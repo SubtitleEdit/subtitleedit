@@ -77,6 +77,22 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string TimedTextItunesTimeCodeFormat { get; set; }
         public string TimedTextItunesStyleAttribute { get; set; }
         public string TimedTextItunesLanguage { get; set; }
+
+        /// <summary>tts:color for the styles of the built-in iTunes Timed Text header (when no header is carried over).</summary>
+        public string TimedTextItunesDefaultColor { get; set; }
+
+        /// <summary>Style id written on &lt;body&gt; (empty = none). With a template header it overrides the template's own.</summary>
+        public string TimedTextItunesDefaultStyle { get; set; }
+
+        /// <summary>Region id written on &lt;body&gt; (empty = none). With a template header it overrides the template's own.</summary>
+        public string TimedTextItunesDefaultRegion { get; set; }
+
+        /// <summary>
+        /// A complete TTML document whose head (styling, layout, metadata) and body attributes are
+        /// used for every saved iTunes Timed Text file instead of the source file's header. Empty =
+        /// keep the source header (or the built-in one). The UI loads it from the user's template file.
+        /// </summary>
+        public string TimedTextItunesHeaderTemplate { get; set; }
         public string TimedTextImsc11TimeCodeFormat { get; set; }
         public string TimedTextImsc11FileExtension { get; set; }
 
@@ -166,6 +182,10 @@ $HorzAlign          =   Center
             TimedTextItunesBottomExtent = "100% 15%";
             TimedTextItunesTimeCodeFormat = "Frames";
             TimedTextItunesStyleAttribute = "tts:fontStyle";
+            TimedTextItunesDefaultColor = "white";
+            TimedTextItunesDefaultStyle = string.Empty;
+            TimedTextItunesDefaultRegion = string.Empty;
+            TimedTextItunesHeaderTemplate = string.Empty;
             TimedTextImsc11TimeCodeFormat = "hh:mm:ss.ms";
             TimedTextImsc11FileExtension = ".xml";
 

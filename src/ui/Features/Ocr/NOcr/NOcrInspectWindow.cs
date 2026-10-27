@@ -1,16 +1,24 @@
-﻿using Avalonia;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.NOcr;
 
+/// <summary>
+/// Inspect the nOCR matches of one image in the editor look (see <see cref="EditorChrome"/>):
+/// the matched letters and the subtitle image on top, then the selected letter, the auto-draw
+/// settings and the drawing canvas as columns; OK in the button bar.
+/// </summary>
 public class NOcrInspectWindow : Window
 {
     private readonly NOcrInspectViewModel _vm;
@@ -27,38 +35,25 @@ public class NOcrInspectWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
+        AddLetterButtonStyles();
         DataContext = vm;
 
-        var grid = new Grid
+        var sections = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Lines
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Controls
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
+                new RowDefinition { Height = GridLength.Auto }, // Lines
+                new RowDefinition { Height = GridLength.Star }, // Controls
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            Height = double.NaN,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
         };
-
-        var linesView = MakeLinesView(vm);
-        var controlsView = MakeControlsView(vm);
+        sections.Add(MakeLinesView(vm), 0, 0);
+        sections.Add(MakeControlsView(vm), 1, 0);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk);
+        buttonOk.Classes.Add("primary");
 
-        grid.Add(linesView, 0, 0);
-        grid.Add(controlsView, 1, 0);
-        grid.Add(buttonBar, 2, 0);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
@@ -70,28 +65,41 @@ public class NOcrInspectWindow : Window
         PointerWheelChanged += vm.PointerWheelChanged;
     }
 
+    /// <summary>
+    /// The letter buttons are built by the view model; give them the field look here.
+    /// </summary>
+    private void AddLetterButtonStyles()
+    {
+        Styles.Add(new Style(x => x.OfType<StackPanel>().Class("letters").Descendant().OfType<Button>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.BackgroundProperty, EditorChrome.FieldBrush),
+                new Setter(TemplatedControl.BorderBrushProperty, EditorChrome.FieldBorderBrush),
+                new Setter(TemplatedControl.BorderThicknessProperty, new Thickness(1)),
+                new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
+                new Setter(TemplatedControl.FontSizeProperty, 15.0),
+                new Setter(Layoutable.MinWidthProperty, 34.0),
+                new Setter(ContentControl.HorizontalContentAlignmentProperty, HorizontalAlignment.Center),
+            },
+        });
+    }
+
     private static Border MakeLinesView(NOcrInspectViewModel vm)
     {
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = GridLength.Star },
+                new ColumnDefinition { Width = GridLength.Auto },
             },
-            Width = double.NaN,
-            Height = double.NaN,
+            ColumnSpacing = 14,
         };
 
-        vm.PanelLines = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
-            Margin = new Thickness(5),
-        };
+        vm.PanelLines.Orientation = Orientation.Vertical;
+        vm.PanelLines.Margin = new Thickness(-4, 0, 0, 0);
+        vm.PanelLines.Classes.Add("letters");
 
         var image = new Image
         {
@@ -106,37 +114,37 @@ public class NOcrInspectWindow : Window
         var imageBackdrop = new Border
         {
             Background = ImagePreviewBackground.CreateBrush(),
+            CornerRadius = new CornerRadius(6),
             Child = image,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
         };
 
-        grid.Add(vm.PanelLines, 0);
-        grid.Add(imageBackdrop, 0, 1, 1);
+        grid.Add(vm.PanelLines, 0, 0);
+        grid.Add(imageBackdrop, 0, 1);
 
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(10);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Match, grid, first: true);
+        section.BorderThickness = new Thickness(0, 0, 0, 1);
+        return section;
     }
 
-    private static Border MakeControlsView(NOcrInspectViewModel vm)
+    private static Grid MakeControlsView(NOcrInspectViewModel vm)
     {
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Star },
             },
-            ColumnSpacing = 20,
-            Width = double.NaN,
         };
 
-        vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText))
+        vm.TextBoxNew = EditorChrome.AsTextField(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)), Se.Language.General.Text)
             .WithBindEnabled(nameof(vm.IsEditControlsEnabled));
+        vm.TextBoxNew.Width = double.NaN;
+        vm.TextBoxNew.Margin = new Thickness(0);
+        vm.TextBoxNew.HorizontalAlignment = HorizontalAlignment.Stretch;
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
@@ -147,74 +155,56 @@ public class NOcrInspectWindow : Window
             Margin = new Thickness(5),
             [!Image.SourceProperty] = new Binding(nameof(vm.CurrentBitmap)),
             Stretch = Stretch.Uniform,
+            StretchDirection = StretchDirection.DownOnly,
             MinWidth = 30,
             MinHeight = 30,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
         };
 
-        var panelCurrentImage = new StackPanel
+        var panelCurrentImage = new Border
         {
             Background = ImagePreviewBackground.CreateBrush(),
-            Children = { image },
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            Margin = new Thickness(0, 0, 0, 5),
+            CornerRadius = new CornerRadius(6),
+            Child = image,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
 
-        var checkBoxItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.IsNewTextItalic))
-            .WithBindEnabled(nameof(vm.IsEditControlsEnabled));
-        checkBoxItalic.IsCheckedChanged += vm.ItalicCheckChanged;
+        var (switchItalic, italicRow) = NOcrChrome.MakeSwitchRow(nameof(vm.IsNewTextItalic), Se.Language.General.Italic);
+        switchItalic.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
+        switchItalic.IsCheckedChanged += vm.ItalicCheckChanged;
+
+        var buttonUpdate = EditorChrome.MakeTextToolButton(IconNames.Check, Se.Language.General.Update, vm.UpdateCommand);
+        buttonUpdate.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
+        var buttonDelete = EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand);
+        buttonDelete.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
+        var buttonAddBetterMatch = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.Ocr.AddBetterMatch, vm.AddBetterMatchCommand);
+        var actions = new StackPanel
+        {
+            Spacing = 2,
+            Margin = new Thickness(-8, 6, 0, 0),
+            Children = { buttonUpdate, buttonDelete, buttonAddBetterMatch },
+        };
+        foreach (var action in actions.Children)
+        {
+            action.HorizontalAlignment = HorizontalAlignment.Left;
+        }
 
         var panelCurrent = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
+            Orientation = Orientation.Vertical,
+            Spacing = 8,
+            Width = 220,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Ocr.CurrentImage).WithBold(),
                 panelCurrentImage,
-                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ResolutionAndTopMargin)),
-                UiUtil.MakeLabel(Se.Language.General.Match).WithBold().WithMarginTop(15),
+                EditorChrome.MakeBoundInfo(nameof(vm.ResolutionAndTopMargin)),
+                EditorChrome.MakeSectionHeader(Se.Language.General.Match).WithMarginTop(10),
                 vm.TextBoxNew,
-                checkBoxItalic,
-                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.MatchResolutionAndTopMargin)),
-                UiUtil.MakeButton(Se.Language.General.Update, vm.UpdateCommand).WithMarginTop(25).WithLeftAlignment().WithBindEnabled(nameof(vm.IsEditControlsEnabled)),
-                UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand).WithMarginTop(5).WithLeftAlignment().WithBindEnabled(nameof(vm.IsEditControlsEnabled)),
-                UiUtil.MakeButton(Se.Language.Ocr.AddBetterMatch, vm.AddBetterMatchCommand).WithMarginTop(5).WithLeftAlignment(),
+                italicRow,
+                EditorChrome.MakeBoundInfo(nameof(vm.MatchResolutionAndTopMargin)),
+                actions,
             },
-        };
-
-        var toggleButtonForeground = new ToggleButton
-        {
-            Content = Se.Language.General.Foreground,
-            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.IsNewLinesForegroundActive))
-            {
-                Source = vm,
-            },
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 5, 0),
-        };
-        toggleButtonForeground.IsCheckedChanged += vm.DrawModeForegroundChanged;
-        var toggleButtonBackground = new ToggleButton
-        {
-            Content = Se.Language.General.Background,
-            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.IsNewLinesBackgroundActive))
-            {
-                Source = vm,
-            },
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-        };
-        toggleButtonBackground.IsCheckedChanged += vm.DrawModeBackgroundChanged;
-
-        var panelDrawMode = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            Children =
-            {
-                toggleButtonForeground,
-                toggleButtonBackground,
-            }
         };
 
         var buttonClear = new SeSplitButton
@@ -236,96 +226,67 @@ public class NOcrInspectWindow : Window
                         Command = vm.ClearDrawBackgroundCommand,
                     },
                 }
-            }
-        };
+            },
+            HorizontalAlignment = HorizontalAlignment.Left,
+        }.WithBindEnabled(nameof(vm.IsEditControlsEnabled));
 
         var comboBoxLinesToAutoDraw = UiUtil.MakeComboBox(vm.NoOfLinesToAutoDrawList, vm, nameof(vm.SelectedNoOfLinesToAutoDraw))
             .WithBindEnabled(nameof(vm.IsEditControlsEnabled));
+        comboBoxLinesToAutoDraw.MinWidth = 100;
+        comboBoxLinesToAutoDraw.Margin = new Thickness(0);
+        AutomationProperties.SetName(comboBoxLinesToAutoDraw, Se.Language.Ocr.LinesToDraw);
 
-        var iconInfo = new Optris.Icons.Avalonia.Icon
-        {
-            Value = IconNames.Information,
-            Margin = new Thickness(5, 0, 0, 0),
-        };
-        iconInfo.PointerPressed += (sender, args) =>
-        {
-            _ = vm.ShowDrawingTips();
-        };
-        ToolTip.SetTip(iconInfo, Se.Language.Ocr.NOcrDrawHelp);
         var panelLinesToDraw = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
             Children =
             {
                 comboBoxLinesToAutoDraw,
-                iconInfo,
+                NOcrChrome.MakeDrawingTipsButton(vm.ShowDrawingTips),
             }
         };
+
+        var buttonDrawAgain = EditorChrome.MakeTextToolButton(IconNames.Refresh, Se.Language.Ocr.AutoDrawAgain, vm.DrawAgainCommand);
+        buttonDrawAgain.HorizontalAlignment = HorizontalAlignment.Left;
+        buttonDrawAgain.Margin = new Thickness(-8, 4, 0, 0);
+        buttonDrawAgain.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
 
         var panelDrawControls = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
+            Orientation = Orientation.Vertical,
+            Spacing = 8,
+            Width = 200,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Ocr.LinesToDraw).WithBold(),
                 panelLinesToDraw,
-                UiUtil.MakeButton(Se.Language.Ocr.AutoDrawAgain, vm.DrawAgainCommand)
-                    .WithMarginLeft(0)
-                    .WithMinWidth(100)
-                    .WithMarginTop(10)
-                    .WithLeftAlignment()
-                    .WithBindEnabled(nameof(vm.IsEditControlsEnabled)),
-                buttonClear
-                    .WithMinWidth(100)
-                    .WithMarginTop(5)
-                    .WithLeftAlignment()
-                    .WithBindEnabled(nameof(vm.IsEditControlsEnabled)),
-            }
-        }.WithBindVisible(vm, nameof(vm.IsEditControlsEnabled));
-
-        vm.NOcrDrawingCanvas.SetStrokeWidth(1);
-        var borderDrawingCanvas = new Border
-        {
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Colors.Black),
-            Child = vm.NOcrDrawingCanvas,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
-        };        
-
-        var panelZoom = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 5),
-            Children =
-            {
-                UiUtil.MakeButton(vm.ZoomOutCommand, IconNames.Minus, "Zoom out").WithFontSize(20).WithBindEnabled(nameof(vm.IsEditControlsEnabled)),
-                UiUtil.MakeButton(vm.ZoomInCommand, IconNames.Plus, "Zoom in").WithFontSize(20).WithBindEnabled(nameof(vm.IsEditControlsEnabled)),
-                UiUtil.MakeLabel(string.Empty).WithMarginLeft(10).WithBindText(vm, nameof(vm.ZoomFactorInfo)),
-                UiUtil.MakeLabel(Se.Language.Ocr.DrawMode).WithMarginLeft(10),
-                panelDrawMode,
+                buttonDrawAgain,
+                buttonClear,
             }
         };
 
-        var panelImage = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
-            Children =
-            {
-                panelZoom,
-                borderDrawingCanvas,
-            }
-        }.WithBindVisible(vm, nameof(vm.IsEditControlsEnabled));
+        vm.NOcrDrawingCanvas.SetStrokeWidth(1);
 
-        grid.Add(panelCurrent, 0, 0);
-        grid.Add(panelDrawControls, 0, 1);
-        grid.Add(panelImage, 0, 2);
+        var toggleButtonForeground = NOcrChrome.MakeToggle(Se.Language.General.Foreground, nameof(vm.IsNewLinesForegroundActive), vm);
+        toggleButtonForeground.IsCheckedChanged += vm.DrawModeForegroundChanged;
+        var toggleButtonBackground = NOcrChrome.MakeToggle(Se.Language.General.Background, nameof(vm.IsNewLinesBackgroundActive), vm);
+        toggleButtonBackground.IsCheckedChanged += vm.DrawModeBackgroundChanged;
 
-        return UiUtil.MakeBorderForControl(grid);
+        var canvasContent = NOcrChrome.MakeCanvasContent(
+            NOcrChrome.MakeCanvasFrame(vm.NOcrDrawingCanvas),
+            NOcrChrome.MakeZoomBar(vm.ZoomOutCommand, vm.ZoomInCommand, nameof(vm.ZoomFactorInfo), nameof(vm.IsEditControlsEnabled)),
+            NOcrChrome.MakeDrawModeBar(toggleButtonForeground, toggleButtonBackground));
+
+        var drawColumn = NOcrChrome.MakeFillColumn(Se.Language.Ocr.LinesToDraw, panelDrawControls);
+        drawColumn.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
+        var canvasColumn = NOcrChrome.MakeFillColumn(Se.Language.General.Preview, canvasContent);
+        canvasColumn.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsEditControlsEnabled)));
+
+        grid.Add(NOcrChrome.MakeScrollingColumn(Se.Language.Ocr.CurrentImage, panelCurrent, first: true), 0, 0);
+        grid.Add(drawColumn, 0, 1);
+        grid.Add(canvasColumn, 0, 2);
+
+        return grid;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

@@ -1,11 +1,14 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Declarative;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main.Layout;
+using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -32,6 +35,24 @@ public partial class MainView : ViewBase
     /// </summary>
     internal static Window? NextHostWindow;
 
+    private Styles? _editorStyles;
+
+    /// <summary>
+    /// Adds the editor styles, replacing the ones added before: their field font size and height
+    /// are picked when they are made, so a UI font size change in Settings needs new ones.
+    /// </summary>
+    internal void ApplyEditorStyles()
+    {
+        if (_editorStyles != null)
+        {
+            Styles.Remove(_editorStyles);
+        }
+
+        _editorStyles = new Styles();
+        EditorChrome.AddWindowStyles(_editorStyles, EditorWindowStyles.TimeCodes);
+        Styles.Add(_editorStyles);
+    }
+
     protected override object Build()
     {
         _vm = Locator.Services.GetRequiredService<MainViewModel>();
@@ -54,6 +75,7 @@ public partial class MainView : ViewBase
         if (hostWindow != null)
         {
             _vm.Window = hostWindow;
+            ImageColorSource.Register(hostWindow, () => _vm.CanPickColorFromImage, _vm.PickColorFromImageAsync);
             // A user-assigned Alt+Space shortcut beats the Windows system menu (#14536).
             UiUtil.SetWindowSystemMenuOverride(hostWindow, _vm.HasAltSpaceShortcut);
             _vm.Window.Closing += _vm.OnClosing;
@@ -79,10 +101,31 @@ public partial class MainView : ViewBase
         // is a no-op safety net for windows created via other entry points).
         Se.LoadLanguage();
 
-        var root = new DockPanel();
+        // The editor look of the dialogs (#16276): window color, compact combo boxes and time
+        // codes, accent menus. Set on the view, not the window, so the styles reach the popups
+        // and context menus of everything inside it.
+        ApplyEditorStyles();
+
+        var root = new DockPanel { Background = EditorChrome.WindowBrush };
 
         // Menu bar
         InitMenu.Make(_vm);
+
+        // PageUp on the menu bar makes Avalonia wrap to the last top-level item. When that item is
+        // hidden (ASSA/SSA tools outside those formats), ItemsControl.GetNextControl keeps getting
+        // the same hidden item back and loops forever on the UI thread (#16039). Close the menu
+        // and go back to the text box instead - PageUp/PageDown are line navigation keys in SE.
+        _vm.Menu.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if (e.Key is Key.PageUp or Key.PageDown &&
+                (e.Source == _vm.Menu || e.Source is MenuItem { IsTopLevel: true }))
+            {
+                e.Handled = true;
+                _vm.Menu.Close();
+                _vm.FocusTextBoxCommand.Execute(null);
+            }
+        }, RoutingStrategies.Tunnel);
+
         if (OperatingSystem.IsMacOS())
         {
             _vm.Menu.IsVisible = false;

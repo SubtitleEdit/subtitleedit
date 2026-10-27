@@ -20,17 +20,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName != null && !(fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".dfxp", StringComparison.OrdinalIgnoreCase)))
+            return HasSmpteTt2052Marker(lines, fileName) && base.IsMine(lines, fileName);
+        }
+
+        /// <summary>
+        /// The SMPTE-TT 2052 specific part of <see cref="IsMine"/>, without the TTML check in the
+        /// base class. <see cref="TimedText10.IsMine"/> uses it to leave these files to this format -
+        /// calling IsMine there recursed back into the base class forever (stack overflow).
+        /// </summary>
+        internal static bool HasSmpteTt2052Marker(List<string> lines, string fileName)
+        {
+            if (fileName != null && !(fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".dfxp", StringComparison.OrdinalIgnoreCase)))
             {
                 return false;
             }
 
-            if (!JoinLines(lines).Contains("http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608"))
-            {
-                return false;
-            }
-
-            return base.IsMine(lines, fileName);
+            return JoinLines(lines).Contains("http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608");
         }
 
         public override string ToText(Subtitle subtitle, string title)

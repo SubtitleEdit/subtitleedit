@@ -142,8 +142,8 @@ public partial class NOcrCharacterHistoryViewModel : ObservableObject
         var item = NOcrChar;
         var answer = await MessageBox.Show(
             Window!,
-            "Delete nOCR item?",
-            $"Do you want to delete the current nOCR item?",
+            Se.Language.Ocr.NOcrDeleteItem,
+            Se.Language.Ocr.NOcrDeleteItemDetails,
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 
@@ -244,7 +244,7 @@ public partial class NOcrCharacterHistoryViewModel : ObservableObject
         NOcrChar = selectedItem.NOcrChar;
         IsNewTextItalic = NOcrChar.Italic;
         NewText = NOcrChar.Text;
-        LineIndex = string.Format(Se.Language.Ocr.LineIndexX, selectedItem.LineIndex + 1);
+        LineIndex = string.Format(Se.Language.General.LineX, selectedItem.LineIndex + 1);
         ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, NOcrChar.Width, NOcrChar.Height, NOcrChar.MarginTop);
 
         NOcrDrawingCanvas.BackgroundImage = CurrentBitmap;

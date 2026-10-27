@@ -62,7 +62,7 @@ public class PinnedDownloadHashTests
     public async Task VerifyDownloadAsync_File_ThrowsOnMismatch()
     {
         var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".7z");
-        await File.WriteAllTextAsync(fileName, "not vlc");
+        await File.WriteAllTextAsync(fileName, "not vlc", TestContext.Current.CancellationToken);
         try
         {
             await Assert.ThrowsAsync<IOException>(() =>
@@ -90,7 +90,7 @@ public class PinnedDownloadHashTests
         await Assert.ThrowsAsync<IOException>(() =>
             DownloadHashManager.VerifyDownloadAsync(fileName, DownloadHashManager.LibVlc.WindowsX64, "libVLC", CancellationToken.None));
 
-        await File.WriteAllBytesAsync(fileName, []);
+        await File.WriteAllBytesAsync(fileName, [], TestContext.Current.CancellationToken);
         try
         {
             await Assert.ThrowsAsync<IOException>(() =>

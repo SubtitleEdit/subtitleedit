@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 namespace LibSETests.ContainerFormats;
 
 /// <summary>

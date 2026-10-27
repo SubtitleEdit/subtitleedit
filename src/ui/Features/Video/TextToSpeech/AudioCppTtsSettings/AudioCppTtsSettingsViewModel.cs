@@ -3,7 +3,6 @@ using Avalonia.Input;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ModelLicense;
@@ -74,6 +73,20 @@ public static class AudioCppTtsSettingsAdapters
         LicenseDefinition: FishTtsAudioCpp.LicenseDefinition,
         StartDownloadModels: (vm, modelKey) => vm.StartDownloadFishTtsAudioCppModels(modelKey));
 
+    public static AudioCppTtsSettingsAdapter Breeze { get; } = new(
+        EngineName: "Breeze TTS 2 (audio.cpp)",
+        FamilyName: BreezeTtsAudioCpp.FamilyName,
+        Description: new BreezeTtsAudioCpp().Description,
+        ModelKeyDefault: BreezeTtsAudioCpp.ModelKeyQ8_0,
+        ModelKeyAlt: BreezeTtsAudioCpp.ModelKeyBf16,
+        ResolveModelKey: BreezeTtsAudioCpp.ResolveModelKey,
+        AreModelsInstalled: BreezeTtsAudioCpp.AreModelsInstalled,
+        GetModelsFolder: BreezeTtsAudioCpp.GetSetModelsFolder,
+        GetVoicesFolder: BreezeTtsAudioCpp.GetSetVoicesFolder,
+        IsLicenseAccepted: BreezeTtsAudioCpp.IsLicenseAccepted,
+        LicenseDefinition: BreezeTtsAudioCpp.LicenseDefinition,
+        StartDownloadModels: (vm, modelKey) => vm.StartDownloadBreezeTtsAudioCppModels(modelKey));
+
     public static AudioCppTtsSettingsAdapter FireRedTts3 { get; } = new(
         EngineName: "FireRedTTS3 (audio.cpp)",
         FamilyName: FireRedTts3AudioCpp.FamilyName,
@@ -101,6 +114,20 @@ public static class AudioCppTtsSettingsAdapters
         IsLicenseAccepted: () => true,
         LicenseDefinition: null,
         StartDownloadModels: (vm, modelKey) => vm.StartDownloadKugelAudioAudioCppModels(modelKey));
+
+    public static AudioCppTtsSettingsAdapter VoxtralTts { get; } = new(
+        EngineName: "Voxtral TTS (audio.cpp)",
+        FamilyName: VoxtralTtsAudioCpp.FamilyName,
+        Description: new VoxtralTtsAudioCpp().Description,
+        ModelKeyDefault: VoxtralTtsAudioCpp.ModelKeyQ8_0,
+        ModelKeyAlt: VoxtralTtsAudioCpp.ModelKeyBf16,
+        ResolveModelKey: VoxtralTtsAudioCpp.ResolveModelKey,
+        AreModelsInstalled: VoxtralTtsAudioCpp.AreModelsInstalled,
+        GetModelsFolder: VoxtralTtsAudioCpp.GetSetModelsFolder,
+        GetVoicesFolder: null,
+        IsLicenseAccepted: VoxtralTtsAudioCpp.IsLicenseAccepted,
+        LicenseDefinition: VoxtralTtsAudioCpp.LicenseDefinition,
+        StartDownloadModels: (vm, modelKey) => vm.StartDownloadVoxtralTtsAudioCppModels(modelKey));
 }
 
 public partial class AudioCppTtsSettingsViewModel : ObservableObject

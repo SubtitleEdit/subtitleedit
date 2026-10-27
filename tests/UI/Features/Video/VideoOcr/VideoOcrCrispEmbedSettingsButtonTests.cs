@@ -10,9 +10,6 @@ using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UITests.Features.Video.VideoOcr;
 

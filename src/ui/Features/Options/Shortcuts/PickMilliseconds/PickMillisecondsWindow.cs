@@ -1,3 +1,5 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
@@ -14,15 +16,22 @@ public class PickMillisecondsWindow : Window
         MinWidth = 400;
         CanResize = false;
         Title = Se.Language.Options.Shortcuts.MoveVideoPositionMilliseconds;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var labelMilliseconds = UiUtil.MakeLabel(Se.Language.General.Milliseconds);
-        var numericUpDownMilliseconds = UiUtil.MakeNumericUpDownInt(1, 1_000_000, 5000, 200, vm, nameof(vm.Milliseconds));
+        var numericUpDownMilliseconds = UiUtil.MakeNumericUpDownInt(1, 1_000_000, 5000, 160, vm, nameof(vm.Milliseconds));
+        numericUpDownMilliseconds.HorizontalAlignment = HorizontalAlignment.Left;
+        numericUpDownMilliseconds.Classes.Add("field"); // the compact field, not the theme's big spinner
+        AutomationProperties.SetName(numericUpDownMilliseconds, Se.Language.General.Milliseconds);
+
+        var row = EditorChrome.MakeLabeledRow(Se.Language.General.Milliseconds, numericUpDownMilliseconds, 110, spacing: 6);
+        row.Margin = new Thickness(16, 18);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -30,23 +39,13 @@ public class PickMillisecondsWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(labelMilliseconds, 0);
-        grid.Add(numericUpDownMilliseconds, 0, 1);
-        grid.Add(buttonPanel, 2, 0, 1, 2);
+        grid.Add(EditorChrome.MakePanel(row), 0);
+        grid.Add(buttonPanel, 1);
 
         Content = grid;
 

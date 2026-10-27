@@ -5,7 +5,6 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.VisualTree;
-using Nikse.SubtitleEdit.Logic;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -135,7 +134,7 @@ public class AssaDrawBackgroundTests
         Dispatcher.UIThread.RunJobs();
         try
         {
-            var button = window.GetVisualDescendants().OfType<Button>().First(b => AutomationProperties.GetName(b) == Se.Language.Assa.DrawBackground);
+            var button = window.GetVisualDescendants().OfType<Button>().First(b => AutomationProperties.GetName(b) == Se.Language.General.Background);
             var p = button.TranslatePoint(new Point(button.Bounds.Width / 2, button.Bounds.Height / 2), window)!.Value;
             window.MouseMove(p);
             window.MouseDown(p, MouseButton.Left);

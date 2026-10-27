@@ -20,8 +20,8 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public static class InitMenu
 {
-    // One notch below the Fluent theme default (~14).
-    private const double MenuFontSize = 13.0;
+    // The shared text size of all windows (#16276).
+    private const double MenuFontSize = UiTheme.BaseFontSize;
 
     public static void Make(MainViewModel vm)
     {
@@ -277,6 +277,16 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
+                            Header = Se.Language.File.Export.TitleExportDCinemaSmpte2014PngMxf,
+                            Command = vm.ExportDCinemaSmpte2014PngMxfCommand,
+                        },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Export.TitleExportDCinemaSmpte2014Mxf,
+                            Command = vm.ExportDCinemaSmpte2014MxfCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = Ebu.NameOfFormat,
                             Command = vm.ExportEbuStlCommand,
                         },
@@ -330,6 +340,11 @@ public static class InitMenu
                         {
                             Header = Se.Language.File.Export.PlainTextDotDotDot,
                             Command = vm.ShowExportPlainTextCommand,
+                        },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Export.DialogueListDotDotDot,
+                            Command = vm.ShowExportDialogueListCommand,
                         },
                     }
                 },
@@ -675,6 +690,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = Se.Language.Video.SyncToAudioDotDotDot,
+                Command = vm.ShowSyncToAudioCommand,
+            },
+            new MenuItem
+            {
                 // Finds who speaks in the video, clones each of them and assigns the cast, so the
                 // whole thing can be dubbed in its own voices (#13698).
                 Header = Se.Language.Video.TextToSpeech.AutoCastMenuItem,
@@ -833,6 +853,11 @@ public static class InitMenu
                 {
                     Header = Se.Language.Video.EmbedSubtitlesDotDotDot,
                     Command = vm.VideoEmbedCommand,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Video.SyncAudioTrackDotDotDot,
+                    Command = vm.ShowSyncAudioTrackCommand,
                 },
                 new Separator(),
                 new MenuItem

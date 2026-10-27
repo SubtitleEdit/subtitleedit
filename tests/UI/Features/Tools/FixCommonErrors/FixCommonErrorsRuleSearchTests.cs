@@ -1,6 +1,4 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -142,7 +140,7 @@ public class FixCommonErrorsRuleSearchTests
             Assert.Equal("gaps", vm.SearchText);
             Assert.Equal(new[] { "Fix short gaps" }, profile.FixRules.Select(r => r.Name));
 
-            vm.Step1IsVisible = false;
+            vm.IsStepOne = false;
             Assert.False(searchBox.IsVisible);
         }
         finally

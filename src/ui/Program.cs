@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
-using Avalonia.Media.Fonts;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
@@ -225,6 +224,14 @@ namespace Nikse.SubtitleEdit
                                 new FontFallback { FontFamily = new FontFamily("Segoe UI Emoji") },
                             }
                         });
+
+                    // Opt-in alternatives to Avalonia's default composition, for GPU/driver setups
+                    // where the desktop flickers through SE's windows during heavy redraws (#15848).
+                    var win32Options = MakeWin32PlatformOptions();
+                    if (win32Options != null)
+                    {
+                        appBuilder = appBuilder.With(win32Options);
+                    }
                 }
 
                 appBuilder = appBuilder
@@ -482,6 +489,38 @@ namespace Nikse.SubtitleEdit
 
             // Context menus kept their first, too small size (#15965).
             PointerPopupPlacement.Initialize();
+        }
+
+        /// <summary>
+        /// Avalonia's Windows defaults (WinUI composition over ANGLE) composite each frame with
+        /// alpha, so on some NVIDIA setups a late frame lets the desktop show through for a moment
+        /// (AvaloniaUI/Avalonia#10306, #13620). Redirection surface and the low-latency swap chain
+        /// present opaquely; Software takes the GPU out entirely (and with it libmpv OpenGL).
+        /// Null keeps Avalonia's own choice.
+        /// </summary>
+        private static Win32PlatformOptions? MakeWin32PlatformOptions()
+        {
+            if (!Enum.TryParse<WindowsRenderingModeType>(Se.Settings.Appearance.WindowsRenderingMode, out var mode))
+            {
+                return null;
+            }
+
+            return mode switch
+            {
+                WindowsRenderingModeType.RedirectionSurface => new Win32PlatformOptions
+                {
+                    CompositionMode = [Win32CompositionMode.RedirectionSurface],
+                },
+                WindowsRenderingModeType.LowLatencySwapChain => new Win32PlatformOptions
+                {
+                    CompositionMode = [Win32CompositionMode.LowLatencyDxgiSwapChain, Win32CompositionMode.RedirectionSurface],
+                },
+                WindowsRenderingModeType.Software => new Win32PlatformOptions
+                {
+                    RenderingMode = [Win32RenderingMode.Software],
+                },
+                _ => null,
+            };
         }
 
         private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)

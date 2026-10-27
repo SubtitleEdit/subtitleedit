@@ -689,7 +689,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>True if the text is considered a URL, otherwise false.</returns>
         public static bool IsUrl(string text)
         {
-            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || text.IndexOf('.') < 0 || text.IndexOf(' ') >= 0)
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains('.') || text.Contains(' '))
             {
                 return false;
             }
@@ -1343,8 +1343,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return text;
             }
 
-            if (text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (text.Contains("<" + tag + ">", StringComparison.OrdinalIgnoreCase) ||
+                text.Contains("</" + tag + ">", StringComparison.OrdinalIgnoreCase))
             {
                 text = text.Replace("<" + tag + ">", string.Empty);
                 text = text.Replace("</" + tag + ">", string.Empty);
@@ -1389,8 +1389,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return text.Contains($"\\{tag}");
             }
 
-            return text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                   text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0;
+            return text.Contains("<" + tag + ">", StringComparison.OrdinalIgnoreCase) ||
+                   text.Contains("</" + tag + ">", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -1484,8 +1484,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return text;
             }
 
-            if (text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (text.Contains("<" + tag + ">", StringComparison.OrdinalIgnoreCase) ||
+                text.Contains("</" + tag + ">", StringComparison.OrdinalIgnoreCase))
             {
                 text = text.Replace("<" + tag + ">", string.Empty);
                 text = text.Replace("</" + tag + ">", string.Empty);

@@ -33,6 +33,11 @@ public partial class AssaAttachmentsViewModel : ObservableObject
     [ObservableProperty] private bool _isDeleteAllVisible;
     [ObservableProperty] private bool _isMoveVisible;
 
+    /// <summary>
+    /// "3 fonts · 2 graphics · 1.2 MB" - shown in the bottom bar.
+    /// </summary>
+    [ObservableProperty] private string _summaryText = string.Empty;
+
     public Window? Window { get; internal set; }
     public TableView AttachmentGrid { get; set; }
     public bool OkPressed { get; private set; }
@@ -40,7 +45,6 @@ public partial class AssaAttachmentsViewModel : ObservableObject
     public string Footer { get; set; }
 
     private readonly IFileHelper _fileHelper;
-    private string _fileName;
     private Subtitle _subtitle;
     private readonly List<string> _imageExtensions = new List<string>
     {
@@ -58,11 +62,108 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         Title = string.Empty;
         Attachments = new ObservableCollection<AssaAttachmentItem>();
         PreviewTitle = string.Empty;
-        _fileName = string.Empty;
         Header = string.Empty;
         Footer = string.Empty;
         _subtitle = new Subtitle();
         AttachmentGrid = new TableView();
+    }
+
+    // The constructor's assignment comes through here too, so every list gets the summary hook once
+    partial void OnAttachmentsChanged(ObservableCollection<AssaAttachmentItem> value)
+    {
+        value.CollectionChanged += (_, _) => UpdateSummary();
+        UpdateSummary();
+    }
+
+    private void UpdateSummary()
+    {
+        var fonts = Attachments.Count(a => a.Category == Se.Language.General.Fonts);
+        var graphics = Attachments.Count - fonts;
+        var bytes = Attachments.Sum(a => (long)a.Bytes.Length);
+        SummaryText = string.Format(Se.Language.Assa.AttachmentsSummary, fonts, graphics, Utilities.FormatBytesToDisplayFileSize(bytes));
+    }
+
+    private static readonly string[] AttachableExtensions = [".ttf", ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico"];
+
+    /// <summary>
+    /// Adds files as attachments (fonts by .ttf, the rest as graphics) and selects the last one.
+    /// </summary>
+    public void AttachFiles(IEnumerable<string> fileNames)
+    {
+        var problems = new List<string>();
+        foreach (var fileName in fileNames)
+        {
+            if (!File.Exists(fileName) || !AttachableExtensions.Contains(Path.GetExtension(fileName).ToLowerInvariant()))
+            {
+                continue;
+            }
+
+            // The footer stores only the file name, so a second file with the same name in the
+            // same section would be ambiguous - skip it and say so
+            var name = Path.GetFileName(fileName);
+            var isFont = fileName.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase);
+            if (Attachments.Any(a => a.Category == (isFont ? Se.Language.General.Fonts : Se.Language.Assa.Graphics) &&
+                                     string.Equals(Path.GetFileName(a.FileName), name, StringComparison.OrdinalIgnoreCase)))
+            {
+                problems.Add(string.Format(Se.Language.General.FileXAlreadyExists, name));
+                continue;
+            }
+
+            // Reading a dropped file can fail (locked, no permission, gone) - this runs from a
+            // posted callback on drop, where an exception crashed the app
+            AssaAttachmentItem attachment;
+            try
+            {
+                attachment = new AssaAttachmentItem(fileName);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "AssaAttachments: unable to read " + fileName);
+                problems.Add(name + ": " + exception.Message);
+                continue;
+            }
+
+            Attachments.Add(attachment);
+            SelectedAttachment = attachment;
+        }
+
+        if (problems.Count > 0 && Window != null)
+        {
+            var window = Window;
+            Dispatcher.UIThread.Post(async void () =>
+            {
+                await MessageBox.Show(window, Se.Language.General.Error, string.Join(Environment.NewLine, problems), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            });
+        }
+    }
+
+    internal void OnDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = GetDroppedFiles(e).Count > 0 ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    internal void OnDrop(object? sender, DragEventArgs e)
+    {
+        var files = GetDroppedFiles(e);
+        if (files.Count > 0)
+        {
+            e.Handled = true;
+            Dispatcher.UIThread.Post(() => AttachFiles(files));
+        }
+    }
+
+    private static List<string> GetDroppedFiles(DragEventArgs e)
+    {
+        if (!e.DataTransfer.Contains(DataFormat.File))
+        {
+            return [];
+        }
+
+        return e.DataTransfer.TryGetFiles()?
+            .Select(f => f.Path.LocalPath)
+            .Where(f => AttachableExtensions.Contains(Path.GetExtension(f).ToLowerInvariant()))
+            .ToList() ?? [];
     }
 
     [RelayCommand]
@@ -129,15 +230,7 @@ public partial class AssaAttachmentsViewModel : ObservableObject
     private async Task FileAttach()
     {
         var fileNames = await _fileHelper.PickOpenFiles(Window!, "Select attachment", "True type font", ["*.ttf"], Se.Language.Assa.Graphics, _imageExtensions);
-
-        foreach (var fileName in fileNames)
-        {
-            var attachmentFileName = Path.GetFileName(fileName);
-            var attachment = new AssaAttachmentItem(fileName);
-            var ext = Path.GetExtension(attachmentFileName)?.ToLowerInvariant();
-            Attachments.Add(attachment);
-            SelectedAttachment = attachment;
-        }
+        AttachFiles(fileNames);
     }
 
     [RelayCommand]
@@ -256,8 +349,8 @@ public partial class AssaAttachmentsViewModel : ObservableObject
         {
             var answer = await MessageBox.Show(
             Window!,
-            "Delete attachment?",
-            $"Do you want to delete {selectedStyle.FileName}?",
+            Se.Language.Assa.DeleteAttachmentQuestion,
+            string.Format(Se.Language.General.DoYouWantToDeleteX, selectedStyle.FileName),
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 

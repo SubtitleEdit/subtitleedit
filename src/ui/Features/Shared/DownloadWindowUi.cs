@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
-using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -17,22 +16,6 @@ namespace Nikse.SubtitleEdit.Features.Shared;
 public static class DownloadWindowUi
 {
     public const string ErrorPropertyName = "Error";
-
-    public static TextBlock MakeErrorText(double maxWidth = 500)
-    {
-        var errorText = new TextBlock
-        {
-            TextWrapping = TextWrapping.Wrap,
-            MaxWidth = maxWidth,
-            Foreground = Brushes.IndianRed,
-        };
-        errorText.Bind(TextBlock.TextProperty, new Binding(ErrorPropertyName));
-        errorText.Bind(TextBlock.IsVisibleProperty, new Binding(ErrorPropertyName)
-        {
-            Converter = StringConverters.IsNotNullOrEmpty,
-        });
-        return errorText;
-    }
 
     public static Button MakeButtonRetry(IRelayCommand command)
     {

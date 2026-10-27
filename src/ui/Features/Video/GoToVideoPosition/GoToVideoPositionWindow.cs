@@ -1,4 +1,4 @@
-using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -9,6 +9,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 
+/// <summary>
+/// Go to video position, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class GoToVideoPositionWindow : Window
 {
     private readonly GoToVideoPositionViewModel _vm;
@@ -19,6 +22,7 @@ public class GoToVideoPositionWindow : Window
         Title = Se.Language.Video.GoToVideoPosition;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
 
         _vm = vm;
         vm.Window = this;
@@ -27,45 +31,36 @@ public class GoToVideoPositionWindow : Window
         vm.UpDown = new TimeCodeUpDown
         {
             VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
             [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(_vm.Time))
             {
                 Mode = BindingMode.TwoWay,
             },
         };
+        AutomationProperties.SetName(vm.UpDown, Se.Language.General.VideoPosition);
 
-        var panel = new StackPanel
+        var section = EditorChrome.MakeEditorSection(
+            Se.Language.General.VideoPosition,
+            vm.UpDown,
+            first: true);
+        section.Background = EditorChrome.PanelBrush;
+        section.MinWidth = 300;
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).AsPrimary();
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        var root = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 15,
-            Margin = new Thickness(10, 20, 10, 10),
-            Children =
+            RowDefinitions =
             {
-                new Label
-                {
-                    Content = Se.Language.General.VideoPosition,
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
-                vm.UpDown,
-            }
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+            },
         };
+        root.Add(section, 0, 0);
+        root.Add(EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1, 0);
 
-        var buttonPanel = UiUtil.MakeButtonBar(
-            UiUtil.MakeButtonOk(vm.OkCommand),
-            UiUtil.MakeButtonCancel(vm.CancelCommand));
-
-        var contentPanel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 15,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
-            {
-                panel,
-                buttonPanel,
-            }
-        };
-
-        Content = contentPanel;
+        Content = root;
 
         UiUtil.FocusOnFirstActivation(this, () => { vm.Activated(); });
     }
