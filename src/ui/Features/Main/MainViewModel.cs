@@ -20570,6 +20570,8 @@ public partial class MainViewModel :
         _fullScreenVideoPlayerControl.PositionChanged += OnVideoPlayerPositionSet;
         var toggleKeys = Se.Settings.Shortcuts
             .FirstOrDefault(s => s.ActionName == nameof(VideoFullScreenCommand))?.Keys;
+        var toggleKeys2 = Se.Settings.Shortcuts
+            .FirstOrDefault(s => s.ActionName == nameof(VideoFullScreen2Command))?.Keys;
         var showMediaInfoKeys = Se.Settings.Shortcuts
             .FirstOrDefault(s => s.ActionName == nameof(ShowMediaInformationCommand))?.Keys;
         Action<Window> showMediaInformationOwnedBy = ownerWindow =>
@@ -20634,7 +20636,7 @@ public partial class MainViewModel :
             RefreshSubtitlePreview();
 
             Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(SubtitleGrid));
-        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, readyPlayer =>
+        }, toggleKeys, toggleKeys2, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings, readyPlayer =>
         {
             // Runs once the fullscreen player has actually opened the file (see the window's
             // Loaded handler). Both of these re-apply state a brand new mpv instance starts
@@ -20659,6 +20661,12 @@ public partial class MainViewModel :
         // fullscreen mpv core is initialized lazily by its rendering surface and has not even
         // loaded the video yet, so mpv rejected the sub-add and nothing tried again (#13407).
         RefreshSubtitlePreview();
+    }
+
+    [RelayCommand]
+    private void VideoFullScreen2()
+    {
+        VideoFullScreen();
     }
 
     private void OnMainWindowActivatedWhileFullScreen(object? sender, EventArgs e) => _fullScreenOwnsKeyboard = false;

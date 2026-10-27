@@ -363,6 +363,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowVideoTransparentSubtitlesCommand), Se.Language.Options.Shortcuts.GenerateTransparent },
         { nameof(MainViewModel.ShowShotChangesSubtitlesCommand),  Se.Language.General.GenerateImportShotChanges },
         { nameof(MainViewModel.VideoFullScreenCommand),  Se.Language.Options.Shortcuts.VideoFullScreen },
+        { nameof(MainViewModel.VideoFullScreen2Command),  Se.Language.Options.Shortcuts.VideoFullScreen },
 
         // Sync
         { nameof(MainViewModel.ShowSyncAdjustAllTimesCommand),  Se.Language.Options.Shortcuts.AdjustAllTimes },
@@ -1013,6 +1014,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.VideoCutCommand, nameof(vm.VideoCutCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.CutVideoSelectedLinesCommand, nameof(vm.CutVideoSelectedLinesCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoFullScreenCommand, nameof(vm.VideoFullScreenCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoFullScreen2Command, nameof(vm.VideoFullScreen2Command), ShortcutCategory.General, ShortcutGroup.Video);
 
         AddShortcut(shortcuts, vm.ShowSyncAdjustAllTimesCommand, nameof(vm.ShowSyncAdjustAllTimesCommand), ShortcutCategory.General, ShortcutGroup.Sync);
         AddShortcut(shortcuts, vm.ShowVisualSyncCommand, nameof(vm.ShowVisualSyncCommand), ShortcutCategory.General, ShortcutGroup.Sync);
@@ -1606,6 +1608,7 @@ public static class ShortcutsMain
             new(nameof(vm.Video500MsBackCommand), ["Alt", nameof(Avalonia.Input.Key.Left)], ShortcutCategory.General),
             new(nameof(vm.Video500MsForwardCommand), ["Alt", nameof(Avalonia.Input.Key.Right)], ShortcutCategory.General),
             new(nameof(vm.VideoFullScreenCommand), ["Alt", nameof(Avalonia.Input.Key.Return)], ShortcutCategory.General),
+            new(nameof(vm.VideoFullScreen2Command), ["Alt", "NumPadReturn"], ShortcutCategory.General),
             new(nameof(vm.WaveformVerticalZoomInCommand), ["Shift", nameof(Avalonia.Input.Key.Add)], ShortcutCategory.General),
             new(nameof(vm.WaveformVerticalZoomOutCommand), ["Shift", nameof(Avalonia.Input.Key.Subtract)], ShortcutCategory.General),
             new(nameof(vm.PauseCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.P)], ShortcutCategory.General),

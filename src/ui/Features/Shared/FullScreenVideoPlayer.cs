@@ -28,6 +28,7 @@ public class FullScreenVideoWindow : Window
         double volume,
         Action onClose,
         List<string>? toggleShortcutKeys = null,
+        List<string>? toggle2ShortcutKeys = null,
         List<string>? showMediaInformationKeys = null,
         Action<Window>? showMediaInformation = null,
         IReadOnlyList<(string name, List<string> keys, IRelayCommand command)>? extraBindings = null,
@@ -59,6 +60,15 @@ public class FullScreenVideoWindow : Window
             shortcutManager.RegisterShortcut(new ShortCut(
                 nameof(FullScreenVideoWindow),
                 toggleShortcutKeys,
+                ShortcutCategory.General,
+                new RelayCommand(Close)));
+        }
+
+        if (toggle2ShortcutKeys != null && toggle2ShortcutKeys.Count > 0)
+        {
+            shortcutManager.RegisterShortcut(new ShortCut(
+                nameof(FullScreenVideoWindow),
+                toggle2ShortcutKeys,
                 ShortcutCategory.General,
                 new RelayCommand(Close)));
         }
