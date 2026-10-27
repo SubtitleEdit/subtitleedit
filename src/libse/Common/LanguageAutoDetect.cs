@@ -2726,11 +2726,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return hebrewEncoding;
                 }
 
-                if (DetectJapaneseOrChineseEncoding(buffer) is { } cjkEncoding)
-                {
-                    return cjkEncoding;
-                }
-
                 if (counts1250.Get(AutoDetectWordsRomanianShort) > 99)
                 {
                     return encoding1250;
@@ -2754,6 +2749,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (turkish1254Count > wordMinCount)
                 {
                     return encoding1254;
+                }
+
+                if (DetectJapaneseOrChineseEncoding(buffer) is { } cjkEncoding)
+                {
+                    return cjkEncoding;
                 }
 
                 var encoding = EncodingTools.DetectInputCodepage(buffer);
