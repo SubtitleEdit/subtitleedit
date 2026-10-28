@@ -1592,7 +1592,7 @@ public class LanguageGeneral
         Timing = "Timing";
         Title = "Title";
         To = "To";
-        ToggleCasing = "Toggle casing";
+        ToggleCasing = "Cycle casing";
         ToggleDirection = "Toggle direction";
         ToggleForced = "Toggle forced";
         MarkedXLinesAsForced = "Marked {0} line(s) as forced";
