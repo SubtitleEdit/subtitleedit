@@ -2411,7 +2411,7 @@ public partial class OcrViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void DeleteSelectedLines()
+    private async Task DeleteSelectedLines()
     {
         if (IsOcrRunning)
         {
@@ -2422,6 +2422,27 @@ public partial class OcrViewModel : ObservableObject
         if (selectedItems == null || selectedItems.Count == 0)
         {
             return;
+        }
+
+        if (Se.Settings.General.PromptBeforeDelete && Window != null)
+        {
+            var selectedLines = selectedItems.OfType<OcrSubtitleItem>().ToList();
+            var message = selectedLines.Count == 1
+                ? string.Format(Se.Language.General.DeleteLineXPrompt, selectedLines[0].Number)
+                : string.Format(Se.Language.General.DeleteXLinesPrompt, selectedLines.Count);
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Delete,
+                message,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            // OCR may have been started, or the selection changed, while the prompt was up
+            selectedItems = SubtitleGrid.SelectedItems;
+            if (answer != MessageBoxResult.Yes || IsOcrRunning || selectedItems == null || selectedItems.Count == 0)
+            {
+                return;
+            }
         }
 
         // Row -> index once: a Contains here plus a Remove per row below searched the whole
@@ -5142,10 +5163,11 @@ public partial class OcrViewModel : ObservableObject
             e.Handled = true; // prevent further handling if needed
             Dispatcher.UIThread.Post(async void () => { await ViewSelectedImage(); });
         }
-        else if (e.Key == Key.Delete)
+        else if ((e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None) ||
+                 (OperatingSystem.IsMacOS() && e.Key == Key.Back && e.KeyModifiers == KeyModifiers.Meta)) // Mac keyboards have no forward Delete - same keys as the main grid
         {
             e.Handled = true; // prevent further handling if needed
-            DeleteSelectedLines();
+            _ = DeleteSelectedLines();
         }
         else if (e.Key == Key.I && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
         {
