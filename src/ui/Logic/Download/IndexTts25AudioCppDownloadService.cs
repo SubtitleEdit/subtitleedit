@@ -37,11 +37,12 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-10-19: upstream v0.9.2-drama3-base-small @ 50749561 with the same nine families as
-    // 2026-10-16b (index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio
-    // + sidon + breeze_tts + voxtral_tts). A seeded KugelAudio A/B against 2026-10-16b was
-    // byte-identical; the bump brings the Fish DAC reference-encoding fixes (#936, #937).
-    private const string ReleaseTag = "audiocpp-indextts25-2026-10-19";
+    // 2026-10-28: upstream v0.9.3 @ 41c1f8ff with the same nine families as 2026-10-19
+    // (index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon
+    // + breeze_tts + voxtral_tts). A seeded KugelAudio A/B against 2026-10-19 was byte-identical;
+    // the bump brings the Fish DAC chunked reference encoding (#960), the Higgs voice kept across
+    // reference-free chunks (#985) and the lower ACE-Step tokenizer VRAM peak (#1012).
+    private const string ReleaseTag = "audiocpp-indextts25-2026-10-28";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 
