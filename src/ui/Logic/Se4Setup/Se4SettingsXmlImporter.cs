@@ -338,6 +338,10 @@ public static class Se4SettingsXmlImporter
         yield return ("ApiRoutePrompt", v => t.ApiRoutePrompt = v);
         yield return ("ApiRouteApiKey", v => t.ApiRouteApiKey = v);
         yield return ("ApiRouteModel", v => t.ApiRouteModel = v);
+        yield return ("OpperUrl", v => t.OpperUrl = v);
+        yield return ("OpperPrompt", v => t.OpperPrompt = v);
+        yield return ("OpperApiKey", v => t.OpperApiKey = v);
+        yield return ("OpperModel", v => t.OpperModel = v);
         yield return ("OpenRouterUrl", v => t.OpenRouterUrl = v);
         yield return ("OpenRouterPrompt", v => t.OpenRouterPrompt = v);
         yield return ("OpenRouterApiKey", v => p.OpenRouterApiKey = v);

@@ -167,6 +167,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new GroqTranslate(),
             new OpenRouterTranslate(),
             new ApiRouteTranslate(),
+            new OpperTranslate(),
             new LaraTranslate(),
             new PerplexityTranslate(),
             new GeminiTranslate(),
@@ -242,6 +243,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.ApiRouteUrl = Se.Settings.AutoTranslate.ApiRouteUrl;
         Configuration.Settings.Tools.ApiRouteModel = Se.Settings.AutoTranslate.ApiRouteModel;
         Configuration.Settings.Tools.ApiRoutePrompt = Se.Settings.AutoTranslate.ApiRoutePrompt;
+
+        Configuration.Settings.Tools.OpperApiKey = Se.Settings.AutoTranslate.OpperApiKey;
+        Configuration.Settings.Tools.OpperUrl = Se.Settings.AutoTranslate.OpperUrl;
+        Configuration.Settings.Tools.OpperModel = Se.Settings.AutoTranslate.OpperModel;
+        Configuration.Settings.Tools.OpperPrompt = Se.Settings.AutoTranslate.OpperPrompt;
 
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
         Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
@@ -499,6 +505,14 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.ApiRouteUrl = apiUrl.Trim();
         }
 
+        if (engineType == typeof(OpperTranslate))
+        {
+            Configuration.Settings.Tools.OpperApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.OpperModel = apiModel.Trim();
+            Configuration.Settings.Tools.OpperUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OpperUrl = apiUrl.Trim();
+        }
+
         if (engineType == typeof(GeminiTranslate))
         {
             Configuration.Settings.Tools.GeminiProApiKey = apiKey.Trim();
@@ -559,6 +573,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.ApiRouteUrl = Configuration.Settings.Tools.ApiRouteUrl;
         Se.Settings.AutoTranslate.ApiRouteModel = Configuration.Settings.Tools.ApiRouteModel;
         Se.Settings.AutoTranslate.ApiRoutePrompt = Configuration.Settings.Tools.ApiRoutePrompt;
+
+        Se.Settings.AutoTranslate.OpperApiKey = Configuration.Settings.Tools.OpperApiKey;
+        Se.Settings.AutoTranslate.OpperUrl = Configuration.Settings.Tools.OpperUrl;
+        Se.Settings.AutoTranslate.OpperModel = Configuration.Settings.Tools.OpperModel;
+        Se.Settings.AutoTranslate.OpperPrompt = Configuration.Settings.Tools.OpperPrompt;
 
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
         Se.Settings.AutoTranslate.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
@@ -1809,6 +1828,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
             ApiRouteTranslate => settings.ApiRouteUrl,
+            OpperTranslate => settings.OpperUrl,
             LaraTranslate => settings.LaraUrl,
             PerplexityTranslate => settings.PerplexityUrl,
             NvidiaTranslate => settings.NvidiaUrl,
@@ -2403,6 +2423,23 @@ public partial class AutoTranslateViewModel : ObservableObject
             _apiModels = ApiRouteTranslate.Models.ToList();
             ModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.ApiRouteModel) ? _apiModels[0] : Configuration.Settings.Tools.ApiRouteModel;
+
+            return;
+        }
+
+        if (engineType == typeof(OpperTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.OpperUrl,
+            });
+
+            ApiKeyText = Configuration.Settings.Tools.OpperApiKey;
+            ApiKeyIsVisible = true;
+
+            _apiModels = OpperTranslate.Models.ToList();
+            ModelIsVisible = true;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.OpperModel) ? _apiModels[0] : Configuration.Settings.Tools.OpperModel;
 
             return;
         }
