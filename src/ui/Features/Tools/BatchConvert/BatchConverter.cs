@@ -2433,7 +2433,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = ChangeSpeed(s);
             s = BridgeGaps(s);
             s = ApplyMinGap(s);
-            s = FixCommonErrors(s);
+            s = await FixCommonErrorsAsync(s);
             s = MergeLinesWithSameText(s);
             s = MergeLinesWithSameTimeCodes(s, Language);
             s = ConvertColorsToDialog(s, Language);
@@ -3359,7 +3359,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
-    private Subtitle FixCommonErrors(Subtitle subtitle)
+    private async Task<Subtitle> FixCommonErrorsAsync(Subtitle subtitle)
     {
         if (!_config.FixCommonErrors.IsActive || _config.FixCommonErrors.Profile == null)
         {
@@ -3370,7 +3370,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (!string.Equals(_namesListFolder, dictionaryFolder, StringComparison.Ordinal) ||
             !string.Equals(_namesListLanguage, Language, StringComparison.Ordinal))
         {
-            _namesList.Load(dictionaryFolder, Language);
+            await _namesList.LoadAsync(dictionaryFolder, Language);
             _namesListFolder = dictionaryFolder;
             _namesListLanguage = Language;
         }

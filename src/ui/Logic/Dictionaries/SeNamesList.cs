@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
@@ -23,7 +24,7 @@ public class SeNamesList : INamesList
     private readonly HashSet<string> _abbreviationList = new(StringComparer.OrdinalIgnoreCase);
     public string LanguageName { get; private set; } = "en";
 
-    public void Load(string dictionaryFolder, string languageCode)
+    public async Task LoadAsync(string dictionaryFolder, string languageCode)
     {
         _dictionaryFolder = dictionaryFolder;
         LanguageName = languageCode;
@@ -34,10 +35,10 @@ public class SeNamesList : INamesList
         _blackList = new HashSet<string>();
         _namesMultiListParts = null;
 
-        LoadNamesList(GetLocalNamesUserFileName()); // e.g: en_names_user.xml (culture sensitive)
-        LoadNamesList(GetLocalNamesFileName()); // e.g: en_names.xml (culture sensitive)
-        LoadNamesList(GetLocalCultureNamesFileName()); // e.g: pt_BR_names.xml (region specific)
-        LoadNamesList(Path.Combine(_dictionaryFolder, "names.xml"));
+        await LoadNamesListAsync(GetLocalNamesUserFileName()); // e.g: en_names_user.xml (culture sensitive)
+        await LoadNamesListAsync(GetLocalNamesFileName()); // e.g: en_names.xml (culture sensitive)
+        await LoadNamesListAsync(GetLocalCultureNamesFileName()); // e.g: pt_BR_names.xml (region specific)
+        await LoadNamesListAsync(Path.Combine(_dictionaryFolder, "names.xml"));
 
         foreach (var name in _blackList)
         {
@@ -325,7 +326,7 @@ public class SeNamesList : INamesList
     /// <summary>
     /// Region specific names file, e.g. pt_BR_names.xml. Portuguese ships one list per region
     /// (pt_PT / pt_BR) and no neutral pt_names.xml, so without this they were never loaded.
-    /// Returns an empty string for a neutral language name; LoadNamesList ignores a missing file.
+    /// Returns an empty string for a neutral language name; LoadNamesListAsync ignores a missing file.
     /// </summary>
     private string GetLocalCultureNamesFileName()
     {
@@ -337,7 +338,7 @@ public class SeNamesList : INamesList
         return Path.Combine(_dictionaryFolder, LanguageName + "_names.xml");
     }
 
-    private void LoadNamesList(string fileNameOrUrl)
+    private async Task LoadNamesListAsync(string fileNameOrUrl)
     {
         if (string.IsNullOrEmpty(fileNameOrUrl) ||
             !File.Exists(fileNameOrUrl) &&
@@ -349,9 +350,10 @@ public class SeNamesList : INamesList
 
         try
         {
-            using var reader = XmlReader.Create(fileNameOrUrl);
-            reader.MoveToContent();
-            while (reader.Read())
+            // The reader only accepts the *Async calls when created with Async = true.
+            using var reader = XmlReader.Create(fileNameOrUrl, new XmlReaderSettings { Async = true });
+            await reader.MoveToContentAsync();
+            while (await reader.ReadAsync())
             {
                 if (reader.NodeType != XmlNodeType.Element || reader.IsEmptyElement)
                 {
@@ -360,7 +362,7 @@ public class SeNamesList : INamesList
 
                 if (reader.Name == "name")
                 {
-                    var name = reader.ReadElementContentAsString().Trim();
+                    var name = (await reader.ReadElementContentAsStringAsync()).Trim();
                     if (name.Length > 0)
                     {
                         if (name.Contains(' '))
@@ -375,7 +377,7 @@ public class SeNamesList : INamesList
                 }
                 else if (reader.Name == "blacklist")
                 {
-                    while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+                    while (await reader.ReadAsync() && reader.NodeType != XmlNodeType.EndElement)
                     {
                         if (reader.NodeType != XmlNodeType.Element || reader.IsEmptyElement)
                         {
@@ -384,7 +386,7 @@ public class SeNamesList : INamesList
 
                         if (reader.Name == "name")
                         {
-                            var name = reader.ReadElementContentAsString().Trim();
+                            var name = (await reader.ReadElementContentAsStringAsync()).Trim();
                             if (name.Length > 0)
                             {
                                 _blackList.Add(name);

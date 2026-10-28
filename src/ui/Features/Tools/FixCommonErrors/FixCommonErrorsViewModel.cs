@@ -164,7 +164,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         if (Se.Settings.Tools.FixCommonErrors.SkipStep1 && SelectedProfile != null)
         {
-            ShowStep2();
+            _ = ShowStep2();
         }
     }
 
@@ -310,6 +310,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         // Fixes and the grid find lines by number, so close the gap the deleted line left
         FixedSubtitle.Renumber();
+        await LoadNamesListIfNeededAsync();
         RefreshFixes();
 
         // Keep the cursor where the deleted line was, so Delete can be pressed again
@@ -349,9 +350,12 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     }
 
     // Used when step 1 is skipped at startup - the window is not up yet, so there is nothing to flash on.
-    private void ShowStep2()
+    // Initialize runs inside the synchronous dialog init callback, so this is fire-and-forget: the
+    // step switch happens at once and the fixes grid fills when the names list has loaded.
+    private async Task ShowStep2()
     {
         EnterStep2();
+        await LoadNamesListIfNeededAsync();
         RefreshFixes();
     }
 
@@ -709,6 +713,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             AnalysingIsVisible = true;
             await Task.Delay(AnalysingPaintDelayMilliseconds);
 
+            await LoadNamesListIfNeededAsync();
             scan();
 
             await Task.Delay(AnalysingMinimumVisibleMilliseconds);
@@ -795,8 +800,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         {
             return;
         }
-
-        LoadNamesListIfNeeded();
 
         _totalErrors = 0;
         if (_previewMode)
@@ -1321,9 +1324,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     /// The names list backs <see cref="IsName"/> and <see cref="GetAbbreviations"/>, so without
     /// this the rules saw no names and no abbreviations at all - e.g. Dutch "dhr. de vries" was
     /// capitalized to "dhr. De vries" (#13082). Reloaded only when the language changes, like
-    /// the batch converter does.
+    /// the batch converter does. Awaited by the async callers of ApplyFixes, which itself stays
+    /// synchronous because it mutates the grid-bound collections.
     /// </summary>
-    private void LoadNamesListIfNeeded()
+    private async Task LoadNamesListIfNeededAsync()
     {
         var dictionaryFolder = Se.DictionariesFolder;
         if (string.Equals(_namesListFolder, dictionaryFolder, StringComparison.Ordinal) &&
@@ -1332,7 +1336,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             return;
         }
 
-        _namesList.Load(dictionaryFolder, Language);
+        await _namesList.LoadAsync(dictionaryFolder, Language);
         _namesListFolder = dictionaryFolder;
         _namesListLanguage = Language;
     }
