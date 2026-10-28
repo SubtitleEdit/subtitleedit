@@ -1272,6 +1272,12 @@ public partial class SubtitleLineViewModel : ObservableObject
         _customRuleCacheText = null;
     }
 
+    /// <summary>Re-renders the text cell - for formatting that depends on more than the text (YouTube timed text pens).</summary>
+    public void RefreshTextFormatting()
+    {
+        OnPropertyChanged(nameof(Text));
+    }
+
     public void RefreshAfterSettingsChanged()
     {
         OnPropertyChanged(nameof(CharactersPerSecond));

@@ -201,6 +201,15 @@ public class MpvReloader : IMpvReloader
             return (subtitle, subtitle.ToText(_assFormat), 0, false);
         }
 
+        if (uiFormatType == typeof(YouTubeTimedText))
+        {
+            // Pens, window positions and karaoke timing, sized and placed like YouTube's player.
+            subtitle = YttToAssa.Convert(subtitle, VideoWidth, VideoHeight);
+            SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
+            AssaCentisecondTiming.FloorToCentiseconds(subtitle);
+            return (subtitle, subtitle.ToText(_assFormat), 0, false);
+        }
+
         if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
         {
             var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
