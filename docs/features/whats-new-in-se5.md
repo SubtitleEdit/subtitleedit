@@ -6,7 +6,7 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 
 - **Command palette** - **Edit → Command palette...** (Ctrl+Shift+K) finds any command by name (with its shortcut) and runs it (see [Command palette](command-palette.md)).
 - **Custom shortcut slots** built from steps (run commands, insert text, find and replace), and **Surround with** slots with toggle/add/remove behavior, like SE 4 (see [Custom shortcuts](shortcuts.md#custom-shortcuts)).
-- **AltGr** as a shortcut modifier on Windows, and new shortcuts: *Toggle break/unbreak*, *Save original*, *Remove all formatting*, *Delete selection (everywhere)*, *Set style 1-10*, *Toggle screen privacy* and more.
+- **AltGr** as a shortcut modifier on Windows, and new shortcuts: *Toggle break/unbreak*, *Save original*, *Remove all formatting*, *Delete selection (everywhere)*, *Set style 1-10*, *Cycle screen privacy* and more.
 - **Tools → Merge continuation lines...** merges lines unless a line ends a sentence (see [Merge continuation lines](merge-continuation-lines.md)).
 - **Find/Replace** shows the replace count and a search history whose entries can be deleted one by one; **Multiple replace** rules get a *Whole word* option.
 - **Actor picker**, *Rename...* in the grid's Actors menu, and *Remove/replace Unicode characters* and *Convert actors* for selected lines.
