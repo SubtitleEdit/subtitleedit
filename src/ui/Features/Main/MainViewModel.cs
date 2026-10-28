@@ -4625,14 +4625,14 @@ public partial class MainViewModel :
                 _mpvReloader.Reset();
                 // Through RunPreviewRefresh so a rejected push (player just recreated, mpv not
                 // playing yet) arms the dirty-flag retry instead of being lost (#13407).
-                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true));
+                _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), GetSecondaryPreviewSubtitle(), SelectedSubtitleFormat, subtitleIsOwned: true));
             }
             else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
                 _ = RunPreviewRefresh(async () =>
                 {
-                    await _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true);
+                    await _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), GetSecondaryPreviewSubtitle(), SelectedSubtitleFormat, subtitleIsOwned: true);
                     return true;
                 });
             }
@@ -4650,7 +4650,24 @@ public partial class MainViewModel :
     private void PushFfmpegPreview(FfmpegPlayer ffmpeg, Subtitle subtitle)
     {
         ffmpeg.PreviewSubtitlesVisible = _mpvReloader.SubtitlesEffectivelyVisible;
-        ffmpeg.PreviewSubtitle = FfmpegPreviewSubtitle.Build(subtitle, _subtitleSecondary, _mpvReloader.SmpteMode);
+        ffmpeg.PreviewSubtitle = FfmpegPreviewSubtitle.Build(subtitle, GetSecondaryPreviewSubtitle(), _mpvReloader.SmpteMode);
+    }
+
+    /// <summary>
+    /// The second subtitle on the video timeline: its file times minus the video offset, the same
+    /// split the main file gets on open (<see cref="SubtitleOpen"/>). Applied per push rather than
+    /// baked into <see cref="_subtitleSecondary"/>, so an offset change re-aligns it.
+    /// </summary>
+    private Subtitle? GetSecondaryPreviewSubtitle()
+    {
+        if (_subtitleSecondary == null || Se.Settings.General.CurrentVideoOffsetInMs == 0)
+        {
+            return _subtitleSecondary;
+        }
+
+        var shifted = new Subtitle(_subtitleSecondary);
+        shifted.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Se.Settings.General.CurrentVideoOffsetInMs));
+        return shifted;
     }
 
     [RelayCommand]
@@ -12075,6 +12092,11 @@ public partial class MainViewModel :
             }
         }
 
+        if (IsSubtitleSecondaryVisible)
+        {
+            PushSecondarySubtitle();
+        }
+
         UpdateVideoOffsetStatus();
         _updateAudioVisualizer = true;
     }
@@ -15434,12 +15456,12 @@ public partial class MainViewModel :
             if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
             {
                 _mpvReloader.Reset();
-                _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true);
+                _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), GetSecondaryPreviewSubtitle(), SelectedSubtitleFormat, subtitleIsOwned: true);
             }
             else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
-                _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true);
+                _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), GetSecondaryPreviewSubtitle(), SelectedSubtitleFormat, subtitleIsOwned: true);
             }
             else if (vp.VideoPlayer is FfmpegPlayer ffmpeg)
             {
@@ -19585,12 +19607,12 @@ public partial class MainViewModel :
         if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
             _mpvReloader.Reset();
-            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true));
+            _ = RunPreviewRefresh(() => _mpvReloader.RefreshMpv(mpv, GetVideoPreviewSubtitle(), GetSecondaryPreviewSubtitle(), SelectedSubtitleFormat, subtitleIsOwned: true));
         }
         else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
         {
             _vlcReloader.Reset();
-            _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), _subtitleSecondary, SelectedSubtitleFormat, subtitleIsOwned: true);
+            _vlcReloader.RefreshVlc(vlc, GetVideoPreviewSubtitle(), GetSecondaryPreviewSubtitle(), SelectedSubtitleFormat, subtitleIsOwned: true);
         }
         else if (vp.VideoPlayer is FfmpegPlayer ffmpeg)
         {
