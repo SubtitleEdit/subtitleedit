@@ -980,11 +980,6 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private void OnMainGridPointerPressed(object? sender, PointerPressedEventArgs e)
         {
             var props = e.GetCurrentPoint(this).Properties;
-            if (props.PointerUpdateKind != PointerUpdateKind.LeftButtonPressed || _surfaceLeftButtonDown)
-            {
-                return;
-            }
-
             // If the click is inside the controls row (_gridProgress), ignore it
             if (IsPointerOverControls(e))
             {
@@ -1019,10 +1014,10 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 return;
             }
 
+            _surfaceLeftButtonDown = false;
             var props = e.GetCurrentPoint(this).Properties;
             if (!props.IsLeftButtonPressed)
             {
-                _surfaceLeftButtonDown = false;
                 e.Pointer.Capture(null);
             }
         }

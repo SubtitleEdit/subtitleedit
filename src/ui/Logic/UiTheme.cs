@@ -113,29 +113,6 @@ public static class UiTheme
     }
 
     /// <summary>
-    /// Themes that ship a folder of their own in Themes.zip: an icon set plus background art.
-    /// </summary>
-    private static bool HasIconFolder(string themeName)
-    {
-        return themeName == ThemeNameMidnightCinema || themeName == ThemeNameSakura ||
-               themeName == ThemeNamePastel || themeName == ThemeNameNord;
-    }
-
-    /// <summary>
-    /// True when the toolbar and message box images come from the theme's own folder (Midnight
-    /// Cinema, Sakura, Pastel, Nord) - those are drawn in the theme's colors and must not be recolored.
-    /// </summary>
-    public static bool HasOwnIcons
-    {
-        get
-        {
-            var themeName = ThemeName;
-            return HasIconFolder(themeName) &&
-                   string.Equals(ImageFolder, Path.Combine(Se.ThemesFolder, themeName), StringComparison.Ordinal);
-        }
-    }
-
-    /// <summary>
     /// Folder holding the current theme's images. These are unpacked from Themes.zip into
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
     /// be reached through an avares:// URI. A theme that ships no image folder of its own
@@ -148,7 +125,7 @@ public static class UiTheme
         {
             var themeName = ThemeName;
             var folder = Path.Combine(Se.ThemesFolder, themeName);
-            if (HasIconFolder(themeName) && !File.Exists(Path.Combine(folder, "Open.png")))
+            if (!File.Exists(Path.Combine(folder, "Open.png")))
             {
                 // A theme (or a theme's icons, as with Pastel's and Nord's once art-only folders)
                 // added after the folder was last unpacked (same version, so the start-up check
@@ -1975,11 +1952,6 @@ public static class UiTheme
     public static Bitmap? GetThemeArt(string fileName)
     {
         var theme = Se.Settings.Appearance.Theme;
-        if (!HasIconFolder(theme))
-        {
-            return null;
-        }
-
         var path = Path.Combine(Se.ThemesFolder, theme, fileName);
         if (ThemeArtCache.TryGetValue(path, out var cached))
         {

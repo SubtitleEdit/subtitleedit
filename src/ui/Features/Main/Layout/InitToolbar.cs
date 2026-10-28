@@ -729,7 +729,7 @@ public static class InitToolbar
     private static unsafe Bitmap MakeOneColor(string filePath)
     {
         // A theme's own icons are already drawn in its colors
-        if (!UiTheme.IsDarkThemeEnabled() || !Se.Settings.Appearance.MatchIconColorToDarkTheme || UiTheme.HasOwnIcons)
+        if (!UiTheme.IsDarkThemeEnabled() || !Se.Settings.Appearance.MatchIconColorToDarkTheme)
         {
             return new Bitmap(filePath);
         }
