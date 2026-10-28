@@ -732,6 +732,8 @@ public class FixCommonErrorsWindow : Window
         var deleteMenuItem = new MenuItem { Header = Se.Language.General.Delete, DataContext = _vm };
         deleteMenuItem.Command = _vm.DeleteSelectedLinesCommand;
         flyout.Items.Add(deleteMenuItem);
+        UiUtil.AttachMacContextFlyoutHandler(dataGridSubtitles);
+        dataGridSubtitles.KeyDown += (_, e) => _vm.GridSubtitlesKeyDown(e);
 
         var gridCurrentSubtbtitle = MakeStep2EditPanel();
 

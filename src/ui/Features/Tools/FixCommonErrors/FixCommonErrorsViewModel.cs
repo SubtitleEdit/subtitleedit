@@ -21,7 +21,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TagLib;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 
@@ -271,7 +270,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private async Task DeleteSelectedItems()
     {
         var selectedItems = GetSelectedEditableSubtitles();
-        if (selectedItems.Count == 0)
+        if (selectedItems.Count == 0 || Window == null)
         {
             return;
         }
@@ -288,7 +287,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             }
 
             var answer = await MessageBox.Show(
-                Window!,
+                Window,
                 title,
                 message,
                 MessageBoxButtons.YesNoCancel,
@@ -300,6 +299,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             }
         }
 
+        var firstIndex = Paragraphs.IndexOf(selectedItems[0]);
         foreach (var item in selectedItems)
         {
             if (item.Paragraph != null)
@@ -308,7 +308,33 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             }
         }
 
+        // Fixes and the grid find lines by number, so close the gap the deleted line left
+        FixedSubtitle.Renumber();
         RefreshFixes();
+
+        // Keep the cursor where the deleted line was, so Delete can be pressed again
+        if (Paragraphs.Count > 0)
+        {
+            var row = Paragraphs[Math.Clamp(firstIndex, 0, Paragraphs.Count - 1)];
+            SelectedParagraph = row;
+            GridSubtitles.ScrollIntoView(row);
+            GridSubtitles.Focus();
+        }
+    }
+
+    /// <summary>
+    /// Delete in the preview grid - plus Cmd+Backspace on macOS, whose keyboards have no forward
+    /// Delete key (same keys as the main window's grid).
+    /// </summary>
+    internal void GridSubtitlesKeyDown(KeyEventArgs e)
+    {
+        var isDelete = e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None;
+        var isMacDelete = OperatingSystem.IsMacOS() && e.Key == Key.Back && e.KeyModifiers == KeyModifiers.Meta;
+        if (isDelete || isMacDelete)
+        {
+            e.Handled = true;
+            _ = DeleteSelectedItems();
+        }
     }
 
     private List<SubtitleLineViewModel> GetSelectedEditableSubtitles()
