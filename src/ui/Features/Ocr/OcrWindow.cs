@@ -863,6 +863,7 @@ public class OcrWindow : Window
         flyout.Items.Add(ImagePreviewBackground.MakeMenuItem(vm.WindowService, () => vm.Window, previewBackground));
 
         vm.SubtitleGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(vm.SubtitleGrid);
 
         return new Border
         {
