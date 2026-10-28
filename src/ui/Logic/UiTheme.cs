@@ -113,6 +113,21 @@ public static class UiTheme
     }
 
     /// <summary>
+    /// True when the toolbar and message box images come from a theme's own icon set (Midnight
+    /// Cinema, Sakura, Pastel, Nord) - those are drawn in the theme's colors and must not be
+    /// recolored. Dark/Light/Classic share the plain glyphs, which may be.
+    /// </summary>
+    public static bool HasOwnIcons
+    {
+        get
+        {
+            var iconSetName = Path.GetFileName(ImageFolder);
+            return iconSetName == ThemeNameMidnightCinema || iconSetName == ThemeNameSakura ||
+                   iconSetName == ThemeNamePastel || iconSetName == ThemeNameNord;
+        }
+    }
+
+    /// <summary>
     /// Folder holding the current theme's images. These are unpacked from Themes.zip into
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
     /// be reached through an avares:// URI. A theme that ships no image folder of its own
