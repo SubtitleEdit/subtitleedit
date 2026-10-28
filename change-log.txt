@@ -3,6 +3,21 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-beta9 (28th of October 2026)
+
+* Add background images for video player and waveform (also check the "Cycle theme" shortcut)
+* Clicking on the video area with no video loaded, an open video prompt will appear 
+* Add subtitle context menu for delete line in "Fix common errors" - thx skylinekiller
+* Improve Portuguese ansi encoding detection - thx Pemicope
+* Update Chinese Traditional translation - thx love80312
+* Update German translation - thx FunkyKnilch
+* Update Korean translation - thx 12si27
+* Update Japanese translation - thx hisui3393
+* Update Italian translation - thx bovirus
+* Update Polish translation - thx potplayer-fanpack
+                                                
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-beta8 (27th of October 2026)
 
 * Add editing word list regex in Options > Word lists
