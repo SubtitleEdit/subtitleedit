@@ -110,6 +110,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 
 ### WebVTT
 - [WebVTT Styles and Voices](features/webvtt-styles.md) — Manage cue classes, voices and browser preview
+- [YouTube Timed Text Styles](features/ytt-styles.md) — Pens, positions, window styles and karaoke for .ytt
 
 ### Options
 - [Settings](features/settings.md) — Application settings

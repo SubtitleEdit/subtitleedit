@@ -32,6 +32,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
 using Nikse.SubtitleEdit.Features.WebVtt;
+using Nikse.SubtitleEdit.Features.Ytt;
 using Nikse.SubtitleEdit.Features.Files.ImportDvd;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
@@ -664,6 +665,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<WaveformToolbarItemsViewModel>();
         collection.AddTransient<WebVttPropertiesViewModel>();
         collection.AddTransient<WebVttStylesViewModel>();
+        collection.AddTransient<YttStylesViewModel>();
         collection.AddTransient<WebVttStylePickerViewModel>();
         collection.AddTransient<SpeechToTextAdvancedViewModel>();
         collection.AddTransient<SpeechToTextPostProcessingViewModel>();

@@ -28576,6 +28576,7 @@ public partial class MainViewModel :
             : null;
 
         Subtitles.Clear();
+        UpdateYttPenLookup(subtitle.Header);
         foreach (var p in subtitle.Paragraphs)
         {
             Subtitles.Add(new SubtitleLineViewModel(p, SelectedSubtitleFormat));
@@ -32526,6 +32527,7 @@ public partial class MainViewModel :
             (selectedCount > 1 || (selectedCount == 1 && idx < count - 1));
         AreAssaContentMenuItemsVisible = false;
         AreWebVttContentMenuItemsVisible = false;
+        AreYttContentMenuItemsVisible = false;
         IsWebVttBrowserPreviewVisible = false;
         ShowAutoTranslateSelectedLines = selectedCount > 0;
         HasMultipleLinesSelected = selectedCount > 1;
@@ -32722,6 +32724,11 @@ public partial class MainViewModel :
                 AreWebVttContentMenuItemsVisible = true;
                 IsWebVttBrowserPreviewVisible = WebVttBrowserPreview.IsSupportedVideoFile(_videoFileName);
                 FillWebVttVoicesMenu();
+            }
+            else if (IsFormatYtt && selectedCount > 0)
+            {
+                AreYttContentMenuItemsVisible = true;
+                FillYttMenu();
             }
         }
 
@@ -37438,6 +37445,8 @@ public partial class MainViewModel :
                 // Clear the stored pointer args after use
                 _lastTextEditorPointerArgs = null;
             }
+
+            AddYttTextBoxMenuItems(flyout);
         }
     }
 
@@ -37767,6 +37776,8 @@ public partial class MainViewModel :
         IsFormatSsa = SelectedSubtitleFormat is SubStationAlpha;
         IsFormatAssaOrSsa = SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha;
         IsFormatWebVtt = SelectedSubtitleFormat is WebVTT or WebVTTFileWithLineNumber;
+        IsFormatYtt = SelectedSubtitleFormat is YouTubeTimedText;
+        UpdateYttPenLookup(_subtitle.Header);
         IsFormatEbu = SelectedSubtitleFormat is Ebu;
         IsFormatTeletext = SelectedSubtitleFormat is Ebu or DvbTeletext;
         UpdateTeletextLineLength();
@@ -37775,7 +37786,7 @@ public partial class MainViewModel :
 
         UpdateTemporaryFrameMode();
 
-        HasFormatStyle = IsFormatAssaOrSsa || IsFormatWebVtt;
+        HasFormatStyle = IsFormatAssaOrSsa || IsFormatWebVtt || IsFormatYtt;
         ShowActorColumnMenuHeader = IsFormatWebVtt
             ? Se.Language.File.WebVtt.ShowVoiceColumn
             : Se.Language.General.ShowActorColumn;

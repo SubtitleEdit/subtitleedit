@@ -54,6 +54,12 @@ public class VlcReloader : IVlcReloader
                 SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
                 text = subtitle.ToText(_assFormat);
             }
+            else if (uiFormatType == typeof(YouTubeTimedText))
+            {
+                subtitle = YttToAssa.Convert(new Subtitle(subtitle), VideoWidth, VideoHeight);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
+                text = subtitle.ToText(_assFormat);
+            }
             else if (uiFormatType == typeof(WebVTT) || uiFormatType == typeof(WebVTTFileWithLineNumber))
             {
                 var defaultStyle = GetMpvPreviewStyle(Se.Settings.Video);
