@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta9",
+  "version": "v5.4.0-beta10",
   "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
@@ -3319,6 +3319,7 @@
     "toggleShotChange": "カット変更を切り替え",
     "resetWaveformZoomAndSpeed": "波形のズームと速度をリセット",
     "showOriginalSubtitle": "波形に別字幕を表示",
+    "lockOriginalToTranslation": "原文を翻訳に固定する",
     "timelineGroupTracksBy": "字幕トラックのグループ化",
     "timelineShowThumbnails": "動画サムネイルを表示",
     "showSpeechOnly": "音声のみを表示（生成に時間がかかります）",
