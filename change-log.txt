@@ -3,6 +3,30 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-beta10 (29th of October 2026)
+
+* Add full support for YouTube timed text (.ytt/srv3): pens, positions, preview + styles window
+* Add Opper auto-translate engine - thx Felixkw12
+* Replace LFM2.5-VL 3B with LFM3-VL 2B in llama.cpp OCR models
+* "Replace all" now starts at selected line and asks before continuing from top (like SE4) - thx kadrimarzouki
+* Fix opening secondary subtitle (with offset) - thx Jamestankw
+* OCR: prompt before delete, Mac delete key + context menu
+* Fix OCR layout squeezed when video preview is off - thx FunkyKnilch
+* Fix right/middle click on video area toggling play/pause
+* Fix Nord/Midnight Cinema icons being recolored
+* Fix "Fix common errors" delete not applied for "Fix common errors in selected lines"
+* Rename multi-state "Toggle" shortcuts to "Cycle"
+* Update Japanese translation - thx hisui3393
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+* Update llama.cpp to b11968
+* Update audio.cpp to v0.9.3
+* Update CrispASR to v0.8.46
+* Update yt-dlp to 2026.10.26
+                                                
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-beta9 (28th of October 2026)
 
 * Add background images for video player and waveform (also check the "Cycle theme" shortcut)

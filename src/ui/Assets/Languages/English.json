@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta9",
+  "version": "v5.4.0-beta10",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -152,6 +152,9 @@
     "continueFindTitle": "Continue Find?",
     "searchItemNotFoundContinueFromTop": "The search item was not found.\nWould you like to start from the top of the document and search one more time?",
     "searchItemNotFoundContinueFromBottom": "The search item was not found.\nWould you like to start from the end of the document and search one more time?",
+    "continueReplaceTitle": "Continue replace?",
+    "replaceNotFoundContinueFromTop": "The search item was not found.\nWould you like to start from the top of the document and continue search and replace?",
+    "replacedXContinueFromTop": "The search item was replaced {0} time(s).\nWould you like to start from the top of the document and continue search and replace?",
     "conversionCancelledByUser": "Conversion cancelled by user",
     "convert": "Convert",
     "converted": "Converted",
