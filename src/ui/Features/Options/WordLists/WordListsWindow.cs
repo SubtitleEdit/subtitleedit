@@ -163,6 +163,20 @@ public class WordListsWindow : Window
             IsTextSearchEnabled = true, // type a letter (or a few quickly) to jump to the first matching entry (#16078)
         };
 
+        // Text search only moves the selection - focus stays on the row clicked before, so the arrow keys
+        // went on from there, or out of the list when that row had scrolled away (#16471). Move focus too.
+        listBox.AddHandler(InputElement.TextInputEvent, (_, _) =>
+        {
+            var index = listBox.SelectedIndex;
+            if (index < 0)
+            {
+                return;
+            }
+
+            listBox.ScrollIntoView(index);
+            listBox.ContainerFromIndex(index)?.Focus(NavigationMethod.Directional);
+        }, handledEventsToo: true);
+
         // Right-click selects the item under the pointer, so Remove acts on the clicked entry.
         var flyout = new MenuFlyout();
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.Remove, Command = removeCommand });
