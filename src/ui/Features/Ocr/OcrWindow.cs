@@ -1083,6 +1083,21 @@ public class OcrWindow : Window
         previewView.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowVideoPreview)) { Source = vm });
         grid.Add(previewView, 0, 3);
 
+        // A hidden child still leaves its star column reserved - collapse the column so the
+        // other panels (e.g. Unknown words) get the space back when the preview is off.
+        var previewColumn = grid.ColumnDefinitions[3];
+        void UpdatePreviewColumn() => previewColumn.Width = vm.ShowVideoPreview
+            ? new GridLength(3, GridUnitType.Star)
+            : new GridLength(0);
+        UpdatePreviewColumn();
+        vm.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(vm.ShowVideoPreview))
+            {
+                UpdatePreviewColumn();
+            }
+        };
+
         var border = new Border
         {
             Child = grid,
