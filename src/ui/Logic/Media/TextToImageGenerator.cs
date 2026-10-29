@@ -109,18 +109,26 @@ public static class TextToImageGenerator
      int padding = 20,
      bool isItalic = false,
      bool isUnderline = false,
-     bool isStrikeout = false
+     bool isStrikeout = false,
+     SKTypeface? typeface = null // e.g. an attached font that is not installed; owned by the caller
  )
     {
         outlineWidth *= 1.7f; // factor to match ASSA
 
-        using var typeface = SKTypeface.FromFamilyName(fontName, isBold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal, SKFontStyleWidth.Normal, isItalic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright);
+        using var installedTypeface = typeface == null
+            ? SKTypeface.FromFamilyName(fontName, isBold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal, SKFontStyleWidth.Normal, isItalic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright)
+            : null;
         using var paint = new SKPaint
         {
             IsAntialias = true
         };
 
-        using var font = new SKFont(typeface, fontSize);
+        using var font = new SKFont(typeface ?? installedTypeface, fontSize);
+        if (typeface != null && isBold && !typeface.IsBold)
+        {
+            font.Embolden = true; // the given face has no bold weight, so fake it like libass does
+        }
+
         if (isItalic)
         {
             font.SkewX = -0.25f; // synthetic slant so italic shows even when the font has no italic face
