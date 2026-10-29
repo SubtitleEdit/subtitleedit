@@ -57,7 +57,6 @@ internal sealed class SkiaWaveformRenderer
     private readonly SKPaint _image = new() { IsAntialias = false };
     private readonly SKPaint _text = new() { IsAntialias = true };
     private readonly SKImageFilter _textBlur = SKImageFilter.CreateBlur(4, 4);
-    private readonly SKPath _path = new();
     private readonly SKPath _wavePath = new();
     private readonly SKPathEffect _dashShotChange = SKPathEffect.CreateDash(new[] { 4f, 4f }, 0);
     private readonly SKPathEffect _dashCursor = SKPathEffect.CreateDash(new[] { 3f, 3f }, 1.5f);

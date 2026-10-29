@@ -46,7 +46,7 @@ internal sealed class NOcrOcrEngine : IOcrEngine
             parent, NOcrSpaceDetector.SplitPixelsAreSpace, rightToLeft: false, topToBottom: true,
             _lineHeightTracker.GetMinLineHeight(), autoHeight: true, _lineHeightTracker.GetAverageLineHeight());
         _lineHeightTracker.Update(letters);
-        letters = _spaceDetector.RemoveFalseSpaces(letters, out _);
+        letters = _spaceDetector.RemoveFalseSpaces(letters, out var pixelsAreSpace);
 
         var matches = new List<NOcrChar>();
         var i = 0;
@@ -85,6 +85,7 @@ internal sealed class NOcrOcrEngine : IOcrEngine
             i++;
         }
 
+        matches = NOcrSpaceDetector.RemoveFalseSpacesInNumbers(matches, pixelsAreSpace);
         return ItalicTextMerger.MergeWithItalicTags(matches).Trim();
     }
 

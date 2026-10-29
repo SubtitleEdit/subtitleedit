@@ -42,6 +42,17 @@ public interface IVideoPlayer
     {
     }
 
+    /// <summary>True when <see cref="SetAudioDelay"/> moves the audio (mpv).</summary>
+    bool SupportsAudioDelay => false;
+
+    /// <summary>
+    /// Plays the audio this many seconds later (negative = earlier) than the picture - the live
+    /// preview of Video > Sync audio track.
+    /// </summary>
+    void SetAudioDelay(double seconds)
+    {
+    }
+
     bool IsPlaying { get; }
     bool IsPaused { get; }
 
@@ -70,4 +81,11 @@ public interface IVideoPlayer
     /// </para>
     /// </summary>
     bool HasPlaybackRestartedSince(long stopwatchTimestamp) => false;
+
+    /// <summary>
+    /// Saves the decoded frame on screen (no subtitles or OSD) as a png when it is the frame at
+    /// <paramref name="seconds"/>, so a preview can skip an ffmpeg seek and decode. False when
+    /// the player cannot, or shows another frame (e.g. a seek is still landing).
+    /// </summary>
+    bool TrySaveCurrentFrame(string pngFileName, double seconds) => false;
 }

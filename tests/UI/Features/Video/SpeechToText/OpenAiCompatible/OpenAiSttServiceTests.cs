@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;

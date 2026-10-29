@@ -2,9 +2,6 @@
 // C# port by J.D. Purcell
 // You may use, copy, modify this code for any purpose and without fee.
 
-using System;
-
-using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.UiLogic.Common
 {

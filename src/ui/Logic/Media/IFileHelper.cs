@@ -1,5 +1,4 @@
 using Avalonia;
-using Avalonia.Controls;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Collections.Generic;
 using System.Threading.Tasks;

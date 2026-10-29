@@ -1,7 +1,4 @@
-using System;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;

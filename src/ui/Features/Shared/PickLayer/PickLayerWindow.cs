@@ -1,4 +1,4 @@
-using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -7,6 +7,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickLayer;
 
+/// <summary>
+/// Pick an ASSA layer number, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class PickLayerWindow : Window
 {
     public PickLayerWindow(PickLayerViewModel vm)
@@ -16,21 +19,10 @@ public class PickLayerWindow : Window
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 300;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
-        // Layer display
-        var panelLayer = new StackPanel
-        {
-            Spacing = 0,
-            Orientation = Orientation.Vertical,
-            Margin = new Thickness(0, 0, 10, 0),
-        };
-        var labelLayer = new TextBlock
-        {
-            Text = Se.Language.General.Layer,
-        };
-        panelLayer.Children.Add(labelLayer);
         var upDownLayer = new NumericUpDown
         {
             DataContext = vm,
@@ -42,39 +34,22 @@ public class PickLayerWindow : Window
             Maximum = int.MaxValue,
             Increment = 1,
             FormatString = "F0",
+            Width = 140,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
+        upDownLayer.Classes.Add("field"); // the compact field, not the theme's big spinner
+        AutomationProperties.SetName(upDownLayer, Se.Language.General.Layer);
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(upDownLayer, Se.Language.General.Layer);
         }
-        panelLayer.Children.Add(upDownLayer);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Layer, upDownLayer, first: true);
+
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelLayer, 0);
-        grid.Add(buttonPanel, 1);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, upDownLayer); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

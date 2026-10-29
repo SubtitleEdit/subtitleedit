@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Features.Edit.Replace;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using SkiaSharp;
 
@@ -106,6 +107,21 @@ public class OcrTableViewTests
         }
 
         return best;
+    }
+
+    // The window is shown, so "Prompt before delete" would put up a modal question
+    private static void DeleteSelectedLinesWithoutPrompt(OcrViewModel vm)
+    {
+        var oldPrompt = Se.Settings.General.PromptBeforeDelete;
+        Se.Settings.General.PromptBeforeDelete = false;
+        try
+        {
+            vm.DeleteSelectedLinesCommand.Execute(null);
+        }
+        finally
+        {
+            Se.Settings.General.PromptBeforeDelete = oldPrompt;
+        }
     }
 
     private static OcrWindow ShowWindow(OcrViewModel vm)
@@ -353,7 +369,7 @@ public class OcrTableViewTests
         Dispatcher.UIThread.RunJobs();
         var survivor = vm.OcrSubtitleItems[3];
 
-        vm.DeleteSelectedLinesCommand.Execute(null);
+        DeleteSelectedLinesWithoutPrompt(vm);
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
@@ -377,7 +393,7 @@ public class OcrTableViewTests
         Dispatcher.UIThread.RunJobs();
         var survivor = vm.OcrSubtitleItems[2];
 
-        vm.DeleteSelectedLinesCommand.Execute(null);
+        DeleteSelectedLinesWithoutPrompt(vm);
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
@@ -403,7 +419,7 @@ public class OcrTableViewTests
         Dispatcher.UIThread.RunJobs();
         var survivor = vm.OcrSubtitleItems[5];
 
-        vm.DeleteSelectedLinesCommand.Execute(null);
+        DeleteSelectedLinesWithoutPrompt(vm);
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
@@ -433,7 +449,7 @@ public class OcrTableViewTests
         var topBefore = FirstVisibleIndex(tableView, scrollViewer);
         Assert.True(topBefore > 200, $"Expected to be scrolled near row 250, top row was {topBefore}");
 
-        vm.DeleteSelectedLinesCommand.Execute(null);
+        DeleteSelectedLinesWithoutPrompt(vm);
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
@@ -466,7 +482,7 @@ public class OcrTableViewTests
         tableView.SelectedItems.Add(vm.OcrSubtitleItems[6]);
         Dispatcher.UIThread.RunJobs();
 
-        vm.DeleteSelectedLinesCommand.Execute(null);
+        DeleteSelectedLinesWithoutPrompt(vm);
         Dispatcher.UIThread.RunJobs();
 
         // Row 3's fix went with it; the others moved up by the deleted rows above them.

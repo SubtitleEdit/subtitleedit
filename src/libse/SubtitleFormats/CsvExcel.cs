@@ -15,7 +15,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class CsvExcel : SubtitleFormat
     {
         private const char Separator = ',';
-        private const int NumberIndex = 0;
         private const int StartIndex = 1;
         private const int EndIndex = 2;
         private const int TextIndex = 3;

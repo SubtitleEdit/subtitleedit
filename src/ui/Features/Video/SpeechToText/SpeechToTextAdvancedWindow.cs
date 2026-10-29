@@ -1,4 +1,5 @@
-﻿using Avalonia;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -24,10 +25,10 @@ public class SpeechToTextAdvancedWindow : Window
         MinWidth = 800;
         MinHeight = 400;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
         vm.Window = this;
         DataContext = vm;
 
-        var labelParameters = UiUtil.MakeTextBlock(Se.Language.General.Parameters);
         var textBoxParameters = new TextBox
         {
             AcceptsReturn = true,
@@ -40,34 +41,63 @@ public class SpeechToTextAdvancedWindow : Window
             // multi-line textbox (#11181). Reserve enough vertical room so the
             // scrollbar sits below the text, not on top of it.
             MinHeight = 60,
+            TextWrapping = TextWrapping.Wrap,
+            VerticalContentAlignment = VerticalAlignment.Top,
             DataContext = vm,
-        };
+        }.WithAccessibleName(Se.Language.General.Parameters);
+        EditorChrome.AsTextField(textBoxParameters);
         textBoxParameters.Bind(TextBox.TextProperty, new Binding(nameof(vm.Parameters))
         {
             Mode = BindingMode.TwoWay,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
 
+        // One flat button per engine: shows that engine's help (and its parameters' defaults)
         var buttonVerticalPanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, 0, 10, 0),
+            Spacing = 2,
         };
         foreach (var engine in vm.Engines)
         {
-            var button = UiUtil.MakeButton(engine.Name, vm.EngineClickedCommand)
-                .WithCommandParameter(engine)
-                .WithLeftAlignment()
-                .WithMinWidth(200);
+            var button = new Button
+            {
+                Content = new TextBlock { Text = engine.Name, FontSize = EditorChrome.FieldFontSize, TextTrimming = TextTrimming.CharacterEllipsis },
+                Command = vm.EngineClickedCommand,
+                CommandParameter = engine,
+                Height = EditorChrome.ScaledSize(30),
+                Padding = new Thickness(10, 0),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+                VerticalContentAlignment = VerticalAlignment.Center,
+            };
+            button.Classes.Add("tool");
+            AutomationProperties.SetName(button, engine.Name);
             buttonVerticalPanel.Children.Add(button);
         }
+
+        var engineList = new Border
+        {
+            Child = new ScrollViewer
+            {
+                Content = EditorChrome.MakeEditorSection(Se.Language.General.Engine, buttonVerticalPanel, first: true),
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            },
+            Width = 240,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
+        };
 
         var textBoxHelp = new TextBox
         {
             IsReadOnly = true,
-            Margin = new Thickness(0, 0, 0, 5),
+            Margin = new Thickness(0),
+            FontSize = EditorChrome.FieldFontSize,
+            Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Padding = new Thickness(10, 8),
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,  
             TextWrapping = Avalonia.Media.TextWrapping.NoWrap,   
@@ -136,6 +166,7 @@ public class SpeechToTextAdvancedWindow : Window
                 }
             }
         }.WithBindIsVisible(nameof(vm.IsWhisperXxlVisible));
+        AutomationProperties.SetName(buttonXxlOptions, Se.Language.Video.AudioToText.WhisperXxlStandard);
 
         // These switch parameters on. As plain buttons there was no way to press one back off
         // again, so anything they set - word-level output above all - stayed on for good.
@@ -144,8 +175,10 @@ public class SpeechToTextAdvancedWindow : Window
             var toggleButton = new ToggleButton
             {
                 Content = text,
-                Margin = new Thickness(4, 0),
-                Padding = new Thickness(12, 6),
+                Margin = new Thickness(0),
+                Padding = new Thickness(12, 0),
+                Height = EditorChrome.ScaledSize(30),
+                FontSize = EditorChrome.FieldFontSize,
                 MinWidth = 80,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -153,6 +186,7 @@ public class SpeechToTextAdvancedWindow : Window
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Command = command,
             }.WithBindIsVisible(visiblePath);
+            toggleButton.Classes.Add("tool");
 
             // One way only: the parameter text is what says whether the switch is set, the
             // button just shows it.
@@ -164,75 +198,80 @@ public class SpeechToTextAdvancedWindow : Window
             return toggleButton;
         }
 
-        var buttonPanel = UiUtil.MakeButtonBar(
-            buttonXxlOptions,
-            MakeToggleButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCppCommand,
-                nameof(vm.IsVadCppActive), nameof(vm.IsWhisperCppVisible)),
-            MakeToggleButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCTranslate2Command,
-                nameof(vm.IsVadCTranslate2Active), nameof(vm.IsWhisperCTranslate2Visible)),
-            UiUtil.MakeButton(Se.Language.Video.AudioToText.WhisperXxlStandard, vm.StandardCrispAsrCommand)
-                .WithBindIsVisible(nameof(vm.IsCrispAsrVisible)),
-            MakeToggleButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCrispAsrCommand,
-                nameof(vm.IsVadCrispAsrActive), nameof(vm.IsCrispAsrVisible)),
-            MakeToggleButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.EnableHighlightWordsCrispAsrCommand,
-                nameof(vm.IsHighlightWordsCrispAsrActive), nameof(vm.IsCrispAsrVisible)),
-            MakeToggleButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.EnableWordLevelCppCommand,
-                nameof(vm.IsWordLevelCppActive), nameof(vm.IsWhisperCppVisible)),
-            MakeToggleButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.WhisperCTranslate2HighLightWordCommand,
-                nameof(vm.IsHighlightWordsCTranslate2Active), nameof(vm.IsWhisperCTranslate2Visible)),
-            UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand),
-            UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand)
-        );
+        var buttonStandardCrispAsr = UiUtil.MakeButton(Se.Language.Video.AudioToText.WhisperXxlStandard, vm.StandardCrispAsrCommand)
+            .WithBindIsVisible(nameof(vm.IsCrispAsrVisible));
+        buttonStandardCrispAsr.Margin = new Thickness(0);
+
+        // Presets and parameter switches for the selected engine on the left, OK/Cancel on the right
+        var presets = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                buttonXxlOptions,
+                MakeToggleButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCppCommand,
+                    nameof(vm.IsVadCppActive), nameof(vm.IsWhisperCppVisible)),
+                MakeToggleButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCTranslate2Command,
+                    nameof(vm.IsVadCTranslate2Active), nameof(vm.IsWhisperCTranslate2Visible)),
+                buttonStandardCrispAsr,
+                MakeToggleButton(Se.Language.Video.AudioToText.EnableVad, vm.EnableVadCrispAsrCommand,
+                    nameof(vm.IsVadCrispAsrActive), nameof(vm.IsCrispAsrVisible)),
+                MakeToggleButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.EnableHighlightWordsCrispAsrCommand,
+                    nameof(vm.IsHighlightWordsCrispAsrActive), nameof(vm.IsCrispAsrVisible)),
+                MakeToggleButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.EnableWordLevelCppCommand,
+                    nameof(vm.IsWordLevelCppActive), nameof(vm.IsWhisperCppVisible)),
+                MakeToggleButton(Se.Language.Video.AudioToText.WhisperXxlHighlightWord, vm.WhisperCTranslate2HighLightWordCommand,
+                    nameof(vm.IsHighlightWordsCTranslate2Active), nameof(vm.IsWhisperCTranslate2Visible)),
+            },
+        };
+
+        var buttonBar = EditorChrome.MakeFlushButtonBar(presets, UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand)));
+
+        var parameters = new Border
+        {
+            Child = EditorChrome.MakeEditorSection(Se.Language.General.Parameters, textBoxParameters, first: true),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+        };
+
+        var help = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+        help.Add(SpeechToTextChrome.ListHeader(Se.Language.General.Help), 0, 0);
+        help.Add(EditorChrome.MakeListFrame(scrollViewer), 1, 0);
+
+        var middle = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+        };
+        middle.Add(engineList, 0, 0);
+        middle.Add(help, 0, 1);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-
-        var row = 0;
-        grid.Children.Add(labelParameters);
-        Grid.SetRow(labelParameters, row);
-        Grid.SetColumn(labelParameters, 0);
-        Grid.SetColumnSpan(labelParameters, 3);
-        row++;
-
-        grid.Children.Add(textBoxParameters);
-        Grid.SetRow(textBoxParameters, row);
-        Grid.SetColumn(textBoxParameters, 0);
-        Grid.SetColumnSpan(textBoxParameters, 3);
-        row++;
-
-        grid.Children.Add(buttonVerticalPanel);
-        Grid.SetRow(buttonVerticalPanel, row);
-        Grid.SetColumn(buttonVerticalPanel, 0);
-
-        grid.Children.Add(scrollViewer);
-        Grid.SetRow(scrollViewer, row);
-        Grid.SetColumn(scrollViewer, 1);
-        Grid.SetColumnSpan(scrollViewer, 2);
-        row++;
-
-        grid.Children.Add(buttonPanel);
-        Grid.SetRow(buttonPanel, row);
-        Grid.SetColumn(buttonPanel, 0);
-        Grid.SetColumnSpan(buttonPanel, 3);
+        grid.Add(parameters, 0, 0);
+        grid.Add(middle, 1, 0);
+        grid.Add(buttonBar, 2, 0);
 
         Content = grid;
 

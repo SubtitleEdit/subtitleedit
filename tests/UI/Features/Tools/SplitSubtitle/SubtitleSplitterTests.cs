@@ -1,4 +1,3 @@
-using System.Linq;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 

@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Linq;
 
 namespace Tests.Features;
 

@@ -1,16 +1,24 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
+using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
-using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Files.FormatProperties.ItunesTimedTextProperties;
 
@@ -53,14 +61,42 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
     [ObservableProperty] private string _bottomOrigin = string.Empty;
     [ObservableProperty] private string _bottomExtent = string.Empty;
 
+    // Export preset (#16257): the header every saved file gets, and named copies of the setup.
+    [ObservableProperty] private Color _defaultColor = Colors.White;
+    [ObservableProperty] private ObservableCollection<string> _headerSources = null!;
+    [ObservableProperty] private string _selectedHeaderSource = string.Empty;
+    [ObservableProperty] private string _templateFile = string.Empty;
+    [ObservableProperty] private string _templateSummary = string.Empty;
+    [ObservableProperty] private bool _isTemplateMode;
+    [ObservableProperty] private bool _isCurrentFileMode = true;
+    [ObservableProperty] private ObservableCollection<string> _presetNames = new();
+    [ObservableProperty] private string? _selectedPresetName;
+
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
 
+    private readonly IFileHelper _fileHelper;
+    private readonly IWindowService _windowService;
     private Subtitle _subtitle = new();
+    private bool _isApplyingPreset;
 
-    public ItunesTimedTextPropertiesViewModel()
+    // What the current file's header holds, so switching the header source back restores it.
+    private List<string> _fileStyles = new();
+    private List<string> _fileRegions = new();
+    private string _fileBodyStyle = NotAvailable;
+    private string _fileBodyRegion = NotAvailable;
+
+    // The color the header's styles carry now - OK recolors the styles that still have it. Kept as
+    // text so "white" stays "white" when the color was not touched.
+    private string _originalDefaultColorText = "white";
+    private Color _originalDefaultColor = Colors.White;
+
+    public ItunesTimedTextPropertiesViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
+        _fileHelper = fileHelper;
+        _windowService = windowService;
+
         Languages = ["en", "da", "de", "es", "fi", "fr", "it", "ja", "ko", "nb", "nl", "pl", "pt", "ru", "sv", "zh"];
         SelectedLanguage = "en";
 
@@ -99,6 +135,9 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
         ];
         SelectedTimeCodeFormat = TimeCodeFormats[0];
 
+        HeaderSources = [Se.Language.File.PropertyHeaderSourceCurrentFile, Se.Language.File.PropertyHeaderSourceTemplateFile];
+        SelectedHeaderSource = HeaderSources[0];
+
         TopOrigin = Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin;
         TopExtent = Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent;
         BottomOrigin = Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin;
@@ -116,12 +155,69 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
             subtitle.Header = header;
         }
 
+        ReadHeader(header);
+
+        var formats = Se.Settings.Formats;
+
+        // Style attribute
+        var styleAttr = formats.TimedTextItunesStyleAttribute;
+        if (!string.IsNullOrEmpty(styleAttr))
+        {
+            var match = StyleAttributes.FirstOrDefault(s => s == styleAttr);
+            SelectedStyleAttribute = match ?? StyleAttributes[0];
+        }
+
+        // Time code format
+        var timeCodeFormat = formats.TimedTextItunesTimeCodeFormat;
+        if (!string.IsNullOrEmpty(timeCodeFormat))
+        {
+            var match = TimeCodeFormats.FirstOrDefault(f => string.Equals(f, timeCodeFormat, StringComparison.OrdinalIgnoreCase));
+            SelectedTimeCodeFormat = match ?? TimeCodeFormats[0];
+        }
+
+        // Alignment settings
+        TopOrigin = formats.TimedTextItunesTopOrigin;
+        TopExtent = formats.TimedTextItunesTopExtent;
+        BottomOrigin = formats.TimedTextItunesBottomOrigin;
+        BottomExtent = formats.TimedTextItunesBottomExtent;
+
+        // Language setting
+        var lang2 = formats.TimedTextItunesLanguage;
+        if (!string.IsNullOrEmpty(lang2))
+        {
+            SelectLanguage(lang2);
+        }
+
+        // Header source + template
+        _isApplyingPreset = true;
+        try
+        {
+            TemplateFile = formats.TimedTextItunesTemplateFile ?? string.Empty;
+            SelectedHeaderSource = formats.TimedTextItunesHeaderSource == SeItunesTimedTextPreset.HeaderSourceTemplateFile
+                ? HeaderSources[1]
+                : HeaderSources[0];
+            RefreshPresetNames(formats.TimedTextItunesSelectedPreset);
+        }
+        finally
+        {
+            _isApplyingPreset = false;
+        }
+
+        UpdateHeaderSourceMode();
+    }
+
+    /// <summary>
+    /// Reads the current file's header into the fields: metadata, root attributes, the styles and
+    /// regions it defines, what the body uses by default, and the color its styles carry.
+    /// </summary>
+    private void ReadHeader(string header)
+    {
         try
         {
             var doc = XDocument.Load(new MemoryStream(Encoding.UTF8.GetBytes(header)));
             XNamespace tt = "http://www.w3.org/ns/ttml";
             XNamespace ttp = "http://www.w3.org/ns/ttml#parameter";
-            XNamespace ttm = "http://www.w3.org/ns/ttml#metadata";
+            XNamespace ttm = "http://www.w3.org/ns/10/ttml#metadata";
             XNamespace xml = "http://www.w3.org/XML/1998/namespace";
             var root = doc.Root;
             if (root == null)
@@ -149,16 +245,7 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
             var lang = (string?)root.Attribute(xml + "lang");
             if (!string.IsNullOrEmpty(lang))
             {
-                var match = Languages.FirstOrDefault(l => l == lang);
-                if (match != null)
-                {
-                    SelectedLanguage = match;
-                }
-                else
-                {
-                    Languages.Add(lang);
-                    SelectedLanguage = lang;
-                }
+                SelectLanguage(lang);
             }
 
             // ttp:timeBase
@@ -191,79 +278,217 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
                 SelectedDropMode = match ?? DropModes[0];
             }
 
-            // Styles from header
-            var styles = TimedText10.GetStylesFromHeader(header);
-            DefaultStyles = new ObservableCollection<string>([NotAvailable, .. styles]);
+            // Styles and regions from header, and what the body uses by default
+            _fileStyles = TimedText10.GetStylesFromHeader(header);
+            _fileRegions = TimedText10.GetRegionsFromHeader(header);
+            var body = root.Descendants(tt + "body").FirstOrDefault();
+            _fileBodyStyle = body?.Attribute("style")?.Value ?? NotAvailable;
+            _fileBodyRegion = body?.Attribute("region")?.Value ?? NotAvailable;
 
-            var bodyStyleAttr = root.Descendants(tt + "body").FirstOrDefault()?.Attribute("style");
-            if (bodyStyleAttr != null)
+            // The color of the default style ("normal", the body's, or the first style with a color)
+            var colorText = GetDefaultStyleColor(root, body?.Attribute("style")?.Value);
+            if (!string.IsNullOrEmpty(colorText))
             {
-                var match = DefaultStyles.FirstOrDefault(s => s == bodyStyleAttr.Value);
-                SelectedDefaultStyle = match ?? DefaultStyles[0];
-            }
-            else
-            {
-                SelectedDefaultStyle = DefaultStyles[0];
-            }
-
-            // Regions from header
-            var regions = TimedText10.GetRegionsFromHeader(header);
-            DefaultRegions = new ObservableCollection<string>([NotAvailable, .. regions]);
-
-            var bodyRegionAttr = root.Descendants(tt + "body").FirstOrDefault()?.Attribute("region");
-            if (bodyRegionAttr != null)
-            {
-                var match = DefaultRegions.FirstOrDefault(r => r == bodyRegionAttr.Value);
-                SelectedDefaultRegion = match ?? DefaultRegions[0];
-            }
-            else
-            {
-                SelectedDefaultRegion = DefaultRegions[0];
+                _originalDefaultColorText = colorText;
+                _originalDefaultColor = ParseColor(colorText, Colors.White);
+                DefaultColor = _originalDefaultColor;
             }
         }
         catch
         {
             // ignore
         }
+    }
 
-        // Style attribute
-        var styleAttr = Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute;
-        if (!string.IsNullOrEmpty(styleAttr))
+    private static string? GetDefaultStyleColor(XElement root, string? bodyStyle)
+    {
+        XNamespace tt = "http://www.w3.org/ns/ttml";
+        XNamespace tts = "http://www.w3.org/ns/ttml#styling";
+        XNamespace xml = "http://www.w3.org/XML/1998/namespace";
+        var styles = root.Descendants(tt + "style").ToList();
+        var defaultStyle = styles.FirstOrDefault(s => (string?)s.Attribute(xml + "id") == "normal")
+                           ?? styles.FirstOrDefault(s => bodyStyle != null && (string?)s.Attribute(xml + "id") == bodyStyle)
+                           ?? styles.FirstOrDefault(s => s.Attribute(tts + "color") != null);
+        return (string?)defaultStyle?.Attribute(tts + "color");
+    }
+
+    internal static Color ParseColor(string text, Color fallback)
+    {
+        if (string.IsNullOrWhiteSpace(text))
         {
-            var match = StyleAttributes.FirstOrDefault(s => s == styleAttr);
-            SelectedStyleAttribute = match ?? StyleAttributes[0];
+            return fallback;
         }
 
-        // Time code format
-        var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedTextItunesTimeCodeFormat;
-        if (!string.IsNullOrEmpty(timeCodeFormat))
+        return Color.TryParse(text.Trim(), out var color) ? color : fallback;
+    }
+
+    private void SelectLanguage(string lang)
+    {
+        var match = Languages.FirstOrDefault(l => l == lang);
+        if (match != null)
         {
-            var match = TimeCodeFormats.FirstOrDefault(f => string.Equals(f, timeCodeFormat, System.StringComparison.OrdinalIgnoreCase));
-            SelectedTimeCodeFormat = match ?? TimeCodeFormats[0];
+            SelectedLanguage = match;
         }
-
-        // Alignment settings
-        TopOrigin = Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin;
-        TopExtent = Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent;
-        BottomOrigin = Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin;
-        BottomExtent = Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent;
-
-        // Language setting
-        var lang2 = Configuration.Settings.SubtitleSettings.TimedTextItunesLanguage;
-        if (!string.IsNullOrEmpty(lang2))
+        else
         {
-            var match = Languages.FirstOrDefault(l => l == lang2);
-            if (match != null)
-            {
-                SelectedLanguage = match;
-            }
-            else
-            {
-                Languages.Add(lang2);
-                SelectedLanguage = lang2;
-            }
+            Languages.Add(lang);
+            SelectedLanguage = lang;
         }
     }
+
+    /// <summary>
+    /// Refills the style/region lists in place - the window's combo boxes hold the collection
+    /// instances, so a replaced collection would leave them showing the old items.
+    /// </summary>
+    private void SetStylesAndRegions(List<string> styles, List<string> regions, string? defaultStyle, string? defaultRegion)
+    {
+        Refill(DefaultStyles, styles);
+        SelectedDefaultStyle = DefaultStyles.FirstOrDefault(s => s == defaultStyle) ?? DefaultStyles[0];
+
+        Refill(DefaultRegions, regions);
+        SelectedDefaultRegion = DefaultRegions.FirstOrDefault(r => r == defaultRegion) ?? DefaultRegions[0];
+    }
+
+    private static void Refill(ObservableCollection<string> target, List<string> items)
+    {
+        target.Clear();
+        target.Add(NotAvailable);
+        foreach (var item in items)
+        {
+            target.Add(item);
+        }
+    }
+
+    partial void OnSelectedHeaderSourceChanged(string value)
+    {
+        if (_isApplyingPreset)
+        {
+            return;
+        }
+
+        UpdateHeaderSourceMode();
+    }
+
+    partial void OnTemplateFileChanged(string value)
+    {
+        if (_isApplyingPreset || !IsTemplateMode)
+        {
+            return;
+        }
+
+        LoadTemplate();
+    }
+
+    /// <summary>
+    /// The style/region lists follow the header source: the current file's header, or the template's.
+    /// </summary>
+    private void UpdateHeaderSourceMode()
+    {
+        IsTemplateMode = SelectedHeaderSource == Se.Language.File.PropertyHeaderSourceTemplateFile;
+        IsCurrentFileMode = !IsTemplateMode;
+
+        if (IsTemplateMode)
+        {
+            LoadTemplate();
+        }
+        else
+        {
+            TemplateSummary = string.Empty;
+            SetStylesAndRegions(_fileStyles, _fileRegions, _fileBodyStyle, _fileBodyRegion);
+        }
+    }
+
+    private void LoadTemplate()
+    {
+        var formats = Se.Settings.Formats;
+        var wantedStyle = SelectedDefaultStyle != NotAvailable ? SelectedDefaultStyle : formats.TimedTextItunesDefaultStyle;
+        var wantedRegion = SelectedDefaultRegion != NotAvailable ? SelectedDefaultRegion : formats.TimedTextItunesDefaultRegion;
+
+        if (string.IsNullOrWhiteSpace(TemplateFile) || !File.Exists(TemplateFile))
+        {
+            TemplateSummary = Se.Language.File.PropertyTemplateFileNotFound;
+            SetStylesAndRegions(new List<string>(), new List<string>(), null, null);
+            return;
+        }
+
+        string text;
+        try
+        {
+            text = File.ReadAllText(TemplateFile);
+        }
+        catch (Exception exception)
+        {
+            TemplateSummary = exception.Message;
+            SetStylesAndRegions(new List<string>(), new List<string>(), null, null);
+            return;
+        }
+
+        if (ItunesTimedText.LoadHeaderTemplate(text) == null)
+        {
+            TemplateSummary = Se.Language.File.PropertyTemplateFileInvalid;
+            SetStylesAndRegions(new List<string>(), new List<string>(), null, null);
+            return;
+        }
+
+        var styles = TimedText10.GetStylesFromHeader(text);
+        var regions = TimedText10.GetRegionsFromHeader(text);
+        var language = "-";
+        try
+        {
+            var doc = XDocument.Load(new MemoryStream(Encoding.UTF8.GetBytes(text)));
+            XNamespace xml = "http://www.w3.org/XML/1998/namespace";
+            language = (string?)doc.Root?.Attribute(xml + "lang") ?? "-";
+        }
+        catch
+        {
+            // ignore
+        }
+
+        TemplateSummary = string.Format(Se.Language.File.PropertyTemplateSummaryX, language, styles.Count == 0 ? "-" : string.Join(", ", styles), regions.Count == 0 ? "-" : string.Join(", ", regions));
+        SetStylesAndRegions(styles, regions, wantedStyle, wantedRegion);
+    }
+
+    [RelayCommand]
+    private async Task BrowseTemplateFile()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.File.PickTemplateFile, Se.Language.File.TtmlFiles, ".itt", "XML", ".xml");
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        TemplateFile = fileName;
+    }
+
+    [RelayCommand]
+    private async Task ChooseDefaultColor()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var vm = await _windowService.ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(
+            Window, viewModel => viewModel.Initialize(DefaultColor));
+
+        if (vm.OkPressed)
+        {
+            DefaultColor = vm.SelectedColor;
+        }
+    }
+
+    /// <summary>
+    /// The color as the settings and the header store it: the header's own text when the color was
+    /// not changed (so "white" stays "white"), else #RRGGBB.
+    /// </summary>
+    private string DefaultColorText => DefaultColor == _originalDefaultColor
+        ? _originalDefaultColorText
+        : DefaultColor.FromColorToHex(includeAlpha: false);
 
     private void WriteValuesToXml()
     {
@@ -277,8 +502,9 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
         {
             var doc = XDocument.Load(new MemoryStream(Encoding.UTF8.GetBytes(header)));
             XNamespace tt = "http://www.w3.org/ns/ttml";
+            XNamespace tts = "http://www.w3.org/ns/ttml#styling";
             XNamespace ttp = "http://www.w3.org/ns/ttml#parameter";
-            XNamespace ttm = "http://www.w3.org/ns/ttml#metadata";
+            XNamespace ttm = "http://www.w3.org/ns/10/ttml#metadata";
             XNamespace xml = "http://www.w3.org/XML/1998/namespace";
             var root = doc.Root;
             if (root == null)
@@ -385,22 +611,26 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
                 }
             }
 
+            // Default color: every style that still has the old default color gets the new one
+            if (DefaultColor != _originalDefaultColor)
+            {
+                var newColor = DefaultColorText;
+                foreach (var style in root.Descendants(tt + "style"))
+                {
+                    var colorAttr = style.Attribute(tts + "color");
+                    if (colorAttr != null && string.Equals(colorAttr.Value.Trim(), _originalDefaultColorText, StringComparison.OrdinalIgnoreCase))
+                    {
+                        colorAttr.Value = newColor;
+                    }
+                }
+            }
+
             _subtitle.Header = doc.ToString();
         }
         catch
         {
             // ignore
         }
-
-        // Save settings
-        var formats = Se.Settings.Formats;
-        formats.TimedTextItunesLanguage = SelectedLanguage ?? string.Empty;
-        formats.TimedTextItunesStyleAttribute = SelectedStyleAttribute;
-        formats.TimedTextItunesTimeCodeFormat = SelectedTimeCodeFormat;
-        formats.TimedTextItunesTopOrigin = TopOrigin;
-        formats.TimedTextItunesTopExtent = TopExtent;
-        formats.TimedTextItunesBottomOrigin = BottomOrigin;
-        formats.TimedTextItunesBottomExtent = BottomExtent;
     }
 
     private static void SetOrRemoveAttribute(XElement element, XName name, string? value)
@@ -418,7 +648,12 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        WriteValuesToXml();
+        // With a template the saved header comes from the template file, not from this file's header.
+        if (!IsTemplateMode)
+        {
+            WriteValuesToXml();
+        }
+
         SaveSettings();
         OkPressed = true;
         Window?.Close();
@@ -437,8 +672,161 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
         formats.TimedTextItunesTimeCodeFormat = SelectedTimeCodeFormat;
         formats.TimedTextItunesStyleAttribute = SelectedStyleAttribute;
         formats.TimedTextItunesLanguage = SelectedLanguage ?? string.Empty;
+        formats.TimedTextItunesDefaultColor = DefaultColorText;
+        formats.TimedTextItunesDefaultStyle = SelectedDefaultStyle == NotAvailable ? string.Empty : SelectedDefaultStyle;
+        formats.TimedTextItunesDefaultRegion = SelectedDefaultRegion == NotAvailable ? string.Empty : SelectedDefaultRegion;
+        formats.TimedTextItunesHeaderSource = IsTemplateMode ? SeItunesTimedTextPreset.HeaderSourceTemplateFile : SeItunesTimedTextPreset.HeaderSourceCurrentFile;
+        formats.TimedTextItunesTemplateFile = TemplateFile ?? string.Empty;
+        formats.TimedTextItunesSelectedPreset = SelectedPresetName ?? string.Empty;
 
         Se.SaveSettings();
+        Se.UpdateLibSeSettings(); // the writer reads the libse mirror, so the next save sees these at once
+    }
+
+    private void RefreshPresetNames(string? selectName)
+    {
+        _isApplyingPreset = true;
+        try
+        {
+            PresetNames.Clear();
+            foreach (var name in Se.Settings.Formats.TimedTextItunesPresets
+                         .Select(p => p.Name)
+                         .OrderBy(p => p, StringComparer.CurrentCultureIgnoreCase))
+            {
+                PresetNames.Add(name);
+            }
+
+            SelectedPresetName = selectName != null && PresetNames.Contains(selectName) ? selectName : null;
+        }
+        finally
+        {
+            _isApplyingPreset = false;
+        }
+    }
+
+    partial void OnSelectedPresetNameChanged(string? value)
+    {
+        if (_isApplyingPreset || string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        ApplyPreset(value);
+    }
+
+    private SeItunesTimedTextPreset ToPreset(string name)
+    {
+        return new SeItunesTimedTextPreset
+        {
+            Name = name,
+            Language = SelectedLanguage ?? string.Empty,
+            TimeBase = SelectedTimeBase == NotAvailable ? string.Empty : SelectedTimeBase,
+            FrameRate = SelectedFrameRate ?? string.Empty,
+            FrameRateMultiplier = SelectedFrameRateMultiplier ?? string.Empty,
+            DropMode = SelectedDropMode == NotAvailable ? string.Empty : SelectedDropMode,
+            DefaultStyle = SelectedDefaultStyle == NotAvailable ? string.Empty : SelectedDefaultStyle,
+            DefaultRegion = SelectedDefaultRegion == NotAvailable ? string.Empty : SelectedDefaultRegion,
+            DefaultColor = DefaultColorText,
+            StyleAttribute = SelectedStyleAttribute,
+            TimeCodeFormat = SelectedTimeCodeFormat,
+            TopOrigin = TopOrigin,
+            TopExtent = TopExtent,
+            BottomOrigin = BottomOrigin,
+            BottomExtent = BottomExtent,
+            HeaderSource = IsTemplateMode ? SeItunesTimedTextPreset.HeaderSourceTemplateFile : SeItunesTimedTextPreset.HeaderSourceCurrentFile,
+            TemplateFile = TemplateFile ?? string.Empty,
+        };
+    }
+
+    private void ApplyPreset(string name)
+    {
+        var preset = Se.Settings.Formats.TimedTextItunesPresets.FirstOrDefault(p => p.Name == name);
+        if (preset == null)
+        {
+            return;
+        }
+
+        _isApplyingPreset = true;
+        try
+        {
+            if (!string.IsNullOrEmpty(preset.Language))
+            {
+                SelectLanguage(preset.Language);
+            }
+
+            SelectedTimeBase = TimeBases.FirstOrDefault(t => t == preset.TimeBase) ?? TimeBases[0];
+            SelectedFrameRate = preset.FrameRate ?? string.Empty;
+            SelectedFrameRateMultiplier = preset.FrameRateMultiplier ?? string.Empty;
+            SelectedDropMode = DropModes.FirstOrDefault(d => d == preset.DropMode) ?? DropModes[0];
+            SelectedStyleAttribute = StyleAttributes.FirstOrDefault(s => s == preset.StyleAttribute) ?? StyleAttributes[0];
+            SelectedTimeCodeFormat = TimeCodeFormats.FirstOrDefault(f => string.Equals(f, preset.TimeCodeFormat, StringComparison.OrdinalIgnoreCase)) ?? TimeCodeFormats[0];
+            TopOrigin = preset.TopOrigin ?? string.Empty;
+            TopExtent = preset.TopExtent ?? string.Empty;
+            BottomOrigin = preset.BottomOrigin ?? string.Empty;
+            BottomExtent = preset.BottomExtent ?? string.Empty;
+            DefaultColor = ParseColor(preset.DefaultColor, Colors.White);
+            TemplateFile = preset.TemplateFile ?? string.Empty;
+            SelectedHeaderSource = preset.HeaderSource == SeItunesTimedTextPreset.HeaderSourceTemplateFile ? HeaderSources[1] : HeaderSources[0];
+        }
+        finally
+        {
+            _isApplyingPreset = false;
+        }
+
+        UpdateHeaderSourceMode();
+        SelectedDefaultStyle = DefaultStyles.FirstOrDefault(s => s == preset.DefaultStyle) ?? DefaultStyles[0];
+        SelectedDefaultRegion = DefaultRegions.FirstOrDefault(r => r == preset.DefaultRegion) ?? DefaultRegions[0];
+    }
+
+    [RelayCommand]
+    private async Task SavePreset()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window, vm =>
+        {
+            vm.Initialize(Se.Language.Tools.BatchConvert.PresetName, SelectedPresetName ?? string.Empty, 300, 20, returnSubmits: true);
+        });
+
+        var name = (result.Text ?? string.Empty).Trim();
+        if (!result.OkPressed || name.Length == 0)
+        {
+            return;
+        }
+
+        var presets = Se.Settings.Formats.TimedTextItunesPresets;
+        presets.RemoveAll(p => p.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        presets.Add(ToPreset(name));
+        Se.SaveSettings();
+        RefreshPresetNames(name);
+    }
+
+    [RelayCommand]
+    private async Task DeletePreset()
+    {
+        var name = SelectedPresetName;
+        if (Window == null || string.IsNullOrEmpty(name))
+        {
+            return;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.Tools.BatchConvert.DeletePreset,
+            string.Format(Se.Language.Tools.BatchConvert.DeletePresetX, name),
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        Se.Settings.Formats.TimedTextItunesPresets.RemoveAll(p => p.Name == name);
+        Se.SaveSettings();
+        RefreshPresetNames(null);
     }
 
     [RelayCommand]

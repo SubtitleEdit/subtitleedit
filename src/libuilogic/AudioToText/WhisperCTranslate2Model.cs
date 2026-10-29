@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace Nikse.SubtitleEdit.UiLogic.AudioToText
+﻿namespace Nikse.SubtitleEdit.UiLogic.AudioToText
 {
     public class WhisperCTranslate2Model : IWhisperModel
     {

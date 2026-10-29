@@ -150,9 +150,9 @@
       },
       "SharpCompress": {
         "type": "Direct",
-        "requested": "[0.50.5, )",
-        "resolved": "0.50.5",
-        "contentHash": "wAEAxPV67rmS3IlIm+tvGNPJXEtZNqlwkZrwJZAvz0AagZP0qLtT4mM2hk8S+uO0Kx+wYoy/FsADQpHwsN5y3g=="
+        "requested": "[0.50.7, )",
+        "resolved": "0.50.7",
+        "contentHash": "amxjOlPKUFb33ohAVahPCCBHLtToYOOb6JGyM40q8DnT6KYoBLW1TtW6uLEXbv40S7ej6ikf6VmAXGBaFL6Klg=="
       },
       "SkiaSharp.HarfBuzz": {
         "type": "Direct",
@@ -547,8 +547,8 @@
       },
       "UTF.Unknown": {
         "type": "Transitive",
-        "resolved": "2.7.0",
-        "contentHash": "QpiN8FVvfEMB6QF3T8IhXCbA0atOu1opLHRlbVxPOW9Cv3VksGVPQVXAjCdWFc00sA7FL6z7pOFCYWtO89PbgQ=="
+        "resolved": "2.8.0",
+        "contentHash": "bpDbg9Hjuenm/vMhxavOb/cLivRBQxhU4Dc6iRPPoEUM80qlAnRQ7c2niLQJPxLV/XBEGGhda5cNLkcQuHxULA=="
       },
       "WeCantSpell.Hunspell": {
         "type": "Transitive",
@@ -559,7 +559,7 @@
         "type": "Project",
         "dependencies": {
           "SkiaSharp": "[3.119.4, )",
-          "UTF.Unknown": "[2.7.0, )"
+          "UTF.Unknown": "[2.8.0, )"
         }
       },
       "libuilogic": {
@@ -568,7 +568,7 @@
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "SkiaSharp.HarfBuzz": "[3.119.4, )",
           "WeCantSpell.Hunspell": "[7.0.1, )",
-          "libse": "[5.2.0, )"
+          "libse": "[5.3.0, )"
         }
       }
     }

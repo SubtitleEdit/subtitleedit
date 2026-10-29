@@ -15,6 +15,16 @@ public class SeEditMultipleReplace
 
     public List<MultipleReplaceCategory> Categories { get; set; } = new List<MultipleReplaceCategory>();
 
+    /// <summary>
+    /// The category the rules list showed last, so rules can be added to the same one next time.
+    /// </summary>
+    public string LastCategory { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Show the rules of a category last rule first - new rules go to the end, so they come on top.
+    /// </summary>
+    public bool NewestFirst { get; set; }
+
     public SeEditMultipleReplace()
     {
 

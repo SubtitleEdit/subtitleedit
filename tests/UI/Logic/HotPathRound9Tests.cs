@@ -4,10 +4,6 @@ using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using NikseBitmap = Nikse.SubtitleEdit.Core.Common.NikseBitmap;
 

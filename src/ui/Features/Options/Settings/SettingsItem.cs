@@ -1,10 +1,10 @@
 using System;
 using Avalonia;
-using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using System.Linq;
 
@@ -20,6 +20,22 @@ public class SettingsItem
     public string? IsVisibleBinding { get; set; }
     public bool IsHidden { get; set; } = false;
     public bool IsFullWidth { get; init; }
+
+    /// <summary>
+    /// An on/off setting: the control is a switch, shown before its label instead of after it.
+    /// </summary>
+    public bool IsSwitch { get; init; }
+
+    /// <summary>
+    /// A control that belongs to a switch (the "Edit" button of its settings), shown in the
+    /// field column after the switch and its label.
+    /// </summary>
+    public Func<Control>? TrailingFactory { get; init; }
+
+    /// <summary>
+    /// A thin line between groups of settings, not a setting.
+    /// </summary>
+    public bool IsSeparator { get; init; }
 
     /// <summary>
     /// English text the search also matches, for a label not found as one translated string
@@ -80,15 +96,31 @@ public class SettingsItem
     {
         if (!includeLabel)
         {
-            return _controlFactory();
+            var bare = _controlFactory();
+            SettingsChrome.Compact(bare);
+            return bare;
         }
 
-        var labelTextBlock = new TextBlock
+        if (IsSeparator)
         {
-            Text = _label,
-            MinWidth = 200,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+            return new Border
+            {
+                Height = 1,
+                Background = EditorChrome.LineBrush,
+                Margin = new Thickness(0, 4),
+            };
+        }
+
+        var labelTextBlock = IsSwitch
+            ? new TextBlock
+            {
+                Text = _label,
+                FontSize = EditorChrome.FieldFontSize,
+                Foreground = EditorChrome.DimTextBrush,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextWrapping = TextWrapping.Wrap,
+            }
+            : SettingsChrome.MakeLabel(_label);
 
         if (_labelBindingPath != null && _labelBindingSource != null)
         {
@@ -99,6 +131,7 @@ public class SettingsItem
         }
 
         var control = _controlFactory();
+        SettingsChrome.Compact(control);
 
         // Associate the row's label with its input control so screen readers announce the label as the
         // control's name. Without this the settings controls (numeric fields, combo boxes, check boxes,
@@ -120,7 +153,7 @@ public class SettingsItem
             {
                 foreach (var input in control.GetLogicalDescendants().OfType<Control>().ToList())
                 {
-                    if ((AccessibleLabels.IsInput(input) || AccessibleLabels.IsContentButton(input))
+                    if ((AccessibleLabels.IsInput(input) || AccessibleLabels.IsContentButton(input) || input is ToggleSwitch)
                         && input.TemplatedParent == null && !AccessibleLabels.HasAccessibleName(input))
                     {
                         AccessibleLabels.LinkToLabel(input, AccessibleLabels.FindLabel(input) ?? labelTextBlock);
@@ -129,23 +162,87 @@ public class SettingsItem
             }
         }
 
-        var stackPanel = new StackPanel
+        Grid row;
+        if (IsSwitch)
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            Margin = new Thickness(0, 0, 0, 15),
-            Children =
+            // "[switch] Label" - with a trailing control (an Edit button) the switch and its
+            // label take the label column and the control lines up with the fields.
+            var switchAndLabel = new Grid
             {
-                labelTextBlock,
-                control
+                ColumnSpacing = 10,
+                ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+            };
+            switchAndLabel.Add(control, 0, 0);
+            switchAndLabel.Add(labelTextBlock, 0, 1);
+
+            SettingsChrome.DimLabelWhenDisabled(control, labelTextBlock);
+
+            if (TrailingFactory == null)
+            {
+                row = switchAndLabel;
             }
-        };
+            else
+            {
+                var trailing = TrailingFactory();
+                SettingsChrome.Compact(trailing);
+                trailing.HorizontalAlignment = HorizontalAlignment.Left;
+                trailing.VerticalAlignment = VerticalAlignment.Center;
+                row = MakeColumns(switchAndLabel, trailing);
+            }
+        }
+        else
+        {
+            if (control.VerticalAlignment == VerticalAlignment.Stretch)
+            {
+                control.VerticalAlignment = VerticalAlignment.Center;
+            }
+
+            // A wide combo box or text box shrinks with a narrow window instead of being cut off
+            // at the right edge - its width becomes the most it takes.
+            var field = control is ComboBox or TextBox && !double.IsNaN(control.Width)
+                ? SettingsChrome.ShrinkToFit(control)
+                : control;
+
+            // A control of fixed width would be centered in the field column
+            if (control.HorizontalAlignment == HorizontalAlignment.Stretch && !double.IsNaN(control.Width))
+            {
+                control.HorizontalAlignment = HorizontalAlignment.Left;
+            }
+
+            // Top aligned, in line with the first line of a taller control (a list, a group)
+            labelTextBlock.VerticalAlignment = VerticalAlignment.Top;
+            labelTextBlock.Margin = new Thickness(0, 6, 0, 0);
+            row = MakeColumns(labelTextBlock, field);
+        }
+
+        row.MinHeight = 30;
 
         if (IsVisibleBinding != null)
         {
-            stackPanel.Bind(Visual.IsVisibleProperty, new Binding(nameof(IsVisibleBinding)));
+            row.Bind(Visual.IsVisibleProperty, new Binding(nameof(IsVisibleBinding)));
         }
 
-        return stackPanel;
+        return row;
+    }
+
+    /// <summary>
+    /// <paramref name="left"/> in the label column, <paramref name="content"/> in the field column.
+    /// </summary>
+    private static Grid MakeColumns(Control left, Control content)
+    {
+        // The label column has its full width where there is room; on a narrow window it gives
+        // up some of it (the labels wrap) so the fields are not cut off at the right edge.
+        var grid = new Grid
+        {
+            ColumnSpacing = 12,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(2, GridUnitType.Star) { MaxWidth = SettingsChrome.LabelWidth },
+                new ColumnDefinition(3, GridUnitType.Star),
+            },
+        };
+        grid.Add(left, 0, 0);
+        grid.Add(content, 0, 1);
+        return grid;
     }
 }

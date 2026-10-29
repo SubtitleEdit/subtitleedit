@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;

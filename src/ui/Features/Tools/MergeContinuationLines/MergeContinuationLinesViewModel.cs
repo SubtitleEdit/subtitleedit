@@ -96,11 +96,6 @@ public partial class MergeContinuationLinesViewModel : ObservableObject, IClosin
         _isDirty = true;
     }
 
-    public bool HasAnyCandidates()
-    {
-        return MergeContinuationLinesHelper.Detect(_allSubtitles, _language, MaxMillisecondsBetweenLines, MaxCharacters).Count > 0;
-    }
-
     private void UpdatePreview()
     {
         Dispatcher.UIThread.Post(() =>

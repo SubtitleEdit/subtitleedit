@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Xunit;
 
 namespace Tests.Logic;
 

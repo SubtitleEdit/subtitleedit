@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.Threading;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
-using Xunit;
 
 namespace UITests.Logic;
 

@@ -17,6 +17,11 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 /// with objc_allocateClassPair and [UnmanagedCallersOnly] method implementations. Every
 /// step is defensive: on any failure the Help search simply keeps its menu-items-only
 /// behavior.
+///
+/// AppKit only adds the search field to the menu it knows is the Help menu. Without
+/// NSApplication.helpMenu it guesses from the title, which only matches "Help" in the
+/// app's development language, so <see cref="TryRegisterHelpMenu"/> registers it
+/// explicitly for translated menu bars (#15980).
 /// </summary>
 internal static unsafe partial class MacHelpSearchInterop
 {
@@ -51,6 +56,12 @@ internal static unsafe partial class MacHelpSearchInterop
 
     [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
     private static partial void SendVoidPtr(IntPtr receiver, IntPtr sel, IntPtr arg);
+
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendPtrLong(IntPtr receiver, IntPtr sel, long arg);
+
+    [LibraryImport(LibObjC, EntryPoint = "objc_msgSend")]
+    private static partial long SendLong(IntPtr receiver, IntPtr sel);
 
     [LibraryImport(LibObjC, StringMarshalling = StringMarshalling.Utf8, EntryPoint = "objc_msgSend")]
     private static partial IntPtr SendPtrUtf8(IntPtr receiver, IntPtr sel, string arg);
@@ -125,6 +136,59 @@ internal static unsafe partial class MacHelpSearchInterop
         catch (Exception exception)
         {
             Debug.WriteLine($"Help menu search unavailable: {exception.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Finds the top-level menu named <paramref name="helpMenuTitle"/> in the current
+    /// NSMenuBar and registers it as NSApplication.helpMenu, so the Help search field
+    /// shows up whatever the UI language. Each editor window has its own NSMenuBar, so
+    /// this runs again per activation. Returns true when the Help menu is registered.
+    /// </summary>
+    public static bool TryRegisterHelpMenu(string helpMenuTitle)
+    {
+        if (!OperatingSystem.IsMacOS())
+        {
+            return false;
+        }
+
+        try
+        {
+            var nsApp = SendPtr(objc_getClass("NSApplication"), sel_registerName("sharedApplication"));
+            var mainMenu = nsApp == IntPtr.Zero ? IntPtr.Zero : SendPtr(nsApp, sel_registerName("mainMenu"));
+            if (mainMenu == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            var submenu = IntPtr.Zero;
+            var count = SendLong(mainMenu, sel_registerName("numberOfItems"));
+            for (long i = 0; i < count; i++)
+            {
+                var item = SendPtrLong(mainMenu, sel_registerName("itemAtIndex:"), i);
+                if (item != IntPtr.Zero &&
+                    string.Equals(ToManagedString(SendPtr(item, sel_registerName("title"))), helpMenuTitle, StringComparison.Ordinal))
+                {
+                    submenu = SendPtr(item, sel_registerName("submenu"));
+                    break;
+                }
+            }
+
+            if (submenu == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            if (SendPtr(nsApp, sel_registerName("helpMenu")) != submenu)
+            {
+                SendVoidPtr(nsApp, sel_registerName("setHelpMenu:"), submenu);
+            }
+
+            return SendPtr(nsApp, sel_registerName("helpMenu")) == submenu;
+        }
+        catch
+        {
+            return false;
         }
     }
 

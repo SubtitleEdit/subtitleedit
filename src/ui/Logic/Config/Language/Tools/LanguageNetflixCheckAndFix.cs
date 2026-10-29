@@ -12,13 +12,9 @@ public class LanguageNetflixCheckAndFix
     public string EllipsesNotThreeDots { get; set; }
     public string OnlyAllowedGlyphs { get; set; }
     public string Italics { get; set; }
-    public string MaxCharsSec { get; set; }
     public string MaxDuration { get; set; }
-    public string MaxLineLength { get; set; }
     public string MinDuration { get; set; }
-    public string MaxNumberOfLines { get; set; }
     public string OneToTenSpellOut { get; set; }
-    public string ShotChanges { get; set; }
     public string StartNumberSpellOut { get; set; }
     public string TextforHiUseBrackets { get; set; }
     public string TwoFrameGrap { get; set; }
@@ -74,13 +70,9 @@ public class LanguageNetflixCheckAndFix
         EllipsesNotThreeDots = "Use ellipses (not three dots)";
         OnlyAllowedGlyphs = "Only allowed glyphs";
         Italics = "Italics";
-        MaxCharsSec = "Max chars/sec";
         MaxDuration = "Max duration";
-        MaxLineLength = "Max line length";
         MinDuration = "Min duration";
-        MaxNumberOfLines = "Max number of lines";
         OneToTenSpellOut = "One to ten spell out";
-        ShotChanges = "Shot changes";
         StartNumberSpellOut = "Start number spell out";
         TextforHiUseBrackets = "Text for HI, use brackets";
         TwoFrameGrap = "Two frame gap";

@@ -1,8 +1,6 @@
-﻿using System.Text;
-using System.Xml;
+﻿using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
-using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
@@ -26,9 +24,7 @@ public class SpellCheckWordLists
         new string(Enumerable.Range(0x7F, 0x21).Select(i => (char)i).ToArray()));
 
     private static readonly char[] PeriodAndDash = { '.', '-' };
-    private static readonly char[] ApostropheChars = { '\'', '‘', '’' };
     private static readonly System.Buffers.SearchValues<char> ApostropheSearchValues = System.Buffers.SearchValues.Create("'‘’");
-    private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
 
     private readonly NameList _nameList;
     private readonly HashSet<string> _names;
@@ -43,16 +39,15 @@ public class SpellCheckWordLists
     private readonly Dictionary<string, List<string>> _wordsWithDashesOrPeriodsByPart = new Dictionary<string, List<string>>();
     private readonly HashSet<string> _userWordList = new HashSet<string>();
     private readonly HashSet<string> _userPhraseList = new HashSet<string>();
+    private readonly HashSet<string> _removedWords = new HashSet<string>();
     private readonly string _dictionaryFolder;
     private readonly Dictionary<string, string> _useAlwaysList = new Dictionary<string, string>();
     private readonly string _languageName;
-    private readonly IDoSpell _doSpell;
 
-    public SpellCheckWordLists(string fiveLetterName, IDoSpell doSpell)
+    public SpellCheckWordLists(string fiveLetterName)
     {
         _dictionaryFolder = SpellCheckConfig.DictionariesFolder();
         _languageName = fiveLetterName ?? throw new NullReferenceException(nameof(fiveLetterName));
-        _doSpell = doSpell ?? throw new NullReferenceException(nameof(doSpell));
         _nameList = new NameList(_dictionaryFolder, fiveLetterName, false, string.Empty);
         _names = _nameList.GetNames();
         var namesMultiWordList = _nameList.GetMultiNames();
@@ -97,6 +92,12 @@ public class SpellCheckWordLists
             Path.Combine(_dictionaryFolder, twoLetterName + "_se.xml"),
         }.Distinct().ToArray();
 
+        // Each file can also list words to reject (<removed>), for dictionary words that hide a
+        // common error - Dutch "weetje" for an OCR'd "weet je" (#16031). The user's own files win
+        // over the shipped "_se.xml" ones; within one file a removed word wins.
+        var userFileWords = new HashSet<string>();
+        var shippedRemovedWords = new HashSet<string>();
+        var userRemovedWords = new HashSet<string>();
         var xmlDoc = new XmlDocument();
         foreach (var path in paths)
         {
@@ -106,28 +107,30 @@ public class SpellCheckWordLists
             }
 
             xmlDoc.Load(path);
-            var xmlNodeList = xmlDoc.DocumentElement?.SelectNodes("word");
-            if (xmlNodeList != null)
+            var isUserFile = path.EndsWith("_user.xml", StringComparison.OrdinalIgnoreCase);
+            foreach (var word in UserDictionaryXml.ReadWords(xmlDoc))
             {
-                foreach (XmlNode node in xmlNodeList)
+                if (word.Contains(' '))
                 {
-                    var word = Utilities.NormalizeUserDictionaryWord(node.InnerText);
-                    if (word.Length == 0)
+                    _userPhraseList.Add(word);
+                }
+                else
+                {
+                    _userWordList.Add(word);
+                    if (isUserFile)
                     {
-                        continue;
-                    }
-
-                    if (word.Contains(' '))
-                    {
-                        _userPhraseList.Add(word);
-                    }
-                    else
-                    {
-                        _userWordList.Add(word);
+                        userFileWords.Add(word);
                     }
                 }
             }
+
+            (isUserFile ? userRemovedWords : shippedRemovedWords).UnionWith(UserDictionaryXml.ReadRemovedWords(xmlDoc));
         }
+
+        shippedRemovedWords.ExceptWith(userFileWords);
+        _removedWords.UnionWith(userRemovedWords);
+        _removedWords.UnionWith(shippedRemovedWords);
+        _userWordList.ExceptWith(_removedWords);
 
         // Add names/userdic with "." or " " or "-"
         foreach (var word in GetSingleUnifiedCollection(namesMultiWordList))
@@ -155,6 +158,26 @@ public class SpellCheckWordLists
             }
 
             words.Add(word);
+        }
+    }
+
+    private void RemoveWordWithDashesOrPeriods(string word)
+    {
+        if (!_wordsWithDashesOrPeriods.Remove(word))
+        {
+            return;
+        }
+
+        foreach (var part in word.Split(PeriodAndDash, StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (_wordsWithDashesOrPeriodsByPart.TryGetValue(part, out var words))
+            {
+                words.Remove(word);
+                if (words.Count == 0)
+                {
+                    _wordsWithDashesOrPeriodsByPart.Remove(part);
+                }
+            }
         }
     }
 
@@ -274,6 +297,15 @@ public class SpellCheckWordLists
         {
             _namesListWithApostrophe.Remove(word + "'");
         }
+
+        // AddName used to index every name for the dash/period part lookup - a plain name like
+        // "Boris" as its own single part - and nothing took it out again, so HasNameExtended stayed
+        // true and spell-check Undo of "Add to names list" never showed the word again. (#16472)
+        // The lookup is shared with the user dictionary, so keep a word that is still in there.
+        if (!_userWordList.Contains(word) && !_userPhraseList.Contains(word))
+        {
+            RemoveWordWithDashesOrPeriods(word);
+        }
     }
 
     /// <summary>
@@ -366,7 +398,11 @@ public class SpellCheckWordLists
             _namesListWithApostrophe.Add(word + "'");
         }
 
-        AddWordWithDashesOrPeriods(word);
+        // Same rule as the start-up load: only names with '.' or '-' get split into parts.
+        if (word.Contains(PeriodAndDash))
+        {
+            AddWordWithDashesOrPeriods(word);
+        }
 
         var namesList = new NameList(_dictionaryFolder, _languageName, false, string.Empty);
         namesList.Add(word);
@@ -395,6 +431,8 @@ public class SpellCheckWordLists
             _userWordList.Add(word);
         }
 
+        // Utilities.AddToUserDictionary also takes the word out of the file's <removed> list.
+        _removedWords.Remove(word);
         Utilities.AddToUserDictionary(word, _languageName);
         return true;
     }
@@ -445,6 +483,21 @@ public class SpellCheckWordLists
     {
         string s = Utilities.NormalizeUserDictionaryWord(word);
         return _userWordList.Contains(s) || (s.StartsWith('\'') || s.EndsWith('\'')) && _userWordList.Contains(s.Trim('\''));
+    }
+
+    /// <summary>
+    /// True when the user (or a shipped "_se.xml" list) removed <paramref name="word"/> from the
+    /// dictionary, so it must count as misspelled even when Hunspell accepts it. Case-insensitive,
+    /// like the user word list.
+    /// </summary>
+    public bool IsRemovedWord(string word)
+    {
+        if (_removedWords.Count == 0 || string.IsNullOrEmpty(word))
+        {
+            return false;
+        }
+
+        return _removedWords.Contains(Utilities.NormalizeUserDictionaryWord(word));
     }
 
     public static List<SpellCheckWord> Split(string s)

@@ -1,6 +1,4 @@
-using System;
 using System.Diagnostics;
-using System.IO;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;

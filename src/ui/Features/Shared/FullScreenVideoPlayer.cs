@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Markup.Declarative;
 using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
@@ -17,6 +16,9 @@ public class FullScreenVideoWindow : Window
     private DispatcherTimer? _mouseMoveDetectionTimer;
     private (int X, int Y) _lastCursorPosition;
     private (int X, int Y) _lastPointerMovedCursorPosition;
+    private readonly Grid _grid;
+    private readonly Action<KeyEventArgs> _handleKeyDown;
+    private readonly Action<KeyEventArgs> _handleKeyUp;
 
     public FullScreenVideoWindow(
         Controls.VideoPlayer.VideoPlayerControl videoPlayer,
@@ -26,6 +28,7 @@ public class FullScreenVideoWindow : Window
         double volume,
         Action onClose,
         List<string>? toggleShortcutKeys = null,
+        List<string>? toggle2ShortcutKeys = null,
         List<string>? showMediaInformationKeys = null,
         Action<Window>? showMediaInformation = null,
         IReadOnlyList<(string name, List<string> keys, IRelayCommand command)>? extraBindings = null,
@@ -35,10 +38,16 @@ public class FullScreenVideoWindow : Window
         WindowDecorations = WindowDecorations.None;
 
 
+        // Focusable so the window can hold keyboard focus itself. Avalonia sends every key to the
+        // one globally focused element - not to the window that has the OS focus - so until some
+        // element in here is focused, keys keep going to whatever was focused in the main window.
         var grid = new Grid
         {
-            Background = Brushes.Transparent // Enable hit testing for pointer events
+            Background = Brushes.Transparent, // Enable hit testing for pointer events
+            Focusable = true,
+            FocusAdorner = null,
         };
+        _grid = grid;
         grid.Children.Add(videoPlayer);
 
         Content = grid;
@@ -51,6 +60,15 @@ public class FullScreenVideoWindow : Window
             shortcutManager.RegisterShortcut(new ShortCut(
                 nameof(FullScreenVideoWindow),
                 toggleShortcutKeys,
+                ShortcutCategory.General,
+                new RelayCommand(Close)));
+        }
+
+        if (toggle2ShortcutKeys != null && toggle2ShortcutKeys.Count > 0)
+        {
+            shortcutManager.RegisterShortcut(new ShortCut(
+                nameof(FullScreenVideoWindow),
+                toggle2ShortcutKeys,
                 ShortcutCategory.General,
                 new RelayCommand(Close)));
         }
@@ -134,7 +152,7 @@ public class FullScreenVideoWindow : Window
             videoPlayer.IsFullScreen = true;
         };
 
-        KeyDown += (_, e) =>
+        _handleKeyDown = e =>
         {
             // Window-management keys always win — Esc/F11 must close the
             // fullscreen window regardless of user shortcut bindings.
@@ -189,7 +207,9 @@ public class FullScreenVideoWindow : Window
             videoPlayer.NotifyUserActivity();
         };
 
-        KeyUp += (_, e) => shortcutManager.OnKeyReleased(this, e);
+        _handleKeyUp = e => shortcutManager.OnKeyReleased(this, e);
+        KeyDown += (_, e) => _handleKeyDown(e);
+        KeyUp += (_, e) => _handleKeyUp(e);
 
         videoPlayer.FullscreenCollapseRequested += Close;
 
@@ -213,11 +233,17 @@ public class FullScreenVideoWindow : Window
             videoPlayer.CloseAndDisposePlayer();
         };
 
-        UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
+        // Focus explicitly instead of waiting for the first activation: on X11 Avalonia only
+        // activates a window when the window manager says so (_NET_WM_STATE_FOCUSED or root
+        // _NET_ACTIVE_WINDOW), and some don't for this window - Hyprland's XWayland gives it the
+        // X focus but never reports it active. Escape and the arrow keys then went to the main
+        // window, where they could even walk the main menu (issue #16039).
+        Opened += (_, _) => FocusVideo();
         Loaded += async(_, _) =>
         {
             WindowState = WindowState.Maximized;
             WindowState = WindowState.FullScreen;
+            FocusVideo();
 
             // Start polling for cursor movement
             _mouseMoveDetectionTimer?.Start();
@@ -265,4 +291,19 @@ public class FullScreenVideoWindow : Window
             });
         };
     }
+
+    /// <summary>
+    /// Moves keyboard focus into this window, so the following keys arrive here directly.
+    /// </summary>
+    public void FocusVideo() => _grid.Focus();
+
+    /// <summary>
+    /// Handles a key that went to the main window while this window should have had it.
+    /// </summary>
+    public void HandleForwardedKeyDown(KeyEventArgs e) => _handleKeyDown(e);
+
+    /// <summary>
+    /// Handles a key release that went to the main window while this window should have had it.
+    /// </summary>
+    public void HandleForwardedKeyUp(KeyEventArgs e) => _handleKeyUp(e);
 }

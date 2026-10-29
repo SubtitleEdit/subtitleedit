@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -9,6 +9,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
+/// <summary>
+/// Pick a position in the video, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class SelectVideoPositionWindow : Window
 {
     private readonly SelectVideoPositionViewModel _vm;
@@ -20,6 +23,7 @@ public class SelectVideoPositionWindow : Window
         Width = 1280;
         Height = 800;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -35,8 +39,9 @@ public class SelectVideoPositionWindow : Window
             WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var grid = new Grid
         {
@@ -45,19 +50,15 @@ public class SelectVideoPositionWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
         };
 
-        grid.Add(vm.VideoPlayerControl, 0, 0);
+        // The player in a plain border - no corner radius or clipping, the macOS native video
+        // surface disappears inside either
+        grid.Add(new Border
+        {
+            Child = EditorChrome.MakeVideoFrame(vm.VideoPlayerControl),
+            Padding = new Avalonia.Thickness(12),
+        }, 0, 0);
         grid.Add(panelButtons, 1, 0);
 
         Content = grid;

@@ -1,8 +1,6 @@
-﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
-using Avalonia.Layout;
 using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -23,12 +21,7 @@ public class ExportCustomTextFormatWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var label = new Label
-        {
-            Content = Se.Language.Tools.AdjustDurations.AdjustVia,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var buttonSaveAs = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveAsCommand)
             .WithBindIsVisible(vm, nameof(vm.IsSaveButtonVisible));
@@ -36,61 +29,45 @@ public class ExportCustomTextFormatWindow : Window
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonSaveAs, buttonOk, buttonCancel);
 
-        var grid = new Grid
+        // The accent goes to the accept button: Save as when it is shown, else OK.
+        void UpdatePrimary()
         {
-            RowDefinitions =
+            buttonSaveAs.Classes.Set("primary", vm.IsSaveButtonVisible);
+            buttonOk.Classes.Set("primary", !vm.IsSaveButtonVisible);
+        }
+
+        UpdatePrimary();
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(vm.IsSaveButtonVisible))
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
+                UpdatePrimary();
+            }
+        };
+
+        var sections = new Grid
+        {
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        sections.Add(MakeFormatsView(vm, out var formatsGrid), 0, 0);
+        sections.Add(MakePreviewView(vm), 0, 1);
 
-        grid.Add(MakeFormatsView(vm, out var formatsGrid), 0);
-        grid.Add(MakePreviewView(vm), 0, 1);
-        grid.Add(panelButtons, 2, 0, 1, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk, buttonSaveAs));
 
         UiUtil.FocusOnFirstActivation(this, () => { TableViewExtras.FocusRow(formatsGrid); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
     }
 
-    private static Grid MakeFormatsView(ExportCustomTextFormatViewModel vm, out TableView formatsGrid)
+    private static Border MakeFormatsView(ExportCustomTextFormatViewModel vm, out TableView formatsGrid)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(UiUtil.MakeLabel(Se.Language.File.Export.CustomTextFormats), 0);
-
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.File.Export.CustomTextFormats);
         formatsGrid = dataGrid;
         dataGrid.Height = double.NaN; // auto size inside scroll viewer
-        dataGrid.Margin = new Thickness(2);
         dataGrid.ItemsSource = vm.CustomFormats;
         dataGrid.DataContext = vm;
 
@@ -155,37 +132,14 @@ public class ExportCustomTextFormatWindow : Window
         dataGrid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
+        var actions = EditorChrome.MakeListActions(EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.New, vm.FormatNewCommand, 26), EditorChrome.CreateToolButton("fa-solid fa-pen", Se.Language.General.Edit, vm.FormatEditCommand, 26), EditorChrome.CreateToolButton("fa-solid fa-trash-can", Se.Language.General.Remove, vm.FormatDeleteCommand, 26));
 
-        var buttonAdd = UiUtil.MakeButton(vm.FormatNewCommand, IconNames.Plus, Se.Language.General.New);
-        var buttonRemove = UiUtil.MakeButton(vm.FormatDeleteCommand, IconNames.Trash, Se.Language.General.Remove);
-        var buttonEdit = UiUtil.MakeButton(vm.FormatEditCommand, IconNames.Pencil, Se.Language.General.Edit);
-        var panelButtons = UiUtil.MakeButtonBar(buttonAdd, buttonEdit, buttonRemove).WithAlignmentLeft().WithMarginTop(5);
-
-        grid.Add(panelButtons, 2);
-
-        return grid;
+        return EditorChrome.MakeListSection(Se.Language.File.Export.CustomTextFormats, dataGrid, actions, first: true);
     }
 
-    private static Grid MakePreviewView(ExportCustomTextFormatViewModel vm)
+    private static Border MakePreviewView(ExportCustomTextFormatViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(UiUtil.MakeLabel(Se.Language.General.Preview), 0);
-        var textBox = new TextBox
+        var textBox = EditorChrome.AsTextArea(new TextBox
         {
             AcceptsReturn = true,
             // Read-only preview - see ManualChosenEncodingWindow (#14313).
@@ -193,11 +147,9 @@ public class ExportCustomTextFormatWindow : Window
             IsReadOnly = true,
             Width = double.NaN,
             Height = double.NaN,
-        };
+        }).WithAccessibleName(Se.Language.General.Preview);
         textBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.PreviewText)));
 
-        grid.Add(textBox, 1);
-
-        return grid;
+        return EditorChrome.MakeFillSection(Se.Language.General.Preview, textBox, lineLeft: true);
     }
 }

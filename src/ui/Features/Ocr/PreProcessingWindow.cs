@@ -1,13 +1,19 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
+/// <summary>
+/// Image pre-processing for OCR, in the editor look (see <see cref="EditorChrome"/>): the options
+/// as switches on top, the image before and after below, Reset left and Cancel/OK right in the
+/// button bar.
+/// </summary>
 public class PreProcessingWindow : Window
 {
     public PreProcessingWindow(PreProcessingViewModel vm)
@@ -19,123 +25,86 @@ public class PreProcessingWindow : Window
         Height = 600;
         MinWidth = 700;
         MinHeight = 500;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var checkBoxCropTransparent = new CheckBox
-        {
-            Content = Se.Language.Ocr.CropTransparent,
-            Margin = new Thickness(0, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.CropTransparentColors)) { Mode = BindingMode.TwoWay },
-        };
-        checkBoxCropTransparent.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
+        var switchCropTransparent = EditorChrome.MakeSwitch(nameof(vm.CropTransparentColors), Se.Language.Ocr.CropTransparent);
+        switchCropTransparent.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
 
-        var checkBoxInverseColors = new CheckBox
-        {
-            Content = Se.Language.Ocr.InverseColors,
-            Margin = new Thickness(0, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.InverseColors)) { Mode = BindingMode.TwoWay },
-        };
-        checkBoxInverseColors.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
+        var switchInverseColors = EditorChrome.MakeSwitch(nameof(vm.InverseColors), Se.Language.Ocr.InverseColors);
+        switchInverseColors.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
 
-        var checkBoxBinarize = new CheckBox
-        {
-            Content = Se.Language.Ocr.Binarize,
-            Margin = new Thickness(0, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.Binarize)) { Mode = BindingMode.TwoWay },
-        };
-        checkBoxBinarize.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
+        var switchBinarize = EditorChrome.MakeSwitch(nameof(vm.Binarize), Se.Language.Ocr.Binarize);
+        switchBinarize.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
 
-        var checkBoxOneColor = new CheckBox
-        {
-            Content = Se.Language.Ocr.OneColor,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ToOneColor)) { Mode = BindingMode.TwoWay },
-        };
-        checkBoxOneColor.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
-        var labelOneColorThreshold = UiUtil.MakeLabel(Se.Language.Ocr.DarknessThreshold);
-        var numericUpDownOneColorThreshold = UiUtil.MakeNumericUpDownInt(1, 255, 128, 200, vm, nameof(vm.OneColorDarknessThreshold))
-            .WithBindEnabled(nameof(vm.ToOneColor));
+        var switchOneColor = EditorChrome.MakeSwitch(nameof(vm.ToOneColor), Se.Language.Ocr.OneColor);
+        switchOneColor.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
+        var numericUpDownOneColorThreshold = EditorChrome.MakeField(nameof(vm.OneColorDarknessThreshold), 1, 255, 80)
+            .WithBindEnabled(nameof(vm.ToOneColor))
+            .WithAccessibleName(Se.Language.Ocr.DarknessThreshold);
         numericUpDownOneColorThreshold.ValueChanged += (s, e) => vm.RequestPreviewUpdate();
-        var panelOneColor = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            Children =
-            {
-                checkBoxOneColor,
-                labelOneColorThreshold,
-                numericUpDownOneColorThreshold,
-            }
-        };
 
-        var checkBoxRemoveBorders = new CheckBox
-        {
-            Content = Se.Language.Ocr.RemoveBorders,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.RemoveBorders)) { Mode = BindingMode.TwoWay },
-        };
-        checkBoxRemoveBorders.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
-        var labelBorderSize = UiUtil.MakeLabel(Se.Language.Ocr.BorderSize);
-        var numericUpDownBorderSize = UiUtil.MakeNumericUpDownInt(1, 20, 2, 200, vm, nameof(vm.BorderSize))
-            .WithBindEnabled(nameof(vm.RemoveBorders));
+        var switchRemoveBorders = EditorChrome.MakeSwitch(nameof(vm.RemoveBorders), Se.Language.Ocr.RemoveBorders);
+        switchRemoveBorders.IsCheckedChanged += (s, e) => vm.RequestPreviewUpdate();
+        var numericUpDownBorderSize = EditorChrome.MakeField(nameof(vm.BorderSize), 1, 20, 80)
+            .WithBindEnabled(nameof(vm.RemoveBorders))
+            .WithAccessibleName(Se.Language.Ocr.BorderSize);
         numericUpDownBorderSize.ValueChanged += (s, e) => vm.RequestPreviewUpdate();
-        var panelRemoveBorders = new StackPanel
+
+        // Switches in two columns: the on/off options left, the ones with a value right
+        var options = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            Children =
+            ColumnDefinitions =
             {
-                checkBoxRemoveBorders,
-                labelBorderSize,
-                numericUpDownBorderSize,
-            }
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+            },
+            ColumnSpacing = 24,
+            RowSpacing = 6,
         };
+        options.Add(BinaryOcrChrome.MakeSwitchRow(switchCropTransparent, Se.Language.Ocr.CropTransparent), 0, 0);
+        options.Add(BinaryOcrChrome.MakeSwitchRow(switchInverseColors, Se.Language.Ocr.InverseColors), 1, 0);
+        options.Add(BinaryOcrChrome.MakeSwitchRow(switchBinarize, Se.Language.Ocr.Binarize), 2, 0);
+        options.Add(MakeOptionWithValue(switchOneColor, Se.Language.Ocr.OneColor, Se.Language.Ocr.DarknessThreshold, numericUpDownOneColorThreshold), 0, 1);
+        options.Add(MakeOptionWithValue(switchRemoveBorders, Se.Language.Ocr.RemoveBorders, Se.Language.Ocr.BorderSize, numericUpDownBorderSize), 1, 1);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonReset, buttonCancel);
-
-        var grid = new Grid
+        var body = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        body.Add(EditorChrome.MakeEditorSection(Se.Language.General.Options, options, first: true), 0, 0);
+        body.Add(EditorChrome.MakeDockedFillSection(Se.Language.General.Before, MakeOriginalImageView(vm)), 1, 0);
+        body.Add(EditorChrome.MakeDockedFillSection(Se.Language.General.After, MakePostProcessedImageView(vm)), 2, 0);
 
-        grid.Add(checkBoxCropTransparent, 0);
-        grid.Add(checkBoxInverseColors, 0, 1);
-        grid.Add(checkBoxBinarize, 0, 2);
-
-        grid.Add(UiUtil.MakeBorderForControl(panelOneColor), 1, 0, 1, 3);
-
-        grid.Add(UiUtil.MakeBorderForControl(panelRemoveBorders), 2, 0, 1, 3);
-
-        grid.Add(MakeOriginalImageView(vm), 3, 0, 1, 3);
-        grid.Add(MakePostProcessedImageView(vm), 4, 0, 1, 3);
-        grid.Add(panelButtons, 5, 0, 1, 3);
-
-        Content = grid;
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonCancel = EditorChrome.WithoutMargin(UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var buttonReset = EditorChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetCommand);
+        buttonReset.HorizontalAlignment = HorizontalAlignment.Left;
+        Content = EditorChrome.MakeRoot(body, EditorChrome.MakeDockedButtonBar(buttonReset, buttonCancel, buttonOk));
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        UiUtil.FocusOnFirstActivation(this, checkBoxCropTransparent);
+        UiUtil.FocusOnFirstActivation(this, switchCropTransparent);
         KeyDown += vm.KeyDown;
+    }
+
+    private static StackPanel MakeOptionWithValue(ToggleSwitch toggle, string text, string valueLabel, Control field)
+    {
+        var row = BinaryOcrChrome.MakeSwitchRow(toggle, text);
+        row.Children.Add(EditorChrome.MakeDimLabel(valueLabel, new Thickness(8, 0, 0, 0)));
+        row.Children.Add(field);
+        return row;
     }
 
     private static Control MakeOriginalImageView(PreProcessingViewModel vm)
@@ -150,9 +119,7 @@ public class PreProcessingWindow : Window
             MaxHeight = 200,
         };
 
-        var border = UiUtil.MakeBorderForControl(image);
-        border.Background = UiUtil.GetCheckerboardBrush();
-        return border;
+        return BinaryOcrChrome.MakeImageFrame(image, UiUtil.GetCheckerboardBrush());
     }
 
     private static Border MakePostProcessedImageView(PreProcessingViewModel vm)
@@ -167,8 +134,6 @@ public class PreProcessingWindow : Window
             MaxHeight = 200,
         };
 
-        var border = UiUtil.MakeBorderForControl(image);
-        border.Background = UiUtil.GetCheckerboardBrush();
-        return border;
+        return BinaryOcrChrome.MakeImageFrame(image, UiUtil.GetCheckerboardBrush());
     }
 }

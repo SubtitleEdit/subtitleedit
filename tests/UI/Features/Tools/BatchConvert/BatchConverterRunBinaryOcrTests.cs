@@ -1,4 +1,3 @@
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert;
@@ -140,9 +139,7 @@ public class BatchConverterRunBinaryOcrTests
 
     private sealed class FakeNamesList : INamesList
     {
-        public void Load(string dictionaryFolder, string languageCode)
-        {
-        }
+        public Task LoadAsync(string dictionaryFolder, string languageCode) => Task.CompletedTask;
 
         public bool IsName(string candidate) => false;
         public HashSet<string> GetAbbreviations() => new();

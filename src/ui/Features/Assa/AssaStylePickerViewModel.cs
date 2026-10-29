@@ -3,7 +3,6 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,14 +21,11 @@ public partial class AssaStylePickerViewModel : ObservableObject
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
 
-    private Subtitle _subtitle;
-
     public AssaStylePickerViewModel()
     {
         Title = string.Empty;
         Styles = new ObservableCollection<StyleDisplay>();
         ButtonAcceptText = string.Empty;
-        _subtitle = new Subtitle();
     }
 
     [RelayCommand]

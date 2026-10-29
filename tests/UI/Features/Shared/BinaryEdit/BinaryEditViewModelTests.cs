@@ -2,7 +2,6 @@ using Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
 using Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Export;
-using System.Collections.Generic;
 
 namespace UITests.Features.Shared.BinaryEdit;
 

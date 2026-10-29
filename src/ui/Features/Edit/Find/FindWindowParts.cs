@@ -220,6 +220,7 @@ internal static class FindWindowParts
             [!TextBlock.TextProperty] = new Binding(textPropertyPath) { Mode = BindingMode.OneWay },
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            FontSize = EditorChrome.FieldFontSize,
             MaxWidth = 220,
         };
 

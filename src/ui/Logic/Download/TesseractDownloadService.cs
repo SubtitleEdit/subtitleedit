@@ -3,7 +3,6 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Logic.Download;
@@ -27,12 +26,9 @@ public class TesseractDownloadService : ITesseractDownloadService
     // Set when the user says no to an update, so the prompt does not come back on every OCR run.
     private static bool _windowsUpdateDeclined;
 
-    private readonly IZipUnpacker _zipUnpacker;
-
-    public TesseractDownloadService(HttpClient httpClient, IZipUnpacker zipUnpacker)
+    public TesseractDownloadService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _zipUnpacker = zipUnpacker;
     }
 
     private static string GetTesseractUrl()

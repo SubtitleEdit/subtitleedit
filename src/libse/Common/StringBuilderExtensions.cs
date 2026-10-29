@@ -67,12 +67,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static bool EndsWithAny(this StringBuilder sb, string chars, string skipTrailing = "")
         {
             var i = sb.Length - 1;
-            while (i >= 0 && skipTrailing.IndexOf(sb[i]) >= 0)
+            while (i >= 0 && skipTrailing.Contains(sb[i]))
             {
                 i--;
             }
 
-            return i >= 0 && chars.IndexOf(sb[i]) >= 0;
+            return i >= 0 && chars.Contains(sb[i]);
         }
 
         // Same answer as string.IsNullOrWhiteSpace(sb.ToString()) without the copy. Walks the

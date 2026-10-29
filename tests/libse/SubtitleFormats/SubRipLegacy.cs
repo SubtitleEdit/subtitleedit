@@ -1,0 +1,616 @@
+using Nikse.SubtitleEdit.Core.Common;
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace Nikse.SubtitleEdit.Core.SubtitleFormats.Legacy
+{
+    /// <summary>The SubRip reader/writer before the 2026-10 rewrite, kept for comparison.</summary>
+    public partial class SubRipLegacy : SubtitleFormat
+    {
+        public string? Errors { get; private set; }
+        private StringBuilder _errors = new();
+        private int _lineNumber;
+        private bool _isMsFrames;
+        private bool _isWsrt;
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"<3\d>")]
+        private static partial Regex _regExWsrtItalicStartGen();
+        private static readonly Regex _regExWsrtItalicStart = _regExWsrtItalicStartGen();
+
+        [GeneratedRegex(@"</3\d>")]
+        private static partial Regex _regExWsrtItalicEndGen();
+        private static readonly Regex _regExWsrtItalicEnd = _regExWsrtItalicEndGen();
+#else
+        private static Regex _regExWsrtItalicStart = new Regex(@"<3\d>", RegexOptions.Compiled);
+        private static Regex _regExWsrtItalicEnd = new Regex(@"</3\d>", RegexOptions.Compiled);
+#endif
+
+        private enum ExpectingLine
+        {
+            Number,
+            TimeCodes,
+            Text
+        }
+
+        private Paragraph _paragraph = new();
+        private Paragraph? _lastParagraph;
+        private ExpectingLine _expecting;
+
+        public override string Extension => ".srt";
+
+        public const string NameOfFormat = "SubRip (legacy)";
+
+        public override string Name => NameOfFormat;
+
+        public override List<string> AlternateExtensions => new List<string> { ".wsrt" };
+
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            if (lines.Count > 0 && lines[0].StartsWith("WEBVTT", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
+            Errors = null;
+            return subtitle.Paragraphs.Count > _errorCount;
+        }
+
+        public override string ToText(Subtitle subtitle, string title)
+        {
+            // Append the parts directly: AppendFormat re-parsed the composite format and boxed
+            // p.Number per paragraph, and "sb.ToString().Trim() + ..." allocated the whole
+            // multi-megabyte output twice more.
+            var sb = new StringBuilder();
+            foreach (var p in subtitle.Paragraphs)
+            {
+                sb.Append(p.Number).Append(Environment.NewLine);
+                sb.Append(p.StartTime.ToString()).Append(" --> ").Append(p.EndTime.ToString()).Append(Environment.NewLine);
+                sb.Append(p.Text).Append(Environment.NewLine).Append(Environment.NewLine);
+            }
+
+            sb.Trim();
+            return sb.Append(Environment.NewLine).Append(Environment.NewLine).ToString();
+        }
+
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            var doRenumber = false;
+            _errors = new StringBuilder();
+            _lineNumber = 0;
+            _isMsFrames = true;
+            _isWsrt = fileName != null && fileName.EndsWith(".wsrt", StringComparison.OrdinalIgnoreCase);
+            _paragraph = new Paragraph();
+            _expecting = ExpectingLine.Number;
+            _errorCount = 0;
+
+            subtitle.Paragraphs.Clear();
+
+            // Pre-allocate capacity for better performance
+            var linesCount = lines.Count;
+            subtitle.Paragraphs.Capacity = linesCount / 4; // Rough estimate: 4 lines per paragraph
+
+            var line = string.Empty;
+            var next = linesCount > 0 ? lines[0].TrimEnd().Trim('\u007F') : string.Empty;
+            var nextNext = linesCount > 1 ? lines[1].TrimEnd().Trim('\u007F') : string.Empty;
+            var nextNextNext = linesCount > 2 ? lines[2].TrimEnd().Trim('\u007F') : string.Empty;
+            for (var i = 0; i < linesCount; i++)
+            {
+                _lineNumber++;
+                line = next;
+                next = nextNext;
+                nextNext = nextNextNext;
+                nextNextNext = (i + 3 < linesCount) ? lines[i + 3].TrimEnd().Trim('\u007F') : string.Empty; //  007F=127=delete asci
+
+                var trimmedLine = line.Trim(); // Cache trimmed line
+
+                // A new line is missing between two paragraphs or no line number (buggy file)
+                if (_expecting == ExpectingLine.Text && i + 1 < linesCount && !string.IsNullOrEmpty(_paragraph?.Text) &&
+                    Utilities.IsInteger(line) && TryReadTimeCodesLine(trimmedLine, null, false))
+                {
+                    if (!string.IsNullOrEmpty(_paragraph.Text))
+                    {
+                        subtitle.Paragraphs.Add(_paragraph);
+                        _lastParagraph = _paragraph;
+                        _paragraph = new Paragraph();
+                    }
+                    _expecting = ExpectingLine.Number;
+                }
+
+                if (_expecting == ExpectingLine.Number && TryReadTimeCodesLine(trimmedLine, null, false))
+                {
+                    _expecting = ExpectingLine.TimeCodes;
+                    doRenumber = true;
+                }
+                else if (!string.IsNullOrEmpty(_paragraph?.Text) && _expecting == ExpectingLine.Text && TryReadTimeCodesLine(trimmedLine, null, false))
+                {
+                    subtitle.Paragraphs.Add(_paragraph);
+                    _lastParagraph = _paragraph;
+                    _paragraph = new Paragraph();
+                    _expecting = ExpectingLine.TimeCodes;
+                    doRenumber = true;
+                }
+
+                ReadLine(subtitle, line, next, nextNext, nextNextNext);
+            }
+
+            if (_paragraph?.IsDefault == false || _paragraph != null && _expecting == ExpectingLine.Text)
+            {
+                subtitle.Paragraphs.Add(_paragraph);
+            }
+
+            if (doRenumber)
+            {
+                subtitle.Renumber();
+            }
+
+            foreach (var p in subtitle.Paragraphs)
+            {
+                if (_isMsFrames)
+                {
+                    p.StartTime.Milliseconds = FramesToMillisecondsMax999(p.StartTime.Milliseconds);
+                    p.EndTime.Milliseconds = FramesToMillisecondsMax999(p.EndTime.Milliseconds);
+                }
+                p.Text = p.Text.TrimEnd();
+            }
+
+            Errors = _errors.ToString();
+        }
+
+        private void ReadLine(Subtitle subtitle, string line, string next, string nextNext, string nextNextNext)
+        {
+            switch (_expecting)
+            {
+                case ExpectingLine.Number:
+                    if (int.TryParse(line, out var number))
+                    {
+                        _paragraph.Number = number;
+                        _expecting = ExpectingLine.TimeCodes;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        if (_lastParagraph != null && nextNext != null && (_lastParagraph.Number + 1).ToString(CultureInfo.InvariantCulture) == nextNext)
+                        {
+                            _lastParagraph.Text = (_lastParagraph.Text + Environment.NewLine + line.Trim()).Trim();
+                        }
+                        else
+                        {
+                            if (_errors.Length < 2000)
+                            {
+                                _errors.AppendLine(string.Format(FormatLanguage.LineNumberXExpectedNumberFromSourceLineY, _lineNumber, line));
+                            }
+
+                            _errorCount++;
+                        }
+                    }
+                    break;
+                case ExpectingLine.TimeCodes:
+                    if (TryReadTimeCodesLine(line, _paragraph, true))
+                    {
+                        _paragraph.Text = string.Empty;
+                        _expecting = ExpectingLine.Text;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        if (_errors.Length < 2000)
+                        {
+                            _errors.AppendLine(string.Format(FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
+                        }
+
+                        _errorCount++;
+                        _expecting = ExpectingLine.Number; // lets go to next paragraph
+                    }
+                    break;
+                case ExpectingLine.Text:
+                    if (Utilities.IsInteger(line) && (TryReadTimeCodesLine(next, null, false) || string.IsNullOrEmpty(next) && TryReadTimeCodesLine(nextNext, null, false)))
+                    {
+                        // line is integer and time code follows - could loose a number from text...
+                        subtitle.Paragraphs.Add(_paragraph);
+                        _lastParagraph = _paragraph;
+                        _paragraph = new Paragraph();
+                        _expecting = ExpectingLine.Number;
+                        if (int.TryParse(line, out var n))
+                        {
+                            _paragraph.Number = n;
+                        }
+                        if (_errors.Length < 2000 && line.Trim() != GetLastNumber(_paragraph))
+                        {
+                            _errors.AppendLine(string.Format(FormatLanguage.LineNumberXExpectedEmptyLine, _lineNumber, line));
+                        }
+                    }
+                    else if (TryReadTimeCodesLine(line, null, false))
+                    {
+                        if (_paragraph != null && _paragraph.EndTime.TotalMilliseconds > 0 ||
+                            _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text))
+                        {
+                            subtitle.Paragraphs.Add(_paragraph);
+                            _lastParagraph = _paragraph;
+                        }
+                        _paragraph = new Paragraph();
+                        TryReadTimeCodesLine(line, _paragraph, false);
+                        _expecting = ExpectingLine.Text;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(line) || IsText(next) || IsText(nextNext) || nextNextNext == GetLastNumber(_paragraph))
+                    {
+                        if (_isWsrt && !string.IsNullOrEmpty(line) && line.Contains("<3", StringComparison.Ordinal))
+                        {
+                            line = _regExWsrtItalicStart.Replace(line, "<i>");
+                            line = _regExWsrtItalicEnd.Replace(line, "</i>");
+                        }
+
+                        // One string.Concat instead of two "+=" - appending the newline and the
+                        // text separately allocated an extra intermediate string per text line.
+                        var textToAppend = line.Replace('\0', ' ').TrimEnd();
+                        _paragraph.Text = _paragraph.Text.Length == 0
+                            ? textToAppend
+                            : _paragraph.Text + Environment.NewLine + textToAppend;
+
+                        if (string.IsNullOrWhiteSpace(line) && Utilities.IsInteger(next) && TryReadTimeCodesLine(nextNext, null, false))
+                        {
+                            subtitle.Paragraphs.Add(_paragraph);
+                            _lastParagraph = _paragraph;
+                            _paragraph = new Paragraph();
+                            _expecting = ExpectingLine.Number;
+                        }
+                    }
+                    else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
+                    {
+                        _paragraph.Text = string.Empty;
+                        if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || TryReadTimeCodesLine(next, null, false)))
+                        {
+                            subtitle.Paragraphs.Add(_paragraph);
+                            _lastParagraph = _paragraph;
+                            _paragraph = new Paragraph();
+                            _expecting = ExpectingLine.Number;
+                        }
+                    }
+                    else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(next))
+                    {
+                        _paragraph.Text += Environment.NewLine + line.Replace('\0', ' ').TrimEnd();
+                    }
+                    else
+                    {
+                        subtitle.Paragraphs.Add(_paragraph);
+                        _lastParagraph = _paragraph;
+                        _paragraph = new Paragraph();
+                        _expecting = ExpectingLine.Number;
+                    }
+                    break;
+            }
+        }
+
+        private static string GetLastNumber(Paragraph? p)
+        {
+            return p == null ? "1" : (p.Number + 1).ToString(CultureInfo.InvariantCulture);
+        }
+
+        private bool IsText(string text)
+        {
+            return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || TryReadTimeCodesLine(text.Trim(), null, false));
+        }
+
+        private bool TryReadTimeCodesLine(string input, Paragraph? paragraph, bool validate)
+        {
+            if (string.IsNullOrEmpty(input) || input.Length < 10)
+            {
+                return false;
+            }
+
+            // No '>' means this cannot be a time code line, so bail before the normalization
+            // below. Exact, not a heuristic: to return true the code must get past step 7 ('-')
+            // and step 8 ('>') of IsValidTimeCode *and* split into 8 numeric groups, which only
+            // the "-->" separator produces - and every separator variant normalized below
+            // ("->", "—>", "-->>", ...) contains '>' too, as does a bare ">". None of the other
+            // replacements can introduce one.
+            //
+            // Without this, any ordinary subtitle line that merely starts with a digit ("1999
+            // was a long time ago.") fell through to the ~20 allocating Replace calls, twice per
+            // line - and once more per neighbouring blank line via IsText.
+            if (input.IndexOf('>') < 0)
+            {
+                return false;
+            }
+
+            // Fast path: the canonical "hh:mm:ss,mmm --> hh:mm:ss,mmm" line SE itself and
+            // virtually every other tool writes. The tolerant normalization below allocates
+            // ~20 intermediate strings and runs for every time-code line on load plus every
+            // SubRip "IsMine" probe, so only pay for it on the rare non-canonical lines.
+            if (input.Length == 29 && TryReadCanonicalTimeCodesLine(input, paragraph))
+            {
+                // Canonical milliseconds are 3 digits, so this cannot be the 2-digit
+                // ms-as-frames variant - same conclusion the slow path reaches below.
+                _isMsFrames = false;
+                return true;
+            }
+
+            var s = input.TrimStart('-', ' ');
+            if (s.Length < 10 || !char.IsDigit(s[0]))
+            {
+                return false;
+            }
+
+            const char zeroWidthSpace = '\u200B';
+            const char zeroWidthNoBreakSpace = '\uFEFF';
+            const string defaultSeparator = " --> ";
+            // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)
+            var line = input.Replace('،', ',')
+             .Replace('', ',')
+             .Replace('¡', ',')
+             .Replace(zeroWidthSpace, ' ')
+             .Replace(zeroWidthNoBreakSpace, ' ')
+             .Replace(" -> ", defaultSeparator)
+             .Replace(" —> ", defaultSeparator) // em-dash
+             .Replace(" ——> ", defaultSeparator) // em-dash
+             .Replace(" - > ", defaultSeparator)
+             .Replace(" ->> ", defaultSeparator)
+             .Replace(" -- > ", defaultSeparator)
+             .Replace(" - -> ", defaultSeparator)
+             .Replace(" -->> ", defaultSeparator)
+             .Replace(" ---> ", defaultSeparator)
+             .Replace("  ", " ")
+             .Replace(": ", ":")
+             .Replace(" :", ":")
+             .Trim();
+
+            // Removed stuff after time codes - like subtitle position
+            //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
+            var lineLength = line.Length; // Cache length
+            if (lineLength > 30)
+            {
+                if (line[29] == ' ')
+                {
+                    line = line.Substring(0, 29);
+                }
+                else if (line[28] == ' ')
+                {
+                    line = line.Substring(0, 28);
+                }
+                else if (line[27] == ' ')
+                {
+                    line = line.Substring(0, 27);
+                }
+            }
+
+            // removes all extra spaces
+            line = line.RemoveChar(' ').Replace("-->", defaultSeparator).Trim();
+            if (!line.Contains(defaultSeparator, StringComparison.Ordinal))
+            {
+                line = line.Replace(">", defaultSeparator);
+            }
+
+            // Fix a few more cases of wrong time codes, seen this: 00.00.02,000 --> 00.00.04,000
+            line = line.Replace('.', ':');
+            lineLength = line.Length; // Update cached length
+            if (lineLength >= 29 && (line[8] == ':' || line[8] == ';'))
+            {
+                line = line.Substring(0, 8) + ',' + line.Substring(9);
+            }
+
+            if (lineLength >= 29 && lineLength <= 30 && (line[25] == ':' || line[25] == ';'))
+            {
+                line = line.Substring(0, 25) + ',' + line.Substring(26);
+            }
+
+            // allow missing hours as some (buggy) websites generate these time codes: 04:48,460 --> 04:52,364
+            if (lineLength == 23 && line[2] == ':' && line[5] == ',' && line[9] == ' ' && line[12] == '>' && line[13] == ' ' && line[16] == ':' && line[19] == ',')
+            {
+                line = "00:" + line.Insert(14, "00:");
+            }
+
+            if (IsValidTimeCode(line))
+            {
+                string[] parts = line.Replace("-->", ":").RemoveChar(' ').Split(':', ',');
+
+                if (parts.Length < 8)
+                {
+                    return false;
+                }
+
+                try
+                {
+                    int startHours = int.Parse(parts[0]);
+                    int startMinutes = int.Parse(parts[1]);
+                    int startSeconds = int.Parse(parts[2]);
+                    int startMilliseconds = int.Parse(parts[3]);
+                    int endHours = int.Parse(parts[4]);
+                    int endMinutes = int.Parse(parts[5]);
+                    int endSeconds = int.Parse(parts[6]);
+                    int endMilliseconds = int.Parse(parts[7]);
+
+                    if (validate && _errors.Length < 2000 &&
+                        (startHours > 99 || startMinutes > 99 || startSeconds > 99 || startMilliseconds > 999 ||
+                        endHours > 99 || endMinutes > 99 || endSeconds > 99 || endMilliseconds > 999))
+                    {
+                        _errors.AppendLine(string.Format(FormatLanguage.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
+                    }
+
+                    if (_isMsFrames && (parts[3].Length != 2 || startMilliseconds > 30 || parts[7].Length != 2 || endMilliseconds > 30))
+                    {
+                        _isMsFrames = false;
+                    }
+
+                    if (paragraph != null)
+                    {
+                        paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
+                        if (parts[0].StartsWith('-') && paragraph.StartTime.TotalMilliseconds > 0)
+                        {
+                            paragraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds * -1;
+                        }
+
+                        paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
+                        if (parts[4].StartsWith('-') && paragraph.EndTime.TotalMilliseconds > 0)
+                        {
+                            paragraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds * -1;
+                        }
+                    }
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        // Parses "00:00:01,000 --> 00:00:04,000" (fixed 29-char layout, digits only) without
+        // any allocation. Returns false on the slightest deviation so the tolerant slow path
+        // still handles it.
+        private static bool TryReadCanonicalTimeCodesLine(string line, Paragraph? paragraph)
+        {
+            if (line[2] != ':' || line[5] != ':' || line[8] != ',' ||
+                line[12] != ' ' || line[13] != '-' || line[14] != '-' || line[15] != '>' || line[16] != ' ' ||
+                line[19] != ':' || line[22] != ':' || line[25] != ',')
+            {
+                return false;
+            }
+
+            var startHours = ParseDigits(line, 0, 2);
+            var startMinutes = ParseDigits(line, 3, 2);
+            var startSeconds = ParseDigits(line, 6, 2);
+            var startMilliseconds = ParseDigits(line, 9, 3);
+            var endHours = ParseDigits(line, 17, 2);
+            var endMinutes = ParseDigits(line, 20, 2);
+            var endSeconds = ParseDigits(line, 23, 2);
+            var endMilliseconds = ParseDigits(line, 26, 3);
+            if (startHours < 0 || startMinutes < 0 || startSeconds < 0 || startMilliseconds < 0 ||
+                endHours < 0 || endMinutes < 0 || endSeconds < 0 || endMilliseconds < 0)
+            {
+                return false;
+            }
+
+            if (paragraph != null)
+            {
+                paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
+                paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
+            }
+
+            return true;
+        }
+
+        private static int ParseDigits(string s, int index, int count)
+        {
+            var result = 0;
+            for (var i = 0; i < count; i++)
+            {
+                var digit = s[index + i] - '0';
+                if ((uint)digit > 9)
+                {
+                    return -1;
+                }
+
+                result = result * 10 + digit;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Optimized validation of time codes
+        /// Old Regex was:
+        ///  - ^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$
+        ///  - ^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$
+        /// <returns>True if valid srt time code</returns>
+        /// </summary>
+        private static bool IsValidTimeCode(string line)
+        {
+            var step = 0;
+            var max = line.Length;
+            for (var i = 0; i < max; i++)
+            {
+                var ch = line[i];
+                if (char.IsWhiteSpace(ch))
+                {
+                    continue;
+                }
+
+                if (step == 0 || step == 2 || step == 4 || step == 9 || step == 11) // start numbers
+                {
+                    if (ch == '-' || char.IsDigit(ch))
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 1 || step == 3 || step == 10 || step == 12) // number
+                {
+                    if (char.IsDigit(ch))
+                    {
+                        // ok
+                    }
+                    else if (ch == ':')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 5 || step == 13) // seconds
+                {
+                    if (char.IsDigit(ch))
+                    {
+                        // ok
+                    }
+                    else if (ch == ',' || ch == ':')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 6 || step == 14) // milliseconds
+                {
+                    if (char.IsDigit(ch))
+                    {
+                        // ok
+                    }
+                    else if (ch == '-')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 7) // separator char 2
+                {
+                    if (ch == '-')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 8) // separator char 3
+                {
+                    if (ch == '>')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step > 14)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+}

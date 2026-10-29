@@ -152,6 +152,11 @@ public static partial class InitListViewAndEditBox
         var notNullConverter = new NotNullConverter();
         var nullToOpacityConverter = new NullToOpacityConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
+        // The original column gets its own converter that is never armed with the spell checker:
+        // the live dictionary is the working subtitle's, and in translation mode the original is
+        // another language, so every French word was underlined against the Arabic dictionary
+        // (issue #16211). The original edit text box is not spell checked either.
+        var originalSyntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
         var textToFlowDirectionConverter = new TextToFlowDirectionConverter();
         vm.SubtitleDataGridSyntaxHighlighting = syntaxHighlightingConverter;
         // How the Text/Original cells fit their text to the window (feature #11590). Read once here;
@@ -168,9 +173,7 @@ public static partial class InitListViewAndEditBox
         if (Se.Settings.Appearance.GridAlternatingRows)
         {
             var isDark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
-            var altColorHex = isDark
-                ? Se.Settings.Appearance.GridAlternatingRowColorDark
-                : Se.Settings.Appearance.GridAlternatingRowColor;
+            var altColorHex = UiTheme.GetGridAlternatingRowColorHex(isDark);
             try
             {
                 if (!string.IsNullOrWhiteSpace(altColorHex))
@@ -482,10 +485,10 @@ public static partial class InitListViewAndEditBox
                     VerticalAlignment = VerticalAlignment.Center,
                     TextAlignment = gridTextAlignment,
 
-                    // Lets the subtitle grid context menu find the word under the pointer (live spell check)
+                    // Lets the subtitle grid context menu tell this cell from a Text cell
                     Tag = SubtitleGridColumnKeys.OriginalText,
                     [!Visual.EffectProperty] = new Binding(nameof(vm.SubtitleTextEffect)) { Source = vm, Mode = BindingMode.OneWay },
-                    [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
+                    [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = originalSyntaxHighlightingConverter, Mode = BindingMode.OneWay },
                     [!TextBlock.FlowDirectionProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = textToFlowDirectionConverter, Mode = BindingMode.OneWay },
                 };
                 SubtitleGridTextDisplayModeDisplay.ApplyTo(textBlock, gridTextDisplayMode);
@@ -827,6 +830,20 @@ public static partial class InitListViewAndEditBox
         var sepWebVtt = new Separator { DataContext = vm };
         sepWebVtt.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreWebVttContentMenuItemsVisible)));
         flyout.Items.Add(sepWebVtt);
+
+        // YouTube timed text: line pen, position and window style (filled on opening)
+        var yttMenuItem = new MenuItem
+        {
+            Header = Se.Language.File.Ytt.YouTube,
+            DataContext = vm,
+        };
+        yttMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreYttContentMenuItemsVisible)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(yttMenuItem);
+        vm.MenuItemYtt = yttMenuItem;
+
+        var sepYtt = new Separator { DataContext = vm };
+        sepYtt.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreYttContentMenuItemsVisible)));
+        flyout.Items.Add(sepYtt);
 
         var showStartTimeMenuItem = new MenuItem
         {
@@ -2213,6 +2230,14 @@ public static partial class InitListViewAndEditBox
             buttonPanel.Children.Add(aiAssistantButton);
         }
 
+        if (Se.Settings.Appearance.TextBoxShowButtonRecordSpeech)
+        {
+            var recordSpeechButton = UiUtil.MakeButton(vm.RecordSpeechToTextBoxCommand, IconNames.Microphone, Se.Language.Main.RecordSpeechHint);
+            vm.RecordSpeechToTextBoxButton = recordSpeechButton;
+            vm.UpdateRecordSpeechButtonState();
+            buttonPanel.Children.Add(recordSpeechButton);
+        }
+
         textEditGrid.Add(buttonPanel, 1, 2);
 
         Grid.SetColumn(textEditGrid, 1);
@@ -2453,6 +2478,7 @@ public static partial class InitListViewAndEditBox
         });
 
         textBox.TextChanged += vm.SubtitleTextChanged;
+        TextBoxAutoWrap.Attach(textBox, vm.GetDetectedLanguageCode);
         textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();
         textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
 
@@ -2669,6 +2695,9 @@ public static partial class InitListViewAndEditBox
             Source = vm
         });
 
+        // The cached language is the working subtitle's; the original's would need its own
+        // detection, and only the rare far-too-long auto-break uses it.
+        TextBoxAutoWrap.Attach(textBox, () => string.Empty);
         SetupMacContextMenuForTextBox(textBox, vm);
         MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
 

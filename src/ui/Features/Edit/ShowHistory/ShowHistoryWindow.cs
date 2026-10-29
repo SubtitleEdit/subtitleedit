@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -7,6 +8,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Edit.ShowHistory;
 
+/// <summary>
+/// Undo history, in the editor look (see <see cref="EditorChrome"/>): the history list, Cancel and
+/// Restore selected at the bottom.
+/// </summary>
 public class ShowHistoryWindow : Window
 {
     public ShowHistoryWindow(ShowHistoryViewModel vm)
@@ -16,6 +21,7 @@ public class ShowHistoryWindow : Window
         Width = 810;
         Height = 640;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -26,7 +32,6 @@ public class ShowHistoryWindow : Window
         var tableView = new TableView
         {
             SelectionMode = SelectionMode.Single,
-            Margin = new Thickness(0, 10, 0, 0),
             [!TableView.ItemsSourceProperty] = new Binding(nameof(vm.HistoryItems)),
             [!TableView.SelectedItemProperty] = new Binding(nameof(vm.SelectedHistoryItem)),
             Width = double.NaN,
@@ -53,6 +58,7 @@ public class ShowHistoryWindow : Window
                 },
             },
         };
+        AutomationProperties.SetName(tableView, Se.Language.Edit.ShowHistory);
         UiUtil.ApplyTableViewRowStyle(tableView);
         TableViewExtras.AttachListNavigation(tableView);
         tableView.SelectionChanged += (sender, args) =>
@@ -61,36 +67,20 @@ public class ShowHistoryWindow : Window
         };
 
         var buttonRollback = UiUtil.MakeButton(Se.Language.Edit.RestoreSelected, vm.RollbackToCommand).WithBindEnabled(nameof(vm.IsRollbackEnabled));
+        buttonRollback.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(
-            buttonRollback,
-            buttonCancel
-        );
 
-        var grid = new Grid
+        var list = new Border
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Child = EditorChrome.MakeListFrame(tableView, clearListBackground: true),
+            Padding = new Thickness(14),
         };
 
-        grid.Add(tableView, 0, 0);
-        grid.Add(panelButtons, 1, 0);
+        Content = EditorChrome.MakeRoot(list, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonRollback));
 
-        Content = grid;
-
-        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
+        // The list, not an action button, gets first focus (hack to make OnKeyDown work) - a
+        // focused button clicks on bare Space.
+        UiUtil.FocusOnFirstActivation(this, tableView);
         KeyDown += vm.OnKeyDown;
     }
 }

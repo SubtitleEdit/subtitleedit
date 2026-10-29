@@ -4,9 +4,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 
@@ -262,24 +260,6 @@ public class NetflixQualityController
         });
     }
 
-    public string ExportCsv()
-    {
-        var csvBuilder = new StringBuilder();
-
-        // Header
-        csvBuilder.AppendLine("LineNumber,TimeCode,Context,Comment");
-
-        // Rows
-        Records.ForEach(r => csvBuilder.AppendLine(r.ToCsvRow()));
-
-        return csvBuilder.ToString();
-    }
-
-    public void SaveCsv(string reportPath)
-    {
-        File.WriteAllText(reportPath, ExportCsv(), Encoding.UTF8);
-    }
-
     public bool IsEmpty => Records.Count == 0;
 
     public static string StringContext(string str, int pos, int radius)
@@ -299,13 +279,13 @@ public class NetflixQualityController
             new NetflixCheckEllipsesNotThreeDots(Se.Language.Tools.NetflixCheckAndFix.EllipsesNotThreeDots),
             new NetflixCheckGlyph(Se.Language.Tools.NetflixCheckAndFix.OnlyAllowedGlyphs),
             new NetflixCheckItalics(Se.Language.Tools.NetflixCheckAndFix.Italics),
-            new NetflixCheckMaxCps(Se.Language.Tools.NetflixCheckAndFix.MaxCharsSec),
+            new NetflixCheckMaxCps(Se.Language.General.MaxCharsPerSec),
             new NetflixCheckMaxDuration(Se.Language.Tools.NetflixCheckAndFix.MaxDuration),
-            new NetflixCheckMaxLineLength(Se.Language.Tools.NetflixCheckAndFix.MaxLineLength),
+            new NetflixCheckMaxLineLength(Se.Language.General.MaxLineLength),
             new NetflixCheckMinDuration(Se.Language.Tools.NetflixCheckAndFix.MinDuration),
-            new NetflixCheckNumberOfLines(Se.Language.Tools.NetflixCheckAndFix.MaxNumberOfLines),
+            new NetflixCheckNumberOfLines(Se.Language.General.MaxNumberOfLines),
             new NetflixCheckNumbersOneToTenSpellOut(Se.Language.Tools.NetflixCheckAndFix.OneToTenSpellOut),
-            new NetflixCheckShotChange(Se.Language.Tools.NetflixCheckAndFix.ShotChanges),
+            new NetflixCheckShotChange(Se.Language.General.ShotChanges),
             new NetflixCheckStartNumberSpellOut(Se.Language.Tools.NetflixCheckAndFix.StartNumberSpellOut),
             new NetflixCheckTextForHiUseBrackets(Se.Language.Tools.NetflixCheckAndFix.TextforHiUseBrackets),
             new NetflixCheckTimedTextFrameRate(Se.Language.General.FrameRate),

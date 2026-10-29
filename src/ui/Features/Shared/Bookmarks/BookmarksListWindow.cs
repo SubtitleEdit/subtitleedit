@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -12,6 +13,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Shared.Bookmarks;
 
+/// <summary>
+/// The bookmarks of the subtitle, in the editor look (see <see cref="EditorChrome"/>): the list in a
+/// frame, count and Clear on the left of the button bar, Go to and Done on the right.
+/// </summary>
 public class BookmarksListWindow : Window
 {
     public BookmarksListWindow(BookmarksListViewModel vm)
@@ -23,19 +28,21 @@ public class BookmarksListWindow : Window
         Height = 700;
         MinWidth = 600;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonGoTo = UiUtil.MakeButton(Se.Language.General.GoTo, vm.GoToCommand).WithBindIsEnabled(nameof(vm.HasBookmarks));
-        var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand).WithBindIsEnabled(nameof(vm.HasBookmarks));
+        var buttonClear = EditorChrome.MakeTextToolButton("fa-solid fa-trash-can", Se.Language.General.Clear, vm.ClearCommand).WithBindIsEnabled(nameof(vm.HasBookmarks));
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonGoTo, buttonClear, buttonCancel);
+        buttonCancel.Classes.Add("primary");
 
         var labelCount = new TextBlock
         {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            Margin = new Thickness(0, 0, 0, 10),
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 12, 0),
         };
         labelCount.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.Subtitles)}.{nameof(vm.Subtitles.Count)}")
         {
@@ -44,29 +51,20 @@ public class BookmarksListWindow : Window
             StringFormat = Se.Language.General.Count + ": {0}",
         });
 
-        var grid = new Grid
+        var left = new StackPanel
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { labelCount, buttonClear },
         };
 
-        grid.Add(MakeBookmarkGridView(vm), 0);
-        grid.Add(labelCount, 1);
-        grid.Add(panelButtons, 1);
+        var list = new Border
+        {
+            Child = MakeBookmarkGridView(vm),
+            Padding = new Thickness(14),
+        };
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(list, EditorChrome.MakeDockedButtonBar(left, buttonGoTo, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -76,7 +74,6 @@ public class BookmarksListWindow : Window
     {
         var dataGrid = TableViewExtras.MakeTableView();
         dataGrid.Height = double.NaN; // auto size inside scroll viewer
-        dataGrid.Margin = new Thickness(2);
         dataGrid.ItemsSource = vm.Subtitles;
         dataGrid.DataContext = vm.Subtitles;
 
@@ -114,9 +111,16 @@ public class BookmarksListWindow : Window
                     Command = vm.DeleteSelectedLineCommand,
                     CommandParameter = item,
                     DataContext = vm,
+                    Width = 26,
+                    Height = 26,
                     Margin = new Thickness(2),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    HorizontalContentAlignment = HorizontalAlignment.Center,
+                    VerticalContentAlignment = VerticalAlignment.Center,
                 };
+                deleteButton.Classes.Add("tool");
                 Optris.Icons.Avalonia.Attached.SetIcon(deleteButton, IconNames.Trash);
+                AutomationProperties.SetName(deleteButton, Se.Language.General.Delete);
                 return deleteButton;
             }),
             Width = new GridLength(80) // was Auto; TableView treats Auto as star
@@ -159,6 +163,8 @@ public class BookmarksListWindow : Window
         dataGrid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        AutomationProperties.SetName(dataGrid, Se.Language.General.BookmarksList);
+
+        return EditorChrome.MakeListFrame(dataGrid, clearListBackground: true);
     }
 }

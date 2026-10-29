@@ -71,7 +71,7 @@ F1 is the default for the **Help** action and can be changed in **Options** → 
 | Ctrl+Alt+V | Split line at text box cursor position |
 | Ctrl+U | Selected text to lowercase |
 | Ctrl+Shift+U | Selected text to uppercase |
-| Ctrl+Shift+F3 | Toggle casing |
+| Ctrl+Shift+F3 | Cycle casing |
 | Ctrl+Shift+E | Extend selected line to next |
 | Alt+Shift+E | Extend selected line to previous |
 

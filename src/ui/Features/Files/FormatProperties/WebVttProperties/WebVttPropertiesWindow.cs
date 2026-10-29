@@ -6,6 +6,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
 
+/// <summary>
+/// WebVTT properties in the editor look (see <see cref="FormatPropertiesChrome"/>): the cue
+/// settings per alignment (with Reset in the section header) and the save options as switches.
+/// </summary>
 public class WebVttPropertiesWindow : Window
 {
     public WebVttPropertiesWindow(WebVttPropertiesViewModel vm)
@@ -15,7 +19,7 @@ public class WebVttPropertiesWindow : Window
         SizeToContent = SizeToContent.Height;
         Width = 700;
         CanResize = false;
-        MinHeight = 200;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
@@ -36,7 +40,7 @@ public class WebVttPropertiesWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnSpacing = 10,
+            ColumnSpacing = 12,
             RowSpacing = 10,
         };
 
@@ -50,61 +54,28 @@ public class WebVttPropertiesWindow : Window
         MakeCueSetting(alignmentGrid, 2, 1, Se.Language.General.BottomCenter, vm, nameof(vm.CueAn2));
         MakeCueSetting(alignmentGrid, 2, 2, Se.Language.General.BottomRight, vm, nameof(vm.CueAn3));
 
-        var alignmentPanel = new StackPanel
+        var cueSettings = new StackPanel
         {
-            Orientation = Orientation.Vertical,
-            Spacing = 5,
+            Spacing = 10,
             Children =
             {
-                UiUtil.MakeLabel(l.CueSettingsHint),
+                FormatPropertiesChrome.Hint(l.CueSettingsHint, 640),
                 alignmentGrid,
             }
         };
+        var buttonReset = FormatPropertiesChrome.MakeAction("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetCueSettingsCommand);
 
-        var checkBoxPanel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Spacing = 5,
-            Children =
-            {
-                UiUtil.MakeCheckBox(l.UseXTimeStamp, vm, nameof(vm.UseXTimestampMap)),
-                UiUtil.MakeCheckBox(l.MergeLines, vm, nameof(vm.MergeLinesWithSameText)),
-                UiUtil.MakeCheckBox(l.MergeStyleTags, vm, nameof(vm.MergeStyleTags)),
-            }
-        };
+        var options = FormatPropertiesChrome.MakeRows(
+            EditorChrome.MakeSwitchRow(nameof(vm.UseXTimestampMap), l.UseXTimeStamp),
+            EditorChrome.MakeSwitchRow(nameof(vm.MergeLinesWithSameText), l.MergeLines),
+            EditorChrome.MakeSwitchRow(nameof(vm.MergeStyleTags), l.MergeStyleTags));
 
-        var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCueSettingsCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonReset, buttonOk, buttonCancel);
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(UiUtil.MakeLabel(l.CueSettings).WithBold(), 0);
-        grid.Add(UiUtil.MakeBorderForControl(alignmentPanel), 1);
-        grid.Add(checkBoxPanel, 2);
-        grid.Add(buttonPanel, 3);
-
-        Content = grid;
+        Content = FormatPropertiesChrome.MakeRoot(
+            buttonBar,
+            EditorChrome.MakeEditorSection(l.CueSettings, cueSettings, buttonReset, first: true),
+            EditorChrome.MakeEditorSection(Se.Language.General.Options, options));
 
         UiUtil.FocusOnFirstActivation(this, textBoxAn7); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -112,16 +83,17 @@ public class WebVttPropertiesWindow : Window
 
     private static TextBox MakeCueSetting(Grid grid, int row, int column, string title, WebVttPropertiesViewModel vm, string propertyName)
     {
-        var textBox = UiUtil.MakeTextBox(180, vm, propertyName);
+        var textBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(180, vm, propertyName), title);
+        textBox.Width = double.NaN;
         textBox.HorizontalAlignment = HorizontalAlignment.Stretch;
 
         var panel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 2,
+            Spacing = 4,
             Children =
             {
-                UiUtil.MakeLabel(title),
+                EditorChrome.MakeDimLabel(title, new Avalonia.Thickness(0)),
                 textBox,
             }
         };

@@ -14,7 +14,6 @@ public class LanguageTextToSpeech
     public string TestVoice { get; set; }
     public string AddAudioToVideoFile { get; set; }
     public string EngineAndVoice { get; set; }
-    public string Output { get; set; }
     public string XLinesFromY { get; set; }
     public string XLines { get; set; }
     public string XVoices { get; set; }
@@ -39,11 +38,9 @@ public class LanguageTextToSpeech
     public string Instructions { get; set; }
     public string InstructionsHint { get; set; }
     public string OpenAiSpeedHint { get; set; }
-    public string OutputFormat { get; set; }
     public string OutputFormatHint { get; set; }
     public string RegenerateAudio { get; set; }
     public string AutoContinuePlaying { get; set; }
-    public string PlayLine { get; set; }
     public string FitDurationToGeneratedAudio { get; set; }
     public string ResetTiming { get; set; }
     public string AddingAudioToVideoFileDotDotDot { get; set; }
@@ -106,7 +103,6 @@ public class LanguageTextToSpeech
     public string InstallToEngine { get; set; }
     public string DownloadAndInstall { get; set; }
     public string SelectAtLeastOneVoicePack { get; set; }
-    public string DownloadingXDotDotDot { get; set; }
     public string InstallingXDotDotDot { get; set; }
     public string XVoicesInstalledYSkipped { get; set; }
     public string UseSpeechToTextDotDotDot { get; set; }
@@ -117,7 +113,6 @@ public class LanguageTextToSpeech
     public string AutoCastSpeakersSubtitle { get; set; }
     public string AutoCastFoundXSpeakersInYLines { get; set; }
     public string AutoCastLines { get; set; }
-    public string AutoCastAudio { get; set; }
     public string AutoCastSays { get; set; }
     public string AutoCastNeedsVideo { get; set; }
     public string AutoCastNoSpeakersFound { get; set; }
@@ -149,7 +144,6 @@ public class LanguageTextToSpeech
     public string VoiceCloneConsentDeclined { get; set; }
     public string AdvancedTtsSettings { get; set; }
     public string AdvancedTtsAudioProcessing { get; set; }
-    public string AdvancedTtsOutput { get; set; }
     public string AdvancedTtsVoiceCloning { get; set; }
     public string CleanCloneReferences { get; set; }
     public string CleanCloneReferencesDescription { get; set; }
@@ -168,7 +162,6 @@ public class LanguageTextToSpeech
     public string RemoveOriginalSpeechDescription { get; set; }
     public string RemovingOriginalSpeech { get; set; }
     public string RemoveOriginalSpeechFailed { get; set; }
-    public string SpeechRemovalModel { get; set; }
     public string SpeechRemovalModelDescription { get; set; }
     public string SpeechRemovalBestQuality { get; set; }
     public string SpeechRemovalFast { get; set; }
@@ -262,7 +255,6 @@ public class LanguageTextToSpeech
         TestVoice = "Test voice";
         AddAudioToVideoFile = "Add audio to video file";
         EngineAndVoice = "Engine & voice";
-        Output = "Output";
         XLinesFromY = "{0} lines from {1}";
         XLines = "{0} lines";
         XVoices = "{0} voices";
@@ -287,11 +279,9 @@ public class LanguageTextToSpeech
         Instructions = "Instructions";
         InstructionsHint = "Optional speaking style, e.g. \"Speak in a calm, warm voice\". Sent only to models that support it (not tts-1/tts-1-hd)";
         OpenAiSpeedHint = "Speech speed from 0.25 to 4.0 (1.0 is normal). Not every model supports it";
-        OutputFormat = "Output format";
         OutputFormatHint = "Audio format requested from the server. \"Auto\" asks for MP3 and switches to PCM for models that only return PCM (e.g. Gemini TTS)";
         RegenerateAudio = "Regenerate audio";
         AutoContinuePlaying = "Auto-continue playing";
-        PlayLine = "Play line";
         FitDurationToGeneratedAudio = "Fit duration to generated audio";
         ResetTiming = "Reset timing";
         AddingAudioToVideoFileDotDotDot = "Adding audio to video file...";
@@ -353,7 +343,6 @@ public class LanguageTextToSpeech
         InstallToEngine = "Install to engine";
         DownloadAndInstall = "Download and install";
         SelectAtLeastOneVoicePack = "Select at least one voice pack";
-        DownloadingXDotDotDot = "Downloading {0}...";
         InstallingXDotDotDot = "Installing {0}...";
         XVoicesInstalledYSkipped = "{0} voices installed ({1} already present)";
         UseSpeechToTextDotDotDot = "Use speech-to-text...";
@@ -362,7 +351,6 @@ public class LanguageTextToSpeech
         AutoCastSpeakersSubtitle = "Name each speaker - the name becomes the actor in the subtitle and the name of the cloned voice. Give two speakers the same name to merge them into one voice.";
         AutoCastFoundXSpeakersInYLines = "{0} speakers in {1} lines";
         AutoCastLines = "Lines";
-        AutoCastAudio = "Audio";
         AutoCastSays = "Says";
         AutoCastNeedsVideo = "Finding the voices needs an open video to listen to.";
         AutoCastNoSpeakersFound = "No speakers were found. The transcription has to come from a speech-to-text engine that tells speakers apart, such as Crisp ASR MOSS Diarize.";
@@ -390,7 +378,6 @@ public class LanguageTextToSpeech
         VoiceCloneConsentDeclined = "Voice cloning is not available until these terms are accepted.";
         AdvancedTtsSettings = "Advanced TTS settings";
         AdvancedTtsAudioProcessing = "Audio processing";
-        AdvancedTtsOutput = "Output";
         AdvancedTtsVoiceCloning = "Voice cloning";
         CleanCloneReferences = "Clean voice-clone references (Sidon)";
         CleanCloneReferencesDescription = "Removes music, noise and reverb from the audio a voice is cloned from: clips taken from the video and recordings imported in the voice manager. Uses the Sidon speech restoration model on audio.cpp (940 MB download). The cloned voice no longer copies the background, but very quiet or overlapping speech can come out muffled.";
@@ -409,7 +396,6 @@ public class LanguageTextToSpeech
         RemoveOriginalSpeechDescription = "Keeps the music and sound effects of the original video but removes its speech, and mixes the new speech over that. Takes about as long as the video itself with a GPU, and many times longer without one. With audio ducking on, its volume applies to the music and effects. Only applies when the speech is added to the video file.";
         RemovingOriginalSpeech = "Removing original speech...";
         RemoveOriginalSpeechFailed = "Could not remove the original speech - the speech was added to the video without it.";
-        SpeechRemovalModel = "Model";
         SpeechRemovalModelDescription = "Best quality keeps the most of the music and sound effects. Fast is about three times quicker, with a little more of the music lost.";
         SpeechRemovalBestQuality = "Best quality (Mel-Band RoFormer)";
         SpeechRemovalFast = "Fast (HTDemucs)";

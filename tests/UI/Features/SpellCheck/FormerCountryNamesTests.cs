@@ -1,6 +1,4 @@
 using Nikse.SubtitleEdit.Core.Dictionaries;
-using System;
-using System.IO;
 
 namespace UITests.Features.SpellCheck;
 

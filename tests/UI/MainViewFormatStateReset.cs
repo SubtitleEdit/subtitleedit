@@ -41,5 +41,6 @@ public sealed class MainViewFormatStateReset : BeforeAfterTestAttribute
         SubtitleLineViewModel.UseTeletextLineLength = false;
         SubtitleLineViewModel.SkipEmptyLinesInLineCount = false;
         CalcFactory.IgnoreAssaCommentBlocks = false;
+        Nikse.SubtitleEdit.Logic.YttPenLookup.Clear();
     }
 }

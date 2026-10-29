@@ -2,14 +2,9 @@
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Http;
 
 namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
@@ -18,6 +13,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
     {
         private static readonly Regex UnicodeRegex = new Regex(@"\\u([0-9a-fA-F]{4})", RegexOptions.Compiled);
         private static readonly Regex PreambleRegex = new Regex(@"^(Here is|Here's) [a-zA-Z ,]+:", RegexOptions.Compiled);
+        private static readonly Regex BrTagRegex = new Regex(@"<br\s*/?>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private HttpClient _httpClient = null!;
 
@@ -38,7 +34,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         // gpt-oss-120b is an open-weights model not hosted on api.openai.com at all.
         public static string[] Models => new[]
         {
+            "gpt-6.1-sol",
             "gpt-6-astra",
+            "gpt-6-sol", "gpt-6-luna",
             "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna",
             "gpt-5.5",
             "gpt-5.4", "gpt-5.4-mini", "gpt-5.4-nano",
@@ -517,9 +515,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         internal static string FixNewLines(string outputText)
         {
-            outputText = outputText.Replace("<br/>", Environment.NewLine);
-            outputText = outputText.Replace("<br />", Environment.NewLine);
-            outputText = outputText.Replace("<br  />", Environment.NewLine);
+            outputText = BrTagRegex.Replace(outputText, Environment.NewLine);
             outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             return outputText.Trim();
         }

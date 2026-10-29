@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Logic;
-using System.Linq;
 
 namespace UITests.Logic;
 

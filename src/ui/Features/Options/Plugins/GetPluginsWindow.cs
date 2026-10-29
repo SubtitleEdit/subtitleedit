@@ -1,58 +1,64 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
+/// <summary>
+/// The online plugin catalog in the editor look (see <see cref="EditorChrome"/>): one row per
+/// plugin with its install/update button, the status and Refresh + Close in the button bar.
+/// </summary>
 public class GetPluginsWindow : Window
 {
-    private static readonly IBrush AccentBrush = new ImmutableSolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
-
     public GetPluginsWindow(GetPluginsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Plugins.GetPluginsTitle;
         CanResize = true;
-        Width = 700;
-        Height = 500;
+        Width = 720;
+        Height = 540;
         MinWidth = 500;
         MinHeight = 300;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
         var listBox = new ListBox();
         listBox.Bind(ListBox.ItemsSourceProperty, new Binding(nameof(vm.Plugins)));
         listBox.Bind(ListBox.SelectedItemProperty, new Binding(nameof(vm.SelectedPlugin)) { Mode = BindingMode.TwoWay });
+        ScrollViewer.SetHorizontalScrollBarVisibility(listBox, ScrollBarVisibility.Disabled);
+        AutomationProperties.SetName(listBox, Se.Language.Plugins.GetPluginsTitle);
         listBox.ItemTemplate = new FuncDataTemplate<GetPluginsDisplayItem>((_, _) =>
         {
-            var name = new TextBlock { FontWeight = FontWeight.Bold, VerticalAlignment = VerticalAlignment.Bottom };
+            var name = new TextBlock { FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Bottom };
             name.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Name)));
 
-            var version = new TextBlock { Opacity = 0.7, FontSize = UiUtil.ScaledFontSize(11), Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var version = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = EditorChrome.ScaledFont(11.5), Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             version.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Version)));
 
-            var author = new TextBlock { Opacity = 0.7, FontSize = UiUtil.ScaledFontSize(11), Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var author = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = EditorChrome.ScaledFont(11.5), Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             author.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Author)));
 
             // Small accent-coloured "Update" pill that appears only when an update is available.
             var updateBadge = new Border
             {
-                Background = AccentBrush,
-                CornerRadius = new CornerRadius(3),
-                Padding = new Thickness(6, 1),
+                Background = EditorChrome.AccentBrush,
+                CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(7, 1),
                 Margin = new Thickness(8, 0, 0, 1),
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Child = new TextBlock
                 {
                     Text = Se.Language.General.Update,
-                    FontSize = UiUtil.ScaledFontSize(10),
+                    FontSize = EditorChrome.ScaledFont(10.5),
                     FontWeight = FontWeight.SemiBold,
                     Foreground = Brushes.White,
                 },
@@ -65,10 +71,10 @@ public class GetPluginsWindow : Window
                 Children = { name, version, author, updateBadge },
             };
 
-            var description = new TextBlock { Opacity = 0.8, TextWrapping = TextWrapping.Wrap };
+            var description = new TextBlock { FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush, TextWrapping = TextWrapping.Wrap };
             description.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Description)));
 
-            var status = new TextBlock { FontSize = UiUtil.ScaledFontSize(11) };
+            var status = new TextBlock { FontSize = EditorChrome.ScaledFont(11) };
             status.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.StatusText)));
             status.Bind(TextBlock.ForegroundProperty, new Binding(nameof(GetPluginsDisplayItem.StatusBrush)));
             status.Bind(TextBlock.FontWeightProperty, new Binding(nameof(GetPluginsDisplayItem.StatusFontWeight)));
@@ -82,6 +88,7 @@ public class GetPluginsWindow : Window
 
             var actionLabel = new TextBlock
             {
+                FontSize = EditorChrome.FieldFontSize,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
@@ -112,23 +119,29 @@ public class GetPluginsWindow : Window
             var installButton = new Button
             {
                 VerticalAlignment = VerticalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
                 Width = 110,
+                MinHeight = 30,
+                CornerRadius = new CornerRadius(6),
+                Margin = new Thickness(10, 0, 0, 0),
                 Command = vm.InstallCommand,
                 Content = buttonContent,
             };
             installButton.Bind(Button.CommandParameterProperty, new Binding());
             installButton.Bind(IsEnabledProperty, new Binding(nameof(GetPluginsDisplayItem.CanInstall)));
+            installButton.Bind(AutomationProperties.NameProperty, new Binding(nameof(GetPluginsDisplayItem.ActionText)));
 
             // A generous hit area: a 32x32 square with the icon inside. Without an explicit
             // size the button can be missed during a short download (the icon glyph itself
             // is only ~16px wide). Transparent background still receives hit-tests so the
             // whole 32x32 area is clickable.
+            var cancelText = Se.Language.General.Cancel.Replace("_", string.Empty);
             var cancelButton = new Button
             {
                 Content = new Icon
                 {
                     Value = IconNames.Close,
-                    FontSize = 18,
+                    FontSize = 16,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
                 },
@@ -136,13 +149,18 @@ public class GetPluginsWindow : Window
                 Height = 32,
                 Padding = new Thickness(0),
                 VerticalAlignment = VerticalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(6, 0, 0, 0),
-                Background = Brushes.Transparent,
-                BorderBrush = null,
                 Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand),
                 Command = vm.CancelDownloadCommand,
-                [ToolTip.TipProperty] = Se.Language.General.Cancel.Replace("_", string.Empty),
             };
+            cancelButton.Classes.Add("tool");
+            AutomationProperties.SetName(cancelButton, cancelText);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(cancelButton, cancelText);
+            }
             cancelButton.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.IsBusy)));
 
             var rowGrid = new Grid
@@ -161,37 +179,40 @@ public class GetPluginsWindow : Window
             // Thin separator at the bottom of each row.
             return new Border
             {
-                BorderBrush = new SolidColorBrush(Color.FromArgb(0x22, 0x80, 0x80, 0x80)),
+                BorderBrush = EditorChrome.LineBrush,
                 BorderThickness = new Thickness(0, 0, 0, 1),
                 Padding = new Thickness(0, 8, 0, 8),
                 Child = rowGrid,
             };
         }, true);
 
-        var statusMessage = new TextBlock { Opacity = 0.8 };
-        statusMessage.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusMessage)));
-
-        var buttonRefresh = UiUtil.MakeButton(Se.Language.General.Refresh, vm.RefreshCommand).WithMinWidth(120);
-        var buttonClose = UiUtil.MakeButton(Se.Language.General.Close, vm.CloseCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonRefresh, buttonClose);
-
-        var grid = new Grid
+        var listSection = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Star },
             },
-            Margin = UiUtil.MakeWindowMargin(),
             RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(14, 12, 14, 14),
         };
-        grid.Add(listBox, 0, 0);
-        grid.Add(statusMessage, 1, 0);
-        grid.Add(panelButtons, 2, 0);
+        listSection.Add(EditorChrome.MakeSectionHeader(Se.Language.Plugins.GetPluginsTitle), 0);
+        listSection.Add(EditorChrome.MakeCompactListFrame(listBox, compact: false), 1);
 
-        Content = grid;
+        var statusMessage = new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        statusMessage.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusMessage)));
+
+        var buttonRefresh = EditorChrome.MakeTextToolButton(IconNames.Refresh, Se.Language.General.Refresh, vm.RefreshCommand);
+        var buttonClose = UiUtil.MakeButton(Se.Language.General.Close, vm.CloseCommand);
+        buttonClose.Classes.Add("primary");
+
+        Content = EditorChrome.MakeRoot(listSection, EditorChrome.MakeDockedButtonBar(statusMessage, buttonRefresh, buttonClose));
 
         UiUtil.FocusOnFirstActivation(this, buttonClose);
         KeyDown += (_, e) => vm.OnKeyDown(e);

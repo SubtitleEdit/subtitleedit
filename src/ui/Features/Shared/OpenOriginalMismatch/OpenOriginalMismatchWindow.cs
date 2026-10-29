@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
@@ -15,7 +16,8 @@ namespace Nikse.SubtitleEdit.Features.Shared.OpenOriginalMismatch;
 /// Asked when the original subtitle being opened does not line up 1:1 with the current subtitle.
 /// The two modes are shown as cards rather than a plain radio list, because the choice decides what
 /// the grid will look like for the rest of the session and what happens to the lines with no
-/// counterpart - see <see cref="OpenOriginalMismatchViewModel"/> and issue #13449.
+/// counterpart - see <see cref="OpenOriginalMismatchViewModel"/> and issue #13449. In the editor
+/// look (see <see cref="EditorChrome"/>).
 /// </summary>
 public class OpenOriginalMismatchWindow : Window
 {
@@ -28,6 +30,7 @@ public class OpenOriginalMismatchWindow : Window
         SizeToContent = SizeToContent.Height;
         Width = ContentWidth + 40;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
@@ -52,29 +55,29 @@ public class OpenOriginalMismatchWindow : Window
             nameof(vm.ShowAllOriginalLinesNote),
             out _);
 
-        var checkBoxAllowEdit = new CheckBox
+        var toggleAllowEdit = new ToggleSwitch
         {
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
             VerticalAlignment = VerticalAlignment.Center,
-            Content = Se.Language.Main.AllowEditOfOriginalSubtitle,
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.AllowEditOfOriginal)) { Mode = BindingMode.TwoWay },
         };
-        AutomationProperties.SetName(checkBoxAllowEdit, Se.Language.Main.AllowEditOfOriginalSubtitle);
+        AutomationProperties.SetName(toggleAllowEdit, Se.Language.Main.AllowEditOfOriginalSubtitle);
 
         var allowEditRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
-            Margin = new Thickness(2, 4, 0, 0),
             Children =
             {
-                new Icon
+                toggleAllowEdit,
+                new TextBlock
                 {
-                    Value = IconNames.Pencil,
-                    FontSize = 18,
+                    Text = Se.Language.Main.AllowEditOfOriginalSubtitle,
+                    FontSize = EditorChrome.FieldFontSize,
                     VerticalAlignment = VerticalAlignment.Center,
-                    IsHitTestVisible = false,
                 },
-                checkBoxAllowEdit,
             },
         };
 
@@ -83,32 +86,43 @@ public class OpenOriginalMismatchWindow : Window
         var allowEditHint = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            MaxWidth = ContentWidth - 28,
-            Margin = new Thickness(28, 0, 0, 0),
-            Opacity = 0.75,
-            FontSize = UiUtil.ScaledFontSize(12),
+            MaxWidth = ContentWidth - 60,
+            Margin = new Thickness(60, 0, 0, 0), // under the label, past the switch
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.AllowEditHint)),
         };
 
-        var buttonPanel = UiUtil.MakeButtonBar(
-            UiUtil.MakeButtonOk(vm.OkCommand),
-            UiUtil.MakeButtonCancel(vm.CancelCommand));
+        var allowEdit = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 2,
+            Children = { allowEditRow, allowEditHint },
+        };
 
-        Content = new StackPanel
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        var modes = new StackPanel
         {
             Orientation = Orientation.Vertical,
             Spacing = 10,
-            Margin = UiUtil.MakeWindowMargin(),
+            Children = { header, cardMatching, cardAll },
+        };
+
+        var sections = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
             Children =
             {
-                header,
-                cardMatching,
-                cardAll,
-                allowEditRow,
-                allowEditHint,
-                buttonPanel,
+                new Border { Child = modes, Padding = new Thickness(16, 16, 16, 14) },
+                EditorChrome.MakeEditorSection(Se.Language.General.Options, allowEdit),
             },
         };
+
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, radioMatching); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -120,6 +134,7 @@ public class OpenOriginalMismatchWindow : Window
         {
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = ContentWidth - 40,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.InfoText)),
         };
@@ -133,7 +148,8 @@ public class OpenOriginalMismatchWindow : Window
                 new Icon
                 {
                     Value = IconNames.Information,
-                    FontSize = 26,
+                    FontSize = 24,
+                    Foreground = EditorChrome.AccentBrush,
                     VerticalAlignment = VerticalAlignment.Top,
                     IsHitTestVisible = false,
                 },
@@ -173,7 +189,8 @@ public class OpenOriginalMismatchWindow : Window
                 new Icon
                 {
                     Value = modeIcon,
-                    FontSize = 20,
+                    FontSize = 18,
+                    Foreground = EditorChrome.IconBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     IsHitTestVisible = false,
                 },
@@ -186,8 +203,9 @@ public class OpenOriginalMismatchWindow : Window
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = ContentWidth - 60,
             Margin = new Thickness(28, 0, 0, 0),
-            Opacity = 0.8,
-            FontSize = UiUtil.ScaledFontSize(12),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(hintProperty),
         };
 
@@ -196,7 +214,7 @@ public class OpenOriginalMismatchWindow : Window
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = ContentWidth - 90,
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = UiUtil.ScaledFontSize(12),
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(noteProperty),
         };
 
@@ -205,13 +223,13 @@ public class OpenOriginalMismatchWindow : Window
             Orientation = Orientation.Horizontal,
             Spacing = 6,
             Margin = new Thickness(28, 2, 0, 0),
-            Opacity = 0.9,
             Children =
             {
                 new Icon
                 {
                     Value = noteIcon,
-                    FontSize = 15,
+                    FontSize = 14,
+                    Foreground = EditorChrome.IconBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     IsHitTestVisible = false,
                 },
@@ -219,11 +237,16 @@ public class OpenOriginalMismatchWindow : Window
             },
         };
 
+        // The picked mode's card gets the accent border, so the choice shows on the whole card.
         return new Border
         {
             BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Colors.Gray, 0.35),
-            CornerRadius = new CornerRadius(6),
+            Background = EditorChrome.FieldBrush,
+            [!Border.BorderBrushProperty] = new Binding(isCheckedProperty)
+            {
+                Converter = new FuncValueConverter<bool, IBrush>(isChecked => isChecked ? EditorChrome.AccentBrush : EditorChrome.FieldBorderBrush),
+            },
+            CornerRadius = new CornerRadius(8),
             Padding = new Thickness(12, 10),
             Child = new StackPanel
             {

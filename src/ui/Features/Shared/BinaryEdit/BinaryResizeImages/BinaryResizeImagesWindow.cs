@@ -9,6 +9,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryResizeImages;
 
+/// <summary>
+/// Resize images in the editor look (see <see cref="EditorChrome"/>): the percentage in a settings
+/// column, the preview on the right, Cancel/OK at the bottom.
+/// </summary>
 public class BinaryResizeImagesWindow : Window
 {
     public BinaryResizeImagesWindow(BinaryResizeImagesViewModel vm)
@@ -18,53 +22,23 @@ public class BinaryResizeImagesWindow : Window
         Width = 800;
         Height = 600;
         CanResize = true;
+        BinaryEditChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var mainGrid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition(GridLength.Star),
-                new RowDefinition(GridLength.Auto),
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-
-        // Content area with controls on left and preview on right
-        var contentGrid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition(new GridLength(300)),
-                new ColumnDefinition(GridLength.Star),
-            },
-            ColumnSpacing = 10,
-        };
-
-        // Left side - controls
+        // Settings column on the left, preview on the right
         var leftPanel = MakeControlsPanel(vm, out var percentageInput);
-        contentGrid.Add(leftPanel, 0, 0);
-
-        // Right side - preview
         var rightPanel = MakePreviewPanel(vm);
-        contentGrid.Add(rightPanel, 0, 1);
 
-        mainGrid.Add(contentGrid, 0, 0);
-
-        // Button panel
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        mainGrid.Add(buttonPanel, 1, 0);
-
-        Content = mainGrid;
+        Content = BinaryEditChrome.MakePreviewDialogRoot(leftPanel, rightPanel, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, percentageInput); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static StackPanel MakeControlsPanel(BinaryResizeImagesViewModel vm, out NumericUpDown percentageInput)
+    private static Border MakeControlsPanel(BinaryResizeImagesViewModel vm, out NumericUpDown percentageInput)
     {
         var panel = new StackPanel
         {
@@ -73,26 +47,26 @@ public class BinaryResizeImagesWindow : Window
         };
 
         // Percentage
-        var percentageLabel = new TextBlock
-        {
-            Text = Se.Language.Tools.ImageBasedEdit.Percentage,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        panel.Children.Add(percentageLabel);
-
         var percentageUpDown = new NumericUpDown
         {
             Minimum = 1,
             Maximum = 1000,
             Increment = 10,
             FormatString = "0",
-            Width = double.NaN,
             [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.Percentage))
             {
                 Mode = BindingMode.TwoWay,
                 Converter = new NullableIntConverter(),
             },
+        };
+        EditorChrome.AsField(percentageUpDown, Se.Language.Tools.ImageBasedEdit.Percentage, 100, alignLeft: true, center: true);
+        percentageUpDown.InnerRightContent = new TextBlock
+        {
+            Text = "%",
+            FontSize = EditorChrome.ScaledFont(11),
+            Foreground = EditorChrome.FaintTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 8, 0),
         };
         panel.Children.Add(percentageUpDown);
         percentageInput = percentageUpDown;
@@ -102,24 +76,15 @@ public class BinaryResizeImagesWindow : Window
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ImageSizeText)),
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            Margin = new Thickness(0, 20, 0, 0),
-            FontSize = UiUtil.ScaledFontSize(12),
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = Avalonia.Media.FontWeight.SemiBold,
         };
         panel.Children.Add(imageSizeLabel);
 
         // Info text
-        var infoText = new TextBlock
-        {
-            Text = Se.Language.Tools.ImageBasedEdit.ResizeImagesInfo,
-            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-            Margin = new Thickness(0, 20, 0, 0),
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = Avalonia.Media.Brushes.Gray,
-        };
-        panel.Children.Add(infoText);
+        panel.Children.Add(EditorChrome.MakeHint(Se.Language.Tools.ImageBasedEdit.ResizeImagesInfo));
 
-        return panel;
+        return EditorChrome.MakeEditorSection(Se.Language.Tools.ImageBasedEdit.Percentage, panel, first: true);
     }
 
     private static Border MakePreviewPanel(BinaryResizeImagesViewModel vm)
@@ -144,8 +109,6 @@ public class BinaryResizeImagesWindow : Window
 
         // Image based subtitles are light or dark text on a transparent background, both
         // invisible on a matching flat backdrop - use the mid-gray checkerboard (issue #12692).
-        var border = UiUtil.MakeBorderForControl(scrollViewer);
-        border.Background = UiUtil.GetCheckerboardBrush();
-        return border;
+        return BinaryEditChrome.MakePreviewFrame(scrollViewer, UiUtil.GetCheckerboardBrush());
     }
 }

@@ -399,7 +399,9 @@ public sealed class UndoRedoManager : IUndoRedoManager
             var textChanged = o.Text != n.Text || o.OriginalText != n.OriginalText;
             var timingChanged =
                 Math.Abs(o.StartTime.TotalMilliseconds - n.StartTime.TotalMilliseconds) > 0.5 ||
-                Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5;
+                Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5 ||
+                o.OriginalStartTime != n.OriginalStartTime ||
+                o.OriginalEndTime != n.OriginalEndTime;
             var bookmarkChanged = o.Bookmark != n.Bookmark;
 
             // Same rule as OriginalText above: every field the undo hash covers must be

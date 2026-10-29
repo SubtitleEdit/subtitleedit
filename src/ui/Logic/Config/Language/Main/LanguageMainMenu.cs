@@ -1,5 +1,3 @@
-using Avalonia.Controls;
-
 namespace Nikse.SubtitleEdit.Logic.Config.Language;
 
 public class LanguageMainMenu

@@ -84,7 +84,7 @@ public partial class ShotChangeListViewModel : ObservableObject
             Window,
             new[]
             {
-                (Se.Language.Video.ShotChanges.ShotChanges, ".shotchanges"),
+                (Se.Language.General.ShotChanges, ".shotchanges"),
                 (Se.Language.General.TextFiles, ".txt"),
             },
             suggestedFileName,

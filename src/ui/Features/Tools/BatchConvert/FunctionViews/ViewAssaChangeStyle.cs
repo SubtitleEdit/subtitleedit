@@ -10,47 +10,15 @@ public static class ViewAssaChangeStyle
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var labelHeader = new Label
-        {
-            Content = Se.Language.Tools.BatchConvert.AssaChangeStyleTitle,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
-        var labelOnlyAssa = new Label
-        {
-            Content = Se.Language.Tools.BatchConvert.AssaChangeResolutionOnlyAppliesToAssa,
-            FontStyle = Avalonia.Media.FontStyle.Italic,
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
-        var labelFrom = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle);
-        var textBoxFrom = UiUtil.MakeTextBox(130, vm, nameof(vm.AssaChangeStyleFromStyle));
+        var textBoxFrom = EditorChrome.MakeTextField(nameof(vm.AssaChangeStyleFromStyle), Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle);
         var buttonBrowseFrom = UiUtil.MakeButtonBrowse(vm.AssaChangeStyleBrowseFromStyleCommand, accessibleName: Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle);
 
-        var labelTo = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle);
-        var textBoxTo = UiUtil.MakeTextBox(130, vm, nameof(vm.AssaChangeStyleToStyle));
+        var textBoxTo = EditorChrome.MakeTextField(nameof(vm.AssaChangeStyleToStyle), Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle);
         var buttonBrowseTo = UiUtil.MakeButtonBrowse(vm.AssaChangeStyleBrowseToStyleCommand, accessibleName: Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle);
 
-        var panelFromTo = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            Children =
-            {
-                labelFrom,
-                textBoxFrom,
-                buttonBrowseFrom,
-                labelTo,
-                textBoxTo,
-                buttonBrowseTo,
-            },
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
-        var buttonImport = UiUtil.MakeButton(Se.Language.Tools.BatchConvert.AssaChangeStyleImportStyle, vm.AssaChangeStyleImportStyleCommand);
-        var labelImported = UiUtil.MakeLabel(string.Empty);
-        labelImported.Bind(Label.ContentProperty, new Binding
+        var buttonImport = FunctionViewChrome.MakeButton("fa-solid fa-file-import", Se.Language.Tools.BatchConvert.AssaChangeStyleImportStyle, vm.AssaChangeStyleImportStyleCommand);
+        var labelImported = EditorChrome.MakeBoundHint(nameof(vm.AssaChangeStyleImportFileName));
+        labelImported.Bind(TextBlock.TextProperty, new Binding
         {
             Path = nameof(vm.AssaChangeStyleImportFileName),
             Mode = BindingMode.OneWay,
@@ -62,25 +30,23 @@ public static class ViewAssaChangeStyle
             Orientation = Orientation.Horizontal,
             Spacing = 10,
             Children = { buttonImport, labelImported },
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
         };
 
-        var checkBoxTrim = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.AssaChangeStyleTrimUnusedStyles, vm, nameof(vm.AssaChangeStyleTrimUnusedStyles));
+        return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.BatchConvert.AssaChangeStyleTitle,
+            EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.AssaChangeResolutionOnlyAppliesToAssa),
+            panelImport,
+            FunctionViewChrome.MakeRow(Se.Language.Tools.BatchConvert.AssaChangeStyleFromStyle, WithButton(textBoxFrom, buttonBrowseFrom)),
+            FunctionViewChrome.MakeRow(Se.Language.Tools.BatchConvert.AssaChangeStyleToStyle, WithButton(textBoxTo, buttonBrowseTo)),
+            EditorChrome.MakeSwitchRow(nameof(vm.AssaChangeStyleTrimUnusedStyles), Se.Language.Tools.BatchConvert.AssaChangeStyleTrimUnusedStyles));
+    }
 
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Children =
-            {
-                labelHeader,
-                labelOnlyAssa,
-                panelImport,
-                panelFromTo,
-                checkBoxTrim,
-            },
-            Margin = new Avalonia.Thickness(10),
-        };
-
-        return panel;
+    /// <summary>
+    /// The text box takes the width the browse button leaves.
+    /// </summary>
+    private static DockPanel WithButton(TextBox textBox, Button button)
+    {
+        button.Margin = new Avalonia.Thickness(6, 0, 0, 0);
+        DockPanel.SetDock(button, Dock.Right);
+        return new DockPanel { Children = { button, textBox } };
     }
 }

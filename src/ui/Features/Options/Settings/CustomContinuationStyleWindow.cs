@@ -1,5 +1,8 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
@@ -7,147 +10,155 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
+/// <summary>
+/// The custom continuation style in the editor look (see <see cref="EditorChrome"/>): prefix,
+/// suffix and long gap sections on the left (scrolling on short screens), the preview on the
+/// right, "Load defaults" + Cancel + OK in the button bar.
+/// </summary>
 public class CustomContinuationStyleWindow : Window
 {
+    private const double LabelWidth = 160;
+
     public CustomContinuationStyleWindow(CustomContinuationStyleViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Options.Settings.EditContinuationStyleCustom;
         CanResize = true;
-        Width = 1100;
-        Height = 750;
-        MinWidth = 800;
-        MinHeight = 700;
+        Width = 960;
+        Height = 700;
+        MinWidth = 760;
+        MinHeight = 480;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
-        var label = new Label
+        var settings = new ScrollViewer
         {
-            Content = Se.Language.Tools.AdjustDurations.AdjustVia,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
+            Content = MakeControls(vm, out var comboBoxFirstInput),
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
+        var columns = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        columns.Add(settings, 0, 0);
+        columns.Add(new Border
+        {
+            Child = MakePreviewView(vm),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
 
-        grid.Add(MakeControlsGrid(vm, out var comboBoxFirstInput), 0, 0);
-        grid.Add(MakePreviewView(vm), 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(columns, EditorChrome.MakeDockedButtonBar(MakeLoadDefaultsButton(vm), buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, comboBoxFirstInput); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeControlsGrid(CustomContinuationStyleViewModel vm, out ComboBox firstInput)
+    private static ComboBox MakeCombo(CustomContinuationStyleViewModel vm, string property, string accessibleName)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = new Thickness(10),
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var comboBox = UiUtil.MakeComboBox(vm.PreAndSuffixes, vm, property);
+        comboBox.MinWidth = 120;
+        comboBox.HorizontalAlignment = HorizontalAlignment.Left;
+        comboBox.VerticalAlignment = VerticalAlignment.Center;
+        AutomationProperties.SetName(comboBox, accessibleName);
+        return comboBox;
+    }
 
-        var labelPrefix = UiUtil.MakeLabel(Se.Language.General.Prefix);
-        var comboBoxPrefix = UiUtil.MakeComboBox(vm.PreAndSuffixes, vm, nameof(vm.SelectedPrefix));
+    private static StackPanel MakeSwitch(string property, string text, CustomContinuationStyleViewModel vm, string? isEnabledProperty = null)
+    {
+        var row = EditorChrome.MakeToggleRow(property, text, out var toggle);
+        toggle.IsCheckedChanged += (s, e) => vm.StyleChanged();
+        if (isEnabledProperty != null)
+        {
+            row.Bind(IsEnabledProperty, new Binding(isEnabledProperty));
+        }
+
+        return row;
+    }
+
+    private static StackPanel MakeControls(CustomContinuationStyleViewModel vm, out ComboBox firstInput)
+    {
+        var comboBoxPrefix = MakeCombo(vm, nameof(vm.SelectedPrefix), Se.Language.General.Prefix);
         firstInput = comboBoxPrefix;
         comboBoxPrefix.SelectionChanged += (s, e) => vm.StyleChanged();
-        var checkBoxPrefixAddSpace = UiUtil.MakeCheckBox(Se.Language.Options.Settings.AddSpace, vm, nameof(vm.SelectedPrefixAddSpace));
-        checkBoxPrefixAddSpace.IsCheckedChanged += (s, e) => vm.StyleChanged();
-
-        var labelSuffix = UiUtil.MakeLabel(Se.Language.General.Suffix);
-        var comboBoxSuffix = UiUtil.MakeComboBox(vm.PreAndSuffixes, vm, nameof(vm.SelectedSuffix));
-        comboBoxSuffix.SelectionChanged += (s, e) => vm.StyleChanged();
-        var checkBoxSuffixProcessIfEndWithComma = UiUtil.MakeCheckBox(Se.Language.Options.Settings.ProcessIfEndsWithComma, vm, nameof(vm.SelectedSuffixesProcessIfEndWithComma));
-        checkBoxSuffixProcessIfEndWithComma.IsCheckedChanged += (s, e) => vm.StyleChanged();
-        var checkBoxSuffixAddSpace = UiUtil.MakeCheckBox(Se.Language.Options.Settings.AddSpace, vm, nameof(vm.SelectedSuffixesAddSpace));
-        checkBoxSuffixAddSpace.IsCheckedChanged += (s, e) => vm.StyleChanged();
-        var checkBoxSuffixRemoveComma = UiUtil.MakeCheckBox(Se.Language.Options.Settings.RemoveComma, vm, nameof(vm.SelectedSuffixesRemoveComma));
-        checkBoxSuffixRemoveComma.IsCheckedChanged += (s, e) => vm.StyleChanged();
-
-        var checkBoxUseSpecialStyleAfterLongGaps = UiUtil.MakeCheckBox(Se.Language.Options.Settings.UseSpecialStyleAfterLongGaps, vm, nameof(vm.UseSpecialStyleAfterLongGaps))
-            .WithMarginTop(10);
-        checkBoxUseSpecialStyleAfterLongGaps.PropertyChanged += (s, e) => vm.StyleChanged();
-        var labelLongGapThreshold = UiUtil.MakeLabel(Se.Language.Options.Settings.LongGapThreshold);
-        var numericUpDownLongGapThreshold = UiUtil.MakeNumericUpDownInt(0, 10_000, 300, 140, vm, nameof(vm.LongGapMs))
-            .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps));
-        var panelLongGapThreshold = new StackPanel
+        var prefixContent = new StackPanel
         {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Left,
+            Spacing = 8,
             Children =
             {
-                labelLongGapThreshold,
-                numericUpDownLongGapThreshold,
-            }
+                EditorChrome.MakeLabeledRow(Se.Language.General.Prefix, comboBoxPrefix, LabelWidth),
+                MakeSwitch(nameof(vm.SelectedPrefixAddSpace), Se.Language.Options.Settings.AddSpace, vm),
+            },
         };
-        var labelLongPrefix = UiUtil.MakeLabel(Se.Language.General.Prefix);
-        var comboBoxLongPrefix = UiUtil.MakeComboBox(vm.PreAndSuffixes, vm, nameof(vm.SelectedLongGapPrefix))
+
+        var comboBoxSuffix = MakeCombo(vm, nameof(vm.SelectedSuffix), Se.Language.General.Suffix);
+        comboBoxSuffix.SelectionChanged += (s, e) => vm.StyleChanged();
+        var suffixContent = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                EditorChrome.MakeLabeledRow(Se.Language.General.Suffix, comboBoxSuffix, LabelWidth),
+                MakeSwitch(nameof(vm.SelectedSuffixesProcessIfEndWithComma), Se.Language.Options.Settings.ProcessIfEndsWithComma, vm),
+                MakeSwitch(nameof(vm.SelectedSuffixesAddSpace), Se.Language.Options.Settings.AddSpace, vm),
+                MakeSwitch(nameof(vm.SelectedSuffixesRemoveComma), Se.Language.Options.Settings.RemoveComma, vm),
+            },
+        };
+
+        var switchUseSpecialStyleAfterLongGaps = EditorChrome.MakeToggleRow(nameof(vm.UseSpecialStyleAfterLongGaps), Se.Language.Options.Settings.UseSpecialStyleAfterLongGaps, out var toggleLongGaps);
+        toggleLongGaps.PropertyChanged += (s, e) => vm.StyleChanged();
+        var numericUpDownLongGapThreshold = UiUtil.MakeNumericUpDownInt(0, 10_000, 300, 120, vm, nameof(vm.LongGapMs))
+            .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps))
+            .AsField(Se.Language.Options.Settings.LongGapThreshold, themeForeground: true);
+        var comboBoxLongPrefix = MakeCombo(vm, nameof(vm.SelectedLongGapPrefix), Se.Language.General.Prefix)
             .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps));
         comboBoxLongPrefix.SelectionChanged += (s, e) => vm.StyleChanged();
-        var labelLongSuffix = UiUtil.MakeLabel(Se.Language.General.Suffix);
-        var comboBoxLongSuffix = UiUtil.MakeComboBox(vm.PreAndSuffixes, vm, nameof(vm.SelectedLongGapSuffix))
+        var comboBoxLongSuffix = MakeCombo(vm, nameof(vm.SelectedLongGapSuffix), Se.Language.General.Suffix)
             .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps));
         comboBoxLongSuffix.SelectionChanged += (s, e) => vm.StyleChanged();
-        var checkBoxLongSuffixProcessIfEndWithComma = UiUtil.MakeCheckBox(Se.Language.Options.Settings.ProcessIfEndsWithComma, vm, nameof(vm.SelectedLongGapSuffixesProcessIfEndWithComma))
-            .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps));
-        checkBoxLongSuffixProcessIfEndWithComma.IsCheckedChanged += (s, e) => vm.StyleChanged();
-        var checkBoxLongSuffixAddSpace = UiUtil.MakeCheckBox(Se.Language.Options.Settings.AddSpace, vm, nameof(vm.SelectedLongGapSuffixesAddSpace))
-            .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps));
-        checkBoxLongSuffixAddSpace.IsCheckedChanged += (s, e) => vm.StyleChanged();
-        var checkBoxLongSuffixRemoveComma = UiUtil.MakeCheckBox(Se.Language.Options.Settings.RemoveComma, vm, nameof(vm.SelectedLongGapSuffixesRemoveComma))
-            .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps));
-        checkBoxLongSuffixRemoveComma.IsCheckedChanged += (s, e) => vm.StyleChanged();
-
-        var splitButtonLoad = new SeSplitButton
+        var longGapContent = new StackPanel
         {
-            VerticalAlignment = VerticalAlignment.Bottom,
+            Spacing = 8,
+            Children =
+            {
+                switchUseSpecialStyleAfterLongGaps,
+                EditorChrome.MakeLabeledRow(Se.Language.Options.Settings.LongGapThreshold, numericUpDownLongGapThreshold, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Prefix, comboBoxLongPrefix, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Suffix, comboBoxLongSuffix, LabelWidth),
+                MakeSwitch(nameof(vm.SelectedLongGapSuffixesProcessIfEndWithComma), Se.Language.Options.Settings.ProcessIfEndsWithComma, vm, nameof(vm.UseSpecialStyleAfterLongGaps)),
+                MakeSwitch(nameof(vm.SelectedLongGapSuffixesAddSpace), Se.Language.Options.Settings.AddSpace, vm, nameof(vm.UseSpecialStyleAfterLongGaps)),
+                MakeSwitch(nameof(vm.SelectedLongGapSuffixesRemoveComma), Se.Language.Options.Settings.RemoveComma, vm, nameof(vm.UseSpecialStyleAfterLongGaps)),
+            },
+        };
+
+        return new StackPanel
+        {
+            Children =
+            {
+                EditorChrome.MakeEditorSection(Se.Language.General.Prefix, prefixContent, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.General.Suffix, suffixContent),
+                EditorChrome.MakeEditorSection(Se.Language.Options.Settings.AfterLongGap.TrimEnd(':', ' '), longGapContent),
+            },
+        };
+    }
+
+    private static SeSplitButton MakeLoadDefaultsButton(CustomContinuationStyleViewModel vm)
+    {
+        return new SeSplitButton
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
             Content = Se.Language.General.LoadDefaults,
             Flyout = new MenuFlyout
             {
@@ -211,33 +222,9 @@ public class CustomContinuationStyleWindow : Window
                  }
             }
         };
-
-        grid.Add(labelPrefix, 0);
-        grid.Add(comboBoxPrefix, 0, 1);
-
-        grid.Add(checkBoxPrefixAddSpace, 1, 1);
-        grid.Add(labelSuffix, 2, 0);
-        grid.Add(comboBoxSuffix, 2, 1);
-        grid.Add(checkBoxSuffixProcessIfEndWithComma, 3, 1);
-        grid.Add(checkBoxSuffixAddSpace, 4, 1);
-        grid.Add(checkBoxSuffixRemoveComma, 5, 1);
-
-        grid.Add(checkBoxUseSpecialStyleAfterLongGaps, 6, 0, 1, 2);
-        grid.Add(panelLongGapThreshold, 7, 1);
-        grid.Add(labelLongPrefix, 8, 0);
-        grid.Add(comboBoxLongPrefix, 8, 1);
-        grid.Add(labelLongSuffix, 9, 0);
-        grid.Add(comboBoxLongSuffix, 9, 1);
-        grid.Add(checkBoxLongSuffixProcessIfEndWithComma, 10, 1);
-        grid.Add(checkBoxLongSuffixAddSpace, 11, 1);
-        grid.Add(checkBoxLongSuffixRemoveComma, 12, 1);
-
-        grid.Add(splitButtonLoad, 13, 0);
-
-        return UiUtil.MakeBorderForControl(grid);
     }
 
-    private static Border MakePreviewView(CustomContinuationStyleViewModel vm)
+    private static Grid MakePreviewView(CustomContinuationStyleViewModel vm)
     {
         var grid = new Grid
         {
@@ -246,21 +233,19 @@ public class CustomContinuationStyleWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Margin = new Thickness(10),
+            RowSpacing = 10,
+            Margin = new Thickness(14, 12, 14, 14),
         };
 
-        var labelPreview = UiUtil.MakeLabel(Se.Language.General.Preview);
+        var previewScroll = new ScrollViewer
+        {
+            Content = vm.PanelPreview,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+        };
 
-        grid.Add(labelPreview, 0);
-        grid.Add(vm.PanelPreview, 1);
-
-        return UiUtil.MakeBorderForControl(grid);
+        grid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0);
+        grid.Add(EditorChrome.MakeListFrame(previewScroll, clearListBackground: true), 1);
+        return grid;
     }
 }

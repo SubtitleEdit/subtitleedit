@@ -1,8 +1,6 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -22,42 +20,14 @@ public class PickRuleProfileWindow : Window
         Height = 750;
         MinWidth = 800;
         MinHeight = 700;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
-        var label = new Label
-        {
-            Content = Se.Language.Tools.AdjustDurations.AdjustVia,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
-
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(MakeProfilesView(vm), 0);
-        grid.Add(panelButtons, 1);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(EditorChrome.MakePickerListSection(Se.Language.General.Profiles, MakeProfilesView(vm)), EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {
@@ -69,7 +39,7 @@ public class PickRuleProfileWindow : Window
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeProfilesView(PickRuleProfileViewModel vm)
+    private static TableView MakeProfilesView(PickRuleProfileViewModel vm)
     {
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         dataGrid.Width = double.NaN;
@@ -121,6 +91,7 @@ public class PickRuleProfileWindow : Window
             .AddSortable<ProfileDisplay, int?>(singleLineMaxLengthColumn, x => x.SingleLineMaxLength)
             .AddSortable<ProfileDisplay, double?>(maxCpsColumn, x => x.MaxCharsPerSec);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        Avalonia.Automation.AutomationProperties.SetName(dataGrid, Se.Language.General.Profiles);
+        return dataGrid;
     }
 }

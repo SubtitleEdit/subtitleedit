@@ -1,19 +1,23 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Media;
-using Avalonia.Threading;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
 namespace Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 
+/// <summary>
+/// Remove text for hearing impaired, in the editor look (see <see cref="EditorChrome"/>): the
+/// options in sections on the left (scrolling on short screens), the fixes preview on the right,
+/// the number of lines found and the buttons in the bar at the bottom.
+/// </summary>
 public class RemoveTextForHearingImpairedWindow : Window
 {
     // Same presets the SE 4 combo boxes offered - awkward characters to type, and they cover
@@ -27,11 +31,23 @@ public class RemoveTextForHearingImpairedWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = UiUtil.MakeWindowTitle(Se.Language.General.RemoveTextForHearingImpaired);
-        Width = 910;
-        Height = 640;
-        MinWidth = 800;
-        MinHeight = 620;
+        Width = 960;
+        Height = 700;
+        MinWidth = 820;
+        MinHeight = 480;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+
+        // The text of the editable (symbol) combo boxes in the middle of the compact box
+        Styles.Add(new Style(x => x.OfType<ComboBox>().Template().OfType<TextBox>().Name("PART_EditableTextBox"))
+        {
+            Setters =
+            {
+                new Setter(TextBox.VerticalContentAlignmentProperty, VerticalAlignment.Center),
+                new Setter(TextBox.PaddingProperty, new Thickness(0)),
+                new Setter(TextBox.MinHeightProperty, 0.0),
+            },
+        });
 
         _vm = vm;
         vm.Window = this;
@@ -44,43 +60,25 @@ public class RemoveTextForHearingImpairedWindow : Window
         // edit callers (menu, selected lines) apply live and repeatedly with Apply, then Done closes.
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
             .WithBindIsVisible(nameof(vm.IsSettingsMode));
+        buttonOk.Classes.Add("primary");
         var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand)
             .WithBindIsVisible(nameof(vm.IsApplyVisible));
         var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand)
             .WithBindIsVisible(nameof(vm.IsApplyVisible));
+        buttonDone.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand)
             .WithBindIsVisible(nameof(vm.IsSettingsMode));
-        var panelButtons = UiUtil.MakeButtonBar(
-            buttonOk,
-            buttonApply,
-            buttonDone,
-            buttonCancel
-        );
 
-        var grid = new Grid
+        var labelLinesFound = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
+        labelLinesFound.Bind(TextBlock.TextProperty, new Binding($"{nameof(vm.Fixes)}.{nameof(vm.Fixes.Count)}")
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+            Source = vm,
+            Mode = BindingMode.OneWay,
+            StringFormat = Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX,
+        });
 
-        grid.Add(settingsView, 0, 0);
-        grid.Add(fixesView, 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
-
-        Content = grid;
+        var sections = EditorChrome.MakeSideBySide(settingsView, fixesView);
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(labelLinesFound, buttonCancel, buttonApply, buttonOk, buttonDone));
 
         UiUtil.FocusOnFirstActivation(this, () => { (vm.IsApplyVisible ? buttonDone : buttonOk).Focus(); }); // hack to make OnKeyDown work
 
@@ -88,225 +86,152 @@ public class RemoveTextForHearingImpairedWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private StackPanel MakeSettingsView(RemoveTextForHearingImpairedViewModel vm)
+    private static ScrollViewer MakeSettingsView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var removeBetweenView = MakeRemoveBetweenView(vm);
-        var removeBeforeColonView = MakeBeforeColonView(vm);
-        var lineUppercaseView = MakeUppercaseLineView(vm);
-        var lineContainsView = MakeLineContainsView(vm);
-        var musicSymbolsView = MakeMusicSymbolsContainsView(vm);
-        var interjectionsView = MakeInterjectionsView(vm);
-
         var panel = new StackPanel
         {
             Orientation = Orientation.Vertical,
+            Width = 340,
             Children =
             {
-                removeBetweenView,
-                removeBeforeColonView,
-                lineUppercaseView,
-                lineContainsView,
-                musicSymbolsView,
-                interjectionsView,
+                MakeRemoveBetweenView(vm),
+                MakeOtherView(vm),
+                MakeInterjectionsView(vm),
             }
         };
 
-        return panel;
+        // Many options: they scroll on short screens, so the buttons stay reachable.
+        return new ScrollViewer
+        {
+            Content = panel,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+        };
     }
 
     private static Border MakeRemoveBetweenView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var labelTitle = UiUtil.MakeLabel(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveTextBetween);
+        var l = Se.Language.Tools.RemoveTextForHearingImpaired;
 
-        var comboBoxBrackets = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.Brackets, vm, nameof(vm.IsRemoveBracketsOn));
-        var comboBoxCurlyBrackets = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.CurlyBrackets, vm, nameof(vm.IsRemoveCurlyBracketsOn));
-        var comboBoxParentheses = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.Parentheses, vm, nameof(vm.IsRemoveParenthesesOn));
-
-        var checkBoxCustom = UiUtil.MakeCheckBox(string.Empty, vm, nameof(vm.IsRemoveCustomOn));
-        var textBoxCustomStart = UiUtil.MakeEditableComboBox(80, SymbolPresets, vm, nameof(vm.CustomStart));
-        var labelAnd = UiUtil.MakeLabel(Se.Language.Tools.RemoveTextForHearingImpaired.And);
-        var textBoxCustomEnd = UiUtil.MakeEditableComboBox(80, SymbolPresets, vm, nameof(vm.CustomEnd));
+        var toggleCustom = new ToggleSwitch
+        {
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleSwitch.IsCheckedProperty] = new Binding(nameof(vm.IsRemoveCustomOn)) { Mode = BindingMode.TwoWay },
+        };
+        AutomationProperties.SetName(toggleCustom, Se.Language.Edit.ModifySelection.HearingImpairedCustom);
+        var textBoxCustomStart = UiUtil.MakeEditableComboBox(80, SymbolPresets, vm, nameof(vm.CustomStart))
+            .WithAccessibleName(l.RemoveTextBetween);
+        var labelAnd = EditorChrome.MakeDimLabel(l.And, new Thickness(0));
+        var textBoxCustomEnd = UiUtil.MakeEditableComboBox(80, SymbolPresets, vm, nameof(vm.CustomEnd))
+            .WithAccessibleName(l.And);
         var panelCustom = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            Spacing = 8,
             Children =
             {
-                checkBoxCustom,
+                toggleCustom,
                 textBoxCustomStart,
                 labelAnd,
                 textBoxCustomEnd,
             }
         };
-        var checkBoxOnlySeparateLine = UiUtil
-            .MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.OnlySeparateLines, vm, nameof(vm.IsOnlySeparateLine))
-            .WithMarginTop(5);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(labelTitle, 0, 0);
-        grid.Add(comboBoxBrackets, 1, 0);
-        grid.Add(comboBoxCurlyBrackets, 2, 0);
-        grid.Add(comboBoxParentheses, 3, 0);
-        grid.Add(panelCustom, 4, 0);
-        grid.Add(checkBoxOnlySeparateLine, 5, 0);
-
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5);
-    }
-
-    private static Border MakeBeforeColonView(RemoveTextForHearingImpairedViewModel vm)
-    {
-        var comboBoxBrackets = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveTextBeforeColon, vm, nameof(vm.IsRemoveTextBeforeColonOn));
-        var comboBoxUppercase = UiUtil
-            .MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.OnlyIfTextIsUppercase, vm, nameof(vm.IsRemoveTextBeforeColonUppercaseOn))
-            .WithMarginLeft(10);
-        var comboBoxSeparateLine = UiUtil
-            .MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.OnlyOnSeparateLine, vm, nameof(vm.IsRemoveTextBeforeColonSeparateLineOn))
-            .WithMarginLeft(10);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(comboBoxBrackets, 0, 0);
-        grid.Add(comboBoxUppercase, 1, 0);
-        grid.Add(comboBoxSeparateLine, 2, 0);
-
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5);
-    }
-
-    private static Border MakeUppercaseLineView(RemoveTextForHearingImpairedViewModel vm)
-    {
-        var comboBoxLineUppercase = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineIsUppercase, vm, nameof(vm.IsRemoveTextUppercaseLineOn));
-        var textBoxWhitelist = UiUtil.MakeTextBox(160, vm, nameof(vm.UppercaseWhitelist)).WithMarginLeft(5);
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(textBoxWhitelist, Se.Language.Tools.RemoveTextForHearingImpaired.KeepUppercaseWords);
-        }
         var panel = new StackPanel
         {
-            Orientation = Orientation.Horizontal,
+            Spacing = 6,
             Children =
             {
-                comboBoxLineUppercase,
-                textBoxWhitelist,
+                EditorChrome.MakeToggleRow(nameof(vm.IsRemoveBracketsOn), l.Brackets),
+                EditorChrome.MakeToggleRow(nameof(vm.IsRemoveCurlyBracketsOn), l.CurlyBrackets),
+                EditorChrome.MakeToggleRow(nameof(vm.IsRemoveParenthesesOn), l.Parentheses),
+                panelCustom,
+                EditorChrome.MakeToggleRow(nameof(vm.IsOnlySeparateLine), l.OnlySeparateLines).WithMarginTop(4),
             }
         };
 
-        return UiUtil.MakeBorderForControl(panel).WithMarginBottom(5);
+        return EditorChrome.MakeEditorSection(l.RemoveTextBetween, panel, first: true);
     }
 
-    private static Border MakeLineContainsView(RemoveTextForHearingImpairedViewModel vm)
+    private static Border MakeOtherView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var comboBoxLineContains = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineContains, vm, nameof(vm.IsRemoveTextContainsOn));
-        var textBoxContains = UiUtil.MakeEditableComboBox(150, ContainsPresets, vm, nameof(vm.TextContains)).WithMarginLeft(5);
-        var panelContains = new StackPanel
+        var l = Se.Language.Tools.RemoveTextForHearingImpaired;
+
+        var textBoxWhitelist = UiUtil.MakeTextBox(150, vm, nameof(vm.UppercaseWhitelist))
+            .WithAccessibleName(l.KeepUppercaseWords);
+        textBoxWhitelist.Classes.Add("text");
+        if (Se.Settings.Appearance.ShowHints)
         {
-            Orientation = Orientation.Horizontal,
+            ToolTip.SetTip(textBoxWhitelist, l.KeepUppercaseWords);
+        }
+
+        var textBoxContains = UiUtil.MakeEditableComboBox(150, ContainsPresets, vm, nameof(vm.TextContains))
+            .WithAccessibleName(l.IfLineContains);
+
+        var panel = new StackPanel
+        {
+            Spacing = 6,
             Children =
             {
-                comboBoxLineContains,
-                textBoxContains,
+                EditorChrome.MakeToggleRow(nameof(vm.IsRemoveTextBeforeColonOn), l.RemoveTextBeforeColon),
+                EditorChrome.MakeToggleRow(nameof(vm.IsRemoveTextBeforeColonUppercaseOn), l.OnlyIfTextIsUppercase).WithMarginLeft(20),
+                EditorChrome.MakeToggleRow(nameof(vm.IsRemoveTextBeforeColonSeparateLineOn), l.OnlyOnSeparateLine).WithMarginLeft(20),
+                MakeToggleWithField(nameof(vm.IsRemoveTextUppercaseLineOn), l.IfLineIsUppercase, textBoxWhitelist).WithMarginTop(4),
+                MakeToggleWithField(nameof(vm.IsRemoveTextContainsOn), l.IfLineContains, textBoxContains),
+                EditorChrome.MakeToggleRow(nameof(vm.IsRemoveOnlyMusicSymbolsOn), l.IfLineOnlyContainsMusicSymbols),
             }
         };
 
-        return UiUtil.MakeBorderForControl(panelContains).WithMarginBottom(5);
-    }
-
-    private static Border MakeMusicSymbolsContainsView(RemoveTextForHearingImpairedViewModel vm)
-    {
-        var comboBoxMusicSymbols =
-            UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineOnlyContainsMusicSymbols, vm, nameof(vm.IsRemoveOnlyMusicSymbolsOn));
-        return UiUtil.MakeBorderForControl(comboBoxMusicSymbols).WithMarginBottom(5);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Other, panel);
     }
 
     private static Border MakeInterjectionsView(RemoveTextForHearingImpairedViewModel vm)
     {
-        var comboBoxInterjections = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveInterjections, vm, nameof(vm.IsRemoveInterjectionsOn));
-        var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, vm.EditInterjectionsCommand);
+        var l = Se.Language.Tools.RemoveTextForHearingImpaired;
 
-        var panelInterjections = new StackPanel
+        var buttonEdit = EditorChrome.MakeTextToolButton("fa-solid fa-pen-to-square", Se.Language.General.Edit, vm.EditInterjectionsCommand);
+
+        var comboBoxLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
+            .WithAccessibleName(Se.Language.General.Language);
+        comboBoxLanguage.HorizontalAlignment = HorizontalAlignment.Stretch;
+
+        var panel = new StackPanel
         {
-            Orientation = Orientation.Horizontal,
+            Spacing = 6,
             Children =
             {
-                comboBoxInterjections,
-                buttonEdit,
+                EditorChrome.MakeToggleRow(nameof(vm.IsRemoveInterjectionsOn), l.RemoveInterjections),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Language, comboBoxLanguage, 80).WithMarginTop(4),
+                EditorChrome.MakeToggleRow(nameof(vm.IsInterjectionsSeparateLineOn), l.OnlySeparateLines).WithMarginTop(4),
             }
         };
 
-        var labelLanguage = UiUtil.MakeLabel(Se.Language.General.Language);
-        var comboBoxLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage));
-        var panelLanguege = new StackPanel
+        return EditorChrome.MakeEditorSection(Se.Language.General.Interjections, panel, buttonEdit);
+    }
+
+    /// <summary>
+    /// A switch with its label, then a field for its text (whitelist, "contains" symbols).
+    /// </summary>
+    private static StackPanel MakeToggleWithField(string property, string text, Control field)
+    {
+        field.Margin = new Thickness(48, 0, 0, 0); // under the label, past the switch
+        field.HorizontalAlignment = HorizontalAlignment.Stretch;
+        field.Width = double.NaN;
+        return new StackPanel
         {
-            Orientation = Orientation.Horizontal,
-            Children =
-            {
-                labelLanguage,
-                comboBoxLanguage,
-            }
+            Spacing = 4,
+            Children = { EditorChrome.MakeToggleRow(property, text), field },
         };
-        
-        var checkBoxOnlySeparateLine = UiUtil
-            .MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.OnlySeparateLines, vm, nameof(vm.IsInterjectionsSeparateLineOn))
-            .WithMarginTop(5);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelInterjections, 0, 0);
-        grid.Add(panelLanguege, 1, 0);
-        grid.Add(checkBoxOnlySeparateLine, 2, 0);
-
-        return UiUtil.MakeBorderForControl(grid);
     }
 
     private Grid MakeFixesView(RemoveTextForHearingImpairedViewModel vm)
     {
         // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
         // fixes in subtitle order.
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = _vm;
@@ -318,18 +243,7 @@ public class RemoveTextForHearingImpairedWindow : Window
                     Header = Se.Language.General.Apply,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                    CellTemplate = new FuncDataTemplate<RemoveItem>((item, _) =>
-                        new Border
-                        {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                Focusable = false,
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(RemoveItem.Apply)),
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            }
-                        }),
+                    CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<RemoveItem>(nameof(RemoveItem.Apply)),
                     // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
                     Width = new GridLength(70)
                 },
@@ -379,31 +293,23 @@ public class RemoveTextForHearingImpairedWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        var labelLinesFound = UiUtil.MakeLabel().WithBindText(vm, new Binding($"{nameof(vm.Fixes)}.{nameof(vm.Fixes.Count)}")
-        {
-            Mode = BindingMode.OneWay,
-            StringFormat = Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX,
-        });
-
+        // The list fills the rest of the window, so the section header and list are laid out
+        // in a grid rather than in a section's stack panel.
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = GridLength.Auto },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 5,
-            Width = double.NaN,
+            RowSpacing = 10,
+            Margin = new Thickness(14, 12, 14, 14),
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
         };
 
-        grid.Add(UiUtil.MakeBorderForControl(dataGrid), 0, 0);
-        grid.Add(labelLinesFound, 1, 0);
+        grid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0, 0);
+        grid.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
 
         return grid;
     }

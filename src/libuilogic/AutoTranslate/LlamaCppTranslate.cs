@@ -2,13 +2,8 @@
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Http;
 
 namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
@@ -130,8 +125,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 outputText = outputText.Trim('"').Trim();
             }
 
-            outputText = outputText.Replace("<br />", Environment.NewLine);
-            outputText = outputText.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            outputText = ChatGptTranslate.FixNewLines(outputText);
             outputText = ChatGptTranslate.RemovePreamble(text, outputText);
             outputText = ChatGptTranslate.DecodeUnicodeEscapes(outputText);
             return outputText.Trim();

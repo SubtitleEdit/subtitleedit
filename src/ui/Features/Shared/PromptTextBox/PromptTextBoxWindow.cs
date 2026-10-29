@@ -7,6 +7,10 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 
+/// <summary>
+/// A text prompt in the editor look (see <see cref="EditorChrome"/>). Bare Space in the text
+/// box types a space (#15028) - no window key handling may take it.
+/// </summary>
 public class PromptTextBoxWindow : Window
 {
     public PromptTextBoxWindow(PromptTextBoxViewModel vm)
@@ -15,12 +19,12 @@ public class PromptTextBoxWindow : Window
         Bind(TitleProperty, new Binding(nameof(vm.Title)));
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
         var textBox = new TextBox
         {
-            Margin = new Thickness(0, 0, 10, 0),
             [!TextBox.WidthProperty] = new Binding(nameof(vm.TextBoxWidth)) { Mode = BindingMode.TwoWay },
             [!TextBox.HeightProperty] = new Binding(nameof(vm.TextBoxHeight)) { Mode = BindingMode.TwoWay },
             [Avalonia.Automation.AutomationProperties.NameProperty] = Nikse.SubtitleEdit.Logic.Config.Se.Language.General.Text,
@@ -30,35 +34,22 @@ public class PromptTextBoxWindow : Window
             TextWrapping = TextWrapping.Wrap,
         };
 
+        textBox.Classes.Add("text");
+        textBox.VerticalContentAlignment = VerticalAlignment.Top;
+
         var buttonExtra = UiUtil.MakeButton(string.Empty, vm.ExtraButtonCommand)
             .WithBindIsVisible(nameof(vm.IsExtraButtonVisible));
         buttonExtra.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.ExtraButtonText)));
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonExtra, buttonOk, buttonCancel);
 
-        var grid = new Grid
+        var panel = new Border
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Child = textBox,
+            Padding = new Thickness(16),
         };
 
-        grid.Add(textBox, 0);
-        grid.Add(buttonPanel, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(panel, EditorChrome.MakeButtonBar(buttonExtra, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, textBox); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);

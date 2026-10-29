@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.UiLogic.Http;

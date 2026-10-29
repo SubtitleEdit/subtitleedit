@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
-using System.Linq;
 
 namespace UITests.Features.Edit;
 

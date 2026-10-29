@@ -1,7 +1,4 @@
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace LibSETests.ContainerFormats;
 

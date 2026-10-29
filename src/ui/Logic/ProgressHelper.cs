@@ -54,42 +54,5 @@ namespace Nikse.SubtitleEdit.Logic
 
             return string.Format(TimeRemainingMinutesAndSeconds, timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
         }
-
-        public static string ToTimeResult(double totalMilliseconds)
-        {
-            if (totalMilliseconds < 1000)
-            {
-                return string.Format("{0:##0} milliseconds", totalMilliseconds);
-            }
-
-            var totalSeconds = (int)Math.Round(totalMilliseconds / 1000.0, MidpointRounding.AwayFromZero);
-            if (totalSeconds < 60)
-            {
-                return string.Format("{0} seconds", totalSeconds);
-            }
-
-            if (totalSeconds / 60 > 5)
-            {
-                return string.Format("{0} minutes", (int)Math.Round(totalSeconds / 60.0, MidpointRounding.AwayFromZero));
-            }
-
-            var timeCode = new TimeCode(totalMilliseconds);
-            if (timeCode.Seconds == 0 && timeCode.Minutes > 0)
-            {
-                if (timeCode.Minutes == 1)
-                {
-                    return "One minute";
-                }
-
-                return string.Format("{0} minutes", timeCode.Minutes);
-            }
-
-            if (timeCode.Hours == 0 && timeCode.Minutes == 1)
-            {
-                return string.Format("One minutes and {0} seconds", timeCode.Seconds);
-            }
-
-            return string.Format("{0} minutes and {1} seconds", timeCode.Minutes + timeCode.Hours * 60, timeCode.Seconds);
-        }
     }
 }

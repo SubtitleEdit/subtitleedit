@@ -22,6 +22,7 @@ public static class InitNativeMacMenuBinaryEdit
         Add(exportMenu, Se.Language.File.Export.TitleExportImscImage, vm.ExportImscImageCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaInteropPng, vm.ExportDCinemaInteropPngCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaSmpte2014Png, vm.ExportDCinemaSmpte2014PngCommand);
+        Add(exportMenu, Se.Language.File.Export.TitleExportDCinemaSmpte2014PngMxf, vm.ExportDCinemaSmpte2014PngMxfCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDostPng, vm.ExportDostPngCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportDvdSup, vm.ExportDvdSupCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportFcpImage, vm.ExportFcpPngCommand);
@@ -31,7 +32,7 @@ public static class InitNativeMacMenuBinaryEdit
         Add(exportMenu, Se.Language.File.Export.TitleExportWebVttThumbnails, vm.ExportWebVttThumbnailCommand);
         fileMenu.Items.Add(new NativeMenuItem(Clean(l.Export)) { Menu = exportMenu });
         fileMenu.Items.Add(new NativeMenuItemSeparator());
-        Add(fileMenu, Se.Language.Tools.ImageBasedEdit.ImportTimeCodes, vm.ImportTimeCodesCommand);
+        Add(fileMenu, Se.Language.General.ImportTimeCodesDotDotDot, vm.ImportTimeCodesCommand);
         fileMenu.Items.Add(new NativeMenuItemSeparator());
         Add(fileMenu, l.Exit, vm.CancelCommand);
         root.Items.Add(new NativeMenuItem(Clean(l.File)) { Menu = fileMenu });

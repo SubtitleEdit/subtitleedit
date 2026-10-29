@@ -1,8 +1,4 @@
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace UITests.Logic;
@@ -136,6 +132,7 @@ public class MpvAudioOptionTests
         "sub-use-margins",
         "vo",
         "wid",
+        "ytdl-raw-options",
     };
 
     private static string PlayerSourcePath => Path.Combine(

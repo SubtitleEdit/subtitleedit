@@ -1,8 +1,12 @@
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
@@ -15,9 +19,9 @@ namespace Nikse.SubtitleEdit.Features.Sync.PointSync.SetSyncPoint;
 
 public class SetSyncPointWindow : Window
 {
-    /// <summary>Room for the line picker, the time code and the two button rows - nothing else.</summary>
-    private const double VideolessHeight = 340;
-    private const double VideolessMinHeight = 340;
+    /// <summary>Room for the toolbar, the line picker, the time code row and the button bar - nothing else.</summary>
+    private const double VideolessHeight = 220;
+    private const double VideolessMinHeight = 220;
 
     public SetSyncPointWindow(SetSyncPointViewModel vm) : this(vm, null)
     {
@@ -29,6 +33,8 @@ public class SetSyncPointWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Sync.SetSyncPoint;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
+        AddStyles();
         vm.Window = this;
         DataContext = vm;
 
@@ -52,32 +58,41 @@ public class SetSyncPointWindow : Window
             MaxHeight = VideolessHeight;
         }
 
-        var labelVideoInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoInfo));
+        var labelVideoInfo = new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        }.WithBindText(vm, nameof(vm.VideoInfo));
 
         // Entering point sync without a video used to be a dead end - the sync point can be typed,
         // but there was no way to load a video from here (issue #13341).
-        var buttonOpenVideo = UiUtil.MakeButton(Se.Language.General.OpenVideoFile, vm.OpenVideoFileCommand);
+        var buttonOpenVideo = EditorChrome.MakeActionButton(IconNames.MovieOpenOutline, Se.Language.General.OpenVideoFile, vm.OpenVideoFileCommand);
 
-        var panelVideo = new StackPanel
+        var panelVideo = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children =
+            ColumnDefinitions =
             {
-                buttonOpenVideo,
-                labelVideoInfo,
-            }
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+            VerticalAlignment = VerticalAlignment.Center,
         };
+        panelVideo.Add(buttonOpenVideo, 0, 0);
+        panelVideo.Add(EditorChrome.MakeToolbarSeparator(), 0, 1);
+        panelVideo.Add(labelVideoInfo, 0, 2);
 
+        var colors = WaveformColors.Current;
         vm.AudioVisualizer = new AudioVisualizer
         {
             Width = double.NaN,
             IsReadOnly = true,
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
-            WaveformColor = Se.Settings.Waveform.WaveformColor.FromHexToColor(),
-            WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor(),
-            WaveformGridColor = Se.Settings.Waveform.WaveformGridColor.FromHexToColor(),
+            WaveformColor = colors.Waveform,
+            WaveformSelectedColor = colors.Selected,
+            WaveformGridColor = colors.Grid,
             InvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel,
         };
         vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerLeftPositionChanged;
@@ -106,39 +121,46 @@ public class SetSyncPointWindow : Window
         // the dialog has no video at all (issue #13341). SE4 labelled it the same way.
         AutomationProperties.SetName(vm.TimeCodeUpDownSyncPoint, Se.Language.Sync.SyncPointTimeCode);
 
-        var panelTimeCode = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            Children =
-            {
-                UiUtil.MakeLabel(Se.Language.Sync.SyncPointTimeCode),
-                vm.TimeCodeUpDownSyncPoint,
-            }
-        };
-
         // Playback is the one thing with no meaning when there is no video - the nudge buttons and
         // "Go to sub pos" still move the sync point time code, so they stay.
-        var buttonPlayTwoSecondsAndBack = UiUtil
-            .MakeButton(Se.Language.Sync.PlayTwoSecondsAndBack, vm.PlayTwoSecondsAndBackLeftCommand)
+        var buttonPlayTwoSecondsAndBack = EditorChrome
+            .MakeActionButton("fa-solid fa-play", Se.Language.Sync.PlayTwoSecondsAndBack, vm.PlayTwoSecondsAndBackLeftCommand)
             .WithBindIsVisible(nameof(vm.IsVideoVisible));
 
         var panelLeftButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                UiUtil.MakeButton(vm.LeftOneSecondBackCommand, IconNames.ArrowLeftThick, Se.Language.General.OneSecondBack),
+                EditorChrome.CreateToolButton(IconNames.ArrowLeftThick, Se.Language.General.OneSecondBack, vm.LeftOneSecondBackCommand),
                 buttonPlayTwoSecondsAndBack,
-                UiUtil.MakeButton(vm.LeftOneSecondForwardCommand, IconNames.ArrowRightThick, Se.Language.General.OneSecondForward),
-                UiUtil.MakeButton(Se.Language.Sync.GoToSubPos, vm.GoToLeftSubtitleCommand),
-                UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextLeftCommand),
+                EditorChrome.CreateToolButton(IconNames.ArrowRightThick, Se.Language.General.OneSecondForward, vm.LeftOneSecondForwardCommand),
+                EditorChrome.MakeToolbarSeparator(),
+                EditorChrome.MakeActionButton("fa-solid fa-location-crosshairs", Se.Language.Sync.GoToSubPos, vm.GoToLeftSubtitleCommand),
+                EditorChrome.MakeActionButton(IconNames.Find, Se.Language.Sync.FindText, vm.FindTextLeftCommand),
             }
         };
 
+        var panelTimeCode = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+            ColumnSpacing = 10,
+        };
+        panelTimeCode.Add(EditorChrome.MakeDimLabel(Se.Language.Sync.SyncPointTimeCode, new Thickness(0)), 0, 0);
+        panelTimeCode.Add(vm.TimeCodeUpDownSyncPoint, 0, 1);
+        panelTimeCode.Add(panelLeftButtons, 0, 2);
+
         var buttonOk = UiUtil.MakeButton(Se.Language.Sync.SetSyncPoint, vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonPanel = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         // The waveform used to be pinned at 80 px under the player, too little to pick a precise
         // sync point from; the drag handle between them mirrors the main window (issue #14414).
@@ -157,52 +179,55 @@ public class SetSyncPointWindow : Window
 
         vm.VideoPlayerControl.WithBindIsVisible(nameof(vm.IsVideoVisible));
 
-        var gridLeft = new Grid
+        // The line picker and the sync point time code on the panel color under the player.
+        var panelControls = new StackPanel
         {
-            RowDefinitions =
+            Spacing = 10,
+            Children =
             {
-                rowVideoPlayer,                                                       // video player over waveform
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // combo box
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // sync point time code
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
+                comboBoxLeft,
+                panelTimeCode,
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        var sectionControls = new Border
+        {
+            Child = panelControls,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 12, 14, 14),
         };
 
-        gridLeft.Add(split, 0);
-        gridLeft.Add(comboBoxLeft, 1);
-        gridLeft.Add(panelTimeCode, 2);
-        gridLeft.Add(panelLeftButtons, 3);
+        // Without a player or waveform the controls take the freed height, so the button bar
+        // stays at the bottom of the window.
+        var rowControls = new RowDefinition
+        {
+            Height = vm.IsVideoVisible || vm.IsAudioVisualizerVisible ? GridLength.Auto : new GridLength(1, GridUnitType.Star),
+        };
+
+        // The player in a plain border - no corner radius or clipping, the macOS native video
+        // surface disappears inside either.
+        var videoArea = new Border
+        {
+            Child = EditorChrome.MakeVideoFrame(split),
+            Padding = new Thickness(12),
+        };
 
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // video player etc. for left/right
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // sync, ok, cancel buttons
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // open video + video info
+                rowVideoPlayer,                                                       // video player over waveform
+                rowControls,                                                          // combo box, sync point time code, buttons
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // set sync point, cancel
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(panelVideo, 0, 0, 1, 2);
-        grid.Add(UiUtil.MakeBorderForControl(gridLeft), 1);
-        grid.Add(buttonPanel, 2, 0, 1, 2);
+        grid.Add(EditorChrome.MakeToolbar(panelVideo), 0);
+        grid.Add(videoArea, 1);
+        grid.Add(sectionControls, 2);
+        grid.Add(buttonPanel, 3);
 
         Content = grid;
 
@@ -219,6 +244,7 @@ public class SetSyncPointWindow : Window
             split.IsVideoVisible = vm.IsVideoVisible;
             split.IsWaveformVisible = vm.IsAudioVisualizerVisible;
             rowVideoPlayer.Height = vm.IsVideoVisible || vm.IsAudioVisualizerVisible ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
+            rowControls.Height = vm.IsVideoVisible || vm.IsAudioVisualizerVisible ? GridLength.Auto : new GridLength(1, GridUnitType.Star);
 
             if (vm.IsVideoVisible)
             {
@@ -253,5 +279,28 @@ public class SetSyncPointWindow : Window
             Se.Settings.Synchronization.SetSyncPointWaveformHeight = split.WaveformHeight;
             vm.OnClosing();
         };
+    }
+
+    /// <summary>
+    /// A compact time code field, matching the other editor-look dialogs.
+    /// </summary>
+    private void AddStyles()
+    {
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+            },
+        });
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<TextBox>())
+        {
+            Setters = { new Setter(TemplatedControl.MinHeightProperty, 26.0) },
+        });
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<ButtonSpinner>())
+        {
+            Setters = { new Setter(TemplatedControl.MinHeightProperty, 26.0) },
+        });
     }
 }

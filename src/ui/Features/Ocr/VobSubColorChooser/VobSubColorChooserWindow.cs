@@ -5,12 +5,17 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.VobSubColorChooser;
 
+/// <summary>
+/// The four VobSub colors, in the editor look (see <see cref="EditorChrome"/>): the color swatches
+/// and the preview in sections, Reset/Invert left and Cancel/OK right in the button bar.
+/// </summary>
 public class VobSubColorChooserWindow : Window
 {
     private const double SwatchSize = 56;
@@ -22,32 +27,32 @@ public class VobSubColorChooserWindow : Window
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var headerText = new TextBlock
         {
             Text = Se.Language.Ocr.VobSubColorsHeader,
-            FontSize = UiUtil.ScaledFontSize(14),
+            FontSize = EditorChrome.ScaledFont(14),
             FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(0, 0, 0, 4),
+            Foreground = EditorChrome.StrongTextBrush,
         };
 
         var descriptionText = new TextBlock
         {
             Text = Se.Language.Ocr.VobSubColorsDescription,
             TextWrapping = TextWrapping.Wrap,
-            MaxWidth = 560,
-            Opacity = 0.8,
-            Margin = new Thickness(0, 0, 0, 12),
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
         };
 
         var swatchesPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 14,
+            Spacing = 12,
             HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 12),
+            Margin = new Thickness(0, 4, 0, 0),
             Children =
             {
                 MakeSwatchTile(Se.Language.General.Background,
@@ -61,58 +66,37 @@ public class VobSubColorChooserWindow : Window
             }
         };
 
-        var previewPanel = MakePreviewPanel(vm);
+        var colorsPanel = new StackPanel
+        {
+            Spacing = 6,
+            Children = { headerText, descriptionText, swatchesPanel },
+        };
 
-        var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetToDefaultsCommand);
-        var buttonInvert = UiUtil.MakeButton(Se.Language.Ocr.VobSubColorsInvert, vm.InvertBackgroundForegroundCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var sections = new StackPanel
+        {
+            Width = 600,
+            Children =
+            {
+                new Border { Child = colorsPanel, Padding = new Thickness(14, 14, 14, 14) }, // the header text is the title
+                EditorChrome.MakeEditorSection(Se.Language.General.Preview, MakePreviewPanel(vm)),
+            },
+        };
+
+        var buttonReset = EditorChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetToDefaultsCommand);
+        var buttonInvert = EditorChrome.MakeTextToolButton(IconNames.SwapVertical, Se.Language.Ocr.VobSubColorsInvert, vm.InvertBackgroundForegroundCommand);
+        var buttonOk = EditorChrome.AsFlushPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
+        var buttonCancel = EditorChrome.WithoutMargin(UiUtil.MakeButtonCancel(vm.CancelCommand));
 
         var leftButtonsPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 6,
+            Spacing = 2,
             HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
             Children = { buttonReset, buttonInvert }
         };
 
-        var rightButtonsPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 6,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Children = { buttonOk, buttonCancel }
-        };
-
-        var buttonRow = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = new Thickness(0, 12, 0, 0),
-        };
-        buttonRow.Add(leftButtonsPanel, 0, 0);
-        buttonRow.Add(rightButtonsPanel, 0, 1);
-
-        var rootPanel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Margin = UiUtil.MakeWindowMargin(),
-            Spacing = 0,
-            Width = 600,
-            Children =
-            {
-                headerText,
-                descriptionText,
-                swatchesPanel,
-                previewPanel,
-                buttonRow,
-            }
-        };
-
-        Content = rootPanel;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(leftButtonsPanel, buttonCancel, buttonOk));
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, buttonCancel);
@@ -127,7 +111,7 @@ public class VobSubColorChooserWindow : Window
             Height = SwatchSize,
             CornerRadius = new CornerRadius(6),
             BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(180, 160, 160, 160)),
+            BorderBrush = EditorChrome.FieldBorderBrush,
             Cursor = new Cursor(StandardCursorType.Hand),
             HorizontalAlignment = HorizontalAlignment.Center,
             // Show a checker pattern through transparency by layering on a neutral background
@@ -146,7 +130,11 @@ public class VobSubColorChooserWindow : Window
         });
         swatch.Child = swatchFill;
 
-        ToolTip.SetTip(swatch, Se.Language.General.ChooseColorDotDotDot);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(swatch, Se.Language.General.ChooseColorDotDotDot);
+        }
+
         swatch.PointerPressed += (s, e) =>
         {
             if (e.GetCurrentPoint(swatch).Properties.IsLeftButtonPressed && command.CanExecute(null))
@@ -158,6 +146,7 @@ public class VobSubColorChooserWindow : Window
         var labelBlock = new TextBlock
         {
             Text = label,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = FontWeight.SemiBold,
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(0, 6, 0, 0),
@@ -166,8 +155,8 @@ public class VobSubColorChooserWindow : Window
         var hexBlock = new TextBlock
         {
             HorizontalAlignment = HorizontalAlignment.Center,
-            Opacity = 0.7,
-            FontSize = UiUtil.ScaledFontSize(11),
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = EditorChrome.ScaledFont(11),
         };
         hexBlock.Bind(TextBlock.TextProperty, new Binding(hexProperty));
 
@@ -180,10 +169,12 @@ public class VobSubColorChooserWindow : Window
 
         return new Border
         {
-            Padding = new Thickness(8),
+            Padding = new Thickness(10, 10, 10, 8),
+            MinWidth = 120,
             CornerRadius = new CornerRadius(8),
             BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 128, 128, 128)),
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            Background = EditorChrome.FieldBrush,
             Child = tilePanel,
         };
     }
@@ -199,31 +190,9 @@ public class VobSubColorChooserWindow : Window
         };
         previewImage.Bind(Image.SourceProperty, new Binding(nameof(vm.PreviewImage)));
 
-        var previewHost = new Border
-        {
-            MinHeight = 140,
-            Padding = new Thickness(8),
-            CornerRadius = new CornerRadius(8),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 128, 128, 128)),
-            Background = MakeCheckerboardBrush(),
-            Child = previewImage,
-        };
-
-        var label = new TextBlock
-        {
-            Text = Se.Language.General.Preview,
-            FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(0, 0, 0, 6),
-        };
-
-        var panel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Children = { label, previewHost },
-        };
-
-        return new Border { Child = panel };
+        var previewHost = BinaryOcrChrome.MakeImageFrame(previewImage, MakeCheckerboardBrush(), 8);
+        previewHost.MinHeight = 140;
+        return previewHost;
     }
 
     private static IBrush MakeCheckerboardBrush()

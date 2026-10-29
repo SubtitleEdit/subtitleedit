@@ -39,7 +39,8 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Prompt before delete**, **Lock time codes**, **Remember window position and size**
 - **Show full file path in title bar** — Show the subtitle file's full path in the main window title instead of only its name. Off by default
 - **Show recent files (for reopen)** — Turn off to stop recording recent files; this also hides the Reopen menus and clears the lists
-- **Time code mode** — How times are shown and typed: *Time (hh:mm:ss,zzz)* with milliseconds, *Frames (hh:mm:ss:ff)*, or *Frame numbers* - the absolute frame number at the current frame rate (e.g. 15230), also for durations and the video position, so a sync offset is just "video frame - start frame". Both frame modes snap edited times to frames. The mode is also shown in the status bar - click it (or use the "Toggle time code mode" shortcut) to cycle through the three.
+- **Time code mode** — How times are shown and typed: *Time (hh:mm:ss,zzz)* with milliseconds, *Frames (hh:mm:ss:ff)*, or *Frame numbers* - the absolute frame number at the current frame rate (e.g. 15230), also for durations and the video position, so a sync offset is just "video frame - start frame". Both frame modes snap edited times to frames. The mode is also shown in the status bar - click it (or use the "Cycle time code mode" shortcut) to cycle through the three.
+- **Store times on video frames (not frames within each second)** — Only for *Frames (hh:mm:ss:ff)*, off by default. Stores each time at the exact time of a real video frame, so the milliseconds in a saved `.srt` match the video and a Blu-ray sup export. See [Frames and video frames](#frames-and-video-frames) below.
 - **Limit number of lines in subtitle text box**
 - **Open last recent file on start**
 - **Auto-convert encoding to UTF-8 on open**, **Force CR+LF on save (text subtitle files)** (also used by [Batch convert](batch-convert.md)), **Auto-trim white-space**
@@ -53,6 +54,27 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Auto-save** — Save the open file while editing
 - **Auto-backup** — Automatic backups every **Auto-backup interval (minutes)**, with a restore dialog, and **Auto-backup retention (days)** for how long they are kept
 - **Auto-backup settings** — Keeps dated copies of `Settings.json` (settings and shortcuts). **Settings backup interval (days)** sets how often: the check runs when Subtitle Edit starts, and `0` means every start. A backup is skipped when nothing but the recent files lists has changed since the newest backup. **Settings backups to keep** sets how many copies are kept (default 30). Restore them from File → Restore auto-backup → Settings
+
+### Frames and video frames
+
+At 25, 24, 30 or 50 fps a second holds a whole number of frames, so there is nothing to choose here. At **23.976, 29.97 and 59.94 fps** it does not, and the two ways of counting frames end up slightly different.
+
+- **The video** counts its frames from the start without stopping: frame 0, 1, 2, ... At 23.976 fps each frame is about 41.708 ms, and every frame has one exact time.
+- **hh:mm:ss:ff** shows whole seconds plus the frame within that second (0-23). Since a real second holds a little fewer than 24 frames, this count slowly slides away from the video's frames, up to one frame, and then lines up again.
+
+By default, a time typed or snapped in frame mode is stored on the hh:mm:ss:ff count: `00:01:58:22` is stored as 118 s + 22 frames = **00:01:58,918**. The video frame shown at that point starts at **00:01:58,910**. Turn on **Store times on video frames (not frames within each second)** and `00:01:58:22` is stored as **00:01:58,910**. The display does not change, only the stored milliseconds do.
+
+Turn it on when the milliseconds have to match the video exactly, for example:
+
+- You check an `.srt` in a player (MPC-HC, mpv, ...) and then export a **Blu-ray sup**. The sup export always puts times on video frames, so with this option the `.srt` and the `.sup` show each subtitle on the same frame.
+- Another tool reads the times as real video time.
+
+Good to know:
+
+- Only lines you add or re-time are stored this way. Existing lines keep their times; use **Tools → Snap all times to frames** to put them all on video frames.
+- Because times are whole milliseconds, two neighbouring video frames can now and then show the same hh:mm:ss:ff. Typing that time code picks the nearer one; step the frames with the up/down arrows of the time box to reach the other.
+- With **SMPTE timing** on (Video → More), frames are exactly 1/24 (1/30, 1/60) s each, so both counts are the same and this option makes no difference. SMPTE timing is a different idea: times follow the broadcast time code clock instead of real video time.
+- *Frame numbers* mode always uses video frames.
 
 ## Subtitle Formats
 

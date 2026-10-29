@@ -1,7 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Media;
-using System.Linq;
 
 namespace UITests.Logic.Media;
 

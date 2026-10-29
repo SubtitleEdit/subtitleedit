@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Layout;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -10,31 +9,22 @@ public static class ViewSnapTimeCodesToFrames
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var labelHeader = new Label
-        {
-            Content = Se.Language.Main.Menu.SnapAllTimesToFrames,
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.Bold,
-        };
+        var radioFrameRateFromVideo = FunctionViewChrome.Compact(UiUtil.MakeRadioButton(Se.Language.Tools.BeautifyTimeCodes.BatchFrameRateFromVideo, vm, nameof(vm.SnapTimeCodesToFramesUseVideoFrameRate), "SnapTimeCodesToFramesFrameRateSource"));
+        var radioFrameRateFixed = FunctionViewChrome.Compact(UiUtil.MakeRadioButton(Se.Language.Tools.BeautifyTimeCodes.BatchFrameRateFixed, vm, nameof(vm.SnapTimeCodesToFramesUseFixedFrameRate), "SnapTimeCodesToFramesFrameRateSource"));
 
-        var radioFrameRateFromVideo = UiUtil.MakeRadioButton(Se.Language.Tools.BeautifyTimeCodes.BatchFrameRateFromVideo, vm, nameof(vm.SnapTimeCodesToFramesUseVideoFrameRate), "SnapTimeCodesToFramesFrameRateSource");
-        var radioFrameRateFixed = UiUtil.MakeRadioButton(Se.Language.Tools.BeautifyTimeCodes.BatchFrameRateFixed, vm, nameof(vm.SnapTimeCodesToFramesUseFixedFrameRate), "SnapTimeCodesToFramesFrameRateSource");
-
-        var comboFrameRate = new ComboBox
+        var comboFrameRate = FunctionViewChrome.Compact(new ComboBox
         {
             ItemsSource = vm.SnapTimeCodesToFramesFrameRates,
             SelectedValue = vm.SelectedSnapTimeCodesToFramesFrameRate,
-            VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 90,
         }.WithFrameRateDisplay()
          .WithBindSelected(nameof(vm.SelectedSnapTimeCodesToFramesFrameRate))
-         .WithBindEnabled(nameof(vm.SnapTimeCodesToFramesUseFixedFrameRate));
+         .WithBindEnabled(nameof(vm.SnapTimeCodesToFramesUseFixedFrameRate)), Se.Language.Tools.BeautifyTimeCodes.BatchFrameRateFixed, 110);
 
         var panelFrameRateFixed = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 5,
+            Spacing = 8,
             Children =
             {
                 radioFrameRateFixed,
@@ -42,28 +32,9 @@ public static class ViewSnapTimeCodesToFrames
             }
         };
 
-        var labelInfo = new TextBlock
-        {
-            Text = Se.Language.Tools.BatchConvert.SnapTimeCodesToFramesInfo,
-            Opacity = 0.7,
-            FontStyle = FontStyle.Italic,
-            TextWrapping = TextWrapping.Wrap,
-            MaxWidth = 500,
-            HorizontalAlignment = HorizontalAlignment.Left,
-        };
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Margin = new Avalonia.Thickness(10),
-            Spacing = 10,
-            Children =
-            {
-                labelHeader,
-                radioFrameRateFromVideo,
-                panelFrameRateFixed,
-                labelInfo,
-            }
-        };
+        return FunctionViewChrome.MakePanel(vm, Se.Language.Main.Menu.SnapAllTimesToFrames,
+            radioFrameRateFromVideo,
+            panelFrameRateFixed,
+            EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.SnapTimeCodesToFramesInfo));
     }
 }

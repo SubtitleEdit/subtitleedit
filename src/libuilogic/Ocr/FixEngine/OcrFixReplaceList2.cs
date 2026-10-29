@@ -42,6 +42,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         private ReplaceEntry[]? _beginLineEntries;
 
         private const string ReplaceListFileNamePostFix = "_OCRFixReplaceList.xml";
+        private const string RegularExpressionsName = "RegularExpressions";
+        private const string RemovedRegularExpressionsName = "RemovedRegularExpressions";
+        private const string RegexElementName = "RegEx";
 
         // These are probed once per OCR'd word, so keep them off the per-call path:
         // the arrays used to be allocated inline and the Greek check re-concatenated the
@@ -201,19 +204,17 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 }
             }
 
-            foreach (var kp in LoadRegExList(userDoc, "RemovedRegularExpressions"))
-            {
-                if (_regExList.ContainsKey(kp.Key))
-                {
-                    _regExList.Remove(kp.Key);
-                }
-            }
+            // Removed after the user's own expressions are added, so a disabled user rule stays off too.
             foreach (var kp in LoadRegExList(userDoc, "RegularExpressions"))
             {
                 if (!_regExList.ContainsKey(kp.Key))
                 {
                     _regExList.Add(kp.Key, kp.Value);
                 }
+            }
+            foreach (var kp in LoadRegExList(userDoc, RemovedRegularExpressionsName))
+            {
+                _regExList.Remove(kp.Key);
             }
         }
 
@@ -603,7 +604,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                     }
 
                     // Inline options like "(?i)" change how the rest of the pattern matches.
-                    if (i + 2 < pattern.Length && pattern[i + 1] == '?' && "imnsx-".IndexOf(pattern[i + 2]) >= 0)
+                    if (i + 2 < pattern.Length && pattern[i + 1] == '?' && "imnsx-".Contains(pattern[i + 2]))
                     {
                         return null;
                     }
@@ -1573,7 +1574,242 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return true;
         }
 
-        private static readonly SearchValues<char> WordSeparatorChars = SearchValues.Create(@" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/");
+        /// <summary>
+        /// The shipped and the user's own regular expressions, in file order (shipped first). A rule
+        /// is disabled when its pattern is listed under "RemovedRegularExpressions" in the user file.
+        /// </summary>
+        public List<OcrFixRegexRule> GetRegexRules()
+        {
+            var builtIn = LoadRegExList(LoadXmlReplaceListDocument(), RegularExpressionsName);
+            var userDoc = LoadXmlReplaceListUserDocument();
+            var user = LoadRegExList(userDoc, RegularExpressionsName);
+            var removed = LoadRegExList(userDoc, RemovedRegularExpressionsName);
+
+            var rules = new List<OcrFixRegexRule>(builtIn.Count + user.Count);
+            foreach (var kp in builtIn)
+            {
+                rules.Add(new OcrFixRegexRule(kp.Key, kp.Value, false, !removed.ContainsKey(kp.Key)));
+            }
+
+            foreach (var kp in user)
+            {
+                if (!builtIn.ContainsKey(kp.Key))
+                {
+                    rules.Add(new OcrFixRegexRule(kp.Key, kp.Value, true, !removed.ContainsKey(kp.Key)));
+                }
+            }
+
+            return rules;
+        }
+
+        public bool SetRegexRuleEnabled(string find, string replaceWith, bool enabled)
+        {
+            return SetRegexRulesEnabled(new[] { new KeyValuePair<string, string>(find, replaceWith) }, enabled);
+        }
+
+        /// <summary>Enables or disables several rules (find -> replace with) with one write of the user file.</summary>
+        public bool SetRegexRulesEnabled(IReadOnlyCollection<KeyValuePair<string, string>> rules, bool enabled)
+        {
+            var userDoc = LoadXmlReplaceListUserDocument();
+            foreach (var rule in rules)
+            {
+                if (string.IsNullOrEmpty(rule.Key))
+                {
+                    continue;
+                }
+
+                RemoveRegexNodes(userDoc, RemovedRegularExpressionsName, rule.Key);
+                if (!enabled)
+                {
+                    AppendRegexNode(userDoc, RemovedRegularExpressionsName, rule.Key, rule.Value);
+                }
+            }
+
+            if (!SaveUserDocument(userDoc))
+            {
+                return false;
+            }
+
+            foreach (var rule in rules)
+            {
+                if (enabled)
+                {
+                    _regExList[rule.Key] = rule.Value;
+                }
+                else
+                {
+                    _regExList.Remove(rule.Key);
+                }
+            }
+
+            _regexEntries = null;
+            return true;
+        }
+
+        /// <summary>Adds a user regular expression; false if the pattern is invalid or already listed.</summary>
+        public bool AddRegexRule(string find, string replaceWith)
+        {
+            if (!RegexUtils.IsValidRegex(find) || GetRegexRules().Exists(r => r.Find == find))
+            {
+                return false;
+            }
+
+            var userDoc = LoadXmlReplaceListUserDocument();
+            RemoveRegexNodes(userDoc, RemovedRegularExpressionsName, find);
+            AppendRegexNode(userDoc, RegularExpressionsName, find, replaceWith);
+            if (!SaveUserDocument(userDoc))
+            {
+                return false;
+            }
+
+            _regExList[find] = replaceWith;
+            _regexEntries = null;
+            return true;
+        }
+
+        /// <summary>Changes a user regular expression in place, keeping its position and enabled state.</summary>
+        public bool UpdateUserRegexRule(string oldFind, string newFind, string replaceWith)
+        {
+            if (!RegexUtils.IsValidRegex(newFind) ||
+                (newFind != oldFind && GetRegexRules().Exists(r => r.Find == newFind)))
+            {
+                return false;
+            }
+
+            var userDoc = LoadXmlReplaceListUserDocument();
+            var updated = false;
+            foreach (var sectionName in new[] { RegularExpressionsName, RemovedRegularExpressionsName })
+            {
+                var sections = userDoc.DocumentElement?.SelectNodes(sectionName);
+                if (sections == null)
+                {
+                    continue;
+                }
+
+                foreach (XmlNode section in sections)
+                {
+                    foreach (XmlNode item in section.ChildNodes)
+                    {
+                        if (item is XmlElement element && element.GetAttribute("find") == oldFind)
+                        {
+                            element.SetAttribute("find", newFind);
+                            element.SetAttribute("replaceWith", replaceWith);
+                            updated |= sectionName == RegularExpressionsName;
+                        }
+                    }
+                }
+            }
+
+            if (!updated || !SaveUserDocument(userDoc))
+            {
+                return false;
+            }
+
+            var wasEnabled = _regExList.Remove(oldFind);
+            if (wasEnabled)
+            {
+                _regExList[newFind] = replaceWith;
+            }
+
+            _regexEntries = null;
+            return true;
+        }
+
+        /// <summary>Deletes a user regular expression - shipped ones can only be disabled.</summary>
+        public bool RemoveUserRegexRule(string find)
+        {
+            var userDoc = LoadXmlReplaceListUserDocument();
+            if (!RemoveRegexNodes(userDoc, RegularExpressionsName, find))
+            {
+                return false;
+            }
+
+            RemoveRegexNodes(userDoc, RemovedRegularExpressionsName, find);
+            if (!SaveUserDocument(userDoc))
+            {
+                return false;
+            }
+
+            if (!LoadRegExList(LoadXmlReplaceListDocument(), RegularExpressionsName).ContainsKey(find))
+            {
+                _regExList.Remove(find);
+                _regexEntries = null;
+            }
+
+            return true;
+        }
+
+        private static bool RemoveRegexNodes(XmlDocument doc, string sectionName, string find)
+        {
+            var removed = false;
+            var sections = doc.DocumentElement?.SelectNodes(sectionName);
+            if (sections == null)
+            {
+                return false;
+            }
+
+            foreach (XmlNode section in sections)
+            {
+                var matches = new List<XmlNode>();
+                foreach (XmlNode item in section.ChildNodes)
+                {
+                    if (item.Attributes?["find"]?.Value == find)
+                    {
+                        matches.Add(item);
+                    }
+                }
+
+                foreach (var item in matches)
+                {
+                    section.RemoveChild(item);
+                    removed = true;
+                }
+            }
+
+            return removed;
+        }
+
+        private static void AppendRegexNode(XmlDocument doc, string sectionName, string find, string replaceWith)
+        {
+            var root = doc.DocumentElement;
+            if (root == null)
+            {
+                return;
+            }
+
+            var section = root.SelectSingleNode(sectionName);
+            if (section == null)
+            {
+                section = doc.CreateElement(sectionName);
+                root.AppendChild(section);
+            }
+
+            var node = doc.CreateElement(RegexElementName);
+            node.SetAttribute("find", find);
+            node.SetAttribute("replaceWith", replaceWith);
+            section.AppendChild(node);
+        }
+
+        private bool SaveUserDocument(XmlDocument userDoc)
+        {
+            if (string.IsNullOrEmpty(_replaceListXmlFileName))
+            {
+                return false;
+            }
+
+            try
+            {
+                userDoc.Save(ReplaceListXmlFileNameUser);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                ErrorMessage = $"Unable to save ocr replace list {ReplaceListXmlFileNameUser}: " + exception.Message;
+                return false;
+            }
+        }
+
+        private static readonly SearchValues<char> WordSeparatorChars =SearchValues.Create(@" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/");
 
         public static string ReplaceWord(string text, string word, string newWord)
         {

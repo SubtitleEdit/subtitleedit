@@ -1,5 +1,3 @@
-using Nikse.SubtitleEdit.Features.SpellCheck;
-using System.Linq;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace UITests.Features.SpellCheck;

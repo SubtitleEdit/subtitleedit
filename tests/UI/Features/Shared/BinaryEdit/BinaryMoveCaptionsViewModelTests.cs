@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryMoveCaptions;
 using Nikse.SubtitleEdit.Logic;
 using SkiaSharp;
-using System.Collections.Generic;
 
 namespace UITests.Features.Shared.BinaryEdit;
 

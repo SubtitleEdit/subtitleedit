@@ -31,6 +31,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     // thread-affine (OpenGL, Metal), which decides who is allowed to free it - see Dispose.
     private volatile bool _renderContextNeedsGraphicsContext;
     private volatile bool _disposePendingRenderContextFree;
+
+    // Held while the render context is freed and while the core is destroyed: mpv requires the
+    // render context to be gone before the core, and the two run on different threads.
+    private readonly object _teardownLock = new();
     private volatile bool _disposed;
     private int _calledAfterDisposeLogged; // 1 once EnsureNotDisposed has reported this player
     private volatile bool _coreInitialized;
@@ -1145,6 +1149,19 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set " + value);
         }
+
+        // Streaming hits YouTube's "confirm you're not a bot" check just like downloading does,
+        // so hand ytdl_hook the same browser cookies (#16032).
+        var browser = YtDlpDownloadService.GetCookiesBrowser();
+        if (browser != null)
+        {
+            var rawOptions = "cookies-from-browser=" + browser;
+            err = SetOptionString("ytdl-raw-options", rawOptions);
+            if (err < 0)
+            {
+                Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer could not set ytdl-raw-options=" + rawOptions);
+            }
+        }
     }
 
     /// <summary>
@@ -1807,12 +1824,29 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         Task.Run(TerminateCore);
     }
 
+    /// <summary>
+    /// Frees mpv's render context. Under <see cref="_teardownLock"/>: the handle is cleared before
+    /// <c>mpv_render_context_free</c> returns (it waits for the video output to stop), and a
+    /// <see cref="Dispose"/> on another thread that saw it cleared went on to destroy the core
+    /// mid-free - the free then read the core's freed option data and crashed (SIGSEGV in
+    /// free_option_data when closing the ASSA Set background window on macOS).
+    /// </summary>
     private void FreeRenderContext()
     {
-        var renderContext = Interlocked.Exchange(ref _renderContext, IntPtr.Zero);
-        if (renderContext != IntPtr.Zero && _mpvRenderContextFree != null)
+        if (_renderContext == IntPtr.Zero)
         {
-            _mpvRenderContextFree(renderContext);
+            // Nothing to free - and no waiting on a core teardown that holds the lock (the GL
+            // deinit callback runs on the UI thread).
+            return;
+        }
+
+        lock (_teardownLock)
+        {
+            var renderContext = Interlocked.Exchange(ref _renderContext, IntPtr.Zero);
+            if (renderContext != IntPtr.Zero && _mpvRenderContextFree != null)
+            {
+                _mpvRenderContextFree(renderContext);
+            }
         }
     }
 
@@ -1848,12 +1882,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private void TerminateCore()
     {
-        var mpv = Interlocked.Exchange(ref _mpv, IntPtr.Zero);
-        if (mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
+        // Waits for a render context free in progress on the graphics thread - see FreeRenderContext
+        lock (_teardownLock)
         {
-            // The event thread must be out of mpv_wait_event before the core goes away.
-            StopEventLoop();
-            _mpvTerminateDestroy.Invoke(mpv);
+            var mpv = Interlocked.Exchange(ref _mpv, IntPtr.Zero);
+            if (mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
+            {
+                // The event thread must be out of mpv_wait_event before the core goes away.
+                StopEventLoop();
+                _mpvTerminateDestroy.Invoke(mpv);
+            }
         }
     }
 
@@ -2050,10 +2088,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             {
                 bound = Media.Mp3DurationReader.TryGetDurationSeconds(path);
             }
+            else if (ext.Equals(".aac", StringComparison.OrdinalIgnoreCase))
+            {
+                bound = Media.AacDurationReader.TryGetDurationSeconds(path);
+            }
 
             if (bound.HasValue && bound.Value > 0)
             {
-                SetOptionString("end", bound.Value.ToString(CultureInfo.InvariantCulture));
+                var rounded = Math.Round(bound.Value + 0.05, 1);
+                var str = rounded.ToString(CultureInfo.InvariantCulture);
+                SetOptionString("end", str);
                 _audioEndBound = bound.Value;
             }
             else
@@ -2063,7 +2107,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                     var d = Duration;
                     if (d > 0 && !double.IsInfinity(d) && !double.IsNaN(d))
                     {
-                        SetOptionString("end", d.ToString(CultureInfo.InvariantCulture));
+                        var rounded = Math.Round(d + 0.05, 1);
+                        var str = rounded.ToString(CultureInfo.InvariantCulture);
+                        SetOptionString("end", str);
                         _audioEndBound = d;
                         break;
                     }
@@ -2708,6 +2754,32 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
     }
 
+    // How far the decoded frame may be from the wanted time and still count as "the frame at
+    // that time" - mpv lands a precise seek on the first frame at or after the target.
+    private const double SaveCurrentFrameToleranceSeconds = 0.1;
+
+    public bool TrySaveCurrentFrame(string pngFileName, double seconds)
+    {
+        EnsureNotDisposed();
+        if (_disposed || _mpv == IntPtr.Zero || _mpvGetPropertyDouble == null || !IsPaused)
+        {
+            return false;
+        }
+
+        // The live time-pos, not Position: while paused Position answers with the seek target,
+        // even before mpv has decoded the frame there.
+        var timePos = 0.0;
+        if (_mpvGetPropertyDouble(_mpv, PropertyNameTimePos, MPV_FORMAT_DOUBLE, ref timePos) < 0 ||
+            Math.Abs(timePos - seconds) > SaveCurrentFrameToleranceSeconds)
+        {
+            return false;
+        }
+
+        // Compression 1: a 4K frame takes ~190 ms instead of ~750 ms at mpv's default 7.
+        DoMpvCommand("set", "screenshot-png-compression", "1");
+        return DoMpvCommand("screenshot-to-file", pngFileName, "video") >= 0;
+    }
+
     public void StepOneFrameForward()
     {
         SettlePendingExactSeek();
@@ -2929,6 +3001,23 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         if (err < 0)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer SetAudioTrack");
+        }
+    }
+
+    public bool SupportsAudioDelay => true;
+
+    public void SetAudioDelay(double seconds)
+    {
+        EnsureNotDisposed();
+        if (_mpv == IntPtr.Zero)
+        {
+            return;
+        }
+
+        var err = DoMpvCommand("set", "audio-delay", seconds.ToString("0.000", CultureInfo.InvariantCulture));
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer SetAudioDelay");
         }
     }
 

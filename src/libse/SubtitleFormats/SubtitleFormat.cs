@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             foreach (var line in lines)
             {
-                if (line.IndexOf(value, StringComparison.Ordinal) >= 0)
+                if (line.Contains(value))
                 {
                     return true;
                 }

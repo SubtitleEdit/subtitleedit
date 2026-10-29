@@ -29,7 +29,7 @@ public interface IFindService
     void Initialize(List<string> textLines, int currentLineIndex, bool wholeWord, FindMode findMode, List<string>? originalTextLines = null);
     int FindNext(string searchText, List<string> textLines, int currentLineIndex, int startTextIndex, List<string>? originalTextLines = null, bool startInOriginal = false);
     int FindPrevious(string searchText, List<string> textLines, int currentLineIndex, int startTextIndex, List<string>? originalTextLines = null, bool startInOriginal = false);
-    int ReplaceAll(string searchText, string replaceText);
+    int ReplaceAll(string searchText, string replaceText, int startLineIndex = 0, int stopAtLineIndex = int.MaxValue);
     int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode, IReadOnlyList<string>? originalTextLines = null, FindScope scope = FindScope.TextAndOriginal);
     List<(int LineIndex, int TextIndex, string FoundText)> FindAll(string searchText);
     void Reset();

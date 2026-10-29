@@ -1,9 +1,9 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -14,6 +14,11 @@ using System;
 
 namespace Nikse.SubtitleEdit.Features.Main.StylePicker;
 
+/// <summary>
+/// The style picker in the editor look (see <see cref="EditorChrome"/>): selection info and the
+/// filter field on top, the style list in a field frame with the selected style's details beside
+/// it, the keys hint under them, and manage styles, Cancel and Set style in the button bar.
+/// </summary>
 public class StylePickerWindow : Window
 {
     private const string PreviewText = "AaBbCc 123";
@@ -24,20 +29,16 @@ public class StylePickerWindow : Window
         Title = Se.Language.General.StylePickerTitle;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
-        Width = 820;
+        Width = 840;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
 
         vm.Window = this;
         DataContext = vm;
 
-        var labelSelectionInfo = new TextBlock { Opacity = 0.8, VerticalAlignment = VerticalAlignment.Center };
+        var labelSelectionInfo = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
         labelSelectionInfo.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectionInfo)));
-        var labelCurrentStyle = new TextBlock
-        {
-            Opacity = 0.8,
-            Margin = new Thickness(16, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-        };
+        var labelCurrentStyle = EditorChrome.MakeDimLabel(string.Empty, new Thickness(16, 0, 0, 0));
+        labelCurrentStyle.TextTrimming = TextTrimming.CharacterEllipsis;
         labelCurrentStyle.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CurrentStyleInfo)));
         var panelInfo = new StackPanel
         {
@@ -49,6 +50,14 @@ public class StylePickerWindow : Window
         {
             PlaceholderText = Se.Language.General.StylePickerFilterHint,
             HorizontalAlignment = HorizontalAlignment.Stretch,
+        }.AsTextField(Se.Language.General.StylePickerFilterHint);
+        textBoxFilter.InnerLeftContent = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "fa-solid fa-magnifying-glass",
+            FontSize = 11,
+            Foreground = EditorChrome.FaintTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
         };
         textBoxFilter.Bind(TextBox.TextProperty, new Binding(nameof(vm.FilterText)) { Mode = BindingMode.TwoWay });
 
@@ -60,6 +69,7 @@ public class StylePickerWindow : Window
             MinHeight = 200,
             Focusable = false,
         };
+        AutomationProperties.SetName(listBox, Se.Language.General.StylePickerTitle);
         listBox.Bind(ListBox.SelectedItemProperty, new Binding(nameof(vm.SelectedItem)) { Mode = BindingMode.TwoWay });
         listBox.SelectionChanged += (_, _) =>
         {
@@ -79,29 +89,34 @@ public class StylePickerWindow : Window
             }
         };
 
-        var detailsPanel = MakeDetailsPanel(vm);
+        var labelKeysHint = EditorChrome.MakeWrappingDimLabel(Se.Language.General.StylePickerKeysHint);
+        labelKeysHint.FontSize = EditorChrome.ScaledFont(11.5);
+
+        var panelList = new StackPanel
+        {
+            Spacing = 10,
+            Margin = new Thickness(14, 12, 14, 12),
+            Children =
+            {
+                panelInfo,
+                textBoxFilter,
+                EditorChrome.MakeCompactListFrame(listBox, compact: false),
+                labelKeysHint,
+            },
+        };
 
         var gridContent = new Grid
         {
-            ColumnSpacing = 10,
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(350) },
+                new ColumnDefinition { Width = new GridLength(340) },
             },
         };
-        gridContent.Add(listBox, 0, 0);
-        gridContent.Add(detailsPanel, 0, 1);
+        gridContent.Add(panelList, 0, 0);
+        gridContent.Add(MakeDetailsPanel(vm), 0, 1);
 
-        var labelKeysHint = new TextBlock
-        {
-            Text = Se.Language.General.StylePickerKeysHint,
-            TextWrapping = TextWrapping.Wrap,
-            FontSize = UiUtil.ScaledFontSize(11),
-            Opacity = 0.7,
-        };
-
-        var buttonManageStyles = UiUtil.MakeButton(Se.Language.General.StylePickerManageStyles);
+        var buttonManageStyles = EditorChrome.MakeTextToolButton("fa-solid fa-palette", Se.Language.General.StylePickerManageStyles, null);
         buttonManageStyles.Click += (_, _) => vm.ShowStylesManager();
         if (Se.Settings.Appearance.ShowHints)
         {
@@ -109,32 +124,13 @@ public class StylePickerWindow : Window
         }
 
         var buttonSet = UiUtil.MakeButton(Se.Language.General.StylePickerSetStyle);
+        buttonSet.Classes.Add("primary");
         buttonSet.Click += (_, _) => vm.Pick(vm.SelectedItem);
         buttonSet.Bind(IsEnabledProperty, new Binding(nameof(vm.SelectedItem)) { Converter = ObjectConverters.IsNotNull });
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel);
         buttonCancel.Click += (_, _) => vm.Cancel();
-        var panelButtons = UiUtil.MakeButtonBar(buttonManageStyles, buttonSet, buttonCancel);
 
-        var grid = new Grid
-        {
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 8,
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-        };
-        grid.Add(panelInfo, 0);
-        grid.Add(textBoxFilter, 1);
-        grid.Add(gridContent, 2);
-        grid.Add(labelKeysHint, 3);
-        grid.Add(panelButtons, 4);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(gridContent, EditorChrome.MakeDockedButtonBar(buttonManageStyles, buttonCancel, buttonSet));
 
         UiUtil.FocusOnFirstActivation(this, textBoxFilter);
 
@@ -171,7 +167,7 @@ public class StylePickerWindow : Window
         {
             Width = width,
             Height = height,
-            CornerRadius = new CornerRadius(4),
+            CornerRadius = new CornerRadius(6),
             BorderThickness = new Thickness(2),
             Padding = new Thickness(4, 0),
             Child = labelPreview,
@@ -186,7 +182,9 @@ public class StylePickerWindow : Window
     {
         var labelNumber = new TextBlock
         {
-            FontWeight = FontWeight.Bold,
+            FontWeight = FontWeight.SemiBold,
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.AccentBrush,
             Width = 24,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -201,6 +199,7 @@ public class StylePickerWindow : Window
 
         var labelName = new TextBlock
         {
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
@@ -214,12 +213,7 @@ public class StylePickerWindow : Window
             Converter = new FuncValueConverter<bool, FontStyle>(isNew => isNew ? FontStyle.Italic : FontStyle.Normal),
         });
 
-        var labelLineCount = new TextBlock
-        {
-            Opacity = 0.6,
-            Margin = new Thickness(8, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        var labelLineCount = EditorChrome.MakeDimLabel(string.Empty, new Thickness(8, 0, 0, 0));
         labelLineCount.Bind(TextBlock.TextProperty, new Binding(nameof(StylePickerItem.LineCountText)));
 
         var labelCurrent = new TextBlock
@@ -227,7 +221,7 @@ public class StylePickerWindow : Window
             Text = "✓",
             Margin = new Thickness(8, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Center,
-            Foreground = UiUtil.GetAccentBrush(),
+            Foreground = EditorChrome.AccentBrush,
         };
         labelCurrent.Bind(IsVisibleProperty, new Binding(nameof(StylePickerItem.IsCurrent)));
 
@@ -239,8 +233,8 @@ public class StylePickerWindow : Window
 
         var labelSummary = new TextBlock
         {
-            Opacity = 0.6,
-            FontSize = UiUtil.ScaledFontSize(11),
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = EditorChrome.ScaledFont(11.5),
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
         labelSummary.Bind(TextBlock.TextProperty, new Binding(nameof(StylePickerItem.Summary)));
@@ -251,13 +245,9 @@ public class StylePickerWindow : Window
             Children = { panelName, labelSummary },
         };
 
-        var labelShortcut = new TextBlock
-        {
-            Opacity = 0.6,
-            Margin = new Thickness(12, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Right,
-        };
+        var labelShortcut = EditorChrome.MakeDimLabel(string.Empty, new Thickness(12, 0, 0, 0));
+        labelShortcut.Foreground = EditorChrome.FaintTextBrush;
+        labelShortcut.HorizontalAlignment = HorizontalAlignment.Right;
         labelShortcut.Bind(TextBlock.TextProperty, new Binding(nameof(StylePickerItem.ShortcutText)));
 
         var grid = new Grid
@@ -282,8 +272,8 @@ public class StylePickerWindow : Window
     {
         var labelName = new TextBlock
         {
-            FontWeight = FontWeight.Bold,
-            FontSize = UiUtil.ScaledFontSize(15),
+            FontWeight = FontWeight.SemiBold,
+            FontSize = EditorChrome.ScaledFont(15),
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
         labelName.Bind(TextBlock.TextProperty, new Binding(nameof(StylePickerItem.Name)));
@@ -294,7 +284,7 @@ public class StylePickerWindow : Window
         var gridProperties = new Grid
         {
             ColumnSpacing = 10,
-            RowSpacing = 4,
+            RowSpacing = 5,
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = GridLength.Auto },
@@ -313,6 +303,7 @@ public class StylePickerWindow : Window
         gridProperties.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         var labelColors = MakePropertyLabel(Se.Language.General.Color);
         labelColors.VerticalAlignment = VerticalAlignment.Top;
+        labelColors.Margin = new Thickness(0, 2, 0, 0);
         gridProperties.Add(labelColors, row, 0);
         var panelColors = new StackPanel
         {
@@ -331,33 +322,32 @@ public class StylePickerWindow : Window
 
         var labelUsage = new TextBlock
         {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.8,
         };
         labelUsage.Bind(TextBlock.TextProperty, new Binding(nameof(StylePickerItem.UsageText)));
 
         var panel = new StackPanel
         {
-            Spacing = 8,
+            Spacing = 10,
             Children = { labelName, preview, gridProperties, labelUsage },
         };
         panel.Bind(DataContextProperty, new Binding(nameof(vm.SelectedItem)) { Source = vm });
         panel.Bind(IsVisibleProperty, new Binding(nameof(vm.SelectedItem)) { Source = vm, Converter = ObjectConverters.IsNotNull });
 
-        var border = UiUtil.MakeBorderForControl(panel);
-        border.Padding = new Thickness(10);
-        border.VerticalAlignment = VerticalAlignment.Top;
-        return border;
+        return new Border
+        {
+            Child = panel,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+            Padding = new Thickness(16, 14),
+        };
     }
 
     private static TextBlock MakePropertyLabel(string text)
     {
-        return new TextBlock
-        {
-            Text = text,
-            Opacity = 0.7,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        return EditorChrome.MakeDimLabel(text, new Thickness(0));
     }
 
     private static void AddProperty(Grid grid, ref int row, string label, string valuePath)
@@ -367,6 +357,7 @@ public class StylePickerWindow : Window
 
         var value = new TextBlock
         {
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -381,9 +372,9 @@ public class StylePickerWindow : Window
         {
             Width = 28,
             Height = 18,
-            CornerRadius = new CornerRadius(3),
+            CornerRadius = new CornerRadius(4),
             BorderThickness = new Thickness(1),
-            BorderBrush = UiUtil.GetTextColor(0.4),
+            BorderBrush = EditorChrome.SeparatorBrush,
             HorizontalAlignment = HorizontalAlignment.Center,
         };
         swatch.Bind(Border.BackgroundProperty, new Binding(brushPath));
@@ -391,14 +382,14 @@ public class StylePickerWindow : Window
         var labelName = new TextBlock
         {
             Text = label,
-            FontSize = UiUtil.ScaledFontSize(10),
-            Opacity = 0.7,
+            FontSize = EditorChrome.ScaledFont(10.5),
+            Foreground = EditorChrome.DimTextBrush,
             HorizontalAlignment = HorizontalAlignment.Center,
         };
 
         var panel = new StackPanel
         {
-            Spacing = 2,
+            Spacing = 3,
             Children = { swatch, labelName },
         };
         if (Se.Settings.Appearance.ShowHints)

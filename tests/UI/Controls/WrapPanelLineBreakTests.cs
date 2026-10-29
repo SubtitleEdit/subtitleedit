@@ -4,7 +4,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Linq;
 
 namespace Tests.Controls;
 

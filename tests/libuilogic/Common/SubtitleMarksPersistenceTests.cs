@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Common;
 

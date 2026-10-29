@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.AdjustDuration;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;

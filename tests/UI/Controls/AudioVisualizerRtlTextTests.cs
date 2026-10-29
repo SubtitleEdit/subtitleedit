@@ -2,11 +2,8 @@ using Avalonia;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
-using System;
 using System.Runtime.InteropServices;
-using Xunit;
 
 namespace UITests.Controls;
 

@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
-using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceManager;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -25,6 +25,7 @@ public class ModelLicenseWindow : Window
         Width = 640;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
 
         vm.Window = this;
         DataContext = vm;
@@ -32,7 +33,7 @@ public class ModelLicenseWindow : Window
         Content = BuildContent(vm);
     }
 
-    private static Border BuildContent(ModelLicenseViewModel vm)
+    private static Grid BuildContent(ModelLicenseViewModel vm)
     {
         var stack = new StackPanel
         {
@@ -40,82 +41,31 @@ public class ModelLicenseWindow : Window
             Spacing = 14,
             Children =
             {
-                BuildHeader(vm),
-                BuildSummary(vm),
+                TtsVoicesChrome.MakeTitle(vm.Definition.Header, vm.Definition.Intro),
+                TtsVoicesChrome.MakeBulletCard(vm.Definition.SummaryPoints),
                 BuildLinks(vm),
                 BuildAcceptRow(vm),
-                BuildActions(vm),
             },
         };
 
-        var outerGrid = new Grid { Margin = UiUtil.MakeWindowMargin() };
-        outerGrid.Children.Add(stack);
-
-        return new Border
-        {
-            Child = outerGrid,
-            Padding = new Thickness(4),
-        };
-    }
-
-    private static StackPanel BuildHeader(ModelLicenseViewModel vm)
-    {
-        var title = new TextBlock
-        {
-            Text = vm.Definition.Header,
-            FontSize = UiUtil.ScaledFontSize(18),
-            FontWeight = FontWeight.SemiBold,
-            TextWrapping = TextWrapping.Wrap,
-        };
-
-        var subtitle = new TextBlock
-        {
-            Text = vm.Definition.Intro,
-            FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.75,
-            TextWrapping = TextWrapping.Wrap,
-            Margin = new Thickness(0, 4, 0, 0),
-        };
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 0,
-            Children = { title, subtitle },
-        };
-    }
-
-    private static Border BuildSummary(ModelLicenseViewModel vm)
-    {
-        var stack = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 8,
-        };
-
-        foreach (var point in vm.Definition.SummaryPoints)
-        {
-            var row = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Spacing = 8,
-                Children =
-                {
-                    new TextBlock { Text = "•", Opacity = 0.7, VerticalAlignment = VerticalAlignment.Top },
-                    new TextBlock { Text = point, TextWrapping = TextWrapping.Wrap, MaxWidth = 560 },
-                },
-            };
-            stack.Children.Add(row);
-        }
-
-        return new Border
+        var body = new Border
         {
             Child = stack,
-            Padding = new Thickness(12),
-            CornerRadius = new CornerRadius(4),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(60, 128, 128, 128)),
+            Background = EditorChrome.PanelBrush,
+            Padding = new Thickness(20, 18),
         };
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+            },
+        };
+        grid.Add(body, 0, 0);
+        grid.Add(BuildActions(vm), 1, 0);
+        return grid;
     }
 
     private static StackPanel BuildLinks(ModelLicenseViewModel vm)
@@ -149,8 +99,10 @@ public class ModelLicenseWindow : Window
             Button.IsEnabledProperty,
             new Avalonia.Data.Binding(nameof(vm.IsAccepted)));
 
+        accept.Classes.Add("primary");
+
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return UiUtil.MakeButtonBar(accept, cancel);
+        return EditorChrome.MakeFlushButtonBar(null, cancel, accept);
     }
 }

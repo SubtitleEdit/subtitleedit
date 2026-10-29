@@ -1,11 +1,16 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 
+/// <summary>
+/// "Please wait" while one line is regenerated, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class GeneratingAudioWindow : Window
 {
     public GeneratingAudioWindow(GeneratingAudioViewModel vm)
@@ -21,15 +26,16 @@ public class GeneratingAudioWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
 
         DataContext = vm;
 
         var titleText = new TextBlock
         {
             Text = Se.Language.General.PleaseWait,
-            FontSize = UiUtil.ScaledFontSize(18),
+            FontSize = EditorChrome.ScaledFont(15),
+            FontWeight = FontWeight.SemiBold,
             HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Avalonia.Thickness(0, 0, 0, 8),
         };
 
         var progressBar = new ProgressBar
@@ -39,18 +45,29 @@ public class GeneratingAudioWindow : Window
             Height = 8,
         };
 
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
-
-        Content = new StackPanel
+        var panel = new StackPanel
         {
-            Spacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
+            Spacing = 14,
             Children =
             {
                 titleText,
                 progressBar,
-                buttonBar,
+            }
+        };
+
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        Content = new StackPanel
+        {
+            Children =
+            {
+                new Border
+                {
+                    Background = EditorChrome.PanelBrush,
+                    Padding = new Thickness(24, 22),
+                    Child = panel,
+                },
+                EditorChrome.MakeButtonBar(null, buttonCancel),
             }
         };
 

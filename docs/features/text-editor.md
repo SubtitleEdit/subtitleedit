@@ -58,7 +58,7 @@ When an editable original is shown, these act on whichever text box has focus: t
 
 Besides cut/copy/paste, split and the formatting items above, the text box right-click menu has:
 
-- **Casing** — Toggle casing, Selection to UPPERCASE, Selection to lowercase, Selection to Sentence case, and Change casing... for the selected lines
+- **Casing** — Cycle casing, Selection to UPPERCASE, Selection to lowercase, Selection to Sentence case, and Change casing... for the selected lines
 - **Insert Unicode symbol** — insert one of the configured symbols
 - **Google it** (with a selection) and **Search via** — the custom search slots set up in Options → Shortcuts
 - **Look up "..."** (macOS only) - opens the selected text, or with no selection the word under the pointer, in the system Dictionary app, as every macOS text field offers

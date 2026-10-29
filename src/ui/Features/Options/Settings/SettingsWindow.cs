@@ -18,9 +18,10 @@ public class SettingsWindow : Window
         Title = Se.Language.General.Settings;
         Width = 900;
         Height = 695;
-        MinWidth = 650;
+        MinWidth = 720;
         MinHeight = 500;
         CanResize = true;
+        SettingsChrome.Apply(this);
 
         vm.Window = this;
         var page = new SettingsPage(vm);

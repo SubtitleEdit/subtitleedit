@@ -1,21 +1,27 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
 
+/// <summary>
+/// Re-encode video for better subtitling, in the editor look (see <see cref="EditorChrome"/>):
+/// the info and the video settings in a section, progress and Generate at the bottom.
+/// </summary>
 public class ReEncodeVideoWindow : Window
 {
     private readonly ReEncodeVideoViewModel _vm;
     private ComboBox? _comboBoxFrameRate;
+
+    private const double LabelWidth = 130;
 
     public ReEncodeVideoWindow(ReEncodeVideoViewModel vm)
     {
@@ -24,15 +30,26 @@ public class ReEncodeVideoWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 600;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var labelInfoText = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.InfoText)).WithMarginBottom(8);
+        var labelInfoText = new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            MaxWidth = 560,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.InfoText)),
+        };
 
-        var videoSettingsView = MakeVideoSettingsView(vm);
-        var progressView = MakeProgressView(vm);
+        var videoSettingsView = MakeVideoSettingsView(vm, labelInfoText);
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsGenerating));
+        var progressView = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsGenerating));
         var buttonGenerate = new SeSplitButton
         {
             Content = Se.Language.General.Generate,
@@ -49,54 +66,42 @@ public class ReEncodeVideoWindow : Window
                 }
             }
         };
+        buttonGenerate.Classes.Add("primary");
         buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = InverseBooleanConverter.Instance });
+        AutomationProperties.SetName(buttonGenerate, Se.Language.General.Generate);
 
         var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
-        var buttonPanel = UiUtil.MakeButtonBar(
-            buttonGenerate,
-            buttonDone,
-            UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating))
-        );
+        var buttonPanel = EditorChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating)), buttonDone, buttonGenerate);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // info
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // settings
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // info + settings
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(labelInfoText, 0);
-        grid.Add(videoSettingsView, 1);
-        grid.Add(progressView, 2);
-        grid.Add(buttonPanel, 3);
+        grid.Add(EditorChrome.MakePanel(videoSettingsView), 0);
+        grid.Add(progressView, 1);
+        grid.Add(buttonPanel, 2);
 
         Content = grid;
 
         UiUtil.FocusOnFirstActivation(this, () => { _comboBoxFrameRate?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
     }
 
-    private Border MakeVideoSettingsView(ReEncodeVideoViewModel vm)
+    private Border MakeVideoSettingsView(ReEncodeVideoViewModel vm, TextBlock labelInfoText)
     {
-        var labelResolution = UiUtil.MakeLabel(Se.Language.General.Resolution);
-        var textBoxWidth = UiUtil.MakeTextBox(100, vm, nameof(vm.VideoWidth));
-        var labelX = UiUtil.MakeLabel("x");
-        var textBoxHeight = UiUtil.MakeTextBox(100, vm, nameof(vm.VideoHeight));
-        var buttonResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
+        var textBoxWidth = EditorChrome.MakeTextField(nameof(vm.VideoWidth), Se.Language.General.Width, 76);
+        var labelX = EditorChrome.MakeDimLabel(Se.Language.Video.ResolutionSeparator, new Thickness(0));
+        var textBoxHeight = EditorChrome.MakeTextField(nameof(vm.VideoHeight), Se.Language.General.Height, 76);
+        var buttonResolution = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.Resolution, vm.BrowseResolutionCommand, 28);
         var panelResolution = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
+            Spacing = 6,
             Children =
             {
                 textBoxWidth,
@@ -106,12 +111,12 @@ public class ReEncodeVideoWindow : Window
             }
         }.WithBindVisible(vm, nameof(vm.UseSourceResolution), InverseBooleanConverter.Instance);
 
-        var labelSourceResolution = UiUtil.MakeLabel(Se.Language.General.UseSourceResolution).WithBindVisible(vm, nameof(vm.UseSourceResolution));
-        var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
+        var labelSourceResolution = new TextBlock { Text = Se.Language.General.UseSourceResolution, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center };
+        var buttonResolutionSource = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.Resolution, vm.BrowseResolutionCommand, 28);
         var panelResolutionSource = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
+            Spacing = 6,
             Children =
             {
                 labelSourceResolution,
@@ -119,79 +124,32 @@ public class ReEncodeVideoWindow : Window
             }
         }.WithBindVisible(vm, nameof(vm.UseSourceResolution));
 
-        var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate);
         var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate)).WithFrameRateDisplay();
+        comboBoxFrameRate.MinWidth = 140;
+        AutomationProperties.SetName(comboBoxFrameRate, Se.Language.General.FrameRate);
         _comboBoxFrameRate = comboBoxFrameRate;
 
-        var labelVideoExtension = UiUtil.MakeLabel(Se.Language.General.VideoExtension);
         var comboBoxVideoExtensions = UiUtil.MakeComboBox(vm.VideoExtensions, vm, nameof(vm.SelectedVideoExtension));
+        comboBoxVideoExtensions.MinWidth = 140;
+        AutomationProperties.SetName(comboBoxVideoExtensions, Se.Language.General.VideoExtension);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(labelInfoText);
 
-        //grid.Add(labelResolution, 0, 0);
-        //grid.Add(panelResolution, 0, 1);
-        //grid.Add(panelResolutionSource, 0, 1);
+        // The resolution rows are not shown (yet)
+        //rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Resolution, panelResolution, LabelWidth, spacing: 6));
+        //rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.Resolution, panelResolutionSource, LabelWidth, spacing: 6));
 
-        grid.Add(labelFrameRate, 1, 0);
-        grid.Add(comboBoxFrameRate, 1, 1);
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.FrameRate, WrapLeft(comboBoxFrameRate), LabelWidth, spacing: 6));
+        rows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.General.VideoExtension, WrapLeft(comboBoxVideoExtensions), LabelWidth, spacing: 6));
 
-        grid.Add(labelVideoExtension, 2, 0);
-        grid.Add(comboBoxVideoExtensions, 2, 1);
-
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
+        return EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.VideoOutput, rows, first: true);
     }
 
-    private static Grid MakeProgressView(ReEncodeVideoViewModel vm)
+    private static Control WrapLeft(Control control)
     {
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
-
-        var statusText = new TextBlock
-        {
-            Margin = new Thickness(5, 0, 0, 0),
-        };
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
-        statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 10,
-            Margin = new Thickness(0, 5, 0, 0),
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 1, 0);
-
-        return grid;
+        control.HorizontalAlignment = HorizontalAlignment.Left;
+        return control;
     }
 
     protected override void OnClosing(WindowClosingEventArgs e)

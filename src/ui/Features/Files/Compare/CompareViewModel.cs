@@ -1783,15 +1783,6 @@ public partial class CompareViewModel : ObservableObject
         });
     }
 
-    /// <summary>Scrolls so that row <paramref name="index"/> is in view, for the overview ruler.</summary>
-    internal void ScrollToRow(int index)
-    {
-        if (RowsView != null && index >= 0 && index < Rows.Count)
-        {
-            RowsView.ScrollIntoView(index);
-        }
-    }
-
     private void FocusRows((int Index, double Top)? anchor = null)
     {
         Dispatcher.UIThread.Post(() =>

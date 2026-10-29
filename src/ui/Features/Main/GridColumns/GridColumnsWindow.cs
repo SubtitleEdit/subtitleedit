@@ -10,6 +10,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Main.GridColumns;
 
+/// <summary>
+/// The subtitle grid's columns in the editor look (see <see cref="EditorChrome"/>): the column list
+/// in one section with move/reset icon actions in its header, Cancel and OK in the button bar.
+/// </summary>
 public class GridColumnsWindow : Window
 {
     public GridColumnsWindow(GridColumnsViewModel vm)
@@ -18,28 +22,30 @@ public class GridColumnsWindow : Window
         Title = Se.Language.General.Columns;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
         var listBox = new ListBox
         {
-            Width = 300,
+            Width = 320,
             Height = 420,
         };
+        AutomationProperties.SetName(listBox, Se.Language.General.Columns);
         listBox.Bind(ListBox.ItemsSourceProperty, new Binding(nameof(GridColumnsViewModel.Columns)));
         listBox.Bind(ListBox.SelectedItemProperty, new Binding(nameof(GridColumnsViewModel.SelectedColumn)) { Mode = BindingMode.TwoWay });
         listBox.ItemTemplate = new FuncDataTemplate<GridColumnDisplay>((_, _) =>
         {
             // The always-shown/content-driven columns (Number, Text, teletext, original)
             // still take part in ordering, but their visibility is not the user's to set.
-            var checkBox = new CheckBox();
+            var checkBox = new CheckBox { MinHeight = 0, VerticalAlignment = VerticalAlignment.Center };
             checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(GridColumnDisplay.IsVisible)) { Mode = BindingMode.TwoWay });
             checkBox.Bind(InputElement.IsEnabledProperty, new Binding(nameof(GridColumnDisplay.CanToggle)));
             // The column name is in a separate text block - name the check box too, or a screen
             // reader announces a bare "check box" (#12087).
             checkBox.Bind(AutomationProperties.NameProperty, new Binding(nameof(GridColumnDisplay.Name)));
 
-            var textBlock = new TextBlock { Margin = new Thickness(5, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
+            var textBlock = new TextBlock { Margin = new Thickness(2, 0, 0, 0), FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center };
             textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(GridColumnDisplay.Name)));
 
             return new StackPanel
@@ -49,55 +55,23 @@ public class GridColumnsWindow : Window
             };
         }, true);
 
-        var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpCommand).WithMinWidth(100);
-        var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownCommand).WithMinWidth(100);
-        var buttonReset = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCommand).WithMinWidth(100);
-
-        var sidePanel = new StackPanel
+        var buttonMoveUp = EditorChrome.CreateToolButton("fa-solid fa-arrow-up", Se.Language.General.MoveUp, vm.MoveUpCommand, 28);
+        var buttonMoveDown = EditorChrome.CreateToolButton("fa-solid fa-arrow-down", Se.Language.General.MoveDown, vm.MoveDownCommand, 28);
+        var buttonReset = EditorChrome.CreateToolButton("fa-solid fa-rotate-left", Se.Language.General.Reset, vm.ResetCommand, 28);
+        var panelActions = new StackPanel
         {
-            Orientation = Orientation.Vertical,
-            Spacing = 5,
-            Margin = new Thickness(10, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Top,
-            Children =
-            {
-                buttonMoveUp,
-                buttonMoveDown,
-                buttonReset,
-            },
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            Children = { buttonMoveUp, buttonMoveDown, EditorChrome.MakeToolbarSeparator(), buttonReset },
         };
 
-        var contentGrid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-        };
-        contentGrid.Add(listBox, 0, 0);
-        contentGrid.Add(sidePanel, 0, 1);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Columns, EditorChrome.MakeCompactListFrame(listBox), panelActions, first: true);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-        grid.Add(contentGrid, 0, 0);
-        grid.Add(panelButtons, 1, 0);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, listBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

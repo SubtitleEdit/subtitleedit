@@ -3,15 +3,13 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
-using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Styling;
 using System;
-using System.Collections;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Sync.PointSync;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -86,12 +84,13 @@ public class PointSyncViaOtherWindow : Window
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = UiUtil.MakeWindowTitle(Se.Language.Sync.PointSyncViaOther);
-        Width = 1100;
-        Height = 600;
-        MinWidth = 800;
-        MinHeight = 600;
+        Width = 1200;
+        Height = 640;
+        MinWidth = 900;
+        MinHeight = 480;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
         DataContext = vm;
 
         var subtitleViewView = MakeSubtitleView(vm);
@@ -100,27 +99,18 @@ public class PointSyncViaOtherWindow : Window
 
         var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand).WithBindIsEnabled(nameof(vm.IsOkEnabled));
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsEnabled(nameof(vm.IsOkEnabled));
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonApply, buttonOk, buttonCancel);
+        var panelButtons = EditorChrome.MakeButtonBar(MakeGapLegend(), buttonApply, buttonCancel, buttonOk);
 
-        var grid = new Grid
+        var content = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
         // Bitmaps scale down to the column width, so an image based other subtitle gets the
@@ -132,7 +122,7 @@ public class PointSyncViaOtherWindow : Window
                 return;
             }
 
-            grid.ColumnDefinitions[2].Width = new GridLength(vm.IsOtherImageBased ? 1.5 : 1, GridUnitType.Star);
+            content.ColumnDefinitions[2].Width = new GridLength(vm.IsOtherImageBased ? 1.5 : 1, GridUnitType.Star);
             if (vm.IsOtherImageBased && WindowState == WindowState.Normal && Width < ImageModeMinWindowWidth)
             {
                 var maxWidth = Screens.ScreenFromWindow(this)?.WorkingArea.Width / (Screens.ScreenFromWindow(this)?.Scaling ?? 1);
@@ -140,11 +130,21 @@ public class PointSyncViaOtherWindow : Window
             }
         };
 
-        grid.Add(subtitleViewView, 0);
-        grid.Add(controlView, 0, 1);
-        grid.Add(subtitleOtherView, 0, 2);
-        grid.Add(MakeGapLegend(), 1, 0, 1, 3);
-        grid.Add(panelButtons, 2, 0, 1, 3);
+        content.Add(subtitleViewView, 0, 0);
+        content.Add(controlView, 0, 1);
+        content.Add(subtitleOtherView, 0, 2);
+
+        // The lists give up height first, so the button bar stays reachable on a short screen.
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        grid.Add(content, 0, 0);
+        grid.Add(panelButtons, 1, 0);
 
         Content = grid;
 
@@ -158,33 +158,44 @@ public class PointSyncViaOtherWindow : Window
     }
 
     /// <summary>
-    /// Explains the gap badges - shown once, under the grids, instead of a tooltip on every
+    /// Explains the gap badges - shown once, in the button bar under the grids, instead of a tooltip on every
     /// badge: one sample badge per strength level, then the explanation.
     /// </summary>
     private static Control MakeGapLegend()
     {
-        var panel = new StackPanel
+        var badges = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 4,
-            Margin = new Thickness(0, 8, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
         };
 
         for (var i = 0; i < SyncCandidateLevelMs.Length; i++)
         {
             var seconds = (int)(SyncCandidateLevelMs[i] / 1000.0);
             var label = i == SyncCandidateLevelMs.Length - 1 ? $"{seconds}s+" : $"{seconds}s";
-            panel.Children.Add(MakeBadge(i + 1, new TextBlock { Text = label, FontSize = 11 }));
+            badges.Children.Add(MakeBadge(i + 1, new TextBlock { Text = label, FontSize = EditorChrome.ScaledFont(11) }));
         }
 
-        panel.Children.Add(new TextBlock
+        // Badges first, then the explanation, which wraps in what is left of the button bar.
+        var panel = new Grid
+        {
+            ColumnSpacing = 8,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+        };
+        panel.Add(badges, 0, 0);
+        panel.Add(new TextBlock
         {
             Text = string.Format(Se.Language.Sync.SyncPointCandidateAfterInfo, (int)(SyncCandidateGapMs / 1000.0)),
-            Opacity = 0.75,
-            Margin = new Thickness(4, 0, 0, 0),
+            FontSize = EditorChrome.ScaledFont(11.5),
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
-        });
+        }, 0, 1);
 
         return panel;
     }
@@ -329,129 +340,36 @@ public class PointSyncViaOtherWindow : Window
 
     private static Control MakeControlView(PointSyncViaOtherViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Margin = new Thickness(0, 60, 0, 0),
-            RowSpacing = 10,
-        };
+        var syncPointList = PointSyncChrome.MakeSyncPointList(vm, vm.SyncPoints, nameof(vm.SelectedSyncPoint),
+            vm.DeleteSelectedPointSyncCommand, () => vm.SelectedSyncPoint != null);
 
-        // The DataGrid this replaces hid its header (HeadersVisibility.None); TableView
-        // has no such switch, so the single column's header now doubles as the panel title.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
-        dataGrid.CanUserResizeColumns = false; // single star column, nothing to resize
-        // Fixed width: this panel sits in an Auto-sized outer column, and a TableView
-        // with a star column measured without a width constraint demands more than the
-        // whole window (star columns have no content-based size), squeezing the
-        // subtitle grids to slivers and overflowing the right edge.
-        dataGrid.Width = 280;
-        dataGrid.DataContext = vm;
-        dataGrid.ItemsSource = vm.SyncPoints;
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.Sync.SyncPoints,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(SyncPoint.Text)),
-            Width = new GridLength(1, GridUnitType.Star),
-        });
-        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedSyncPoint)));
-        dataGrid.WithAccessibleName(Se.Language.Sync.SyncPoints);
-        TableViewExtras.AttachListNavigation(dataGrid);
-
-        var menuItemDelete = new MenuItem
-        {
-            Header = Se.Language.General.Delete,
-            DataContext = vm,
-            Command = vm.DeleteSelectedPointSyncCommand,
-        };
-        var flyout = new MenuFlyout { Items = { menuItemDelete } };
-        flyout.Opening += (_, _) => menuItemDelete.IsEnabled = vm.SelectedSyncPoint != null;
-        dataGrid.ContextFlyout = flyout;
-        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
-        dataGrid.KeyDown += (_, e) =>
-        {
-            if (e.Key is Key.Delete or Key.Back)
-            {
-                e.Handled = true;
-                vm.DeleteSelectedPointSyncCommand.Execute(null);
-            }
-        };
-
-        var buttonSetSyncPoint = UiUtil.MakeButton(Se.Language.Sync.SetSyncPoint, vm.SetSyncPointCommand)
-            .WithIconLeft(IconNames.ArrowLeftRightBold);
+        var buttonSetSyncPoint = PointSyncChrome.MakeWideAction(IconNames.ArrowLeftRightBold, Se.Language.Sync.SetSyncPoint, vm.SetSyncPointCommand);
 
         // The other subtitle is the usual source for a sync point here, but a line it does not
         // cover still has to be pinnable - so allow picking the time off the video (issue #13341).
-        var buttonSetSyncPointViaVideo = UiUtil.MakeButton(Se.Language.Sync.SetSyncPointViaVideo, vm.SetSyncPointViaVideoCommand)
-            .WithIconLeft(IconNames.MovieOpenOutline);
+        var buttonSetSyncPointViaVideo = PointSyncChrome.MakeWideAction(IconNames.MovieOpenOutline, Se.Language.Sync.SetSyncPointViaVideo, vm.SetSyncPointViaVideoCommand);
 
-        var panelSetSyncPoint = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 5,
-            Children =
-            {
-                buttonSetSyncPoint,
-                buttonSetSyncPointViaVideo,
-            }
-        };
-
-        grid.Add(panelSetSyncPoint, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
-
-        return grid;
+        return PointSyncChrome.MakeSidePanel(syncPointList, $"{nameof(vm.SyncPoints)}.Count", new Thickness(1, 0, 1, 0),
+            buttonSetSyncPoint, buttonSetSyncPointViaVideo);
     }
 
     private static Grid MakeSubtitleView(PointSyncViaOtherViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(50, GridUnitType.Pixel) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
         // TextBlock in a star column so a long file name shrinks with an ellipsis
         // instead of pushing under the "Find text" button.
-        var labelFileName = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            Margin = new Thickness(5, 0, 5, 0),
-        };
-        labelFileName.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FileName)) { Source = vm });
-        var buttonFindText = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextLeftCommand)
-            .WithIconLeft(IconNames.Find);
-        buttonFindText.HorizontalAlignment = HorizontalAlignment.Right;
-        var panelHeader = new Grid
+        var labelFileName = PointSyncChrome.MakeFileNameLabel(vm, nameof(vm.FileName));
+        var buttonFindText = EditorChrome.MakeActionButton(IconNames.Find, Se.Language.Sync.FindText, vm.FindTextLeftCommand);
+        var fileNamePanel = new Grid
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
         };
-        panelHeader.Add(labelFileName, 0, 0);
-        panelHeader.Add(buttonFindText, 0, 1);
+        fileNamePanel.Add(PointSyncChrome.MakeFileIcon(), 0, 0);
+        fileNamePanel.Add(labelFileName, 0, 1);
+        var panelHeader = PointSyncChrome.MakeHeaderRow(fileNamePanel, buttonFindText);
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
@@ -515,39 +433,28 @@ public class PointSyncViaOtherWindow : Window
             TableViewExtras.FocusRow(dataGrid);
         };
 
-        grid.Add(panelHeader, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
-
-        return grid;
+        return PointSyncChrome.MakeListPane(panelHeader, EditorChrome.MakeListFrame(dataGrid));
     }
 
     private static Grid MakeSubtitleOtherView(PointSyncViaOtherViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(50, GridUnitType.Pixel) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var buttonBrowseOther = UiUtil.MakeButtonBrowse(vm.BrowseOtherCommand, accessibleName: Se.Language.General.OpenSubtitleFileTitle);
+        var buttonBrowseOther = EditorChrome.CreateToolButton("fa-solid fa-folder-open", Se.Language.General.OpenSubtitleFileTitle, vm.BrowseOtherCommand, 28);
         // TextBlock in a star column so a long file name shrinks with an ellipsis
         // instead of pushing under the "Find text" button.
-        var labelOtherFileName = new TextBlock
+        var labelOtherFileName = PointSyncChrome.MakeFileNameLabel(vm, nameof(vm.FileNameOther));
+
+        // Until the other subtitle is picked, say what the folder button is for.
+        var labelOpenHint = new TextBlock
         {
+            Text = Se.Language.General.OpenSubtitleFileTitle,
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            Margin = new Thickness(5, 0, 5, 0),
+            IsHitTestVisible = false,
         };
-        labelOtherFileName.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FileNameOther)) { Source = vm });
+        labelOpenHint.Bind(IsVisibleProperty, new Binding(nameof(vm.FileNameOther)) { Source = vm, Converter = StringConverters.IsNullOrEmpty });
+
         var panelOtherBrowse = new Grid
         {
             ColumnDefinitions =
@@ -555,24 +462,14 @@ public class PointSyncViaOtherWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
+            ColumnSpacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
         };
         panelOtherBrowse.Add(buttonBrowseOther, 0, 0);
-        panelOtherBrowse.Add(labelOtherFileName, 0, 1);
-        var buttonFindTextOther = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextOtherCommand)
-            .WithIconLeft(IconNames.Find)
+        panelOtherBrowse.Add(new Panel { Children = { labelOtherFileName, labelOpenHint } }, 0, 1);
+        var buttonFindTextOther = EditorChrome.MakeActionButton(IconNames.Find, Se.Language.Sync.FindText, vm.FindTextOtherCommand)
             .WithBindIsEnabled(nameof(vm.IsOtherTextBased));
-        buttonFindTextOther.HorizontalAlignment = HorizontalAlignment.Right;
-        var panelOtherHeader = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-        };
-        panelOtherHeader.Add(panelOtherBrowse, 0, 0);
-        panelOtherHeader.Add(buttonFindTextOther, 0, 1);
+        var panelOtherHeader = PointSyncChrome.MakeHeaderRow(panelOtherBrowse, buttonFindTextOther);
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var dataGridSubtitle = TableViewExtras.MakeTableView(multiSelect: false);
@@ -640,10 +537,7 @@ public class PointSyncViaOtherWindow : Window
             TableViewExtras.FocusRow(dataGridSubtitle);
         };
 
-        grid.Add(panelOtherHeader, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle), 1);
-
-        return grid;
+        return PointSyncChrome.MakeListPane(panelOtherHeader, EditorChrome.MakeListFrame(dataGridSubtitle));
     }
 
 }

@@ -9,11 +9,7 @@ using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
-using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using Xunit;
 
 namespace UITests.Features.Options;
 

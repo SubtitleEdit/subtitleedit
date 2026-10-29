@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic;
-using Xunit;
 
 namespace UITests.Features.Options.Shortcuts;
 

@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -12,6 +13,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 
+/// <summary>
+/// Split subtitle, in the editor look (see <see cref="EditorChrome"/>): output folder/format/encoding
+/// and how to split side by side, the parts below, the subtitle info, Cancel and Save at the bottom.
+/// </summary>
 public class SplitSubtitleWindow : Window
 {
     private TextBox _textBoxOutputFolder = null!;
@@ -23,41 +28,43 @@ public class SplitSubtitleWindow : Window
         CanResize = true;
         Width = 900;
         Height = 700;
-        MinWidth = 650;
-        MinHeight = 400;
+        MinWidth = 700;
+        MinHeight = 420;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButton(Se.Language.Tools.SplitSubtitle.SaveSplitParts, vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
+        var labelSubtitleInfo = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0)).WithBindText(vm, nameof(vm.SubtitleInfo));
+        labelSubtitleInfo.TextTrimming = TextTrimming.CharacterEllipsis;
+
+        var top = new Grid
+        {
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
+        };
+        top.Add(MakeInputOutputView(vm), 0, 0);
+        top.Add(new Border
+        {
+            Child = MakeOptionsView(vm),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
+
+        var sections = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // input/output info
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // split options
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // output + split options
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // split items list
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        sections.Add(top, 0, 0);
+        sections.Add(MakeListView(vm), 1, 0);
 
-        grid.Add(MakeInputOutputView(vm), 0);
-        grid.Add(MakeOptionsView(vm), 1);
-        grid.Add(MakeListView(vm), 2);
-        grid.Add(panelButtons, 3, 0, 1, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(labelSubtitleInfo, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, _textBoxOutputFolder); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -65,31 +72,32 @@ public class SplitSubtitleWindow : Window
 
     private Border MakeInputOutputView(SplitSubtitleViewModel vm)
     {
-        var labelSubtitleInfo = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.SubtitleInfo));
+        const double labelWidth = 100;
 
-        var labelOutputFolder = UiUtil.MakeLabel(Se.Language.General.OutputFolder).WithMinWidth(100);
-        var textBoxOutputFolder = UiUtil.MakeTextBox(450, vm, nameof(vm.OutputFolder));
+        var textBoxOutputFolder = UiUtil.MakeTextBox(double.NaN, vm, nameof(vm.OutputFolder))
+            .WithAccessibleName(Se.Language.General.OutputFolder);
+        textBoxOutputFolder.Classes.Add("text");
+        textBoxOutputFolder.HorizontalAlignment = HorizontalAlignment.Stretch;
         _textBoxOutputFolder = textBoxOutputFolder;
-        var buttonBrowse = UiUtil.MakeBrowseButton(vm.BrowseCommand);
-        var buttonOpen = UiUtil.MakeButton(vm.OpenFolderCommand, IconNames.FolderOpen, Se.Language.General.OpenOutputFolder);
-        var panelOutputFolder = new StackPanel
+        var buttonBrowse = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.PickOutputFolder, vm.BrowseCommand, 28);
+        var buttonOpen = EditorChrome.CreateToolButton("fa-solid fa-folder-open", Se.Language.General.OpenOutputFolder, vm.OpenFolderCommand, 28);
+        var panelOutputFolder = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Children =
+            ColumnSpacing = 4,
+            ColumnDefinitions =
             {
-                labelOutputFolder,
-                textBoxOutputFolder,
-                buttonBrowse,
-                buttonOpen,
-            }
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Auto),
+            },
         };
-
-        var labelFormat = UiUtil.MakeLabel(Se.Language.General.Format).WithMinWidth(100);
+        panelOutputFolder.Add(textBoxOutputFolder, 0, 0);
+        panelOutputFolder.Add(buttonBrowse, 0, 1);
+        panelOutputFolder.Add(buttonOpen, 0, 2);
 
         var comboBoxFormat = new ComboBox
         {
-            Width = 200,
-            Height = 30,
+            Width = 240,
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Formats)),
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedSubtitleFormat)),
             DataContext = vm,
@@ -101,108 +109,81 @@ public class SplitSubtitleWindow : Window
                     // "DVD Studio Pro with one space" (#15901). The closed box trims instead.
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 }, true)
-        };
+        }.WithAccessibleName(Se.Language.General.Format);
 
-        var panelFormat = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children =
-            {
-                labelFormat,
-                comboBoxFormat,
-            }
-        };
-
-        var labelEncoding = UiUtil.MakeLabel(Se.Language.General.Encoding).WithMinWidth(100);
         var comboBoxEncoding = new ComboBox
         {
-            Width = 200,
-            Height = 30,
+            Width = 240,
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Encodings)),
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedEncoding)),
             DataContext = vm,
-        };
-
-        var panelEncoding = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children =
-            {
-                labelEncoding,
-                comboBoxEncoding,
-            }
-        };
+        }.WithAccessibleName(Se.Language.General.Encoding);
 
         var panel = new StackPanel
         {
             Orientation = Orientation.Vertical,
             Children =
             {
-                labelSubtitleInfo,
-                panelOutputFolder,
-                panelFormat,
-                panelEncoding,
+                EditorChrome.MakeLabeledRow(Se.Language.General.OutputFolder, panelOutputFolder, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Format, comboBoxFormat, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Encoding, comboBoxEncoding, labelWidth),
             },
-            Spacing = 5,
+            Spacing = 8,
         };
 
-        return UiUtil.MakeBorderForControl(panel);
+        return EditorChrome.MakeEditorSection(Se.Language.General.OutputProperties, panel, first: true);
     }
 
     private static Border MakeOptionsView(SplitSubtitleViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
         var radioLines = UiUtil.MakeRadioButton(Se.Language.General.Lines, vm, nameof(vm.SplitByLines));
-        radioLines.IsCheckedChanged += (s, e) => vm.SetDirty();   
+        radioLines.IsCheckedChanged += (s, e) => vm.SetDirty();
         var radioCharacters = UiUtil.MakeRadioButton(Se.Language.General.Characters, vm, nameof(vm.SplitByCharacters));
         radioCharacters.IsCheckedChanged += (s, e) => vm.UpdateSplit();
         var radioTime = UiUtil.MakeRadioButton(Se.Language.General.Time, vm, nameof(vm.SplitByTime));
         radioTime.IsCheckedChanged += (s, e) => vm.SetDirty();
+        foreach (var radio in new[] { radioLines, radioCharacters, radioTime })
+        {
+            radio.FontSize = EditorChrome.FieldFontSize;
+        }
+
         var panelSplitBy = new StackPanel()
         {
             Orientation = Orientation.Vertical,
             Children = { radioLines, radioCharacters, radioTime },
-            Margin = new Avalonia.Thickness(0, 0, 20, 0),
         };
 
-        var labelParts = UiUtil.MakeLabel(Se.Language.Tools.SplitSubtitle.NumberOfEqualParts);
-        var numberUpDownParts = UiUtil.MakeNumericUpDownInt(1, vm.PartsMax, 1, 110, vm, nameof(vm.NumberOfEqualParts));
+        var numberUpDownParts = UiUtil.MakeNumericUpDownInt(1, vm.PartsMax, 1, 110, vm, nameof(vm.NumberOfEqualParts))
+            .WithAccessibleName(Se.Language.Tools.SplitSubtitle.NumberOfEqualParts);
+        numberUpDownParts.Classes.Add("field");
         numberUpDownParts.ValueChanged += (s, e) => vm.SetDirty();
         numberUpDownParts.Bind(NumericUpDown.MaximumProperty, new Binding(nameof(vm.PartsMax)) { Source = vm, Mode = BindingMode.OneWay });
         var panelParts = new StackPanel()
         {
             Orientation = Orientation.Vertical,
-            Children = { labelParts, numberUpDownParts },
+            Spacing = 6,
+            Margin = new Thickness(0, 6, 0, 0),
+            Children =
+            {
+                EditorChrome.MakeDimLabel(Se.Language.Tools.SplitSubtitle.NumberOfEqualParts, new Thickness(0)),
+                numberUpDownParts,
+            },
         };
 
-        grid.Add(panelSplitBy, 0);
-        grid.Add(panelParts, 0, 1);
+        var panel = new StackPanel
+        {
+            MinWidth = 200,
+            Children = { panelSplitBy, panelParts },
+        };
 
-        return UiUtil.MakeBorderForControl(grid);
+        return EditorChrome.MakeEditorSection(Se.Language.Tools.SplitSubtitle.SplitBy, panel, first: true);
     }
 
     private Control MakeListView(SplitSubtitleViewModel vm)
     {
         // Sorting dropped in the DataGrid -> TableView conversion: the list shows the
         // split parts in output order (part 1, part 2, ...).
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false).WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -247,6 +228,21 @@ public class SplitSubtitleWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        // The list fills the rest of the window, so the section header and list are laid out
+        // in a grid rather than in a section's stack panel.
+        var content = new Grid
+        {
+            RowSpacing = 10,
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)) },
+        };
+        content.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 0, 0);
+        content.Add(EditorChrome.MakeListFrame(dataGrid, clearListBackground: true), 1, 0);
+        return new Border
+        {
+            Child = content,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14, 12, 14, 14),
+        };
     }
 }

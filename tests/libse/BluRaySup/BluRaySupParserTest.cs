@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using SkiaSharp;
-using System.IO;
 using System.Text;
 
 namespace LibSETests.BluRaySup;

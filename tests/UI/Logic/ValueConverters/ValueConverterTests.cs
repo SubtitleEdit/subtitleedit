@@ -4,7 +4,6 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using System;
 using System.Globalization;
 
 namespace UITests.Logic.ValueConverters;

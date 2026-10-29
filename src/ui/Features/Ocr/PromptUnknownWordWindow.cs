@@ -1,10 +1,13 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -12,6 +15,11 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
+/// <summary>
+/// Unknown word found during OCR, in the editor look of spell check (see <see cref="EditorChrome"/>):
+/// the image and the line on top, the word with its actions on the left, the suggestions on the
+/// right, Abort in the button bar.
+/// </summary>
 public class PromptUnknownWordWindow : Window
 {
     public PromptUnknownWordWindow(PromptUnknownWordViewModel vm)
@@ -20,35 +28,12 @@ public class PromptUnknownWordWindow : Window
         Title = Se.Language.SpellCheck.SpellCheck;
         CanResize = true;
         Width = 800;
-        Height = 600;
+        Height = 640;
         MinWidth = 700;
-        MinHeight = 500;
+        MinHeight = 560;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
-
-        var buttonCancel = UiUtil.MakeButton(Se.Language.General.Abort, vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonCancel);
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // image
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // whole text
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // word + suggestions
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons (abort)
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
 
         var image = new Image
         {
@@ -60,21 +45,44 @@ public class PromptUnknownWordWindow : Window
 
         // subtitle bitmaps are light or dark text on transparent pixels, so without a backdrop they
         // vanish into the window - white text on the light theme (#15111)
-        var imageBackdrop = new Border
+        var imageBackdrop = BinaryOcrChrome.MakeImageFrame(image, ImagePreviewBackground.CreateBrush());
+        imageBackdrop.HorizontalAlignment = HorizontalAlignment.Center;
+        imageBackdrop.VerticalAlignment = VerticalAlignment.Center;
+        var imageSection = new Border
         {
-            Background = ImagePreviewBackground.CreateBrush(),
-            Child = image,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
+            Child = imageBackdrop,
+            Padding = new Thickness(14, 14, 14, 0),
         };
 
-        grid.Add(imageBackdrop, 0, 0, 1, 2);
-        grid.Add(MakeWholeTextView(vm), 1, 0, 1, 2);
-        grid.Add(MakeWordView(vm), 2);
-        grid.Add(MakeWordSuggestionsView(vm), 2, 1);
-        grid.Add(panelButtons, 3, 0, 1, 2);
+        var columns = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+        };
+        columns.Add(MakeWordView(vm), 0, 0);
+        var suggestions = MakeWordSuggestionsView(vm);
+        suggestions.BorderThickness = new Thickness(1, 1, 0, 0);
+        columns.Add(suggestions, 0, 1);
 
-        Content = grid;
+        // The image takes what is left, so the word and its actions always fit
+        var body = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // image
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // whole text
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // word + suggestions
+            },
+        };
+        body.Add(imageSection, 0, 0);
+        body.Add(MakeWholeTextView(vm), 1, 0);
+        body.Add(columns, 2, 0);
+
+        var buttonCancel = EditorChrome.WithoutMargin(UiUtil.MakeButton(Se.Language.General.Abort, vm.CancelCommand));
+        Content = EditorChrome.MakeRoot(body, EditorChrome.MakeDockedButtonBar(null, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, vm.TextBoxWord); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -82,30 +90,16 @@ public class PromptUnknownWordWindow : Window
         Closing += vm.OnClosing;
     }
 
-    private static Grid MakeWholeTextView(PromptUnknownWordViewModel vm)
+    private static Border MakeWholeTextView(PromptUnknownWordViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-        };
-
         vm.TextBoxWholeText.Bind(TextBox.TextProperty, new Binding(nameof(vm.WholeText)) { Mode = BindingMode.TwoWay });
-        vm.TextBoxWholeText.WithAccessibleName(Se.Language.Ocr.EditWholeText);
+        vm.TextBoxWholeText.WithAccessibleName(Se.Language.General.EditWholeText);
+        vm.TextBoxWholeText.Classes.Add("text");
         vm.TextBoxWholeText
             .WithHorizontalAlignmentStretch()
             .WithHeight(88)
             .WithBindIsVisible(nameof(vm.DoEditWholeText));
+        vm.TextBoxWholeText.VerticalContentAlignment = VerticalAlignment.Top; // 88 high, the text starts at the top
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxWholeText.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
@@ -115,45 +109,45 @@ public class PromptUnknownWordWindow : Window
         vm.PanelWholeText.HorizontalAlignment = HorizontalAlignment.Left;
         vm.PanelWholeText.VerticalAlignment = VerticalAlignment.Top;
         vm.PanelWholeText.Orientation = Orientation.Horizontal;
-        vm.PanelWholeText.Margin = new Thickness(10, 6, 10, 6);
+        vm.PanelWholeText.Margin = new Thickness(10, 8, 10, 8);
         var scrollViewerWholeText = new ScrollViewer
         {
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
             HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
             Content = vm.PanelWholeText,
-            Height = 85,
+            Height = 86,
         };
-        var scrollViewerWholeTextBorder = new Border
-        {
-            BorderThickness = new Thickness(1),
-            BorderBrush = UiUtil.GetBorderBrush(),
-            Child = scrollViewerWholeText,
-        };
-        scrollViewerWholeText.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.DoEditWholeText))
+        var scrollViewerWholeTextBorder = EditorChrome.MakeListFrame(scrollViewerWholeText, clearListBackground: true);
+        scrollViewerWholeTextBorder.Bind(Border.IsVisibleProperty, new Binding(nameof(vm.DoEditWholeText))
         {
             Converter = InverseBooleanConverter.Instance,
         });
 
+        // Toggles between the line with the word highlighted and a text box with the whole line
         var buttonEditWholeText = new ToggleButton
         {
             DataContext = vm,
             [!ContentControl.ContentProperty] = new Binding(nameof(vm.EditButtonLabel)),
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.DoEditWholeText)) { Mode = BindingMode.TwoWay },
+            [!AutomationProperties.NameProperty] = new Binding(nameof(vm.EditButtonLabel)),
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(3, 0, 0, 0),
+            FontSize = EditorChrome.FieldFontSize,
+            MinHeight = 28,
+            Padding = new Thickness(10, 4),
+            CornerRadius = new CornerRadius(6),
         };
         buttonEditWholeText.Click += (_, _) => vm.OnEditWholeTextClicked();
 
-        var panelButtons = UiUtil.MakeVerticalPanel(buttonEditWholeText);
+        var panel = new Panel();
+        panel.Children.Add(scrollViewerWholeTextBorder);
+        panel.Children.Add(vm.TextBoxWholeText);
 
-        grid.Add(scrollViewerWholeTextBorder, 0);
-        grid.Add(vm.TextBoxWholeText, 0);
-        grid.Add(panelButtons, 0, 1);
-
-        return grid;
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Text, panel, buttonEditWholeText);
+        section.BorderThickness = new Thickness(0);
+        return section;
     }
 
-    private static Grid MakeWordView(PromptUnknownWordViewModel vm)
+    private static Border MakeWordView(PromptUnknownWordViewModel vm)
     {
         var grid = new Grid
         {
@@ -172,39 +166,35 @@ public class PromptUnknownWordWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            RowSpacing = 5,
-            ColumnSpacing = 5,
+            VerticalAlignment = VerticalAlignment.Top,
+            RowSpacing = 6,
+            ColumnSpacing = 6,
         };
 
+        // The word box gets the first focus: the window keys (Esc, F1) work from the start, and a
+        // bare Space types a space instead of clicking a focused action button (#15028)
+        vm.TextBoxWord.Classes.Add("text");
         vm.TextBoxWord
             .WithHorizontalAlignmentStretch()
             .WithBindEnabled(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance)
             .Bind(TextBox.TextProperty, new Binding(nameof(vm.Word)) { Mode = BindingMode.TwoWay });
         vm.TextBoxWord.WithAccessibleName(Se.Language.General.Text);
+        vm.TextBoxWord.Margin = new Thickness(0, 0, 0, 4);
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxWord.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
-        var buttonChangeAll = UiUtil.MakeButton(Se.Language.General.ChangeAll, vm.ChangeAllCommand)
-            .WithHorizontalAlignmentStretch()
+        var buttonChangeAll = MakeActionButton(Se.Language.General.ChangeAll, IconNames.FileReplaceOutline, vm.ChangeAllCommand)
             .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
-        var buttonChangeOnce = UiUtil.MakeButton(Se.Language.General.ChangeOnce, vm.ChangeOnceCommand)
-            .WithHorizontalAlignmentStretch();
-        var buttonSkipOne = UiUtil.MakeButton(Se.Language.General.SkipOnce, vm.SkipOnceCommand)
-            .WithHorizontalAlignmentStretch();
-        var buttonGoogleIt = UiUtil.MakeButton(Se.Language.General.GoogleIt, vm.GoogleItCommand)
-            .WithHorizontalAlignmentStretch()
+        var buttonChangeOnce = MakeActionButton(Se.Language.General.ChangeOnce, IconNames.FindReplace, vm.ChangeOnceCommand);
+        var buttonSkipOne = MakeActionButton(Se.Language.General.SkipOnce, IconNames.SkipNext, vm.SkipOnceCommand);
+        var buttonGoogleIt = MakeActionButton(Se.Language.General.GoogleIt.Trim(), IconNames.Web, vm.GoogleItCommand)
             .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
-        var buttonSkipAll = UiUtil.MakeButton(Se.Language.General.SkipAll, vm.SkipAllCommand)
-            .WithHorizontalAlignmentStretch()
+        var buttonSkipAll = MakeActionButton(Se.Language.General.SkipAll, IconNames.ChevronDoubleRight, vm.SkipAllCommand)
             .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
-        var buttonAddToNameList = UiUtil.MakeButton(Se.Language.General.AddToNamesListCaseSensitive, vm.AddToNamesListCommand)
-            .WithHorizontalAlignmentStretch()
+        var buttonAddToNameList = MakeActionButton(Se.Language.General.AddToNamesListCaseSensitive, IconNames.Account, vm.AddToNamesListCommand)
             .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
-        var buttonAddToUserDictionary = UiUtil.MakeButton(Se.Language.General.AddToUserDictionary, vm.AddToUserDictionaryCommand)
-            .WithHorizontalAlignmentStretch()
+        var buttonAddToUserDictionary = MakeActionButton(Se.Language.General.AddToUserDictionary, IconNames.BookAlphabet, vm.AddToUserDictionaryCommand)
             .WithBindIsVisible(nameof(vm.DoEditWholeText), InverseBooleanConverter.Instance);
 
         grid.Add(vm.TextBoxWord, 0, 0, 1, 2);
@@ -216,42 +206,31 @@ public class PromptUnknownWordWindow : Window
         grid.Add(buttonAddToNameList, 4, 0, 1, 2);
         grid.Add(buttonAddToUserDictionary, 5, 0, 1, 2);
 
-        return grid;
+        return EditorChrome.MakeEditorSection(Se.Language.SpellCheck.WordNotFound, grid);
     }
 
-    private static Grid MakeWordSuggestionsView(PromptUnknownWordViewModel vm)
+    private static Button MakeActionButton(string text, string icon, System.Windows.Input.ICommand? command)
     {
-        var labelSuggestions = new Label
+        var button = new Button
         {
-            VerticalAlignment = VerticalAlignment.Center,
-            Content = Se.Language.General.Suggestions,
-            Margin = new Thickness(0, 10, 0, 0),
-        };
+            Content = text,
+            Command = command,
+        }.WithIconLeft(icon);
+        return EditorChrome.StyleActionColumnButton(button);
+    }
 
-        var buttonUseOnce = new Button
-        {
-            Content = Se.Language.General.UseOnce,
-            Command = vm.SuggestionUseCommand,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            HorizontalContentAlignment = HorizontalAlignment.Center,
-        }.WithBindEnabled(nameof(vm.AreSuggestionsEnabled));
-
-        var buttonUseAlways = new Button
-        {
-            Content = Se.Language.General.UseAlways,
-            Command = vm.SuggestionUseAlwaysCommand,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            HorizontalContentAlignment = HorizontalAlignment.Center,
-        }.WithBindEnabled(nameof(vm.AreSuggestionsEnabled));
+    private static Border MakeWordSuggestionsView(PromptUnknownWordViewModel vm)
+    {
+        var buttonUseOnce = MakeActionButton(Se.Language.General.UseOnce, IconNames.Check, vm.SuggestionUseCommand)
+            .WithBindEnabled(nameof(vm.AreSuggestionsEnabled));
+        var buttonUseAlways = MakeActionButton(Se.Language.General.UseAlways, IconNames.CheckBold, vm.SuggestionUseAlwaysCommand)
+            .WithBindEnabled(nameof(vm.AreSuggestionsEnabled));
 
         // Side by side when both fit, otherwise stacked - a horizontal StackPanel kept each button at
         // its natural width, so longer translations (e.g. Russian, Bulgarian) ran past the window edge (#15901).
         var panelButtons = new ButtonPairPanel
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 5, 0, 10),
             Children =
             {
                 buttonUseOnce,
@@ -263,46 +242,26 @@ public class PromptUnknownWordWindow : Window
         {
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(SpellCheckViewModel.Suggestions)) { Source = vm, Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(SpellCheckViewModel.SelectedSuggestion)) { Source = vm, Mode = BindingMode.TwoWay },
-            VerticalAlignment = VerticalAlignment.Top,
-            Width = double.NaN,
-            Height = double.NaN,
+            VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Background = new SolidColorBrush(Colors.Transparent),
-        };
+            Height = 170,
+            Background = Brushes.Transparent,
+        }.WithAccessibleName(Se.Language.General.Suggestions);
+        listBoxSuggestions.Styles.Add(new Style(x => x.OfType<ListBoxItem>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(10, 6)),
+                new Setter(TemplatedControl.FontSizeProperty, 13.0),
+                new Setter(Layoutable.MinHeightProperty, 0.0),
+            },
+        });
         listBoxSuggestions.DoubleTapped += vm.ListBoxSuggestionsDoubleTapped;
         listBoxSuggestions.SelectionChanged += vm.ListBoxSuggestionsSelectionChanged;
 
-        var scrollViewSuggestions = new ScrollViewer
-        {
-            Content = listBoxSuggestions,
-            Height = 160,
-        };
-
-        var borderSuggestions = UiUtil.MakeBorderForControl(scrollViewSuggestions);
-
-
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, // Auto measured the buttons unconstrained, so they never stacked
-            },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-        };
-
-        grid.Add(labelSuggestions, 0, 0);
-        grid.Add(borderSuggestions, 1, 0);
-        grid.Add(panelButtons, 2, 0);
-
-        return grid;
+        var panel = new StackPanel { Spacing = 8 };
+        panel.Children.Add(EditorChrome.MakeListFrame(listBoxSuggestions, clearListBackground: true));
+        panel.Children.Add(panelButtons);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Suggestions, panel);
     }
 }

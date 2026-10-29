@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace Nikse.SubtitleEdit.UiLogic.Translate;
 

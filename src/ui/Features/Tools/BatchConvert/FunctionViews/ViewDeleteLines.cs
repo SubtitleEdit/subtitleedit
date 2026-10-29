@@ -1,6 +1,6 @@
-﻿using Avalonia.Controls;
-using Nikse.SubtitleEdit.Logic;
+using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 
@@ -8,65 +8,15 @@ public static class ViewDeleteLines
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var labelHeader = new Label
-        {
-            Content = Se.Language.General.DeleteLines,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0, 0, 0, 20),
-        };
+        var numericUpDownDeleteFirstLines = FunctionViewChrome.MakeIntField(vm, nameof(vm.DeleteXFirstLines), 0, 100, 0, Se.Language.General.DeleteFirstLines);
+        var numericUpDownDeleteLastLines = FunctionViewChrome.MakeIntField(vm, nameof(vm.DeleteXLastLines), 0, 100, 0, Se.Language.General.DeleteLastLines);
+        var textBoxDeleteContains = EditorChrome.MakeTextField(nameof(vm.DeleteLinesContains), Se.Language.General.DeleteLinesContainingText);
+        var textBoxDeleteActorsOrStyles = EditorChrome.MakeTextField(nameof(vm.DeleteActorsOrStyles), Se.Language.Tools.BatchConvert.DeleteLinesWithSpecificActorsOrStyles);
 
-        var labelDeleteContains = UiUtil.MakeLabel(Se.Language.General.DeleteLinesContainingText);
-        var textBoxDeleteContains = UiUtil.MakeTextBox(400, vm, nameof(vm.DeleteLinesContains))
-            .WithMarginLeft(10);
-        var panelDeleteContains = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            Children = { labelDeleteContains, textBoxDeleteContains },
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
-        var labelDeleteFirstLines = UiUtil.MakeLabel(Se.Language.General.DeleteFirstLines);
-        var numericUpDownDeleteFirstLines = UiUtil.MakeNumericUpDownInt(0, 100, 0, 150, vm, nameof(vm.DeleteXFirstLines))
-            .WithMarginLeft(10);
-        var panelDeleteFirstLines = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            Children = { labelDeleteFirstLines, numericUpDownDeleteFirstLines },
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
-        var labelDeleteLastLines = UiUtil.MakeLabel(Se.Language.General.DeleteLastLines);
-        var numericUpDownDeleteLastLines = UiUtil.MakeNumericUpDownInt(0, 100, 0, 150, vm, nameof(vm.DeleteXLastLines))
-            .WithMarginLeft(10);
-        var panelDeleteLastLines = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            Children = { labelDeleteLastLines, numericUpDownDeleteLastLines },
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
-        var labelDeleteActorsOrStyles = UiUtil.MakeLabel(Se.Language.Tools.BatchConvert.DeleteLinesWithSpecificActorsOrStyles);
-        var textBoxDeleteActorsOrStyles = UiUtil.MakeTextBox(400, vm, nameof(vm.DeleteActorsOrStyles));
-        var panelDeleteActorsOrStyles = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
-            Children = { labelDeleteActorsOrStyles, textBoxDeleteActorsOrStyles },
-            Margin = new Avalonia.Thickness(0, 10, 0, 0),
-        };
-
-        var panel = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
-            Children =
-            {
-                labelHeader,
-                panelDeleteFirstLines,
-                panelDeleteLastLines,
-                panelDeleteContains,
-                panelDeleteActorsOrStyles,
-            }
-        };
-
-        return panel;
+        return FunctionViewChrome.MakePanel(vm, Se.Language.General.DeleteLines,
+            FunctionViewChrome.MakeRow(Se.Language.General.DeleteFirstLines, numericUpDownDeleteFirstLines),
+            FunctionViewChrome.MakeRow(Se.Language.General.DeleteLastLines, numericUpDownDeleteLastLines),
+            FunctionViewChrome.MakeRow(Se.Language.General.DeleteLinesContainingText, textBoxDeleteContains),
+            FunctionViewChrome.MakeRow(Se.Language.Tools.BatchConvert.DeleteLinesWithSpecificActorsOrStyles, textBoxDeleteActorsOrStyles));
     }
 }

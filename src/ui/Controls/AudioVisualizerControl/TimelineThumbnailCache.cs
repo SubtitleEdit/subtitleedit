@@ -21,6 +21,12 @@ namespace Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 /// (#15956). Only when the keyframe is too far away for the tile is the exact frame decoded,
 /// on one thread. ffmpeg runs at below normal priority either way.
 /// </para>
+/// <para>
+/// No ffmpeg is started while <see cref="Paused"/> is set (the video playing): on macOS .NET
+/// starts a process with a full fork(), and malloc is locked for every thread meanwhile - mpv's
+/// included - which still gave jitter and crackling audio with an idle CPU (#15956). Frames
+/// asked for meanwhile wait in the queue.
+/// </para>
 /// </summary>
 internal sealed class TimelineThumbnailCache
 {
@@ -40,9 +46,33 @@ internal sealed class TimelineThumbnailCache
     private int _generation;
     private int _consecutiveFailures;
     private bool _workerRunning;
+    private bool _paused;
 
     /// <summary>Raised on a background thread when a requested frame has arrived.</summary>
     public event Action? ThumbnailReady;
+
+    /// <summary>
+    /// While set, no new frames are extracted (a run already going finishes). Clearing it works
+    /// off the frames asked for meanwhile, newest first.
+    /// </summary>
+    public bool Paused
+    {
+        get
+        {
+            lock (_lock)
+            {
+                return _paused;
+            }
+        }
+        set
+        {
+            lock (_lock)
+            {
+                _paused = value;
+                StartWorkerIfNeeded();
+            }
+        }
+    }
 
     /// <summary>
     /// The frame at <paramref name="milliseconds"/>, or null while it is not there yet (it is
@@ -87,14 +117,20 @@ internal sealed class TimelineThumbnailCache
                 _pending.RemoveAt(0);
             }
 
-            if (!_workerRunning)
-            {
-                _workerRunning = true;
-                _ = Task.Run(Work);
-            }
+            StartWorkerIfNeeded();
         }
 
         return null;
+    }
+
+    // Called with _lock held
+    private void StartWorkerIfNeeded()
+    {
+        if (!_workerRunning && !_paused && _pending.Count > 0)
+        {
+            _workerRunning = true;
+            _ = Task.Run(Work);
+        }
     }
 
     private void Work()
@@ -107,7 +143,7 @@ internal sealed class TimelineThumbnailCache
             int generation;
             lock (_lock)
             {
-                if (_pending.Count == 0)
+                if (_pending.Count == 0 || _paused)
                 {
                     _workerRunning = false;
                     return;

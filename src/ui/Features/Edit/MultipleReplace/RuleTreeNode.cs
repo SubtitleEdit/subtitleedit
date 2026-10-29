@@ -19,6 +19,16 @@ public partial class RuleTreeNode : ObservableObject
     [ObservableProperty] private bool _wholeWord;
 
     /// <summary>
+    /// The rule's place in its category, 1-based - the order the rules run in.
+    /// </summary>
+    [ObservableProperty] private int _number;
+
+    /// <summary>
+    /// How many rules a category holds, for the category list.
+    /// </summary>
+    public int RuleCount => SubNodes?.Count ?? 0;
+
+    /// <summary>
     /// Why this rule cannot run - currently only a regular expression that will not compile.
     /// Set by the preview, shown as a warning marker on the row.
     /// </summary>
@@ -46,6 +56,9 @@ public partial class RuleTreeNode : ObservableObject
     }
 
     public RuleTreeNode? Parent { get; set; }
+
+    // What a screen reader announces for a row of the category list (#12087).
+    public override string ToString() => IsCategory ? CategoryName : Find;
 
     /// <summary>
     /// "Whole word" applies to the plain text types only - a regular expression uses \b itself.
@@ -83,6 +96,7 @@ public partial class RuleTreeNode : ObservableObject
         if (isCategory)
         {
             SubNodes = new ObservableCollection<RuleTreeNode>();
+            SubNodes.CollectionChanged += (_, _) => OnPropertyChanged(nameof(RuleCount));
         }
     }
 
@@ -103,24 +117,27 @@ public partial class RuleTreeNode : ObservableObject
 
     private void UpdateIconName()
     {
-        if (Type == MultipleReplaceType.RegularExpression)
+        IconName = GetIconName(Type);
+    }
+
+    /// <summary>
+    /// The icon the tree shows for a rule type - also used by lists that show plain rules.
+    /// </summary>
+    internal static string GetIconName(MultipleReplaceType type)
+    {
+        return type switch
         {
-            IconName = IconNames.Regex;
-        }
-        else if (Type == MultipleReplaceType.CaseInsensitive)
-        {
-            IconName = IconNames.FindReplace;
-        }
-        else if (Type == MultipleReplaceType.CaseSensitive)
-        {
-            IconName =  IconNames.CaseSensitiveAlt;
-        }
+            MultipleReplaceType.RegularExpression => IconNames.Regex,
+            MultipleReplaceType.CaseSensitive => IconNames.CaseSensitiveAlt,
+            _ => IconNames.FindReplace,
+        };
     }
 
     public RuleTreeNode(RuleTreeNode? parent, string categoryName, ObservableCollection<RuleTreeNode> subNodes, bool active)
     {
         CategoryName = categoryName;
         SubNodes = subNodes;
+        SubNodes.CollectionChanged += (_, _) => OnPropertyChanged(nameof(RuleCount));
         Find = string.Empty;
         ReplaceWith = string.Empty;
         Description = string.Empty;

@@ -1,6 +1,4 @@
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
-using System.Linq;
-using Xunit;
 
 namespace UITests.Controls;
 

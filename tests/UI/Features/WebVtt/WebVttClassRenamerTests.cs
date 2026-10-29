@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Features.WebVtt;
-using System.Collections.Generic;
 
 namespace UITests.Features.WebVtt;
 

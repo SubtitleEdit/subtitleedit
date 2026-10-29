@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.UiLogic;
 

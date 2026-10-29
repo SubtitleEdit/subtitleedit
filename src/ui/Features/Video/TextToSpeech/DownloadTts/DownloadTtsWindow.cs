@@ -1,11 +1,10 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Data;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Avalonia.Controls.Primitives;
-using Avalonia.Styling;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 
@@ -24,10 +23,14 @@ public sealed class DownloadTtsWindow : Window
         DataContext = vm;
         _vm = vm;
 
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsUncentered | EditorWindowStyles.MuteDisabledPrimary);
+
         var titleText = new TextBlock
-        {            
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
+        {
+            FontSize = EditorChrome.ScaledFont(17),
+            FontWeight = FontWeight.SemiBold,
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 460,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.TitleText)),
         };
 
@@ -35,7 +38,13 @@ public sealed class DownloadTtsWindow : Window
         progressBar.MinWidth = 400;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
-        var statusText = new TextBlock();
+        var statusText = new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            MaxWidth = 460,
+        };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
 
         // The view models set Error on every failure path, but nothing rendered it - the user saw
@@ -45,6 +54,8 @@ public sealed class DownloadTtsWindow : Window
         {
             Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
             TextWrapping = TextWrapping.Wrap,
+            FontSize = EditorChrome.FieldFontSize,
+            MaxWidth = 460,
         };
         errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
         errorText.Bind(IsVisibleProperty, new Binding(nameof(vm.Error))
@@ -53,21 +64,36 @@ public sealed class DownloadTtsWindow : Window
         });
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel);
 
-        Content = new StackPanel
+        var body = new Border
         {
-            Spacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
+            Background = EditorChrome.PanelBrush,
+            Padding = new Thickness(20, 18),
+            Child = new StackPanel
             {
-                titleText,
-                progressBar,
-                statusText,
-                errorText,
-                buttonBar,
-            }
+                Spacing = 10,
+                Children =
+                {
+                    titleText,
+                    progressBar,
+                    statusText,
+                    errorText,
+                },
+            },
         };
+
+        var root = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+            },
+        };
+        root.Add(body, 0, 0);
+        root.Add(buttonBar, 1, 0);
+        Content = root;
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {

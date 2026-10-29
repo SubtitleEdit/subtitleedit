@@ -2,8 +2,6 @@ using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace UITests.Controls;
 

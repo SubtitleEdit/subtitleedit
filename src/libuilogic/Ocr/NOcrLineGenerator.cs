@@ -1,20 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Nikse.SubtitleEdit.UiLogic.Ocr;
 
 internal static class NOcrLineGenerator
 {
     private const int FgAlphaThreshold = 150;
 
-    internal static void GenerateSkeletonDistance(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap)
+    internal static void GenerateSkeletonDistance(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap, Random random)
     {
         var w = bitmap.Width;
         var h = bitmap.Height;
         if (w < 4 || h < 4)
         {
-            NOcrChar.GenerateLineSegmentsRandom(maxNumberOfLines, veryPrecise, nOcrChar, bitmap);
+            NOcrChar.GenerateLineSegmentsRandom(maxNumberOfLines, veryPrecise, nOcrChar, bitmap, random);
             return;
         }
 
@@ -35,13 +31,13 @@ internal static class NOcrLineGenerator
         RemoveSimilarLines(nOcrChar.LinesBackground, nOcrChar.Width, nOcrChar.Height);
     }
 
-    internal static void GenerateEdgeHough(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap)
+    internal static void GenerateEdgeHough(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap, Random random)
     {
         var w = bitmap.Width;
         var h = bitmap.Height;
         if (w < 6 || h < 6)
         {
-            NOcrChar.GenerateLineSegmentsRandom(maxNumberOfLines, veryPrecise, nOcrChar, bitmap);
+            NOcrChar.GenerateLineSegmentsRandom(maxNumberOfLines, veryPrecise, nOcrChar, bitmap, random);
             return;
         }
 

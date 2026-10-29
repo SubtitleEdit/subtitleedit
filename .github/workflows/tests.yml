@@ -8,13 +8,17 @@ name: Tests
 # Polish.json still reached main, so the suite also needs to gate merges here.
 #
 # This covers the translation files as well - UITests contains LanguageJsonFilesTests and
-# SeLanguageJsonContextTests - which is why there is no separate language-file workflow:
-# building UITests is nearly the whole cost of this job, so a second workflow that builds
-# the same project to run 66 of its tests would roughly double CI time for no extra
-# coverage.
+# SeLanguageJsonContextTests - which is why there is no separate language-file workflow.
 #
-# `dotnet test` on the solution picks up the four test projects (libse, libuilogic,
-# seconv, UI); the benchmark projects are not test projects and are skipped.
+# The suite is split over parallel jobs because UITests is nearly all of the run time and
+# cannot parallelize inside one process: every headless test shares one Avalonia dispatcher
+# thread and the static Se.Settings, so tests/xunit.runner.json turns parallelization off.
+# Separate processes have none of that shared state, so UITests is sharded by namespace
+# into three runs of about the same length (measured 10-20: 118 s in one process, 48 s as
+# three). The three filters partition the namespace - Features.Main, the rest of Features,
+# everything else - so a new test lands in exactly one shard without editing this file.
+# The libs job builds the whole solution, so the app and benchmark projects still have to
+# compile; the UI jobs build only UITests and what it references.
 on:
   pull_request:
   push:
@@ -24,7 +28,33 @@ on:
 
 jobs:
   test:
+    name: test (${{ matrix.name }})
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: libs
+            build: SubtitleEdit.sln
+            projects: tests/libse/LibSETests.csproj tests/libuilogic/LibUiLogicTests.csproj tests/seconv/SeConvTests.csproj
+            filter: ''
+          - name: ui-main
+            build: tests/UI/UITests.csproj
+            projects: tests/UI/UITests.csproj
+            filter: FullyQualifiedName~UITests.Features.Main.
+          - name: ui-features
+            build: tests/UI/UITests.csproj
+            projects: tests/UI/UITests.csproj
+            filter: FullyQualifiedName~UITests.Features.&FullyQualifiedName!~UITests.Features.Main.
+          - name: ui-other
+            build: tests/UI/UITests.csproj
+            projects: tests/UI/UITests.csproj
+            filter: FullyQualifiedName!~UITests.Features.
+
+    env:
+      PROJECTS: ${{ matrix.projects }}
+      FILTER: ${{ matrix.filter }}
 
     steps:
       - uses: actions/checkout@v5
@@ -35,15 +65,21 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore
-        run: dotnet restore SubtitleEdit.sln
+        run: dotnet restore ${{ matrix.build }}
 
       - name: Build
-        run: dotnet build SubtitleEdit.sln --no-restore
+        run: dotnet build ${{ matrix.build }} --no-restore
 
+      # Every project runs even when an earlier one fails, so one run reports all failures.
       - name: Test
         id: test
         continue-on-error: true
-        run: dotnet test SubtitleEdit.sln --no-build --logger "trx;LogFileName=tests.trx"
+        run: |
+          status=0
+          for p in $PROJECTS; do
+            dotnet test "$p" --no-build --logger "trx;LogFileName=tests.trx" ${FILTER:+--filter "$FILTER"} || status=1
+          done
+          exit $status
 
       # The headless UI suite has a contamination failure mode no in-test fix can cover:
       # when a test crashes the shared Avalonia dispatcher thread, every later test that
@@ -56,7 +92,11 @@ jobs:
         if: steps.test.outcome == 'failure'
         run: |
           echo "::warning title=Flaky test run::First test run failed; retrying once in a fresh process. Check the test-results artifact for the failure."
-          dotnet test SubtitleEdit.sln --no-build --logger "trx;LogFileName=tests-retry.trx"
+          status=0
+          for p in $PROJECTS; do
+            dotnet test "$p" --no-build --logger "trx;LogFileName=tests-retry.trx" ${FILTER:+--filter "$FILTER"} || status=1
+          done
+          exit $status
 
       # Uploaded whenever the first run failed - also on a green retry, so flakes can be
       # diagnosed without re-running locally. Needs !cancelled(): without a status function
@@ -64,8 +104,8 @@ jobs:
       # upload - exactly the run whose trx files were needed.
       - name: Upload test results
         if: ${{ !cancelled() && steps.test.outcome == 'failure' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
-          name: test-results
+          name: test-results-${{ matrix.name }}
           path: '**/TestResults/*.trx'
           if-no-files-found: ignore

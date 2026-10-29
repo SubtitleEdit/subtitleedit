@@ -1,13 +1,13 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Data;
-using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
+/// <summary>
+/// Downloads ffmpeg, in the editor download layout (see <see cref="Chrome"/>): title, progress,
+/// status and error on the panel color, Retry (after a failure) and Cancel in the button bar.
+/// </summary>
 public class DownloadFfmpegWindow : Window
 {
     public DownloadFfmpegWindow(DownloadFfmpegViewModel vm)
@@ -18,49 +18,28 @@ public class DownloadFfmpegWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         DataContext = vm;
 
-        var titleText = new TextBlock
-        {
-            Text = string.Format(Se.Language.General.DownloadingX, "ffmpeg"),
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
-        };
+        var titleText = EditorChrome.MakeDownloadTitle(string.Format(Se.Language.General.DownloadingX, "ffmpeg"));
+        var progressBar = EditorChrome.MakeDownloadProgressBar(nameof(DownloadFfmpegViewModel.Progress));
+        var statusText = EditorChrome.MakeDownloadStatus(nameof(DownloadFfmpegViewModel.StatusText));
 
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.MinWidth = 400;
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(DownloadFfmpegViewModel.Progress)));
-
-        var statusText = new TextBlock();
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(DownloadFfmpegViewModel.StatusText)));
-
-        // Download/unpack failures (no data, ffmpeg in use, ...) - otherwise the window just sits there.
-        var errorText = DownloadWindowUi.MakeErrorText();
+        // Download/unpack failures (no data, file in use, ...) - otherwise the window just sits there.
+        var errorText = EditorChrome.MakeDownloadError(DownloadWindowUi.ErrorPropertyName);
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
         var buttonRetry = DownloadWindowUi.MakeButtonRetry(vm.RetryCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonRetry, buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonRetry, buttonCancel);
 
-        Content = new StackPanel
-        {
-            Spacing = 8,
-            Margin = UiUtil.MakeWindowMargin(),
-            Children =
-            {
-                titleText,
-                progressBar,
-                statusText,
-                errorText,
-                buttonBar,
-            }
-        };
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 
         Loaded += delegate
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
             vm.StartDownload();
         };
-        KeyDown += (s, e) => vm.OnKeyDown(e);
+        KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

@@ -1,7 +1,5 @@
 using Nikse.SubtitleEdit.Features.Video.BackgroundMusic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UITests.Features.Video;
 

@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Logic;
 
@@ -11,10 +12,12 @@ namespace UITests.Logic;
 public class FrameModeTimeSnapperTests : IDisposable
 {
     private readonly double _currentFrameRate = Configuration.Settings.General.CurrentFrameRate;
+    private readonly bool _snapToVideoFrames = Se.Settings.General.FrameModeSnapToVideoFrames;
 
     public void Dispose()
     {
         Configuration.Settings.General.CurrentFrameRate = _currentFrameRate;
+        Se.Settings.General.FrameModeSnapToVideoFrames = _snapToVideoFrames;
     }
 
     private static SubtitleLineViewModel MakeLine(double startMs, double endMs) =>
@@ -99,5 +102,55 @@ public class FrameModeTimeSnapperTests : IDisposable
 
         Assert.Equal(0, FrameModeTimeSnapper.SnapChangedLines(new[] { line }, Array.Empty<SubtitleLineViewModel>()));
         Assert.Equal(1013, line.StartTime.TotalMilliseconds);
+    }
+
+    [Theory]
+    [InlineData(23.976, 118918, 118910)] // 00:01:58:22 - the frame the Blu-ray sup export uses (#16007)
+    [InlineData(23.976, 126334, 126335)] // 00:02:06:08
+    [InlineData(23.976, 118910, 118910)]
+    [InlineData(25, 1013, 1000)]
+    public void Snap_ToVideoFrames_LandsOnTheVideoFrame(double frameRate, double ms, double expectedMs)
+    {
+        Configuration.Settings.General.CurrentFrameRate = frameRate;
+        Se.Settings.General.FrameModeSnapToVideoFrames = true;
+
+        Assert.Equal(expectedMs, FrameModeTimeSnapper.Snap(TimeSpan.FromMilliseconds(ms)).TotalMilliseconds);
+    }
+
+    [Theory]
+    [InlineData(23.976)]
+    [InlineData(29.97)]
+    [InlineData(59.94)]
+    [InlineData(25)]
+    public void Snap_ToVideoFrames_KeepsVideoFramesAndTimeCodes(double frameRate)
+    {
+        Configuration.Settings.General.CurrentFrameRate = frameRate;
+        Se.Settings.General.FrameModeSnapToVideoFrames = true;
+
+        // Three hours, so the drift between the time code and the video frames goes round many times.
+        var lastFrame = FrameNumbers.FromMilliseconds(3 * 3600 * 1000);
+        for (var frame = 0; frame <= lastFrame; frame += 7)
+        {
+            var frameTime = TimeSpan.FromMilliseconds(FrameNumbers.ToMilliseconds(frame));
+            var snapped = FrameModeTimeSnapper.Snap(frameTime);
+
+            Assert.Equal(frameTime, snapped);
+
+            // Typing the shown time code back in lands on a video frame with that time code (two
+            // video frames can share one, as times are whole milliseconds).
+            var timeCode = new TimeCode(frameTime.TotalMilliseconds).ToHHMMSSFF();
+            var typed = FrameModeTimeSnapper.Snap(TimeSpan.FromMilliseconds(TimeCode.ParseHHMMSSFFToMilliseconds(timeCode)));
+            Assert.Equal(typed, FrameNumbers.Snap(typed));
+            Assert.Equal(timeCode, new TimeCode(typed.TotalMilliseconds).ToHHMMSSFF());
+        }
+    }
+
+    [Fact]
+    public void Snap_ToVideoFramesOff_KeepsTheTimeCodeGrid()
+    {
+        Configuration.Settings.General.CurrentFrameRate = 23.976;
+        Se.Settings.General.FrameModeSnapToVideoFrames = false;
+
+        Assert.Equal(118918, FrameModeTimeSnapper.Snap(TimeSpan.FromMilliseconds(118918)).TotalMilliseconds);
     }
 }

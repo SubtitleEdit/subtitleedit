@@ -1,6 +1,6 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Features.Ocr;
 
 public class LlamaCppOcrSettingsWindow : Window
 {
-    private const int LabelWidth = 130;
+    private const int LabelWidth = 165;
 
     public LlamaCppOcrSettingsWindow(LlamaCppOcrSettingsViewModel vm)
     {
@@ -25,6 +25,7 @@ public class LlamaCppOcrSettingsWindow : Window
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         vm.Window = this;
         DataContext = vm;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.EngineDialog);
 
         var textBoxUrl = new TextBox
         {
@@ -32,6 +33,8 @@ public class LlamaCppOcrSettingsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             DataContext = vm,
         };
+        textBoxUrl.Classes.Add(EditorChrome.TextClass);
+        AutomationProperties.SetName(textBoxUrl, Se.Language.General.Url);
         textBoxUrl.Bind(IsEnabledProperty, new Binding(nameof(vm.UseRemoteServer)));
         textBoxUrl.Bind(TextBox.TextProperty, new Binding(nameof(vm.Url))
         {
@@ -41,9 +44,12 @@ public class LlamaCppOcrSettingsWindow : Window
 
         // Off: SE downloads and runs its own llama-server, so the URL is not used. On: OCR posts
         // to the user's own running server at the URL (#15854).
-        var checkBoxRemote = UiUtil.MakeCheckBox(Se.Language.General.LlamaCppUseRemoteServer, vm, nameof(vm.UseRemoteServer));
+        var switchRemote = EditorChrome.MakeSwitch(nameof(vm.UseRemoteServer), Se.Language.General.LlamaCppUseRemoteServer);
 
         var numericTimeout = UiUtil.MakeNumericUpDownInt(1, 120, 5, 140, vm, nameof(vm.TimeoutMinutes));
+        numericTimeout.Classes.Add("field");
+        numericTimeout.HorizontalAlignment = HorizontalAlignment.Left;
+        AutomationProperties.SetName(numericTimeout, Se.Language.Ocr.LlamaCppOcrTimeoutMinutes);
 
         var textBoxPrompt = new TextBox
         {
@@ -52,158 +58,78 @@ public class LlamaCppOcrSettingsWindow : Window
             TextWrapping = TextWrapping.Wrap,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
+            VerticalContentAlignment = VerticalAlignment.Top,
             MinHeight = 90,
             DataContext = vm,
         };
+        textBoxPrompt.Classes.Add(EditorChrome.TextClass);
+        AutomationProperties.SetName(textBoxPrompt, Se.Language.General.Prompt);
         textBoxPrompt.Bind(TextBox.TextProperty, new Binding(nameof(vm.Prompt))
         {
             Mode = BindingMode.TwoWay,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
 
-        var hintPrompt = UiUtil.MakeTextBlock(Se.Language.Ocr.LlamaCppOcrPromptHint);
-        hintPrompt.Opacity = 0.7;
-        hintPrompt.FontSize = UiUtil.ScaledFontSize(12);
-        hintPrompt.Margin = new Thickness(0, 2, 0, 0);
+        var hintPrompt = EditorChrome.MakeHint(Se.Language.Ocr.LlamaCppOcrPromptHint, 12);
 
-        var promptLabel = MakeLabel(Se.Language.General.OpenAiCompatibleSttPrompt);
-        promptLabel.VerticalAlignment = VerticalAlignment.Top;
-        promptLabel.Margin = new Thickness(0, 6, 0, 0);
-
-        var detailsGrid = new Grid
+        // Engine: status, own server or remote one, timeout
+        var serverRows = new StackPanel
         {
-            ColumnDefinitions =
+            Spacing = 10,
+            Children =
             {
-                new ColumnDefinition { Width = new GridLength(LabelWidth, GridUnitType.Pixel) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                EditorChrome.MakeLabeledRow(Se.Language.General.Status, EditorChrome.MakeStatusDot(nameof(vm.EngineBrush), nameof(vm.EngineLabel)), LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(string.Empty, EditorChrome.MakeSwitchRow(switchRemote, Se.Language.General.LlamaCppUseRemoteServer), LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.General.Url, textBoxUrl, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes, numericTimeout, LabelWidth, spacing: 10),
             },
+        };
+
+        // Prompt: the text box takes the rest of the height
+        var promptGrid = new Grid
+        {
             RowDefinitions =
             {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
             },
-            ColumnSpacing = 12,
-            RowSpacing = 12,
+            RowSpacing = 8,
+            Margin = new Thickness(14, 12, 14, 14),
         };
+        promptGrid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Prompt), 0, 0);
+        promptGrid.Add(textBoxPrompt, 1, 0);
+        promptGrid.Add(hintPrompt, 2, 0);
 
-        detailsGrid.Add(MakeLabel("Engine"), 0, 0);
-        detailsGrid.Add(MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel)), 0, 1);
-
-        detailsGrid.Add(checkBoxRemote, 1, 1);
-
-        detailsGrid.Add(MakeLabel(Se.Language.General.Url), 2, 0);
-        detailsGrid.Add(textBoxUrl, 2, 1);
-
-        detailsGrid.Add(MakeLabel(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes), 3, 0);
-        detailsGrid.Add(numericTimeout, 3, 1);
-
-        detailsGrid.Add(promptLabel, 4, 0);
-        detailsGrid.Add(textBoxPrompt, 4, 1);
-
-        detailsGrid.Add(hintPrompt, 5, 1);
-
-        var detailsBorder = new Border
+        var sections = new Grid
         {
-            Child = detailsGrid,
-            Padding = new Thickness(14),
-            CornerRadius = new CornerRadius(6),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+            },
         };
+        sections.Add(EditorChrome.MakeDialogHeader(Se.Language.Ocr.LlamaCppOcr, Se.Language.Ocr.LlamaCppOcrDescription), 0, 0);
+        sections.Add(EditorChrome.MakeEditorSection(Se.Language.General.Engine, serverRows), 1, 0);
+        sections.Add(new Border
+        {
+            Child = promptGrid,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+        }, 2, 0);
 
-        var buttonRedownload = UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
-            .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel));
-        buttonRedownload.VerticalAlignment = VerticalAlignment.Center;
+        var buttonRedownload = EditorChrome.AsFlatAction(UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel)));
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-        };
-        buttonBar.Add(buttonRedownload, 0, 0);
-        buttonBar.Add(UiUtil.MakeButtonBar(buttonOk, buttonCancel), 0, 2);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(buttonRedownload, buttonCancel, buttonOk);
+        buttonRedownload.HorizontalAlignment = HorizontalAlignment.Left;
 
-        var rootGrid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            RowSpacing = 14,
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-        rootGrid.Add(BuildHeader(), 0, 0);
-        rootGrid.Add(detailsBorder, 1, 0);
-        rootGrid.Add(buttonBar, 2, 0);
+        Content = EditorChrome.MakeRoot(sections, buttonBar, stretch: true);
 
-        Content = rootGrid;
-
-        UiUtil.FocusOnFirstActivation(this, checkBoxRemote);
+        UiUtil.FocusOnFirstActivation(this, switchRemote);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
-
-    private static StackPanel BuildHeader()
-    {
-        var title = new TextBlock
-        {
-            Text = Se.Language.Ocr.LlamaCppOcr,
-            FontSize = UiUtil.ScaledFontSize(18),
-            FontWeight = FontWeight.SemiBold,
-        };
-        var subtitle = new TextBlock
-        {
-            Text = Se.Language.Ocr.LlamaCppOcrDescription,
-            FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.75,
-            Margin = new Thickness(0, 2, 0, 0),
-        };
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 0,
-            Children = { title, subtitle },
-        };
-    }
-
-    private static StackPanel MakeStatusPanel(string brushBindingPath, string labelBindingPath)
-    {
-        var dot = new Ellipse
-        {
-            Width = 10,
-            Height = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!Ellipse.FillProperty] = new Binding(brushBindingPath),
-        };
-        var text = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(8, 0, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(labelBindingPath),
-        };
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { dot, text },
-        };
-    }
-
-    private static TextBlock MakeLabel(string text) => new()
-    {
-        Text = text,
-        Opacity = 0.7,
-        VerticalAlignment = VerticalAlignment.Center,
-    };
 }

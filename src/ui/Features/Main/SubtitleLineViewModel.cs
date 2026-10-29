@@ -82,6 +82,42 @@ public partial class SubtitleLineViewModel : ObservableObject
     [ObservableProperty]
     private string _originalText;
 
+    /// <summary>
+    /// The original line's own time codes, when they differ from this row's. Null means the
+    /// original line follows the row.
+    /// </summary>
+    [ObservableProperty]
+    private TimeSpan? _originalStartTime;
+
+    [ObservableProperty]
+    private TimeSpan? _originalEndTime;
+
+    public bool HasOwnOriginalTimeCodes => OriginalStartTime.HasValue && OriginalEndTime.HasValue;
+    public TimeSpan EffectiveOriginalStartTime => HasOwnOriginalTimeCodes ? OriginalStartTime!.Value : StartTime;
+    public TimeSpan EffectiveOriginalEndTime => HasOwnOriginalTimeCodes ? OriginalEndTime!.Value : EndTime;
+
+    public void SetOriginalTimeCodes(TimeSpan? start, TimeSpan? end)
+    {
+        OriginalStartTime = start;
+        OriginalEndTime = end;
+    }
+
+    partial void OnStartTimeChanged(TimeSpan oldValue, TimeSpan newValue)
+    {
+        if (OriginalStartTime is { } originalStart && Se.Settings.General.LockOriginalToTranslation)
+        {
+            OriginalStartTime = originalStart + (newValue - oldValue);
+        }
+    }
+
+    partial void OnEndTimeChanged(TimeSpan oldValue, TimeSpan newValue)
+    {
+        if (OriginalEndTime is { } originalEnd && Se.Settings.General.LockOriginalToTranslation)
+        {
+            OriginalEndTime = originalEnd + (newValue - oldValue);
+        }
+    }
+
     [ObservableProperty]
     private string _style;
 
@@ -135,27 +171,13 @@ public partial class SubtitleLineViewModel : ObservableObject
                          ebuLine >= 1 &&
                          ebuLine <= 23;
 
-            var text = Text ?? string.Empty;
-            var alignment = string.Empty;
-
-            if (text.StartsWith("{\\an1}") ||
-                text.StartsWith("{\\an4}") ||
-                text.StartsWith("{\\an7}"))
+            var alignment = GetLeadingAlignmentDigit(Text) switch
             {
-                alignment = "L";
-            }
-            else if (text.StartsWith("{\\an3}") ||
-                     text.StartsWith("{\\an6}") ||
-                     text.StartsWith("{\\an9}"))
-            {
-                alignment = "R";
-            }
-            else if (text.StartsWith("{\\an2}") ||
-                     text.StartsWith("{\\an5}") ||
-                     text.StartsWith("{\\an8}"))
-            {
-                alignment = "C";
-            }
+                '1' or '4' or '7' => "L",
+                '3' or '6' or '9' => "R",
+                '2' or '5' or '8' => "C",
+                _ => string.Empty,
+            };
 
             if (!hasRow)
             {
@@ -193,24 +215,28 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         get
         {
-            var text = Text ?? string.Empty;
-
-            if (text.StartsWith("{\\an1}") ||
-                text.StartsWith("{\\an4}") ||
-                text.StartsWith("{\\an7}"))
+            return GetLeadingAlignmentDigit(Text) switch
             {
-                return TextAlignment.Left;
-            }
-
-            if (text.StartsWith("{\\an3}") ||
-                text.StartsWith("{\\an6}") ||
-                text.StartsWith("{\\an9}"))
-            {
-                return TextAlignment.Right;
-            }
-
-            return TextAlignment.Center;
+                '1' or '4' or '7' => TextAlignment.Left,
+                '3' or '6' or '9' => TextAlignment.Right,
+                _ => TextAlignment.Center,
+            };
         }
+    }
+
+    /// <summary>
+    /// The digit of a leading "{\anX}" tag, or '\0'. An ordinal check: the culture-aware
+    /// StartsWith calls this replaced ran up to nine times per row bind and per keystroke.
+    /// </summary>
+    private static char GetLeadingAlignmentDigit(string? text)
+    {
+        if (text == null || text.Length < 6 || text[0] != '{' || text[1] != '\\' || text[2] != 'a' || text[3] != 'n' || text[5] != '}')
+        {
+            return '\0';
+        }
+
+        var digit = text[4];
+        return digit >= '1' && digit <= '9' ? digit : '\0';
     }
 
     public bool NewSection { get; set; }
@@ -262,6 +288,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         // what _duration is set to below.
         _text = p.Text;
         _originalText = p.OriginalText;
+        _originalStartTime = p.OriginalStartTime;
+        _originalEndTime = p.OriginalEndTime;
         _startTime = p.StartTime;
         _endTime = p.EndTime;
         _duration = p.EndTime - p.StartTime;
@@ -358,7 +386,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
     public Paragraph ToParagraphOriginal(SubtitleFormat? subtitleFormat = null)
     {
-        var p = new Paragraph(new TimeCode(StartTime), new TimeCode(EndTime), OriginalText.TrimEnd())
+        var p = new Paragraph(new TimeCode(EffectiveOriginalStartTime), new TimeCode(EffectiveOriginalEndTime), OriginalText.TrimEnd())
         {
             Number = Number,
             Actor = Actor,
@@ -571,19 +599,21 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return 0;
             }
 
-            if (Duration.TotalMilliseconds <= 1.0)
+            var start = EffectiveOriginalStartTime;
+            var end = EffectiveOriginalEndTime;
+            if ((end - start).TotalMilliseconds <= 1.0)
             {
                 return 999.0;
             }
 
             if (!ReferenceEquals(_cpsOriginalCacheText, OriginalText) ||
-                _cpsOriginalCacheStart != StartTime ||
-                _cpsOriginalCacheEnd != EndTime)
+                _cpsOriginalCacheStart != start ||
+                _cpsOriginalCacheEnd != end)
             {
                 _cpsOriginalCacheText = OriginalText;
-                _cpsOriginalCacheStart = StartTime;
-                _cpsOriginalCacheEnd = EndTime;
-                _cpsOriginalCacheValue = SubtitleTextInfoHelper.GetCharactersPerSecond(OriginalText, StartTime, EndTime);
+                _cpsOriginalCacheStart = start;
+                _cpsOriginalCacheEnd = end;
+                _cpsOriginalCacheValue = SubtitleTextInfoHelper.GetCharactersPerSecond(OriginalText, start, end);
             }
 
             return _cpsOriginalCacheValue;
@@ -626,6 +656,31 @@ public partial class SubtitleLineViewModel : ObservableObject
     private TextErrorSettings _textErrorCacheSettings;
     private bool _textErrorCacheValue;
 
+    // The same memo for the user's custom error rules (#10136): keyed on the text and the
+    // compiled rule set, which is a new instance whenever the rules or their switch change.
+    private string? _customRuleCacheText;
+    private CustomErrorRuleMatcher.RuleSet? _customRuleCacheRules;
+    private CustomErrorRuleMatcher.CompiledRule? _customRuleCacheValue;
+
+    /// <summary>The first custom error rule whose pattern matches the text, or null.</summary>
+    public CustomErrorRuleMatcher.CompiledRule? GetMatchingCustomErrorRule()
+    {
+        var rules = CustomErrorRuleMatcher.Current;
+        if (rules.Rules.Count == 0)
+        {
+            return null;
+        }
+
+        if (!ReferenceEquals(_customRuleCacheText, Text) || !ReferenceEquals(_customRuleCacheRules, rules))
+        {
+            _customRuleCacheText = Text;
+            _customRuleCacheRules = rules;
+            _customRuleCacheValue = rules.Match(Text);
+        }
+
+        return _customRuleCacheValue;
+    }
+
     private readonly record struct TextErrorSettings(
         bool ColorTextTooLong,
         int MaxLineLength,
@@ -658,7 +713,10 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
-    public IBrush TextBackgroundBrush => HasTextRuleError() ? _errorBrush : _transparentBrush;
+    // A built-in text error wins; otherwise a matching custom rule paints the cell in its own color.
+    public IBrush TextBackgroundBrush => HasTextRuleError()
+        ? _errorBrush
+        : GetMatchingCustomErrorRule()?.Brush ?? _transparentBrush;
 
     /// <summary>
     /// The memoized "text too long / too wide / too many lines" verdict behind
@@ -917,6 +975,11 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return _errorBrush;
             }
 
+            if (IsGapInColorRange(Se.Settings.General, Gap))
+            {
+                return _errorBrush;
+            }
+
             return _transparentBrush;
         }
     }
@@ -958,6 +1021,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             {
                 Add("gap too short");
             }
+            else if (IsGapInColorRange(general, Gap))
+            {
+                Add("gap in range");
+            }
 
             if (_shotInWarning)
             {
@@ -994,6 +1061,11 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (HasTextRuleError())
             {
                 Add(UseTeletextLineLength ? "text too long or wide for teletext" : "text too long or wide");
+            }
+
+            if (GetMatchingCustomErrorRule() is { } customRule)
+            {
+                Add("matches rule " + customRule.DisplayName);
             }
 
             return errors?.ToString() ?? string.Empty;
@@ -1197,6 +1269,13 @@ public partial class SubtitleLineViewModel : ObservableObject
         _cpsCacheText = null;
         _cpsOriginalCacheText = null;
         _textErrorCacheText = null;
+        _customRuleCacheText = null;
+    }
+
+    /// <summary>Re-renders the text cell - for formatting that depends on more than the text (YouTube timed text pens).</summary>
+    public void RefreshTextFormatting()
+    {
+        OnPropertyChanged(nameof(Text));
     }
 
     public void RefreshAfterSettingsChanged()
@@ -1382,13 +1461,37 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         // Last, because these are the only rules that touch the text (and, with
         // "text too wide" on, shape every line with HarfBuzz).
-        return HasTextRuleError();
+        return HasTextRuleError() || GetMatchingCustomErrorRule() != null;
     }
 
     private static bool HasGapError(SeGeneral general, double gapMs)
         => gapMs < 0
             ? general.ColorTimeCodeOverlap
-            : general.ColorGapTooShort && gapMs < general.MinimumBetweenLines.GetMilliseconds();
+            : (general.ColorGapTooShort && gapMs < general.MinimumBetweenLines.GetMilliseconds()) ||
+              IsGapInColorRange(general, gapMs);
+
+    /// <summary>
+    /// True when "Color gap in range" is on and the gap is inside GapRangeMin..GapRangeMax
+    /// (both inclusive). In frame mode the gap is rounded to whole frames first, so a 3 frame
+    /// gap matches a min of 3 frames even when its millisecond value is off by rounding.
+    /// </summary>
+    public static bool IsGapInColorRange(SeGeneral general, double gapMs)
+    {
+        // The last line has Gap = double.MaxValue (no next line).
+        if (!general.ColorGapInRange || gapMs < 0 || gapMs > int.MaxValue)
+        {
+            return false;
+        }
+
+        if (general.UseFrameMode)
+        {
+            var frames = SubtitleFormat.MillisecondsToFrames(gapMs);
+            return frames >= general.GapRangeMin.Frames && frames <= general.GapRangeMax.Frames;
+        }
+
+        var ms = Math.Round(gapMs, MidpointRounding.AwayFromZero);
+        return ms >= general.GapRangeMin.Milliseconds && ms <= general.GapRangeMax.Milliseconds;
+    }
 
     /// <summary>All errors as one newline-separated string (batch error list, tooltips).</summary>
     public string GetErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
@@ -1494,6 +1597,10 @@ public partial class SubtitleLineViewModel : ObservableObject
             {
                 errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToPrevious, Math.Round(gapPrev, 3), minGap)));
             }
+            else if (IsGapInColorRange(general, gapPrev))
+            {
+                errors.Add(new LineError(LineErrorType.GapInRange, string.Format(l.DetailGapInRangeToPrevious, Math.Round(gapPrev, 3), general.GapRangeMin.GetMilliseconds(), general.GapRangeMax.GetMilliseconds())));
+            }
         }
 
         if (next != null)
@@ -1510,6 +1617,15 @@ public partial class SubtitleLineViewModel : ObservableObject
             {
                 errors.Add(new LineError(LineErrorType.GapTooShort, string.Format(l.DetailGapToNext, Math.Round(gapNext, 3), minGap)));
             }
+            else if (IsGapInColorRange(general, gapNext))
+            {
+                errors.Add(new LineError(LineErrorType.GapInRange, string.Format(l.DetailGapInRangeToNext, Math.Round(gapNext, 3), general.GapRangeMin.GetMilliseconds(), general.GapRangeMax.GetMilliseconds())));
+            }
+        }
+
+        if (GetMatchingCustomErrorRule() is { } customRule)
+        {
+            errors.Add(new LineError(LineErrorType.CustomRule, customRule.DisplayName));
         }
 
         return errors;

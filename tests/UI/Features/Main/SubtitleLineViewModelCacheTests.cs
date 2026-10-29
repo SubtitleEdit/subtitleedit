@@ -2,7 +2,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
 
 namespace UITests.Features.Main;
 

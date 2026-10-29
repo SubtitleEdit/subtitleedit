@@ -1,13 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.UiLogic.Http;
 
@@ -30,6 +25,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
+            "claude-sonnet-5-5",
+            "claude-opus-5-5",
+            "claude-haiku-5-5",
             "claude-sonnet-5",
             "claude-opus-5",
             "claude-opus-4-8",

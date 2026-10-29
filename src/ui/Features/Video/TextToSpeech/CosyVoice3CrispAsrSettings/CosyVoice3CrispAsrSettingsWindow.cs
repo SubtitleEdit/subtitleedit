@@ -1,20 +1,18 @@
-using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
-using Avalonia.Data;
 using Avalonia.Input;
-using Avalonia.Layout;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 
+/// <summary>
+/// CosyVoice3 (CrispASR) settings, in the editor look (see <see cref="TtsSettingsChrome"/>).
+/// </summary>
 public class CosyVoice3CrispAsrSettingsWindow : Window
 {
     private const int LabelWidth = 150;
-    private const int ValueWidth = 360;
 
     private readonly CosyVoice3CrispAsrSettingsViewModel _vm;
 
@@ -22,275 +20,63 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = string.Format(Se.Language.Video.TtsCrispAsrSettingsTitle, "CosyVoice3");
-        SizeToContent = SizeToContent.WidthAndHeight;
-        CanResize = false;
-        MinWidth = 580;
+        TtsSettingsChrome.Apply(this);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        Content = BuildContent(vm);
-
-        var ok = UiUtil.MakeButtonOk(vm.OkCommand);
-        UiUtil.FocusOnFirstActivation(this, ok);
+        var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
+        Content = TtsSettingsChrome.MakeContent(
+            TtsSettingsChrome.MakeHeader("CosyVoice3 (CrispASR)", new CosyVoice3CrispAsr().Description),
+            TtsSettingsChrome.MakeButtonBar(close),
+            BuildModels(vm),
+            BuildVoice(vm));
     }
 
-    private Border BuildContent(CosyVoice3CrispAsrSettingsViewModel vm)
+    private static Border BuildModels(CosyVoice3CrispAsrSettingsViewModel vm)
     {
-        var header = BuildHeader();
-        var details = BuildDetails(vm);
-        var actions = BuildActions(vm);
-
-        var stack = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 14,
-            Children = { header, details, actions },
-        };
-
-        var outerGrid = new Grid
-        {
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-        outerGrid.Children.Add(stack);
-
-        return new Border
-        {
-            Child = outerGrid,
-            Padding = new Thickness(4),
-        };
+        var rows = TtsSettingsChrome.MakeRows(LabelWidth,
+            (Se.Language.General.Engine, TtsSettingsChrome.MakeStatus(nameof(vm.EngineBrush), nameof(vm.EngineLabel),
+                TtsSettingsChrome.MakeEngineDownloadButton(vm.RedownloadEngineCommand, nameof(vm.EngineDownloadButtonText)))),
+            (CosyVoice3CrispAsr.ModelKeyQ4K, TtsSettingsChrome.MakeStatus(nameof(vm.Q4KBundleBrush), nameof(vm.Q4KBundleLabel))),
+            (CosyVoice3CrispAsr.ModelKeyF16, TtsSettingsChrome.MakeStatus(nameof(vm.F16BundleBrush), nameof(vm.F16BundleLabel))),
+            // The RL talker bundles (#13272) share every companion with the two above - only the LLM
+            // file differs - so an installed RL row means one extra GGUF on disk, not a second bundle.
+            (CosyVoice3CrispAsr.ModelKeyRlQ4K, TtsSettingsChrome.MakeStatus(nameof(vm.RlQ4KBundleBrush), nameof(vm.RlQ4KBundleLabel))),
+            (CosyVoice3CrispAsr.ModelKeyRlF16, TtsSettingsChrome.MakeStatus(nameof(vm.RlF16BundleBrush), nameof(vm.RlF16BundleLabel))),
+            (Se.Language.General.InstallFolder, TtsSettingsChrome.MakeFolder(nameof(vm.ModelsFolder), vm.OpenModelsFolderCommand)));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Models, rows);
     }
 
-    private static StackPanel BuildHeader()
+    private static Border BuildVoice(CosyVoice3CrispAsrSettingsViewModel vm)
     {
-        var title = new TextBlock
-        {
-            Text = "CosyVoice3 (CrispASR)",
-            FontSize = UiUtil.ScaledFontSize(18),
-            FontWeight = FontWeight.SemiBold,
-        };
-
-        var subtitle = new TextBlock
-        {
-            Text = new CosyVoice3CrispAsr().Description,
-            FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.75,
-            Margin = new Thickness(0, 2, 0, 0),
-        };
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 0,
-            Children = { title, subtitle },
-        };
-    }
-
-    private static Border BuildDetails(CosyVoice3CrispAsrSettingsViewModel vm)
-    {
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(LabelWidth, GridUnitType.Pixel) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 12,
-            RowSpacing = 10,
-        };
-
-        grid.Add(MakeLabel(Se.Language.General.Engine), 0, 0);
-        var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
-        var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
-            .WithIconLeftBindText(IconNames.Download, nameof(vm.EngineDownloadButtonText))
-            .WithMarginLeft(12);
-        enginePanel.Children.Add(engineButton);
-        grid.Add(enginePanel, 0, 1);
-
-        grid.Add(MakeLabel(CosyVoice3CrispAsr.ModelKeyQ4K), 1, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.Q4KBundleBrush), nameof(vm.Q4KBundleLabel)), 1, 1);
-
-        grid.Add(MakeLabel(CosyVoice3CrispAsr.ModelKeyF16), 2, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.F16BundleBrush), nameof(vm.F16BundleLabel)), 2, 1);
-
-        // The RL talker bundles (#13272) share every companion with the two above - only the LLM
-        // file differs - so an installed RL row means one extra GGUF on disk, not a second bundle.
-        grid.Add(MakeLabel(CosyVoice3CrispAsr.ModelKeyRlQ4K), 3, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.RlQ4KBundleBrush), nameof(vm.RlQ4KBundleLabel)), 3, 1);
-
-        grid.Add(MakeLabel(CosyVoice3CrispAsr.ModelKeyRlF16), 4, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.RlF16BundleBrush), nameof(vm.RlF16BundleLabel)), 4, 1);
-
-        grid.Add(MakeLabel(Se.Language.Video.Presets), 5, 0);
-        var presetsText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.SemiBold,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.PresetsLabel)),
-        };
-        grid.Add(presetsText, 5, 1);
-
-        grid.Add(MakeLabel(Se.Language.Video.Voices), 6, 0);
-        var voicesText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.SemiBold,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.VoicesLabel)),
-        };
-        grid.Add(voicesText, 6, 1);
-
-        grid.Add(MakeLabel(Se.Language.General.Speed), 7, 0);
-        grid.Add(MakeSpeedPanel(), 7, 1);
-
         // Language spoken in imported reference WAVs — sent as `source_lang` so cross-lingual
         // cloning engages when the target language differs (the server cannot detect the
         // reference language itself for Latin scripts). Presets carry their own bank language.
-        grid.Add(MakeLabel("Reference language"), 8, 0);
         var sourceLanguageCombo = UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage));
-        var sourceLanguageHint = new TextBlock
+        sourceLanguageCombo.MinWidth = 200;
+        sourceLanguageCombo.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
+        AutomationProperties.SetName(sourceLanguageCombo, "Reference language");
+        var sourceLanguage = new StackPanel
         {
-            Text = "Language spoken in imported reference WAVs (for cross-lingual cloning). "
-                   + "Auto detects it from each voice's transcript.",
-            FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.75,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(8, 0, 0, 0),
-        };
-        grid.Add(new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { sourceLanguageCombo, sourceLanguageHint },
-        }, 8, 1);
-
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 9, 0);
-        var folderText = new TextBox
-        {
-            IsReadOnly = true,
-            Width = ValueWidth,
-            BorderThickness = new Thickness(0),
-            Background = Brushes.Transparent,
-            Padding = new Thickness(0),
-            VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = UiUtil.ScaledFontSize(12),
-            [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
-        };
-        grid.Add(folderText, 9, 1);
-
-        return new Border
-        {
-            Child = grid,
-            Padding = new Thickness(14),
-            CornerRadius = new CornerRadius(6),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
-        };
-    }
-
-    private static StackPanel MakeSpeedPanel()
-    {
-        var slider = new Slider
-        {
-            Minimum = 0.5,
-            Maximum = 2.0,
-            Width = 220,
-            TickFrequency = 0.05,
-            IsSnapToTickEnabled = true,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!Slider.ValueProperty] = new Binding(nameof(CosyVoice3CrispAsrSettingsViewModel.Speed)),
-        };
-        var label = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(8, 0, 0, 0),
-            Width = 80,
-            [!TextBlock.TextProperty] = new Binding(nameof(CosyVoice3CrispAsrSettingsViewModel.SpeedLabel)),
-        };
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { slider, label },
-        };
-    }
-
-    private static StackPanel MakeStatusPanel(string brushBindingPath, string labelBindingPath)
-    {
-        var dot = new Ellipse
-        {
-            Width = 10,
-            Height = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!Ellipse.FillProperty] = new Binding(brushBindingPath),
-        };
-        var text = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(8, 0, 0, 0),
-            [!TextBlock.TextProperty] = new Binding(labelBindingPath),
-        };
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { dot, text },
-        };
-    }
-
-    private static Grid BuildActions(CosyVoice3CrispAsrSettingsViewModel vm)
-    {
-        var openModelsFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenModelsFolderCommand).WithIconLeft(IconNames.FolderOpen);
-        var openVoicesFolder = UiUtil.MakeButton("Voices folder", vm.OpenVoicesFolderCommand).WithIconLeft(IconNames.FolderOpen);
-        var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
-
-        var leftPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Children = { openModelsFolder, openVoicesFolder },
-        };
-
-        var rightPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Spacing = 8,
-            Children = { close },
-        };
-
-        var grid = new Grid
-        {
-            ColumnDefinitions =
+            Spacing = 4,
+            Children =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                sourceLanguageCombo,
+                EditorChrome.MakeHint("Language spoken in imported reference WAVs (for cross-lingual cloning). "
+                                           + "Auto detects it from each voice's transcript."),
             },
         };
-        grid.Add(leftPanel, 0, 0);
-        grid.Add(rightPanel, 0, 2);
-        return grid;
-    }
 
-    private static TextBlock MakeLabel(string text) => new()
-    {
-        Text = text,
-        Opacity = 0.7,
-        VerticalAlignment = VerticalAlignment.Center,
-    };
+        var rows = TtsSettingsChrome.MakeRows(LabelWidth,
+            (Se.Language.Video.Presets, TtsSettingsChrome.MakeValue(nameof(vm.PresetsLabel))),
+            (Se.Language.Video.Voices, TtsSettingsChrome.MakeValue(nameof(vm.VoicesLabel),
+                TtsSettingsChrome.MakeFolderButton(Se.Language.Video.TextToSpeech.OpenVoicesFolder, vm.OpenVoicesFolderCommand))),
+            (Se.Language.General.Speed, TtsSettingsChrome.MakeSlider(Se.Language.General.Speed, 0.5, 2.0, 0.05, nameof(vm.Speed), nameof(vm.SpeedLabel))),
+            ("Reference language", sourceLanguage));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Voice, rows);
+    }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {

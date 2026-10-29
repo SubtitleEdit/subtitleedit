@@ -12,7 +12,7 @@ Manage custom word lists used by spell check and OCR error fixing.
 
 1. Open **Options → Word lists...**
 2. Select a language from the dropdown
-3. Manage entries in the three word list categories
+3. Manage entries in the four word list categories
 4. Changes are saved automatically when entries are added or removed
 
 ## Word List Categories
@@ -30,6 +30,15 @@ Custom words added to the user dictionary. These supplement the main spell check
 
 - Add a new word in the text field and click **Add**
 - Select a word and click **Remove** to delete it
+
+### Removed From Dictionary
+
+Words the spell checker should treat as misspelled even though the dictionary knows them. Use this for rare words that usually hide an error - for example Dutch "weetje" or "watje", which in subtitles are mostly "weet je" / "wat je" with the space lost.
+
+- A removed word is flagged by spell check and is not offered as a suggestion
+- OCR error fixing treats it as unknown, so rules like "weetje" → "weet je" can fix it
+- Adding the word as a user word takes it off this list again (and the other way round)
+- Stored in the `<removed>` section of the language's `_user.xml` file
 
 ### OCR Fix Replacements
 

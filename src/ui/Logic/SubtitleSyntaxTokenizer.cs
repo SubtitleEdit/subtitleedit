@@ -404,6 +404,8 @@ public static class SubtitleSyntaxTokenizer
 
         var inHtmlTag = false;
         var lastAttributeIsColor = false;
+        var lastAttributeIsYttPen = false;
+        var inYttSpanTag = false;
 
         for (int i = 0; i < text.Length; i++)
         {
@@ -512,6 +514,7 @@ public static class SubtitleSyntaxTokenizer
                         elementEnd++;
                     }
 
+                    inYttSpanTag = YttPenLookup.IsActive && elementEnd == elementStart + 1 && text[elementStart] == 's';
                     if (elementEnd > elementStart)
                     {
                         Add(elementStart, elementEnd, elementColor);
@@ -544,6 +547,7 @@ public static class SubtitleSyntaxTokenizer
                 }
 
                 lastAttributeIsColor = text.AsSpan(attrStart, i - attrStart).Equals("color", StringComparison.OrdinalIgnoreCase);
+                lastAttributeIsYttPen = inYttSpanTag && text.AsSpan(attrStart, i - attrStart).Equals("p", StringComparison.Ordinal);
 
                 Add(attrStart, i, attributeColor);
                 i--;
@@ -577,6 +581,11 @@ public static class SubtitleSyntaxTokenizer
                 if (lastAttributeIsColor && !valueContent.IsEmpty)
                 {
                     valueColor = TryParseColor(valueContent);
+                }
+                else if (lastAttributeIsYttPen && int.TryParse(valueContent, out var penId))
+                {
+                    // YouTube timed text: the pen id in the pen's text color
+                    valueColor = YttPenLookup.GetForeColor(YttPenLookup.GetPen(penId));
                 }
 
                 // If not a color attribute or color parsing failed, use default logic

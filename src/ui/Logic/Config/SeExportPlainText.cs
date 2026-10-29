@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Nikse.SubtitleEdit.UiLogic.Export;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -27,5 +27,24 @@ public class SeExportPlainText
         TimeCodeSeparator = " --> ";
         AddLineAfterText = true;
         AddLineBetweenSubtitles = true;
+    }
+    public PlainTextOptions ToOptions()
+    {
+        return new PlainTextOptions
+        {
+            TextProcessing = TextProcessing == "Merge" ? PlainTextProcessing.Merge :
+                             TextProcessing == "Unbreak" ? PlainTextProcessing.Unbreak : PlainTextProcessing.None,
+            RemoveStyling = TextRemoveStyling,
+            ShowLineNumbers = ShowLineNumbers,
+            AddNewLineAfterLineNumber = AddNewLineAfterLineNumber,
+            ShowTimeCodes = ShowTimeCodes,
+            AddNewLineAfterTimeCode = AddNewLineAfterTimeCode,
+
+            // The dialog stores its "Seconds" entry as the translated display text.
+            TimeCodeFormat = TimeCodeFormat == Se.Language.General.Seconds ? PlainTextFormatter.TimeCodeFormatSeconds : TimeCodeFormat,
+            TimeCodeSeparator = TimeCodeSeparator,
+            AddLineAfterText = AddLineAfterText,
+            AddLineBetweenSubtitles = AddLineBetweenSubtitles,
+        };
     }
 }

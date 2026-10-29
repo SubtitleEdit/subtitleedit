@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace LibSETests.SubtitleFormats;

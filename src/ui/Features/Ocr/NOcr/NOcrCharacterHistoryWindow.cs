@@ -1,12 +1,18 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.NOcr;
 
+/// <summary>
+/// The nOCR additions history in the editor look (see <see cref="EditorChrome"/>): the history
+/// list, the selected addition's image and text, and its drawn lines, as columns; OK in the
+/// button bar.
+/// </summary>
 public class NOcrCharacterHistoryWindow : Window
 {
     public NOcrCharacterHistoryWindow(NOcrCharacterHistoryViewModel vm)
@@ -20,38 +26,27 @@ public class NOcrCharacterHistoryWindow : Window
         MinHeight = 600;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
 
-        var grid = new Grid
+        var sections = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Controls
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(260) },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Star },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            Height = double.NaN,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
         };
 
-        var listView = MakeListView(vm);
-        var detailsView = MakeDetailsView(vm);
+        sections.Add(MakeListView(vm), 0, 0);
+        sections.Add(MakeCurrentView(vm), 0, 1);
+        sections.Add(MakeCanvasView(vm), 0, 2);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonOk);
+        buttonOk.Classes.Add("primary");
 
-        grid.Add(listView, 0);
-        grid.Add(detailsView, 0, 1);
-        grid.Add(buttonBar, 1, 0, 1, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonOk));
 
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
 
@@ -67,116 +62,88 @@ public class NOcrCharacterHistoryWindow : Window
 
     private static Border MakeListView(NOcrCharacterHistoryViewModel vm)
     {
-        var listBoxCurrentItems = new ListBox
-        {
-            Margin = new Thickness(0, 5, 0, 0),
-        }.WithAccessibleName(Se.Language.General.History);
+        var listBoxCurrentItems = new ListBox().WithAccessibleName(Se.Language.General.History);
         listBoxCurrentItems.Bind(Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedHistoryItem)));
         listBoxCurrentItems.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.HistoryItems)));
         listBoxCurrentItems.SelectionChanged += vm.HistoryItemChanged;
 
-        return UiUtil.MakeBorderForControl(listBoxCurrentItems);
+        return NOcrChrome.MakeFillColumn(Se.Language.General.History, EditorChrome.MakeListFrame(listBoxCurrentItems, clearListBackground: true), first: true);
     }
 
-    private static Grid MakeDetailsView(NOcrCharacterHistoryViewModel vm)
+    private static Border MakeCurrentView(NOcrCharacterHistoryViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 20,
-            Width = double.NaN,
-        };
-
-        vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)).WithAccessibleName(Se.Language.General.Text);
+        vm.TextBoxNew = EditorChrome.AsTextField(UiUtil.MakeTextBox(100, vm, nameof(vm.NewText)), Se.Language.General.Text);
+        vm.TextBoxNew.Width = double.NaN;
+        vm.TextBoxNew.Margin = new Thickness(0);
+        vm.TextBoxNew.HorizontalAlignment = HorizontalAlignment.Stretch;
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
             vm.TextBoxNew.FontFamily = FontFamilyHelper.Make(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
+
         var image = new Image
         {
             Margin = new Thickness(5),
             Stretch = Stretch.Uniform,
+            StretchDirection = StretchDirection.DownOnly,
             MinWidth = 30,
             MinHeight = 30,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
         };
         image.Bind(Image.SourceProperty, new Binding(nameof(vm.CurrentBitmap)));
 
-        var panelCurrentImage = new StackPanel
+        // subtitle bitmaps are light or dark text on transparent pixels, so they need a backdrop
+        var panelCurrentImage = new Border
         {
             Background = ImagePreviewBackground.CreateBrush(),
-            Children = { image },
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            Margin = new Thickness(5, 2, 0, 5),
+            CornerRadius = new CornerRadius(6),
+            Child = image,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
 
-        var checkBoxItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.IsNewTextItalic));
-        checkBoxItalic.IsCheckedChanged += vm.ItalicCheckChanged;
+        var (switchItalic, italicRow) = NOcrChrome.MakeSwitchRow(nameof(vm.IsNewTextItalic), Se.Language.General.Italic);
+        switchItalic.IsCheckedChanged += vm.ItalicCheckChanged;
+
+        var actions = new StackPanel
+        {
+            Spacing = 2,
+            Margin = new Thickness(-8, 6, 0, 0),
+            Children =
+            {
+                EditorChrome.MakeTextToolButton(IconNames.Check, Se.Language.General.Update, vm.UpdateCommand),
+                EditorChrome.MakeTextToolButton(IconNames.CheckBold, Se.Language.General.UpdateAndClose, vm.UpdateAndCloseCommand),
+                EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand),
+            },
+        };
+        foreach (var action in actions.Children)
+        {
+            action.HorizontalAlignment = HorizontalAlignment.Left;
+        }
 
         var panelCurrent = new StackPanel
         {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
+            Orientation = Orientation.Vertical,
+            Spacing = 8,
+            Width = 240,
             Children =
             {
-                UiUtil.MakeLabel(Se.Language.Ocr.CurrentImage).WithBold(),
-                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ResolutionAndTopMargin)),
-                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.LineIndex)),
+                EditorChrome.MakeBoundInfo(nameof(vm.ResolutionAndTopMargin)),
+                EditorChrome.MakeBoundInfo(nameof(vm.LineIndex)),
                 panelCurrentImage,
                 vm.TextBoxNew,
-                checkBoxItalic,
-                UiUtil.MakeButton(Se.Language.General.Update, vm.UpdateCommand).WithMarginTop(25).WithLeftAlignment(),
-                UiUtil.MakeButton(Se.Language.General.UpdateAndClose, vm.UpdateAndCloseCommand).WithMarginTop(25).WithLeftAlignment(),
-                UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand).WithMarginTop(5).WithLeftAlignment(),
+                italicRow,
+                actions,
             },
         };
 
+        return NOcrChrome.MakeFillColumn(Se.Language.Ocr.CurrentImage, panelCurrent);
+    }
+
+    private static Border MakeCanvasView(NOcrCharacterHistoryViewModel vm)
+    {
         vm.NOcrDrawingCanvas.SetStrokeWidth(1);
-        var borderDrawingCanvas = new Border
-        {
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Colors.Black),
-            Child = vm.NOcrDrawingCanvas,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
-        };
-
-        var panelZoom = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 5),
-            Children =
-            {
-                UiUtil.MakeButton(vm.ZoomOutCommand, IconNames.Minus, "Zoom out"),
-                UiUtil.MakeButton(vm.ZoomInCommand, IconNames.Plus, "Zoom in"),
-                UiUtil.MakeLabel(string.Empty).WithMarginLeft(10).WithBindText(vm, nameof(vm.ZoomFactorInfo)),
-            }
-        };
-
-        var panelImage = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
-            Children =
-            {
-                panelZoom,
-                borderDrawingCanvas,
-            }
-        };
-
-        grid.Add(panelCurrent, 0);
-        grid.Add(panelImage, 0, 1);
-
-        return grid;
+        var zoomBar = NOcrChrome.MakeZoomBar(vm.ZoomOutCommand, vm.ZoomInCommand, nameof(vm.ZoomFactorInfo));
+        return NOcrChrome.MakeFillColumn(Se.Language.General.Preview, NOcrChrome.MakeCanvasContent(NOcrChrome.MakeCanvasFrame(vm.NOcrDrawingCanvas), zoomBar));
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Markup.Declarative;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -15,7 +14,6 @@ using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -24,14 +22,12 @@ using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using Nikse.SubtitleEdit.UiLogic.Common;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
@@ -122,10 +118,10 @@ public partial class AutoTranslateViewModel : ObservableObject
     private List<string> _apiUrls = new();
     private List<string> _apiModels = new();
     private bool _onlyCurrentLine;
+    private List<int> _onlyRowIndices = new(); // "Translate rows": the selected rows, in order (empty = selected row only)
     private bool _autoStart;
     private bool _translationFailed;
     private Subtitle _subtitle = new Subtitle();
-    private int _translationProgressIndex;
     private bool _llamaCppUpdatePromptShown;
     private bool _suppressLlamaCppRemoteToggle;
     private readonly IWindowService _windowService;
@@ -171,6 +167,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new GroqTranslate(),
             new OpenRouterTranslate(),
             new ApiRouteTranslate(),
+            new OpperTranslate(),
             new LaraTranslate(),
             new PerplexityTranslate(),
             new GeminiTranslate(),
@@ -246,6 +243,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.ApiRouteUrl = Se.Settings.AutoTranslate.ApiRouteUrl;
         Configuration.Settings.Tools.ApiRouteModel = Se.Settings.AutoTranslate.ApiRouteModel;
         Configuration.Settings.Tools.ApiRoutePrompt = Se.Settings.AutoTranslate.ApiRoutePrompt;
+
+        Configuration.Settings.Tools.OpperApiKey = Se.Settings.AutoTranslate.OpperApiKey;
+        Configuration.Settings.Tools.OpperUrl = Se.Settings.AutoTranslate.OpperUrl;
+        Configuration.Settings.Tools.OpperModel = Se.Settings.AutoTranslate.OpperModel;
+        Configuration.Settings.Tools.OpperPrompt = Se.Settings.AutoTranslate.OpperPrompt;
 
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
         Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
@@ -503,6 +505,14 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.ApiRouteUrl = apiUrl.Trim();
         }
 
+        if (engineType == typeof(OpperTranslate))
+        {
+            Configuration.Settings.Tools.OpperApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.OpperModel = apiModel.Trim();
+            Configuration.Settings.Tools.OpperUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OpperUrl = apiUrl.Trim();
+        }
+
         if (engineType == typeof(GeminiTranslate))
         {
             Configuration.Settings.Tools.GeminiProApiKey = apiKey.Trim();
@@ -563,6 +573,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.ApiRouteUrl = Configuration.Settings.Tools.ApiRouteUrl;
         Se.Settings.AutoTranslate.ApiRouteModel = Configuration.Settings.Tools.ApiRouteModel;
         Se.Settings.AutoTranslate.ApiRoutePrompt = Configuration.Settings.Tools.ApiRoutePrompt;
+
+        Se.Settings.AutoTranslate.OpperApiKey = Configuration.Settings.Tools.OpperApiKey;
+        Se.Settings.AutoTranslate.OpperUrl = Configuration.Settings.Tools.OpperUrl;
+        Se.Settings.AutoTranslate.OpperModel = Configuration.Settings.Tools.OpperModel;
+        Se.Settings.AutoTranslate.OpperPrompt = Configuration.Settings.Tools.OpperPrompt;
 
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
         Se.Settings.AutoTranslate.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
@@ -836,6 +851,30 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         await DoTranslate(onlyCurrentLine: true);
+    }
+
+    [RelayCommand]
+    private async Task TranslateRows()
+    {
+        // Same guard as TranslateRow - a running translation must not be switched to selected-rows mode.
+        if (_translationInProgress)
+        {
+            return;
+        }
+
+        var indices = RowGrid?.SelectedItems?
+            .OfType<TranslateRow>()
+            .Select(row => Rows.IndexOf(row))
+            .Where(index => index >= 0)
+            .Distinct()
+            .OrderBy(index => index)
+            .ToList() ?? new List<int>();
+        if (indices.Count == 0)
+        {
+            return;
+        }
+
+        await DoTranslate(onlyCurrentLine: true, indices);
     }
 
     [RelayCommand]
@@ -1323,7 +1362,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
     }
 
-    private async Task<bool> DoTranslate(bool onlyCurrentLine)
+    private async Task<bool> DoTranslate(bool onlyCurrentLine, List<int>? onlyRowIndices = null)
     {
         // The pre-flight below awaits (model download, server startup) before
         // _translationInProgress is set - block re-entry for that whole window so a
@@ -1361,6 +1400,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         _onlyCurrentLine = onlyCurrentLine;
+        _onlyRowIndices = onlyRowIndices ?? new List<int>();
         _translationStarting = true;
         try
         {
@@ -1513,6 +1553,14 @@ public partial class AutoTranslateViewModel : ObservableObject
                 start = Rows.IndexOf(selectedItem);
             }
 
+            // "Translate rows" walks the selected rows one by one, each in single-line mode.
+            var rowQueue = new Queue<int>(_onlyRowIndices);
+            var rowQueueTotal = rowQueue.Count;
+            if (rowQueue.Count > 0)
+            {
+                start = rowQueue.Dequeue();
+            }
+
             // Single-line mode forced by the user setting or the engine itself is permanent;
             // forceSingleLineMode may additionally be turned on temporarily after errors and
             // is only allowed to fall back to merged mode when the permanent flag is off.
@@ -1542,7 +1590,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
                     var translatedCount = await advancedTranslator.TranslateBatchAsync(Rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken);
                     index += translatedCount;
-                    _translationProgressIndex = index;
 
                     EnqueueTranslateProgress(index);
                 }
@@ -1585,7 +1632,6 @@ public partial class AutoTranslateViewModel : ObservableObject
                     }
 
                     linesTranslated += linesMergedAndTranslated;
-                    _translationProgressIndex = index;
                     errorCount = 0;
                     noProgressCount = 0;
 
@@ -1625,11 +1671,27 @@ public partial class AutoTranslateViewModel : ObservableObject
                 {
                     index += translateCount;
                     noProgressCount = 0;
-                    EnqueueTranslateProgress(index);
+
+                    if (_onlyCurrentLine && rowQueueTotal > 0)
+                    {
+                        // Progress over the selected rows; no follow-along select, so the selection stays.
+                        var progressValue = (double)(rowQueueTotal - rowQueue.Count) * 100 / rowQueueTotal;
+                        TranslateUiUpdates.EnqueueProgress(progressValue, $"{(int)progressValue} %");
+                        TranslateUiUpdates.EnqueueUpdate(() => HasTranslatedSomething = true);
+                        if (rowQueue.Count > 0)
+                        {
+                            index = rowQueue.Dequeue();
+                            errorCount = 0;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        EnqueueTranslateProgress(index);
+                    }
 
                     if (_onlyCurrentLine)
                     {
-                        _translationProgressIndex = index - 1;
                         Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
                         break;
                     }
@@ -1766,6 +1828,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
             ApiRouteTranslate => settings.ApiRouteUrl,
+            OpperTranslate => settings.OpperUrl,
             LaraTranslate => settings.LaraUrl,
             PerplexityTranslate => settings.PerplexityUrl,
             NvidiaTranslate => settings.NvidiaUrl,
@@ -2360,6 +2423,23 @@ public partial class AutoTranslateViewModel : ObservableObject
             _apiModels = ApiRouteTranslate.Models.ToList();
             ModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.ApiRouteModel) ? _apiModels[0] : Configuration.Settings.Tools.ApiRouteModel;
+
+            return;
+        }
+
+        if (engineType == typeof(OpperTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.OpperUrl,
+            });
+
+            ApiKeyText = Configuration.Settings.Tools.OpperApiKey;
+            ApiKeyIsVisible = true;
+
+            _apiModels = OpperTranslate.Models.ToList();
+            ModelIsVisible = true;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.OpperModel) ? _apiModels[0] : Configuration.Settings.Tools.OpperModel;
 
             return;
         }

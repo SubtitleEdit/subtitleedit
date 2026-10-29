@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;

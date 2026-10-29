@@ -7,7 +7,6 @@ using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.Layout;
-using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features.Main;
 

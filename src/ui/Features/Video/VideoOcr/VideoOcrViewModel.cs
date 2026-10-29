@@ -18,7 +18,6 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr.EngineSettings;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
 using System;
@@ -32,7 +31,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using Nikse.SubtitleEdit.UiLogic.Media;
 using Nikse.SubtitleEdit.UiLogic.Ocr.AppleVision;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
@@ -81,8 +79,16 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private int _maxGapMs;
     [ObservableProperty] private int _minDurationMs;
     [ObservableProperty] private bool _addAssaPositionTag;
+
+    // Parts of the video to scan, e.g. "16:00-32:00; 36:00-41:00" - empty is the whole
+    // video (#16334). Not saved: ranges belong to one video.
+    [ObservableProperty] private string _timeRanges = string.Empty;
     [ObservableProperty] private ObservableCollection<VideoOcrLineItem> _lines;
     [ObservableProperty] private bool _isRunning;
+    [ObservableProperty] private bool _keepExistingLines;
+    // Hold off
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.VideoOcr.Title);
+
     [ObservableProperty] private bool _isOkEnabled;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _progressText;
@@ -114,6 +120,8 @@ public partial class VideoOcrViewModel : ObservableObject
     private readonly IOcrFixEngine _ocrFixEngine;
     private Process? _ffmpegProcess;
     private long _extractedFrames;
+    private long _extractedFramesBefore;
+    private long _totalFramesToExtract;
     private readonly DispatcherTimer _previewTimer;
     private bool _previewLoading;
     private bool _previewLoadQueued;
@@ -540,7 +548,7 @@ public partial class VideoOcrViewModel : ObservableObject
             }
             else if (!engineInstalled)
             {
-                message = Se.Language.Ocr.LlamaCppDownloadEnginePrompt;
+                message = Se.Language.General.LlamaCppDownloadEnginePrompt;
             }
             else
             {
@@ -644,6 +652,12 @@ public partial class VideoOcrViewModel : ObservableObject
                 }
             }
         });
+    }
+
+    [RelayCommand]
+    private void InsertPreviewTime()
+    {
+        TimeRanges = VideoOcrTimeRanges.AppendTime(TimeRanges, PreviewPositionSeconds);
     }
 
     [RelayCommand]
@@ -806,6 +820,18 @@ public partial class VideoOcrViewModel : ObservableObject
             return;
         }
 
+        var ranges = VideoOcrTimeRanges.Parse(TimeRanges, DurationSeconds, out var invalidRange);
+        if (ranges == null)
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                string.Format(Se.Language.Video.VideoOcr.InvalidTimeRangeX, invalidRange, Environment.NewLine, Se.Language.Video.VideoOcr.TimeRangesHint),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
         ClampSelection();
         SaveSettings();
 
@@ -814,6 +840,7 @@ public partial class VideoOcrViewModel : ObservableObject
         IsRunning = true;
         IsOkEnabled = false;
         ProgressValue = 0;
+        var keptLines = KeepExistingLines ? Lines.ToList() : new List<VideoOcrLineItem>();
         Lines.Clear();
 
         var framesFolder = Path.Combine(Path.GetTempPath(), "se_video_ocr_" + Guid.NewGuid());
@@ -821,66 +848,76 @@ public partial class VideoOcrViewModel : ObservableObject
 
         try
         {
-            await ExtractFrames(framesFolder, cancellationToken);
+            // Each range gets its own folder and frame numbering from 0, and its groups carry
+            // the range start as offset, so all times below are on the video's clock.
+            _extractedFramesBefore = 0;
+            _totalFramesToExtract = Math.Max(1, (long)Math.Round(ranges.Sum(p => p.LengthSeconds) * FramesPerSecond));
+            var rangeScans = new List<(VideoOcrTimeRange Range, string Folder, List<VideoOcrFrameGroup> Groups)>();
+            for (var i = 0; i < ranges.Count; i++)
+            {
+                var range = ranges[i];
+                var rangeFolder = Path.Combine(framesFolder, $"range{i:000}");
+                Directory.CreateDirectory(rangeFolder);
+                await ExtractFrames(rangeFolder, range, cancellationToken);
+                _extractedFramesBefore += (long)Math.Round(range.LengthSeconds * FramesPerSecond);
 
-            var frameFileNames = Directory.GetFiles(framesFolder, "*.jpg").OrderBy(p => p, StringComparer.Ordinal).ToList();
-            if (frameFileNames.Count == 0)
+                var frameFileNames = Directory.GetFiles(rangeFolder, "*.jpg").OrderBy(p => p, StringComparer.Ordinal).ToList();
+                rangeScans.Add((range, rangeFolder, frameFileNames.Count == 0 ? new List<VideoOcrFrameGroup>() : await GroupFrames(frameFileNames, range, cancellationToken)));
+            }
+
+            if (rangeScans.All(p => p.Groups.Count == 0))
             {
                 throw new Exception("No frames were extracted from the video - see log for the ffmpeg command line.");
             }
 
-            var lastAnalyzeUpdate = 0L;
-            var groups = await Task.Run(() => VideoOcrFrameGrouper.Group(
-                frameFileNames,
-                BrightnessMinimum,
-                Se.Settings.Video.VideoOcr.ImageSimilarityPercent,
-                (current, total) =>
-                {
-                    var now = Environment.TickCount64;
-                    if (now - lastAnalyzeUpdate > 200 || current == total)
-                    {
-                        lastAnalyzeUpdate = now;
-                        Dispatcher.UIThread.Post(() =>
-                        {
-                            ProgressText = string.Format(Se.Language.Video.VideoOcr.AnalyzingFramesXY, current, total);
-                            ProgressValue = total == 0 ? 0 : current * 100.0 / total;
-                        });
-                    }
-                },
-                cancellationToken), cancellationToken);
-
             InitializeOcrFixEngine(contextSubtitle: null);
 
-            await RunOcr(groups, cancellationToken);
+            // One OCR pass over every range, so engines with a start-up cost (Paddle, llama.cpp)
+            // start once.
+            await RunOcr(rangeScans.SelectMany(p => p.Groups).ToList(), cancellationToken);
 
-            var mergedLines = VideoOcrLineBuilder.Build(groups, FramesPerSecond, TextSimilarityPercent, MaxGapMs, MinDurationMs);
-
+            var mergedLines = new List<VideoOcrLineBuilder.OcrLine>();
+            var refineDone = 0;
+            var refineTotal = 0;
             var lastRefineUpdate = 0L;
-            await VideoOcrTimingRefiner.RefineAsync(
-                mergedLines,
-                new VideoOcrTimingRefiner.Context
-                {
-                    VideoFileName = _videoFileName,
-                    FramesFolder = framesFolder,
-                    CoarseFps = FramesPerSecond,
-                    BrightnessMinimum = BrightnessMinimum,
-                    ImageSimilarityPercent = Se.Settings.Video.VideoOcr.ImageSimilarityPercent,
-                    CropAndScaleFilter = GetCropAndScaleFilter(),
-                },
-                (current, total) =>
-                {
-                    var now = Environment.TickCount64;
-                    if (now - lastRefineUpdate > 200 || current == total)
+            foreach (var rangeScan in rangeScans)
+            {
+                // Built per range: a line must not merge across a skipped part of the video.
+                var rangeLines = VideoOcrLineBuilder.Build(rangeScan.Groups, FramesPerSecond, TextSimilarityPercent, MaxGapMs, MinDurationMs);
+                refineTotal += rangeLines.Count;
+                var refineBefore = refineDone;
+                await VideoOcrTimingRefiner.RefineAsync(
+                    rangeLines,
+                    new VideoOcrTimingRefiner.Context
                     {
-                        lastRefineUpdate = now;
-                        Dispatcher.UIThread.Post(() =>
+                        VideoFileName = _videoFileName,
+                        FramesFolder = rangeScan.Folder,
+                        CoarseFps = FramesPerSecond,
+                        OffsetMs = rangeScan.Range.StartSeconds * 1000.0,
+                        BrightnessMinimum = BrightnessMinimum,
+                        ImageSimilarityPercent = Se.Settings.Video.VideoOcr.ImageSimilarityPercent,
+                        CropAndScaleFilter = GetCropAndScaleFilter(),
+                    },
+                    (current, total) =>
+                    {
+                        refineDone = refineBefore + current;
+                        var now = Environment.TickCount64;
+                        if (now - lastRefineUpdate > 200 || current == total)
                         {
-                            ProgressText = string.Format(Se.Language.Video.VideoOcr.RefiningTimingXY, current, total);
-                            ProgressValue = total == 0 ? 0 : current * 100.0 / total;
-                        });
-                    }
-                },
-                cancellationToken);
+                            lastRefineUpdate = now;
+                            var done = refineDone;
+                            var all = refineTotal;
+                            Dispatcher.UIThread.Post(() =>
+                            {
+                                ProgressText = string.Format(Se.Language.Video.VideoOcr.RefiningTimingXY, done, all);
+                                ProgressValue = all == 0 ? 0 : done * 100.0 / all;
+                            });
+                        }
+                    },
+                    cancellationToken);
+                refineDone = refineBefore + rangeLines.Count;
+                mergedLines.AddRange(rangeLines);
+            }
 
             var positionTag = string.Empty;
             if (AddAssaPositionTag)
@@ -907,6 +944,17 @@ public partial class VideoOcrViewModel : ObservableObject
 
             ApplyOcrFixes();
 
+            if (keptLines.Count > 0)
+            {
+                var all = keptLines.Concat(Lines).OrderBy(p => p.StartTime).ThenBy(p => p.EndTime).ToList();
+                Lines.Clear();
+                for (var i = 0; i < all.Count; i++)
+                {
+                    all[i].Number = i + 1;
+                    Lines.Add(all[i]);
+                }
+            }
+
             IsRunning = false;
             IsOkEnabled = Lines.Count > 0;
             ProgressValue = 0;
@@ -925,7 +973,7 @@ public partial class VideoOcrViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window!,
-                    Se.Language.Video.VideoOcr.NoLinesFoundTitle,
+                    Se.Language.General.NoSubtitlesFoundTitle,
                     Se.Language.Video.VideoOcr.NoLinesFoundMessage,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -938,7 +986,8 @@ public partial class VideoOcrViewModel : ObservableObject
             // refine pipeline only rebuilds it on completion. Inserting those would produce
             // near-duplicate paragraphs on the scan grid with no position tag, so a cancelled
             // scan offers nothing to apply.
-            IsOkEnabled = false;
+            RestoreKeptLines(keptLines);
+            IsOkEnabled = Lines.Count > 0;
             ProgressValue = 0;
             ProgressText = string.Empty;
         }
@@ -946,6 +995,8 @@ public partial class VideoOcrViewModel : ObservableObject
         {
             Se.LogError(exception, "Video OCR failed");
 
+            RestoreKeptLines(keptLines);
+            IsOkEnabled = Lines.Count > 0;
             IsRunning = false;
             ProgressValue = 0;
             ProgressText = string.Empty;
@@ -970,7 +1021,16 @@ public partial class VideoOcrViewModel : ObservableObject
         }
     }
 
-    /// <summary>The crop (and optional downscale) part of the extraction filter - shared by
+    private void RestoreKeptLines(List<VideoOcrLineItem> keptLines)
+    {
+        Lines.Clear();
+        foreach (var line in keptLines)
+        {
+            Lines.Add(line);
+        }
+    }
+
+    /// <summary>The crop (and optional downscale) part
     /// the scan, the test frame and the timing refinement so they all see the same pixels.</summary>
     private string GetCropAndScaleFilter()
     {
@@ -984,18 +1044,54 @@ public partial class VideoOcrViewModel : ObservableObject
         return $"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}";
     }
 
-    private async Task ExtractFrames(string framesFolder, CancellationToken cancellationToken)
+    private async Task<List<VideoOcrFrameGroup>> GroupFrames(List<string> frameFileNames, VideoOcrTimeRange range, CancellationToken cancellationToken)
+    {
+        var lastAnalyzeUpdate = 0L;
+        var groups = await Task.Run(() => VideoOcrFrameGrouper.Group(
+            frameFileNames,
+            BrightnessMinimum,
+            Se.Settings.Video.VideoOcr.ImageSimilarityPercent,
+            (current, total) =>
+            {
+                var now = Environment.TickCount64;
+                if (now - lastAnalyzeUpdate > 200 || current == total)
+                {
+                    lastAnalyzeUpdate = now;
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        ProgressText = string.Format(Se.Language.Video.VideoOcr.AnalyzingFramesXY, current, total);
+                        ProgressValue = total == 0 ? 0 : current * 100.0 / total;
+                    });
+                }
+            },
+            cancellationToken), cancellationToken);
+
+        foreach (var group in groups)
+        {
+            group.OffsetMs = range.StartSeconds * 1000.0;
+        }
+
+        return groups;
+    }
+
+    private async Task ExtractFrames(string framesFolder, VideoOcrTimeRange range, CancellationToken cancellationToken)
     {
         // JPEG (near-lossless q=2) instead of PNG: a long video at 5 fps produces tens of
         // thousands of frames, and PNG would need gigabytes of temp disk space.
+        // A range seeks with -ss before -i (fast), and ffmpeg then decodes from the key frame
+        // and drops frames up to the exact start, so frame 0 is the range start.
         var outputPattern = Path.Combine(framesFolder, "img%06d.jpg");
-        var arguments = $"-nostdin -y -i \"{_videoFileName}\" " +
+        var isWholeVideo = range.StartSeconds <= 0 && range.EndSeconds >= DurationSeconds;
+        var rangeArguments = isWholeVideo
+            ? string.Empty
+            : $"-ss {range.StartSeconds.ToString("0.###", CultureInfo.InvariantCulture)} " +
+              $"-t {range.LengthSeconds.ToString("0.###", CultureInfo.InvariantCulture)} ";
+        var arguments = $"-nostdin -y {rangeArguments}-i \"{_videoFileName}\" " +
                         $"-vf \"fps={FramesPerSecond.ToString(CultureInfo.InvariantCulture)}," +
                         $"{GetCropAndScaleFilter()}\" " +
                         $"-q:v 2 -start_number 0 \"{outputPattern}\"";
 
         _extractedFrames = 0;
-        var totalFrames = Math.Max(1, (long)Math.Round(DurationSeconds * FramesPerSecond));
 
         Se.WriteToolsLog("Video OCR: extracting frames - ffmpeg " + arguments);
         _ffmpegProcess = FfmpegGenerator.GetProcess(arguments, ExtractFramesOutputHandler);
@@ -1009,7 +1105,7 @@ public partial class VideoOcrViewModel : ObservableObject
         using var timer = new System.Timers.Timer(200);
         timer.Elapsed += (s, e) =>
         {
-            var percentage = Math.Clamp(_extractedFrames * 100.0 / totalFrames, 0, 100);
+            var percentage = Math.Clamp((_extractedFramesBefore + _extractedFrames) * 100.0 / Math.Max(1, _totalFramesToExtract), 0, 100);
             Dispatcher.UIThread.Post(() =>
             {
                 ProgressValue = percentage;
@@ -1078,7 +1174,7 @@ public partial class VideoOcrViewModel : ObservableObject
             var current = Interlocked.Increment(ref done);
             Dispatcher.UIThread.Post(() =>
             {
-                ProgressText = string.Format(Se.Language.Video.VideoOcr.RunningOcrXY, current, ocrGroups.Count);
+                ProgressText = string.Format(Se.Language.General.RunningOcrXY, current, ocrGroups.Count);
                 ProgressValue = current * 100.0 / ocrGroups.Count;
             });
         }
@@ -1107,7 +1203,7 @@ public partial class VideoOcrViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             ProgressValue = 0;
-            ProgressText = string.Format(Se.Language.Video.VideoOcr.RunningOcrXY, 0, ocrGroups.Count);
+            ProgressText = string.Format(Se.Language.General.RunningOcrXY, 0, ocrGroups.Count);
         });
 
         _ocrStoppedEarlyError = string.Empty;
@@ -1587,6 +1683,17 @@ public partial class VideoOcrViewModel : ObservableObject
                     d.Name.Contains(result.SelectedDictionary.NativeName, StringComparison.OrdinalIgnoreCase))
                 ?? SelectedDictionary;
         }
+        else if (result.DictionariesChanged)
+        {
+            // Keep the current dictionary unless it was the one uninstalled.
+            var currentFileName = SelectedDictionary?.DictionaryFileName;
+            SelectedDictionary = null;
+            LoadDictionaries(currentFileName ?? string.Empty);
+            if (currentFileName == string.Empty)
+            {
+                SelectedDictionary = Dictionaries[0]; // "None" stays "None"
+            }
+        }
     }
 
     /// <summary>The current engine's OCR language as a two-letter code, for the dictionary auto-pick.</summary>
@@ -1939,10 +2046,13 @@ public partial class VideoOcrViewModel : ObservableObject
         }
     }
 
+    partial void OnIsRunningChanged(bool value) => _sleepInhibitor.SetActive(value);
+
     internal void OnClosing()
     {
         _previewTimer.Stop();
         _cancellationTokenSource.Cancel();
+        _sleepInhibitor.Dispose();
 
         try
         {

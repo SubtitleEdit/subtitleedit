@@ -2,7 +2,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Features.WebVtt;
-using System.Linq;
 
 namespace UITests.Features;
 
