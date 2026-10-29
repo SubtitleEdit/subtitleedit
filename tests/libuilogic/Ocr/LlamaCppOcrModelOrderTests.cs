@@ -19,9 +19,15 @@ public class LlamaCppOcrModelOrderTests
     }
 
     [Fact]
-    public void LightOnOcr3_4B_IsSecond_AsAccurateAsGlmOcrButFourTimesTheDownload()
+    public void Lfm3Vl_IsSecond_AsAccurateAsGlmOcrButWithFluentWordSwaps()
     {
-        Assert.Equal("LightOnOCR-3-4B.Q8_0.gguf", LlamaCppServerManager.OcrModels[1].FileName);
+        Assert.Equal("LFM3-VL-2B-Q4_K_M.gguf", LlamaCppServerManager.OcrModels[1].FileName);
+    }
+
+    [Fact]
+    public void LightOnOcr3_4B_IsThird_AsAccurateAsGlmOcrButFourTimesTheDownload()
+    {
+        Assert.Equal("LightOnOCR-3-4B.Q8_0.gguf", LlamaCppServerManager.OcrModels[2].FileName);
     }
 
     [Fact]
@@ -46,7 +52,7 @@ public class LlamaCppOcrModelOrderTests
     public void QariOcr_RanksBehindTheGeneralModels_BecauseItIsAnArabicSpecialist()
     {
         // Best on Arabic, but it merges every two-line subtitle, so it must not become the
-        // headless fallback ahead of GLM-OCR/LFM2.5-VL/PaddleOCR-VL/HunyuanOCR.
+        // headless fallback ahead of GLM-OCR/LFM3-VL/PaddleOCR-VL/HunyuanOCR.
         Assert.Equal("Qari-OCR-0.2.2.1-VL-2B-Instruct-merged.Q8_0.gguf", LlamaCppServerManager.OcrModels[^2].FileName);
     }
 

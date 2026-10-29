@@ -35,7 +35,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
         _modelName = modelName;
         _language = string.IsNullOrWhiteSpace(language) ? "English" : language;
         // Shared with the UI's default so the two cannot drift; --ocr-prompt overrides it, and a
-        // curated model with its own tuned prompt (LFM2.5-VL) gets that unless --ocr-prompt is set.
+        // curated model with its own tuned prompt (LFM3-VL) gets that unless --ocr-prompt is set.
         _promptTemplate = LlamaCppServerManager.ResolveOcrPrompt(model, prompt);
         _quiet = quiet;
         _httpClient = new HttpClient
