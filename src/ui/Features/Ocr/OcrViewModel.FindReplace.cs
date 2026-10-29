@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
@@ -319,10 +319,24 @@ public partial class OcrViewModel : IFindResult
         int idx;
         if (result.ReplaceAllPressed)
         {
-            var replaceCount = _findService.ReplaceAll(result.SearchText, result.ReplaceText);
-            for (var i = 0; i < OcrSubtitleItems.Count && i < lines.Count; i++)
+            // Same as the main window (#16453): current line to the end first, then ask before
+            // going on from the top.
+            var startLine = Math.Max(0, currentLineIndex);
+            var replaceCount = _findService.ReplaceAll(result.SearchText, result.ReplaceText, startLine);
+            SetItemTexts(lines);
+
+            var parent = result.Window?.IsVisible == true ? result.Window : Window;
+            if (startLine > 0 && parent != null)
             {
-                SetItemText(i, lines[i]);
+                var message = replaceCount > 0
+                    ? string.Format(Se.Language.General.ReplacedXContinueFromTop, replaceCount)
+                    : Se.Language.General.ReplaceNotFoundContinueFromTop;
+                var answer = await MessageBox.Show(parent, Se.Language.General.ContinueReplaceTitle, message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (answer == MessageBoxResult.Yes)
+                {
+                    replaceCount += _findService.ReplaceAll(result.SearchText, result.ReplaceText, 0, startLine);
+                    SetItemTexts(lines);
+                }
             }
 
             result.ReportReplaceAll(replaceCount);
@@ -406,6 +420,14 @@ public partial class OcrViewModel : IFindResult
 
         ShowFindMatch(idx);
         Dispatcher.UIThread.Post(() => EditTextBox?.Focus());
+    }
+
+    private void SetItemTexts(List<string> lines)
+    {
+        for (var i = 0; i < OcrSubtitleItems.Count && i < lines.Count; i++)
+        {
+            SetItemText(i, lines[i]);
+        }
     }
 
     private async Task<int> WrapAround(bool forward, string searchText, List<string> lines, Window? dialogWindow)

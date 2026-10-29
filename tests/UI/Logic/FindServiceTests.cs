@@ -388,4 +388,51 @@ public class FindServiceTests
         Assert.Equal(0, count);
         Assert.Equal("hello world", lines[0]);
     }
+
+    // #16453: Replace all from the current line runs to the end first and leaves the lines above
+    // alone until the user agrees to continue from the top.
+    [Fact]
+    public void ReplaceAll_FromStartLine_LeavesLinesAboveUntouched()
+    {
+        var lines = new List<string> { "hello 1", "hello 2", "hello 3", "hello 4" };
+        var originals = new List<string> { "hello a", "hello b", "hello c", "hello d" };
+        var service = new FindService();
+        service.Initialize(lines, 2, false, FindService.FindMode.CaseInsensitive, originals);
+
+        var count = service.ReplaceAll("hello", "hi", 2);
+
+        Assert.Equal(4, count);
+        Assert.Equal(new List<string> { "hello 1", "hello 2", "hi 3", "hi 4" }, lines);
+        Assert.Equal(new List<string> { "hello a", "hello b", "hi c", "hi d" }, originals);
+    }
+
+    // The second pass (from the top) stops before the line the first pass started on, so a
+    // replacement that still matches (hello -> hello there) is not applied twice there.
+    [Fact]
+    public void ReplaceAll_SecondPassFromTop_StopsBeforeStartLine()
+    {
+        var lines = new List<string> { "hello 1", "hello 2", "hello 3" };
+        var service = new FindService();
+        service.Initialize(lines, 1, false, FindService.FindMode.CaseInsensitive);
+
+        var first = service.ReplaceAll("hello", "hello there", 1);
+        var second = service.ReplaceAll("hello", "hello there", 0, 1);
+
+        Assert.Equal(2, first);
+        Assert.Equal(1, second);
+        Assert.Equal(new List<string> { "hello there 1", "hello there 2", "hello there 3" }, lines);
+    }
+
+    [Fact]
+    public void ReplaceAll_Regex_RespectsLineRange()
+    {
+        var lines = new List<string> { "a1", "a2", "a3" };
+        var service = new FindService();
+        service.Initialize(lines, 0, false, FindService.FindMode.RegularExpression);
+
+        var count = service.ReplaceAll(@"a(\d)", "b$1", 1, 2);
+
+        Assert.Equal(1, count);
+        Assert.Equal(new List<string> { "a1", "b2", "a3" }, lines);
+    }
 }

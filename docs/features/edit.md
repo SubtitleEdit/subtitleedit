@@ -56,6 +56,8 @@ The buttons have Alt accelerators, underlined while Alt is held: `Alt+F` **Find 
 
 The line under the buttons reports the outcome: **Count** shows how many matches there are, **Replace all** shows how many occurrences were replaced, and **Replace & find next** keeps a running total of the occurrences replaced with the current search text. Typing a new search text starts the count over.
 
+**Replace all** starts at the selected line and replaces down to the end of the file. If it did not start on the first line, it then asks whether to continue from the top; **Yes** replaces in the lines above the starting line too, so no line is replaced twice. Both passes are one undo step.
+
 With an editable original subtitle loaded, a **Replace/search in** drop-down appears with three choices:
 
 - **Text and original text** - both columns (the default, and what Find always does)
