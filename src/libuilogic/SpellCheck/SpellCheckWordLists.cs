@@ -161,6 +161,26 @@ public class SpellCheckWordLists
         }
     }
 
+    private void RemoveWordWithDashesOrPeriods(string word)
+    {
+        if (!_wordsWithDashesOrPeriods.Remove(word))
+        {
+            return;
+        }
+
+        foreach (var part in word.Split(PeriodAndDash, StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (_wordsWithDashesOrPeriodsByPart.TryGetValue(part, out var words))
+            {
+                words.Remove(word);
+                if (words.Count == 0)
+                {
+                    _wordsWithDashesOrPeriodsByPart.Remove(part);
+                }
+            }
+        }
+    }
+
     private IEnumerable<string> GetSingleUnifiedCollection(IEnumerable<string> namesMultiWordList)
     {
         return namesMultiWordList
@@ -277,6 +297,15 @@ public class SpellCheckWordLists
         {
             _namesListWithApostrophe.Remove(word + "'");
         }
+
+        // AddName used to index every name for the dash/period part lookup - a plain name like
+        // "Boris" as its own single part - and nothing took it out again, so HasNameExtended stayed
+        // true and spell-check Undo of "Add to names list" never showed the word again. (#16472)
+        // The lookup is shared with the user dictionary, so keep a word that is still in there.
+        if (!_userWordList.Contains(word) && !_userPhraseList.Contains(word))
+        {
+            RemoveWordWithDashesOrPeriods(word);
+        }
     }
 
     /// <summary>
@@ -369,7 +398,11 @@ public class SpellCheckWordLists
             _namesListWithApostrophe.Add(word + "'");
         }
 
-        AddWordWithDashesOrPeriods(word);
+        // Same rule as the start-up load: only names with '.' or '-' get split into parts.
+        if (word.Contains(PeriodAndDash))
+        {
+            AddWordWithDashesOrPeriods(word);
+        }
 
         var namesList = new NameList(_dictionaryFolder, _languageName, false, string.Empty);
         namesList.Add(word);

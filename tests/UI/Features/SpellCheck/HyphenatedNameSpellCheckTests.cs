@@ -47,6 +47,49 @@ public class HyphenatedNameSpellCheckTests : IDisposable
         Assert.False(wordLists.HasNameExtended("Soo", "I met Soo today."));
     }
 
+    // #16472: AddName indexed plain names for the dash/period part lookup and RemoveName never took
+    // them out, so after spell-check Undo of "Add to names list" the word still counted as a name.
+    [Fact]
+    public void RemoveName_PlainName_NoLongerRecognized()
+    {
+        var wordLists = new SpellCheckWordLists(LanguageName);
+        wordLists.AddName("Zorbulon");
+
+        const string line = "Zorbulon came home.";
+        Assert.True(wordLists.HasName("Zorbulon"));
+
+        wordLists.RemoveName("Zorbulon");
+
+        Assert.False(wordLists.HasName("Zorbulon"));
+        Assert.False(wordLists.HasNameExtended("Zorbulon", line));
+    }
+
+    [Fact]
+    public void RemoveName_HyphenatedName_PartsNoLongerRecognized()
+    {
+        var wordLists = new SpellCheckWordLists(LanguageName);
+        wordLists.AddName("Soo-bin");
+        wordLists.RemoveName("Soo-bin");
+
+        const string line = "I met Soo-bin today.";
+        Assert.False(wordLists.HasNameExtended("Soo", line));
+        Assert.False(wordLists.HasNameExtended("bin", line));
+    }
+
+    // #16472: Undo wrote the removed name to the blacklist, so adding it again later was refused
+    // on disk and the name was lost on the next start.
+    [Fact]
+    public void AddName_AfterRemove_IsSavedAgain()
+    {
+        var wordLists = new SpellCheckWordLists(LanguageName);
+        wordLists.AddName("Zorbulon");
+        wordLists.RemoveName("Zorbulon");
+        wordLists.AddName("Zorbulon");
+
+        var reloaded = new SpellCheckWordLists(LanguageName);
+        Assert.True(reloaded.HasName("Zorbulon"));
+    }
+
     public void Dispose()
     {
         Se.DictionariesFolder = _originalDictionariesFolder;
