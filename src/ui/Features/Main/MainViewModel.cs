@@ -24636,6 +24636,16 @@ public partial class MainViewModel :
     // (#12027). null means "resync to the player on the next move".
     private double? _relativeSeekTargetSeconds;
 
+    /// <summary>
+    /// How far the player may lag the tracked target before a relative step resyncs to it.
+    /// While the previous step's seek is still in flight (slow exact seeks in long-GOP video),
+    /// the player still reports the old position, one full step behind the target. A flat 0.5 s
+    /// guard dropped that step for 500 ms steps (float rounding at the limit) and for every
+    /// longer step, so quick presses came out uneven (#16469). Every other position change
+    /// clears the tracker, so the wider guard only applies to chained relative steps.
+    /// </summary>
+    internal static double RelativeSeekResyncSeconds(int ms) => 0.5 + Math.Abs(ms) / 1000.0;
+
     private void MoveVideoPositionMs(int ms, bool pause = false)
     {
         var vp = GetVideoPlayerControl();
@@ -24657,12 +24667,11 @@ public partial class MainViewModel :
         var actual = vp.Position;
 
         // Keep accumulating from the tracked target only while it still matches where
-        // the player actually is (within half a second) and playback is paused. If the
-        // user played, clicked the waveform, or jumped to a cue, the player diverges and
-        // we resync to its real position.
+        // the player actually is and playback is paused. If the user played, clicked the
+        // waveform, or jumped to a cue, the player diverges and we resync to its real position.
         var baseSeconds = !wasPlaying
             && _relativeSeekTargetSeconds is double tracked
-            && Math.Abs(tracked - actual) < 0.5
+            && Math.Abs(tracked - actual) < RelativeSeekResyncSeconds(ms)
                 ? tracked
                 : actual;
 
