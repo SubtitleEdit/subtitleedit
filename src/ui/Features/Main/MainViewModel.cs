@@ -19106,7 +19106,7 @@ public partial class MainViewModel :
         });
     }
 
-    private async Task<MessageBoxResult> ShowWrapAroundDialog(string message)
+    private async Task<MessageBoxResult> ShowWrapAroundDialog(string message, string? title = null)
     {
         if (Window == null)
         {
@@ -19117,7 +19117,7 @@ public partial class MainViewModel :
         var dialogWindow = (findWin?.IsVisible == true ? findWin : null)
                         ?? (replaceWin?.IsVisible == true ? replaceWin : null);
         var parentWindow = dialogWindow ?? Window!;
-        return await MessageBox.Show(parentWindow, Se.Language.General.ContinueFindTitle,
+        return await MessageBox.Show(parentWindow, title ?? Se.Language.General.ContinueFindTitle,
             message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
     }
 
@@ -19336,29 +19336,35 @@ public partial class MainViewModel :
             }
             else if (result.ReplaceAllPressed)
             {
-                var replaceCount = _findService.ReplaceAll(result.SearchText, result.ReplaceText);
-
-                for (var i = 0; i < Subtitles.Count && i < subs.Count; i++)
+                // Like SE 4: replace from the current line to the end, then ask before going on
+                // from the top - replacing above the current line without asking surprised users
+                // working down the file (#16453). Both passes are one undo step.
+                var startLine = Math.Max(0, currentLineIndex);
+                int replaceCount;
+                _undoRedoManager.CheckForChanges(null);
+                _undoRedoManager.StopChangeDetection();
+                try
                 {
-                    var s = Subtitles[i];
-                    var newText = subs[i];
-                    if (newText != s.Text)
-                    {
-                        s.Text = newText;
-                    }
-                }
+                    replaceCount = _findService.ReplaceAll(result.SearchText, result.ReplaceText, startLine);
+                    ApplyReplacedLines(subs, origs);
 
-                if (origs != null)
-                {
-                    for (var i = 0; i < Subtitles.Count && i < origs.Count; i++)
+                    if (startLine > 0)
                     {
-                        var s = Subtitles[i];
-                        var newText = origs[i];
-                        if (newText != s.OriginalText)
+                        var message = replaceCount > 0
+                            ? string.Format(Se.Language.General.ReplacedXContinueFromTop, replaceCount)
+                            : Se.Language.General.ReplaceNotFoundContinueFromTop;
+                        var answer = await ShowWrapAroundDialog(message, Se.Language.General.ContinueReplaceTitle);
+                        _shortcutManager.ClearKeys();
+                        if (answer == MessageBoxResult.Yes)
                         {
-                            s.OriginalText = newText;
+                            replaceCount += _findService.ReplaceAll(result.SearchText, result.ReplaceText, 0, startLine);
+                            ApplyReplacedLines(subs, origs);
                         }
                     }
+                }
+                finally
+                {
+                    _undoRedoManager.StartChangeDetection();
                 }
 
                 ShowStatus(string.Format(Se.Language.Main.ReplacedXWithYCountZ, result.SearchText, result.ReplaceText, replaceCount));
@@ -19431,6 +19437,32 @@ public partial class MainViewModel :
             }
 
             ShowFindMatch(idx, _findService.CurrentTextFound, _findService.CurrentLineNumber, _findService.CurrentTextIndex, _findService.CurrentMatchInOriginal);
+        }
+    }
+
+    private void ApplyReplacedLines(List<string> subs, List<string>? origs)
+    {
+        for (var i = 0; i < Subtitles.Count && i < subs.Count; i++)
+        {
+            var s = Subtitles[i];
+            var newText = subs[i];
+            if (newText != s.Text)
+            {
+                s.Text = newText;
+            }
+        }
+
+        if (origs != null)
+        {
+            for (var i = 0; i < Subtitles.Count && i < origs.Count; i++)
+            {
+                var s = Subtitles[i];
+                var newText = origs[i];
+                if (newText != s.OriginalText)
+                {
+                    s.OriginalText = newText;
+                }
+            }
         }
     }
 
