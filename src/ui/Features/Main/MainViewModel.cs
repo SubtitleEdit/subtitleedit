@@ -9964,9 +9964,12 @@ public partial class MainViewModel :
         if (viewModel.OkPressed)
         {
             var selectedFormat = viewModel.GetSelectedFormat();
-            if (selectedFormat != null && selectedFormat != SelectedSubtitleFormat)
+            if (selectedFormat != null && selectedFormat.Name != SelectedSubtitleFormat.Name)
             {
-                SetSubtitleFormat(selectedFormat);
+                // A pick here is the user's format change, the same as one in the toolbar combo:
+                // not SetSubtitleFormat, which skipped the conversion and left "Save as" on the
+                // default "Save as" format (.srt) instead of the picked one (.ssa).
+                SelectedSubtitleFormat = SubtitleFormats.FirstOrDefault(p => p.Name == selectedFormat.Name) ?? selectedFormat;
             }
         }
     }
