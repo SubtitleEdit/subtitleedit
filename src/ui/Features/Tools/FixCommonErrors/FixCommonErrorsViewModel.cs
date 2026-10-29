@@ -102,6 +102,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private readonly INamesList _namesList;
     private string? _namesListFolder;
     private string? _namesListLanguage;
+    private Task _namesListLoad = Task.CompletedTask;
     private readonly IWindowService _windowService;
     private readonly IOcrFixEngine _ocrFixEngine;
 
@@ -164,7 +165,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         if (Se.Settings.Tools.FixCommonErrors.SkipStep1 && SelectedProfile != null)
         {
-            _ = ShowStep2();
+            _ = ShowStep2Async();
         }
     }
 
@@ -347,16 +348,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
 
         return new List<SubtitleLineViewModel>() { selected };
-    }
-
-    // Used when step 1 is skipped at startup - the window is not up yet, so there is nothing to flash on.
-    // Initialize runs inside the synchronous dialog init callback, so this is fire-and-forget: the
-    // step switch happens at once and the fixes grid fills when the names list has loaded.
-    private async Task ShowStep2()
-    {
-        EnterStep2();
-        await LoadNamesListIfNeededAsync();
-        RefreshFixes();
     }
 
     private async Task ShowStep2Async()
@@ -1325,20 +1316,45 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     /// this the rules saw no names and no abbreviations at all - e.g. Dutch "dhr. de vries" was
     /// capitalized to "dhr. De vries" (#13082). Reloaded only when the language changes, like
     /// the batch converter does. Awaited by the async callers of ApplyFixes, which itself stays
-    /// synchronous because it mutates the grid-bound collections.
+    /// synchronous because it mutates the grid-bound collections. A caller that comes in while a
+    /// load for the same language is running awaits that load instead of starting a second one.
     /// </summary>
-    private async Task LoadNamesListIfNeededAsync()
+    private Task LoadNamesListIfNeededAsync()
     {
         var dictionaryFolder = Se.DictionariesFolder;
         if (string.Equals(_namesListFolder, dictionaryFolder, StringComparison.Ordinal) &&
             string.Equals(_namesListLanguage, Language, StringComparison.Ordinal))
         {
-            return;
+            return _namesListLoad;
         }
 
-        await _namesList.LoadAsync(dictionaryFolder, Language);
         _namesListFolder = dictionaryFolder;
         _namesListLanguage = Language;
+        _namesListLoad = LoadNamesListAsync(dictionaryFolder, Language);
+        return _namesListLoad;
+    }
+
+    // A broken names file must not leave the fixes grid empty without a word, so report it and
+    // let the scan run without names. It is not retried until the language changes.
+    private async Task LoadNamesListAsync(string dictionaryFolder, string language)
+    {
+        try
+        {
+            await _namesList.LoadAsync(dictionaryFolder, language);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Fix common errors: could not load names list");
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    exception.Message,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
     }
 
     public bool IsName(string candidate)

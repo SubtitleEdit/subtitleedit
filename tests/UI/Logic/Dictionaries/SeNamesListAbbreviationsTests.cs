@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Logic.Dictionaries;
+﻿using Nikse.SubtitleEdit.Logic.Dictionaries;
 
 namespace UITests.Logic.Dictionaries;
 
@@ -76,6 +76,24 @@ public class SeNamesListAbbreviationsTests : IDisposable
         var namesList = new SeNamesList();
         await namesList.LoadAsync(_folder, "nl");
         await namesList.LoadAsync(_folder, "es");
+
+        var abbreviations = namesList.GetAbbreviations();
+        Assert.Contains("sr.", abbreviations);
+        Assert.DoesNotContain("dhr.", abbreviations);
+    }
+
+    // Overlapping loads (e.g. the language changed while a load was running) end with the
+    // lists of the last load started, whichever finishes first.
+    [Fact]
+    public async Task OverlappingLoadsKeepTheLastStarted()
+    {
+        WriteAbbreviations("nl_abbreviations.xml", "dhr.");
+        WriteAbbreviations("es_abbreviations.xml", "sr.");
+
+        var namesList = new SeNamesList();
+        var first = namesList.LoadAsync(_folder, "nl");
+        var second = namesList.LoadAsync(_folder, "es");
+        await Task.WhenAll(first, second);
 
         var abbreviations = namesList.GetAbbreviations();
         Assert.Contains("sr.", abbreviations);
