@@ -29389,8 +29389,11 @@ public partial class MainViewModel :
             if (paragraph.Id is { } id && rowsByReferenceId.TryGetValue(id, out var row))
             {
                 text = row.OriginalText;
-                start = row.EffectiveOriginalStartTime.TotalSeconds;
-                end = row.EffectiveOriginalEndTime.TotalSeconds;
+                if (!IsOriginalReadOnly)
+                {
+                    start = row.EffectiveOriginalStartTime.TotalSeconds;
+                    end = row.EffectiveOriginalEndTime.TotalSeconds;
+                }
             }
 
             cues.Add(new WaveformOriginalSubtitleCue(start, end, text));
