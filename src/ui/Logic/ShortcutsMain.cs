@@ -548,6 +548,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveStartXMsForwardCommand), Se.Language.Options.Shortcuts.MoveStartXMsForward },
         { nameof(MainViewModel.MoveEndXMsBackCommand), Se.Language.Options.Shortcuts.MoveEndXMsBack },
         { nameof(MainViewModel.MoveEndXMsForwardCommand), Se.Language.Options.Shortcuts.MoveEndXMsForward },
+        { nameof(MainViewModel.MoveStartXMsBackPushPreviousCommand), Se.Language.Options.Shortcuts.MoveStartXMsBackPushPrevious },
+        { nameof(MainViewModel.MoveEndXMsForwardPushNextCommand), Se.Language.Options.Shortcuts.MoveEndXMsForwardPushNext },
         { nameof(MainViewModel.MoveSelectedLinesXMsBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesXMsBack },
         { nameof(MainViewModel.MoveSelectedLinesXMsForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesXMsForward },
         { nameof(MainViewModel.MoveSelectedLinesAndForwardXMsBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardXMsBack },
@@ -1132,6 +1134,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MoveStartXMsForwardCommand, nameof(vm.MoveStartXMsForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndXMsBackCommand, nameof(vm.MoveEndXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndXMsForwardCommand, nameof(vm.MoveEndXMsForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveStartXMsBackPushPreviousCommand, nameof(vm.MoveStartXMsBackPushPreviousCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveEndXMsForwardPushNextCommand, nameof(vm.MoveEndXMsForwardPushNextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesXMsBackCommand, nameof(vm.MoveSelectedLinesXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesXMsForwardCommand, nameof(vm.MoveSelectedLinesXMsForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardXMsBackCommand, nameof(vm.MoveSelectedLinesAndForwardXMsBackCommand), ShortcutCategory.General);

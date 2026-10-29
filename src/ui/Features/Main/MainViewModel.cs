@@ -16969,6 +16969,15 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MoveEndXMsForward() => MoveEndByMs(GetMoveStartEndStepMs(), keepGapNextIfClose: false);
 
+    // Push variants (doom9 request): the step is the same, but running into the neighbour pushes
+    // its border along at the minimum gap instead of stopping. Only the directions that can
+    // collide get one - moving away from the neighbour is the plain shortcut.
+    [RelayCommand]
+    private void MoveStartXMsBackPushPrevious() => MoveStartByMs(-GetMoveStartEndStepMs(), keepGapPrevIfClose: false, pushPrevOnCollision: true);
+
+    [RelayCommand]
+    private void MoveEndXMsForwardPushNext() => MoveEndByMs(GetMoveStartEndStepMs(), keepGapNextIfClose: false, pushNextOnCollision: true);
+
     private static int GetMoveStartEndStepMs() => Math.Max(1, Se.Settings.General.MoveStartEndStepMs);
 
     // #14789: repeatable fixed-ms nudges for fixing progressive drift section by section.
@@ -17237,7 +17246,7 @@ public partial class MainViewModel :
     private void MoveStartByFrames(int frames, bool keepGapPrevIfClose) =>
         MoveStartByMs(FramesToMilliseconds(frames), keepGapPrevIfClose);
 
-    private void MoveStartByMs(int deltaMs, bool keepGapPrevIfClose)
+    private void MoveStartByMs(int deltaMs, bool keepGapPrevIfClose, bool pushPrevOnCollision = false)
     {
         var s = SelectedSubtitle;
         if (s == null || AreTimeCodesLocked)
@@ -17281,13 +17290,37 @@ public partial class MainViewModel :
             }
         }
 
+        // Push variant: unlike KeepGapPrev the previous end only moves when this start would get
+        // closer to it than the minimum gap (or the current gap, if that is already tighter -
+        // touching lines stay touching), and it never follows a start that moves forward again.
+        var pushPrev = false;
+        var newPrevEndMs = 0.0;
+        if (pushPrevOnCollision && deltaMs < 0 && prev != null
+            && prev.EndTime.TotalMilliseconds <= s.StartTime.TotalMilliseconds)
+        {
+            var pushGapMs = Math.Min(gapMs, s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds);
+            if (newStartMs - pushGapMs < prev.EndTime.TotalMilliseconds)
+            {
+                // Push no further than the previous line's minimum duration.
+                newPrevEndMs = Math.Max(newStartMs - pushGapMs,
+                    prev.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+                newStartMs = newPrevEndMs + pushGapMs;
+                if (newStartMs >= s.StartTime.TotalMilliseconds)
+                {
+                    return;
+                }
+
+                pushPrev = true;
+            }
+        }
+
         // Moving the start back must not run into the previous line (issue #13999). SE 4 clamped
         // to "previous end + minimum gap" here; SE 5 checked only this line's own end, so repeated
         // presses walked straight through the neighbour. The KeepGapPrev variant is exempt: it
         // carries the previous line along, so there is nothing to run into. "Allow overlap (when
         // moving/resizing)" is the user saying they want to - the waveform drag reads it the same
         // way.
-        if (deltaMs < 0 && !prevIsClose && prev != null && !Se.Settings.Waveform.AllowOverlap)
+        if (deltaMs < 0 && !prevIsClose && !pushPrev && prev != null && !Se.Settings.Waveform.AllowOverlap)
         {
             var floorMs = prev.EndTime.TotalMilliseconds + gapMs;
             if (newStartMs < floorMs)
@@ -17321,6 +17354,10 @@ public partial class MainViewModel :
         {
             prev.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs - prevGapMs);
         }
+        else if (pushPrev && prev != null)
+        {
+            prev.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newPrevEndMs);
+        }
 
         _updateAudioVisualizer = true;
     }
@@ -17328,7 +17365,7 @@ public partial class MainViewModel :
     private void MoveEndByFrames(int frames, bool keepGapNextIfClose) =>
         MoveEndByMs(FramesToMilliseconds(frames), keepGapNextIfClose);
 
-    private void MoveEndByMs(int deltaMs, bool keepGapNextIfClose)
+    private void MoveEndByMs(int deltaMs, bool keepGapNextIfClose, bool pushNextOnCollision = false)
     {
         var s = SelectedSubtitle;
         if (s == null || AreTimeCodesLocked)
@@ -17368,9 +17405,30 @@ public partial class MainViewModel :
             }
         }
 
+        // Push variant: symmetric counterpart of the one in MoveStartByMs.
+        var pushNext = false;
+        var newNextStartMs = 0.0;
+        if (pushNextOnCollision && deltaMs > 0 && next != null
+            && s.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds)
+        {
+            var pushGapMs = Math.Min(gapMs, next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds);
+            if (newEndMs + pushGapMs > next.StartTime.TotalMilliseconds)
+            {
+                newNextStartMs = Math.Min(newEndMs + pushGapMs,
+                    next.EndTime.TotalMilliseconds - Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+                newEndMs = newNextStartMs - pushGapMs;
+                if (newEndMs <= s.EndTime.TotalMilliseconds)
+                {
+                    return;
+                }
+
+                pushNext = true;
+            }
+        }
+
         // Symmetric counterpart of the clamp in MoveStartByFrames (issue #13999): moving the end
         // forward must not run into the next line.
-        if (deltaMs > 0 && !nextIsClose && next != null && !Se.Settings.Waveform.AllowOverlap)
+        if (deltaMs > 0 && !nextIsClose && !pushNext && next != null && !Se.Settings.Waveform.AllowOverlap)
         {
             var ceilingMs = next.StartTime.TotalMilliseconds - gapMs;
             if (newEndMs > ceilingMs)
@@ -17389,6 +17447,10 @@ public partial class MainViewModel :
         if (nextIsClose && next != null)
         {
             next.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs + nextGapMs));
+        }
+        else if (pushNext && next != null)
+        {
+            next.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newNextStartMs));
         }
 
         _updateAudioVisualizer = true;
