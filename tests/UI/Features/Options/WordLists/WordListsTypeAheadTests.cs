@@ -1,8 +1,11 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Options.WordLists;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -123,6 +126,59 @@ public class WordListsTypeAheadTests : IDisposable
             window.KeyTextInput("r");
             Dispatcher.UIThread.RunJobs();
             Assert.Equal("rn", vm.SelectedOcrFix?.Find);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    // Arrow keys after a jump move on from the matched entry, not from the entry clicked before the jump (#16471).
+    [AvaloniaFact]
+    public void Names_ArrowAfterJump_MovesFromMatchedEntry()
+    {
+        var (window, vm, listBoxes) = ShowWindow();
+        try
+        {
+            FocusItem(listBoxes[0]);
+            window.KeyTextInput("m");
+            Dispatcher.UIThread.RunJobs();
+            window.KeyPressQwerty(PhysicalKey.ArrowDown, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal("Mette", vm.SelectedName);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    // Jumping to an entry far outside the visible rows keeps keyboard focus in the list, so the arrow
+    // keys walk the list instead of moving focus to the language combo box (#16471).
+    [AvaloniaFact]
+    public void Names_ArrowAfterJumpOutOfView_StaysInList()
+    {
+        var (window, vm, listBoxes) = ShowWindow();
+        try
+        {
+            var names = Enumerable.Range(0, 300).Select(i => "a" + i.ToString("D3")).ToList();
+            names.AddRange(["c000", "c001", "c002"]);
+            vm.Names = new ObservableCollection<string>(names);
+            Dispatcher.UIThread.RunJobs();
+
+            FocusItem(listBoxes[0]);
+            window.KeyTextInput("c");
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("c000", vm.SelectedName);
+
+            window.KeyPressQwerty(PhysicalKey.ArrowDown, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.Equal("c001", vm.SelectedName);
+            var focused = window.FocusManager?.GetFocusedElement() as Visual;
+            Assert.NotNull(focused);
+            Assert.True(focused == listBoxes[0] || listBoxes[0].IsVisualAncestorOf(focused));
         }
         finally
         {
