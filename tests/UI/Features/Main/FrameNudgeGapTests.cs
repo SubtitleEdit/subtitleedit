@@ -33,6 +33,8 @@ public class FrameNudgeGapTests : IDisposable
     private readonly int _minBetweenMs = Se.Settings.General.MinimumBetweenLines.Milliseconds;
     private readonly int _minBetweenFrames = Se.Settings.General.MinimumBetweenLines.Frames;
     private readonly int _moveStartEndStepMs = Se.Settings.General.MoveStartEndStepMs;
+    private readonly int _moveStartEndPushMs = Se.Settings.General.MoveStartEndPushMs;
+    private readonly int _minDisplayMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
 
     public void Dispose()
     {
@@ -43,6 +45,8 @@ public class FrameNudgeGapTests : IDisposable
         Se.Settings.General.MinimumBetweenLines.Milliseconds = _minBetweenMs;
         Se.Settings.General.MinimumBetweenLines.Frames = _minBetweenFrames;
         Se.Settings.General.MoveStartEndStepMs = _moveStartEndStepMs;
+        Se.Settings.General.MoveStartEndPushMs = _moveStartEndPushMs;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = _minDisplayMs;
         foreach (var w in _windows)
         {
             w.Close();
@@ -347,5 +351,78 @@ public class FrameNudgeGapTests : IDisposable
         var result = TwoLines(gapMs);
         Se.Settings.General.UseFrameMode = true;
         return result;
+    }
+
+    // "Move end forward, push next": walks freely up to the minimum gap, then carries the next
+    // line's start along (it gets shorter); "Move end back" afterwards leaves the next line alone.
+    [AvaloniaFact]
+    public void MoveEndForwardPushNext_PushesNextStartAtTheGap()
+    {
+        var (window, vm) = TwoLines(gapMs: 100, minGapMs: 100);
+        Se.Settings.General.MoveStartEndPushMs = 50;
+        Se.Settings.General.MoveStartEndStepMs = 50;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 500;
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveEndXMsForwardPushNextCommand.Execute(null);
+        Assert.Equal(3050, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(3150, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(6000, vm.Subtitles[1].EndTime.TotalMilliseconds, 3);
+
+        vm.MoveEndXMsBackCommand.Execute(null);
+        Assert.Equal(3000, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(3150, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void MoveEndForwardPushNext_StopsAtNextMinimumDuration()
+    {
+        var (window, vm) = TwoLines(gapMs: 100, minGapMs: 100);
+        Se.Settings.General.MoveStartEndPushMs = 1000;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        Dispatcher.UIThread.RunJobs();
+
+        for (var i = 0; i < 10; i++)
+        {
+            vm.MoveEndXMsForwardPushNextCommand.Execute(null);
+        }
+
+        Assert.Equal(5000, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(4900, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void MoveStartBackPushPrevious_PushesPreviousEndAndKeepsTighterGap()
+    {
+        var (window, vm) = TwoLines(gapMs: 0, minGapMs: 100);
+        Se.Settings.General.MoveStartEndPushMs = 50;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 500;
+        vm.SelectedSubtitle = vm.Subtitles[1];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveStartXMsBackPushPreviousCommand.Execute(null);
+        Assert.Equal(2950, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(2950, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(1000, vm.Subtitles[0].StartTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void MoveStartBackPushPrevious_StopsAtZeroForFirstLine()
+    {
+        var (window, vm) = TwoLines(gapMs: 1000);
+        vm.Subtitles[0].SetStartTimeOnly(TimeSpan.FromMilliseconds(20));
+        Se.Settings.General.MoveStartEndPushMs = 50;
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveStartXMsBackPushPreviousCommand.Execute(null);
+        vm.MoveStartXMsBackPushPreviousCommand.Execute(null);
+        Assert.Equal(0, vm.Subtitles[0].StartTime.TotalMilliseconds, 3);
+        window.Close();
     }
 }

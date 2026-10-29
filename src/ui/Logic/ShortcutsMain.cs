@@ -155,6 +155,18 @@ public static class ShortcutsMain
         return string.Format(format, ms, slotNumber);
     }
 
+    /// <summary>Display name of "Move start back, push previous" / "Move end forward, push next" with their shared step.</summary>
+    public static string GetMoveStartEndPushTitle(bool back)
+    {
+        return GetMoveStartEndPushTitle(back, Se.Settings.General.MoveStartEndPushMs);
+    }
+
+    public static string GetMoveStartEndPushTitle(bool back, int ms)
+    {
+        var l = Se.Language.Options.Shortcuts;
+        return string.Format(back ? l.MoveStartXMsBackPushPrevious : l.MoveEndXMsForwardPushNext, ms);
+    }
+
     /// <summary>Action name of a custom move slot command, e.g. "MoveAllLinesCustom2BackCommand".</summary>
     public static string GetMoveLinesCustomCommandName(MoveLinesScope scope, int slotNumber, bool back)
     {
@@ -548,6 +560,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveStartXMsForwardCommand), Se.Language.Options.Shortcuts.MoveStartXMsForward },
         { nameof(MainViewModel.MoveEndXMsBackCommand), Se.Language.Options.Shortcuts.MoveEndXMsBack },
         { nameof(MainViewModel.MoveEndXMsForwardCommand), Se.Language.Options.Shortcuts.MoveEndXMsForward },
+        { nameof(MainViewModel.MoveStartXMsBackPushPreviousCommand), GetMoveStartEndPushTitle(back: true) },
+        { nameof(MainViewModel.MoveEndXMsForwardPushNextCommand), GetMoveStartEndPushTitle(back: false) },
         { nameof(MainViewModel.MoveSelectedLinesXMsBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesXMsBack },
         { nameof(MainViewModel.MoveSelectedLinesXMsForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesXMsForward },
         { nameof(MainViewModel.MoveSelectedLinesAndForwardXMsBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardXMsBack },
@@ -1132,6 +1146,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MoveStartXMsForwardCommand, nameof(vm.MoveStartXMsForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndXMsBackCommand, nameof(vm.MoveEndXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndXMsForwardCommand, nameof(vm.MoveEndXMsForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveStartXMsBackPushPreviousCommand, nameof(vm.MoveStartXMsBackPushPreviousCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveEndXMsForwardPushNextCommand, nameof(vm.MoveEndXMsForwardPushNextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesXMsBackCommand, nameof(vm.MoveSelectedLinesXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesXMsForwardCommand, nameof(vm.MoveSelectedLinesXMsForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardXMsBackCommand, nameof(vm.MoveSelectedLinesAndForwardXMsBackCommand), ShortcutCategory.General);

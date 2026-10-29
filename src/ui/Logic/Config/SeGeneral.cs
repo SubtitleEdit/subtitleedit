@@ -127,6 +127,9 @@ public class SeGeneral
     public int MoveSelectedLinesAndForwardCustom2Ms { get; set; }
     public int MoveAllLinesCustom1Ms { get; set; }
     public int MoveAllLinesCustom2Ms { get; set; }
+    /// <summary>Step of "Move start back, push previous" / "Move end forward, push next" (doom9
+    /// keyboard-timing request), shared by both. Configured via the gear button in Options > Shortcuts.</summary>
+    public int MoveStartEndPushMs { get; set; }
     public bool PromptBeforeDelete { get; set; }
     public bool LockTimeCodes { get; set; }
 
@@ -344,6 +347,7 @@ public class SeGeneral
         MoveSelectedLinesStepMs = 100;
         MoveStartEndStepMs = 10;
         MoveSelectedLinesCustom1Ms = 10;
+        MoveStartEndPushMs = 50;
         MoveSelectedLinesCustom2Ms = 1000;
         MoveSelectedLinesAndForwardCustom1Ms = 10;
         MoveSelectedLinesAndForwardCustom2Ms = 1000;

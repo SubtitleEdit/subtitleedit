@@ -80,6 +80,8 @@ public partial class ShortcutsViewModel : ObservableObject
     // Same for the "move lines, custom milliseconds" steps: [scope][slot] (#14789).
     private readonly int[,] _moveLinesSlots = new int[3, MoveLinesSlotCount];
     private const int MoveLinesSlotCount = 2;
+    // Same for the step shared by "Move start back, push previous" / "Move end forward, push next".
+    private int _moveStartEndPushMs;
     private bool _goToFirstAndLastLineAlsoSetVideoPosition;
 
     // Add this flag to prevent updates during selection changes
@@ -135,6 +137,7 @@ public partial class ShortcutsViewModel : ObservableObject
         _videoSeekSlots[6] = Se.Settings.Video.MoveVideoPositionCustom4Back;
         _videoSeekSlots[7] = Se.Settings.Video.MoveVideoPositionCustom4Forward;
         _goToFirstAndLastLineAlsoSetVideoPosition = Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition;
+        _moveStartEndPushMs = Se.Settings.General.MoveStartEndPushMs;
         foreach (var scope in Enum.GetValues<MoveLinesScope>())
         {
             for (var slot = 1; slot <= MoveLinesSlotCount; slot++)
@@ -322,6 +325,8 @@ public partial class ShortcutsViewModel : ObservableObject
         _configurableCommands.Add(vm.VideoMoveCustom3ForwardAndPauseCommand);
         _configurableCommands.Add(vm.VideoMoveCustom4BackAndPauseCommand);
         _configurableCommands.Add(vm.VideoMoveCustom4ForwardAndPauseCommand);
+        _configurableCommands.Add(vm.MoveStartXMsBackPushPreviousCommand);
+        _configurableCommands.Add(vm.MoveEndXMsForwardPushNextCommand);
         _configurableCommands.Add(vm.MoveSelectedLinesCustom1BackCommand);
         _configurableCommands.Add(vm.MoveSelectedLinesCustom1ForwardCommand);
         _configurableCommands.Add(vm.MoveSelectedLinesCustom2BackCommand);
@@ -674,6 +679,9 @@ public partial class ShortcutsViewModel : ObservableObject
         Se.Settings.Video.MoveVideoPositionCustom4Back = _videoSeekSlots[6];
         Se.Settings.Video.MoveVideoPositionCustom4Forward = _videoSeekSlots[7];
         Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition = _goToFirstAndLastLineAlsoSetVideoPosition;
+        Se.Settings.General.MoveStartEndPushMs = _moveStartEndPushMs;
+        ShortcutsMain.CommandTranslationLookup[nameof(MainViewModel.MoveStartXMsBackPushPreviousCommand)] = ShortcutsMain.GetMoveStartEndPushTitle(back: true);
+        ShortcutsMain.CommandTranslationLookup[nameof(MainViewModel.MoveEndXMsForwardPushNextCommand)] = ShortcutsMain.GetMoveStartEndPushTitle(back: false);
         foreach (var scope in Enum.GetValues<MoveLinesScope>())
         {
             for (var slot = 1; slot <= MoveLinesSlotCount; slot++)
@@ -734,6 +742,13 @@ public partial class ShortcutsViewModel : ObservableObject
         if (moveLinesSlot != null)
         {
             await ConfigureMoveLinesSlot(moveLinesSlot.Value.Scope, moveLinesSlot.Value.SlotNumber);
+            return;
+        }
+
+        if (node.ShortCut.Action == MainViewModel.MoveStartXMsBackPushPreviousCommand ||
+            node.ShortCut.Action == MainViewModel.MoveEndXMsForwardPushNextCommand)
+        {
+            await ConfigureMoveStartEndPush();
             return;
         }
 
@@ -1189,6 +1204,35 @@ public partial class ShortcutsViewModel : ObservableObject
             if (flatNode != null)
             {
                 flatNode.Title = ShortcutsMain.GetMoveLinesCustomTitle(scope, slotNumber, back, ms);
+            }
+        }
+    }
+
+    /// <summary>The push step is shared by both push commands, so configuring either one retitles both rows.</summary>
+    private async Task ConfigureMoveStartEndPush()
+    {
+        if (Window == null || MainViewModel == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
+        {
+            vm.Initialize(_moveStartEndPushMs);
+        });
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        _moveStartEndPushMs = result.Milliseconds;
+        foreach (var back in new[] { true, false })
+        {
+            var command = back ? MainViewModel.MoveStartXMsBackPushPreviousCommand : MainViewModel.MoveEndXMsForwardPushNextCommand;
+            var flatNode = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == command);
+            if (flatNode != null)
+            {
+                flatNode.Title = ShortcutsMain.GetMoveStartEndPushTitle(back, _moveStartEndPushMs);
             }
         }
     }

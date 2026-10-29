@@ -16971,6 +16971,109 @@ public partial class MainViewModel :
 
     private static int GetMoveStartEndStepMs() => Math.Max(1, Se.Settings.General.MoveStartEndStepMs);
 
+    // Push variants (doom9 keyboard-timing request): growing a line into its neighbour pushes the
+    // neighbour's near edge along (it gets shorter) instead of stopping at the minimum gap. Push
+    // only - unlike KeepGap, the opposite moves never pull the neighbour back. The step is the gear
+    // value in Options > Shortcuts, shared by both.
+    [RelayCommand]
+    private void MoveStartXMsBackPushPrevious() => MoveStartBackPushPrevious(GetMoveStartEndPushMs());
+
+    [RelayCommand]
+    private void MoveEndXMsForwardPushNext() => MoveEndForwardPushNext(GetMoveStartEndPushMs());
+
+    private static int GetMoveStartEndPushMs() => Math.Max(1, Se.Settings.General.MoveStartEndPushMs);
+
+    private void MoveStartBackPushPrevious(int stepMs)
+    {
+        var s = SelectedSubtitle;
+        if (s == null || AreTimeCodesLocked)
+        {
+            return;
+        }
+
+        var prev = GetPreviousWorkingRow(SelectedSubtitleIndex ?? -1);
+
+        // A neighbour this line already overlaps (e.g. ASSA signs over dialogue) is not this
+        // move's to push - behave like the plain nudge.
+        if (prev == null || prev.EndTime.TotalMilliseconds > s.StartTime.TotalMilliseconds)
+        {
+            MoveStartByMs(-stepMs, keepGapPrevIfClose: false);
+            return;
+        }
+
+        var newStartMs = Math.Max(0, s.StartTime.TotalMilliseconds - stepMs);
+
+        // Keep a gap that is already tighter than the minimum (e.g. back-to-back lines) as it is.
+        var gapMs = Math.Min(Se.Settings.General.MinimumBetweenLines.GetMilliseconds(),
+            s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds);
+        var pushedEndMs = newStartMs - gapMs;
+        if (pushedEndMs < prev.EndTime.TotalMilliseconds)
+        {
+            // Push no further than the previous line's minimum duration.
+            var minEndMs = prev.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+            if (pushedEndMs < minEndMs)
+            {
+                pushedEndMs = minEndMs;
+                newStartMs = minEndMs + gapMs;
+            }
+
+            if (newStartMs >= s.StartTime.TotalMilliseconds)
+            {
+                return;
+            }
+
+            prev.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(pushedEndMs);
+        }
+
+        if (newStartMs >= s.StartTime.TotalMilliseconds)
+        {
+            return;
+        }
+
+        s.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newStartMs));
+        _updateAudioVisualizer = true;
+    }
+
+    private void MoveEndForwardPushNext(int stepMs)
+    {
+        var s = SelectedSubtitle;
+        if (s == null || AreTimeCodesLocked)
+        {
+            return;
+        }
+
+        var next = GetNextWorkingRow(SelectedSubtitleIndex ?? -1);
+        if (next == null || next.StartTime.TotalMilliseconds < s.EndTime.TotalMilliseconds)
+        {
+            MoveEndByMs(stepMs, keepGapNextIfClose: false);
+            return;
+        }
+
+        var newEndMs = s.EndTime.TotalMilliseconds + stepMs;
+        var gapMs = Math.Min(Se.Settings.General.MinimumBetweenLines.GetMilliseconds(),
+            next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds);
+        var pushedStartMs = newEndMs + gapMs;
+        if (pushedStartMs > next.StartTime.TotalMilliseconds)
+        {
+            var maxStartMs = next.EndTime.TotalMilliseconds - Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+            if (pushedStartMs > maxStartMs)
+            {
+                pushedStartMs = maxStartMs;
+                newEndMs = maxStartMs - gapMs;
+            }
+
+            if (newEndMs <= s.EndTime.TotalMilliseconds)
+            {
+                return;
+            }
+
+            next.SetStartTimeOnly(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(pushedStartMs));
+        }
+
+        s.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(newEndMs);
+        _updateAudioVisualizer = true;
+    }
+
     // #14789: repeatable fixed-ms nudges for fixing progressive drift section by section.
     // Durations are kept, and a backward move is clamped so no start goes below zero.
     [RelayCommand]

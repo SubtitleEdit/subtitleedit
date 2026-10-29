@@ -336,6 +336,8 @@ public class LanguageSettingsShortcuts
     public string MoveStartXMsForward { get; set; }
     public string MoveEndXMsBack { get; set; }
     public string MoveEndXMsForward { get; set; }
+    public string MoveStartXMsBackPushPrevious { get; set; }
+    public string MoveEndXMsForwardPushNext { get; set; }
     public string MoveSelectedLinesXMsBack { get; set; }
     public string MoveSelectedLinesXMsForward { get; set; }
     public string MoveSelectedLinesAndForwardXMsBack { get; set; }
@@ -696,6 +698,8 @@ public class LanguageSettingsShortcuts
         MoveStartXMsForward = "Move start X ms forward (X set in Settings, also in Visual Sync)";
         MoveEndXMsBack = "Move end X ms back (X set in Settings, also in Visual Sync)";
         MoveEndXMsForward = "Move end X ms forward (X set in Settings, also in Visual Sync)";
+        MoveStartXMsBackPushPrevious = "Move start {0:#,###,##0} ms back, push previous";
+        MoveEndXMsForwardPushNext = "Move end {0:#,###,##0} ms forward, push next";
         MoveSelectedLinesXMsBack = "Move selected lines X ms back (X set in Settings)";
         MoveSelectedLinesXMsForward = "Move selected lines X ms forward (X set in Settings)";
         MoveSelectedLinesAndForwardXMsBack = "Move selected lines and all following X ms back (X set in Settings)";
