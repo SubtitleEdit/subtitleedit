@@ -437,6 +437,7 @@ public class InitWaveform
                 GetHasOriginal = () => vm.ShowColumnOriginalText,
                 GetCanEditOriginalTimeCodes = () => vm.CanEditOriginalTimeCodes && !vm.IsOriginalLockedToTranslation,
                 HasOriginalLine = vm.HasOriginalLine,
+                GetReadOnlyOriginalTimeCodes = vm.GetReadOnlyOriginalTimeCodes,
                 SetOriginalTimeCodes = vm.SetRowOriginalTimeCodes,
                 SelectParagraph = vm.SelectAndScrollToSubtitle,
                 TextLabel = Se.Language.General.Text,

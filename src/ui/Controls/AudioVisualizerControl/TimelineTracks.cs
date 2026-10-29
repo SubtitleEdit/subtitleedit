@@ -117,6 +117,13 @@ public class TimelineTracks : Control, IDisposable
     /// <summary>Whether a row stands for a line of the original, which gives it a block in the original row.</summary>
     public Func<SubtitleLineViewModel, bool>? HasOriginalLine { get; set; }
 
+    /// <summary>
+    /// The read-only original's own time codes by line id, or null when the original is editable.
+    /// A read-only original never moves, but the rows' original time codes follow the translation
+    /// while it is retimed.
+    /// </summary>
+    public Func<IReadOnlyDictionary<Guid, (TimeSpan Start, TimeSpan End)>?>? GetReadOnlyOriginalTimeCodes { get; set; }
+
     /// <summary>Writes new time codes to the original line a row stands for.</summary>
     public Action<SubtitleLineViewModel, TimeSpan, TimeSpan>? SetOriginalTimeCodes { get; set; }
 
@@ -720,6 +727,7 @@ public class TimelineTracks : Control, IDisposable
             return;
         }
 
+        var readOnlyTimeCodes = GetReadOnlyOriginalTimeCodes?.Invoke();
         foreach (var row in rows)
         {
             if (!RowHasOriginalLine(row))
@@ -727,8 +735,13 @@ public class TimelineTracks : Control, IDisposable
                 continue;
             }
 
-            var x1 = (row.EffectiveOriginalStartTime.TotalSeconds - startSeconds) * pixelsPerSecond;
-            var x2 = (row.EffectiveOriginalEndTime.TotalSeconds - startSeconds) * pixelsPerSecond;
+            var (start, end) = readOnlyTimeCodes != null &&
+                               row.ReferenceParagraphId is { } id &&
+                               readOnlyTimeCodes.TryGetValue(id, out var timeCodes)
+                ? timeCodes
+                : (row.EffectiveOriginalStartTime, row.EffectiveOriginalEndTime);
+            var x1 = (start.TotalSeconds - startSeconds) * pixelsPerSecond;
+            var x2 = (end.TotalSeconds - startSeconds) * pixelsPerSecond;
             if (!(x2 < 0 || x1 > width))
             {
                 DrawBlock(context, row, GetTrackRect(originalTrack, width), x1, x2, _selectedIds.Contains(row.Id), true);
