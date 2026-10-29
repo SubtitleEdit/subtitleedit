@@ -769,12 +769,17 @@ public class FfmpegGenerator
             height++;
         }
 
+        // ffmpeg's subtitles filter does not load fonts from the [Fonts] attachment section, so a
+        // style using an attached font previewed in a fallback font. Hand them to libass as a fontsdir.
+        var fontsDirName = WriteEmbeddedFontsToTempFolder(previewSubtitle.Footer);
+        var fontsDirArgument = fontsDirName == null ? string.Empty : $":fontsdir={Path.GetFileName(fontsDirName)}";
+
         var process = new Process
         {
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-f lavfi -i \"color=c=black@0.0:s={width}x{height}:d=0.1,format=rgba,subtitles=f={Path.GetFileName(tempAssFileName)}:alpha=1\" -frames:v 1 -c:v png \"{outputFileName}\"",
+                Arguments = $"-f lavfi -i \"color=c=black@0.0:s={width}x{height}:d=0.1,format=rgba,subtitles=f={Path.GetFileName(tempAssFileName)}:alpha=1{fontsDirArgument}\" -frames:v 1 -c:v png \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 WorkingDirectory = Path.GetDirectoryName(tempAssFileName) ?? string.Empty
@@ -799,7 +804,49 @@ public class FfmpegGenerator
             // Ignore cleanup errors
         }
 
+        if (fontsDirName != null)
+        {
+            try
+            {
+                Directory.Delete(fontsDirName, true);
+            }
+            catch
+            {
+                // Ignore cleanup errors
+            }
+        }
+
         return File.Exists(outputFileName) ? outputFileName : null;
+    }
+
+    /// <summary>
+    /// Decodes the [Fonts] attachments of an ASSA footer into a new folder in the temp folder.
+    /// Returns null when there are no attached fonts.
+    /// </summary>
+    private static string? WriteEmbeddedFontsToTempFolder(string? footer)
+    {
+        var fonts = AssaFontEmbedder.GetEmbeddedFonts(footer);
+        if (fonts.Count == 0)
+        {
+            return null;
+        }
+
+        var folder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        try
+        {
+            Directory.CreateDirectory(folder);
+            foreach (var (fileName, bytes) in fonts)
+            {
+                File.WriteAllBytes(Path.Combine(folder, fileName), bytes);
+            }
+
+            return folder;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Could not write attached fonts for libass preview");
+            return Directory.Exists(folder) ? folder : null;
+        }
     }
 
     private static string GetFfmpegLocation()

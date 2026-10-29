@@ -1521,7 +1521,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         // actually changed. Renders via libass so the preview matches playback/burn-in exactly.
         var ssaStyle = style.ToSsaStyle();
         var previewText = EffectivePreviewText;
-        var signature = ssaStyle.ToRawAss() + "\n" + previewText;
+        var signature = ssaStyle.ToRawAss() + "\n" + previewText + "\n" + (_subtitle.Footer?.Length ?? 0);
         if (signature == _lastPreviewSignature)
         {
             return;
@@ -1530,12 +1530,15 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         _lastPreviewSignature = signature;
         var requestId = System.Threading.Interlocked.Increment(ref _previewRequestId);
         var header = _subtitle.Header;
+        var footer = _subtitle.Footer;
 
         Task.Run(() =>
         {
+            // The footer carries the [Fonts] attachments, so a style using an attached font previews in it
             var previewSubtitle = new Subtitle
             {
                 Header = string.IsNullOrEmpty(header) ? AdvancedSubStationAlpha.DefaultHeader : header,
+                Footer = footer,
             };
             previewSubtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(
                 previewSubtitle.Header, new List<SsaStyle> { ssaStyle });
