@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v5.4.0-beta9",
-  "translatedBy": "v. 28.10.2026 di bovirus e GitGianluc",
+  "version": "v5.4.0-beta10",
+  "translatedBy": "v. 29.10.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -152,6 +152,9 @@
     "continueFindTitle": "Vuoi continuare la ricerca?",
     "searchItemNotFoundContinueFromTop": "L'elemento da ricercare non è stato trovato.\r\nVuoi iniziare dall'inizio del documento ed effettuare la ricerca ancora una volta?",
     "searchItemNotFoundContinueFromBottom": "L'elemento da ricercare non è stato trovato.\r\nVuoi iniziare dalla fine del documento ed effettuare la ricerca ancora una volta?",
+    "continueReplaceTitle": "Vuoi continuare la sostituzione?",
+    "replaceNotFoundContinueFromTop": "L'elemento ricercato non è stato trovato.\r\nVuoi iniziare la ricerca dall'inizio del documento e continuare la ricerca/sostituzione?",
+    "replacedXContinueFromTop": "L'elemento ricercato è stato sostituito '{0}' volte.\r\nVuoi iniziare la ricerca dall'inizio del documento e continuare la ricerca/sostituzione?",
     "conversionCancelledByUser": "Conversione annullata dall'utente",
     "convert": "Convertire",
     "converted": "Convertito",
