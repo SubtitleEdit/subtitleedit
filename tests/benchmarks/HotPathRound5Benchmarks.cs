@@ -62,12 +62,12 @@ public class NameListMultiWordBenchmarks
     private SeNamesList _seNamesList = null!;
 
     [GlobalSetup]
-    public void Setup()
+    public async Task Setup()
     {
         var folder = WordSamples.DictionaryFolder();
         _nameList = new NameList(folder, "en_US", false, string.Empty);
         _seNamesList = new SeNamesList();
-        _seNamesList.Load(folder, "en_US");
+        await _seNamesList.LoadAsync(folder, "en_US");
     }
 
     [Benchmark]

@@ -171,9 +171,7 @@ public class FixCommonErrorsUnfixableErrorsTests : IDisposable
 
     private sealed class FakeNamesList : INamesList
     {
-        public void Load(string dictionaryFolder, string languageCode)
-        {
-        }
+        public Task LoadAsync(string dictionaryFolder, string languageCode) => Task.CompletedTask;
 
         public bool IsName(string candidate) => false;
 

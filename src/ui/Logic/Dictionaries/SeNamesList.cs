@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
@@ -23,54 +24,85 @@ public class SeNamesList : INamesList
     private readonly HashSet<string> _abbreviationList = new(StringComparer.OrdinalIgnoreCase);
     public string LanguageName { get; private set; } = "en";
 
-    public void Load(string dictionaryFolder, string languageCode)
+    // Bumped by every LoadAsync, so a slower earlier load cannot overwrite a later one.
+    private int _loadGeneration;
+
+    /// <summary>
+    /// Reads the name files on a worker thread into fresh sets and swaps them in when done, so the
+    /// UI thread is not blocked and a list that is in use is never seen half-filled.
+    /// </summary>
+    public async Task LoadAsync(string dictionaryFolder, string languageCode)
     {
+        var generation = ++_loadGeneration;
         _dictionaryFolder = dictionaryFolder;
         LanguageName = languageCode;
 
-        _namesList = new HashSet<string>();
-        _namesMultiList = new HashSet<string>();
-        _namesMultiListUppercase = new HashSet<string>();
-        _blackList = new HashSet<string>();
+        string[] fileNames =
+        [
+            GetLocalNamesUserFileName(), // e.g: en_names_user.xml (culture sensitive)
+            GetLocalNamesFileName(), // e.g: en_names.xml (culture sensitive)
+            GetLocalCultureNamesFileName(), // e.g: pt_BR_names.xml (region specific)
+            Path.Combine(dictionaryFolder, "names.xml"),
+        ];
+
+        var loaded = await Task.Run(() => LoadNames(fileNames, dictionaryFolder, languageCode));
+        if (generation != _loadGeneration)
+        {
+            return;
+        }
+
+        _namesList = loaded.Names;
+        _namesMultiList = loaded.MultiNames;
+        _namesMultiListUppercase = loaded.MultiNamesUppercase;
+        _blackList = loaded.BlackList;
         _namesMultiListParts = null;
-
-        LoadNamesList(GetLocalNamesUserFileName()); // e.g: en_names_user.xml (culture sensitive)
-        LoadNamesList(GetLocalNamesFileName()); // e.g: en_names.xml (culture sensitive)
-        LoadNamesList(GetLocalCultureNamesFileName()); // e.g: pt_BR_names.xml (region specific)
-        LoadNamesList(Path.Combine(_dictionaryFolder, "names.xml"));
-
-        foreach (var name in _blackList)
-        {
-            if (_namesList.Contains(name))
-            {
-                _namesList.Remove(name);
-            }
-
-            if (_namesMultiList.Contains(name))
-            {
-                _namesMultiList.Remove(name);
-            }
-        }
-
-        foreach (var name in _namesMultiList)
-        {
-            _namesMultiListUppercase.Add(name.ToUpperInvariant());
-        }
-
         _abbreviationList.Clear();
-        foreach (var name in _namesList)
+        _abbreviationList.UnionWith(loaded.Abbreviations);
+    }
+
+    private sealed record LoadedNames(
+        HashSet<string> Names,
+        HashSet<string> MultiNames,
+        HashSet<string> MultiNamesUppercase,
+        HashSet<string> BlackList,
+        List<string> Abbreviations);
+
+    private static LoadedNames LoadNames(string[] fileNames, string dictionaryFolder, string languageCode)
+    {
+        var names = new HashSet<string>();
+        var multiNames = new HashSet<string>();
+        var multiNamesUppercase = new HashSet<string>();
+        var blackList = new HashSet<string>();
+
+        foreach (var fileName in fileNames)
+        {
+            LoadNamesList(fileName, names, multiNames, blackList);
+        }
+
+        foreach (var name in blackList)
+        {
+            names.Remove(name);
+            multiNames.Remove(name);
+        }
+
+        foreach (var name in multiNames)
+        {
+            multiNamesUppercase.Add(name.ToUpperInvariant());
+        }
+
+        var abbreviations = new List<string>();
+        foreach (var name in names)
         {
             if (name.EndsWith('.') && !name.Contains(' '))
             {
-                _abbreviationList.Add(name);
+                abbreviations.Add(name);
             }
         }
 
         // e.g. nl_abbreviations.xml - abbreviations that are not names ("enz.", "ca.", "nr.").
-        foreach (var abbreviation in AbbreviationList.Load(_dictionaryFolder, languageCode))
-        {
-            _abbreviationList.Add(abbreviation);
-        }
+        abbreviations.AddRange(AbbreviationList.Load(dictionaryFolder, languageCode));
+
+        return new LoadedNames(names, multiNames, multiNamesUppercase, blackList, abbreviations);
     }
 
     public List<string> GetAllNames()
@@ -337,7 +369,7 @@ public class SeNamesList : INamesList
         return Path.Combine(_dictionaryFolder, LanguageName + "_names.xml");
     }
 
-    private void LoadNamesList(string fileNameOrUrl)
+    private static void LoadNamesList(string fileNameOrUrl, HashSet<string> names, HashSet<string> multiNames, HashSet<string> blackList)
     {
         if (string.IsNullOrEmpty(fileNameOrUrl) ||
             !File.Exists(fileNameOrUrl) &&
@@ -365,11 +397,11 @@ public class SeNamesList : INamesList
                     {
                         if (name.Contains(' '))
                         {
-                            _namesMultiList.Add(name);
+                            multiNames.Add(name);
                         }
                         else
                         {
-                            _namesList.Add(name);
+                            names.Add(name);
                         }
                     }
                 }
@@ -387,7 +419,7 @@ public class SeNamesList : INamesList
                             var name = reader.ReadElementContentAsString().Trim();
                             if (name.Length > 0)
                             {
-                                _blackList.Add(name);
+                                blackList.Add(name);
                             }
                         }
                     }
