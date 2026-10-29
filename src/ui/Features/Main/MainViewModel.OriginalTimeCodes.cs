@@ -91,6 +91,34 @@ public partial class MainViewModel
         }
     }
 
+    private readonly Dictionary<Guid, (TimeSpan Start, TimeSpan End)> _readOnlyOriginalTimeCodes = new();
+
+    /// <summary>
+    /// The read-only original's own time codes by line id, or null when the original is editable.
+    /// The rows' original time codes follow the translation as it is retimed (with "Lock original
+    /// to translation" on, or when a line shares its row's times), but a read-only original never
+    /// moves. Rebuilt into one reused dictionary on each call: the original's lines can be replaced,
+    /// and one pass over them is cheap.
+    /// </summary>
+    internal IReadOnlyDictionary<Guid, (TimeSpan Start, TimeSpan End)>? GetReadOnlyOriginalTimeCodes()
+    {
+        if (!IsOriginalReadOnly || _subtitleOriginal == null)
+        {
+            return null;
+        }
+
+        _readOnlyOriginalTimeCodes.Clear();
+        foreach (var p in _subtitleOriginal.Paragraphs)
+        {
+            if (p.Id is { } id)
+            {
+                _readOnlyOriginalTimeCodes[id] = (TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds), TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds));
+            }
+        }
+
+        return _readOnlyOriginalTimeCodes;
+    }
+
     private void ClearOriginalTimeCodes()
     {
         foreach (var row in Subtitles)
