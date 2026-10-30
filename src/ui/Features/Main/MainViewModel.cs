@@ -4656,18 +4656,45 @@ public partial class MainViewModel :
     /// <summary>
     /// The second subtitle on the video timeline: its file times minus the video offset, the same
     /// split the main file gets on open (<see cref="SubtitleOpen"/>). Applied per push rather than
-    /// baked into <see cref="_subtitleSecondary"/>, so an offset change re-aligns it.
+    /// baked into <see cref="_subtitleSecondary"/>, so an offset change re-aligns it. A second file
+    /// already timed from zero is left as is (<see cref="SecondarySubtitleOffset"/>).
     /// </summary>
     private Subtitle? GetSecondaryPreviewSubtitle()
     {
-        if (_subtitleSecondary == null || Se.Settings.General.CurrentVideoOffsetInMs == 0)
+        var offsetMs = Se.Settings.General.CurrentVideoOffsetInMs;
+        if (_subtitleSecondary == null || offsetMs == 0)
+        {
+            return _subtitleSecondary;
+        }
+
+        var (windowStartMs, windowEndMs) = GetSecondaryOffsetReferenceWindow();
+        if (!SecondarySubtitleOffset.ShouldApply(_subtitleSecondary, offsetMs, windowStartMs, windowEndMs))
         {
             return _subtitleSecondary;
         }
 
         var shifted = new Subtitle(_subtitleSecondary);
-        shifted.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Se.Settings.General.CurrentVideoOffsetInMs));
+        shifted.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-offsetMs));
         return shifted;
+    }
+
+    /// <summary>
+    /// The video timeline span a second subtitle should land in: the video when its duration is
+    /// known, else the main subtitle's span (already on the video timeline), else from zero on.
+    /// </summary>
+    private (double StartMs, double EndMs) GetSecondaryOffsetReferenceWindow()
+    {
+        if (_mediaInfo?.Duration is { } duration && duration.TotalMilliseconds > 0)
+        {
+            return (0, duration.TotalMilliseconds);
+        }
+
+        if (Subtitles.Count > 0)
+        {
+            return (Subtitles.Min(p => p.StartTime.TotalMilliseconds), Subtitles.Max(p => p.EndTime.TotalMilliseconds));
+        }
+
+        return (0, double.MaxValue);
     }
 
     [RelayCommand]
