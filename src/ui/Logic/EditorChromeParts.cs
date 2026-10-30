@@ -358,6 +358,10 @@ internal static partial class EditorChrome
         styles.Add(style);
         if (extra.HasFlag(EditorWindowStyles.AutoComplete))
         {
+            styles.Add(new Style(x => x.OfType<AutoCompleteBox>())
+            {
+                Setters = { new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)) },
+            });
             styles.Add(autoCompleteStyle);
         }
     }
