@@ -6,6 +6,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using System;
 using System.Collections.Generic;
@@ -237,18 +238,16 @@ public class FfmpegSoftwareControl : Control
         var weight = (FontWeight)(style.Bold ? Math.Max(faceWeight, (int)FontWeight.Bold) : faceWeight);
         var alignment = int.TryParse(style.Alignment, NumberStyles.Integer, CultureInfo.InvariantCulture, out var a) && a is >= 1 and <= 9 ? a : 2;
 
-        var primary = string.Join(Environment.NewLine, active.Where(l => !l.Secondary).Select(l => l.Text));
-        var secondary = string.Join(Environment.NewLine, active.Where(l => l.Secondary).Select(l => l.Text));
-        var primaryItalic = active.Any(l => !l.Secondary) && active.Where(l => !l.Secondary).All(l => l.Italic);
-        var secondaryItalic = active.Any(l => l.Secondary) && active.Where(l => l.Secondary).All(l => l.Italic);
+        var primary = active.Where(l => !l.Secondary).ToList();
+        var secondary = active.Where(l => l.Secondary).ToList();
 
         var blocks = new List<OverlayBlock>(2);
-        if (primary.Length > 0)
+        if (primary.Count > 0)
         {
-            blocks.Add(MakeBlock(primary, primaryItalic, alignment));
+            blocks.Add(MakeBlock(primary, alignment));
         }
 
-        if (secondary.Length > 0)
+        if (secondary.Count > 0)
         {
             // The secondary subtitle goes to the top; opposite the primary when that is at the top.
             var secondaryAlignment = alignment is 7 or 8 or 9 ? alignment - 6 : alignment + 6;
@@ -257,19 +256,40 @@ public class FfmpegSoftwareControl : Control
                 secondaryAlignment = 8;
             }
 
-            blocks.Add(MakeBlock(secondary, secondaryItalic, secondaryAlignment));
+            blocks.Add(MakeBlock(secondary, secondaryAlignment));
         }
 
         return new OverlayCache(active, videoRect, style, blocks, fill, outlinePen, shadow, shadowPen, shadowWidth);
 
-        OverlayBlock MakeBlock(string text, bool italic, int numpadAlignment)
+        OverlayBlock MakeBlock(List<FfmpegPreviewSubtitle.Line> lines, int numpadAlignment)
         {
-            var typeface = new Typeface(fontFamily, italic ? FontStyle.Italic : FontStyle.Normal, weight);
-            var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, fontSize, fill)
+            var text = string.Join(Environment.NewLine, lines.Select(l => l.Text));
+            var typeface = new Typeface(fontFamily, FontStyle.Normal, weight);
+            var flowDirection = TextToFlowDirectionConverter.GetFlowDirection(text);
+            var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, flowDirection, typeface, fontSize, fill)
             {
                 TextAlignment = numpadAlignment is 1 or 4 or 7 ? TextAlignment.Left : numpadAlignment is 3 or 6 or 9 ? TextAlignment.Right : TextAlignment.Center,
                 MaxTextWidth = Math.Max(1, videoRect.Width - 2 * margin),
             };
+
+            var lineStart = 0;
+            foreach (var line in lines)
+            {
+                foreach (var run in line.Runs)
+                {
+                    if (run.Italic)
+                    {
+                        formatted.SetFontStyle(FontStyle.Italic, lineStart + run.Start, run.Length);
+                    }
+
+                    if (run.Bold)
+                    {
+                        formatted.SetFontWeight(FontWeight.Bold, lineStart + run.Start, run.Length);
+                    }
+                }
+
+                lineStart += line.Text.Length + Environment.NewLine.Length;
+            }
 
             // Horizontal placement is TextAlignment's job: the text box spans the video width
             // minus margins, so the origin is always the left margin.

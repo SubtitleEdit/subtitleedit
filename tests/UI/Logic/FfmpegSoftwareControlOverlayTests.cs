@@ -28,7 +28,7 @@ public class FfmpegSoftwareControlOverlayTests
         {
             OverlayLinesField.SetValue(control, new List<FfmpegPreviewSubtitle.Line>
             {
-                new(0, 2, "Still on screen", false, false),
+                new(0, 2, "Still on screen", [], false),
             });
 
             control.InvalidateVisual();

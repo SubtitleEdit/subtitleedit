@@ -3,6 +3,8 @@ using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 
@@ -10,12 +12,20 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 /// The subtitle preview for the ffmpeg player, as plain lines with times. mpv and VLC render
 /// the preview themselves from an ASS file; this player draws it in
 /// <see cref="FfmpegSoftwareControl"/>, so the snapshot only keeps what that overlay can show:
-/// text with line breaks, whole-line italic, and whether a line belongs to the secondary
+/// text with line breaks, italic/bold runs, and whether a line belongs to the secondary
 /// subtitle (drawn at the top, the primary at the configured alignment).
 /// </summary>
 public sealed class FfmpegPreviewSubtitle
 {
-    public sealed record Line(double StartSeconds, double EndSeconds, string Text, bool Italic, bool Secondary);
+    /// <summary>A part of <see cref="Line.Text"/> shown italic and/or bold.</summary>
+    public readonly record struct StyleRun(int Start, int Length, bool Italic, bool Bold);
+
+    public sealed record Line(double StartSeconds, double EndSeconds, string Text, StyleRun[] Runs, bool Secondary);
+
+    // From a \p1 (or higher) block to the \p0 block that ends the drawing, or else the end of the text.
+    private static readonly Regex DrawingRegex = new(@"\{[^{}]*\\p[1-9][^{}]*\}.*?(?=\{[^{}]*\\p0[^{}]*\}|\z)", RegexOptions.Compiled | RegexOptions.Singleline);
+    private static readonly Regex StyleTagRegex = new(@"</?[ibIB]>|\{\\[^{}]*\}", RegexOptions.Compiled);
+    private static readonly Regex AssStyleOverrideRegex = new(@"\\([ib])(\d*)(?=[\\}])", RegexOptions.Compiled);
 
     public static readonly FfmpegPreviewSubtitle Empty = new(Array.Empty<Line>());
 
@@ -61,31 +71,113 @@ public sealed class FfmpegPreviewSubtitle
         foreach (var paragraph in paragraphs)
         {
             var p = smpteMode ? SmptePreviewStretch.Stretched(paragraph) : paragraph;
-            var text = ToPlainText(p.Text, out var italic);
+            var text = ToPlainText(p.Text, out var runs);
             if (string.IsNullOrWhiteSpace(text) || p.EndTime.TotalSeconds <= p.StartTime.TotalSeconds)
             {
                 continue;
             }
 
-            lines.Add(new Line(p.StartTime.TotalSeconds, p.EndTime.TotalSeconds, text, italic, secondary));
+            lines.Add(new Line(p.StartTime.TotalSeconds, p.EndTime.TotalSeconds, text, runs, secondary));
         }
     }
 
-    /// <summary>Strips HTML and ASS tags; italic survives only when it wraps the whole text.</summary>
-    internal static string ToPlainText(string text, out bool italic)
+    /// <summary>
+    /// Strips HTML and ASS tags and ASS drawings. Italic and bold survive as runs, because a
+    /// tag rarely wraps the whole text: "&lt;i&gt;one&lt;/i&gt; two", or one line of two in italic.
+    /// </summary>
+    internal static string ToPlainText(string text, out StyleRun[] runs)
     {
-        var trimmed = text.Trim();
-        italic = trimmed.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) &&
-                 trimmed.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) &&
-                 trimmed.IndexOf("</i>", StringComparison.OrdinalIgnoreCase) == trimmed.Length - 4;
-        if (!italic)
+        var source = text.Contains("\\p", StringComparison.Ordinal) ? DrawingRegex.Replace(text, string.Empty) : text;
+
+        var plain = new StringBuilder(source.Length);
+        var styled = new List<StyleRun>();
+        var italic = false;
+        var bold = false;
+        var position = 0;
+        foreach (Match tag in StyleTagRegex.Matches(source))
         {
-            italic = trimmed.StartsWith("{\\i1}", StringComparison.Ordinal) && !trimmed.Contains("{\\i0}", StringComparison.Ordinal);
+            AppendPlain(source.Substring(position, tag.Index - position));
+            position = tag.Index + tag.Length;
+            ApplyStyleTag(tag.Value, ref italic, ref bold);
         }
 
-        var plain = HtmlUtil.RemoveHtmlTags(trimmed, true);
-        plain = plain.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
-        return plain.Trim();
+        AppendPlain(source.Substring(position));
+
+        var result = plain.ToString();
+        var trimmed = result.Trim();
+        var leading = result.Length - result.TrimStart().Length;
+        runs = styled
+            .Select(r => ClipRun(r, leading, trimmed.Length))
+            .Where(r => r.Length > 0)
+            .ToArray();
+        return trimmed;
+
+        void AppendPlain(string part)
+        {
+            var value = HtmlUtil.RemoveHtmlTags(part, true)
+                .Replace("\\N", Environment.NewLine)
+                .Replace("\\n", Environment.NewLine)
+                .Replace("\\h", " ");
+            if (value.Length == 0)
+            {
+                return;
+            }
+
+            if (italic || bold)
+            {
+                var last = styled.Count - 1;
+                if (last >= 0 && styled[last].Italic == italic && styled[last].Bold == bold && styled[last].Start + styled[last].Length == plain.Length)
+                {
+                    styled[last] = styled[last] with { Length = styled[last].Length + value.Length };
+                }
+                else
+                {
+                    styled.Add(new StyleRun(plain.Length, value.Length, italic, bold));
+                }
+            }
+
+            plain.Append(value);
+        }
+    }
+
+    private static StyleRun ClipRun(StyleRun run, int leading, int textLength)
+    {
+        var start = Math.Max(0, run.Start - leading);
+        var end = Math.Min(textLength, run.Start + run.Length - leading);
+        return run with { Start = start, Length = end - start };
+    }
+
+    private static void ApplyStyleTag(string tag, ref bool italic, ref bool bold)
+    {
+        if (tag[0] == '<')
+        {
+            var on = tag[1] != '/';
+            if (char.ToLowerInvariant(tag[^2]) == 'i')
+            {
+                italic = on;
+            }
+            else
+            {
+                bold = on;
+            }
+
+            return;
+        }
+
+        foreach (Match match in AssStyleOverrideRegex.Matches(tag))
+        {
+            // \b700 is a weight; \i and \b without a value go back to the style, which is regular here.
+            var value = match.Groups[2].Value;
+            var on = value.Length > 0 && value != "0";
+            if (match.Groups[1].Value == "i")
+            {
+                italic = on;
+            }
+            else
+            {
+                bold = on;
+            }
+        }
     }
 
     /// <summary>Lines showing at <paramref name="seconds"/>, in start order.</summary>
