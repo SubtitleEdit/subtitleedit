@@ -1545,15 +1545,9 @@ public partial class OcrViewModel : ObservableObject
         LlamaCppServerManager.StopServer();
         UpdateLlamaCppOcrServerButtonText();
 
-        // Re-download the same backend that is installed (CPU/Vulkan/CUDA all unpack into one
-        // folder); when nothing is installed yet, DownloadAsync falls back to asking the user.
-        var folder = LlamaCppServerManager.GetAndCreateFolder();
-        var variant = LlamaCppServerManager.IsEngineInstalled() && OperatingSystem.IsWindows()
-            ? DownloadHashManager.DetectLlamaCppWindowsVariant(folder)
-            : null;
-
+        // No forced variant: the user picks CPU/Vulkan/CUDA, which is how to change the installed build.
         var model = SelectedLlamaCppOcrModel?.Model;
-        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, variant, forceEngineDownload: true);
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, forceEngineDownload: true);
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;

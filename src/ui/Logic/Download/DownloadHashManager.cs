@@ -4271,4 +4271,19 @@ public static class DownloadHashManager
 
         return "cpu";
     }
+
+    /// <summary>
+    /// Detects which Linux llama.cpp variant is installed: the Vulkan archive only adds
+    /// libggml-vulkan.so (llama-server itself is identical in both builds).
+    /// Returns "vulkan" / "cpu", or null if the folder doesn't look like a llama.cpp install.
+    /// </summary>
+    public static string? DetectLlamaCppLinuxVariant(string installFolder)
+    {
+        if (string.IsNullOrEmpty(installFolder) || !File.Exists(Path.Combine(installFolder, "llama-server")))
+        {
+            return null;
+        }
+
+        return File.Exists(Path.Combine(installFolder, "libggml-vulkan.so")) ? "vulkan" : "cpu";
+    }
 }
