@@ -4,15 +4,20 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 
@@ -21,6 +26,7 @@ public class MultipleReplaceWindow : Window
     // Follow the app theme, also when it changes while the window is open
     private static readonly IBrush ErrorBrush = EditorChrome.Themed(Color.FromRgb(255, 100, 100), Color.FromRgb(183, 28, 28));
     private static readonly IBrush ReplacedBrush = EditorChrome.Themed(Color.FromRgb(100, 220, 100), Color.FromRgb(27, 94, 32));
+    private static readonly TextToFlowDirectionConverter TextToFlowDirection = new();
 
     public MultipleReplaceWindow(MultipleReplaceViewModel vm)
     {
@@ -276,7 +282,7 @@ public class MultipleReplaceWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children = { checkBoxNewestFirst, textBoxFilter },
         };
-        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 6) };
         DockPanel.SetDock(headerRight, Dock.Right);
         header.Children.Add(headerRight);
         header.Children.Add(title);
@@ -346,7 +352,7 @@ public class MultipleReplaceWindow : Window
                 new ColumnDefinition { Width = GridLength.Auto },
             },
             ColumnSpacing = 8,
-            Margin = new Thickness(0, 0, 0, 8),
+            Margin = new Thickness(0, 0, 0, 6),
         };
         entryRow.Add(newFind, 0, 0);
         entryRow.Add(arrow, 0, 1);
@@ -410,7 +416,7 @@ public class MultipleReplaceWindow : Window
                 CellTheme = UiUtil.TableViewCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 NameBinding = new Binding(nameof(RuleTreeNode.Find)),
-                CellTemplate = new FuncDataTemplate<RuleTreeNode>((_, _) => MakeFindCell()),
+                CellTemplate = new FuncDataTemplate<RuleTreeNode>((_, _) => MakeFindCell(vm)),
                 Width = new GridLength(1, GridUnitType.Star),
             },
             new SeTableViewColumn
@@ -419,7 +425,8 @@ public class MultipleReplaceWindow : Window
                 CellTheme = UiUtil.TableViewCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 Binding = new Binding(nameof(RuleTreeNode.ReplaceWith)),
-                CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(RuleTreeNode.ReplaceWith)),
+                CellTemplate = new FuncDataTemplate<RuleTreeNode>((_, _) =>
+                    MakeEditableTextCell(vm, nameof(RuleTreeNode.ReplaceWith), Se.Language.General.ReplaceWith, MakeCellTextBlock(nameof(RuleTreeNode.ReplaceWith)))),
                 Width = new GridLength(1, GridUnitType.Star),
             },
             new SeTableViewColumn
@@ -441,14 +448,14 @@ public class MultipleReplaceWindow : Window
                 CellTheme = UiUtil.TableViewCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                 Binding = new Binding(nameof(RuleTreeNode.Description)),
-                CellTemplate = new FuncDataTemplate<RuleTreeNode>((_, _) => new TextBlock
+                CellTemplate = new FuncDataTemplate<RuleTreeNode>((_, _) => MakeEditableTextCell(vm, nameof(RuleTreeNode.Description), Se.Language.General.Description, new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
                     Foreground = EditorChrome.FaintTextBrush,
                     FontStyle = FontStyle.Italic,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     [!TextBlock.TextProperty] = new Binding(nameof(RuleTreeNode.Description)),
-                }),
+                })),
                 Width = new GridLength(0.8, GridUnitType.Star),
             },
         });
@@ -459,11 +466,18 @@ public class MultipleReplaceWindow : Window
         table.AddHandler(InputElement.KeyDownEvent, vm.RulesTable_PreviewKeyDown, RoutingStrategies.Tunnel);
         table.DoubleTapped += (_, e) =>
         {
-            if (!TableViewExtras.IsInColumnHeader(e.Source as Visual))
+            // A double-click inside an edit box selects a word; elsewhere it edits the row,
+            // the caret in the cell that was clicked.
+            if (e.Source is not Visual source || TableViewExtras.IsInColumnHeader(source) ||
+                source.FindAncestorOfType<TextBox>(includeSelf: true) != null)
             {
-                vm.RulesTableDoubleTapped();
+                return;
             }
+
+            var field = source.GetSelfAndVisualAncestors().OfType<Control>().Select(p => p.Tag).OfType<string>().FirstOrDefault();
+            vm.RulesTableDoubleTapped(field ?? nameof(RuleTreeNode.Find));
         };
+        table.AddHandler(InputElement.LostFocusEvent, (_, _) => vm.RulesTableLostFocus(), RoutingStrategies.Bubble);
         table.AddHandler(InputElement.PointerReleasedEvent, (_, e) =>
         {
             if (IsContextClick(e) && vm.SelectedNode != null)
@@ -495,7 +509,7 @@ public class MultipleReplaceWindow : Window
             Spacing = 4,
             Children = { buttonRemove, buttonEdit, buttonMoveTo, buttonUp, buttonDown },
         };
-        var actions = new DockPanel { Margin = new Thickness(0, 8, 0, 0), MinHeight = EditorChrome.FieldHeight };
+        var actions = new DockPanel { Margin = new Thickness(0, 6, 0, 0), MinHeight = EditorChrome.FieldHeight };
         DockPanel.SetDock(buttonAddRules, Dock.Right);
         actions.Children.Add(buttonAddRules);
         actions.Children.Add(ruleActions);
@@ -509,7 +523,7 @@ public class MultipleReplaceWindow : Window
                 new RowDefinition(new GridLength(1, GridUnitType.Star)),
                 new RowDefinition(GridLength.Auto),
             },
-            Margin = new Thickness(14, 12, 14, 12),
+            Margin = new Thickness(12, 8, 12, 8),
         };
         panel.Add(header, 0);
         panel.Add(entryRow, 1);
@@ -520,11 +534,11 @@ public class MultipleReplaceWindow : Window
     }
 
     /// <summary>
-    /// "Find what" with the rule type's icon in front, and a warning marker for a rule that
+    /// "Find what" with the rule type's button in front, and a warning marker for a rule that
     /// cannot run - today only a regular expression that will not compile; it is skipped
     /// silently otherwise, which reads as a rule that just does nothing (#13534).
     /// </summary>
-    private static Control MakeFindCell()
+    private static Control MakeFindCell(MultipleReplaceViewModel vm)
     {
         var labelError = new Label
         {
@@ -540,14 +554,26 @@ public class MultipleReplaceWindow : Window
             labelError[!ToolTip.TipProperty] = new Binding(nameof(RuleTreeNode.ErrorMessage));
         }
 
-        var labelIcon = new Label
+        // The type icon picks the type, so the row editor covers every field but whole word,
+        // which has its own check box column. Not focusable: Tab goes between the edit boxes.
+        var buttonType = new Button
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 6, 0),
+            Margin = new Thickness(0, 0, 4, 0),
             Padding = new Thickness(0),
+            Width = 22,
+            Height = 22,
+            Focusable = false,
             Foreground = EditorChrome.DimTextBrush,
         };
-        labelIcon.Bind(Attached.IconProperty, new Binding(nameof(RuleTreeNode.IconName)));
+        buttonType.Classes.Add("tool");
+        buttonType.Bind(Attached.IconProperty, new Binding(nameof(RuleTreeNode.IconName)));
+        buttonType.Bind(AutomationProperties.NameProperty, new Binding(nameof(RuleTreeNode.SearchType)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonType, Se.Language.General.Type);
+        }
+        buttonType.Click += (_, _) => vm.OpenRuleTypeMenu(buttonType, buttonType.DataContext as RuleTreeNode);
 
         var text = new TextBlock
         {
@@ -556,115 +582,89 @@ public class MultipleReplaceWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(RuleTreeNode.Find)),
         };
 
-        return new StackPanel
+        var row = new DockPanel { VerticalAlignment = VerticalAlignment.Center };
+        DockPanel.SetDock(labelError, Dock.Left);
+        DockPanel.SetDock(buttonType, Dock.Left);
+        row.Children.Add(labelError);
+        row.Children.Add(buttonType);
+        row.Children.Add(MakeEditableTextCell(vm, nameof(RuleTreeNode.Find), Se.Language.Edit.MultipleReplace.FindWhat, text));
+        return row;
+    }
+
+    private static TextBlock MakeCellTextBlock(string propertyPath)
+    {
+        return new TextBlock
         {
-            Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { labelError, labelIcon, text },
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            [!TextBlock.TextProperty] = new Binding(propertyPath) { Mode = BindingMode.OneWay },
+            [!TextBlock.FlowDirectionProperty] = new Binding(propertyPath) { Converter = TextToFlowDirection, Mode = BindingMode.OneWay },
         };
     }
 
     /// <summary>
-    /// The selected rule's fields on top (only while a rule is selected), the preview of the
-    /// fixes under them and the rules that made the selected fix at the bottom.
+    /// A rule cell that shows <paramref name="display"/>, and a text box instead while the rule is
+    /// edited in its row. The Tag names the field, so a double-click puts the caret in the cell
+    /// that was clicked.
+    /// </summary>
+    private static Control MakeEditableTextCell(MultipleReplaceViewModel vm, string field, string accessibleName, Control display)
+    {
+        display[!Visual.IsVisibleProperty] = new Binding(nameof(RuleTreeNode.IsEditing)) { Converter = BoolConverters.Not };
+
+        var textBox = new TextBox
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinHeight = 0,
+            Padding = new Thickness(4, 1, 4, 1),
+            [!TextBox.TextProperty] = new Binding(field) { Mode = BindingMode.TwoWay },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(RuleTreeNode.IsEditing)),
+        };
+        textBox.Classes.Add("text");
+        AutomationProperties.SetName(textBox, accessibleName);
+        textBox.TextChanged += vm.RuleTextChanged;
+        textBox.KeyDown += vm.InlineEditTextBoxKeyDown;
+
+        var panel = new Panel { Tag = field, Children = { display, textBox } };
+
+        // Cells are recycled between rows, so follow the row the cell shows now.
+        RuleTreeNode? node = null;
+        void OnEditFocusRequested()
+        {
+            if (node?.EditField != field)
+            {
+                return;
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                textBox.Focus();
+                textBox.CaretIndex = textBox.Text?.Length ?? 0;
+            }, DispatcherPriority.Background);
+        }
+
+        panel.DataContextChanged += (_, _) =>
+        {
+            if (node != null)
+            {
+                node.EditFocusRequested -= OnEditFocusRequested;
+            }
+
+            node = panel.DataContext as RuleTreeNode;
+            if (node != null)
+            {
+                node.EditFocusRequested += OnEditFocusRequested;
+            }
+        };
+
+        return panel;
+    }
+
+    /// <summary>
+    /// The preview of the fixes, and the rules that made the selected fix under it.
     /// </summary>
     private static Grid MakeFixesView(MultipleReplaceViewModel vm)
     {
-        var textBoxFind = new TextBox
-        {
-            MinWidth = 100,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.Find)) { Source = vm }
-        };
-        textBoxFind.Classes.Add("text");
-        AutomationProperties.SetName(textBoxFind, Se.Language.General.Find);
-        textBoxFind.TextChanged += vm.RuleTextChanged;
-
-        var textBoxReplaceWith = new TextBox
-        {
-            MinWidth = 100,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.ReplaceWith)) { Source = vm }
-        };
-        textBoxReplaceWith.Classes.Add("text");
-        AutomationProperties.SetName(textBoxReplaceWith, Se.Language.General.ReplaceWith);
-        textBoxReplaceWith.TextChanged += vm.RuleTextChanged;
-
-        var comboBoxType = new ComboBox
-        {
-            Width = 170,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.RuleTypes)) { Source = vm },
-            [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedRuleType)) { Source = vm, Mode = BindingMode.TwoWay },
-        };
-        AutomationProperties.SetName(comboBoxType, Se.Language.General.Type);
-        // no event handler needed; binding to SelectedRuleType updates RuleTreeNode.Type
-
-        var switchWholeWord = new ToggleSwitch
-        {
-            OnContent = null,
-            OffContent = null,
-            MinWidth = 0,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.WholeWord)) { Source = vm, Mode = BindingMode.TwoWay },
-            [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.SelectedNode) + "." + nameof(RuleTreeNode.CanUseWholeWord)) { Source = vm },
-        };
-        AutomationProperties.SetName(switchWholeWord, Se.Language.Edit.Find.WholeWord);
-        switchWholeWord.IsCheckedChanged += vm.OnActiveChanged;
-        var panelWholeWord = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children =
-            {
-                switchWholeWord,
-                new TextBlock { Text = Se.Language.Edit.Find.WholeWord, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center },
-            },
-        };
-
-        // Labels above the fields: find and replace share the width, type and whole word take what they need.
-        var editGrid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            ColumnSpacing = 8,
-            RowSpacing = 4,
-        };
-
-        editGrid.Add(EditorChrome.MakeDimLabel(Se.Language.General.Find, new Thickness(0)), 0, 0);
-        editGrid.Add(textBoxFind, 1, 0);
-
-        editGrid.Add(EditorChrome.MakeDimLabel(Se.Language.General.ReplaceWith, new Thickness(0)), 0, 1);
-        editGrid.Add(textBoxReplaceWith, 1, 1);
-
-        editGrid.Add(EditorChrome.MakeDimLabel(Se.Language.General.Type, new Thickness(0)), 0, 2);
-        editGrid.Add(comboBoxType, 1, 2);
-
-        editGrid.Add(panelWholeWord, 1, 3);
-
-        var editSection = EditorChrome.MakeEditorSection(Se.Language.Edit.MultipleReplace.EditRule, editGrid, first: true);
-        editSection.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsEditPanelVisible)) { Source = vm });
-        editSection.Background = EditorChrome.PanelBrush;
-        editSection.BorderBrush = EditorChrome.LineBrush;
-        editSection.BorderThickness = new Thickness(0, 0, 0, 1);
-
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // this is a fix preview in subtitle order, and the replace rules themselves run
         // in list order - reordering the backing collection would scramble the preview.
@@ -827,7 +827,7 @@ public class MultipleReplaceWindow : Window
 
         var hitsPanel = new StackPanel
         {
-            Margin = new Thickness(0, 10, 0, 0),
+            Margin = new Thickness(0, 8, 0, 0),
             Spacing = 6,
             Children =
             {
@@ -853,7 +853,7 @@ public class MultipleReplaceWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children = { buttonSelectAll, buttonSelectNone, buttonInvert },
         };
-        var previewHeader = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        var previewHeader = new DockPanel { Margin = new Thickness(0, 0, 0, 6) };
         DockPanel.SetDock(previewActions, Dock.Right);
         previewHeader.Children.Add(previewActions);
         previewHeader.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview));
@@ -866,24 +866,13 @@ public class MultipleReplaceWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            Margin = new Thickness(14, 12, 14, 14),
+            Margin = new Thickness(12, 8, 12, 10),
         };
         gridPreview.Add(previewHeader, 0, 0);
         gridPreview.Add(EditorChrome.MakeListFrame(dataGrid), 1, 0);
         gridPreview.Add(hitsPanel, 2, 0);
 
-        var gridFixes = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-        };
-        gridFixes.Add(editSection, 0, 0);
-        gridFixes.Add(gridPreview, 1, 0);
-
-        return gridFixes;
+        return gridPreview;
     }
 
     // A preview with one row per changed line is far too long to untick by hand, so offer

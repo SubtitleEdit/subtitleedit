@@ -82,12 +82,13 @@ Apply multiple find-and-replace rules at once, organized into named categories. 
 
 ### Window layout
 
-The window is split into two resizable panels:
+The window is split into resizable panels:
 
 | Panel | Description |
 |---|---|
-| **Left — Rules** | Tree of categories and their rules. Each rule shows its type icon, find pattern, replacement, and an optional description. The buttons above the tree add a category, add a rule, open **Add rules** (a whole list in one go), import rules, and collapse or expand all categories. |
-| **Right — Fixes** | Preview of all lines that will be changed. The **Before** column highlights removed characters in red and the **After** column highlights added characters in green. Selecting a row reveals an **Applied rules** detail panel at the bottom listing every rule that matched that line. |
+| **Left — Categories** | The categories, each with an on/off checkbox and its number of rules. The buttons below the list add, rename, delete and import categories. |
+| **Top right — Rules** | The rules of the selected category: on/off, type icon, **Find what**, **Replace with**, **Whole word** and description. The row above the list adds a rule as you type it (`Enter` adds it); **Newest first** and the filter box change what the list shows. The buttons below remove, edit, move and reorder the selected rule, and open **Add rules** (a whole list in one go). |
+| **Bottom right — Preview** | All lines that will be changed. The **Before** column highlights removed characters in red and the **After** column highlights added characters in green. Selecting a row shows **Applied rules** under it, listing every rule that matched that line. |
 
 ### Choosing which fixes to apply
 
@@ -105,7 +106,7 @@ Editing a rule regenerates the preview, which ticks every row again.
 
 ### Rule types
 
-Each rule has one of three match types, shown as an icon in the tree:
+Each rule has one of three match types, shown as an icon in front of **Find what**. Click the icon to pick another type:
 
 | Type | Description |
 |---|---|
@@ -137,7 +138,7 @@ Right-click a category node to open its context menu:
 
 Right-click a rule node to open its context menu:
 
-- **Edit rule** — change find/replace text, type, and description
+- **Edit rule** — open the **Edit rule** dialog for find/replace text, type, whole word, and description
 - **Duplicate** — insert a copy of the rule above the current one
 - **Insert before / Insert after** — add a new rule relative to this one
 - **Add rules...** — add a list of rules right after this one (see [Adding many rules at once](#adding-many-rules-at-once))
@@ -146,7 +147,15 @@ Right-click a rule node to open its context menu:
 - **Move to category** — move the rule to the end of another category
 - **Delete** — remove the rule
 
-Double-clicking a rule also opens the **Edit rule** dialog. A new rule is selected and scrolled into view, also at the end of a long category.
+Double-click a rule (or press `Enter` or `F2` on it) to edit it in its own row: **Find what**, **Replace with** and **Description** turn into text boxes, with the cursor in the cell you double-clicked. `Tab` moves between the boxes and the preview follows while you type.
+
+- `Enter` keeps the change
+- `Escape` puts the texts back
+- Selecting another rule or clicking outside the list also keeps the change
+
+**Whole word** is the checkbox in its own column, and the type is the icon in front of **Find what**. The **Edit...** button below the list and **Edit rule** in the context menu still open the full dialog.
+
+A new rule is selected and scrolled into view, also at the end of a long category.
 
 ### Adding many rules at once
 
@@ -165,7 +174,8 @@ The rules are added in the order they were entered, which is the order they run 
 |---|---|
 | `Ctrl+N` | Add a new rule to the selected category, or insert after the selected rule |
 | `Ctrl+Shift+N` | Open **Add rules** for the selected category or rule |
-| `F2` | Edit the selected rule, or rename the selected category |
+| `F2` / `Enter` | Edit the selected rule in its row (`F2` renames the selected category) |
+| `Enter` / `Escape` while editing a row | Keep the change / put the texts back |
 | `Ctrl+D` | Duplicate the selected rule |
 | `Ctrl+F` | Find a rule by name / text |
 | `Ctrl+Up` / `Ctrl+Down` | Move the selected category or rule up / down (`Cmd` on macOS) |
