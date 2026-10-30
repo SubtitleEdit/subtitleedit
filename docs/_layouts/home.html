@@ -1,0 +1,67 @@
+---
+layout: default
+---
+<main id="content" class="home" tabindex="-1">
+  <section class="hero">
+    <div>
+      <h1>{{ page.title }}</h1>
+      <div class="hero-text">{{ content }}</div>
+    </div>
+    <div class="hero-shot">
+      <img class="only-dark" src="{{ '/screenshots/main-window.png' | relative_url }}" width="1426" height="746" alt="Subtitle Edit main window with the subtitle grid, video and waveform">
+      <img class="only-light" src="{{ '/screenshots/main-window-light.png' | relative_url }}" width="1453" height="791" alt="Subtitle Edit main window in the light theme">
+    </div>
+  </section>
+
+  <section>
+    <h2>Start here</h2>
+    <div class="cards">
+      {%- for item in site.data.nav.first.items %}
+      <a class="card" href="{{ item.url | prepend: '/' | relative_url }}">
+        <strong>{{ item.title }}</strong>
+        <span>{{ item.desc }}</span>
+      </a>
+      {%- endfor %}
+    </div>
+  </section>
+
+  <section>
+    <h2 class="with-lead">Make it yours</h2>
+    <p class="section-lead">Pick a theme in <a href="{{ '/features/settings.html' | relative_url }}">Options → Settings → Appearance</a>.</p>
+    <div class="themes">
+      {%- for theme in site.data.themes %}
+      {%- assign shot = '/screenshots/' | append: theme.file | relative_url %}
+      <figure{% if theme.site %} class="only-{{ theme.site }}"{% endif %}>
+        <a href="{{ shot }}"><img src="{{ shot }}" width="1426" height="746" loading="lazy" alt="Subtitle Edit main window in the {{ theme.name }} theme"></a>
+        <figcaption>{{ theme.name }}</figcaption>
+      </figure>
+      {%- endfor %}
+    </div>
+  </section>
+
+  <section>
+    <h2>Browse by area</h2>
+    <div class="areas">
+      {%- for group in site.data.nav offset: 1 %}
+      <div class="area">
+        <h3>{{ group.name }}</h3>
+        <ul>
+          {%- for item in group.items limit: 3 %}
+          <li><a href="{{ item.url | prepend: '/' | relative_url }}">{{ item.title }}</a></li>
+          {%- endfor %}
+        </ul>
+        {%- if group.items.size > 3 %}
+        <details>
+          <summary>All {{ group.items.size }} pages</summary>
+          <ul>
+            {%- for item in group.items offset: 3 %}
+            <li><a href="{{ item.url | prepend: '/' | relative_url }}">{{ item.title }}</a></li>
+            {%- endfor %}
+          </ul>
+        </details>
+        {%- endif %}
+      </div>
+      {%- endfor %}
+    </div>
+  </section>
+</main>
