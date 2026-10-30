@@ -1,0 +1,18 @@
+# Theme screenshots on the home page. "site" shows a card only in that site theme, so the card
+# never repeats the main screenshot, which already follows the site theme.
+- name: Light
+  file: main-window-theme-light.png
+  site: dark
+- name: Dark
+  file: main-window-theme-dark.png
+  site: light
+- name: Nord
+  file: main-window-theme-nord.png
+- name: Midnight Cinema
+  file: main-window-theme-midnight-cinema.png
+- name: Sakura
+  file: main-window-theme-sakura.png
+- name: Pastel
+  file: main-window-theme-pastel.png
+- name: Classic
+  file: main-window-theme-classic.png
