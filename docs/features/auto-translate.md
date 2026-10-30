@@ -36,7 +36,7 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 - **LM Studio advanced (local LLM)** — LM Studio translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **Ollama (local LLM)** — Local LLM-based translation
 - **Ollama advanced (local LLM)** — Ollama translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
-- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT, Hy-MT2 or TranslatePsy-AfriSLM for English ↔ 19 African languages) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
+- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (Index-Translate, TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT, Hy-MT2 or TranslatePsy-AfriSLM for English ↔ 19 African languages) and runs a local `llama-server` for you. See [Best local models for translating from English](#best-local-models-for-translating-from-english) for a recommendation and [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
 - **llama.cpp advanced (local LLM)** — The managed llama.cpp server translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **OpenAI Compatible API** — Generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...); configure URL, model, prompt, and an optional API key
 - **Anthropic Claude** — AI translation (requires API key)
@@ -54,6 +54,26 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 - **winstxnhdw-nllb-api** — NLLB (No Language Left Behind) API
 - **Baidu Translate** — Baidu translation (requires App ID and secret)
 - **CrispASR MADLAD** — Local MADLAD-based translation with downloadable models (shown with size and install status); also available in Batch Convert. The language list is the 419 languages the MADLAD-400 model itself knows, so it is both longer and shorter than the usual one: it adds languages such as Iloko, Waray, Papiamento, Moroccan Arabic and Latin, and leaves out ones MADLAD cannot produce — including Cantonese, for which Google Translate, NLLB or any of the LLM engines are the alternatives. Quality varies a lot across that long tail — Google evaluated only about half of the languages the model claims
+
+## Best local models for translating from English
+
+To translate English subtitles into Spanish, German, Danish or another language on your own machine, start with **Index-Translate 9B (Q4_K_M)** in the **llama.cpp** engine. All the models below are in its download list.
+
+| Model | Download | Why pick it |
+|-------|----------|-------------|
+| **Index-Translate 9B (Q4_K_M)** | 5.8 GB | Best overall, with the fewest meaning errors in every language we tested. About 1.3 s per line on an M4 Mac |
+| **Index-Translate 2B (Q8_0)** | 2.1 GB | Best small model, for limited memory or when speed matters most. About 0.6 s per line, with more slips than the 9B |
+| **Gemma 4 E4B it (Q4_K_M)** | 5.4 GB | Good alternative at about 1 s per line, with more errors than the 9B in Danish and German but not in Japanese |
+| **TranslateGemma 12B (Q4_K_M)** | 7.3 GB | Close to the 9B in quality, but it can return English lines untranslated when lines are merged into one request. Subtitle Edit detects this and retries, so it can take longer |
+| **TranslatePsy-AfriSLM 4B** | 3.1 GB | The one to use for the 19 African languages it covers |
+
+These recommendations come from small tests of about 24 lines of English dialogue, mostly into Danish, German and Japanese, with Index-Translate 9B also tested into Spanish, French, Russian and Chinese. Results for other languages can differ, so try a few lines before translating a whole file.
+
+**CrispASR MADLAD** made more meaning errors than Index-Translate 9B in the same tests (5 against 1 of 24 lines into German). Its strength is its long language list.
+
+A bigger download is not automatically better. Qwen 3.8 27B at 2-bit (9.8 GB) was about four times slower than Index-Translate 9B and clearly worse, because the heavy compression damages the output. Bonsai 27B is listed for [AI Review](ai-review.md) as English only, and is not a translation model.
+
+For a whole episode or film, use **llama.cpp advanced** so that names and terms stay consistent, see [Advanced local engines](auto-translate-advanced.md).
 
 ## llama.cpp: using your own model
 

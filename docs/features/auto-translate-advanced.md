@@ -4,7 +4,7 @@ The **llama.cpp advanced (local LLM)**, **Ollama advanced (local LLM)** and **LM
 
 LM Studio advanced talks to LM Studio's OpenAI-compatible endpoint (default `http://localhost:1234/v1/chat/completions`). LM Studio can have several models loaded; leave the model empty to use the loaded one.
 
-See [Auto Translate](auto-translate.md) for the translation window itself.
+See [Auto Translate](auto-translate.md) for the translation window itself, and [Best local models for translating from English](auto-translate.md#best-local-models-for-translating-from-english) for which llama.cpp model to download.
 
 ## Advanced Settings
 
