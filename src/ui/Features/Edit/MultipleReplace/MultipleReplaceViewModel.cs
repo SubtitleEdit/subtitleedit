@@ -35,7 +35,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
     [ObservableProperty] private string _fixesInfo;
     [ObservableProperty] private ObservableCollection<ReplaceExpression> _selectedFixHits;
     public ObservableCollection<MultipleReplaceTypeItem> RuleTypes { get; }
-    [ObservableProperty] private MultipleReplaceTypeItem? _selectedRuleType;
+
+    // The rule whose row shows text boxes in the rules list, and its texts from before the edit
+    // so Escape can put them back.
+    private RuleTreeNode? _inlineEditNode;
+    private (string Find, string ReplaceWith, string Description) _inlineEditOriginal;
 
     public ObservableCollection<RuleTreeNode> Nodes { get; }
 
@@ -319,13 +323,16 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
     }
 
-    // Keep SelectedRuleType in sync with SelectedNode
     partial void OnSelectedNodeChanged(RuleTreeNode? value)
     {
         IsEditPanelVisible = value is { IsCategory: false };
+        if (_inlineEditNode != null && _inlineEditNode != value)
+        {
+            EndInlineEdit(commit: true, focusRow: false);
+        }
+
         if (value == null || value.IsCategory)
         {
-            SelectedRuleType = null;
             if (value == null && !_refreshingRules && RulesTable.SelectedItem != null)
             {
                 RulesTable.SelectedItem = null;
@@ -347,29 +354,6 @@ public partial class MultipleReplaceViewModel : ObservableObject
         if (RulesTable.SelectedItem != value && VisibleRules.Contains(value))
         {
             RulesTable.SelectedItem = value;
-        }
-
-        var item = ReplaceTypes.FirstOrDefault(t => t.Type == value.Type);
-        SelectedRuleType = item;
-    }
-
-    partial void OnSelectedRuleTypeChanged(MultipleReplaceTypeItem? value)
-    {
-        if (value == null)
-        {
-            return;
-        }
-
-        var node = SelectedNode;
-        if (node == null || node.IsCategory)
-        {
-            return;
-        }
-
-        if (node.Type != value.Type)
-        {
-            node.Type = value.Type;
-            _dirty = true;
         }
     }
 
@@ -1485,12 +1469,19 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
         else if (e.Key == Key.F2 && e.KeyModifiers == KeyModifiers.None)
         {
-            // Edit the selected rule, or rename the selected category - the usual "rename" key.
+            // Edit the selected rule in its row, or rename the selected category - the usual "rename" key.
             var node = CategoriesListBox.IsKeyboardFocusWithin ? SelectedCategory : SelectedNode ?? SelectedCategory;
             if (node != null)
             {
                 e.Handled = true;
-                _ = node.IsCategory ? CategoryEdit(node) : NodeEdit(node);
+                if (node.IsCategory)
+                {
+                    _ = CategoryEdit(node);
+                }
+                else
+                {
+                    BeginInlineEdit(node, nameof(RuleTreeNode.Find));
+                }
             }
         }
         else if (e.Key == Key.D && IsCommand(e))
@@ -1559,7 +1550,13 @@ public partial class MultipleReplaceViewModel : ObservableObject
     /// the list box inside the tree view handles Ctrl+Arrow itself (move focus, keep selection),
     /// so a bubbling handler never sees it.
     /// </summary>
-    internal void RulesTable_PreviewKeyDown(object? sender, KeyEventArgs e) => MoveKeyDown(e, SelectedNode);
+    internal void RulesTable_PreviewKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Source is not TextBox) // Ctrl+Home/End in an inline edit box moves the caret
+        {
+            MoveKeyDown(e, SelectedNode);
+        }
+    }
 
     internal void CategoriesListBox_PreviewKeyDown(object? sender, KeyEventArgs e) => MoveKeyDown(e, SelectedCategory);
 
@@ -1597,6 +1594,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
     internal void RulesTable_KeyDown(object? sender, KeyEventArgs e)
     {
+        if (e.Source is TextBox)
+        {
+            return; // typing in an inline edit box
+        }
+
         if (e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None)
         {
             e.Handled = true;
@@ -1615,8 +1617,124 @@ public partial class MultipleReplaceViewModel : ObservableObject
         else if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && SelectedNode != null)
         {
             e.Handled = true;
-            _ = NodeEdit(SelectedNode);
+            BeginInlineEdit(SelectedNode, nameof(RuleTreeNode.Find));
         }
+    }
+
+    /// <summary>
+    /// Shows text boxes for find, replace with and description in the rule's own row, the caret
+    /// in <paramref name="field"/>. The preview follows while typing; Enter keeps the change,
+    /// Escape puts the texts back, and leaving the row keeps it.
+    /// </summary>
+    internal void BeginInlineEdit(RuleTreeNode? node, string field)
+    {
+        if (node == null || node.IsCategory)
+        {
+            return;
+        }
+
+        if (_inlineEditNode != null && _inlineEditNode != node)
+        {
+            EndInlineEdit(commit: true, focusRow: false);
+        }
+
+        node.EditField = field;
+        if (_inlineEditNode == node)
+        {
+            node.RequestEditFocus();
+            return;
+        }
+
+        _inlineEditOriginal = (node.Find, node.ReplaceWith, node.Description);
+        _inlineEditNode = node;
+        node.IsEditing = true;
+    }
+
+    internal void EndInlineEdit(bool commit, bool focusRow = true)
+    {
+        var node = _inlineEditNode;
+        if (node == null)
+        {
+            return;
+        }
+
+        _inlineEditNode = null;
+        if (!commit)
+        {
+            node.Find = _inlineEditOriginal.Find;
+            node.ReplaceWith = _inlineEditOriginal.ReplaceWith;
+            node.Description = _inlineEditOriginal.Description;
+        }
+
+        node.IsEditing = false;
+        _dirty = true;
+        if (focusRow)
+        {
+            Dispatcher.UIThread.Post(() => FocusNode(node), DispatcherPriority.Input);
+        }
+    }
+
+    internal void InlineEditTextBoxKeyDown(object? sender, KeyEventArgs e)
+    {
+        // Handled here, so neither reaches the window - where Enter means OK and Escape closes.
+        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = true;
+            EndInlineEdit(commit: true);
+        }
+        else if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = true;
+            EndInlineEdit(commit: false);
+        }
+    }
+
+    /// <summary>
+    /// Focus left the rules list while a row was being edited - keep the change.
+    /// </summary>
+    internal void RulesTableLostFocus()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_inlineEditNode != null && !RulesTable.IsKeyboardFocusWithin)
+            {
+                EndInlineEdit(commit: true, focusRow: false);
+            }
+        }, DispatcherPriority.Input);
+    }
+
+    /// <summary>
+    /// The rule type picker behind the type icon in front of "Find what".
+    /// </summary>
+    internal void OpenRuleTypeMenu(Control button, RuleTreeNode? node)
+    {
+        if (node == null || node.IsCategory)
+        {
+            return;
+        }
+
+        var contextMenu = new ContextMenu();
+        foreach (var typeItem in ReplaceTypes)
+        {
+            var menuItem = new MenuItem
+            {
+                Header = typeItem.Name,
+                Icon = new Optris.Icons.Avalonia.Icon { Value = RuleTreeNode.GetIconName(typeItem.Type) },
+                ToggleType = MenuItemToggleType.Radio,
+                IsChecked = node.Type == typeItem.Type,
+            };
+            menuItem.Click += (_, _) =>
+            {
+                if (node.Type != typeItem.Type)
+                {
+                    node.Type = typeItem.Type;
+                    _dirty = true;
+                }
+            };
+            contextMenu.Items.Add(menuItem);
+        }
+
+        OpenContextMenu(button, contextMenu);
     }
 
     internal void CategoriesListBox_KeyDown(object? sender, KeyEventArgs e)
@@ -2010,12 +2128,9 @@ public partial class MultipleReplaceViewModel : ObservableObject
         UiUtil.RestoreWindowPosition(Window);
     }
 
-    internal void RulesTableDoubleTapped()
+    internal void RulesTableDoubleTapped(string field)
     {
-        if (SelectedNode is { } node)
-        {
-            _ = NodeEdit(node);
-        }
+        BeginInlineEdit(SelectedNode, field);
     }
 
     internal void CategoriesListBoxDoubleTapped()
