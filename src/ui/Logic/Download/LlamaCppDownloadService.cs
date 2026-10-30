@@ -85,6 +85,33 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     }
 
     /// <summary>
+    /// All builds unpack into one folder and unpacking only overwrites, so the GPU backend of a
+    /// previous build would survive a switch - ggml would keep loading it, and the variant detection
+    /// would keep reporting it. Removes the files that <paramref name="variant"/> does not ship.
+    /// </summary>
+    public static void DeleteOtherBuildFiles(string folder, string variant)
+    {
+        var isCuda = variant == VariantCuda || variant == VariantCuda13;
+        var staleFiles = new (string FileName, bool IsStale)[]
+        {
+            ("ggml-vulkan.dll", variant != VariantVulkan),
+            ("libggml-vulkan.so", variant != VariantVulkan),
+            ("ggml-cuda.dll", !isCuda),
+            ("cudart64_12.dll", variant != VariantCuda),
+            ("cudart64_13.dll", variant != VariantCuda13),
+        };
+
+        foreach (var (fileName, isStale) in staleFiles)
+        {
+            var path = Path.Combine(folder, fileName);
+            if (isStale && File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+    }
+
+    /// <summary>
     /// True when the given variant ships its GPU runtime DLLs in a separate archive (Windows CUDA build).
     /// </summary>
     public static bool VariantNeedsCudaRuntime(string variant)

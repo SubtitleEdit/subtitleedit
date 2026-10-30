@@ -1107,14 +1107,9 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        // Pass the key of the outdated install when there is one, so the re-download picks the same
-        // backend. Otherwise pass empty: UpdateLlamaCppEngineAsync then falls back to detecting the
-        // variant from the install folder, and to asking the user when nothing is installed yet.
-        var installedKey = GetLlamaCppEngineUpdate()?.key ?? string.Empty;
-
         await _windowService.ShowDialogAsync<LlamaCppEngineSettingsWindow, LlamaCppEngineSettingsViewModel>(
             Window!,
-            vm => vm.Initialize(() => UpdateLlamaCppEngineAsync(installedKey)));
+            vm => vm.Initialize(() => UpdateLlamaCppEngineAsync(string.Empty, askForBuild: true)));
 
         RefreshDownloadDots?.Invoke();
         RefreshEngineUpdateButton();
@@ -1289,8 +1284,9 @@ public partial class AutoTranslateViewModel : ObservableObject
     /// <summary>
     /// Stops the running llama-server (it holds the binary open and would keep serving a stale build),
     /// re-downloads the matching llama.cpp build, and refreshes the model list and status indicators.
+    /// With <paramref name="askForBuild"/> the user picks the build instead, so it can be changed.
     /// </summary>
-    private async Task UpdateLlamaCppEngineAsync(string installedKey)
+    private async Task UpdateLlamaCppEngineAsync(string installedKey, bool askForBuild = false)
     {
         if (Window == null)
         {
@@ -1301,8 +1297,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         UpdateLlamaCppServerButtonText();
 
         var folder = LlamaCppServerManager.GetAndCreateFolder();
-        var variant = DownloadHashManager.GetLlamaCppWindowsVariant(installedKey)
-                      ?? (OperatingSystem.IsWindows() ? DownloadHashManager.DetectLlamaCppWindowsVariant(folder) : null);
+        var variant = askForBuild ? null : DownloadHashManager.GetLlamaCppWindowsVariant(installedKey) ?? DetectInstalledLlamaCppVariant(folder);
 
         var model = SelectedLlamaCppModel?.Model;
         var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, variant, forceEngineDownload: true);
@@ -1315,6 +1310,16 @@ public partial class AutoTranslateViewModel : ObservableObject
         RefreshDownloadDots?.Invoke();
         UpdateLlamaCppServerButtonText();
         RefreshEngineUpdateButton();
+    }
+
+    private static string? DetectInstalledLlamaCppVariant(string folder)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return DownloadHashManager.DetectLlamaCppWindowsVariant(folder);
+        }
+
+        return OperatingSystem.IsLinux() ? DownloadHashManager.DetectLlamaCppLinuxVariant(folder) : null;
     }
 
     private static (string key, string hash)? TryReadLlamaCppSidecarHash(string folder)

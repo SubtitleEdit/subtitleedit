@@ -42,4 +42,12 @@ For the local llama.cpp engines, the gear button opens an info dialog about the 
 - **Release** — The llama.cpp release Subtitle Edit is pinned to
 - **Install folder** — Where the server binaries live
 
-Use **Download** / **Update** / **Re-download...** to (re)install the server build, for example after a graphics driver change. The same dialog is used by [AI Review](ai-review.md) and the [AI Assistant](ai-assistant.md).
+Use **Download** / **Update** / **Re-download...** to (re)install the server build, for example after a graphics driver change. On Windows and Linux you pick the build each time, so this is also how to switch between CPU and GPU. The same dialog is used by [AI Review](ai-review.md) and the [AI Assistant](ai-assistant.md).
+
+### GPU acceleration
+
+Pick **Vulkan (GPU)** instead of **CPU** to run llama.cpp on the GPU. Vulkan works with NVIDIA, AMD and Intel GPUs that have Vulkan drivers installed. On Windows, **CUDA (NVIDIA GPU)** is also available.
+
+If llama.cpp is already installed as a CPU build, click the gear next to the engine, click **Re-download...** in the engine settings, and pick the GPU build. **Backend** shows which build is installed. The **Re-download...** button next to the model only downloads the model again.
+
+Subtitle Edit offloads all model layers to the GPU, so the model should fit in the GPU memory. For a model that doesn't fit, add `-ngl N` under **Advanced...** to offload only N layers. If **Use only these parameters** is on, your parameters decide this.
