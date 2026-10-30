@@ -192,6 +192,8 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             ShowLineNumbers = true,
+            CornerRadius = new CornerRadius(EditorChrome.ListFrameContentRadius),
+            ClipToBounds = true,
             SourceHighlighter = SourceSyntaxHighlighterFactory.ForFormat(text, subtitleFormat),
             Text = text,
         };

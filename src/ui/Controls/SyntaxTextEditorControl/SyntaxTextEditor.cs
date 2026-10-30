@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -45,6 +44,8 @@ public class SyntaxTextEditor : Border
 
     static SyntaxTextEditor()
     {
+        // White like every other text input; the dark and pastel themes set their own through a
+        // style (see UiTheme), and a caller can still set it directly.
         BackgroundProperty.OverrideDefaultValue<SyntaxTextEditor>(Brushes.White);
     }
 

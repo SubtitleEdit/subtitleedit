@@ -220,7 +220,7 @@ public partial class BatchConvertAssaViewModel : ObservableObject
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             ShowLineNumbers = true,
-            CornerRadius = new CornerRadius(7),
+            CornerRadius = new CornerRadius(EditorChrome.ListFrameContentRadius),
             ClipToBounds = true,
             SourceHighlighter = new AssaSourceSyntaxHighlighting(),
             Text = text,

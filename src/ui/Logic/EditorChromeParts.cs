@@ -903,6 +903,15 @@ internal static partial class EditorChrome
 
     // ---- Sections and frames ----
 
+    private const double ListFrameRadius = 8;
+    private const double ListFrameBorderThickness = 1;
+
+    /// <summary>
+    /// The inner radius of <see cref="MakeListFrame"/>, for content that paints its own background
+    /// and would otherwise cover the frame's rounded corners.
+    /// </summary>
+    internal const double ListFrameContentRadius = ListFrameRadius - ListFrameBorderThickness;
+
     /// <summary>
     /// A list (table view, list box) or text area in a rounded frame on the field color. With
     /// <paramref name="clearListBackground"/> the list's own background is cleared so the frame
@@ -925,8 +934,8 @@ internal static partial class EditorChrome
             Child = list,
             Background = FieldBrush,
             BorderBrush = FieldBorderBrush,
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(8),
+            BorderThickness = new Thickness(ListFrameBorderThickness),
+            CornerRadius = new CornerRadius(ListFrameRadius),
             ClipToBounds = true,
         };
     }
