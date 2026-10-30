@@ -650,14 +650,17 @@ public class TimelineTracks : Control, IDisposable
             }
         }
 
-        foreach (var shotChange in source.ShotChanges)
+        // Sorted (see AudioVisualizer.ShotChanges), and this runs per frame.
+        var shotChanges = source.ShotChanges;
+        var firstShotChange = shotChanges.BinarySearch(startSeconds);
+        if (firstShotChange < 0)
         {
-            if (shotChange < startSeconds || shotChange > endSeconds)
-            {
-                continue;
-            }
+            firstShotChange = ~firstShotChange;
+        }
 
-            var x = Math.Round((shotChange - startSeconds) * pixelsPerSecond);
+        for (var i = firstShotChange; i < shotChanges.Count && shotChanges[i] <= endSeconds; i++)
+        {
+            var x = Math.Round((shotChanges[i] - startSeconds) * pixelsPerSecond);
             context.DrawLine(_shotChangePen, new Point(x, row.Y), new Point(x, row.Bottom));
         }
     }
@@ -699,17 +702,6 @@ public class TimelineTracks : Control, IDisposable
             }
         }
 
-        // The original row is drawn from all rows (display-only reference rows included), and
-        // the selection is not culled by the translation's times, which may be off screen.
-        _selectedIds.Clear();
-        if (selected != null)
-        {
-            foreach (var paragraph in selected)
-            {
-                _selectedIds.Add(paragraph.Id);
-            }
-        }
-
         foreach (var paragraph in _paragraphs)
         {
             var x1 = (paragraph.StartTime.TotalSeconds - startSeconds) * pixelsPerSecond;
@@ -725,6 +717,18 @@ public class TimelineTracks : Control, IDisposable
         if (originalTrack < 0 || rows == null)
         {
             return;
+        }
+
+        // The original row is drawn from all rows (display-only reference rows included), and
+        // the selection is not culled by the translation's times, which may be off screen.
+        // Only built here: hashing a "select all" per frame is a waste without an original row.
+        _selectedIds.Clear();
+        if (selected != null)
+        {
+            foreach (var paragraph in selected)
+            {
+                _selectedIds.Add(paragraph.Id);
+            }
         }
 
         var readOnlyTimeCodes = GetReadOnlyOriginalTimeCodes?.Invoke();

@@ -184,6 +184,15 @@ public sealed class FfmpegPreviewSubtitle
     /// </param>
     internal static string ToPlainText(string text, out StyleRun[] runs, out int? alignment)
     {
+        // Most lines have no markup, and the whole subtitle comes through here on the UI thread
+        // after every settled edit.
+        if (text.AsSpan().IndexOfAny('<', '{', '\\') < 0)
+        {
+            runs = [];
+            alignment = null;
+            return text.Trim();
+        }
+
         var source = text.Contains("\\p", StringComparison.Ordinal) ? DrawingRegex.Replace(text, string.Empty) : text;
 
         var plain = new StringBuilder(source.Length);

@@ -91,14 +91,22 @@ public partial class MainViewModel
         }
     }
 
+    // Same reasoning as the 500 ms look at the rows in TimelineTracks: nothing announces a change
+    // to the original, so it is looked at again now and then instead of per frame.
+    private const int ReadOnlyOriginalTimeCodesMaxAgeMs = 250;
+
     private readonly Dictionary<Guid, (TimeSpan Start, TimeSpan End)> _readOnlyOriginalTimeCodes = new();
+    private Subtitle? _readOnlyOriginalTimeCodesSource;
+    private int _readOnlyOriginalTimeCodesCount;
+    private long _readOnlyOriginalTimeCodesBuiltMs;
 
     /// <summary>
     /// The read-only original's own time codes by line id, or null when the original is editable.
     /// The rows' original time codes follow the translation as it is retimed (with "Lock original
     /// to translation" on, or when a line shares its row's times), but a read-only original never
-    /// moves. Rebuilt into one reused dictionary on each call: the original's lines can be replaced,
-    /// and one pass over them is cheap.
+    /// moves. Kept in one reused dictionary: the timeline asks on every frame, while the original's
+    /// lines are rarely replaced - a pass over them per frame was thousands of inserts 60 times a
+    /// second. A new original or line count rebuilds at once, anything else within the max age.
     /// </summary>
     internal IReadOnlyDictionary<Guid, (TimeSpan Start, TimeSpan End)>? GetReadOnlyOriginalTimeCodes()
     {
@@ -107,6 +115,17 @@ public partial class MainViewModel
             return null;
         }
 
+        var now = Environment.TickCount64;
+        if (ReferenceEquals(_readOnlyOriginalTimeCodesSource, _subtitleOriginal) &&
+            _readOnlyOriginalTimeCodesCount == _subtitleOriginal.Paragraphs.Count &&
+            now - _readOnlyOriginalTimeCodesBuiltMs < ReadOnlyOriginalTimeCodesMaxAgeMs)
+        {
+            return _readOnlyOriginalTimeCodes;
+        }
+
+        _readOnlyOriginalTimeCodesSource = _subtitleOriginal;
+        _readOnlyOriginalTimeCodesCount = _subtitleOriginal.Paragraphs.Count;
+        _readOnlyOriginalTimeCodesBuiltMs = now;
         _readOnlyOriginalTimeCodes.Clear();
         foreach (var p in _subtitleOriginal.Paragraphs)
         {
