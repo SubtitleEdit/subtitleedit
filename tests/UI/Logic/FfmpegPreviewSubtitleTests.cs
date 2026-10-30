@@ -32,6 +32,20 @@ public class FfmpegPreviewSubtitleTests
         Assert.Empty(runs);
     }
 
+    [Theory]
+    [InlineData("Hello world", "Hello world")]
+    [InlineData("  Hello world\r\n", "Hello world")]
+    [InlineData("1 > 0 & done", "1 > 0 & done")]
+    [InlineData("   ", "")]
+    public void ToPlainText_NoMarkup_IsTrimmedTextWithoutRunsOrAlignment(string input, string expected)
+    {
+        var text = FfmpegPreviewSubtitle.ToPlainText(input, out var runs, out var alignment);
+
+        Assert.Equal(expected, text);
+        Assert.Empty(runs);
+        Assert.Null(alignment);
+    }
+
     [Fact]
     public void ToPlainText_WholeLineItalic_IsOneRun()
     {
