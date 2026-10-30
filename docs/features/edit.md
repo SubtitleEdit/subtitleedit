@@ -82,12 +82,13 @@ Apply multiple find-and-replace rules at once, organized into named categories. 
 
 ### Window layout
 
-The window is split into two resizable panels:
+The window is split into resizable panels:
 
 | Panel | Description |
 |---|---|
-| **Left — Rules** | Tree of categories and their rules. Each rule shows its type icon, find pattern, replacement, and an optional description. The buttons above the tree add a category, add a rule, open **Add rules** (a whole list in one go), import rules, and collapse or expand all categories. |
-| **Right — Fixes** | Preview of all lines that will be changed. The **Before** column highlights removed characters in red and the **After** column highlights added characters in green. Selecting a row reveals an **Applied rules** detail panel at the bottom listing every rule that matched that line. |
+| **Left — Categories** | The categories, each with an on/off checkbox and its number of rules. The buttons below the list add, rename, delete and import categories. |
+| **Top right — Rules** | The rules of the selected category: on/off, type icon, **Find what**, **Replace with**, **Whole word** and description. The row above the list adds a rule as you type it (`Enter` adds it); **Newest first** and the filter box change what the list shows. The buttons below remove, edit, move and reorder the selected rule, and open **Add rules** (a whole list in one go). |
+| **Bottom right — Preview** | All lines that will be changed. The **Before** column highlights removed characters in red and the **After** column highlights added characters in green. Selecting a row shows **Applied rules** under it, listing every rule that matched that line. |
 
 ### Choosing which fixes to apply
 
