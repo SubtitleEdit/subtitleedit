@@ -3,6 +3,27 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-beta11 (30th of October 2026)
+
+* Add "Move start/end X ms" shortcuts that push the neighbour line (no default key) - thx doom9 forum
+* Second subtitle: add font name picker
+* Second subtitle: auto-detect if the video offset applies - thx Jamestankw
+* Multiple replace: edit rules directly in the list (Enter/F2/double-click), more compact window
+* ASSA/SSA styles: preview fonts attached in [Fonts]
+* Use Silero VAD for CrispASR Granite by default (better accuracy)
+* Fix spell check undo of "Add to names list" - thx bptrsn
+* Fix arrow keys after type-ahead in Options > Word lists - thx FunkyKnilch
+* Fix uneven 500 ms / custom video steps on quick presses - thx vitonique
+* Fix read-only original moving in waveform/timeline while retiming translation - thx pdjdev
+* Fix "Save as" ignoring format picked via format picker (e.g. Sub Station Alpha/.ssa)
+* Update Japanese translation - thx hisui3393
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+* Update CrispASR to v0.8.48
+                                                
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-beta10 (29th of October 2026)
 
 * Add full support for YouTube timed text (.ytt/srv3): pens, positions, preview + styles window

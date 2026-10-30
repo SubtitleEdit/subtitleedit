@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta10",
+  "version": "v5.4.0-beta11",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -2709,7 +2709,7 @@
       "detectSpeakersNeedsNewerCrispAsr": "\"Detect speakers\" needs Crisp ASR v{0} or newer, but v{1} is installed.\n\nUpdate Crisp ASR (the gear button next to the engine) or turn off \"Detect speakers\".",
       "xNeedsNewerCrispAsr": "{0} needs Crisp ASR v{1} or newer, but v{2} is installed.\n\nDownload and install the update now?",
       "vad": "VAD",
-      "vadHint": "Voice activity detection: only the speech is transcribed, cut where the speaker pauses.\nAuto: Silero, and only for the engines that need it (Cohere, Mega, Index-Echo).\nSilero, FireRedVAD, Whisper-VAD, WebRTC: always on, for every Crisp ASR engine. FireRedVAD is the most accurate, Whisper-VAD gives the fewest, cleanest cuts but is the slowest.\nIndex-Echo always uses Silero. --vad, --vad-model or --chunk-seconds in the advanced settings take precedence.",
+      "vadHint": "Voice activity detection: only the speech is transcribed, cut where the speaker pauses.\nAuto: Silero, and only for the engines that need it (Cohere, Mega, Index-Echo, Granite).\nSilero, FireRedVAD, Whisper-VAD, WebRTC: always on, for every Crisp ASR engine. FireRedVAD is the most accurate, Whisper-VAD gives the fewest, cleanest cuts but is the slowest.\nIndex-Echo always uses Silero. --vad, --vad-model or --chunk-seconds in the advanced settings take precedence.",
       "inputLanguage": "Input language",
       "advancedWhisperSettings": "Advanced speech-to-text parameters",
       "downloadingSpeechToTextEngine": "Downloading speech-to-text engine",
@@ -4194,6 +4194,8 @@
       "moveStartXMsForward": "Move start X ms forward (X set in Settings, also in Visual Sync)",
       "moveEndXMsBack": "Move end X ms back (X set in Settings, also in Visual Sync)",
       "moveEndXMsForward": "Move end X ms forward (X set in Settings, also in Visual Sync)",
+      "moveStartXMsBackPushPrevious": "Move start X ms back, push previous end (X set in Settings)",
+      "moveEndXMsForwardPushNext": "Move end X ms forward, push next start (X set in Settings)",
       "moveSelectedLinesXMsBack": "Move selected lines X ms back (X set in Settings)",
       "moveSelectedLinesXMsForward": "Move selected lines X ms forward (X set in Settings)",
       "moveSelectedLinesAndForwardXMsBack": "Move selected lines and all following X ms back (X set in Settings)",
