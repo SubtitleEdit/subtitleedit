@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -18,14 +17,8 @@ namespace Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
 /// Only the visible lines are tokenized, laid out and drawn, so a 25 MB source opens and scrolls
 /// like a small one. Word wrap is not supported - long lines scroll sideways instead.
 /// </summary>
-public class SyntaxTextEditor : Decorator
+public class SyntaxTextEditor : Border
 {
-    // White like every other text input; the dark and pastel themes set their own through a style
-    // (see UiTheme), and a caller can still set it directly.
-    public static readonly StyledProperty<IBrush?> BackgroundProperty =
-        Border.BackgroundProperty.AddOwner<SyntaxTextEditor>(
-            new StyledPropertyMetadata<IBrush?>(defaultValue: new Optional<IBrush?>(Brushes.White)));
-
     public static readonly StyledProperty<IBrush?> ForegroundProperty =
         TextElement.ForegroundProperty.AddOwner<SyntaxTextEditor>();
 
@@ -48,6 +41,13 @@ public class SyntaxTextEditor : Decorator
     private readonly ScrollBar _horizontalScrollBar;
 
     private bool _syncingScrollBars;
+
+    static SyntaxTextEditor()
+    {
+        // White like every other text input; the dark and pastel themes set their own through a
+        // style (see UiTheme), and a caller can still set it directly.
+        BackgroundProperty.OverrideDefaultValue<SyntaxTextEditor>(Brushes.White);
+    }
 
     public SyntaxTextEditor()
     {
@@ -95,7 +95,6 @@ public class SyntaxTextEditor : Decorator
                 new RowDefinition(GridLength.Auto),
             },
             Children = { _gutter, _view, _verticalScrollBar, _horizontalScrollBar },
-            Background = Background,
         };
 
         Child = _grid;
@@ -128,12 +127,6 @@ public class SyntaxTextEditor : Decorator
 
     /// <summary>The text surface - exposed for hit testing and focus.</summary>
     public SyntaxTextView View => _view;
-
-    public IBrush? Background
-    {
-        get => GetValue(BackgroundProperty);
-        set => SetValue(BackgroundProperty, value);
-    }
 
     public IBrush? Foreground
     {
@@ -241,10 +234,6 @@ public class SyntaxTextEditor : Decorator
         if (change.Property == ShowLineNumbersProperty)
         {
             _gutter.IsVisible = ShowLineNumbers;
-        }
-        else if (change.Property == BackgroundProperty)
-        {
-            _grid.Background = Background;
         }
         else if (change.Property == IsReadOnlyProperty)
         {

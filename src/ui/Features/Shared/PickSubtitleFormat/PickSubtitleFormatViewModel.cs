@@ -213,6 +213,8 @@ public partial class PickSubtitleFormatViewModel : ObservableObject
             SourceHighlighter = highlighter,
             IsReadOnly = true,
             ShowLineNumbers = true,
+            CornerRadius = new CornerRadius(EditorChrome.ListFrameContentRadius),
+            ClipToBounds = true,
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             FontFamily = new FontFamily("Courier New, Consolas, monospace"),

@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -190,10 +189,11 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
     {
         var editor = new SyntaxTextEditor
         {
-            Margin = new Thickness(0, 0, 10, 0),
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             ShowLineNumbers = true,
+            CornerRadius = new CornerRadius(EditorChrome.ListFrameContentRadius),
+            ClipToBounds = true,
             SourceHighlighter = SourceSyntaxHighlighterFactory.ForFormat(text, subtitleFormat),
             Text = text,
         };
@@ -205,16 +205,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
 
         // The view model's Text is not kept in sync while typing on purpose: materializing the
         // whole source on every keystroke is what made a large file crawl. Ok reads the editor.
-        var textBoxBorder = new Border
-        {
-            BorderBrush = Brushes.Gray,
-            BorderThickness = new Thickness(1),
-            Child = editor,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        return new SyntaxTextEditorWrapper(editor, textBoxBorder);
+        return new SyntaxTextEditorWrapper(editor);
     }
 
     // ----------------------------------------------------------------------------------------

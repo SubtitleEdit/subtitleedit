@@ -19,12 +19,10 @@ namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 public class SyntaxTextEditorWrapper : ITextBoxWrapper
 {
     private readonly SyntaxTextEditor _editor;
-    private readonly Control _contentControl;
 
-    public SyntaxTextEditorWrapper(SyntaxTextEditor editor, Control? contentControl = null)
+    public SyntaxTextEditorWrapper(SyntaxTextEditor editor)
     {
         _editor = editor;
-        _contentControl = contentControl ?? editor;
     }
 
     public bool HasFocus { get; set; }
@@ -71,7 +69,7 @@ public class SyntaxTextEditorWrapper : ITextBoxWrapper
 
     public Control TextControl => _editor.View;
 
-    public Control ContentControl => _contentControl;
+    public Control ContentControl => _editor;
 
     public bool IsFocused => _editor.View.IsFocused;
     public bool IsReadOnly => _editor.IsReadOnly;
