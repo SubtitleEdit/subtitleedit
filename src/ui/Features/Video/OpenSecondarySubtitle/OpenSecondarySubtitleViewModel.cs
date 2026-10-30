@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
@@ -27,6 +28,7 @@ namespace Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 public partial class OpenSecondarySubtitleViewModel : ObservableObject
 {
     [ObservableProperty] private Color _subtitleColor;
+    [ObservableProperty] private string _selectedFontName;
     [ObservableProperty] private FontBoxItem _selectedFontBoxType;
     [ObservableProperty] private int _fontSize;
     [ObservableProperty] private bool _fontBold;
@@ -37,6 +39,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     [ObservableProperty] private bool _overrideStyle;
     [ObservableProperty] private bool _doNotShowAgain;
 
+    public ObservableCollection<string> FontNames { get; }
     public ObservableCollection<FontBoxItem> FontBoxTypes { get; }
     public ObservableCollection<AlignmentItem> FontAlignments { get; }
     public ObservableCollection<MpvJustifyDisplay> JustifyItems { get; }
@@ -76,6 +79,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         _windowService = windowService;
 
         SubtitleColor = Colors.White;
+        FontNames = new ObservableCollection<string>(FontHelper.GetSystemFonts());
         FontBold = Se.Settings.Video.MpvPreviewFontBold;
         FontBoxTypes = new ObservableCollection<FontBoxItem>
         {
@@ -94,6 +98,10 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         // so it's set in Initialize.
         var video = Se.Settings.Video;
         OverrideStyle = video.SecondarySubtitleOverrideStyle;
+        SelectedFontName = OverrideStyle
+            ? SecondarySubtitleStyler.GetFontNameFromSettings()
+            : SecondarySubtitleStyler.GetDefaultFontName();
+        AddFontName(SelectedFontName);
         if (OverrideStyle)
         {
             SubtitleColor = video.SecondarySubtitleColor.FromHexToColor();
@@ -132,6 +140,43 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task PickFont()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var currentFontName = SelectedFontName;
+        var result = await _windowService.ShowDialogAsync<PickFontNameWindow, PickFontNameViewModel>(Window, vm =>
+        {
+            vm.Initialize();
+            vm.SelectedFontName = currentFontName;
+        });
+
+        if (!result.OkPressed || string.IsNullOrEmpty(result.SelectedFontName))
+        {
+            return;
+        }
+
+        // A "Collected fonts" pick need not be installed, so it need not be in the drop-down.
+        AddFontName(result.SelectedFontName);
+        SelectedFontName = result.SelectedFontName;
+    }
+
+    /// <summary>
+    /// Lists a font name the drop-down lacks (a saved family name, or a collected font), so the
+    /// combo box does not show blank.
+    /// </summary>
+    private void AddFontName(string fontName)
+    {
+        if (!string.IsNullOrEmpty(fontName) && !FontNames.Contains(fontName))
+        {
+            FontNames.Insert(0, fontName);
+        }
+    }
+
+    [RelayCommand]
     private void Ok()
     {
         ResultSubtitle = BuildAssaSubtitle(false);
@@ -145,7 +190,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
 
         if (OverrideStyle)
         {
-            SecondarySubtitleStyler.SaveToSettings(FontSize, GetVideoHeight(), FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code, SelectedJustify.Code);
+            SecondarySubtitleStyler.SaveToSettings(SelectedFontName, FontSize, GetVideoHeight(), FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code, SelectedJustify.Code);
         }
 
         Se.SaveSettings();
@@ -317,7 +362,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
 
     private Subtitle BuildAssaSubtitle(bool mergeWithSubtitle)
     {
-        var style = SecondarySubtitleStyler.MakeStyle(_styleName, FontSize, FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code);
+        var style = SecondarySubtitleStyler.MakeStyle(_styleName, SelectedFontName, FontSize, FontBold, SubtitleColor, SelectedFontBoxType.BoxType, SelectedFontAlignment.Code);
 
         var (width, height) = SecondarySubtitleStyler.GetVideoSize(_mediaInfo);
         var secondaryParagraphs = SecondarySubtitleJustifier.Apply(_secondarySubtitle.Paragraphs, style, SelectedJustify.Code, width, height);
