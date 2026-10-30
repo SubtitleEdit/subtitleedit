@@ -68,20 +68,15 @@ public class SourceViewWindow : Window
 
         Avalonia.Automation.AutomationProperties.SetName(vm.SourceViewTextBox.TextControl, Se.Language.General.Text);
 
-        // The editor in a field frame; its syntax colors stay as they are (theme-stable pastels)
-        var contentBorder = new Border
+        var editorContent = vm.SourceViewTextBox.ContentControl;
+        editorContent.Margin = new Thickness(14, 14, 14, 12);
+        if (editorContent is SyntaxTextEditor editor)
         {
-            VerticalAlignment = VerticalAlignment.Stretch,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Width = double.NaN,
-            Height = double.NaN,
-            Child = vm.SourceViewTextBox.ContentControl,
-            BorderBrush = EditorChrome.FieldBorderBrush,
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(8),
-            ClipToBounds = true,
-            Margin = new Thickness(14, 14, 14, 12),
-        };
+            editor.BorderBrush = EditorChrome.FieldBorderBrush;
+            editor.BorderThickness = new Thickness(1);
+            editor.CornerRadius = new CornerRadius(8);
+            editor.ClipToBounds = true;
+        }
 
         var findBar = MakeFindBar(vm);
 
@@ -94,7 +89,7 @@ public class SourceViewWindow : Window
             },
         };
 
-        grid.Add(contentBorder, 0);
+        grid.Add(editorContent, 0);
         grid.Add(findBar, 1);
 
         Content = EditorChrome.MakeRoot(grid, MakeBottomPanel(vm));
