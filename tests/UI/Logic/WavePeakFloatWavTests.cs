@@ -1,8 +1,5 @@
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
-using System.IO;
 using System.Text;
-using Xunit;
 
 namespace UITests.Logic;
 

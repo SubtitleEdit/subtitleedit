@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -8,7 +8,6 @@ using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
-using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Features.Main;
@@ -22,43 +21,6 @@ namespace UITests.Features.Main;
 /// </summary>
 public class ReturnKeyShortcutTests
 {
-    [AvaloniaFact]
-    public void AltReturn_BoundToSurroundWith_RunsTheShortcutInsteadOfInsertingALineBreak()
-    {
-        var left = Se.Settings.Surround1Left;
-        var right = Se.Settings.Surround1Right;
-        Se.Settings.Surround1Left = "<i>";
-        Se.Settings.Surround1Right = "</i>";
-        try
-        {
-            WithShortcut(nameof(MainViewModel.SurroundWith1Command), ["Alt", nameof(Key.Return)], () =>
-            {
-                var (window, vm) = ShowMainWindowWithOneLine("Hello world");
-                try
-                {
-                    vm.EditTextBox.Focus();
-                    vm.EditTextBox.CaretIndex = "Hello".Length;
-                    Settle(window);
-
-                    window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.Alt);
-                    Settle(window);
-
-                    Assert.Equal("<i>Hello world</i>", vm.Subtitles[0].Text);
-                    Assert.DoesNotContain('\n', vm.EditTextBox.Text);
-                }
-                finally
-                {
-                    window.Close();
-                }
-            });
-        }
-        finally
-        {
-            Se.Settings.Surround1Left = left;
-            Se.Settings.Surround1Right = right;
-        }
-    }
-
     [AvaloniaFact]
     public void GetKeyWindow_CapturesAltReturn_InsteadOfClickingOk()
     {

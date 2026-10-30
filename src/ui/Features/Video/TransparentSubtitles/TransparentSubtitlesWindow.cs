@@ -1,12 +1,14 @@
-using System;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Threading;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -16,38 +18,714 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 
+/// <summary>
+/// Generate a video with transparent subtitles, in the editor look (see <see cref="EditorChrome"/>):
+/// how the subtitle looks on the left (style, position, effect), the preview with the cut range on
+/// the right and the output settings (resolution, frame rate, format) under it; mode switch,
+/// progress and Generate at the bottom. In batch mode the job list takes the place of the preview.
+/// </summary>
 public class TransparentSubtitlesWindow : Window
 {
     private readonly TransparentSubtitlesViewModel _vm;
     private ComboBox? _comboBoxFontName;
 
+    private const double LabelWidth = 78;
+
     public TransparentSubtitlesWindow(TransparentSubtitlesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.VideoTransparent.Title;
-        SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = true;
+        Width = 1180;
+        Height = 780;
+        MinWidth = 960;
+        MinHeight = 520;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
+        AddStyles();
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var subtitleSettingsView = MakeSubtitlesView(vm);
-        var videoSettingsView = MakeVideoSettingsView(vm);
-        // Keep the left column (subtitle + video settings) together and top-aligned so the extra
-        // vertical space goes to the preview instead of opening a gap between the two boxes.
-        var leftPanel = new StackPanel
+        // Same guard as the burn-in window (issues #13904, #14360): the style column scrolls on
+        // its own and the preview gives up height before anything else, so the progress bar and
+        // the button bar are always reachable - even on a screen too short for the dialog.
+        var styleScroller = new ScrollViewer
         {
-            Orientation = Orientation.Vertical,
-            VerticalAlignment = VerticalAlignment.Top,
-            Children = { subtitleSettingsView, videoSettingsView },
+            Content = MakeStylePanel(vm),
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+        };
+        var left = new Border
+        {
+            Child = styleScroller,
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
         };
 
-        var cutView = MakeCutView(vm);
-        var previewView = MakePreviewView(vm);
-        var batchView = MakeBatchView(vm);
-        var videoInfoView = MakeVideoInfoView(vm);
-        var progressView = MakeProgressView(vm);
+        var right = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(1, GridUnitType.Star)), // preview, or the batch list
+                new RowDefinition(GridLength.Auto), // cut range + source video
+                new RowDefinition(GridLength.Auto), // resolution / frame rate / format
+            },
+        };
+        var stage = new Panel { Margin = new Thickness(14, 12, 14, 8) };
+        stage.Children.Add(MakePreview(vm));
+        stage.Children.Add(MakeBatchView(vm));
+        right.Add(stage, 0, 0);
+        right.Add(MakeCutRow(vm), 1, 0);
+        right.Add(MakeOutputPanel(vm), 2, 0);
+
+        var content = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(310)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+        };
+        content.Add(left, 0, 0);
+        content.Add(right, 0, 1);
+
+        var root = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto), // progress, while generating
+                new RowDefinition(GridLength.Auto), // mode, buttons
+            },
+        };
+        root.Add(content, 0, 0);
+        root.Add(MakeProgressView(vm), 1, 0);
+        root.Add(MakeButtonBar(vm), 2, 0);
+        Content = root;
+
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(vm.IsBatchMode) && vm.IsBatchMode)
+            {
+                // The player is hidden in batch mode - stop its audio too.
+                vm.VideoPlayerControl?.VideoPlayer.Pause();
+            }
+        };
+
+        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxFontName?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        Loaded += (_, _) => vm.Loaded();
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        _vm.OnClosing();
+    }
+
+    /// <summary>
+    /// Compact combo boxes and time code fields, the bold toggle, the alignment cells and the
+    /// accent Generate button.
+    /// </summary>
+    private void AddStyles()
+    {
+        Styles.Add(new Style(x => x.OfType<ComboBox>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 2, 4, 2)),
+                new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
+            },
+        });
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+            },
+        });
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<TextBox>())
+        {
+            Setters = { new Setter(TemplatedControl.MinHeightProperty, 26.0) },
+        });
+        Styles.Add(new Style(x => x.OfType<TimeCodeUpDown>().Descendant().OfType<ButtonSpinner>())
+        {
+            Setters = { new Setter(TemplatedControl.MinHeightProperty, 26.0) },
+        });
+
+        Styles.Add(new Style(x => x.OfType<ToggleButton>().Class("tool"))
+        {
+            Setters =
+            {
+                new Setter(ToggleButton.BackgroundProperty, Brushes.Transparent),
+                new Setter(ToggleButton.BorderThicknessProperty, new Thickness(0)),
+                new Setter(ToggleButton.CornerRadiusProperty, new CornerRadius(6)),
+                new Setter(ToggleButton.ForegroundProperty, EditorChrome.IconBrush),
+                new Setter(ToggleButton.PaddingProperty, new Thickness(0)),
+            },
+        });
+        Styles.Add(new Style(x => x.OfType<ToggleButton>().Class("tool").Class(":checked").Template().OfType<Avalonia.Controls.Presenters.ContentPresenter>().Name("PART_ContentPresenter"))
+        {
+            Setters =
+            {
+                new Setter(Avalonia.Controls.Presenters.ContentPresenter.BackgroundProperty, EditorChrome.AccentBrush),
+                new Setter(Avalonia.Controls.Presenters.ContentPresenter.ForegroundProperty, Brushes.White),
+            },
+        });
+
+        Styles.Add(new Style(x => x.OfType<RadioButton>().Class("anchor").Template().OfType<Border>())
+        {
+            Setters =
+            {
+                new Setter(Border.BackgroundProperty, EditorChrome.FieldBrush),
+                new Setter(Border.BorderBrushProperty, EditorChrome.FieldBorderBrush),
+            },
+        });
+        Styles.Add(new Style(x => x.OfType<RadioButton>().Class("anchor").Class(":pointerover").Template().OfType<Border>())
+        {
+            Setters = { new Setter(Border.BackgroundProperty, EditorChrome.HoverBrush) },
+        });
+        Styles.Add(new Style(x => x.OfType<RadioButton>().Class("anchor").Class(":checked").Template().OfType<Border>())
+        {
+            Setters =
+            {
+                new Setter(Border.BackgroundProperty, EditorChrome.AccentBrush),
+                new Setter(Border.BorderBrushProperty, EditorChrome.AccentBrush),
+            },
+        });
+        Styles.Add(new Style(x => x.OfType<RadioButton>().Class("anchor").Template().OfType<Ellipse>())
+        {
+            Setters = { new Setter(Shape.FillProperty, EditorChrome.FaintTextBrush) },
+        });
+        Styles.Add(new Style(x => x.OfType<RadioButton>().Class("anchor").Class(":checked").Template().OfType<Ellipse>())
+        {
+            Setters = { new Setter(Shape.FillProperty, Brushes.White) },
+        });
+
+        // Generate is the window's main action: both halves of the split button in the accent
+        foreach (var state in new[] { string.Empty, ":pointerover" })
+        {
+            var hover = state.Length > 0;
+            Styles.Add(new Style(x =>
+            {
+                var selector = x.OfType<SplitButton>().Class("primary").Template().OfType<Button>();
+                return hover ? selector.Class(":pointerover").Template().OfType<Avalonia.Controls.Presenters.ContentPresenter>() : selector.Template().OfType<Avalonia.Controls.Presenters.ContentPresenter>();
+            })
+            {
+                Setters =
+                {
+                    new Setter(Avalonia.Controls.Presenters.ContentPresenter.BackgroundProperty, hover ? EditorChrome.AccentHoverBrush : EditorChrome.AccentBrush),
+                    new Setter(Avalonia.Controls.Presenters.ContentPresenter.ForegroundProperty, Brushes.White),
+                },
+            });
+        }
+    }
+
+    /// <summary>
+    /// A label of fixed width and the control(s) after it, so the rows line up.
+    /// </summary>
+    private static Grid Row(string? label, Control content, string? labelBinding = null, bool autoLabelWidth = false)
+    {
+        var text = EditorChrome.MakeDimLabel(label ?? string.Empty, new Thickness(0));
+        text.TextTrimming = TextTrimming.CharacterEllipsis;
+        if (labelBinding != null)
+        {
+            text.Bind(TextBlock.TextProperty, new Binding(labelBinding));
+        }
+
+        var grid = new Grid
+        {
+            ColumnSpacing = 6,
+            ColumnDefinitions = { new ColumnDefinition(autoLabelWidth ? GridLength.Auto : new GridLength(LabelWidth)), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+        };
+        grid.Add(text, 0, 0);
+        grid.Add(content, 0, 1);
+        return grid;
+    }
+
+    private static ComboBox Combo<T>(System.Collections.ObjectModel.ObservableCollection<T> items, TransparentSubtitlesViewModel vm, string property, string name)
+    {
+        var comboBox = UiUtil.MakeComboBox(items, vm, property);
+        comboBox.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(comboBox, name);
+        return comboBox;
+    }
+
+    private static NumericUpDown Field(TransparentSubtitlesViewModel vm, string property, double min, double max, string prefix, string name, string format = "0.#", decimal increment = 1, double width = 76)
+    {
+        var field = EditorChrome.MakeField(property, min, max, width, prefix, format);
+        field.Increment = increment;
+        field.ValueChanged += vm.NumericUpDownChanged;
+        AutomationProperties.SetName(field, name);
+        return field;
+    }
+
+    private Control MakeStylePanel(TransparentSubtitlesViewModel vm)
+    {
+        var panel = new StackPanel();
+        panel.Children.Add(MakeStyleSection(vm));
+        panel.Children.Add(MakePositionSection(vm));
+        panel.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Effect,
+            MakeLinkRow("fa-solid fa-wand-magic-sparkles", Se.Language.General.Effect, nameof(vm.DisplayEffect), vm.ShowEffectsCommand)));
+        return panel;
+    }
+
+    /// <summary>
+    /// A row that opens a dialog: icon, what is set now, and a "..." button.
+    /// </summary>
+    private static Grid MakeLinkRow(string icon, string name, string valueProperty, System.Windows.Input.ICommand command)
+    {
+        var button = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", name, command, 26);
+        var row = new Grid
+        {
+            ColumnSpacing = 8,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
+        };
+        row.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 13, Foreground = EditorChrome.IconBrush, VerticalAlignment = VerticalAlignment.Center }, 0, 0);
+        var value = EditorChrome.MakeBoundHint(valueProperty);
+        value.FontSize = EditorChrome.FieldFontSize;
+        row.Add(value, 0, 1);
+        row.Add(button, 0, 2);
+        return row;
+    }
+
+    private Border MakeStyleSection(TransparentSubtitlesViewModel vm)
+    {
+        var fontName = Combo(vm.FontNames, vm, nameof(vm.SelectedFontName), Se.Language.General.FontName);
+        fontName.SelectionChanged += vm.ComboBoxChanged;
+        _comboBoxFontName = fontName;
+
+        var sizeFactor = Field(vm, nameof(vm.FontFactor), 0.1, 1.0, "Aa", Se.Language.Video.BurnIn.FontSizeFactor, "0.00", 0.05m);
+        var bold = new ToggleButton
+        {
+            Content = new TextBlock { Text = "B", FontWeight = FontWeight.Bold, FontSize = EditorChrome.FieldFontSize },
+            Width = 28,
+            Height = EditorChrome.ScaledSize(28),
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.FontIsBold)) { Mode = BindingMode.TwoWay },
+        };
+        bold.Classes.Add("tool");
+        bold.PropertyChanged += vm.CheckBoxChanged;
+        AutomationProperties.SetName(bold, Se.Language.General.Bold);
+        var factorHint = EditorChrome.MakeBoundHint(nameof(vm.FontFactorText));
+        var sizeRow = new Grid
+        {
+            ColumnSpacing = 6,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+        };
+        sizeRow.Add(sizeFactor, 0, 0);
+        sizeRow.Add(bold, 0, 1);
+        sizeRow.Add(factorHint, 0, 2);
+
+        var textColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontTextColor), true);
+        AutomationProperties.SetName(textColor, Se.Language.General.TextColor);
+        var outlineColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontOutlineColor), true);
+        AutomationProperties.SetName(outlineColor, Se.Language.General.Outline);
+        var shadowColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontShadowColor), true);
+        AutomationProperties.SetName(shadowColor, Se.Language.General.Shadow);
+
+        var boxType = Combo(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType), Se.Language.Video.BurnIn.BoxType);
+        boxType.SelectionChanged += vm.BoxTypeChanged;
+
+        var rows = new StackPanel { Spacing = 7 };
+        rows.Children.Add(fontName);
+        rows.Children.Add(sizeRow);
+        rows.Children.Add(Row(Se.Language.Video.BurnIn.BoxType, boxType));
+        rows.Children.Add(Row(Se.Language.General.TextColor, EditorChrome.MakeInlineRow(textColor)));
+        rows.Children.Add(Row(null, EditorChrome.MakeInlineRow(outlineColor, Field(vm, nameof(vm.SelectedFontOutline), 0, 50, "W", Se.Language.General.OutlineWidth, increment: 0.5m, width: 70)), nameof(vm.FontOutlineText)));
+        rows.Children.Add(Row(null, EditorChrome.MakeInlineRow(shadowColor, Field(vm, nameof(vm.SelectedFontShadowWidth), 0, 50, "W", Se.Language.General.ShadowWidth, increment: 0.5m, width: 70)), nameof(vm.FontShadowText)));
+        rows.Children.Add(Row(Se.Language.General.Spacing, EditorChrome.MakeInlineRow(Field(vm, nameof(vm.SelectedFontSpacing), -20, 100, "↔", Se.Language.General.Spacing, width: 70))));
+        return EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.SubtitleStyle, rows, first: true);
+    }
+
+    /// <summary>
+    /// The 3 x 3 alignment grid beside the margins.
+    /// </summary>
+    private static Border MakePositionSection(TransparentSubtitlesViewModel vm)
+    {
+        var anchors = new UniformGrid { Columns = 3, Rows = 3, Width = 90, Height = 90, VerticalAlignment = VerticalAlignment.Top };
+        foreach (var item in vm.FontAlignments)
+        {
+            var alignment = item;
+            var radio = new RadioButton
+            {
+                GroupName = "transparent-subtitles-alignment",
+                Width = 26,
+                Height = 26,
+                Margin = new Thickness(0, 0, 4, 4),
+                Template = new FuncControlTemplate<RadioButton>((_, _) => new Border
+                {
+                    CornerRadius = new CornerRadius(6),
+                    BorderThickness = new Thickness(1),
+                    Child = new Ellipse { Width = 6, Height = 6, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
+                }),
+                IsChecked = vm.SelectedFontAlignment?.Code == alignment.Code,
+            };
+            radio.Classes.Add("anchor");
+            AutomationProperties.SetName(radio, alignment.Name);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(radio, alignment.Name);
+            }
+
+            radio.IsCheckedChanged += (_, _) =>
+            {
+                if (radio.IsChecked == true && vm.SelectedFontAlignment?.Code != alignment.Code)
+                {
+                    vm.SelectedFontAlignment = alignment;
+                    vm.ComboBoxChanged(radio, null!); // what the old alignment combo box did on change
+                }
+            };
+            vm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(vm.SelectedFontAlignment))
+                {
+                    radio.IsChecked = vm.SelectedFontAlignment?.Code == alignment.Code;
+                }
+            };
+            anchors.Children.Add(radio);
+        }
+
+        var margins = new StackPanel { Spacing = 6 };
+        margins.Children.Add(Field(vm, nameof(vm.FontMarginHorizontal), 0, 1000, "H", Se.Language.General.Horizontal, "0", width: double.NaN));
+        margins.Children.Add(Field(vm, nameof(vm.FontMarginVertical), 0, 1000, "V", Se.Language.General.Vertical, "0", width: double.NaN));
+
+        var row = new Grid { ColumnSpacing = 14, ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) } };
+        row.Add(anchors, 0, 0);
+        row.Add(margins, 0, 1);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Alignment + " · " + Se.Language.General.Margin, row);
+    }
+
+    private static Control MakePreview(TransparentSubtitlesViewModel vm)
+    {
+        // Live preview (single mode): the loaded video plays in an embedded mpv player
+        // while the current style/effects are generated as an ASSA subtitle and rendered
+        // on top via libass (sub-add/sub-reload) - see TransparentSubtitlesViewModel.LoadVideoPreview.
+        // Single mode always has a video (no video forces batch mode), so the player can
+        // fully replace the old static image preview there.
+        vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
+        vm.VideoPlayerControl.FullScreenIsVisible = true;
+        vm.VideoPlayerControl.FullScreenCommand = vm.PreviewFullScreenCommand;
+        vm.VideoPlayerControl.MinHeight = 180;
+        vm.VideoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
+        vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
+        AutomationProperties.SetName(vm.VideoPlayerControl, Se.Language.General.Preview);
+
+        // A plain border: the native video surface on macOS disappears under a rounded, clipping one
+        return new Border
+        {
+            Child = vm.VideoPlayerControl,
+            [!Border.IsVisibleProperty] = new Binding(nameof(vm.IsBatchMode)) { Converter = InverseBooleanConverter.Instance },
+        };
+    }
+
+    /// <summary>
+    /// Cut range (from → to, each with a pick-from-video button) and the source video's name and size.
+    /// </summary>
+    private static Border MakeCutRow(TransparentSubtitlesViewModel vm)
+    {
+        TimeCodeUpDown Time(string property, string name)
+        {
+            var time = new TimeCodeUpDown
+            {
+                [!TimeCodeUpDown.ValueProperty] = new Binding(property),
+                DataContext = vm,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!TimeCodeUpDown.IsEnabledProperty] = new Binding(nameof(vm.IsCutActive)),
+            };
+            AutomationProperties.SetName(time, name);
+            return time;
+        }
+
+        var pickFrom = EditorChrome.CreateToolButton("fa-solid fa-film", Se.Language.Video.BurnIn.FromTime, vm.BrowseCutFromCommand, 28);
+        pickFrom.Bind(IsEnabledProperty, new Binding(nameof(vm.IsCutActive)));
+        var pickTo = EditorChrome.CreateToolButton("fa-solid fa-film", Se.Language.Video.BurnIn.ToTime, vm.BrowseCutToCommand, 28);
+        pickTo.Bind(IsEnabledProperty, new Binding(nameof(vm.IsCutActive)));
+
+        var cut = EditorChrome.MakeInlineRow(
+            EditorChrome.MakeSwitch(nameof(vm.IsCutActive), Se.Language.General.Cut),
+            new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-scissors", FontSize = 13, Foreground = EditorChrome.IconBrush, VerticalAlignment = VerticalAlignment.Center },
+            new TextBlock { Text = Se.Language.General.Cut, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) },
+            Time(nameof(vm.CutFrom), Se.Language.Video.BurnIn.FromTime),
+            pickFrom,
+            new TextBlock { Text = "→", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center },
+            Time(nameof(vm.CutTo), Se.Language.Video.BurnIn.ToTime),
+            pickTo);
+        cut.Bind(IsVisibleProperty, new Binding(nameof(vm.IsBatchMode)) { Converter = InverseBooleanConverter.Instance });
+
+        // The source video, single mode only
+        var fileName = UiUtil.MakeFilePathLabel(vm, nameof(vm.VideoFileName));
+        fileName.Foreground = EditorChrome.DimTextBrush;
+        fileName.FontSize = EditorChrome.FieldFontSize;
+        fileName.VerticalAlignment = VerticalAlignment.Center;
+        var size = EditorChrome.MakeBoundHint(nameof(vm.VideoFileSize));
+        var source = EditorChrome.MakeInlineRow(new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-file-video", FontSize = 12, Foreground = EditorChrome.FaintTextBrush, VerticalAlignment = VerticalAlignment.Center }, fileName, size);
+        source.HorizontalAlignment = HorizontalAlignment.Right;
+        source.Bind(IsVisibleProperty, new Binding(nameof(vm.IsBatchMode)) { Converter = InverseBooleanConverter.Instance });
+
+        var row = new Grid
+        {
+            ColumnSpacing = 12,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+            Margin = new Thickness(14, 0, 14, 10),
+        };
+        row.Add(cut, 0, 0);
+        row.Add(source, 0, 1);
+        return new Border { Child = row };
+    }
+
+    /// <summary>
+    /// Resolution, frame rate and container side by side - there is no audio and no encoder to set,
+    /// the output is always a transparent video.
+    /// </summary>
+    private static Border MakeOutputPanel(TransparentSubtitlesViewModel vm)
+    {
+        // Resolution: W x H, or the source's own size; the picker sets either
+        var width = EditorChrome.MakeField(nameof(vm.VideoWidth), 0, 10_000, 76, "W");
+        AutomationProperties.SetName(width, Se.Language.General.Width);
+        var height = EditorChrome.MakeField(nameof(vm.VideoHeight), 0, 10_000, 76, "H");
+        AutomationProperties.SetName(height, Se.Language.General.Height);
+        var size = EditorChrome.MakeInlineRow(width, new TextBlock { Text = "×", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center }, height);
+        size.Bind(IsVisibleProperty, new Binding(nameof(vm.UseSourceResolution)) { Converter = InverseBooleanConverter.Instance });
+        var source = new TextBlock
+        {
+            Text = Se.Language.General.UseSourceResolution,
+            FontSize = EditorChrome.FieldFontSize,
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.UseSourceResolution)),
+        };
+        var pick = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.Resolution, vm.BrowseResolutionCommand, 28);
+        var resolution = new Grid { ColumnSpacing = 4, ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) } };
+        var sizeOrSource = new Panel();
+        sizeOrSource.Children.Add(size);
+        sizeOrSource.Children.Add(source);
+        resolution.Add(sizeOrSource, 0, 0);
+        resolution.Add(pick, 0, 1);
+
+        var frameRate = Combo(vm.FrameRates, vm, nameof(vm.SelectedFrameRate), Se.Language.General.FrameRate).WithFrameRateDisplay();
+        var extension = Combo(vm.VideoExtensions, vm, nameof(vm.SelectedVideoExtension), Se.Language.General.VideoExtension);
+
+        var columns = new Grid
+        {
+            ColumnSpacing = 28,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+        };
+        columns.Add(Row(Se.Language.General.Resolution, resolution, autoLabelWidth: true), 0, 0);
+        columns.Add(Row(Se.Language.General.FrameRate, frameRate, autoLabelWidth: true), 0, 1);
+        columns.Add(Row(Se.Language.General.VideoExtension, extension, autoLabelWidth: true), 0, 2);
+
+        return new Border
+        {
+            Child = EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.VideoOutput, columns, first: true),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+        };
+    }
+
+    private static Border MakeBatchView(TransparentSubtitlesViewModel vm)
+    {
+        // No header sorting: the batch queue is processed top-to-bottom, so the list
+        // order is meaningful.
+        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
+        AutomationProperties.SetName(dataGrid, Se.Language.General.BatchMode);
+        dataGrid.DataContext = vm;
+        dataGrid.ItemsSource = vm.JobItems;
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.SubtitleFileName,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.SubtitleFileNameShort)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Size,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.Resolution)),
+            Width = new GridLength(100),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.VideoFile,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.InputVideoFileNameShort)),
+            Width = new GridLength(1, GridUnitType.Star),
+        });
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Status,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(BurnInJobItem.Status)),
+            Width = new GridLength(120),
+        });
+        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedJobItem)) { Source = vm });
+
+        var actions = EditorChrome.MakeInlineRow(
+            EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.AddDotDotDot, vm.AddCommand, 26),
+            EditorChrome.CreateToolButton("fa-solid fa-minus", Se.Language.General.Remove, vm.RemoveCommand, 26),
+            EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Clear, vm.ClearCommand, 26),
+            EditorChrome.MakeToolbarSeparator(),
+            EditorChrome.CreateToolButton("fa-solid fa-file-video", Se.Language.General.PickVideoFile, vm.PickVideoFileCommand, 26));
+        actions.Spacing = 2;
+
+        // Batch items are separate files (possibly with no video at all), so there is no player
+        // here: a static image rendered from the current style settings shows the look instead.
+        var image = new Image
+        {
+            [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Stretch = Stretch.None, // Prevents stretching of the image
+        };
+        var imagePreview = new ScrollViewer
+        {
+            Content = image,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            MaxHeight = 140,
+        };
+        var preview = new Border
+        {
+            Child = imagePreview,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            Padding = new Thickness(6),
+        };
+
+        // Where the results go
+        var outputFolder = UiUtil.MakeLink(string.Empty, vm.OpenOutputFolderCommand)
+            .WithFilePathText(vm, nameof(vm.OutputFolder))
+            .WithBindVisible(vm, nameof(vm.UseOutputFolderVisible));
+        var useSourceFolder = EditorChrome.MakeDimLabel(Se.Language.General.UseSourceFolder, new Thickness(0));
+        useSourceFolder.Bind(IsVisibleProperty, new Binding(nameof(vm.UseSourceFolderVisible)));
+        var output = EditorChrome.MakeInlineRow(
+            new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-folder", FontSize = 12, Foreground = EditorChrome.FaintTextBrush, VerticalAlignment = VerticalAlignment.Center },
+            outputFolder,
+            useSourceFolder,
+            EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.Video.BurnIn.OutputProperties, vm.OutputPropertiesCommand, 26));
+
+        var header = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(actions, Dock.Right);
+        header.Children.Add(actions);
+        header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.BatchMode));
+
+        var grid = new Grid
+        {
+            RowSpacing = 8,
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+            },
+        };
+        grid.Add(header, 0, 0);
+        grid.Add(dataGrid, 1, 0);
+        grid.Add(output, 2, 0);
+        grid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 3, 0);
+        grid.Add(preview, 4, 0);
+
+        return new Border
+        {
+            Child = grid,
+            [!Border.IsVisibleProperty] = new Binding(nameof(vm.IsBatchMode)),
+        };
+    }
+
+    private Border MakeProgressView(TransparentSubtitlesViewModel vm)
+    {
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.VerticalAlignment = VerticalAlignment.Center;
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
+        statusText.FontSize = EditorChrome.FieldFontSize;
+
+        var grid = new Grid
+        {
+            ColumnSpacing = 12,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
+        };
+        grid.Add(progressBar, 0, 0);
+        grid.Add(statusText, 0, 1);
+
+        return new Border
+        {
+            Child = grid,
+            Background = EditorChrome.StatusBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 8),
+            [!Border.IsVisibleProperty] = new Binding(nameof(vm.IsGenerating)),
+        };
+    }
+
+    private static Border MakeButtonBar(TransparentSubtitlesViewModel vm)
+    {
+        // Single / batch switch - batch is not available while generating, single only when a
+        // video was loaded
+        Button Mode(string text, System.Windows.Input.ICommand command, bool batch)
+        {
+            var button = new Button
+            {
+                Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(12, 0) },
+                Height = EditorChrome.ScaledSize(28),
+                Command = command,
+                VerticalContentAlignment = VerticalAlignment.Center,
+            };
+            button.Classes.Add("tool");
+            AutomationProperties.SetName(button, text);
+
+            void Update()
+            {
+                button.Classes.Set("active", vm.IsBatchMode == batch);
+                button.IsEnabled = !vm.IsGenerating && (batch || !vm.IsBatchMode || vm.IsSingleModeVisible);
+            }
+
+            Update();
+            vm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName is nameof(vm.IsBatchMode) or nameof(vm.IsGenerating) or nameof(vm.IsSingleModeVisible))
+                {
+                    Update();
+                }
+            };
+            return button;
+        }
+
+        var modes = new Border
+        {
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(2),
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = EditorChrome.MakeInlineRow(Mode(Se.Language.General.SingleMode, vm.SingleModeCommand, false), Mode(Se.Language.General.BatchMode, vm.BatchModeCommand, true)),
+        };
+        ((StackPanel)modes.Child).Spacing = 2;
 
         var buttonGenerate = new SeSplitButton
         {
@@ -65,705 +743,23 @@ public class TransparentSubtitlesWindow : Window
                 }
             }
         };
+        buttonGenerate.Classes.Add("primary");
         buttonGenerate.Bind(SplitButton.IsEnabledProperty, new Binding(nameof(vm.IsGenerating)) { Converter = InverseBooleanConverter.Instance });
+        AutomationProperties.SetName(buttonGenerate, Se.Language.General.Generate);
 
-        var buttonBatchMode = UiUtil.MakeButton(Se.Language.General.BatchMode, vm.BatchModeCommand)
-            .WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance)
-            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
-        var buttonSingleMode = UiUtil.MakeButton(Se.Language.General.SingleMode, vm.SingleModeCommand)
-            .WithBindIsVisible(nameof(vm.IsSingleModeVisible))
-            .WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsGenerating), InverseBooleanConverter.Instance);
-        var buttonPanel = UiUtil.MakeButtonBar(
-            buttonGenerate,
-            buttonBatchMode,
-            buttonSingleMode,
-            buttonOk,
-            UiUtil.MakeButtonCancel(vm.CancelCommand)
-        );
-
-        // The preview column grows in single mode; the batch column grows in batch mode
-        // (toggled in UpdateGrowAreas). The preview/batch row is a star row so the preview
-        // (single mode) and the batch list (batch mode) also grow vertically.
-        var previewColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-        var batchColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) };
-
-        var settingsGrid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // cut
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // preview + batch list
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // subtitle/video settings
-                previewColumn, // cut/preview/video info
-                batchColumn, // batch mode
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        settingsGrid.Add(leftPanel, 0, 0, 3, 1);
-        settingsGrid.Add(cutView, 0, 1);
-        settingsGrid.Add(previewView, 1, 1);
-        settingsGrid.Add(videoInfoView, 2, 1);
-        settingsGrid.Add(batchView, 0, 3, 3, 1);
-
-        // Same guard as the burn-in window (issues #13904, #14360): on a screen too short for the
-        // dialog UiUtil clamps the window to the working area, and whatever did not fit - the
-        // "Generate" button row above all - was clipped off and unreachable. The settings area
-        // scrolls instead, with the progress bar and the buttons kept outside the scroll viewer.
-        // Pinning the grid's MinHeight to the viewport keeps the star preview row filling tall
-        // windows exactly as before; only a viewport shorter than the content minimum scrolls.
-        var settingsScroller = new ScrollViewer
-        {
-            Content = settingsGrid,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-        };
-        settingsScroller.SizeChanged += (_, e) =>
-        {
-            var viewportHeight = Math.Max(0, e.NewSize.Height);
-            if (Math.Abs(settingsGrid.MinHeight - viewportHeight) > 0.5)
-            {
-                settingsGrid.MinHeight = viewportHeight;
-            }
-        };
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // settings + preview (scrolls when the window is too short)
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(settingsScroller, 0, 0);
-        grid.Add(progressView, 1, 0);
-        grid.Add(buttonPanel, 2, 0);
-
-        Content = grid;
-
-        void UpdateGrowAreas()
-        {
-            // Steer extra space to whichever area is in use: the preview (single mode) or the batch list (batch mode).
-            previewColumn.Width = new GridLength(1, vm.IsBatchMode ? GridUnitType.Auto : GridUnitType.Star);
-            batchColumn.Width = new GridLength(1, vm.IsBatchMode ? GridUnitType.Star : GridUnitType.Auto);
-        }
-
-        vm.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(vm.IsBatchMode))
-            {
-                if (vm.IsBatchMode)
-                {
-                    // The player is hidden in batch mode - stop its audio too.
-                    vm.VideoPlayerControl?.VideoPlayer.Pause();
-                }
-
-                UpdateGrowAreas();
-                LockMinimumToContentSize(); // batch mode needs more width; re-fit and re-lock the minimum
-            }
-        };
-        UpdateGrowAreas();
-
-        UiUtil.FocusOnFirstActivation(this, () => { _comboBoxFontName?.Focus(); }); // initial focus on an input, not an action button - a focused button clicks on bare Space
-        Loaded += (_, _) => vm.Loaded();
-
-        Opened += (_, _) => LockMinimumToContentSize();
-    }
-
-    protected override void OnClosing(WindowClosingEventArgs e)
-    {
-        base.OnClosing(e);
-        _vm.OnClosing();
-    }
-
-    private void LockMinimumToContentSize()
-    {
-        // Re-fit the window to the current mode's content (single mode is narrower; batch mode
-        // needs more width for the file list), then lock that size in as the new minimum while
-        // still allowing the user to enlarge the window further.
-        MinWidth = 0;
-        MinHeight = 0;
-        SizeToContent = SizeToContent.WidthAndHeight;
-        Dispatcher.UIThread.Post(() =>
-        {
-            var width = ClientSize.Width;
-            var height = ClientSize.Height;
-            SizeToContent = SizeToContent.Manual;
-            if (width > 0 && height > 0)
-            {
-                MinWidth = width;
-                MinHeight = height;
-                Width = width;
-                Height = height;
-            }
-        }, DispatcherPriority.Loaded);
-    }
-
-    private Border MakeSubtitlesView(TransparentSubtitlesViewModel vm)
-    {
-        var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName);
-        var comboBoxFontName = UiUtil.MakeComboBox(vm.FontNames, vm, nameof(vm.SelectedFontName))
-            .WithMinWidth(200);
-        comboBoxFontName.SelectionChanged += vm.ComboBoxChanged;
-        _comboBoxFontName = comboBoxFontName;
-
-        var labelFontSizeFactor = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FontSizeFactor);
-        var numericUpDownFontSizeFactor = UiUtil.MakeNumericUpDownTwoDecimals(0.1m, 1.0m, 150, vm, nameof(vm.FontFactor));
-        numericUpDownFontSizeFactor.ValueChanged += vm.NumericUpDownChanged;
-        var labelFontSizeFactorInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.FontFactorText));
-        var panelFontSizeFactor = new StackPanel()
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                numericUpDownFontSizeFactor,
-                labelFontSizeFactorInfo
-            }
-        };
-
-        var checkBoxUseBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.FontIsBold));
-        checkBoxUseBold.PropertyChanged += vm.CheckBoxChanged;
-
-        var labelTextColor = UiUtil.MakeLabel(Se.Language.General.TextColor);
-        var colorPickerTextColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontTextColor), true);
-
-        var labelOutline = UiUtil.MakeLabel(string.Empty)
-            .WithBindText(vm, nameof(vm.FontOutlineText));
-        var textBoxBoxWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 50, 130, vm, nameof(vm.SelectedFontOutline));
-        textBoxBoxWidth.ValueChanged += vm.NumericUpDownChanged;
-        var colorPickerBoxColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontOutlineColor), true);
-        var panelBox = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                colorPickerBoxColor,
-                UiUtil.MakeLabel(Se.Language.General.Width).WithMarginLeft(5),
-                textBoxBoxWidth,
-            }
-        };
-
-        var labelShadow = UiUtil.MakeLabel(Se.Language.General.Shadow)
-            .WithBindText(vm, nameof(vm.FontShadowText));
-        var textBoxShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 50, 130, vm, nameof(vm.SelectedFontShadowWidth));
-        textBoxShadowWidth.ValueChanged += vm.NumericUpDownChanged;
-        var colorPickerShadowColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontShadowColor), true);
-        var panelShadow = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                colorPickerShadowColor,
-                UiUtil.MakeLabel(Se.Language.General.Width).WithMarginLeft(5),
-                textBoxShadowWidth,
-            }
-        };
-
-        var labelSpacing = UiUtil.MakeLabel(Se.Language.General.Spacing);
-        var textBoxSpacing = UiUtil.MakeNumericUpDownOneDecimal(-20, 100, 130, vm, nameof(vm.SelectedFontSpacing));
-        textBoxSpacing.ValueChanged += vm.NumericUpDownChanged;
-
-        var labelBoxType = UiUtil.MakeLabel(Se.Language.Video.BurnIn.BoxType);
-        var comboBoxBoxType = UiUtil.MakeComboBox(vm.FontBoxTypes, vm, nameof(vm.SelectedFontBoxType));
-        comboBoxBoxType.SelectionChanged += vm.BoxTypeChanged;
-
-        var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment);
-        var comboBoxAlignment = UiUtil.MakeComboBox(vm.FontAlignments, vm, nameof(vm.SelectedFontAlignment));
-        comboBoxAlignment.SelectionChanged += vm.ComboBoxChanged;
-
-        var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
-        var labelMarginHorizontal = UiUtil.MakeLabel(Se.Language.General.Horizontal);
-        var textBoxMarginHorizontal = UiUtil.MakeNumericUpDownInt(0, 1000, 0, 130, vm, nameof(vm.FontMarginHorizontal));
-        textBoxMarginHorizontal.ValueChanged += vm.NumericUpDownChanged;
-        var labelMarginVertical = UiUtil.MakeLabel(Se.Language.General.Vertical).WithMarginLeft(5);
-        var textBoxMarginVertical = UiUtil.MakeNumericUpDownInt(0, 1000, 0, 130, vm, nameof(vm.FontMarginVertical));
-        textBoxMarginVertical.ValueChanged += vm.NumericUpDownChanged;
-        var panelMargin = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelMarginHorizontal,
-                textBoxMarginHorizontal,
-                labelMarginVertical,
-                textBoxMarginVertical
-            }
-        };
-
-        var labelEffect = UiUtil.MakeLabel(Se.Language.General.Effect);
-        var labelSelectedEffect = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.DisplayEffect)).WithMarginRight(3);
-        var buttonEffect = UiUtil.MakeButtonBrowse(vm.ShowEffectsCommand, accessibleName: Se.Language.General.Effect);
-        var panelEffect = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                labelSelectedEffect,
-                buttonEffect,
-            }
-        };
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(labelFontName, 0, 0);
-        grid.Add(comboBoxFontName, 0, 1);
-
-        grid.Add(labelFontSizeFactor, 1, 0);
-        grid.Add(panelFontSizeFactor, 1, 1);
-
-        grid.Add(checkBoxUseBold, 2, 1);
-
-        grid.Add(labelBoxType, 3, 0);
-        grid.Add(comboBoxBoxType, 3, 1);
-
-        grid.Add(labelTextColor, 4, 0);
-        grid.Add(colorPickerTextColor, 4, 1);
-
-        grid.Add(labelOutline, 5, 0);
-        grid.Add(panelBox, 5, 1);
-
-        grid.Add(labelShadow, 6, 0);
-        grid.Add(panelShadow, 6, 1);
-
-        grid.Add(labelSpacing, 7, 0);
-        grid.Add(textBoxSpacing, 7, 1);
-
-        grid.Add(labelAlignment, 8, 0);
-        grid.Add(comboBoxAlignment, 8, 1);
-
-        grid.Add(labelMargin, 9, 0);
-        grid.Add(panelMargin, 9, 1);
-
-        grid.Add(labelEffect, 10, 0);
-        grid.Add(panelEffect, 10, 1);
-
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
-    }
-
-    private static Border MakeVideoSettingsView(TransparentSubtitlesViewModel vm)
-    {
-        var labelResolution = UiUtil.MakeLabel(Se.Language.General.Resolution);
-        var textBoxWidth = UiUtil.MakeNumericUpDownInt(0, 10_000, 0, 130, vm, nameof(vm.VideoWidth));
-        var labelX = UiUtil.MakeLabel("x");
-        var textBoxHeight = UiUtil.MakeNumericUpDownInt(0, 10_000, 0, 130, vm, nameof(vm.VideoHeight));
-        var buttonResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
-        var panelResolution = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Children =
-            {
-                textBoxWidth,
-                labelX,
-                textBoxHeight,
-                buttonResolution,
-            }
-        }.WithBindVisible(vm, nameof(vm.UseSourceResolution), InverseBooleanConverter.Instance);
-
-        var labelSourceResolution = UiUtil.MakeLabel("Use source resolution").WithBindVisible(vm, nameof(vm.UseSourceResolution));
-        var buttonResolutionSource = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand, accessibleName: Se.Language.General.Resolution);
-        var panelResolutionSource = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Children =
-            {
-                labelSourceResolution,
-                buttonResolutionSource,
-            }
-        }.WithBindVisible(vm, nameof(vm.UseSourceResolution));
-
-        var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate);
-        var comboBoxFrameRate = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate)).WithFrameRateDisplay();
-
-        var labelVideoExtension = UiUtil.MakeLabel(Se.Language.General.VideoExtension);
-        var comboBoxVideoExtensions = UiUtil.MakeComboBox(vm.VideoExtensions, vm, nameof(vm.SelectedVideoExtension));
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(labelResolution, 0, 0);
-        grid.Add(panelResolution, 0, 1);
-        grid.Add(panelResolutionSource, 0, 1);
-
-        grid.Add(labelFrameRate, 1, 0);
-        grid.Add(comboBoxFrameRate, 1, 1);
-
-        grid.Add(labelVideoExtension, 2, 0);
-        grid.Add(comboBoxVideoExtensions, 2, 1);
-
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
-    }
-
-    private static Border MakeCutView(TransparentSubtitlesViewModel vm)
-    {
-        var checkBoxCut = UiUtil.MakeCheckBox(Se.Language.General.Cut, vm, nameof(vm.IsCutActive));
-
-        var buttonCutFrom = UiUtil.MakeButtonBrowse(vm.BrowseCutFromCommand, accessibleName: Se.Language.Video.BurnIn.FromTime);
-        buttonCutFrom.VerticalAlignment = VerticalAlignment.Center;
-        var labelFromTime = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FromTime);
-        var timeUpDownFrom = new TimeCodeUpDown
-        {
-            [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.CutFrom)),
-            DataContext = vm,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
-        var buttonCutTo = UiUtil.MakeButtonBrowse(vm.BrowseCutToCommand, accessibleName: Se.Language.Video.BurnIn.ToTime);
-        buttonCutTo.VerticalAlignment = VerticalAlignment.Center;
-        var labelToTime = UiUtil.MakeLabel(Se.Language.Video.BurnIn.ToTime);
-        var timeUpDownTo = new TimeCodeUpDown
-        {
-            [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.CutTo)),
-            DataContext = vm,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(checkBoxCut, 0, 0);
-
-        grid.Add(labelFromTime, 1, 0);
-        grid.Add(timeUpDownFrom, 1, 1);
-        grid.Add(buttonCutFrom, 1, 2);
-
-        grid.Add(labelToTime, 2, 0);
-        grid.Add(timeUpDownTo, 2, 1);
-        grid.Add(buttonCutTo, 2, 2);
-
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
-    }
-
-    private static Border MakePreviewView(TransparentSubtitlesViewModel vm)
-    {
-        var labelPreview = UiUtil.MakeLabel(Se.Language.General.Preview);
-
-        // Live preview (single mode): the loaded video plays in an embedded mpv player
-        // while the current style/effects are generated as an ASSA subtitle and rendered
-        // on top via libass (sub-add/sub-reload) - see TransparentSubtitlesViewModel.LoadVideoPreview.
-        // Single mode always has a video (no video forces batch mode), so the player can
-        // fully replace the old static image preview there.
-        vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
-        vm.VideoPlayerControl.FullScreenIsVisible = true;
-        vm.VideoPlayerControl.FullScreenCommand = vm.PreviewFullScreenCommand;
-        vm.VideoPlayerControl.MinWidth = 480;
-        vm.VideoPlayerControl.MinHeight = 270;
-        vm.VideoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
-        vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
-        vm.VideoPlayerControl.Bind(Visual.IsVisibleProperty,
-            new Binding(nameof(vm.IsBatchMode)) { Source = vm, Converter = InverseBooleanConverter.Instance });
-
-        // Batch mode fallback: batch items are separate files (possibly with no video at
-        // all), so show a static image rendered from the current style settings instead.
-        var image = new Image
-        {
-            [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
-            DataContext = vm,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
-            Stretch = Stretch.None, // Prevents stretching of the image
-        };
-
-        var scrollViewer = new ScrollViewer
-        {
-            Content = image,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            MinWidth = 300,
-            Height = double.NaN,
-        };
-        scrollViewer.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsBatchMode)) { Source = vm });
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // preview grows
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(labelPreview, 0, 0);
-        grid.Add(vm.VideoPlayerControl, 1, 0);
-        grid.Add(scrollViewer, 1, 0);
-
-        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
-    }
-
-    private static Border MakeBatchView(TransparentSubtitlesViewModel vm)
-    {
-        // No header sorting: the batch queue is processed top-to-bottom, so the list
-        // order is meaningful.
-        var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
-        dataGrid.Width = double.NaN;
-        dataGrid.Height = double.NaN;
-        dataGrid.MinWidth = 550; // the batch column is Auto while measuring; star columns have no intrinsic width
-        dataGrid.DataContext = vm;
-        dataGrid.ItemsSource = vm.JobItems;
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.SubtitleFileName,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(BurnInJobItem.SubtitleFileNameShort)),
-            Width = new GridLength(1, GridUnitType.Star),
-        });
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.Size,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(BurnInJobItem.Resolution)),
-            Width = new GridLength(90), // was content-sized (Auto) on the DataGrid
-        });
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.VideoFile,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(BurnInJobItem.InputVideoFileNameShort)),
-            Width = new GridLength(1, GridUnitType.Star),
-        });
-        dataGrid.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.Status,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(BurnInJobItem.Status)),
-            Width = new GridLength(110), // was content-sized (Auto) on the DataGrid
-        });
-        dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedJobItem)) { Source = vm });
-
-        var buttonAdd = UiUtil.MakeButton(Se.Language.General.AddDotDotDot, vm.AddCommand);
-        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveCommand);
-        var buttonClear = UiUtil.MakeButton(Se.Language.General.Clear, vm.ClearCommand);
-        var buttonPickSubtitle = UiUtil.MakeButton(Se.Language.General.PickVideoFile, vm.PickVideoFileCommand);
-
-        var panelFileControls = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children =
-            {
-                buttonAdd,
-                buttonRemove,
-                buttonClear,
-                UiUtil.MakeSeparatorForHorizontal(vm),
-                buttonPickSubtitle,
-            }
-        };
-
-        var buttonOutputProperties = UiUtil.MakeButton(Se.Language.Video.BurnIn.OutputProperties, vm.OutputPropertiesCommand);
-        var labelOutputPropertiesFolder = UiUtil.MakeLink(string.Empty, vm.OpenOutputFolderCommand)
-            .WithFilePathText(vm, nameof(vm.OutputFolder))
-            .WithBindVisible(vm, nameof(vm.UseOutputFolderVisible));
-        var labelOutputPropertiesUseSourceFolder = UiUtil.MakeLabel(Se.Language.General.UseSourceFolder)
-            .WithBindVisible(vm, nameof(vm.UseSourceFolderVisible));
-
-        var panelFileControls2 = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children =
-            {
-                buttonOutputProperties,
-                labelOutputPropertiesFolder,
-                labelOutputPropertiesUseSourceFolder,
-            }
-        };
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(dataGrid, 0, 0);
-        grid.Add(panelFileControls, 1, 0);
-        grid.Add(panelFileControls2, 2, 0);
-
-        return UiUtil.MakeBorderForControl(grid)
-            .WithBindIsVisible(nameof(vm.IsBatchMode))
-            .WithMarginBottom(5);
-    }
-
-    private static Border MakeVideoInfoView(TransparentSubtitlesViewModel vm)
-    {
-        var labelVideoFile = UiUtil.MakeLabel(Se.Language.General.VideoFile);
-        var labelVideoFileName = UiUtil.MakeFilePathLabel(vm, nameof(vm.VideoFileName));
-
-        var labelVideoSize = UiUtil.MakeLabel(Se.Language.Video.BurnIn.VideoFileSize);
-        var labelVideoSizeValue = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoFileSize));
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(labelVideoFile, 0, 0);
-        grid.Add(labelVideoFileName, 0, 1);
-
-        grid.Add(labelVideoSize, 1, 0);
-        grid.Add(labelVideoSizeValue, 1, 1);
-
-        return UiUtil.MakeBorderForControl(grid)
-            .WithBindIsVisible(nameof(vm.IsBatchMode), InverseBooleanConverter.Instance)
-            .WithMarginRight(5);
-    }
-
-    private static Grid MakeProgressView(TransparentSubtitlesViewModel vm)
-    {
-        var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Margin = new Thickness(0, 4, 0, 0);
-        progressBar.VerticalAlignment = VerticalAlignment.Top;
-        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
-
-        var statusText = new TextBlock
-        {
-            Margin = new Thickness(5, 18, 0, 0),
-            VerticalAlignment = VerticalAlignment.Top,
-        };
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
-        statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
-
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
-
-        return grid;
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttons = EditorChrome.MakeInlineRow(buttonCancel, buttonOk, buttonGenerate);
+        buttons.Spacing = 10;
+
+        var bar = new DockPanel();
+        DockPanel.SetDock(modes, Dock.Left);
+        DockPanel.SetDock(buttons, Dock.Right);
+        bar.Children.Add(modes);
+        bar.Children.Add(buttons);
+        bar.Children.Add(new Border());
+
+        return EditorChrome.WrapButtonBar(bar);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

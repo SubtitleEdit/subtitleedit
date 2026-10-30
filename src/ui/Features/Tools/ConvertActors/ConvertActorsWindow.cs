@@ -2,10 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Threading;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -13,6 +10,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ConvertActors;
 
+/// <summary>
+/// Convert actors, in the editor look (see <see cref="EditorChrome"/>): from/to and the options
+/// side by side, the preview below, the summary plus Cancel and OK in the button bar.
+/// </summary>
 public class ConvertActorsWindow : Window
 {
     public ConvertActorsWindow(ConvertActorsViewModel vm)
@@ -24,111 +25,72 @@ public class ConvertActorsWindow : Window
         Height = 800;
         MinWidth = 900;
         MinHeight = 500;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
-        var labelFrom = UiUtil.MakeLabel(Se.Language.Tools.ConvertActors.ConvertActorFrom);
-        var comboBoxFrom = UiUtil.MakeComboBox(vm.FromTypes, vm, nameof(vm.SelectedFromType));
+        var comboBoxFrom = UiUtil.MakeComboBox(vm.FromTypes, vm, nameof(vm.SelectedFromType))
+            .WithAccessibleName(Se.Language.Tools.ConvertActors.ConvertActorFrom);
         comboBoxFrom.SelectionChanged += vm.SelectionChanged;
 
-        var labelTo = UiUtil.MakeLabel(Se.Language.Tools.ConvertActors.ConvertActorTo);
-        var comboBoxTo = UiUtil.MakeComboBox(vm.ToTypes, vm, nameof(vm.SelectedToType));
+        var comboBoxTo = UiUtil.MakeComboBox(vm.ToTypes, vm, nameof(vm.SelectedToType))
+            .WithAccessibleName(Se.Language.Tools.ConvertActors.ConvertActorTo);
         comboBoxTo.SelectionChanged += vm.SelectionChanged;
 
-        var checkBoxSetColor = UiUtil.MakeCheckBox(Se.Language.Tools.ConvertActors.SetColor, vm, nameof(vm.SetColor));
-        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.SelectedColor));
+        var rowSetColor = EditorChrome.MakeToggleRow(nameof(vm.SetColor), Se.Language.Tools.ConvertActors.SetColor, out _);
+        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.SelectedColor))
+            .WithAccessibleName(Se.Language.General.Color);
         colorPicker.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.SetColor)) { Source = vm, Mode = BindingMode.OneWay });
+        colorPicker.Margin = new Thickness(4, 0, 0, 0);
+        rowSetColor.Children.Add(colorPicker);
 
-        var checkBoxChangeCasing = UiUtil.MakeCheckBox(Se.Language.General.ChangeCasing, vm, nameof(vm.ChangeCasing));
+        var rowChangeCasing = EditorChrome.MakeToggleRow(nameof(vm.ChangeCasing), Se.Language.General.ChangeCasing, out _);
         var comboBoxCasing = new ComboBox
         {
             ItemsSource = vm.CasingOptions,
             DataContext = vm,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
-        };
+            Margin = new Thickness(4, 0, 0, 0),
+        }.WithAccessibleName(Se.Language.General.Casing);
         comboBoxCasing.Bind(ComboBox.SelectedIndexProperty, new Binding(nameof(vm.SelectedCasingIndex)) { Mode = BindingMode.TwoWay });
         comboBoxCasing.Bind(ComboBox.IsVisibleProperty, new Binding(nameof(vm.IsCasingVisible)) { Source = vm, Mode = BindingMode.OneWay });
         comboBoxCasing.SelectionChanged += vm.SelectionChanged;
+        rowChangeCasing.Children.Add(comboBoxCasing);
 
-        var checkBoxOnlyNames = UiUtil.MakeCheckBox(Se.Language.Tools.ConvertActors.OnlyNames, vm, nameof(vm.OnlyNames));
+        var rowOnlyNames = EditorChrome.MakeToggleRow(nameof(vm.OnlyNames), Se.Language.Tools.ConvertActors.OnlyNames, out _);
 
-        var panelConversion = new Grid
+        // The color and casing pickers show up next to their switch, so the rows keep a fixed
+        // height and the list below does not jump.
+        foreach (var row in new[] { rowSetColor, rowChangeCasing, rowOnlyNames })
         {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-        };
-        panelConversion.Add(labelFrom, 0, 0);
-        panelConversion.Add(comboBoxFrom, 0, 1);
-        panelConversion.Add(labelTo, 1, 0);
-        panelConversion.Add(comboBoxTo, 1, 1);
+            row.MinHeight = 30;
+        }
 
-        var panelOptions = UiUtil.MakeVerticalPanel(
-            UiUtil.MakeHorizontalPanel(checkBoxSetColor, colorPicker),
-            UiUtil.MakeHorizontalPanel(checkBoxChangeCasing, comboBoxCasing),
-            checkBoxOnlyNames);
+        var panelConversion = EditorChrome.MakeFieldGrid((Se.Language.Tools.ConvertActors.ConvertActorFrom, comboBoxFrom), (Se.Language.Tools.ConvertActors.ConvertActorTo, comboBoxTo));
+
+        var panelOptions = new StackPanel
+        {
+            Spacing = 4,
+            Children = { rowSetColor, rowChangeCasing, rowOnlyNames },
+        };
 
         var panelControls = new Grid
         {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 24,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
         };
-        panelControls.Add(panelConversion, 0, 0);
-        panelControls.Add(panelOptions, 0, 1);
-
-        var subtitleView = MakeSubtitleView(vm);
-
-        var labelStatus = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.StatusText)).WithAlignmentTop();
+        panelControls.Add(EditorChrome.MakeEditorSection(Se.Language.General.Convert, panelConversion, first: true), 0, 0);
+        panelControls.Add(new Border
+        {
+            Child = EditorChrome.MakeEditorSection(Se.Language.General.Options, panelOptions, first: true),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelControls, 0);
-        grid.Add(subtitleView, 1);
-        grid.Add(labelStatus, 2);
-        grid.Add(panelButtons, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(panelControls, MakeSubtitleView(vm)), EditorChrome.MakeStatusText(nameof(vm.StatusText), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, comboBoxFrom); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -145,7 +107,7 @@ public class ConvertActorsWindow : Window
 
         // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
         // subtitle lines in timeline order.
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -237,6 +199,6 @@ public class ConvertActorsWindow : Window
         TableViewExtras.AddSpaceToggle<ConvertActorsDisplayItem>(dataGrid,
             item => item.IsChecked, (item, v) => item.IsChecked = v);
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid);
     }
 }

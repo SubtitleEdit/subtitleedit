@@ -384,6 +384,19 @@ public static class InitToolbar
             stackPanelLeft.Children.Add(new Button
             {
                 Content = MakeImage("AssaStyle"),
+                Command = vm.ShowYttStylesCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.YttStylesHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.YttStylesHint, shortcuts, nameof(vm.ShowYttStylesCommand)),
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatYtt))
+                {
+                    Source = vm,
+                },
+            });
+
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("AssaStyle"),
                 Command = vm.ShowWebVttStylesCommand,
                 Background = Brushes.Transparent,
                 [AutomationProperties.NameProperty] = languageHints.WebVttStylesHint,
@@ -667,8 +680,8 @@ public static class InitToolbar
         // global Button style (UiTheme.ApplyWindowsClassicGray) adds a 1px border to
         // every button; this style is scoped to the toolbar panel so it strips the
         // border from the toolbar buttons only - buttons elsewhere keep their border.
-        // Pastel's Button style colors the border too, which boxes in every icon.
-        if (UiTheme.ThemeName == UiTheme.ThemeNameClassic || UiTheme.ThemeName == UiTheme.ThemeNamePastel)
+        // Pastel's and Sakura's Button styles color the border too, which boxes in every icon.
+        if (UiTheme.ThemeName is UiTheme.ThemeNameClassic or UiTheme.ThemeNamePastel or UiTheme.ThemeNameSakura)
         {
             toolbarPanel.Styles.Add(new Style(x => x.OfType<Button>())
             {
@@ -728,7 +741,8 @@ public static class InitToolbar
 
     private static unsafe Bitmap MakeOneColor(string filePath)
     {
-        if (!UiTheme.IsDarkThemeEnabled() || !Se.Settings.Appearance.MatchIconColorToDarkTheme)
+        // A theme's own icons are already drawn in its colors
+        if (!UiTheme.IsDarkThemeEnabled() || !Se.Settings.Appearance.MatchIconColorToDarkTheme || UiTheme.HasOwnIcons)
         {
             return new Bitmap(filePath);
         }

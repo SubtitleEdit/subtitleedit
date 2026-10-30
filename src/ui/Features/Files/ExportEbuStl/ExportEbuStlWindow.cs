@@ -1,26 +1,40 @@
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Files.Export.ExportEbuStl;
+using Nikse.SubtitleEdit.Features.Files.FormatProperties;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportEbuStl;
 
+/// <summary>
+/// EBU STL save options in the editor look (see <see cref="FormatPropertiesChrome"/>): the GSI
+/// header, text and timing, and the errors found, as tabs over the panel; Import in the button bar.
+/// </summary>
 public class ExportEbuStlWindow : Window
 {
+    private const double FieldWidth = 225;
+
+    // All tabs get the size of the biggest one, so switching tabs does not resize the window
+    private const double TabMinWidth = 932;
+    private const double TabMinHeight = 556;
+
     public ExportEbuStlWindow(ExportEbuStlViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Options.Shortcuts.FileExportEbuStl;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Form);
         vm.Window = this;
         DataContext = vm;
 
-        var tabControl = new TabControl();
+        var tabControl = new TabControl { Padding = new Thickness(0) };
         var tabGeneral = new TabItem
         {
             Header = Se.Language.General.General,
@@ -37,335 +51,199 @@ public class ExportEbuStlWindow : Window
 
         var tabErrors = new TabItem
         {
-            [!Avalonia.Controls.Primitives.HeaderedContentControl.HeaderProperty] = new Binding(nameof(vm.ErrorTitle)) { Source = vm },
+            [!HeaderedContentControl.HeaderProperty] = new Binding(nameof(vm.ErrorTitle)) { Source = vm },
             Content = MakeErrorsView(vm),
         };
         tabControl.Items.Add(tabErrors);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonImport = FormatPropertiesChrome.MakeAction("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand);
+        var buttonBar = EditorChrome.MakeDockedCancelOkBar(buttonImport, UiUtil.MakeButtonCancel(vm.CancelCommand), UiUtil.MakeButtonOk(vm.OkCommand));
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(tabControl, 0);
-        grid.Add(panelButtons, 1);
-
-        Content = grid;
+        Content = FormatPropertiesChrome.MakeContentRoot(new Border { Child = tabControl, Padding = new Thickness(8, 4, 8, 0) }, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, comboBoxCodePage); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
     }
 
-    private Border MakeGeneralView(ExportEbuStlViewModel vm, out ComboBox comboBoxCodePage)
+    private static Control MakeGeneralView(ExportEbuStlViewModel vm, out ComboBox comboBoxCodePage)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var l = Se.Language.File.EbuSaveOptions;
 
+        // Format
+        comboBoxCodePage = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.CodePages, vm, nameof(vm.SelectedCodePage)), l.CodePageNumber, FieldWidth);
+        var comboboxDiskFormatCodes = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.DiskFormatCodes, vm, nameof(vm.SelectedDiskFormatCode)), l.DiskFormatCode, FieldWidth);
+        var comboBoxFrameRates = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate)), Se.Language.General.FrameRate, FieldWidth);
+        var comboBoxDisplayStandardCodes = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.DisplayStandardCodes, vm, nameof(vm.SelectedDisplayStandardCode)), l.DisplayStandardCode, FieldWidth);
+        var comboBoxCharacterTables = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.CharacterTables, vm, nameof(vm.SelectedCharacterTable)), l.CharacterCodeTable, FieldWidth);
+        var comboBoxLanguageCodes = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.LanguageCodes, vm, nameof(vm.SelectedLanguageCode)), l.LanguageCode, FieldWidth);
+        var format = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(l.CodePageNumber, comboBoxCodePage),
+            FormatPropertiesChrome.Row(l.DiskFormatCode, comboboxDiskFormatCodes),
+            FormatPropertiesChrome.Row(Se.Language.General.FrameRate, comboBoxFrameRates),
+            FormatPropertiesChrome.Row(l.DisplayStandardCode, comboBoxDisplayStandardCodes),
+            FormatPropertiesChrome.Row(l.CharacterCodeTable, comboBoxCharacterTables),
+            FormatPropertiesChrome.Row(l.LanguageCode, comboBoxLanguageCodes));
 
-        var textBoxWidth = 225;
+        // Programme
+        var textBoxOriginalProgramTitle = HeaderText(vm, nameof(vm.OriginalProgramTitle), l.OriginalProgramTitle, 32);
+        var textBoxOriginalEpisodeTitle = HeaderText(vm, nameof(vm.OriginalEpisodeTitle), l.OriginalEpisodeTitle, 32);
+        var textBoxTranslatedProgramTitle = HeaderText(vm, nameof(vm.TranslatedProgramTitle), l.TranslatedProgramTitle, 32);
+        var textBoxTranslatedEpisodeTitle = HeaderText(vm, nameof(vm.TranslatedEpisodeTitle), l.TranslatedEpisodeTitle, 32);
+        var textBoxTranslatorsName = HeaderText(vm, nameof(vm.TranslatorsName), l.TranslatorsName, 32);
+        var textBoxSubtitleListReferenceCode = HeaderText(vm, nameof(vm.SubtitleListReferenceCode), l.SubtitleListReferenceCode, 16);
+        var textBoxCountryOfOrigin = HeaderText(vm, nameof(vm.CountryOfOrigin), l.CountryOfOrigin, 3);
+        var programme = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(l.OriginalProgramTitle, textBoxOriginalProgramTitle),
+            FormatPropertiesChrome.Row(l.OriginalEpisodeTitle, textBoxOriginalEpisodeTitle),
+            FormatPropertiesChrome.Row(l.TranslatedProgramTitle, textBoxTranslatedProgramTitle),
+            FormatPropertiesChrome.Row(l.TranslatedEpisodeTitle, textBoxTranslatedEpisodeTitle),
+            FormatPropertiesChrome.Row(l.TranslatorsName, textBoxTranslatorsName),
+            FormatPropertiesChrome.Row(l.SubtitleListReferenceCode, textBoxSubtitleListReferenceCode),
+            FormatPropertiesChrome.Row(l.CountryOfOrigin, textBoxCountryOfOrigin));
 
-        var labelCodePageNumber = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.CodePageNumber);
-        var comboBoxCodeNumbers = UiUtil.MakeComboBox(vm.CodePages, vm, nameof(vm.SelectedCodePage)).WithMinWidth(textBoxWidth);
-        comboBoxCodePage = comboBoxCodeNumbers;
-
-        var labelDiskFormatCode = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DiskFormatCode);
-        var comboboxDiskFormatCodes = UiUtil.MakeComboBox(vm.DiskFormatCodes, vm, nameof(vm.SelectedDiskFormatCode)).WithMinWidth(textBoxWidth);
-
-        var labelFrameRate = UiUtil.MakeLabel(Se.Language.General.FrameRate);
-        var comboBoxFrameRates = UiUtil.MakeComboBox(vm.FrameRates, vm, nameof(vm.SelectedFrameRate)).WithMinWidth(textBoxWidth);
-
-        var labelDisplayStandardCode = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DisplayStandardCode);
-        var comboBoxDisplayStandardCodes = UiUtil.MakeComboBox(vm.DisplayStandardCodes, vm, nameof(vm.SelectedDisplayStandardCode)).WithMinWidth(textBoxWidth);
-
-        var labelCharacterTable = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.CharacterCodeTable);
-        var comboBoxCharacterTables = UiUtil.MakeComboBox(vm.CharacterTables, vm, nameof(vm.SelectedCharacterTable)).WithMinWidth(textBoxWidth);
-
-        var labelLanguageCode = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.LanguageCode);
-        var comboBoxLanguageCodes = UiUtil.MakeComboBox(vm.LanguageCodes, vm, nameof(vm.SelectedLanguageCode)).WithMinWidth(textBoxWidth);
-
-        var labelOriginalProgramTitle = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.OriginalProgramTitle);
-        var textBoxOriginalProgramTitle = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.OriginalProgramTitle));
-        textBoxOriginalProgramTitle.MaxLength = 32; // EBU STL header field width
-
-        var labelOriginalEpisodeTitle = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.OriginalEpisodeTitle);
-        var textBoxOriginalEpisodeTitle = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.OriginalEpisodeTitle));
-        textBoxOriginalEpisodeTitle.MaxLength = 32; // EBU STL header field width
-
-        var labelTranslatedProgramTitle = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TranslatedProgramTitle);
-        var textBoxTranslatedProgramTitle = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.TranslatedProgramTitle));
-        textBoxTranslatedProgramTitle.MaxLength = 32; // EBU STL header field width
-
-        var labelTranslatedEpisodeTitle = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TranslatedEpisodeTitle);
-        var textBoxTranslatedEpisodeTitle = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.TranslatedEpisodeTitle));
-        textBoxTranslatedEpisodeTitle.MaxLength = 32; // EBU STL header field width
-
-        var labelTranslatorsName = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TranslatorsName);
-        var textBoxTranslatorsName = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.TranslatorsName));
-        textBoxTranslatorsName.MaxLength = 32; // EBU STL header field width
-
-        grid.Add(labelCodePageNumber, 0, 0);
-        grid.Add(comboBoxCodeNumbers, 0, 1);
-
-        grid.Add(labelDiskFormatCode, 1, 0);
-        grid.Add(comboboxDiskFormatCodes, 1, 1);
-
-        grid.Add(labelFrameRate, 2, 0);
-        grid.Add(comboBoxFrameRates, 2, 1);
-
-        grid.Add(labelDisplayStandardCode, 3, 0);
-        grid.Add(comboBoxDisplayStandardCodes, 3, 1);
-
-        grid.Add(labelCharacterTable, 4, 0);
-        grid.Add(comboBoxCharacterTables, 4, 1);
-
-        grid.Add(labelLanguageCode, 5, 0);
-        grid.Add(comboBoxLanguageCodes, 5, 1);
-
-        grid.Add(labelOriginalProgramTitle, 6, 0);
-        grid.Add(textBoxOriginalProgramTitle, 6, 1);
-
-        grid.Add(labelOriginalEpisodeTitle, 7, 0);
-        grid.Add(textBoxOriginalEpisodeTitle, 7, 1);
-
-        grid.Add(labelTranslatedProgramTitle, 8, 0);
-        grid.Add(textBoxTranslatedProgramTitle, 8, 1);
-
-        grid.Add(labelTranslatedEpisodeTitle, 9, 0);
-        grid.Add(textBoxTranslatedEpisodeTitle, 9, 1);
-
-        grid.Add(labelTranslatorsName, 10, 0);
-        grid.Add(textBoxTranslatorsName, 10, 1);
-
-
-        var labelSubtitleListReferenceCode = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.SubtitleListReferenceCode);
-        var textBoxSubtitleListReferenceCode = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.SubtitleListReferenceCode));
-        textBoxSubtitleListReferenceCode.MaxLength = 16; // EBU STL header field width
-
-        var labelCountryOfOrigin = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.CountryOfOrigin);
-        var textBoxCountryOfOrigin = UiUtil.MakeTextBox(textBoxWidth, vm, nameof(vm.CountryOfOrigin));
-        textBoxCountryOfOrigin.MaxLength = 3; // EBU STL header field width
-
-        var labelTimeCodeStatus = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TimeCodeStatus);
-        var comboBoxTimeCodeStatus = UiUtil.MakeComboBox(vm.TimeCodeStatusList, vm, nameof(vm.SelectedTimeCodeStatus)).WithMinWidth(textBoxWidth);
-
-        var labelStartOfProgramme = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TimeCodeStartOfProgramme);
+        // Time code
+        var comboBoxTimeCodeStatus = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeStatusList, vm, nameof(vm.SelectedTimeCodeStatus)), l.TimeCodeStatus, FieldWidth);
         var timeCodeUpDownStartOfProgramme = new TimeCodeUpDown
         {
             DataContext = vm,
+            HorizontalAlignment = HorizontalAlignment.Left,
             [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.StartOfProgramme))
             {
                 Mode = BindingMode.TwoWay,
             }
         };
+        AutomationProperties.SetName(timeCodeUpDownStartOfProgramme, l.TimeCodeStartOfProgramme);
+        var timeCode = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(l.TimeCodeStatus, comboBoxTimeCodeStatus),
+            FormatPropertiesChrome.Row(l.TimeCodeStartOfProgramme, timeCodeUpDownStartOfProgramme));
 
-        grid.Add(labelSubtitleListReferenceCode, 0, 2);
-        grid.Add(textBoxSubtitleListReferenceCode, 0, 3);
+        // Disc and display
+        var comboBoxRevisionNumbers = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.RevisionNumbers, vm, nameof(vm.SelectedRevisionNumber)), l.RevisionNumber, 120);
+        var comboBoxMaxCharsPerRowList = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.MaxCharactersPerRow, vm, nameof(vm.SelectedMaxCharactersPerRow)), l.MaxNoOfDisplayableChars, 120);
+        var comboBoxMaxRows = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.MaxRows, vm, nameof(vm.SelectedMaxRow)), l.MaxNumberOfDisplayableRows, 120);
+        var comboBoxDiscSequenceNumbers = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.DiscSequenceNumbers, vm, nameof(vm.SelectedDiscSequenceNumber)), l.DiscSequenceNumber, 120);
+        var comboBoxTotalNumberOfDisks = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TotalNumerOfDiscsList, vm, nameof(vm.SelectedTotalNumberOfDiscs)), l.TotalNumberOfDisks, 120);
+        var disc = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(l.RevisionNumber, comboBoxRevisionNumbers),
+            FormatPropertiesChrome.Row(l.MaxNoOfDisplayableChars, comboBoxMaxCharsPerRowList),
+            FormatPropertiesChrome.Row(l.MaxNumberOfDisplayableRows, comboBoxMaxRows),
+            FormatPropertiesChrome.Row(l.DiscSequenceNumber, comboBoxDiscSequenceNumbers),
+            FormatPropertiesChrome.Row(l.TotalNumberOfDisks, comboBoxTotalNumberOfDisks));
 
-        grid.Add(labelCountryOfOrigin, 1, 2);
-        grid.Add(textBoxCountryOfOrigin, 1, 3);
-
-        grid.Add(labelTimeCodeStatus, 2, 2);
-        grid.Add(comboBoxTimeCodeStatus, 2, 3);
-
-        grid.Add(labelStartOfProgramme, 3, 2);
-        grid.Add(timeCodeUpDownStartOfProgramme, 3, 3);
-
-
-        var labelRevisionNumber = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.RevisionNumber);
-        var comboBoxRevisionNumbers = UiUtil.MakeComboBox(vm.RevisionNumbers, vm, nameof(vm.SelectedRevisionNumber)).WithMinWidth(textBoxWidth);
-
-        var labelMaxCharsPerRow = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.MaxNoOfDisplayableChars);
-        var comboBoxMaxCharsPerRowList = UiUtil.MakeComboBox(vm.MaxCharactersPerRow, vm, nameof(vm.SelectedMaxCharactersPerRow)).WithMinWidth(textBoxWidth);
-
-        var labelMaxRows = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.MaxNumberOfDisplayableRows);
-        var comboBoxMaxRows = UiUtil.MakeComboBox(vm.MaxRows, vm, nameof(vm.SelectedMaxRow)).WithMinWidth(textBoxWidth);
-
-        var labelDiscSequenceNumber = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DiscSequenceNumber);
-        var comboBoxDiscSequenceNumbers = UiUtil.MakeComboBox(vm.DiscSequenceNumbers, vm, nameof(vm.SelectedDiscSequenceNumber)).WithMinWidth(textBoxWidth);
-
-        var labelTotalNumberOfDisks = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.TotalNumberOfDisks);
-        var comboBoxTotalNumberOfDisks = UiUtil.MakeComboBox(vm.TotalNumerOfDiscsList, vm, nameof(vm.SelectedTotalNumberOfDiscs)).WithMinWidth(textBoxWidth);
-
-        grid.Add(labelRevisionNumber, 5, 2);
-        grid.Add(comboBoxRevisionNumbers, 5, 3);
-
-        grid.Add(labelMaxCharsPerRow, 6, 2);
-        grid.Add(comboBoxMaxCharsPerRowList, 6, 3);
-
-        grid.Add(labelMaxRows, 7, 2);
-        grid.Add(comboBoxMaxRows, 7, 3);
-
-        grid.Add(labelDiscSequenceNumber, 8, 2);
-        grid.Add(comboBoxDiscSequenceNumbers, 8, 3);
-
-        grid.Add(labelTotalNumberOfDisks, 9, 2);
-        grid.Add(comboBoxTotalNumberOfDisks, 9, 3);
-
-        var buttonImport = UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand);
-        grid.Add(buttonImport, 0, 4);
-
-        return UiUtil.MakeBorderForControl(grid);
-    }
-
-    private Border MakeTextAndTimingView(ExportEbuStlViewModel vm)
-    {
-        var grid = new Grid
+        var left = new StackPanel
         {
-            RowDefinitions =
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
+                EditorChrome.MakeEditorSection(Se.Language.General.Format, format, first: true),
+                EditorChrome.MakeEditorSection(l.Programme, programme),
+            }
+        };
+        var right = new StackPanel
+        {
+            Children =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+                EditorChrome.MakeEditorSection(Se.Language.General.TimeCodes, timeCode, first: true),
+                EditorChrome.MakeEditorSection(l.DiscAndDisplay, disc),
+            }
         };
 
-        var textBoxWidth = 225;
+        return MakeTab(FormatPropertiesChrome.SideBySide(left, right));
+    }
 
-        var labelJustification = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.JustificationCode);
-        var comboBoxJustifications = UiUtil.MakeComboBox(vm.Justifications, vm, nameof(vm.SelectedJustification)).WithMinWidth(textBoxWidth);
+    private static TextBox HeaderText(ExportEbuStlViewModel vm, string property, string name, int maxLength)
+    {
+        var textBox = EditorChrome.AsTextField(UiUtil.MakeTextBox(FieldWidth, vm, property), name);
+        textBox.MaxLength = maxLength; // EBU STL header field width
+        return textBox;
+    }
 
+    private static Control MakeTextAndTimingView(ExportEbuStlViewModel vm)
+    {
+        var l = Se.Language.File.EbuSaveOptions;
 
-        var labelVerticalPosition = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.VerticalPosition);
+        var comboBoxJustifications = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.Justifications, vm, nameof(vm.SelectedJustification)), l.JustificationCode, FieldWidth);
+        var text = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(l.JustificationCode, comboBoxJustifications));
 
-        var labelMarginTop = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.MarginTop);
-        var comboBoxMarginTops = UiUtil.MakeComboBox(vm.TopAlignments, vm, nameof(vm.SelectedTopAlignment)).WithMinWidth(textBoxWidth);
-
-        var labelMarginBottom = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.MarginBottom);
-        var comboBoxMarginBottoms = UiUtil.MakeComboBox(vm.BottomAlignments, vm, nameof(vm.SelectedBottomAlignment)).WithMinWidth(textBoxWidth);
-
-        var labelRowsAddedByNewLine = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.NewLineRows);
-        var comboBoxRowsAddedByNewLine = UiUtil.MakeComboBox(vm.RowsAddByNewLine, vm, nameof(vm.SelectedRowsAddByNewLine)).WithMinWidth(textBoxWidth);
-
-
-        var labelTeletext = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.Teletext);
+        var comboBoxMarginTops = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TopAlignments, vm, nameof(vm.SelectedTopAlignment)), l.MarginTop, 120);
+        var comboBoxMarginBottoms = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.BottomAlignments, vm, nameof(vm.SelectedBottomAlignment)), l.MarginBottom, 120);
+        var comboBoxRowsAddedByNewLine = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.RowsAddByNewLine, vm, nameof(vm.SelectedRowsAddByNewLine)), l.NewLineRows, 120);
+        var verticalPosition = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(l.MarginTop, comboBoxMarginTops),
+            FormatPropertiesChrome.Row(l.MarginBottom, comboBoxMarginBottoms),
+            FormatPropertiesChrome.Row(l.NewLineRows, comboBoxRowsAddedByNewLine));
 
         // Both are teletext control codes: "0 Open subtitling" writes neither, so leaving them
         // enabled there only promises a box the file and the video preview never show.
-        var labelUseBox = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.UseBox).WithBindIsEnabled(nameof(vm.IsTeletext));
-        var checkBoxUseBox = UiUtil.MakeCheckBox(vm, nameof(vm.UseBox)).WithBindIsEnabled(nameof(vm.IsTeletext));
-
-        var labelUseDoubleHeight = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.DoubleHeight).WithBindIsEnabled(nameof(vm.IsTeletext));
-        var checkBoxUseDoubleHeight = UiUtil.MakeCheckBox(vm, nameof(vm.UseDoubleHeight)).WithBindIsEnabled(nameof(vm.IsTeletext));
+        var switchUseBox = EditorChrome.MakeSwitchRow(nameof(vm.UseBox), l.UseBox);
+        switchUseBox.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTeletext)));
+        var switchUseDoubleHeight = EditorChrome.MakeSwitchRow(nameof(vm.UseDoubleHeight), l.DoubleHeight);
+        switchUseDoubleHeight.Bind(IsEnabledProperty, new Binding(nameof(vm.IsTeletext)));
+        var teletext = FormatPropertiesChrome.MakeRows(switchUseBox, switchUseDoubleHeight);
 
         // Not a save option: an STL file carries a character table, not a typeface. It is here so
         // someone with a teletext face installed can have the preview look like a decoder.
-        var labelVideoPreview = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.VideoPreview);
-
-        var labelPreviewFont = UiUtil.MakeLabel(Se.Language.File.EbuSaveOptions.PreviewFont);
-        var comboBoxPreviewFont = UiUtil.MakeComboBox(vm.PreviewFonts, vm, nameof(vm.SelectedPreviewFont)).WithMinWidth(textBoxWidth);
-        var buttonPreviewFont = UiUtil.MakeButtonBrowse(vm.PickPreviewFontCommand, null, Se.Language.Tools.PickFontNameTitle);
-        var panelPreviewFont = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Children = { comboBoxPreviewFont, buttonPreviewFont },
-        };
+        var comboBoxPreviewFont = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.PreviewFonts, vm, nameof(vm.SelectedPreviewFont)), l.PreviewFont, FieldWidth);
+        var buttonPreviewFont = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.Tools.PickFontNameTitle, vm.PickPreviewFontCommand, 28);
 
         // The drop-down is a name; this shows what the name looks like, in the font itself.
-        var labelPreviewFontSample = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.PreviewFontSample));
-        labelPreviewFontSample.Bind(TemplatedControl.FontFamilyProperty, new Binding(nameof(vm.PreviewFontFamily)) { Source = vm });
+        var labelPreviewFontSample = new TextBlock
+        {
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            MaxWidth = 340,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewFontSample)) { Source = vm },
+            [!TextBlock.FontFamilyProperty] = new Binding(nameof(vm.PreviewFontFamily)) { Source = vm },
+        };
+        var previewFontSample = new Border
+        {
+            Child = labelPreviewFontSample,
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            Padding = new Thickness(10, 8),
+        };
+        var videoPreview = FormatPropertiesChrome.MakeRows(
+            FormatPropertiesChrome.Row(l.PreviewFont, comboBoxPreviewFont, buttonPreviewFont),
+            previewFontSample);
 
+        var left = new StackPanel
+        {
+            Children =
+            {
+                EditorChrome.MakeEditorSection(Se.Language.General.Text, text, first: true),
+                EditorChrome.MakeEditorSection(l.VerticalPosition, verticalPosition),
+            }
+        };
+        var right = new StackPanel
+        {
+            Children =
+            {
+                EditorChrome.MakeEditorSection(l.Teletext, teletext, first: true),
+                EditorChrome.MakeEditorSection(l.VideoPreview, videoPreview),
+            }
+        };
 
-        grid.Add(labelJustification, 0, 0);
-        grid.Add(comboBoxJustifications, 0, 1);
-
-        grid.Add(labelVerticalPosition, 2, 0);
-
-        grid.Add(labelMarginTop, 3, 0);
-        grid.Add(comboBoxMarginTops, 3, 1);
-
-        grid.Add(labelMarginBottom, 4, 0);
-        grid.Add(comboBoxMarginBottoms, 4, 1);
-
-        grid.Add(labelRowsAddedByNewLine, 5, 0);
-        grid.Add(comboBoxRowsAddedByNewLine, 5, 1);
-
-
-        grid.Add(labelTeletext, 7, 0);
-
-        grid.Add(labelUseBox, 8, 0);
-        grid.Add(checkBoxUseBox, 8, 1);
-
-        grid.Add(labelUseDoubleHeight, 9, 0);
-        grid.Add(checkBoxUseDoubleHeight, 9, 1);
-
-        grid.Add(labelVideoPreview, 11, 0);
-
-        grid.Add(labelPreviewFont, 12, 0);
-        grid.Add(panelPreviewFont, 12, 1);
-
-        grid.Add(labelPreviewFontSample, 13, 1);
-
-        return UiUtil.MakeBorderForControl(grid).WithMinWidth(944).WithMinHeight(465);
+        return MakeTab(FormatPropertiesChrome.SideBySide(left, right));
     }
 
-    private Border MakeErrorsView(ExportEbuStlViewModel vm)
+    private static Control MakeErrorsView(ExportEbuStlViewModel vm)
     {
         var label = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ErrorLog)).WithAlignmentTop();
-        return UiUtil.MakeBorderForControl(label).WithMinWidth(944).WithMinHeight(465);
+        label.Padding = new Thickness(0);
+        return MakeTab(new Border { Child = label, Padding = new Thickness(14, 12) });
+    }
+
+    private static Border MakeTab(Control content)
+    {
+        return new Border
+        {
+            Child = content,
+            MinWidth = TabMinWidth,
+            MinHeight = TabMinHeight,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+        };
     }
 }

@@ -2,8 +2,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
-using System.Collections.Generic;
 
 namespace UITests.Features.Main;
 
@@ -354,5 +352,61 @@ public class SubtitleLineViewModelHasErrorsTests
         {
             SubtitleLineViewModel.SkipEmptyLinesInLineCount = originalSkip;
         }
+    }
+    [AvaloniaTheory]
+    [InlineData(false, 80, false)]  // 2 frames: closed gap, fine
+    [InlineData(false, 120, true)]  // 3 frames: min, inclusive
+    [InlineData(false, 300, true)]
+    [InlineData(false, 480, true)]  // 12 frames: max, inclusive
+    [InlineData(false, 520, false)] // 13 frames: open gap, fine
+    [InlineData(true, 79, false)]
+    [InlineData(true, 120, true)]
+    [InlineData(true, 480, true)]
+    [InlineData(true, 481, false)]
+    public void GapInRange_InclusiveRange(bool msMode, double gapMs, bool expected)
+    {
+        var originalSettings = Se.Settings;
+        var originalFrameRate = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Se.Settings = new Se();
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            var general = Se.Settings.General;
+            general.UseFrameMode = !msMode;
+            general.ColorGapTooShort = false;
+            general.ColorGapInRange = true;
+            general.GapRangeMin = new MsOrFramesValue { Milliseconds = 80, Frames = 3 };
+            general.GapRangeMax = new MsOrFramesValue { Milliseconds = 480, Frames = 12 };
+
+            Assert.Equal(expected, SubtitleLineViewModel.IsGapInColorRange(general, gapMs));
+
+            var lines = new List<SubtitleLineViewModel>
+            {
+                Line("First.", 1000, 2000),
+                Line("Second.", 2000 + gapMs, 4000),
+            };
+            lines[0].Gap = gapMs;
+            Assert.Equal(expected, lines[0].HasErrors(null, lines[1]));
+            Assert.Equal(expected, lines[1].HasErrors(lines[0], null));
+            Assert.Equal(expected, lines[0].GetErrors(null, lines[1]).Contains(Se.Language.ErrorList.GapInRange));
+            Assert.Equal(expected, lines[0].AccessibleErrorText.Contains("gap in range"));
+            AssertAgrees(lines);
+
+            general.ColorGapInRange = false;
+            Assert.False(SubtitleLineViewModel.IsGapInColorRange(general, gapMs));
+        }
+        finally
+        {
+            Configuration.Settings.General.CurrentFrameRate = originalFrameRate;
+            Se.Settings = originalSettings;
+        }
+    }
+
+    [AvaloniaFact]
+    public void GapInRange_LastLineGapIsNotInRange()
+    {
+        var general = new SeGeneral { ColorGapInRange = true, UseFrameMode = true };
+        Assert.False(SubtitleLineViewModel.IsGapInColorRange(general, double.MaxValue));
+        Assert.False(SubtitleLineViewModel.IsGapInColorRange(general, -40));
     }
 }

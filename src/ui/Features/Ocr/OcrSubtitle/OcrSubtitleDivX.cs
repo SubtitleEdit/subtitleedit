@@ -9,12 +9,10 @@ public class OcrSubtitleDivX : IOcrSubtitle
 {
     public int Count { get; private set; }
     private readonly List<XSub> _list;
-    private readonly string _fileName;
 
     public OcrSubtitleDivX(List<XSub> list, string fileName)
     {
         _list = list;
-        _fileName = fileName;
         Count = _list.Count;
     }
 

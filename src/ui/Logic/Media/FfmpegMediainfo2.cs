@@ -27,6 +27,9 @@ public class FfmpegMediaInfo2
     // Match the language tag in the ffmpeg stream header prefix, e.g.
     //   "Stream #0:2(eng): Subtitle: ..."   or   "Stream #0:2[0x3](eng): ...".
     // Captures the 2-3 letter ISO code in group "lang".
+    // "Stream #0:3..." - the stream index used in "-map 0:3"
+    private static readonly Regex StreamIndexRegex = new Regex(@"^Stream #\d+:(?<index>\d+)", RegexOptions.Compiled);
+
     private static readonly Regex StreamLanguageRegex = new Regex(@"^Stream #\d+:\d+(?:\[[^\]]+\])?\((?<lang>[a-zA-Z]{2,3})\)", RegexOptions.Compiled);
     // Rotation side data ffmpeg prints under a video stream, e.g.
     //   "    Side data:"
@@ -124,7 +127,7 @@ public class FfmpegMediaInfo2
                info.Contains("9.1", StringComparison.Ordinal);
     }
 
-    private static FfmpegMediaInfo2 ParseLog(string log)
+    internal static FfmpegMediaInfo2 ParseLog(string log)
     {
         var info = new FfmpegMediaInfo2();
 
@@ -192,6 +195,8 @@ public class FfmpegMediaInfo2
                         continue;
                     }
 
+                    var streamIndexMatch = StreamIndexRegex.Match(arr[0]);
+                    var streamIndex = streamIndexMatch.Success ? int.Parse(streamIndexMatch.Groups["index"].Value, CultureInfo.InvariantCulture) : -1;
                     var trackType = arr[1].Trim();
                     var trackInfo = arr[2].Trim();
                     // arr[0] still carries the "Stream #N:M(LANG)" prefix; parse the
@@ -205,19 +210,19 @@ public class FfmpegMediaInfo2
 
                     if (trackType == FfmpegTrackType.Audio.ToString())
                     {
-                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Audio, TrackInfo = trackInfo, Language = language });
+                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Audio, TrackInfo = trackInfo, Language = language, StreamIndex = streamIndex });
                     }
                     else if (trackType == FfmpegTrackType.Video.ToString())
                     {
-                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Video, TrackInfo = trackInfo, Language = language });
+                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Video, TrackInfo = trackInfo, Language = language, StreamIndex = streamIndex });
                     }
                     else if (trackType == FfmpegTrackType.Subtitle.ToString())
                     {
-                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Subtitle, TrackInfo = trackInfo, Language = language });
+                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Subtitle, TrackInfo = trackInfo, Language = language, StreamIndex = streamIndex });
                     }
                     else
                     {
-                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TrackInfo = trackInfo, Language = language });
+                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TypeName = trackType, TrackInfo = trackInfo, Language = language, StreamIndex = streamIndex });
                     }
                 }
             }

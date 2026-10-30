@@ -1,4 +1,3 @@
-using System.IO;
 using Nikse.SubtitleEdit.Logic.Download;
 
 namespace UITests.Logic.Download;
@@ -59,6 +58,76 @@ public class LlamaCppCudaVariantTests
     public void GetWindowsVariant_MapsEveryWindowsArchiveKey(string key, string expectedVariant)
     {
         Assert.Equal(expectedVariant, DownloadHashManager.GetLlamaCppWindowsVariant(key));
+    }
+
+    [Fact]
+    public void DetectLinuxVariant_VulkanBackendLibrary_ReturnsVulkan()
+    {
+        var folder = MakeInstallFolder("llama-server", "libggml-base.so", "libggml-vulkan.so");
+        try
+        {
+            Assert.Equal("vulkan", DownloadHashManager.DetectLlamaCppLinuxVariant(folder));
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public void DetectLinuxVariant_NoVulkanBackendLibrary_ReturnsCpu()
+    {
+        var folder = MakeInstallFolder("llama-server", "libggml-base.so");
+        try
+        {
+            Assert.Equal("cpu", DownloadHashManager.DetectLlamaCppLinuxVariant(folder));
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
+    [Fact]
+    public void DetectLinuxVariant_NoServerBinary_ReturnsNull()
+    {
+        var folder = MakeInstallFolder("libggml-vulkan.so");
+        try
+        {
+            Assert.Null(DownloadHashManager.DetectLlamaCppLinuxVariant(folder));
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
+    }
+
+    [Theory]
+    [InlineData(LlamaCppDownloadService.VariantCpu, "libggml-vulkan.so", "ggml-vulkan.dll", "ggml-cuda.dll", "cudart64_12.dll", "cudart64_13.dll")]
+    [InlineData(LlamaCppDownloadService.VariantVulkan, "ggml-cuda.dll", "cudart64_12.dll", "cudart64_13.dll")]
+    [InlineData(LlamaCppDownloadService.VariantCuda, "libggml-vulkan.so", "ggml-vulkan.dll", "cudart64_13.dll")]
+    [InlineData(LlamaCppDownloadService.VariantCuda13, "libggml-vulkan.so", "ggml-vulkan.dll", "cudart64_12.dll")]
+    public void DeleteOtherBuildFiles_RemovesOnlyWhatTheVariantDoesNotShip(string variant, params string[] expectedDeleted)
+    {
+        string[] backendFiles = ["libggml-vulkan.so", "ggml-vulkan.dll", "ggml-cuda.dll", "cudart64_12.dll", "cudart64_13.dll"];
+        var folder = MakeInstallFolder([.. backendFiles, "llama-server", "libggml-base.so", "custom.txt"]);
+        try
+        {
+            LlamaCppDownloadService.DeleteOtherBuildFiles(folder, variant);
+
+            foreach (var fileName in backendFiles)
+            {
+                Assert.Equal(!expectedDeleted.Contains(fileName), File.Exists(Path.Combine(folder, fileName)));
+            }
+
+            Assert.True(File.Exists(Path.Combine(folder, "llama-server")));
+            Assert.True(File.Exists(Path.Combine(folder, "libggml-base.so")));
+            Assert.True(File.Exists(Path.Combine(folder, "custom.txt")));
+        }
+        finally
+        {
+            Directory.Delete(folder, true);
+        }
     }
 
     [Theory]

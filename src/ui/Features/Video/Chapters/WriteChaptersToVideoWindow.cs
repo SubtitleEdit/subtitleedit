@@ -1,5 +1,4 @@
 using Avalonia;
-using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -11,6 +10,9 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.Chapters;
 
+/// <summary>
+/// Write the chapters into a copy of the video, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class WriteChaptersToVideoWindow : Window
 {
     private readonly WriteChaptersToVideoViewModel _vm;
@@ -22,9 +24,11 @@ public class WriteChaptersToVideoWindow : Window
         Title = language.WriteToVideoTitle;
         CanResize = true;
         Width = 640;
-        Height = 340;
+        SizeToContent = SizeToContent.Height; // a fixed 320 px left an empty band below the output file
         MinWidth = 560;
-        MinHeight = 300;
+        MinHeight = 280;
+
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         _vm = vm;
         vm.Window = this;
@@ -32,24 +36,11 @@ public class WriteChaptersToVideoWindow : Window
 
         var header = MakeHeader(vm);
 
-        var hint = new TextBlock
-        {
-            Text = language.WriteToVideoDescription,
-            TextWrapping = TextWrapping.Wrap,
-            Opacity = 0.7,
-            Margin = new Thickness(0, 0, 0, 4),
-        };
+        var hint = EditorChrome.MakeHint(language.WriteToVideoDescription);
 
-        var labelOutput = UiUtil.MakeLabel(language.OutputFileName);
-        var textBoxOutput = new TextBox
-        {
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            [!TextBox.TextProperty] = new Binding(nameof(vm.OutputFileName)) { Mode = BindingMode.TwoWay },
-        };
-        AutomationProperties.SetName(textBoxOutput, language.OutputFileName);
+        var textBoxOutput = EditorChrome.MakeTextField(nameof(vm.OutputFileName), language.OutputFileName);
 
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseOutputFileNameCommand, accessibleName: language.OutputFileName);
+        var buttonBrowse = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", language.OutputFileName, vm.BrowseOutputFileNameCommand, 28);
 
         var outputGrid = new Grid
         {
@@ -58,52 +49,52 @@ public class WriteChaptersToVideoWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnSpacing = 6,
+            ColumnSpacing = 4,
         };
         outputGrid.Add(textBoxOutput, 0, 0);
         outputGrid.Add(buttonBrowse, 0, 1);
 
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.IsIndeterminate = true;
-        progressBar.Bind(IsVisibleProperty, new Binding(nameof(vm.IsWriting)));
-
-        var progressText = new TextBlock
-        {
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressText)),
-            Opacity = 0.7,
-            Margin = new Thickness(0, 4, 0, 0),
-            [!IsVisibleProperty] = new Binding(nameof(vm.IsWriting)),
-        };
+        var progressView = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsWriting));
 
         var buttonWrite = UiUtil.MakeButton(language.WriteToVideo, vm.WriteCommand)
-            .WithIconLeft(IconNames.Export)
             .WithBindIsEnabled(nameof(vm.IsWriting), InverseBooleanConverter.Instance);
+        buttonWrite.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonWrite, buttonCancel);
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonWrite);
+
+        var rows = new StackPanel { Spacing = 8 };
+        rows.Children.Add(hint);
+        rows.Children.Add(EditorChrome.MakeDimLabel(language.OutputFileName, new Thickness(0, 4, 0, 0)));
+        rows.Children.Add(outputGrid);
+
+        var settings = new StackPanel();
+        settings.Children.Add(new Border { Child = header, Padding = new Thickness(14, 12, 14, 12) });
+        settings.Children.Add(EditorChrome.MakeEditorSection(language.WriteToVideo.TrimEnd('.', '…'), rows));
 
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 8,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(header, 0);
-        grid.Add(hint, 1);
-        grid.Add(labelOutput, 2);
-        grid.Add(outputGrid, 3);
-        grid.Add(UiUtil.MakeVerticalPanel(progressBar, progressText), 4);
-        grid.Add(panelButtons, 5);
+        grid.Add(new Border
+        {
+            Background = EditorChrome.PanelBrush,
+            Child = new ScrollViewer
+            {
+                Content = settings,
+                VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
+            },
+        }, 0);
+        grid.Add(progressView, 1);
+        grid.Add(panelButtons, 2);
 
         Content = grid;
 

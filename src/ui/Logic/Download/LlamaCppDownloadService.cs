@@ -21,7 +21,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     /// The pinned llama.cpp release tag. Public so the engine settings dialog can show which build
     /// SE downloads; index 0 of every <see cref="DownloadHashManager.LlamaCpp"/> hash list must match it.
     /// </summary>
-    public const string ReleaseTag = "b11553";
+    public const string ReleaseTag = "b11968";
 
     private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + ReleaseTag + "/";
 
@@ -82,6 +82,33 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     public async Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(httpClient, url, destinationFileName, progress, cancellationToken);
+    }
+
+    /// <summary>
+    /// All builds unpack into one folder and unpacking only overwrites, so the GPU backend of a
+    /// previous build would survive a switch - ggml would keep loading it, and the variant detection
+    /// would keep reporting it. Removes the files that <paramref name="variant"/> does not ship.
+    /// </summary>
+    public static void DeleteOtherBuildFiles(string folder, string variant)
+    {
+        var isCuda = variant == VariantCuda || variant == VariantCuda13;
+        var staleFiles = new (string FileName, bool IsStale)[]
+        {
+            ("ggml-vulkan.dll", variant != VariantVulkan),
+            ("libggml-vulkan.so", variant != VariantVulkan),
+            ("ggml-cuda.dll", !isCuda),
+            ("cudart64_12.dll", variant != VariantCuda),
+            ("cudart64_13.dll", variant != VariantCuda13),
+        };
+
+        foreach (var (fileName, isStale) in staleFiles)
+        {
+            var path = Path.Combine(folder, fileName);
+            if (isStale && File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
     }
 
     /// <summary>

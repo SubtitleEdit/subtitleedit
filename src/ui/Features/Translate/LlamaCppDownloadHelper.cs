@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -183,8 +182,9 @@ public static class LlamaCppDownloadHelper
     /// <summary>
     /// Opens the llama.cpp download window (engine binary + selected model) and persists the result.
     /// When <paramref name="forceVariant"/> is given (e.g. re-downloading an update), that build is
-    /// used and the Windows build picker is skipped. When <paramref name="forceEngineDownload"/> is
-    /// set, the engine binary is re-downloaded even though it is already installed. When
+    /// used and the build picker is skipped. When <paramref name="forceEngineDownload"/> is set, the
+    /// engine binary is re-downloaded even though it is already installed, and without a
+    /// <paramref name="forceVariant"/> the user picks the build, so this is how to switch. When
     /// <paramref name="forceModelDownload"/> is set, the model file is re-downloaded even though it
     /// is already installed.
     /// </summary>
@@ -192,7 +192,8 @@ public static class LlamaCppDownloadHelper
     public static async Task<string?> DownloadAsync(Window owner, IWindowService windowService, LlamaCppModel? model, string? forceVariant = null, bool forceEngineDownload = false, bool forceModelDownload = false)
     {
         var variant = forceVariant ?? Logic.Download.LlamaCppDownloadService.VariantCpu;
-        if (forceVariant == null && !LlamaCppServerManager.IsEngineInstalled() && OperatingSystem.IsWindows())
+        var engineWillDownload = forceEngineDownload || !LlamaCppServerManager.IsEngineInstalled();
+        if (forceVariant == null && engineWillDownload && (OperatingSystem.IsWindows() || OperatingSystem.IsLinux()))
         {
             var buildAnswer = await MessageBox.Show(
                 owner,
@@ -202,7 +203,7 @@ public static class LlamaCppDownloadHelper
                 MessageBoxIcon.Question,
                 "CPU",
                 "Vulkan (GPU)",
-                "CUDA (NVIDIA GPU)");
+                OperatingSystem.IsWindows() ? "CUDA (NVIDIA GPU)" : null);
 
             variant = buildAnswer switch
             {
@@ -304,7 +305,7 @@ public static class LlamaCppDownloadHelper
         }
         else if (!engineInstalled)
         {
-            message = Se.Language.Translate.LlamaCppDownloadEnginePrompt;
+            message = Se.Language.General.LlamaCppDownloadEnginePrompt;
         }
         else
         {

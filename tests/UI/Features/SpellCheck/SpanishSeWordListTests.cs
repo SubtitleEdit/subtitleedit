@@ -1,7 +1,3 @@
-using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Features.SpellCheck;
-using System;
-using System.IO;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace UITests.Features.SpellCheck;
@@ -51,7 +47,7 @@ public class SpanishSeWordListTests : IDisposable
     [InlineData("es_AR")]
     public void TwoLetterSeList_IsReadForEverySpanishDictionary(string dictionaryName)
     {
-        var wordLists = new SpellCheckWordLists(dictionaryName, new AlwaysMissSpellChecker());
+        var wordLists = new SpellCheckWordLists(dictionaryName);
 
         Assert.True(wordLists.HasUserWord("pruébalo"));
         Assert.True(wordLists.HasUserWord("Pruébalo"));
@@ -74,7 +70,7 @@ public class SpanishSeWordListTests : IDisposable
     [InlineData("vámonos")]
     public void ImperativeWithEncliticPronoun_IsKnown(string word)
     {
-        var wordLists = new SpellCheckWordLists("es_ES", new AlwaysMissSpellChecker());
+        var wordLists = new SpellCheckWordLists("es_ES");
 
         Assert.True(wordLists.HasUserWord(word));
     }
@@ -82,7 +78,7 @@ public class SpanishSeWordListTests : IDisposable
     [Fact]
     public void OtherLanguage_DoesNotReadSpanishList()
     {
-        var wordLists = new SpellCheckWordLists("en_US", new AlwaysMissSpellChecker());
+        var wordLists = new SpellCheckWordLists("en_US");
 
         Assert.False(wordLists.HasUserWord("pruébalo"));
     }
@@ -97,14 +93,6 @@ public class SpanishSeWordListTests : IDisposable
         catch
         {
             // Best-effort cleanup; leaving a temp dir behind is harmless.
-        }
-    }
-
-    private sealed class AlwaysMissSpellChecker : IDoSpell
-    {
-        public bool DoSpell(string word)
-        {
-            return false;
         }
     }
 }

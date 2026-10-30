@@ -1,9 +1,11 @@
-﻿using Avalonia;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -18,119 +20,117 @@ public class FixCommonErrorsProfileWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Tools.FixCommonErrors.FixCommonErrorsProfiles;
-        Width = 800;
-        Height = 440;
+        Width = 680;
+        Height = 420;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
+        // Left: the profile list, "New profile" in its header
+        var listBoxProfiles = new ListBox
         {
-            ColumnDefinitions = new ColumnDefinitions("*,*"),
-            RowDefinitions = new RowDefinitions("Auto,*"),
-            Margin = UiUtil.MakeWindowMargin(),
-        };
-
-        // Left column: Profile list
-        var profileListPanel = new StackPanel
-        {
-            Margin = new Thickness(10),
-            Spacing = 10,
-            Children =
+            DataContext = vm,
+            ItemsSource = vm.Profiles,
+            Background = Brushes.Transparent,
+            [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedProfile)) { Mode = BindingMode.TwoWay },
+            ItemTemplate = new FuncDataTemplate<ProfileDisplayItem>((profile, _) =>
             {
-                new Button
+                var grid = new Grid
                 {
-                    Content = Se.Language.General.NewProfile,
-                    Command = vm.NewProfileCommand
-                },
-                new ListBox
+                    ColumnDefinitions = new ColumnDefinitions("*,Auto"),
+                    Margin = new Thickness(0),
+                };
+
+                // Name text (left-aligned)
+                var nameText = new TextBlock
                 {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextTrimming = TextTrimming.CharacterEllipsis,
+                    FontSize = EditorChrome.FieldFontSize,
+                    [!TextBlock.TextProperty] = new Binding(nameof(ProfileDisplayItem.Name))
+                };
+                Grid.SetColumn(nameText, 0);
+                grid.Children.Add(nameText);
+
+                // Delete button (right-aligned)
+                var deleteButton = new Button
+                {
+                    Command = vm.DeleteCommand,
+                    CommandParameter = profile,
                     DataContext = vm,
-                    ItemsSource = vm.Profiles,
-                    [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedProfile)) { Mode = BindingMode.TwoWay },
-                    ItemTemplate = new FuncDataTemplate<ProfileDisplayItem>((profile, _) =>
-                    {
-                       var grid = new Grid
-                        {
-                            ColumnDefinitions = new ColumnDefinitions("*,Auto"),
-                            Margin = new Thickness(2)
-                        };
-
-                        // Name text (left-aligned)
-                        var nameText = new TextBlock
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            [!TextBlock.TextProperty] = new Binding(nameof(ProfileDisplayItem.Name))
-                        };
-                        Grid.SetColumn(nameText, 0);
-                        grid.Children.Add(nameText);
-
-                        // Delete button (right-aligned)
-                        var deleteButton = new Button
-                        {
-                            Command = vm.DeleteCommand,
-                            CommandParameter = profile,
-                            DataContext = vm,
-                        };
-                        deleteButton.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsProfileDeleteEnabled)) { Mode = BindingMode.OneWay });
-                        Attached.SetIcon(deleteButton, "fa-solid fa-trash");
-                        Grid.SetColumn(deleteButton, 1);
-                        grid.Children.Add(deleteButton);
-
-                        return grid;
-                    })
+                    Width = 24,
+                    Height = 24,
+                    HorizontalContentAlignment = HorizontalAlignment.Center,
+                    VerticalContentAlignment = VerticalAlignment.Center,
+                };
+                deleteButton.Classes.Add("tool");
+                deleteButton.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsProfileDeleteEnabled)) { Mode = BindingMode.OneWay });
+                Attached.SetIcon(deleteButton, "fa-solid fa-trash");
+                AutomationProperties.SetName(deleteButton, Se.Language.General.Delete);
+                if (Se.Settings.Appearance.ShowHints)
+                {
+                    ToolTip.SetTip(deleteButton, Se.Language.General.Delete);
                 }
-            }
-        };
-        grid.Children.Add(profileListPanel);
-        Grid.SetRow(profileListPanel, 1);
-        Grid.SetColumn(profileListPanel, 0);
 
-        // Right column: Profile editor
-        var editorGrid = new Grid
+                Grid.SetColumn(deleteButton, 1);
+                grid.Children.Add(deleteButton);
+
+                return grid;
+            })
+        };
+        AutomationProperties.SetName(listBoxProfiles, Se.Language.General.Profiles);
+
+        var buttonNewProfile = EditorChrome.MakeTextToolButton("fa-solid fa-plus", Se.Language.General.NewProfile, vm.NewProfileCommand);
+        var profilesHeader = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
+        DockPanel.SetDock(buttonNewProfile, Dock.Right);
+        profilesHeader.Children.Add(buttonNewProfile);
+        profilesHeader.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Profiles));
+
+        var profilesPanel = new Grid
         {
-            Margin = new Thickness(10),
-            RowDefinitions = new RowDefinitions("Auto,Auto,Auto,*,Auto"),
+            RowDefinitions = new RowDefinitions("Auto,*"),
+            Margin = new Thickness(14, 8, 14, 14),
         };
+        profilesPanel.Add(profilesHeader, 0);
+        profilesPanel.Add(EditorChrome.MakeListFrame(listBoxProfiles, clearListBackground: true), 1);
 
-        // "Edit Profile" heading
-        var heading = new TextBlock
-        {
-            Text = Se.Language.General.ProfileName,
-            FontSize = UiUtil.ScaledFontSize(20),
-            Padding = new Thickness(0, 25, 0, 0),
-        };
-        editorGrid.Children.Add(heading);
-        Grid.SetRow(heading, 0);
-
-        // Name textbox
+        // Right: the selected profile's name
         var nameBox = new TextBox
         {
             PlaceholderText = Se.Language.General.EnterProfileName,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        nameBox.Classes.Add("text");
         nameBox.Bind(TextBox.TextProperty, new Binding($"{nameof(vm.SelectedProfile)}.{nameof(ProfileDisplayItem.Name)}"));
         nameBox.KeyDown += vm.ProfileNameTextBoxOnKeyDown;
-        editorGrid.Children.Add(nameBox);
-        Grid.SetRow(nameBox, 1);
+        AutomationProperties.SetName(nameBox, Se.Language.General.ProfileName);
         vm.FocusProfileName = () => Avalonia.Threading.Dispatcher.UIThread.Post(() => nameBox.Focus());
 
-        var buttonRow = UiUtil.MakeButtonBar(
-            UiUtil.MakeButtonOk(vm.OkCommand),
-            UiUtil.MakeButtonCancel(vm.CancelCommand)
-        );
-        Grid.SetRow(buttonRow, 4);
-        editorGrid.Children.Add(buttonRow);
+        var editorSection = EditorChrome.MakeEditorSection(Se.Language.General.ProfileName, nameBox, first: true);
 
         // Hide if no profile is selected
-        editorGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.IsProfileSelected)));
+        editorSection.Bind(IsVisibleProperty, new Binding(nameof(vm.IsProfileSelected)));
 
-        Grid.SetRow(editorGrid, 1);
-        Grid.SetColumn(editorGrid, 1);
-        grid.Children.Add(editorGrid);
+        var columns = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("*,*"),
+        };
+        columns.Add(profilesPanel, 0, 0);
+        columns.Add(new Border
+        {
+            Child = editorSection,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        }, 0, 1);
 
-        Content = grid;
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonBar = EditorChrome.MakeButtonBar(null, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk);
+
+        Content = EditorChrome.MakeRoot(columns, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
     }

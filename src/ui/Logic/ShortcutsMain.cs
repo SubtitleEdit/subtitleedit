@@ -276,6 +276,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.OpenDataFolderCommand), Se.Language.Options.Shortcuts.OpenSeDataFolder },
         { nameof(MainViewModel.SetupLikeSe4Command), Se.Language.General.SetUpLikeSubtitleEdit4 },
         { nameof(MainViewModel.ToggleIsWaveformToolbarVisibleCommand), Se.Language.Options.Shortcuts.ToggleWaveformToolbar },
+        { nameof(MainViewModel.CycleThemeCommand), Se.Language.Options.Shortcuts.CycleTheme },
         { nameof(MainViewModel.ToggleSubtitleGridFormattingCommand), Se.Language.Options.Shortcuts.ToggleSubtitleGridFormatting },
 
         // File
@@ -362,6 +363,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowVideoTransparentSubtitlesCommand), Se.Language.Options.Shortcuts.GenerateTransparent },
         { nameof(MainViewModel.ShowShotChangesSubtitlesCommand),  Se.Language.General.GenerateImportShotChanges },
         { nameof(MainViewModel.VideoFullScreenCommand),  Se.Language.Options.Shortcuts.VideoFullScreen },
+        { nameof(MainViewModel.VideoFullScreen2Command),  Se.Language.Options.Shortcuts.VideoFullScreen },
 
         // Sync
         { nameof(MainViewModel.ShowSyncAdjustAllTimesCommand),  Se.Language.Options.Shortcuts.AdjustAllTimes },
@@ -384,6 +386,7 @@ public static class ShortcutsMain
 
         { nameof(MainViewModel.ShowGoToVideoPositionCommand), Se.Language.Options.Shortcuts.GeneralGoToVideoPosition },
         { nameof(MainViewModel.ToggleLinesItalicOrSelectedTextCommand), Se.Language.Options.Shortcuts.GeneralToggleItalic },
+        { nameof(MainViewModel.RecordSpeechToTextBoxCommand), Se.Language.Options.Shortcuts.GeneralRecordSpeechToTextBox },
         { nameof(MainViewModel.ToggleLinesBoldOrSelectedTextCommand), Se.Language.Options.Shortcuts.GeneralToggleBold },
         { nameof(MainViewModel.ToggleLinesUnderlineOrSelectedTextCommand), Se.Language.Options.Shortcuts.GeneralToggleUnderline },
         { nameof(MainViewModel.ToggleLinesBoxOrSelectedTextCommand), Se.Language.Options.Shortcuts.GeneralToggleBox },
@@ -426,6 +429,9 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SplitAtVideoPositionCommand), Se.Language.General.SplitLineAtVideoPosition },
         { nameof(MainViewModel.SplitAtTextBoxCursorPositionCommand), Se.Language.General.SplitAtTextBoxCursorPosition },
         { nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionCommand), Se.Language.General.SplitLineAtVideoAndTextBoxPosition },
+        { nameof(MainViewModel.SplitAtVideoPositionAndPlayCommand), Se.Language.Options.Shortcuts.SplitAtVideoPositionAndPlay },
+        { nameof(MainViewModel.SplitAtTextBoxCursorPositionAndPlayCommand), Se.Language.Options.Shortcuts.SplitAtTextBoxCursorPositionAndPlay },
+        { nameof(MainViewModel.SplitAtVideoPositionAndTextBoxCursorPositionAndPlayCommand), Se.Language.Options.Shortcuts.SplitAtVideoAndTextBoxPositionAndPlay },
         { nameof(MainViewModel.TextBoxDeleteForwardCommand), Se.Language.Options.Shortcuts.TextBoxDeleteForward },
         { nameof(MainViewModel.TextBoxCutCommand), Se.Language.Options.Shortcuts.TextBoxCut },
         { nameof(MainViewModel.TextBoxCut2Command), Se.Language.Options.Shortcuts.TextBoxCut2 },
@@ -484,7 +490,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ToggleShotChangesAtVideoPositionCommand),  Se.Language.General.ToggleShotChangesAtVideoPosition },
         { nameof(MainViewModel.GoToPreviousShotChangeCommand),  Se.Language.General.GoToPreviousShotChange },
         { nameof(MainViewModel.GoToNextShotChangeCommand),  Se.Language.General.GoToNextShotChange },
-        { nameof(MainViewModel.ShowVideoChaptersCommand),  Se.Language.Video.Chapters.Title },
+        { nameof(MainViewModel.ShowVideoChaptersCommand),  Se.Language.General.Chapters },
         { nameof(MainViewModel.ToggleChapterAtVideoPositionCommand),  Se.Language.Video.Chapters.ToggleChapterAtVideoPosition },
         { nameof(MainViewModel.GoToPreviousChapterCommand),  Se.Language.Video.Chapters.GoToPreviousChapter },
         { nameof(MainViewModel.GoToNextChapterCommand),  Se.Language.Video.Chapters.GoToNextChapter },
@@ -542,12 +548,20 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveStartXMsForwardCommand), Se.Language.Options.Shortcuts.MoveStartXMsForward },
         { nameof(MainViewModel.MoveEndXMsBackCommand), Se.Language.Options.Shortcuts.MoveEndXMsBack },
         { nameof(MainViewModel.MoveEndXMsForwardCommand), Se.Language.Options.Shortcuts.MoveEndXMsForward },
+        { nameof(MainViewModel.MoveStartXMsBackPushPreviousCommand), Se.Language.Options.Shortcuts.MoveStartXMsBackPushPrevious },
+        { nameof(MainViewModel.MoveEndXMsForwardPushNextCommand), Se.Language.Options.Shortcuts.MoveEndXMsForwardPushNext },
         { nameof(MainViewModel.MoveSelectedLinesXMsBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesXMsBack },
         { nameof(MainViewModel.MoveSelectedLinesXMsForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesXMsForward },
         { nameof(MainViewModel.MoveSelectedLinesAndForwardXMsBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardXMsBack },
         { nameof(MainViewModel.MoveSelectedLinesAndForwardXMsForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardXMsForward },
         { nameof(MainViewModel.MoveAllLinesXMsBackCommand), Se.Language.Options.Shortcuts.MoveAllLinesXMsBack },
         { nameof(MainViewModel.MoveAllLinesXMsForwardCommand), Se.Language.Options.Shortcuts.MoveAllLinesXMsForward },
+        { nameof(MainViewModel.MoveSelectedLinesOneFrameBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesOneFrameBack },
+        { nameof(MainViewModel.MoveSelectedLinesOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesOneFrameForward },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardOneFrameBackCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardOneFrameBack },
+        { nameof(MainViewModel.MoveSelectedLinesAndForwardOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveSelectedLinesAndForwardOneFrameForward },
+        { nameof(MainViewModel.MoveAllLinesOneFrameBackCommand), Se.Language.Options.Shortcuts.MoveAllLinesOneFrameBack },
+        { nameof(MainViewModel.MoveAllLinesOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveAllLinesOneFrameForward },
         { nameof(MainViewModel.MoveSelectedLinesCustom1BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 1, back: true) },
         { nameof(MainViewModel.MoveSelectedLinesCustom1ForwardCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 1, back: false) },
         { nameof(MainViewModel.MoveSelectedLinesCustom2BackCommand), GetMoveLinesCustomTitle(MoveLinesScope.Selected, 2, back: true) },
@@ -582,6 +596,9 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveTextFromCursorToNextAndGoToNextCommand), Se.Language.Options.Shortcuts.MoveTextFromCursorToNextAndGoToNext },
         { nameof(MainViewModel.MoveTextFromCursorToNextAndGoToNextAndPlayCommand), Se.Language.Options.Shortcuts.MoveTextFromCursorToNextAndGoToNextAndPlay },
         { nameof(MainViewModel.MoveTextFromCursorToNextAndGoToNextAndPlayAndPauseCommand), Se.Language.Options.Shortcuts.MoveTextFromCursorToNextAndGoToNextAndPlayAndPause },
+        { nameof(MainViewModel.MoveTextBeforeCursorToPreviousCommand), Se.Language.Options.Shortcuts.MoveTextBeforeCursorToPrevious },
+        { nameof(MainViewModel.ShowCustomErrorRulesCommand), Se.Language.Options.Shortcuts.ShowCustomErrorRules },
+        { nameof(MainViewModel.ToggleCustomErrorRulesCommand), Se.Language.Options.Shortcuts.ToggleCustomErrorRules },
         { nameof(MainViewModel.BreakAtFirstSpaceFromCursorCommand), Se.Language.Options.Shortcuts.BreakAtFirstSpaceFromCursor },
         { nameof(MainViewModel.BreakAtFirstSpaceFromCursorAndGoToNextCommand), Se.Language.Options.Shortcuts.BreakAtFirstSpaceFromCursorAndGoToNext },
         { nameof(MainViewModel.ToggleFocusGridAndWaveformCommand), Se.Language.Options.Shortcuts.ToggleFocusGridAndWaveform },
@@ -730,6 +747,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowPickLayerCommand), Se.Language.General.PickLayer },
         { nameof(MainViewModel.CopyTextToClipboardCommand), Se.Language.Options.Shortcuts.CopyTextToClipboard },
         { nameof(MainViewModel.CopyTextFromOriginalToClipboardCommand), Se.Language.Options.Shortcuts.CopyTextFromOriginalToClipboard },
+        { nameof(MainViewModel.CopyPlainTextToClipboardCommand), Se.Language.Options.Shortcuts.CopyPlainTextToClipboard },
+        { nameof(MainViewModel.CopyPlainTextFromOriginalToClipboardCommand), Se.Language.Options.Shortcuts.CopyPlainTextFromOriginalToClipboard },
         { nameof(MainViewModel.ShowAssaImageColorPickerCommand), Se.Language.Assa.ImageColorPicker },
         { nameof(MainViewModel.ShowAssaSetPositionCommand), Se.Language.Assa.SetPosition },
         { nameof(MainViewModel.ShowAssaApplyCustomOverrideTagsCommand), Se.Language.Assa.ApplyOverrideTags },
@@ -747,6 +766,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.RemoveFormattingAllCommand), Se.Language.General.RemoveAllFormatting },
         { nameof(MainViewModel.RemoveFormattingItalicCommand), Se.Language.General.RemoveItalic },
         { nameof(MainViewModel.ToggleEditOriginalModeCommand), Se.Language.Main.Menu.EditOriginalSubtitle },
+        { nameof(MainViewModel.ToggleLockOriginalToTranslationCommand), Se.Language.Waveform.LockOriginalToTranslation },
         { nameof(MainViewModel.WaveformShowOnlyWaveformCommand), Se.Language.Waveform.ShowOnlyWaveform },
         { nameof(MainViewModel.WaveformShowOnlySpectrogramCommand), Se.Language.Waveform.ShowOnlySpectrogram },
         { nameof(MainViewModel.WaveformShowWaveformAndSpectrogramCommand), Se.Language.Waveform.ShowWaveformAndSpectrogram },
@@ -835,6 +855,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.GoToNextEmptyLineCommand, nameof(vm.GoToNextEmptyLineCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.OpenDataFolderCommand, nameof(vm.OpenDataFolderCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleIsWaveformToolbarVisibleCommand, nameof(vm.ToggleIsWaveformToolbarVisibleCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.CycleThemeCommand, nameof(vm.CycleThemeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleSubtitleGridFormattingCommand, nameof(vm.ToggleSubtitleGridFormattingCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SetupLikeSe4Command, nameof(vm.SetupLikeSe4Command), ShortcutCategory.General);
 
@@ -881,6 +902,7 @@ public static class ShortcutsMain
 
         AddShortcut(shortcuts, vm.ShowGoToVideoPositionCommand, nameof(vm.ShowGoToVideoPositionCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleLinesItalicOrSelectedTextCommand, nameof(vm.ToggleLinesItalicOrSelectedTextCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.RecordSpeechToTextBoxCommand, nameof(vm.RecordSpeechToTextBoxCommand), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.ToggleLinesBoldOrSelectedTextCommand, nameof(vm.ToggleLinesBoldOrSelectedTextCommand), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.ToggleLinesUnderlineOrSelectedTextCommand, nameof(vm.ToggleLinesUnderlineOrSelectedTextCommand), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.ToggleLinesBoxOrSelectedTextCommand, nameof(vm.ToggleLinesBoxOrSelectedTextCommand), ShortcutCategory.SubtitleGridAndTextBox);
@@ -929,6 +951,9 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SplitAtVideoPositionCommand, nameof(vm.SplitAtVideoPositionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SplitAtTextBoxCursorPositionCommand, nameof(vm.SplitAtTextBoxCursorPositionCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.SplitAtVideoPositionAndTextBoxCursorPositionCommand, nameof(vm.SplitAtVideoPositionAndTextBoxCursorPositionCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SplitAtVideoPositionAndPlayCommand, nameof(vm.SplitAtVideoPositionAndPlayCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SplitAtTextBoxCursorPositionAndPlayCommand, nameof(vm.SplitAtTextBoxCursorPositionAndPlayCommand), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.SplitAtVideoPositionAndTextBoxCursorPositionAndPlayCommand, nameof(vm.SplitAtVideoPositionAndTextBoxCursorPositionAndPlayCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.TextBoxDeleteForwardCommand, nameof(vm.TextBoxDeleteForwardCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxCutCommand, nameof(vm.TextBoxCutCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.TextBoxCut2Command, nameof(vm.TextBoxCut2Command), ShortcutCategory.TextBox);
@@ -991,6 +1016,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.VideoCutCommand, nameof(vm.VideoCutCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.CutVideoSelectedLinesCommand, nameof(vm.CutVideoSelectedLinesCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoFullScreenCommand, nameof(vm.VideoFullScreenCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.VideoFullScreen2Command, nameof(vm.VideoFullScreen2Command), ShortcutCategory.General, ShortcutGroup.Video);
 
         AddShortcut(shortcuts, vm.ShowSyncAdjustAllTimesCommand, nameof(vm.ShowSyncAdjustAllTimesCommand), ShortcutCategory.General, ShortcutGroup.Sync);
         AddShortcut(shortcuts, vm.ShowVisualSyncCommand, nameof(vm.ShowVisualSyncCommand), ShortcutCategory.General, ShortcutGroup.Sync);
@@ -1108,12 +1134,20 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MoveStartXMsForwardCommand, nameof(vm.MoveStartXMsForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndXMsBackCommand, nameof(vm.MoveEndXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndXMsForwardCommand, nameof(vm.MoveEndXMsForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveStartXMsBackPushPreviousCommand, nameof(vm.MoveStartXMsBackPushPreviousCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveEndXMsForwardPushNextCommand, nameof(vm.MoveEndXMsForwardPushNextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesXMsBackCommand, nameof(vm.MoveSelectedLinesXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesXMsForwardCommand, nameof(vm.MoveSelectedLinesXMsForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardXMsBackCommand, nameof(vm.MoveSelectedLinesAndForwardXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardXMsForwardCommand, nameof(vm.MoveSelectedLinesAndForwardXMsForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveAllLinesXMsBackCommand, nameof(vm.MoveAllLinesXMsBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveAllLinesXMsForwardCommand, nameof(vm.MoveAllLinesXMsForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesOneFrameBackCommand, nameof(vm.MoveSelectedLinesOneFrameBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesOneFrameForwardCommand, nameof(vm.MoveSelectedLinesOneFrameForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardOneFrameBackCommand, nameof(vm.MoveSelectedLinesAndForwardOneFrameBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveSelectedLinesAndForwardOneFrameForwardCommand, nameof(vm.MoveSelectedLinesAndForwardOneFrameForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesOneFrameBackCommand, nameof(vm.MoveAllLinesOneFrameBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveAllLinesOneFrameForwardCommand, nameof(vm.MoveAllLinesOneFrameForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesCustom1BackCommand, nameof(vm.MoveSelectedLinesCustom1BackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesCustom1ForwardCommand, nameof(vm.MoveSelectedLinesCustom1ForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveSelectedLinesCustom2BackCommand, nameof(vm.MoveSelectedLinesCustom2BackCommand), ShortcutCategory.General);
@@ -1140,6 +1174,9 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MoveTextFromCursorToNextAndGoToNextCommand, nameof(vm.MoveTextFromCursorToNextAndGoToNextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveTextFromCursorToNextAndGoToNextAndPlayCommand, nameof(vm.MoveTextFromCursorToNextAndGoToNextAndPlayCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveTextFromCursorToNextAndGoToNextAndPlayAndPauseCommand, nameof(vm.MoveTextFromCursorToNextAndGoToNextAndPlayAndPauseCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveTextBeforeCursorToPreviousCommand, nameof(vm.MoveTextBeforeCursorToPreviousCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ShowCustomErrorRulesCommand, nameof(vm.ShowCustomErrorRulesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleCustomErrorRulesCommand, nameof(vm.ToggleCustomErrorRulesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleFocusGridAndWaveformCommand, nameof(vm.ToggleFocusGridAndWaveformCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleFocusTextBoxAndWaveformCommand, nameof(vm.ToggleFocusTextBoxAndWaveformCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleFocusTextBoxAndSubtitleGridCommand, nameof(vm.ToggleFocusTextBoxAndSubtitleGridCommand), ShortcutCategory.General);
@@ -1243,7 +1280,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithLoopCommand, nameof(vm.PlaySelectedLinesWithLoopCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.PlaySelectedLinesAndFocusWaveformCommand, nameof(vm.PlaySelectedLinesAndFocusWaveformCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithLoopAndFocusWaveformCommand, nameof(vm.PlaySelectedLinesWithLoopAndFocusWaveformCommand), ShortcutCategory.General, ShortcutGroup.Video);
-        // "Toggle casing" also works on selected lines in the grid, but it belongs next to the two
+        // "Cycle casing" also works on selected lines in the grid, but it belongs next to the two
         // other casing actions when browsing shortcuts - the group is display-only (#13093).
         AddShortcut(shortcuts, vm.ToggleCasingCommand, nameof(vm.ToggleCasingCommand), ShortcutCategory.SubtitleGridAndTextBox, ShortcutGroup.TextBox);
         AddShortcut(shortcuts, vm.SelectionToLowerCommand, nameof(vm.SelectionToLowerCommand), ShortcutCategory.TextBox);
@@ -1284,6 +1321,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowPickLayerCommand, nameof(vm.ShowPickLayerCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.CopyTextToClipboardCommand, nameof(vm.CopyTextToClipboardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.CopyTextFromOriginalToClipboardCommand, nameof(vm.CopyTextFromOriginalToClipboardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.CopyPlainTextToClipboardCommand, nameof(vm.CopyPlainTextToClipboardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.CopyPlainTextFromOriginalToClipboardCommand, nameof(vm.CopyPlainTextFromOriginalToClipboardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowAssaImageColorPickerCommand, nameof(vm.ShowAssaImageColorPickerCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowAssaSetPositionCommand, nameof(vm.ShowAssaSetPositionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowAssaApplyCustomOverrideTagsCommand, nameof(vm.ShowAssaApplyCustomOverrideTagsCommand), ShortcutCategory.General);
@@ -1302,6 +1341,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.RemoveFormattingAllCommand, nameof(vm.RemoveFormattingAllCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.RemoveFormattingItalicCommand, nameof(vm.RemoveFormattingItalicCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.ToggleEditOriginalModeCommand, nameof(vm.ToggleEditOriginalModeCommand), ShortcutCategory.General, ShortcutGroup.Translate);
+        AddShortcut(shortcuts, vm.ToggleLockOriginalToTranslationCommand, nameof(vm.ToggleLockOriginalToTranslationCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformShowOnlyWaveformCommand, nameof(vm.WaveformShowOnlyWaveformCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformShowOnlySpectrogramCommand, nameof(vm.WaveformShowOnlySpectrogramCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformShowWaveformAndSpectrogramCommand, nameof(vm.WaveformShowWaveformAndSpectrogramCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
@@ -1572,6 +1612,7 @@ public static class ShortcutsMain
             new(nameof(vm.Video500MsBackCommand), ["Alt", nameof(Avalonia.Input.Key.Left)], ShortcutCategory.General),
             new(nameof(vm.Video500MsForwardCommand), ["Alt", nameof(Avalonia.Input.Key.Right)], ShortcutCategory.General),
             new(nameof(vm.VideoFullScreenCommand), ["Alt", nameof(Avalonia.Input.Key.Return)], ShortcutCategory.General),
+            new(nameof(vm.VideoFullScreen2Command), ["Alt", "NumPadReturn"], ShortcutCategory.General),
             new(nameof(vm.WaveformVerticalZoomInCommand), ["Shift", nameof(Avalonia.Input.Key.Add)], ShortcutCategory.General),
             new(nameof(vm.WaveformVerticalZoomOutCommand), ["Shift", nameof(Avalonia.Input.Key.Subtract)], ShortcutCategory.General),
             new(nameof(vm.PauseCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.P)], ShortcutCategory.General),

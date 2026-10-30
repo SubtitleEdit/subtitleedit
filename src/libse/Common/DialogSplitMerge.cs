@@ -13,6 +13,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         public bool SkipLineEndingCheck { get; set; }
 
         public static char GetDashChar() => '-';
+
+        /// <summary>
+        /// Every IsDialog variant needs a line starting with a dash, so text without one is
+        /// returned as is - without splitting it and stripping tags for the dialog checks.
+        /// </summary>
+        private static bool CannotBeDialog(string input) =>
+            input != null && input.IndexOf(GetDashChar()) < 0 && input.IndexOf(GetAlternateDashChar()) < 0;
         public static char GetAlternateDashChar() => '‐'; // Unicode En Dash (\u2010)
 
         public string FixDashesAndSpaces(string input)
@@ -27,6 +34,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string FixSpaces(string input)
         {
+            if (CannotBeDialog(input))
+            {
+                return input;
+            }
+
             var lines = input.SplitToLines();
             if (!IsDialog(lines))
             {
@@ -94,6 +106,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string AddSpaces(string input)
         {
+            if (CannotBeDialog(input))
+            {
+                return input;
+            }
+
             var lines = input.SplitToLines();
             if (!IsDialog(lines))
             {
@@ -140,6 +157,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string RemoveSpaces(string input)
         {
+            if (CannotBeDialog(input))
+            {
+                return input;
+            }
+
             var lines = input.SplitToLines();
             if (!IsDialog(lines))
             {
@@ -189,6 +211,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string FixDashes(string input, Paragraph p, Paragraph prev)
         {
+            if (CannotBeDialog(input))
+            {
+                return input;
+            }
+
             var lines = input.SplitToLines();
             if (!IsDialog(lines, p, prev))
             {
@@ -285,6 +312,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string FixDashes(string input)
         {
+            if (CannotBeDialog(input))
+            {
+                return input;
+            }
+
             var lines = input.SplitToLines();
             if (!IsDialog(lines))
             {

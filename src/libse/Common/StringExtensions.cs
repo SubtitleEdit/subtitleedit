@@ -105,29 +105,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.AsSpan(0, endExclusive).EndsWith(value.AsSpan(), comparison);
         }
 
-        public static bool StartsWith(this string s, char c)
-        {
-            return s.Length > 0 && s[0] == c;
-        }
-
-        public static bool EndsWith(this string s, char c)
-        {
-            return s.Length > 0 && s[s.Length - 1] == c;
-        }
-
-        public static bool Contains(this string source, char value)
-        {
-            return source.IndexOf(value) >= 0;
-        }
-
         public static bool Contains(this string source, char[] value)
         {
             return source.IndexOfAny(value) >= 0;
-        }
-
-        public static bool Contains(this string source, string value, StringComparison comparisonType)
-        {
-            return source.IndexOf(value, comparisonType) >= 0;
         }
 
         public static List<string> SplitToLines(this string s) => s.SplitToLines(s.Length);
@@ -558,15 +538,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// building the stripped string. Prepare <paramref name="chars"/> once in a static field.
         /// </summary>
         public static bool IsOnlyCharsOrWhiteSpace(this string value, CharLookup chars) => chars.IsOnlyOrWhiteSpace(value);
-
-        public static bool ContainsUnicodeControlChars(this string s)
-        {
-#if NET8_0_OR_GREATER
-            return s.AsSpan().ContainsAny(UnicodeControlCharsSearchValues);
-#else
-            return s.Contains(UnicodeControlChars);
-#endif
-        }
 
         public static string RemoveControlCharacters(this string s)
         {

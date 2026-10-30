@@ -15,7 +15,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public const int ProperCase = 3;
 
         private SubtitleFormat _subtitleFormat;
-        private string _languageCode;
 
         private NameList _namesList;
         private HashSet<string> _nameListInclMulti;
@@ -29,7 +28,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public ActorConverter(SubtitleFormat subtitleFormat, string languageCode)
         {
             _subtitleFormat = subtitleFormat;
-            _languageCode = languageCode;
             _namesList = new NameList(Configuration.DictionariesDirectory, languageCode, false, string.Empty);
             _nameListInclMulti = new HashSet<string>(_namesList.GetAllNames(), StringComparer.OrdinalIgnoreCase);
         }

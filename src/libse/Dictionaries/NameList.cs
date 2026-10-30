@@ -15,6 +15,10 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private readonly HashSet<string> _namesMultiListUppercase;
         private readonly HashSet<string> _blackList;
 
+        // Names from the shipped lists (not the user file) - only these need a blacklist entry to
+        // stay removed; a name that only lives in the user file is gone once its node is deleted.
+        private readonly HashSet<string> _shippedNames;
+
         // Lazy reverse index for IsInNamesMultiWordList, see GetMultiNamePartIndex.
         private Dictionary<string, List<string>> _namesMultiListParts;
         public string LanguageName { get; private set; }
@@ -28,10 +32,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             _namesMultiList = new HashSet<string>();
             _namesMultiListUppercase = new HashSet<string>();
             _blackList = new HashSet<string>();
+            _shippedNames = new HashSet<string>();
 
-            LoadNamesList(GetLocalNamesUserFileName()); // e.g: en_names_user.xml (culture sensitive)
-            LoadNamesList(GetLocalNamesFileName()); // e.g: en_names.xml (culture sensitive)
-            LoadNamesList(GetLocalCultureNamesFileName()); // e.g: pt_BR_names.xml (region specific)
+            LoadNamesList(GetLocalNamesUserFileName(), null); // e.g: en_names_user.xml (culture sensitive)
+            LoadNamesList(GetLocalNamesFileName(), _shippedNames); // e.g: en_names.xml (culture sensitive)
+            LoadNamesList(GetLocalCultureNamesFileName(), _shippedNames); // e.g: pt_BR_names.xml (region specific)
             if (useOnlineNameList && !string.IsNullOrEmpty(namesUrl))
             {
                 try
@@ -45,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
             else
             {
-                LoadNamesList(Path.Combine(_dictionaryFolder, "names.xml"));
+                LoadNamesList(Path.Combine(_dictionaryFolder, "names.xml"), _shippedNames);
             }
 
             foreach (var name in _blackList)
@@ -121,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return Path.Combine(_dictionaryFolder, LanguageName + "_names.xml");
         }
 
-        private void LoadNamesList(string fileNameOrUrl)
+        private void LoadNamesList(string fileNameOrUrl, HashSet<string> loadedNames)
         {
             if (string.IsNullOrEmpty(fileNameOrUrl) ||
                 !File.Exists(fileNameOrUrl) &&
@@ -145,7 +150,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                                 var name = reader.ReadElementContentAsString().Trim();
                                 if (name.Length > 0)
                                 {
-                                    if (name.IndexOf(' ') >= 0)
+                                    loadedNames?.Add(name);
+                                    if (name.Contains(' '))
                                     {
                                         _namesMultiList.Add(name);
                                     }
@@ -197,12 +203,18 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 var fileName = GetLocalNamesUserFileName();
                 var nameListXml = CreateDocument(fileName);
 
-                // Add removed name to blacklist
-                var nameNode = nameListXml.CreateElement("name");
-                nameNode.InnerText = name;
                 if (nameListXml.DocumentElement != null)
                 {
-                    nameListXml.DocumentElement.SelectSingleNode("blacklist")?.AppendChild(nameNode);
+                    // Blacklist only a shipped name: one the user added (e.g. spell-check "Add to
+                    // names list" followed by Undo) just loses its node - a blacklist entry would
+                    // make adding it again later silently fail to save. (#16472)
+                    if (_shippedNames.Contains(name))
+                    {
+                        var nameNode = nameListXml.CreateElement("name");
+                        nameNode.InnerText = name;
+                        nameListXml.DocumentElement.SelectSingleNode("blacklist")?.AppendChild(nameNode);
+                    }
+
                     var nodeToRemove = default(XmlNode);
 
                     // Remove remove-name from name-list
@@ -242,23 +254,48 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         public bool Add(string name)
         {
             name = name.RemoveControlCharacters().Trim();
-            if (name.Length == 0 || _blackList.Contains(name) || !name.ContainsLetter())
+            if (name.Length == 0 || !name.ContainsLetter())
             {
                 return false;
             }
 
+            // An explicit add overrides an earlier removal: blacklisted names are left out of the
+            // lists at load, so TryAdd succeeds and the blacklist entry is dropped below. Refusing
+            // here left the name in the caller's session but never saved it. (#16472)
+            var wasBlacklisted = _blackList.Remove(name);
             if (!TryAdd(name))
             {
                 return false;
             }
 
-            // <two-letter-iso-code>_names.xml, e.g "en_names.xml"
+            // <two-letter-iso-code>_names_user.xml, e.g "en_names_user.xml"
             var fileName = GetLocalNamesUserFileName();
             var nameListXml = CreateDocument(fileName);
 
             var de = nameListXml.DocumentElement;
             if (de != null)
             {
+                if (wasBlacklisted)
+                {
+                    var blacklistNodes = de.SelectNodes("blacklist/name");
+                    var nodesToRemove = new List<XmlNode>();
+                    if (blacklistNodes != null)
+                    {
+                        foreach (XmlNode blacklistNode in blacklistNodes)
+                        {
+                            if (blacklistNode.InnerText.Trim().Equals(name, StringComparison.Ordinal))
+                            {
+                                nodesToRemove.Add(blacklistNode);
+                            }
+                        }
+                    }
+
+                    foreach (var blacklistNode in nodesToRemove)
+                    {
+                        blacklistNode.ParentNode?.RemoveChild(blacklistNode);
+                    }
+                }
+
                 var node = nameListXml.CreateElement("name");
                 node.InnerText = name;
                 de.AppendChild(node);
@@ -399,7 +436,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             Dictionary<string, string> index;
-            if (name.IndexOf(' ') >= 0)
+            if (name.Contains(' '))
             {
                 index = _namesMultiListCaseInsensitive ?? (_namesMultiListCaseInsensitive = BuildCaseInsensitiveIndex(_namesMultiList));
             }

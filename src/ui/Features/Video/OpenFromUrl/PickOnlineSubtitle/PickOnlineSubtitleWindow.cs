@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -23,20 +22,19 @@ public class PickOnlineSubtitleWindow : Window
         MinHeight = 500;
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
         DataContext = vm;
 
         var tracksView = MakeTracksView(vm);
         var previewView = MakePreviewView(vm);
 
-        var statusBar = MakeStatusBar(vm);
-
         var buttonSave = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveCommand);
         buttonSave.Bind(IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)));
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).AsPrimary();
         buttonOk.Bind(IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonSave, buttonOk, buttonCancel);
 
+        // The track list and the preview side by side, the status in the button bar
         var splitGrid = new Grid
         {
             ColumnDefinitions =
@@ -44,10 +42,10 @@ public class PickOnlineSubtitleWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            ColumnSpacing = 10,
+            Background = EditorChrome.PanelBrush,
         };
-        splitGrid.Add(tracksView, 0, 0);
-        splitGrid.Add(previewView, 0, 1);
+        splitGrid.Add(EditorChrome.MakeListPane(Se.Language.Video.PickOnlineSubtitleTitle, tracksView, margin: new Thickness(14, 12, 7, 14)), 0, 0);
+        splitGrid.Add(EditorChrome.MakeListPane(Se.Language.General.Preview, previewView, margin: new Thickness(7, 12, 14, 14)), 0, 1);
 
         var outer = new Grid
         {
@@ -55,14 +53,10 @@ public class PickOnlineSubtitleWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 8,
         };
         outer.Add(splitGrid, 0);
-        outer.Add(statusBar, 1);
-        outer.Add(panelButtons, 2);
+        outer.Add(EditorChrome.MakeButtonBar(MakeStatusText(vm), buttonSave, buttonCancel, buttonOk), 1);
 
         Content = outer;
 
@@ -125,7 +119,7 @@ public class PickOnlineSubtitleWindow : Window
         };
         vm.TracksGrid = dataGridTracks;
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGridTracks);
+        return EditorChrome.MakeListFrame(dataGridTracks);
     }
 
     private static Border MakePreviewView(PickOnlineSubtitleViewModel vm)
@@ -174,24 +168,13 @@ public class PickOnlineSubtitleWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
         });
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGridPreview);
+        return EditorChrome.MakeListFrame(dataGridPreview);
     }
 
-    private static Border MakeStatusBar(PickOnlineSubtitleViewModel vm)
+    private static TextBlock MakeStatusText(PickOnlineSubtitleViewModel vm)
     {
-        var statusText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            TextWrapping = TextWrapping.NoWrap,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            Opacity = 0.85,
-        };
-        statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
-
-        return new Border
-        {
-            Child = statusText,
-            Padding = new Thickness(4, 2),
-        };
+        var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText), 12);
+        statusText.TextWrapping = TextWrapping.NoWrap;
+        return statusText;
     }
 }

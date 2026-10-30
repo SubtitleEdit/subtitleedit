@@ -65,6 +65,13 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     private volatile bool _isClosing;
     private readonly System.Timers.Timer _timerUpdatePreview;
 
+    // Typefaces decoded from the [Fonts] attachments, so a style using an attached font that is
+    // not installed previews in it. Rebuilt when the footer changes; the lock keeps the timer's
+    // render off them while they are rebuilt or disposed on close.
+    private readonly object _attachedTypefacesLock = new();
+    private string? _attachedTypefacesFooter;
+    private readonly List<(string FontName, SKTypeface Typeface)> _attachedTypefaces = new();
+
     public SsaStylesViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;
@@ -845,6 +852,10 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
     {
         _isClosing = true;
         _timerUpdatePreview.StopAndDispose(TimerUpdatePreviewElapsed);
+        lock (_attachedTypefacesLock)
+        {
+            DisposeAttachedTypefaces();
+        }
     }
 
     public void Initialize(
@@ -987,12 +998,25 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void UpdatePreview()
     {
+        lock (_attachedTypefacesLock)
+        {
+            if (!_isClosing)
+            {
+                UpdatePreviewLocked();
+            }
+        }
+    }
+
+    private void UpdatePreviewLocked()
+    {
         var style = CurrentStyle;
         if (style == null)
         {
             ImagePreview = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
             return;
         }
+
+        var attachedTypeface = GetAttachedTypeface(style);
 
         var text = "This is a test";
 
@@ -1020,7 +1044,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 (float)style.ShadowWidth,
                 isItalic: style.Italic,
                 isUnderline: style.Underline,
-                isStrikeout: style.Strikeout);
+                isStrikeout: style.Strikeout,
+                typeface: attachedTypeface);
 
             if (style.ShadowWidth > 0)
             {
@@ -1047,7 +1072,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 (int)Math.Round(style.ShadowWidth),
                 isItalic: style.Italic,
                 isUnderline: style.Underline,
-                isStrikeout: style.Strikeout);
+                isStrikeout: style.Strikeout,
+                typeface: attachedTypeface);
         }
         else // FontBoxType.None
         {
@@ -1064,7 +1090,8 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
                 (float)style.ShadowWidth,
                 isItalic: style.Italic,
                 isUnderline: style.Underline,
-                isStrikeout: style.Strikeout);
+                isStrikeout: style.Strikeout,
+                typeface: attachedTypeface);
         }
 
         // A 500 ms timer re-renders this for as long as the dialog is open, and ToAvaloniaBitmap
@@ -1072,6 +1099,49 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
         using var frame = TextToImageGenerator.ComposeOnPreviewFrame(bitmap, GetAlignment(style), style.MarginLeft, style.MarginRight, style.MarginVertical);
         ImagePreview = frame.ToAvaloniaBitmap();
         bitmap.Dispose();
+    }
+
+    /// <summary>
+    /// The attached font face matching the style's font name (preferring the style's bold/italic),
+    /// or null to use an installed font. Call with _attachedTypefacesLock held.
+    /// </summary>
+    private SKTypeface? GetAttachedTypeface(StyleDisplay style)
+    {
+        var footer = _subtitle.Footer;
+        if (!ReferenceEquals(footer, _attachedTypefacesFooter))
+        {
+            DisposeAttachedTypefaces();
+            _attachedTypefacesFooter = footer;
+            foreach (var (_, bytes) in AssaFontEmbedder.GetEmbeddedFonts(footer))
+            {
+                var typeface = SKTypeface.FromData(SKData.CreateCopy(bytes));
+                if (typeface != null)
+                {
+                    _attachedTypefaces.Add((FontHelper.GetLibAssaFontName(typeface), typeface));
+                }
+            }
+        }
+
+        var matches = _attachedTypefaces
+            .Where(p => p.FontName.Equals(style.FontName, StringComparison.OrdinalIgnoreCase) ||
+                        p.Typeface.FamilyName.Equals(style.FontName, StringComparison.OrdinalIgnoreCase))
+            .Select(p => p.Typeface)
+            .ToList();
+
+        return matches.FirstOrDefault(p => p.IsBold == style.Bold && p.IsItalic == style.Italic) ??
+               matches.FirstOrDefault(p => p.IsBold == style.Bold) ??
+               matches.FirstOrDefault();
+    }
+
+    private void DisposeAttachedTypefaces()
+    {
+        foreach (var (_, typeface) in _attachedTypefaces)
+        {
+            typeface.Dispose();
+        }
+
+        _attachedTypefaces.Clear();
+        _attachedTypefacesFooter = null;
     }
 
     private static int GetPlayResY(string? header)
@@ -1155,6 +1225,13 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void SwitchToFileStyle()
     {
+        // The grid can show a selection the view model never got (the first row is selected
+        // when the grid fills): clicking that row only raises GotFocus, and the editor stayed empty
+        if (SelectedFileStyle == null && FileStyleGrid.SelectedItem is StyleDisplay gridSelected)
+        {
+            SelectedFileStyle = gridSelected;
+        }
+
         var selectedStyle = SelectedFileStyle;
         CurrentStyle = selectedStyle;
         CurrentTitle = Se.Language.Assa.StylesInFile;
@@ -1165,6 +1242,12 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void SwitchToStorageStyle()
     {
+        // See SwitchToFileStyle: the first saved style showed selected but could not be edited
+        if (SelectedStorageStyle == null && StorageStyleGrid.SelectedItem is StyleDisplay gridSelected)
+        {
+            SelectedStorageStyle = gridSelected;
+        }
+
         var selectedStyle = SelectedStorageStyle;
         CurrentStyle = selectedStyle;
         CurrentTitle = Se.Language.Assa.StylesSaved;

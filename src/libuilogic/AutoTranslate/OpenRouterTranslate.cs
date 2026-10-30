@@ -2,13 +2,8 @@
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic.Http;
 
 namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
@@ -31,33 +26,44 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         {
             // High-Reasoning & Multilingual (The Leaders)
             "openai/gpt-5.6-sol",                       // OpenAI flagship for complex professional work
+            "openai/gpt-6.1-sol",                       // Newest OpenAI flagship
+            "openai/gpt-6-sol",                         // GPT-6 flagship
             "openai/gpt-5.5",                           // Previous-gen flagship general-purpose translator
-            "anthropic/claude-opus-5",                  // Current Anthropic flagship for nuanced translation
+            "anthropic/claude-opus-5.5",                // Current Anthropic flagship for nuanced translation
+            "anthropic/claude-sonnet-5.5",              // Strong balance of quality and cost
+            "anthropic/claude-opus-5",                  // Previous Anthropic flagship
             "anthropic/claude-opus-4.8",                // Exceptional nuance and formal tone preservation
-            "anthropic/claude-sonnet-5",                // Strong balance of quality and cost
+            "anthropic/claude-sonnet-5",                // Previous-gen Sonnet
+            "google/gemini-4-argon",                    // Google's newest frontier model
             "google/gemini-3.1-pro-preview",            // Massive context for translating whole books
             "deepseek/deepseek-v4-pro",                 // The most cost-effective reasoning translator
-            "z-ai/glm-5.2",                             // Strong open-weight generalist
-            "moonshotai/kimi-k2.6",                     // Strong for Asian languages
+            "z-ai/glm-5.3",                             // Strong open-weight generalist
+            "z-ai/glm-5.2",                             // Previous GLM generalist
+            "moonshotai/kimi-k3",                       // Strong for Asian languages
+            "moonshotai/kimi-k2.6",                     // Previous Kimi
+            "x-ai/grok-4.7",                            // xAI flagship
 
             // Efficient / Fast Translation
             "openai/gpt-5.6-terra",                     // Balanced intelligence and cost
+            "openai/gpt-6-luna",                        // GPT-6 cost-optimized, high-volume
             "openai/gpt-5.6-luna",                      // Cost-optimized, high-volume
-            "google/gemini-3.6-flash",                  // Google's newest flash model, cheaper and smarter
-            "google/gemini-3.5-flash",                  // Strong previous-gen flash model
+            "google/gemini-3.8-flash",                  // Google's newest flash model, cheaper and smarter
+            "google/gemini-3.6-flash",                  // Strong previous-gen flash model
             "google/gemini-3.1-flash-lite",             // Speed-optimized multimodal
-            "anthropic/claude-haiku-4.5",               // Fast Anthropic option
-            "deepseek/deepseek-v4-flash",               // Low-latency DeepSeek
+            "anthropic/claude-haiku-5.5",               // Fast Anthropic option
+            "anthropic/claude-haiku-4.5",               // Previous fast Anthropic option
+            "deepseek/deepseek-v4.1-flash",             // Low-latency DeepSeek
 
             // Specialized & Open-Weight (High Translation Performance)
-            "qwen/qwen3.6-max-preview",                 // Dominant for Asian & Middle Eastern languages
+            "qwen/qwen3.8-max-0902",                    // Dominant for Asian & Middle Eastern languages
             "meta-llama/llama-4-maverick",              // MoE architecture, strong multilingual coverage
-            "mistralai/mistral-large-2512",             // Superior for European romance languages
+            "mistralai/mistral-large-4-0",              // Superior for European romance languages (preview)
+            "mistralai/mistral-large-2512",             // Mistral Large 3
             "mistralai/mistral-medium-3-5",             // Solid mid-tier European-language model
 
             // Free tier
-            "meta-llama/llama-3.3-70b-instruct:free",   // High-quality free-tier model
-            "qwen/qwen3-next-80b-a3b-instruct:free",    // Free-tier MoE alternative
+            "google/gemma-4-31b-it:free",               // High-quality free-tier model
+            "google/gemma-4-26b-a4b-it:free",           // Free-tier MoE alternative
         };
 
         /// <summary>

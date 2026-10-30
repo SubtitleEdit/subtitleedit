@@ -1,4 +1,3 @@
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
 namespace UITests.Features.Video.SpeechToText.Engines;

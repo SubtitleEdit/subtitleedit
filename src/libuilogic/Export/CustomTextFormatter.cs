@@ -256,21 +256,21 @@ public static partial class CustomTextFormatter
         // introduce new pattern letters, so grouping "hh" with "h" is safe), and every
         // TimeCode getter re-runs a TimeSpan conversion - so read them at most once.
         var result = template;
-        if (result.IndexOf('h') >= 0)
+        if (result.Contains('h'))
         {
             var hours = Math.Abs(timeCode.Hours);
             result = result.Replace("hh", hours.ToString("00"))
                            .Replace("h", hours.ToString());
         }
 
-        if (result.IndexOf('m') >= 0)
+        if (result.Contains('m'))
         {
             var minutes = Math.Abs(timeCode.Minutes);
             result = result.Replace("mm", minutes.ToString("00"))
                            .Replace("m", minutes.ToString());
         }
 
-        if (result.IndexOf('f') >= 0)
+        if (result.Contains('f'))
         {
             if (template == "ff")
             {

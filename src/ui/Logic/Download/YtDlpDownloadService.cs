@@ -74,7 +74,7 @@ public sealed record DownloadedSubtitleInfo(string FilePath, string LanguageCode
 public class YtDlpDownloadService : IYtDlpDownloadService
 {
     private readonly HttpClient _httpClient;
-    internal const string CurrentVersion = "2026.08.19";
+    internal const string CurrentVersion = "2026.10.26";
     // First-run extraction of the self-extracting yt-dlp bundle (especially
     // yt-dlp_macos) routinely needs more than 5s on slower disks; bumped to 15s
     // so the timeout doesn't masquerade as "version unknown / outdated".
@@ -92,21 +92,66 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     internal static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> KnownSha256 =
         new Dictionary<string, IReadOnlyDictionary<string, string>>(StringComparer.Ordinal)
         {
-            ["2026.07.04"] = new Dictionary<string, string>(StringComparer.Ordinal)
+            ["2026.10.21"] = new Dictionary<string, string>(StringComparer.Ordinal)
             {
-                ["yt-dlp.exe"] = "52fe3c26dcf71fbdc85b528589020bb0b8e383155cfa81b64dd447bbe35e24b8",
-                ["yt-dlp_linux"] = "6bbb3d314cde4febe36e5fa1d55462e29c974f63444e707871834f6d8cc210ae",
-                ["yt-dlp_linux_aarch64"] = "b6ce97646773070d7a7ffd6bbbdcaecb47c48483909c54c915bf08a7a9b5e0b1",
-                ["yt-dlp_macos"] = "498bd0dae17855c599d371d68ec5bafc439a9d8640e838be25c765a9792f261b",
+                ["yt-dlp.exe"] = "33121d192d706e62f684a06f80918e3f3a8ba52ac3a65213b6951c39c7d9f555",
+                ["yt-dlp_linux"] = "d8bd33fca9d5b23bd5b9952b3fca36db5c46331933fda9f598a3da14ce2c243f",
+                ["yt-dlp_linux_aarch64"] = "e137c2171b0b8ef648e6136e86aa70c65923e93e434f01c93901d64744b190aa",
+                ["yt-dlp_macos"] = "7a6fe71d7d680f1fb0ac18d4949873d77db2859e90017c0f44bd94b23be4ee40",
             },
-            ["2026.08.19"] = new Dictionary<string, string>(StringComparer.Ordinal)
+            ["2026.10.26"] = new Dictionary<string, string>(StringComparer.Ordinal)
             {
-                ["yt-dlp.exe"] = "66674953fe251b89f4d08c5f0e35e0728679bd67ab3d7d05c0562af101dd3e7a",
-                ["yt-dlp_linux"] = "58162f9bfdc27458ea47bfcb311cf47028f17d8154a8bf7d689861d46399230a",
-                ["yt-dlp_linux_aarch64"] = "b16e4dab368a816cd05d477d698a605a6ae87ccee1c8ffd38fa21d7254141fcc",
-                ["yt-dlp_macos"] = "0f192b7ec147ab6288885d6351d9ab67367640029b4377576ef46dd79cf7b202",
+                ["yt-dlp.exe"] = "f5389d3698ecde4ef06f4e6b1ce0294fe9ac1396228c8990b8d3416d6d177a7d",
+                ["yt-dlp_linux"] = "767ba9dce7052aa196f8b12652f433d76de128ba168966fa84b6394d5e6c6795",
+                ["yt-dlp_linux_aarch64"] = "e87e9533e89fe5889abaa21f5114dfe7756d6aa6219b83551add04d48b18e483",
+                ["yt-dlp_macos"] = "0f922c15ccc0b83eefa1c8bc9104e434318c4bf16e408e1ee93b7745a6efe0aa",
             },
         };
+
+    /// <summary>
+    /// Browsers yt-dlp can read cookies from (<c>--cookies-from-browser</c>). YouTube often
+    /// answers "Sign in to confirm you're not a bot" - especially behind a VPN or a shared IP -
+    /// and the only way past it is sending the cookies of a signed-in browser session (#16032).
+    /// </summary>
+    public static readonly IReadOnlyList<string> CookieBrowsers =
+        ["firefox", "chrome", "chromium", "edge", "brave", "opera", "vivaldi", "whale", "safari"];
+
+    /// <summary>
+    /// The <c>--cookies-from-browser</c> arguments for the browser picked in settings, or nothing.
+    /// </summary>
+    internal static List<string> GetCookiesArguments()
+    {
+        var browser = GetCookiesBrowser();
+        return browser == null ? [] : ["--cookies-from-browser", browser];
+    }
+
+    /// <summary>
+    /// The browser picked in settings, if it is one yt-dlp knows; null when none is picked.
+    /// </summary>
+    public static string? GetCookiesBrowser()
+    {
+        var browser = Se.Settings.Video.OpenFromUrlCookiesFromBrowser?.Trim().ToLowerInvariant();
+        return !string.IsNullOrEmpty(browser) && CookieBrowsers.Contains(browser) ? browser : null;
+    }
+
+    /// <summary>
+    /// "firefox" -> "Firefox", for showing a yt-dlp browser name.
+    /// </summary>
+    public static string GetBrowserDisplayName(string browser)
+    {
+        return string.IsNullOrEmpty(browser) ? browser : char.ToUpperInvariant(browser[0]) + browser[1..];
+    }
+
+    /// <summary>
+    /// True when yt-dlp's error output is YouTube's "confirm you're not a bot" check, which
+    /// only cookies from a signed-in browser get past.
+    /// </summary>
+    public static bool IsBotCheckError(string? message)
+    {
+        return !string.IsNullOrEmpty(message) &&
+               (message.Contains("confirm you", StringComparison.OrdinalIgnoreCase) && message.Contains("not a bot", StringComparison.OrdinalIgnoreCase) ||
+                message.Contains("--cookies-from-browser", StringComparison.Ordinal));
+    }
 
     public YtDlpDownloadService(HttpClient httpClient)
     {
@@ -287,6 +332,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             args.Add("vtt/best");
         }
 
+        args.AddRange(GetCookiesArguments());
         args.Add(url);
 
         using var process = new Process
@@ -403,8 +449,9 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             "--sub-langs", autoGenerated ? ".*-orig" : "all",
             "--sub-format", "vtt/best",
             "-o", outputStem,
-            url,
         };
+        args.AddRange(GetCookiesArguments());
+        args.Add(url);
 
         using var process = new Process
         {
@@ -465,13 +512,15 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             {
                 FileName = GetFullFileName(),
                 // --print implies --simulate/--quiet, so nothing is downloaded.
-                ArgumentList = { "--no-playlist", "--no-warnings", "--print", "title", url },
+                ArgumentList = { "--no-playlist", "--no-warnings", "--print", "title" },
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
             },
         };
+        foreach (var a in GetCookiesArguments()) process.StartInfo.ArgumentList.Add(a);
+        process.StartInfo.ArgumentList.Add(url);
 
         if (!process.Start())
         {

@@ -6,14 +6,9 @@ using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.Layout;
-using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using UITests;
-using Xunit;
 
 namespace Tests.Features.Main;
 

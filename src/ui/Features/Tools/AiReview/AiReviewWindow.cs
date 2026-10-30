@@ -1,19 +1,28 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
+using System.Linq;
 using Nikse.SubtitleEdit.Features.Files.Compare;
-using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Progress;
 
 namespace Nikse.SubtitleEdit.Features.Tools.AiReview;
 
+/// <summary>
+/// AI review in the editor look (see <see cref="EditorChrome"/>): engine and model in a toolbar
+/// on top, the category filter chips and the suggestions list in the middle, the reason and the
+/// neighbouring lines of the selected suggestion under it, then the status/progress strip and
+/// the button bar.
+/// </summary>
 public class AiReviewWindow : Window
 {
     public AiReviewWindow(AiReviewViewModel vm)
@@ -25,6 +34,9 @@ public class AiReviewWindow : Window
         MinWidth = 900;
         MinHeight = 500;
         CanResize = true;
+        // The Edit dialogs' styles: compact fields that keep the field color while focused
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+        AddChipStyles(Styles);
         vm.Window = this;
         DataContext = vm;
 
@@ -37,41 +49,52 @@ public class AiReviewWindow : Window
 
         // Ollama may run on another machine or port, so the URL is editable here like in
         // auto-translate - it was only reachable by hand-editing Settings.json before.
-        var textBoxOllamaUrl = UiUtil.MakeTextBox(250, vm, nameof(vm.OllamaUrl))
-            .WithAccessibleName(Se.Language.General.Url);
+        var textBoxOllamaUrl = Field(UiUtil.MakeTextBox(250, vm, nameof(vm.OllamaUrl))
+            .WithAccessibleName(Se.Language.General.Url));
         textBoxOllamaUrl.PlaceholderText = Se.Language.General.Url;
-        var textBoxOllamaModel = UiUtil.MakeTextBox(220, vm, nameof(vm.OllamaModel))
-            .WithAccessibleName(Se.Language.General.Model);
-        var buttonPickOllamaModel = UiUtil.MakeButton("...", vm.PickOllamaModelCommand)
-            .Compact()
-            .WithAccessibleName(Se.Language.General.PickOllamaModel);
+        var textBoxOllamaModel = Field(UiUtil.MakeTextBox(220, vm, nameof(vm.OllamaModel))
+            .WithAccessibleName(Se.Language.General.Model));
+        var buttonPickOllamaModel = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.General.PickOllamaModel, vm.PickOllamaModelCommand, 28);
         var panelOllama = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
+            Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
             Children = { textBoxOllamaUrl, textBoxOllamaModel, buttonPickOllamaModel },
         };
         panelOllama.Bind(IsVisibleProperty, new Binding(nameof(vm.IsOllamaVisible)));
 
-        var textBoxOpenAiUrl = UiUtil.MakeTextBox(250, vm, nameof(vm.OpenAiCompatibleUrl))
-            .WithAccessibleName(Se.Language.General.Url);
-        var textBoxOpenAiModel = UiUtil.MakeTextBox(150, vm, nameof(vm.OpenAiCompatibleModel))
-            .WithAccessibleName(Se.Language.General.Model);
+        var textBoxOpenAiUrl = Field(UiUtil.MakeTextBox(250, vm, nameof(vm.OpenAiCompatibleUrl))
+            .WithAccessibleName(Se.Language.General.Url));
+        var textBoxOpenAiModel = Field(UiUtil.MakeTextBox(150, vm, nameof(vm.OpenAiCompatibleModel))
+            .WithAccessibleName(Se.Language.General.Model));
         textBoxOpenAiModel.PlaceholderText = Se.Language.General.Model;
         var panelOpenAiApiKey = UiUtil.MakeApiKeyTextBox(130, vm, nameof(vm.OpenAiCompatibleApiKey),
             placeholderText: Se.Language.General.ApiKey);
+        foreach (var textBox in panelOpenAiApiKey.Children.OfType<TextBox>())
+        {
+            Field(textBox);
+        }
+
+        foreach (var button in panelOpenAiApiKey.Children.OfType<Button>())
+        {
+            button.Classes.Add("tool");
+            button.Width = 28;
+            button.Height = 28;
+        }
 
         // Free cloud tiers rate limit hard, so the delay between requests lives next to the API key
         // rather than in a settings dialog. The label would not fit the toolbar - a timer icon plus
         // tooltip carries the meaning, and the accessible name keeps it readable for screen readers.
-        var numericDelay = UiUtil.MakeNumericUpDownInt(0, 600, 0, double.NaN, vm, nameof(vm.RequestDelaySeconds))
+        var numericDelay = UiUtil.MakeNumericUpDownInt(0, 600, 0, 56, vm, nameof(vm.RequestDelaySeconds))
             .WithAccessibleName(Se.Language.Translate.DelayInSecondsBetweenRequests);
+        numericDelay.Classes.Add("field");
         ToolTip.SetTip(numericDelay, Se.Language.Translate.DelayInSecondsBetweenRequests);
         var iconDelay = new Optris.Icons.Avalonia.Icon
         {
             Value = "mdi-timer-outline",
             FontSize = 16,
+            Foreground = EditorChrome.IconBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
         ToolTip.SetTip(iconDelay, Se.Language.Translate.DelayInSecondsBetweenRequests);
@@ -79,7 +102,7 @@ public class AiReviewWindow : Window
         var panelOpenAiCompatible = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
+            Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
             Children = { textBoxOpenAiUrl, textBoxOpenAiModel, panelOpenAiApiKey, iconDelay, numericDelay },
         };
@@ -96,19 +119,19 @@ public class AiReviewWindow : Window
         var buttonLlamaCppServer = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand);
         buttonLlamaCppServer.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
         buttonLlamaCppServer.Bind(IsEnabledProperty, new Binding("!" + nameof(vm.IsReviewing)));
+        CompactButton(buttonLlamaCppServer);
 
         var panelLlamaCpp = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
+            Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
             Children = { comboLlamaCppModel, buttonLlamaCppServer },
         };
         panelLlamaCpp.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
 
-        var buttonLlamaCppEngineSettings = UiUtil.MakeButton(vm.ShowLlamaCppEngineSettingsCommand, IconNames.Settings)
-            .WithAccessibleName(Se.Language.General.LlamaCppEngineSettings);
-        ToolTip.SetTip(buttonLlamaCppEngineSettings, Se.Language.General.LlamaCppEngineSettings);
+        var buttonLlamaCppEngineSettings = EditorChrome.CreateToolButton("fa-solid fa-gear", Se.Language.General.LlamaCppEngineSettings,
+            vm.ShowLlamaCppEngineSettingsCommand, 28);
         buttonLlamaCppEngineSettings.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
 
         // The engine settings button sits directly after the engine combo, not with the model combo:
@@ -116,18 +139,18 @@ public class AiReviewWindow : Window
         var panelEngine = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
+            Spacing = 4,
             VerticalAlignment = VerticalAlignment.Center,
             Children = { comboEngine, buttonLlamaCppEngineSettings },
         };
 
+        var languageText = MakeBoundTextBlock(nameof(vm.LanguageDisplay));
+        languageText.FontSize = EditorChrome.FieldFontSize;
         var languageChip = new Border
         {
-            Background = new SolidColorBrush(Color.FromArgb(0x24, 0x4c, 0x9c, 0xe8)),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x59, 0x4c, 0x9c, 0xe8)),
-            BorderThickness = new Thickness(1),
+            Background = EditorChrome.AccentSoftBrush,
             CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(10, 3),
+            Padding = new Thickness(10, 4),
             VerticalAlignment = VerticalAlignment.Center,
             Child = new StackPanel
             {
@@ -135,34 +158,34 @@ public class AiReviewWindow : Window
                 Spacing = 6,
                 Children =
                 {
-                    new Optris.Icons.Avalonia.Icon { Value = "mdi-web", FontSize = 14, VerticalAlignment = VerticalAlignment.Center },
-                    MakeBoundTextBlock(nameof(vm.LanguageDisplay)),
+                    new Optris.Icons.Avalonia.Icon { Value = "mdi-web", FontSize = 14, Foreground = EditorChrome.IconBrush, VerticalAlignment = VerticalAlignment.Center },
+                    languageText,
                 },
             },
         };
 
-        var buttonEditPrompt = UiUtil.MakeButton(l.EditPrompt, vm.EditPromptCommand)
-            .WithIconLeft("fa-solid fa-pen");
+        var buttonEditPrompt = EditorChrome.MakeActionButton("fa-solid fa-pen", l.EditPrompt, vm.EditPromptCommand);
 
-        var toolbar = new Grid
+        var toolbarGrid = new Grid
         {
             ColumnDefinitions = new ColumnDefinitions("Auto,Auto,Auto,Auto,Auto,Auto,*,Auto"),
             ColumnSpacing = 8,
         };
-        var labelEngine = UiUtil.MakeTextBlock(Se.Language.General.Engine).WithMarginRight(2);
-        labelEngine.VerticalAlignment = VerticalAlignment.Center;
-        toolbar.Add(labelEngine, 0, 0);
-        toolbar.Add(panelEngine, 0, 1);
-        toolbar.Add(panelOllama, 0, 2);
-        toolbar.Add(panelLlamaCpp, 0, 3);
-        toolbar.Add(panelOpenAiCompatible, 0, 4);
-        toolbar.Add(languageChip, 0, 5);
-        toolbar.Add(buttonEditPrompt, 0, 7);
+        toolbarGrid.Add(EditorChrome.MakeDimLabel(Se.Language.General.Engine, new Thickness(4, 0, 2, 0)), 0, 0);
+        toolbarGrid.Add(panelEngine, 0, 1);
+        toolbarGrid.Add(panelOllama, 0, 2);
+        toolbarGrid.Add(panelLlamaCpp, 0, 3);
+        toolbarGrid.Add(panelOpenAiCompatible, 0, 4);
+        toolbarGrid.Add(languageChip, 0, 5);
+        toolbarGrid.Add(buttonEditPrompt, 0, 7);
+        var toolbar = EditorChrome.MakeToolbar(toolbarGrid);
+        toolbar.Padding = new Thickness(12, 8);
 
         // ---------- filter chips ----------
         var chipsItems = new ItemsControl
         {
             ItemsSource = vm.FilterChips,
+            VerticalAlignment = VerticalAlignment.Center,
             ItemsPanel = new FuncTemplate<Panel?>(() => new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 }),
             ItemTemplate = new FuncDataTemplate<ReviewFilterChip>((chip, _) =>
             {
@@ -183,19 +206,21 @@ public class AiReviewWindow : Window
                     });
                 }
 
-                var chipText = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+                var chipText = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontSize = EditorChrome.FieldFontSize };
                 chipText.Bind(TextBlock.TextProperty, new Binding(nameof(ReviewFilterChip.Display)));
                 content.Children.Add(chipText);
 
                 var toggle = new ToggleButton
                 {
                     Padding = new Thickness(10, 3),
-                    CornerRadius = new CornerRadius(12),
+                    MinHeight = 26,
+                    CornerRadius = new CornerRadius(13),
                     Command = vm.SetFilterCommand,
                     CommandParameter = chip,
                     Content = content,
                     [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewFilterChip.IsActive)),
                 };
+                toggle.Classes.Add("chip");
                 AutomationProperties.SetName(toggle, chip?.Label ?? string.Empty);
                 return toggle;
             }),
@@ -204,11 +229,13 @@ public class AiReviewWindow : Window
         var warningBrush = ReviewSuggestionItem.GetWarningBrush();
         var warningText = MakeBoundTextBlock(nameof(vm.WarningNoteText));
         warningText.Foreground = warningBrush;
+        warningText.FontSize = EditorChrome.FieldFontSize;
         var warningNote = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 10, 0),
             Children =
             {
                 new Optris.Icons.Avalonia.Icon { Value = "mdi-alert", FontSize = 14, Foreground = warningBrush, VerticalAlignment = VerticalAlignment.Center },
@@ -217,12 +244,30 @@ public class AiReviewWindow : Window
         };
         warningNote.Bind(IsVisibleProperty, new Binding(nameof(vm.HasWarningNote)));
 
+        // Tick all / untick all / invert, as icons on the list header like Multiple replace's preview.
+        var listActions = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 2,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                EditorChrome.CreateToolButton("fa-solid fa-square-check", Se.Language.General.SelectAll, vm.SelectAllCommand, 26),
+                EditorChrome.CreateToolButton("fa-regular fa-square", Se.Language.General.SelectNone, vm.SelectNoneCommand, 26),
+                EditorChrome.CreateToolButton("fa-solid fa-right-left", Se.Language.General.InvertSelection, vm.InvertSelectionCommand, 26),
+            },
+        };
+
         var chipsBar = new Grid
         {
-            ColumnDefinitions = new ColumnDefinitions("*,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto"),
+            ColumnSpacing = 10,
+            Margin = new Thickness(0, 0, 0, 8),
         };
-        chipsBar.Add(chipsItems, 0, 0);
-        chipsBar.Add(warningNote, 0, 1);
+        chipsBar.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Suggestions), 0, 0);
+        chipsBar.Add(chipsItems, 0, 1);
+        chipsBar.Add(warningNote, 0, 2);
+        chipsBar.Add(listActions, 0, 3);
 
         // ---------- suggestions grid ----------
         // No header-click sorting (the DataGrid's CanUserSortColumns is not carried
@@ -241,18 +286,7 @@ public class AiReviewWindow : Window
                     Header = Se.Language.General.Apply,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                    CellTemplate = new FuncDataTemplate<ReviewSuggestionItem>((item, _) => new Border
-                    {
-                        Background = Brushes.Transparent,
-                        Padding = new Thickness(4),
-                        Child = new CheckBox
-                        {
-                            Focusable = false,
-                            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewSuggestionItem.IsSelected)),
-                            [!AutomationProperties.NameProperty] = new Binding(nameof(ReviewSuggestionItem.CategoryDisplay)),
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                        },
-                    }),
+                    CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<ReviewSuggestionItem>(nameof(ReviewSuggestionItem.IsSelected), nameof(ReviewSuggestionItem.CategoryDisplay)),
                     Width = new GridLength(80), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
                 },
                 new SeTableViewColumn
@@ -353,62 +387,26 @@ public class AiReviewWindow : Window
             item => item.IsSelected, (item, v) => item.IsSelected = v);
         dataGrid.DoubleTapped += (_, _) => vm.OnSuggestionsGridDoubleTapped();
 
-        var borderGrid = UiUtil.MakeBorderForControlNoPadding(dataGrid);
-
-        // ---------- progress ----------
-        var progressBar = new ProgressBar
-        {
-            Minimum = 0,
-            Maximum = 100,
-            Height = 6,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!RangeBase.ValueProperty] = new Binding(nameof(vm.ProgressValue)),
-            // Only meaningful while a review is running - a full bar sitting under a
-            // finished review just looks stuck.
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsReviewing)),
-        };
-        progressBar.WithPlatformProgress(this, nameof(vm.IsReviewing));
-        var statusText = MakeBoundTextBlock(nameof(vm.StatusText));
-        statusText.VerticalAlignment = VerticalAlignment.Center;
-        statusText.Opacity = 0.8;
-
-        var progressIcon = new Optris.Icons.Avalonia.Icon
-        {
-            Value = "mdi-robot-outline",
-            FontSize = 15,
-            Opacity = 0.8,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var progressRow = new Grid
-        {
-            ColumnDefinitions = new ColumnDefinitions("Auto,Auto,*"),
-            ColumnSpacing = 10,
-        };
-        progressRow.Add(progressIcon, 0, 0);
-        progressRow.Add(statusText, 0, 1);
-        progressRow.Add(progressBar, 0, 2);
+        var borderGrid = EditorChrome.MakeListFrame(dataGrid);
 
         // ---------- reason strip ----------
         var reasonTextBlock = MakeBoundTextBlock(nameof(vm.ReasonText));
-        reasonTextBlock.Opacity = 0.8;
+        reasonTextBlock.FontSize = EditorChrome.FieldFontSize;
         reasonTextBlock.TextWrapping = TextWrapping.Wrap;
-        var reasonText = new StackPanel
+        var reasonText = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 7,
+            ColumnDefinitions = new ColumnDefinitions("Auto,*"),
+            ColumnSpacing = 7,
             MinHeight = 20,
-            Children =
-            {
-                new Optris.Icons.Avalonia.Icon
-                {
-                    Value = "mdi-message-text-outline",
-                    FontSize = 14,
-                    Opacity = 0.7,
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
-                reasonTextBlock,
-            },
         };
+        reasonText.Add(new Optris.Icons.Avalonia.Icon
+        {
+            Value = "mdi-message-text-outline",
+            FontSize = 14,
+            Foreground = EditorChrome.IconBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+        }, 0, 0);
+        reasonText.Add(reasonTextBlock, 0, 1);
         reasonText.Bind(IsVisibleProperty, new Binding(nameof(vm.HasReason)));
 
         // ---------- context strip ----------
@@ -425,25 +423,29 @@ public class AiReviewWindow : Window
         {
             Value = "mdi-arrow-up-thin",
             FontSize = 14,
-            Opacity = 0.7,
+            Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         }, 0, 0);
         contextGrid.Add(new Optris.Icons.Avalonia.Icon
         {
             Value = "mdi-arrow-down-thin",
             FontSize = 14,
-            Opacity = 0.7,
+            Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         }, 1, 0);
         var contextPreviousLabel = MakeBoundTextBlock(nameof(vm.ContextPreviousLabel));
-        contextPreviousLabel.Opacity = 0.6;
+        contextPreviousLabel.Foreground = EditorChrome.FaintTextBrush;
+        contextPreviousLabel.FontSize = EditorChrome.FieldFontSize;
         var contextNextLabel = MakeBoundTextBlock(nameof(vm.ContextNextLabel));
-        contextNextLabel.Opacity = 0.6;
+        contextNextLabel.Foreground = EditorChrome.FaintTextBrush;
+        contextNextLabel.FontSize = EditorChrome.FieldFontSize;
         var contextPreviousText = MakeBoundTextBlock(nameof(vm.ContextPreviousText));
-        contextPreviousText.Opacity = 0.8;
+        contextPreviousText.Foreground = EditorChrome.DimTextBrush;
+        contextPreviousText.FontSize = EditorChrome.FieldFontSize;
         contextPreviousText.TextWrapping = TextWrapping.Wrap;
         var contextNextText = MakeBoundTextBlock(nameof(vm.ContextNextText));
-        contextNextText.Opacity = 0.8;
+        contextNextText.Foreground = EditorChrome.DimTextBrush;
+        contextNextText.FontSize = EditorChrome.FieldFontSize;
         contextNextText.TextWrapping = TextWrapping.Wrap;
         contextGrid.Add(contextPreviousLabel, 0, 1);
         contextGrid.Add(contextPreviousText, 0, 2);
@@ -451,33 +453,86 @@ public class AiReviewWindow : Window
         contextGrid.Add(contextNextText, 1, 2);
         contextGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.HasContext)));
 
+        var detailPanel = new StackPanel
+        {
+            Spacing = 6,
+            Margin = new Thickness(0, 10, 0, 0),
+            Children = { reasonText, contextGrid },
+        };
+
+        var listGrid = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,*,Auto"),
+            Margin = new Thickness(14, 12, 14, 12),
+        };
+        listGrid.Add(chipsBar, 0, 0);
+        listGrid.Add(borderGrid, 1, 0);
+        listGrid.Add(detailPanel, 2, 0);
+
+        // ---------- progress ----------
+        var progressBar = new ProgressBar
+        {
+            Minimum = 0,
+            Maximum = 100,
+            Height = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!RangeBase.ValueProperty] = new Binding(nameof(vm.ProgressValue)),
+            // Only meaningful while a review is running - a full bar sitting under a
+            // finished review just looks stuck.
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsReviewing)),
+        };
+        progressBar.WithPlatformProgress(this, nameof(vm.IsReviewing));
+        var statusText = MakeBoundTextBlock(nameof(vm.StatusText));
+        statusText.FontSize = EditorChrome.FieldFontSize;
+        statusText.Foreground = EditorChrome.DimTextBrush;
+        statusText.TextTrimming = TextTrimming.CharacterEllipsis;
+
+        var progressIcon = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "mdi-robot-outline",
+            FontSize = 15,
+            Foreground = EditorChrome.IconBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        var progressRow = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("Auto,Auto,*"),
+            ColumnSpacing = 10,
+        };
+        progressRow.Add(progressIcon, 0, 0);
+        progressRow.Add(statusText, 0, 1);
+        progressRow.Add(progressBar, 0, 2);
+
+        // The status stays after a review ("Review done - ...", "Fixed N lines"), so the strip
+        // is there whenever there is something to say, not only while reviewing.
+        var progressStrip = new Border
+        {
+            Child = progressRow,
+            Background = EditorChrome.StatusBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(16, 7),
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.StatusText)) { Converter = StringConverters.IsNotNullOrEmpty },
+        };
+
         // ---------- bottom bar ----------
-        var summaryText = MakeBoundTextBlock(nameof(vm.SummaryText));
-        summaryText.VerticalAlignment = VerticalAlignment.Center;
-        summaryText.Opacity = 0.8;
+        var summaryText = EditorChrome.MakeBoundHint(nameof(vm.SummaryText));
+        summaryText.FontSize = EditorChrome.FieldFontSize;
 
         // Plays the selected suggestion's line in the main window's video player - hidden when no
         // video is loaded (the view model gets no play hook then).
-        var buttonPlay = UiUtil.MakeButton(Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand)
-            .WithIconLeft("fa-solid fa-play");
+        var buttonPlay = EditorChrome.MakeActionButton("fa-solid fa-play", Se.Language.General.PlayCurrent, vm.PlayCurrentLineCommand);
         buttonPlay.Bind(IsVisibleProperty, new Binding(nameof(vm.IsPlayVisible)));
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(buttonPlay, l.PlayCurrentLineHint);
         }
 
-        var leftButtons = new StackPanel
+        var leftPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Children =
-            {
-                buttonPlay.WithMarginRight(10),
-                summaryText.WithMarginRight(10),
-                UiUtil.MakeButton(Se.Language.General.SelectAll, vm.SelectAllCommand),
-                UiUtil.MakeButton(Se.Language.General.SelectNone, vm.SelectNoneCommand),
-                UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.InvertSelectionCommand),
-            },
+            Spacing = 10,
+            Children = { buttonPlay, summaryText },
         };
 
         var buttonReview = UiUtil.MakeButton(l.Review, vm.ReviewCommand)
@@ -502,42 +557,34 @@ public class AiReviewWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var bottomBar = new Grid
+        // The accent marks the next step: Review until there are suggestions, then OK.
+        void UpdateAccent()
         {
-            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
+            var hasSuggestions = vm.Suggestions.Count > 0;
+            buttonReview.Classes.Set("primary", !hasSuggestions);
+            buttonOk.Classes.Set("primary", hasSuggestions);
+        }
+
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(vm.SummaryText) or nameof(vm.IsReviewing) or nameof(vm.Suggestions))
+            {
+                UpdateAccent();
+            }
         };
-        bottomBar.Add(leftButtons, 0, 0);
-        bottomBar.Add(UiUtil.MakeButtonBar(buttonReview, buttonStop, buttonApply, buttonOk, buttonCancel), 0, 2);
+        UpdateAccent();
+
+        var bottomBar = EditorChrome.MakeButtonBar(leftPanel, buttonReview, buttonStop, buttonApply, buttonCancel, buttonOk);
 
         // ---------- layout ----------
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 8,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
         };
-
         grid.Add(toolbar, 0, 0);
-        grid.Add(chipsBar, 1, 0);
-        grid.Add(borderGrid, 2, 0);
-        grid.Add(progressRow, 3, 0);
-        grid.Add(reasonText, 4, 0);
-        grid.Add(contextGrid, 5, 0);
-        grid.Add(bottomBar, 6, 0);
+        grid.Add(EditorChrome.MakePanel(listGrid), 1, 0);
+        grid.Add(progressStrip, 2, 0);
+        grid.Add(bottomBar, 3, 0);
 
         Content = grid;
 
@@ -548,6 +595,58 @@ public class AiReviewWindow : Window
         };
         Closing += delegate { vm.OnClosing(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// The filter chips: outlined pills, the active one in the soft accent.
+    /// </summary>
+    private static void AddChipStyles(Styles styles)
+    {
+        static Style Presenter(System.Func<Selector?, Selector> toggle, params (AvaloniaProperty Property, object Value)[] setters)
+        {
+            var style = new Style(x => toggle(x).Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"));
+            foreach (var (property, value) in setters)
+            {
+                style.Setters.Add(new Setter(property, value));
+            }
+
+            return style;
+        }
+
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("chip"),
+            (ContentPresenter.BackgroundProperty, Brushes.Transparent),
+            (ContentPresenter.BorderBrushProperty, EditorChrome.FieldBorderBrush),
+            (ContentPresenter.ForegroundProperty, EditorChrome.DimTextBrush)));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("chip").Class(":pointerover"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.HoverBrush),
+            (ContentPresenter.BorderBrushProperty, EditorChrome.FieldBorderBrush),
+            (ContentPresenter.ForegroundProperty, EditorChrome.StrongTextBrush)));
+        styles.Add(Presenter(x => x.OfType<ToggleButton>().Class("chip").Class(":pressed"),
+            (ContentPresenter.BackgroundProperty, EditorChrome.PressedBrush)));
+        foreach (var state in new[] { ":checked", ":checked:pointerover" })
+        {
+            styles.Add(Presenter(x => state == ":checked"
+                    ? x.OfType<ToggleButton>().Class("chip").Class(":checked")
+                    : x.OfType<ToggleButton>().Class("chip").Class(":checked").Class(":pointerover"),
+                (ContentPresenter.BackgroundProperty, EditorChrome.AccentSoftBrush),
+                (ContentPresenter.BorderBrushProperty, EditorChrome.AccentBrush),
+                (ContentPresenter.ForegroundProperty, EditorChrome.StrongTextBrush)));
+        }
+    }
+
+    private static TextBox Field(TextBox textBox)
+    {
+        textBox.Classes.Add("text");
+        return textBox;
+    }
+
+    private static void CompactButton(Button button)
+    {
+        button.MinHeight = 28;
+        button.Height = EditorChrome.ScaledSize(28);
+        button.Padding = new Thickness(10, 0);
+        button.FontSize = EditorChrome.FieldFontSize;
+        button.VerticalContentAlignment = VerticalAlignment.Center;
     }
 
     /// <summary>

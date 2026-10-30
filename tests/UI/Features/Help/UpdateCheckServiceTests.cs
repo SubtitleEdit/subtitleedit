@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using System.Net;
-using System.Net.Http;
 
 namespace Tests.Features.Help;
 

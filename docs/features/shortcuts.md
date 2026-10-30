@@ -75,7 +75,7 @@ Examples: *Insert text* `\N` at end of text to lift a subtitle one line per key 
 - **Command palette** — Ctrl+Shift+K (Cmd+Shift+K on macOS) by default; search for any command by name and run it, see [Command palette](command-palette.md)
 - **Toggle break/unbreak** — Unbreaks the text if it has a line break, otherwise forces a break (no default key)
 - **Save original** — Saves only the original subtitle in translation mode (no default key; Ctrl+S saves both)
-- **Toggle screen privacy (hide file names, then also texts)** — Each press cycles: hide file names → also blur the subtitle texts → off. Handy for screen sharing and recordings (no default key)
+- **Cycle screen privacy (hide file names, then also texts)** — Each press cycles: hide file names → also blur the subtitle texts → off. Handy for screen sharing and recordings (no default key)
 
 See [Keyboard Shortcuts](../reference/keyboard-shortcuts.md) for the full list of default keys.
 

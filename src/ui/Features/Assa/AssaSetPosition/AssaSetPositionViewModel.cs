@@ -12,7 +12,9 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAlpha;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -30,7 +32,15 @@ public partial class AssaSetPositionViewModel : ObservableObject
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
     public Image? ScreenshotImage { get; set; }
-    public Image? ScreenshotOverlayImage { get; set; }
+    /// <summary>
+    /// The draggable text (with its selection box and anchor dot) - sized, placed and rotated here.
+    /// </summary>
+    public Control? ScreenshotOverlayImage { get; set; }
+
+    /// <summary>
+    /// Where the frame is shown inside <see cref="VideoGrid"/>, for drawing the guides over it.
+    /// </summary>
+    public event EventHandler<Rect>? FrameRectChanged;
     public Grid? VideoGrid { get; set; }
 
     [ObservableProperty] private int _sourceWidth = 1920;
@@ -43,6 +53,54 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [ObservableProperty] private Bitmap _screenshot;
     [ObservableProperty] private string _screenshotOverlayPosiion;
     [ObservableProperty] private decimal _rotation;
+
+    /// <summary>
+    /// The \pos point in script (PlayRes) space - shown and edited in the X/Y fields.
+    /// </summary>
+    [ObservableProperty] private int _positionX;
+    [ObservableProperty] private int _positionY;
+
+    /// <summary>
+    /// The anchor grid cell the line was last placed with (0 = top left ... 8 = bottom right), -1 after a drag or edit.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AnchorName))]
+    private int _anchorIndex = -1;
+
+    [ObservableProperty] private string _tagsPreview = string.Empty;
+    [ObservableProperty] private string _lineInfo = string.Empty;
+
+    /// <summary>
+    /// False until the text is rendered - the position is unknown until then, so moving the text
+    /// and OK wait for it.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(OkCommand))]
+    private bool _isPreviewReady;
+    [ObservableProperty] private bool _showSafeArea = Se.Settings.Assa.SetPositionShowSafeArea;
+    [ObservableProperty] private bool _showCenterLines = Se.Settings.Assa.SetPositionShowCenterLines;
+    [ObservableProperty] private bool _snapToGuides = Se.Settings.Assa.SetPositionSnapToGuides;
+    [ObservableProperty] private bool _clickToPlace = Se.Settings.Assa.SetPositionClickToPlace;
+    [ObservableProperty] private bool _showSelection = Se.Settings.Assa.SetPositionShowSelection;
+
+    /// <summary>
+    /// The title-safe frame the anchor grid places the line inside, as a fraction of each side.
+    /// </summary>
+    public const double SafeAreaMargin = 0.05;
+
+    public static IReadOnlyList<string> AnchorNames =>
+    [
+        Se.Language.Assa.SetPositionTopLeft, Se.Language.Assa.SetPositionTopCenter, Se.Language.Assa.SetPositionTopRight,
+        Se.Language.Assa.SetPositionMiddleLeft, Se.Language.General.Center, Se.Language.Assa.SetPositionMiddleRight,
+        Se.Language.Assa.SetPositionBottomLeft, Se.Language.Assa.SetPositionBottomCenter, Se.Language.Assa.SetPositionBottomRight,
+    ];
+
+    public string AnchorName => AnchorIndex >= 0 && AnchorIndex < 9 ? AnchorNames[AnchorIndex] : Se.Language.Assa.SetPositionCustom;
+
+    private bool _updatingPositionFields;
+    private int _initialScreenshotX;
+    private int _initialScreenshotY;
+    private decimal _initialRotation;
 
     private static readonly Regex FrzRegex = new(@"\\frz\(?(-?\d+(\.\d+)?)\)?", RegexOptions.Compiled);
     private static readonly Regex PosRegex = new(@"\\pos\(\s*-?\d+(\.\d+)?\s*,\s*-?\d+(\.\d+)?\s*\)", RegexOptions.Compiled);
@@ -67,15 +125,23 @@ public partial class AssaSetPositionViewModel : ObservableObject
     private int _renderHeight = 1080;
 
     private string _alignment = "2";
-    private bool _isLeftAligned = false;
     private bool _isHorizontalCentered = true;
     private bool _isRightAligned = false;
 
-    private bool _isTopAligned = false;
     private bool _isVerticalCentered = false;
     private bool _isBottomAligned = true;
 
     public Subtitle ResultSubtitle => _subtitle;
+
+    /// <summary>
+    /// The effective \an alignment (1-9) - where on the text box \pos is.
+    /// </summary>
+    public string Alignment => _alignment;
+
+    /// <summary>
+    /// Width of the canvas the text was rendered on (ScreenshotX/Y space).
+    /// </summary>
+    public int RenderWidth => _renderWidth;
 
     public AssaSetPositionViewModel()
     {
@@ -137,12 +203,171 @@ public partial class AssaSetPositionViewModel : ObservableObject
         return (int)Math.Round(renderValue * playRes / renderSize, MidpointRounding.AwayFromZero);
     }
 
+    partial void OnPositionXChanged(int value) => MoveAnchorTo(value, null);
+
+    partial void OnPositionYChanged(int value) => MoveAnchorTo(null, value);
+
+    /// <summary>
+    /// X/Y fields: put the \pos point there (script space), keeping the text's size.
+    /// </summary>
+    private void MoveAnchorTo(int? x, int? y)
+    {
+        if (_updatingPositionFields || !IsPreviewReady)
+        {
+            return;
+        }
+
+        AnchorIndex = -1;
+        if (x.HasValue)
+        {
+            ScreenshotX += (int)Math.Round((x.Value - ResultX) * (double)_renderWidth / Math.Max(1, SourceWidth));
+        }
+
+        if (y.HasValue)
+        {
+            ScreenshotY += (int)Math.Round((y.Value - ResultY) * (double)_renderHeight / Math.Max(1, SourceHeight));
+        }
+
+        // The text box moves in whole render pixels, so a typed script-space value can round to no
+        // move at all (PlayRes larger than the video) - the field then showed 961 while OK wrote
+        // 960. Show the value that will be written.
+        UpdatePositionFields();
+    }
+
+    partial void OnShowSafeAreaChanged(bool value) => Se.Settings.Assa.SetPositionShowSafeArea = value;
+
+    partial void OnShowCenterLinesChanged(bool value) => Se.Settings.Assa.SetPositionShowCenterLines = value;
+
+    partial void OnSnapToGuidesChanged(bool value) => Se.Settings.Assa.SetPositionSnapToGuides = value;
+
+    partial void OnClickToPlaceChanged(bool value) => Se.Settings.Assa.SetPositionClickToPlace = value;
+    partial void OnShowSelectionChanged(bool value) => Se.Settings.Assa.SetPositionShowSelection = value;
+
+    /// <summary>
+    /// Anchor grid: places the text box inside the safe area - left/center/right, top/middle/bottom.
+    /// </summary>
+    [RelayCommand]
+    private void SetAnchor(int index)
+    {
+        if (index < 0 || index > 8 || !IsPreviewReady)
+        {
+            return;
+        }
+
+        var width = ScreenshotOverlayText.Size.Width;
+        var height = ScreenshotOverlayText.Size.Height;
+        var marginX = _renderWidth * SafeAreaMargin;
+        var marginY = _renderHeight * SafeAreaMargin;
+        var column = index % 3;
+        var row = index / 3;
+        var x = column switch { 0 => marginX, 1 => (_renderWidth - width) / 2, _ => _renderWidth - marginX - width };
+        var y = row switch { 0 => marginY, 1 => (_renderHeight - height) / 2, _ => _renderHeight - marginY - height };
+        ScreenshotX = (int)Math.Round(x, MidpointRounding.AwayFromZero);
+        ScreenshotY = (int)Math.Round(y, MidpointRounding.AwayFromZero);
+        AnchorIndex = index;
+    }
+
+    /// <summary>
+    /// Back to where the line was when the dialog opened.
+    /// </summary>
+    [RelayCommand]
+    private void ResetPosition()
+    {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
+        ScreenshotX = _initialScreenshotX;
+        ScreenshotY = _initialScreenshotY;
+        Rotation = _initialRotation;
+        AnchorIndex = -1;
+    }
+
+    [RelayCommand]
+    private void ResetRotation() => Rotation = 0;
+
+    /// <summary>
+    /// A drag moved the text box to this render-space top-left. With snapping on, an edge or the
+    /// center that comes close to a guide (center lines, safe area) sticks to it.
+    /// </summary>
+    public void DragTo(int x, int y)
+    {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
+        AnchorIndex = -1;
+        if (SnapToGuides)
+        {
+            var width = ScreenshotOverlayText.Size.Width;
+            var height = ScreenshotOverlayText.Size.Height;
+            x = (int)Math.Round(Snap(x, width, _renderWidth));
+            y = (int)Math.Round(Snap(y, height, _renderHeight));
+        }
+
+        ScreenshotX = x;
+        ScreenshotY = y;
+    }
+
+    /// <summary>
+    /// Click-to-place mode: centers the text box on this render-space point (snapping applies).
+    /// </summary>
+    public void CenterAt(double x, double y)
+    {
+        DragTo((int)Math.Round(x - ScreenshotOverlayText.Size.Width / 2.0, MidpointRounding.AwayFromZero),
+            (int)Math.Round(y - ScreenshotOverlayText.Size.Height / 2.0, MidpointRounding.AwayFromZero));
+    }
+
+    /// <summary>
+    /// Snaps a box start so its start, center or end lands on a guide within 1% of the frame.
+    /// </summary>
+    internal static double Snap(double start, double size, double frameSize)
+    {
+        var threshold = frameSize * 0.01;
+        var margin = frameSize * SafeAreaMargin;
+        var best = start;
+        var bestDistance = threshold;
+        foreach (var (guide, offset) in new[] { (margin, 0.0), (frameSize / 2, size / 2), (frameSize - margin, size) })
+        {
+            var candidate = guide - offset;
+            var distance = Math.Abs(candidate - start);
+            if (distance <= bestDistance)
+            {
+                best = candidate;
+                bestDistance = distance;
+            }
+        }
+
+        return best;
+    }
+
+    /// <summary>
+    /// Arrow keys: move by one render pixel (ten with Shift).
+    /// </summary>
+    internal void Nudge(int dx, int dy)
+    {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
+        AnchorIndex = -1;
+        ScreenshotX += dx;
+        ScreenshotY += dy;
+    }
+
     partial void OnScreenshotXChanged(int value)
     {
         // Only update if UI elements are initialized
         if (VideoGrid != null && ScreenshotOverlayImage != null && ScreenshotImage != null)
         {
             UpdateOverlayPosition();
+        }
+        else
+        {
+            UpdatePositionFields();
         }
     }
 
@@ -153,6 +378,10 @@ public partial class AssaSetPositionViewModel : ObservableObject
         {
             UpdateOverlayPosition();
         }
+        else
+        {
+            UpdatePositionFields();
+        }
     }
 
     partial void OnRotationChanged(decimal value)
@@ -160,6 +389,10 @@ public partial class AssaSetPositionViewModel : ObservableObject
         if (VideoGrid != null && ScreenshotOverlayImage != null && ScreenshotImage != null)
         {
             UpdateOverlayPosition();
+        }
+        else
+        {
+            UpdatePositionFields();
         }
     }
 
@@ -179,7 +412,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
         return startSeconds;
     }
 
-    public void Initialize(Subtitle subtitle, SubtitleLineViewModel line, string? videoFileName, int? videoWidth, int? videoHeight, double? videoPositionSeconds = null)
+    public void Initialize(Subtitle subtitle, SubtitleLineViewModel line, string? videoFileName, int? videoWidth, int? videoHeight, double? videoPositionSeconds = null, IVideoPlayer? videoPlayer = null)
     {
         _subtitle = new Subtitle(subtitle, false);
 
@@ -211,32 +444,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
         _renderWidth += _renderWidth % 2;
         _renderHeight += _renderHeight % 2;
 
-        var previewSubtitle = MakePreviewSubtitle(_subtitle, line);
-        var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, _renderWidth, _renderHeight);
-
-        // ffmpeg can fail to produce the frame (missing/blocked binary, odd filter input): decoding
-        // a null file name threw and took the whole dialog down. The png and both bitmaps are ours
-        // to clean up.
-        if (!string.IsNullOrEmpty(previewScreenshotFileName))
-        {
-            using var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
-            try
-            {
-                File.Delete(previewScreenshotFileName);
-            }
-            catch
-            {
-                // ignore cleanup errors
-            }
-
-            if (skBitmap != null)
-            {
-                using var trimResult = skBitmap.TrimTransparentPixels();
-                ScreenshotOverlayText = trimResult.TrimmedBitmap.ToAvaloniaBitmap();
-                ScreenshotX = trimResult.Left;
-                ScreenshotY = trimResult.Top;
-            }
-        }
+        LineInfo = $"#{line.Number}   {new TimeCode(line.StartTime).ToDisplayString()}   ·   {SourceWidth} × {SourceHeight}";
 
         // Set target resolution from video if available
         if (videoWidth.HasValue && videoWidth.Value > 0)
@@ -263,29 +471,166 @@ public partial class AssaSetPositionViewModel : ObservableObject
             TargetHeight = 1080;
         }
 
-        if (string.IsNullOrEmpty(videoFileName))
+        // The frame and the text come from two ffmpeg runs, which made the dialog open with a
+        // noticeable lag (#16289). Show it at once on the checkered background and fill both in
+        // when they are ready.
+        Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
+        var previewSubtitle = MakePreviewSubtitle(_subtitle, line);
+        var seconds = GetScreenshotSeconds(line, videoPositionSeconds);
+        _ = LoadPreviewAsync(previewSubtitle, videoFileName, seconds, videoPlayer, videoWidth, videoHeight);
+    }
+
+    private async Task LoadPreviewAsync(Subtitle previewSubtitle, string? videoFileName, double seconds, IVideoPlayer? videoPlayer, int? videoWidth, int? videoHeight)
+    {
+        var renderWidth = _renderWidth;
+        var renderHeight = _renderHeight;
+        var textTask = Task.Run(() => RenderText(previewSubtitle, renderWidth, renderHeight));
+        var frameTask = string.IsNullOrEmpty(videoFileName)
+            ? Task.FromResult<Bitmap?>(null)
+            : Task.Run(() => LoadFrameFromPlayer(videoPlayer, videoFileName, seconds, videoWidth, videoHeight) ?? LoadFrame(videoFileName, seconds));
+
+        try
         {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
-            return;
+            var text = await textTask;
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (text != null)
+                {
+                    ScreenshotOverlayText = text.Value.Bitmap;
+                    ScreenshotX = text.Value.Left;
+                    ScreenshotY = text.Value.Top;
+                }
+
+                _initialScreenshotX = ScreenshotX;
+                _initialScreenshotY = ScreenshotY;
+                _initialRotation = Rotation;
+                IsPreviewReady = true;
+                UpdateOverlayPosition();
+                UpdatePositionFields();
+            });
+
+            var frame = await frameTask;
+            if (frame != null)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => Screenshot = frame);
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Set position: preview failed");
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                _initialScreenshotX = ScreenshotX;
+                _initialScreenshotY = ScreenshotY;
+                _initialRotation = Rotation;
+                IsPreviewReady = true;
+            });
+        }
+    }
+
+    /// <summary>
+    /// Renders the line with ffmpeg/libass and trims it to the text. ScreenshotX/Y start at the
+    /// trimmed box's top-left in render space.
+    /// </summary>
+    private static (Bitmap Bitmap, int Left, int Top)? RenderText(Subtitle previewSubtitle, int renderWidth, int renderHeight)
+    {
+        // ffmpeg can fail to produce the frame (missing/blocked binary, odd filter input): decoding
+        // a null file name threw and took the whole dialog down. The png and both bitmaps are ours
+        // to clean up.
+        var previewScreenshotFileName = FfmpegGenerator.GetScreenShotWithSubtitle(previewSubtitle, renderWidth, renderHeight);
+        if (string.IsNullOrEmpty(previewScreenshotFileName))
+        {
+            return null;
         }
 
-        // Pass exact seconds (not ToDisplayString, which honors the HH:MM:SS:FF time-code format
-        // setting and would feed ffmpeg an unparseable "-ss 00:01:23:15", blanking the preview - #12182).
-        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, GetScreenshotSeconds(line, videoPositionSeconds).ToString("0.###", CultureInfo.InvariantCulture));
-        if (System.IO.File.Exists(fileName))
+        using var skBitmap = SKBitmap.Decode(previewScreenshotFileName);
+        try
+        {
+            File.Delete(previewScreenshotFileName);
+        }
+        catch
+        {
+            // ignore cleanup errors
+        }
+
+        if (skBitmap == null)
+        {
+            return null;
+        }
+
+        using var trimResult = skBitmap.TrimTransparentPixels();
+        return (trimResult.TrimmedBitmap.ToAvaloniaBitmap(), trimResult.Left, trimResult.Top);
+    }
+
+    /// <summary>
+    /// The paused player usually already shows the wanted frame (the dialog uses the player
+    /// position when it is inside the line). Saving that takes ~40-190 ms whatever the keyframe
+    /// distance, where ffmpeg has to seek and decode again - the checkered background lingered
+    /// for seconds on some lines (#16289). Null falls back to ffmpeg.
+    /// </summary>
+    private static Bitmap? LoadFrameFromPlayer(IVideoPlayer? videoPlayer, string videoFileName, double seconds, int? videoWidth, int? videoHeight)
+    {
+        if (videoPlayer == null || !string.Equals(videoPlayer.FileName, videoFileName, StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        var fileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
+        try
+        {
+            if (!videoPlayer.TrySaveCurrentFrame(fileName, seconds) || !File.Exists(fileName))
+            {
+                return null;
+            }
+
+            var bitmap = new Bitmap(fileName);
+
+            // The overlay is placed in the video's pixel space; a frame of another size (e.g. an
+            // anamorphic video scaled to display aspect) would not line up with it.
+            if (videoWidth is > 0 && videoHeight is > 0 &&
+                (bitmap.PixelSize.Width != videoWidth.Value || bitmap.PixelSize.Height != videoHeight.Value))
+            {
+                bitmap.Dispose();
+                return null;
+            }
+
+            return bitmap;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Set position: saving the player frame failed");
+            return null;
+        }
+        finally
         {
             try
             {
-                Screenshot = new Bitmap(fileName);
+                File.Delete(fileName);
             }
             catch
             {
-                Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
+                // ignore cleanup errors
             }
         }
-        else
+    }
+
+    private static Bitmap? LoadFrame(string videoFileName, double seconds)
+    {
+        // Pass exact seconds (not ToDisplayString, which honors the HH:MM:SS:FF time-code format
+        // setting and would feed ffmpeg an unparseable "-ss 00:01:23:15", blanking the preview - #12182).
+        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, seconds.ToString("0.###", CultureInfo.InvariantCulture));
+        if (!File.Exists(fileName))
         {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
+            return null;
+        }
+
+        try
+        {
+            return new Bitmap(fileName);
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -332,11 +677,9 @@ public partial class AssaSetPositionViewModel : ObservableObject
     private void ApplyAlignment(string alignment)
     {
         _alignment = alignment;
-        _isLeftAligned = alignment == "1" || alignment == "4" || alignment == "7";
         _isHorizontalCentered = alignment == "2" || alignment == "5" || alignment == "8";
         _isRightAligned = alignment == "3" || alignment == "6" || alignment == "9";
 
-        _isTopAligned = alignment == "7" || alignment == "8" || alignment == "9";
         _isVerticalCentered = alignment == "4" || alignment == "5" || alignment == "6";
         _isBottomAligned = alignment == "1" || alignment == "2" || alignment == "3";
     }
@@ -474,6 +817,12 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [RelayCommand]
     private async Task CenterHorizontally()
     {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
+        AnchorIndex = -1;
         // ScreenshotX/Y are render-space, so center on the render canvas - centering on
         // SourceWidth (PlayRes) was off whenever the two resolutions differed.
         ScreenshotX = (int)Math.Round(_renderWidth / 2.0 - ScreenshotOverlayText.Size.Width / 2.0, MidpointRounding.AwayFromZero);
@@ -482,10 +831,16 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [RelayCommand]
     private async Task CenterVertically()
     {
+        if (!IsPreviewReady)
+        {
+            return;
+        }
+
+        AnchorIndex = -1;
         ScreenshotY = (int)Math.Round(_renderHeight / 2.0 - ScreenshotOverlayText.Size.Height / 2.0, MidpointRounding.AwayFromZero);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsPreviewReady))]
     private async Task Ok()
     {
         OkPressed = true;
@@ -508,7 +863,15 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
     internal void KeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Escape)
+        var isTyping = e.Source is Avalonia.Visual visual &&
+                       (visual is TextBox || Avalonia.VisualTree.VisualExtensions.FindAncestorOfType<TextBox>(visual) != null);
+        if (!isTyping && e.Key is Key.Left or Key.Right or Key.Up or Key.Down && (e.KeyModifiers & ~KeyModifiers.Shift) == KeyModifiers.None)
+        {
+            var step = e.KeyModifiers.HasFlag(KeyModifiers.Shift) ? 10 : 1;
+            Nudge(e.Key == Key.Left ? -step : e.Key == Key.Right ? step : 0, e.Key == Key.Up ? -step : e.Key == Key.Down ? step : 0);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Escape)
         {
             Close();
         }
@@ -575,5 +938,31 @@ public partial class AssaSetPositionViewModel : ObservableObject
         ScreenshotOverlayPosiion = Rotation == 0
             ? $"X: {ResultX}, Y: {ResultY}"
             : $"X: {ResultX}, Y: {ResultY}, {Rotation}°";
+        UpdatePositionFields();
+        FrameRectChanged?.Invoke(this, new Rect(offsetX, offsetY, screenshotImageWidth, screenshotImageHeight));
+    }
+
+    /// <summary>
+    /// X/Y fields and the tag preview follow the text box (without moving it again).
+    /// </summary>
+    private void UpdatePositionFields()
+    {
+        if (!IsPreviewReady)
+        {
+            return; // nothing measured yet - the fields would show the placeholder's 0, 0
+        }
+
+        _updatingPositionFields = true;
+        try
+        {
+            PositionX = ResultX;
+            PositionY = ResultY;
+        }
+        finally
+        {
+            _updatingPositionFields = false;
+        }
+
+        TagsPreview = "{" + ResultTags + "}";
     }
 }

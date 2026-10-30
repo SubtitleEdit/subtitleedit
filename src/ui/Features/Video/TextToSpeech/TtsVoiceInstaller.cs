@@ -188,7 +188,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
-    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.43).
+    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.48).
     /// </summary>
     public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
@@ -198,7 +198,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that dots.tts (CrispASR) runs on is installed.
-    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.43); the version
+    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.48); the version
     /// note names that floor because older builds have no dots-tts backend at all and abort on
     /// the unknown --backend value.
     /// </summary>
@@ -232,7 +232,8 @@ public static class TtsVoiceInstaller
     /// Ensures the shared audio.cpp runtime is installed — the same binaries back IndexTTS
     /// 2.5, Higgs Audio v3 and Fish Audio S2 Pro, so whichever engine asks first downloads
     /// for all of them. Unlike the CrispASR engines, these binaries are built by SubtitleEdit
-    /// itself (upstream ships Windows-only prebuilts), and the archive is per backend: Metal
+    /// itself (a composite of our families with portable CPU flags, see
+    /// <see cref="IndexTts25AudioCppDownloadService"/>), and the archive is per backend: Metal
     /// on Apple Silicon, and CPU / Vulkan / CUDA on Windows and Linux x64.
     /// </summary>
     /// <param name="engineDisplayName">The engine that asked, for the prompts ("IndexTTS 2.5").</param>
@@ -374,8 +375,10 @@ public static class TtsVoiceInstaller
         IndexTts25AudioCpp.StopServer();
         HiggsTtsAudioCpp.StopServer();
         FishTtsAudioCpp.StopServer();
+        BreezeTtsAudioCpp.StopServer();
         FireRedTts3AudioCpp.StopServer();
         KugelAudioAudioCpp.StopServer();
+        VoxtralTtsAudioCpp.StopServer();
 
         var dlResult = await windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(
             window, vm => vm.StartDownloadIndexTts25AudioCppEngine(backend));

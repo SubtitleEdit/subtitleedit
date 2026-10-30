@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -10,9 +10,6 @@ using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
-using System.Linq;
-using System.Threading;
 
 namespace UITests.Features.Edit;
 
@@ -61,28 +58,40 @@ public class MultipleReplaceWindowShortcutTests
         return (vm, window, category);
     }
 
+    // Opening the window can mark the preview dirty again (the category list binds its "active"
+    // boxes), and that second pass rebuilds the rows - and drops the focus - after a click. So
+    // wait until the fixes have stopped changing, not just until the first pass is in.
     private static void WaitForPreview(MultipleReplaceViewModel vm, int expectedFixes)
     {
-        var end = Environment.TickCount64 + 3000;
-        while (Environment.TickCount64 < end)
+        var lastChange = Environment.TickCount64;
+        void OnChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => lastChange = Environment.TickCount64;
+        vm.Fixes.CollectionChanged += OnChanged;
+        try
         {
-            Dispatcher.UIThread.RunJobs();
-            if (vm.Fixes.Count == expectedFixes)
+            var end = Environment.TickCount64 + 3000;
+            while (Environment.TickCount64 < end)
             {
                 Dispatcher.UIThread.RunJobs();
-                return;
+                if (vm.Fixes.Count == expectedFixes && Environment.TickCount64 - lastChange > 200)
+                {
+                    return;
+                }
+
+                Thread.Sleep(20);
             }
-
-            Thread.Sleep(20);
         }
-
-        Dispatcher.UIThread.RunJobs();
+        finally
+        {
+            vm.Fixes.CollectionChanged -= OnChanged;
+            Dispatcher.UIThread.RunJobs();
+        }
     }
 
-    // The rules panel is a TreeView, so the fixes grid is the only TableView in the window.
+    // The rules list is a TableView too, so pick the one showing the fixes.
     private static TableView FixesGrid(Window window)
     {
-        return window.GetVisualDescendants().OfType<TableView>().First();
+        var vm = (MultipleReplaceViewModel)window.DataContext!;
+        return window.GetVisualDescendants().OfType<TableView>().First(t => ReferenceEquals(t.ItemsSource, vm.Fixes));
     }
 
     private static Point CenterOf(Visual container, Window window)

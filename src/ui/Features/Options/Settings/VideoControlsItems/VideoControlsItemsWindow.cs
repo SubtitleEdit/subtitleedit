@@ -8,10 +8,14 @@ using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings.VideoControlsItems;
 
+/// <summary>
+/// Order and visibility of the video controls in the editor look (see <see cref="EditorChrome"/>):
+/// a live preview on top, the reorderable list with its actions below, Cancel + OK in the
+/// button bar.
+/// </summary>
 public class VideoControlsItemsWindow : Window
 {
     public VideoControlsItemsWindow(VideoControlsItemsViewModel vm)
@@ -20,6 +24,7 @@ public class VideoControlsItemsWindow : Window
         Title = Se.Language.Options.Settings.VideoControls;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
@@ -32,16 +37,18 @@ public class VideoControlsItemsWindow : Window
             Focusable = false,
             StopIsVisible = true,
             FullScreenIsVisible = true,
+            SubtitleButtonsIsVisible = true,
+            PlaybackSpeedIsVisible = true,
         };
         KeyboardNavigation.SetTabNavigation(preview, KeyboardNavigationMode.None);
         preview.SetPreviewCaptions("00:01:23.456 / 01:39:43.040", "movie.mkv", "libmpv");
+        // A plain border: no corner radius or clipping around a video player (the native video
+        // surface on macOS disappears otherwise).
         var previewBorder = new Border
         {
             Child = preview,
-            BorderBrush = UiUtil.GetBorderBrush(),
+            BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            ClipToBounds = true,
         };
 
         void UpdatePreview() => preview.ApplyControlsLayout(vm.GetCurrentItems());
@@ -62,9 +69,10 @@ public class VideoControlsItemsWindow : Window
         };
         listBox.Bind(ListBox.ItemsSourceProperty, new Binding(nameof(VideoControlsItemsViewModel.Items)));
         listBox.Bind(ListBox.SelectedItemProperty, new Binding(nameof(VideoControlsItemsViewModel.SelectedItem)) { Mode = BindingMode.TwoWay });
+        AutomationProperties.SetName(listBox, Se.Language.Options.Settings.VideoControls);
         listBox.ItemTemplate = new FuncDataTemplate<VideoControlsItemDisplay>((_, _) =>
         {
-            var checkBox = new CheckBox();
+            var checkBox = new CheckBox { MinWidth = 0 };
             checkBox.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(VideoControlsItemDisplay.IsVisible)) { Mode = BindingMode.TwoWay });
             // A check box with no content is announced as a nameless "check box" (#12087).
             checkBox.Bind(AutomationProperties.NameProperty, new Binding(nameof(VideoControlsItemDisplay.Name)));
@@ -74,6 +82,7 @@ public class VideoControlsItemsWindow : Window
                 Width = 20,
                 Margin = new Thickness(2, 0, 8, 0),
                 VerticalAlignment = VerticalAlignment.Center,
+                Foreground = EditorChrome.IconBrush,
             };
             icon.Bind(Optris.Icons.Avalonia.Icon.ValueProperty, new Binding(nameof(VideoControlsItemDisplay.IconName)));
 
@@ -103,6 +112,7 @@ public class VideoControlsItemsWindow : Window
         var eyeIcon = new Optris.Icons.Avalonia.Icon { Value = IconNames.Eye, Margin = new Thickness(0, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center };
         var checkBoxVisible = new CheckBox
         {
+            FontSize = EditorChrome.FieldFontSize,
             Content = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
@@ -113,20 +123,29 @@ public class VideoControlsItemsWindow : Window
         checkBoxVisible.Bind(CheckBox.IsCheckedProperty, new Binding($"{nameof(VideoControlsItemsViewModel.SelectedItem)}.{nameof(VideoControlsItemDisplay.IsVisible)}") { Mode = BindingMode.TwoWay });
         checkBoxVisible.Bind(IsEnabledProperty, new Binding(nameof(VideoControlsItemsViewModel.SelectedItem)) { Converter = Avalonia.Data.Converters.ObjectConverters.IsNotNull });
 
+        var moveButtons = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 2,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Children =
+            {
+                EditorChrome.MakeTextToolButton(IconNames.ArrowUpThin, Se.Language.General.MoveUp, vm.MoveUpCommand),
+                EditorChrome.MakeTextToolButton(IconNames.ArrowDownThin, Se.Language.General.MoveDown, vm.MoveDownCommand),
+            },
+        };
+
         var sidePanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Spacing = 5,
-            Margin = new Thickness(10, 0, 0, 0),
+            Spacing = 10,
+            Margin = new Thickness(14, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Top,
             Children =
             {
-                UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpCommand).WithIconLeft(IconNames.ArrowUpThin).WithMinWidth(130),
-                UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownCommand).WithIconLeft(IconNames.ArrowDownThin).WithMinWidth(130),
-                new Border { Height = 10 },
+                moveButtons,
                 checkBoxVisible,
-                new Border { Height = 10 },
-                UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetCommand).WithIconLeft(IconNames.Restore).WithMinWidth(130),
+                EditorChrome.MakeTextToolButton(IconNames.Restore, Se.Language.General.Reset, vm.ResetCommand),
             },
         };
 
@@ -138,31 +157,24 @@ public class VideoControlsItemsWindow : Window
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        contentGrid.Add(listBox, 0, 0);
+        contentGrid.Add(EditorChrome.MakeCompactListFrame(listBox), 0, 0);
         contentGrid.Add(sidePanel, 0, 1);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
+        var sections = new StackPanel
         {
-            RowDefinitions =
+            Width = 580,
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                EditorChrome.MakeEditorSection(Se.Language.General.Preview, previewBorder, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.Options.Settings.VideoControls, contentGrid),
             },
-            Width = 560,
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-        grid.Add(previewBorder, 0, 0);
-        grid.Add(contentGrid, 1, 0);
-        grid.Add(panelButtons, 2, 0);
 
-        Content = grid;
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, listBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

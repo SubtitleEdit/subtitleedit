@@ -9,6 +9,13 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `main-window.png` — Full main window overview
 - `main-window-annotated.png` — Main window with numbered labels for each area
 - `main-window-light.png` — Main window in light mode
+- `main-window-theme-dark.png` — Main window in the Dark theme
+- `main-window-theme-light.png` — Main window in the Light theme
+- `main-window-theme-nord.png` — Main window in the Nord theme
+- `main-window-theme-midnight-cinema.png` — Main window in the Midnight Cinema theme
+- `main-window-theme-sakura.png` — Main window in the Sakura theme
+- `main-window-theme-pastel.png` — Main window in the Pastel theme
+- `main-window-theme-classic.png` — Main window in the Classic theme
 - `main-window-layout.png` — Main window layout
 - `main-menu-bar.png` — Menu bar with a menu expanded
 - `main-toolbar.png` — Toolbar buttons

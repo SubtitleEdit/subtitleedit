@@ -113,9 +113,9 @@ public partial class SpeechToTextQualityReportViewModel : ObservableObject
         var l = Se.Language.Video.AudioToText;
         return type switch
         {
-            SpeechToTextQualityIssueType.TooShort => l.QualityReportTooShort,
-            SpeechToTextQualityIssueType.TooLong => l.QualityReportTooLong,
-            SpeechToTextQualityIssueType.Overlap => l.QualityReportOverlap,
+            SpeechToTextQualityIssueType.TooShort => Se.Language.General.TooShort,
+            SpeechToTextQualityIssueType.TooLong => Se.Language.General.TooLong,
+            SpeechToTextQualityIssueType.Overlap => Se.Language.General.Overlapping,
             SpeechToTextQualityIssueType.NonSpeech => l.QualityReportNonSpeech,
             SpeechToTextQualityIssueType.Repeated => l.QualityReportRepeated,
             _ => string.Empty,
@@ -340,7 +340,7 @@ public partial class SpeechToTextQualityReportViewModel : ObservableObject
             Summary = Summary,
             FileName = _fileName,
             CategoryHeader = l.QualityReportIssue,
-            DetailHeader = l.QualityReportDetail,
+            DetailHeader = Se.Language.General.Detail,
             AllLabel = l.QualityReportAll,
             AllColor = AllColor,
             Chips = chips,

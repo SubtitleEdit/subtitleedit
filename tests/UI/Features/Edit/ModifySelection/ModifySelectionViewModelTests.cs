@@ -3,9 +3,7 @@ using Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace UITests.Features.Edit.ModifySelection;
 
@@ -164,6 +162,35 @@ public class ModifySelectionViewModelTests
             vm.OkCommand.Execute(null);
 
             Assert.Equal(88, Se.Settings.Edit.ModifySelectionNumber);
+        }
+        finally
+        {
+            Se.Settings = originalSettings;
+        }
+    }
+
+    [Fact]
+    public void HasErrorsRule_MatchesLinesTheGridHighlights()
+    {
+        var originalSettings = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+            Se.Settings.General.ColorDurationTooShort = true;
+            Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+            Se.Settings.General.ColorTimeCodeOverlap = true;
+
+            var ok = new SubtitleLineViewModel(new Nikse.SubtitleEdit.Core.Common.Paragraph("Fine", 0, 2000), null!);
+            var tooShort = new SubtitleLineViewModel(new Nikse.SubtitleEdit.Core.Common.Paragraph("Short", 3000, 3200), null!);
+            var overlapped = new SubtitleLineViewModel(new Nikse.SubtitleEdit.Core.Common.Paragraph("Overlap", 5000, 7000), null!);
+            var overlapping = new SubtitleLineViewModel(new Nikse.SubtitleEdit.Core.Common.Paragraph("Overlap 2", 6500, 9000), null!);
+
+            var rule = ModifySelectionRule.List(new List<SubtitleLineViewModel>()).Single(r => r.RuleType == RuleType.HasErrors);
+
+            Assert.False(rule.IsMatch(ok, null, tooShort));
+            Assert.True(rule.IsMatch(tooShort, ok, overlapped));
+            Assert.True(rule.IsMatch(overlapped, tooShort, overlapping)); // overlap is a neighbour error
+            Assert.False(rule.IsMatch(overlapped)); // ...that needs the neighbour
         }
         finally
         {

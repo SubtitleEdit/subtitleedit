@@ -9,6 +9,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Shared.FindText;
 
+/// <summary>
+/// Find a line by its text, in the editor look (see <see cref="EditorChrome"/>): search box, the
+/// matching lines in a frame, Cancel and OK at the bottom.
+/// </summary>
 public class FindTextWindow : Window
 {
     public FindTextWindow(FindTextViewModel vm)
@@ -20,39 +24,39 @@ public class FindTextWindow : Window
         Height = 600;
         MinWidth = 600;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var textBoxSearch = new TextBox
         {
             Width = 300,
-            Margin = new Thickness(0, 0, 10, 0),
+            HorizontalAlignment = HorizontalAlignment.Left,
             [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.General.Search,
             [!TextBox.TextProperty] = new Binding(nameof(vm.SearchText)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Center,
         }.WithSearchAndClearIcons();
+        textBoxSearch.Classes.Add("text");
         textBoxSearch.TextChanged += vm.SearchTextChanged;
 
         var subtitlesView = MakeSubtitlesView(vm);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsEnabled(nameof(vm.IsOkEnabled));
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);   
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
+            Margin = new Thickness(14),
             RowSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -60,10 +64,9 @@ public class FindTextWindow : Window
 
         grid.Add(textBoxSearch, 0);
         grid.Add(subtitlesView, 1);
-        grid.Add(buttonPanel, 2);
 
-        Content = grid;
-        
+        Content = EditorChrome.MakeRoot(grid, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
+
         UiUtil.FocusOnFirstActivation(this, textBoxSearch); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
@@ -74,7 +77,6 @@ public class FindTextWindow : Window
         vm.SubtitleGrid.WithAccessibleName(Se.Language.General.Lines);
         vm.SubtitleGrid.Height = double.NaN; // auto size inside scroll viewer
         vm.SubtitleGrid.Width = double.NaN;
-        vm.SubtitleGrid.Margin = new Thickness(2);
         vm.SubtitleGrid.ItemsSource = vm.Subtitles;
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
@@ -128,6 +130,6 @@ public class FindTextWindow : Window
         vm.SubtitleGrid.DoubleTapped += vm.OnSubtitleGridDoubleTapped;
         vm.SubtitleGrid.KeyDown += vm.SubtitleGridKeyDown;
 
-        return UiUtil.MakeBorderForControl(vm.SubtitleGrid);
+        return EditorChrome.MakeListFrame(vm.SubtitleGrid, clearListBackground: true);
     }
 }

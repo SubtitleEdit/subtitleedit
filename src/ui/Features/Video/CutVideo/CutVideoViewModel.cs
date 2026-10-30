@@ -9,13 +9,14 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
-using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.UiLogic.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,7 +30,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using Nikse.SubtitleEdit.UiLogic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.CutVideo;
 
@@ -51,6 +51,9 @@ public partial class CutVideoViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<BurnInJobItem> _jobItems;
     [ObservableProperty] private BurnInJobItem? _selectedJobItem;
     [ObservableProperty] private bool _isGenerating;
+    // Hold off system sleep while the job runs (#16183); the display may still turn off.
+    private readonly SleepInhibitorScope _sleepInhibitor = new(Se.Language.Video.CutVideoTitle);
+
     [ObservableProperty] private bool _isAudioVisualizerVisible;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _segments;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSegment;
@@ -118,21 +121,18 @@ public partial class CutVideoViewModel : ObservableObject
     private readonly List<double> _keyFrameSeconds = new List<double>();
     private bool _keyFramePublishPending;
     private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(150)); // posted ticks, not a DispatcherTimer - see UiTickPump
-    private string _importFileName;
     private Subtitle _currentSubtitle;
     private long _lastKeyPressedMs;
     private SubtitleLineViewModel? _setEndAtKeyUpLine;
 
     private readonly IWindowService _windowService;
-    private readonly IFolderHelper _folderHelper;
     private readonly IFileHelper _fileHelper;
     private readonly IInsertService _insertService;
     private readonly IShortcutManager _shortcutManager;
 
 
-    public CutVideoViewModel(IFolderHelper folderHelper, IFileHelper fileHelper, IWindowService windowService, IInsertService insertService, IShortcutManager shortcutManager)
+    public CutVideoViewModel(IFileHelper fileHelper, IWindowService windowService, IInsertService insertService, IShortcutManager shortcutManager)
     {
-        _folderHelper = folderHelper;
         _fileHelper = fileHelper;
         _windowService = windowService;
         _insertService = insertService;
@@ -181,7 +181,6 @@ public partial class CutVideoViewModel : ObservableObject
         _timerGenerate = new();
         _timerGenerate.Elapsed += TimerGenerateElapsed;
         _timerGenerate.Interval = 100;
-        _importFileName = string.Empty;
         _inputVideoFileName = string.Empty;
         _currentSubtitle = new Subtitle();
         UpdateSelection();
@@ -901,7 +900,6 @@ public partial class CutVideoViewModel : ObservableObject
             return;
         }
 
-        _importFileName = fileName;
         foreach (var p in subtitle.Paragraphs)
         {
             var segment = new SubtitleLineViewModel(p, _subtitleFormat ?? new SubRip());
@@ -969,8 +967,8 @@ public partial class CutVideoViewModel : ObservableObject
         {
             await MessageBox.Show(
                 Window!,
-                "No segments added",
-                $"Add one or more segments - e.g. via the waveform",
+                Se.Language.Video.CutNoSegmentsAdded,
+                Se.Language.Video.CutNoSegmentsAddedDetails,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
 
@@ -1119,7 +1117,11 @@ public partial class CutVideoViewModel : ObservableObject
         });
     }
 
-    partial void OnIsGeneratingChanged(bool value) => UpdatePreviewState();
+    partial void OnIsGeneratingChanged(bool value)
+    {
+        _sleepInhibitor.SetActive(value);
+        UpdatePreviewState();
+    }
     partial void OnIsPreviewingChanged(bool value) => UpdatePreviewState();
     partial void OnTransitionEnabledChanged(bool value) => UpdatePreviewState();
 
@@ -1281,7 +1283,7 @@ public partial class CutVideoViewModel : ObservableObject
 
         if (Segments.Count > 0)
         {
-            var message = "Are you sure you want to discard segments and close window? All segments will be lost.";
+            var message = Se.Language.Video.CutDiscardSegments;
             var result = await MessageBox.Show(Window!, Se.Language.General.Cancel.Replace("_", string.Empty), message, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result != MessageBoxResult.Yes)
             {
@@ -1454,6 +1456,7 @@ public partial class CutVideoViewModel : ObservableObject
         _tempSubtitleFiles.Delete();
 
         _isClosing = true;
+        _sleepInhibitor.Dispose();
         _positionTimer.Stop();
         _timerGenerate.StopAndDispose(TimerGenerateElapsed);
         VideoPlayer.CloseAndDisposePlayer();

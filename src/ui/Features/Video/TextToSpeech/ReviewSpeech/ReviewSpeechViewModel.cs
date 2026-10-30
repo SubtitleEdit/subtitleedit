@@ -9,7 +9,6 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
@@ -2364,7 +2363,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         IsInstructionTextVisible =
             (engine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(model))
-            || (engine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(model));
+            || (engine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(model))
+            || engine is BreezeTtsAudioCpp;
         IsInstructionPickerVisible = engine is OmniVoiceTtsCpp;
         HasInstruction = IsInstructionTextVisible || IsInstructionPickerVisible;
 
@@ -2380,6 +2380,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             Qwen3TtsCpp => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
             Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
             OmniVoiceTtsCpp => Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction ?? string.Empty,
+            BreezeTtsAudioCpp => Se.Settings.Video.TextToSpeech.BreezeTtsAudioCppInstruction ?? string.Empty,
             _ => string.Empty,
         };
 

@@ -84,7 +84,8 @@ internal static class ContainerSubtitleLoader
             return LoadMatroska(filePath, options);
         }
 
-        if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp" or ".mov" or ".m4a" or ".m4b" or ".cmaf")
+        // Content over extension: a text subtitle (e.g. SubRip) merely named .mp4 goes to the text loader.
+        if (ext is ".mp4" or ".m4v" or ".m4s" or ".3gp" or ".mov" or ".m4a" or ".m4b" or ".cmaf" && LooksLikeIsoBaseMedia(filePath))
         {
             long fileLength;
             try
@@ -596,6 +597,26 @@ internal static class ContainerSubtitleLoader
         }
 
         return tracks;
+    }
+
+    private static bool LooksLikeIsoBaseMedia(string filePath)
+    {
+        try
+        {
+            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var buffer = new byte[8];
+            if (fs.Read(buffer, 0, 8) < 8)
+            {
+                return false;
+            }
+
+            var type = System.Text.Encoding.ASCII.GetString(buffer, 4, 4);
+            return type is "ftyp" or "moov" or "mdat" or "moof" or "styp" or "sidx" or "free" or "skip" or "wide" or "pnot" or "uuid" or "mfra";
+        }
+        catch
+        {
+            return true; // let the MP4 path report the I/O problem as before
+        }
     }
 
     private static List<LoadedTrack> LoadMp4(string filePath, ConversionOptions options)

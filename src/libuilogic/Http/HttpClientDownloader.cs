@@ -1,11 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System;
-using System.IO;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.UiLogic.Http
 {

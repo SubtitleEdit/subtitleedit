@@ -52,6 +52,25 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _isCategoryActionVisible;
     [ObservableProperty] private bool _isMoveVisible;
 
+    /// <summary>
+    /// "4 styles in file · 3 saved" - the bottom bar.
+    /// </summary>
+    [ObservableProperty] private string _summaryText = string.Empty;
+
+    /// <summary>
+    /// What the preview text sits on: 0 = dark, 1 = checker (transparency), 2 = light.
+    /// </summary>
+    [ObservableProperty] private int _previewBackgroundIndex = Se.Settings.Assa.StylesPreviewBackground;
+
+    /// <summary>
+    /// The text the preview shows (saved in Settings.json); \N is a line break like in ASSA.
+    /// </summary>
+    [ObservableProperty] private string _previewText = Se.Settings.Assa.StylesPreviewText;
+
+    private const string DefaultPreviewText = "This is a test";
+
+    private string EffectivePreviewText => string.IsNullOrWhiteSpace(PreviewText) ? DefaultPreviewText : PreviewText;
+
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public string Header { get; set; }
@@ -113,6 +132,10 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         };
         RefreshStorageStylesView();
         RebuildStorageCategories();
+
+        FileStyles.CollectionChanged += (_, _) => UpdateSummary();
+        StorageStylesView.CollectionChanged += (_, _) => UpdateSummary();
+        UpdateSummary();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
         _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
@@ -933,9 +956,10 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        var category = CategoryForNewStyle();
         foreach (var selectedStyle in selectedItems)
         {
+            // A duplicate stays in its source style's category
+            var category = selectedStyle.Category ?? string.Empty;
             var name = selectedStyle.Name + " - " + Se.Language.General.Copy;
             if (StorageStylesInCategory(category).Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             {
@@ -1045,8 +1069,21 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         => IsSameCategoryLabel(SelectedStorageCategory, AllCategoriesLabel) ||
            IsSameCategoryLabel(StoredToCategoryLabel(style.Category), SelectedStorageCategory);
 
+    /// <summary>
+    /// Category a new, copied or imported saved style goes to: the filtered category, or - as the
+    /// window has no category picker and always shows all saved styles - the category of the
+    /// selected saved style, else Default. Everything landed in Default before.
+    /// </summary>
     private string CategoryForNewStyle()
-        => SelectedStorageCategory == AllCategoriesLabel ? string.Empty : CategoryLabelToStored(SelectedStorageCategory);
+    {
+        if (!IsSameCategoryLabel(SelectedStorageCategory, AllCategoriesLabel))
+        {
+            return CategoryLabelToStored(SelectedStorageCategory);
+        }
+
+        var selected = SelectedStorageStyle ?? StorageStyleGrid?.SelectedItem as StyleDisplay;
+        return selected?.Category ?? string.Empty;
+    }
 
     // Categories are independent style sets, so a style name only has to be unique within its
     // category - the same name in another category is not a clash (#15332).
@@ -1234,9 +1271,13 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
         MoveStylesToCategory(selectedItems, stored);
 
+        // The filter is left alone (the window always shows all saved styles, and switching it
+        // rebuilt the list twice and dropped the selection) - the category column updates itself
         RebuildStorageCategories();
-        SelectedStorageCategory = StorageCategories.FirstOrDefault(c => IsSameCategoryLabel(c, label)) ?? SelectedStorageCategory;
-        RefreshStorageStylesView();
+        if (!IsSameCategoryLabel(SelectedStorageCategory, AllCategoriesLabel))
+        {
+            RefreshStorageStylesView();
+        }
     }
 
     /// <summary>
@@ -1410,6 +1451,62 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
     private int _previewRequestId;
     private string _lastPreviewSignature = string.Empty;
 
+    private void UpdateSummary()
+    {
+        SummaryText = string.Format(Se.Language.Assa.StylesSummary, FileStyles.Count, StorageStylesView.Count);
+    }
+
+    partial void OnPreviewTextChanged(string value)
+    {
+        Se.Settings.Assa.StylesPreviewText = value ?? string.Empty;
+
+        // The render is keyed on the style - forget it so the next timer tick shows the new text
+        _lastPreviewSignature = string.Empty;
+    }
+
+    partial void OnPreviewBackgroundIndexChanged(int value)
+    {
+        Se.Settings.Assa.StylesPreviewBackground = value;
+
+        // Forget the last render so the preview timer draws it again on the new background
+        _lastPreviewSignature = string.Empty;
+        UpdatePreview();
+    }
+
+    /// <summary>
+    /// The libass render (transparent) on the chosen preview background, with a thin frame.
+    /// </summary>
+    internal static SKBitmap ComposeOnBackground(SKBitmap bitmap, int backgroundIndex)
+    {
+        if (backgroundIndex is not (1 or 2))
+        {
+            return NonAssaPreviewRenderer.ComposeOnDarkFrame(bitmap);
+        }
+
+        var frame = new SKBitmap(bitmap.Width, bitmap.Height);
+        using var canvas = new SKCanvas(frame);
+        if (backgroundIndex == 2)
+        {
+            canvas.Clear(new SKColor(232, 233, 236));
+        }
+        else
+        {
+            const int cell = 24;
+            canvas.Clear(new SKColor(70, 70, 70));
+            using var paint = new SKPaint { Color = new SKColor(100, 100, 100) };
+            for (var y = 0; y < bitmap.Height; y += cell)
+            {
+                for (var x = (y / cell) % 2 * cell; x < bitmap.Width; x += cell * 2)
+                {
+                    canvas.DrawRect(x, y, cell, cell, paint);
+                }
+            }
+        }
+
+        canvas.DrawBitmap(bitmap, 0, 0);
+        return frame;
+    }
+
     private void UpdatePreview()
     {
         var style = CurrentStyle;
@@ -1423,7 +1520,8 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         // The preview timer polls every 500 ms; only re-render (spawn ffmpeg) when the style
         // actually changed. Renders via libass so the preview matches playback/burn-in exactly.
         var ssaStyle = style.ToSsaStyle();
-        var signature = ssaStyle.ToRawAss();
+        var previewText = EffectivePreviewText;
+        var signature = ssaStyle.ToRawAss() + "\n" + previewText + "\n" + (_subtitle.Footer?.Length ?? 0);
         if (signature == _lastPreviewSignature)
         {
             return;
@@ -1432,16 +1530,19 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
         _lastPreviewSignature = signature;
         var requestId = System.Threading.Interlocked.Increment(ref _previewRequestId);
         var header = _subtitle.Header;
+        var footer = _subtitle.Footer;
 
         Task.Run(() =>
         {
+            // The footer carries the [Fonts] attachments, so a style using an attached font previews in it
             var previewSubtitle = new Subtitle
             {
                 Header = string.IsNullOrEmpty(header) ? AdvancedSubStationAlpha.DefaultHeader : header,
+                Footer = footer,
             };
             previewSubtitle.Header = AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(
                 previewSubtitle.Header, new List<SsaStyle> { ssaStyle });
-            previewSubtitle.Paragraphs.Add(new Paragraph("This is a test", 0, 2000) { Extra = ssaStyle.Name });
+            previewSubtitle.Paragraphs.Add(new Paragraph(previewText, 0, 2000) { Extra = ssaStyle.Name });
 
             SKBitmap? bitmap = null;
             try
@@ -1469,7 +1570,9 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
                 if (bitmap != null)
                 {
-                    ImagePreview = NonAssaPreviewRenderer.ComposeOnDarkFrame(bitmap).ToAvaloniaBitmap();
+                    using var composed = ComposeOnBackground(bitmap, PreviewBackgroundIndex);
+                    ImagePreview = composed.ToAvaloniaBitmap();
+                    bitmap.Dispose();
                 }
                 else
                 {
@@ -1481,7 +1584,7 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void UpdatePreviewSkia(StyleDisplay style)
     {
-        var text = "This is a test";
+        var text = EffectivePreviewText.Replace("\\N", "\n").Replace("\\n", "\n");
 
         // Scale the rendered font size to the preview canvas height (~360px) the same way
         // libass scales fonts against PlayResY. Default to 288 (libass default) when missing.
@@ -1642,6 +1745,13 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void SwitchToFileStyle()
     {
+        // The grid can show a selection the view model never got (the first row is selected
+        // when the grid fills): clicking that row only raises GotFocus, and the editor stayed empty
+        if (SelectedFileStyle == null && FileStyleGrid.SelectedItem is StyleDisplay gridSelected)
+        {
+            SelectedFileStyle = gridSelected;
+        }
+
         var selectedStyle = SelectedFileStyle;
         CurrentStyle = selectedStyle;
         CurrentTitle = Se.Language.Assa.StylesInFile;
@@ -1652,6 +1762,12 @@ public partial class AssaStylesViewModel : ObservableObject, IClosingCleanup
 
     private void SwitchToStorageStyle()
     {
+        // See SwitchToFileStyle: the first saved style showed selected but could not be edited
+        if (SelectedStorageStyle == null && StorageStyleGrid.SelectedItem is StyleDisplay gridSelected)
+        {
+            SelectedStorageStyle = gridSelected;
+        }
+
         var selectedStyle = SelectedStorageStyle;
         CurrentStyle = selectedStyle;
         CurrentTitle = Se.Language.Assa.StylesSaved;

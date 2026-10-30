@@ -37,4 +37,5 @@ public enum BatchConvertFunctionType
     Renumber,
     MergeContinuationLines,
     ConvertActors,
+    RunPlugin,
 }

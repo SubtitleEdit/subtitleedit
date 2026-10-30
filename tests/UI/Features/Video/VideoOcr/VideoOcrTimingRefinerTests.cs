@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
 namespace UITests.Features.Video.VideoOcr;

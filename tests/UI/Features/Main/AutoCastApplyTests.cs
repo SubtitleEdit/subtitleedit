@@ -7,7 +7,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AutoCast;
-using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features.Main;
 

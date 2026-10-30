@@ -1,4 +1,3 @@
-using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;

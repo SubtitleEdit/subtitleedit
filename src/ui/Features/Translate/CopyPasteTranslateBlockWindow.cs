@@ -1,12 +1,18 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
+/// <summary>
+/// One block of translate via copy-paste in the editor look (see <see cref="EditorChrome"/>): what to
+/// do, the accent "get from clipboard" button, Re-copy and Cancel in the button bar.
+/// </summary>
 public class CopyPasteTranslateBlockWindow : Window
 {
     public CopyPasteTranslateBlockWindow(CopyPasteTranslateBlockViewModel vm)
@@ -17,48 +23,53 @@ public class CopyPasteTranslateBlockWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelInfo = UiUtil.MakeLabel(Se.Language.Translate.BlockCopyInfo);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
+
+        var labelInfo = new TextBlock
+        {
+            Text = Se.Language.Translate.BlockCopyInfo,
+            FontSize = EditorChrome.FieldFontSize,
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 520,
+            HorizontalAlignment = HorizontalAlignment.Left,
+        };
 
         var buttonGetFromClipboard = new Button
         {
-            Content = Se.Language.Translate.BlockCopyGetFromClipboard,
+            Content = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 10,
+                Children =
+                {
+                    new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-paste", FontSize = 16, VerticalAlignment = VerticalAlignment.Center },
+                    new TextBlock { Text = Se.Language.Translate.BlockCopyGetFromClipboard, VerticalAlignment = VerticalAlignment.Center },
+                },
+            },
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Padding = new Thickness(15),
-            Margin = new Thickness(15),
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            FontSize = UiUtil.ScaledFontSize(16),
+            Padding = new Thickness(22, 12),
+            Margin = new Thickness(0, 6, 0, 2),
+            CornerRadius = new CornerRadius(8),
+            FontWeight = FontWeight.SemiBold,
+            FontSize = UiUtil.ScaledFontSize(15),
             Command = vm.CopyFromClipboardCommand,
         };
+        buttonGetFromClipboard.Classes.Add("primary");
+        AutomationProperties.SetName(buttonGetFromClipboard, Se.Language.Translate.BlockCopyGetFromClipboard);
 
-        var buttonOk = UiUtil.MakeButton(Se.Language.Translate.ReCopyTextToClipboard, vm.CopyFromClipboardCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        var grid = new Grid
+        var body = new StackPanel
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Spacing = 14,
+            Margin = new Thickness(20, 18),
+            Children = { labelInfo, buttonGetFromClipboard },
         };
 
-        grid.Add(labelInfo, 0);
-        grid.Add(buttonGetFromClipboard, 1);
-        grid.Add(panelButtons, 2);
+        var buttonReCopy = UiUtil.MakeButton(Se.Language.Translate.ReCopyTextToClipboard, vm.CopyToClipboardCommand);
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonReCopy, buttonCancel);
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(body, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;

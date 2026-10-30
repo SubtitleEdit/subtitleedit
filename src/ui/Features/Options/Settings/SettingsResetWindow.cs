@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -16,117 +15,66 @@ public class SettingsResetWindow : Window
         Title = Se.Language.Options.Settings.ResetSettingsTitle;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
+        SettingsChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var checkBoxResetAll = new CheckBox
+        var switchResetAll = EditorChrome.MakeSwitch(nameof(vm.ResetAll), null, vm);
+
+        // The parts can only be picked when not resetting everything
+        ToggleSwitch MakePartSwitch(string property)
         {
-            Content = Se.Language.Options.Settings.ResetAllSettings,
-            Margin = new Thickness(0, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ResetAll)) { Mode = BindingMode.TwoWay },
+            var toggle = EditorChrome.MakeSwitch(property, null, vm);
+            toggle[!IsEnabledProperty] = new Binding(nameof(vm.ResetAll)) { Converter = InverseBooleanConverter.Instance };
+            return toggle;
+        }
+
+        var parts = new StackPanel
+        {
+            Spacing = 6,
+            Margin = new Thickness(20, 0, 0, 0),
+            Children =
+            {
+                SettingsChrome.MakeSwitchRow(MakePartSwitch(nameof(vm.ResetRules)), Se.Language.Options.Settings.ResetRules),
+                SettingsChrome.MakeSwitchRow(MakePartSwitch(nameof(vm.ResetAppearance)), Se.Language.Options.Settings.ResetAppearance),
+                SettingsChrome.MakeSwitchRow(MakePartSwitch(nameof(vm.ResetWaveform)), Se.Language.Options.Settings.ResetWaveform),
+                SettingsChrome.MakeSwitchRow(MakePartSwitch(nameof(vm.ResetWindowPositionAndSize)), Se.Language.Options.Settings.ResetWindowPositionAndSize),
+                SettingsChrome.MakeSwitchRow(MakePartSwitch(nameof(vm.ResetSyntaxColoring)), Se.Language.Options.Settings.ResetSyntaxColoring),
+                SettingsChrome.MakeSwitchRow(MakePartSwitch(nameof(vm.ResetShortcuts)), Se.Language.Options.Settings.ResetShortcuts),
+                SettingsChrome.MakeSwitchRow(MakePartSwitch(nameof(vm.ResetRecentFiles)), Se.Language.Options.Settings.ResetRecentFiles),
+                SettingsChrome.MakeSwitchRow(MakePartSwitch(nameof(vm.ResetAutoTranslate)), Se.Language.Options.Settings.ResetAutoTranslate),
+            }
         };
 
-        var checkBoxResetRules = new CheckBox
+        var content = new StackPanel
         {
-            Content = Se.Language.Options.Settings.ResetRules,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ResetRules)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ResetAll), InverseBooleanConverter.Instance);
-
-        var checkBoxResetShortcuts = new CheckBox
-        {
-            Content = Se.Language.Options.Settings.ResetShortcuts,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ResetShortcuts)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ResetAll), InverseBooleanConverter.Instance);
-
-        var checkBoxResetRecentFiles = new CheckBox
-        {
-            Content = Se.Language.Options.Settings.ResetRecentFiles,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ResetRecentFiles)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ResetAll), InverseBooleanConverter.Instance);
-
-        var checkBoxResetAutoTranslate = new CheckBox
-        {
-            Content = Se.Language.Options.Settings.ResetAutoTranslate,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ResetAutoTranslate)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ResetAll), InverseBooleanConverter.Instance);
-
-        var checkBoxResetAppearance = new CheckBox
-        {
-            Content = Se.Language.Options.Settings.ResetAppearance,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ResetAppearance)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ResetAll), InverseBooleanConverter.Instance);
-
-        var checkBoxResetWaveform = new CheckBox
-        {
-            Content = Se.Language.Options.Settings.ResetWaveform,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ResetWaveform)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ResetAll), InverseBooleanConverter.Instance);
-
-        var checkBoxResetSyntaxColoring = new CheckBox
-        {
-            Content = Se.Language.Options.Settings.ResetSyntaxColoring,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ResetSyntaxColoring)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ResetAll), InverseBooleanConverter.Instance);
-
-        var checkBoxResetWindowPositionAndSize = new CheckBox
-        {
-            Content = Se.Language.Options.Settings.ResetWindowPositionAndSize,
-            Margin = new Thickness(20, 0, 55, 0),
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.ResetWindowPositionAndSize)) { Mode = BindingMode.TwoWay },
-        }.WithBindEnabled(nameof(vm.ResetAll), InverseBooleanConverter.Instance);
-
+            Spacing = 10,
+            MinWidth = 340,
+            Children =
+            {
+                SettingsChrome.MakeSwitchRow(switchResetAll, Se.Language.Options.Settings.ResetAllSettings),
+                parts,
+            }
+        };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = GridLength.Auto },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 5,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-
-        grid.Add(checkBoxResetAll, 0);
-        grid.Add(checkBoxResetRules, 1);
-        grid.Add(checkBoxResetAppearance, 2);
-        grid.Add(checkBoxResetWaveform, 3);
-        grid.Add(checkBoxResetWindowPositionAndSize, 4);
-        grid.Add(checkBoxResetSyntaxColoring, 5);
-        grid.Add(checkBoxResetShortcuts, 6);
-        grid.Add(checkBoxResetRecentFiles, 7);
-        grid.Add(checkBoxResetAutoTranslate, 8);
-        grid.Add(panelButtons, 9);
+        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.Options.Settings.ResetSettingsTitle, content, first: true)), 0);
+        grid.Add(SettingsChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1);
 
         Content = grid;
 
-        UiUtil.FocusOnFirstActivation(this, checkBoxResetAll); // initial focus on an input, not an action button - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, switchResetAll); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
     }
 }

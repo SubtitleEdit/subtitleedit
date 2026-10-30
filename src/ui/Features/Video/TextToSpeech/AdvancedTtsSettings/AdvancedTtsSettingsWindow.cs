@@ -6,6 +6,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.IO;
@@ -17,6 +18,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 /// made the window several screens tall - on a laptop it was clamped to the working area and the
 /// OK/Cancel buttons ended up off-screen (#14331). The explanations now live in hover hints, the
 /// options are grouped, and the content scrolls with the buttons pinned below it.
+/// In the editor look (see <see cref="EditorChrome"/>): sections on the panel color, switches for
+/// the on/off options, compact fields, Cancel/OK in the button bar.
 /// </summary>
 public class AdvancedTtsSettingsWindow : Window
 {
@@ -32,6 +35,9 @@ public class AdvancedTtsSettingsWindow : Window
         Width = 560;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
+        AddStyles();
 
         _vm = vm;
         vm.Window = this;
@@ -39,91 +45,93 @@ public class AdvancedTtsSettingsWindow : Window
 
         var l = Se.Language.Video.TextToSpeech;
 
-        var checkBoxProAudio = MakeCheckBox(l.ProAudioPostProcessing, nameof(vm.DoProAudioChain));
-        var checkBoxDucking = MakeCheckBox(l.AudioDucking, nameof(vm.DoAudioDucking));
-        var checkBoxRemoveSpeech = MakeCheckBox(l.RemoveOriginalSpeech, nameof(vm.DoRemoveOriginalSpeech));
-        var checkBoxVad = MakeCheckBox(l.VadSilenceCompression, nameof(vm.DoVadSilenceCompression));
-        var checkBoxTimeStretch = MakeCheckBox(l.HighQualityTimeStretch, nameof(vm.DoHighQualityTimeStretch));
-        var checkBoxDeleteTempFiles = MakeCheckBox(l.DeleteTempFiles, nameof(vm.DoDeleteTempFiles));
-        var checkBoxCleanCloneReferences = MakeCheckBox(l.CleanCloneReferences, nameof(vm.DoCleanCloneReferences));
+        var switchProAudio = MakeSwitch(l.ProAudioPostProcessing, nameof(vm.DoProAudioChain), out var toggleProAudio);
+        var switchDucking = MakeSwitch(l.AudioDucking, nameof(vm.DoAudioDucking), out var toggleDucking);
+        var switchRemoveSpeech = MakeSwitch(l.RemoveOriginalSpeech, nameof(vm.DoRemoveOriginalSpeech), out var toggleRemoveSpeech);
+        var switchVad = MakeSwitch(l.VadSilenceCompression, nameof(vm.DoVadSilenceCompression), out var toggleVad);
+        var switchTimeStretch = MakeSwitch(l.HighQualityTimeStretch, nameof(vm.DoHighQualityTimeStretch), out var toggleTimeStretch);
+        var switchDeleteTempFiles = MakeSwitch(l.DeleteTempFiles, nameof(vm.DoDeleteTempFiles), out var toggleDeleteTempFiles);
+        var switchCleanCloneReferences = MakeSwitch(l.CleanCloneReferences, nameof(vm.DoCleanCloneReferences), out var toggleCleanCloneReferences);
 
-        var groupAudio = MakeGroupBox(l.AdvancedTtsAudioProcessing, new StackPanel
+        var speechRemovalModel = new ComboBox
         {
-            Spacing = 6,
+            Width = 240,
+            ItemsSource = vm.SpeechRemovalModels,
+            [!SelectingItemsControl.SelectedIndexProperty] = new Binding(nameof(vm.SpeechRemovalModelIndex)) { Mode = BindingMode.TwoWay },
+            [!IsEnabledProperty] = new Binding(nameof(vm.DoRemoveOriginalSpeech)) { Mode = BindingMode.OneWay },
+        };
+
+        var groupAudio = EditorChrome.MakeEditorSection(l.AdvancedTtsAudioProcessing, new StackPanel
+        {
+            Spacing = 8,
             Children =
             {
-                MakeRow(checkBoxProAudio, l.ProAudioPostProcessingDescription),
+                MakeRow(switchProAudio, l.ProAudioPostProcessingDescription, describes: toggleProAudio),
 
-                MakeRow(checkBoxDucking, l.AudioDuckingDescription,
+                MakeRow(switchDucking, l.AudioDuckingDescription,
                     MakeField(l.OriginalVolumePercent,
-                        UiUtil.MakeNumericUpDownInt(0, 100, 15, 110, vm, nameof(vm.AudioDuckingVolume)),
-                        nameof(vm.DoAudioDucking))),
+                        MakeNumber(UiUtil.MakeNumericUpDownInt(0, 100, 15, 90, vm, nameof(vm.AudioDuckingVolume)), l.OriginalVolumePercent),
+                        nameof(vm.DoAudioDucking)),
+                    describes: toggleDucking),
 
-                MakeRow(checkBoxRemoveSpeech, l.RemoveOriginalSpeechDescription),
+                MakeRow(switchRemoveSpeech, l.RemoveOriginalSpeechDescription, describes: toggleRemoveSpeech),
 
-                MakeRow(UiUtil.MakeLabel(l.SpeechRemovalModel), l.SpeechRemovalModelDescription,
-                    new ComboBox
-                    {
-                        Width = 240,
-                        ItemsSource = vm.SpeechRemovalModels,
-                        [!SelectingItemsControl.SelectedIndexProperty] = new Binding(nameof(vm.SpeechRemovalModelIndex)) { Mode = BindingMode.TwoWay },
-                        [!IsEnabledProperty] = new Binding(nameof(vm.DoRemoveOriginalSpeech)) { Mode = BindingMode.OneWay },
-                    }),
+                MakeRow(MakeLabel(Se.Language.General.Model), l.SpeechRemovalModelDescription, speechRemovalModel),
 
-                MakeRow(checkBoxVad, l.VadSilenceCompressionDescription,
+                MakeRow(switchVad, l.VadSilenceCompressionDescription,
                     MakeField(l.MaxSilenceMs,
-                        UiUtil.MakeNumericUpDownInt(0, 5000, 150, 110, vm, nameof(vm.VadMaxSilenceMs)),
-                        nameof(vm.DoVadSilenceCompression))),
+                        MakeNumber(UiUtil.MakeNumericUpDownInt(0, 5000, 150, 90, vm, nameof(vm.VadMaxSilenceMs)), l.MaxSilenceMs),
+                        nameof(vm.DoVadSilenceCompression)),
+                    describes: toggleVad),
 
-                MakeRow(checkBoxTimeStretch, l.HighQualityTimeStretchDescription,
-                    status: MakeStatusLabel(nameof(vm.RubberbandStatus))),
+                MakeRow(switchTimeStretch, l.HighQualityTimeStretchDescription,
+                    status: MakeStatusLabel(nameof(vm.RubberbandStatus)), describes: toggleTimeStretch),
+            }
+        }, first: true);
+
+        var groupOutput = EditorChrome.MakeEditorSection(Se.Language.General.Output, new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                MakeRow(MakeLabel(l.SilencePaddingMs), l.SilencePaddingMsDescription,
+                    MakeNumber(UiUtil.MakeNumericUpDownInt(0, 10000, 0, 110, vm, nameof(vm.SilencePaddingMs)), null)),
+
+                MakeRow(MakeLabel(l.OutputSampleRate), l.OutputSampleRateDescription,
+                    MakeNumber(UiUtil.MakeNumericUpDownInt(0, 192000, 0, 110, vm, nameof(vm.OutputSampleRate)), null)),
             }
         });
 
-        var groupOutput = MakeGroupBox(l.AdvancedTtsOutput, new StackPanel
+        var groupVoiceCloning = EditorChrome.MakeEditorSection(l.AdvancedTtsVoiceCloning, new StackPanel
         {
-            Spacing = 6,
+            Spacing = 8,
             Children =
             {
-                MakeRow(UiUtil.MakeLabel(l.SilencePaddingMs), l.SilencePaddingMsDescription,
-                    UiUtil.MakeNumericUpDownInt(0, 10000, 0, 110, vm, nameof(vm.SilencePaddingMs))),
-
-                MakeRow(UiUtil.MakeLabel(l.OutputSampleRate), l.OutputSampleRateDescription,
-                    UiUtil.MakeNumericUpDownInt(0, 192000, 0, 120, vm, nameof(vm.OutputSampleRate))),
+                MakeRow(switchCleanCloneReferences, l.CleanCloneReferencesDescription, describes: toggleCleanCloneReferences),
             }
         });
 
-        var groupVoiceCloning = MakeGroupBox(l.AdvancedTtsVoiceCloning, new StackPanel
+        var groupFolder = EditorChrome.MakeEditorSection(l.GenerationFolder, MakeGenerationFolderContent(vm, switchDeleteTempFiles, toggleDeleteTempFiles));
+
+        var groupEdgeTts = EditorChrome.MakeEditorSection("Edge-TTS", new StackPanel
         {
-            Spacing = 6,
+            Spacing = 8,
             Children =
             {
-                MakeRow(checkBoxCleanCloneReferences, l.CleanCloneReferencesDescription),
-            }
-        });
+                MakeRow(MakeLabel(l.EdgeTtsRate), l.EdgeTtsRateDescription,
+                    MakeTextBox(UiUtil.MakeTextBox(110, vm, nameof(vm.EdgeTtsRate)))),
 
-        var groupFolder = MakeGroupBox(l.GenerationFolder, MakeGenerationFolderContent(vm, checkBoxDeleteTempFiles));
+                MakeRow(MakeLabel(l.EdgeTtsPitch), l.EdgeTtsPitchDescription,
+                    MakeTextBox(UiUtil.MakeTextBox(110, vm, nameof(vm.EdgeTtsPitch)))),
 
-        var groupEdgeTts = MakeGroupBox("Edge-TTS", new StackPanel
-        {
-            Spacing = 6,
-            Children =
-            {
-                MakeRow(UiUtil.MakeLabel(l.EdgeTtsRate), l.EdgeTtsRateDescription,
-                    UiUtil.MakeTextBox(110, vm, nameof(vm.EdgeTtsRate))),
-
-                MakeRow(UiUtil.MakeLabel(l.EdgeTtsPitch), l.EdgeTtsPitchDescription,
-                    UiUtil.MakeTextBox(110, vm, nameof(vm.EdgeTtsPitch))),
-
-                MakeRow(UiUtil.MakeLabel(l.EdgeTtsVolume), l.EdgeTtsVolumeDescription,
-                    UiUtil.MakeTextBox(110, vm, nameof(vm.EdgeTtsVolume))),
+                MakeRow(MakeLabel(l.EdgeTtsVolume), l.EdgeTtsVolumeDescription,
+                    MakeTextBox(UiUtil.MakeTextBox(110, vm, nameof(vm.EdgeTtsVolume)))),
             }
         });
         groupEdgeTts[!IsVisibleProperty] = new Binding(nameof(vm.IsEdgeTtsEngine)) { Mode = BindingMode.OneWay };
 
         var content = new StackPanel
         {
-            Spacing = 10,
             Children = { groupAudio, groupVoiceCloning, groupOutput, groupFolder, groupEdgeTts },
         };
 
@@ -135,62 +143,119 @@ public class AdvancedTtsSettingsWindow : Window
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
         var grid = new Grid
         {
-            Margin = UiUtil.MakeWindowMargin(),
-            RowSpacing = 10,
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = GridLength.Auto },
             },
         };
-        grid.Add(scrollViewer, 0);
-        grid.Add(panelButtons, 1);
+        grid.Add(new Border { Background = EditorChrome.PanelBrush, Child = scrollViewer }, 0);
+        grid.Add(MakeButtonBar(vm), 1);
 
         Content = grid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        UiUtil.FocusOnFirstActivation(this, () => checkBoxProAudio.Focus());
+        UiUtil.FocusOnFirstActivation(this, () => toggleProAudio.Focus());
     }
 
-    private static CheckBox MakeCheckBox(string title, string binding)
+    /// <summary>
+    /// Compact combo boxes.
+    /// </summary>
+    private void AddStyles()
     {
-        return new CheckBox
+        Styles.Add(new Style(x => x.OfType<ComboBox>())
         {
-            // A TextBlock (not a bare string) so long translations wrap instead of widening the row.
-            Content = new TextBlock { Text = title, TextWrapping = TextWrapping.Wrap },
+            Setters =
+            {
+                new Setter(TemplatedControl.FontSizeProperty, 12.5),
+                new Setter(TemplatedControl.MinHeightProperty, 28.0),
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(8, 2, 4, 2)),
+                new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)),
+            },
+        });
+    }
+
+    /// <summary>
+    /// An on/off option: a compact switch with its title beside it. The title wraps instead of
+    /// widening the row for long translations.
+    /// </summary>
+    private static Grid MakeSwitch(string title, string binding, out ToggleSwitch toggle)
+    {
+        toggle = new ToggleSwitch
+        {
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
             VerticalAlignment = VerticalAlignment.Center,
-            [!CheckBox.IsCheckedProperty] = new Binding(binding) { Mode = BindingMode.TwoWay },
+            [!ToggleSwitch.IsCheckedProperty] = new Binding(binding) { Mode = BindingMode.TwoWay },
         };
+        AutomationProperties.SetName(toggle, title);
+
+        var row = new Grid
+        {
+            ColumnSpacing = 8,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
+        };
+        row.Add(toggle, 0, 0);
+        row.Add(new TextBlock { Text = title, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap }, 0, 1);
+        return row;
     }
 
-    private static Label MakeStatusLabel(string statusBinding)
+    private static Label MakeLabel(string text)
     {
-        return new Label
+        var label = UiUtil.MakeLabel(text);
+        label.FontSize = EditorChrome.FieldFontSize;
+        label.Padding = new Thickness(0);
+        label.VerticalAlignment = VerticalAlignment.Center;
+        return label;
+    }
+
+    private static NumericUpDown MakeNumber(NumericUpDown field, string? name)
+    {
+        field.Classes.Add("field");
+        if (name != null)
         {
-            Opacity = 0.6,
+            AutomationProperties.SetName(field, name);
+        }
+
+        return field;
+    }
+
+    private static TextBox MakeTextBox(TextBox textBox)
+    {
+        textBox.FontSize = EditorChrome.FieldFontSize;
+        textBox.MinHeight = 28;
+        textBox.Background = EditorChrome.FieldBrush;
+        textBox.BorderBrush = EditorChrome.FieldBorderBrush;
+        textBox.CornerRadius = new CornerRadius(6);
+        textBox.VerticalContentAlignment = VerticalAlignment.Center;
+        return textBox;
+    }
+
+    private static TextBlock MakeStatusLabel(string statusBinding)
+    {
+        return new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
             FontStyle = FontStyle.Italic,
             VerticalAlignment = VerticalAlignment.Center,
-            Padding = new Thickness(0),
-            [!ContentControl.ContentProperty] = new Binding(statusBinding) { Mode = BindingMode.OneWay },
+            [!TextBlock.TextProperty] = new Binding(statusBinding) { Mode = BindingMode.OneWay },
         };
     }
 
     /// <summary>
-    /// One option: its label/check box plus hint icon on the left, its input right-aligned so the
+    /// One option: its label/switch plus hint icon on the left, its input right-aligned so the
     /// inputs of a group line up.
     /// </summary>
-    private static Grid MakeRow(Control label, string hint, Control? input = null, Control? status = null)
+    private static Grid MakeRow(Control label, string hint, Control? input = null, Control? status = null, Control? describes = null)
     {
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
+            Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
             Children = { label },
         };
@@ -200,13 +265,14 @@ public class AdvancedTtsSettingsWindow : Window
             leftPanel.Children.Add(status);
         }
 
-        // Screen readers get the hint as help text on the control it belongs to: the check box when
+        // Screen readers get the hint as help text on the control it belongs to: the switch when
         // the option is a toggle, otherwise the input the label names.
-        leftPanel.Children.Add(UiUtil.MakeHintIcon(hint, label is CheckBox ? label : input ?? label));
+        leftPanel.Children.Add(UiUtil.MakeHintIcon(hint, describes ?? input ?? label));
 
         var grid = new Grid
         {
             ColumnSpacing = 10,
+            MinHeight = 28,
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
@@ -218,6 +284,7 @@ public class AdvancedTtsSettingsWindow : Window
         if (input != null)
         {
             input.HorizontalAlignment = HorizontalAlignment.Right;
+            input.VerticalAlignment = VerticalAlignment.Center;
             grid.Add(input, 0, 1);
             // The label sits inside leftPanel, not beside the input in the grid, so link it by hand (#12087).
             if (label is Label && !AccessibleLabels.HasAccessibleName(input))
@@ -237,11 +304,18 @@ public class AdvancedTtsSettingsWindow : Window
         var panel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Spacing = 5,
+            Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                new Label { Content = label, VerticalAlignment = VerticalAlignment.Center, Padding = new Thickness(0) },
+                new Label
+                {
+                    Content = label,
+                    FontSize = EditorChrome.FieldFontSize,
+                    Foreground = EditorChrome.DimTextBrush,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Padding = new Thickness(0),
+                },
                 input,
             },
             [!IsEnabledProperty] = new Binding(isEnabledBinding) { Mode = BindingMode.OneWay },
@@ -254,24 +328,24 @@ public class AdvancedTtsSettingsWindow : Window
     /// Where the per-line clips are written during a run, and whether they are swept when the
     /// window closes. Before #13332 they went loose into the system temp folder and stayed there.
     /// </summary>
-    private static Control MakeGenerationFolderContent(AdvancedTtsSettingsViewModel vm, CheckBox checkBoxDeleteTempFiles)
+    private static Control MakeGenerationFolderContent(AdvancedTtsSettingsViewModel vm, Control switchDeleteTempFiles, ToggleSwitch toggleDeleteTempFiles)
     {
         var l = Se.Language.Video.TextToSpeech;
 
-        var textBoxFolder = new TextBox
+        var textBoxFolder = MakeTextBox(new TextBox
         {
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             PlaceholderText = Path.GetTempPath(),
             [!TextBox.TextProperty] = new Binding(nameof(vm.GenerationFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-        };
+        });
         AutomationProperties.SetName(textBoxFolder, l.GenerationFolder);
 
-        var buttonBrowse = UiUtil.MakeButtonBrowse(vm.BrowseGenerationFolderCommand, accessibleName: l.GenerationFolder);
+        var buttonBrowse = EditorChrome.CreateToolButton(IconNames.FolderOpen, l.GenerationFolder, vm.BrowseGenerationFolderCommand, 28);
 
         var folderRow = new Grid
         {
-            ColumnSpacing = 5,
+            ColumnSpacing = 6,
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
@@ -285,27 +359,27 @@ public class AdvancedTtsSettingsWindow : Window
 
         return new StackPanel
         {
-            Spacing = 6,
+            Spacing = 8,
             Children =
             {
                 folderRow,
-                MakeRow(checkBoxDeleteTempFiles, l.DeleteTempFilesDescription),
+                MakeRow(switchDeleteTempFiles, l.DeleteTempFilesDescription, describes: toggleDeleteTempFiles),
             }
         };
     }
 
-    private static Border MakeGroupBox(string title, Control content)
+    private static Border MakeButtonBar(AdvancedTtsSettingsViewModel vm)
     {
-        var header = new TextBlock
-        {
-            Text = title,
-            FontWeight = FontWeight.SemiBold,
-            Margin = new Thickness(0, 0, 0, 6),
-        };
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return UiUtil.MakeBorderForControl(new StackPanel
+        return EditorChrome.WrapButtonBar(new StackPanel
         {
-            Children = { header, content },
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Spacing = 10,
+            Children = { buttonCancel, buttonOk },
         });
     }
 

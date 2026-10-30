@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.UiLogic.Http
 {

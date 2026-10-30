@@ -5,9 +5,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
-using System;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace UITests.Features.Main;
 

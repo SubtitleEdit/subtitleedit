@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -8,8 +9,15 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 
+/// <summary>
+/// "Text too wide" measuring settings in the editor look (see <see cref="EditorChrome"/>): the
+/// font and max width, then the sample with its preview, Cancel + OK in the button bar. The
+/// preview image keeps its own colors.
+/// </summary>
 public class SyntaxColorTooWideSettingsWindow : Window
 {
+    private const double LabelWidth = 140;
+
     public SyntaxColorTooWideSettingsWindow(SyntaxColorTooWideSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -18,43 +26,53 @@ public class SyntaxColorTooWideSettingsWindow : Window
         Width = 660;
         MinWidth = 460;
         SizeToContent = SizeToContent.Height;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
-        // Row 0 – font name
-        var labelFont = UiUtil.MakeLabel(Se.Language.General.FontName);
+        // Font name
         var comboFont = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.SelectedFont))
-            .WithMinWidth(200);
+            .WithMinWidth(220);
+        comboFont.VerticalAlignment = VerticalAlignment.Center;
+        AutomationProperties.SetName(comboFont, Se.Language.General.FontName);
         comboFont.SelectionChanged += (_, _) => vm.MarkPreviewDirty();
 
-        // Row 1 – font size
-        var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
-        var numericFontSize = UiUtil.MakeNumericUpDownInt(4, 200, 24, 100, vm, nameof(vm.FontSize));
+        // Font size
+        var numericFontSize = UiUtil.MakeNumericUpDownInt(4, 200, 24, 100, vm, nameof(vm.FontSize))
+            .AsField(Se.Language.General.FontSize, themeForeground: true);
         numericFontSize.ValueChanged += (_, _) => vm.MarkPreviewDirty();
 
-        // Row 2 – max width
-        var labelMaxWidth = UiUtil.MakeLabel(Se.Language.General.MaxWidthPixels);
-        var numericMaxWidth = UiUtil.MakeNumericUpDownInt(10, 9999, 560, 120, vm, nameof(vm.MaxWidthPixels));
+        // Max width
+        var numericMaxWidth = UiUtil.MakeNumericUpDownInt(10, 9999, 560, 100, vm, nameof(vm.MaxWidthPixels))
+            .AsField(Se.Language.General.MaxWidthPixels, themeForeground: true);
         numericMaxWidth.ValueChanged += (_, _) => vm.MarkPreviewDirty();
 
-        // Row 3 – separator
+        var measureContent = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontName, comboFont, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, numericFontSize, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.MaxWidthPixels, numericMaxWidth, LabelWidth),
+            },
+        };
 
-        // Row 4 – sample text
-        var labelSampleText = UiUtil.MakeLabel(Se.Language.General.SampleText);
+        // Sample text
         var textBoxSampleText = new TextBox
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBox.TextProperty] = new Binding(nameof(vm.SampleText)) { Mode = BindingMode.TwoWay },
-        };
+        }.AsTextField(Se.Language.General.SampleText);
         textBoxSampleText.TextChanged += (_, _) => vm.MarkPreviewDirty();
 
-        // Row 5 – box width
-        var labelBoxWidth = UiUtil.MakeLabel(Se.Language.General.BoxWidthPixels);
-        var numericBoxWidth = UiUtil.MakeNumericUpDownInt(100, 9999, 720, 120, vm, nameof(vm.SampleBoxWidth));
+        // Box width
+        var numericBoxWidth = UiUtil.MakeNumericUpDownInt(100, 9999, 720, 100, vm, nameof(vm.SampleBoxWidth))
+            .AsField(Se.Language.General.BoxWidthPixels, themeForeground: true);
         numericBoxWidth.ValueChanged += (_, _) => vm.MarkPreviewDirty();
 
-        // Row 6 – preview image
+        // Preview image
         var previewImage = new Image
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -64,64 +82,47 @@ public class SyntaxColorTooWideSettingsWindow : Window
             DataContext = vm,
             [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
         };
-        var previewBorder = UiUtil.MakeBorderForControl(previewImage).WithMinHeight(60);
-
-        // Row 7 – hint
-        var hint = new TextBlock
+        var previewBorder = new Border
         {
-            Text = Se.Language.Options.Settings.PixelWidthInfo,
-            FontStyle = FontStyle.Italic,
-            Opacity = 0.65,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
+            Child = previewImage,
+            MinHeight = 60,
+            Padding = new Thickness(4),
+            Background = EditorChrome.FieldBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(6),
+            ClipToBounds = true,
         };
 
-        // Row 8 – buttons
+        // Hint
+        var hint = EditorChrome.MakeWrappingDimLabel(Se.Language.Options.Settings.PixelWidthInfo);
+
+        var sampleContent = new StackPanel
+        {
+            Spacing = 8,
+            Children =
+            {
+                EditorChrome.MakeLabeledRow(Se.Language.General.SampleText, textBoxSampleText, LabelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.BoxWidthPixels, numericBoxWidth, LabelWidth),
+                previewBorder,
+                hint,
+            },
+        };
+
+        var sections = new StackPanel
+        {
+            Children =
+            {
+                EditorChrome.MakeEditorSection(Se.Language.General.Font, measureContent, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.General.Preview, sampleContent),
+            },
+        };
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // font
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // font size
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // max width
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // separator
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // sample text
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // box width
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // preview
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // hint
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 8,
-            RowSpacing = 8,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(labelFont, 0, 0);
-        grid.Add(comboFont, 0, 1);
-        grid.Add(labelFontSize, 1, 0);
-        grid.Add(numericFontSize, 1, 1);
-        grid.Add(labelMaxWidth, 2, 0);
-        grid.Add(numericMaxWidth, 2, 1);
-        grid.Add(labelSampleText, 4, 0);
-        grid.Add(textBoxSampleText, 4, 1);
-        grid.Add(labelBoxWidth, 5, 0);
-        grid.Add(numericBoxWidth, 5, 1);
-        grid.Add(previewBorder, 6, 0, 1, 2);
-        grid.Add(hint, 7, 0, 1, 2);
-        grid.Add(panelButtons, 8, 0, 1, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, comboFont); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);

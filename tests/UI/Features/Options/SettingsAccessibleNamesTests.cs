@@ -10,9 +10,6 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
 
 namespace UITests.Features.Options;
 

@@ -1,9 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -20,21 +18,26 @@ public class DownloadSpeechToTextEngineWindow : Window
         SizeToContent = SizeToContent.Height;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.SpeechToText);
         DataContext = vm;
 
         var titleText = new TextBlock
         {
             Text = Se.Language.Video.AudioToText.DownloadingSpeechToTextEngine,
-            FontSize = UiUtil.ScaledFontSize(20),
-            FontWeight = FontWeight.Bold,
+            FontSize = UiUtil.ScaledFontSize(16),
+            FontWeight = FontWeight.SemiBold,
+            TextWrapping = TextWrapping.Wrap,
         };
         titleText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.TitleText)));
 
         var progressBar = UiUtil.MakeProgressBar();
+        progressBar.Width = double.NaN;
+        progressBar.Margin = new Thickness(0, 4, 0, 0);
+        progressBar.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
 
-        var statusText = new TextBlock();
+        var statusText = new TextBlock { FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
 
         // The view models set Error on every failure path, but nothing rendered it - the user saw
@@ -52,20 +55,26 @@ public class DownloadSpeechToTextEngineWindow : Window
         });
 
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CommandCancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
+        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel);
 
         Content = new StackPanel
         {
-            Spacing = 8,
-            Margin = new Thickness(20),
             Children =
             {
-                titleText,
-                progressBar,
-                statusText,
-                errorText,
+                new StackPanel
+                {
+                    Spacing = 8,
+                    Margin = new Thickness(20, 18, 20, 18),
+                    Children =
+                    {
+                        titleText,
+                        progressBar,
+                        statusText,
+                        errorText,
+                    }
+                },
                 buttonBar,
-            }
+            },
         };
 
         UiUtil.FocusOnFirstActivation(this, () =>

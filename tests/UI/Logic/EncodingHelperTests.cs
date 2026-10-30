@@ -1,7 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using System.Text;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Logic;
 

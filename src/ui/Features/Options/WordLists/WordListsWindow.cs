@@ -1,16 +1,21 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System.Windows.Input;
 
 namespace Nikse.SubtitleEdit.Features.Options.WordLists;
 
+/// <summary>
+/// Names, user words, removed words and OCR fixes of a language in the editor look (see <see cref="EditorChrome"/>):
+/// language on top, the three lists side by side, each with its add row, and OK in the button bar.
+/// </summary>
 public class WordListsWindow : Window
 {
     private readonly WordListsViewModel _vm;
@@ -20,57 +25,73 @@ public class WordListsWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Options.WordLists.Title;
         CanResize = true;
-        Width = 900;
-        Height = 800;
-        MinWidth = 700;
+        Width = 960;
+        Height = 720;
+        MinWidth = 760;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var labelLanguage = UiUtil.MakeLabel(Se.Language.General.Language);
         var comboLanguages = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage));
         comboLanguages.SelectionChanged += (s, e) => vm.SelectedLanguageChanged();
-        var panelLanguage = UiUtil.MakeHorizontalPanel(labelLanguage, comboLanguages);
-
-        var linkLabelOpenDictionariesFolder = UiUtil.MakeLink(Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
-        var linkLabelEditUseAlwaysList = UiUtil.MakeLink(Se.Language.SpellCheck.EditUseAlwaysList, vm.EditUseAlwaysListCommand);
-        var panelLinks = UiUtil.MakeHorizontalPanel(linkLabelOpenDictionariesFolder, linkLabelEditUseAlwaysList).WithSpacing(20);
-
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk);
-
-        var grid = new Grid
+        comboLanguages.MinWidth = 240;
+        comboLanguages.VerticalAlignment = VerticalAlignment.Center;
+        AutomationProperties.SetName(comboLanguages, Se.Language.General.Language);
+        var panelLanguage = new StackPanel
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            Children = { EditorChrome.MakeDimLabel(Se.Language.General.Language, new Thickness(0)), comboLanguages },
+        };
+
+        var lists = new Grid
+        {
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        lists.Add(MakeViewNames(vm), 0, 0);
+        lists.Add(WithLeftLine(MakeViewUserAndRemovedWords(vm)), 0, 1);
+        lists.Add(WithLeftLine(MakeViewOcrFixes(vm)), 0, 2);
+
+        var sections = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Star },
+            },
+        };
+        sections.Add(new Border
+        {
+            Child = panelLanguage,
+            Padding = new Thickness(14, 12),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+        }, 0, 0);
+        sections.Add(lists, 1, 0);
+
+        var buttonOpenFolder = EditorChrome.MakeTextToolButton(IconNames.FolderOpen, Se.Language.General.OpenDictionaryFolder, vm.OpenDictionariesFolderCommand);
+        var buttonUseAlwaysList = EditorChrome.MakeTextToolButton(IconNames.FormatListChecks, Se.Language.SpellCheck.EditUseAlwaysList, vm.EditUseAlwaysListCommand);
+        var buttonRegexRules = EditorChrome.MakeTextToolButton(IconNames.Regex, Se.Language.Options.WordLists.RegexRulesDotDotDot, vm.EditRegexRulesCommand);
+        var panelLinks = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonOpenFolder, buttonUseAlwaysList, buttonRegexRules },
         };
 
-        grid.Add(panelLanguage, 0, 0, 1, 3);
-        grid.Add(MakeViewNames(vm), 1, 0);
-        grid.Add(MakeViewWords(vm), 1, 1);
-        grid.Add(MakeViewOcrFixes(vm), 1, 2);
-        grid.Add(panelLinks, 2, 0, 1, 3);
-        grid.Add(panelButtons, 3, 0, 1, 3);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
 
-        Content = grid;
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(panelLinks, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, comboLanguages); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Closing += (s, e) => _vm.Closing();
@@ -80,15 +101,25 @@ public class WordListsWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    // Panel header with the list's icon on a colored rounded square plus a count badge in the
+    private static Border WithLeftLine(Control content)
+    {
+        return new Border
+        {
+            Child = content,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        };
+    }
+
+    // Section header with the list's icon on a colored rounded square plus a count badge in the
     // same color - the glyph style used by the settings and shortcuts windows.
-    private static StackPanel MakePanelTitle(string title, string iconName, string colorHex, Binding countBinding)
+    private static DockPanel MakePanelTitle(string title, string iconName, string colorHex, Binding countBinding)
     {
         var color = Color.Parse(colorHex);
 
         var icon = new ContentControl
         {
-            FontSize = UiUtil.ScaledFontSize(13),
+            FontSize = UiUtil.ScaledFontSize(12),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -98,187 +129,191 @@ public class WordListsWindow : Window
         icon.Classes.Add(UiTheme.IconOnAccentClassName);
         var glyph = new Border
         {
-            Width = 22,
-            Height = 22,
-            CornerRadius = new CornerRadius(6),
+            Width = 20,
+            Height = 20,
+            CornerRadius = new CornerRadius(5),
             Background = new SolidColorBrush(color),
             VerticalAlignment = VerticalAlignment.Center,
             Child = icon,
         };
 
-        var labelTitle = UiUtil.MakeLabel(title).WithBold();
-
-        var badge = new Border
+        var labelTitle = EditorChrome.MakeSectionHeader(title);
+        labelTitle.TextTrimming = TextTrimming.CharacterEllipsis;
+        var titlePanel = new StackPanel
         {
-            Background = new SolidColorBrush(color, 0.16),
-            CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(8, 3, 8, 2),
-            Margin = new Thickness(4, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-            Child = new TextBlock
-            {
-                [!TextBlock.TextProperty] = countBinding,
-                FontSize = UiUtil.ScaledFontSize(10),
-                FontWeight = FontWeight.SemiBold,
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = new SolidColorBrush(color),
-                HorizontalAlignment = HorizontalAlignment.Center
-            }
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children = { glyph, labelTitle },
         };
 
-        return UiUtil.MakeHorizontalPanel(glyph, labelTitle, badge);
+        var badge = EditorChrome.MakeCountBadge(countBinding, new SolidColorBrush(color), new SolidColorBrush(color, 0.16));
+        badge.Margin = new Thickness(6, 0, 0, 0);
+        return EditorChrome.MakeHeaderRow(titlePanel, badge);
     }
 
-    private static Border MakeViewNames(WordListsViewModel vm)
+    private static ListBox MakeListBox(string accessibleName, string itemsPath, string selectedPath, ICommand removeCommand)
+    {
+        var listBox = new ListBox
+        {
+            [AutomationProperties.NameProperty] = accessibleName,
+            [!ListBox.ItemsSourceProperty] = new Binding(itemsPath) { Mode = BindingMode.OneWay },
+            [!ListBox.SelectedItemProperty] = new Binding(selectedPath) { Mode = BindingMode.TwoWay },
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            IsTextSearchEnabled = true, // type a letter (or a few quickly) to jump to the first matching entry (#16078)
+        };
+
+        // Text search only moves the selection - focus stays on the row clicked before, so the arrow keys
+        // went on from there, or out of the list when that row had scrolled away (#16471). Move focus too.
+        listBox.AddHandler(InputElement.TextInputEvent, (_, _) =>
+        {
+            var index = listBox.SelectedIndex;
+            if (index < 0)
+            {
+                return;
+            }
+
+            listBox.ScrollIntoView(index);
+            listBox.ContainerFromIndex(index)?.Focus(NavigationMethod.Directional);
+        }, handledEventsToo: true);
+
+        // Right-click selects the item under the pointer, so Remove acts on the clicked entry.
+        var flyout = new MenuFlyout();
+        flyout.Items.Add(new MenuItem { Header = Se.Language.General.Remove, Command = removeCommand });
+        listBox.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(listBox);
+
+        return listBox;
+    }
+
+    // Header, list and the add row of one list - the list takes the free height.
+    private static Grid MakeListSection(Control header, ListBox listBox, Control addRow)
+    {
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // label
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // listbox
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // add textbox + buttons
+            },
+            RowSpacing = 10,
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+
+        grid.Add(header, 0);
+        grid.Add(EditorChrome.MakeCompactListFrame(listBox), 1);
+        grid.Add(addRow, 2);
+        return grid;
+    }
+
+    // Text box(es) stretched, then the add and remove icon buttons.
+    private static Grid MakeAddRow(Button buttonAdd, Button buttonRemove, params TextBox[] textBoxes)
+    {
+        var grid = new Grid { ColumnSpacing = 6 };
+        var column = 0;
+        foreach (var textBox in textBoxes)
+        {
+            textBox.Width = double.NaN;
+            textBox.MinWidth = 0;
+            textBox.HorizontalAlignment = HorizontalAlignment.Stretch;
+            grid.ColumnDefinitions.Add(new ColumnDefinition(1, GridUnitType.Star));
+            grid.Add(textBox, 0, column++);
+        }
+
+        grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+        grid.Add(buttonAdd, 0, column++);
+        grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+        grid.Add(buttonRemove, 0, column);
+        return grid;
+    }
+
+    private static Grid MakeViewNames(WordListsViewModel vm)
     {
         var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.NameAndIgnoreList, IconNames.Account, "#4ec98a",
             new Binding(nameof(vm.Names) + ".Count") { Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
 
-        var listBox = new ListBox
-        {
-            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.Options.WordLists.NameAndIgnoreList,
-            [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.Names)) { Mode = BindingMode.OneWay },
-            [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedName)) { Mode = BindingMode.TwoWay },
-            VerticalAlignment = VerticalAlignment.Top,
-            Width = double.NaN,
-            Height = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            ItemContainerTheme = MakeListBoxTheme()
-        };
+        var listBox = MakeListBox(Se.Language.Options.WordLists.NameAndIgnoreList, nameof(vm.Names), nameof(vm.SelectedName), vm.RemoveNameCommand);
 
-        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewName)).WithAccessibleName(Se.Language.Options.WordLists.AddName);
+        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewName)).AsTextField(Se.Language.Options.WordLists.AddName);
+        textBox.PlaceholderText = Se.Language.Options.WordLists.AddName;
         textBox.KeyDown += (s, e) => vm.NameTextBoxKeyDown(e);
-        var buttonAdd = UiUtil.MakeButton(vm.AddNameCommand, IconNames.Plus, Se.Language.General.New);
-        var buttonRemove = UiUtil.MakeButton(vm.RemoveNameCommand, IconNames.Trash, Se.Language.General.Remove);
-        var panelButtons = UiUtil.MakeButtonBar(textBox, buttonAdd, buttonRemove).WithAlignmentLeft().WithSpacing(4);
+        var buttonAdd = EditorChrome.CreateToolButton(IconNames.Plus, Se.Language.General.New, vm.AddNameCommand, 28);
+        var buttonRemove = EditorChrome.CreateToolButton(IconNames.Trash, Se.Language.General.Remove, vm.RemoveNameCommand, 28);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // label
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // listbox
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // add textbox + buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelTitle, 0);
-        grid.Add(listBox, 1);
-        grid.Add(panelButtons, 2);
-
-        return UiUtil.MakeBorderForControl(grid);
+        return MakeListSection(panelTitle, listBox, MakeAddRow(buttonAdd, buttonRemove, textBox));
     }
 
-    private static ControlTheme MakeListBoxTheme()
-    {
-        return new ControlTheme(typeof(ListBoxItem))
-        {
-            BasedOn = Application.Current?.FindResource(typeof(ListBoxItem)) as ControlTheme,
-            Setters =
-            {
-                new Setter(ListBoxItem.PaddingProperty, new Thickness(8, 2)),
-                new Setter(ListBoxItem.MarginProperty, new Thickness(1))
-            }
-        };
-    }
-
-    private static Border MakeViewWords(WordListsViewModel vm)
+    private static Grid MakeViewWords(WordListsViewModel vm)
     {
         var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.UserWords, IconNames.Spellcheck, "#7fa8f0",
             new Binding(nameof(vm.UserWords) + ".Count") { Source = vm, Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
 
-        var listBox = new ListBox
-        {
-            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.Options.WordLists.UserWords,
-            [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.UserWords)) { Mode = BindingMode.OneWay },
-            [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedUserWord)) { Mode = BindingMode.TwoWay },
-            VerticalAlignment = VerticalAlignment.Top,
-            Width = double.NaN,
-            Height = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            ItemContainerTheme = MakeListBoxTheme()
-        };
+        var listBox = MakeListBox(Se.Language.Options.WordLists.UserWords, nameof(vm.UserWords), nameof(vm.SelectedUserWord), vm.RemoveWordCommand);
 
-        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewUserWord)).WithAccessibleName(Se.Language.General.AddToUserDictionary);
+        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewUserWord)).AsTextField(Se.Language.General.AddToUserDictionary);
+        textBox.PlaceholderText = Se.Language.General.AddToUserDictionary;
         textBox.KeyDown += (s, e) => vm.UserWordTextBoxKeyDown(e);
-        var buttonAdd = UiUtil.MakeButton(vm.AddWordCommand, IconNames.Plus, Se.Language.General.New);
-        var buttonRemove = UiUtil.MakeButton(vm.RemoveWordCommand, IconNames.Trash, Se.Language.General.Remove);
-        var panelButtons = UiUtil.MakeButtonBar(textBox, buttonAdd, buttonRemove).WithAlignmentLeft().WithSpacing(4);
+        var buttonAdd = EditorChrome.CreateToolButton(IconNames.Plus, Se.Language.General.New, vm.AddWordCommand, 28);
+        var buttonRemove = EditorChrome.CreateToolButton(IconNames.Trash, Se.Language.General.Remove, vm.RemoveWordCommand, 28);
 
+        return MakeListSection(panelTitle, listBox, MakeAddRow(buttonAdd, buttonRemove, textBox));
+    }
+
+    // Words the dictionary should reject (#16031) share the column with the user words: both
+    // live in "<lang>_user.xml", and adding a word to one list takes it off the other.
+    private static Grid MakeViewRemovedWords(WordListsViewModel vm)
+    {
+        var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.RemovedWords, IconNames.Close, "#e0707a",
+            new Binding(nameof(vm.RemovedWords) + ".Count") { Source = vm, Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
+
+        var listBox = MakeListBox(Se.Language.Options.WordLists.RemovedWords, nameof(vm.RemovedWords), nameof(vm.SelectedRemovedWord), vm.RemoveRemovedWordCommand);
+
+        var textBox = UiUtil.MakeTextBox(110, vm, nameof(vm.NewRemovedWord)).AsTextField(Se.Language.Options.WordLists.AddRemovedWord);
+        textBox.PlaceholderText = Se.Language.Options.WordLists.AddRemovedWord;
+        textBox.KeyDown += (s, e) => vm.RemovedWordTextBoxKeyDown(e);
+        var buttonAdd = EditorChrome.CreateToolButton(IconNames.Plus, Se.Language.General.New, vm.AddRemovedWordCommand, 28);
+        var buttonRemove = EditorChrome.CreateToolButton(IconNames.Trash, Se.Language.General.Remove, vm.RemoveRemovedWordCommand, 28);
+
+        return MakeListSection(panelTitle, listBox, MakeAddRow(buttonAdd, buttonRemove, textBox));
+    }
+
+    private static Grid MakeViewUserAndRemovedWords(WordListsViewModel vm)
+    {
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // label
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // listbox
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // add textbox + buttons
+                new RowDefinition { Height = new GridLength(3, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(2, GridUnitType.Star) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-
-        grid.Add(panelTitle, 0);
-        grid.Add(listBox, 1);
-        grid.Add(panelButtons, 2);
-
-        return UiUtil.MakeBorderForControl(grid);
+        grid.Add(MakeViewWords(vm), 0);
+        grid.Add(new Border
+        {
+            Child = MakeViewRemovedWords(vm),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+        }, 1);
+        return grid;
     }
 
-    private static Border MakeViewOcrFixes(WordListsViewModel vm)
+    private static Grid MakeViewOcrFixes(WordListsViewModel vm)
     {
         var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.OcrFixList, IconNames.Ocr, "#f0885a",
             new Binding(nameof(vm.OcrFixes) + ".Count") { Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
 
-        var listBox = new ListBox
-        {
-            [Avalonia.Automation.AutomationProperties.NameProperty] = Se.Language.Options.WordLists.OcrFixList,
-            [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.OcrFixes)) { Mode = BindingMode.OneWay },
-            [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedOcrFix)) { Mode = BindingMode.TwoWay },
-            VerticalAlignment = VerticalAlignment.Top,
-            Width = double.NaN,
-            Height = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            ItemContainerTheme = MakeListBoxTheme()
-        };
+        var listBox = MakeListBox(Se.Language.Options.WordLists.OcrFixList, nameof(vm.OcrFixes), nameof(vm.SelectedOcrFix), vm.RemoveOcrFixCommand);
 
-        var textBoxFind = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixFind)).WithAccessibleName(Se.Language.General.Find);
-        var textBoxReplace = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixReplace)).WithAccessibleName(Se.Language.General.ReplaceWith);
+        var textBoxFind = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixFind)).AsTextField(Se.Language.General.Find);
+        textBoxFind.PlaceholderText = Se.Language.General.Find;
+        var textBoxReplace = UiUtil.MakeTextBox(110, vm, nameof(vm.NewOcrFixReplace)).AsTextField(Se.Language.General.ReplaceWith);
+        textBoxReplace.PlaceholderText = Se.Language.General.ReplaceWith;
         textBoxReplace.KeyDown += (s, e) => vm.OcrFixTextBoxKeyDown(e);
-        var buttonAdd = UiUtil.MakeButton(vm.AddOcrFixCommand, IconNames.Plus, Se.Language.General.New);
-        var buttonRemove = UiUtil.MakeButton(vm.RemoveOcrFixCommand, IconNames.Trash, Se.Language.General.Remove);
-        var panelButtons = UiUtil.MakeButtonBar(textBoxFind, textBoxReplace, buttonAdd, buttonRemove).WithAlignmentLeft().WithSpacing(4);
+        var buttonAdd = EditorChrome.CreateToolButton(IconNames.Plus, Se.Language.General.New, vm.AddOcrFixCommand, 28);
+        var buttonRemove = EditorChrome.CreateToolButton(IconNames.Trash, Se.Language.General.Remove, vm.RemoveOcrFixCommand, 28);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // label
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // listbox
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // add textbox + buttons
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(panelTitle, 0);
-        grid.Add(listBox, 1);
-        grid.Add(panelButtons, 2);
-
-        return UiUtil.MakeBorderForControl(grid);
+        return MakeListSection(panelTitle, listBox, MakeAddRow(buttonAdd, buttonRemove, textBoxFind, textBoxReplace));
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

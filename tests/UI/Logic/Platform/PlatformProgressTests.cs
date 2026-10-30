@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Logic.Platform.Progress;

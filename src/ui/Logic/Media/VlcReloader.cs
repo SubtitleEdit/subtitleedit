@@ -5,7 +5,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
@@ -52,6 +51,12 @@ public class VlcReloader : IVlcReloader
                 // See MpvReloader - the furigana/bouten/vertical markup has to become positioned
                 // render lines before libass sees it (issue #13861, issue #14165).
                 subtitle = NetflixImsc11JapaneseToAss.ConvertToSubtitle(subtitle, VideoWidth, VideoHeight);
+                SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
+                text = subtitle.ToText(_assFormat);
+            }
+            else if (uiFormatType == typeof(YouTubeTimedText))
+            {
+                subtitle = YttToAssa.Convert(new Subtitle(subtitle), VideoWidth, VideoHeight);
                 SecondarySubtitleMerger.AddSecondarySubtitle(subtitle, subtitleSecondary, SmpteMode);
                 text = subtitle.ToText(_assFormat);
             }

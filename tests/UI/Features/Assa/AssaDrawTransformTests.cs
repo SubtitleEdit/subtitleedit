@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
-using Avalonia.Input.Raw;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;

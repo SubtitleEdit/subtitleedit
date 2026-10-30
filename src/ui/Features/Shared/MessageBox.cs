@@ -50,14 +50,12 @@ public enum MessageBoxIcon
 
 public class MessageBox : Window
 {
-    private static string CustomButton1Text { get; set; } = string.Empty;
-    private static string CustomButton2Text { get; set; } = string.Empty;
     private MessageBoxResult _result = MessageBoxResult.None;
     private readonly bool _hasCancel;
     private readonly bool _hasOnlyOk;
     private readonly bool _hasNo;
     private readonly StackPanel _buttonPanel;
-    private readonly CheckBox? _doNotAskAgainCheckBox;
+    private readonly ToggleSwitch? _doNotAskAgainCheckBox;
     private readonly KeyPressTracker _enterTracker = new();
     private readonly KeyPressTracker _spaceTracker = new();
     private long _openedTimestamp;
@@ -122,12 +120,14 @@ public class MessageBox : Window
         MinHeight = 180;
         MaxWidth = 900;
         MaxHeight = 700;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         var message1 = message;
 
+        // The message on the panel, the buttons in the button bar below it - the editor look
         var grid = new Grid
         {
-            Margin = new Thickness(10),
+            Margin = new Thickness(8, 8, 8, 10),
             RowDefinitions =
             {
                 new RowDefinition { Height = GridLength.Star },
@@ -203,28 +203,40 @@ public class MessageBox : Window
 
         if (!string.IsNullOrEmpty(doNotAskAgainText))
         {
-            _doNotAskAgainCheckBox = new CheckBox
+            // An on/off switch like the other dialogs' options
+            _doNotAskAgainCheckBox = new ToggleSwitch
             {
-                Content = doNotAskAgainText,
-                Margin = new Thickness(10, 0, 10, 0),
-                HorizontalAlignment = HorizontalAlignment.Left,
+                OnContent = null,
+                OffContent = null,
+                MinWidth = 0,
+                VerticalAlignment = VerticalAlignment.Center,
             };
-            grid.Children.Add(_doNotAskAgainCheckBox);
-            Grid.SetRow(_doNotAskAgainCheckBox, 1);
-            Grid.SetColumn(_doNotAskAgainCheckBox, 1);
+            Avalonia.Automation.AutomationProperties.SetName(_doNotAskAgainCheckBox, doNotAskAgainText);
+            var doNotAskAgainRow = EditorChrome.MakeSwitchRow(_doNotAskAgainCheckBox, doNotAskAgainText);
+            doNotAskAgainRow.Margin = new Thickness(10, 0, 10, 0);
+            doNotAskAgainRow.HorizontalAlignment = HorizontalAlignment.Left;
+            grid.Children.Add(doNotAskAgainRow);
+            Grid.SetRow(doNotAskAgainRow, 1);
+            Grid.SetColumn(doNotAskAgainRow, 1);
         }
 
         var buttonPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Right,
-            Margin = new Thickness(10)
+            Spacing = 10,
         };
         _buttonPanel = buttonPanel;
 
         void AddButton(string text, MessageBoxResult result)
         {
             var btn = UiUtil.MakeButton(text);
+            btn.Margin = new Thickness(0);
+            if (buttonPanel.Children.Count == 0)
+            {
+                btn.Classes.Add("primary"); // the default (first) choice, focused below
+            }
+
             btn.Click += (_, _) => { _result = result; Close(_result); };
             buttonPanel.Children.Add(btn);
         }
@@ -278,17 +290,18 @@ public class MessageBox : Window
                 break;
         }
 
-        grid.Children.Add(buttonPanel);
-        Grid.SetRow(buttonPanel, 2);
-        Grid.SetColumn(buttonPanel, 0);
-        Grid.SetColumnSpan(buttonPanel, 2);
+        var buttonBar = EditorChrome.WrapButtonBar(buttonPanel);
 
         if (!string.IsNullOrEmpty(custom1) ||  !string.IsNullOrEmpty(custom2))
         {
             _hasOnlyOk = false;
         }
 
-        Content = grid;
+        var root = new DockPanel { LastChildFill = true };
+        DockPanel.SetDock(buttonBar, Dock.Bottom);
+        root.Children.Add(buttonBar);
+        root.Children.Add(new Border { Background = EditorChrome.PanelBrush, Child = grid });
+        Content = root;
 
         var contextMenu = new MenuFlyout
         {

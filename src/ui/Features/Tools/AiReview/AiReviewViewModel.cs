@@ -12,7 +12,6 @@ using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -140,7 +139,7 @@ public partial class AiReviewViewModel : ObservableObject
             new() { Category = ReviewCategory.Grammar, Label = l.CategoryGrammar },
             new() { Category = ReviewCategory.Punctuation, Label = l.CategoryPunctuation },
             new() { Category = ReviewCategory.Casing, Label = l.CategoryCasing },
-            new() { Category = ReviewCategory.Other, Label = l.CategoryOther },
+            new() { Category = ReviewCategory.Other, Label = Se.Language.General.Other },
         };
 
         ApplyButtonText = string.Format(l.ApplyXFixes, 0);
@@ -228,7 +227,7 @@ public partial class AiReviewViewModel : ObservableObject
         var unitLines = _allSuggestions.Where(s => s.UnitId == value.UnitId).Select(s => s.Number).OrderBy(n => n).ToList();
         var who = unitLines.Count > 1
             ? string.Format(l.LinesXToY, unitLines.First(), unitLines.Last())
-            : string.Format(l.LineX, value.Number);
+            : string.Format(Se.Language.General.LineX, value.Number);
         ReasonText = string.IsNullOrEmpty(value.Reason) ? who : $"{who}: {value.Reason}";
         UpdateContext(value.ParagraphIndex);
     }
@@ -242,15 +241,14 @@ public partial class AiReviewViewModel : ObservableObject
     /// </summary>
     private void UpdateContext(int paragraphIndex)
     {
-        var l = Se.Language.Tools.AiReview;
         var previousIndex = paragraphIndex - 1;
         var nextIndex = paragraphIndex + 1;
         var hasPrevious = previousIndex >= 0 && previousIndex < _subtitle.Paragraphs.Count;
         var hasNext = nextIndex >= 0 && nextIndex < _subtitle.Paragraphs.Count;
 
-        ContextPreviousLabel = hasPrevious ? string.Format(l.LineX, previousIndex + 1) : string.Empty;
+        ContextPreviousLabel = hasPrevious ? string.Format(Se.Language.General.LineX, previousIndex + 1) : string.Empty;
         ContextPreviousText = hasPrevious ? GetContextText(previousIndex) : string.Empty;
-        ContextNextLabel = hasNext ? string.Format(l.LineX, nextIndex + 1) : string.Empty;
+        ContextNextLabel = hasNext ? string.Format(Se.Language.General.LineX, nextIndex + 1) : string.Empty;
         ContextNextText = hasNext ? GetContextText(nextIndex) : string.Empty;
         HasContext = hasPrevious || hasNext;
     }
@@ -322,17 +320,11 @@ public partial class AiReviewViewModel : ObservableObject
         LlamaCppServerManager.StopServer();
         UpdateLlamaCppServerButtonText();
 
-        // Reuse the installed backend so the user is not re-asked CPU/Vulkan/CUDA on a re-download;
-        // null on a fresh install (or off Windows), which lets DownloadAsync prompt.
-        var variant = OperatingSystem.IsWindows()
-            ? DownloadHashManager.DetectLlamaCppWindowsVariant(LlamaCppServerManager.GetAndCreateFolder())
-            : null;
-
+        // No forced variant: the user picks CPU/Vulkan/CUDA, which is how to change the installed build.
         await LlamaCppDownloadHelper.DownloadAsync(
             Window,
             _windowService,
             SelectedLlamaCppModel?.Model,
-            variant,
             forceEngineDownload: true);
 
         RefreshLlamaCppModels();

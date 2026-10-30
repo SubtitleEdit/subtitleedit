@@ -1,7 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System.IO;
 
 namespace LibSETests.ContainerFormats;
 

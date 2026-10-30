@@ -1,9 +1,6 @@
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 using Nikse.SubtitleEdit.Features.Main;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace UITests.Features.Assa;
 

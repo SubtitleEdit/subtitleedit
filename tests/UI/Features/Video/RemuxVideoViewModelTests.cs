@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Avalonia.Headless.XUnit;
+﻿using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Features.Video.RemuxVideo;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -405,6 +403,57 @@ public class RemuxVideoViewModelTests
     }
 
     /// <summary>
+    /// An .mp4 with "Subtitles as: CEA-608 in video (SEI)" gets the subtitles as A/53 captions
+    /// in the H.264/H.265 video afterwards (#16164): .scc, .mcc and .ass stay in the .mp4,
+    /// ffmpeg gets no subtitle streams, and the first two files show CC1/CC3.
+    /// </summary>
+    [AvaloniaFact]
+    public void Mp4WithCaptions_KeepsSubtitlesOutOfFfmpegAndStaysMp4()
+    {
+        var saved = Nikse.SubtitleEdit.Logic.Config.Se.Settings.Video.RemuxMp4SubtitlesAsCaptions;
+        try
+        {
+            var (vm, _, _) = BuildMixViewModel(true);
+            Assert.True(vm.IsSubtitlesAsVisible);
+            vm.SelectedSubtitlesAs = vm.SubtitlesAsOptions[1];
+            Assert.True(vm.IsMp4WithCaptions);
+            Assert.True(vm.IsMp4CaptionsHintVisible);
+
+            var scc = new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-scc-does-not-exist.scc"));
+            var mcc = new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-mcc-does-not-exist.mcc"));
+            var ass = new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-ass-does-not-exist.ass"));
+            vm.SubtitleFiles.Add(scc);
+            vm.SubtitleFiles.Add(mcc);
+            vm.SubtitleFiles.Add(ass);
+
+            Assert.Equal(".mp4", vm.SelectedOutputFormat);
+            Assert.Equal(new[] { "CC1", "CC3", "" }, vm.SubtitleFiles.Select(f => f.CaptionChannel).ToArray());
+
+            var temp = Path.Combine(Path.GetTempPath(), "remux-mp4-temp.mp4");
+            var args = vm.BuildFfmpegArguments([.. vm.AudioFiles], [.. vm.SubtitleFiles], temp);
+            Assert.DoesNotContain("-c:s", args);
+            Assert.DoesNotContain(":s:0", args);
+            Assert.EndsWith($"\"{temp}\"", args);
+
+            // back to mov_text: the .mcc needs .mpg again - captions there too
+            vm.SelectedSubtitlesAs = vm.SubtitlesAsOptions[0];
+            Assert.False(vm.IsMp4WithCaptions);
+            Assert.Equal(".mpg", vm.SelectedOutputFormat);
+            Assert.False(vm.IsSubtitlesAsVisible);
+            Assert.Equal("CC1", vm.SubtitleFiles[0].CaptionChannel);
+
+            // no caption output: no channels
+            vm.SubtitleFiles.Remove(mcc);
+            vm.SelectedOutputFormat = ".mov";
+            Assert.All(vm.SubtitleFiles, f => Assert.False(f.HasCaptionChannel));
+        }
+        finally
+        {
+            Nikse.SubtitleEdit.Logic.Config.Se.Settings.Video.RemuxMp4SubtitlesAsCaptions = saved;
+        }
+    }
+
+    /// <summary>
     /// MacCaption (.mcc) can only be embedded in .mpg - with .scc too, .mpg wins over .mov.
     /// </summary>
     [AvaloniaFact]
@@ -443,6 +492,72 @@ public class RemuxVideoViewModelTests
             File.Delete(first);
             File.Delete(second);
         }
+    }
+
+    /// <summary>
+    /// The caption time offset is taken off every caption time, both files alike (#16220).
+    /// </summary>
+    [Fact]
+    public void GetClosedCaptionBytes_OffsetIsTakenOffBothFiles()
+    {
+        var first = Path.Combine(Path.GetTempPath(), "remux-cc-first-" + System.Guid.NewGuid() + ".scc");
+        var second = Path.Combine(Path.GetTempPath(), "remux-cc-second-" + System.Guid.NewGuid() + ".scc");
+        try
+        {
+            File.WriteAllText(first, "Scenarist_SCC V1.0\n\n01:00:01:00\t9420 9420\n");
+            File.WriteAllText(second, "Scenarist_SCC V1.0\n\n00:59:59:00\t942c 942c\n\n01:00:02:00\t942f\n");
+
+            var captions = RemuxVideoViewModel.GetClosedCaptionBytes([new RemuxFileItem(first), new RemuxFileItem(second)], TimeSpan.FromHours(1));
+
+            Assert.Equal(new long[] { 30, 31 }, captions.Field1.Select(p => p.Slot));
+            Assert.Equal(new long[] { 60 }, captions.Field2.Select(p => p.Slot)); // the pairs before the video are dropped
+        }
+        finally
+        {
+            File.Delete(first);
+            File.Delete(second);
+        }
+    }
+
+    /// <summary>
+    /// A broadcast file starting at 01:00:00:00 gets its hour suggested when the video is shorter;
+    /// one that starts at 00:59:58:00 (two seconds of pre-roll) gets nothing.
+    /// </summary>
+    [Theory]
+    [InlineData(3_600_000, 6_000, 3_600_000)]
+    [InlineData(3_600_033, 6_000, 3_600_000)]
+    [InlineData(7_200_000, 6_000, 7_200_000)]
+    [InlineData(3_598_000, 6_000, 0)]
+    [InlineData(3_600_000, 7_200_000, 0)]
+    [InlineData(5_000, 6_000, 0)]
+    public void SuggestCaptionOffset_WholeHourWhenPastTheVideo(int firstCaptionMs, int videoMs, int expectedMs)
+    {
+        var suggested = RemuxVideoViewModel.SuggestCaptionOffset(TimeSpan.FromMilliseconds(firstCaptionMs), TimeSpan.FromMilliseconds(videoMs));
+        Assert.Equal(TimeSpan.FromMilliseconds(expectedMs), suggested);
+    }
+
+    [Fact]
+    public void SuggestCaptionOffset_NothingWithoutDurationOrTimeCode()
+    {
+        Assert.Equal(TimeSpan.Zero, RemuxVideoViewModel.SuggestCaptionOffset(TimeSpan.FromHours(1), null));
+        Assert.Equal(TimeSpan.Zero, RemuxVideoViewModel.SuggestCaptionOffset(null, TimeSpan.FromSeconds(6)));
+    }
+
+    /// <summary>
+    /// The offset field only shows when the subtitle files become captions in the video.
+    /// </summary>
+    [AvaloniaFact]
+    public void CaptionOffset_VisibleForCaptionOutputOnly()
+    {
+        var (vm, _, _) = BuildMixViewModel(false);
+        Assert.False(vm.IsCaptionOffsetVisible);
+
+        vm.SubtitleFiles.Add(new RemuxFileItem(Path.Combine(Path.GetTempPath(), "remux-mcc-does-not-exist.mcc")));
+        Assert.Equal(".mpg", vm.SelectedOutputFormat);
+        Assert.True(vm.IsCaptionOffsetVisible);
+
+        vm.SubtitleFiles.Clear();
+        Assert.False(vm.IsCaptionOffsetVisible);
     }
 
     [Theory]

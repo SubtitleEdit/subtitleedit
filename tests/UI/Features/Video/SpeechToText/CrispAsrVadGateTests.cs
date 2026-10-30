@@ -1,15 +1,14 @@
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
-using Xunit;
 
 namespace UITests.Features.Video.SpeechToText;
 
 /// <summary>
-/// SE adds its own Silero VAD to the Cohere and Mega Crisp ASR backends, which otherwise emit a
-/// zero-byte SRT on long audio. Two things have to stay true about that: the user can still turn
-/// it off with crispasr's own --chunk-seconds (#13849), and a job that came back empty can be
-/// re-run with VAD off (#13911) - on a per-line clip Silero can reject the whole clip as
-/// non-speech, which left clips silently unconverted.
+/// SE adds its own Silero VAD to the Cohere, Mega, Index-Echo and Granite Crisp ASR backends
+/// (Cohere and Mega otherwise emit a zero-byte SRT on long audio). Two things have to stay true
+/// about that: the user can still turn it off with crispasr's own --chunk-seconds (#13849), and
+/// a job that came back empty can be re-run with VAD off (#13911) - on a per-line clip Silero
+/// can reject the whole clip as non-speech, which left clips silently unconverted.
 /// </summary>
 public class CrispAsrVadGateTests
 {
@@ -30,6 +29,21 @@ public class CrispAsrVadGateTests
     public void IndexEchoGetsVadByDefault()
     {
         Assert.True(SpeechToTextViewModel.ShouldForceCrispAsrVad(new CrispAsrIndexEcho(), string.Empty, vadSuppressed: false));
+    }
+
+    /// <summary>Without VAD, Granite runs in fixed 30 s auto-chunks that drop words at the cuts.</summary>
+    [Fact]
+    public void GraniteGetsVadByDefault()
+    {
+        Assert.True(SpeechToTextViewModel.ShouldForceCrispAsrVad(new CrispAsrGranite(), string.Empty, vadSuppressed: false));
+    }
+
+    /// <summary>Granite's own default parameters must not count as the user opting out.</summary>
+    [Fact]
+    public void GraniteDefaultParametersKeepVad()
+    {
+        var defaultArgs = new Nikse.SubtitleEdit.Logic.Config.SeAudioToText().CommandLineParameterCrispAsrGranite;
+        Assert.True(SpeechToTextViewModel.ShouldForceCrispAsrVad(new CrispAsrGranite(), defaultArgs, vadSuppressed: false));
     }
 
     [Fact]

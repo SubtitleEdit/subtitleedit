@@ -15,6 +15,8 @@ public enum LineErrorType
     LineTooWide,
     Overlap,
     GapTooShort,
+    GapInRange,
+    CustomRule,
 }
 
 /// <summary>One error on one line: the class plus a short detail such as "27.3 > 25".</summary>
@@ -32,12 +34,14 @@ public record LineError(LineErrorType Type, string Detail)
         {
             LineErrorType.TooManyLines => l.TooManyLines,
             LineErrorType.CharactersPerSecond => l.CharactersPerSecond,
-            LineErrorType.DurationTooShort => l.DurationTooShort,
-            LineErrorType.DurationTooLong => l.DurationTooLong,
+            LineErrorType.DurationTooShort => Se.Language.General.TooShort,
+            LineErrorType.DurationTooLong => Se.Language.General.TooLong,
             LineErrorType.LineTooLong => l.LineTooLong,
             LineErrorType.LineTooWide => l.LineTooWide,
-            LineErrorType.Overlap => l.Overlap,
+            LineErrorType.Overlap => Se.Language.General.Overlapping,
             LineErrorType.GapTooShort => l.GapTooShort,
+            LineErrorType.GapInRange => l.GapInRange,
+            LineErrorType.CustomRule => l.CustomRule,
             _ => type.ToString(),
         };
     }
@@ -55,6 +59,8 @@ public record LineError(LineErrorType Type, string Detail)
             LineErrorType.LineTooWide => l.LineTooWideHint,
             LineErrorType.Overlap => l.OverlapHint,
             LineErrorType.GapTooShort => l.GapTooShortHint,
+            LineErrorType.GapInRange => l.GapInRangeHint,
+            LineErrorType.CustomRule => l.CustomRuleHint,
             _ => string.Empty,
         };
     }
@@ -67,6 +73,7 @@ public record LineError(LineErrorType Type, string Detail)
     private const string LineTooWideColor = "#2980B9";
     private const string OverlapColor = "#E74C3C";
     private const string GapColor = "#1ABC9C";
+    private const string CustomRuleColor = "#FFA500";
     public const string AllColor = "#5D8AA8";
 
     private static readonly IBrush TooManyLinesBrush = new ImmutableSolidColorBrush(Color.Parse(TooManyLinesColor));
@@ -77,6 +84,7 @@ public record LineError(LineErrorType Type, string Detail)
     private static readonly IBrush LineTooWideBrush = new ImmutableSolidColorBrush(Color.Parse(LineTooWideColor));
     private static readonly IBrush OverlapBrush = new ImmutableSolidColorBrush(Color.Parse(OverlapColor));
     private static readonly IBrush GapBrush = new ImmutableSolidColorBrush(Color.Parse(GapColor));
+    private static readonly IBrush CustomRuleBrush = new ImmutableSolidColorBrush(Color.Parse(CustomRuleColor));
     public static readonly IBrush AllBrush = new ImmutableSolidColorBrush(Color.Parse(AllColor));
 
     /// <summary>The dot colour as "#RRGGBB" - the html export paints the same palette as the window.</summary>
@@ -91,7 +99,8 @@ public record LineError(LineErrorType Type, string Detail)
             LineErrorType.LineTooLong => LineTooLongColor,
             LineErrorType.LineTooWide => LineTooWideColor,
             LineErrorType.Overlap => OverlapColor,
-            LineErrorType.GapTooShort => GapColor,
+            LineErrorType.GapTooShort or LineErrorType.GapInRange => GapColor,
+            LineErrorType.CustomRule => CustomRuleColor,
             _ => AllColor,
         };
     }
@@ -107,7 +116,8 @@ public record LineError(LineErrorType Type, string Detail)
             LineErrorType.LineTooLong => LineTooLongBrush,
             LineErrorType.LineTooWide => LineTooWideBrush,
             LineErrorType.Overlap => OverlapBrush,
-            LineErrorType.GapTooShort => GapBrush,
+            LineErrorType.GapTooShort or LineErrorType.GapInRange => GapBrush,
+            LineErrorType.CustomRule => CustomRuleBrush,
             _ => AllBrush,
         };
     }

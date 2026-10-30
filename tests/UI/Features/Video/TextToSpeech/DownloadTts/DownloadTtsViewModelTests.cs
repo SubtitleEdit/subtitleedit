@@ -1,4 +1,3 @@
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 
 namespace UITests.Features.Video.TextToSpeech.DownloadTts;

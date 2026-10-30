@@ -1,9 +1,15 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
+using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 
+/// <summary>
+/// Pick an action for the binary image compare database (edit, delete, rename, new), in the editor
+/// look (see <see cref="EditorChrome"/>): the actions in a section, Cancel in the button bar.
+/// </summary>
 public class BinaryOcrSettingsWindow : Window
 {
     public BinaryOcrSettingsWindow(BinaryOcrSettingsViewModel vm)
@@ -14,39 +20,42 @@ public class BinaryOcrSettingsWindow : Window
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);
         DataContext = vm;
 
-        var grid = new Grid
+        var labelTitle = new TextBlock
         {
-            RowDefinitions =
+            FontSize = EditorChrome.FieldFontSize,
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 480,
+            HorizontalAlignment = HorizontalAlignment.Left,
+        }.WithBindText(vm, nameof(vm.ActionText));
+
+        // The same flat buttons, in the same order (Delete last), as the nOCR database dialog
+        var buttonEdit = EditorChrome.MakeTextToolButton(IconNames.Pencil, Se.Language.General.Edit, vm.EditCommand);
+        var buttonDelete = EditorChrome.MakeTextToolButton(IconNames.Trash, Se.Language.General.Delete, vm.DeleteCommand);
+        var buttonRename = EditorChrome.MakeTextToolButton(IconNames.FormTextBox, Se.Language.General.Rename, vm.RenameCommand);
+        var buttonNew = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.New, vm.NewCommand);
+        var buttonCancel = EditorChrome.WithoutMargin(UiUtil.MakeButtonCancel(vm.CancelCommand));
+
+        var panel = new StackPanel
+        {
+            Spacing = 12,
+            Children =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Select action
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Buttons
+                labelTitle,
+                new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 4,
+                    Children = { buttonEdit, buttonRename, buttonNew, buttonDelete },
+                },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            Height = double.NaN,
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch,
         };
 
-        var labelTitle = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ActionText)).HorizontalContentAlignmentCenter();
-
-        var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, vm.EditCommand);
-        var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand);
-        var buttonRename = UiUtil.MakeButton(Se.Language.General.Rename, vm.RenameCommand);
-        var buttonNew = UiUtil.MakeButton(Se.Language.General.New, vm.NewCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonEdit, buttonDelete, buttonRename, buttonNew, buttonCancel);
-
-        grid.Add(labelTitle, 0);
-        grid.Add(buttonBar, 1);
-
-        Content = grid;
+        var section = EditorChrome.MakeEditorSection(Se.Language.Ocr.Database, panel, first: true);
+        section.MinWidth = 420;
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(null, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, () =>
         {

@@ -1,7 +1,6 @@
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
-using System.Threading.Tasks;
 
 namespace UITests.Features.Sync.PointSync;
 

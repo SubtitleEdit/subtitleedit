@@ -3,12 +3,12 @@ using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
@@ -177,7 +177,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 str = str.Substring(0, MaxRawLength);
             }
 
-            str = HtmlUtil.RemoveHtmlTags(Utilities.RemoveSsaTags(str, removeDrawingTags: true));
+            str = CalcFactory.RemoveIgnoredTags(HtmlUtil.RemoveHtmlTags(Utilities.RemoveSsaTags(str, removeDrawingTags: true)));
             if (string.IsNullOrEmpty(str))
             {
                 return new InlineCollection();
@@ -704,6 +704,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
     {
         // Track current formatting state
         var state = new FormattingState();
+        FormattingState? beforeYttSpan = null; // formatting to restore at a YouTube timed text </s>
         var inlines = new InlineCollection();
         var visibleLength = 0;
 
@@ -845,6 +846,11 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                             state.FontName = null;
                             state.FontSize = null;
                         }
+                        else if (beforeYttSpan != null && tagName.Equals("s", StringComparison.Ordinal))
+                        {
+                            state.CopyFrom(beforeYttSpan);
+                            beforeYttSpan = null;
+                        }
                         else
                         {
                             isRenderedTag = false;
@@ -868,6 +874,20 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                         else if (tagName.Equals("font", StringComparison.OrdinalIgnoreCase))
                         {
                             ParseFontTag(str.AsSpan(contentStart, contentEnd - contentStart), state);
+                        }
+                        else if (YttPenLookup.IsActive && tagName.Equals("s", StringComparison.Ordinal))
+                        {
+                            // YouTube timed text: the s tag's pen, from the header
+                            var pen = YttPenLookup.GetPen(str.AsSpan(contentStart + 1, contentEnd - contentStart - 1));
+                            beforeYttSpan ??= new FormattingState();
+                            beforeYttSpan.CopyFrom(state);
+                            if (pen != null)
+                            {
+                                state.Italic |= pen.Italic == true;
+                                state.Bold |= pen.Bold == true;
+                                state.Underline |= pen.Underline == true;
+                                state.Color = YttPenLookup.GetForeColor(pen) ?? state.Color;
+                            }
                         }
                         else
                         {
@@ -1627,6 +1647,16 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         public Color? Color { get; set; }
         public string? FontName { get; set; }
         public double? FontSize { get; set; }
+
+        public void CopyFrom(FormattingState other)
+        {
+            Italic = other.Italic;
+            Bold = other.Bold;
+            Underline = other.Underline;
+            Color = other.Color;
+            FontName = other.FontName;
+            FontSize = other.FontSize;
+        }
 
         public void Reset()
         {

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -49,14 +46,25 @@ public class FrameNumbersModeTests : IDisposable
         _scope.Dispose();
     }
 
+    // Keys sent with window.KeyPress go to the focused element, and KeyPress first runs any
+    // queued dispatcher jobs. A window an earlier test left open can have a focus/activate job
+    // still queued; run before our Focus() it lets that window take focus, the Up key never
+    // reaches this text box and the value stays put ("62" instead of "63" in a full run).
+    // Drain those jobs first, then activate and focus, and check focus actually landed.
     private (Window window, TextBox textBox) Show(Control control)
     {
+        Dispatcher.UIThread.RunJobs();
+
         var window = new Window { Content = control };
         _windows.Add(window);
         window.Show();
+        Dispatcher.UIThread.RunJobs();
+
         var textBox = control.GetVisualDescendants().OfType<TextBox>().Single();
+        window.Activate();
         textBox.Focus();
         Dispatcher.UIThread.RunJobs();
+        Assert.True(textBox.IsFocused, $"Focus is on {window.FocusManager?.GetFocusedElement()}");
         return (window, textBox);
     }
 

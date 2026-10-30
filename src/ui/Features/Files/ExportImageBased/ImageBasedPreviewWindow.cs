@@ -1,9 +1,15 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia.Automation;
+using Avalonia.Controls;
 using Avalonia.Data;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 
+/// <summary>
+/// The exported image of one line, full size in its frame (see <see cref="ImageBasedPreviewViewModel.Initialize"/>),
+/// on the editor window color (see <see cref="EditorChrome"/>).
+/// </summary>
 public class ImageBasedPreviewWindow : Window
 {
     public ImageBasedPreviewWindow(ImageBasedPreviewViewModel vm)
@@ -15,6 +21,8 @@ public class ImageBasedPreviewWindow : Window
         CanResize = true;
         MinWidth = 720;
         MinHeight = 480;
+        Background = EditorChrome.WindowBrush; // around the frame; the frame itself is drawn on a checkerboard
+        EditorChrome.AddEditorStyles(Styles);
         vm.Window = this;
         DataContext = vm;
 
@@ -22,6 +30,7 @@ public class ImageBasedPreviewWindow : Window
         {
             [!Image.SourceProperty] = new Binding(nameof(vm.BitmapPreview)) { Mode = BindingMode.OneWay },
         };
+        AutomationProperties.SetName(image, Se.Language.General.Preview);
         vm.ImagePreview = image;
 
         Content = image;

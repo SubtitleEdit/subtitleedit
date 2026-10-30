@@ -310,7 +310,10 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = MakePortalSafeSuggestedFileName(suggestedFileName, currentFormat.Extension),
+                // See the macOS note in PickSaveSubtitleFileAs.
+                SuggestedFileName = OperatingSystem.IsMacOS()
+                    ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
+                    : MakePortalSafeSuggestedFileName(suggestedFileName, currentFormat.Extension),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(currentFormat),
                 DefaultExtension = currentFormat.Extension.TrimStart('.')
             };
@@ -350,7 +353,10 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 // Pre-fill with the same extension rule the result goes through below
                 // (AddMissingExtension), so under the document portal the granted name is
                 // final-safe when the user keeps the suggestion (see NeedsPortalGrantedName).
-                SuggestedFileName = DocumentPortal.IsSandboxed
+                // macOS: without an extension in the name, the save panel appends the preferred
+                // extension of the format's file type, and ".ssa" shares a type with ".ass" (e.g.
+                // io.mpv.ass) - so Sub Station Alpha was suggested as "movie.ass".
+                SuggestedFileName = DocumentPortal.IsSandboxed || OperatingSystem.IsMacOS()
                     ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
                     : Path.GetFileName(suggestedFileName),
                 FileTypeChoices = filePickerFileTypes,

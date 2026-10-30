@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Controls;

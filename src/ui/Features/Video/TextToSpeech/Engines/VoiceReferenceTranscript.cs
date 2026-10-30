@@ -37,9 +37,11 @@ public static class VoiceReferenceTranscript
         {
             // CosyVoice3's s3tok tokenizer and the Qwen3 Base backend load the sidecar as ref-text
             // and error without it; audio.cpp answers a Fish voice_ref without reference_text with
-            // a server error; OmniVoice (tts.cpp) silently falls back to its default voice.
+            // a server error, and refuses a Breeze clone without one; OmniVoice (tts.cpp) silently
+            // falls back to its default voice.
             CosyVoice3CrispAsr => TranscriptRequirement.Required,
             FishTtsAudioCpp => TranscriptRequirement.Required,
+            BreezeTtsAudioCpp => TranscriptRequirement.Required,
             Qwen3TtsCrispAsr => TranscriptRequirement.Required,
             OmniVoiceTtsCpp => TranscriptRequirement.Required,
 

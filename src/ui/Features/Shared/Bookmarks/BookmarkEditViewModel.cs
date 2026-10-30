@@ -4,10 +4,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Nikse.SubtitleEdit.Features.Shared.Bookmarks;
 
@@ -23,13 +21,10 @@ public partial class BookmarkEditViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public bool ListPressed { get; private set; }
 
-    private List<SubtitleLineViewModel> _selectedItems;
-
     public BookmarkEditViewModel()
     {
         Title = string.Empty;
         BookmarkText = string.Empty;
-        _selectedItems = new List<SubtitleLineViewModel>();
     }
 
     [RelayCommand]
@@ -75,7 +70,6 @@ public partial class BookmarkEditViewModel : ObservableObject
         BookmarkText = selectedItems.First().Bookmark ?? string.Empty;
         ShowRemoveButton = !selectedItems.All(p => p.Bookmark == null);
         ShowListButton = allBookmarks.Count > 1;
-        _selectedItems = selectedItems;
     }
 
     private string GetEditLabel(List<SubtitleLineViewModel> selectedItems)

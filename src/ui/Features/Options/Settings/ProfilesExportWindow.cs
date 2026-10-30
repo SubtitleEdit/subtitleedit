@@ -1,10 +1,7 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Layout;
-using Avalonia.Media;
-using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -17,46 +14,29 @@ public class ProfilesExportWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Options.Settings.ExportProfiles;
         CanResize = true;
-        Width = 1100;
-        Height = 750;
-        MinWidth = 800;
-        MinHeight = 700;
+        Width = 700;
+        Height = 550;
+        MinWidth = 500;
+        MinHeight = 400;
+        SettingsChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var label = new Label
-        {
-            Content = Se.Language.Tools.AdjustDurations.AdjustVia,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
-        };
-
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = GridLength.Auto },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var dataGridBorder = MakeDataGrid(vm, out var dataGrid);
-        grid.Add(dataGridBorder, 0, 0);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        grid.Add(EditorChrome.MakePanel(MakeDataGrid(vm, out var dataGrid)), 0);
+        grid.Add(SettingsChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1);
 
         Content = grid;
 
@@ -64,29 +44,14 @@ public class ProfilesExportWindow : Window
         KeyDown += vm.KeyDown;
     }
 
-    private static Border MakeDataGrid(ProfilesExportViewModel vm, out TableView tableView)
+    private static Grid MakeDataGrid(ProfilesExportViewModel vm, out TableView tableView)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = double.NaN,
-        };
-
         // No header sorting (the DataGrid's CanUserSortColumns is not carried over):
         // the caller writes result.Profiles to the exported .profile file in collection
         // order, so reordering the backing collection would reorder the export.
         var dataGrid = TableViewExtras.MakeTableView(multiSelect: false);
         dataGrid.DataContext = vm;
+        AutomationProperties.SetName(dataGrid, Se.Language.General.Profiles);
         dataGrid.Columns.AddRange(new TableViewColumn[]
         {
             new SeTableViewColumn
@@ -94,17 +59,7 @@ public class ProfilesExportWindow : Window
                 Header = Se.Language.General.Enabled,
                 CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                 HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                CellTemplate = new FuncDataTemplate<ProfileDisplay>((item, _) =>
-                new Border
-                {
-                    Background = Brushes.Transparent, // Prevents highlighting
-                    Padding = new Thickness(4),
-                    Child = new CheckBox
-                    {
-                        [!CheckBox.IsCheckedProperty] = new Binding(nameof(ProfileDisplay.IsSelected)),
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    }
-                }),
+                CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<ProfileDisplay>(nameof(ProfileDisplay.IsSelected), focusable: true),
                 // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
                 Width = new GridLength(80)
             },
@@ -122,8 +77,20 @@ public class ProfilesExportWindow : Window
 
         tableView = dataGrid;
 
-        grid.Add(dataGrid, 0);
+        var header = EditorChrome.MakeSectionHeader(Se.Language.General.Profiles);
+        header.Margin = new Thickness(0, 0, 0, 8);
 
-        return UiUtil.MakeBorderForControlNoPadding(grid);
+        var panel = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+        panel.Add(header, 0);
+        panel.Add(EditorChrome.MakeListFrame(dataGrid), 1);
+        return panel;
     }
 }

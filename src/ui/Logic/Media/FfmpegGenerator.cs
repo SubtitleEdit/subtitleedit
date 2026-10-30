@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
@@ -298,6 +299,14 @@ public class FfmpegGenerator
             tuneParameter = $" -tune {tune}";
         }
 
+        // "+faststart" only means something to the MP4/QuickTime muxer. Edit lists are left to
+        // ffmpeg: "-use_editlist 0" shifted the video by the B-frame delay (two frames late
+        // against the audio), and with AAC's encoder delay it could also stretch the first
+        // video sample, which Adobe Audition plays back as black video (#15992).
+        var movFlags = Features.Video.BurnIn.OutputContainer.IsMp4Family(Path.GetExtension(outputVideoFileName))
+            ? " -movflags +faststart"
+            : string.Empty;
+
         outputVideoFileName = $"\"{outputVideoFileName}\"";
 
         var passSettings = string.Empty;
@@ -418,7 +427,7 @@ public class FfmpegGenerator
         // Without it ffmpeg hits "File ... already exists. Exiting." and writes nothing - and as
         // the old file is still there, the burn-in looked like it succeeded (issue #14210).
         return
-            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings}{tuneParameter} {crfSettings} {pixelFormat} {audioSettings} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
+            $"-y{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{imageSubtitleInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings}{tuneParameter} {crfSettings} {pixelFormat} {audioSettings}{movFlags}{shortestParameter} {outputVideoFileName}";
     }
 
     /// <summary>
@@ -593,7 +602,7 @@ public class FfmpegGenerator
             return outputFileName;
         }
 
-        var stderr2 = RunFfmpegScreenShot($"-y -i \"{inputFileName}\" -ss {timeCode} {vfMatrix} -frames:v 1 -c:v png \"{outputFileName}\"");
+        var stderr2 = RunFfmpegScreenShot(GetScreenShotFallbackArguments(inputFileName, timeCode, vfMatrix, outputFileName));
         if (HasFrame(outputFileName))
         {
             return outputFileName;
@@ -604,6 +613,52 @@ public class FfmpegGenerator
                     "input-seek: " + stderr + Environment.NewLine +
                     "output-seek: " + stderr2);
         return outputFileName;
+    }
+
+    // Seconds before the wanted time where the fallback starts decoding.
+    private const double ScreenShotFallbackPreRollSeconds = 10;
+
+    /// <summary>
+    /// Arguments for the accurate retry when input seeking gave no frame. Pure output seeking
+    /// decodes from the start of the file, which took 13-18 s for a line a few minutes in and
+    /// left the Set position preview on its checkered background meanwhile (#16289). Input seek
+    /// to a bit before the time, then output seek the rest, so the cost no longer grows with
+    /// the position (same frame; 720p at 13 min: 18 s -> 0.9 s).
+    /// </summary>
+    internal static string GetScreenShotFallbackArguments(string inputFileName, string timeCode, string vfMatrix, string outputFileName)
+    {
+        var seekArguments = $"-i \"{inputFileName}\" -ss {timeCode}";
+        if (TryGetFfmpegSeconds(timeCode, out var seconds) && seconds > ScreenShotFallbackPreRollSeconds)
+        {
+            var inputSeek = (seconds - ScreenShotFallbackPreRollSeconds).ToString("0.###", CultureInfo.InvariantCulture);
+            var outputSeek = ScreenShotFallbackPreRollSeconds.ToString(CultureInfo.InvariantCulture);
+            seekArguments = $"-ss {inputSeek} -i \"{inputFileName}\" -ss {outputSeek}";
+        }
+
+        return $"-y {seekArguments} {vfMatrix} -frames:v 1 -c:v png \"{outputFileName}\"";
+    }
+
+    // Parses a normalized ffmpeg time ("123.4", "MM:SS.ms" or "HH:MM:SS.ms") to seconds.
+    private static bool TryGetFfmpegSeconds(string timeCode, out double seconds)
+    {
+        seconds = 0;
+        var parts = timeCode.Split(':');
+        if (parts.Length > 3)
+        {
+            return false;
+        }
+
+        foreach (var part in parts)
+        {
+            if (!double.TryParse(part, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) || value < 0)
+            {
+                return false;
+            }
+
+            seconds = seconds * 60 + value;
+        }
+
+        return true;
     }
 
     private static string RunFfmpegScreenShot(string arguments)
@@ -714,12 +769,17 @@ public class FfmpegGenerator
             height++;
         }
 
+        // ffmpeg's subtitles filter does not load fonts from the [Fonts] attachment section, so a
+        // style using an attached font previewed in a fallback font. Hand them to libass as a fontsdir.
+        var fontsDirName = WriteEmbeddedFontsToTempFolder(previewSubtitle.Footer);
+        var fontsDirArgument = fontsDirName == null ? string.Empty : $":fontsdir={Path.GetFileName(fontsDirName)}";
+
         var process = new Process
         {
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-f lavfi -i \"color=c=black@0.0:s={width}x{height}:d=0.1,format=rgba,subtitles=f={Path.GetFileName(tempAssFileName)}:alpha=1\" -frames:v 1 -c:v png \"{outputFileName}\"",
+                Arguments = $"-f lavfi -i \"color=c=black@0.0:s={width}x{height}:d=0.1,format=rgba,subtitles=f={Path.GetFileName(tempAssFileName)}:alpha=1{fontsDirArgument}\" -frames:v 1 -c:v png \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 WorkingDirectory = Path.GetDirectoryName(tempAssFileName) ?? string.Empty
@@ -744,31 +804,49 @@ public class FfmpegGenerator
             // Ignore cleanup errors
         }
 
+        if (fontsDirName != null)
+        {
+            try
+            {
+                Directory.Delete(fontsDirName, true);
+            }
+            catch
+            {
+                // Ignore cleanup errors
+            }
+        }
+
         return File.Exists(outputFileName) ? outputFileName : null;
     }
 
-    public static string[] GetScreenShotsForEachFrame(string videoFileName, string outputFolder)
+    /// <summary>
+    /// Decodes the [Fonts] attachments of an ASSA footer into a new folder in the temp folder.
+    /// Returns null when there are no attached fonts.
+    /// </summary>
+    private static string? WriteEmbeddedFontsToTempFolder(string? footer)
     {
-        Directory.CreateDirectory(outputFolder);
-        var outputFileName = Path.Combine(outputFolder, "image%05d.png");
-        var process = new Process
+        var fonts = AssaFontEmbedder.GetEmbeddedFonts(footer);
+        if (fonts.Count == 0)
         {
-            StartInfo =
-            {
-                FileName = GetFfmpegLocation(),
-                // "-vsync vfr" was dropped: ffmpeg 9 removed -vsync and aborts before decoding
-                // anything, and "select=1" already passes every frame through unchanged.
-                Arguments = $"-i \"{videoFileName}\" -vf \"select=1\" \"{outputFileName}\"",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            }
-        };
+            return null;
+        }
 
-#pragma warning disable CA1416
-        _ = process.Start();
-#pragma warning restore CA1416
-        process.WaitForExit();
-        return Directory.GetFiles(outputFolder, "*.png").OrderBy(p => p).ToArray();
+        var folder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        try
+        {
+            Directory.CreateDirectory(folder);
+            foreach (var (fileName, bytes) in fonts)
+            {
+                File.WriteAllBytes(Path.Combine(folder, fileName), bytes);
+            }
+
+            return folder;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Could not write attached fonts for libass preview");
+            return Directory.Exists(folder) ? folder : null;
+        }
     }
 
     private static string GetFfmpegLocation()
@@ -969,6 +1047,133 @@ public class FfmpegGenerator
         var isExperimental = string.Equals(audioEncoding, "truehd", StringComparison.OrdinalIgnoreCase) ||
                              string.Equals(audioEncoding, "mlp", StringComparison.OrdinalIgnoreCase);
         return "-c:a " + audioEncoding + (isExperimental ? " -strict -2 " : " ");
+    }
+
+    /// <summary>
+    /// Video > Sync audio track: a copy of the video (no re-encode) with one audio stream moved
+    /// <paramref name="offsetSeconds"/> later (negative = earlier). The file is read twice; only
+    /// the chosen audio stream is taken from the second, time-shifted input (-itsoffset), every
+    /// other stream from the first - mapped in the original order, so the track keeps its place,
+    /// language, title and default flag.
+    /// </summary>
+    /// <remarks>
+    /// Moving audio earlier puts its first packets before zero. ffmpeg's default then shifts the
+    /// whole file later in .mkv (the video started at the offset, out of step with the
+    /// subtitles), so negative timestamps are allowed through, and with
+    /// <paramref name="dropNegativePackets"/> (ffmpeg 5.1+ "noise" bsf drop option) the audio
+    /// packets before zero are dropped instead.
+    /// </remarks>
+    /// <param name="streamIndexes">The stream indexes of the input to copy, in order ("Stream #0:N"),
+    /// without data streams (they have no codec and make the muxer abort); empty = unknown, then
+    /// the shifted track is added last instead of in its old place.</param>
+    /// <param name="audioStreamIndex">The ffmpeg stream index of the audio track to shift.</param>
+    /// <param name="audioNumber">1-based position of that track among the audio streams - used
+    /// when the stream indexes are unknown.</param>
+    public static Process ShiftAudioTrack(string inputFileName, string outputFileName, IReadOnlyList<int> streamIndexes, int audioStreamIndex, int audioNumber, double offsetSeconds, bool dropNegativePackets, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = GetShiftAudioTrackArguments(inputFileName, outputFileName, streamIndexes, audioStreamIndex, audioNumber, offsetSeconds, dropNegativePackets),
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+        return process;
+    }
+
+    internal static string GetShiftAudioTrackArguments(string inputFileName, string outputFileName, IReadOnlyList<int> streamIndexes, int audioStreamIndex, int audioNumber, double offsetSeconds, bool dropNegativePackets)
+    {
+        var offset = offsetSeconds.ToString("0.000", CultureInfo.InvariantCulture);
+
+        var maps = new StringBuilder();
+        var outputIndex = -1;
+        if (streamIndexes.Count > 0 && streamIndexes.Contains(audioStreamIndex))
+        {
+            for (var i = 0; i < streamIndexes.Count; i++)
+            {
+                var index = streamIndexes[i];
+                if (index == audioStreamIndex)
+                {
+                    maps.Append($"-map 1:{index} ");
+                    outputIndex = i;
+                }
+                else
+                {
+                    maps.Append($"-map 0:{index} ");
+                }
+            }
+        }
+        else
+        {
+            // Relative audio specifier: without known stream indexes there may be no absolute one.
+            // "-map -0:d" leaves out data streams, which "-c copy" cannot mux.
+            var audio = $"a:{Math.Max(0, audioNumber - 1)}";
+            maps.Append($"-map 0 -map -0:{audio} -map -0:d -map 1:{audio} ");
+        }
+
+        var negative = string.Empty;
+        if (offsetSeconds < 0)
+        {
+            negative = dropNegativePackets && outputIndex >= 0
+                ? $"-bsf:{outputIndex} \"noise=drop=lt(pts*tb\\,0)\" -avoid_negative_ts disabled "
+                : "-avoid_negative_ts disabled ";
+        }
+
+        return $"{FfmpegProgressTracker.ProgressArguments} -nostdin -y {GeneratePtsForVideoCopy}-i \"{inputFileName}\" -itsoffset {offset} -i \"{inputFileName}\" {maps}-c copy {negative}-map_metadata 0 -map_chapters 0 \"{outputFileName}\"";
+    }
+
+    private static bool? _noiseBsfHasDrop;
+
+    /// <summary>
+    /// The "-drop" option line of "ffmpeg -h bsf=noise" - not "-dropamount", which older
+    /// versions (4.x) have and which cannot drop by timestamp.
+    /// </summary>
+    internal static bool NoiseHelpHasDropOption(string help) =>
+        Regex.IsMatch(help, @"^\s*-drop\s", RegexOptions.Multiline);
+
+    /// <summary>
+    /// True when this ffmpeg's "noise" bitstream filter has the drop option (ffmpeg 5.1+).
+    /// </summary>
+    public static bool NoiseBitstreamFilterCanDrop()
+    {
+        if (_noiseBsfHasDrop.HasValue)
+        {
+            return _noiseBsfHasDrop.Value;
+        }
+
+        try
+        {
+            using var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = GetFfmpegLocation(),
+                    Arguments = "-hide_banner -h bsf=noise",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                }
+            };
+#pragma warning disable CA1416 // Validate platform compatibility
+            process.Start();
+#pragma warning restore CA1416
+            var stdout = process.StandardOutput.ReadToEndAsync();
+            var stderr = process.StandardError.ReadToEndAsync();
+            process.WaitForExit(10000);
+            _noiseBsfHasDrop = NoiseHelpHasDropOption(stdout.Result + stderr.Result);
+        }
+        catch
+        {
+            _noiseBsfHasDrop = false;
+        }
+
+        return _noiseBsfHasDrop.Value;
     }
 
     public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler? dataReceivedHandler = null)
@@ -1225,24 +1430,6 @@ public class FfmpegGenerator
         return processMakeVideo;
     }
 
-    public static Process ConvertToAc2(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
-    {
-        var processMakeVideo = new Process
-        {
-            StartInfo =
-            {
-                FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -ac 2 \"{outputFileName}\"",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            }
-        };
-
-        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
-
-        return processMakeVideo;
-    }
-
     /// <summary>
     /// Resamples / mixes the input to mono PCM16 WAV at 24 kHz. Used for the Chatterbox TTS
     /// voice-clone reference WAV, which only does "atomic" cloning at 24 kHz mono — other
@@ -1457,54 +1644,6 @@ public class FfmpegGenerator
         }
 
         return resizedBitmap;
-    }
-
-    public static Process ReEncodeVideoForSubtitling(string inputVideoFileName, string outputVideoFileName, int width, int height, string frameRate, DataReceivedEventHandler? dataReceivedHandler)
-    {
-        if (width % 2 == 1)
-        {
-            width++;
-        }
-
-        if (height % 2 == 1)
-        {
-            height++;
-        }
-
-        outputVideoFileName = $"\"{outputVideoFileName}\"";
-        var frameRateInt = (int)double.Parse(frameRate, CultureInfo.InvariantCulture);
-
-        var processMakeVideo = new Process
-        {
-            StartInfo =
-            {
-                FileName = GetFfmpegLocation(),
-                Arguments =
-                    $"-y -i \"{inputVideoFileName}\" " +
-                    $"-vf scale={width}:{height},fps={frameRate} " +
-                    $"-c:v libx264 -preset ultrafast -movflags +faststart " +
-                    $"-g {frameRateInt / 2} -keyint_min {frameRateInt / 2} -sc_threshold 0 " +
-                    $"-pix_fmt yuv420p -c:a copy {outputVideoFileName}",
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true,
-            }
-        };
-
-        processMakeVideo.StartInfo.Arguments = processMakeVideo.StartInfo.Arguments.Trim();
-
-        // Never let ffmpeg wait on a console prompt: stdin is inherited (not redirected), so an
-        // interactive question - e.g. "File exists. Overwrite? [y/N]" when user-edited custom
-        // parameters lack -y - blocks forever with the UI stuck at the last progress value.
-        if (!processMakeVideo.StartInfo.Arguments.Contains("-nostdin"))
-        {
-            processMakeVideo.StartInfo.Arguments = "-nostdin " + processMakeVideo.StartInfo.Arguments;
-        }
-
-        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
-
-        return processMakeVideo;
     }
 
     public static Process GetProcess(string parameters, DataReceivedEventHandler? dataReceivedHandler, string workingDirectory = "")

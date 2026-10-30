@@ -32,14 +32,12 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
     private readonly System.Timers.Timer _timer;
     private volatile bool _isClosing;
     private CancellationTokenSource _cancellationTokenSource;
-    private CancellationToken _cancellationToken;
 
     public ReviewSpeechHistoryViewModel()
     {
         HistoryItems = new ObservableCollection<ReviewHistoryRow>();
 
         _cancellationTokenSource = new CancellationTokenSource();
-        _cancellationToken = _cancellationTokenSource.Token;
         _playLock = new Lock();
         _timer = new System.Timers.Timer(200);
         _timer.Elapsed += OnTimerOnElapsed;
@@ -166,7 +164,6 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
         if (_cancellationTokenSource.IsCancellationRequested)
         {
             _cancellationTokenSource = new CancellationTokenSource();
-            _cancellationToken = _cancellationTokenSource.Token;
         }
 
         item.IsPlaying = true;

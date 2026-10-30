@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -13,6 +14,11 @@ using System.ComponentModel;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
 
+/// <summary>
+/// Voice sample text and voice import, in the editor look (see <see cref="EditorChrome"/>): the
+/// sample text section, a drop area for importing a voice below it, import/refresh on the left of
+/// the button bar and Cancel/OK on the right.
+/// </summary>
 public class VoiceSettingsWindow : Window
 {
     private readonly VoiceSettingsViewModel _vm;
@@ -30,20 +36,22 @@ public class VoiceSettingsWindow : Window
         MinWidth = 400;
         MinHeight = 320;
         CanResize = true;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         _vm = vm;
         vm.Window = this;
         DataContext = vm;
 
-        var label = new Label
-        {
-            Content = Se.Language.Video.TextToSpeech.VoiceSampleText,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
         var textBox = UiUtil.MakeTextBox(250, vm, nameof(vm.VoiceTestText));
         textBox.Width = double.NaN;
         textBox.HorizontalAlignment = HorizontalAlignment.Stretch;
+        textBox.FontSize = EditorChrome.FieldFontSize;
+        textBox.Background = EditorChrome.FieldBrush;
+        textBox.BorderBrush = EditorChrome.FieldBorderBrush;
+        textBox.CornerRadius = new CornerRadius(6);
+        textBox.Padding = new Thickness(8, 6);
+        AutomationProperties.SetName(textBox, Se.Language.Video.TextToSpeech.VoiceSampleText);
 
         // Multi-line and growing with the window, so a longer sample text is readable (#14726).
         // Line breaks are fine - the sample is unbroken before it is spoken.
@@ -53,19 +61,22 @@ public class VoiceSettingsWindow : Window
         textBox.VerticalContentAlignment = VerticalAlignment.Top;
         textBox.MinHeight = 60;
 
-        var dropArea = BuildDropArea(vm);
+        // The sample text section: header on top, the text box takes the rest of the height
+        var sampleHeader = EditorChrome.MakeSectionHeader(Se.Language.Video.TextToSpeech.VoiceSampleText);
+        sampleHeader.Margin = new Thickness(0, 0, 0, 10);
+        DockPanel.SetDock(sampleHeader, Dock.Top);
+        var sampleSection = new Border
+        {
+            Padding = new Thickness(14, 12, 14, 14),
+            Child = new DockPanel { Children = { sampleHeader, textBox } },
+        };
 
-        var buttonImport = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.ImportVoiceDotDotDot, vm.ImportVoiceCommand).WithBindIsVisible(nameof(vm.IsImportVoiceVisible));
-        var buttonRefresh = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.RefreshVoices, vm.RefreshVoiceListCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonImport, buttonRefresh, buttonOk, buttonCancel);
+        var dropArea = BuildDropArea(vm);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -74,19 +85,17 @@ public class VoiceSettingsWindow : Window
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        _dropRow = grid.RowDefinitions[2];
+        _dropRow = grid.RowDefinitions[1];
 
-        grid.Add(label, 0, 0);
-        grid.Add(textBox, 1, 0);
-        grid.Add(dropArea, 2, 0);
-        grid.Add(panelButtons, 3, 0);
+        // The panel color behind both sections, whichever of them is showing
+        var panel = new Border { Background = EditorChrome.PanelBrush };
+        grid.Add(panel, 0, 0);
+        Grid.SetRowSpan(panel, 2);
+        grid.Add(sampleSection, 0, 0);
+        grid.Add(dropArea, 1, 0);
+        grid.Add(MakeButtonBar(vm), 2, 0);
 
         Content = grid;
 
@@ -105,9 +114,9 @@ public class VoiceSettingsWindow : Window
         var icon = new Icon
         {
             Value = IconNames.Import,
-            FontSize = 32,
+            FontSize = 30,
             HorizontalAlignment = HorizontalAlignment.Center,
-            Foreground = UiUtil.GetTextColor(0.55d),
+            Foreground = EditorChrome.FaintTextBrush,
         };
         _dropIcon = icon;
 
@@ -116,7 +125,8 @@ public class VoiceSettingsWindow : Window
             Text = Se.Language.Video.TextToSpeech.DropAudioFileHereToImportVoice,
             HorizontalAlignment = HorizontalAlignment.Center,
             TextAlignment = TextAlignment.Center,
-            Foreground = UiUtil.GetTextColor(0.8d),
+            TextWrapping = TextWrapping.Wrap,
+            FontSize = EditorChrome.FieldFontSize,
         };
 
         var hintText = new TextBlock
@@ -124,8 +134,9 @@ public class VoiceSettingsWindow : Window
             Text = Se.Language.Video.TextToSpeech.DropAudioFileHereHint,
             HorizontalAlignment = HorizontalAlignment.Center,
             TextAlignment = TextAlignment.Center,
-            FontSize = UiUtil.ScaledFontSize(11),
-            Foreground = UiUtil.GetTextColor(0.5d),
+            TextWrapping = TextWrapping.Wrap,
+            FontSize = EditorChrome.ScaledFont(11.5),
+            Foreground = EditorChrome.DimTextBrush,
         };
 
         var content = new StackPanel
@@ -133,14 +144,14 @@ public class VoiceSettingsWindow : Window
             Orientation = Orientation.Vertical,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
-            Spacing = 8,
-            Margin = new Thickness(24, 18),
+            Spacing = 6,
+            Margin = new Thickness(24, 14),
             Children = { icon, primaryText, hintText },
         };
 
         var dashRect = new Rectangle
         {
-            Stroke = UiUtil.GetTextColor(0.35d),
+            Stroke = EditorChrome.SeparatorBrush,
             StrokeThickness = 1.5,
             StrokeDashArray = new AvaloniaList<double> { 4, 3 },
             RadiusX = 8,
@@ -160,21 +171,59 @@ public class VoiceSettingsWindow : Window
         {
             Background = Brushes.Transparent,
             CornerRadius = new CornerRadius(8),
-            Padding = new Thickness(16),
             MinHeight = 96,
             VerticalAlignment = VerticalAlignment.Stretch,
             Child = inner,
         };
         _dropBorder = border;
 
-        DragDrop.SetAllowDrop(border, true);
-        border.AddHandler(DragDrop.DragOverEvent, vm.OnDragOver, RoutingStrategies.Bubble);
-        border.AddHandler(DragDrop.DragLeaveEvent, vm.OnDragLeave, RoutingStrategies.Bubble);
-        border.AddHandler(DragDrop.DropEvent, vm.OnDrop, RoutingStrategies.Bubble);
+        // The whole section takes drops, not only the dashed area inside its padding
+        var section = new Border
+        {
+            Background = Brushes.Transparent,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            Padding = new Thickness(14),
+            Child = border,
+        };
 
-        border.WithBindIsVisible(nameof(vm.IsImportVoiceVisible));
+        DragDrop.SetAllowDrop(section, true);
+        section.AddHandler(DragDrop.DragOverEvent, vm.OnDragOver, RoutingStrategies.Bubble);
+        section.AddHandler(DragDrop.DragLeaveEvent, vm.OnDragLeave, RoutingStrategies.Bubble);
+        section.AddHandler(DragDrop.DropEvent, vm.OnDrop, RoutingStrategies.Bubble);
 
-        return border;
+        section.WithBindIsVisible(nameof(vm.IsImportVoiceVisible));
+
+        return section;
+    }
+
+    private static Border MakeButtonBar(VoiceSettingsViewModel vm)
+    {
+        var buttonImport = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.ImportVoiceDotDotDot, vm.ImportVoiceCommand)
+            .WithIconLeft(IconNames.Import)
+            .WithBindIsVisible(nameof(vm.IsImportVoiceVisible));
+        var buttonRefresh = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.RefreshVoices, vm.RefreshVoiceListCommand)
+            .WithIconLeft(IconNames.Refresh);
+        var left = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Children = { buttonImport, buttonRefresh } };
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var right = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, Children = { buttonCancel, buttonOk } };
+
+        var grid = new Grid
+        {
+            ColumnSpacing = 10,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
+            },
+        };
+        grid.Add(left, 0, 0);
+        grid.Add(right, 0, 1);
+
+        return EditorChrome.WrapButtonBar(grid);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -208,17 +257,16 @@ public class VoiceSettingsWindow : Window
 
         if (isDragOver)
         {
-            var accent = new SolidColorBrush(Color.FromRgb(0x2E, 0x8B, 0xC0));
-            _dropDashRect.Stroke = accent;
+            _dropDashRect.Stroke = EditorChrome.AccentBrush;
             _dropDashRect.StrokeThickness = 2.0;
-            _dropIcon.Foreground = accent;
-            _dropBorder.Background = new SolidColorBrush(Color.FromArgb(0x22, 0x2E, 0x8B, 0xC0));
+            _dropIcon.Foreground = EditorChrome.AccentBrush;
+            _dropBorder.Background = EditorChrome.AccentSoftBrush;
         }
         else
         {
-            _dropDashRect.Stroke = UiUtil.GetTextColor(0.35d);
+            _dropDashRect.Stroke = EditorChrome.SeparatorBrush;
             _dropDashRect.StrokeThickness = 1.5;
-            _dropIcon.Foreground = UiUtil.GetTextColor(0.55d);
+            _dropIcon.Foreground = EditorChrome.FaintTextBrush;
             _dropBorder.Background = Brushes.Transparent;
         }
     }

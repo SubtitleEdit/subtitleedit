@@ -5,7 +5,6 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;

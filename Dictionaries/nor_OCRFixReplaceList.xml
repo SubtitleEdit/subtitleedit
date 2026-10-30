@@ -113,7 +113,7 @@
     <RegEx find="\b([A-ZÆØÅ][a-zæøåé]*[sxzSXZ])['']s\b" spellCheck="$1" replaceWith="$1'" />
 
     <!-- David's → Davids : remove apostrophe from normal genitive -->
-    <RegEx find="\b([A-ZÆØÅ][a-zæøåé]+)['']s\b" spellCheck="$1s" replaceWith="$1s" />
+    <RegEx find="\b(?!(?:He|She|It|That|What|There|Here|Who|Where|How|Let|This)['’]s\b)([A-ZÆØÅ][a-zæøåé]+)['']s\b" spellCheck="$1s" replaceWith="$1s" />
 
     <!-- ============================================================ -->
     <!-- NORWEGIAN COMPOUND WORDS — NOTE                              -->
@@ -124,7 +124,7 @@
     <!-- ============================================================ -->
 
     <!-- iOslo → i Oslo -->
-    <RegEx find="\bi([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="i $1" />
+    <RegEx find="\bi(?!(?:Tunes|Pod|Phone|Pad|Mac|Cloud|Message|Movie|Player)\b)([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="i $1" />
 
     <!-- påBergen → på Bergen -->
     <RegEx find="\bpå([A-ZÆØÅ][a-zæøåé]+)\b" spellCheck="$1" replaceWith="på $1" />

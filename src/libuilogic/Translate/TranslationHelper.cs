@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.UiLogic.Translate
@@ -80,7 +79,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate
         {
             string s = FixInvalidCarriageReturnLineFeedCharacters(input);
 
-            if (source == "en" && s.IndexOf('\'') >= 0)
+            if (source == "en" && s.Contains('\''))
             {
                 // Every pattern needs an apostrophe, so lines without one skip the whole table.
                 // These were 21 static Regex.Replace calls per line - more distinct patterns than

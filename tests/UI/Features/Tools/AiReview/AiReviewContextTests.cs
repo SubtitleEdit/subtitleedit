@@ -2,7 +2,6 @@ using Avalonia.Headless.XUnit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
 using Nikse.SubtitleEdit.Logic;
-using System;
 
 namespace UITests.Features.Tools.AiReview;
 

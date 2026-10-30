@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Data;
@@ -20,49 +21,48 @@ public class ChangeFrameRateWindow : Window
         Title = UiUtil.MakeWindowTitle(Se.Language.General.ChangeFrameRate);
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
         vm.Window = this;
         DataContext = vm;
 
         // Where the preset "from" rate came from: the loaded video's name and detected frame rate.
-        var videoIcon = new ContentControl
+        var videoIcon = new Icon
         {
-            Width = 16,
-            Height = 16,
+            Value = "fa-solid fa-file-video",
+            FontSize = 12,
+            Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 6, 0),
         };
-        Attached.SetIcon(videoIcon, IconNames.MovieOpenOutline);
         var textVideoInfo = new TextBlock
         {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            MaxWidth = 420,
+            MaxWidth = 300,
         }.WithBindText(vm, nameof(vm.VideoInfoText));
         var panelVideoInfo = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Opacity = 0.85,
-            Margin = new Thickness(0, 0, 0, 4),
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 16, 0),
             Children = { videoIcon, textVideoInfo },
         }.WithBindIsVisible(nameof(vm.HasVideo));
         ToolTip.SetTip(panelVideoInfo, vm.VideoFileName);
         ToolTip.SetTip(textVideoInfo, vm.VideoFileName);
 
-        var labelFromFrameRate = new Label
-        {
-            Content = Se.Language.Sync.FromFrameRate,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
         // Editable like SE 4, so any rate can be typed - e.g. 1, 2, 5, 10 or 15 fps (#15806).
         var comboFromFrameRate = new ComboBox
         {
             VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 90,
+            MinWidth = 110,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             IsEditable = true,
             DisplayMemberBinding = FrameRateDisplayBinding(),
         }
         .WithBindItemsSource(nameof(vm.FromFrameRates));
+        AutomationProperties.SetName(comboFromFrameRate, Se.Language.Sync.FromFrameRate);
         BindSelectedFrameRate(comboFromFrameRate, nameof(vm.SelectedFromFrameRate));
         UiUtil.OnEditableComboBoxCommit(comboFromFrameRate, () =>
         {
@@ -71,25 +71,23 @@ public class ChangeFrameRateWindow : Window
             comboFromFrameRate.Text = FormatFrameRate(vm.SelectedFromFrameRate);
         }, handleEnter: false);
 
-        var buttonFromFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseFromFrameRateCommand, accessibleName: Se.Language.Sync.FromFrameRate);
+        var buttonFromFrameRate = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.Sync.FromFrameRate, vm.BrowseFromFrameRateCommand, 28);
 
-        var buttonSwitch = UiUtil.MakeButton(vm.SwitchFrameRatesCommand, IconNames.SwapVertical,
-            $"{Se.Language.Sync.FromFrameRate} <-> {Se.Language.Sync.ToFrameRate}");
-
-        var labelToFrameRate = new Label
-        {
-            Content = Se.Language.Sync.ToFrameRate,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        var buttonSwitch = EditorChrome.CreateToolButton("fa-solid fa-arrows-up-down",
+            $"{Se.Language.Sync.FromFrameRate} <-> {Se.Language.Sync.ToFrameRate}", vm.SwitchFrameRatesCommand, 28);
+        buttonSwitch.VerticalAlignment = VerticalAlignment.Center;
+        buttonSwitch.Margin = new Thickness(4, 0, 0, 0);
 
         var comboToFrameRate = new ComboBox
         {
             VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 90,
+            MinWidth = 110,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             IsEditable = true,
             DisplayMemberBinding = FrameRateDisplayBinding(),
         }
         .WithBindItemsSource(nameof(vm.ToFrameRates));
+        AutomationProperties.SetName(comboToFrameRate, Se.Language.Sync.ToFrameRate);
         BindSelectedFrameRate(comboToFrameRate, nameof(vm.SelectedToFrameRate));
         UiUtil.OnEditableComboBoxCommit(comboToFrameRate, () =>
         {
@@ -98,54 +96,44 @@ public class ChangeFrameRateWindow : Window
             comboToFrameRate.Text = FormatFrameRate(vm.SelectedToFrameRate);
         }, handleEnter: false);
 
-        var buttonToFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseToFrameRateCommand, accessibleName: Se.Language.Sync.ToFrameRate);
+        var buttonToFrameRate = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.Sync.ToFrameRate, vm.BrowseToFrameRateCommand, 28);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
             },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto }, // label
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, // combo box
+                new ColumnDefinition { Width = GridLength.Auto }, // browse
+                new ColumnDefinition { Width = GridLength.Auto }, // switch
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            ColumnSpacing = 6,
+            RowSpacing = 7,
         };
 
-        var row = 0;
-        grid.Add(panelVideoInfo, row, 0, 1, 4);
-        row++;
+        grid.Add(EditorChrome.MakeDimLabel(Se.Language.Sync.FromFrameRate, new Thickness(0, 0, 6, 0)), 0, 0);
+        grid.Add(comboFromFrameRate, 0, 1);
+        grid.Add(buttonFromFrameRate, 0, 2);
+        grid.Add(buttonSwitch, 0, 3, 2);
 
-        grid.Add(labelFromFrameRate, row, 0);
-        grid.Add(comboFromFrameRate, row, 1);
-        grid.Add(buttonFromFrameRate, row, 2);
-        grid.Add(buttonSwitch, row, 3, 2);
-        row++;
+        grid.Add(EditorChrome.MakeDimLabel(Se.Language.Sync.ToFrameRate, new Thickness(0, 0, 6, 0)), 1, 0);
+        grid.Add(comboToFrameRate, 1, 1);
+        grid.Add(buttonToFrameRate, 1, 2);
 
-        grid.Add(labelToFrameRate, row, 0);
-        grid.Add(comboToFrameRate, row, 1);
-        grid.Add(buttonToFrameRate, row, 2);
-        row++;
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.FrameRate, grid, first: true);
+        section.MinWidth = 340;
 
-        grid.Add(buttonPanel, row, 0, 1, 4);
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = grid;
-        
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeDockedButtonBar(panelVideoInfo, buttonCancel, buttonOk));
+
         UiUtil.FocusOnFirstActivation(this, comboFromFrameRate); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);

@@ -9,22 +9,17 @@ namespace Nikse.SubtitleEdit.UiLogic.Export;
 public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
 {
     public ExportImageType ExportImageType => ExportImageType.DCinemaPng;
-    public string Extension => "";
-    public bool UseFileName => false;
-    public string Title => string.Format("Export to {0}", "DCinema SMPTE 2014/png");
+    public virtual string Extension => "";
+    public virtual bool UseFileName => false;
+    public virtual string Title => string.Format("Export to {0}", "DCinema SMPTE 2014/png");
     public double FrameRate { get; set; } = 23.976;
 
-    private int _width;
-    private int _height;
     private StringBuilder _sb = new StringBuilder();
     private string _folderName = string.Empty;
     private int _imagesSavedCount = 0;
 
     public void WriteHeader(string fileOrFolderName, ImageParameter imageParameter)
     {
-        _width = imageParameter.ScreenWidth;
-        _height = imageParameter.ScreenHeight;
-
         // Nothing sets the FrameRate property, so it stayed at the 23.976 default and every
         // index.xml declared EditRate/TimeCodeRate 23 - not a valid D-Cinema rate, and out of step
         // with the TimeIn/TimeOut values, which come from the real current frame rate. The Dost and
@@ -34,12 +29,7 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
             FrameRate = imageParameter.FramesPerSecond;
         }
 
-        _folderName = fileOrFolderName;
-        if (!Directory.Exists(_folderName))
-        {
-            Directory.CreateDirectory(_folderName);
-        }
-
+        PrepareOutput(fileOrFolderName);
         _sb.Clear();
         _imagesSavedCount = 0;
     }
@@ -53,8 +43,7 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
         // string numberString = $"{i:0000}";
         _imagesSavedCount++;
         string uuidString = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
-        string fileName = Path.Combine(_folderName, uuidString + ".png");
-        File.WriteAllBytes(fileName, param.Bitmap.ToPngArray());
+        SaveImage(uuidString, param.Bitmap.ToPngArray());
 
         string verticalAlignment = "bottom";
         string horizontalAlignment = "center";
@@ -130,7 +119,8 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
             "  <Id>urn:uuid:" + guid + "</Id>" + Environment.NewLine +
             "  <ContentTitleText>Movie Title</ContentTitleText>" + Environment.NewLine +
             "  <AnnotationText>This is a subtitle file</AnnotationText>" + Environment.NewLine +
-            "  <IssueDate>" + DateTime.Now.ToString("o") + "</IssueDate>" + Environment.NewLine +
+            // xs:dateTime without fractions or zone - DCP-o-matic's verifier warns on "o" (Bv2.1)
+            "  <IssueDate>" + DateTime.Now.ToString("s") + "</IssueDate>" + Environment.NewLine +
             "  <ReelNumber>1</ReelNumber>" + Environment.NewLine +
             "  <Language>en</Language>" + Environment.NewLine +
             "  <EditRate>[FRAMERATE] 1</EditRate>" + Environment.NewLine +
@@ -145,21 +135,30 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
         xml = xml.Replace("[FRAMERATE]", ((int)Math.Round(FrameRate, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture));
 
         doc.LoadXml(xml);
-        var fName = Path.Combine(_folderName, "index.xml");
-
-        File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
+        // "UTF-8" like the text D-Cinema formats - ClairMeta rejects the lowercase declaration
+        SaveXml(SubtitleFormat.ToUtf8XmlString(doc).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\""));
     }
 
-    private static string FormatUtf8Xml(XmlDocument doc)
+    /// <summary>
+    /// The PNGs and index.xml go into a folder; see <see cref="ExportHandlerDCinemaSmpte2014Mxf"/>
+    /// for the same subtitles wrapped in one MXF track file.
+    /// </summary>
+    protected virtual void PrepareOutput(string fileOrFolderName)
     {
-        var sb = new StringBuilder();
-        using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+        _folderName = fileOrFolderName;
+        if (!Directory.Exists(_folderName))
         {
-            doc.Save(writer);
+            Directory.CreateDirectory(_folderName);
         }
+    }
 
-        return
-            sb.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"")
-                .Trim(); // "replace hack" due to missing encoding (encoding only works if it's the only parameter...)
+    protected virtual void SaveImage(string uuid, byte[] png)
+    {
+        File.WriteAllBytes(Path.Combine(_folderName, uuid + ".png"), png);
+    }
+
+    protected virtual void SaveXml(string xml)
+    {
+        File.WriteAllText(Path.Combine(_folderName, "index.xml"), xml);
     }
 }

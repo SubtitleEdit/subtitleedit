@@ -1,13 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.UiLogic.Http;
 
@@ -30,24 +25,29 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public static string[] Models => new[]
         {
             "perplexity/sonar",
+            "openai/gpt-6.1-sol",
+            "openai/gpt-6-sol",
+            "openai/gpt-6-luna",
             "openai/gpt-5.6-sol",
             "openai/gpt-5.6-terra",
             "openai/gpt-5.6-luna",
+            "anthropic/claude-opus-5-5",
+            "anthropic/claude-sonnet-5-5",
+            "anthropic/claude-haiku-5-5",
             "anthropic/claude-opus-5",
             "anthropic/claude-opus-4-8",
             "anthropic/claude-sonnet-5",
             "anthropic/claude-haiku-4-5",
             "google/gemini-3.8-flash",
-            "google/gemini-3.7-flash",
             "google/gemini-3.6-flash",
-            "google/gemini-3.5-flash",
             "google/gemini-3.1-pro-preview",
             "google/gemini-3.1-flash-lite",
+            "xai/grok-4.7",
             "xai/grok-4.6",
             "xai/grok-4.5",
             "perplexity/glm-5.3",
+            "perplexity/glm-5.3-flash",
             "perplexity/kimi-k3",
-            "perplexity/kimi-k2.7-code",
         };
 
         /// <summary>

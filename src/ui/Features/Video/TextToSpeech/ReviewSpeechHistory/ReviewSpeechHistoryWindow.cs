@@ -1,8 +1,8 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -10,6 +10,10 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 
+/// <summary>
+/// The earlier generations of one line, in the editor look (see <see cref="EditorChrome"/>):
+/// the list with play/stop per row, Cancel and OK at the bottom.
+/// </summary>
 public class ReviewSpeechHistoryWindow : Window
 {
     private TableView? _tableView;
@@ -23,12 +27,27 @@ public class ReviewSpeechHistoryWindow : Window
         MinWidth = 600;
         MinHeight = 400;
         CanResize = true;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.TextFieldsBare | EditorWindowStyles.MuteDisabledPrimary);
         vm.Window = this;
         DataContext = vm;
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+
+        var header = EditorChrome.MakeSectionHeader(Se.Language.General.History);
+        header.Margin = new Thickness(0, 0, 0, 10);
+
+        var list = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+            },
+            Margin = new Thickness(14, 12, 14, 14),
+        };
+        list.Add(header, 0);
+        list.Add(MakeHistoryGrid(vm), 1);
 
         var grid = new Grid
         {
@@ -37,19 +56,10 @@ public class ReviewSpeechHistoryWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 5,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(MakeHistoryGrid(vm), 0);
-        grid.Add(panelButtons, 1);
+        grid.Add(new Border { Background = EditorChrome.PanelBrush, Child = list }, 0);
+        grid.Add(EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk), 1);
 
         Content = grid;
 
@@ -62,7 +72,7 @@ public class ReviewSpeechHistoryWindow : Window
             }
         });
         KeyDown += (s, e) => vm.OnKeyDown(e);
-        Closing += (s, e) => vm.OnWindowClosing(e); 
+        Closing += (s, e) => vm.OnWindowClosing(e);
         Loaded += (s, e) => vm.OnWindowLoaded();
     }
 
@@ -70,11 +80,11 @@ public class ReviewSpeechHistoryWindow : Window
     {
         var tableView = TableViewExtras.MakeTableView(multiSelect: false);
         _tableView = tableView;
-        tableView.Margin = new Thickness(0, 10, 0, 0);
         tableView.Width = double.NaN;
         tableView.Height = double.NaN;
         tableView[!TableView.ItemsSourceProperty] = new Binding(nameof(vm.HistoryItems));
         tableView[!TableView.SelectedItemProperty] = new Binding(nameof(vm.SelectedHistoryItem)) { Mode = BindingMode.TwoWay };
+        AutomationProperties.SetName(tableView, Se.Language.General.History);
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
@@ -98,20 +108,22 @@ public class ReviewSpeechHistoryWindow : Window
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             CellTemplate = new FuncDataTemplate<ReviewHistoryRow>((item, _) =>
             {
-                var buttonPlay = UiUtil.MakeButton(vm.PlayItemCommand,"fa-solid fa-play")
+                var buttonPlay = EditorChrome.CreateToolButton("fa-solid fa-play", Se.Language.General.Play, vm.PlayItemCommand, 26)
                     .WithBindIsVisible(nameof(item.IsPlaying), InverseBooleanConverter.Instance)
                     .WithBindEnabled(nameof(item.IsPlayingEnabled));
                 buttonPlay.CommandParameter = item;
 
-                var buttonStop = UiUtil.MakeButton(vm.StopItemCommand,"fa-solid fa-stop")
+                var buttonStop = EditorChrome.CreateToolButton("fa-solid fa-stop", Se.Language.General.Stop, vm.StopItemCommand, 26)
                     .WithBindIsVisible(nameof(item.IsPlaying));
                 buttonStop.CommandParameter = item;
 
-                return UiUtil.MakeHorizontalPanel(buttonPlay, buttonStop);
+                var panel = TtsMainEditorLook.Horizontal(buttonPlay, buttonStop);
+                panel.Margin = new Thickness(4, 0);
+                return panel;
             }),
             Width = new GridLength(90),
         });
 
-        return UiUtil.MakeBorderForControlNoPadding(tableView);
+        return EditorChrome.MakeListFrame(tableView);
     }
 }

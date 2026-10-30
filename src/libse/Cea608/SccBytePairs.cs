@@ -91,10 +91,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                     continue;
                 }
 
-                var milliseconds = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture) * 3_600_000.0 +
-                                   int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture) * 60_000.0 +
-                                   int.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture) * 1_000.0 +
-                                   int.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture) * SlotMilliseconds;
+                var milliseconds = ToMilliseconds(match, SlotMilliseconds);
                 timedLines.Add(((long)Math.Round(milliseconds / SlotMilliseconds), match.Groups[5].Value));
             }
 
@@ -119,6 +116,59 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// The byte pairs moved by <paramref name="milliseconds"/> (negative = earlier), in whole
+        /// slots so the pairs of a line stay on consecutive slots. Pairs that would come before the
+        /// start of the video are dropped - what a broadcast file with its first caption at
+        /// 01:00:00:00 sends before the program starts is nothing but the encoder's null pairs.
+        /// </summary>
+        public static List<TimedPair> Shift(IEnumerable<TimedPair> pairs, double milliseconds)
+        {
+            var slots = (long)Math.Round(milliseconds / SlotMilliseconds);
+            var result = new List<TimedPair>();
+            foreach (var pair in pairs)
+            {
+                var slot = pair.Slot + slots;
+                if (slot >= 0)
+                {
+                    result.Add(new TimedPair(slot, pair.Data1, pair.Data2));
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// The timecode of the first caption line in a Scenarist file, read like
+        /// <see cref="FromSccLines"/> reads it (the time of day plus frames at 29.97), or null when
+        /// the file has no timecode line.
+        /// </summary>
+        public static TimeSpan? GetFirstTimeCode(IEnumerable<string> lines)
+        {
+            foreach (var line in lines)
+            {
+                var match = TimeCodeLine.Match(line.Trim());
+                if (match.Success)
+                {
+                    return TimeSpan.FromMilliseconds(ToMilliseconds(match, SlotMilliseconds));
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// hh:mm:ss:ff of a timecode <paramref name="match"/> (groups 1-4) in milliseconds, with the
+        /// frames at <paramref name="frameMilliseconds"/>.
+        /// </summary>
+        internal static double ToMilliseconds(Match match, double frameMilliseconds)
+        {
+            return int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture) * 3_600_000.0 +
+                   int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture) * 60_000.0 +
+                   int.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture) * 1_000.0 +
+                   int.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture) * frameMilliseconds;
         }
 
         /// <summary>

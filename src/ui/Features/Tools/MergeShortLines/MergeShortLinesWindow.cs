@@ -1,12 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -14,6 +11,10 @@ using System.Collections;
 
 namespace Nikse.SubtitleEdit.Features.Tools.MergeShortLines;
 
+/// <summary>
+/// Merge short lines, in the editor look (see <see cref="EditorChrome"/>): the options on top,
+/// the preview of the merges below, the summary plus Cancel and OK in the button bar.
+/// </summary>
 public class MergeShortLinesWindow : Window
 {
     private NumericUpDown _numericUpDownSingleLineMaxLength = null!;
@@ -27,37 +28,14 @@ public class MergeShortLinesWindow : Window
         Height = 800;
         MinWidth = 600;
         MinHeight = 400;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        grid.Add(MakeControlsView(vm), 0);
-        grid.Add(MakeFixesView(vm), 1);
-        grid.Add(panelButtons, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(MakeControlsView(vm), MakeFixesView(vm)), EditorChrome.MakeStatusText(nameof(vm.FixesInfo), vm), buttonCancel, buttonOk);
 
         UiUtil.FocusOnFirstActivation(this, _numericUpDownSingleLineMaxLength); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.KeyDown;
@@ -67,75 +45,37 @@ public class MergeShortLinesWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private Grid MakeControlsView(MergeShortLinesViewModel vm)
+    private Border MakeControlsView(MergeShortLinesViewModel vm)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var labelSingleLineMaxLength = UiUtil.MakeLabel(Se.Language.Options.Settings.SingleLineMaxLength);
-        var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength));
+        var labelSingleLineMaxLength = Se.Language.Options.Settings.SingleLineMaxLength;
+        var numericUpDownSingleLineMaxLength = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SingleLineMaxLength)), labelSingleLineMaxLength.TrimEnd(':'), 100, alignLeft: true, center: true);
         _numericUpDownSingleLineMaxLength = numericUpDownSingleLineMaxLength;
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
 
-        var labelMaxNumberOfLines = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxLines);
-        var numericUpDownMaxNumberOfLines = UiUtil.MakeNumericUpDownInt(2, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines));
+        var labelMaxNumberOfLines = Se.Language.General.MaxNumberOfLines;
+        var numericUpDownMaxNumberOfLines = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(2, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines)), labelMaxNumberOfLines.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownMaxNumberOfLines.ValueChanged += (s, e) => vm.SetChanged();
 
-        var checkBoxHighlightParts = UiUtil.MakeCheckBox(Se.Language.Tools.MergeShortLines.HighlightParts, vm, nameof(vm.HighLight));
+        var rowHighlightParts = EditorChrome.MakeToggleRow(nameof(vm.HighLight), Se.Language.Tools.MergeShortLines.HighlightParts, out var checkBoxHighlightParts);
         checkBoxHighlightParts.IsCheckedChanged += (s, e) => vm.SetChanged();
 
-        grid.Add(labelSingleLineMaxLength, 0, 0);
-        grid.Add(numericUpDownSingleLineMaxLength, 0, 1);
-
-        grid.Add(labelMaxNumberOfLines, 1, 0);
-        grid.Add(numericUpDownMaxNumberOfLines, 1, 1);
-
-        grid.Add(checkBoxHighlightParts, 2, 1);
-
-        return grid;
-    }
-
-    private static Grid MakeFixesView(MergeShortLinesViewModel vm)
-    {
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            ColumnSpacing = 40,
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
         };
+        grid.Add(EditorChrome.MakeFieldGrid((labelSingleLineMaxLength, numericUpDownSingleLineMaxLength), (labelMaxNumberOfLines, numericUpDownMaxNumberOfLines)), 0, 0);
+        rowHighlightParts.VerticalAlignment = VerticalAlignment.Top;
+        grid.Add(rowHighlightParts, 0, 1);
 
-        var labelFixesAvailable = UiUtil.MakeLabel()
-            .WithBindText(vm, nameof(vm.FixesInfo))
-            .WithMarginTop(10)
-            .WithMarginLeft(10);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Options, grid, first: true);
+    }
 
+    private static Border MakeFixesView(MergeShortLinesViewModel vm)
+    {
         // Sorting dropped in the DataGrid -> TableView conversion: the grid previews
         // merge candidates in subtitle order.
-        var dataGrid = TableViewExtras.MakeTableView();
+        var dataGrid = TableViewExtras.MakeTableView().WithAccessibleName(Se.Language.General.Preview);
         dataGrid.Width = double.NaN;
         dataGrid.Height = double.NaN;
         dataGrid.DataContext = vm;
@@ -147,23 +87,9 @@ public class MergeShortLinesWindow : Window
                     Header = Se.Language.General.Apply,
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                    CellTemplate = new FuncDataTemplate<MergeShortLinesItem>((item, _) =>
-                        new Border
-                        {
-                            Background = Brushes.Transparent, // Prevents highlighting
-                            Padding = new Thickness(4),
-                            Child = new CheckBox
-                            {
-                                Focusable = false,
-                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(MergeShortLinesItem.Apply))
-                                {
-                                    Mode = BindingMode.TwoWay,
-                                },
-                                // The first line of a highlighted group is merged into, not merged: no checkbox.
-                                [!Visual.IsVisibleProperty] = new Binding(nameof(MergeShortLinesItem.CanToggle)),
-                                HorizontalAlignment = HorizontalAlignment.Center,
-                            }
-                        }),
+                    CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<MergeShortLinesItem>(nameof(MergeShortLinesItem.Apply),
+                        // The first line of a highlighted group is merged into, not merged: no checkbox.
+                        configure: cb => cb[!Visual.IsVisibleProperty] = new Binding(nameof(MergeShortLinesItem.CanToggle))),
                     Width = new GridLength(70),
                 },
                 new SeTableViewColumn
@@ -246,9 +172,8 @@ public class MergeShortLinesWindow : Window
             }
         }, RoutingStrategies.Tunnel);
 
-        grid.Add(labelFixesAvailable, 0);
-        grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
+        var actions = EditorChrome.MakeListActions(EditorChrome.MakeSelectAllButton(vm.SelectAllCommand), EditorChrome.MakeSelectNoneButton(vm.SelectNoneCommand), EditorChrome.MakeInvertSelectionButton(vm.InvertSelectionCommand));
 
-        return grid;
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid, actions);
     }
 }

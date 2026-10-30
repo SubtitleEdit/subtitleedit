@@ -130,7 +130,7 @@ public static class AiReviewChunker
 
         // skip closing quotes/brackets after the sentence-final mark
         var i = s.Length - 1;
-        while (i >= 0 && "\"'’”»)]".IndexOf(s[i]) >= 0)
+        while (i >= 0 && "\"'’”»)]".Contains(s[i]))
         {
             i--;
         }
@@ -140,6 +140,6 @@ public static class AiReviewChunker
             return true;
         }
 
-        return ".!?…".IndexOf(s[i]) >= 0;
+        return ".!?…".Contains(s[i]);
     }
 }

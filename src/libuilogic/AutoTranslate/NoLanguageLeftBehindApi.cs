@@ -2,12 +2,7 @@
 using Nikse.SubtitleEdit.UiLogic.Http;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 {

@@ -2,8 +2,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
-using Nikse.SubtitleEdit.Features.SpellCheck;
 using System.Text;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
@@ -63,6 +61,7 @@ public class FixCommonOcrErrorsTests : IDisposable
         public void AddName(string name) { }
         public List<string> ReloadNames() => new();
         public bool FillUnknownCharacters { get; set; }
+        public bool FixImageMatcherMisreads { get; set; }
     }
 
     private sealed class FakeCallbacks : IFixCallbacks

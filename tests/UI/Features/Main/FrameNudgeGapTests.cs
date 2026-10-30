@@ -5,10 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
-using System.Collections.Generic;
 
 namespace UITests.Features.Main;
 
@@ -36,6 +33,7 @@ public class FrameNudgeGapTests : IDisposable
     private readonly int _minBetweenMs = Se.Settings.General.MinimumBetweenLines.Milliseconds;
     private readonly int _minBetweenFrames = Se.Settings.General.MinimumBetweenLines.Frames;
     private readonly int _moveStartEndStepMs = Se.Settings.General.MoveStartEndStepMs;
+    private readonly int _minDisplayMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
 
     public void Dispose()
     {
@@ -46,6 +44,7 @@ public class FrameNudgeGapTests : IDisposable
         Se.Settings.General.MinimumBetweenLines.Milliseconds = _minBetweenMs;
         Se.Settings.General.MinimumBetweenLines.Frames = _minBetweenFrames;
         Se.Settings.General.MoveStartEndStepMs = _moveStartEndStepMs;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = _minDisplayMs;
         foreach (var w in _windows)
         {
             w.Close();
@@ -341,6 +340,90 @@ public class FrameNudgeGapTests : IDisposable
 
         Assert.True(vm.Subtitles[0].EndTime.TotalMilliseconds < 3000);
         Assert.Equal(gapMs, vm.Subtitles[1].StartTime.TotalMilliseconds - vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    // Push variants (doom9): the step moves freely until the minimum gap, then pushes the
+    // neighbour's border along; moving back again leaves the neighbour where it was pushed to.
+    [AvaloniaFact]
+    public void MoveEndXMsForwardPushNext_PushesAtTheMinimumGap_AndDoesNotPullBack()
+    {
+        var (window, vm) = TwoLines(gapMs: 200, minGapMs: 100);
+        Se.Settings.General.MoveStartEndStepMs = 50;
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveEndXMsForwardPushNextCommand.Execute(null);
+        vm.MoveEndXMsForwardPushNextCommand.Execute(null);
+        Assert.Equal(3100, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(3200, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+
+        vm.MoveEndXMsForwardPushNextCommand.Execute(null);
+        Assert.Equal(3150, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(3250, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+
+        vm.MoveEndXMsBackCommand.Execute(null);
+        Assert.Equal(3100, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(3250, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void MoveStartXMsBackPushPrevious_PushesAtTheMinimumGap_AndDoesNotPullBack()
+    {
+        var (window, vm) = TwoLines(gapMs: 200, minGapMs: 100);
+        Se.Settings.General.MoveStartEndStepMs = 50;
+        vm.SelectedSubtitle = vm.Subtitles[1];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveStartXMsBackPushPreviousCommand.Execute(null);
+        vm.MoveStartXMsBackPushPreviousCommand.Execute(null);
+        Assert.Equal(3100, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(3000, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+
+        vm.MoveStartXMsBackPushPreviousCommand.Execute(null);
+        Assert.Equal(3050, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(2950, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+
+        vm.MoveStartXMsForwardCommand.Execute(null);
+        Assert.Equal(3100, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(2950, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    // The pushed line is never squeezed below the minimum duration.
+    [AvaloniaFact]
+    public void MoveStartXMsBackPushPrevious_StopsAtThePreviousMinimumDuration()
+    {
+        var (window, vm) = TwoLines(gapMs: 100, minGapMs: 100);
+        Se.Settings.General.MoveStartEndStepMs = 70;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+        vm.SelectedSubtitle = vm.Subtitles[1];
+        Dispatcher.UIThread.RunJobs();
+
+        for (var i = 0; i < 50; i++)
+        {
+            vm.MoveStartXMsBackPushPreviousCommand.Execute(null);
+        }
+
+        Assert.Equal(2000, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(2100, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    // Touching lines stay touching - the push does not open them up to the minimum gap.
+    [AvaloniaFact]
+    public void MoveEndXMsForwardPushNext_TouchingLines_StayTouching()
+    {
+        var (window, vm) = TwoLines(gapMs: 0, minGapMs: 100);
+        Se.Settings.General.MoveStartEndStepMs = 50;
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveEndXMsForwardPushNextCommand.Execute(null);
+
+        Assert.Equal(3050, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(3050, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
         window.Close();
     }
 

@@ -115,4 +115,14 @@ public class OperationOrderParserTest
 
         Assert.Equal(new[] { "FixCommonErrors", "BalanceLines", "RemoveFormatting" }, ops.ToArray());
     }
+
+    [Fact]
+    public void MergeContinuationLines_LimitOptionsDoNotAddAPass()
+    {
+        var args = new[] { "--merge-continuation-lines-max-gap:500", "--MergeContinuationLines", "--merge-continuation-lines-max-chars:90", "--merge-continuation-lines" };
+
+        var ops = OperationOrderParser.BuildOperations(args, fceRequested: false);
+
+        Assert.Equal(new[] { "MergeContinuationLines", "MergeContinuationLines" }, ops.ToArray());
+    }
 }

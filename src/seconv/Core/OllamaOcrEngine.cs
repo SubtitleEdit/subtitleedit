@@ -1,7 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using SkiaSharp;
 using System.Globalization;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -34,7 +33,7 @@ internal sealed class OllamaOcrEngine : IOcrEngine
     {
         // Trailing slash costs a 307 redirect on every single image (Ollama's route is
         // /api/chat), which the GUI already trims.
-        _url = string.IsNullOrWhiteSpace(url) ? "http://localhost:11434/api/chat" : url.TrimEnd('/');
+        _url = string.IsNullOrWhiteSpace(url) ? "http://localhost:11434/api/chat" : CompleteScheme(url.Trim().TrimEnd('/'));
         _model = string.IsNullOrWhiteSpace(model) ? "llama3.2-vision" : model;
         _language = string.IsNullOrWhiteSpace(language) ? "English" : language;
         // Ollama OCR has no prompt in the GUI, so its built-in wording stays the default here;
@@ -46,6 +45,14 @@ internal sealed class OllamaOcrEngine : IOcrEngine
             Timeout = TimeSpan.FromMinutes(25),
         };
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
+    }
+
+    /// <summary>
+    /// A bare <c>host:port/api/chat</c> gets <c>http://</c> - HttpClient rejects a URI without a scheme.
+    /// </summary>
+    internal static string CompleteScheme(string url)
+    {
+        return url.Contains("://", StringComparison.Ordinal) ? url : "http://" + url;
     }
 
     public string Recognize(SKBitmap bitmap)

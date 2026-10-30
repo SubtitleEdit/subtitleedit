@@ -282,6 +282,6 @@ public class ImproveTimeCodesViewModelTests
 
         Assert.Equal(3, vm.SelectedRow!.Index);
         Assert.False(vm.CanGoNext);
-        Assert.Equal(string.Format(Nikse.SubtitleEdit.Logic.Config.Se.Language.Tools.ImproveTimeCodes.ChangeXOfY, 2, 2), vm.ChangePositionLabel);
+        Assert.Equal(string.Format(Nikse.SubtitleEdit.Logic.Config.Se.Language.General.ChangeXOfY, 2, 2), vm.ChangePositionLabel);
     }
 }

@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace UITests.Features.Sync.ChangeSpeed;

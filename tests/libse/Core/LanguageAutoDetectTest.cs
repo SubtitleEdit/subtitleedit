@@ -58,4 +58,20 @@ public class LanguageAutoDetectTest
         var encoding = DetectAnsiEncoding("auto_detect_windows-1251.srt");
         Assert.Equal(1251, encoding.CodePage);
     }
+
+    [Fact]
+    public void AutoDetectCodePageShiftJis()
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var bytes = Encoding.GetEncoding(932).GetBytes("これは日本語の字幕です。よろしくお願いします。ありがとうございました。");
+        Assert.Equal(932, LanguageAutoDetect.DetectAnsiEncoding(bytes).CodePage);
+    }
+
+    [Fact]
+    public void AutoDetectCodePageGbk()
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var bytes = Encoding.GetEncoding(936).GetBytes("我们这个国家的时间很好，请来学习中文，说明一下为什么。");
+        Assert.Equal(936, LanguageAutoDetect.DetectAnsiEncoding(bytes).CodePage);
+    }
 }

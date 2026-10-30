@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8,7 +7,6 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Settings;
-using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace Nikse.SubtitleEdit.UiLogic.Translate;
 
@@ -273,7 +271,7 @@ public static partial class MergeAndSplitHelper
         // Strategy 1: Split by line ending chars where period count matches
         var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
-            HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations))
+            (mergeResult.NoSentenceEndingSource || HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations)))
         {
             return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate);
         }
@@ -289,7 +287,7 @@ public static partial class MergeAndSplitHelper
         var noPeriodsInNumbersTranslation = FixPeriodInNumbers(mergedTranslation);
         splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, target.Code);
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
-            HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations))
+            (mergeResult.NoSentenceEndingSource || HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations)))
         {
             return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate, restorePeriodPlaceholder: true);
         }
@@ -487,9 +485,17 @@ public static partial class MergeAndSplitHelper
         Action<Action> applyRowUpdate)
     {
         var translatedLines = mergedTranslation.SplitToLines();
+        var separatorsOmitted = false;
         if (translatedLines.Count != mergeResult.Text.CountLines())
         {
-            return 0;
+            // Sources without sentence endings (Chinese/Japanese) are sent with "." separator lines.
+            // Models often drop them and reply with one line per row, so accept that reply too.
+            if (!mergeResult.NoSentenceEndingSource || translatedLines.Count != CountContentLines(mergeResult.Text))
+            {
+                return 0;
+            }
+
+            separatorsOmitted = true;
         }
 
         var translatedLinesIdx = 0;
@@ -500,7 +506,7 @@ public static partial class MergeAndSplitHelper
         foreach (var mergeItem in mergeResult.MergeResultItems)
         {
             var numberOfParagraphs = mergeItem.EndIndex - mergeItem.StartIndex + 1;
-            var numberOfLines = mergeItem.Text.CountLines();
+            var numberOfLines = separatorsOmitted ? CountContentLines(mergeItem.Text) : mergeItem.Text.CountLines();
 
             var translatedText = BuildTranslatedText(translatedLines, ref translatedLinesIdx, numberOfLines);
 
@@ -543,6 +549,11 @@ public static partial class MergeAndSplitHelper
             translatedLinesIdx++;
         }
         return sb.ToString().Trim();
+    }
+
+    private static int CountContentLines(string text)
+    {
+        return text.SplitToLines().Count(line => line.Trim() != ".");
     }
 
     private static string AutoBreakIfNeeded(string text, string language)
@@ -1437,7 +1448,7 @@ public static partial class MergeAndSplitHelper
 
         // Lyrics keep one line per phrase; AutoBreakLine's own ♪ guard only fires on text that
         // still holds line breaks, which the UnbreakLine below removes, so guard here.
-        if (text.IndexOf('♪') >= 0 || text.IndexOf('♫') >= 0)
+        if (text.Contains('♪') || text.Contains('♫'))
         {
             return text;
         }

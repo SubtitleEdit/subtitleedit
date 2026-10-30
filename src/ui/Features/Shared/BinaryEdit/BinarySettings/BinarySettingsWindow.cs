@@ -6,136 +6,59 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinarySettings;
 
+/// <summary>
+/// Binary edit settings in the editor look (see <see cref="EditorChrome"/>): the margins in one
+/// section, Cancel/OK at the bottom.
+/// </summary>
 public class BinarySettingsWindow : Window
 {
+    private const double LabelWidth = 80;
+
     public BinarySettingsWindow(BinarySettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.General.Settings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        BinaryEditChrome.Apply(this);
         vm.Window = this;
         DataContext = vm;
 
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var numericUpDownMarginLeft = MakeMarginField(vm, nameof(vm.MarginLeft), Se.Language.General.Left);
+        var numericUpDownMarginTop = MakeMarginField(vm, nameof(vm.MarginTop), Se.Language.General.Top);
+        var numericUpDownMarginRight = MakeMarginField(vm, nameof(vm.MarginRight), Se.Language.General.Right);
+        var numericUpDownMarginBottom = MakeMarginField(vm, nameof(vm.MarginBottom), Se.Language.General.Bottom);
 
-        var labelMarginLeft = new TextBlock
-        {
-            Text = Se.Language.General.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var numericUpDownMarginLeft = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 1000,
-            Width = 150,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        numericUpDownMarginLeft.Bind(NumericUpDown.ValueProperty, new Binding
-        {
-            Path = nameof(vm.MarginLeft),
-            Mode = BindingMode.TwoWay,
-            Source = vm,
-        });
-
-        var labelMarginTop = new TextBlock
-        {
-            Text = Se.Language.General.Top,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var numericUpDownMarginTop = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 1000,
-            Width = 150,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        numericUpDownMarginTop.Bind(NumericUpDown.ValueProperty, new Binding
-        {
-            Path = nameof(vm.MarginTop),
-            Mode = BindingMode.TwoWay,
-            Source = vm,
-        });
-
-        var labelMarginRight = new TextBlock
-        {
-            Text = Se.Language.General.Right,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var numericUpDownMarginRight = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 1000,
-            Width = 150,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        numericUpDownMarginRight.Bind(NumericUpDown.ValueProperty, new Binding
-        {
-            Path = nameof(vm.MarginRight),
-            Mode = BindingMode.TwoWay,
-            Source = vm,
-        });
-
-        var labelMarginBottom = new TextBlock
-        {
-            Text = Se.Language.General.Bottom,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var numericUpDownMarginBottom = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 1000,
-            Width = 150,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        numericUpDownMarginBottom.Bind(NumericUpDown.ValueProperty, new Binding
-        {
-            Path = nameof(vm.MarginBottom),
-            Mode = BindingMode.TwoWay,
-            Source = vm,
-        });
-
-        grid.Add(labelMarginLeft, 0, 0);
-        grid.Add(numericUpDownMarginLeft, 0, 1);
-
-        grid.Add(labelMarginTop, 1, 0);
-        grid.Add(numericUpDownMarginTop, 1, 1);
-
-        grid.Add(labelMarginRight, 2, 0);
-        grid.Add(numericUpDownMarginRight, 2, 1);
-
-        grid.Add(labelMarginBottom, 3, 0);
-        grid.Add(numericUpDownMarginBottom, 3, 1);
+        var rows = new StackPanel { Spacing = 10 };
+        rows.Children.Add(BinaryEditChrome.MakeRow(Se.Language.General.Left, numericUpDownMarginLeft, LabelWidth));
+        rows.Children.Add(BinaryEditChrome.MakeRow(Se.Language.General.Top, numericUpDownMarginTop, LabelWidth));
+        rows.Children.Add(BinaryEditChrome.MakeRow(Se.Language.General.Right, numericUpDownMarginRight, LabelWidth));
+        rows.Children.Add(BinaryEditChrome.MakeRow(Se.Language.General.Bottom, numericUpDownMarginBottom, LabelWidth));
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Margin, rows, first: true);
+        section.MinWidth = 280;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        grid.Add(panelButtons, 4, 0, 1, 2);
-
-        Content = grid;
+        Content = EditorChrome.MakeRoot(section, EditorChrome.MakeCancelOkBar(null, buttonCancel, buttonOk));
 
         UiUtil.FocusOnFirstActivation(this, numericUpDownMarginLeft); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    private static NumericUpDown MakeMarginField(BinarySettingsViewModel vm, string property, string name)
+    {
+        var numericUpDown = new NumericUpDown
+        {
+            Minimum = 0,
+            Maximum = 1000,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        numericUpDown.Bind(NumericUpDown.ValueProperty, new Binding
+        {
+            Path = property,
+            Mode = BindingMode.TwoWay,
+            Source = vm,
+        });
+        return EditorChrome.AsField(numericUpDown, name, 100, alignLeft: true, center: true);
     }
 }

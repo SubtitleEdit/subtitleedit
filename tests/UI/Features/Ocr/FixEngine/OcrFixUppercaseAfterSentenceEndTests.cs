@@ -1,9 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace UITests.Features.Ocr.FixEngine;
 
@@ -39,6 +36,9 @@ public class OcrFixUppercaseAfterSentenceEndTests : IDisposable
     [InlineData("I met Mr.", "you're out of luck.", "you're out of luck.")]
     [InlineData("", "you're out of luck.", "you're out of luck.")] // previous line not OCR'd yet
     [InlineData("Yes.", "lo0k out.", "lo0k out.")] // not a dictionary word once capitalized
+    [InlineData("Yes.", "lt is here.", "It is here.")] // sans-serif I read as l: the I-word is known
+    [InlineData("Yes.", "ln here.", "In here.")]
+    [InlineData("Yes.", "lx here.", "lx here.")] // neither "Lx" nor "Ix" is a word
     [InlineData("Yes.", "[music]", "[music]")]
     [InlineData("Yes.", "...you're out of luck.", "...you're out of luck.")]
     public void FixOcrErrors_AfterSentenceEnd(string previousLine, string line, string expected)
@@ -72,7 +72,7 @@ public class OcrFixUppercaseAfterSentenceEndTests : IDisposable
     {
         private static readonly HashSet<string> Words = new(StringComparer.Ordinal)
         {
-            "you're", "You're", "out", "of", "luck", "I", "I'm", "said", "no", "here", "music",
+            "you're", "You're", "out", "of", "luck", "I", "I'm", "said", "no", "here", "music", "It", "is", "In",
         };
 
         public bool Initialize(string dictionaryFile, string twoLetterLanguageCode) => true;

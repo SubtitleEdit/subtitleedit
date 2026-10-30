@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;

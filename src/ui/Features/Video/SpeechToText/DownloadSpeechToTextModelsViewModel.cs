@@ -39,6 +39,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
     [ObservableProperty] private string _error;
     [ObservableProperty] bool _downloadIsEnabled;
     [ObservableProperty] private bool _supportsCustomModels;
+    [ObservableProperty] private string _customModelHelpText;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; internal set; }
@@ -71,6 +72,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
         ProgressText = Se.Language.General.StartingDotDotDot;
         ProgressFileName = string.Empty;
         Error = string.Empty;
+        CustomModelHelpText = Se.Language.Video.AudioToText.CustomModelHelp;
         DownloadIsEnabled = true;
 
         _timer = new Timer(500);
@@ -82,6 +84,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
     {
         _whisperEngine = whisperEngine;
         SupportsCustomModels = whisperEngine.SupportsCustomModels;
+        CustomModelHelpText = whisperEngine.CustomModelHelpText;
 
         foreach (var model in models)
         {
@@ -354,9 +357,9 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
                     AllowMultiple = false,
                     FileTypeFilter = new List<FilePickerFileType>
                     {
-                        new FilePickerFileType("Whisper model (*.bin)")
+                        new FilePickerFileType(engine.CustomModelFileTypeName)
                         {
-                            Patterns = new List<string> { "*.bin" },
+                            Patterns = engine.CustomModelFilePatterns.ToList(),
                         },
                     },
                 });
@@ -413,6 +416,12 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
     {
         if (SelectedModel is not { } model)
         {
+            return;
+        }
+
+        if (model.Model.Urls.Length == 0)
+        {
+            // A custom model the user added themselves - there is nothing to download.
             return;
         }
 

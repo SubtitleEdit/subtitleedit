@@ -22,6 +22,7 @@ public class SeGeneral
     public int SubtitleLineMaximumLength { get; set; } = 43;
     public int MaxNumberOfLines { get; set; }
     public bool SubtitleTextBoxLimitNewLines { get; set; } = true;
+    public bool SubtitleTextBoxAutoWrapWhileTyping { get; set; }
     public double SubtitleMaximumCharactersPerSeconds { get; set; }
     public double SubtitleOptimalCharactersPerSeconds { get; set; }
     public double SubtitleMaximumWordsPerMinute { get; set; }
@@ -29,6 +30,7 @@ public class SeGeneral
     public string DialogStyle { get; set; }
     public string ContinuationStyle { get; set; }
     public string CpsLineLengthStrategy { get; set; }
+    public string CpsLineLengthIgnoreTagsRegex { get; set; }
 
     public CustomContinuationStyle CustomContinuationStyle { get; set; }
     public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
@@ -70,6 +72,14 @@ public class SeGeneral
     [JsonIgnore]
     public bool UseFrameNumbers => UseFrameMode && UseFrameNumbersPersisted;
 
+    /// <summary>
+    /// In hh:mm:ss:ff frame mode, store a time as the video frame's own time instead of whole
+    /// seconds plus the frame within the second (#16007). At 23.976/29.97 the hh:mm:ss:ff count
+    /// restarts every second and drifts up to a frame from the video, so 00:01:58:22 is 118918 ms
+    /// while the video frame - and the Blu-ray sup PTS - is at 118910 ms.
+    /// </summary>
+    public bool FrameModeSnapToVideoFrames { get; set; }
+
     public double DefaultFrameRate { get; set; }
     public double CurrentFrameRate { get; set; }
     public string DefaultSubtitleFormat { get; set; }
@@ -82,6 +92,7 @@ public class SeGeneral
     public string SubtitleDoubleClickAction { get; set; }
     public bool SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
+    public string FileChangedOutsideAction { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
     public string DefaultSaveLocation { get; set; }
     public string DefaultSaveLocationCustomFolder { get; set; }
@@ -120,6 +131,12 @@ public class SeGeneral
     public bool LockTimeCodes { get; set; }
 
     /// <summary>
+    /// Whether retiming a translation line moves the original line it shows by the same amounts,
+    /// keeping any offset between the two. Off lets the original's time codes be edited on their own.
+    /// </summary>
+    public bool LockOriginalToTranslation { get; set; }
+
+    /// <summary>
     /// SE4 parity: whether an original subtitle that does not line up 1:1 may be edited (and
     /// therefore saved back over its file). Off means it is shown read-only, which is what protects
     /// the lines with no counterpart here (#13449). Remembered from the import prompt.
@@ -141,6 +158,8 @@ public class SeGeneral
     public bool UndockVideoControls { get; set; }
     public List<SeWindowPosition> WindowPositions { get; set; } = new List<SeWindowPosition>();
     public bool AutoSave { get; set; }
+    public bool CheckSubtitleFileChangedOutside { get; set; }
+    public bool ConfirmOverwriteSubtitleFileChangedOutside { get; set; }
     public bool AutoBackupOn { get; set; }
     public int AutoBackupIntervalMinutes { get; set; }
     public int AutoBackupDeleteAfterDays { get; set; }
@@ -174,7 +193,17 @@ public class SeGeneral
     public bool ColorWordsPerMinute { get; set; }
     public bool ColorTimeCodeOverlap { get; set; }
     public bool ColorGapTooShort { get; set; }
+
+    /// <summary>
+    /// Color the gap when it falls inside [GapRangeMin, GapRangeMax] (inclusive) - the broadcast
+    /// rule that a gap should be either closed (about 2 frames) or at least about 12 frames.
+    /// </summary>
+    public bool ColorGapInRange { get; set; }
+    public MsOrFramesValue GapRangeMin { get; set; } = new() { Milliseconds = 120, Frames = 3 };
+    public MsOrFramesValue GapRangeMax { get; set; } = new() { Milliseconds = 480, Frames = 12 };
     public string ErrorColor { get; set; }
+    public bool ColorCustomErrorRules { get; set; }
+    public List<SeCustomErrorRule> CustomErrorRules { get; set; } = new();
 
     public string FfmpegPath { get; set; }
     public bool FfmpegUseCenterChannelOnly { get; set; }
@@ -264,6 +293,7 @@ public class SeGeneral
         SubtitleMaximumWordsPerMinute = 400;
         DialogStyle = DialogType.DashBothLinesWithSpace.ToString();
         CpsLineLengthStrategy = nameof(CalcAll);
+        CpsLineLengthIgnoreTagsRegex = string.Empty;
         ContinuationStyle = Core.Enums.ContinuationStyle.None.ToString();
         CustomContinuationStyle = new CustomContinuationStyle();
         FixContinuationStyleUncheckInsertsAllCaps = true;
@@ -303,6 +333,7 @@ public class SeGeneral
         SubtitleDoubleClickAction = nameof(SubtitleDoubleClickActionType.GoToSubtitleAndPause);
         SubtitleGridCenterSelectedRow = false;
         SaveAsBehavior = nameof(SaveAsBehaviourType.UseVideoFileNameThenSubtitleFileName);
+        FileChangedOutsideAction = nameof(FileChangedOutsideActionType.ReloadWhenUnmodified);
         DefaultSaveLocation = nameof(DefaultSaveLocationType.SourceFileFolder);
         DefaultSaveLocationCustomFolder = string.Empty;
         SaveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None);
@@ -319,6 +350,9 @@ public class SeGeneral
         MoveAllLinesCustom1Ms = 10;
         MoveAllLinesCustom2Ms = 1000;
         PromptBeforeDelete = true;
+        LockOriginalToTranslation = true;
+        CheckSubtitleFileChangedOutside = true;
+        ConfirmOverwriteSubtitleFileChangedOutside = true;
         AutoBackupOn = true;
         AutoBackupIntervalMinutes = 5;
         AutoBackupDeleteAfterDays = 90;
@@ -329,6 +363,7 @@ public class SeGeneral
         FavoriteSubtitleFormats = new SubRip().FriendlyName + ";" + new AdvancedSubStationAlpha().FriendlyName;
         FavoriteLanguages = string.Empty;
         CpsLineLengthStrategy = nameof(CalcAll);
+        CpsLineLengthIgnoreTagsRegex = string.Empty;
         RememberPositionAndSize = true;
 
         ColorDurationTooShort = true;
@@ -344,6 +379,7 @@ public class SeGeneral
         ColorTimeCodeOverlap = true;
         ColorGapTooShort = true;
         ErrorColor = Color.FromArgb(50, 255, 0, 0).FromColorToHex();
+        ColorCustomErrorRules = true;
 
         FfmpegPath = string.Empty;
         LibMpvPath = string.Empty;

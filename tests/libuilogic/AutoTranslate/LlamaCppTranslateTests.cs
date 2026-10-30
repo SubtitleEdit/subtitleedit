@@ -1,6 +1,4 @@
-﻿using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
-using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using System.Linq;
+﻿using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
 namespace LibUiLogicTests.AutoTranslate;
 

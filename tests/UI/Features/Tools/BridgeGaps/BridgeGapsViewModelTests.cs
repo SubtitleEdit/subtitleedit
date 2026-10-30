@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;

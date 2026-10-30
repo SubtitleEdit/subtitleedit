@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
-using Nikse.SubtitleEdit.UiLogic.Export;
+﻿using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;

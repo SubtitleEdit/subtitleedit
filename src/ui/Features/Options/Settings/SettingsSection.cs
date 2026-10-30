@@ -37,23 +37,27 @@ public class SettingsSection
         }
     }
 
-    public Control Build()
+    /// <summary>
+    /// The section in the editor look: a small caps header with the category glyph, then the
+    /// rows. <paramref name="first"/> leaves out the line above it (the first section shown).
+    /// </summary>
+    public Control Build(bool first = true)
     {
         // Exposed as a named group so a screen reader announces the section ("Video player,
         // grouping") when focus moves into it, e.g. after picking a category (#12087).
         Panel = new StackPanel
         {
-            Spacing = 6,
+            Spacing = 8,
             [AutomationProperties.NameProperty] = Title,
             [AutomationProperties.ControlTypeOverrideProperty] = AutomationControlType.Group,
             [AutomationProperties.IsControlElementOverrideProperty] = true,
         };
 
-        // Section header: colored glyph + title, matching the category tiles above the list
+        // Section header: colored glyph + title, matching the category rows in the side panel
         // (and the group icons in the shortcuts window).
         var icon = new ContentControl
         {
-            FontSize = UiUtil.ScaledFontSize(15),
+            FontSize = EditorChrome.ScaledFont(11),
             Foreground = Brushes.White,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -62,30 +66,27 @@ public class SettingsSection
         // Keep the glyph white on the colored square in the dark theme too (#12717).
         icon.Classes.Add(UiTheme.IconOnAccentClassName);
 
+        // The header is shown in small caps; the group above carries the title as written.
+        var header = EditorChrome.MakeSectionHeader(Title);
+        AutomationProperties.SetHeadingLevel(header, 2);
+
         Panel.Children.Add(new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
-            Margin = new Thickness(0, 10, 0, 5),
+            Margin = new Thickness(0, 0, 0, 6),
             Children =
             {
                 new Border
                 {
-                    Width = 26,
-                    Height = 26,
-                    CornerRadius = new CornerRadius(7),
+                    Width = 18,
+                    Height = 18,
+                    CornerRadius = new CornerRadius(5),
                     Background = Brush,
                     VerticalAlignment = VerticalAlignment.Center,
                     Child = icon,
                 },
-                new TextBlock
-                {
-                    Text = Title,
-                    FontSize = UiUtil.ScaledFontSize(16),
-                    FontWeight = FontWeight.Bold,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    [AutomationProperties.HeadingLevelProperty] = 2,
-                },
+                header,
             }
         });
 
@@ -108,6 +109,12 @@ public class SettingsSection
             }
         }
 
-        return Panel;
+        return new Border
+        {
+            Child = Panel,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, first ? 0 : 1, 0, 0),
+            Padding = new Thickness(20, 16, 20, 18),
+        };
     }
 }

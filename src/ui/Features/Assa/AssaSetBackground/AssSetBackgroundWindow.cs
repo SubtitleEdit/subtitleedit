@@ -1,343 +1,359 @@
-﻿using Avalonia;
+﻿using System.Collections.Generic;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaSetBackground;
 
+/// <summary>
+/// Background box generator, styled like ASSA draw: a properties panel on the
+/// left with the box styles as a gallery, the libass preview on the right.
+/// </summary>
 public class AssSetBackgroundWindow : Window
 {
+
     public AssSetBackgroundWindow(AssSetBackgroundViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Assa.BackgroundBoxGenerator;
         CanResize = true;
-        Width = 1100;
-        Height = 700;
-        MinWidth = 900;
+        Width = 1200;
+        Height = 760;
+        MinWidth = 950;
         MinHeight = 650;
+        Background = EditorChrome.WindowBrush;
+        EditorChrome.AddEditorStyles(Styles);
 
         vm.Window = this;
         DataContext = vm;
 
         vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
         vm.VideoPlayerControl.FullScreenIsVisible = false;
-        var videoPanel = UiUtil.MakeBorderForControl(vm.VideoPlayerControl);
 
-        var leftPanel = new Grid
+        // A click (or a wheel / trackpad scroll) on the preview would play or seek away from
+        // the line being styled
+        vm.VideoPlayerControl.ClickToTogglePlay = false;
+        vm.VideoPlayerControl.WheelToSeek = false;
+        // No clip or rounded corners around the player: on macOS the video is a native surface
+        // (composition child visual), and a clipped parent kept it from showing
+        var videoPanel = new Border
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            RowSpacing = 12,
+            Child = vm.VideoPlayerControl,
+            Margin = new Thickness(12),
         };
 
-        // Padding settings
-        leftPanel.Add(CreatePaddingPanel(vm, out var paddingLeftBox), 0);
+        var sidePanel = CreateSidePanel(vm, out var firstInput);
 
-        // Fill width settings
-        leftPanel.Add(CreateFillWidthPanel(vm), 1);
-
-        // Style settings
-        leftPanel.Add(CreateStylePanel(vm), 2);
-
-        // Colors
-        leftPanel.Add(CreateColorsPanel(vm), 3);
-
-        var mainGrid = new Grid
+        var content = new Grid
         {
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition(new GridLength(320)),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
             },
+        };
+        content.Add(sidePanel, 0, 0);
+        content.Add(videoPanel, 0, 1);
+
+        var mainGrid = new Grid
+        {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition(new GridLength(1, GridUnitType.Star)),
+                new RowDefinition(GridLength.Auto),
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 12,
         };
-
-        // Progress text
-        var labelProgress = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.ProgressText));
-
-        // Buttons
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        mainGrid.Add(leftPanel, 0, 0);
-        mainGrid.Add(videoPanel, 0, 1);
-        mainGrid.Add(labelProgress, 1, 0, 1, 2);
-        mainGrid.Add(panelButtons, 1, 0, 1, 2);
-
+        mainGrid.Add(content, 0, 0);
+        mainGrid.Add(CreateButtonBar(vm), 1, 0);
         Content = mainGrid;
 
         // initial focus on an input, not an action button - a focused button clicks on bare Space
-        UiUtil.FocusOnFirstActivation(this, paddingLeftBox);
+        UiUtil.FocusOnFirstActivation(this, firstInput);
         AddHandler(KeyDownEvent, vm.KeyDown, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: false);
         Loaded += (_, _) => vm.OnLoaded();
         Closing += (_, _) => vm.OnClosing();
     }
 
-    private static Border CreatePaddingPanel(AssSetBackgroundViewModel vm, out NumericUpDown firstInput)
+    private static Border CreateSidePanel(AssSetBackgroundViewModel vm, out NumericUpDown firstInput)
     {
-        var grid = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-            RowSpacing = 8,
-            ColumnSpacing = 10,
-        };
-
-        var titleLabel = new TextBlock
-        {
-            Text = Se.Language.General.Padding,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        grid.Add(titleLabel, 0, 0, 1, 4);
-
-        // Left
-        var leftLabel = new TextBlock { Text = Se.Language.General.Left, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(leftLabel, 1, 0);
-
-        var leftBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingLeft));
-        firstInput = leftBox;
-        grid.Add(leftBox, 1, 1);
-
-        // Right
-        var rightLabel = new TextBlock { Text = Se.Language.General.Right, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(rightLabel, 1, 2);
-
-        var rightBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingRight));
-        grid.Add(rightBox, 1, 3);
-
-        // Top
-        var topLabel = new TextBlock { Text = Se.Language.General.Top, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(topLabel, 2, 0);
-
-        var topBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingTop));
-        grid.Add(topBox, 2, 1);
-
-        // Bottom
-        var bottomLabel = new TextBlock { Text = Se.Language.General.Bottom, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(bottomLabel, 2, 2);
-
-        var bottomBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.PaddingBottom));
-        grid.Add(bottomBox, 2, 3);
+        var sections = new StackPanel();
+        sections.Children.Add(CreateStyleSection(vm));
+        sections.Children.Add(CreatePaddingSection(vm, out firstInput));
+        sections.Children.Add(CreateFillWidthSection(vm));
+        sections.Children.Add(CreateColorsSection(vm));
 
         return new Border
         {
-            Child = grid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(12),
+            Child = new ScrollViewer { Content = sections, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled },
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 1, 0),
         };
     }
 
-    private static Border CreateFillWidthPanel(AssSetBackgroundViewModel vm)
+    /// <summary>
+    /// The box styles as a gallery, each thumbnail drawn by the generator itself.
+    /// </summary>
+    private static Border CreateStyleSection(AssSetBackgroundViewModel vm)
     {
-        var grid = new Grid
+        const int columns = 3;
+        var gallery = new UniformGrid { Columns = columns };
+        var tiles = new List<Button>();
+        for (var i = 0; i < vm.BoxStyles.Count; i++)
         {
-            RowDefinitions =
+            var index = i;
+            var button = new Button
             {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            ColumnDefinitions =
+                Content = MakeThumbnailView(index),
+                Height = 54,
+                Margin = new Thickness(0, 0, 6, 6),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Stretch,
+            };
+            button.Classes.Add("tool");
+            AutomationProperties.SetName(button, vm.BoxStyles[index]);
+            if (Se.Settings.Appearance.ShowHints)
             {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-            RowSpacing = 8,
-            ColumnSpacing = 10,
-        };
+                ToolTip.SetTip(button, vm.BoxStyles[index]);
+            }
 
-        var checkBox = new CheckBox
+            button.Click += (_, _) => vm.BoxStyleIndex = index;
+            tiles.Add(button);
+            gallery.Children.Add(button);
+        }
+
+        void UpdateSelection()
         {
-            Content = Se.Language.Assa.BackgroundBoxFillWidth,
-            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.FillWidth)) { Mode = BindingMode.TwoWay },
-            FontWeight = FontWeight.Bold,
-        };
-        grid.Add(checkBox, 0, 0, 1, 4);
+            for (var i = 0; i < tiles.Count; i++)
+            {
+                tiles[i].Classes.Set("active", i == vm.BoxStyleIndex);
+            }
+        }
 
-        // Margin Left
-        var leftLabel = new TextBlock { Text = Se.Language.General.Left, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(leftLabel, 1, 0);
-
-        var leftBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.FillWidthMarginLeft));
-        leftBox.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.FillWidth)));
-        grid.Add(leftBox, 1, 1);
-
-        // Margin Right
-        var rightLabel = new TextBlock { Text = Se.Language.General.Right, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(rightLabel, 1, 2);
-
-        var rightBox = UiUtil.MakeNumericUpDownInt(0, 500, 0, 120, vm, nameof(vm.FillWidthMarginRight));
-        rightBox.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.FillWidth)));
-        grid.Add(rightBox, 1, 3);
-
-        return new Border
+        UpdateSelection();
+        vm.PropertyChanged += (_, e) =>
         {
-            Child = grid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(12),
+            if (e.PropertyName == nameof(vm.BoxStyleIndex))
+            {
+                UpdateSelection();
+            }
         };
+
+        var radius = EditorChrome.MakeField(nameof(vm.Radius), 0, 200);
+        AutomationProperties.SetName(radius, Se.Language.Assa.BackgroundBoxRadius);
+        var radiusRow = EditorChrome.MakePropertyRow(Se.Language.Assa.BackgroundBoxRadius, radius, new Control());
+        radiusRow.Bind(Grid.IsVisibleProperty, new Binding(nameof(vm.IsRadiusEnabled)));
+
+        var content = new StackPanel { Spacing = 6 };
+        content.Children.Add(gallery);
+        content.Children.Add(radiusRow);
+
+        var name = new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.BoxStyleName)),
+        };
+        return EditorChrome.MakeEditorSection(Se.Language.General.Style, content, name, first: true);
     }
 
-    private static Border CreateStylePanel(AssSetBackgroundViewModel vm)
+    // The sample box the thumbnails are drawn around, and the "text" inside it
+    private static readonly Rect SampleBox = new(10, 10, 140, 60);
+
+    /// <summary>
+    /// A tile: the style drawn around a sample text box, scaled as a whole - so a bar under the
+    /// text stays under it (stretching the bar alone showed the underline as a line at the top).
+    /// </summary>
+    private static Control MakeThumbnailView(int styleIndex)
     {
-        var grid = new Grid
+        var geometry = MakeThumbnail(styleIndex);
+        var bounds = geometry.Bounds.Union(SampleBox);
+        var canvas = new Canvas { Width = bounds.Width, Height = bounds.Height };
+        var path = new Avalonia.Controls.Shapes.Path { Data = geometry, Fill = EditorChrome.ThumbnailBrush };
+        Canvas.SetLeft(path, -bounds.X);
+        Canvas.SetTop(path, -bounds.Y);
+        canvas.Children.Add(path);
+
+        // Two lines of "text" in the middle of the sample box
+        foreach (var (width, y) in new[] { (80.0, 30.0), (56.0, 44.0) })
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 8,
-            ColumnSpacing = 10,
-        };
+            var line = new Border { Width = width, Height = 7, CornerRadius = new CornerRadius(3.5), Background = EditorChrome.ThumbnailMutedBrush };
+            Canvas.SetLeft(line, SampleBox.Center.X - width / 2 - bounds.X);
+            Canvas.SetTop(line, y - bounds.Y);
+            canvas.Children.Add(line);
+        }
 
-        var titleLabel = new TextBlock
-        {
-            Text = Se.Language.General.Style,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
-        };
-        grid.Add(titleLabel, 0, 0, 1, 2);
-
-        // Box style
-        var styleLabel = new TextBlock { Text = Se.Language.General.Style, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(styleLabel, 1, 0);
-
-        var styleCombo = new ComboBox
-        {
-            MinWidth = 150,
-            [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.BoxStyles)),
-            [!ComboBox.SelectedIndexProperty] = new Binding(nameof(vm.BoxStyleIndex)) { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(styleCombo, 1, 1);
-
-        // Radius (for rounded corners)
-        var radiusLabel = new TextBlock { Text = Se.Language.Assa.BackgroundBoxRadius, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(radiusLabel, 2, 0);
-
-        var radiusBox = UiUtil.MakeNumericUpDownInt(0, 200, 0, 120, vm, nameof(vm.Radius));
-        grid.Add(radiusBox, 2, 1);
-
-        // Outline width
-        var outlineLabel = new TextBlock { Text = Se.Language.General.Outline, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(outlineLabel, 3, 0);
-
-        var outlineBox = UiUtil.MakeNumericUpDownInt(0, 20, 0, 120, vm, nameof(vm.OutlineWidth));
-        grid.Add(outlineBox, 3, 1);
-
-        return new Border
-        {
-            Child = grid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(12),
-        };
+        return new Viewbox { Child = canvas, Stretch = Stretch.Uniform, Margin = new Thickness(10, 8) };
     }
 
-    private static Border CreateColorsPanel(AssSetBackgroundViewModel vm)
+    /// <summary>
+    /// A box style drawn into the 140 x 60 sample box, as geometry for its gallery tile.
+    /// </summary>
+    internal static Geometry MakeThumbnail(int styleIndex) =>
+        AssaDrawingGeometry.FromDrawing(AssSetBackgroundViewModel.GenerateBackgroundBox(styleIndex, 14, 10, 150, 10, 70));
+
+    /// <summary>
+    /// Padding as a box diagram: the four sides around the text they pad.
+    /// </summary>
+    private static Border CreatePaddingSection(AssSetBackgroundViewModel vm, out NumericUpDown firstInput)
     {
+        NumericUpDown Side(string property, string prefix, string name)
+        {
+            var field = EditorChrome.MakeField(property, 0, 500, 74, prefix);
+            AutomationProperties.SetName(field, name);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(field, name);
+            }
+
+            return field;
+        }
+
+        var top = Side(nameof(vm.PaddingTop), "T", Se.Language.General.Top);
+        var left = Side(nameof(vm.PaddingLeft), "L", Se.Language.General.Left);
+        var right = Side(nameof(vm.PaddingRight), "R", Se.Language.General.Right);
+        var bottom = Side(nameof(vm.PaddingBottom), "B", Se.Language.General.Bottom);
+        top.HorizontalAlignment = HorizontalAlignment.Center;
+        bottom.HorizontalAlignment = HorizontalAlignment.Center;
+        firstInput = left;
+
+        var text = new Border
+        {
+            Background = EditorChrome.AccentSoftBrush,
+            BorderBrush = EditorChrome.AccentBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(5),
+            Height = EditorChrome.ScaledSize(28),
+            Child = new TextBlock
+            {
+                Text = Se.Language.General.Text,
+                FontSize = EditorChrome.FieldFontSize,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
+
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-                new RowDefinition { Height = GridLength.Auto },
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
             },
-            RowSpacing = 8,
-            ColumnSpacing = 10,
+            RowDefinitions =
+            {
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+                new RowDefinition(GridLength.Auto),
+            },
+            ColumnSpacing = 6,
+            RowSpacing = 6,
         };
+        grid.Add(top, 0, 1);
+        grid.Add(left, 1, 0);
+        grid.Add(text, 1, 1);
+        grid.Add(right, 1, 2);
+        grid.Add(bottom, 2, 1);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Padding, grid);
+    }
 
-        var titleLabel = new TextBlock
+    private static Border CreateFillWidthSection(AssSetBackgroundViewModel vm)
+    {
+        var toggle = new ToggleSwitch
         {
-            Text = Se.Language.General.Color,
-            FontWeight = FontWeight.Bold,
-            Margin = new Thickness(0, 0, 0, 5),
+            OnContent = null,
+            OffContent = null,
+            MinWidth = 0,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!ToggleSwitch.IsCheckedProperty] = new Binding(nameof(vm.FillWidth)) { Mode = BindingMode.TwoWay },
         };
-        grid.Add(titleLabel, 0, 0, 1, 2);
+        AutomationProperties.SetName(toggle, Se.Language.Assa.BackgroundBoxFillWidth);
+        var toggleRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        toggleRow.Children.Add(toggle);
+        toggleRow.Children.Add(new TextBlock { Text = Se.Language.Assa.BackgroundBoxFillWidth, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center });
 
-        // Box color
-        var boxLabel = new TextBlock { Text = Se.Language.General.BoxColor, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(boxLabel, 1, 0);
+        var left = EditorChrome.MakeField(nameof(vm.FillWidthMarginLeft), 0, 2000, prefix: "L");
+        var right = EditorChrome.MakeField(nameof(vm.FillWidthMarginRight), 0, 2000, prefix: "R");
+        AutomationProperties.SetName(left, Se.Language.General.Left);
+        AutomationProperties.SetName(right, Se.Language.General.Right);
+        left.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.FillWidth)));
+        right.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.FillWidth)));
 
-        var boxPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.BoxColor));
-        boxPicker.HorizontalAlignment = HorizontalAlignment.Left;
-        grid.Add(boxPicker, 1, 1);
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(toggleRow);
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Margin, left, right));
+        return EditorChrome.MakeEditorSection(Se.Language.Assa.BackgroundBoxFillWidth, content);
+    }
 
-        // Outline color
-        var outlineLabel = new TextBlock { Text = Se.Language.General.Outline, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(outlineLabel, 2, 0);
-
-        var outlinePicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.OutlineColor));
-        outlinePicker.HorizontalAlignment = HorizontalAlignment.Left;
-        grid.Add(outlinePicker, 2, 1);
-
-        // Shadow color
-        var shadowLabel = new TextBlock { Text = Se.Language.General.Shadow, VerticalAlignment = VerticalAlignment.Center };
-        grid.Add(shadowLabel, 3, 0);
-
-        var shadowPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.ShadowColor));
-        shadowPicker.HorizontalAlignment = HorizontalAlignment.Left;
-        grid.Add(shadowPicker, 3, 1);
-
-        return new Border
+    /// <summary>
+    /// Box, outline and shadow colors, with the outline width and shadow distance next to theirs.
+    /// </summary>
+    private static Border CreateColorsSection(AssSetBackgroundViewModel vm)
+    {
+        Button Swatch(string property, string name)
         {
-            Child = grid,
-            BorderBrush = UiUtil.GetBorderBrush(),
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(12),
+            var button = UiUtil.MakeColorPickerButton(vm, property);
+            button.HorizontalAlignment = HorizontalAlignment.Left;
+            AutomationProperties.SetName(button, name);
+            return button;
+        }
+
+        var outlineWidth = EditorChrome.MakeField(nameof(vm.OutlineWidth), 0, 20, prefix: "W");
+        var shadowDistance = EditorChrome.MakeField(nameof(vm.ShadowDistance), 0, 20, prefix: "D");
+        AutomationProperties.SetName(outlineWidth, Se.Language.General.OutlineWidth);
+        AutomationProperties.SetName(shadowDistance, Se.Language.General.ShadowWidth);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(outlineWidth, Se.Language.General.OutlineWidth);
+            ToolTip.SetTip(shadowDistance, Se.Language.General.ShadowWidth);
+        }
+
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.BoxColor, Swatch(nameof(vm.BoxColor), Se.Language.General.BoxColor), new Control()));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Outline, Swatch(nameof(vm.OutlineColor), Se.Language.General.Outline), outlineWidth));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Shadow, Swatch(nameof(vm.ShadowColor), Se.Language.General.Shadow), shadowDistance));
+        return EditorChrome.MakeEditorSection(Se.Language.General.Color, content);
+    }
+
+    private static Border CreateButtonBar(AssSetBackgroundViewModel vm)
+    {
+        var progress = new TextBlock
+        {
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressText)),
         };
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        buttonOk.Classes.Add("primary");
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
+        buttons.Children.Add(buttonCancel);
+        buttons.Children.Add(buttonOk);
+
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+                new ColumnDefinition(GridLength.Auto),
+            },
+        };
+        grid.Add(progress, 0, 0);
+        grid.Add(buttons, 0, 1);
+        return EditorChrome.WrapButtonBar(grid);
     }
 }

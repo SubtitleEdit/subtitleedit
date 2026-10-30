@@ -1,5 +1,5 @@
-﻿using Avalonia.Controls;
-using Avalonia.Data;
+using Avalonia.Automation;
+using Avalonia.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -9,39 +9,16 @@ public static class ViewAddFormatting
 {
     public static Control Make(BatchConvertViewModel vm)
     {
-        var labelHeader = new Label
-        {
-            Content = Se.Language.Tools.BatchConvert.AddFormatting,
-            FontWeight = Avalonia.Media.FontWeight.Bold,
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
+        var comboBoxAlignment = FunctionViewChrome.Compact(UiUtil.MakeComboBox(vm.AlignmentTagOptions, vm, nameof(vm.SelectedAlignmentTagOption)), Se.Language.Tools.BatchConvert.AddAlignment, 120);
 
-        var checkBoxAddItalic = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.AddItalic, vm, nameof(vm.FormattingAddItalic));
-        var checkBoxAddBold = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.AddBold, vm, nameof(vm.FormattingAddBold));
-        var checkBoxAddUnderline = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.AddUnderline, vm, nameof(vm.FormattingAddUnderline));
-
-        var checkBoxAddAlignmentTag = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.AddAlignment, vm, nameof(vm.FormattingAddAlignmentTag));
-        var comboBoxAlignment = UiUtil.MakeComboBox(vm.AlignmentTagOptions, vm, nameof(vm.SelectedAlignmentTagOption));
-        var panelAlignment = UiUtil.MakeHorizontalPanel(checkBoxAddAlignmentTag, comboBoxAlignment);
-
-        var checkBoxAddColor = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.AddColor, vm, nameof(vm.FormattingAddColor));
         var colorPickerAdd = UiUtil.MakeColorPickerButton(vm, nameof(vm.FormattingAddColorValue));
-        var panelColor = UiUtil.MakeHorizontalPanel(checkBoxAddColor, colorPickerAdd);
+        AutomationProperties.SetName(colorPickerAdd, Se.Language.Tools.BatchConvert.AddColor);
 
-        var panel = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Vertical,
-            Children =
-            {
-                labelHeader,
-                checkBoxAddItalic,
-                checkBoxAddBold,
-                checkBoxAddUnderline,
-                panelAlignment,
-                panelColor,
-            }
-        };
-
-        return panel;
+        return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.BatchConvert.AddFormatting,
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingAddItalic), Se.Language.Tools.BatchConvert.AddItalic),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingAddBold), Se.Language.Tools.BatchConvert.AddBold),
+            EditorChrome.MakeSwitchRow(nameof(vm.FormattingAddUnderline), Se.Language.Tools.BatchConvert.AddUnderline),
+            FunctionViewChrome.MakeSwitchRow(nameof(vm.FormattingAddAlignmentTag), Se.Language.Tools.BatchConvert.AddAlignment, comboBoxAlignment),
+            FunctionViewChrome.MakeSwitchRow(nameof(vm.FormattingAddColor), Se.Language.Tools.BatchConvert.AddColor, colorPickerAdd));
     }
 }

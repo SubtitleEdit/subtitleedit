@@ -62,12 +62,12 @@ public class NameListMultiWordBenchmarks
     private SeNamesList _seNamesList = null!;
 
     [GlobalSetup]
-    public void Setup()
+    public async Task Setup()
     {
         var folder = WordSamples.DictionaryFolder();
         _nameList = new NameList(folder, "en_US", false, string.Empty);
         _seNamesList = new SeNamesList();
-        _seNamesList.Load(folder, "en_US");
+        await _seNamesList.LoadAsync(folder, "en_US");
     }
 
     [Benchmark]
@@ -108,11 +108,6 @@ public class NameListMultiWordBenchmarks
 [MemoryDiagnoser]
 public class SpellCheckWordListsBenchmarks
 {
-    private sealed class AlwaysWrongSpell : IDoSpell
-    {
-        public bool DoSpell(string word) => false;
-    }
-
     private SpellCheckWordLists _wordLists = null!;
 
     [GlobalSetup]
@@ -120,7 +115,7 @@ public class SpellCheckWordListsBenchmarks
     {
         var folder = WordSamples.DictionaryFolder();
         SpellCheckConfig.DictionariesFolder = () => folder;
-        _wordLists = new SpellCheckWordLists("en_US", new AlwaysWrongSpell());
+        _wordLists = new SpellCheckWordLists("en_US");
     }
 
     [Benchmark]

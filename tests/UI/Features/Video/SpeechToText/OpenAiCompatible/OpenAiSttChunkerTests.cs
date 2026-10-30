@@ -1,4 +1,3 @@
-using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using static Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible.OpenAiSttChunker;
 
 namespace UITests.Features.Video.SpeechToText.OpenAiCompatible;

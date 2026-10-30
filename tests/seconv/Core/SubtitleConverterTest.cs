@@ -128,4 +128,41 @@ public class SubtitleConverterTest : IDisposable
         Assert.Equal(1, result.SuccessfulFiles);
         Assert.Single(Directory.GetFiles(outputFolder, "*.ass"));
     }
+
+    [Fact]
+    public async Task ConvertAsync_MergeContinuationLines_PassesLimitsToTheOperation()
+    {
+        const string continuationSrt = """
+            1
+            00:00:01,000 --> 00:00:02,000
+            But then I
+
+            2
+            00:00:02,400 --> 00:00:03,000
+            forgot what it was.
+
+            """;
+        var inputFile = Path.Combine(_tempRoot, "continuation.srt");
+        await File.WriteAllTextAsync(inputFile, continuationSrt, TestContext.Current.CancellationToken);
+        var outputFolder = Path.Combine(_tempRoot, "continuation-out");
+        Directory.CreateDirectory(outputFolder);
+
+        var options = new ConversionOptions
+        {
+            Patterns = [inputFile],
+            Format = "SubRip",
+            OutputFolder = outputFolder,
+            Overwrite = true,
+            Operations = ["MergeContinuationLines"],
+            MergeContinuationLinesMaxGapMs = 500, // the 400 ms gap is above the 250 ms default
+        };
+
+        var result = await new SubtitleConverter().ConvertAsync(options);
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var output = await File.ReadAllTextAsync(Path.Combine(outputFolder, "continuation.srt"), TestContext.Current.CancellationToken);
+        Assert.Contains("00:00:01,000 --> 00:00:03,000", output);
+        Assert.Contains("But then I forgot what it was.", output);
+        Assert.DoesNotContain("00:00:02,400", output);
+    }
 }

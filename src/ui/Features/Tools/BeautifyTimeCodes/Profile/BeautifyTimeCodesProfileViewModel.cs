@@ -326,9 +326,6 @@ public partial class BeautifyTimeCodesProfileViewModel : ObservableObject
         }
     }
 
-    // GapMs property used by NumericUpDown bindings — derived from frame count
-    public double FramesToMs(int frames) => frames * (1000.0 / FrameRate);
-
     // When the general "Gap" changes, propagate to gap NUDs that already have a non-zero
     // value. Honors the tooltip's "will overwrite custom settings" promise across all
     // explicit gap fields, but leaves intentional zeros alone.

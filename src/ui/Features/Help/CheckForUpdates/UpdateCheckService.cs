@@ -54,6 +54,25 @@ public class UpdateCheckService : IUpdateCheckService
         return ResolveIncludePrereleases(Se.Settings.General.CheckForUpdatesChannel, Se.Version);
     }
 
+    /// <summary>
+    /// The dropdown text for the channel in effect (Settings > Updates and the check-for-updates
+    /// gear show the same two entries), resolving the "auto" default to what it means for this build.
+    /// </summary>
+    public static string ChannelDisplayName()
+    {
+        return IncludePrereleases()
+            ? Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
+            : Se.Language.Options.Settings.CheckForUpdatesChannelStable;
+    }
+
+    /// <summary>The stored channel for a dropdown text from <see cref="ChannelDisplayName"/>.</summary>
+    public static string ChannelFromDisplayName(string displayName)
+    {
+        return displayName == Se.Language.Options.Settings.CheckForUpdatesChannelStableAndBeta
+            ? ChannelBeta
+            : ChannelStable;
+    }
+
     public static bool ResolveIncludePrereleases(string channel, string currentVersion)
     {
         if (channel == ChannelStable)

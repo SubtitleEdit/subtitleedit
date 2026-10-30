@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
@@ -46,7 +42,6 @@ public class TextToSpeechWindowTests : IDisposable
             new TtsDownloadService(new HttpClient()),
             new WindowService(new NullServiceProvider()),
             new FileHelper(),
-            new FolderHelper(),
             new AceStepAudioCppDownloadService(new HttpClient()));
         var window = new TextToSpeechWindow(vm);
         _windows.Add(window);
@@ -67,12 +62,12 @@ public class TextToSpeechWindowTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void GenerateButton_IsTheAccentPrimaryAction()
+    public void GenerateButton_IsTheOnlyPrimaryAction()
     {
         var window = BuildWindow();
 
-        var accentButtons = AllButtons(window).Where(b => b.Classes.Contains("accent")).ToList();
+        var primaryButtons = AllButtons(window).Where(b => b.Classes.Contains("primary")).ToList();
 
-        Assert.Single(accentButtons);
+        Assert.Single(primaryButtons);
     }
 }

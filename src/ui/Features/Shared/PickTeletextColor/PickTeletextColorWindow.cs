@@ -9,6 +9,10 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickTeletextColor;
 
+/// <summary>
+/// Pick a teletext color, in the editor look (see <see cref="EditorChrome"/>): flat color
+/// tiles, the current color framed in the accent. Picking a tile closes the window.
+/// </summary>
 public class PickTeletextColorWindow : Window
 {
     private const double SwatchWidth = 48;
@@ -20,6 +24,7 @@ public class PickTeletextColorWindow : Window
         Title = Se.Language.General.TeletextColor;
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Picker);
         vm.Window = this;
         DataContext = vm;
 
@@ -46,8 +51,7 @@ public class PickTeletextColorWindow : Window
 
         var panel = new StackPanel
         {
-            Margin = UiUtil.MakeWindowMargin(),
-            Spacing = 10,
+            Spacing = 6,
             Children =
             {
                 tilePanel,
@@ -77,17 +81,13 @@ public class PickTeletextColorWindow : Window
         }
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        Button? buttonCustom = null;
         if (vm.IsLevel25)
         {
-            var buttonCustom = UiUtil.MakeButton(Se.Language.General.ChooseColorDotDotDot, vm.PickCustomColorCommand);
-            panel.Children.Add(UiUtil.MakeButtonBar(buttonCustom, buttonCancel));
-        }
-        else
-        {
-            panel.Children.Add(UiUtil.MakeButtonBar(buttonCancel));
+            buttonCustom = EditorChrome.MakeTextToolButton("fa-solid fa-palette", Se.Language.General.ChooseColorDotDotDot, vm.PickCustomColorCommand);
         }
 
-        Content = panel;
+        Content = EditorChrome.MakeRoot(EditorChrome.MakeEditorSection(Se.Language.General.TeletextColor, panel, first: true), EditorChrome.MakeButtonBar(buttonCustom, buttonCancel));
 
         UiUtil.FocusOnFirstActivation(this, buttonCancel);
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -98,10 +98,11 @@ public class PickTeletextColorWindow : Window
         var label = new TextBlock
         {
             Text = text,
+            FontSize = EditorChrome.ScaledFont(11.5),
             HorizontalAlignment = HorizontalAlignment.Center,
         };
 
-        return new Button
+        var button = new Button
         {
             Command = command,
             CommandParameter = commandParameter,
@@ -114,6 +115,8 @@ public class PickTeletextColorWindow : Window
             // Swatch + caption panel as content: name the tile after its caption (#12087).
             [AutomationProperties.NameProperty] = text,
         };
+        button.Classes.Add("tool");
+        return button;
     }
 
     private static Border MakeColorSwatch(Color color, bool isCurrent)
@@ -123,7 +126,8 @@ public class PickTeletextColorWindow : Window
             Width = SwatchWidth,
             Height = SwatchHeight,
             Background = new SolidColorBrush(color),
-            BorderBrush = isCurrent ? UiUtil.GetAccentBrush() : new SolidColorBrush(Colors.Gray),
+            BorderBrush = isCurrent ? EditorChrome.AccentBrush : EditorChrome.FieldBorderBrush,
+            CornerRadius = new CornerRadius(5),
             BorderThickness = new Thickness(isCurrent ? 3 : 1),
             HorizontalAlignment = HorizontalAlignment.Center,
         };

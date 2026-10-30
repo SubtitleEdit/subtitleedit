@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Data;
@@ -29,21 +30,22 @@ public class VideoOcrEngineSettingsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.VideoTool);
+
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).AsPrimary();
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        var stack = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 14,
-            Children = { BuildHeader(vm), BuildDetails(vm), BuildActions(vm, buttonOk, buttonCancel) },
-        };
+        var sections = new StackPanel { Background = EditorChrome.PanelBrush };
+        sections.Children.Add(new Border { Child = BuildHeader(vm), Padding = new Thickness(14, 14, 14, 12) });
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Information, BuildDetails(vm)));
 
-        Content = new Border
+        var root = new Grid
         {
-            Child = new Grid { Margin = UiUtil.MakeWindowMargin(), Children = { stack } },
-            Padding = new Thickness(4),
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto) },
         };
+        root.Add(sections, 0, 0);
+        root.Add(EditorChrome.MakeButtonBar(BuildActions(vm), buttonCancel, buttonOk), 1, 0);
+        Content = root;
 
         UiUtil.FocusOnFirstActivation(this, buttonOk);
     }
@@ -52,15 +54,15 @@ public class VideoOcrEngineSettingsWindow : Window
     {
         var title = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(18),
+            FontSize = EditorChrome.ScaledFont(16),
             FontWeight = FontWeight.SemiBold,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.TitleText)),
         };
 
         var subtitle = new TextBlock
         {
-            FontSize = UiUtil.ScaledFontSize(12),
-            Opacity = 0.75,
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = LabelWidth + ValueWidth + 40,
             Margin = new Thickness(0, 2, 0, 0),
@@ -74,7 +76,7 @@ public class VideoOcrEngineSettingsWindow : Window
         };
     }
 
-    private static Border BuildDetails(VideoOcrEngineSettingsViewModel vm)
+    private static Grid BuildDetails(VideoOcrEngineSettingsViewModel vm)
     {
         var grid = new Grid
         {
@@ -108,6 +110,7 @@ public class VideoOcrEngineSettingsWindow : Window
         var statusText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(8, 0, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusLabel)),
         };
@@ -123,15 +126,17 @@ public class VideoOcrEngineSettingsWindow : Window
             Background = Brushes.Transparent,
             Padding = new Thickness(0),
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = UiUtil.ScaledFontSize(12),
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBox.TextProperty] = new Binding(nameof(vm.InstallFolder)),
         };
         grid.Add(folderText.WithBindIsVisible(nameof(vm.HasInstallFolder)), 2, 1);
 
         // Request timeout - only for the server engines that have one
         grid.Add(MakeLabel(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes).WithBindIsVisible(nameof(vm.HasTimeout)), 3, 0);
-        grid.Add(UiUtil.MakeNumericUpDownInt(1, 120, 5, 140, vm, nameof(vm.TimeoutMinutes))
-            .WithBindIsVisible(nameof(vm.HasTimeout)), 3, 1);
+        var timeout = UiUtil.MakeNumericUpDownInt(1, 120, 5, 90, vm, nameof(vm.TimeoutMinutes));
+        timeout.Classes.Add("field");
+        AutomationProperties.SetName(timeout, Se.Language.Ocr.LlamaCppOcrTimeoutMinutes);
+        grid.Add(timeout.WithBindIsVisible(nameof(vm.HasTimeout)), 3, 1);
 
         // Website
         grid.Add(MakeLabel(Se.Language.Video.VideoOcr.Website).WithBindIsVisible(nameof(vm.HasWebsite)), 4, 0);
@@ -139,17 +144,13 @@ public class VideoOcrEngineSettingsWindow : Window
         link.HorizontalAlignment = HorizontalAlignment.Left;
         grid.Add(link.WithBindIsVisible(nameof(vm.HasWebsite)), 4, 1);
 
-        return new Border
-        {
-            Child = grid,
-            Padding = new Thickness(14),
-            CornerRadius = new CornerRadius(6),
-            BorderThickness = new Thickness(1),
-            BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
-        };
+        return grid;
     }
 
-    private static Grid BuildActions(VideoOcrEngineSettingsViewModel vm, Button buttonOk, Button buttonCancel)
+    /// <summary>
+    /// Re-download and open folder, as flat actions on the left of the button bar.
+    /// </summary>
+    private static StackPanel BuildActions(VideoOcrEngineSettingsViewModel vm)
     {
         var redownload = UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
             .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel))
@@ -157,31 +158,23 @@ public class VideoOcrEngineSettingsWindow : Window
         var openFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenFolderCommand)
             .WithIconLeft(IconNames.FolderOpen)
             .WithBindIsVisible(nameof(vm.HasInstallFolder));
-
-        var grid = new Grid
+        foreach (var button in new[] { redownload, openFolder })
         {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-        };
-        grid.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Children = { redownload, openFolder } }, 0, 0);
-        grid.Add(UiUtil.MakeButtonBar(buttonOk, buttonCancel), 0, 2);
-        return grid;
+            button.Classes.Add("tool");
+            button.Height = EditorChrome.ScaledSize(30);
+            button.Padding = new Thickness(10, 0);
+            button.FontSize = EditorChrome.FieldFontSize;
+        }
+
+        return new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, Children = { redownload, openFolder } };
     }
 
-    private static TextBlock MakeLabel(string text) => new()
-    {
-        Text = text,
-        Opacity = 0.7,
-        VerticalAlignment = VerticalAlignment.Center,
-    };
+    private static TextBlock MakeLabel(string text) => EditorChrome.MakeDimLabel(text, new Thickness(0));
 
     private static TextBlock MakeValue(string bindingPath) => new()
     {
         FontWeight = FontWeight.SemiBold,
+        FontSize = EditorChrome.FieldFontSize,
         VerticalAlignment = VerticalAlignment.Center,
         [!TextBlock.TextProperty] = new Binding(bindingPath),
     };

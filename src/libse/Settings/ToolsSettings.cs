@@ -57,6 +57,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string ApiRoutePrompt { get; set; }
         public string ApiRouteApiKey { get; set; }
         public string ApiRouteModel { get; set; }
+        public string OpperUrl { get; set; }
+        public string OpperPrompt { get; set; }
+        public string OpperApiKey { get; set; }
+        public string OpperModel { get; set; }
         
         public string PerplexityUrl { get; set; }
         public string PerplexityPrompt { get; set; }
@@ -161,6 +165,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             ApiRouteUrl = "https://global.api-route.com/v1/chat/completions";
             ApiRoutePrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             ApiRouteModel = "claude-sonnet-5"; // ApiRouteTranslate.Models[0] in LibUiLogic
+            OpperUrl = "https://api.opper.ai/v3/compat/chat/completions";
+            OpperPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
+            OpperModel = "claude-sonnet-4-6"; // OpperTranslate.Models[0] in LibUiLogic
             OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             OpenRouterModel = "openai/gpt-5.6-sol"; // OpenRouterTranslate.Models[0] in LibUiLogic
@@ -176,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OllamaPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments or notes:";
             AnthropicApiUrl = "https://api.anthropic.com/v1/messages";
             AnthropicPrompt = "Translate from {0} to {1}, keep sentences in {1} as they are, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            AnthropicApiModel = "claude-sonnet-5"; // AnthropicTranslate.Models[0] in LibUiLogic
+            AnthropicApiModel = "claude-sonnet-5-5"; // AnthropicTranslate.Models[0] in LibUiLogic
             BaiduUrl = "https://fanyi-api.baidu.com";
             GeminiModel = "gemini-flash-latest"; // GeminiTranslate.Models[0] in LibUiLogic
             GeminiPrompt = "Please translate the following text from {0} to {1}, keep line breaks exactly the same, do not censor the translation, only write the result:";

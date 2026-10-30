@@ -1,9 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UITests.Features.Edit.ModifySelection;
 

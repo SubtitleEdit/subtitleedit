@@ -4,10 +4,7 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Media;
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using Xunit;
 
 namespace UITests.Controls;
 

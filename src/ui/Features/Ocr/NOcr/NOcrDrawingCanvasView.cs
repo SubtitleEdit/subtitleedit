@@ -268,13 +268,6 @@ public class NOcrDrawingCanvasView : Control
         InvalidateVisual();
     }
 
-    public void ClearPaths()
-    {
-        HitPaths.Clear();
-        MissPaths.Clear();
-        InvalidateVisual();
-    }
-
     public void SetBackgroundImage(Bitmap? bitmap)
     {
         BackgroundImage = bitmap;

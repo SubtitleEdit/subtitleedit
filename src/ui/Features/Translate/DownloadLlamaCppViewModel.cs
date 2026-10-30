@@ -7,13 +7,11 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Download;
-using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.UiLogic;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 
@@ -29,7 +27,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
-    /// <summary>"cpu", "vulkan", "cuda" or "cuda13" - which llama.cpp build to download (Windows only).</summary>
+    /// <summary>"cpu" or "vulkan" on Windows and Linux, also "cuda" or "cuda13" on Windows - which llama.cpp build to download.</summary>
     public string Variant { get; set; } = LlamaCppDownloadService.VariantCpu;
 
     /// <summary>The model to download, or null to only install the engine.</summary>
@@ -110,6 +108,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
                     }
 
                     TitleText = string.Format(Se.Language.General.UnpackingX, "llama.cpp");
+                    LlamaCppDownloadService.DeleteOtherBuildFiles(folder, Variant);
                     engineStream.Position = 0;
                     _zipUnpacker.UnpackZipStream(engineStream, folder, string.Empty, true, new List<string>(), null);
 

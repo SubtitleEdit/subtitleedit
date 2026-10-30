@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -11,6 +12,9 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 
+/// <summary>
+/// Read-only preview of an embedded track's cues, in the editor look (see <see cref="EditorChrome"/>).
+/// </summary>
 public class EmbedTrackPreviewWindow : Window
 {
     public EmbedTrackPreviewWindow(EmbedTrackPreviewViewModel vm)
@@ -25,11 +29,13 @@ public class EmbedTrackPreviewWindow : Window
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         DataContext = vm;
+        EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 
         var subtitleView = MakeSubtitleView(vm);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk);
+        buttonOk.Classes.Add("primary");
+        var panelButtons = EditorChrome.MakeButtonBar(null, buttonOk);
 
         var grid = new Grid
         {
@@ -38,19 +44,15 @@ public class EmbedTrackPreviewWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            Margin = UiUtil.MakeWindowMargin(),
-            ColumnSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(subtitleView, 0, 0, 1, 2);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        grid.Add(new Border
+        {
+            Child = subtitleView,
+            Background = EditorChrome.PanelBrush,
+            Padding = new Thickness(14),
+        }, 0);
+        grid.Add(panelButtons, 1);
 
         Content = grid;
 
@@ -151,6 +153,6 @@ public class EmbedTrackPreviewWindow : Window
             })
         });
 
-        return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle);
+        return EditorChrome.MakeListFrame(dataGridSubtitle);
     }
 }

@@ -9,12 +9,10 @@ namespace Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 public class OcrSubtitleMkvBluRay : IOcrSubtitle
 {
     public int Count { get; private set; }
-    private readonly MatroskaTrackInfo _matroskaSubtitleInfo;
     private readonly List<BluRaySupParser.PcsData> _pcsDataList;
 
     public OcrSubtitleMkvBluRay(MatroskaTrackInfo matroskaSubtitleInfo, List<BluRaySupParser.PcsData> pcsDataList)
     {
-        _matroskaSubtitleInfo = matroskaSubtitleInfo;
         _pcsDataList = pcsDataList;
         Count = _pcsDataList.Count;
     }

@@ -30,6 +30,14 @@ public class LanguageAutoDetectShortFileTest
     }
 
     [Fact]
+    public void OneAmbiguousWordIsNotDetected()
+    {
+        // "Ja" is a Slovak list entry, and German, Dutch and Scandinavian "yes": a single such
+        // hit must not make the clip Slovak (the translate window then keeps its last source).
+        Assert.Null(Detect("Ja, klar."));
+    }
+
+    [Fact]
     public void ShortEnglish()
     {
         Assert.Equal("en", Detect(
@@ -156,6 +164,9 @@ public class LanguageAutoDetectShortFileTest
     // Cyrillic
     [InlineData("bg", "Какво правиш тук?", "Не знам, благодаря.")]
     [InlineData("sr", "Шта радиш овде?", "Не знам, хвала.")]
+    [InlineData("mk", "Што правиш тука?", "Не знам, благодарам.")]
+    [InlineData("mk", "Ќе дојдам утре.", "Не можам да верувам.")]      // only Bulgarian list words (не, да) - the ќ decides
+    [InlineData("sr", "Доћи ћу сутра.", "Не могу да верујем.")]         // ћ decides
     // Greek
     [InlineData("el", "Τι κάνεις εδώ;", "Δεν ξέρω, ευχαριστώ πολύ.")]
     // Middle East

@@ -68,6 +68,7 @@ public partial class BatchConvertFunction : ObservableObject
             MakeFunction(BatchConvertFunctionType.MergeContinuationLines, Se.Language.Tools.MergeContinuationLines.Title, ViewMergeContinuationLines.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.ApplyDurationLimits, Se.Language.Tools.ApplyDurationLimits.Title, ViewApplyDurationLimits.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AutoBalanceLines, Se.Language.General.AutoBalanceLines, ViewAutoBalanceLines.Make(vm), activeFunctions),
+            MakeFunction(BatchConvertFunctionType.RunPlugin, Se.Language.Plugins.RunPlugin, ViewRunPlugin.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.SortBy, Se.Language.Tools.SortBy.Title, ViewSortBy.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.Renumber, Se.Language.Tools.Renumber.Title, ViewRenumber.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AdjustImageColors, Se.Language.Tools.BatchConvert.AdjustImageColorsTitle, ViewAdjustImageColors.Make(vm), activeFunctions),

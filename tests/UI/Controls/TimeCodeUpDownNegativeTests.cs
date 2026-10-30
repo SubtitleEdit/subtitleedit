@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -12,7 +10,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
-using System.Collections.Generic;
 
 namespace UITests.Controls;
 

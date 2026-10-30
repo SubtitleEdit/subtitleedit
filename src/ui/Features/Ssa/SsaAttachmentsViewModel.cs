@@ -41,7 +41,6 @@ public partial class SsaAttachmentsViewModel : ObservableObject
     public string Footer { get; set; }
 
     private readonly IFileHelper _fileHelper;
-    private string _fileName;
     private Subtitle _subtitle;
     private readonly List<string> _imageExtensions = new List<string>
     {
@@ -59,7 +58,6 @@ public partial class SsaAttachmentsViewModel : ObservableObject
         Title = string.Empty;
         Attachments = new ObservableCollection<SsaAttachmentItem>();
         PreviewTitle = string.Empty;
-        _fileName = string.Empty;
         Header = string.Empty;
         Footer = string.Empty;
         _subtitle = new Subtitle();
@@ -257,8 +255,8 @@ public partial class SsaAttachmentsViewModel : ObservableObject
         {
             var answer = await MessageBox.Show(
             Window!,
-            "Delete attachment?",
-            $"Do you want to delete {selectedStyle.FileName}?",
+             Se.Language.Assa.DeleteAttachmentQuestion,
+            string.Format(Se.Language.General.DoYouWantToDeleteX, selectedStyle.FileName),
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 

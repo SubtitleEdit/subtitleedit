@@ -31,21 +31,6 @@ public static class EncodingHelper
         return encodingList;
     }
 
-    public static List<Encoding> GetRawEncodings()
-    {
-        var encodingList = new List<Encoding>();
-        foreach (var encodingInfo in Encoding.GetEncodings())
-        {
-            var encoding = encodingInfo.GetEncoding();
-            if (encoding.CodePage >= 874 && !encoding.IsEbcdic() && !encoding.CodePage.Equals(Encoding.UTF8.CodePage))
-            {
-                encodingList.Add(encoding);
-            }
-        }
-
-        return encodingList;
-    }
-
     /// <summary>
     /// Resolves a target-encoding <see cref="TextEncoding.DisplayName"/> (as stored in
     /// settings) to a concrete <see cref="Encoding"/>. Honors the <see cref="TryToUseSourceEncoding"/>
