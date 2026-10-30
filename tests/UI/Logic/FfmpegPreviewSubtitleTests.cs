@@ -1,10 +1,13 @@
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 
 namespace UITests.Logic;
 
 /// <summary>
-/// The subtitle snapshot the ffmpeg player's control draws: tag stripping, whole-line italic,
+/// The subtitle snapshot the ffmpeg player's control draws: tag stripping, italic and bold runs,
 /// active-line lookup, secondary marking and the SMPTE stretch.
 /// </summary>
 public class FfmpegPreviewSubtitleTests
@@ -23,27 +26,185 @@ public class FfmpegPreviewSubtitleTests
     [Fact]
     public void ToPlainText_StripsTagsAndKeepsLineBreaks()
     {
-        var text = FfmpegPreviewSubtitle.ToPlainText("<b>Hello</b>" + Environment.NewLine + "{\\an8}world", out var italic);
+        var text = FfmpegPreviewSubtitle.ToPlainText("<font face=\"Arial\">Hello</font>" + Environment.NewLine + "{\\an8}world", out var runs, out _);
 
         Assert.Equal("Hello" + Environment.NewLine + "world", text);
-        Assert.False(italic);
+        Assert.Empty(runs);
     }
 
     [Fact]
-    public void ToPlainText_WholeLineItalic_IsDetected()
+    public void ToPlainText_WholeLineItalic_IsOneRun()
     {
-        var text = FfmpegPreviewSubtitle.ToPlainText("<i>Hello world</i>", out var italic);
+        var text = FfmpegPreviewSubtitle.ToPlainText("<i>Hello world</i>", out var runs, out _);
 
         Assert.Equal("Hello world", text);
-        Assert.True(italic);
+        Assert.Equal([new FfmpegPreviewSubtitle.StyleRun(0, 11, true, false)], runs);
     }
 
     [Fact]
-    public void ToPlainText_PartialItalic_IsNotWholeLineItalic()
+    public void ToPlainText_PartialItalic_CoversOnlyTheTaggedWords()
     {
-        FfmpegPreviewSubtitle.ToPlainText("<i>Hello</i> world", out var italic);
+        var text = FfmpegPreviewSubtitle.ToPlainText("<i>Hello</i> world", out var runs, out _);
 
-        Assert.False(italic);
+        Assert.Equal("Hello world", text);
+        Assert.Equal([new FfmpegPreviewSubtitle.StyleRun(0, 5, true, false)], runs);
+    }
+
+    [Fact]
+    public void ToPlainText_ItalicOnEachLine_KeepsOneRunPerLine()
+    {
+        var text = FfmpegPreviewSubtitle.ToPlainText("<i>one</i>\\N<i>two</i>", out var runs, out _);
+
+        Assert.Equal("one" + Environment.NewLine + "two", text);
+        Assert.Equal(
+            [
+                new FfmpegPreviewSubtitle.StyleRun(0, 3, true, false),
+                new FfmpegPreviewSubtitle.StyleRun(3 + Environment.NewLine.Length, 3, true, false),
+            ],
+            runs);
+    }
+
+    [Fact]
+    public void ToPlainText_AssTags_FollowOnOffAndWeight()
+    {
+        var text = FfmpegPreviewSubtitle.ToPlainText("{\\an8\\i1}one {\\i0\\b700}two{\\b0} three", out var runs, out _);
+
+        Assert.Equal("one two three", text);
+        Assert.Equal(
+            [
+                new FfmpegPreviewSubtitle.StyleRun(0, 4, true, false),
+                new FfmpegPreviewSubtitle.StyleRun(4, 3, false, true),
+            ],
+            runs);
+    }
+
+    [Fact]
+    public void ToPlainText_TagsThatOnlyLookLikeStyle_AreIgnored()
+    {
+        FfmpegPreviewSubtitle.ToPlainText("{\\blur2\\bord3\\be1\\iclip(0,0,1,1)}Hello", out var runs, out _);
+
+        Assert.Empty(runs);
+    }
+
+    [Fact]
+    public void ToPlainText_LeadingSpace_ShiftsRuns()
+    {
+        var text = FfmpegPreviewSubtitle.ToPlainText("  <b>Hello</b>  ", out var runs, out _);
+
+        Assert.Equal("Hello", text);
+        Assert.Equal([new FfmpegPreviewSubtitle.StyleRun(0, 5, false, true)], runs);
+    }
+
+    [Fact]
+    public void ToPlainText_HardSpace_BecomesSpace()
+    {
+        Assert.Equal("a b", FfmpegPreviewSubtitle.ToPlainText("a\\hb", out _, out _));
+    }
+
+    [Theory]
+    [InlineData("{\\p1}m 0 0 l 100 0 100 100 0 100{\\p0}")]
+    [InlineData("{\\an7\\pos(10,10)\\p2}m 0 0 b 10 0 20 10 20 20 s 30 30 40 40 c")]
+    public void ToPlainText_Drawing_LeavesNothing(string text)
+    {
+        Assert.Equal(string.Empty, FfmpegPreviewSubtitle.ToPlainText(text, out _, out _));
+    }
+
+    [Fact]
+    public void ToPlainText_TextAfterDrawing_IsKept()
+    {
+        var text = FfmpegPreviewSubtitle.ToPlainText("{\\p1}m 0 0 l 10 0 10 10{\\p0} Hello", out _, out _);
+
+        Assert.Equal("Hello", text);
+    }
+
+    [Fact]
+    public void ToPlainText_PositionTag_IsNotADrawing()
+    {
+        Assert.Equal("Hello", FfmpegPreviewSubtitle.ToPlainText("{\\pos(10,10)}Hello", out _, out _));
+    }
+
+    [Theory]
+    [InlineData("{\\an8}Hello", 8)]
+    [InlineData("{\\an8}{\\an2}Hello", 8)]
+    [InlineData("Hello", null)]
+    [InlineData("{\\an7\\pos(10,10)}Hello", null)]
+    [InlineData("{\\an7\\move(1,2,3,4)}Hello", null)]
+    public void ToPlainText_Alignment(string text, int? expected)
+    {
+        FfmpegPreviewSubtitle.ToPlainText(text, out _, out var alignment);
+
+        Assert.Equal(expected, alignment);
+    }
+
+    [Fact]
+    public void ToPlainText_FontColor_IsARun_AndClosesToTheOuterColor()
+    {
+        var text = FfmpegPreviewSubtitle.ToPlainText("<font color=\"#ff0000\">a<font color=\"#00ff00\">b</font>c</font>d", out var runs, out _);
+
+        Assert.Equal("abcd", text);
+        Assert.Equal(
+            [
+                new FfmpegPreviewSubtitle.StyleRun(0, 1, false, false, Colors.Red),
+                new FfmpegPreviewSubtitle.StyleRun(1, 1, false, false, Color.Parse("#00ff00")),
+                new FfmpegPreviewSubtitle.StyleRun(2, 1, false, false, Colors.Red),
+            ],
+            runs);
+    }
+
+    [Fact]
+    public void ToPlainText_AssColor_IsBlueGreenRed_AndCResets()
+    {
+        var text = FfmpegPreviewSubtitle.ToPlainText("{\\c&H0000FF&}red{\\c} plain {\\1c&HFF0000&}blue", out var runs, out _);
+
+        Assert.Equal("red plain blue", text);
+        Assert.Equal(
+            [
+                new FfmpegPreviewSubtitle.StyleRun(0, 3, false, false, Colors.Red),
+                new FfmpegPreviewSubtitle.StyleRun(10, 4, false, false, Color.Parse("#0000ff")),
+            ],
+            runs);
+    }
+
+    [Fact]
+    public void ToPlainText_ClipIsNotAColor()
+    {
+        FfmpegPreviewSubtitle.ToPlainText("{\\clip(0,0,1,1)\\3c&H0000FF&}Hello", out var runs, out _);
+
+        Assert.Empty(runs);
+    }
+
+    [Fact]
+    public void Build_SecondaryHeaderStyle_IsScaledToPreviewUnits()
+    {
+        var style = new SsaStyle { Name = "Second", FontName = "Georgia", FontSize = 150, Alignment = "4", MarginVertical = 75, OutlineWidth = 15, ShadowWidth = 0, Bold = true, BorderStyle = "3" };
+        var secondary = MakeSubtitle((1, 3, "second"));
+        SecondarySubtitleStyler.SetHeader(secondary, style, 1920, 1080);
+        secondary.Paragraphs[0].Extra = "Second";
+
+        var result = FfmpegPreviewSubtitle.Build(MakeSubtitle((1, 3, "main")), secondary, false).SecondaryStyle;
+
+        Assert.NotNull(result);
+        Assert.Equal("Georgia", result.FontName);
+        Assert.Equal(150m * 288 / 1080, result.FontSize, 3);
+        Assert.Equal(4, result.Alignment);
+        Assert.Equal(3, result.BorderStyle);
+        Assert.True(result.Bold);
+    }
+
+    [Fact]
+    public void Build_SecondaryWithoutStyle_HasNoSecondaryStyle()
+    {
+        var preview = FfmpegPreviewSubtitle.Build(MakeSubtitle((1, 3, "main")), MakeSubtitle((1, 3, "second")), false);
+
+        Assert.Null(preview.SecondaryStyle);
+    }
+
+    [Fact]
+    public void Build_DrawingOnlyLine_IsSkipped()
+    {
+        var preview = FfmpegPreviewSubtitle.Build(MakeSubtitle((1, 3, "{\\p1}m 0 0 b 1 1 2 2 3 3{\\p0}"), (1, 3, "text")), null, false);
+
+        Assert.Equal(["text"], preview.GetActive(2).Select(l => l.Text));
     }
 
     [Fact]

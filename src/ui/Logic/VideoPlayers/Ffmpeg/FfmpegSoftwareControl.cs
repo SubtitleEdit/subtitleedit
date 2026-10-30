@@ -6,6 +6,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using System;
 using System.Collections.Generic;
@@ -185,145 +186,256 @@ public class FfmpegSoftwareControl : Control
             return;
         }
 
-        var style = OverlayStyle.FromSettings(Se.Settings.Video);
+        var settings = Se.Settings.Video;
+        var style = FfmpegPreviewSubtitle.TextStyle.FromSettings(settings);
+        var secondaryStyle = player.PreviewSubtitle.SecondaryStyle;
+        // As mpv's sub-use-margins: the black bars are part of the area the text may use (#13934).
+        var area = settings.MpvPreviewMarginIsPartOfSubtitleArea ? new Rect(Bounds.Size) : videoRect;
         var cache = _overlayCache;
-        if (cache == null || cache.VideoRect != videoRect || cache.Style != style || !SameLines(cache.Lines, active))
+        if (cache == null || cache.VideoRect != videoRect || cache.Area != area || cache.Style != style ||
+            cache.SecondaryStyle != secondaryStyle || !SameLines(cache.Lines, active))
         {
-            cache = BuildOverlay(active, videoRect, style);
+            cache = BuildOverlay(active, videoRect, area, style, secondaryStyle);
             _overlayCache = cache;
         }
 
+        DrawBlocks(context, cache);
+    }
+
+    internal static void DrawBlocks(DrawingContext context, OverlayCache cache)
+    {
         foreach (var block in cache.Blocks)
         {
+            var paint = block.Paint;
+            if (block.Box != null)
+            {
+                context.DrawGeometry(paint.BoxBrush, block.BoxPen, block.Box);
+            }
+
             if (block.Geometry == null)
             {
                 context.DrawText(block.Text, block.Origin);
                 continue;
             }
 
-            if (cache.ShadowWidth > 0)
+            if (paint.ShadowWidth > 0 && paint.BoxBrush == null)
             {
-                using (context.PushTransform(Matrix.CreateTranslation(cache.ShadowWidth, cache.ShadowWidth)))
+                using (context.PushTransform(Matrix.CreateTranslation(paint.ShadowWidth, paint.ShadowWidth)))
                 {
-                    context.DrawGeometry(cache.Shadow, cache.ShadowPen, block.Geometry);
+                    context.DrawGeometry(paint.Shadow, paint.ShadowPen, block.Geometry);
                 }
             }
 
-            if (cache.OutlinePen != null)
+            if (paint.OutlinePen != null)
             {
-                context.DrawGeometry(null, cache.OutlinePen, block.Geometry);
+                context.DrawGeometry(null, paint.OutlinePen, block.Geometry);
             }
 
-            context.DrawGeometry(cache.Fill, null, block.Geometry);
+            // One geometry takes one brush, so text with colors of its own is drawn as text.
+            if (block.HasColors)
+            {
+                context.DrawText(block.Text, block.Origin);
+            }
+            else
+            {
+                context.DrawGeometry(paint.Fill, null, block.Geometry);
+            }
         }
     }
 
-    private static OverlayCache BuildOverlay(List<FfmpegPreviewSubtitle.Line> active, Rect videoRect, OverlayStyle style)
+    internal static OverlayCache BuildOverlay(
+        List<FfmpegPreviewSubtitle.Line> active,
+        Rect videoRect,
+        Rect area,
+        FfmpegPreviewSubtitle.TextStyle style,
+        FfmpegPreviewSubtitle.TextStyle? secondaryStyle)
     {
         var scale = videoRect.Height / 720.0;
-        var fontSize = Math.Max(6, style.FontSize * 1.6 * scale);
-        var margin = style.Margin * scale;
+        var paint = MakePaint(style, scale);
+        var secondaryPaint = secondaryStyle != null ? MakePaint(secondaryStyle, scale) : paint;
+
+        // Text placed at the same spot stacks: the primary at the edge, the rest further in.
+        var stacked = new Dictionary<int, double>();
+        var blocks = new List<OverlayBlock>(2);
+        var groups = active
+            .GroupBy(l => (l.Secondary, Alignment: l.Alignment ?? DefaultAlignment(l.Secondary)))
+            .OrderBy(g => g.Key.Secondary);
+        foreach (var group in groups)
+        {
+            blocks.Add(MakeBlock(group.ToList(), group.Key.Secondary ? secondaryPaint : paint, group.Key.Alignment));
+        }
+
+        return new OverlayCache(active, videoRect, area, style, secondaryStyle, blocks);
+
+        int DefaultAlignment(bool secondary)
+        {
+            if (!secondary)
+            {
+                return style.Alignment;
+            }
+
+            if (secondaryStyle != null)
+            {
+                return secondaryStyle.Alignment;
+            }
+
+            // No style of its own: the top, or opposite the primary when that is at the top.
+            var opposite = style.Alignment is 7 or 8 or 9 ? style.Alignment - 6 : style.Alignment + 6;
+            return opposite is < 1 or > 9 ? 8 : opposite;
+        }
+
+        OverlayBlock MakeBlock(List<FfmpegPreviewSubtitle.Line> lines, OverlayPaint blockPaint, int numpadAlignment)
+        {
+            var text = string.Join(Environment.NewLine, lines.Select(l => l.Text));
+            var margin = blockPaint.Margin;
+            var left = area.X + margin;
+            var available = Math.Max(1, area.Width - 2 * margin);
+            var horizontal = numpadAlignment is 1 or 4 or 7 ? TextAlignment.Left : numpadAlignment is 3 or 6 or 9 ? TextAlignment.Right : TextAlignment.Center;
+            var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, TextToFlowDirectionConverter.GetFlowDirection(text), blockPaint.Typeface, blockPaint.FontSize, blockPaint.Fill)
+            {
+                TextAlignment = horizontal,
+                MaxTextWidth = available,
+            };
+
+            var hasColors = false;
+            var lineStart = 0;
+            foreach (var line in lines)
+            {
+                foreach (var run in line.Runs)
+                {
+                    if (run.Italic)
+                    {
+                        formatted.SetFontStyle(FontStyle.Italic, lineStart + run.Start, run.Length);
+                    }
+
+                    if (run.Bold)
+                    {
+                        formatted.SetFontWeight(FontWeight.Bold, lineStart + run.Start, run.Length);
+                    }
+
+                    if (run.Color.HasValue)
+                    {
+                        formatted.SetForegroundBrush(new SolidColorBrush(run.Color.Value), lineStart + run.Start, run.Length);
+                        hasColors = true;
+                    }
+                }
+
+                lineStart += line.Text.Length + Environment.NewLine.Length;
+            }
+
+            // Horizontal placement is TextAlignment's job: the text box spans the video width
+            // minus margins, so the origin is always the left margin. With justify the box is
+            // as wide as the text and goes where the alignment says; the justify then only
+            // moves the shorter lines inside it.
+            var x = left;
+            var justify = GetJustify(blockPaint.Justify);
+            if (justify.HasValue)
+            {
+                var width = Math.Min(available, Math.Ceiling(formatted.WidthIncludingTrailingWhitespace) + 1);
+                formatted.MaxTextWidth = width;
+                formatted.TextAlignment = justify.Value;
+                x = horizontal switch
+                {
+                    TextAlignment.Left => left,
+                    TextAlignment.Right => left + available - width,
+                    _ => left + (available - width) / 2,
+                };
+            }
+
+            stacked.TryGetValue(numpadAlignment, out var stack);
+            stacked[numpadAlignment] = stack + formatted.Height;
+            var y = numpadAlignment switch
+            {
+                7 or 8 or 9 => area.Y + margin + stack,
+                4 or 5 or 6 => area.Y + (area.Height - formatted.Height) / 2 + stack,
+                _ => area.Bottom - margin - formatted.Height - stack,
+            };
+
+            var origin = new Point(x, y);
+            Geometry? box = null;
+            IPen? boxPen = null;
+            if (blockPaint.BoxBrush != null)
+            {
+                var highlight = formatted.BuildHighlightGeometry(origin, 0, text.Length);
+                if (blockPaint.OneBox)
+                {
+                    box = new RectangleGeometry(highlight.Bounds.Inflate(blockPaint.BoxPadding));
+                }
+                else
+                {
+                    box = highlight;
+                    boxPen = new Pen(blockPaint.BoxBrush, blockPaint.BoxPadding * 2);
+                }
+            }
+
+            return new OverlayBlock(formatted, origin, formatted.BuildGeometry(origin), blockPaint, hasColors, box, boxPen);
+        }
+    }
+
+    private static TextAlignment? GetJustify(string? justify)
+    {
+        return justify switch
+        {
+            "left" => TextAlignment.Left,
+            "center" => TextAlignment.Center,
+            "right" => TextAlignment.Right,
+            _ => null,
+        };
+    }
+
+    private static OverlayPaint MakePaint(FfmpegPreviewSubtitle.TextStyle style, double scale)
+    {
         var outlineWidth = (double)style.OutlineWidth * scale;
         var shadowWidth = (double)style.ShadowWidth * scale;
-        var fill = new SolidColorBrush(style.ColorPrimary.FromHexToColor());
-        var outlinePen = outlineWidth > 0
-            ? new Pen(new SolidColorBrush(style.ColorOutline.FromHexToColor()), outlineWidth * 2, lineJoin: PenLineJoin.Round)
-            : null;
-        var shadow = new SolidColorBrush(style.ColorShadow.FromHexToColor());
-        var shadowPen = outlineWidth > 0 ? new Pen(shadow, outlineWidth * 2, lineJoin: PenLineJoin.Round) : null;
+        var fill = new SolidColorBrush(style.Primary);
+        var shadow = new SolidColorBrush(style.Shadow);
+        var isBox = style.BorderStyle is 3 or 4;
+
         // The font name is a libass face name ("Arial Light"); Avalonia matches families, so
         // draw the face's family at the face's own weight (issue #15682).
         FontFaces.TryGetFamilyAndWeight(style.FontName, out var fontFamily, out var faceWeight);
         var weight = (FontWeight)(style.Bold ? Math.Max(faceWeight, (int)FontWeight.Bold) : faceWeight);
-        var alignment = int.TryParse(style.Alignment, NumberStyles.Integer, CultureInfo.InvariantCulture, out var a) && a is >= 1 and <= 9 ? a : 2;
 
-        var primary = string.Join(Environment.NewLine, active.Where(l => !l.Secondary).Select(l => l.Text));
-        var secondary = string.Join(Environment.NewLine, active.Where(l => l.Secondary).Select(l => l.Text));
-        var primaryItalic = active.Any(l => !l.Secondary) && active.Where(l => !l.Secondary).All(l => l.Italic);
-        var secondaryItalic = active.Any(l => l.Secondary) && active.Where(l => l.Secondary).All(l => l.Italic);
-
-        var blocks = new List<OverlayBlock>(2);
-        if (primary.Length > 0)
-        {
-            blocks.Add(MakeBlock(primary, primaryItalic, alignment));
-        }
-
-        if (secondary.Length > 0)
-        {
-            // The secondary subtitle goes to the top; opposite the primary when that is at the top.
-            var secondaryAlignment = alignment is 7 or 8 or 9 ? alignment - 6 : alignment + 6;
-            if (secondaryAlignment is < 1 or > 9)
-            {
-                secondaryAlignment = 8;
-            }
-
-            blocks.Add(MakeBlock(secondary, secondaryItalic, secondaryAlignment));
-        }
-
-        return new OverlayCache(active, videoRect, style, blocks, fill, outlinePen, shadow, shadowPen, shadowWidth);
-
-        OverlayBlock MakeBlock(string text, bool italic, int numpadAlignment)
-        {
-            var typeface = new Typeface(fontFamily, italic ? FontStyle.Italic : FontStyle.Normal, weight);
-            var formatted = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, fontSize, fill)
-            {
-                TextAlignment = numpadAlignment is 1 or 4 or 7 ? TextAlignment.Left : numpadAlignment is 3 or 6 or 9 ? TextAlignment.Right : TextAlignment.Center,
-                MaxTextWidth = Math.Max(1, videoRect.Width - 2 * margin),
-            };
-
-            // Horizontal placement is TextAlignment's job: the text box spans the video width
-            // minus margins, so the origin is always the left margin.
-            var x = videoRect.X + margin;
-            var y = numpadAlignment switch
-            {
-                7 or 8 or 9 => videoRect.Y + margin,
-                4 or 5 or 6 => videoRect.Y + (videoRect.Height - formatted.Height) / 2,
-                _ => videoRect.Bottom - margin - formatted.Height,
-            };
-
-            var origin = new Point(x, y);
-            return new OverlayBlock(formatted, origin, formatted.BuildGeometry(origin));
-        }
+        return new OverlayPaint(
+            new Typeface(fontFamily, FontStyle.Normal, weight),
+            Math.Max(6, (double)style.FontSize * 1.6 * scale),
+            (double)style.Margin * scale,
+            style.Justify,
+            fill,
+            !isBox && outlineWidth > 0 ? new Pen(new SolidColorBrush(style.Outline), outlineWidth * 2, lineJoin: PenLineJoin.Round) : null,
+            shadow,
+            outlineWidth > 0 ? new Pen(shadow, outlineWidth * 2, lineJoin: PenLineJoin.Round) : null,
+            shadowWidth,
+            // As libass: a box per line is in the outline color, one box in the shadow color.
+            isBox ? style.BorderStyle == 4 ? shadow : new SolidColorBrush(style.Outline) : null,
+            style.BorderStyle == 4,
+            Math.Max(1, Math.Max(outlineWidth, shadowWidth)));
     }
 
-    /// <summary>The preview settings the overlay is drawn with - a change means a rebuild.</summary>
-    private readonly record struct OverlayStyle(
-        string FontName,
-        int FontSize,
-        bool Bold,
-        int Margin,
-        string ColorPrimary,
-        string ColorOutline,
-        string ColorShadow,
-        decimal OutlineWidth,
-        decimal ShadowWidth,
-        string Alignment)
-    {
-        public static OverlayStyle FromSettings(SeVideo settings) => new(
-            settings.MpvPreviewFontName,
-            settings.MpvPreviewFontSize,
-            settings.MpvPreviewFontBold,
-            settings.MpvPreviewMargin,
-            settings.MpvPreviewColorPrimary,
-            settings.MpvPreviewColorOutline,
-            settings.MpvPreviewColorShadow,
-            settings.MpvPreviewOutlineWidth,
-            settings.MpvPreviewShadowWidth,
-            settings.MpvPreviewAlignment);
-    }
-
-    private sealed record OverlayBlock(FormattedText Text, Point Origin, Geometry? Geometry);
-
-    private sealed record OverlayCache(
-        List<FfmpegPreviewSubtitle.Line> Lines,
-        Rect VideoRect,
-        OverlayStyle Style,
-        List<OverlayBlock> Blocks,
+    /// <summary>What a style turns into at the current video size.</summary>
+    internal sealed record OverlayPaint(
+        Typeface Typeface,
+        double FontSize,
+        double Margin,
+        string? Justify,
         IBrush Fill,
         IPen? OutlinePen,
         IBrush Shadow,
         IPen? ShadowPen,
-        double ShadowWidth);
+        double ShadowWidth,
+        IBrush? BoxBrush,
+        bool OneBox,
+        double BoxPadding);
+
+    internal sealed record OverlayBlock(FormattedText Text, Point Origin, Geometry? Geometry, OverlayPaint Paint, bool HasColors, Geometry? Box, IPen? BoxPen);
+
+    internal sealed record OverlayCache(
+        List<FfmpegPreviewSubtitle.Line> Lines,
+        Rect VideoRect,
+        Rect Area,
+        FfmpegPreviewSubtitle.TextStyle Style,
+        FfmpegPreviewSubtitle.TextStyle? SecondaryStyle,
+        List<OverlayBlock> Blocks);
 
     /// <summary>The largest rectangle of the given aspect ratio centered in <paramref name="bounds"/>.</summary>
     internal static Rect FitRect(Rect bounds, double aspectRatio)
