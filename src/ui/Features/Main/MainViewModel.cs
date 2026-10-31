@@ -14437,12 +14437,15 @@ public partial class MainViewModel :
             return;
         }
 
-        var captureOriginal = noOriginal && !result.TranslateInPlace;
-        if (captureOriginal && !result.Rows.Any(r => !string.IsNullOrEmpty(r.TranslatedText)))
+        // OK can be enabled after a partial/cancelled translation run. If no row actually
+        // contains translated text, the operation is a no-op in both modes: do not capture an
+        // original and do not reset language/spell-check state for unchanged subtitle content.
+        if (!result.Rows.Any(r => !string.IsNullOrEmpty(r.TranslatedText)))
         {
-            return; // nothing came back - do not switch to translator mode for an unchanged subtitle
+            return;
         }
 
+        var captureOriginal = noOriginal && !result.TranslateInPlace;
         var wasOldTranslationChanged = captureOriginal && _changeSubtitleHash != GetFastHash();
 
         if (captureOriginal)

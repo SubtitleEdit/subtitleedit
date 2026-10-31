@@ -85,6 +85,39 @@ public class AutoTranslateSelectedLinesTests
         }
     }
 
+    [AvaloniaFact]
+    public async Task NoOriginal_TranslateInPlaceWithNoResult_IsNoOp()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "One", 0, 1000);
+            AddLine(vm, "Two", 1000, 2000);
+            var rows = vm.Subtitles.ToList();
+            vm.SubtitleGrid.SelectedItems?.Clear();
+            vm.SubtitleGrid.SelectedItems?.Add(rows[0]);
+            await SettleAsync(window);
+
+            // OnSubtitleLanguageChanged clears this cache. An empty in-place result must leave it
+            // untouched because no subtitle text changed.
+            var detectedField = typeof(MainViewModel).GetField("_detectedLanguageCode", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            detectedField.SetValue(vm, "zz");
+
+            FakeTranslateWindowService.Install(vm, translateInPlace: true, produceTranslations: false);
+            await vm.AutoTranslateSelectedLinesCommand.ExecuteAsync(null);
+            await SettleAsync(window);
+
+            Assert.Equal(new[] { "One", "Two" }, vm.Subtitles.Select(p => p.Text));
+            Assert.All(vm.Subtitles, p => Assert.True(string.IsNullOrEmpty(p.OriginalText)));
+            Assert.False(vm.ShowColumnOriginalText);
+            Assert.Equal("zz", detectedField.GetValue(vm));
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     private static List<string> GridCellTexts(MainViewModel vm)
     {
         return vm.SubtitleGrid.GetVisualDescendants().OfType<TextBlock>()
@@ -97,12 +130,14 @@ public class AutoTranslateSelectedLinesTests
     public class FakeTranslateWindowService : DispatchProxy
     {
         private static bool _translateInPlace;
+        private static bool _produceTranslations = true;
 
         public static bool LastInPlaceOffered { get; private set; }
 
-        public static void Install(MainViewModel vm, bool translateInPlace)
+        public static void Install(MainViewModel vm, bool translateInPlace, bool produceTranslations = true)
         {
             _translateInPlace = translateInPlace;
+            _produceTranslations = produceTranslations;
             var field = typeof(MainViewModel).GetField("_windowService", BindingFlags.Instance | BindingFlags.NonPublic)!;
             field.SetValue(vm, Create<IWindowService, FakeTranslateWindowService>());
         }
@@ -121,9 +156,12 @@ public class AutoTranslateSelectedLinesTests
             translateVm.OnLoaded();
             LastInPlaceOffered = translateVm.TranslateInPlaceIsVisible;
             translateVm.TranslateInPlace = _translateInPlace;
-            foreach (var row in translateVm.Rows)
+            if (_produceTranslations)
             {
-                row.TranslatedText = "T:" + row.Text;
+                foreach (var row in translateVm.Rows)
+                {
+                    row.TranslatedText = "T:" + row.Text;
+                }
             }
 
             translateVm.OkPressed = true;
