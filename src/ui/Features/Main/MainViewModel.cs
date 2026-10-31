@@ -2733,6 +2733,16 @@ public partial class MainViewModel :
     private static readonly Regex AssaTagBlockRegex = new(@"\{[^}]*\}", RegexOptions.Compiled);
 
     /// <summary>
+    /// A row that draws a shape, such as a generated background box. Narrower than
+    /// <see cref="IsAssaDrawingText"/>, which also takes text lines: those have a real counterpart
+    /// in an original, a shape has one only if the original draws it too.
+    /// </summary>
+    internal static bool IsAssaVectorDrawing(string text)
+    {
+        return !string.IsNullOrEmpty(text) && AssaDrawingTagRegex.IsMatch(text);
+    }
+
+    /// <summary>
     /// A row the ASSA draw dialog imports as drawing: a \p1 drawing, a mask-only line
     /// (just an \iclip, no text) as the dialog writes for a layer of erase shapes, or a text
     /// line it wrote for a bubble or text box.
@@ -2982,9 +2992,8 @@ public partial class MainViewModel :
     /// <summary>
     /// Adds the generated box lines to the grid, each after the rows that start no later than it.
     /// The existing rows stay as they are: a wholesale rebuild blanked the original column, and the
-    /// next save then emptied the original's file (#16499). A box has no original line, so an
-    /// editable original goes to the mode where a row without original text contributes nothing -
-    /// in 1:1 mode each box would add a blank line to the saved original.
+    /// next save then emptied the original's file (#16499). A box has no original line, see
+    /// <see cref="GetSaveSubtitleOriginal"/>.
     /// </summary>
     private void InsertBackgroundBoxRows(IReadOnlyCollection<Paragraph> boxes)
     {
@@ -2993,13 +3002,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var hasEditableOriginal = CanEditOriginal && Subtitles.Any(p => !string.IsNullOrEmpty(p.OriginalText));
-        var originalWasDirty = hasEditableOriginal && _changeSubtitleHashOriginal != GetFastHashOriginal();
-        if (hasEditableOriginal && !IsShowingOriginalNonMatchingLines)
-        {
-            // Links every row to its original line while the rows still line up 1:1.
-            GetUpdateSubtitleOriginal();
-        }
+        var originalWasDirty = _changeSubtitleHashOriginal != GetFastHashOriginal();
 
         var sortedBoxes = boxes.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
         var rows = new List<SubtitleLineViewModel>(Subtitles.Count + sortedBoxes.Count);
@@ -3024,15 +3027,10 @@ public partial class MainViewModel :
         Renumber();
         UpdateGaps();
 
-        if (hasEditableOriginal)
+        // The baseline hash covers the rows, but the original's lines are unchanged.
+        if (!originalWasDirty)
         {
-            IsShowingOriginalNonMatchingLines = true;
-
-            // The baseline hash covers the rows, but the original's lines are unchanged.
-            if (!originalWasDirty)
-            {
-                _changeSubtitleHashOriginal = GetFastHashOriginal();
-            }
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
         }
     }
 
@@ -29340,10 +29338,37 @@ public partial class MainViewModel :
         return copy;
     }
 
-    /// <summary>Same as <see cref="GetSaveSubtitle"/> for the original subtitle.</summary>
+    /// <summary>
+    /// Same as <see cref="GetSaveSubtitle"/> for the original subtitle, without the blank lines of
+    /// the rows that only draw a shape: a background box belongs to the working subtitle, so each
+    /// one would otherwise add a blank line to the original's file (#16499). Left out here and not
+    /// in <see cref="GetUpdateSubtitleOriginal"/>, which the rebuilds re-fill the rows from by index.
+    /// </summary>
     public Subtitle GetSaveSubtitleOriginal()
     {
-        return AddVideoOffset(GetUpdateSubtitleOriginal());
+        var subtitle = GetUpdateSubtitleOriginal();
+
+        var shapeLines = new HashSet<Guid>();
+        foreach (var line in Subtitles)
+        {
+            if (line.ReferenceParagraphId is { } id &&
+                !line.IsReferenceOnly &&
+                string.IsNullOrWhiteSpace(line.OriginalText) &&
+                IsAssaVectorDrawing(line.Text))
+            {
+                shapeLines.Add(id);
+            }
+        }
+
+        if (shapeLines.Count > 0)
+        {
+            // generateNewId false: the lines are matched on the ids the rows point at.
+            subtitle = new Subtitle(subtitle, false);
+            subtitle.Paragraphs.RemoveAll(p => p.Id is { } id && shapeLines.Contains(id));
+            subtitle.Renumber();
+        }
+
+        return AddVideoOffset(subtitle);
     }
 
     private static Subtitle AddVideoOffset(Subtitle subtitle)
