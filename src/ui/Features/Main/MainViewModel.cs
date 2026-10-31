@@ -2960,6 +2960,7 @@ public partial class MainViewModel :
 
         SetAssaResolution(false);
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.AssaGenerateBackground);
         var result = await ShowDialogAsync<AssSetBackgroundWindow, AssSetBackgroundViewModel>(vm =>
         {
             vm.Initialize(GetUpdateSubtitle(), selectedItems, _mediaInfo?.Dimension.Width ?? 1920, _mediaInfo?.Dimension.Height ?? 1080, _videoFileName, GetVideoPlayerControl()?.Position);
@@ -2970,9 +2971,69 @@ public partial class MainViewModel :
             return;
         }
 
-        _subtitle.Header = result.ResultSubtitle.Header;
-        SetSubtitles(result.ResultSubtitle);
+        EndToolApply(toolApply, () =>
+        {
+            _subtitle.Header = result.ResultSubtitle.Header;
+            InsertBackgroundBoxRows(result.BoxParagraphs);
+        });
         RefreshSubtitlePreview();
+    }
+
+    /// <summary>
+    /// Adds the generated box lines to the grid, each after the rows that start no later than it.
+    /// The existing rows stay as they are: a wholesale rebuild blanked the original column, and the
+    /// next save then emptied the original's file (#16499). A box has no original line, so an
+    /// editable original goes to the mode where a row without original text contributes nothing -
+    /// in 1:1 mode each box would add a blank line to the saved original.
+    /// </summary>
+    private void InsertBackgroundBoxRows(IReadOnlyCollection<Paragraph> boxes)
+    {
+        if (boxes.Count == 0)
+        {
+            return;
+        }
+
+        var hasEditableOriginal = CanEditOriginal && Subtitles.Any(p => !string.IsNullOrEmpty(p.OriginalText));
+        var originalWasDirty = hasEditableOriginal && _changeSubtitleHashOriginal != GetFastHashOriginal();
+        if (hasEditableOriginal && !IsShowingOriginalNonMatchingLines)
+        {
+            // Links every row to its original line while the rows still line up 1:1.
+            GetUpdateSubtitleOriginal();
+        }
+
+        var sortedBoxes = boxes.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+        var rows = new List<SubtitleLineViewModel>(Subtitles.Count + sortedBoxes.Count);
+        var nextBox = 0;
+        foreach (var row in Subtitles)
+        {
+            while (nextBox < sortedBoxes.Count &&
+                   sortedBoxes[nextBox].StartTime.TotalMilliseconds < row.StartTime.TotalMilliseconds)
+            {
+                rows.Add(new SubtitleLineViewModel(sortedBoxes[nextBox++], SelectedSubtitleFormat));
+            }
+
+            rows.Add(row);
+        }
+
+        for (; nextBox < sortedBoxes.Count; nextBox++)
+        {
+            rows.Add(new SubtitleLineViewModel(sortedBoxes[nextBox], SelectedSubtitleFormat));
+        }
+
+        ReplaceSubtitles(rows);
+        Renumber();
+        UpdateGaps();
+
+        if (hasEditableOriginal)
+        {
+            IsShowingOriginalNonMatchingLines = true;
+
+            // The baseline hash covers the rows, but the original's lines are unchanged.
+            if (!originalWasDirty)
+            {
+                _changeSubtitleHashOriginal = GetFastHashOriginal();
+            }
+        }
     }
 
     [RelayCommand]
@@ -29157,16 +29218,15 @@ public partial class MainViewModel :
             return await SaveSubtitleOriginalAs();
         }
 
-        var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
-        var originalSubtitle = GetSaveSubtitleOriginal();
-
         // A whole original without a single line of text is never something the user typed - the
         // column was blanked somewhere (a rebuild, a lost translation source). Writing it out
         // would leave numbers and time codes and no subtitles at all, over the file the
         // translation was made from, so refuse instead (#14091) - a single-line original
-        // included, it is overwritten just as irreversibly.
-        if (originalSubtitle.Paragraphs.Count > 0 &&
-            originalSubtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        // included, it is overwritten just as irreversibly. Asked of the rows, before the original
+        // is rebuilt from them: that rebuild replaces the lines still held in _subtitleOriginal,
+        // and with the non-matching lines on screen it skips blank rows, so the result has no
+        // lines at all and an empty file went over the user's original (#16499).
+        if (Subtitles.All(line => string.IsNullOrWhiteSpace(line.OriginalText)))
         {
             if (!isAutoSave)
             {
@@ -29176,6 +29236,8 @@ public partial class MainViewModel :
             return false;
         }
 
+        var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
+        var originalSubtitle = GetSaveSubtitleOriginal();
         var text = originalSubtitle.ToText(originalFormat);
         if (Se.Settings.General.ForceCrLfOnSave)
         {
