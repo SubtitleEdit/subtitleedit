@@ -51,8 +51,15 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             return GetTranslationPairs();
         }
 
+        // The free translate_a endpoints historically used "pt" for Brazilian Portuguese.
+        // Keep the proven wire format while storing a region-specific code in user settings.
+        internal static string ToEndpointLanguageCode(string code) =>
+            string.Equals(code, "pt-BR", StringComparison.OrdinalIgnoreCase) ? "pt" : code;
+
         public async Task<string> Translate(string input, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            sourceLanguageCode = ToEndpointLanguageCode(sourceLanguageCode);
+            targetLanguageCode = ToEndpointLanguageCode(targetLanguageCode);
             string jsonResultString;
 
             try
@@ -445,7 +452,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 new TranslationPair("PERSIAN", "fa"),
                 new TranslationPair("POLISH", "pl"),
                 new TranslationPair("PORTUGUESE", "pt-PT"),
-                new TranslationPair("PORTUGUESE (BRAZIL)", "pt"),
+                new TranslationPair("PORTUGUESE (BRAZIL)", "pt-BR"),
                 new TranslationPair("PUNJABI", "pa"),
                 new TranslationPair("PUNJABI (Shahmukhi)", "pa-Arab"),
                 new TranslationPair("QUECHUABI", "qu"),

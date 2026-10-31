@@ -83,6 +83,49 @@ public class AutoTranslateModelAndSourceTests
         }
     }
 
+    [AvaloniaFact]
+    public void EngineSwitch_GoogleV1ToV2ToGemini_KeepsBrazilianPortuguese()
+    {
+        var previousName = Se.Settings.AutoTranslate.AutoTranslateLastName;
+        var previousSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+        var previousTarget = Se.Settings.AutoTranslate.AutoTranslateLastTarget;
+        var vm = new AutoTranslateViewModel(new WindowService(new NullServiceProvider()), new FolderHelper());
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Hello.", 0, 1000));
+        vm.Initialize(subtitle);
+        var window = new AutoTranslateWindow(vm) { Width = 1000, Height = 700 };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+
+            vm.SelectedAutoTranslator = vm.AutoTranslators.First(p => p is GoogleTranslateV1);
+            Dispatcher.UIThread.RunJobs();
+            vm.SelectedSourceLanguage = vm.SourceLanguages.Single(p => p.Code == "en");
+            vm.SelectedTargetLanguage = vm.TargetLanguages.Single(p => p.Code == "pt-BR");
+
+            vm.SelectedAutoTranslator = vm.AutoTranslators.First(p => p is GoogleTranslateV2);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("en", vm.SelectedSourceLanguage?.Code);
+            Assert.Equal("pt-BR", vm.SelectedTargetLanguage?.Code);
+
+            vm.SelectedAutoTranslator = vm.AutoTranslators.First(p => p is GeminiTranslate);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Brazilian Portuguese", vm.SelectedTargetLanguage?.Name);
+
+            vm.SelectedAutoTranslator = vm.AutoTranslators.First(p => p is GoogleTranslateV1);
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("pt-BR", vm.SelectedTargetLanguage?.Code);
+        }
+        finally
+        {
+            window.Close();
+            Se.Settings.AutoTranslate.AutoTranslateLastName = previousName;
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = previousSource;
+            Se.Settings.AutoTranslate.AutoTranslateLastTarget = previousTarget;
+        }
+    }
+
     [Fact]
     public void UndetectableSource_UsesLastSource_NotEnglish()
     {
@@ -98,6 +141,585 @@ public class AutoTranslateModelAndSourceTests
 
             Se.Settings.AutoTranslate.AutoTranslateLastSource = string.Empty;
             Assert.Equal("en", AutoTranslateViewModel.EvaluateDefaultSourceLanguageCode(null, subtitle, languages));
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = lastSource;
+        }
+    }
+
+    [Fact]
+    public void UndetectableSource_NllbSavedCodeMapsToCurrentProvider()
+    {
+        var lastSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+        try
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("...", 0, 1000));
+            var languages = new ObservableCollection<TranslationPair>(new GoogleTranslateV1().GetSupportedSourceLanguages());
+
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = "eng_Latn";
+
+            Assert.Equal("en", AutoTranslateViewModel.EvaluateDefaultSourceLanguageCode(null, subtitle, languages));
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = lastSource;
+        }
+    }
+
+    [Fact]
+    public void LastNllbTarget_MapsToCurrentProviderLanguage()
+    {
+        var translator = new GeminiTranslate();
+        var targets = translator.GetSupportedTargetLanguages();
+        var source = translator.GetSupportedSourceLanguages().First(p => p.Name == "English");
+
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets,
+            source,
+            lastTarget: "deu_Latn",
+            uiCultureName: "en-US");
+
+        Assert.NotNull(selected);
+        Assert.Equal("German", selected.Name);
+    }
+
+    [Fact]
+    public void ScriptQualifiedNllbTarget_PreservesVariantAcrossSeparatorConventions()
+    {
+        var translator = new GeminiTranslate();
+        var targets = translator.GetSupportedTargetLanguages();
+        var source = translator.GetSupportedSourceLanguages().First(p => p.Name == "English");
+
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets,
+            source,
+            lastTarget: "zho_Hans",
+            uiCultureName: "en-US");
+
+        Assert.NotNull(selected);
+        Assert.Equal("Chinese (Simplified)", selected.Name);
+    }
+
+    [Fact]
+    public void ScriptQualifiedNllbTraditionalChinese_MapsToCurrentProvider()
+    {
+        var translator = new GeminiTranslate();
+        var targets = translator.GetSupportedTargetLanguages();
+        var source = translator.GetSupportedSourceLanguages().First(p => p.Name == "English");
+
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets,
+            source,
+            lastTarget: "zho_Hant",
+            uiCultureName: "en-US");
+
+        Assert.NotNull(selected);
+        Assert.Equal("Chinese (Traditional)", selected.Name);
+    }
+
+    [Fact]
+    public void ScriptQualifiedNllbSimplifiedChinese_MapsToGoogleStyleProvider()
+    {
+        var translator = new GoogleTranslateV1();
+        var targets = translator.GetSupportedTargetLanguages();
+        var source = translator.GetSupportedSourceLanguages().First(p => p.Code == "en");
+
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets,
+            source,
+            lastTarget: "zho_Hans",
+            uiCultureName: "en-US");
+
+        Assert.NotNull(selected);
+        Assert.Equal("zh-CN", selected.Code);
+    }
+
+    [Fact]
+    public void UnknownChineseScript_DoesNotGuessTheWrongVariant()
+    {
+        var translator = new GeminiTranslate();
+        var targets = translator.GetSupportedTargetLanguages();
+        var source = translator.GetSupportedSourceLanguages().First(p => p.Name == "English");
+
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets,
+            source,
+            lastTarget: "zho_UnknownScript",
+            uiCultureName: "fr-FR");
+
+        Assert.NotNull(selected);
+        Assert.Equal("French", selected.Name);
+    }
+
+    [Fact]
+    public void RememberLanguageCodes_PreservesNllbScriptAfterTranslation()
+    {
+        var previousSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+        var previousTarget = Se.Settings.AutoTranslate.AutoTranslateLastTarget;
+        try
+        {
+            var engine = new NoLanguageLeftBehindServe();
+            var languages = engine.GetSupportedTargetLanguages();
+            var source = languages.Single(p => p.Code == "eng_Latn");
+            var target = languages.Single(p => p.Code == "zho_Hant");
+
+            Assert.Equal("zh", target.TwoLetterIsoLanguageName);
+            AutoTranslateViewModel.RememberLanguageCodes(source, target);
+            Assert.Equal("eng_Latn", Se.Settings.AutoTranslate.AutoTranslateLastSource);
+            Assert.Equal("zho_Hant", Se.Settings.AutoTranslate.AutoTranslateLastTarget);
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = previousSource;
+            Se.Settings.AutoTranslate.AutoTranslateLastTarget = previousTarget;
+        }
+    }
+
+    [Fact]
+    public void OldAmbiguousChineseIso_DoesNotGuessNllbSimplified()
+    {
+        var nllb = new NoLanguageLeftBehindServe();
+        var languages = nllb.GetSupportedTargetLanguages();
+        var english = languages.Single(p => p.Code == "eng_Latn");
+        var result = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            languages, english, lastTarget: "zh", uiCultureName: "en-US");
+
+        Assert.NotNull(result);
+        Assert.NotEqual("zho_Hans", result.Code);
+        Assert.NotEqual("zho_Hant", result.Code);
+    }
+
+    [Theory]
+    [InlineData("zh-TW", "Chinese (Traditional)")]
+    [InlineData("zh-CN", "Chinese (Simplified)")]
+    [InlineData("pt-PT", "Portuguese")]
+    [InlineData("pt-BR", "Brazilian Portuguese")]
+    [InlineData("arb_Arab", "Arabic")]
+    [InlineData("pes_Arab", "Persian")]
+    [InlineData("zsm_Latn", "Malay")]
+    [InlineData("yue_Hant", "Cantonese")]
+    public void CrossProviderIdentifiers_MapToGemini(string previousCode, string expected)
+    {
+        var engine = new GeminiTranslate();
+        var targets = engine.GetSupportedTargetLanguages();
+        var english = targets.Single(p => p.Name == "English");
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets, english, previousCode, uiCultureName: "en-US");
+        Assert.NotNull(selected);
+        Assert.Equal(expected, selected.Name);
+    }
+
+    [Theory]
+    [InlineData("zh-TW", "zho_Hant")]
+    [InlineData("zh-CN", "zho_Hans")]
+    [InlineData("pt-PT", "por_Latn")]
+    public void GoogleVariants_MapToNllb(string previousCode, string expected)
+    {
+        var engine = new NoLanguageLeftBehindServe();
+        var targets = engine.GetSupportedTargetLanguages();
+        var english = targets.Single(p => p.Code == "eng_Latn");
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets, english, previousCode, uiCultureName: "en-US");
+        Assert.NotNull(selected);
+        Assert.Equal(expected, selected.Code);
+    }
+
+    [Fact]
+    public void LegacyGeminiPortugueseIso_MapsToEuropeanGoogle_NotBrazilian()
+    {
+        var google = new GoogleTranslateV1();
+        var targets = google.GetSupportedTargetLanguages();
+        var english = targets.Single(p => p.Code == "en");
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets, english, lastTarget: "pt", uiCultureName: "en-US",
+            savedProviderName: GeminiTranslate.StaticName);
+        Assert.NotNull(selected);
+        Assert.Equal("pt-PT", selected.Code);
+    }
+
+    [Fact]
+    public void LegacyGeminiEuropeanIso_MapsToEuropeanGoogleV2()
+    {
+        var google = new GoogleTranslateV2();
+        var targets = google.GetSupportedTargetLanguages();
+        var english = targets.Single(p => p.Code == "en");
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets, english, lastTarget: "pt", uiCultureName: "en-US",
+            savedProviderName: GeminiTranslate.StaticName);
+        Assert.NotNull(selected);
+        Assert.Equal("pt-PT", selected.Code);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void RememberGoogleBrazilianLanguage_StoresExplicitRegion(bool useV2)
+    {
+        var previousSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+        var previousTarget = Se.Settings.AutoTranslate.AutoTranslateLastTarget;
+        try
+        {
+            var languages = useV2
+                ? new GoogleTranslateV2().GetSupportedTargetLanguages()
+                : new GoogleTranslateV1().GetSupportedTargetLanguages();
+            var source = languages.Single(p => p.Code == "en");
+            var target = languages.Single(p => p.Name == "PORTUGUESE (BRAZIL)");
+
+            AutoTranslateViewModel.RememberLanguageCodes(source, target);
+
+            Assert.Equal("en", Se.Settings.AutoTranslate.AutoTranslateLastSource);
+            Assert.Equal("pt-BR", Se.Settings.AutoTranslate.AutoTranslateLastTarget);
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = previousSource;
+            Se.Settings.AutoTranslate.AutoTranslateLastTarget = previousTarget;
+        }
+    }
+
+    [Fact]
+    public void LegacyGoogleBrazilianIso_RemainsBrazilian()
+    {
+        var google = new GoogleTranslateV1();
+        var targets = google.GetSupportedTargetLanguages();
+        var english = targets.Single(p => p.Code == "en");
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets, english, lastTarget: "pt", uiCultureName: "en-US",
+            savedProviderName: GoogleTranslateV1.StaticName);
+        Assert.NotNull(selected);
+        Assert.Equal("pt-BR", selected.Code);
+    }
+
+    [Fact]
+    public void LegacyGoogleV2BrazilianIso_MapsToBrazilianGemini()
+    {
+        var gemini = new GeminiTranslate();
+        var targets = gemini.GetSupportedTargetLanguages();
+        var english = targets.Single(p => p.Name == "English");
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets, english, lastTarget: "pt", uiCultureName: "en-US",
+            savedProviderName: GoogleTranslateV2.StaticName);
+        Assert.NotNull(selected);
+        Assert.Equal("Brazilian Portuguese", selected.Name);
+    }
+
+    [Fact]
+    public void LegacyGoogleV2BrazilianIso_MapsBackToCanonicalGoogleV2()
+    {
+        var google = new GoogleTranslateV2();
+        var targets = google.GetSupportedTargetLanguages();
+        var english = targets.Single(p => p.Code == "en");
+        var selected = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets, english, lastTarget: "pt", uiCultureName: "en-US",
+            savedProviderName: GoogleTranslateV2.StaticName);
+        Assert.NotNull(selected);
+        Assert.Equal("pt-BR", selected.Code);
+    }
+
+    [Theory]
+    [InlineData("pt-PT", "Portuguese")]
+    [InlineData("pt-BR", "Brazilian Portuguese")]
+    public void GoogleV2Variants_SurviveEngineSwitchToGemini(string code, string expected)
+    {
+        var previous = new GoogleTranslateV2().GetSupportedTargetLanguages().Single(p => p.Code == code);
+        var selected = AutoTranslateViewModel.FindSameLanguage(
+            previous, new GeminiTranslate().GetSupportedTargetLanguages());
+        Assert.NotNull(selected);
+        Assert.Equal(expected, selected.Name);
+    }
+
+    [Theory]
+    [InlineData("pt-PT")]
+    [InlineData("pt-BR")]
+    public void GoogleV1AndV2_PreservePortugueseCodesBetweenEngines(string code)
+    {
+        var previous = new GoogleTranslateV1().GetSupportedTargetLanguages().Single(p => p.Code == code);
+        var next = AutoTranslateViewModel.FindSameLanguage(
+            previous, new GoogleTranslateV2().GetSupportedTargetLanguages());
+        Assert.NotNull(next);
+        Assert.Equal(code, next.Code);
+    }
+
+    [Fact]
+    public void SwitchTranslator_NllbChineseTraditional_StaysTraditional()
+    {
+        var nllb = new NoLanguageLeftBehindServe();
+        var previous = nllb.GetSupportedTargetLanguages().Single(p => p.Code == "zho_Hant");
+        var gemini = new GeminiTranslate();
+        var next = AutoTranslateViewModel.FindSameLanguage(previous, gemini.GetSupportedTargetLanguages());
+        Assert.NotNull(next);
+        Assert.Equal("Chinese (Traditional)", next.Name);
+    }
+
+    [Theory]
+    [InlineData("pt-BR", "PORTUGUESE (BRAZIL)", "Brazilian Portuguese")]
+    [InlineData("pt-PT", "PORTUGUESE", "Portuguese")]
+    public void SwitchTranslator_GooglePortugueseVariants_DoNotCross(string code, string name, string expected)
+    {
+        var google = new GoogleTranslateV1();
+        var previous = google.GetSupportedTargetLanguages().Single(p => p.Code == code);
+        Assert.Equal(name, previous.Name);
+        var gemini = new GeminiTranslate();
+        var next = AutoTranslateViewModel.FindSameLanguage(previous, gemini.GetSupportedTargetLanguages());
+        Assert.NotNull(next);
+        Assert.Equal(expected, next.Name);
+    }
+
+    [Theory]
+    [InlineData("arb_Latn")] // Romanized Arabic is not the Arabic-script Google option.
+    [InlineData("ace_Arab")] // Acehnese has distinct NLLB Arabic/Latin options.
+    [InlineData("bjn_Arab")]
+    [InlineData("min_Arab")]
+    [InlineData("kas_Deva")]
+    [InlineData("taq_Tfng")]
+    [InlineData("eng_Cyrl")] // Not a supported NLLB code: do not invent an English variant.
+    public void UnrepresentedScript_IsNotSilentlyMappedToGenericProvider(string previousCode)
+    {
+        var targets = new GoogleTranslateV1().GetSupportedTargetLanguages();
+        Assert.Null(AutoTranslateViewModel.FindLanguage(targets, previousCode));
+    }
+
+    [Fact]
+    public void NativeScriptArabic_CanStillMapToGenericArabic()
+    {
+        var targets = new GoogleTranslateV1().GetSupportedTargetLanguages();
+        var match = AutoTranslateViewModel.FindLanguage(targets, "arb_Arab");
+        Assert.NotNull(match);
+        Assert.Equal("ar", match.Code);
+    }
+
+    [Fact]
+    public void SwitchProvider_DoesNotTurnRomanizedArabicIntoArabicScript()
+    {
+        var nllb = new NoLanguageLeftBehindServe();
+        var previous = nllb.GetSupportedTargetLanguages().Single(p => p.Code == "arb_Latn");
+        var google = new GoogleTranslateV1();
+        Assert.Null(AutoTranslateViewModel.FindSameLanguage(previous, google.GetSupportedTargetLanguages()));
+    }
+
+    [Fact]
+    public void UnsupportedScript_UsesSafeCultureFallbackRatherThanWrongTarget()
+    {
+        var google = new GoogleTranslateV1();
+        var targets = google.GetSupportedTargetLanguages();
+        var english = targets.Single(p => p.Code == "en");
+        var chosen = AutoTranslateViewModel.FindDefaultTargetLanguage(
+            targets, english, lastTarget: "arb_Latn", uiCultureName: "fr-FR");
+        Assert.NotNull(chosen);
+        Assert.Equal("fr", chosen.Code);
+    }
+
+    [Theory]
+    [InlineData("pt-PT")]
+    [InlineData("pt-BR")]
+    public void GenericPortugueseDetection_RetainsSavedGoogleVariant(string code)
+    {
+        var languages = new GoogleTranslateV2().GetSupportedSourceLanguages();
+        var previous = languages.Single(p => p.Code == code);
+
+        var selected = AutoTranslateViewModel.ResolveDetectedSourceLanguage("pt", languages, previous);
+
+        Assert.NotNull(selected);
+        Assert.Equal(code, selected.Code);
+    }
+
+    [Theory]
+    [InlineData("zh-CN")]
+    [InlineData("zh-TW")]
+    public void GenericChineseDetection_RetainsSavedGoogleScript(string code)
+    {
+        var languages = new GoogleTranslateV1().GetSupportedSourceLanguages();
+        var previous = languages.Single(p => p.Code == code);
+
+        var selected = AutoTranslateViewModel.ResolveDetectedSourceLanguage("zh", languages, previous);
+
+        Assert.NotNull(selected);
+        Assert.Equal(code, selected.Code);
+    }
+
+    [Theory]
+    [InlineData("pt-PT", "pt-PT")]
+    [InlineData("pt-BR", "pt-BR")]
+    [InlineData("fr-FR", "pt-PT")]
+    [InlineData("en-US", "pt-PT")]
+    [InlineData(null, "pt-PT")]
+    public void GenericPortugueseDetection_UsesAvailablePortuguese_NotEnglish(
+        string? uiCultureName, string expectedCode)
+    {
+        foreach (var languages in new[]
+                 {
+                     new GoogleTranslateV1().GetSupportedSourceLanguages(),
+                     new GoogleTranslateV2().GetSupportedSourceLanguages(),
+                 })
+        {
+            var selected = AutoTranslateViewModel.ResolveDetectedSourceLanguage(
+                "pt", languages, null, uiCultureName);
+
+            Assert.NotNull(selected);
+            Assert.Equal(expectedCode, selected.Code);
+        }
+    }
+
+    [Theory]
+    [InlineData("pt-PT", "pt-BR")]
+    [InlineData("pt-BR", "pt-PT")]
+    public void GenericPortugueseDetection_PreviousRegionWinsOverUiCulture(
+        string previousCode, string uiCultureName)
+    {
+        var languages = new GoogleTranslateV2().GetSupportedSourceLanguages();
+        var previous = languages.Single(p => p.Code == previousCode);
+
+        var selected = AutoTranslateViewModel.ResolveDetectedSourceLanguage(
+            "pt", languages, previous, uiCultureName);
+
+        Assert.NotNull(selected);
+        Assert.Equal(previousCode, selected.Code);
+    }
+
+    [Fact]
+    public void GenericPortugueseDetection_WhenOnlyBrazilIsOffered_DoesNotChooseEnglish()
+    {
+        var languages = new List<TranslationPair>
+        {
+            new("English", "en"),
+            new("Brazilian Portuguese", "pt-BR"),
+        };
+
+        var selected = AutoTranslateViewModel.ResolveDetectedSourceLanguage(
+            "pt", languages, null, "en-US");
+
+        Assert.NotNull(selected);
+        Assert.Equal("pt-BR", selected.Code);
+    }
+
+    [Fact]
+    public void GenericPortugueseDetection_OtherLanguagesAreNotReinterpreted()
+    {
+        var languages = new GoogleTranslateV2().GetSupportedSourceLanguages();
+
+        var spanish = AutoTranslateViewModel.ResolveDetectedSourceLanguage("es", languages, null, "pt-PT");
+        var english = AutoTranslateViewModel.ResolveDetectedSourceLanguage("en", languages, null, "pt-BR");
+        var unknown = AutoTranslateViewModel.ResolveDetectedSourceLanguage("xx-INVALID", languages, null, "pt-PT");
+
+        Assert.Equal("es", spanish?.Code);
+        Assert.Equal("en", english?.Code);
+        Assert.Null(unknown);
+    }
+
+    [Fact]
+    public void GenericPortugueseDetection_KeepsNllbLanguageOnlyChoice()
+    {
+        var languages = new NoLanguageLeftBehindServe().GetSupportedSourceLanguages();
+        var previous = languages.Single(p => p.Code == "por_Latn");
+        var selected = AutoTranslateViewModel.ResolveDetectedSourceLanguage("pt", languages, previous);
+        Assert.NotNull(selected);
+        Assert.Equal("por_Latn", selected.Code);
+    }
+
+    [Fact]
+    public void BatchConvert_SavedGooglePortuguese_StaysBrazilian()
+    {
+        var targets = new GoogleTranslateV1().GetSupportedTargetLanguages();
+
+        var selected = AutoTranslateViewModel.FindBatchConvertLanguage(targets, "pt", GoogleTranslateV1.StaticName);
+
+        Assert.Equal("pt-BR", selected?.Code);
+    }
+
+    [Fact]
+    public void BatchConvert_SavedTwoLetterValue_StillMatchesEngineOwnEntry()
+    {
+        var targets = new GeminiTranslate().GetSupportedTargetLanguages();
+
+        var selected = AutoTranslateViewModel.FindBatchConvertLanguage(targets, "pt", GeminiTranslate.StaticName);
+
+        Assert.Equal("Portuguese", selected?.Name);
+    }
+
+    [Fact]
+    public void GoogleBrazilian_KeepsPortugueseOnEnginesWithOneEntry()
+    {
+        var previous = new GoogleTranslateV1().GetSupportedTargetLanguages().Single(p => p.Code == "pt-BR");
+
+        Assert.Equal("por_Latn", AutoTranslateViewModel.FindSameLanguage(previous, new NoLanguageLeftBehindServe().GetSupportedTargetLanguages())?.Code);
+        Assert.Equal("pt", AutoTranslateViewModel.FindSameLanguage(previous, new PapagoTranslate().GetSupportedTargetLanguages())?.Code);
+        Assert.Equal("pt", AutoTranslateViewModel.FindSameLanguage(previous, new BaiduTranslate().GetSupportedTargetLanguages())?.Code);
+        Assert.Equal("pt-PT", AutoTranslateViewModel.FindSameLanguage(previous, new MyMemoryApi().GetSupportedTargetLanguages())?.Code);
+    }
+
+    [Fact]
+    public void LibreBrazilian_MapsBothWays()
+    {
+        var google = new GoogleTranslateV1().GetSupportedTargetLanguages();
+        var libre = new LibreTranslate().GetSupportedTargetLanguages();
+
+        Assert.Equal("pb", AutoTranslateViewModel.FindSameLanguage(google.Single(p => p.Code == "pt-BR"), libre)?.Code);
+        Assert.Equal("pt-BR", AutoTranslateViewModel.FindSameLanguage(libre.Single(p => p.Code == "pb"), google)?.Code);
+    }
+
+    [Fact]
+    public void SameNameOnNextEngine_IsNotMistakenForACode()
+    {
+        var ga = new GoogleTranslateV1().GetSupportedTargetLanguages().Single(p => p.Code == "gaa");
+        var irish = new MyMemoryApi().GetSupportedTargetLanguages().Single(p => p.Code == "ga-IE");
+
+        Assert.Equal("gaa", AutoTranslateViewModel.FindSameLanguage(ga, new GoogleTranslateV2().GetSupportedTargetLanguages())?.Code);
+        Assert.Equal("Irish", AutoTranslateViewModel.FindSameLanguage(irish, new GeminiTranslate().GetSupportedTargetLanguages())?.Name);
+    }
+
+    [Fact]
+    public void TwoLetterCode_FallsBackToEnglishName()
+    {
+        var microsoft = new MicrosoftTranslator().GetSupportedTargetLanguages();
+
+        Assert.Equal("nb", AutoTranslateViewModel.FindLanguage(microsoft, "no")?.Code);
+    }
+
+    [Fact]
+    public void SharedIso_ExactEnglishNameWins()
+    {
+        var myMemory = new MyMemoryApi().GetSupportedSourceLanguages();
+
+        Assert.Equal("de-DE", AutoTranslateViewModel.FindLanguage(myMemory, "de")?.Code);
+    }
+
+    [Fact]
+    public void SharedIso_RegionsOfOneLanguageStillMatch()
+    {
+        var lara = new LaraTranslate().GetSupportedSourceLanguages();
+
+        Assert.StartsWith("en-", AutoTranslateViewModel.FindLanguage(lara, "en")?.Code);
+        Assert.Null(AutoTranslateViewModel.FindLanguage(lara, "zh"));
+        Assert.Null(AutoTranslateViewModel.FindLanguage(lara, "pt"));
+    }
+
+    [Fact]
+    public void DetectedLanguage_KeepsRegionOfPreviousChoice()
+    {
+        var lara = new LaraTranslate().GetSupportedSourceLanguages();
+        var previous = lara.First(p => p.Code == "en-GB");
+
+        Assert.Equal("en-GB", AutoTranslateViewModel.ResolveDetectedSourceLanguage("en", lara, previous)?.Code);
+    }
+
+    [Fact]
+    public void DetectedLanguageEngineLacks_UsesLastSource_NotEnglish()
+    {
+        var lastSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+        try
+        {
+            var subtitle = new Subtitle();
+            for (var i = 0; i < 40; i++)
+            {
+                subtitle.Paragraphs.Add(new Paragraph("Hvad er det du siger, jeg ved ikke hvad det er, men det er ikke noget jeg vil have.", i * 1000, i * 1000 + 900));
+            }
+
+            var languages = new ObservableCollection<TranslationPair>(new PapagoTranslate().GetSupportedSourceLanguages());
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = "ko";
+
+            Assert.Equal("ko", AutoTranslateViewModel.EvaluateDefaultSourceLanguageCode(null, subtitle, languages));
         }
         finally
         {

@@ -1027,7 +1027,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             SelectedAutoTranslator = translator;
         }
 
-        var sourceLanguage = SourceLanguages.FirstOrDefault(p => p.TwoLetterIsoLanguageName == Se.Settings.Tools.BatchConvert.AutoTranslateSourceLanguage);
+        var batchEngine = Se.Settings.Tools.BatchConvert.AutoTranslateEngine;
+        var sourceLanguage = AutoTranslateViewModel.FindBatchConvertLanguage(SourceLanguages, Se.Settings.Tools.BatchConvert.AutoTranslateSourceLanguage, batchEngine);
         if (sourceLanguage != null)
         {
             SelectedSourceLanguage = sourceLanguage;
@@ -1037,8 +1038,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             TargetLanguages,
             SelectedSourceLanguage,
             Se.Settings.AutoTranslate.AutoTranslateLastTarget,
-            Se.Language.CultureName);
-        var targetLanguage = TargetLanguages.FirstOrDefault(p => p.TwoLetterIsoLanguageName == Se.Settings.Tools.BatchConvert.AutoTranslateTargetLanguage);
+            Se.Language.CultureName,
+            savedProviderName: Se.Settings.AutoTranslate.AutoTranslateLastName);
+        var targetLanguage = AutoTranslateViewModel.FindBatchConvertLanguage(TargetLanguages, Se.Settings.Tools.BatchConvert.AutoTranslateTargetLanguage, batchEngine);
         if (targetLanguage != null)
         {
             SelectedTargetLanguage = targetLanguage;
@@ -4448,7 +4450,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             TargetLanguages,
             SelectedSourceLanguage,
             Se.Settings.AutoTranslate.AutoTranslateLastTarget,
-            Se.Language.CultureName);
+            Se.Language.CultureName,
+            savedProviderName: Se.Settings.AutoTranslate.AutoTranslateLastName);
     }
 
     internal void Onloaded(object? sender, RoutedEventArgs e)
