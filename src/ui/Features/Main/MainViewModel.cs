@@ -15247,6 +15247,18 @@ public partial class MainViewModel :
         {
             subtitle.RefreshTextRendering();
         }
+
+        // The theme art follows the variant too - Light and Dark each have their own.
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.EmptyBackgroundTile = UiTheme.GetThemeArt(UiTheme.WaveformBackgroundFileName);
+        }
+
+        var videoPlayer = GetVideoPlayerControl();
+        if (videoPlayer != null)
+        {
+            videoPlayer.EmptyBackground = UiTheme.GetThemeArt(UiTheme.VideoBackgroundFileName);
+        }
     }
 
     private void UpdateAlternatingRowBrush()
