@@ -75,6 +75,8 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private string _apiKeyText;
     [ObservableProperty] private string _apiIdText;
     [ObservableProperty] private bool _apiIdIsVisible;
+    [ObservableProperty] private string _apiRegionText;
+    [ObservableProperty] private bool _apiRegionIsVisible;
     [ObservableProperty] private string _apiSecretText;
     [ObservableProperty] private bool _apiSecretIsVisible;
     [ObservableProperty] private bool _apiUrlIsVisible;
@@ -146,6 +148,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         ModelText = string.Empty;
         ApiIdText = string.Empty;
         ApiSecretText = string.Empty;
+        ApiRegionText = string.Empty;
 
         AutoTranslators = new ObservableCollection<IAutoTranslator>
         {
@@ -277,6 +280,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.MicrosoftTranslatorApiKey = Se.Settings.AutoTranslate.MicrosoftTranslatorApiKey;
         Configuration.Settings.Tools.MicrosoftTranslatorCategory = Se.Settings.AutoTranslate.MicrosoftTranslatorCategory;
         Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint = Se.Settings.AutoTranslate.MicrosoftTranslatorTokenEndpoint;
+        Configuration.Settings.Tools.MicrosoftTranslatorRegion = Se.Settings.AutoTranslate.MicrosoftTranslatorRegion;
 
         Configuration.Settings.Tools.AutoTranslateDeepLApiKey = Se.Settings.AutoTranslate.DeepLApiKey;
         Configuration.Settings.Tools.AutoTranslateDeepLUrl = Se.Settings.AutoTranslate.DeepLUrl;
@@ -354,6 +358,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (engineType == typeof(MicrosoftTranslator))
         {
             Configuration.Settings.Tools.MicrosoftTranslatorApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.MicrosoftTranslatorRegion = (ApiRegionText ?? string.Empty).Trim();
         }
 
         if (engineType == typeof(DeepLTranslate))
@@ -602,6 +607,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.MicrosoftTranslatorApiKey = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
         Se.Settings.AutoTranslate.MicrosoftTranslatorCategory = Configuration.Settings.Tools.MicrosoftTranslatorCategory;
         Se.Settings.AutoTranslate.MicrosoftTranslatorTokenEndpoint = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
+        Se.Settings.AutoTranslate.MicrosoftTranslatorRegion = Configuration.Settings.Tools.MicrosoftTranslatorRegion;
 
         Se.Settings.AutoTranslate.DeepLApiKey = Configuration.Settings.Tools.AutoTranslateDeepLApiKey;
         Se.Settings.AutoTranslate.DeepLUrl = Configuration.Settings.Tools.AutoTranslateDeepLUrl;
@@ -2023,6 +2029,8 @@ public partial class AutoTranslateViewModel : ObservableObject
         //LabelApiKey.Text = "API key";
         ApiIdIsVisible = false;
         ApiSecretIsVisible = false;
+        ApiRegionIsVisible = false;
+        ApiRegionText = string.Empty;
 
         _apiUrls.Clear();
         _apiModels.Clear();
@@ -2045,6 +2053,8 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             ApiKeyText = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
             ApiKeyIsVisible = true;
+            ApiRegionText = Configuration.Settings.Tools.MicrosoftTranslatorRegion ?? string.Empty;
+            ApiRegionIsVisible = true;
             return;
         }
 
