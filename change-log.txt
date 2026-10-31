@@ -3,6 +3,27 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-beta12 (31st of October 2026)
+
+* FFmpeg player: subtitle overlay closer to the mpv preview (per-line alignment, inline colors, bold/italic, RTL, second subtitle style, opaque box, justify)
+* llama.cpp: pick CPU or Vulkan on Linux, switch builds from the engine settings - thx SMAP-git
+* Bing translate: add Region field for regional Azure resources, show the real token error
+* Classic theme: new video and waveform background art
+* Improve performance of layout 14 timeline and FFmpeg player subtitle preview
+* Improve help: recommended local models for translating from English
+* Fix waveform click selecting the source line instead of its duplicate - thx Rafatenshii
+* Fix "Generate background boxes" emptying the original subtitle - thx bichitoxxx
+* Fix error log entries + Themes.zip unpacked on every start with the System theme - thx GrampaWildWilly
+* Fix Multiple replace ticking excluded preview lines again
+* Fix "push neighbour" shortcuts lengthening a neighbour already under minimum duration
+* Fix AutoCompleteBox and Source view borders - thx pdjdev
+* seconv: fix LFM vision models losing their OCR prompt
+* seconv: fix --ollama-url with a bare host:port
+* Update Japanese translation - thx hisui3393
+* Update German translation - thx FunkyKnilch
+
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-beta11 (30th of October 2026)
 
 * Add "Move start/end X ms" shortcuts that push the neighbour line (no default key) - thx doom9 forum
