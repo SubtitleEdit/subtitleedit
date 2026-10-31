@@ -66,6 +66,9 @@ public partial class AutoTranslateViewModel : ObservableObject
     public bool IsOkPrimary => IsTranslateEnabled && HasTranslatedSomething;
     public bool IsOkEnabled => IsTranslateEnabled && HasTranslatedSomething;
 
+    /// <summary>Whether any row holds text worth applying - blank or whitespace-only rows do not count.</summary>
+    public bool HasUsableTranslation => Rows.Any(r => !string.IsNullOrWhiteSpace(r.TranslatedText));
+
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] double _progressValue;
     [ObservableProperty] bool _isProgressEnabled;
@@ -741,6 +744,16 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Language.CultureName,
             Se.Settings.AutoTranslate.AutoTranslateLastSource,
             System.Globalization.CultureInfo.CurrentUICulture.Name);
+    }
+
+    /// <summary>
+    /// Applies a manual edit of a translation cell. An edit can add the first translation (enables
+    /// OK) or clear the last one (disables it again, as there is nothing left to apply).
+    /// </summary>
+    public void OnTranslationEdited(TranslateRow row, string text)
+    {
+        row.TranslatedText = text;
+        HasTranslatedSomething = HasUsableTranslation;
     }
 
     [RelayCommand]

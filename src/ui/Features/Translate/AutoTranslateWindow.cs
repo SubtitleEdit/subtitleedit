@@ -452,11 +452,7 @@ public class AutoTranslateWindow : Window
                 var cell = new Border { Background = Brushes.Transparent };
                 _ = new TableViewInlineTextEditor(cell, tableView,
                     () => row.TranslatedText,
-                    text =>
-                    {
-                        row.TranslatedText = text;
-                        vm.HasTranslatedSomething = true; // an edited translation is something to keep - enables OK
-                    },
+                    text => vm.OnTranslationEdited(row, text),
                     () => TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.TranslatedText)).Build(row)!,
                     canEdit: () => vm.IsTranslateEnabled,
                     hint: Se.Language.Translate.EditTranslationHint);

@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace UITests.Features.Main;
 
@@ -103,7 +104,7 @@ public class AutoTranslateSelectedLinesTests
             var detectedField = typeof(MainViewModel).GetField("_detectedLanguageCode", BindingFlags.Instance | BindingFlags.NonPublic)!;
             detectedField.SetValue(vm, "zz");
 
-            FakeTranslateWindowService.Install(vm, translateInPlace: true, produceTranslations: false);
+            FakeTranslateWindowService.Install(vm, translateInPlace: true, translate: _ => null);
             await vm.AutoTranslateSelectedLinesCommand.ExecuteAsync(null);
             await SettleAsync(window);
 
@@ -135,7 +136,7 @@ public class AutoTranslateSelectedLinesTests
                 "_subtitleFileName", BindingFlags.Instance | BindingFlags.NonPublic)!;
             var beforeFilename = filenameField.GetValue(vm);
 
-            FakeTranslateWindowService.Install(vm, translateInPlace: false, produceTranslations: false);
+            FakeTranslateWindowService.Install(vm, translateInPlace: false, translate: _ => null);
             await vm.ShowAutoTranslateCommand.ExecuteAsync(null);
             await SettleAsync(window);
 
@@ -161,13 +162,22 @@ public class AutoTranslateSelectedLinesTests
             AddLine(vm, "Two", 1000, 2000);
             await SettleAsync(window);
 
-            FakeTranslateWindowService.Install(vm, translateInPlace: false, forcedTranslation: " ");
+            var detectedField = typeof(MainViewModel).GetField(
+                "_detectedLanguageCode", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            detectedField.SetValue(vm, "zz");
+            var filenameField = typeof(MainViewModel).GetField(
+                "_subtitleFileName", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var beforeFilename = filenameField.GetValue(vm);
+
+            FakeTranslateWindowService.Install(vm, translateInPlace: false, translate: _ => " ");
             await vm.ShowAutoTranslateCommand.ExecuteAsync(null);
             await SettleAsync(window);
 
             Assert.Equal(new[] { "One", "Two" }, vm.Subtitles.Select(p => p.Text));
             Assert.All(vm.Subtitles, p => Assert.True(string.IsNullOrEmpty(p.OriginalText)));
             Assert.False(vm.ShowColumnOriginalText);
+            Assert.Equal("zz", detectedField.GetValue(vm));
+            Assert.Equal(beforeFilename, filenameField.GetValue(vm));
         }
         finally
         {
@@ -187,8 +197,141 @@ public class AutoTranslateSelectedLinesTests
             vm.SubtitleGrid.SelectedItems?.Add(selected);
             await SettleAsync(window);
 
-            FakeTranslateWindowService.Install(vm, translateInPlace: true, forcedTranslation: " ");
+            FakeTranslateWindowService.Install(vm, translateInPlace: true, translate: _ => " ");
             await vm.AutoTranslateSelectedLinesCommand.ExecuteAsync(null);
+            await SettleAsync(window);
+
+            Assert.Equal("One", vm.Subtitles.Single().Text);
+            Assert.True(string.IsNullOrEmpty(vm.Subtitles.Single().OriginalText));
+            Assert.False(vm.ShowColumnOriginalText);
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task SelectedLines_CaptureOriginal_WhitespaceOnlyTranslation_IsNoOp()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "One", 0, 1000);
+            AddLine(vm, "Two", 1000, 2000);
+            var rows = vm.Subtitles.ToList();
+            vm.SubtitleGrid.SelectedItems?.Clear();
+            vm.SubtitleGrid.SelectedItems?.Add(rows[0]);
+            await SettleAsync(window);
+
+            var detectedField = typeof(MainViewModel).GetField("_detectedLanguageCode", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            detectedField.SetValue(vm, "zz");
+
+            FakeTranslateWindowService.Install(vm, translateInPlace: false, translate: _ => " ");
+            await vm.AutoTranslateSelectedLinesCommand.ExecuteAsync(null);
+            await SettleAsync(window);
+
+            Assert.Equal(new[] { "One", "Two" }, vm.Subtitles.Select(p => p.Text));
+            Assert.All(vm.Subtitles, p => Assert.True(string.IsNullOrEmpty(p.OriginalText)));
+            Assert.False(vm.ShowColumnOriginalText);
+            Assert.Equal("zz", detectedField.GetValue(vm));
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task FullFile_PartlyWhitespaceTranslation_KeepsTextOfBlankRows()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "One", 0, 1000);
+            AddLine(vm, "Two", 1000, 2000);
+            await SettleAsync(window);
+
+            FakeTranslateWindowService.Install(vm, translateInPlace: false, translate: text => text == "One" ? "T:One" : " ");
+            await vm.ShowAutoTranslateCommand.ExecuteAsync(null);
+            await SettleAsync(window);
+
+            Assert.Equal(new[] { "T:One", "Two" }, vm.Subtitles.Select(p => p.Text));
+            Assert.Equal(new[] { "One", "Two" }, vm.Subtitles.Select(p => p.OriginalText));
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task SelectedLines_PartlyWhitespaceTranslation_KeepsTextOfBlankRows()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "One", 0, 1000);
+            AddLine(vm, "Two", 1000, 2000);
+            var rows = vm.Subtitles.ToList();
+            vm.SubtitleGrid.SelectedItems?.Clear();
+            vm.SubtitleGrid.SelectedItems?.Add(rows[0]);
+            vm.SubtitleGrid.SelectedItems?.Add(rows[1]);
+            await SettleAsync(window);
+
+            FakeTranslateWindowService.Install(vm, translateInPlace: true, translate: text => text == "One" ? "T:One" : " ");
+            await vm.AutoTranslateSelectedLinesCommand.ExecuteAsync(null);
+            await SettleAsync(window);
+
+            Assert.Equal(new[] { "T:One", "Two" }, vm.Subtitles.Select(p => p.Text));
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public void ClearingTheLastTranslation_DisablesOk()
+    {
+        var translateVm = new AutoTranslateViewModel(new WindowService(new NullServiceProvider()), new FolderHelper());
+        var row = new TranslateRow();
+        translateVm.Rows.Add(row);
+
+        translateVm.OnTranslationEdited(row, "Text");
+        Assert.True(translateVm.IsOkEnabled);
+
+        translateVm.OnTranslationEdited(row, " ");
+        Assert.False(translateVm.IsOkEnabled);
+    }
+
+    [AvaloniaFact]
+    public void CopyPaste_BlankTranslatedLine_IsNotATranslation()
+    {
+        var copyPasteVm = new CopyPasteTranslateViewModel(new WindowService(new NullServiceProvider()));
+        copyPasteVm.Subtitles.Add(new SubtitleLineViewModel { Text = "One" });
+        copyPasteVm.Subtitles.Add(new SubtitleLineViewModel { Text = "Two" });
+
+        typeof(CopyPasteTranslateViewModel)
+            .GetMethod("FillTranslatedText", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(copyPasteVm, new object[] { new List<string> { "T:One", " " }, 0 });
+
+        Assert.Equal(new[] { "T:One", "Two" }, copyPasteVm.Subtitles.Select(p => p.Text));
+        Assert.Equal(new[] { 0 }, copyPasteVm.TranslatedRowIndices);
+    }
+
+    [AvaloniaFact]
+    public async Task CopyPaste_NoTranslatedRows_IsNoOp()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "One", 0, 1000);
+            await SettleAsync(window);
+
+            var field = typeof(MainViewModel).GetField("_windowService", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            field.SetValue(vm, DispatchProxy.Create<IWindowService, FakeCopyPasteWindowService>());
+            await vm.ShowTranslateViaCopyPasteCommand.ExecuteAsync(null);
             await SettleAsync(window);
 
             Assert.Equal("One", vm.Subtitles.Single().Text);
@@ -209,20 +352,18 @@ public class AutoTranslateSelectedLinesTests
             .ToList();
     }
 
-    /// <summary>Stands in for the auto-translate dialog: prefixes each row with "T:" and presses OK.</summary>
+    /// <summary>Stands in for the auto-translate dialog: fills each row (by default with "T:" + text) and presses OK.</summary>
     public class FakeTranslateWindowService : DispatchProxy
     {
         private static bool _translateInPlace;
-        private static bool _produceTranslations = true;
-        private static string? _forcedTranslation;
+        private static Func<string, string?> _translate = text => "T:" + text;
 
         public static bool LastInPlaceOffered { get; private set; }
 
-        public static void Install(MainViewModel vm, bool translateInPlace, bool produceTranslations = true, string? forcedTranslation = null)
+        public static void Install(MainViewModel vm, bool translateInPlace, Func<string, string?>? translate = null)
         {
             _translateInPlace = translateInPlace;
-            _produceTranslations = produceTranslations;
-            _forcedTranslation = forcedTranslation;
+            _translate = translate ?? (text => "T:" + text);
             var field = typeof(MainViewModel).GetField("_windowService", BindingFlags.Instance | BindingFlags.NonPublic)!;
             field.SetValue(vm, Create<IWindowService, FakeTranslateWindowService>());
         }
@@ -241,16 +382,32 @@ public class AutoTranslateSelectedLinesTests
             translateVm.OnLoaded();
             LastInPlaceOffered = translateVm.TranslateInPlaceIsVisible;
             translateVm.TranslateInPlace = _translateInPlace;
-            if (_produceTranslations || _forcedTranslation != null)
+            foreach (var row in translateVm.Rows)
             {
-                foreach (var row in translateVm.Rows)
-                {
-                    row.TranslatedText = _forcedTranslation ?? ("T:" + row.Text);
-                }
+                row.TranslatedText = _translate(row.Text) ?? string.Empty;
             }
 
             translateVm.OkPressed = true;
             return Task.FromResult(translateVm);
+        }
+    }
+
+    /// <summary>Stands in for the copy-paste translate dialog: presses OK without translating anything.</summary>
+    public class FakeCopyPasteWindowService : DispatchProxy
+    {
+        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
+        {
+            if (targetMethod?.Name != nameof(IWindowService.ShowDialogAsync) ||
+                targetMethod.GetGenericArguments() is not [_, var vmType] ||
+                vmType != typeof(CopyPasteTranslateViewModel))
+            {
+                throw new NotSupportedException(targetMethod?.Name);
+            }
+
+            var copyPasteVm = new CopyPasteTranslateViewModel(new WindowService(new NullServiceProvider()));
+            ((Action<CopyPasteTranslateViewModel>?)args![1])?.Invoke(copyPasteVm);
+            typeof(CopyPasteTranslateViewModel).GetProperty(nameof(CopyPasteTranslateViewModel.OkPressed))!.SetValue(copyPasteVm, true);
+            return Task.FromResult(copyPasteVm);
         }
     }
 

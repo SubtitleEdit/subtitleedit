@@ -3821,7 +3821,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             // A row the engine never returned text for keeps its source text rather than
             // being blanked - an engine failure part way through must not empty the rest.
-            if (!string.IsNullOrEmpty(translatedSubtitle[i].TranslatedText))
+            if (!string.IsNullOrWhiteSpace(translatedSubtitle[i].TranslatedText))
             {
                 subtitle.Paragraphs[i].Text = translatedSubtitle[i].TranslatedText;
             }

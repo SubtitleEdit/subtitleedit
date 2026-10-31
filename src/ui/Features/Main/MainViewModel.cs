@@ -14304,9 +14304,9 @@ public partial class MainViewModel :
             return;
         }
 
-        // A translation dialog may still return OK after the only translated cell is cleared.
-        // Leave every subtitle, reference row, file name and language setting untouched.
-        if (!result.Rows.Any(r => !string.IsNullOrWhiteSpace(r.TranslatedText)))
+        // OK can be enabled after a run that returned only blank text. Leave every subtitle,
+        // reference row, file name and language setting untouched.
+        if (!result.HasUsableTranslation)
         {
             return;
         }
@@ -14497,16 +14497,17 @@ public partial class MainViewModel :
             }
         });
 
+        _shortcutManager.ClearKeys();
+
         if (!result.OkPressed)
         {
-            _shortcutManager.ClearKeys();
             return;
         }
 
         // OK can be enabled after a partial/cancelled translation run. If no row actually
         // contains translated text, the operation is a no-op in both modes: do not capture an
         // original and do not reset language/spell-check state for unchanged subtitle content.
-        if (!result.Rows.Any(r => !string.IsNullOrWhiteSpace(r.TranslatedText)))
+        if (!result.HasUsableTranslation)
         {
             return;
         }
@@ -14572,7 +14573,8 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<CopyPasteTranslateWindow, CopyPasteTranslateViewModel>(vm => { vm.Initialize(rows); });
 
-        if (!result.OkPressed)
+        // No translated rows means an unchanged subtitle: stay out of translator mode.
+        if (!result.OkPressed || result.TranslatedRowIndices.Count == 0)
         {
             return;
         }
