@@ -49,30 +49,53 @@ public static class OcrAssaAlignment
         return DetectFromPlacedImage(bitmap, positionX, positionY, screenWidth, screenHeight, text, writeAn2Tag);
     }
 
+    /// <summary>
+    /// True when <see cref="Detect"/> would see separately placed blocks in the image. Their text
+    /// must keep its line breaks: re-breaking it moves words from one block to the other (#16501).
+    /// </summary>
+    public static bool HasSeparatedBlocks(SKBitmap? bitmap, int screenWidth, int screenHeight)
+    {
+        if (bitmap == null || screenWidth <= 0 || screenHeight <= 0)
+        {
+            return false;
+        }
+
+        if (bitmap.Width >= screenWidth && bitmap.Height >= screenHeight)
+        {
+            var ink = BitmapInkBounds.Crop(bitmap);
+            if (ink is null)
+            {
+                return false;
+            }
+
+            using var inkBitmap = ink.Value.Bitmap;
+            return GetImageLineBlockCentersY(inkBitmap, screenHeight) != null;
+        }
+
+        return GetImageLineBlockCentersY(bitmap, screenHeight) != null;
+    }
+
     private static (string Text, bool AlignmentAdded) DetectFromPlacedImage(
         SKBitmap bitmap, int positionX, int positionY, int screenWidth, int screenHeight, string text, bool writeAn2Tag)
     {
-        // Check if image height is larger than approximately 1/3 of screen height
-        var imageHeightRatio = (double)bitmap.Height / screenHeight;
-        if (imageHeightRatio > 0.33)
+        // Try to split lines and set alignment for each line
+        var lines = text.Trim().SplitToLines();
+        var blockCentersY = lines.Count > 1 ? GetImageLineBlockCentersY(bitmap, screenHeight) : null;
+        if (blockCentersY != null)
         {
-            // Try to split lines and set alignment for each line
-            var lines = text.Trim().SplitToLines();
-            var lineCentersY = lines.Count > 1 ? GetSeparatedLineCentersY(bitmap, lines.Count, screenHeight) : null;
-            if (lineCentersY != null)
+            var lineAlignments = new List<string>();
+            var multiLineCenterX = positionX + bitmap.Width / 2.0;
+            var multiLineRelativeX = multiLineCenterX / screenWidth;
+
+            for (var i = 0; i < lines.Count; i++)
             {
-                var lineAlignments = new List<string>();
-                var multiLineCenterX = positionX + bitmap.Width / 2.0;
-                var multiLineRelativeX = multiLineCenterX / screenWidth;
-
-                for (var i = 0; i < lines.Count; i++)
-                {
-                    var lineRelativeY = (positionY + lineCentersY[i]) / screenHeight;
-                    lineAlignments.Add(GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY));
-                }
-
-                return ApplyLineAlignmentTags(lines, lineAlignments, text, writeAn2Tag);
+                // OCR can find more or fewer lines than the image has: keep them in order, first to first and last to last
+                var imageLineIndex = (int)Math.Round(i * (blockCentersY.Length - 1.0) / (lines.Count - 1.0));
+                var lineRelativeY = (positionY + blockCentersY[imageLineIndex]) / screenHeight;
+                lineAlignments.Add(GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY));
             }
+
+            return ApplyLineAlignmentTags(lines, lineAlignments, text, writeAn2Tag);
         }
 
         // Calculate center point of the image on screen
@@ -89,11 +112,18 @@ public static class OcrAssaAlignment
     /// <summary>
     /// Finds blocks of lines placed apart in a tall image, e.g. a sign at the top and dialogue at
     /// the bottom: lines further apart than <see cref="MinBlockGapRatio"/> of the frame are in
-    /// different blocks. Returns the Y center, in the image, of the block of each text line, or
+    /// different blocks. Returns the Y center, in the image, of the block of each image line, or
     /// null when the image holds a single block.
     /// </summary>
-    private static List<double>? GetSeparatedLineCentersY(SKBitmap bitmap, int textLineCount, int screenHeight)
+    private static double[]? GetImageLineBlockCentersY(SKBitmap bitmap, int screenHeight)
     {
+        // Check if image height is larger than approximately 1/3 of screen height
+        var imageHeightRatio = (double)bitmap.Height / screenHeight;
+        if (imageHeightRatio <= 0.33)
+        {
+            return null;
+        }
+
         var nbmp = new NikseBitmap2(bitmap);
         nbmp.MakeOneColor(SKColors.White);
         var imageLines = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
@@ -118,20 +148,7 @@ public static class OcrAssaAlignment
             blockStart = i;
         }
 
-        if (imageLines.Count == 0 || blockCentersY[0] == blockCentersY[^1])
-        {
-            return null;
-        }
-
-        // OCR can find more or fewer lines than the image has: keep them in order, first to first and last to last
-        var lineCentersY = new List<double>();
-        for (var i = 0; i < textLineCount; i++)
-        {
-            var imageLineIndex = (int)Math.Round(i * (imageLines.Count - 1.0) / (textLineCount - 1.0));
-            lineCentersY.Add(blockCentersY[imageLineIndex]);
-        }
-
-        return lineCentersY;
+        return imageLines.Count == 0 || blockCentersY[0] == blockCentersY[^1] ? null : blockCentersY;
     }
 
     // "an2" is the default bottom-center alignment, so no tag is needed for it (#12393)

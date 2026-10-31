@@ -141,6 +141,51 @@ public class OcrAssaAlignmentTests
         Assert.Equal("{\\an5}A\nB\nC\nD\nE\nF\nG\nH", result.Text);
     }
 
+    // Auto-break must leave these alone: it moved words between the top and the bottom (#16501).
+    [Theory]
+    [InlineData(new[] { 20, 940 }, true)]
+    [InlineData(new[] { 20, 80, 940 }, true)]
+    [InlineData(new[] { 20, 100, 180, 260, 340, 420, 500, 580 }, false)]
+    public void HasSeparatedBlocks_TallImage_GoesByTheGap(int[] lineTops, bool expected)
+    {
+        using var bitmap = MakeTallImage(lineTops);
+
+        Assert.Equal(expected, OcrAssaAlignment.HasSeparatedBlocks(bitmap, 1920, 1080));
+    }
+
+    [Fact]
+    public void HasSeparatedBlocks_NormalImage_IsFalse()
+    {
+        using var bitmap = new SKBitmap(800, 100);
+
+        Assert.False(OcrAssaAlignment.HasSeparatedBlocks(bitmap, 1920, 1080));
+    }
+
+    [Theory]
+    [InlineData(0, 0)]
+    [InlineData(-1, -1)]
+    public void HasSeparatedBlocks_UnknownScreenSize_IsFalse(int screenWidth, int screenHeight)
+    {
+        using var bitmap = MakeTallImage(20, 940);
+
+        Assert.False(OcrAssaAlignment.HasSeparatedBlocks(bitmap, screenWidth, screenHeight));
+    }
+
+    [Fact]
+    public void HasSeparatedBlocks_FrameSizedImage_GoesByTheInk()
+    {
+        using var bitmap = new SKBitmap(720, 576, SKColorType.Rgba8888, SKAlphaType.Unpremul);
+        bitmap.Erase(SKColors.Transparent);
+        using (var canvas = new SKCanvas(bitmap))
+        using (var paint = new SKPaint { Color = SKColors.White })
+        {
+            canvas.DrawRect(100, 30, 500, 30, paint);
+            canvas.DrawRect(100, 510, 500, 30, paint);
+        }
+
+        Assert.True(OcrAssaAlignment.HasSeparatedBlocks(bitmap, 720, 576));
+    }
+
     [Fact]
     public void SplitTextByAlignmentGroups_BlockOfLines_StaysTogether()
     {
