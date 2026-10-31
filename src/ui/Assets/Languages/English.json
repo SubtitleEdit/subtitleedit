@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta11",
+  "version": "v5.4.0-beta12",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -3485,7 +3485,8 @@
     "customPromptHint": "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt",
     "editTranslationHint": "Click the selected row's translation to edit it (Enter saves, Escape cancels)",
     "llamaCppDownloadEngineAndModelPrompt": "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?",
-    "llamaCppDownloadModelPrompt": "llama.cpp requires the selected translation model to be downloaded. Download now?"
+    "llamaCppDownloadModelPrompt": "llama.cpp requires the selected translation model to be downloaded. Download now?",
+    "microsoftTranslatorRegionHint": "Only for a regional or multi-service Azure resource, e.g. westeurope (see Keys and Endpoint in the Azure portal) - leave empty for a global resource"
   },
   "options": {
     "settings": {

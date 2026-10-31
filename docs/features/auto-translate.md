@@ -27,7 +27,7 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 
 - **Google Translate V1 API** — Free Google Translate. When Google answers with its "unusual traffic" block page, Subtitle Edit retries the request through a fallback endpoint (`clients5.google.com`) before giving up; a block is on Google's side and is usually lifted again after minutes to a few hours
 - **Google Translate V2 API** — Google Cloud Translation (requires API key)
-- **Bing Microsoft Translator** — Azure Cognitive Services (requires API key)
+- **Bing Microsoft Translator** — Azure Cognitive Services (requires API key). For a regional or multi-service Azure resource, also enter its **Region**, for example `westeurope` (shown under Keys and Endpoint in the Azure portal); leave it empty for a global resource
 - **DeepL V2 translate** — DeepL translation (requires API key). Every language the DeepL API offers is listed, as source and as target (including the target-only regional variants such as fr-CA and de-CH). A **Formality** dropdown — Default, More formal, Less formal, More formal (fall back to default), Less formal (fall back to default) — appears for target languages that support it
 - **LibreTranslate** — Open-source, self-hosted translation
 - **MyMemory Translate** — Free translation memory

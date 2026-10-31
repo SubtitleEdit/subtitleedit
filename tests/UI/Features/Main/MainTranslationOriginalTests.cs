@@ -23,6 +23,8 @@ namespace UITests.Features.Main;
 /// </summary>
 public class MainTranslationOriginalTests
 {
+    private const string BoxText = @"{\p1}m 0 0 l 10 0 10 10 0 10{\p0}";
+
     [AvaloniaFact]
     public void CaptureOriginalFromTranslatedRows_PutsThePreTranslationTextInTheOriginalSubtitle()
     {
@@ -337,6 +339,273 @@ public class MainTranslationOriginalTests
         return (window, (MainViewModel)view.DataContext!);
     }
 
+    /// <summary>
+    /// A rebuild with the non-matching lines on screen leaves every row blank, and the rows without
+    /// an original line are skipped - so the rebuilt original had no lines at all, and the check for
+    /// an all-blank original passed. The empty file then read back as "Unknown subtitle format"
+    /// (issue #16499).
+    /// </summary>
+    [AvaloniaFact]
+    public async Task SaveSubtitleOriginal_ShowingNonMatchingLinesAllBlank_LeavesTheFileUntouched()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var fileName = await WriteOriginalFile(lineCount: 3);
+        var onDisk = await File.ReadAllTextAsync(fileName);
+        try
+        {
+            ImportOriginal(vm, fileName, mismatch: true);
+            Assert.True(vm.IsShowingOriginalNonMatchingLines);
+
+            var blank = new Subtitle(vm.GetUpdateSubtitle(), false);
+            InvokeSetSubtitles(vm, blank, null);
+
+            var saved = await InvokeSaveSubtitleOriginal(vm, isAutoSave: false);
+
+            Assert.False(saved);
+            Assert.Equal(onDisk, await File.ReadAllTextAsync(fileName));
+        }
+        finally
+        {
+            File.Delete(fileName);
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task InsertBackgroundBoxRows_KeepsTheOriginalColumnAndPutsEachBoxAfterItsLine()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var fileName = await WriteOriginalFile(lineCount: 2);
+        try
+        {
+            ImportOriginal(vm, fileName, mismatch: false);
+
+            InvokeInsertBackgroundBoxRows(vm, MakeBoxes(vm));
+
+            Assert.Equal(
+                new[] { "Trans 1", BoxText, "Trans 2", BoxText },
+                vm.Subtitles.Select(p => p.Text));
+            Assert.Equal(
+                new[] { "Source 1", string.Empty, "Source 2", string.Empty },
+                vm.Subtitles.Select(p => p.OriginalText));
+            Assert.Equal(new[] { 1, 2, 3, 4 }, vm.Subtitles.Select(p => p.Number));
+        }
+        finally
+        {
+            File.Delete(fileName);
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// The boxes belong to the working subtitle only: the saved original must be the same lines it
+    /// was, with no blank line per box.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task InsertBackgroundBoxRows_ThenSavingTheOriginal_AddsNoLinesToIt()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var fileName = await WriteOriginalFile(lineCount: 2);
+        try
+        {
+            ImportOriginal(vm, fileName, mismatch: false);
+
+            InvokeInsertBackgroundBoxRows(vm, MakeBoxes(vm));
+            var saved = await InvokeSaveSubtitleOriginal(vm, isAutoSave: false);
+
+            Assert.True(saved);
+            var reloaded = Subtitle.Parse(fileName)!;
+            Assert.Equal(new[] { "Source 1", "Source 2" }, reloaded.Paragraphs.Select(p => p.Text));
+        }
+        finally
+        {
+            File.Delete(fileName);
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task InsertBackgroundBoxRows_WithNonMatchingLinesOnScreen_KeepsEveryOriginalLine()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var fileName = await WriteOriginalFile(lineCount: 3);
+        try
+        {
+            ImportOriginal(vm, fileName, mismatch: true);
+
+            InvokeInsertBackgroundBoxRows(vm, MakeBoxes(vm));
+            var saved = await InvokeSaveSubtitleOriginal(vm, isAutoSave: false);
+
+            Assert.True(saved);
+            var reloaded = Subtitle.Parse(fileName)!;
+            Assert.Equal(new[] { "Source 1", "Source 2", "Source 3" }, reloaded.Paragraphs.Select(p => p.Text));
+        }
+        finally
+        {
+            File.Delete(fileName);
+            CloseWindow(window, vm);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task InsertBackgroundBoxRows_LeavesACleanOriginalClean()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var fileName = await WriteOriginalFile(lineCount: 2);
+        try
+        {
+            ImportOriginal(vm, fileName, mismatch: false);
+
+            InvokeInsertBackgroundBoxRows(vm, MakeBoxes(vm));
+
+            Assert.Equal((int)GetField("_changeSubtitleHashOriginal").GetValue(vm)!, vm.GetFastHashOriginal());
+        }
+        finally
+        {
+            File.Delete(fileName);
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// The rebuilds re-fill the rows from the original by index, so the original has to keep its
+    /// (blank) line for a box in memory - only the saved file leaves it out.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task InsertBackgroundBoxRows_ThenARebuild_KeepsTheOriginalOnItsRow()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var fileName = await WriteOriginalFile(lineCount: 2);
+        try
+        {
+            ImportOriginal(vm, fileName, mismatch: false);
+            InvokeInsertBackgroundBoxRows(vm, MakeBoxes(vm));
+            await InvokeSaveSubtitleOriginal(vm, isAutoSave: false);
+
+            var rebuilt = new Subtitle(vm.GetUpdateSubtitle(), false);
+            var method = typeof(MainViewModel).GetMethod(
+                             "SetSubtitlesKeepingOriginal", BindingFlags.Instance | BindingFlags.NonPublic)
+                         ?? throw new InvalidOperationException("SetSubtitlesKeepingOriginal not found");
+            method.Invoke(vm, new object[] { rebuilt });
+
+            Assert.Equal(
+                new[] { "Source 1", string.Empty, "Source 2", string.Empty },
+                vm.Subtitles.Select(p => p.OriginalText));
+        }
+        finally
+        {
+            File.Delete(fileName);
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>
+    /// Opening the original again once the boxes exist: every original line matches, so nothing
+    /// marks the rows as not lining up - and each box added a blank line to the saved file.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task OriginalOpenedAfterTheBoxes_SavesWithoutBlankLines(bool showAllLines)
+    {
+        var (window, vm) = CreateMainViewModel();
+        var fileName = await WriteOriginalFile(lineCount: 2);
+        try
+        {
+            AddLine(vm, "Trans 1", string.Empty, 0, 2000);
+            AddLine(vm, BoxText, string.Empty, 0, 2000);
+            AddLine(vm, "Trans 2", string.Empty, 2000, 4000);
+            AddLine(vm, BoxText, string.Empty, 2000, 4000);
+
+            var original = Subtitle.Parse(fileName)!;
+            var match = ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, original);
+            if (showAllLines)
+            {
+                InvokeImportOriginalSubtitle(vm, fileName, original, match, false);
+            }
+            else
+            {
+                InvokeImportOriginalSubtitle(vm, fileName, match.Projection, null, false);
+            }
+
+            var saved = await InvokeSaveSubtitleOriginal(vm, isAutoSave: false);
+
+            Assert.True(saved);
+            var reloaded = Subtitle.Parse(fileName)!;
+            Assert.Equal(new[] { "Source 1", "Source 2" }, reloaded.Paragraphs.Select(p => p.Text));
+            Assert.Equal(new[] { 1, 2 }, reloaded.Paragraphs.Select(p => p.Number));
+        }
+        finally
+        {
+            File.Delete(fileName);
+            CloseWindow(window, vm);
+        }
+    }
+
+    /// <summary>A shape that really is in the original stays there, blank or not.</summary>
+    [AvaloniaFact]
+    public async Task SavingTheOriginal_KeepsADrawingOfItsOwn()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var fileName = await WriteOriginalFile(lineCount: 2);
+        try
+        {
+            ImportOriginal(vm, fileName, mismatch: false);
+            vm.Subtitles[1].Text = BoxText;
+            vm.Subtitles[1].OriginalText = BoxText;
+
+            var saved = await InvokeSaveSubtitleOriginal(vm, isAutoSave: false);
+
+            Assert.True(saved);
+            Assert.Equal(2, Subtitle.Parse(fileName)!.Paragraphs.Count);
+        }
+        finally
+        {
+            File.Delete(fileName);
+            CloseWindow(window, vm);
+        }
+    }
+
+    private static async Task<string> WriteOriginalFile(int lineCount)
+    {
+        var fileName = Path.Combine(Path.GetTempPath(), $"se-box-original-{Guid.NewGuid():N}.srt");
+        var subtitle = new Subtitle();
+        for (var i = 0; i < lineCount; i++)
+        {
+            subtitle.Paragraphs.Add(new Paragraph($"Source {i + 1}", i * 2000, (i + 1) * 2000));
+        }
+
+        await File.WriteAllTextAsync(fileName, subtitle.ToText(new SubRip()));
+        return fileName;
+    }
+
+    private static void ImportOriginal(MainViewModel vm, string fileName, bool mismatch)
+    {
+        AddLine(vm, "Trans 1", string.Empty, 0, 2000);
+        AddLine(vm, "Trans 2", string.Empty, 2000, 4000);
+
+        var original = Subtitle.Parse(fileName)!;
+        var match = mismatch ? ImportOriginalHelper.MatchOriginalLines(vm.Subtitles, original) : null;
+        InvokeImportOriginalSubtitle(vm, fileName, original, match, false);
+    }
+
+    private static List<Paragraph> MakeBoxes(MainViewModel vm)
+    {
+        return vm.Subtitles
+            .Where(p => !p.IsReferenceOnly)
+            .Select(p => new Paragraph(BoxText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds))
+            .ToList();
+    }
+
+    private static void InvokeInsertBackgroundBoxRows(MainViewModel vm, List<Paragraph> boxes)
+    {
+        var method = typeof(MainViewModel).GetMethod(
+                         "InsertBackgroundBoxRows", BindingFlags.Instance | BindingFlags.NonPublic)
+                     ?? throw new InvalidOperationException("InsertBackgroundBoxRows not found");
+
+        method.Invoke(vm, new object[] { boxes });
+    }
+
     private static SubtitleLineViewModel AddLine(
         MainViewModel vm, string text, string originalText, int startMs = 0, int endMs = 2000)
     {
@@ -374,7 +643,7 @@ public class MainTranslationOriginalTests
         Invoke(vm, "RemoveReferenceOnlyRows");
     }
 
-    private static void InvokeSetSubtitles(MainViewModel vm, Subtitle subtitle, Subtitle subtitleOriginal)
+    private static void InvokeSetSubtitles(MainViewModel vm, Subtitle subtitle, Subtitle? subtitleOriginal)
     {
         var method = typeof(MainViewModel).GetMethod(
                          "SetSubtitles",

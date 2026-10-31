@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public const string GoToUrl = "https://www.bing.com/translator";
         private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
         private const string TranslateUrl = "translate?api-version=3.0&from={0}&to={1}";
+        private const string RegionalTokenEndpoint = "https://{0}.api.cognitive.microsoft.com/sts/v1.0/issueToken";
         private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
         // Azure issues tokens valid for 10 minutes; refresh with a margin so
         // long translation runs do not start failing with 401 mid-run.
@@ -39,7 +40,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public void Initialize()
         {
             _apiKey = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
-            _tokenEndpoint = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
+            _tokenEndpoint = GetTokenEndpoint(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint, Configuration.Settings.Tools.MicrosoftTranslatorRegion);
             _category = Configuration.Settings.Tools.MicrosoftTranslatorCategory;
 
             try
@@ -49,8 +50,24 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             }
             catch (Exception e)
             {
-                throw new Exception("Can't get Access Token", e);
+                throw new Exception("Can't get Access Token: " + e.Message, e);
             }
+        }
+
+        /// <summary>
+        /// Regional and multi-service Azure resources must get their token from a URL with the
+        /// region in the host name. The Azure portal shows "global" for global resources, which
+        /// use the configured endpoint like an empty region does.
+        /// </summary>
+        internal static string GetTokenEndpoint(string tokenEndpoint, string? region)
+        {
+            var normalizedRegion = (region ?? string.Empty).Replace(" ", string.Empty).ToLowerInvariant();
+            if (normalizedRegion.Length == 0 || normalizedRegion == "global")
+            {
+                return tokenEndpoint;
+            }
+
+            return string.Format(RegionalTokenEndpoint, normalizedRegion);
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()
@@ -149,7 +166,10 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     if (!response.IsSuccessStatusCode)
                     {
                         SeLogger.Error($"{StaticName}: Error getting access token via {tokenEndpoint}: status code={response.StatusCode} {result}");
-                        throw new Exception($"Could not get access token via {tokenEndpoint}: {result}");
+                        var hint = response.StatusCode == HttpStatusCode.Unauthorized
+                            ? " Check the API key and, for a regional or multi-service Azure resource, the region."
+                            : string.Empty;
+                        throw new Exception($"Could not get access token via {tokenEndpoint}: {result}{hint}");
                     }
 
                     return result;
