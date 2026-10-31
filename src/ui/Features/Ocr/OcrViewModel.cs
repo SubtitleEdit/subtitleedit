@@ -4082,15 +4082,39 @@ public partial class OcrViewModel : ObservableObject
         return _autoBreakLanguage;
     }
 
+    private void AutoBreakIfNeeded(OcrSubtitleItem item)
+    {
+        // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
+        if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines && !HasSeparatedBlocks(item))
+        {
+            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
+        }
+    }
+
+    private bool HasSeparatedBlocks(OcrSubtitleItem item)
+    {
+        if (!HasCaptureAlignment)
+        {
+            return false;
+        }
+
+        try
+        {
+            var screenSize = item.GetScreenSize();
+            using var bitmap = item.GetSkBitmapClean(); // fresh bitmap each call; dispose to avoid a native leak
+            return OcrAssaAlignment.HasSeparatedBlocks(bitmap, screenSize.Width, screenSize.Height);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private OcrFixLineResultTemp OcrFixLine(int i, OcrSubtitleItem item)
     {
         var result = new OcrFixLineResultTemp();
 
-        // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
-        if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
-        {
-            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
-        }
+        AutoBreakIfNeeded(item);
 
         if (SelectedDictionary != null &&
             SelectedDictionary.Name != GetDictionaryNameNone() &&
@@ -4187,11 +4211,7 @@ public partial class OcrViewModel : ObservableObject
 
     private List<UnknownWordItem> OcrFixLineAndSetText(int i, OcrSubtitleItem item)
     {
-        // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
-        if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
-        {
-            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
-        }
+        AutoBreakIfNeeded(item);
 
         var unknownWords = new List<UnknownWordItem>();
         if (SelectedDictionary != null &&
