@@ -9,6 +9,30 @@ namespace LibUiLogicTests.AutoTranslate;
 /// </summary>
 public class GoogleTranslateLanguageTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void PortugueseVariants_HaveDistinctExplicitCodes(bool useV2)
+    {
+        var languages = useV2
+            ? new GoogleTranslateV2().GetSupportedTargetLanguages()
+            : GoogleTranslateV1.GetTranslationPairs();
+
+        Assert.Equal("pt-PT", languages.Single(p => p.Name == "PORTUGUESE").Code);
+        Assert.Equal("pt-BR", languages.Single(p => p.Name == "PORTUGUESE (BRAZIL)").Code);
+        Assert.DoesNotContain(languages, p => p.Code == "pt");
+    }
+
+    [Theory]
+    [InlineData("pt-BR", "pt")]
+    [InlineData("pt-br", "pt")]
+    [InlineData("pt-PT", "pt-PT")]
+    [InlineData("en", "en")]
+    public void V1_LanguageCodes_KeepTheLegacyFreeEndpointFormat(string code, string expected)
+    {
+        Assert.Equal(expected, GoogleTranslateV1.ToEndpointLanguageCode(code));
+    }
+
     [Fact]
     public void V1_HasNoDuplicateCodes()
     {
