@@ -54,6 +54,7 @@ public class SeAutoTranslate
     public string MicrosoftTranslatorApiKey { get; set; }
     public string MicrosoftTranslatorTokenEndpoint { get; set; }
     public string MicrosoftTranslatorCategory { get; set; }
+    public string MicrosoftTranslatorRegion { get; set; }
     public decimal RequestMaxBytes { get; set; }
     public decimal RequestDelaySeconds { get; set; }
 
@@ -192,6 +193,7 @@ public class SeAutoTranslate
         MicrosoftBingApiId = string.Empty;
         MicrosoftTranslatorApiKey = string.Empty;
         MicrosoftTranslatorCategory = string.Empty;
+        MicrosoftTranslatorRegion = string.Empty;
         MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
         MistralModel = MistralTranslate.Models[0];
         MistralPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";

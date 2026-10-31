@@ -56,6 +56,7 @@ public class LanguageTranslate
     public string EditTranslationHint { get; set; }
     public string LlamaCppDownloadEngineAndModelPrompt { get; set; }
     public string LlamaCppDownloadModelPrompt { get; set; }
+    public string MicrosoftTranslatorRegionHint { get; set; }
 
     public LanguageTranslate()
     {
@@ -113,5 +114,6 @@ public class LanguageTranslate
         EditTranslationHint = "Click the selected row's translation to edit it (Enter saves, Escape cancels)";
         LlamaCppDownloadEngineAndModelPrompt = "llama.cpp requires the llama-server engine and a translation model to be downloaded. Download now?";
         LlamaCppDownloadModelPrompt = "llama.cpp requires the selected translation model to be downloaded. Download now?";
+        MicrosoftTranslatorRegionHint = "Only for a regional or multi-service Azure resource, e.g. westeurope (see Keys and Endpoint in the Azure portal) - leave empty for a global resource";
     }
 }

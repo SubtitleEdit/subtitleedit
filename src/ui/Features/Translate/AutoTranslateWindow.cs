@@ -278,6 +278,13 @@ public class AutoTranslateWindow : Window
         }
         settingsPanel.Children.Add(Group(nameof(vm.ApiKeyIsVisible), Label(Se.Language.General.ApiKey), panelApiKey));
 
+        var textBoxApiRegion = Text(UiUtil.MakeTextBox(120, vm, nameof(vm.ApiRegionText)).WithAccessibleName(Se.Language.General.Region));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(textBoxApiRegion, Se.Language.Translate.MicrosoftTranslatorRegionHint);
+        }
+        settingsPanel.Children.Add(Group(nameof(vm.ApiRegionIsVisible), Label(Se.Language.General.Region), textBoxApiRegion));
+
         settingsPanel.Children.Add(Group(nameof(vm.FormalityIsVisible), Label(Se.Language.General.Formality),
             UiUtil.MakeComboBox(vm.Formalities, vm, nameof(vm.SelectedFormality)).WithWidth(200).WithAccessibleName(Se.Language.General.Formality)));
 
