@@ -117,10 +117,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _emptyBackground.IsVisible = showArt;
 
             // A native player window (mpv "wid" - the Windows default - and VLC) is drawn on top
-            // of everything Avalonia draws, so it is hidden while the art shows. Hiding only hides
-            // the native window: the window and the player in it live until the control is
-            // detached. The presenter is hidden rather than the control itself, as mpv's Linux
-            // resize workaround toggles the control's own IsVisible.
+            // of everything Avalonia draws, so it is hidden while the art shows. A presenter hidden
+            // before its first measure never creates its child, so the native window and the mpv
+            // core in it only come up when a video opens (#16513); hiding one that already exists
+            // just hides the window. The presenter is hidden rather than the control itself, as
+            // mpv's Linux resize workaround toggles the control's own IsVisible.
             if (_contentPresenter != null && PlayerContent is NativeControlHost)
             {
                 _contentPresenter.IsVisible = !showArt;
