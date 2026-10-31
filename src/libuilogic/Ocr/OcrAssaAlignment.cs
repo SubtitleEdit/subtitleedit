@@ -12,10 +12,14 @@ public static class OcrAssaAlignment
 {
     private static readonly Regex AlignmentTagRegex = new(@"^\{\\an[1-9]\}", RegexOptions.Compiled);
 
+    // Fraction of the frame height: the empty gap that separates two blocks of lines. Lines of one
+    // block are far closer than this at any resolution, also in tall images of many lines.
+    private const double MinBlockGapRatio = 0.15;
+
     /// <summary>
     /// Returns <paramref name="text"/> with an alignment tag matching the image's place in the
-    /// frame. A tall image (more than a third of the frame) holding a short multi-line text is
-    /// taken to be several separately placed lines, which are then tagged one by one.
+    /// frame. A tall image (more than a third of the frame) with a big empty gap between its
+    /// lines is taken to be several separately placed blocks, which are then tagged one by one.
     /// Nothing is added when the frame size is unknown.
     /// </summary>
     public static (string Text, bool AlignmentAdded) Detect(
@@ -54,32 +58,20 @@ public static class OcrAssaAlignment
         {
             // Try to split lines and set alignment for each line
             var lines = text.Trim().SplitToLines();
-            if (lines.Count > 1 && text.Length < 40)
+            var lineCentersY = lines.Count > 1 ? GetSeparatedLineCentersY(bitmap, lines.Count, screenHeight) : null;
+            if (lineCentersY != null)
             {
-                var nbmp = new NikseBitmap2(bitmap);
-                nbmp.MakeOneColor(SKColors.White);
-                var lineImages = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
-                var lineImages2 = NikseBitmapImageSplitter2.SplitToLines(nbmp, 20);
+                var lineAlignments = new List<string>();
+                var multiLineCenterX = positionX + bitmap.Width / 2.0;
+                var multiLineRelativeX = multiLineCenterX / screenWidth;
 
-                if (lineImages.Count > 1 || lineImages2.Count > 1)
+                for (var i = 0; i < lines.Count; i++)
                 {
-                    // Multiple lines detected - apply alignment to each line
-                    var lineAlignments = new List<string>();
-                    var multiLineCenterX = positionX + bitmap.Width / 2.0;
-                    var multiLineRelativeX = multiLineCenterX / screenWidth;
-
-                    for (var i = 0; i < lines.Count; i++)
-                    {
-                        // Calculate relative Y position for each line
-                        var lineHeight = bitmap.Height / (double)lines.Count;
-                        var lineY = positionY + (i * lineHeight) + (lineHeight / 2.0);
-                        var lineRelativeY = lineY / screenHeight;
-
-                        lineAlignments.Add(GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY));
-                    }
-
-                    return ApplyLineAlignmentTags(lines, lineAlignments, text, writeAn2Tag);
+                    var lineRelativeY = (positionY + lineCentersY[i]) / screenHeight;
+                    lineAlignments.Add(GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY));
                 }
+
+                return ApplyLineAlignmentTags(lines, lineAlignments, text, writeAn2Tag);
             }
         }
 
@@ -92,6 +84,54 @@ public static class OcrAssaAlignment
         var relativeY = centerY / screenHeight;
 
         return ApplyAlignmentTag(text, GetAssaPositionFromScreen(relativeX, relativeY), writeAn2Tag);
+    }
+
+    /// <summary>
+    /// Finds blocks of lines placed apart in a tall image, e.g. a sign at the top and dialogue at
+    /// the bottom: lines further apart than <see cref="MinBlockGapRatio"/> of the frame are in
+    /// different blocks. Returns the Y center, in the image, of the block of each text line, or
+    /// null when the image holds a single block.
+    /// </summary>
+    private static List<double>? GetSeparatedLineCentersY(SKBitmap bitmap, int textLineCount, int screenHeight)
+    {
+        var nbmp = new NikseBitmap2(bitmap);
+        nbmp.MakeOneColor(SKColors.White);
+        var imageLines = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
+        if (imageLines.Count < 2)
+        {
+            imageLines = NikseBitmapImageSplitter2.SplitToLines(nbmp, 20);
+        }
+
+        var minGap = screenHeight * MinBlockGapRatio;
+        var blockCentersY = new double[imageLines.Count];
+        var blockStart = 0;
+        for (var i = 1; i <= imageLines.Count; i++)
+        {
+            var bottom = imageLines[i - 1].Y + imageLines[i - 1].NikseBitmap!.Height;
+            if (i < imageLines.Count && imageLines[i].Y - bottom <= minGap)
+            {
+                continue;
+            }
+
+            var centerY = (imageLines[blockStart].Y + bottom) / 2.0;
+            Array.Fill(blockCentersY, centerY, blockStart, i - blockStart);
+            blockStart = i;
+        }
+
+        if (imageLines.Count == 0 || blockCentersY[0] == blockCentersY[^1])
+        {
+            return null;
+        }
+
+        // OCR can find more or fewer lines than the image has: keep them in order, first to first and last to last
+        var lineCentersY = new List<double>();
+        for (var i = 0; i < textLineCount; i++)
+        {
+            var imageLineIndex = (int)Math.Round(i * (imageLines.Count - 1.0) / (textLineCount - 1.0));
+            lineCentersY.Add(blockCentersY[imageLineIndex]);
+        }
+
+        return lineCentersY;
     }
 
     // "an2" is the default bottom-center alignment, so no tag is needed for it (#12393)
@@ -112,10 +152,12 @@ public static class OcrAssaAlignment
             return (originalText, false);
         }
 
+        // A line with the same alignment as the one above needs no tag of its own
         var perLine = new List<string>();
         for (var i = 0; i < lines.Count; i++)
         {
-            perLine.Add($"{{\\{lineAlignments[i]}}}{lines[i].Trim()}");
+            var tag = i > 0 && lineAlignments[i] == lineAlignments[i - 1] ? string.Empty : $"{{\\{lineAlignments[i]}}}";
+            perLine.Add(tag + lines[i].Trim());
         }
 
         return (string.Join("\n", perLine), true);

@@ -2733,6 +2733,16 @@ public partial class MainViewModel :
     private static readonly Regex AssaTagBlockRegex = new(@"\{[^}]*\}", RegexOptions.Compiled);
 
     /// <summary>
+    /// A row that draws a shape, such as a generated background box. Narrower than
+    /// <see cref="IsAssaDrawingText"/>, which also takes text lines: those have a real counterpart
+    /// in an original, a shape has one only if the original draws it too.
+    /// </summary>
+    internal static bool IsAssaVectorDrawing(string text)
+    {
+        return !string.IsNullOrEmpty(text) && AssaDrawingTagRegex.IsMatch(text);
+    }
+
+    /// <summary>
     /// A row the ASSA draw dialog imports as drawing: a \p1 drawing, a mask-only line
     /// (just an \iclip, no text) as the dialog writes for a layer of erase shapes, or a text
     /// line it wrote for a bubble or text box.
@@ -2960,6 +2970,7 @@ public partial class MainViewModel :
 
         SetAssaResolution(false);
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.AssaGenerateBackground);
         var result = await ShowDialogAsync<AssSetBackgroundWindow, AssSetBackgroundViewModel>(vm =>
         {
             vm.Initialize(GetUpdateSubtitle(), selectedItems, _mediaInfo?.Dimension.Width ?? 1920, _mediaInfo?.Dimension.Height ?? 1080, _videoFileName, GetVideoPlayerControl()?.Position);
@@ -2970,9 +2981,57 @@ public partial class MainViewModel :
             return;
         }
 
-        _subtitle.Header = result.ResultSubtitle.Header;
-        SetSubtitles(result.ResultSubtitle);
+        EndToolApply(toolApply, () =>
+        {
+            _subtitle.Header = result.ResultSubtitle.Header;
+            InsertBackgroundBoxRows(result.BoxParagraphs);
+        });
         RefreshSubtitlePreview();
+    }
+
+    /// <summary>
+    /// Adds the generated box lines to the grid, each after the rows that start no later than it.
+    /// The existing rows stay as they are: a wholesale rebuild blanked the original column, and the
+    /// next save then emptied the original's file (#16499). A box has no original line, see
+    /// <see cref="GetSaveSubtitleOriginal"/>.
+    /// </summary>
+    private void InsertBackgroundBoxRows(IReadOnlyCollection<Paragraph> boxes)
+    {
+        if (boxes.Count == 0)
+        {
+            return;
+        }
+
+        var originalWasDirty = _changeSubtitleHashOriginal != GetFastHashOriginal();
+
+        var sortedBoxes = boxes.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+        var rows = new List<SubtitleLineViewModel>(Subtitles.Count + sortedBoxes.Count);
+        var nextBox = 0;
+        foreach (var row in Subtitles)
+        {
+            while (nextBox < sortedBoxes.Count &&
+                   sortedBoxes[nextBox].StartTime.TotalMilliseconds < row.StartTime.TotalMilliseconds)
+            {
+                rows.Add(new SubtitleLineViewModel(sortedBoxes[nextBox++], SelectedSubtitleFormat));
+            }
+
+            rows.Add(row);
+        }
+
+        for (; nextBox < sortedBoxes.Count; nextBox++)
+        {
+            rows.Add(new SubtitleLineViewModel(sortedBoxes[nextBox], SelectedSubtitleFormat));
+        }
+
+        ReplaceSubtitles(rows);
+        Renumber();
+        UpdateGaps();
+
+        // The baseline hash covers the rows, but the original's lines are unchanged.
+        if (!originalWasDirty)
+        {
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+        }
     }
 
     [RelayCommand]
@@ -15257,6 +15316,18 @@ public partial class MainViewModel :
         {
             subtitle.RefreshTextRendering();
         }
+
+        // The theme art follows the variant too - Light and Dark each have their own.
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.EmptyBackgroundTile = UiTheme.GetThemeArt(UiTheme.WaveformBackgroundFileName);
+        }
+
+        var videoPlayer = GetVideoPlayerControl();
+        if (videoPlayer != null)
+        {
+            videoPlayer.EmptyBackground = UiTheme.GetThemeArt(UiTheme.VideoBackgroundFileName);
+        }
     }
 
     private void UpdateAlternatingRowBrush()
@@ -16608,9 +16679,11 @@ public partial class MainViewModel :
         // Not the display-only reference rows: the copy constructor keeps IsReferenceOnly, so
         // duplicating one produced a second dimmed, unnumbered row that was never saved - and
         // that an editable original then captured as a new line.
+        // A new id, as rows are looked up by id - a shared one made the waveform select the
+        // source line when the duplicate was clicked (#16500).
         foreach (var selected in SubtitleGridSelectedItems)
         {
-            newSubtitles.Add(new SubtitleLineViewModel(selected));
+            newSubtitles.Add(new SubtitleLineViewModel(selected, generateNewId: true));
         }
 
         foreach (var newSubtitle in newSubtitles)
@@ -17341,9 +17414,10 @@ public partial class MainViewModel :
             var pushGapMs = Math.Min(gapMs, s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds);
             if (newStartMs - pushGapMs < prev.EndTime.TotalMilliseconds)
             {
-                // Push no further than the previous line's minimum duration.
-                newPrevEndMs = Math.Max(newStartMs - pushGapMs,
-                    prev.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+                // Push no further than the previous line's minimum duration. A line already
+                // shorter than that stays as it is - pushing it back never lengthens it.
+                newPrevEndMs = Math.Max(newStartMs - pushGapMs, Math.Min(prev.EndTime.TotalMilliseconds,
+                    prev.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds));
                 newStartMs = newPrevEndMs + pushGapMs;
                 if (newStartMs >= s.StartTime.TotalMilliseconds)
                 {
@@ -17454,8 +17528,8 @@ public partial class MainViewModel :
             var pushGapMs = Math.Min(gapMs, next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds);
             if (newEndMs + pushGapMs > next.StartTime.TotalMilliseconds)
             {
-                newNextStartMs = Math.Min(newEndMs + pushGapMs,
-                    next.EndTime.TotalMilliseconds - Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+                newNextStartMs = Math.Min(newEndMs + pushGapMs, Math.Max(next.StartTime.TotalMilliseconds,
+                    next.EndTime.TotalMilliseconds - Se.Settings.General.SubtitleMinimumDisplayMilliseconds));
                 newEndMs = newNextStartMs - pushGapMs;
                 if (newEndMs <= s.EndTime.TotalMilliseconds)
                 {
@@ -29153,16 +29227,15 @@ public partial class MainViewModel :
             return await SaveSubtitleOriginalAs();
         }
 
-        var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
-        var originalSubtitle = GetSaveSubtitleOriginal();
-
         // A whole original without a single line of text is never something the user typed - the
         // column was blanked somewhere (a rebuild, a lost translation source). Writing it out
         // would leave numbers and time codes and no subtitles at all, over the file the
         // translation was made from, so refuse instead (#14091) - a single-line original
-        // included, it is overwritten just as irreversibly.
-        if (originalSubtitle.Paragraphs.Count > 0 &&
-            originalSubtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        // included, it is overwritten just as irreversibly. Asked of the rows, before the original
+        // is rebuilt from them: that rebuild replaces the lines still held in _subtitleOriginal,
+        // and with the non-matching lines on screen it skips blank rows, so the result has no
+        // lines at all and an empty file went over the user's original (#16499).
+        if (Subtitles.All(line => string.IsNullOrWhiteSpace(line.OriginalText)))
         {
             if (!isAutoSave)
             {
@@ -29172,6 +29245,8 @@ public partial class MainViewModel :
             return false;
         }
 
+        var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
+        var originalSubtitle = GetSaveSubtitleOriginal();
         var text = originalSubtitle.ToText(originalFormat);
         if (Se.Settings.General.ForceCrLfOnSave)
         {
@@ -29274,10 +29349,37 @@ public partial class MainViewModel :
         return copy;
     }
 
-    /// <summary>Same as <see cref="GetSaveSubtitle"/> for the original subtitle.</summary>
+    /// <summary>
+    /// Same as <see cref="GetSaveSubtitle"/> for the original subtitle, without the blank lines of
+    /// the rows that only draw a shape: a background box belongs to the working subtitle, so each
+    /// one would otherwise add a blank line to the original's file (#16499). Left out here and not
+    /// in <see cref="GetUpdateSubtitleOriginal"/>, which the rebuilds re-fill the rows from by index.
+    /// </summary>
     public Subtitle GetSaveSubtitleOriginal()
     {
-        return AddVideoOffset(GetUpdateSubtitleOriginal());
+        var subtitle = GetUpdateSubtitleOriginal();
+
+        var shapeLines = new HashSet<Guid>();
+        foreach (var line in Subtitles)
+        {
+            if (line.ReferenceParagraphId is { } id &&
+                !line.IsReferenceOnly &&
+                string.IsNullOrWhiteSpace(line.OriginalText) &&
+                IsAssaVectorDrawing(line.Text))
+            {
+                shapeLines.Add(id);
+            }
+        }
+
+        if (shapeLines.Count > 0)
+        {
+            // generateNewId false: the lines are matched on the ids the rows point at.
+            subtitle = new Subtitle(subtitle, false);
+            subtitle.Paragraphs.RemoveAll(p => p.Id is { } id && shapeLines.Contains(id));
+            subtitle.Renumber();
+        }
+
+        return AddVideoOffset(subtitle);
     }
 
     private static Subtitle AddVideoOffset(Subtitle subtitle)
@@ -37329,8 +37431,8 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (!string.IsNullOrEmpty(_videoFileName) && vp != null)
         {
-            var p = Subtitles.FirstOrDefault(p =>
-                Math.Abs(p.StartTime.TotalMilliseconds - e.Paragraph.StartTime.TotalMilliseconds) < 0.01);
+            // By id, not start time: same-start lines (ASSA layers) would all resolve to the first.
+            var p = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
             if (p != null)
             {
                 // Toggling has to go through the control's own (selection-ordered) list -
@@ -38381,8 +38483,7 @@ public partial class MainViewModel :
         if (!string.IsNullOrEmpty(_videoFileName) && vp != null)
         {
             vp.Position = e.Seconds;
-            var p = Subtitles.FirstOrDefault(p =>
-                Math.Abs(p.StartTime.TotalMilliseconds - e.Paragraph.StartTime.TotalMilliseconds) < 0.01);
+            var p = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
             if (p != null)
             {
                 SelectAndScrollToSubtitle(p);
@@ -38477,7 +38578,7 @@ public partial class MainViewModel :
                 case WaveformDoubleClickActionType.SelectSubtitle:
                     if (e.Paragraph != null)
                     {
-                        var p = Subtitles.FirstOrDefault(p => Math.Abs(p.StartTime.TotalMilliseconds - e.Paragraph.StartTime.TotalMilliseconds) < 0.01);
+                        var p = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
                         if (p != null)
                         {
                             SelectAndScrollToSubtitle(p);

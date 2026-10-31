@@ -167,4 +167,57 @@ public class MultipleReplaceInlineEditTests : IDisposable
         Assert.False(rule.IsEditing);
         Assert.Equal("US spelling!", rule.Description);
     }
+
+    // Recycled cells raise the text and check box events, so scrolling rebuilds the preview.
+    [AvaloniaFact]
+    public void ScrollingTheRules_KeepsAnUntickedPreviewLineUnticked()
+    {
+        var (vm, window, rule) = Open();
+        for (var i = 0; i < 200; i++)
+        {
+            rule.Parent!.SubNodes!.Add(new RuleTreeNode(false) { Find = "nomatch" + i, ReplaceWith = "x" + i, IsActive = true, Parent = rule.Parent });
+        }
+
+        vm.SelectedCategory = null;
+        Dispatcher.UIThread.RunJobs();
+        vm.SelectedCategory = rule.Parent;
+        WaitFor(() => vm.Fixes.Count == 1);
+        Settle();
+
+        var fix = vm.Fixes[0];
+        fix.Apply = false;
+        var scrollViewer = vm.RulesTable.GetVisualDescendants().OfType<ScrollViewer>().First();
+        scrollViewer.Offset = new Avalonia.Vector(0, scrollViewer.Extent.Height);
+        window.UpdateLayout();
+        WaitFor(() => !ReferenceEquals(fix, vm.Fixes[0]));
+
+        Assert.NotSame(fix, vm.Fixes[0]); // the preview really was rebuilt
+        Assert.False(vm.Fixes[0].Apply);
+    }
+
+    // A changed fix is a new one: it starts ticked.
+    [AvaloniaFact]
+    public void ChangingWhatARuleDoes_TicksThePreviewLineAgain()
+    {
+        var (vm, window, rule) = Open();
+        WaitFor(() => vm.Fixes.Count == 1);
+        Settle();
+        vm.Fixes[0].Apply = false;
+
+        BeginEdit(window, vm, rule, nameof(RuleTreeNode.ReplaceWith));
+        FocusedTextBox(window)!.Text = "shade";
+        WaitFor(() => vm.Fixes[0].After == "The shade is red.");
+
+        Assert.True(vm.Fixes[0].Apply);
+    }
+
+    private static void Settle()
+    {
+        var end = Environment.TickCount64 + 300;
+        while (Environment.TickCount64 < end)
+        {
+            Dispatcher.UIThread.RunJobs();
+            Thread.Sleep(20);
+        }
+    }
 }
