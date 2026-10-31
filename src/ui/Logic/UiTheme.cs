@@ -1961,19 +1961,28 @@ public static class UiTheme
     private static readonly System.Collections.Generic.Dictionary<string, Bitmap?> ThemeArtCache = new(StringComparer.Ordinal);
 
     /// <summary>
+    /// Where a theme image lives. Uses <see cref="ThemeName"/> rather than the setting, as System
+    /// has no folder of its own - it is always Light or Dark (issue #16502).
+    /// </summary>
+    internal static string GetThemeArtPath(string fileName)
+    {
+        return Path.Combine(Se.ThemesFolder, ThemeName, fileName);
+    }
+
+    /// <summary>
     /// A background image shipped in the current theme's folder (see
     /// <see cref="VideoBackgroundFileName"/>), or null when the theme has none.
     /// </summary>
     public static Bitmap? GetThemeArt(string fileName)
     {
-        var theme = Se.Settings.Appearance.Theme;
-        var path = Path.Combine(Se.ThemesFolder, theme, fileName);
+        var path = GetThemeArtPath(fileName);
         if (ThemeArtCache.TryGetValue(path, out var cached))
         {
             return cached;
         }
 
-        if (!File.Exists(path) && !Initializers.ThemeInitializer.TryRepair(path))
+        // A repair only says the zip was unpacked - the zip may not have the file either.
+        if (!File.Exists(path) && (!Initializers.ThemeInitializer.TryRepair(path) || !File.Exists(path)))
         {
             return null;
         }
