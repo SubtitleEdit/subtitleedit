@@ -14304,6 +14304,13 @@ public partial class MainViewModel :
             return;
         }
 
+        // OK can be enabled after a run that returned only blank text. Leave every subtitle,
+        // reference row, file name and language setting untouched.
+        if (!result.HasUsableTranslation)
+        {
+            return;
+        }
+
         var wasOldTranslationChanged = _changeSubtitleHash != GetFastHash();
 
         // The dialog was handed GetUpdateSubtitle(), which leaves the display-only rows of a
@@ -14326,7 +14333,7 @@ public partial class MainViewModel :
             // row has a translation (translate-one-row, translate-from-here, or Cancel part way),
             // so writing every row unconditionally blanked every line that was never sent.
             // Same guard the translate-via-copy-paste and translate-selected-lines paths use.
-            if (!string.IsNullOrEmpty(result.Rows[i].TranslatedText))
+            if (!string.IsNullOrWhiteSpace(result.Rows[i].TranslatedText))
             {
                 Subtitles[i].Text = result.Rows[i].TranslatedText;
             }
@@ -14490,18 +14497,22 @@ public partial class MainViewModel :
             }
         });
 
+        _shortcutManager.ClearKeys();
+
         if (!result.OkPressed)
         {
-            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // OK can be enabled after a partial/cancelled translation run. If no row actually
+        // contains translated text, the operation is a no-op in both modes: do not capture an
+        // original and do not reset language/spell-check state for unchanged subtitle content.
+        if (!result.HasUsableTranslation)
+        {
             return;
         }
 
         var captureOriginal = noOriginal && !result.TranslateInPlace;
-        if (captureOriginal && !result.Rows.Any(r => !string.IsNullOrEmpty(r.TranslatedText)))
-        {
-            return; // nothing came back - do not switch to translator mode for an unchanged subtitle
-        }
-
         var wasOldTranslationChanged = captureOriginal && _changeSubtitleHash != GetFastHash();
 
         if (captureOriginal)
@@ -14525,7 +14536,7 @@ public partial class MainViewModel :
         {
             var translatedText = result.Rows[i].TranslatedText;
             var id = selectedItems[i].Id;
-            if (rowsById.TryGetValue(id, out var p) && !string.IsNullOrEmpty(translatedText))
+            if (rowsById.TryGetValue(id, out var p) && !string.IsNullOrWhiteSpace(translatedText))
             {
                 p.Text = translatedText;
             }
@@ -14562,7 +14573,8 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<CopyPasteTranslateWindow, CopyPasteTranslateViewModel>(vm => { vm.Initialize(rows); });
 
-        if (!result.OkPressed)
+        // No translated rows means an unchanged subtitle: stay out of translator mode.
+        if (!result.OkPressed || result.TranslatedRowIndices.Count == 0)
         {
             return;
         }
