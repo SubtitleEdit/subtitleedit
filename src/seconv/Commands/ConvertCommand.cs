@@ -992,7 +992,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             // Perform conversion
             var stopwatch = Stopwatch.StartNew();
             var converter = new SubtitleConverter();
-            var result = await converter.ConvertAsync(options);
+            var result = await converter.ConvertAsync(options, cancellationToken);
             stopwatch.Stop();
 
             // Surface settings-file warnings in the machine-readable output too; in non-silent
