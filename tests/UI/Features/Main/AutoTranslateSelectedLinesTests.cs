@@ -118,6 +118,39 @@ public class AutoTranslateSelectedLinesTests
         }
     }
 
+    [AvaloniaFact]
+    public async Task FullFile_NoTranslatedRows_IsNoOp()
+    {
+        var (window, vm) = CreateMainViewModel();
+        try
+        {
+            AddLine(vm, "One", 0, 1000);
+            AddLine(vm, "Two", 1000, 2000);
+            await SettleAsync(window);
+
+            var detectedField = typeof(MainViewModel).GetField(
+                "_detectedLanguageCode", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            detectedField.SetValue(vm, "zz");
+            var filenameField = typeof(MainViewModel).GetField(
+                "_subtitleFileName", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var beforeFilename = filenameField.GetValue(vm);
+
+            FakeTranslateWindowService.Install(vm, translateInPlace: false, produceTranslations: false);
+            await vm.ShowAutoTranslateCommand.ExecuteAsync(null);
+            await SettleAsync(window);
+
+            Assert.Equal(new[] { "One", "Two" }, vm.Subtitles.Select(p => p.Text));
+            Assert.All(vm.Subtitles, p => Assert.True(string.IsNullOrEmpty(p.OriginalText)));
+            Assert.False(vm.ShowColumnOriginalText);
+            Assert.Equal("zz", detectedField.GetValue(vm));
+            Assert.Equal(beforeFilename, filenameField.GetValue(vm));
+        }
+        finally
+        {
+            CloseWindow(window, vm);
+        }
+    }
+
     private static List<string> GridCellTexts(MainViewModel vm)
     {
         return vm.SubtitleGrid.GetVisualDescendants().OfType<TextBlock>()

@@ -14245,6 +14245,13 @@ public partial class MainViewModel :
             return;
         }
 
+        // A translation dialog may still return OK after the only translated cell is cleared.
+        // Leave every subtitle, reference row, file name and language setting untouched.
+        if (!result.Rows.Any(r => !string.IsNullOrWhiteSpace(r.TranslatedText)))
+        {
+            return;
+        }
+
         var wasOldTranslationChanged = _changeSubtitleHash != GetFastHash();
 
         // The dialog was handed GetUpdateSubtitle(), which leaves the display-only rows of a
