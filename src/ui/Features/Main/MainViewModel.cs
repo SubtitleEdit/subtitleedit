@@ -17406,9 +17406,10 @@ public partial class MainViewModel :
             var pushGapMs = Math.Min(gapMs, s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds);
             if (newStartMs - pushGapMs < prev.EndTime.TotalMilliseconds)
             {
-                // Push no further than the previous line's minimum duration.
-                newPrevEndMs = Math.Max(newStartMs - pushGapMs,
-                    prev.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+                // Push no further than the previous line's minimum duration. A line already
+                // shorter than that stays as it is - pushing it back never lengthens it.
+                newPrevEndMs = Math.Max(newStartMs - pushGapMs, Math.Min(prev.EndTime.TotalMilliseconds,
+                    prev.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds));
                 newStartMs = newPrevEndMs + pushGapMs;
                 if (newStartMs >= s.StartTime.TotalMilliseconds)
                 {
@@ -17519,8 +17520,8 @@ public partial class MainViewModel :
             var pushGapMs = Math.Min(gapMs, next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds);
             if (newEndMs + pushGapMs > next.StartTime.TotalMilliseconds)
             {
-                newNextStartMs = Math.Min(newEndMs + pushGapMs,
-                    next.EndTime.TotalMilliseconds - Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+                newNextStartMs = Math.Min(newEndMs + pushGapMs, Math.Max(next.StartTime.TotalMilliseconds,
+                    next.EndTime.TotalMilliseconds - Se.Settings.General.SubtitleMinimumDisplayMilliseconds));
                 newEndMs = newNextStartMs - pushGapMs;
                 if (newEndMs <= s.EndTime.TotalMilliseconds)
                 {

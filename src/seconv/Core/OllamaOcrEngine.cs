@@ -33,7 +33,7 @@ internal sealed class OllamaOcrEngine : IOcrEngine
     {
         // Trailing slash costs a 307 redirect on every single image (Ollama's route is
         // /api/chat), which the GUI already trims.
-        _url = string.IsNullOrWhiteSpace(url) ? "http://localhost:11434/api/chat" : CompleteScheme(url.Trim().TrimEnd('/'));
+        _url = string.IsNullOrWhiteSpace(url) ? "http://localhost:11434/api/chat" : CompleteUrl(url);
         _model = string.IsNullOrWhiteSpace(model) ? "llama3.2-vision" : model;
         _language = string.IsNullOrWhiteSpace(language) ? "English" : language;
         // Ollama OCR has no prompt in the GUI, so its built-in wording stays the default here;
@@ -48,11 +48,20 @@ internal sealed class OllamaOcrEngine : IOcrEngine
     }
 
     /// <summary>
-    /// A bare <c>host:port/api/chat</c> gets <c>http://</c> - HttpClient rejects a URI without a scheme.
+    /// Completes a user-supplied --ollama-url to the chat endpoint: a bare <c>host:port</c> gets
+    /// <c>http://</c> (HttpClient rejects a URI without a scheme) and a URL without a path gets
+    /// <c>/api/chat</c>. A URL with a path of its own is kept, e.g. behind a reverse proxy.
     /// </summary>
-    internal static string CompleteScheme(string url)
+    internal static string CompleteUrl(string url)
     {
-        return url.Contains("://", StringComparison.Ordinal) ? url : "http://" + url;
+        var fullUrl = url.Trim().TrimEnd('/');
+        if (!fullUrl.Contains("://", StringComparison.Ordinal))
+        {
+            fullUrl = "http://" + fullUrl;
+        }
+
+        var hostStart = fullUrl.IndexOf("://", StringComparison.Ordinal) + 3;
+        return fullUrl.IndexOf('/', hostStart) < 0 ? fullUrl + "/api/chat" : fullUrl;
     }
 
     public string Recognize(SKBitmap bitmap)
