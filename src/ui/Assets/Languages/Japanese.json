@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta12",
+  "version": "v5.4.0-beta13",
   "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
@@ -428,7 +428,7 @@
     "options": "オプション",
     "originalSubtitleClosed": "別の字幕ファイルを閉じました",
     "originalSubtitleLoadedX": "別の字幕ファイルを読み込みました：{0}",
-    "originalText": "オリジナルテキスト",
+    "originalText": "別字幕",
     "outline": "文字の縁取り",
     "outlineColor": "文字の縁取りの色",
     "outlineWidth": "文字の縁取りの幅",
@@ -3485,7 +3485,8 @@
     "customPromptHint": "カスタム指示（{0}=元文言語、{1}=翻訳先言語）。空の場合は組み込みプロンプトを使用",
     "editTranslationHint": "選択した行の翻訳をクリックすると編集できます（Enterで保存、Escでキャンセル）",
     "llamaCppDownloadEngineAndModelPrompt": "llama.cpp を使用するには、llama-server エンジンと翻訳モデルのダウンロードが必要です。今すぐダウンロードしますか？",
-    "llamaCppDownloadModelPrompt": "llama.cpp を使用するには、選択した翻訳モデルのダウンロードが必要です。今すぐダウンロードしますか？"
+    "llamaCppDownloadModelPrompt": "llama.cpp を使用するには、選択した翻訳モデルのダウンロードが必要です。今すぐダウンロードしますか？",
+    "microsoftTranslatorRegionHint": "リージョン別またはマルチサービスのAzureリソース専用（例：westeurope。Azureポータルの「キーとエンドポイント」を参照）。グローバルリソースの場合は空欄"
   },
   "options": {
     "settings": {
@@ -4204,6 +4205,8 @@
       "moveSelectedLinesOneFrameForward": "選択した字幕行を1フレーム後に移動",
       "moveSelectedLinesAndForwardOneFrameBack": "選択した字幕行とそれ以降のすべての字幕行を1フレーム前に移動",
       "moveSelectedLinesAndForwardOneFrameForward": "選択した字幕行とそれ以降のすべての字幕行を1フレーム後に移動",
+    "moveSelectedLinesAndForwardOneFrameBack": "選択した字幕行と後続のすべての字幕行を1フレーム戻す",
+    "moveSelectedLinesAndForwardOneFrameForward": "選択した字幕行と後続のすべての字幕行を1フレーム進める",
       "moveAllLinesOneFrameBack": "すべての字幕行を1フレーム前に移動",
       "moveAllLinesOneFrameForward": "すべての字幕行を1フレーム後に移動",
       "moveSelectedLinesCustomMsBack": "選択した行を指定したミリ秒（{0:#,###,##0}）戻す，{1}",
