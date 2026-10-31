@@ -619,6 +619,115 @@ public class AutoTranslateModelAndSourceTests
     }
 
     [Fact]
+    public void BatchConvert_SavedGooglePortuguese_StaysBrazilian()
+    {
+        var targets = new GoogleTranslateV1().GetSupportedTargetLanguages();
+
+        var selected = AutoTranslateViewModel.FindBatchConvertLanguage(targets, "pt", GoogleTranslateV1.StaticName);
+
+        Assert.Equal("pt-BR", selected?.Code);
+    }
+
+    [Fact]
+    public void BatchConvert_SavedTwoLetterValue_StillMatchesEngineOwnEntry()
+    {
+        var targets = new GeminiTranslate().GetSupportedTargetLanguages();
+
+        var selected = AutoTranslateViewModel.FindBatchConvertLanguage(targets, "pt", GeminiTranslate.StaticName);
+
+        Assert.Equal("Portuguese", selected?.Name);
+    }
+
+    [Fact]
+    public void GoogleBrazilian_KeepsPortugueseOnEnginesWithOneEntry()
+    {
+        var previous = new GoogleTranslateV1().GetSupportedTargetLanguages().Single(p => p.Code == "pt-BR");
+
+        Assert.Equal("por_Latn", AutoTranslateViewModel.FindSameLanguage(previous, new NoLanguageLeftBehindServe().GetSupportedTargetLanguages())?.Code);
+        Assert.Equal("pt", AutoTranslateViewModel.FindSameLanguage(previous, new PapagoTranslate().GetSupportedTargetLanguages())?.Code);
+        Assert.Equal("pt", AutoTranslateViewModel.FindSameLanguage(previous, new BaiduTranslate().GetSupportedTargetLanguages())?.Code);
+        Assert.Equal("pt-PT", AutoTranslateViewModel.FindSameLanguage(previous, new MyMemoryApi().GetSupportedTargetLanguages())?.Code);
+    }
+
+    [Fact]
+    public void LibreBrazilian_MapsBothWays()
+    {
+        var google = new GoogleTranslateV1().GetSupportedTargetLanguages();
+        var libre = new LibreTranslate().GetSupportedTargetLanguages();
+
+        Assert.Equal("pb", AutoTranslateViewModel.FindSameLanguage(google.Single(p => p.Code == "pt-BR"), libre)?.Code);
+        Assert.Equal("pt-BR", AutoTranslateViewModel.FindSameLanguage(libre.Single(p => p.Code == "pb"), google)?.Code);
+    }
+
+    [Fact]
+    public void SameNameOnNextEngine_IsNotMistakenForACode()
+    {
+        var ga = new GoogleTranslateV1().GetSupportedTargetLanguages().Single(p => p.Code == "gaa");
+        var irish = new MyMemoryApi().GetSupportedTargetLanguages().Single(p => p.Code == "ga-IE");
+
+        Assert.Equal("gaa", AutoTranslateViewModel.FindSameLanguage(ga, new GoogleTranslateV2().GetSupportedTargetLanguages())?.Code);
+        Assert.Equal("Irish", AutoTranslateViewModel.FindSameLanguage(irish, new GeminiTranslate().GetSupportedTargetLanguages())?.Name);
+    }
+
+    [Fact]
+    public void TwoLetterCode_FallsBackToEnglishName()
+    {
+        var microsoft = new MicrosoftTranslator().GetSupportedTargetLanguages();
+
+        Assert.Equal("nb", AutoTranslateViewModel.FindLanguage(microsoft, "no")?.Code);
+    }
+
+    [Fact]
+    public void SharedIso_ExactEnglishNameWins()
+    {
+        var myMemory = new MyMemoryApi().GetSupportedSourceLanguages();
+
+        Assert.Equal("de-DE", AutoTranslateViewModel.FindLanguage(myMemory, "de")?.Code);
+    }
+
+    [Fact]
+    public void SharedIso_RegionsOfOneLanguageStillMatch()
+    {
+        var lara = new LaraTranslate().GetSupportedSourceLanguages();
+
+        Assert.StartsWith("en-", AutoTranslateViewModel.FindLanguage(lara, "en")?.Code);
+        Assert.Null(AutoTranslateViewModel.FindLanguage(lara, "zh"));
+        Assert.Null(AutoTranslateViewModel.FindLanguage(lara, "pt"));
+    }
+
+    [Fact]
+    public void DetectedLanguage_KeepsRegionOfPreviousChoice()
+    {
+        var lara = new LaraTranslate().GetSupportedSourceLanguages();
+        var previous = lara.First(p => p.Code == "en-GB");
+
+        Assert.Equal("en-GB", AutoTranslateViewModel.ResolveDetectedSourceLanguage("en", lara, previous)?.Code);
+    }
+
+    [Fact]
+    public void DetectedLanguageEngineLacks_UsesLastSource_NotEnglish()
+    {
+        var lastSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+        try
+        {
+            var subtitle = new Subtitle();
+            for (var i = 0; i < 40; i++)
+            {
+                subtitle.Paragraphs.Add(new Paragraph("Hvad er det du siger, jeg ved ikke hvad det er, men det er ikke noget jeg vil have.", i * 1000, i * 1000 + 900));
+            }
+
+            var languages = new ObservableCollection<TranslationPair>(new PapagoTranslate().GetSupportedSourceLanguages());
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = "ko";
+
+            Assert.Equal("ko", AutoTranslateViewModel.EvaluateDefaultSourceLanguageCode(null, subtitle, languages));
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = lastSource;
+        }
+    }
+
+    [Fact]
     public void DetectableSource_IsStillDetected()
     {
         var lastSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;

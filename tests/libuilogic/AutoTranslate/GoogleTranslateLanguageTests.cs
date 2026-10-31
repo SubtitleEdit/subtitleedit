@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.Translate;
 
 namespace LibUiLogicTests.AutoTranslate;
 
@@ -31,6 +32,16 @@ public class GoogleTranslateLanguageTests
     public void V1_LanguageCodes_KeepTheLegacyFreeEndpointFormat(string code, string expected)
     {
         Assert.Equal(expected, GoogleTranslateV1.ToEndpointLanguageCode(code));
+    }
+
+    [Theory]
+    [InlineData("pt-BR", "pt")]
+    [InlineData("pt-PT", "pt")]
+    [InlineData("pt", "pt")]
+    [InlineData("por_Latn", "por_Latn")]
+    public void RegionalPortuguese_UsesPortugueseTextRules(string code, string expected)
+    {
+        Assert.Equal(expected, MergeAndSplitHelper.TextRulesLanguage(code));
     }
 
     [Fact]

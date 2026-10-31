@@ -86,9 +86,9 @@ public static partial class MergeAndSplitHelper
             // rules are guarded by source == "en") and to Formatting.SetTagsAndReturnTrimmed,
             // which decides un-breaking from LanguagesAllowingLineMerging - both are properties
             // of the text being sent, not of the language being requested.
-            formattingList = HandleFormatting(tempSubtitle, 0, source.Code);
+            formattingList = HandleFormatting(tempSubtitle, 0, TextRulesLanguage(source.Code));
             noSentenceEndingSource = initialNoSentenceEndingSource;
-            mergeResult = TryMergeLines(tempSubtitle, 0, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget, source.TwoLetterIsoLanguageName ?? source.Code, joinContinuousRowsWithLineBreak);
+            mergeResult = TryMergeLines(tempSubtitle, 0, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget, TextRulesLanguage(source.TwoLetterIsoLanguageName ?? source.Code), joinContinuousRowsWithLineBreak);
             if (!mergeResult.ReachedEndOfRows || index + count >= rows.Count)
             {
                 break;
@@ -266,10 +266,10 @@ public static partial class MergeAndSplitHelper
         var sourceTexts = tempSubtitle.Select(p => p.Text).ToList();
         var mergeCount = mergeResult.ParagraphCount;
         var sourceAbbreviations = AbbreviationsForLanguage(mergeResult.SourceLanguage);
-        var targetAbbreviations = AbbreviationsForLanguage(target.TwoLetterIsoLanguageName ?? target.Code);
+        var targetAbbreviations = AbbreviationsForLanguage(TextRulesLanguage(target.TwoLetterIsoLanguageName ?? target.Code));
 
         // Strategy 1: Split by line ending chars where period count matches
-        var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
+        var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, TextRulesLanguage(target.Code));
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
             (mergeResult.NoSentenceEndingSource || HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations)))
         {
@@ -285,7 +285,7 @@ public static partial class MergeAndSplitHelper
 
         // Strategy 3: Split with periods in numbers normalized
         var noPeriodsInNumbersTranslation = FixPeriodInNumbers(mergedTranslation);
-        splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, target.Code);
+        splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, TextRulesLanguage(target.Code));
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
             (mergeResult.NoSentenceEndingSource || HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations)))
         {
@@ -298,7 +298,7 @@ public static partial class MergeAndSplitHelper
         // character like '?' the final row swallows the rest so the split still "succeeds"
         // (#14484). The proportion check catches that shape: a row cut off at "Mrs." is far
         // shorter than its source, and the final row is far longer.
-        splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
+        splitResult = SplitMultipleLines(mergeResult, mergedTranslation, TextRulesLanguage(target.Code));
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
             HasPlausibleProportions(mergeResult, splitResult))
         {
@@ -514,12 +514,12 @@ public static partial class MergeAndSplitHelper
             // instead of re-cutting the sentence by length, which moved words into the
             // neighbouring row (#15602).
             var splitParts = mergeResult.ContinuousRowsJoinedWithLineBreak && mergeItem.Continuous
-                ? SplitByPreservedLineBreaks(translatedText, mergeItem) ?? TextSplit.SplitMulti(translatedText, numberOfParagraphs, target.TwoLetterIsoLanguageName)
-                : TextSplit.SplitMulti(translatedText, numberOfParagraphs, target.TwoLetterIsoLanguageName);
+                ? SplitByPreservedLineBreaks(translatedText, mergeItem) ?? TextSplit.SplitMulti(translatedText, numberOfParagraphs, TextRulesLanguage(target.TwoLetterIsoLanguageName))
+                : TextSplit.SplitMulti(translatedText, numberOfParagraphs, TextRulesLanguage(target.TwoLetterIsoLanguageName));
 
             for (var i = 0; i < splitParts.Count && pending.Count < rows.Count - index; i++)
             {
-                pending.Add(AutoBreakIfNeeded(splitParts[i], target.TwoLetterIsoLanguageName));
+                pending.Add(AutoBreakIfNeeded(splitParts[i], TextRulesLanguage(target.TwoLetterIsoLanguageName)));
             }
         }
 
@@ -554,6 +554,15 @@ public static partial class MergeAndSplitHelper
     private static int CountContentLines(string text)
     {
         return text.SplitToLines().Count(line => line.Trim() != ".");
+    }
+
+    // Line merging and breaking rules are keyed on "pt", whatever the region the engine asks for.
+    internal static string TextRulesLanguage(string code)
+    {
+        return code.Equals("pt-BR", StringComparison.OrdinalIgnoreCase) ||
+               code.Equals("pt-PT", StringComparison.OrdinalIgnoreCase)
+            ? "pt"
+            : code;
     }
 
     private static string AutoBreakIfNeeded(string text, string language)
@@ -1461,7 +1470,7 @@ public static partial class MergeAndSplitHelper
             return text;
         }
 
-        var language = target.TwoLetterIsoLanguageName ?? target.Code;
+        var language = TextRulesLanguage(target.TwoLetterIsoLanguageName ?? target.Code);
         var rebalanced = Utilities.AutoBreakLine(Utilities.UnbreakLine(text), language);
         return string.IsNullOrWhiteSpace(rebalanced) ? text : rebalanced;
     }

@@ -1922,14 +1922,12 @@ public partial class AutoTranslateViewModel : ObservableObject
     /// The entry in <paramref name="languages"/> standing for the same language as
     /// <paramref name="previous"/>, or null when the engine does not offer it.
     ///
-    /// Code first, then name: engines do not agree on how a language is spelled. NLLB uses
+    /// Name first, then code: engines do not agree on how a language is spelled. NLLB uses
     /// "eng_Latn" where Google uses "en", and the LLM engines take English names rather than
     /// codes - so matching on the code alone would drop the selection between exactly the
-    /// engines a user is most likely to be comparing.
+    /// engines a user is most likely to be comparing. Names also say more than short codes:
+    /// Microsoft's "pt" is Brazilian Portuguese, LibreTranslate's is not.
     /// </summary>
-    // While changing providers in the same dialog, keep the user's exact chosen script/
-    // regional variant. Provider language names are more descriptive than lossy short ISO
-    // codes (Google V1 "pt" means Brazilian Portuguese, but Gemini "pt" means European).
     internal static TranslationPair? FindSameLanguage(TranslationPair? previous, IList<TranslationPair> languages)
     {
         if (previous == null)
@@ -1937,8 +1935,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             return null;
         }
 
+        // A hit on a code is not a hit on a name: Google's "GA" (Ga, code gaa) is not "ga" (Irish).
         var byName = FindLanguage(languages, previous.Name);
-        if (byName != null)
+        if (byName != null &&
+            (byName.Name.Equals(previous.Name, StringComparison.OrdinalIgnoreCase) ||
+             !byName.Code.Equals(previous.Name, StringComparison.OrdinalIgnoreCase)))
         {
             return byName;
         }
@@ -1958,7 +1959,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             return null;
         }
 
-        return FindLanguage(languages, previous.TwoLetterIsoLanguageName);
+        var sameIso = languages.Where(p => !string.IsNullOrEmpty(p.TwoLetterIsoLanguageName) &&
+                                           p.TwoLetterIsoLanguageName.Equals(previous.TwoLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
+            .Take(2).ToList();
+        return sameIso.Count == 1 ? sameIso[0] : FindLanguage(languages, previous.TwoLetterIsoLanguageName);
     }
 
     partial void OnSelectedTargetLanguageChanged(TranslationPair? value)
@@ -2600,12 +2604,17 @@ public partial class AutoTranslateViewModel : ObservableObject
                 return resolved.Code;
             }
         }
-        else if (previousLanguage != null)
+
+        // Nothing recognizable, or a language this engine lacks - typically a line or two picked
+        // for "Selected lines > Auto translate". Assuming English then pushed an English target
+        // off the target combo, so it opened on German instead (#14926). The last source is a
+        // better guess.
+        if (previousLanguage != null)
         {
             return previousLanguage.Code;
         }
 
-        // Unknown/ambiguous detection: English is safer than selecting Abkhaz/Acehnese by index.
+        // English is safer than selecting Abkhaz/Acehnese by index.
         return FindLanguage(sourceLanguages, "en")?.Code ?? string.Empty;
     }
 
@@ -2635,6 +2644,14 @@ public partial class AutoTranslateViewModel : ObservableObject
                previousLanguage.Code.Equals("zho_Hans", StringComparison.OrdinalIgnoreCase) ||
                previousLanguage.Code.Equals("zho_Hant", StringComparison.OrdinalIgnoreCase) ||
                previousLanguage.TwoLetterIsoLanguageName.Equals("zh", StringComparison.OrdinalIgnoreCase)))))
+        {
+            return previousLanguage;
+        }
+
+        // A detected language may not use the same code as the current translator, and
+        // detection must not replace the region of a previous choice (fr-CA with fr-FR).
+        if (previousLanguage != null &&
+            detected.Equals(previousLanguage.TwoLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
         {
             return previousLanguage;
         }
@@ -2683,11 +2700,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                    FindLanguage(languages, "pt-BR");
         }
 
-        // A detected language may not use the same code as the current translator.
-        return previousLanguage != null &&
-               detected.Equals(previousLanguage.TwoLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase)
-            ? previousLanguage
-            : null;
+        return null;
     }
 
     /// <summary>
@@ -2754,10 +2767,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
     }
 
-    /// <summary>
-    /// The entry for a saved code or name, however the engine spells it: a code ("zh-CN",
-    /// "zho_Hans"), an English name ("Chinese"), or the ISO code behind either.
-    /// </summary>
     // Saved settings refer to the provider that last wrote them. In particular the old
     // two-letter "pt" was European Portuguese in Gemini/ChatGPT, but Brazilian Portuguese
     // in Google V1 and V2. Both Google entries now store "pt-BR" explicitly; migrate legacy
@@ -2784,12 +2793,26 @@ public partial class AutoTranslateViewModel : ObservableObject
         return code; // Historical codes without a known provider are inherently ambiguous.
     }
 
+    /// <summary>
+    /// The entry for a language Batch Convert saved as its two-letter ISO value, which for
+    /// Google's Brazilian Portuguese used to be "pt".
+    /// </summary>
+    internal static TranslationPair? FindBatchConvertLanguage(IList<TranslationPair> languages, string? saved, string? savedProviderName)
+    {
+        return languages.FirstOrDefault(p => p.TwoLetterIsoLanguageName == saved)
+               ?? FindLanguage(languages, NormalizeSavedLanguageCode(saved, savedProviderName));
+    }
+
     // Only documented NLLB script-qualified codes can be reduced to a generic ISO code.
     // The lookup is lazy because most providers match a code/name without the NLLB fallback.
     private static readonly Lazy<HashSet<string>> KnownNllbLanguageCodes = new(() =>
         new HashSet<string>(new NoLanguageLeftBehindServe().GetSupportedTargetLanguages()
             .Select(p => NormalizeLanguageIdentifier(p.Code)), StringComparer.OrdinalIgnoreCase));
 
+    /// <summary>
+    /// The entry for a saved code or name, however the engine spells it: a code ("zh-CN",
+    /// "zho_Hans"), an English name ("Chinese"), or the ISO code behind either.
+    /// </summary>
     // Deliberately no lossy lookup of a script-qualified language by its bare ISO prefix.
     // Mapped aliases are only accepted when they pick exactly one current-provider entry.
     internal static TranslationPair? FindLanguage(IList<TranslationPair> languages, string? codeOrName)
@@ -2828,8 +2851,8 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             new[] { "zho_Hans", "zh-Hans", "zh-CN", "Chinese (Simplified)", "CHINESE_SIMPLIFIED" },
             new[] { "zho_Hant", "zh-Hant", "zh-TW", "Chinese (Traditional)", "CHINESE_TRADITIONAL" },
-            new[] { "pt-PT", "por_Latn", "Portuguese", "PORTUGUESE" },
-            new[] { "pt-BR", "Brazilian Portuguese", "PORTUGUESE (BRAZIL)" },
+            new[] { "pt-PT", "por_Latn", "Portuguese", "PORTUGUESE", "Portuguese (European)", "Portuguese (Portugal)" },
+            new[] { "pt-BR", "pb", "Brazilian Portuguese", "PORTUGUESE (BRAZIL)", "Portuguese (Brazil)", "Portuguese (Brazilian)" },
             new[] { "yue_Hant", "Cantonese", "Yue Chinese" },
         };
 
@@ -2844,27 +2867,40 @@ public partial class AutoTranslateViewModel : ObservableObject
                     alias.Equals(p.Code, StringComparison.OrdinalIgnoreCase) ||
                     alias.Equals(p.Name, StringComparison.OrdinalIgnoreCase)))
                 .Take(2).ToList();
+            if (groupMatches.Count == 0 && group[0].StartsWith("pt-", StringComparison.Ordinal))
+            {
+                return FindOnlyPortuguese(languages);
+            }
+
             return groupMatches.Count == 1 ? groupMatches[0] : null;
         }
 
         // Exact provider ISO metadata may be shared by several entries (e.g. zh for both
-        // Chinese scripts in NLLB, ks for two Kashmiri scripts). Never pick the first.
+        // Chinese scripts in NLLB, ks for two Kashmiri scripts). Never pick the first of those;
+        // regions of one written language (en-AU, en-GB) are a different matter.
         var isoMatches = languages.Where(p =>
                 identifier.Equals(NormalizeLanguageIdentifier(p.TwoLetterIsoLanguageName), StringComparison.OrdinalIgnoreCase))
-            .Take(2).ToList();
+            .ToList();
         if (isoMatches.Count == 1)
         {
             return isoMatches[0];
         }
         if (isoMatches.Count > 1)
         {
-            return null;
+            return FindByIsoEnglishName(languages, identifier) ?? FindRegionOfOneWrittenLanguage(isoMatches, identifier);
         }
 
         // NLLB includes individual ISO-639-3 language identifiers, not all of which are
         // covered by ISO-639-2. Translate only known language-equivalent prefixes.
         var dash = identifier.IndexOf('-');
         var prefix = dash >= 0 ? identifier[..dash] : identifier;
+        if (prefix.Length == 2 && dash < 0)
+        {
+            // A bare "pt" does not say which region, and "Portuguese" alone would answer European.
+            return identifier.Equals("pt", StringComparison.OrdinalIgnoreCase)
+                ? null
+                : FindByIsoEnglishName(languages, identifier);
+        }
         if (prefix.Length != 3)
         {
             return null;
@@ -2909,6 +2945,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             return null;
         }
 
+        return FindByIsoEnglishName(languages, iso);
+    }
+
+    private static TranslationPair? FindByIsoEnglishName(IList<TranslationPair> languages, string iso)
+    {
         var englishName = Iso639Dash2LanguageCode.List
             .FirstOrDefault(l => l.TwoLetterCode.Equals(iso, StringComparison.OrdinalIgnoreCase))?.EnglishName;
         if (englishName == null)
@@ -2919,6 +2960,33 @@ public partial class AutoTranslateViewModel : ObservableObject
         var byName = languages.Where(p => englishName.Equals(p.Name, StringComparison.OrdinalIgnoreCase))
             .Take(2).ToList();
         return byName.Count == 1 ? byName[0] : null;
+    }
+
+    // A code like "en-AU" names a region, unlike "sr-Cyrl-RS" or "kas_Arab". Portuguese and
+    // Chinese regions stay out: those choices are exactly what must not be guessed.
+    private static TranslationPair? FindRegionOfOneWrittenLanguage(List<TranslationPair> matches, string iso)
+    {
+        if (iso.Equals("pt", StringComparison.OrdinalIgnoreCase) || iso.Equals("zh", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return matches.All(p => IsRegionalCode(p.Code)) ? matches[0] : null;
+    }
+
+    private static bool IsRegionalCode(string code)
+    {
+        var parts = code.Split('-');
+        return parts.Length == 2 && parts[1].Length == 2;
+    }
+
+    // The two Portuguese regions read alike, so an engine with a single Portuguese entry is a
+    // better answer for either of them than dropping the language altogether.
+    private static TranslationPair? FindOnlyPortuguese(IList<TranslationPair> languages)
+    {
+        var portuguese = languages.Where(p => p.Name.StartsWith("Portuguese", StringComparison.OrdinalIgnoreCase))
+            .Take(2).ToList();
+        return portuguese.Count == 1 ? portuguese[0] : null;
     }
 
     private static string NormalizeLanguageIdentifier(string? value)
