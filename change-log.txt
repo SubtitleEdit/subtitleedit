@@ -16,6 +16,7 @@ v5.4.0-beta12 (31st of October 2026)
 * Fix error log entries + Themes.zip unpacked on every start with the System theme - thx GrampaWildWilly
 * Fix Multiple replace ticking excluded preview lines again
 * Fix "push neighbour" shortcuts lengthening a neighbour already under minimum duration
+* Fix OCR ASSA auto-alignment tagging top and bottom text as middle in tall images - thx robinfire110
 * Fix AutoCompleteBox and Source view borders - thx pdjdev
 * seconv: fix LFM vision models losing their OCR prompt
 * seconv: fix --ollama-url with a bare host:port
