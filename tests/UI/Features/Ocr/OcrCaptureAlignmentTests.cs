@@ -59,7 +59,7 @@ public class OcrCaptureAlignmentTests
     }
 
     [Fact]
-    public void ApplyLineAlignmentTags_AllBottomCenterWithWriteAn2Tag_TagsAllLines()
+    public void ApplyLineAlignmentTags_AllBottomCenterWithWriteAn2Tag_TagsFirstLine()
     {
         var lines = new List<string> { "One", "Two" };
         var alignments = new List<string> { "an2", "an2" };
@@ -67,7 +67,7 @@ public class OcrCaptureAlignmentTests
         var result = OcrViewModel.ApplyLineAlignmentTags(lines, alignments, "One\nTwo", writeAn2Tag: true);
 
         Assert.True(result.AlignmentAdded);
-        Assert.Equal("{\\an2}One\n{\\an2}Two", result.Text);
+        Assert.Equal("{\\an2}One\nTwo", result.Text);
     }
 
     [Theory]
