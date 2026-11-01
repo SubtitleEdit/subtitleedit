@@ -41,6 +41,8 @@
 		<PackageReference Include="Optris.Icons.Avalonia.MaterialDesign" Version="12.0.7" />
 		<PackageReference Include="SharpCompress" Version="0.50.7" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4" />
+		<!-- 12.0.0.13 is the last version on SkiaSharp 3; 12.0.0.14+ needs SkiaSharp 4.148, Avalonia 12.1 uses 3.119.4. -->
+		<PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.13" />
 		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.4" />
 		<!--
 		  Pin the Linux native HarfBuzz to match the managed HarfBuzzSharp (8.3.1.5) that
@@ -68,6 +70,7 @@
 		<AvaloniaResource Include="Assets\*.ico" />
 		<AvaloniaResource Include="Assets\*.json" />
 		<AvaloniaResource Include="Assets\*.png" />
+		<AvaloniaResource Include="Assets\*.svg" />
 		<AvaloniaResource Include="Assets\*.zip" />
 		<AvaloniaResource Include="Assets\FileTypes\*.ico" />
 		<AvaloniaResource Include="Assets\Layout\*.png" />
