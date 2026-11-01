@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -111,14 +112,17 @@ public static class CrispAsrTranslateDownloadHelper
 
         if (!engine.IsEngineInstalled())
         {
-            // Madlad is a CPU-bound translation model — the small CPU build is the right default
-            // here, no need to make the user pick between Vulkan/CUDA/CPU. Other CrispASR flows
-            // (speech-to-text, Chatterbox TTS) still prompt because those benefit from a GPU build.
+            var variant = await CrispAsrDownloadHelper.PromptVariantAsync(owner, engine.Name);
+            if (variant == null)
+            {
+                return null;
+            }
+
             var engineVm = await windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
                 owner, vm =>
                 {
                     vm.Engine = engine;
-                    vm.CrispAsrWindowsVariant = "cpu";
+                    vm.CrispAsrWindowsVariant = variant;
                     vm.StartDownload();
                 });
 
@@ -168,21 +172,31 @@ public static class CrispAsrTranslateDownloadHelper
     }
 
     /// <summary>
-    /// Forces a re-download of the CrispASR engine binary to apply an available update. The MADLAD
-    /// models are left untouched - only the engine executable (and its sidecar hash) is refreshed.
+    /// Forces a re-download of the CrispASR engine binary. The MADLAD models are left untouched -
+    /// only the engine executable (and its sidecar hash) is refreshed.
     /// </summary>
+    /// <param name="owner">The window that owns the prompts and the download dialog.</param>
+    /// <param name="windowService">Opens the download dialog.</param>
+    /// <param name="askForBuild">
+    /// True to let the user switch builds. Otherwise the installed build is kept, because
+    /// speech-to-text runs the same binary and an update must not swap its GPU build for another.
+    /// </param>
     /// <returns>True if the engine was re-installed.</returns>
-    public static async Task<bool> UpdateEngineAsync(Window owner, IWindowService windowService)
+    public static async Task<bool> UpdateEngineAsync(Window owner, IWindowService windowService, bool askForBuild = false)
     {
         var engine = new CrispAsrMadlad();
 
-        // Same small CPU build the regular CrispASR/MADLAD flow installs - this is a CPU-bound
-        // translation model, so there is no GPU variant to choose between.
+        var variant = await ResolveBuildAsync(owner, engine.Name, engine.GetAndCreateWhisperFolder(), engine.IsEngineInstalled(), askForBuild);
+        if (variant == null)
+        {
+            return false;
+        }
+
         var engineVm = await windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             owner, vm =>
             {
                 vm.Engine = engine;
-                vm.CrispAsrWindowsVariant = "cpu";
+                vm.CrispAsrWindowsVariant = variant;
                 vm.StartDownload();
             });
 
@@ -195,6 +209,35 @@ public static class CrispAsrTranslateDownloadHelper
         Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
         Se.SaveSettings();
         return true;
+    }
+
+    /// <summary>
+    /// The build for a re-download of the engine in <paramref name="folder"/>: the installed one
+    /// when it is known and the user did not ask to switch, otherwise whatever the user picks.
+    /// Returns null when the user cancels.
+    /// </summary>
+    public static async Task<string?> ResolveBuildAsync(Window owner, string engineName, string folder, bool isInstalled, bool askForBuild)
+    {
+        if (!isInstalled)
+        {
+            return await CrispAsrDownloadHelper.PromptVariantAsync(owner, engineName);
+        }
+
+        var installed = askForBuild ? null : CrispAsrDownloadHelper.GetInstalledVariant(folder);
+        return installed ?? await CrispAsrDownloadHelper.PromptVariantAsync(
+            owner,
+            engineName,
+            string.Format(Se.Language.Translate.CrispAsrSwitchBuildInfo, engineName));
+    }
+
+    /// <summary>
+    /// Opens the engine settings dialog, whose download button is how the user switches builds.
+    /// </summary>
+    public static Task ShowEngineSettingsAsync(Window owner, IWindowService windowService)
+    {
+        return windowService.ShowDialogAsync<SpeechToTextEngineSettingsWindow, SpeechToTextEngineSettingsViewModel>(
+            owner,
+            vm => vm.Initialize(new CrispAsrMadlad(), () => UpdateEngineAsync(vm.Window!, windowService, askForBuild: true)));
     }
 
     /// <summary>
@@ -226,6 +269,13 @@ public static class CrispAsrTranslateDownloadHelper
             }
 
             return true;
+        }
+
+        // The build prompt has its own Cancel, so asking first would be a second question in a row.
+        if (!engineInstalled && CrispAsrDownloadHelper.HasVariantChoice)
+        {
+            await DownloadAsync(owner, windowService, preselectModelName, autoStartModelDownload: !string.IsNullOrEmpty(preselectModelName));
+            return IsReady(preselectModelName);
         }
 
         string message;

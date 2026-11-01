@@ -33,10 +33,29 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         private string _executablePath = string.Empty;
         private string _modelPath = string.Empty;
 
+        /// <summary>
+        /// Set once a line failed on the GPU and worked with <c>--no-gpu</c>. A GPU build uses the
+        /// GPU unasked, and when the model does not fit in VRAM crispasr exits instead of falling
+        /// back, so without a retry every line of the subtitle would fail. Each line is its own
+        /// process, so remembering this also spares the rest of the run a failed GPU load.
+        /// </summary>
+        private bool _useCpu;
+
+        /// <summary>Runs crispasr with the given arguments. Replaced by tests.</summary>
+        internal Func<string, IReadOnlyList<string>, CancellationToken, Task<CrispAsrResult>> RunProcess { get; set; } = RunCrispAsr;
+
+        internal readonly record struct CrispAsrResult(int ExitCode, string Output, string Error);
+
         public void Initialize()
         {
-            _executablePath = Configuration.Settings.Tools.AutoTranslateCrispAsrExe;
-            _modelPath = Configuration.Settings.Tools.AutoTranslateCrispAsrModel;
+            Initialize(Configuration.Settings.Tools.AutoTranslateCrispAsrExe, Configuration.Settings.Tools.AutoTranslateCrispAsrModel);
+        }
+
+        internal void Initialize(string executablePath, string modelPath)
+        {
+            _executablePath = executablePath;
+            _modelPath = modelPath;
+            _useCpu = false;
         }
 
         /// <summary>
@@ -77,30 +96,68 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 throw new Exception(Error);
             }
 
+            var arguments = BuildArguments(text, sourceLanguageCode, targetLanguageCode, _useCpu);
+            var result = await RunProcess(_executablePath, arguments, cancellationToken).ConfigureAwait(false);
+            if (result.ExitCode != 0 && !_useCpu)
+            {
+                arguments = BuildArguments(text, sourceLanguageCode, targetLanguageCode, true);
+                result = await RunProcess(_executablePath, arguments, cancellationToken).ConfigureAwait(false);
+                _useCpu = result.ExitCode == 0;
+            }
+
+            if (result.ExitCode != 0)
+            {
+                Error = result.Error;
+                throw new Exception($"CrispASR exited with code {result.ExitCode}: {Error}");
+            }
+
+            return result.Output;
+        }
+
+        private List<string> BuildArguments(string text, string sourceLanguageCode, string targetLanguageCode, bool useCpu)
+        {
+            var arguments = new List<string>
+            {
+                "--backend",
+                "madlad",
+                "-m",
+                _modelPath,
+                "--text",
+                text.Trim(),
+                "-sl",
+                sourceLanguageCode,
+                "-tl",
+                targetLanguageCode,
+                "--translate-max-tokens",
+                MaxOutputTokens.ToString(CultureInfo.InvariantCulture),
+                "--no-prints",
+            };
+
+            if (useCpu)
+            {
+                arguments.Add("--no-gpu");
+            }
+
+            return arguments;
+        }
+
+        private static async Task<CrispAsrResult> RunCrispAsr(string executablePath, IReadOnlyList<string> arguments, CancellationToken cancellationToken)
+        {
             var startInfo = new ProcessStartInfo
             {
-                FileName = _executablePath,
+                FileName = executablePath,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true,
                 StandardOutputEncoding = Encoding.UTF8,
                 StandardErrorEncoding = Encoding.UTF8,
-                WorkingDirectory = Path.GetDirectoryName(_executablePath) ?? string.Empty,
+                WorkingDirectory = Path.GetDirectoryName(executablePath) ?? string.Empty,
             };
-            startInfo.ArgumentList.Add("--backend");
-            startInfo.ArgumentList.Add("madlad");
-            startInfo.ArgumentList.Add("-m");
-            startInfo.ArgumentList.Add(_modelPath);
-            startInfo.ArgumentList.Add("--text");
-            startInfo.ArgumentList.Add(text.Trim());
-            startInfo.ArgumentList.Add("-sl");
-            startInfo.ArgumentList.Add(sourceLanguageCode);
-            startInfo.ArgumentList.Add("-tl");
-            startInfo.ArgumentList.Add(targetLanguageCode);
-            startInfo.ArgumentList.Add("--translate-max-tokens");
-            startInfo.ArgumentList.Add(MaxOutputTokens.ToString(CultureInfo.InvariantCulture));
-            startInfo.ArgumentList.Add("--no-prints");
+            foreach (var argument in arguments)
+            {
+                startInfo.ArgumentList.Add(argument);
+            }
 
             using (var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true })
             {
@@ -148,13 +205,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     await exitedSource.Task.ConfigureAwait(false);
                 }
 
-                if (process.ExitCode != 0)
-                {
-                    Error = errorBuilder.ToString().Trim();
-                    throw new Exception($"CrispASR exited with code {process.ExitCode}: {Error}");
-                }
-
-                return outputBuilder.ToString().Trim();
+                return new CrispAsrResult(process.ExitCode, outputBuilder.ToString().Trim(), errorBuilder.ToString().Trim());
             }
         }
     }

@@ -1094,6 +1094,23 @@ public partial class AutoTranslateViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Opens the CrispASR engine settings dialog (installed build, pinned release, install status),
+    /// which is where the MADLAD build is switched.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowCrispAsrEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await CrispAsrTranslateDownloadHelper.ShowEngineSettingsAsync(Window, _windowService);
+        RefreshDownloadDots?.Invoke();
+        RefreshEngineUpdateButton();
+    }
+
+    /// <summary>
     /// Opens the llama.cpp engine settings dialog (installed backend, pinned release, install status).
     /// Its download button routes back through <see cref="UpdateLlamaCppEngineAsync"/> so the running
     /// server is stopped first and the model list and status dots refresh afterwards.
