@@ -1,5 +1,7 @@
 ﻿# Subtitle Edit
 
+<img src="src/ui/Assets/SE.png" alt="Subtitle Edit app icon" width="96">
+
 The subtitle editor :)
 
 ---
