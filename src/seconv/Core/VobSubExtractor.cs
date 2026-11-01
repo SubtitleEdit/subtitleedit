@@ -114,6 +114,7 @@ internal static class VobSubExtractor
             cancellationToken.ThrowIfCancellationRequested();
             var streamId = streams[i].Key;
             var streamPacks = streams[i].OrderBy(p => p.StartTime.Ticks).ToList();
+            cancellationToken.ThrowIfCancellationRequested();
 
             var outputPath = streams.Count == 1
                 ? subOutputPath
@@ -167,6 +168,8 @@ internal static class VobSubExtractor
 
     private static int CopyOneStream(IReadOnlyList<VobSubMergedPack> packs, string outputPath, bool isPal, int streamId, DvdSubtitleLanguage language, IReadOnlyList<SKColor> palette, CancellationToken cancellationToken)
     {
+        // VobSubWriter opens with FileMode.Create: never truncate after cancellation.
+        cancellationToken.ThrowIfCancellationRequested();
         using var writer = new VobSubWriter(outputPath, 720, isPal ? 576 : 480, streamId, language, palette);
         foreach (var pack in packs)
         {
@@ -198,6 +201,8 @@ internal static class VobSubExtractor
         var pattern = SKColors.Yellow;
         var emphasis = SKColors.Black;
 
+        // Check immediately before opening a writer that can replace an existing file.
+        cancellationToken.ThrowIfCancellationRequested();
         using var writer = new VobSubWriter(
             outputPath,
             screenWidth,
