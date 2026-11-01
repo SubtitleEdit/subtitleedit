@@ -161,20 +161,25 @@ internal static class ImageOutputWriter
             cancellationToken.ThrowIfCancellationRequested();
             var item = items[i];
             var ip = BuildPreservedParameter(item, i, defaultWidth, defaultHeight, options);
-            if (apply3D)
+            try
             {
-                // A 2D Blu-ray/DVB/VobSub track made into a 3D one - from where the source put it.
-                Stereo3DImage.Apply(ip, disposeSource: false);
-            }
+                if (apply3D)
+                {
+                    // A 2D Blu-ray/DVB/VobSub track made into a 3D one.
+                    Stereo3DImage.Apply(ip, disposeSource: false);
+                }
 
-            handler.CreateParagraph(ip);
-            handler.WriteParagraph(ip);
-            // We do NOT dispose item.Bitmap here — ownership stays with BitmapSubtitleItem;
-            // the caller disposes the whole list when done. Disposing twice would crash.
-            // A 3D image made above is ours, though.
-            if (!ReferenceEquals(ip.Bitmap, item.Bitmap))
+                handler.CreateParagraph(ip);
+                handler.WriteParagraph(ip);
+            }
+            finally
             {
-                ip.Bitmap.Dispose();
+                // The source bitmap belongs to BitmapSubtitleItem. Dispose
+                // only any derived 3D bitmap, even if writing throws.
+                if (!ReferenceEquals(ip.Bitmap, item.Bitmap))
+                {
+                    ip.Bitmap?.Dispose();
+                }
             }
         }
         cancellationToken.ThrowIfCancellationRequested();
