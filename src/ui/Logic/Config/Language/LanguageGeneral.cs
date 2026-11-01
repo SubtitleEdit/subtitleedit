@@ -289,6 +289,7 @@ public class LanguageGeneral
     public string GetAudioClips { get; set; }
     public string GoTo { get; set; }
     public string GoToLineNumber { get; set; }
+    public string OfX { get; set; }
     public string GoToNextShotChange { get; set; }
     public string GoToPreviousShotChange { get; set; }
     public string GoogleIt { get; set; }
@@ -1314,6 +1315,7 @@ public class LanguageGeneral
         GetAudioClips = "Get audio clips";
         GoTo = "Go to";
         GoToLineNumber = "Go to line number";
+        OfX = "of {0}";
         GoToNextShotChange = "Go to next shot change";
         GoToPreviousShotChange = "Go to previous shot change";
         GoogleIt = "Google it";

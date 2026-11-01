@@ -17979,6 +17979,18 @@ public partial class MainViewModel :
         }
     }
 
+    private (string Time, string Text)? GetGoToLinePreview(int number)
+    {
+        var line = Subtitles.FirstOrDefault(p => !p.IsReferenceOnly && p.Number == number);
+        if (line == null)
+        {
+            return null;
+        }
+
+        var text = HtmlUtil.RemoveHtmlTags(line.Text, true).SplitToLines();
+        return (new TimeCode(line.StartTime).ToDisplayString(), string.Join(" ", text));
+    }
+
     private async Task ShowTeletextAlignmentPicker(SubtitleLineViewModel selected)
     {
         var selectedItems = SubtitleGridSelectedItems;
@@ -19737,7 +19749,7 @@ public partial class MainViewModel :
                     : Subtitles.IndexOf(SelectedSubtitle) + 1;
             }
 
-            vm.Initialize(idx, lineCount);
+            vm.Initialize(idx, lineCount, GetGoToLinePreview);
         });
 
         if (viewModel is { OkPressed: true, LineNumber: >= 0 } && viewModel.LineNumber <= lineCount)
