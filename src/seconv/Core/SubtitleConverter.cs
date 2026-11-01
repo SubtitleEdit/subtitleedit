@@ -813,7 +813,9 @@ internal class SubtitleConverter
         }
 
         var streams = BitmapSubtitleLoader.LoadTransportStreamDvbSub(inputFile);
-        cancellationToken.ThrowIfCancellationRequested();
+        try
+        {
+            cancellationToken.ThrowIfCancellationRequested();
         if (streams.Count == 0)
         {
             // No DVB-sub PIDs found; let the regular container loader handle teletext / etc.
@@ -869,7 +871,16 @@ internal class SubtitleConverter
                     AnsiConsole.MarkupLineInterpolated($" [red]error: {msg}[/]");
                 }
             }
-            finally
+        }
+
+            await Task.CompletedTask;
+            return true;
+        }
+        finally
+        {
+            // The loader allocates all PIDs up front. Cancellation or a failed
+            // track must not leave later streams' native bitmaps undisposed.
+            foreach (var (items, _) in streams)
             {
                 foreach (var item in items)
                 {
@@ -877,9 +888,6 @@ internal class SubtitleConverter
                 }
             }
         }
-
-        await Task.CompletedTask;
-        return true;
     }
 
     /// <summary>
@@ -891,7 +899,9 @@ internal class SubtitleConverter
     {
         cancellationToken.ThrowIfCancellationRequested();
         var allStreams = BitmapSubtitleLoader.LoadXSub(inputFile);
-        cancellationToken.ThrowIfCancellationRequested();
+        try
+        {
+            cancellationToken.ThrowIfCancellationRequested();
         if (allStreams.Count == 0)
         {
             // No XSUB packets — let the regular loader report it (it also owns the error text).
@@ -912,10 +922,6 @@ internal class SubtitleConverter
                 continue;
             }
 
-            foreach (var item in stream.Items)
-            {
-                item.Dispose();
-            }
         }
 
         try
@@ -933,19 +939,6 @@ internal class SubtitleConverter
                     + $"{streams.Count} XSUB streams in the file.");
             }
         }
-        catch
-        {
-            foreach (var (items, _) in streams)
-            {
-                foreach (var item in items)
-                {
-                    item.Dispose();
-                }
-            }
-
-            throw;
-        }
-
         foreach (var (items, streamNumber) in streams)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -985,7 +978,16 @@ internal class SubtitleConverter
                     AnsiConsole.MarkupLineInterpolated($" [red]error: {msg}[/]");
                 }
             }
-            finally
+        }
+
+            await Task.CompletedTask;
+            return true;
+        }
+        finally
+        {
+            // All streams (including filtered-out ones) are allocated at load.
+            // Own the complete collection until every selected stream is done.
+            foreach (var (items, _) in allStreams)
             {
                 foreach (var item in items)
                 {
@@ -993,9 +995,6 @@ internal class SubtitleConverter
                 }
             }
         }
-
-        await Task.CompletedTask;
-        return true;
     }
 
     /// <summary>
