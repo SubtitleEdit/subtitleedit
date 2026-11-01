@@ -136,8 +136,10 @@ internal static class ImageOutputWriter
         IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items,
         string filePath,
         IExportHandler handler,
-        ConversionOptions options)
+        ConversionOptions options,
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (items.Count == 0)
         {
             throw new InvalidOperationException("No bitmaps to write.");
@@ -148,11 +150,13 @@ internal static class ImageOutputWriter
         var first = items[0];
         var firstParam = BuildPreservedParameter(first, 0, defaultWidth, defaultHeight, options);
         ApplyReelDuration(handler, options);
+        cancellationToken.ThrowIfCancellationRequested();
         handler.WriteHeader(filePath, firstParam);
 
         var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
         for (var i = 0; i < items.Count; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var item = items[i];
             var ip = BuildPreservedParameter(item, i, defaultWidth, defaultHeight, options);
             if (apply3D)
@@ -171,6 +175,7 @@ internal static class ImageOutputWriter
                 ip.Bitmap.Dispose();
             }
         }
+        cancellationToken.ThrowIfCancellationRequested();
         handler.WriteFooter();
     }
 
