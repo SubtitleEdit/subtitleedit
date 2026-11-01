@@ -1,3 +1,4 @@
+using SeConv.Commands;
 using SeConv.Core;
 using Xunit;
 
@@ -19,6 +20,37 @@ public class SubtitleConverterCancellationTest : IDisposable
         {
             Directory.Delete(_tempRoot, recursive: true);
         }
+    }
+
+    [Fact]
+    public async Task ConvertCommand_PreCancelledToken_PropagatesRatherThanReturningAnError()
+    {
+        var input = Path.Combine(_tempRoot, "cli-input.srt");
+        await File.WriteAllTextAsync(input, """
+            1
+            00:00:01,000 --> 00:00:02,000
+            Hello.
+
+            """, TestContext.Current.CancellationToken);
+        var outputFolder = Path.Combine(_tempRoot, "cli-output");
+        Directory.CreateDirectory(outputFolder);
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        var command = new ConvertCommand();
+        var settings = new ConvertCommand.Settings
+        {
+            Pattern = [input],
+            Format = "SubRip",
+            OutputFolder = outputFolder,
+            Quiet = true,
+            Json = true,
+        };
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            command.ExecuteAsync(null!, settings, cts.Token));
+        Assert.Empty(Directory.GetFiles(outputFolder));
     }
 
     [Fact]
