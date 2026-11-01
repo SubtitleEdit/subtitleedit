@@ -2,6 +2,7 @@ using SeConv.Commands;
 using SeConv.Core;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.VobSub;
 using SkiaSharp;
 using Xunit;
 
@@ -178,9 +179,8 @@ public class SubtitleConverterCancellationTest : IDisposable
     {
         var output = Path.Combine(_tempRoot, "interrupted.sup");
         using var cts = new CancellationTokenSource();
-        using var bitmap = new SKBitmap(16, 16);
         using var item = new BitmapSubtitleLoader.BitmapSubtitleItem(
-            new TimeCode(0), new TimeCode(1000), bitmap);
+            new TimeCode(0), new TimeCode(1000), new SKBitmap(16, 16));
         var handler = new CancelAfterHeaderHandler(cts);
 
         Assert.ThrowsAny<OperationCanceledException>(() =>
@@ -260,6 +260,34 @@ public class SubtitleConverterCancellationTest : IDisposable
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => task);
         Assert.Equal("ORIGINAL CONTENT", await File.ReadAllTextAsync(output, TestContext.Current.CancellationToken));
+    }
+
+    [Theory]
+    [InlineData("CopyOneStream")]
+    [InlineData("WriteOneStream")]
+    public void VobSubWriter_PreCancelledToken_LeavesExistingOutputsUntouched(string writerName)
+    {
+        var output = Path.Combine(_tempRoot, "existing-dvd.sub");
+        var index = Path.ChangeExtension(output, ".idx");
+        File.WriteAllText(output, "EXISTING SUB");
+        File.WriteAllText(index, "EXISTING IDX");
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        var method = typeof(VobSubExtractor).GetMethod(
+            writerName, System.Reflection.BindingFlags.NonPublic |
+                        System.Reflection.BindingFlags.Static)!;
+        var args = writerName == "CopyOneStream"
+            ? new object[] { Array.Empty<VobSubMergedPack>(), output, true, 0,
+                DvdSubtitleLanguage.English, Array.Empty<SKColor>(), cts.Token }
+            : new object[] { Array.Empty<VobSubMergedPack>(), output, true, 0,
+                DvdSubtitleLanguage.English, cts.Token };
+
+        var failure = Assert.Throws<System.Reflection.TargetInvocationException>(
+            () => method.Invoke(null, args));
+        Assert.IsAssignableFrom<OperationCanceledException>(failure.InnerException);
+        Assert.Equal("EXISTING SUB", File.ReadAllText(output));
+        Assert.Equal("EXISTING IDX", File.ReadAllText(index));
     }
 
     [Fact]
