@@ -3,6 +3,29 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-rc1 (1st of November 2026)
+
+* New SVG icons in all themes and the About window, sharp at any display scale
+* New layout picker thumbnails drawn in theme colors, restyled spell check and change casing
+* Auto-translate: show source and translation side by side, with more room for text
+* Auto-translate: let CrispASR MADLAD use GPU builds - thx SMAP-git
+* Fix common errors: more compact rules with clearer examples
+* Improve Choose alignment, Go to line number and Command palette
+* More consistent dialogs: Escape, button order, error icons
+* Save as: list favorite subtitle formats first - thx accessallareas
+* More dialog text can now be translated
+* Fix "Save as" doubling the file extension on macOS (.srt.srt) - thx accessallareas
+* Fix OCR line breaks of separated top and bottom text with Auto-break - thx robinfire110
+* Fix error log entry from stopping mpv before it started - thx GrampaWildWilly
+* Fix Auto-translate changing the subtitle when no text is returned - thx Blackspirits
+* Fix Auto-translate losing language variants like pt-PT when switching provider - thx Blackspirits
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+* Update Portuguese translation - thx Blackspirits
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-beta12 (31st of October 2026)
 
 * FFmpeg player: subtitle overlay closer to the mpv preview (per-line alignment, inline colors, bold/italic, RTL, second subtitle style, opaque box, justify)
