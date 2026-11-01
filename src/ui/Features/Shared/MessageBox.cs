@@ -4,7 +4,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -153,14 +152,13 @@ public class MessageBox : Window
         {
             // Theme images are unpacked from Themes.zip into Se.ThemesFolder at start-up; a path
             // relative to the working directory never resolved, so no icon was ever shown here.
-            var iconPath = Path.Combine(UiTheme.ImageFolder, $"{icon}.png");
             try
             {
-                iconImage.Source = new Bitmap(iconPath);
+                iconImage.Source = ThemeIcon.Load(UiTheme.ImageFolder, icon.ToString());
             }
             catch
             {
-                Se.LogError($"Could not load message box icon \"{iconPath}\".");
+                Se.LogError($"Could not load message box icon \"{icon}\" from \"{UiTheme.ImageFolder}\".");
             }
 
             grid.Children.Add(iconImage);

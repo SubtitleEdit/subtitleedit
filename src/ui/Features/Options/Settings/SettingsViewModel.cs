@@ -573,7 +573,7 @@ public partial class SettingsViewModel : ObservableObject
         var iconFolders = Directory.Exists(Se.ThemesFolder)
             ? Directory.GetDirectories(Se.ThemesFolder)
                 // A folder unpacked before its theme had icons holds only background art - not an icon set to pick
-                .Where(p => File.Exists(Path.Combine(p, "Open.png")))
+                .Where(p => ThemeIcon.Exists(p, "Open"))
                 .Select(p => Path.GetFileName(p)).ToList()
             : new List<string>();
         iconFolders.Insert(0, Se.Language.General.Auto);

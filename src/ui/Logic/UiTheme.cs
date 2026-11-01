@@ -140,7 +140,7 @@ public static class UiTheme
         {
             var themeName = ThemeName;
             var folder = Path.Combine(Se.ThemesFolder, themeName);
-            if (!File.Exists(Path.Combine(folder, "Open.png")))
+            if (!ThemeIcon.Exists(folder, "Open"))
             {
                 // A theme (or a theme's icons, as with Pastel's and Nord's once art-only folders)
                 // added after the folder was last unpacked (same version, so the start-up check
