@@ -299,6 +299,14 @@ internal static class BurnInRunner
 
             cancellationToken.ThrowIfCancellationRequested();
             process.Start();
+            // Close the small race between the pre-start check and process.Start:
+            // cancellation may have fired while the process was not yet running.
+            if (cancellationToken.IsCancellationRequested)
+            {
+                TryKill(process);
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
             process.BeginErrorReadLine();
             process.WaitForExit();
             // A killed encode is cancellation, not an ordinary ffmpeg failure.
