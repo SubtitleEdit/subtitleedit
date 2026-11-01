@@ -924,21 +924,19 @@ internal class SubtitleConverter
 
         }
 
-        try
+        if (streams.Count == 0)
         {
-            if (streams.Count == 0)
-            {
-                throw new InvalidOperationException(
-                    $"XSUB file has {allStreams.Count} subtitle stream(s) but none matched --track-number ({string.Join(",", options.TrackNumbers)}): {inputFile}");
-            }
-
-            if (streams.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
-            {
-                throw new InvalidOperationException(
-                    "--output-filename can only target a single subtitle stream. Found "
-                    + $"{streams.Count} XSUB streams in the file.");
-            }
+            throw new InvalidOperationException(
+                $"XSUB file has {allStreams.Count} subtitle stream(s) but none matched --track-number ({string.Join(",", options.TrackNumbers)}): {inputFile}");
         }
+
+        if (streams.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
+        {
+            throw new InvalidOperationException(
+                "--output-filename can only target a single subtitle stream. Found "
+                + $"{streams.Count} XSUB streams in the file.");
+        }
+
         foreach (var (items, streamNumber) in streams)
         {
             cancellationToken.ThrowIfCancellationRequested();
