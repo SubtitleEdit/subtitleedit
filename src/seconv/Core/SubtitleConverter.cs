@@ -202,13 +202,13 @@ internal class SubtitleConverter
                     return result;
                 }
 
-                return await ConvertVobBatchAsync(titleSetVobs, options, result);
+                return await ConvertVobBatchAsync(titleSetVobs, options, result, cancellationToken);
             }
 
             if (inputFiles.All(f => f.EndsWith(".vob", StringComparison.OrdinalIgnoreCase)))
             {
                 inputFiles.Sort(StringComparer.OrdinalIgnoreCase);
-                return await ConvertVobBatchAsync(inputFiles, options, result);
+                return await ConvertVobBatchAsync(inputFiles, options, result, cancellationToken);
             }
 
             // --output-filename only makes sense for a single input file (matches old SE)
@@ -236,7 +236,7 @@ internal class SubtitleConverter
                 try
                 {
                     if (imageTargetHandler is not null
-                        && await TryConvertImageToImageAsync(inputFile, options, result, fileIndex, sourceTimestamps))
+                        && await TryConvertImageToImageAsync(inputFile, options, result, fileIndex, sourceTimestamps, cancellationToken))
                     {
                         fileIndex++;
                         continue;
@@ -383,8 +383,9 @@ internal class SubtitleConverter
         return true;
     }
 
-    private async Task<ConversionResult> ConvertVobBatchAsync(List<string> vobFiles, ConversionOptions options, ConversionResult result)
+    private async Task<ConversionResult> ConvertVobBatchAsync(List<string> vobFiles, ConversionOptions options, ConversionResult result, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (!"vobsub".Equals(options.Format, StringComparison.OrdinalIgnoreCase))
         {
             result.Errors.Add(
@@ -469,7 +470,7 @@ internal class SubtitleConverter
             }
 
             int? dvdTitleNumber = options.TrackNumbers.Count == 1 ? options.TrackNumbers[0] : null;
-            var extraction = VobSubExtractor.Extract(vobFiles, outputBase, dvdTitleNumber);
+            var extraction = VobSubExtractor.Extract(vobFiles, outputBase, dvdTitleNumber, cancellationToken);
             var outputs = extraction.Outputs;
             if (!options.Quiet)
             {
@@ -483,6 +484,7 @@ internal class SubtitleConverter
                 result.Warnings.Add(warning); // listed in the summary at the end
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
             result.SuccessfulFiles = vobFiles.Count;
             // Report the first stream's output path against each input VOB. With multiple
             // streams there's no clean 1:1 mapping back to inputs, but the OutputFile slot
@@ -518,6 +520,10 @@ internal class SubtitleConverter
                 }
             }
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
@@ -544,8 +550,9 @@ internal class SubtitleConverter
     /// input. Returns true if the input was handled (recorded in <paramref name="result"/>),
     /// false if it should fall through to the OCR / text pipeline.
     /// </summary>
-    private async Task<bool> TryConvertImageToImageAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps)
+    private async Task<bool> TryConvertImageToImageAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var ext = Path.GetExtension(inputFile).ToLowerInvariant();
 
         if (ext == ".sup")
@@ -553,17 +560,17 @@ internal class SubtitleConverter
             if (HdDvdSupParser.IsHdDvdSup(inputFile))
             {
                 return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
-                    () => BitmapSubtitleLoader.LoadHdDvdSup(inputFile));
+                    () => BitmapSubtitleLoader.LoadHdDvdSup(inputFile), cancellationToken);
             }
 
             if (FileUtil.IsSpDvdSup(inputFile))
             {
                 return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
-                    () => BitmapSubtitleLoader.LoadSpDvdSup(inputFile));
+                    () => BitmapSubtitleLoader.LoadSpDvdSup(inputFile), cancellationToken);
             }
 
             return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
-                () => BitmapSubtitleLoader.LoadBluRaySup(inputFile));
+                () => BitmapSubtitleLoader.LoadBluRaySup(inputFile), cancellationToken);
         }
 
         if (ext == ".sub")
@@ -587,7 +594,7 @@ internal class SubtitleConverter
                 // could disambiguate per-file, but a wrong guess only affects timing scale,
                 // not bitmap content.
                 return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex, sourceTimestamps,
-                    () => BitmapSubtitleLoader.LoadVobSub(inputFile, idxPath, isPal: true));
+                    () => BitmapSubtitleLoader.LoadVobSub(inputFile, idxPath, isPal: true), cancellationToken);
             }
             return false;
         }
@@ -605,24 +612,24 @@ internal class SubtitleConverter
             }
 
             return await PassThroughSingleStreamAsync(subPath, options, result, fileIndex, sourceTimestamps,
-                () => BitmapSubtitleLoader.LoadVobSub(subPath, inputFile, isPal: true));
+                () => BitmapSubtitleLoader.LoadVobSub(subPath, inputFile, isPal: true), cancellationToken);
         }
 
         // e.g. an HLS web rip named .mp4 - before the Matroska branch, as it could be named .mkv too
         var isTransportStreamWithOtherExtension = FileUtil.IsTransportStreamWithOtherVideoExtension(inputFile);
         if (ext is ".mkv" or ".mks" && !isTransportStreamWithOtherExtension)
         {
-            return await PassThroughMatroskaPgsAsync(inputFile, options, result, fileIndex, sourceTimestamps);
+            return await PassThroughMatroskaPgsAsync(inputFile, options, result, fileIndex, sourceTimestamps, cancellationToken);
         }
 
         if (ext is ".ts" or ".m2ts" or ".mts" || isTransportStreamWithOtherExtension)
         {
-            return await PassThroughTransportStreamDvbAsync(inputFile, options, result, fileIndex, sourceTimestamps);
+            return await PassThroughTransportStreamDvbAsync(inputFile, options, result, fileIndex, sourceTimestamps, cancellationToken);
         }
 
         if (ext is ".avi" or ".divx")
         {
-            return await PassThroughXSubAsync(inputFile, options, result, fileIndex, sourceTimestamps);
+            return await PassThroughXSubAsync(inputFile, options, result, fileIndex, sourceTimestamps, cancellationToken);
         }
 
         return false;
@@ -634,8 +641,9 @@ internal class SubtitleConverter
         ConversionResult result,
         int fileIndex,
         FileTimestamps? sourceTimestamps,
-        Func<IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>> load)
+        Func<IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>> load, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var outputFile = ResolveOutputFileName(inputFile, options, usedNames: _usedOutputFileNames);
         if (!options.Quiet)
         {
@@ -646,7 +654,8 @@ internal class SubtitleConverter
         try
         {
             items = load();
-            WritePreservedBitmaps(items, outputFile, options);
+            cancellationToken.ThrowIfCancellationRequested();
+            WritePreservedBitmaps(items, outputFile, options, cancellationToken);
             result.SuccessfulFiles++;
             ApplySourceTimestamp(sourceTimestamps, outputFile);
             result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
@@ -654,6 +663,10 @@ internal class SubtitleConverter
             {
                 AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
             }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -681,8 +694,9 @@ internal class SubtitleConverter
         return true;
     }
 
-    private async Task<bool> PassThroughMatroskaPgsAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps)
+    private async Task<bool> PassThroughMatroskaPgsAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         using var matroska = new Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaFile(inputFile);
         if (!matroska.IsValid)
         {
@@ -716,6 +730,7 @@ internal class SubtitleConverter
 
         foreach (var track in bitmapTracks)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var isVobSub = track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase);
             var isDvbSub = track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase);
             var outputFile = ResolveOutputFileName(
@@ -734,7 +749,8 @@ internal class SubtitleConverter
                 items = isVobSub ? BitmapSubtitleLoader.LoadMatroskaVobSub(matroska, track)
                     : isDvbSub ? BitmapSubtitleLoader.LoadMatroskaDvbSub(matroska, track)
                     : BitmapSubtitleLoader.LoadMatroskaPgs(matroska, track);
-                WritePreservedBitmaps(items, outputFile, options);
+                cancellationToken.ThrowIfCancellationRequested();
+                WritePreservedBitmaps(items, outputFile, options, cancellationToken);
                 result.SuccessfulFiles++;
                 ApplySourceTimestamp(sourceTimestamps, outputFile);
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
@@ -742,6 +758,10 @@ internal class SubtitleConverter
                 {
                     AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
                 }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -770,8 +790,9 @@ internal class SubtitleConverter
         return true;
     }
 
-    private async Task<bool> PassThroughTransportStreamDvbAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps)
+    private async Task<bool> PassThroughTransportStreamDvbAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         // --teletext-only means "skip DVB-sub". The regular container path
         // (ContainerSubtitleLoader.LoadTransportStream) honors this by gating its DVB-sub
         // load on !options.TeletextOnly; this preserve path has to do the same or the
@@ -783,6 +804,7 @@ internal class SubtitleConverter
         }
 
         var streams = BitmapSubtitleLoader.LoadTransportStreamDvbSub(inputFile);
+        cancellationToken.ThrowIfCancellationRequested();
         if (streams.Count == 0)
         {
             // No DVB-sub PIDs found; let the regular container loader handle teletext / etc.
@@ -798,6 +820,7 @@ internal class SubtitleConverter
 
         foreach (var (items, pid) in streams)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             // PID is the natural per-stream identifier. ResolveOutputFileName only embeds
             // languageSuffix into the filename stem (trackNumber is only used as the
             // de-duplication fallback for overwrite collisions), so pass the PID *as* the
@@ -812,7 +835,8 @@ internal class SubtitleConverter
 
             try
             {
-                WritePreservedBitmaps(items, outputFile, options);
+                cancellationToken.ThrowIfCancellationRequested();
+                WritePreservedBitmaps(items, outputFile, options, cancellationToken);
                 result.SuccessfulFiles++;
                 ApplySourceTimestamp(sourceTimestamps, outputFile);
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
@@ -820,6 +844,10 @@ internal class SubtitleConverter
                 {
                     AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
                 }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -850,9 +878,11 @@ internal class SubtitleConverter
     /// number is used as the filename suffix (an AVI stream header carries no language) but only
     /// when the file has more than one, so the usual single-stream file keeps its plain name.
     /// </summary>
-    private async Task<bool> PassThroughXSubAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps)
+    private async Task<bool> PassThroughXSubAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex, FileTimestamps? sourceTimestamps, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var allStreams = BitmapSubtitleLoader.LoadXSub(inputFile);
+        cancellationToken.ThrowIfCancellationRequested();
         if (allStreams.Count == 0)
         {
             // No XSUB packets — let the regular loader report it (it also owns the error text).
@@ -909,6 +939,7 @@ internal class SubtitleConverter
 
         foreach (var (items, streamNumber) in streams)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var languageSuffix = allStreams.Count > 1 && streamNumber.HasValue ? $"xsub_track{streamNumber.Value}" : null;
             var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix, streamNumber, _usedOutputFileNames);
 
@@ -920,7 +951,8 @@ internal class SubtitleConverter
 
             try
             {
-                WritePreservedBitmaps(items, outputFile, options);
+                cancellationToken.ThrowIfCancellationRequested();
+                WritePreservedBitmaps(items, outputFile, options, cancellationToken);
                 result.SuccessfulFiles++;
                 ApplySourceTimestamp(sourceTimestamps, outputFile);
                 result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
@@ -928,6 +960,10 @@ internal class SubtitleConverter
                 {
                     AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
                 }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -984,8 +1020,10 @@ internal class SubtitleConverter
     private static void WritePreservedBitmaps(
         IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items,
         string outputFile,
-        ConversionOptions options)
+        ConversionOptions options,
+        CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         ThrowOnUnsupportedImagePassThroughOptions(options);
         var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format))
             ?? throw new InvalidOperationException($"No image handler for format '{options.Format}'");
@@ -994,7 +1032,7 @@ internal class SubtitleConverter
         {
             Directory.CreateDirectory(outputDir);
         }
-        ImageOutputWriter.WritePreservedBitmaps(items, outputFile, handler, options);
+        ImageOutputWriter.WritePreservedBitmaps(items, outputFile, handler, options, cancellationToken);
     }
 
     private List<string> GetInputFiles(ConversionOptions options)
@@ -1228,7 +1266,8 @@ internal class SubtitleConverter
             Action<int, int>? progress = options.Quiet ? null : (done, total) => ProgressLine.Report("Burn-in seconds", done, total);
             try
             {
-                BurnInRunner.Run(outputFile, options.BurnInVideo, options.BurnInFfmpegArgs, options.Overwrite, progress);
+                BurnInRunner.Run(outputFile, options.BurnInVideo, options.BurnInFfmpegArgs, options.Overwrite, progress, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
             }
             finally
             {
