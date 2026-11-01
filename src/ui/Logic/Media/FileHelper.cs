@@ -310,9 +310,8 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                // See the macOS note in PickSaveSubtitleFileAs.
                 SuggestedFileName = OperatingSystem.IsMacOS()
-                    ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
+                    ? MakeMacSuggestedFileName(suggestedFileName, currentFormat.Extension)
                     : MakePortalSafeSuggestedFileName(suggestedFileName, currentFormat.Extension),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(currentFormat),
                 DefaultExtension = currentFormat.Extension.TrimStart('.')
@@ -353,12 +352,11 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 // Pre-fill with the same extension rule the result goes through below
                 // (AddMissingExtension), so under the document portal the granted name is
                 // final-safe when the user keeps the suggestion (see NeedsPortalGrantedName).
-                // macOS: without an extension in the name, the save panel appends the preferred
-                // extension of the format's file type, and ".ssa" shares a type with ".ass" (e.g.
-                // io.mpv.ass) - so Sub Station Alpha was suggested as "movie.ass".
-                SuggestedFileName = DocumentPortal.IsSandboxed || OperatingSystem.IsMacOS()
-                    ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
-                    : Path.GetFileName(suggestedFileName),
+                SuggestedFileName = OperatingSystem.IsMacOS()
+                    ? MakeMacSuggestedFileName(suggestedFileName, currentFormat.Extension)
+                    : DocumentPortal.IsSandboxed
+                        ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
+                        : Path.GetFileName(suggestedFileName),
                 FileTypeChoices = filePickerFileTypes,
                 SuggestedFileType = defaultChoice,
             };
@@ -438,6 +436,32 @@ namespace Nikse.SubtitleEdit.Logic.Media
         {
             var name = Path.GetFileName(suggestedFileName);
             return DocumentPortal.IsSandboxed ? AddDefaultExtension(name, extension) : name;
+        }
+
+        private static string MakeMacSuggestedFileName(string suggestedFileName, string extension)
+        {
+            return MakeMacSuggestedFileName(suggestedFileName, extension, MacFileTypes.PrefersOtherExtension(extension));
+        }
+
+        /// <summary>
+        /// The macOS save panel adds the file type's preferred extension to the name it is given.
+        /// It only sees an extension that an installed app has registered, so for an unregistered
+        /// one (".srt" without mpv or IINA) "movie.srt" became "movie.srt.srt" (#16535): the
+        /// suggestion must have no extension. But when the type prefers another extension, as
+        /// ".ssa" does with io.mpv.ass, a bare "movie" became "movie.ass": the suggestion must
+        /// carry the format's extension.
+        /// </summary>
+        internal static string MakeMacSuggestedFileName(string suggestedFileName, string extension, bool typePrefersOtherExtension)
+        {
+            var name = Path.GetFileName(suggestedFileName);
+            if (typePrefersOtherExtension)
+            {
+                return AddMissingExtension(name, extension);
+            }
+
+            return name.Length > extension.Length && name.EndsWith(extension, StringComparison.OrdinalIgnoreCase)
+                ? name.Substring(0, name.Length - extension.Length)
+                : name;
         }
 
         /// <summary>
