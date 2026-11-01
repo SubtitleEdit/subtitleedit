@@ -18,6 +18,11 @@ internal class SubtitleConverter
     // configuration fails before the first file is touched.
     private AutoTranslateRunner? _translateRunner;
 
+    // Deterministic test seam for the transform/save boundary. Normally null;
+    // a regression can cancel a live token after transforms but before output
+    // is committed, rather than testing only an already-cancelled token.
+    internal Action? BeforeSaveForTesting { get; set; }
+
     // Output names handed out during the current run - --overwrite must only clobber
     // files from before the run, never output this run just wrote (two "eng" tracks in
     // one mkv would otherwise silently overwrite each other).
@@ -1255,6 +1260,7 @@ internal class SubtitleConverter
         }
 
         // Do not replace an existing output after a cancelled translation.
+        BeforeSaveForTesting?.Invoke();
         cancellationToken.ThrowIfCancellationRequested();
         LibSEIntegration.SaveSubtitle(
             subtitle,
