@@ -123,7 +123,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     private List<string> _apiUrls = new();
     private List<string> _apiModels = new();
     private bool _onlyCurrentLine;
-    private List<int> _onlyRowIndices = new(); // "Translate rows": the selected rows, in order (empty = selected row only)
+    private List<int> _onlyRowIndices = new(); // "Translate rows": the selected rows, in order (empty = not limited to a selection)
     private bool _autoStart;
     private bool _translationFailed;
     private Subtitle _subtitle = new Subtitle();
@@ -873,7 +873,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        await DoTranslate(onlyCurrentLine: true, indices);
+        await DoTranslate(onlyCurrentLine: false, indices);
     }
 
     [RelayCommand]
@@ -1576,169 +1576,19 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         try
         {
+            if (_onlyRowIndices.Count > 0)
+            {
+                await TranslateSelectedRows(sourceLanguage, targetLanguage, translator, cancellationToken);
+                return; // the finally block below reports completion
+            }
+
             var start = 0;
             if (SelectedTranslateRow is TranslateRow selectedItem)
             {
                 start = Rows.IndexOf(selectedItem);
             }
 
-            // "Translate rows" walks the selected rows one by one, each in single-line mode.
-            var rowQueue = new Queue<int>(_onlyRowIndices);
-            var rowQueueTotal = rowQueue.Count;
-            if (rowQueue.Count > 0)
-            {
-                start = rowQueue.Dequeue();
-            }
-
-            // Single-line mode forced by the user setting or the engine itself is permanent;
-            // forceSingleLineMode may additionally be turned on temporarily after errors and
-            // is only allowed to fall back to merged mode when the permanent flag is off.
-            var alwaysSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
-                                       translator.Name ==
-                                       NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
-                                       translator.Name == NoLanguageLeftBehindServe.StaticName ||
-                                       translator.Name == CrispAsrMadladTranslate.StaticName || // one CLI process per line
-                                       _onlyCurrentLine;
-            var forceSingleLineMode = alwaysSingleLineMode;
-
-            var index = start;
-
-            // The advanced llama.cpp engine runs its own batch loop: numbered batches with a
-            // schema-forced JSON reply and rolling context, so MergeAndSplitHelper's merge/split
-            // heuristics are not needed (and would break the line alignment the schema guarantees).
-            // "Translate current line" still goes through the regular single-line path below.
-            if (translator is AdvancedTranslatorBase advancedTranslator && !_onlyCurrentLine)
-            {
-                while (index < Rows.Count)
-                {
-                    if (_abort || cancellationToken.IsCancellationRequested)
-                    {
-                        Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
-                        break;
-                    }
-
-                    var translatedCount = await advancedTranslator.TranslateBatchAsync(Rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken);
-                    index += translatedCount;
-
-                    EnqueueTranslateProgress(index);
-                }
-
-                return; // the finally block below reports completion
-            }
-
-            var linesTranslated = 0;
-            var errorCount = 0;
-            var noErrorCount = 0;
-            var noProgressCount = 0;
-            while (index < Rows.Count)
-            {
-                if (_abort || cancellationToken.IsCancellationRequested)
-                {
-                    Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
-                    break;
-                }
-
-                var linesMergedAndTranslated = 0;
-
-                if (!_onlyCurrentLine)
-                {
-                    linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(Rows, sourceLanguage, targetLanguage, index, translator, forceSingleLineMode,
-                        cancellationToken, ApplyRowUpdateOnUiThread);
-                }
-
-                if (linesMergedAndTranslated > 0)
-                {
-                    noErrorCount++;
-                    index += linesMergedAndTranslated;
-
-                    if (!_onlyCurrentLine)
-                    {
-                        EnqueueTranslateProgress(index);
-                    }
-                    else
-                    {
-                        Dispatcher.UIThread.Invoke(() => HasTranslatedSomething = true);
-                    }
-
-                    linesTranslated += linesMergedAndTranslated;
-                    errorCount = 0;
-                    noProgressCount = 0;
-
-                    if (noErrorCount > 7 && !alwaysSingleLineMode)
-                    {
-                        forceSingleLineMode = false;
-                    }
-
-                    continue;
-                }
-
-                errorCount++;
-                noErrorCount = 0;
-                if (errorCount > 3)
-                {
-                    forceSingleLineMode = true;
-                }
-
-
-                var translateCount = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
-                    Rows,
-                    sourceLanguage,
-                    targetLanguage,
-                    index,
-                    translator,
-                    forceSingleLineMode,
-                    cancellationToken,
-                    ApplyRowUpdateOnUiThread);
-
-                if (_abort || cancellationToken.IsCancellationRequested)
-                {
-                    Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
-                    return;
-                }
-
-                if (translateCount > 0)
-                {
-                    index += translateCount;
-                    noProgressCount = 0;
-
-                    if (_onlyCurrentLine && rowQueueTotal > 0)
-                    {
-                        // Progress over the selected rows; no follow-along select, so the selection stays.
-                        var progressValue = (double)(rowQueueTotal - rowQueue.Count) * 100 / rowQueueTotal;
-                        TranslateUiUpdates.EnqueueProgress(progressValue, $"{(int)progressValue} %");
-                        TranslateUiUpdates.EnqueueUpdate(() => HasTranslatedSomething = true);
-                        if (rowQueue.Count > 0)
-                        {
-                            index = rowQueue.Dequeue();
-                            errorCount = 0;
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        EnqueueTranslateProgress(index);
-                    }
-
-                    if (_onlyCurrentLine)
-                    {
-                        Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
-                        break;
-                    }
-                }
-                else
-                {
-                    forceSingleLineMode = true;
-
-                    // The engine keeps returning nothing for this line without throwing -
-                    // without a cap the loop would retry the same line forever.
-                    noProgressCount++;
-                    if (noProgressCount > 3)
-                    {
-                        throw new Exception($"Translation engine {translator.Name} returned no translation for line {index + 1} after {noProgressCount} attempts");
-                    }
-                }
-            }
-
+            await TranslateRange(Rows, start, EnqueueTranslateProgress, sourceLanguage, targetLanguage, translator, cancellationToken);
         }
         catch (OperationCanceledException) when (_abort || _cancellationTokenSource.IsCancellationRequested)
         {
@@ -1818,8 +1668,9 @@ public partial class AutoTranslateViewModel : ObservableObject
                     StatusText = Se.Language.Translate.TranslationComplete;
                 }
 
+                // "Translate rows" leaves the selection as it was.
                 var lastTranslatedRow = Rows.LastOrDefault(p => !string.IsNullOrEmpty(p.TranslatedText));
-                if (lastTranslatedRow != null)
+                if (lastTranslatedRow != null && _onlyRowIndices.Count == 0)
                 {
                     SelectAndScrollToRow(Rows.IndexOf(lastTranslatedRow));
                 }
@@ -1829,6 +1680,187 @@ public partial class AutoTranslateViewModel : ObservableObject
                     Ok();
                 }
             });
+        }
+    }
+
+    /// <summary>
+    /// "Translate rows": each unbroken run of selected rows takes the same batch path as a full
+    /// translation, so lines are still merged and the rows above stay available as context.
+    /// A run gets a list that ends at its last row, which keeps a batch from reaching past the selection.
+    /// </summary>
+    private async Task TranslateSelectedRows(TranslationPair sourceLanguage, TranslationPair targetLanguage, IAutoTranslator translator, CancellationToken cancellationToken)
+    {
+        var total = _onlyRowIndices.Count;
+        var finishedRows = 0;
+        foreach (var (first, last) in GetRowRuns(_onlyRowIndices))
+        {
+            if (_abort || cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            var finishedBefore = finishedRows;
+            var rows = new ObservableCollection<TranslateRow>(Rows.Take(last + 1));
+            await TranslateRange(rows, first, index => EnqueueSelectedRowsProgress(finishedBefore + index - first, total),
+                sourceLanguage, targetLanguage, translator, cancellationToken);
+            finishedRows += last - first + 1;
+        }
+    }
+
+    /// <summary>
+    /// Groups sorted row indices into runs of adjacent rows, as (first, last) pairs.
+    /// </summary>
+    internal static List<(int First, int Last)> GetRowRuns(IReadOnlyList<int> sortedIndices)
+    {
+        var runs = new List<(int First, int Last)>();
+        foreach (var index in sortedIndices)
+        {
+            if (runs.Count > 0 && runs[^1].Last + 1 == index)
+            {
+                runs[^1] = (runs[^1].First, index);
+            }
+            else
+            {
+                runs.Add((index, index));
+            }
+        }
+
+        return runs;
+    }
+
+    private async Task TranslateRange(ObservableCollection<TranslateRow> rows, int start, Action<int> reportProgress, TranslationPair sourceLanguage, TranslationPair targetLanguage, IAutoTranslator translator, CancellationToken cancellationToken)
+    {
+        // Single-line mode forced by the user setting or the engine itself is permanent;
+        // forceSingleLineMode may additionally be turned on temporarily after errors and
+        // is only allowed to fall back to merged mode when the permanent flag is off.
+        var alwaysSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
+                                   translator.Name ==
+                                   NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
+                                   translator.Name == NoLanguageLeftBehindServe.StaticName ||
+                                   translator.Name == CrispAsrMadladTranslate.StaticName || // one CLI process per line
+                                   _onlyCurrentLine;
+        var forceSingleLineMode = alwaysSingleLineMode;
+
+        var index = start;
+
+        // The advanced llama.cpp engine runs its own batch loop: numbered batches with a
+        // schema-forced JSON reply and rolling context, so MergeAndSplitHelper's merge/split
+        // heuristics are not needed (and would break the line alignment the schema guarantees).
+        // "Translate current line" still goes through the regular single-line path below.
+        if (translator is AdvancedTranslatorBase advancedTranslator && !_onlyCurrentLine)
+        {
+            while (index < rows.Count)
+            {
+                if (_abort || cancellationToken.IsCancellationRequested)
+                {
+                    Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
+                    break;
+                }
+
+                var translatedCount = await advancedTranslator.TranslateBatchAsync(rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken);
+                index += translatedCount;
+
+                reportProgress(index);
+            }
+
+            return;
+        }
+
+        var linesTranslated = 0;
+        var errorCount = 0;
+        var noErrorCount = 0;
+        var noProgressCount = 0;
+        while (index < rows.Count)
+        {
+            if (_abort || cancellationToken.IsCancellationRequested)
+            {
+                Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
+                break;
+            }
+
+            var linesMergedAndTranslated = 0;
+
+            if (!_onlyCurrentLine)
+            {
+                linesMergedAndTranslated = await MergeAndSplitHelper.MergeAndTranslateIfPossible(rows, sourceLanguage, targetLanguage, index, translator, forceSingleLineMode,
+                    cancellationToken, ApplyRowUpdateOnUiThread);
+            }
+
+            if (linesMergedAndTranslated > 0)
+            {
+                noErrorCount++;
+                index += linesMergedAndTranslated;
+
+                if (!_onlyCurrentLine)
+                {
+                    reportProgress(index);
+                }
+                else
+                {
+                    Dispatcher.UIThread.Invoke(() => HasTranslatedSomething = true);
+                }
+
+                linesTranslated += linesMergedAndTranslated;
+                errorCount = 0;
+                noProgressCount = 0;
+
+                if (noErrorCount > 7 && !alwaysSingleLineMode)
+                {
+                    forceSingleLineMode = false;
+                }
+
+                continue;
+            }
+
+            errorCount++;
+            noErrorCount = 0;
+            if (errorCount > 3)
+            {
+                forceSingleLineMode = true;
+            }
+
+
+            var translateCount = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+                rows,
+                sourceLanguage,
+                targetLanguage,
+                index,
+                translator,
+                forceSingleLineMode,
+                cancellationToken,
+                ApplyRowUpdateOnUiThread);
+
+            if (_abort || cancellationToken.IsCancellationRequested)
+            {
+                Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
+                return;
+            }
+
+            if (translateCount > 0)
+            {
+                index += translateCount;
+                noProgressCount = 0;
+
+                reportProgress(index);
+
+                if (_onlyCurrentLine)
+                {
+                    Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
+                    break;
+                }
+            }
+            else
+            {
+                forceSingleLineMode = true;
+
+                // The engine keeps returning nothing for this line without throwing -
+                // without a cap the loop would retry the same line forever.
+                noProgressCount++;
+                if (noProgressCount > 3)
+                {
+                    throw new Exception($"Translation engine {translator.Name} returned no translation for line {index + 1} after {noProgressCount} attempts");
+                }
+            }
         }
     }
 
@@ -1890,6 +1922,16 @@ public partial class AutoTranslateViewModel : ObservableObject
         TranslateUiUpdates.EnqueueProgress(progressValue, $"{(int)progressValue} %");
         TranslateUiUpdates.EnqueueUpdate(() => HasTranslatedSomething = true);
         TranslateUiUpdates.EnqueueSelect(translatedIndex - 1);
+    }
+
+    /// <summary>
+    /// Progress over the selected rows; no follow-along select, so the selection stays.
+    /// </summary>
+    private void EnqueueSelectedRowsProgress(int translatedCount, int total)
+    {
+        var progressValue = (double)translatedCount * 100 / total;
+        TranslateUiUpdates.EnqueueProgress(progressValue, $"{(int)progressValue} %");
+        TranslateUiUpdates.EnqueueUpdate(() => HasTranslatedSomething = true);
     }
 
     private void SelectAndScrollToRow(int index)
