@@ -382,8 +382,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         {
             var answer = await MessageBox.Show(
                 Window,
-                "Delete lines?",
-                $"Do you want to delete {selectedItems.Count} lines?",
+                Se.Language.General.DeleteLines,
+                string.Format(Se.Language.General.DeleteXLinesQuestion, selectedItems.Count),
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 

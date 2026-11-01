@@ -133,7 +133,7 @@ public partial class ProfilesViewModel : ObservableObject
             await MessageBox.Show(
                 Window!,
                 Se.Language.General.Error,
-                "Unable to import profiles: " + exception.Message,
+                string.Format(Se.Language.General.UnableToImportProfilesX, exception.Message),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
 
@@ -145,7 +145,7 @@ public partial class ProfilesViewModel : ObservableObject
             await MessageBox.Show(
                 Window!,
                 Se.Language.General.Error,
-                "No profiles found in file",
+                Se.Language.General.NoProfilesFoundInFile,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;

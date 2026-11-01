@@ -1453,7 +1453,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         item.Subtitle = new Subtitle();
 
         var batchImages = new List<PaddleOcrBatchInput>(numberOfImages);
-        item.Status = "Preparing OCR...";
+        item.Status = Se.Language.Ocr.PreparingOcr;
         for (var i = 0; i < imageSubtitles.Count; i++)
         {
             batchImages.Add(new PaddleOcrBatchInput

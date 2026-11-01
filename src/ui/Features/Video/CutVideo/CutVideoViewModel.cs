@@ -445,9 +445,8 @@ public partial class CutVideoViewModel : ObservableObject
             Dispatcher.UIThread.Invoke(async () =>
             {
                 await MessageBox.Show(Window!,
-                    "Unable to generate video",
-                    "Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                    "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
+                    Se.Language.General.UnableToGenerateVideo,
+                    string.Format(Se.Language.General.OutputVideoFileNotGeneratedX, jobItem.OutputVideoFileName) + Environment.NewLine + string.Format(Se.Language.General.ParametersX, _ffmpegProcess.StartInfo.Arguments),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -894,7 +893,7 @@ public partial class CutVideoViewModel : ObservableObject
             await MessageBox.Show(
                 Window!,
                 Se.Language.General.Error,
-                "The selected subtitle file contains no subtitles.",
+                Se.Language.General.SelectedSubtitleFileHasNoSubtitles,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
@@ -1232,7 +1231,7 @@ public partial class CutVideoViewModel : ObservableObject
             if (process.ExitCode != 0 || !File.Exists(previewFileName))
             {
                 SeLogger.Error("Cut video transition preview failed: " + arguments + Environment.NewLine + log);
-                await MessageBox.Show(Window, Se.Language.General.Error, "Unable to generate preview" + Environment.NewLine + Environment.NewLine + arguments, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnableToGeneratePreview + Environment.NewLine + Environment.NewLine + arguments, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
