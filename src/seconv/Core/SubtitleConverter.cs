@@ -88,14 +88,23 @@ internal class SubtitleConverter
         }
     }
 
-    public async Task<ConversionResult> ConvertAsync(
+    public Task<ConversionResult> ConvertAsync(
         ConversionOptions options, CancellationToken cancellationToken = default)
+        => RunExclusiveAsync(() => ConvertCoreAsync(options, cancellationToken), cancellationToken);
+
+    // The CLI applies process-wide settings before it starts conversion. Hold the same gate
+    // across both operations; entering ConvertAsync again would deadlock on the semaphore.
+    internal Task<ConversionResult> ConvertInsideGlobalGateAsync(
+        ConversionOptions options, CancellationToken cancellationToken)
+        => ConvertCoreAsync(options, cancellationToken);
+
+    internal static async Task<T> RunExclusiveAsync<T>(
+        Func<Task<T>> operation, CancellationToken cancellationToken)
     {
-        // Check cancellation before touching any output or process-wide configuration.
         await ConversionGate.WaitAsync(cancellationToken);
         try
         {
-            return await ConvertCoreAsync(options, cancellationToken);
+            return await operation();
         }
         finally
         {
