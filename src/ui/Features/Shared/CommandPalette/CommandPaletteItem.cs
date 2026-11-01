@@ -10,13 +10,13 @@ public class CommandPaletteItem
     public string ActionName { get; }
     public string DisplayName { get; }
     public string GroupName { get; }
-    public string ShortcutText { get; }
 
     /// <summary>
-    /// The keys of the shortcut, one per key cap. ShortcutText joins them with "+", and a plus key
-    /// shows as a trailing "+".
+    /// The keys of the shortcut, one per key cap. The shortcut text joins them with "+", and a plus
+    /// key shows as a trailing "+".
     /// </summary>
     public IReadOnlyList<string> ShortcutKeys { get; }
+
     public IRelayCommand Command { get; }
 
     // Lower-cased once so filtering on every key press does not re-allocate.
@@ -29,7 +29,6 @@ public class CommandPaletteItem
         ActionName = actionName;
         DisplayName = displayName;
         GroupName = groupName;
-        ShortcutText = shortcutText;
         var keys = shortcutText.Split('+', StringSplitOptions.RemoveEmptyEntries).ToList();
         if (shortcutText.EndsWith('+'))
         {
