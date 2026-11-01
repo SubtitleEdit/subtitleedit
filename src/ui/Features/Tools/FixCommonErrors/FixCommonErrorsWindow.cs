@@ -26,6 +26,9 @@ public class FixCommonErrorsWindow : Window
     private static readonly IBrush NothingToFixBrush = EditorChrome.Themed(Color.FromRgb(0x6e, 0xcb, 0x87), Color.FromRgb(0x1e, 0x7e, 0x34));
     private static readonly IBrush ErrorsFoundBrush = EditorChrome.Themed(Color.FromRgb(0xff, 0x8a, 0x80), Color.FromRgb(0xc4, 0x28, 0x28));
 
+    // Rules that are off step back, so the ones that will run stand out
+    private static readonly FuncValueConverter<bool, IBrush> RuleNameBrushConverter = new(isEnabled => isEnabled ? EditorChrome.StrongTextBrush : EditorChrome.DimTextBrush);
+
     private readonly FixCommonErrorsViewModel _vm;
     private Button? _buttonApplySelectedFixes;
 
@@ -45,27 +48,29 @@ public class FixCommonErrorsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelStep1 = new TextBlock
+        var stepper = new StackPanel
         {
-            Text = Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep1,
-            FontSize = EditorChrome.FieldFontSize,
-            FontWeight = FontWeight.SemiBold,
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
             VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
             Margin = new Thickness(4, 0, 12, 0),
         };
-        labelStep1.Bind(IsVisibleProperty, new Binding(nameof(vm.IsStepOne)));
-
-        var labelStep2 = new TextBlock
+        var step1 = MakeStep("1", Se.Language.Tools.FixCommonErrors.ChooseFixes, activeInStepOne: true);
+        AutomationProperties.SetName(step1, Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep1);
+        var step2 = MakeStep("2", Se.Language.Tools.FixCommonErrors.ApplyFixes, activeInStepOne: false);
+        step2.Bind(AutomationProperties.NameProperty, new Binding(nameof(vm.Step2Title)));
+        var fixesFoundBadge = EditorChrome.MakeCountBadge(new Binding(nameof(vm.FixesFoundBadge)), EditorChrome.AccentBrush, EditorChrome.AccentSoftBrush);
+        fixesFoundBadge.Bind(IsVisibleProperty, new Binding(nameof(vm.FixesFoundBadge)) { Converter = StringConverters.IsNotNullOrEmpty });
+        step2.Children.Add(fixesFoundBadge);
+        stepper.Children.Add(step1);
+        stepper.Children.Add(new Border
         {
-            FontSize = EditorChrome.FieldFontSize,
-            FontWeight = FontWeight.SemiBold,
+            Width = 28,
+            Height = 1,
+            Background = EditorChrome.FieldBorderBrush,
             VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            Margin = new Thickness(4, 0, 12, 0),
-        };
-        labelStep2.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Step2Title)));
-        labelStep2.Bind(IsVisibleProperty, new Binding("!" + nameof(vm.IsStepOne)));
+        });
+        stepper.Children.Add(step2);
 
         var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(16)
             .WithAccessibleName(Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot)
@@ -112,7 +117,7 @@ public class FixCommonErrorsWindow : Window
         var toolbarContent = new DockPanel { MinHeight = 32 };
         DockPanel.SetDock(panelTopRight, Dock.Right);
         toolbarContent.Children.Add(panelTopRight);
-        toolbarContent.Children.Add(new Panel { Children = { labelStep1, labelStep2 }, VerticalAlignment = VerticalAlignment.Center });
+        toolbarContent.Children.Add(stepper);
         var toolbar = EditorChrome.MakeToolbar(toolbarContent);
         toolbar.Padding = new Thickness(12, 8);
 
@@ -124,24 +129,35 @@ public class FixCommonErrorsWindow : Window
             Header = Se.Language.General.Enabled,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<FixRuleDisplayItem>(nameof(FixRuleDisplayItem.IsSelected), nameof(FixRuleDisplayItem.Name)),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<FixRuleDisplayItem>(
+                nameof(FixRuleDisplayItem.IsSelected),
+                nameof(FixRuleDisplayItem.Name),
+                configure: checkBox => checkBox.Margin = new Thickness(0, -5)), // the theme's 32px check box sets the row height, so fewer rules fit
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
-            Width = new GridLength(80),
+            Width = new GridLength(72),
         };
         var rulesNameColumn = new SeTableViewColumn
         {
             Header = Se.Language.General.Name,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(FixRuleDisplayItem.Name)),
-            Width = new GridLength(320),
+            CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((_, _) => new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                [!TextBlock.TextProperty] = new Binding(nameof(FixRuleDisplayItem.Name)),
+                [!TextBlock.ForegroundProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)) { Converter = RuleNameBrushConverter },
+            }),
+            NameBinding = new Binding(nameof(FixRuleDisplayItem.Name)),
+            Width = new GridLength(420),
         };
         var rulesExampleColumn = new SeTableViewColumn
         {
             Header = Se.Language.General.Example,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(FixRuleDisplayItem.Example)),
+            CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) => MakeExampleCell(item)),
+            NameBinding = new Binding(nameof(FixRuleDisplayItem.Example)),
             Width = new GridLength(1, GridUnitType.Star),
         };
         rulesGrid.Columns.Add(rulesEnabledColumn);
@@ -183,7 +199,16 @@ public class FixCommonErrorsWindow : Window
         var rulesHeader = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
         DockPanel.SetDock(rulesActions, Dock.Right);
         rulesHeader.Children.Add(rulesActions);
-        rulesHeader.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Rules));
+        rulesHeader.Children.Add(new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children =
+            {
+                EditorChrome.MakeSectionHeader(Se.Language.General.Rules),
+                EditorChrome.MakeCountBadge(new Binding(nameof(vm.RulesEnabledText)), EditorChrome.AccentBrush, EditorChrome.AccentSoftBrush),
+            },
+        });
 
         var rulesPanel = new Grid
         {
@@ -376,6 +401,93 @@ public class FixCommonErrorsWindow : Window
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+    }
+
+    /// <summary>
+    /// A step of the stepper: its number in a circle, in the accent while it is the current step.
+    /// </summary>
+    private static StackPanel MakeStep(string number, string text, bool activeInStepOne)
+    {
+        var circleBrush = new FuncValueConverter<bool, IBrush>(isStepOne => isStepOne == activeInStepOne ? EditorChrome.AccentBrush : Brushes.Transparent);
+        var circleBorderBrush = new FuncValueConverter<bool, IBrush>(isStepOne => isStepOne == activeInStepOne ? EditorChrome.AccentBrush : EditorChrome.FieldBorderBrush);
+        var numberBrush = new FuncValueConverter<bool, IBrush>(isStepOne => isStepOne == activeInStepOne ? EditorChrome.OnAccentBrush : EditorChrome.DimTextBrush);
+        var textBrush = new FuncValueConverter<bool, IBrush>(isStepOne => isStepOne == activeInStepOne ? EditorChrome.StrongTextBrush : EditorChrome.DimTextBrush);
+        var textWeight = new FuncValueConverter<bool, FontWeight>(isStepOne => isStepOne == activeInStepOne ? FontWeight.SemiBold : FontWeight.Normal);
+
+        var circle = new Border
+        {
+            Width = 22,
+            Height = 22,
+            CornerRadius = new CornerRadius(11),
+            BorderThickness = new Thickness(1),
+            [!Border.BackgroundProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = circleBrush },
+            [!Border.BorderBrushProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = circleBorderBrush },
+            Child = new TextBlock
+            {
+                Text = number,
+                FontSize = EditorChrome.ScaledFont(11),
+                FontWeight = FontWeight.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!TextBlock.ForegroundProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = numberBrush },
+            },
+        };
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                circle,
+                new TextBlock
+                {
+                    Text = text,
+                    FontSize = EditorChrome.FieldFontSize,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.ForegroundProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = textBrush },
+                    [!TextBlock.FontWeightProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = textWeight },
+                },
+            },
+        };
+    }
+
+    /// <summary>
+    /// A rule's example with what it fixes dimmed and the result strong, an accent arrow between.
+    /// </summary>
+    private static Control MakeExampleCell(FixRuleDisplayItem? item)
+    {
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 7,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        if (item == null || item.Example.Length == 0)
+        {
+            return panel;
+        }
+
+        panel.Children.Add(MakeExampleText(item.ExampleBefore, EditorChrome.DimTextBrush));
+        if (item.ExampleAfter.Length > 0)
+        {
+            panel.Children.Add(MakeExampleText("\u2192", EditorChrome.AccentBrush));
+            panel.Children.Add(MakeExampleText(item.ExampleAfter, EditorChrome.StrongTextBrush));
+        }
+
+        return panel;
+    }
+
+    private static TextBlock MakeExampleText(string text, IBrush foreground)
+    {
+        return new TextBlock
+        {
+            Text = text,
+            FontSize = EditorChrome.ScaledFont(12),
+            Foreground = foreground,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
     }
 
     private Grid MakeStep2Grid()
