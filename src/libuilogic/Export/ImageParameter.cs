@@ -73,6 +73,12 @@ public class ImageParameter
     /// </summary>
     public List<ExportFadeKeyframe>? FadeKeyframes { get; set; }
 
+    /// <summary>
+    /// Blu-ray sup: write an HDR palette (BT.2020 + ST 2084 PQ) with white at this luminance.
+    /// 0 is the usual BT.709 palette.
+    /// </summary>
+    public int HdrWhiteNits { get; set; }
+
     public double FramesPerSecond { get; set; }
     public bool IsRightToLeft { get; set; } = false;
     public ExportBoxType BoxType { get; set; } = ExportBoxType.None;

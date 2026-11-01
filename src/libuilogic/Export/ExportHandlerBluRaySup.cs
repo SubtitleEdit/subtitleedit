@@ -287,6 +287,7 @@ public class ExportHandlerBluRaySup : IExportHandler
                         Height = _height,
                         IsForced = objects.Any(o => o.IsForced),
                         CompositionNumber = compositionNumber,
+                        HdrWhiteNits = pictures[0].HdrWhiteNits,
                     };
 
                     var buffer = BluRaySupPicture.CreateSupFrame(picture, objects, fps, writeClear: !showsMore);
@@ -451,6 +452,7 @@ public class ExportHandlerBluRaySup : IExportHandler
             Height = param.ScreenHeight,
             IsForced = param.IsForced,
             CompositionNumber = (param.Index + 1) * CompositionNumbersPerParagraph,
+            HdrWhiteNits = param.HdrWhiteNits,
 
             // "{\fad(..)}" - Blu-ray fades by re-sending the palette with the alpha scaled, so
             // the subtitle is encoded once and each step costs a palette, not a bitmap.
