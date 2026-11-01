@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.4.0-beta12",
+  "version": "v5.4.0-rc1",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -3601,6 +3601,9 @@
     "translateInPlaceNoOriginal": "Translate in place (do not create original)",
     "translationCancelled": "Translation cancelled",
     "swapLanguages": "Swap source and target languages",
+    "engineSettings": "Translation engine settings",
+    "engineSettingsSubtitle": "Translation engine",
+    "crispAsrSwitchBuildInfo": "\"{0}\" shares the CrispASR engine with speech-to-text, so the version you pick is used there too. Downloaded models are kept.\n\nSelect a version to download:",
     "xIsAlreadyDownloadedReDownload": "{0} is already downloaded. Re-download?",
     "advancedSettingsSubtitle": "Batch, context and sampling options for the advanced llama.cpp engine",
     "context": "Context",
