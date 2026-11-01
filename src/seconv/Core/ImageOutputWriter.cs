@@ -136,8 +136,10 @@ internal static class ImageOutputWriter
         IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items,
         string filePath,
         IExportHandler handler,
-        ConversionOptions options)
+        ConversionOptions options,
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (items.Count == 0)
         {
             throw new InvalidOperationException("No bitmaps to write.");
@@ -148,30 +150,50 @@ internal static class ImageOutputWriter
         var first = items[0];
         var firstParam = BuildPreservedParameter(first, 0, defaultWidth, defaultHeight, options);
         ApplyReelDuration(handler, options);
-        handler.WriteHeader(filePath, firstParam);
-
-        var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
-        for (var i = 0; i < items.Count; i++)
+        cancellationToken.ThrowIfCancellationRequested();
+        try
         {
-            var item = items[i];
-            var ip = BuildPreservedParameter(item, i, defaultWidth, defaultHeight, options);
-            if (apply3D)
-            {
-                // A 2D Blu-ray/DVB/VobSub track made into a 3D one - from where the source put it.
-                Stereo3DImage.Apply(ip, disposeSource: false);
-            }
+            handler.WriteHeader(filePath, firstParam);
 
-            handler.CreateParagraph(ip);
-            handler.WriteParagraph(ip);
-            // We do NOT dispose item.Bitmap here — ownership stays with BitmapSubtitleItem;
-            // the caller disposes the whole list when done. Disposing twice would crash.
-            // A 3D image made above is ours, though.
-            if (!ReferenceEquals(ip.Bitmap, item.Bitmap))
+            var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
+            for (var i = 0; i < items.Count; i++)
             {
-                ip.Bitmap.Dispose();
+                cancellationToken.ThrowIfCancellationRequested();
+                var item = items[i];
+                var ip = BuildPreservedParameter(item, i, defaultWidth, defaultHeight, options);
+                try
+                {
+                    if (apply3D)
+                    {
+                        // A 2D Blu-ray/DVB/VobSub track made into a 3D one.
+                        Stereo3DImage.Apply(ip, disposeSource: false);
+                    }
+    
+                    handler.CreateParagraph(ip);
+                    handler.WriteParagraph(ip);
+                }
+                finally
+                {
+                    // The source bitmap belongs to BitmapSubtitleItem. Dispose
+                    // only any derived 3D bitmap, even if writing throws.
+                    if (!ReferenceEquals(ip.Bitmap, item.Bitmap))
+                    {
+                        ip.Bitmap?.Dispose();
+                    }
+                }
             }
+            cancellationToken.ThrowIfCancellationRequested();
+            handler.WriteFooter();
         }
-        handler.WriteFooter();
+        catch
+        {
+            // Do not finalize incomplete image output after cancellation or
+            // any writer failure. Unlike WriteFooter, Dispose releases handles
+            // without publishing pending Blu-ray packets or VobSub IDX data.
+            // Other image exporters do not implement IDisposable yet.
+            (handler as IDisposable)?.Dispose();
+            throw;
+        }
     }
 
     /// <summary>

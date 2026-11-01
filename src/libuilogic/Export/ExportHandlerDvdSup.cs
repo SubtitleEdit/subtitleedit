@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
-public class ExportHandlerDvdSup : IExportHandler
+public class ExportHandlerDvdSup : IExportHandler, IDisposable
 {
     public ExportImageType ExportImageType => ExportImageType.DvdSup;
     public string Extension => ".sup";
@@ -77,6 +77,13 @@ public class ExportHandlerDvdSup : IExportHandler
             throw new InvalidOperationException("DvdSupWriter is not initialized. Call WriteHeader first.");
         }
 
-        _dvdSupWriter.Dispose();
+        Dispose();
+    }
+
+    // Release the native writer without finalizing a cancelled export.
+    public void Dispose()
+    {
+        _dvdSupWriter?.Dispose();
+        _dvdSupWriter = null;
     }
 }

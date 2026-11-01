@@ -40,8 +40,10 @@ internal static class VobSubExtractor
     /// is ripped cell by cell with exact time codes. Otherwise every VOB is read and the PTS
     /// restarts are stitched from the NAV packs.
     /// </summary>
-    public static ExtractionResult Extract(IReadOnlyList<string> vobFiles, string subOutputPath, int? dvdTitleNumber = null)
+    public static ExtractionResult Extract(IReadOnlyList<string> vobFiles, string subOutputPath, int? dvdTitleNumber = null,
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (vobFiles.Count == 0)
         {
             throw new InvalidOperationException("No VOB files supplied.");
@@ -83,6 +85,7 @@ internal static class VobSubExtractor
             source = ifo != null ? $"{Path.GetFileName(ifoFileName)} (palette, languages)" : "no IFO";
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         var isPal = ifo?.IsPal ?? true;
         var parser = new VobSubParser(isPal);
         parser.VobSubPacks.AddRange(packs);
@@ -108,8 +111,10 @@ internal static class VobSubExtractor
         var outputs = new List<StreamOutput>(streams.Count);
         for (var i = 0; i < streams.Count; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var streamId = streams[i].Key;
             var streamPacks = streams[i].OrderBy(p => p.StartTime.Ticks).ToList();
+            cancellationToken.ThrowIfCancellationRequested();
 
             var outputPath = streams.Count == 1
                 ? subOutputPath
@@ -118,8 +123,8 @@ internal static class VobSubExtractor
             var languageCode = ifo?.GetLanguageCode(streamId);
             var language = string.IsNullOrEmpty(languageCode) ? null : DvdSubtitleLanguage.GetLanguageOrNull(languageCode);
             var written = palette is { Count: > 0 }
-                ? CopyOneStream(streamPacks, outputPath, isPal, streamId, language ?? DvdSubtitleLanguage.English, palette)
-                : WriteOneStream(streamPacks, outputPath, isPal, streamId, language ?? DvdSubtitleLanguage.English);
+                ? CopyOneStream(streamPacks, outputPath, isPal, streamId, language ?? DvdSubtitleLanguage.English, palette, cancellationToken)
+                : WriteOneStream(streamPacks, outputPath, isPal, streamId, language ?? DvdSubtitleLanguage.English, cancellationToken);
             outputs.Add(new StreamOutput(outputPath, streamId, written));
         }
 
@@ -161,11 +166,14 @@ internal static class VobSubExtractor
         return Path.Combine(dir, $"{stem}.{index}.sub");
     }
 
-    private static int CopyOneStream(IReadOnlyList<VobSubMergedPack> packs, string outputPath, bool isPal, int streamId, DvdSubtitleLanguage language, IReadOnlyList<SKColor> palette)
+    private static int CopyOneStream(IReadOnlyList<VobSubMergedPack> packs, string outputPath, bool isPal, int streamId, DvdSubtitleLanguage language, IReadOnlyList<SKColor> palette, CancellationToken cancellationToken)
     {
+        // VobSubWriter opens with FileMode.Create: never truncate after cancellation.
+        cancellationToken.ThrowIfCancellationRequested();
         using var writer = new VobSubWriter(outputPath, 720, isPal ? 576 : 480, streamId, language, palette);
         foreach (var pack in packs)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             // the merged PES payloads can run past the unit (padding) - its first word is its size
             var data = pack.SubPictureData;
             var size = pack.SubPicture.SubPictureDateSize;
@@ -177,11 +185,12 @@ internal static class VobSubExtractor
             writer.WriteSubPictureUnit(pack.StartTimeCode, data);
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         writer.WriteIdxFile();
         return packs.Count;
     }
 
-    private static int WriteOneStream(IReadOnlyList<VobSubMergedPack> packs, string outputPath, bool isPal, int streamId, DvdSubtitleLanguage language)
+    private static int WriteOneStream(IReadOnlyList<VobSubMergedPack> packs, string outputPath, bool isPal, int streamId, DvdSubtitleLanguage language, CancellationToken cancellationToken)
     {
         var screenWidth = 720;
         var screenHeight = isPal ? 576 : 480;
@@ -192,6 +201,8 @@ internal static class VobSubExtractor
         var pattern = SKColors.Yellow;
         var emphasis = SKColors.Black;
 
+        // Check immediately before opening a writer that can replace an existing file.
+        cancellationToken.ThrowIfCancellationRequested();
         using var writer = new VobSubWriter(
             outputPath,
             screenWidth,
@@ -207,6 +218,7 @@ internal static class VobSubExtractor
         var written = 0;
         foreach (var pack in packs)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             using var bmp = pack.GetBitmap();
             if (bmp is null)
             {
@@ -223,6 +235,7 @@ internal static class VobSubExtractor
             written++;
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         writer.WriteIdxFile();
         return written;
     }

@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
-public class ExportHandlerVobSub : IExportHandler
+public class ExportHandlerVobSub : IExportHandler, IDisposable
 {
     public ExportImageType ExportImageType => ExportImageType.VobSub;
     public string Extension => ".sub";
@@ -89,7 +89,20 @@ public class ExportHandlerVobSub : IExportHandler
             throw new InvalidOperationException("VobSubWriter is not initialized. Call WriteHeader first.");
         }
 
-        _vobSubWriter.WriteIdxFile();
-        _vobSubWriter.Dispose();
+        try
+        {
+            _vobSubWriter.WriteIdxFile();
+        }
+        finally
+        {
+            Dispose();
+        }
+    }
+
+    // Release native resources but never publish an IDX for cancelled output.
+    public void Dispose()
+    {
+        _vobSubWriter?.Dispose();
+        _vobSubWriter = null;
     }
 }
