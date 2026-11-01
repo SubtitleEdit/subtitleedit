@@ -119,6 +119,58 @@ public class SubtitleConverterCancellationTest : IDisposable
     }
 
     [Fact]
+    public void BurnInRunner_PreCancelledToken_DoesNotOverwriteExistingVideo()
+    {
+        var assa = Path.Combine(_tempRoot, "captions.ass");
+        var sourceVideo = Path.Combine(_tempRoot, "source.mp4");
+        File.WriteAllText(assa, "subtitle");
+        File.WriteAllText(sourceVideo, "video");
+        var output = BurnInRunner.GetOutputFileName(assa, sourceVideo);
+        File.WriteAllText(output, "EXISTING VIDEO");
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.ThrowsAny<OperationCanceledException>(() =>
+            BurnInRunner.Run(assa, sourceVideo, null, overwrite: true,
+                cancellationToken: cts.Token));
+
+        Assert.Equal("EXISTING VIDEO", File.ReadAllText(output));
+        Assert.Equal("video", File.ReadAllText(sourceVideo));
+    }
+
+    [Fact]
+    public void ImageOutputWriter_PreCancelledToken_DoesNotCreateOutput()
+    {
+        var output = Path.Combine(_tempRoot, "cancelled.sup");
+        var handler = ImageOutputWriter.TryCreateHandler("Blu-ray sup");
+        Assert.NotNull(handler);
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.ThrowsAny<OperationCanceledException>(() =>
+            ImageOutputWriter.WritePreservedBitmaps(
+                [], output, handler,
+                new ConversionOptions { Patterns = [], Format = "Blu-ray sup" },
+                cts.Token));
+        Assert.False(File.Exists(output));
+    }
+
+    [Fact]
+    public void VobSubExtractor_PreCancelledToken_DoesNotCreateOutputPair()
+    {
+        var output = Path.Combine(_tempRoot, "cancelled.sub");
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.ThrowsAny<OperationCanceledException>(() =>
+            VobSubExtractor.Extract([], output, cancellationToken: cts.Token));
+        Assert.False(File.Exists(output));
+        Assert.False(File.Exists(Path.ChangeExtension(output, ".idx")));
+    }
+
+    [Fact]
     public async Task ConvertAsync_PreCancelledToken_ThrowsBeforeWritingOutput()
     {
         var input = Path.Combine(_tempRoot, "input.srt");
