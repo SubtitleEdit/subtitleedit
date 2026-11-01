@@ -151,7 +151,9 @@ internal static class ImageOutputWriter
         var firstParam = BuildPreservedParameter(first, 0, defaultWidth, defaultHeight, options);
         ApplyReelDuration(handler, options);
         cancellationToken.ThrowIfCancellationRequested();
-        handler.WriteHeader(filePath, firstParam);
+        try
+        {
+            handler.WriteHeader(filePath, firstParam);
 
         var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
         for (var i = 0; i < items.Count; i++)
@@ -177,6 +179,16 @@ internal static class ImageOutputWriter
         }
         cancellationToken.ThrowIfCancellationRequested();
         handler.WriteFooter();
+        }
+        catch
+        {
+            // Do not finalize incomplete image output after cancellation or
+            // any writer failure. Unlike WriteFooter, Dispose releases handles
+            // without publishing pending Blu-ray packets or VobSub IDX data.
+            // Other image exporters do not implement IDisposable yet.
+            (handler as IDisposable)?.Dispose();
+            throw;
+        }
     }
 
     /// <summary>
