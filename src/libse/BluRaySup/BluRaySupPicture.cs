@@ -138,6 +138,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         public List<List<PaletteInfo>> Palettes { get; set; } = new List<List<PaletteInfo>>();
 
         /// <summary>
+        /// The luminance white gets in an HDR palette (BT.2020 + ST 2084 PQ), 0 for the usual
+        /// BT.709 palette. For a disc with HDR video, which keeps its subtitles in a stream of their own.
+        /// </summary>
+        public int HdrWhiteNits { get; set; }
+
+        /// <summary>
         /// Alpha levels for a fade in/out, in presentation order. A step at <see cref="StartTime"/>
         /// sets the alpha the caption appears with; every later step becomes a palette update
         /// display set. Empty (the default) writes the caption fully opaque, as before.
@@ -1133,7 +1139,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             {
                 for (var i = 0; i < obj.Palette.Count; i++)
                 {
-                    pal.SetColor(obj.PaletteOffset + i, obj.Palette[i]);
+                    if (pic.HdrWhiteNits > 0)
+                    {
+                        pal.SetHdrColor(obj.PaletteOffset + i, obj.Palette[i], pic.HdrWhiteNits);
+                    }
+                    else
+                    {
+                        pal.SetColor(obj.PaletteOffset + i, obj.Palette[i]);
+                    }
                 }
             }
 

@@ -25,6 +25,10 @@ public class ExportImageBasedWindow : Window
 {
     private const double LabelWidth = 112;
 
+    // Technical terms, the same in every language - not language strings.
+    private const string HdrPaletteLabel = "HDR (BT.2020 PQ)";
+    private const string NitsLabel = "nits";
+
     public ExportImageBasedWindow(ExportImageBasedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -311,6 +315,15 @@ public class ExportImageBasedWindow : Window
         var fullFrameRow = SwitchRow(fullFrame, Se.Language.File.Export.FullFrameImage, fullFrameColor)
             .WithBindIsVisible(vm, nameof(vm.IsFullFrameVisible));
 
+        // Only shown for Blu-ray sup (see IsHdrPaletteVisible).
+        var hdrWhiteNits = Combo(vm.HdrWhiteNits, vm, nameof(vm.SelectedHdrWhiteNits), NitsLabel);
+        hdrWhiteNits.MinWidth = 80;
+        hdrWhiteNits.Bind(IsVisibleProperty, new Binding(nameof(vm.IsHdrPalette)) { Source = vm });
+        var hdrNits = EditorChrome.MakeDimLabel(NitsLabel, new Thickness(0));
+        hdrNits.Bind(IsVisibleProperty, new Binding(nameof(vm.IsHdrPalette)) { Source = vm });
+        var hdrRow = SwitchRow(Switch(vm, nameof(vm.IsHdrPalette), HdrPaletteLabel), HdrPaletteLabel, hdrWhiteNits, hdrNits)
+            .WithBindIsVisible(vm, nameof(vm.IsHdrPaletteVisible));
+
         // SE4's "3D": the subtitle drawn once per eye for frame-packed 3D video. D-Cinema has only
         // the depth, as the Z-position (see IsMode3DVisible).
         var mode3D = Combo(vm.Modes3D, vm, nameof(vm.SelectedMode3D), Se.Language.File.Export.Stereo3D);
@@ -358,6 +371,7 @@ public class ExportImageBasedWindow : Window
             Row(Se.Language.General.Resolution, resolution),
             Row(Se.Language.General.FrameRate, frameRate),
             fullFrameRow,
+            hdrRow,
             mode3DRow,
             depth3DRow,
             plane3DRow));

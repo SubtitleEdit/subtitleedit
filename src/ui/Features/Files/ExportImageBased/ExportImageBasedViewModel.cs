@@ -86,6 +86,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] private bool _isFullFrame;
     [ObservableProperty] private Color _fullFrameBackgroundColor;
     [ObservableProperty] private bool _isFullFrameVisible;
+    [ObservableProperty] private bool _isHdrPalette;
+    [ObservableProperty] private bool _isHdrPaletteVisible;
+    [ObservableProperty] private ObservableCollection<int> _hdrWhiteNits = [100, 150, 203, 250, 300, 400, 500];
+    [ObservableProperty] private int _selectedHdrWhiteNits = 203;
     [ObservableProperty] private ObservableCollection<Export3DModeDisplay> _modes3D = null!;
     [ObservableProperty] private Export3DModeDisplay _selectedMode3D = null!;
     [ObservableProperty] private ObservableCollection<int> _depths3D = null!;
@@ -650,6 +654,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             FramesPerSecond = SelectedFrameRate,
             IsFullFrame = IsFullFrameVisible && IsFullFrame,
             FullFrameBackgroundColor = FullFrameBackgroundColor.ToSKColor(),
+            HdrWhiteNits = IsHdrPaletteVisible && IsHdrPalette ? SelectedHdrWhiteNits : 0,
             // D-Cinema has no 3D mode (see IsMode3DVisible), only the depth - its Z-position.
             Mode3D = IsMode3DVisible ? SelectedMode3D?.Mode ?? Export3DMode.None : Export3DMode.None,
             Depth3D = IsDepth3DEnabled ? SelectedDepth3D : 0,
@@ -772,6 +777,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         // are dropped on (Final Cut Pro & co), and Blu-ray sup, which SE4 offered it for too. The
         // other formats position the subtitle themselves from its own bitmap size.
         IsFullFrameVisible = exportHandler.ExportImageType is ExportImageType.Fcp or ExportImageType.BluRaySup;
+        IsHdrPaletteVisible = exportHandler.ExportImageType == ExportImageType.BluRaySup;
 
         // D-Cinema has no packed 3D frame to draw into; like SE4 it keeps only the depth, which it
         // writes as the Z-position of each image.
@@ -1187,6 +1193,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             SelectedFrameRate = FrameRates.Contains(profile.FramesPerSecond) ? profile.FramesPerSecond : 25;
             IsFullFrame = profile.IsFullFrame;
             FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHex().ToAvaloniaColor();
+            IsHdrPalette = profile.IsHdrPalette;
+            SelectedHdrWhiteNits = HdrWhiteNits.Contains(profile.HdrWhiteNits) ? profile.HdrWhiteNits : 203;
             SelectedMode3D = Modes3D.FirstOrDefault(m => m.Mode == profile.Mode3D) ?? Modes3D[0];
             SelectedDepth3D = Math.Clamp(profile.Depth3D, Stereo3DImage.MinDepth, Stereo3DImage.MaxDepth);
             SelectedTextEffect = TextEffectItems.FirstOrDefault(t => t.Preset.ToString() == profile.TextEffect)
@@ -1232,6 +1240,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 : SelectedFrameRate;
             profile.IsFullFrame = IsFullFrame;
             profile.FullFrameBackgroundColor = FullFrameBackgroundColor.FromColorToHex(true);
+            profile.IsHdrPalette = IsHdrPalette;
+            profile.HdrWhiteNits = SelectedHdrWhiteNits;
             profile.Mode3D = SelectedMode3D?.Mode ?? Export3DMode.None;
             profile.Depth3D = SelectedDepth3D;
             profile.TextEffect = SelectedTextEffect?.Preset.ToString() ?? string.Empty;

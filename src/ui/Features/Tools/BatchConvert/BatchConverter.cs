@@ -1947,6 +1947,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FramesPerSecond = profile.FramesPerSecond,
                 IsFullFrame = profile.IsFullFrame,
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
+                HdrWhiteNits = profile.IsHdrPalette ? profile.HdrWhiteNits : 0,
                 Mode3D = mode3D,
                 Depth3D = profile.Depth3D,
                 Plane3D = plane3D,
@@ -2336,6 +2337,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FramesPerSecond = profile.FramesPerSecond,
                 IsFullFrame = profile.IsFullFrame,
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
+                HdrWhiteNits = profile.IsHdrPalette ? profile.HdrWhiteNits : 0,
                 // The text effect configured in the shared export-images dialog - without this
                 // a batch convert silently rendered classic text while the dialog's preview
                 // showed the effect.
