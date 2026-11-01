@@ -289,6 +289,7 @@
     "getAudioClips": "Get audio clips",
     "goTo": "Go to",
     "goToLineNumber": "Go to line number",
+    "ofX": "of {0}",
     "goToNextShotChange": "Go to next shot change",
     "goToPreviousShotChange": "Go to previous shot change",
     "googleIt": "Google it",
