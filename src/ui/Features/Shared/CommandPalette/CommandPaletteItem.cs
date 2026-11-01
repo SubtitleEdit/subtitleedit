@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Nikse.SubtitleEdit.Features.Shared.CommandPalette;
@@ -8,6 +11,12 @@ public class CommandPaletteItem
     public string DisplayName { get; }
     public string GroupName { get; }
     public string ShortcutText { get; }
+
+    /// <summary>
+    /// The keys of the shortcut, one per key cap. ShortcutText joins them with "+", and a plus key
+    /// shows as a trailing "+".
+    /// </summary>
+    public IReadOnlyList<string> ShortcutKeys { get; }
     public IRelayCommand Command { get; }
 
     // Lower-cased once so filtering on every key press does not re-allocate.
@@ -21,6 +30,13 @@ public class CommandPaletteItem
         DisplayName = displayName;
         GroupName = groupName;
         ShortcutText = shortcutText;
+        var keys = shortcutText.Split('+', StringSplitOptions.RemoveEmptyEntries).ToList();
+        if (shortcutText.EndsWith('+'))
+        {
+            keys.Add("+");
+        }
+
+        ShortcutKeys = keys;
         Command = command;
 
         SearchName = displayName.ToLowerInvariant();
