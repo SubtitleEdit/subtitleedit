@@ -19,6 +19,26 @@ public partial class FixRuleDisplayItem : ObservableObject
 
     public string FixCommonErrorFunctionName { get; set; }
 
+    /// <summary>
+    /// The text before the fix: the part of <see cref="Example"/> ahead of "->", or all of it
+    /// when an example (or its translation) has no arrow.
+    /// </summary>
+    public string ExampleBefore => SplitExample().Before;
+
+    /// <summary>
+    /// The text after the fix: the part of <see cref="Example"/> behind "->", empty without one.
+    /// </summary>
+    public string ExampleAfter => SplitExample().After;
+
+    private (string Before, string After) SplitExample()
+    {
+        const string arrow = "->";
+        var index = Example.IndexOf(arrow, StringComparison.Ordinal);
+        return index < 0
+            ? (Example, string.Empty)
+            : (Example.Substring(0, index).Trim(), Example.Substring(index + arrow.Length).Trim());
+    }
+
     public FixRuleDisplayItem()
     {
         Name = string.Empty;

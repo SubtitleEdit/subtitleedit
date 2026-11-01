@@ -118,6 +118,9 @@ public class LanguageFixCommonErrors
     public string FixCommonOcrErrorsStep1 { get; set; }
     public string SearchRulesDotDotDot { get; set; }
     public string GoToApplyFixes { get; set; }
+    public string ChooseFixes { get; set; }
+    public string ApplyFixes { get; set; }
+    public string RulesEnabledXOfY { get; set; }
     public string BackToFixList { get; set; }
     public string FixCommonOcrErrorsStep2 { get; set; }
     public string FixCommonOcrErrorsStep2FixesFoundX { get; set; }
@@ -249,6 +252,9 @@ public class LanguageFixCommonErrors
         FixCommonOcrErrorsStep2 = "Fix common errors, step 2 (apply fixes)";
         SearchRulesDotDotDot = "Search rules...";
         GoToApplyFixes = "Go to apply fixes";
+        ChooseFixes = "Choose fixes";
+        ApplyFixes = "Apply fixes";
+        RulesEnabledXOfY = "{0} of {1} on";
         BackToFixList =  "Back to fix list";
         FixCommonOcrErrorsStep2FixesFoundX =  "Fix common errors, step 2 - Fixes found: {0}";
         Action = "Action";
