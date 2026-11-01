@@ -155,35 +155,35 @@ internal static class ImageOutputWriter
         {
             handler.WriteHeader(filePath, firstParam);
 
-        var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
-        for (var i = 0; i < items.Count; i++)
-        {
+            var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
+            for (var i = 0; i < items.Count; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var item = items[i];
+                var ip = BuildPreservedParameter(item, i, defaultWidth, defaultHeight, options);
+                try
+                {
+                    if (apply3D)
+                    {
+                        // A 2D Blu-ray/DVB/VobSub track made into a 3D one.
+                        Stereo3DImage.Apply(ip, disposeSource: false);
+                    }
+    
+                    handler.CreateParagraph(ip);
+                    handler.WriteParagraph(ip);
+                }
+                finally
+                {
+                    // The source bitmap belongs to BitmapSubtitleItem. Dispose
+                    // only any derived 3D bitmap, even if writing throws.
+                    if (!ReferenceEquals(ip.Bitmap, item.Bitmap))
+                    {
+                        ip.Bitmap?.Dispose();
+                    }
+                }
+            }
             cancellationToken.ThrowIfCancellationRequested();
-            var item = items[i];
-            var ip = BuildPreservedParameter(item, i, defaultWidth, defaultHeight, options);
-            try
-            {
-                if (apply3D)
-                {
-                    // A 2D Blu-ray/DVB/VobSub track made into a 3D one.
-                    Stereo3DImage.Apply(ip, disposeSource: false);
-                }
-
-                handler.CreateParagraph(ip);
-                handler.WriteParagraph(ip);
-            }
-            finally
-            {
-                // The source bitmap belongs to BitmapSubtitleItem. Dispose
-                // only any derived 3D bitmap, even if writing throws.
-                if (!ReferenceEquals(ip.Bitmap, item.Bitmap))
-                {
-                    ip.Bitmap?.Dispose();
-                }
-            }
-        }
-        cancellationToken.ThrowIfCancellationRequested();
-        handler.WriteFooter();
+            handler.WriteFooter();
         }
         catch
         {
