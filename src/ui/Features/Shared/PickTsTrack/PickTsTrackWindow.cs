@@ -36,10 +36,7 @@ public class PickTsTrackWindow : Window
 
         Content = EditorChrome.MakeRoot(EditorChrome.MakeTwoPanes(tracksView, subtitleView), EditorChrome.MakeButtonBar(buttonExport, buttonCancel, buttonOk));
 
-        UiUtil.FocusOnFirstActivation(this, () =>
-        {
-            buttonOk.Focus(); // hack to make OnKeyDown work
-        });
+        UiUtil.FocusOnFirstActivation(this, () => TableViewExtras.FocusRow(vm.TracksGrid));
 
         Loaded += (_, _) => vm.SelectAndScrollToRow(0);
         KeyDown += (_, e) => vm.OnKeyDown(e);

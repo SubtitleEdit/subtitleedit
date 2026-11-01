@@ -77,7 +77,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         // window bound. DownloadVideoFromUrlWindow and DownloadCrispEmbedWindow show it this way.
         var errorText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
+            Foreground = EditorChrome.ErrorTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
         errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
@@ -110,7 +110,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         };
 
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand);
-        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonDownload);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonDownload);
 
         Content = new StackPanel
         {

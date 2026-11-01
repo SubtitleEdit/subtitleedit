@@ -70,7 +70,12 @@ public partial class VoiceCloneConsentViewModel : ObservableObject
 
     internal void OnKeyDown(KeyEventArgs e)
     {
-        if (UiUtil.IsHelp(e))
+        if (e.Key == Key.Escape)
+        {
+            e.Handled = true;
+            Cancel();
+        }
+        else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/text-to-speech", "voice-cloning");

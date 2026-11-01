@@ -22,6 +22,8 @@ public class BinaryChangeResolutionWindow : Window
         Title = Se.Language.General.VideoResolution;
         Width = 800;
         Height = 600;
+        MinWidth = 600;
+        MinHeight = 400;
         CanResize = true;
         BinaryEditChrome.Apply(this);
         vm.Window = this;

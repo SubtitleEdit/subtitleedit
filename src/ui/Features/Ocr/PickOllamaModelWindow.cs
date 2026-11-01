@@ -24,7 +24,7 @@ public class PickOllamaModelWindow : Window
 
         var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var listBox = new ListBox
         {

@@ -1395,7 +1395,7 @@ public class OcrWindow : Window
         AutomationProperties.SetAutomationId(buttonOk, "OcrOkButton");
         AutomationProperties.SetAutomationId(buttonCancel, "OcrCancelButton");
 
-        return EditorChrome.MakeButtonBar(subtitleCountText, buttonInspect, buttonInspectAdditions, buttonExport, buttonStart, buttonPause, buttonOk, buttonCancel);
+        return EditorChrome.MakeButtonBar(subtitleCountText, buttonInspect, buttonInspectAdditions, buttonExport, buttonStart, buttonPause, buttonCancel, buttonOk);
     }
 
     /// <summary>

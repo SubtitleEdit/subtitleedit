@@ -37,7 +37,7 @@ public class TranslationErrorWindow : Window
             Text = "⚠",
             FontSize = UiUtil.ScaledFontSize(28),
             // Darker amber on the light theme - the dark-theme tone is too faint on white (#15768).
-            Foreground = new SolidColorBrush(Color.Parse(UiTheme.IsDarkThemeEnabled() ? "#E8A020" : "#9E5500")),
+            Foreground = EditorChrome.WarningTextBrush,
             VerticalAlignment = VerticalAlignment.Top,
             Margin = new Thickness(0, -4, 12, 0),
         };

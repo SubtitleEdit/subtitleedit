@@ -148,7 +148,7 @@ public partial class EditCustomTextFormatViewModel : ObservableObject, IClosingC
         if (string.IsNullOrWhiteSpace(SelectedCustomFormat.Name))
         {
             var message = Se.Language.File.Export.PleaseEnterNameForTheCustomFormat;
-            await MessageBox.Show(Window, Se.Language.General.Error, message);
+            await MessageBox.Show(Window, Se.Language.General.Error, message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

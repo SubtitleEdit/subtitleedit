@@ -3019,7 +3019,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 {
                     await MessageBox.Show(Window!, Se.Language.General.Error,
                         $"Could not generate the audio file (ffmpeg exit code {exitCode})." +
-                        Environment.NewLine + "Please check the tools log for the ffmpeg output.");
+                        Environment.NewLine + "Please check the tools log for the ffmpeg output.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     if (Window != null)
                     {
@@ -3379,7 +3379,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         else
         {
-            await MessageBox.Show(Window!, "Error", $"Unable to start {engine.Name}: {error}");
+            await MessageBox.Show(Window!, "Error", $"Unable to start {engine.Name}: {error}", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

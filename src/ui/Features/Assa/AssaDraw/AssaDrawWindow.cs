@@ -1201,7 +1201,7 @@ public class AssaDrawWindow : Window
         left.Children.Add(new TextBlock
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.PreviewStatusText)),
-            Foreground = Brushes.OrangeRed,
+            Foreground = EditorChrome.ErrorTextBrush,
             FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
         });
@@ -1215,7 +1215,10 @@ public class AssaDrawWindow : Window
             TextTrimming = TextTrimming.CharacterEllipsis,
             Margin = new Thickness(18, 0),
         };
-        ToolTip.SetTip(help, Se.Language.Assa.DrawHelpText);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(help, Se.Language.Assa.DrawHelpText);
+        }
 
         // Zoom: - slider + percent Fit
         var zoom = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, VerticalAlignment = VerticalAlignment.Center };
@@ -1298,8 +1301,8 @@ public class AssaDrawWindow : Window
         buttonOk.IsDefault = false;
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         var grid = new Grid
         {

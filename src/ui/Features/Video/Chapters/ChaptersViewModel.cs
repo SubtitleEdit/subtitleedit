@@ -291,7 +291,7 @@ public partial class ChaptersViewModel : ObservableObject
         }
         catch (Exception exception)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message);
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -341,7 +341,7 @@ public partial class ChaptersViewModel : ObservableObject
         }
         catch (Exception exception)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message);
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

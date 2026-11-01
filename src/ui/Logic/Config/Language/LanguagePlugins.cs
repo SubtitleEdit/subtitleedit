@@ -52,25 +52,25 @@ public class LanguagePlugins
         GetPluginsTitle = "Get plugins";
         Disabled = "Disabled";
         NotSupportedOnThisOs = "Not supported on this operating system";
-        RemovePluginXConfirm = "Remove plugin '{0}'? This deletes the plugin folder:{1}";
-        CouldNotRemovePluginX = "Could not remove plugin '{0}': {1}";
-        PluginXHasNoExecutable = "Plugin '{0}' has no executable for this operating system.";
-        PluginXFailed = "Plugin '{0}' failed.";
-        PluginXReportedError = "Plugin '{0}' reported an error.";
+        RemovePluginXConfirm = "Remove plugin \"{0}\"? This deletes the plugin folder:{1}";
+        CouldNotRemovePluginX = "Could not remove plugin \"{0}\": {1}";
+        PluginXHasNoExecutable = "Plugin \"{0}\" has no executable for this operating system.";
+        PluginXFailed = "Plugin \"{0}\" failed.";
+        PluginXReportedError = "Plugin \"{0}\" reported an error.";
         PluginXDone = "{0} done";
-        PluginXReturnedUnparsableSubtitle = "Plugin '{0}' returned a subtitle that could not be parsed.";
+        PluginXReturnedUnparsableSubtitle = "Plugin \"{0}\" returned a subtitle that could not be parsed.";
         LoadingPluginList = "Loading plugin list...";
         NoPluginsAvailable = "No plugins available.";
         XPluginsAvailable = "{0} plugins available.";
         CouldNotLoadPluginList = "Could not load the plugin list: {0}";
         DownloadingXPercent = "Downloading {0}%...";
-        PluginXInstalled = "'{0}' installed.";
-        CouldNotInstallPluginX = "Could not install '{0}': {1}";
+        PluginXInstalled = "\"{0}\" installed.";
+        CouldNotInstallPluginX = "Could not install \"{0}\": {1}";
         Install = "Install";
         Reinstall = "Reinstall";
         InstalledX = "Installed ({0})";
         UpdateAvailableXToY = "Update available ({0} → {1})";
-        ApplyPluginToWhichLinesX = "Apply '{0}' to:";
+        ApplyPluginToWhichLinesX = "Apply \"{0}\" to:";
         ApplyToSelectedLinesX = "Selected lines ({0})";
         ApplyToAllLinesX = "All lines ({0})";
         UpdateAllXAvailable = "Update all ({0})";
@@ -84,6 +84,6 @@ public class LanguagePlugins
         ConfigurePlugin = "Configure...";
         NoBatchPluginsInstalled = "No installed plugin supports batch convert.";
         BatchPluginInfo = "The plugin runs on each file without showing its window, using its saved settings.";
-        PluginXNotAvailable = "Plugin '{0}' is not installed, is disabled, or does not support batch convert.";
+        PluginXNotAvailable = "Plugin \"{0}\" is not installed, is disabled, or does not support batch convert.";
     }
 }

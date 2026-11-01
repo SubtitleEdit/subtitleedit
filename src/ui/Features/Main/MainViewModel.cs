@@ -10443,7 +10443,7 @@ public partial class MainViewModel :
             Se.Settings.Video.RecentFiles.RemoveAll(f => string.Equals(f, videoFileName, StringComparison.OrdinalIgnoreCase));
             Se.SaveSettings();
             UpdateRecentVideoMenus();
-            await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.XNotFound, videoFileName), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.XNotFound, videoFileName), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         _shortcutManager.ClearKeys();
     }
@@ -26734,63 +26734,63 @@ public partial class MainViewModel :
                 // check for .rar file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsRar(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadRar);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadRar, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .zip file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsZip(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadZip);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadZip, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .gzip file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsGZip(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadGZip);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadGZip, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .7z file
                 if (subtitle == null && fileSize > 100 && FileUtil.Is7Zip(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoad7Zip);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoad7Zip, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .png file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsPng(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadPng);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadPng, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .jpg file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsJpg(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadJpg);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadJpg, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .srr file
                 if (subtitle == null && fileSize > 100 && ext == ".srr" && FileUtil.IsSrr(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadSrr);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadSrr, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for Torrent file
                 if (subtitle == null && fileSize > 50 && FileUtil.IsTorrentFile(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadTorrent);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadTorrent, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for all binary zeroes (I've heard about this a few times... perhaps related to crashes?)
                 if (subtitle == null && FileUtil.IsSubtitleFileAllBinaryZeroes(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadBinaryZeroes);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadBinaryZeroes, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -26799,7 +26799,7 @@ public partial class MainViewModel :
                 {
                     await MessageBox.Show(Window!, Se.Language.General.Error, "This file seems to be an .mp3 audio file which does not contains subtitles." + Environment.NewLine +
                                                                               Environment.NewLine +
-                                                                              "You can open media files via the Video menu.");
+                                                                              "You can open media files via the Video menu.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -26808,7 +26808,7 @@ public partial class MainViewModel :
                 {
                     await MessageBox.Show(Window!, Se.Language.General.Error, "This file seems to be a .wav audio file which does not contains subtitles." + Environment.NewLine +
                                                                               Environment.NewLine +
-                                                                              "You can open media files via the Video menu.");
+                                                                              "You can open media files via the Video menu.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }

@@ -124,7 +124,7 @@ public class LlamaCppOcrSettingsWindow : Window
 
         var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = EditorChrome.MakeFlushButtonBar(buttonRedownload, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(buttonRedownload, buttonCancel, buttonOk);
         buttonRedownload.HorizontalAlignment = HorizontalAlignment.Left;
 
         Content = EditorChrome.MakeRoot(sections, buttonBar, stretch: true);

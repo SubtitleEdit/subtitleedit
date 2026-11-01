@@ -31,7 +31,7 @@ public class DownloadYtDlpWindow : Window
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
         var buttonRetry = DownloadWindowUi.MakeButtonRetry(vm.RetryCommand);
-        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonRetry, buttonCancel);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonRetry, buttonCancel);
 
         Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 

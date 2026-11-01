@@ -1014,7 +1014,7 @@ public partial class OcrViewModel : ObservableObject
 
         if (result == null)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, string.IsNullOrEmpty(errorMessage) ? Se.Language.General.UnknownError : errorMessage);
+            await MessageBox.Show(Window, Se.Language.General.Error, string.IsNullOrEmpty(errorMessage) ? Se.Language.General.UnknownError : errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -1060,7 +1060,7 @@ public partial class OcrViewModel : ObservableObject
 
         if (subtitle == null || subtitle.Paragraphs.Count == 0)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat);
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
