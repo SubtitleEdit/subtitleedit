@@ -7,6 +7,7 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -14,7 +15,8 @@ namespace Nikse.SubtitleEdit.Features.Shared.CommandPalette;
 
 /// <summary>
 /// Command palette, in the editor look (see <see cref="EditorChrome"/>): keyboard first - type to
-/// filter, arrow keys/Enter in the search box pick from the list.
+/// filter, arrow keys/Enter in the search box pick from the list. Each row has its group in front
+/// and its shortcut as key caps behind the name.
 /// </summary>
 public class CommandPaletteWindow : Window
 {
@@ -23,7 +25,7 @@ public class CommandPaletteWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Main.CommandPaletteTitle;
         CanResize = true;
-        Width = 650;
+        Width = 720;
         Height = 500;
         MinWidth = 400;
         MinHeight = 250;
@@ -37,6 +39,8 @@ public class CommandPaletteWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         }.WithSearchAndClearIcons();
         textBoxSearch.Classes.Add("text");
+        textBoxSearch.FontSize = EditorChrome.ScaledFont(15);
+        textBoxSearch.MinHeight = 38;
         textBoxSearch.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm, Mode = BindingMode.TwoWay });
         textBoxSearch.WithAccessibleName(Se.Language.Main.CommandPaletteTitle);
 
@@ -50,8 +54,16 @@ public class CommandPaletteWindow : Window
             ItemsSource = vm.Items,
             Focusable = false,
             Background = Brushes.Transparent, // the frame's field color shows through
-            ItemTemplate = new FuncDataTemplate<CommandPaletteItem>((item, _) => MakeItemView(item), true),
+            ItemTemplate = new FuncDataTemplate<CommandPaletteItem>((item, _) => MakeItemView(item)), // built per item, not recycled: the row is not bound
         };
+        listBox.Styles.Add(new Style(x => x.OfType<ListBoxItem>())
+        {
+            Setters =
+            {
+                new Setter(TemplatedControl.PaddingProperty, new Thickness(12, 6)),
+                new Setter(Layoutable.MinHeightProperty, 0.0),
+            },
+        });
         listBox.Bind(SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedItem)) { Source = vm, Mode = BindingMode.TwoWay });
         AutomationProperties.SetName(listBox, Se.Language.Main.CommandPaletteTitle);
         listBox.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
@@ -103,6 +115,15 @@ public class CommandPaletteWindow : Window
             return new TextBlock();
         }
 
+        var group = new TextBlock
+        {
+            Text = item.GroupName,
+            Foreground = EditorChrome.DimTextBrush,
+            FontSize = EditorChrome.ScaledFont(11),
+            VerticalAlignment = VerticalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
+
         var name = new TextBlock
         {
             Text = item.DisplayName,
@@ -110,36 +131,42 @@ public class CommandPaletteWindow : Window
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
 
-        var group = new TextBlock
+        var keys = new StackPanel
         {
-            Text = item.GroupName,
-            Foreground = EditorChrome.FaintTextBrush,
-            FontSize = EditorChrome.ScaledFont(11),
+            Orientation = Orientation.Horizontal,
+            Spacing = 3,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 0),
+            Margin = new Thickness(12, 0, 0, 0),
         };
-
-        var shortcut = new TextBlock
+        foreach (var key in item.ShortcutKeys)
         {
-            Text = item.ShortcutText,
-            Foreground = EditorChrome.DimTextBrush,
-            FontSize = EditorChrome.FieldFontSize,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(15, 0, 0, 0),
-        };
+            keys.Children.Add(MakeKeyCap(key));
+        }
 
-        var grid = new Grid
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("92,*,Auto") };
+        grid.Add(group, 0, 0);
+        grid.Add(name, 0, 1);
+        grid.Add(keys, 0, 2);
+        return grid;
+    }
+
+    private static Border MakeKeyCap(string key)
+    {
+        return new Border
         {
-            ColumnDefinitions =
+            Background = EditorChrome.ButtonBarBrush,
+            BorderBrush = EditorChrome.FieldBorderBrush,
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(5, 1),
+            MinWidth = 22,
+            Child = new TextBlock
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
+                Text = key,
+                FontSize = EditorChrome.ScaledFont(11),
+                Foreground = EditorChrome.StrongTextBrush,
+                HorizontalAlignment = HorizontalAlignment.Center,
             },
         };
-        grid.Add(name, 0, 0);
-        grid.Add(group, 0, 1);
-        grid.Add(shortcut, 0, 2);
-        return grid;
     }
 }
