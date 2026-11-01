@@ -172,6 +172,13 @@ internal class Program
         {
             return ReportUsageError(DescribeParseFailure(ex, args), json);
         }
+        catch (OperationCanceledException)
+        {
+            // Preserve cancellation as a distinct CLI outcome, not an ordinary
+            // conversion failure or malformed usage request. 130 is the
+            // conventional shell status for an interrupted command.
+            return 130;
+        }
         catch (Exception ex)
         {
             var message = ex.InnerException != null
