@@ -26797,18 +26797,14 @@ public partial class MainViewModel :
                 // check for mp3 file
                 if (subtitle == null && fileSize > 50 && FileUtil.IsMp3(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, "This file seems to be an .mp3 audio file which does not contains subtitles." + Environment.NewLine +
-                                                                              Environment.NewLine +
-                                                                              "You can open media files via the Video menu.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.AudioFileXHasNoSubtitles, ".mp3"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for wav file
                 if (subtitle == null && fileSize > 50 && FileUtil.IsWav(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, "This file seems to be a .wav audio file which does not contains subtitles." + Environment.NewLine +
-                                                                              Environment.NewLine +
-                                                                              "You can open media files via the Video menu.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.AudioFileXHasNoSubtitles, ".wav"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -30242,8 +30238,8 @@ public partial class MainViewModel :
                 {
                     var answer = await MessageBox.Show(
                         Window!,
-                        "Download mpv?",
-                        $"{Environment.NewLine}\"Subtitle Edit\" requires mpv to play video/audio.{Environment.NewLine}{Environment.NewLine}Download and use mpv?",
+                        string.Format(Se.Language.General.DownloadXQuestion, "mpv"),
+                        Environment.NewLine + Se.Language.General.DownloadMpvPrompt,
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
 

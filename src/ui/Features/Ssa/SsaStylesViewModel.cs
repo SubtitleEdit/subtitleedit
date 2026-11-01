@@ -226,7 +226,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             await MessageBox.Show(
                 Window,
                 Se.Language.General.Error,
-                "Nothing to import",
+                Se.Language.General.NothingToImport,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
@@ -627,7 +627,7 @@ public partial class SsaStylesViewModel : ObservableObject, IClosingCleanup
             await MessageBox.Show(
                 Window,
                 Se.Language.General.Error,
-                "Nothing to import",
+                Se.Language.General.NothingToImport,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;

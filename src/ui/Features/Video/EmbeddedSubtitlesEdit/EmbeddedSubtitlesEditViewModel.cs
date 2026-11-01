@@ -221,9 +221,8 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
             Dispatcher.UIThread.Invoke(async () =>
             {
                 await MessageBox.Show(Window!,
-                    "Unable to generate video",
-                    "Output video file not generated: " + _outputFileName + Environment.NewLine +
-                    "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
+                    Se.Language.General.UnableToGenerateVideo,
+                    string.Format(Se.Language.General.OutputVideoFileNotGeneratedX, _outputFileName) + Environment.NewLine + string.Format(Se.Language.General.ParametersX, _ffmpegProcess.StartInfo.Arguments),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -373,8 +372,8 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         {
             await MessageBox.Show(
                 Window,
-                "No subtitles found",
-                "The selected subtitle file does not contain any subtitles.",
+                Se.Language.General.NoSubtitlesFound,
+                Se.Language.General.SelectedSubtitleFileHasNoSubtitles,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
@@ -676,8 +675,8 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         {
             await MessageBox.Show(
                 Window!,
-                "Unable to get media info",
-                $"Cannot generate video without valid media info",
+                Se.Language.General.UnableToGetMediaInfo,
+                Se.Language.General.CannotGenerateWithoutMediaInfo,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
@@ -687,8 +686,8 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         {
             await MessageBox.Show(
                 Window!,
-                "No tracks added",
-                $"Add one or more tracks",
+                Se.Language.General.NoTracksAdded,
+                Se.Language.General.AddOneOrMoreTracks,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
 

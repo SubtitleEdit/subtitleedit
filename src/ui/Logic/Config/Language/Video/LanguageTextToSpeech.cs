@@ -242,9 +242,89 @@ public class LanguageTextToSpeech
     public string SubtitleUpdatedFromReviewPlural { get; set; }
     public string SubtitleMergedLinesAppliedSingular { get; set; }
     public string SubtitleMergedLinesAppliedPlural { get; set; }
+    public string DownloadXModelQuestion { get; set; }
+    public string DownloadXModelsQuestion { get; set; }
+    public string XYRequiresModelDownload { get; set; }
+    public string XYRequiresModelsDownload { get; set; }
+    public string XYRequiresModelsSizeZDownload { get; set; }
+    public string XRequiresModelSizeYDownload { get; set; }
+    public string XRequiresModelsSizeYDownload { get; set; }
+    public string RequiresXDownloadAndUse { get; set; }
+    public string RequiresXSelectBuild { get; set; }
+    public string ZonosRequiresModels { get; set; }
+    public string CosyVoiceXRequiresModels { get; set; }
+    public string AllTalkRequiresServer { get; set; }
+    public string EdgeTtsRequiresCli { get; set; }
+    public string XRequiresKeyFile { get; set; }
+    public string XRequiresApiKey { get; set; }
+    public string XNeedsModelLicense { get; set; }
+    public string AudioCppUpdateRequired { get; set; }
+    public string XNeedsNewerAudioCpp { get; set; }
+    public string XRequiresAppleSilicon { get; set; }
+    public string XOnlyBuiltForX64 { get; set; }
+    public string XRunsThroughYDownloadInstall { get; set; }
+    public string XRunsThroughYSelectBuild { get; set; }
+    public string UpdateCrispAsr { get; set; }
+    public string CrispAsrUpdateRequired { get; set; }
+    public string NewerCrispAsrAvailable { get; set; }
+    public string XNeedsCrispAsrYRedownload { get; set; }
+    public string XRequiresNewerCrispAsrRedownload { get; set; }
+    public string NoVoicesLoaded { get; set; }
+    public string TextToSpeechFailedX { get; set; }
+    public string XAlreadyDownloadedYRedownload { get; set; }
+    public string TestVoiceError { get; set; }
+    public string RefreshingVoicesFailedX { get; set; }
+    public string NoUsableTtsEngines { get; set; }
+    public string MergingAudioSegmentsFailedX { get; set; }
+    public string AddingAudioTrackFailed { get; set; }
+    public string MergingAudioFailedAtSegmentX { get; set; }
+    public string XOfYSegmentsFailedZContinue { get; set; }
+    public string TtsServerErrorX { get; set; }
+    public string AdjustingAudioSpeedFailedX { get; set; }
+    public string AudioPostProcessingFailedX { get; set; }
 
     public LanguageTextToSpeech()
     {
+        DownloadXModelQuestion = "Download {0} model?";
+        DownloadXModelsQuestion = "Download {0} models?";
+        XYRequiresModelDownload = "\"{0}\" ({1}) requires a model.\n\nDownload model?";
+        XYRequiresModelsDownload = "\"{0}\" ({1}) requires models.\n\nDownload models?";
+        XYRequiresModelsSizeZDownload = "\"{0}\" ({1}) requires models ({2}).\n\nDownload models?";
+        XRequiresModelSizeYDownload = "\"{0}\" requires a model ({1}).\n\nDownload model?";
+        XRequiresModelsSizeYDownload = "\"{0}\" requires models ({1}).\n\nDownload models?";
+        RequiresXDownloadAndUse = "\"Text to speech\" requires {0}.\n\nDownload and use {0}?";
+        RequiresXSelectBuild = "\"Text to speech\" requires {0}.\n\nSelect a build to download:";
+        ZonosRequiresModels = "\"Zonos TTS (CrispASR)\" requires the Zonos transformer + DAC codec (~1.8 GB).\n\nDownload models?";
+        CosyVoiceXRequiresModels = "\"CosyVoice3 (CrispASR)\" ({0}) requires LLM + flow + hift + s3tok + campplus + voice-bank GGUFs (all sized into the total above).\n\nDownload models?";
+        AllTalkRequiresServer = "\"AllTalk\" text to speech requires a running local AllTalk web server.\n\nRead more?";
+        EdgeTtsRequiresCli = "\"EdgeTts\" text to speech requires the edge-tts CLI tool.\n\nInstall with: pipx install edge-tts\n(or pip install edge-tts)\n\nRead more?";
+        XRequiresKeyFile = "\"{0}\" requires a key file";
+        XRequiresApiKey = "\"{0}\" requires an API key";
+        XNeedsModelLicense = "{0} cannot be used until the model license is accepted.";
+        AudioCppUpdateRequired = "audio.cpp update required";
+        XNeedsNewerAudioCpp = "\"{0}\" needs a newer audio.cpp runtime than the one installed. Re-download it now?";
+        XRequiresAppleSilicon = "\"{0}\" (audio.cpp) requires an Apple Silicon Mac.";
+        XOnlyBuiltForX64 = "\"{0}\" (audio.cpp) is only built for x86-64 on Windows and Linux.";
+        XRunsThroughYDownloadInstall = "\"{0}\" runs through the {1} runtime. Download and install now?";
+        XRunsThroughYSelectBuild = "\"{0}\" runs through the {1} runtime. Select a build to download:";
+        UpdateCrispAsr = "Update CrispASR";
+        CrispAsrUpdateRequired = "CrispASR update required";
+        NewerCrispAsrAvailable = "A newer CrispASR runtime is available. Re-download it now?";
+        XNeedsCrispAsrYRedownload = "\"{0}\" needs CrispASR {1}. Re-download now?";
+        XRequiresNewerCrispAsrRedownload = "\"{0}\" requires a newer CrispASR runtime. Re-download now?";
+        NoVoicesLoaded = "No voices are loaded for the selected engine - check the engine settings (e.g. API key) and re-select the engine to reload its voices.";
+        TextToSpeechFailedX = "Text to speech failed: {0}";
+        XAlreadyDownloadedYRedownload = "\"{0}\" is already downloaded.{1}\n\nRe-download it?";
+        TestVoiceError = "Test voice error";
+        RefreshingVoicesFailedX = "Refreshing voices failed: {0}";
+        NoUsableTtsEngines = "No usable TTS engines are available - check the engine settings and try again.";
+        MergingAudioSegmentsFailedX = "Merging the audio segments failed: {0}";
+        AddingAudioTrackFailed = "Adding the audio track to the video failed - the audio file was still saved.";
+        MergingAudioFailedAtSegmentX = "Merging audio failed at segment {0}.";
+        XOfYSegmentsFailedZContinue = "{0} of {1} segments failed to generate (see error-log.txt in the Subtitle Edit data folder).{2}\n\nContinue with the remaining segments? The failed lines will be missing from the audio.";
+        TtsServerErrorX = "TTS server error: {0}";
+        AdjustingAudioSpeedFailedX = "Adjusting audio speed failed: {0}";
+        AudioPostProcessingFailedX = "Audio post-processing failed: {0}";
         Title = "Text to speech";
         ReviewAudioSegments = "TTS - Review audio segments";
         ReviewAudioSegmentsHistory = "TTS - Review audio history";

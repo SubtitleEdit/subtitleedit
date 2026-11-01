@@ -185,9 +185,35 @@ public class LanguageOcr
     public string DiscardOcrResultDetaulsQuestion { get; set; }
     public string UpdateCrispEmbedQuestion { get; set; }
     public string UpdateCrispEmbedDetailsQuestion { get; set; }
+    public string MistralApiKeyMissing { get; set; }
+    public string MistralApiKeyMessage { get; set; }
+    public string TesseractOcrFailedX { get; set; }
+    public string OllamaOcrFailedXYZ { get; set; }
+    public string LlamaCppOcrFailedXYZ { get; set; }
+    public string CrispEmbedError { get; set; }
+    public string CrispEmbedCouldNotStartX { get; set; }
+    public string NewerTesseractXAvailable { get; set; }
+    public string PleaseInstallTesseract { get; set; }
+    public string TesseractNotDetectedExampleX { get; set; }
+    public string InitializingX { get; set; }
+    public string LoadingXModel { get; set; }
+    public string PreparingOcr { get; set; }
 
     public LanguageOcr()
     {
+        MistralApiKeyMissing = "Mistral API key missing";
+        MistralApiKeyMessage = "You must enter a valid Mistral API key.\n\nGet your API key from https://mistral.ai/";
+        TesseractOcrFailedX = "Tesseract OCR failed:\n\n{0}";
+        OllamaOcrFailedXYZ = "Ollama OCR failed (model \"{0}\" at {1}):\n\n{2}";
+        LlamaCppOcrFailedXYZ = "llama.cpp OCR failed (model \"{0}\" at {1}):\n\n{2}";
+        CrispEmbedError = "CrispEmbed error";
+        CrispEmbedCouldNotStartX = "CrispEmbed could not be started:\n\n{0}";
+        NewerTesseractXAvailable = "A newer Tesseract OCR ({0}) is available.\n\nDownload and use it? Your downloaded languages are kept.";
+        PleaseInstallTesseract = "Please install Tesseract";
+        TesseractNotDetectedExampleX = "\"Tesseract\" was not detected. Please install Tesseract.\nE.g. {0}.";
+        InitializingX = "Initializing {0}...";
+        LoadingXModel = "Loading {0} model...";
+        PreparingOcr = "Preparing OCR...";
         LinesToDraw = "Lines to draw";
         CurrentImage = "Current image";
         AutoDrawAgain = "Auto draw again";

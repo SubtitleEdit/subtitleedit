@@ -52,7 +52,7 @@ public static class TtsVoiceInstaller
     /// <summary>
     /// Ensures the CrispASR runtime that Chatterbox TTS runs on is installed and new enough.
     /// When <paramref name="forceRedownload"/> is true the download runs even if CrispASR is
-    /// already Chatterbox-capable - used by the settings "Update CrispASR" button when a newer
+    /// already Chatterbox-capable - used by the settings Se.Language.Video.TextToSpeech.UpdateCrispAsr button when a newer
     /// release exists. Returns true when CrispASR ends up installed and Chatterbox-capable.
     /// </summary>
     public static Task<bool> EnsureCrispAsrForChatterbox(Window? window, IWindowService windowService, bool forceRedownload)
@@ -264,8 +264,8 @@ public static class TtsVoiceInstaller
         {
             var updateAnswer = await MessageBox.Show(
                 window,
-                "audio.cpp update required",
-                $"{Environment.NewLine}\"{engineDisplayName}\" needs a newer audio.cpp runtime than the one installed. Re-download it now?",
+                Se.Language.Video.TextToSpeech.AudioCppUpdateRequired,
+                Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XNeedsNewerAudioCpp, engineDisplayName),
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -283,7 +283,7 @@ public static class TtsVoiceInstaller
                 await MessageBox.Show(
                     window,
                     engineDisplayName,
-                    $"{Environment.NewLine}\"{engineDisplayName}\" (audio.cpp) requires an Apple Silicon Mac.",
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRequiresAppleSilicon, engineDisplayName),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 return false;
@@ -291,8 +291,8 @@ public static class TtsVoiceInstaller
 
             var answer = isUpdateRequired ? MessageBoxResult.Yes : await MessageBox.Show(
                 window,
-                "Download audio.cpp?",
-                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the audio.cpp runtime. Download and install now?",
+                string.Format(Se.Language.General.DownloadXQuestion, "audio.cpp"),
+                Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRunsThroughYDownloadInstall, engineDisplayName, "audio.cpp"),
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -310,7 +310,7 @@ public static class TtsVoiceInstaller
                 await MessageBox.Show(
                     window,
                     engineDisplayName,
-                    $"{Environment.NewLine}\"{engineDisplayName}\" (audio.cpp) is only built for x86-64 on Windows and Linux.",
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XOnlyBuiltForX64, engineDisplayName),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 return false;
@@ -320,8 +320,8 @@ public static class TtsVoiceInstaller
                 ? MessageBoxResult.None
                 : await MessageBox.Show(
                 window,
-                "Download audio.cpp?",
-                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the audio.cpp runtime. Select a build to download:",
+                string.Format(Se.Language.General.DownloadXQuestion, "audio.cpp"),
+                Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRunsThroughYSelectBuild, engineDisplayName, "audio.cpp"),
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -352,8 +352,8 @@ public static class TtsVoiceInstaller
             {
                 var vulkanAnswer = await MessageBox.Show(
                     window,
-                    "Vulkan driver may be required",
-                    $"The Vulkan build needs a Vulkan-capable GPU driver.{Environment.NewLine}{Environment.NewLine}Without it audio.cpp cannot start at all. Pick the CPU build instead if you are unsure.{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
+                    Se.Language.General.VulkanDriverMayBeRequired,
+                    Se.Language.General.VulkanDriverRequiredContinue,
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -440,15 +440,15 @@ public static class TtsVoiceInstaller
             }
 
             var versionRequirement = !string.IsNullOrEmpty(minVersionNote)
-                ? $" needs CrispASR {minVersionNote}"
-                : " requires a newer CrispASR runtime";
+                ? string.Format(Se.Language.Video.TextToSpeech.XNeedsCrispAsrYRedownload, engineDisplayName, minVersionNote)
+                : string.Format(Se.Language.Video.TextToSpeech.XRequiresNewerCrispAsrRedownload, engineDisplayName);
 
             var answer = await MessageBox.Show(
                 window,
-                isCapable ? "Update CrispASR" : "CrispASR update required",
+                isCapable ? Se.Language.Video.TextToSpeech.UpdateCrispAsr : Se.Language.Video.TextToSpeech.CrispAsrUpdateRequired,
                 isCapable
-                    ? $"{Environment.NewLine}A newer CrispASR runtime is available. Re-download it now?"
-                    : $"{Environment.NewLine}\"{engineDisplayName}\"{versionRequirement}. Re-download now?",
+                    ? Environment.NewLine + Se.Language.Video.TextToSpeech.NewerCrispAsrAvailable
+                    : Environment.NewLine + versionRequirement,
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -461,8 +461,8 @@ public static class TtsVoiceInstaller
         {
             var variantAnswer = await MessageBox.Show(
                 window,
-                "Download CrispASR?",
-                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the CrispASR runtime. Select a build to download:",
+                string.Format(Se.Language.General.DownloadXQuestion, "CrispASR"),
+                Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRunsThroughYSelectBuild, engineDisplayName, "CrispASR"),
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -509,8 +509,8 @@ public static class TtsVoiceInstaller
             {
                 var vulkanAnswer = await MessageBox.Show(
                     window,
-                    "Vulkan SDK may be required",
-                    $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
+                    Se.Language.General.VulkanSdkMayBeRequired,
+                    Se.Language.General.VulkanSdkRequiredContinue,
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -540,8 +540,8 @@ public static class TtsVoiceInstaller
         {
             var answer = await MessageBox.Show(
                 window,
-                "Download CrispASR?",
-                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the CrispASR runtime. Download and install now?",
+                string.Format(Se.Language.General.DownloadXQuestion, "CrispASR"),
+                Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRunsThroughYDownloadInstall, engineDisplayName, "CrispASR"),
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -579,8 +579,8 @@ public static class TtsVoiceInstaller
     {
         var cpuAnswer = await MessageBox.Show(
             window,
-            "CrispASR CPU build",
-            $"{Environment.NewLine}Standard is recommended for most machines.{Environment.NewLine}{Environment.NewLine}Legacy is a fallback for older CPUs without AVX2 support.",
+            Se.Language.General.CrispAsrCpuBuild,
+            Environment.NewLine + Se.Language.General.CrispAsrCpuBuildInfo,
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "Standard",
@@ -603,8 +603,8 @@ public static class TtsVoiceInstaller
     {
         var answer = await MessageBox.Show(
             window,
-            "Download CrispASR?",
-            $"{Environment.NewLine}\"{engineDisplayName}\" runs through the CrispASR runtime. Select a build to download:",
+            string.Format(Se.Language.General.DownloadXQuestion, "CrispASR"),
+            Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRunsThroughYSelectBuild, engineDisplayName, "CrispASR"),
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CPU",
@@ -635,8 +635,8 @@ public static class TtsVoiceInstaller
     {
         var cudaAnswer = await MessageBox.Show(
             window,
-            "CrispASR CUDA build",
-            $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
+            Se.Language.General.CrispAsrCudaBuild,
+            Environment.NewLine + Se.Language.General.CrispAsrCudaBuildInfo,
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CUDA 12",

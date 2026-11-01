@@ -82,8 +82,8 @@ public partial class ImageBasedProfileViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window!,
-                    "Error",
-                    "Please enter a profile name",
+                    Se.Language.General.Error,
+                    Se.Language.General.PleaseEnterProfileName,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 return;
@@ -93,8 +93,8 @@ public partial class ImageBasedProfileViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window!,
-                    "Error",
-                    $"Profile name '{profile.Name}' can only be used once. Please choose a different name.",
+                    Se.Language.General.Error,
+                    string.Format(Se.Language.General.ProfileNameXCanOnlyBeUsedOnce, profile.Name),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 return;

@@ -185,10 +185,8 @@ public partial class BlankVideoViewModel : ObservableObject
                 }
 
                 await MessageBox.Show(Window!,
-                    "Unable to generate blank video",
-                    "Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                    "ffmpeg exit code: " + exitCode + Environment.NewLine +
-                    "Parameters: " + process.StartInfo.Arguments,
+                    Se.Language.General.UnableToGenerateBlankVideo,
+                    string.Format(Se.Language.General.OutputVideoFileNotGeneratedX, jobItem.OutputVideoFileName) + Environment.NewLine + string.Format(Se.Language.General.FfmpegExitCodeX, exitCode) + Environment.NewLine + string.Format(Se.Language.General.ParametersX, process.StartInfo.Arguments),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -513,7 +511,7 @@ public partial class BlankVideoViewModel : ObservableObject
             Se.LogError(ex, "Unable to delete existing blank video: " + VideoFileName);
             await MessageBox.Show(Window!,
                 Se.Language.General.Error,
-                "Unable to overwrite file (is it open in the video player?): " + VideoFileName,
+                string.Format(Se.Language.General.UnableToOverwriteFileX, VideoFileName),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
