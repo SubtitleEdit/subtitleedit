@@ -1058,6 +1058,12 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             return 0;
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Cancellation is not a failed file conversion. Let Spectre/CLI
+            // callers distinguish it from a normal --json or exit-1 failure.
+            throw;
+        }
         catch (Exception ex)
         {
             if (settings.Json)
