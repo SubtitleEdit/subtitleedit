@@ -5,8 +5,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -18,14 +16,14 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 /// <summary>
 /// The layout picker in the editor look (see <see cref="EditorChrome"/>): the layout thumbnails as
-/// cards on the panel color, each with its number in a badge, the hovered/keyboard-picked card
-/// lifted in the accent, and Cancel in the button bar.
+/// cards on the panel color, each with its number under it, the layout in use marked in the accent
+/// with a check, the hovered/keyboard-picked card lifted, and Cancel in the button bar.
 /// </summary>
 public class LayoutWindow : Window
 {
     private readonly LayoutViewModel _vm;
     private List<Border> _borders = new List<Border>();
-    private const int LayoutCount = 15;
+    private static readonly int LayoutCount = LayoutThumbnail.Count;
     private int _focusedLayout = -1;
 
     public LayoutWindow(LayoutViewModel viewViewModel)
@@ -46,64 +44,45 @@ public class LayoutWindow : Window
             Margin = new Thickness(14),
         };
 
+        var currentLayout = Se.Settings.General.LayoutNumber;
         for (var i = 1; i <= LayoutCount; i++)
         {
-            var uri = new Uri($"avares://SubtitleEdit/Assets/Layout/Layout{i:D2}.png");
-
-            var image = new Image
-            {
-                Source = new Bitmap(AssetLoader.Open(uri)),
-                Width = 200,
-                Height = 139
-            };
-
+            var isCurrent = i == currentLayout;
             var text = new TextBlock
             {
                 Text = i.ToString(CultureInfo.InvariantCulture),
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = Brushes.White,
-                FontSize = EditorChrome.FieldFontSize,
-                FontWeight = FontWeight.Bold,
-            };
-            var badge = new Border
-            {
-                MinWidth = 26,
-                Height = EditorChrome.ScaledSize(26),
-                CornerRadius = new CornerRadius(13),
-                Padding = new Thickness(6, 0),
-                Background = new SolidColorBrush(Color.FromArgb(0xb0, 0x10, 0x12, 0x18)),
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(6),
-                Child = text,
+                Foreground = isCurrent ? EditorChrome.AccentBrush : EditorChrome.DimTextBrush,
+                FontSize = EditorChrome.ScaledFont(12),
+                FontWeight = FontWeight.SemiBold,
             };
 
-            // Layer the image and the number badge
-            var grid = new Grid
-            {
-                Width = 200,
-                Height = 139
-            };
+            var thumbnail = new Grid { RowDefinitions = new RowDefinitions("Auto,Auto"), RowSpacing = 7 };
+            thumbnail.Add(LayoutThumbnail.Make(i), 0, 0);
+            thumbnail.Add(text, 1, 0);
 
-            grid.Children.Add(image);
-            grid.Children.Add(badge);
+            var content = new Grid();
+            content.Children.Add(thumbnail);
+            if (isCurrent)
+            {
+                content.Children.Add(MakeCurrentBadge());
+            }
 
             var border = new Border
             {
-                Margin = new Thickness(6),
-                Padding = new Thickness(6),
-                Child = grid,
+                Margin = new Thickness(5),
+                Padding = new Thickness(10, 10, 10, 7),
+                Child = content,
                 CornerRadius = new CornerRadius(10),
-                BorderThickness = new Thickness(1),
+                BorderThickness = new Thickness(isCurrent ? 2 : 1),
                 Cursor = new Cursor(StandardCursorType.Hand),
                 RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative),
                 RenderTransform = new ScaleTransform(1, 1)
             };
             AutomationProperties.SetName(border, Se.Language.Options.Shortcuts.GeneralChooseLayout + " " + i.ToString(CultureInfo.InvariantCulture));
-            SetHighlight(border, false);
-
+            _borders.Add(border);
             var layoutNumber = i;
+            SetHighlight(border, false);
 
             border.PointerEntered += (_, __) =>
             {
@@ -125,7 +104,6 @@ public class LayoutWindow : Window
             };
 
             wrapPanel.Children.Add(border);
-            _borders.Add(border);
         }
 
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel);
@@ -198,14 +176,38 @@ public class LayoutWindow : Window
         _borders[_focusedLayout].BringIntoView();
     }
 
-    /// <summary>
-    /// The picked card is lifted: a little larger, soft accent behind it, accent border.
-    /// </summary>
-    private static void SetHighlight(Border border, bool isHighlighted)
+    private static Border MakeCurrentBadge()
     {
+        return new Border
+        {
+            Width = 22,
+            Height = 22,
+            CornerRadius = new CornerRadius(11),
+            Background = EditorChrome.AccentBrush,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, -6, -6, 0),
+            Child = new Optris.Icons.Avalonia.Icon
+            {
+                Value = IconNames.Check,
+                FontSize = 11,
+                Foreground = EditorChrome.OnAccentBrush,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
+    }
+
+    /// <summary>
+    /// The picked card is lifted: a little larger, on the hover color. The layout in use stays in
+    /// the accent, picked or not.
+    /// </summary>
+    private void SetHighlight(Border border, bool isHighlighted)
+    {
+        var isCurrent = _borders.IndexOf(border) + 1 == Se.Settings.General.LayoutNumber;
         border.RenderTransform = isHighlighted ? new ScaleTransform(1.06, 1.06) : new ScaleTransform(1.0, 1.0);
-        border.Background = isHighlighted ? EditorChrome.AccentSoftBrush : EditorChrome.FieldBrush;
-        border.BorderBrush = isHighlighted ? EditorChrome.AccentBrush : EditorChrome.FieldBorderBrush;
+        border.Background = isCurrent ? EditorChrome.AccentSoftBrush : isHighlighted ? EditorChrome.HoverBrush : EditorChrome.PanelBrush;
+        border.BorderBrush = isCurrent ? EditorChrome.AccentBrush : isHighlighted ? EditorChrome.DimTextBrush : EditorChrome.LineBrush;
         border.ZIndex = isHighlighted ? 1 : 0;
     }
 

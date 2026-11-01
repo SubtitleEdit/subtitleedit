@@ -5,6 +5,8 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
@@ -17,6 +19,9 @@ public partial class ChangeCasingViewModel : ObservableObject
     [ObservableProperty] private bool _fixNamesOnly;
     [ObservableProperty] private bool _allUppercase;
     [ObservableProperty] private bool _allLowercase;
+    [ObservableProperty] private string _normalCasingSample;
+    [ObservableProperty] private string _allUppercaseSample;
+    [ObservableProperty] private string _allLowercaseSample;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -25,6 +30,8 @@ public partial class ChangeCasingViewModel : ObservableObject
 
     private readonly IWindowService _windowService;
     private Subtitle _subtitle;
+    private string _sampleLine;
+    private string _sampleLanguage;
 
     public ChangeCasingViewModel(IWindowService windowService)
     {
@@ -32,13 +39,65 @@ public partial class ChangeCasingViewModel : ObservableObject
         _subtitle = new Subtitle();
         Subtitle = new Subtitle();
         Info = string.Empty;
+        _normalCasingSample = string.Empty;
+        _allUppercaseSample = string.Empty;
+        _allLowercaseSample = string.Empty;
+        _sampleLine = string.Empty;
+        _sampleLanguage = string.Empty;
         LoadSettings();
     }
 
     public void Initialize(Subtitle subtitle)
     {
         _subtitle = subtitle;
+        _sampleLine = FindSampleLine(subtitle);
+        if (_sampleLine.Length == 0)
+        {
+            return;
+        }
+
+        _sampleLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+        AllUppercaseSample = MakeSample(fixCasing => fixCasing.FixMakeUppercase = true);
+        AllLowercaseSample = MakeSample(fixCasing => fixCasing.FixMakeLowercase = true);
+        UpdateNormalCasingSample();
     }
+
+    /// <summary>
+    /// The first line of more than one word, so a card shows the user's own text with enough of it
+    /// to see the casing; a line of one word when there is nothing better.
+    /// </summary>
+    private static string FindSampleLine(Subtitle subtitle)
+    {
+        var lines = subtitle.Paragraphs
+            .Select(p => HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, " ").Replace('\n', ' ').Trim())
+            .Where(line => line.Any(char.IsLetter))
+            .ToList();
+        return lines.FirstOrDefault(line => line.Contains(' ')) ?? lines.FirstOrDefault() ?? string.Empty;
+    }
+
+    private string MakeSample(Action<FixCasing> configure)
+    {
+        var sample = new Subtitle();
+        sample.Paragraphs.Add(new Paragraph(_sampleLine, 0, 1000));
+        var fixCasing = new FixCasing(_sampleLanguage) { Format = _subtitle.OriginalFormat };
+        configure(fixCasing);
+        fixCasing.Fix(sample);
+        return sample.Paragraphs[0].Text;
+    }
+
+    private void UpdateNormalCasingSample()
+    {
+        if (_sampleLine.Length > 0)
+        {
+            NormalCasingSample = MakeSample(fixCasing =>
+            {
+                fixCasing.FixNormal = true;
+                fixCasing.FixNormalOnlyAllUppercase = NormalCasingOnlyUpper;
+            });
+        }
+    }
+
+    partial void OnNormalCasingOnlyUpperChanged(bool value) => UpdateNormalCasingSample();
 
     private void LoadSettings()
     {

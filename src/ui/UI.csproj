@@ -73,7 +73,6 @@
 		<AvaloniaResource Include="Assets\*.svg" />
 		<AvaloniaResource Include="Assets\*.zip" />
 		<AvaloniaResource Include="Assets\FileTypes\*.ico" />
-		<AvaloniaResource Include="Assets\Layout\*.png" />
 		<AvaloniaResource Include="Assets\SevenZip\*.zip" />
 		<AvaloniaResource Include="Assets\SpeechToText\*.py" />
 		<AvaloniaResource Include="Assets\SpeechToText\*.txt" />
