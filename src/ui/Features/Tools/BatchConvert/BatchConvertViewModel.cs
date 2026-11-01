@@ -3115,6 +3115,22 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     }
 
     /// <summary>
+    /// Installed build, pinned release and install status for CrispASR - the same dialog the
+    /// Auto-translate window's gear opens, and where the MADLAD build is switched.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowCrispAsrEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await CrispAsrTranslateDownloadHelper.ShowEngineSettingsAsync(Window, _windowService);
+        RefreshAutoTranslateEngineDots?.Invoke();
+    }
+
+    /// <summary>
     /// Installed backend, pinned release and install status for llama.cpp - the same dialog the
     /// Auto-translate window's gear opens. Its download button routes back through
     /// <see cref="RedownloadLlamaCppEngineAsync"/> so a running server is stopped first and the

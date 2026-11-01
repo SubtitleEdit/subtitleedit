@@ -21,7 +21,7 @@ public class SpeechToTextEngineSettingsWindow : Window
     public SpeechToTextEngineSettingsWindow(SpeechToTextEngineSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.AudioToText.EngineSettings;
+        Bind(TitleProperty, new Binding(nameof(vm.WindowTitle)));
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 540;

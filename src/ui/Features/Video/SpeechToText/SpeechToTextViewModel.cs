@@ -3490,7 +3490,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var crispVariant = "vulkan";
         if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
         {
-            var windowsVariant = await PromptCrispAsrWindowsVariantAsync(CrispAsrEngine.StaticName);
+            var windowsVariant = await CrispAsrDownloadHelper.PromptWindowsVariantAsync(Window, CrispAsrEngine.StaticName);
             if (windowsVariant == null)
             {
                 return;
@@ -3501,7 +3501,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                  && OperatingSystem.IsLinux()
                  && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
         {
-            var linuxAnswer = await PromptCrispAsrLinuxVariantAsync(CrispAsrEngine.StaticName);
+            var linuxAnswer = await CrispAsrDownloadHelper.PromptLinuxVariantAsync(Window, CrispAsrEngine.StaticName);
             if (linuxAnswer == null)
             {
                 return;
@@ -3576,151 +3576,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         return useVulkan;
-    }
-
-    /// <summary>
-    /// Windows build prompt: CPU (with a standard/legacy follow-up), Vulkan (with a
-    /// Vulkan-SDK warning when none is detected) or CUDA. Returns the variant string
-    /// for the download dialog, or null when the user cancels.
-    /// </summary>
-    private async Task<string?> PromptCrispAsrWindowsVariantAsync(string engineName)
-    {
-        var answer = await MessageBox.Show(
-            Window!,
-            string.Format(Se.Language.General.DownloadXQuestion, engineName),
-            Environment.NewLine + string.Format(Se.Language.Video.AudioToText.XRequiresCrispAsrSelectVersion, engineName),
-            MessageBoxButtons.Cancel,
-            MessageBoxIcon.Question,
-            "CPU",
-            "Vulkan",
-            "CUDA");
-
-        if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
-        {
-            return null;
-        }
-
-        var crispVariant = answer switch
-        {
-            MessageBoxResult.Custom1 => "cpu",
-            MessageBoxResult.Custom3 => "cuda",
-            _ => "vulkan",
-        };
-
-        if (crispVariant == "cuda")
-        {
-            // Upstream added a Windows CUDA 13 build alongside the CUDA 12 one in v0.8.31, so
-            // Windows now gets the same follow-up Linux has had since v0.8.30 (#14343).
-            return await PromptCrispAsrCudaVersionAsync();
-        }
-
-        if (crispVariant == "cpu")
-        {
-            return await PromptCrispAsrCpuFlavorAsync();
-        }
-
-        if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
-        {
-            var vulkanAnswer = await MessageBox.Show(
-                Window!,
-                Se.Language.General.VulkanSdkMayBeRequired,
-                Se.Language.General.VulkanSdkRequiredContinue,
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (vulkanAnswer == MessageBoxResult.No)
-            {
-                UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
-                return null;
-            }
-
-            if (vulkanAnswer != MessageBoxResult.Yes)
-            {
-                return null;
-            }
-        }
-
-        return crispVariant;
-    }
-
-    /// <summary>
-    /// Linux x86_64 build prompt: CPU, Vulkan (any GPU), CUDA (NVIDIA) or ROCm (AMD).
-    /// Returns "vulkan" / "cuda" / "cuda13" / "hip", empty string for the default CPU build,
-    /// or null when the user cancels.
-    /// </summary>
-    private async Task<string?> PromptCrispAsrLinuxVariantAsync(string engineName)
-    {
-        var answer = await MessageBox.Show(
-            Window!,
-            string.Format(Se.Language.General.DownloadXQuestion, engineName),
-            Environment.NewLine + string.Format(Se.Language.Video.AudioToText.XRequiresCrispAsrSelectVersion, engineName),
-            MessageBoxButtons.Cancel,
-            MessageBoxIcon.Question,
-            "CPU",
-            "Vulkan",
-            "CUDA",
-            "ROCm");
-
-        if (answer == MessageBoxResult.Custom3)
-        {
-            return await PromptCrispAsrCudaVersionAsync();
-        }
-
-        return answer switch
-        {
-            MessageBoxResult.Custom1 => string.Empty,
-            MessageBoxResult.Custom2 => "vulkan",
-            MessageBoxResult.Custom4 => "hip",
-            _ => null,
-        };
-    }
-
-    /// <summary>
-    /// Follow-up prompt after the user picks "CUDA" in the CrispASR variant selector, on both
-    /// Windows and Linux - upstream ships a CUDA 12 and a CUDA 13 build for each.
-    /// Returns "cuda" (CUDA 12 build) or "cuda13", or null when the user cancels.
-    /// </summary>
-    private async Task<string?> PromptCrispAsrCudaVersionAsync()
-    {
-        var answer = await MessageBox.Show(
-            Window!,
-            Se.Language.General.CrispAsrCudaBuild,
-            Environment.NewLine + Se.Language.General.CrispAsrCudaBuildInfo,
-            MessageBoxButtons.Cancel,
-            MessageBoxIcon.Question,
-            "CUDA 12",
-            "CUDA 13");
-
-        return answer switch
-        {
-            MessageBoxResult.Custom1 => "cuda",
-            MessageBoxResult.Custom2 => "cuda13",
-            _ => null,
-        };
-    }
-
-    /// <summary>
-    /// Follow-up prompt after the user picks "CPU" in the CrispASR variant selector.
-    /// Returns "cpu" (modern, recommended), "cpu-legacy" (compatibility build for CPUs without AVX2),
-    /// or null when the user cancels.
-    /// </summary>
-    private async Task<string?> PromptCrispAsrCpuFlavorAsync()
-    {
-        var cpuAnswer = await MessageBox.Show(
-            Window!,
-            Se.Language.General.CrispAsrCpuBuild,
-            Environment.NewLine + Se.Language.General.CrispAsrCpuBuildInfo,
-            MessageBoxButtons.Cancel,
-            MessageBoxIcon.Question,
-            "Standard",
-            "Legacy");
-
-        return cpuAnswer switch
-        {
-            MessageBoxResult.Custom1 => "cpu",
-            MessageBoxResult.Custom2 => "cpu-legacy",
-            _ => null,
-        };
     }
 
     [RelayCommand]
@@ -4096,7 +3951,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
                 {
-                    var crispVariant = await PromptCrispAsrWindowsVariantAsync(engine.Name);
+                    var crispVariant = await CrispAsrDownloadHelper.PromptWindowsVariantAsync(Window!, engine.Name);
                     if (crispVariant == null)
                     {
                         return;
@@ -4119,7 +3974,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                          && OperatingSystem.IsLinux()
                          && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
                 {
-                    var crispVariant = await PromptCrispAsrLinuxVariantAsync(engine.Name);
+                    var crispVariant = await CrispAsrDownloadHelper.PromptLinuxVariantAsync(Window!, engine.Name);
                     if (crispVariant == null)
                     {
                         return;

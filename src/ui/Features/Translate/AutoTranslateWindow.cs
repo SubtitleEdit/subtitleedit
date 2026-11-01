@@ -165,6 +165,7 @@ public class AutoTranslateWindow : Window
         var updateEngineButton = Flat(UiUtil.MakeButton(Se.Language.General.Update, vm.UpdateEngineCommand)
             .WithIconLeft(IconNames.Download));
         updateEngineButton.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.EngineUpdateButtonIsVisible)));
+        updateEngineButton.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(updateEngineButton, Se.Language.General.UpdateAvailable);
@@ -223,6 +224,13 @@ public class AutoTranslateWindow : Window
         var buttonDownloadCrispAsr = Flat(UiUtil.MakeButton(string.Empty, vm.DownloadCrispAsrCommand)
             .WithIconLeftBindText(IconNames.Download, nameof(vm.CrispAsrDownloadButtonText)));
         buttonDownloadCrispAsr.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ButtonDownloadIsVisible)));
+
+        // Disabled during a run: MADLAD starts one crispasr process per line, so a build switch
+        // would replace the binary underneath the translation.
+        var buttonCrispAsrEngineSettings = EditorChrome.CreateToolButton(IconNames.Settings, Se.Language.Translate.EngineSettings,
+            vm.ShowCrispAsrEngineSettingsCommand, 28);
+        buttonCrispAsrEngineSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.CrispAsrModelComboIsVisible)));
+        buttonCrispAsrEngineSettings.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
 
         var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
         crispAsrModelCombo.ItemTemplate = AutoTranslateCombos.CrispAsrModelItemTemplate();
@@ -338,6 +346,7 @@ public class AutoTranslateWindow : Window
 
         settingsPanel.Children.Add(Group(nameof(vm.CrispAsrModelComboIsVisible), Label(Se.Language.General.Model), crispAsrModelCombo));
         settingsPanel.Children.Add(buttonDownloadCrispAsr);
+        settingsPanel.Children.Add(buttonCrispAsrEngineSettings);
 
         settingsPanel.Children.Add(Group(nameof(vm.LlamaCppModelComboIsVisible), Label(Se.Language.General.Model), llamaCppModelCombo));
         var llamaCppButtons = new StackPanel
