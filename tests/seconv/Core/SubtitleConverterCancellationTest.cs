@@ -1,5 +1,8 @@
 using SeConv.Commands;
 using SeConv.Core;
+using Nikse.SubtitleEdit.UiLogic.Export;
+using Nikse.SubtitleEdit.Core.Common;
+using SkiaSharp;
 using Xunit;
 
 namespace SeConvTests.Core;
@@ -133,6 +136,105 @@ public class SubtitleConverterCancellationTest : IDisposable
         finally
         {
             gate.Release();
+        }
+    }
+
+    [Fact]
+    public async Task CancellationBetweenTransformsAndSave_PreservesExistingSubtitle()
+    {
+        var output = Path.Combine(_tempRoot, "after-transform.srt");
+        await File.WriteAllTextAsync(output, "EXISTING SUBTITLE", TestContext.Current.CancellationToken);
+
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Replacement", 0, 1000));
+        using var cts = new CancellationTokenSource();
+        var reachedSaveBoundary = false;
+        var converter = new SubtitleConverter
+        {
+            BeforeSaveForTesting = () =>
+            {
+                // The token was live when transforms began. Cancel exactly at
+                // the last pre-save boundary rather than at method entry.
+                Assert.False(cts.IsCancellationRequested);
+                reachedSaveBoundary = true;
+                cts.Cancel();
+            }
+        };
+
+        var method = typeof(SubtitleConverter).GetMethod(
+            "ApplyTransformsAndSaveAsync",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+        var task = (Task)method.Invoke(converter,
+            [subtitle, new Nikse.SubtitleEdit.Core.SubtitleFormats.SubRip(),
+                output, new ConversionOptions { Patterns = [], Format = "SubRip", Overwrite = true }, cts.Token])!;
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => task);
+        Assert.True(reachedSaveBoundary);
+        Assert.Equal("EXISTING SUBTITLE", await File.ReadAllTextAsync(output, TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public void ImageOutputWriter_CancellationAfterOpeningStream_AbortsWithoutFooter()
+    {
+        var output = Path.Combine(_tempRoot, "interrupted.sup");
+        using var cts = new CancellationTokenSource();
+        using var bitmap = new SKBitmap(16, 16);
+        using var item = new BitmapSubtitleLoader.BitmapSubtitleItem(
+            new TimeCode(0), new TimeCode(1000), bitmap);
+        var handler = new CancelAfterHeaderHandler(cts);
+
+        Assert.ThrowsAny<OperationCanceledException>(() =>
+            ImageOutputWriter.WritePreservedBitmaps([item], output, handler,
+                new ConversionOptions { Patterns = [], Format = "Blu-ray sup" }, cts.Token));
+
+        Assert.True(handler.Disposed);
+        Assert.False(handler.FooterCalled);
+        // An immediate retry must be able to open the same path exclusively.
+        using var retry = new FileStream(output, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+        Assert.True(retry.CanWrite);
+    }
+
+    [Theory]
+    [InlineData("Blu-ray sup")]
+    [InlineData("DVD sup")]
+    [InlineData("VobSub")]
+    public void BitmapExportHandlers_SupportAbortingWithoutFinalization(string format)
+    {
+        var handler = ImageOutputWriter.TryCreateHandler(format);
+        Assert.IsAssignableFrom<IDisposable>(handler);
+        ((IDisposable)handler!).Dispose();
+    }
+
+    private sealed class CancelAfterHeaderHandler(CancellationTokenSource source)
+        : IExportHandler, IDisposable
+    {
+        private FileStream? _stream;
+        public bool Disposed { get; private set; }
+        public bool FooterCalled { get; private set; }
+        public ExportImageType ExportImageType => ExportImageType.BluRaySup;
+        public string Extension => ".sup";
+        public string Title => "Cancellation test";
+        public bool UseFileName => true;
+
+        public void WriteHeader(string path, ImageParameter parameter)
+        {
+            _stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+            source.Cancel();
+        }
+
+        public void CreateParagraph(ImageParameter parameter) { }
+        public void WriteParagraph(ImageParameter parameter) { }
+        public void WriteFooter()
+        {
+            FooterCalled = true;
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            Disposed = true;
+            _stream?.Dispose();
+            _stream = null;
         }
     }
 
