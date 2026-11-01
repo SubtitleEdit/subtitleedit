@@ -699,9 +699,9 @@ public class RemuxVideoWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonDone);
-        buttons.Children.Add(buttonRemux);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonDone));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonRemux));
 
         var bar = new DockPanel();
         DockPanel.SetDock(buttonOpenFolder, Dock.Left);

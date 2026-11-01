@@ -198,7 +198,7 @@ public class LanguageFixCommonErrors
         XFixedBut = "{0} issue(s) fixed but the subtitle still contains errors - see log for details";
         XCouldBeFixedBut = "{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details";
         NumberOfImportantLogMessages = "{0} important log messages!";
-        FixedOkXY = "Fixed and OK - '{0}': {1}";
+        FixedOkXY = "Fixed and OK - \"{0}\": {1}";
         XFixesApplied = "Fixes applied: {0}";
         XFixesYSelected = "{0} fixes - {1} selected";
         FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph";

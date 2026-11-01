@@ -486,7 +486,11 @@ public class RegexRulesWindow : Window
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Focusable = false,
             };
-            ToolTip.SetTip(button, Se.Language.Options.WordLists.Insert + ": " + helper.Description);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(button, Se.Language.Options.WordLists.Insert + ": " + helper.Description);
+            }
+
             AutomationProperties.SetName(button, helper.Description);
             button.Click += (_, _) => Insert(target, helper);
             panel.Children.Add(button);

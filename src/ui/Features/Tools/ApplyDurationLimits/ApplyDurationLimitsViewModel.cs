@@ -339,7 +339,7 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject, IClosingCl
         if (FixMinDurationMs && FixMaxDurationMs && MinDurationMsOrFrames >= MaxDurationMsOrFrames)
         {
             var msg = Se.Language.Tools.ApplyDurationLimits.MaxDurationShouldBeHigherThanMinDuration;
-            await MessageBox.Show(Window, Se.Language.General.Error, msg, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window, Se.Language.General.Error, msg, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

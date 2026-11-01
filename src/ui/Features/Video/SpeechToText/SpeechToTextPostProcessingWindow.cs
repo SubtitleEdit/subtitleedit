@@ -71,7 +71,7 @@ public class SpeechToTextPostProcessingWindow : Window
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
 
-        var buttonBar = EditorChrome.MakeFlushButtonBar(null, UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OKCommand)));
+        var buttonBar = EditorChrome.MakeButtonBar(null, UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OKCommand)));
 
         var outerGrid = new Grid
         {

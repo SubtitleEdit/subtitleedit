@@ -29,11 +29,14 @@ public class VoiceCloneConsentWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        Content = BuildContent(vm);
+        var checkBoxAccept = BuildAcceptRow(vm);
+        Content = BuildContent(vm, checkBoxAccept);
+
+        UiUtil.FocusOnFirstActivation(this, checkBoxAccept);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Grid BuildContent(VoiceCloneConsentViewModel vm)
+    private static Grid BuildContent(VoiceCloneConsentViewModel vm, CheckBox checkBoxAccept)
     {
         var stack = new StackPanel
         {
@@ -44,7 +47,7 @@ public class VoiceCloneConsentWindow : Window
                 TtsVoicesChrome.MakeTitle(Se.Language.Video.TextToSpeech.VoiceCloneConsentHeader, Se.Language.Video.TextToSpeech.VoiceCloneConsentIntro),
                 TtsVoicesChrome.MakeBulletCard(VoiceCloneConsentViewModel.ConsentPoints),
                 BuildLinks(vm),
-                BuildAcceptRow(vm),
+                checkBoxAccept,
             },
         };
 
@@ -111,6 +114,6 @@ public class VoiceCloneConsentWindow : Window
 
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return EditorChrome.MakeFlushButtonBar(null, cancel, accept);
+        return EditorChrome.MakeButtonBar(null, cancel, accept);
     }
 }

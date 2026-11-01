@@ -270,6 +270,12 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
 
+        /// <summary>Puts the keyboard focus in the time code field (the control itself is not focusable).</summary>
+        internal void FocusTextBox()
+        {
+            _textBox?.Focus();
+        }
+
         private void OnTextBoxGotFocus(object? sender, FocusChangedEventArgs e)
         {
             if (_textBox != null)

@@ -161,7 +161,7 @@ public class SpeechToTextEngineSettingsWindow : Window
             Children = { redownload, openFolder },
         };
 
-        return EditorChrome.MakeFlushButtonBar(leftPanel, close);
+        return EditorChrome.MakeButtonBar(leftPanel, close);
     }
 
     private static TextBlock MakeLabel(string text) => new()

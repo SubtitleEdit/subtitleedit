@@ -113,8 +113,6 @@ internal static partial class EditorChrome
     /// <summary>The class of the compact text fields (see <see cref="EditorWindowStyles.TextFields"/>).</summary>
     internal const string TextClass = "text";
 
-    private static readonly IBrush DownloadErrorBrush = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B));
-
     /// <summary>
     /// Window background, the editor styles, compact combo boxes and the given extra styles.
     /// </summary>
@@ -710,29 +708,10 @@ internal static partial class EditorChrome
     /// </summary>
     internal static Border MakeButtonBar(Control? left, params Control[] buttons)
     {
-        return MakeButtonBar(left, false, buttons);
-    }
-
-    /// <summary>
-    /// <see cref="MakeButtonBar(Control?, Control[])"/> with the buttons' own margins dropped (the
-    /// UiUtil buttons have 4px side margins), so only the bar spaces them.
-    /// </summary>
-    internal static Border MakeFlushButtonBar(Control? left, params Control[] buttons)
-    {
-        return MakeButtonBar(left, true, buttons);
-    }
-
-    private static Border MakeButtonBar(Control? left, bool flush, Control[] buttons)
-    {
         var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
         foreach (var button in buttons)
         {
-            if (flush)
-            {
-                button.Margin = new Thickness(0);
-            }
-
-            panel.Children.Add(button);
+            panel.Children.Add(WithoutMargin(button)); // the UiUtil buttons have 4px side margins, only the bar spaces them
         }
 
         var grid = new Grid
@@ -765,7 +744,7 @@ internal static partial class EditorChrome
         };
         foreach (var button in buttons)
         {
-            panel.Children.Add(button);
+            panel.Children.Add(WithoutMargin(button));
         }
 
         var bar = new DockPanel();
@@ -1498,7 +1477,7 @@ internal static partial class EditorChrome
     {
         var errorText = new TextBlock
         {
-            Foreground = DownloadErrorBrush,
+            Foreground = ErrorTextBrush,
             TextWrapping = TextWrapping.Wrap,
             FontSize = ScaledFont(12),
             MaxWidth = 460,

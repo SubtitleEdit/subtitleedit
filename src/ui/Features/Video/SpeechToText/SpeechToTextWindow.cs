@@ -802,7 +802,7 @@ public class SpeechToTextWindow : Window
 
         var transcribeButton = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.Video.AudioToText.Transcribe, vm.TranscribeCommand))
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        var bar = EditorChrome.MakeFlushButtonBar(modes, UiUtil.MakeButtonCancel(vm.CancelCommand), transcribeButton);
+        var bar = EditorChrome.MakeButtonBar(modes, UiUtil.MakeButtonCancel(vm.CancelCommand), transcribeButton);
         bar.Name = ButtonBarName;
         return bar;
     }

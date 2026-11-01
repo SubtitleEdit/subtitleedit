@@ -94,7 +94,7 @@ public static class SelectLinesWindowBuilder
             }
             else
             {
-                buttonOk.Focus();
+                rowsView.Focus();
             }
         });
         window.KeyDown += vm.KeyDown;

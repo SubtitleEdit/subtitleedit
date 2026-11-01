@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -86,5 +87,23 @@ public partial class TranscriptionProgressViewModel : ObservableObject
     private void Close()
     {
         Window?.Close();
+    }
+
+    internal void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key != Key.Escape)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        if (IsCompleted)
+        {
+            Close();
+        }
+        else
+        {
+            Cancel();
+        }
     }
 }

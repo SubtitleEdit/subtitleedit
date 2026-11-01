@@ -555,7 +555,7 @@ public partial class AiReviewViewModel : ObservableObject
             {
                 await MessageBox.Show(Window, Se.Language.General.Error,
                     string.Format(l.EngineError, $"{failedChunks} chunk(s) could not be reviewed"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         catch (OperationCanceledException)

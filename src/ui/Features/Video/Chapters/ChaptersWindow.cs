@@ -216,8 +216,8 @@ public class ChaptersWindow : Window
         };
 
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         var grid = new Grid
         {

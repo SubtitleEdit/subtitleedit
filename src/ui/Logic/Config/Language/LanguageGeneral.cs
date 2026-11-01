@@ -1202,7 +1202,7 @@ public class LanguageGeneral
         GoToLineNumber = "Go to line number";
         GoToNextShotChange = "Go to next shot change";
         GoToPreviousShotChange = "Go to previous shot change";
-        GoogleIt = "Google it ";
+        GoogleIt = "Google it";
         Group = "Group";
         Header = "Header";
         Height = "Height";
@@ -1357,7 +1357,7 @@ public class LanguageGeneral
         Percent = "Percent";
         PickLayer = "Set layer";
         PickOllamaModel = "Pick Ollama model";
-        PickModel = "Pick model";
+        PickModel = "Select model";
         LlamaCppUseRemoteServer = "Use external server (URL)";
         LlamaCppEngineSettings = "llama.cpp engine settings";
         LlamaCppEngineSettingsSubtitle = "Local llama.cpp server build";

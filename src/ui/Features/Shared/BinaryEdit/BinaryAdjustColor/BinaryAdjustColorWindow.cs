@@ -22,6 +22,8 @@ public class BinaryAdjustColorWindow : Window
         Title = Se.Language.Tools.ImageBasedEdit.AdjustColor;
         Width = 700;
         Height = 400;
+        MinWidth = 600;
+        MinHeight = 400;
         CanResize = true;
         BinaryEditChrome.Apply(this);
         vm.Window = this;

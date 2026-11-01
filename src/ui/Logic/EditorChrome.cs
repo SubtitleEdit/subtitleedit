@@ -108,6 +108,18 @@ internal static partial class EditorChrome
     private static readonly ThemedBrush MenuBorderColor = new(p => p.MenuBorder);
     private static readonly ThemedBrush BadgeTextColor = new(p => p.BadgeText);
     private static readonly ThemedBrush OnAccentColor = new(p => p.OnAccent);
+    private static readonly ThemedBrush ErrorTextColor = new(p => p.IsDark ? Color.FromRgb(0xFF, 0x8A, 0x80) : Color.FromRgb(0xC8, 0x32, 0x3D));
+    private static readonly ThemedBrush WarningTextColor = new(p => p.IsDark ? Color.FromRgb(0xE8, 0xA0, 0x20) : Color.FromRgb(0x9E, 0x55, 0x00));
+    private static readonly ThemedBrush SuccessTextColor = new(p => p.IsDark ? Color.FromRgb(0x6E, 0xCB, 0x87) : Color.FromRgb(0x1F, 0x8A, 0x52));
+
+    /// <summary>Error text, readable on both the dark and the light panels.</summary>
+    internal static IBrush ErrorTextBrush => ErrorTextColor.Brush;
+
+    /// <summary>Warning text, readable on both the dark and the light panels.</summary>
+    internal static IBrush WarningTextBrush => WarningTextColor.Brush;
+
+    /// <summary>Success text, readable on both the dark and the light panels.</summary>
+    internal static IBrush SuccessTextBrush => SuccessTextColor.Brush;
 
     /// <summary>
     /// A brush outside the palette that also follows the app theme (e.g. a status color with a

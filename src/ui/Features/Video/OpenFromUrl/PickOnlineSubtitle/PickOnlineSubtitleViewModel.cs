@@ -180,7 +180,7 @@ public partial class PickOnlineSubtitleViewModel : ObservableObject
         catch (Exception ex)
         {
             Se.LogError(ex, $"Failed to save downloaded subtitle to {fileName}");
-            await MessageBox.Show(Window, Se.Language.General.Error, ex.Message);
+            await MessageBox.Show(Window, Se.Language.General.Error, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
