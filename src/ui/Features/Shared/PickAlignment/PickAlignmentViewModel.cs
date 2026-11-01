@@ -3,6 +3,8 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickAlignment;
 
@@ -12,10 +14,12 @@ public partial class PickAlignmentViewModel : ObservableObject
 
     public bool OkPressed { get; private set; }
     public string Alignment { get; set; }
+    public string CurrentAlignment { get; private set; }
 
     public PickAlignmentViewModel()
     {
         Alignment = string.Empty;
+        CurrentAlignment = string.Empty;
     }
 
     [RelayCommand]
@@ -46,8 +50,20 @@ public partial class PickAlignmentViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Marks the alignment of the selected line. Without a tag a line is at the bottom center, and
+    /// without a line (a whole file in Binary Edit) nothing is marked.
+    /// </summary>
     internal void Initialize(SubtitleLineViewModel? selectedSubtitle, int count)
     {
-        
+        if (selectedSubtitle == null)
+        {
+            CurrentAlignment = string.Empty;
+            return;
+        }
+
+        CurrentAlignment = Enumerable.Range(1, 9)
+            .Select(number => $"an{number}")
+            .FirstOrDefault(alignment => AlignmentTagHelper.HasAlignment(selectedSubtitle.Text, alignment)) ?? "an2";
     }
 }
