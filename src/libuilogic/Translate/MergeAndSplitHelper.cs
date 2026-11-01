@@ -116,15 +116,21 @@ public static partial class MergeAndSplitHelper
 
     /// <summary>
     /// True when the "do not translate lines in music symbols" setting is on and the text is a
-    /// music line: once tags are removed, it both starts and ends with ♪ or ♫. Such a row is
-    /// copied as-is instead of being sent to the translator, so lyrics stay in the original
-    /// language and do not use up the engine's quota (#9969).
+    /// music line, see <see cref="IsMusicLine"/>. Such a row is copied as-is instead of being sent
+    /// to the translator, so lyrics stay in the original language and do not use up the engine's
+    /// quota (#9969).
     /// </summary>
     public static bool IsKeptUntranslated(string? text)
     {
         return Configuration.Settings.Tools.AutoTranslateKeepMusicLines && IsMusicLine(text);
     }
 
+    /// <summary>
+    /// True when, once tags are removed, the text both starts and ends with a music symbol, or
+    /// every line starts or ends with one. The latter covers lyrics marked per line ("♪ One\n♪ Two")
+    /// and rows that open or close a verse ("♪ Still singing"), also after a dialog dash. A line
+    /// without any symbol is speech, so the row still goes to the translator (#16546).
+    /// </summary>
     public static bool IsMusicLine(string? text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -133,10 +139,66 @@ public static partial class MergeAndSplitHelper
         }
 
         var s = HtmlUtil.RemoveHtmlTags(text, true).Trim();
-        return s.Length > 0 && IsMusicSymbol(s[0]) && IsMusicSymbol(s[^1]);
+        if (s.Length == 0)
+        {
+            return false;
+        }
+
+        if (StartsWithMusicSymbol(s) && EndsWithMusicSymbol(s))
+        {
+            return true;
+        }
+
+        var hasMusicLine = false;
+        foreach (var rawLine in s.SplitToLines())
+        {
+            var line = rawLine.Trim().TrimStart(DialogDashes).TrimStart();
+            if (line.Length == 0)
+            {
+                continue;
+            }
+
+            if (!StartsWithMusicSymbol(line) && !EndsWithMusicSymbol(line))
+            {
+                return false;
+            }
+
+            hasMusicLine = true;
+        }
+
+        return hasMusicLine;
     }
 
-    private static bool IsMusicSymbol(char c) => c is '♪' or '♫';
+    // Strings, not chars: 🎵 and 🎶 are surrogate pairs.
+    private static readonly string[] MusicSymbols = ["♩", "♪", "♫", "♬", "🎵", "🎶"];
+
+    private static readonly char[] DialogDashes = ['-', '‐', '–', '—'];
+
+    private static bool StartsWithMusicSymbol(string s)
+    {
+        foreach (var symbol in MusicSymbols)
+        {
+            if (s.StartsWith(symbol, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool EndsWithMusicSymbol(string s)
+    {
+        foreach (var symbol in MusicSymbols)
+        {
+            if (s.EndsWith(symbol, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /// <summary>
     /// Honours the user's "delay in seconds between requests" setting by waiting until that delay
