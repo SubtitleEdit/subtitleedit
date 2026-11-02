@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             }
 
             if (_pendingRestorePositionSeconds is { } pending &&
-                Math.Abs(_videoPlayerInstance.Position - pending) < PositionRestoreArrivedToleranceSeconds)
+                HasPlayerArrivedAtUiPosition(pending))
             {
                 EndPositionRestore();
             }
@@ -535,6 +535,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private double UiToPlayerSeconds(double seconds)
         {
             return IsSmpteTimingEnabled ? seconds * 1001.0 / 1000.0 : seconds;
+        }
+
+        private bool HasPlayerArrivedAtUiPosition(double seconds)
+        {
+            return Math.Abs(_videoPlayerInstance.Position - UiToPlayerSeconds(seconds)) < PositionRestoreArrivedToleranceSeconds;
         }
 
         public void SetPosition(double seconds)
@@ -1185,7 +1190,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Duration = 0;
             StartDurationProbe(videoFileName);
 
-            await _videoPlayerInstance.LoadFile(videoFileName, startPositionSeconds);
+            await _videoPlayerInstance.LoadFile(videoFileName, UiToPlayerSeconds(startPositionSeconds));
 
             // The control may have been torn down while LoadFile was awaiting (fullscreen
             // closed mid-open, a second layout rebuild). Starting the position timer then
@@ -1644,7 +1649,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     return;
                 }
 
-                if (Math.Abs(_videoPlayerInstance.Position - seconds) < PositionRestoreArrivedToleranceSeconds)
+                if (HasPlayerArrivedAtUiPosition(seconds))
                 {
                     EndPositionRestore();
                     return;
