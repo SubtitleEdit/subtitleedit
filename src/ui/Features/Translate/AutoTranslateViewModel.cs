@@ -3075,6 +3075,11 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     public void KeyDown(KeyEventArgs e)
     {
+        if (HandleFindReplaceKeys(e))
+        {
+            return;
+        }
+
         if (e.Key == Key.Escape)
         {
             Cancel();

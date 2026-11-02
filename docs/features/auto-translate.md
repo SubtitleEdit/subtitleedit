@@ -23,6 +23,10 @@ Right-click selected lines in the grid and choose **Auto-translate** to translat
 
 The shortcut **Auto-translate selected lines (no prompt, use last engine/languages)** (no default key; set it in [Shortcuts](shortcuts.md)) starts right away with the last used engine and languages; the dialog only shows progress and closes when done. Until a translation has been run once, it prompts as usual.
 
+### Find and replace in the translation
+
+**Find...** and **Replace...** (right-click a line in the grid, Ctrl+F / Ctrl+H, Cmd+F / Cmd+Option+F on macOS) open the same Find and Replace windows as the main window, so a recurring error in the translation can be fixed before you click **OK**. F3 and Shift+F3 repeat the last search. Only the translation column is searched, and text can't be replaced while a translation is running.
+
 ## Supported Engines
 
 - **Google Translate V1 API** — Free Google Translate. When Google answers with its "unusual traffic" block page, Subtitle Edit retries the request through a fallback endpoint (`clients5.google.com`) before giving up; a block is on Google's side and is usually lifted again after minutes to a few hours
