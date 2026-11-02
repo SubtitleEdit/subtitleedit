@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Edit.Find;
 using Nikse.SubtitleEdit.Features.Edit.Replace;
 using Nikse.SubtitleEdit.Features.Main;
@@ -25,6 +26,9 @@ public partial class AutoTranslateViewModel : IFindResult
     private readonly IFindService _findService = new FindService();
     private FindViewModel? _findViewModel;
     private ReplaceViewModel? _replaceViewModel;
+
+    /// <summary>The row text and search options the last match was found with - see <see cref="TryGetCurrentMatch"/>.</summary>
+    private (string LineText, string SearchText, bool WholeWord, FindService.FindMode FindMode)? _lastMatch;
 
     /// <summary>
     /// Ctrl+F (find), Ctrl+H (replace - Cmd+Alt+F on macOS, where Cmd+H hides the app), F3 and
@@ -177,9 +181,19 @@ public partial class AutoTranslateViewModel : IFindResult
 
             window.KeyDown += async (_, e) =>
             {
-                if (!e.Handled && e.Key == Key.F3 && (e.KeyModifiers & KeyModifiers.Shift) == 0)
+                if (e.Handled || e.Key != Key.F3)
                 {
-                    e.Handled = true;
+                    return;
+                }
+
+                e.Handled = true;
+                if ((e.KeyModifiers & KeyModifiers.Shift) != 0)
+                {
+                    // The dialog has no Find previous button - repeat the last search backwards.
+                    await FindAgain(forward: false);
+                }
+                else
+                {
                     await vm.FindNextCommand.ExecuteAsync(null);
                 }
             };
@@ -229,9 +243,10 @@ public partial class AutoTranslateViewModel : IFindResult
     /// <summary>
     /// The last match, if the selected row still holds it. Without a text box there is no caret to
     /// continue from, so the find service's last match is the search position - selecting another
-    /// row or editing this one starts over, like moving the caret would.
+    /// row, editing this one or changing the search starts over, like moving the caret would.
     /// </summary>
-    private bool TryGetCurrentMatch(List<string> lines, int lineIndex, out int matchIndex, out string matchText)
+    private bool TryGetCurrentMatch(List<string> lines, int lineIndex, string searchText, bool wholeWord, FindService.FindMode findMode,
+        out int matchIndex, out string matchText)
     {
         matchIndex = _findService.CurrentTextIndex;
         matchText = _findService.CurrentTextFound ?? string.Empty;
@@ -239,7 +254,7 @@ public partial class AutoTranslateViewModel : IFindResult
                lineIndex < lines.Count &&
                matchIndex >= 0 &&
                matchText.Length > 0 &&
-               matchIndex + matchText.Length <= lines[lineIndex].Length;
+               _lastMatch == (lines[lineIndex], RegexUtils.EscapeNewLines(searchText), wholeWord, findMode);
     }
 
     private int FindFromCurrentMatch(bool forward, string searchText, List<string> lines, int lineIndex, bool hasMatch, int matchIndex, string matchText)
@@ -271,7 +286,7 @@ public partial class AutoTranslateViewModel : IFindResult
 
         var lines = GetFindLines();
         var currentLineIndex = GetCurrentLineIndex();
-        var hasMatch = TryGetCurrentMatch(lines, currentLineIndex, out var matchIndex, out var matchText);
+        var hasMatch = TryGetCurrentMatch(lines, currentLineIndex, result.SearchText, result.WholeWord, result.FindMode, out var matchIndex, out var matchText);
         _findService.Initialize(lines, currentLineIndex, result.WholeWord, result.FindMode);
 
         var idx = FindFromCurrentMatch(result.FindNextPressed, result.SearchText, lines, currentLineIndex, hasMatch, matchIndex, matchText);
@@ -314,7 +329,7 @@ public partial class AutoTranslateViewModel : IFindResult
         var currentLineIndex = GetCurrentLineIndex();
 
         // Initialize wipes the last match, which Replace needs to know what to replace.
-        var hasMatch = TryGetCurrentMatch(lines, currentLineIndex, out var matchIndex, out var matchText);
+        var hasMatch = TryGetCurrentMatch(lines, currentLineIndex, result.SearchText, result.WholeWord, result.FindMode, out var matchIndex, out var matchText);
         _findService.Initialize(lines, currentLineIndex, result.WholeWord, result.FindMode);
 
         var nextStartIndex = hasMatch ? matchIndex + matchText.Length : 0;
@@ -381,6 +396,9 @@ public partial class AutoTranslateViewModel : IFindResult
     {
         var lines = GetFindLines();
         _findService.Initialize(lines, startLine, result.WholeWord, result.FindMode);
+
+        // Only a find stores the search text, and F3 after closing the dialog repeats it.
+        _findService.SearchText = RegexUtils.EscapeNewLines(result.SearchText);
         var replaceCount = _findService.ReplaceAll(result.SearchText, result.ReplaceText, startLine, stopAtLine);
         SetTranslations(lines);
         return replaceCount;
@@ -422,7 +440,7 @@ public partial class AutoTranslateViewModel : IFindResult
 
         var lines = GetFindLines();
         var currentLineIndex = GetCurrentLineIndex();
-        var hasMatch = TryGetCurrentMatch(lines, currentLineIndex, out var matchIndex, out var matchText);
+        var hasMatch = TryGetCurrentMatch(lines, currentLineIndex, searchText, _findService.WholeWord, _findService.CurrentFindMode, out var matchIndex, out var matchText);
         var idx = FindFromCurrentMatch(forward, searchText, lines, currentLineIndex, hasMatch, matchIndex, matchText);
         if (idx < 0)
         {
@@ -466,6 +484,7 @@ public partial class AutoTranslateViewModel : IFindResult
         }
 
         var row = Rows[idx];
+        _lastMatch = (row.TranslatedText ?? string.Empty, _findService.SearchText, _findService.WholeWord, _findService.CurrentFindMode);
         SelectedTranslateRow = row;
         if (RowGrid != null)
         {

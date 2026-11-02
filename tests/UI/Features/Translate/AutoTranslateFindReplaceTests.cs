@@ -216,6 +216,52 @@ public class AutoTranslateFindReplaceTests
     }
 
     [AvaloniaFact]
+    public async Task FindNext_AfterTheRowWasEditedAroundTheMatch_StartsTheRowOver()
+    {
+        var (vm, window) = OpenWindow("dog cat");
+        var replacer = Replacer(vm, "cat", "lion");
+        await replacer.FindNextCommand.ExecuteAsync(null);
+
+        // The old match offset (4) still fits the edited text, but the text is not what was searched.
+        vm.OnTranslationEdited(vm.Rows[0], "cat cat");
+        await replacer.ReplaceCommand.ExecuteAsync(null);
+        Assert.Equal("cat cat", vm.Rows[0].TranslatedText);
+
+        await replacer.ReplaceCommand.ExecuteAsync(null);
+        Assert.Equal("lion cat", vm.Rows[0].TranslatedText);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task Replace_AfterWholeWordWasTurnedOn_DoesNotReplaceThePartialMatch()
+    {
+        var (vm, window) = OpenWindow("caterpillar");
+        var replacer = Replacer(vm, "cat", "dog");
+        await replacer.FindNextCommand.ExecuteAsync(null);
+
+        replacer.WholeWord = true;
+        await replacer.ReplaceCommand.ExecuteAsync(null);
+
+        Assert.Equal("caterpillar", vm.Rows[0].TranslatedText);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public async Task ReplaceAll_RemembersTheSearchForF3()
+    {
+        var (vm, window) = OpenWindow("dog", "cat");
+        var replacer = Replacer(vm, "cat", "cat!");
+
+        await replacer.ReplaceAllCommand.ExecuteAsync(null);
+        vm.SelectedTranslateRow = vm.Rows[0];
+        vm.KeyDown(new KeyEventArgs { Key = Key.F3, RoutedEvent = InputElement.KeyDownEvent });
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Same(vm.Rows[1], vm.SelectedTranslateRow);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void ShowFind_CommitsAnOpenCellEdit()
     {
         var (vm, window) = OpenWindow("Hello");
