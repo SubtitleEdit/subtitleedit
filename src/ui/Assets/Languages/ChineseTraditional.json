@@ -2861,7 +2861,7 @@
       "xRequiresCrispAsrSelectVersion": "「{0}」需要下載 CrispASR 引擎。\n\n請選取擇要下載的版本：",
       "xRequiresForcedAlignerUseY": "「{0}」需要強制對齊器來建立時間軸。\n要下載並使用 {1} 嗎？",
       "updatedModelXAvailable": "已有更新的 {0} 可供使用（已對 Crisp ASR v0.8.36 重新轉換）。\n要下載並使用它嗎？",
-      "xSelectedNotInstalledUseY": "已選取「{0」但未安裝。\n要下載並使用 {1} 嗎？",
+      "xSelectedNotInstalledUseY": "已選取「{0}」但未安裝。\n要下載並使用 {1} 嗎？",
       "englishModelContinue": "英文模型僅能與英文搭配使用。\n仍要繼續嗎？",
       "noAudioTrackFound": "沒找到音軌",
       "noAudioTrackFoundInX": "在 {0} 內沒找到音軌"
