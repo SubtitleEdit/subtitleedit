@@ -409,6 +409,9 @@ public class AutoTranslateWindow : Window
             {
                 menuItemTranslateRow,
                 menuItemTranslateRows,
+                new Separator(),
+                new MenuItem { Header = Se.Language.Main.Menu.Find, Command = vm.ShowFindCommand },
+                new MenuItem { Header = Se.Language.Main.Menu.Replace, Command = vm.ShowReplaceCommand },
             }
         };
 
