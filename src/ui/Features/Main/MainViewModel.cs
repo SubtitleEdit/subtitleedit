@@ -12243,15 +12243,6 @@ public partial class MainViewModel :
         }
 
         RestoreFrameNumbers(frameNumbers);
-
-        var vp = GetVideoPlayerControl();
-        if (vp != null)
-        {
-            vp.IsSmpteTimingEnabled = IsSmpteTimingEnabled;
-        }
-
-        _mpvReloader.SmpteMode = IsSmpteTimingEnabled;
-        _vlcReloader.SmpteMode = IsSmpteTimingEnabled;
     }
 
     /// <summary>
@@ -12303,6 +12294,17 @@ public partial class MainViewModel :
     {
         Se.Settings.General.CurrentVideoIsSmpte = value;
         Configuration.Settings.General.CurrentVideoIsSmpte = value;
+
+        var vp = GetVideoPlayerControl();
+        if (vp != null)
+        {
+            vp.IsSmpteTimingEnabled = value;
+        }
+
+        _mpvReloader.SmpteMode = value;
+        _vlcReloader.SmpteMode = value;
+
+        RefreshSubtitlePreview();
     }
 
     [RelayCommand]
@@ -20816,6 +20818,7 @@ public partial class MainViewModel :
         _fullScreenVideoPlayerControl.PlaybackSpeeds = Speeds;
         _fullScreenVideoPlayerControl.PlaybackSpeedText = SelectedSpeed;
         _fullScreenVideoPlayerControl.PlaybackSpeedIsVisible = true;
+        _fullScreenVideoPlayerControl.IsSmpteTimingEnabled = IsSmpteTimingEnabled;
         // The fullscreen player is created bare (not via MakeLayoutVideoPlayer), so wire the
         // pause/stop cursor-freeze here as well (issue #12233).
         _fullScreenVideoPlayerControl.PlayPauseRequested += willPause =>
