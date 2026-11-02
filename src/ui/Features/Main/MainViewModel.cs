@@ -34789,6 +34789,7 @@ public partial class MainViewModel :
             // On macOS, Cmd (Meta) is the multi-select modifier; Ctrl triggers the context menu instead
             var isMultiSelectModifier = _subtitleGridIsControlPressed
                 || (OperatingSystem.IsMacOS() && e.KeyModifiers.HasFlag(KeyModifiers.Meta));
+            var isMacContextClick = OperatingSystem.IsMacOS() && _subtitleGridIsLeftClick && _subtitleGridIsControlPressed;
 
             var hitTest = SubtitleGrid.InputHitTest(e.GetPosition(SubtitleGrid)) as Visual;
             if (TableViewExtras.IsInColumnHeader(hitTest))
@@ -34837,7 +34838,7 @@ public partial class MainViewModel :
                     return;
                 }
             }
-            else if (!isMultiSelectModifier || rowIndex < 0)
+            else if (!isMultiSelectModifier || rowIndex < 0 || isMacContextClick)
             {
                 _shiftSelectAnchorIndex = -1;
                 _shiftSelectCurrentIndex = -1;
