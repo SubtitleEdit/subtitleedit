@@ -1190,7 +1190,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Duration = 0;
             StartDurationProbe(videoFileName);
 
-            await _videoPlayerInstance.LoadFile(videoFileName, startPositionSeconds);
+            await _videoPlayerInstance.LoadFile(videoFileName, UiToPlayerSeconds(startPositionSeconds));
 
             // The control may have been torn down while LoadFile was awaiting (fullscreen
             // closed mid-open, a second layout rebuild). Starting the position timer then

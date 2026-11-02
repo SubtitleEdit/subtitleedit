@@ -20865,6 +20865,9 @@ public partial class MainViewModel :
 
         var fullScreenWindow = new FullScreenVideoWindow(_fullScreenVideoPlayerControl, _videoFileName, _subtitleFileName ?? string.Empty, position, volume, () =>
         {
+            // SMPTE timing may have changed while fullscreen, which only reached the fullscreen
+            // player - set it first, as the seek below expands the position by this flag.
+            control!.IsSmpteTimingEnabled = IsSmpteTimingEnabled;
             control!.Position = _fullScreenVideoPlayerControl.PositionForRestore;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
