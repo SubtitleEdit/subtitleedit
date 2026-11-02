@@ -229,6 +229,40 @@ public class BurnedInMaskBuilderTests
     }
 
     [Fact]
+    public void SoftShadowFadingIntoBrightBackgroundIsCovered()
+    {
+        // Bright background (230) and a soft shadow below the outline that fades 165 -> 195:
+        // all above 65% of the background, but still clearly darker than the picture around it.
+        // Left on the rim of the hole, the models fill it as a grey shadow.
+        byte[] F(int i)
+        {
+            var luma = Frame(230);
+            DrawText(luma, 30, 55, 60, 8);
+            return luma;
+        }
+
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L) }, 235, true, 2);
+        for (var i = 0; i < 30; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(F(i), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        var luma = F(5);
+        FillRect(luma, 28, 65, 64, 2, 165);
+        FillRect(luma, 28, 67, 64, 2, 180);
+        FillRect(luma, 28, 69, 64, 2, 195);
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(5, ToRgb(luma), mask));
+        Assert.Equal(255, mask[66 * W + 60]);
+        Assert.Equal(255, mask[70 * W + 60]); // the faintest part of the shadow
+        Assert.Equal(0, mask[78 * W + 60]); // background below the shadow + margin
+        Assert.Equal(0, mask[59 * W + 5]); // background beside the text
+    }
+
+    [Fact]
     public void MaskFollowsTheTextBeyondInexactOcrTiming()
     {
         // OCR says frames 0..29, the text is still on screen at frame 45: with a 30-frame apply

@@ -254,107 +254,244 @@ public sealed class BurnedInMaskBuilder
         return any;
     }
 
-    // Per frame, the mask also takes the text's dark outline / drop shadow in *this* frame:
-    // it grows through dark pixels (see below), a few px (by video height), then
-    // one more px. The per-line growth uses the line's average brightness, which misses the
-    // outline when the line spans a scene cut; any outline left on the rim of the hole makes
-    // the models fill it dark (a black bar on a bright background).
+    // Per frame, the mask also takes the text's dark outline / drop shadow in *this* frame. The
+    // per-line growth uses the line's average brightness, which misses the outline when the line
+    // spans a scene cut, and any outline left on the rim of the hole makes the models fill it
+    // dark (a black bar or a grey shadow on a bright background).
+    // "Dark" is relative to the local background, estimated around the text with the text and
+    // its immediate surroundings left out: a semi-transparent shadow on a bright picture is far
+    // above any absolute threshold but still clearly darker than the picture next to it. The
+    // mask grows through such pixels until they run out (up to 3x the outline size), through
+    // absolutely dark pixels for the outline size; the outline found gets the extra width left
+    // and right, then everything a few px all round.
+    private const int RelativeDarkDelta = 28;
+    private static readonly int[] BackgroundRadii = { 8, 16, 32, 64 };
+
     private void GrowIntoDarkPixels(ReadOnlySpan<byte> rgb, Span<byte> mask, int x0, int y0, int x1, int y1)
     {
         var steps = _outlineSteps;
-        x0 = Math.Max(0, x0 - steps - 1);
-        y0 = Math.Max(0, y0 - steps - 1);
-        x1 = Math.Min(_videoWidth, x1 + steps + 1);
-        y1 = Math.Min(_videoHeight, y1 + steps + 1);
-        var w = x1 - x0;
-        var h = y1 - y0;
+        var maxSteps = steps * 3;
+        var finalGrow = Math.Max(2, _grow / 2);
+        var margin = maxSteps + finalGrow + _extraWidth + 1;
+        var context = BackgroundRadii[^1];
+        // Work area: the growth margin plus room for the background estimate.
+        var wx0 = Math.Max(0, x0 - margin - context);
+        var wy0 = Math.Max(0, y0 - margin - context);
+        var wx1 = Math.Min(_videoWidth, x1 + margin + context);
+        var wy1 = Math.Min(_videoHeight, y1 + margin + context);
+        var w = wx1 - wx0;
+        var h = wy1 - wy0;
         if (w <= 0 || h <= 0)
         {
             return;
         }
 
-        // "Dark" relative to the background around the text: a semi-transparent shadow on a
-        // bright picture is far above an absolute threshold but still clearly darker than its
-        // surroundings.
-        var cur = new bool[w * h];
-        var luma = new int[w * h];
-        var background = new List<int>();
+        var n = w * h;
+        var original = new bool[n];
+        var luma = new int[n];
         for (var y = 0; y < h; y++)
         {
             for (var x = 0; x < w; x++)
             {
-                var i = (y0 + y) * _videoWidth + x0 + x;
-                cur[y * w + x] = mask[i] != 0;
+                var i = (wy0 + y) * _videoWidth + wx0 + x;
+                original[y * w + x] = mask[i] != 0;
                 var o = i * 3;
                 luma[y * w + x] = (rgb[o] * 299 + rgb[o + 1] * 587 + rgb[o + 2] * 114) / 1000;
-                if (!cur[y * w + x])
-                {
-                    background.Add(luma[y * w + x]);
-                }
             }
         }
 
-        var darkMaximum = DarkOutlineMaximum;
-        if (background.Count > 0)
-        {
-            background.Sort();
-            darkMaximum = Math.Clamp((int)(background[background.Count / 2] * 0.65), DarkOutlineMaximum, 160);
-        }
+        var background = EstimateBackground(luma, original, w, h, Math.Max(6, steps));
 
-        var dark = new bool[w * h];
-        for (var i = 0; i < dark.Length; i++)
+        // Breadth-first growth; dist = steps from the original mask (8-neighbour).
+        var dist = new int[n];
+        Array.Fill(dist, -1);
+        var queue = new Queue<int>();
+        for (var i = 0; i < n; i++)
         {
-            dark[i] = luma[i] <= darkMaximum;
-        }
-
-        for (var step = 0; step <= steps; step++)
-        {
-            var next = (bool[])cur.Clone();
-            var last = step == steps; // final step: plain 1 px dilation
-            for (var y = 0; y < h; y++)
+            if (original[i])
             {
-                for (var x = 0; x < w; x++)
+                dist[i] = 0;
+                queue.Enqueue(i);
+            }
+        }
+
+        while (queue.Count > 0)
+        {
+            var i = queue.Dequeue();
+            var next = dist[i] + 1;
+            if (next > maxSteps)
+            {
+                continue;
+            }
+
+            var cx = i % w;
+            var cy = i / w;
+            for (var dy = -1; dy <= 1; dy++)
+            {
+                var yy = cy + dy;
+                if (yy < 0 || yy >= h)
                 {
-                    var i = y * w + x;
-                    if (cur[i] || (!last && !dark[i]))
+                    continue;
+                }
+
+                for (var dx = -1; dx <= 1; dx++)
+                {
+                    var xx = cx + dx;
+                    if (xx < 0 || xx >= w)
                     {
                         continue;
                     }
 
-                    for (var dy = -1; dy <= 1 && !next[i]; dy++)
+                    var j = yy * w + xx;
+                    if (dist[j] >= 0)
                     {
-                        var yy = y + dy;
-                        if (yy < 0 || yy >= h)
-                        {
-                            continue;
-                        }
+                        continue;
+                    }
 
-                        for (var dx = -1; dx <= 1; dx++)
-                        {
-                            var xx = x + dx;
-                            if (xx >= 0 && xx < w && cur[yy * w + xx])
-                            {
-                                next[i] = true;
-                                break;
-                            }
-                        }
+                    var relativeDark = luma[j] < background[j] - RelativeDarkDelta;
+                    var absoluteDark = luma[j] <= DarkOutlineMaximum && next <= steps;
+                    if (relativeDark || absoluteDark)
+                    {
+                        dist[j] = next;
+                        queue.Enqueue(j);
                     }
                 }
             }
-
-            cur = next;
         }
 
+        var grown = new bool[n];
+        for (var i = 0; i < n; i++)
+        {
+            grown[i] = dist[i] >= 0;
+        }
+
+        // The line mask already has the extra width; outline found here gets it too.
+        if (_extraWidth > 0)
+        {
+            var added = new bool[n];
+            for (var i = 0; i < n; i++)
+            {
+                added[i] = grown[i] && !original[i];
+            }
+
+            var wide = DilateHorizontal(added, w, h, _extraWidth);
+            for (var i = 0; i < n; i++)
+            {
+                grown[i] |= wide[i];
+            }
+        }
+
+        var result = Dilate(grown, w, h, finalGrow);
         for (var y = 0; y < h; y++)
         {
             for (var x = 0; x < w; x++)
             {
-                if (cur[y * w + x])
+                if (result[y * w + x])
                 {
-                    mask[(y0 + y) * _videoWidth + x0 + x] = 255;
+                    mask[(wy0 + y) * _videoWidth + wx0 + x] = 255;
                 }
             }
         }
+    }
+
+    // Local background brightness per pixel: the mean of the pixels more than `exclude` px from
+    // the mask in the smallest box (radius 8..64) with enough of them; the overall median of
+    // those pixels where no box has.
+    private static int[] EstimateBackground(int[] luma, bool[] mask, int w, int h, int exclude)
+    {
+        var n = w * h;
+        var near = Dilate(mask, w, h, exclude);
+        var valid = new int[n];
+        var values = new int[n];
+        var all = new List<int>();
+        for (var i = 0; i < n; i++)
+        {
+            if (!near[i])
+            {
+                valid[i] = 1;
+                values[i] = luma[i];
+                all.Add(luma[i]);
+            }
+        }
+
+        var fallback = 128;
+        if (all.Count > 0)
+        {
+            all.Sort();
+            fallback = all[all.Count / 2];
+        }
+
+        var background = new int[n];
+        Array.Fill(background, -1);
+        var countIntegral = Integral(valid, w, h);
+        var sumIntegral = Integral(values, w, h);
+        foreach (var r in BackgroundRadii)
+        {
+            var minimum = r * r / 2;
+            var open = false;
+            for (var y = 0; y < h; y++)
+            {
+                var ya = Math.Max(0, y - r);
+                var yb = Math.Min(h, y + r + 1);
+                for (var x = 0; x < w; x++)
+                {
+                    var i = y * w + x;
+                    if (background[i] >= 0)
+                    {
+                        continue;
+                    }
+
+                    var xa = Math.Max(0, x - r);
+                    var xb = Math.Min(w, x + r + 1);
+                    var count = BoxSum(countIntegral, w, xa, ya, xb, yb);
+                    if (count >= minimum)
+                    {
+                        background[i] = (int)(BoxSum(sumIntegral, w, xa, ya, xb, yb) / count);
+                    }
+                    else
+                    {
+                        open = true;
+                    }
+                }
+            }
+
+            if (!open)
+            {
+                break;
+            }
+        }
+
+        for (var i = 0; i < n; i++)
+        {
+            if (background[i] < 0)
+            {
+                background[i] = fallback;
+            }
+        }
+
+        return background;
+    }
+
+    private static long[] Integral(int[] values, int w, int h)
+    {
+        var integral = new long[(w + 1) * (h + 1)];
+        for (var y = 0; y < h; y++)
+        {
+            long row = 0;
+            for (var x = 0; x < w; x++)
+            {
+                row += values[y * w + x];
+                integral[(y + 1) * (w + 1) + x + 1] = integral[y * (w + 1) + x + 1] + row;
+            }
+        }
+
+        return integral;
+    }
+
+    private static long BoxSum(long[] integral, int w, int x0, int y0, int x1, int y1)
+    {
+        var stride = w + 1;
+        return integral[y1 * stride + x1] - integral[y0 * stride + x1] - integral[y1 * stride + x0] + integral[y0 * stride + x0];
     }
 
     private bool IsTextPresent(LineMask line, ReadOnlySpan<byte> rgb)
@@ -523,7 +660,9 @@ public sealed class BurnedInMaskBuilder
 
     // Extra width left and right of the text (user setting): the first and last letters'
     // outline/shadow can reach further sideways than the normal margin covers.
-    private bool[] DilateHorizontal(bool[] source, int radius)
+    private bool[] DilateHorizontal(bool[] source, int radius) => DilateHorizontal(source, _rw, _rh, radius);
+
+    private static bool[] DilateHorizontal(bool[] source, int width, int height, int radius)
     {
         if (radius <= 0)
         {
@@ -531,12 +670,12 @@ public sealed class BurnedInMaskBuilder
         }
 
         var result = new bool[source.Length];
-        for (var y = 0; y < _rh; y++)
+        for (var y = 0; y < height; y++)
         {
             var last = int.MinValue / 2;
-            for (var x = 0; x < _rw + radius; x++)
+            for (var x = 0; x < width + radius; x++)
             {
-                if (x < _rw && source[y * _rw + x])
+                if (x < width && source[y * width + x])
                 {
                     last = x;
                 }
@@ -544,7 +683,7 @@ public sealed class BurnedInMaskBuilder
                 var ox = x - radius;
                 if (ox >= 0 && x - last <= 2 * radius)
                 {
-                    result[y * _rw + ox] = true;
+                    result[y * width + ox] = true;
                 }
             }
         }
@@ -553,7 +692,9 @@ public sealed class BurnedInMaskBuilder
     }
 
     // Square dilation (max filter) of a scan-area bitmap, separable.
-    private bool[] Dilate(bool[] source, int radius)
+    private bool[] Dilate(bool[] source, int radius) => Dilate(source, _rw, _rh, radius);
+
+    private static bool[] Dilate(bool[] source, int width, int height, int radius)
     {
         if (radius <= 0)
         {
@@ -561,12 +702,12 @@ public sealed class BurnedInMaskBuilder
         }
 
         var tmp = new bool[source.Length];
-        for (var y = 0; y < _rh; y++)
+        for (var y = 0; y < height; y++)
         {
             var last = int.MinValue / 2;
-            for (var x = 0; x < _rw + radius; x++)
+            for (var x = 0; x < width + radius; x++)
             {
-                if (x < _rw && source[y * _rw + x])
+                if (x < width && source[y * width + x])
                 {
                     last = x;
                 }
@@ -574,18 +715,18 @@ public sealed class BurnedInMaskBuilder
                 var ox = x - radius;
                 if (ox >= 0 && x - last <= 2 * radius)
                 {
-                    tmp[y * _rw + ox] = true;
+                    tmp[y * width + ox] = true;
                 }
             }
         }
 
         var result = new bool[source.Length];
-        for (var x = 0; x < _rw; x++)
+        for (var x = 0; x < width; x++)
         {
             var last = int.MinValue / 2;
-            for (var y = 0; y < _rh + radius; y++)
+            for (var y = 0; y < height + radius; y++)
             {
-                if (y < _rh && tmp[y * _rw + x])
+                if (y < height && tmp[y * width + x])
                 {
                     last = y;
                 }
@@ -593,7 +734,7 @@ public sealed class BurnedInMaskBuilder
                 var oy = y - radius;
                 if (oy >= 0 && y - last <= 2 * radius)
                 {
-                    result[oy * _rw + x] = true;
+                    result[oy * width + x] = true;
                 }
             }
         }
