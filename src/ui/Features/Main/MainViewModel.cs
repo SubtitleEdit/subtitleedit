@@ -9108,7 +9108,7 @@ public partial class MainViewModel :
             count++;
         }
 
-        await ClipboardHelper.SetTextAsync(Window!, sb.ToString());
+        await ClipboardHelper.SetTextAsync(Window!, sb.ToString().TrimEnd());
 
         ShowStatus(string.Format("{0} lines copied to clipboard", count));
     }
