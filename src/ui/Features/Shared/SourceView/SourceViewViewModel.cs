@@ -892,6 +892,11 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
                 _ = GoToLine();
                 break;
 
+            case Key.S when commandModifier:
+                e.Handled = true;
+                _ = Ok();
+                break;
+
             case Key.F3:
                 e.Handled = true;
                 if (string.IsNullOrEmpty(SearchText))
