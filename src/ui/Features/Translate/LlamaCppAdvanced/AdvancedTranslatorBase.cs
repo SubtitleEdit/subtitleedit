@@ -115,7 +115,10 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         // An echoed line in a batch is bisected down to that line; a single line that still comes
         // back unchanged after the warmer retry is accepted - it may legitimately read the same in
         // both languages, and throwing would abort the whole translation.
-        if (IsComplete(map, lines) && (count == 1 || FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode) < 0))
+        // Same for a reply where rows moved up by one and the last row repeats an earlier
+        // translation (#16555); a lone line has no neighbour to shift into.
+        if (IsComplete(map, lines) && (count == 1 || (FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode) < 0 &&
+                                                      FindDuplicatedTranslation(map, lines, history) < 0)))
         {
             // Runs on the background translation loop; the rows are DataGrid-bound, so the
             // writes must happen on the UI thread.
@@ -184,7 +187,17 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                     var echoedLine = FindUntranslatedEcho(map, lines, sourceLanguageCode, targetLanguageCode);
                     if (echoedLine < 0)
                     {
-                        return map;
+                        // The model merged two rows and padded the end with a copy of an earlier
+                        // translation, so every row in between holds its neighbour's text (#16555).
+                        // Retried here, then the caller bisects the batch.
+                        var duplicatedLine = FindDuplicatedTranslation(map, lines, history);
+                        if (duplicatedLine < 0 || lines.Count == 1)
+                        {
+                            return map;
+                        }
+
+                        Error = "line " + duplicatedLine + " repeats an earlier translation (lines shifted): " + map[duplicatedLine];
+                        continue;
                     }
 
                     // The model handed a line back in the source language (TranslateGemma 12B does
@@ -286,6 +299,31 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         }
 
         return -1;
+    }
+
+    /// <summary>
+    /// The number of the first line whose translation repeats an earlier one - in the batch or in
+    /// the history - for a different source text (see <see cref="TranslationShiftGuard"/>), or -1
+    /// when there is none.
+    /// </summary>
+    internal static int FindDuplicatedTranslation(Dictionary<int, string> map, List<LlamaCppAdvancedProtocol.BatchLine> lines, List<LlamaCppAdvancedProtocol.HistoryPair> history)
+    {
+        var sources = new List<string>(history.Count + lines.Count);
+        var translations = new List<string>(history.Count + lines.Count);
+        foreach (var pair in history)
+        {
+            sources.Add(pair.Source);
+            translations.Add(pair.Target);
+        }
+
+        foreach (var line in lines)
+        {
+            sources.Add(line.Text);
+            translations.Add(map.TryGetValue(line.Number, out var translation) ? translation : string.Empty);
+        }
+
+        var index = TranslationShiftGuard.FindDuplicatedTranslation(sources, translations, history.Count);
+        return index < 0 ? -1 : lines[index - history.Count].Number;
     }
 
     /// <summary>Every requested line number must be present, and non-empty for non-empty sources.</summary>
