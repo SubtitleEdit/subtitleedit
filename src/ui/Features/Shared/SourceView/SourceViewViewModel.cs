@@ -892,7 +892,7 @@ public partial class SourceViewViewModel : ObservableObject, IClosingCleanup
                 _ = GoToLine();
                 break;
 
-            case Key.S when commandModifier:
+            case Key.Enter when commandModifier:
                 e.Handled = true;
                 _ = Ok();
                 break;
