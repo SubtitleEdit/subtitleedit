@@ -373,7 +373,19 @@ public static partial class MergeAndSplitHelper
 
     private static bool IsSplitValid(List<string> splitResult, int expectedCount, List<string> sourceTexts, int index)
     {
-        return splitResult.Count == expectedCount && HasSameEmptyLines(splitResult, sourceTexts, index);
+        return splitResult.Count == expectedCount && HasSameEmptyLines(splitResult, sourceTexts, index) &&
+               !HasDuplicatedTranslation(splitResult, sourceTexts, index);
+    }
+
+    /// <summary>
+    /// True when a row got the same translation as an earlier row of a different source: the
+    /// engine merged two rows and padded the end with a copy, so every row in between holds its
+    /// neighbour's translation while the row count still matches (#16555).
+    /// </summary>
+    private static bool HasDuplicatedTranslation(List<string> translations, List<string> sourceTexts, int index)
+    {
+        var sources = sourceTexts.Skip(index).Take(translations.Count).ToList();
+        return TranslationShiftGuard.FindDuplicatedTranslation(sources, translations) >= 0;
     }
 
     private static bool HasMatchingPeriodCount(string source, string translation, HashSet<string> sourceAbbreviations, HashSet<string> targetAbbreviations)
@@ -565,12 +577,16 @@ public static partial class MergeAndSplitHelper
         // Build the candidate result in a scratch list first - the rows are live and
         // UI-bound, so nothing may be written to them until the split has validated.
         var pending = new List<string>();
+        var itemSources = new List<string>(mergeResult.MergeResultItems.Count);
+        var itemTranslations = new List<string>(mergeResult.MergeResultItems.Count);
         foreach (var mergeItem in mergeResult.MergeResultItems)
         {
             var numberOfParagraphs = mergeItem.EndIndex - mergeItem.StartIndex + 1;
             var numberOfLines = separatorsOmitted ? CountContentLines(mergeItem.Text) : mergeItem.Text.CountLines();
 
             var translatedText = BuildTranslatedText(translatedLines, ref translatedLinesIdx, numberOfLines);
+            itemSources.Add(mergeItem.Text);
+            itemTranslations.Add(translatedText);
 
             // The rows of a sentence were sent as lines: deal the reply's lines back out to them
             // instead of re-cutting the sentence by length, which moved words into the
@@ -585,8 +601,11 @@ public static partial class MergeAndSplitHelper
             }
         }
 
+        var pendingSources = rows.Skip(index).Take(pending.Count).Select(p => p.Text).ToList();
         if (pending.Count == mergeResult.ParagraphCount &&
-            HasSameEmptyLines(pending, rows.Skip(index).Take(pending.Count).Select(p => p.Text).ToList(), 0))
+            HasSameEmptyLines(pending, pendingSources, 0) &&
+            !HasDuplicatedTranslation(pending, pendingSources, 0) &&
+            !HasDuplicatedTranslation(itemTranslations, itemSources, 0))
         {
             applyRowUpdate(() =>
             {
