@@ -9100,17 +9100,10 @@ public partial class MainViewModel :
 
     private async Task CopyLinesToClipboard(IEnumerable<string> lines)
     {
-        var sb = new StringBuilder();
-        var count = 0;
-        foreach (var line in lines)
-        {
-            sb.AppendLine(line);
-            count++;
-        }
+        var list = lines.ToList();
+        await ClipboardHelper.SetTextAsync(Window!, string.Join(Environment.NewLine, list));
 
-        await ClipboardHelper.SetTextAsync(Window!, sb.ToString());
-
-        ShowStatus(string.Format("{0} lines copied to clipboard", count));
+        ShowStatus(string.Format("{0} lines copied to clipboard", list.Count));
     }
 
     /// <summary>
