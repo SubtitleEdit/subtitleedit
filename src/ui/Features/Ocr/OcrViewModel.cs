@@ -6011,12 +6011,6 @@ public partial class OcrViewModel : ObservableObject
             var props = e.GetCurrentPoint(control).Properties;
             _subtitleGridIsLeftClick = props.IsLeftButtonPressed;
             _subtitleGridIsControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
-
-            // Block the DataGrid's default Ctrl+Click deselect behavior on Mac
-            if (_subtitleGridIsLeftClick && _subtitleGridIsControlPressed)
-            {
-                e.Handled = true;
-            }
         }
     }
 
