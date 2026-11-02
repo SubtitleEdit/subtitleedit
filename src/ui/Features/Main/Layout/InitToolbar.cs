@@ -585,6 +585,7 @@ public static class InitToolbar
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 }, true)
         };
+        WindowService.SuspendUndockedTopmostWhileOpen(comboBoxSubtitleFormat);
         comboBoxSubtitleFormat.SelectionChanged += vm.ComboBoxSubtitleFormatChanged;
         comboBoxSubtitleFormat.KeyDown += vm.ComboBoxSubtitleFormatKeyDown;
         // Tunnel phase so we see the event before ComboBox consumes a left-click to open
@@ -615,6 +616,7 @@ public static class InitToolbar
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedEncoding)),
                 DataContext = vm,
             };
+            WindowService.SuspendUndockedTopmostWhileOpen(comboBoxEncoding);
             stackPanelRight.Children.Add(comboBoxEncoding);
             toolbarPanel.AddCollapsible(comboBoxEncoding, rankEncoding);
         }
@@ -640,6 +642,7 @@ public static class InitToolbar
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedFrameRate)),
                 DataContext = vm,
             };
+            WindowService.SuspendUndockedTopmostWhileOpen(comboBoxFrameRate);
             stackPanelRight.Children.Add(comboBoxFrameRate);
             toolbarPanel.AddCollapsible(comboBoxFrameRate, rankFrameRate);
             comboBoxFrameRate.SelectionChanged += vm.ComboBoxFrameRateSelectionChanged;
