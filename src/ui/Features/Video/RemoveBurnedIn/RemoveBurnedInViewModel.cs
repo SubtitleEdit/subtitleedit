@@ -44,6 +44,10 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         public override string ToString() => $"{DisplayName} ({Model.Size})";
     }
 
+    [ObservableProperty] private ObservableCollection<string> _methods = new();
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsInpaint))]
+    private int _methodIndex;
     [ObservableProperty] private ObservableCollection<ModelDisplay> _models = new();
     [ObservableProperty] private ModelDisplay? _selectedModel;
     [ObservableProperty] private string _outputFileName = string.Empty;
@@ -100,6 +104,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     private DateTime _previewDirtySince;
     private bool _waveformDirty = true;
 
+    /// <summary>AI inpainting (method 0); method 1 covers each line with a black box.</summary>
+    public bool IsInpaint => MethodIndex == 0;
+
     public RemoveBurnedInViewModel(IWindowService windowService, IFileHelper fileHelper, IFolderHelper folderHelper)
     {
         _windowService = windowService;
@@ -124,6 +131,8 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         _ocrFramesPerSecond = ocrFramesPerSecond;
 
         var settings = Se.Settings.Video.VideoOcr;
+        Methods = new ObservableCollection<string> { Se.Language.Video.RemoveBurnedIn.MethodRemove, Se.Language.Video.RemoveBurnedIn.MethodBlackBox };
+        MethodIndex = settings.RemoveBurnedInBlackBox ? 1 : 0;
         var backend = CrispEmbedEngine.GetInpaintBackend();
         Models = new ObservableCollection<ModelDisplay>(backend.Models.Select(m => new ModelDisplay
         {
@@ -336,6 +345,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     partial void OnRequireOutlineChanged(bool value) => InvalidatePreview();
     partial void OnGrowChanged(int value) => InvalidatePreview();
     partial void OnExtraWidthChanged(int value) => InvalidatePreview();
+    partial void OnMethodIndexChanged(int value) => InvalidatePreview();
 
     partial void OnSelectedModelChanged(ModelDisplay? value)
     {
@@ -459,6 +469,30 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             }
 
             var pixels = mask.Count(v => v != 0);
+            if (showResult && pixels > 0 && !IsInpaint)
+            {
+                foreach (var item in candidates)
+                {
+                    if (!_masks.TryGetValue(item.Line.Id, out var m))
+                    {
+                        continue;
+                    }
+
+                    var relative = (long)Math.Round((seconds - m.StartSeconds) * options.FrameRate);
+                    foreach (var box in m.Builder.GetLineBoxes())
+                    {
+                        if (relative >= box.StartFrame && relative <= box.EndFrame)
+                        {
+                            BurnedInPreviewRenderer.FillBlack(rgb, _videoWidth, box.X, box.Y, box.Width, box.Height);
+                        }
+                    }
+                }
+
+                SetPreview(BurnedInPreviewRenderer.Compose(rgb, null, options, false));
+                PreviewStatus = Se.Language.Video.RemoveBurnedIn.MethodBlackBox;
+                return;
+            }
+
             if (showResult && pixels > 0)
             {
                 if (!await EnsureEngineReady())
@@ -530,6 +564,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         Grow = Grow,
         ExtraWidth = ExtraWidth,
         Temporal = Temporal,
+        BlackBox = !IsInpaint,
         Crf = Crf,
         CrispEmbedExecutable = CrispEmbedEngine.GetCliExecutable(),
         ModelFileName = GetModelFileName(),
@@ -587,7 +622,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             return;
         }
 
-        if (!await EnsureEngineReady())
+        if (IsInpaint && !await EnsureEngineReady())
         {
             return;
         }
@@ -603,7 +638,8 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             ProgressValue = p.Percent;
             ProgressText = p.Pass == 1
                 ? string.Format(Se.Language.Video.RemoveBurnedIn.BuildingMasksX, $"{p.Percent / 15.0:0%}")
-                : string.Format(Se.Language.Video.RemoveBurnedIn.RemovingXYZ, p.Frame, p.TotalFrames, p.FramesPerSecond);
+                : string.Format(options.BlackBox ? Se.Language.Video.RemoveBurnedIn.CoveringXYZ : Se.Language.Video.RemoveBurnedIn.RemovingXYZ,
+                    p.Frame, p.TotalFrames, p.FramesPerSecond);
         });
 
         IsDone = false;
@@ -712,6 +748,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         settings.RemoveBurnedInTemporal = Temporal;
         settings.RemoveBurnedInExtraWidth = ExtraWidth;
         settings.RemoveBurnedInCrf = Crf;
+        settings.RemoveBurnedInBlackBox = !IsInpaint;
         settings.RemoveBurnedInModel = SelectedModel?.Model.Name ?? CrispEmbedEngine.InpaintModelLama;
         Se.SaveSettings();
     }

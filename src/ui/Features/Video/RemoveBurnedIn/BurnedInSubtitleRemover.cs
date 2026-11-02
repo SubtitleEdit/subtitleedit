@@ -37,6 +37,9 @@ public sealed class BurnedInRemovalOptions
     /// <summary>Extra mask width in px on the left and right of each line.</summary>
     public int ExtraWidth { get; init; } = 5;
     public bool Temporal { get; init; } = true;
+
+    /// <summary>Cover each line with a black box (ASSA drawing) instead of inpainting it.</summary>
+    public bool BlackBox { get; init; }
     public int Crf { get; init; } = 18;
     public string CrispEmbedExecutable { get; init; } = string.Empty;
     public string ModelFileName { get; init; } = string.Empty;
@@ -51,6 +54,8 @@ public sealed class BurnedInRemovalOptions
 /// (frame + mask in, inpainted frame out, with temporal consistency) into an ffmpeg encoder
 /// that copies the audio from the source. No frames touch the disk.</item>
 /// </list>
+/// With <see cref="BurnedInRemovalOptions.BlackBox"/>, pass 2 instead burns in an ASSA file with
+/// one black drawing per line (<see cref="MakeBoxesAssa"/>) - one ffmpeg run, no CrispEmbed.
 /// </summary>
 public sealed class BurnedInSubtitleRemover
 {
@@ -111,8 +116,96 @@ public sealed class BurnedInSubtitleRemover
         AppendLog($"Masks: {builder.LinesWithText} of {o.Lines.Count} lines have text in the scan area");
         cancellationToken.ThrowIfCancellationRequested();
 
-        // Pass 2: decode -> mask -> crispembed -> encode.
-        return await InpaintAsync(o, builder, totalFrames, progress, cancellationToken);
+        // Pass 2: decode -> mask -> crispembed -> encode, or burn in black boxes.
+        return o.BlackBox
+            ? await CoverAsync(o, builder, totalFrames, progress, cancellationToken)
+            : await InpaintAsync(o, builder, totalFrames, progress, cancellationToken);
+    }
+
+    /// <summary>
+    /// ASSA with a black rectangle drawing (\p1) per box, shown for the box's frame span. Times
+    /// are rounded outwards to whole centiseconds so the box never shows a frame late.
+    /// </summary>
+    public static string MakeBoxesAssa(BurnedInRemovalOptions o, IEnumerable<(long StartFrame, long EndFrame, int X, int Y, int Width, int Height)> boxes)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("[Script Info]");
+        sb.AppendLine("ScriptType: v4.00+");
+        sb.AppendLine($"PlayResX: {o.VideoWidth}");
+        sb.AppendLine($"PlayResY: {o.VideoHeight}");
+        sb.AppendLine("ScaledBorderAndShadow: yes");
+        sb.AppendLine("WrapStyle: 2");
+        sb.AppendLine();
+        sb.AppendLine("[V4+ Styles]");
+        sb.AppendLine("Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding");
+        sb.AppendLine("Style: Box,Arial,20,&H00000000,&H00000000,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1");
+        sb.AppendLine();
+        sb.AppendLine("[Events]");
+        sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
+        foreach (var (startFrame, endFrame, x, y, w, h) in boxes)
+        {
+            var start = (long)Math.Floor(Math.Max(0, startFrame) / o.FrameRate * 100);
+            var end = (long)Math.Ceiling((endFrame + 1) / o.FrameRate * 100);
+            if (end <= start || w <= 0 || h <= 0)
+            {
+                continue;
+            }
+
+            sb.AppendLine(FormattableString.Invariant(
+                $"Dialogue: 0,{AssaTime(start)},{AssaTime(end)},Box,,0,0,0,,{{\\an7\\pos(0,0)\\bord0\\shad0\\p1}}m {x} {y} l {x + w} {y} {x + w} {y + h} {x} {y + h}{{\\p0}}"));
+        }
+
+        return sb.ToString();
+    }
+
+    private static string AssaTime(long centiseconds) =>
+        FormattableString.Invariant($"{centiseconds / 360000}:{centiseconds / 6000 % 60:00}:{centiseconds / 100 % 60:00}.{centiseconds % 100:00}");
+
+    private async Task<bool> CoverAsync(BurnedInRemovalOptions o, BurnedInMaskBuilder builder, long totalFrames,
+        IProgress<ProgressInfo> progress, CancellationToken cancellationToken)
+    {
+        // ffmpeg's ass filter parses its argument (':' and '\' in a Windows path); run it in the
+        // file's folder and pass the bare name, like the burn-in feature does.
+        var folder = Path.GetTempPath();
+        var assName = "se-burned-in-boxes-" + Guid.NewGuid().ToString("N") + ".ass";
+        var assFileName = Path.Combine(folder, assName);
+        await File.WriteAllTextAsync(assFileName, MakeBoxesAssa(o, builder.GetLineBoxes()), cancellationToken);
+        try
+        {
+            var args = $"-nostdin -v error -y -progress pipe:1 -nostats -i \"{o.VideoFileName}\" -map 0:v:0 -map 0:a? -c:a copy " +
+                       $"-vf \"ass={assName}\" -c:v libx264 -crf {o.Crf} -preset medium \"{o.OutputFileName}\"";
+            AppendLog("ffmpeg " + args);
+            using var encoder = StartProcess(FfmpegHelper.GetFfmpegLocation(), args, redirectInput: false, workingDirectory: folder);
+            var stopwatch = Stopwatch.StartNew();
+            using (cancellationToken.Register(() => Kill(encoder)))
+            {
+                string? line;
+                while ((line = await encoder.StandardOutput.ReadLineAsync(cancellationToken)) != null)
+                {
+                    if (line.StartsWith("frame=", StringComparison.Ordinal) && long.TryParse(line.AsSpan(6), out var frame))
+                    {
+                        var fps = frame / Math.Max(0.001, stopwatch.Elapsed.TotalSeconds);
+                        progress.Report(new ProgressInfo(15 + 85.0 * Math.Min(1.0, (double)frame / totalFrames), 2, frame, totalFrames, fps));
+                    }
+                }
+            }
+
+            await encoder.WaitForExitAsync(CancellationToken.None);
+            cancellationToken.ThrowIfCancellationRequested();
+            AppendLog($"Boxes burned in in {stopwatch.Elapsed.TotalSeconds:0.0} s, exit code {encoder.ExitCode}");
+            return encoder.ExitCode == 0 && File.Exists(o.OutputFileName);
+        }
+        finally
+        {
+            try
+            {
+                File.Delete(assFileName);
+            }
+            catch
+            {
+                // ignore
+            }
+        }
     }
 
     /// <summary>
@@ -345,7 +438,7 @@ public sealed class BurnedInSubtitleRemover
         return ok;
     }
 
-    private Process StartProcess(string fileName, string arguments, bool redirectInput)
+    private Process StartProcess(string fileName, string arguments, bool redirectInput, string? workingDirectory = null)
     {
         var process = new Process
         {
@@ -356,7 +449,8 @@ public sealed class BurnedInSubtitleRemover
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 RedirectStandardInput = redirectInput,
-                WorkingDirectory = Path.GetDirectoryName(fileName) is { Length: > 0 } dir && Directory.Exists(dir) ? dir : string.Empty,
+                WorkingDirectory = workingDirectory ??
+                                   (Path.GetDirectoryName(fileName) is { Length: > 0 } dir && Directory.Exists(dir) ? dir : string.Empty),
             },
         };
 

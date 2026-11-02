@@ -6,6 +6,11 @@ public class LanguageRemoveBurnedIn
     public string RemoveBurnedInDotDotDot { get; set; }
     public string Info { get; set; }
     public string TextMask { get; set; }
+    public string Method { get; set; }
+    public string MethodRemove { get; set; }
+    public string MethodBlackBox { get; set; }
+    public string MethodHint { get; set; }
+    public string CoveringXYZ { get; set; }
     public string Model { get; set; }
     public string ModelLama { get; set; }
     public string ModelMiGan { get; set; }
@@ -55,8 +60,13 @@ public class LanguageRemoveBurnedIn
     {
         Title = "Remove burned-in subtitles";
         RemoveBurnedInDotDotDot = "Remove burned-in subtitles...";
-        Info = "Paints over the burned-in subtitle text found by OCR with the MI-GAN inpainting model (CrispEmbed). Only the scan area is changed, and only while an OCR line is shown. The video is re-encoded; the audio is copied.";
+        Info = "Paints over the burned-in subtitle text found by OCR with an AI inpainting model (CrispEmbed), or covers it with a black box. Only the scan area is changed, and only while an OCR line is shown. The video is re-encoded; the audio is copied.";
         TextMask = "Text mask";
+        Method = "Method";
+        MethodRemove = "Remove - AI inpainting";
+        MethodBlackBox = "Cover with a black box";
+        MethodHint = "A black box over each line is fast and never shows leftovers, but hides the picture behind the text";
+        CoveringXYZ = "Covering subtitles... frame {0:#,##0} of {1:#,##0} ({2:0.0} fps)";
         Model = "Model";
         ModelLama = "LaMa - best quality, slower";
         ModelMiGan = "MI-GAN - fast";
@@ -85,7 +95,7 @@ public class LanguageRemoveBurnedIn
         Lines = "Lines";
         LinesIncludedXY = "{0} of {1} included";
         ShowResult = "Show result";
-        ShowResultHint = "Show the inpainted frame instead of the mask (R)";
+        ShowResultHint = "Show the result (inpainted or covered) instead of the mask (R)";
         PreviousLine = "Previous line";
         NextLine = "Next line";
         PreviousFrame = "Previous frame";

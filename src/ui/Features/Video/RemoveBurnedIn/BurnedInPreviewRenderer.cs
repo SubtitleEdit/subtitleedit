@@ -144,6 +144,21 @@ internal static class BurnedInPreviewRenderer
         data.SaveTo(stream);
     }
 
+    /// <summary>Paints a black rectangle into an RGB24 frame (the black-box method's result).</summary>
+    public static void FillBlack(byte[] rgb, int width, int x, int y, int w, int h)
+    {
+        var height = rgb.Length / 3 / width;
+        for (var yy = Math.Max(0, y); yy < Math.Min(height, y + h); yy++)
+        {
+            var from = (yy * width + Math.Max(0, x)) * 3;
+            var to = (yy * width + Math.Min(width, x + w)) * 3;
+            if (to > from)
+            {
+                Array.Clear(rgb, from, to - from);
+            }
+        }
+    }
+
     /// <summary>
     /// The full frame as an Avalonia bitmap: the mask (when given) tinted in the accent red with
     /// a crisp edge, and the scan area outlined.

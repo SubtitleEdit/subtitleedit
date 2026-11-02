@@ -213,6 +213,42 @@ public sealed class BurnedInMaskBuilder
     }
 
     /// <summary>
+    /// One box per line (in span order) for covering the subtitle instead of inpainting it: the
+    /// bounding box of the line's mask plus room for the outline the per-frame growth would add,
+    /// or the whole scan area when no text was found for the line.
+    /// </summary>
+    public IReadOnlyList<(long StartFrame, long EndFrame, int X, int Y, int Width, int Height)> GetLineBoxes()
+    {
+        var boxes = new List<(long, long, int, int, int, int)>();
+        foreach (var line in _lines)
+        {
+            if (line.MaskRuns.Length == 0)
+            {
+                boxes.Add((line.StartFrame, line.EndFrame, _rx, _ry, _rw, _rh));
+                continue;
+            }
+
+            int x0 = int.MaxValue, y0 = int.MaxValue, x1 = 0, y1 = 0;
+            for (var r = 0; r < line.MaskRuns.Length; r += 3)
+            {
+                x0 = Math.Min(x0, _rx + line.MaskRuns[r + 1]);
+                y0 = Math.Min(y0, _ry + line.MaskRuns[r]);
+                x1 = Math.Max(x1, _rx + line.MaskRuns[r + 1] + line.MaskRuns[r + 2]);
+                y1 = Math.Max(y1, _ry + line.MaskRuns[r] + 1);
+            }
+
+            var margin = _outlineSteps;
+            x0 = Math.Max(0, x0 - margin);
+            y0 = Math.Max(0, y0 - margin);
+            x1 = Math.Min(_videoWidth, x1 + margin);
+            y1 = Math.Min(_videoHeight, y1 + margin);
+            boxes.Add((line.StartFrame, line.EndFrame, x0, y0, x1 - x0, y1 - y0));
+        }
+
+        return boxes;
+    }
+
+    /// <summary>
     /// Writes the full-frame mask (videoWidth x videoHeight, 255 = fill) for a frame, given the
     /// frame's RGB24 pixels for the presence check. Returns false (mask untouched) when no line
     /// with visible text covers the frame. <paramref name="mask"/> must be cleared by the caller.

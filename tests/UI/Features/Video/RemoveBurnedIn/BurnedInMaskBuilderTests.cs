@@ -311,6 +311,39 @@ public class BurnedInMaskBuilderTests
     }
 
     [Fact]
+    public void LineBoxCoversTheMaskAndTheScanAreaWithoutText()
+    {
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L), (40L, 49L) }, 190, true, 2);
+        for (var i = 0; i < 50; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(i < 30 ? TextFrame(i) : Frame(), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        var boxes = builder.GetLineBoxes();
+        Assert.Equal(2, boxes.Count);
+        var (start, end, x, y, w, h) = boxes[0];
+        Assert.Equal((0L, 29L), (start, end));
+        Assert.True(x <= 28 && x + w >= 92, $"x {x} w {w}"); // text + outline is x 28..92
+        Assert.True(y <= 53 && y + h >= 65, $"y {y} h {h}"); // and y 53..65
+        Assert.True(w < W && y > 40, "box stays near the text");
+        Assert.Equal((40L, 49L, 0, 40, W, 40), boxes[1]); // no text found: the whole scan area
+    }
+
+    [Fact]
+    public void BoxesAssaHasOneBlackDrawingPerBox()
+    {
+        var o = new BurnedInRemovalOptions { VideoWidth = 1920, VideoHeight = 1080, FrameRate = 25 };
+        var assa = BurnedInSubtitleRemover.MakeBoxesAssa(o, new[] { (50L, 99L, 100, 900, 400, 80), (3600L * 25, 3600L * 25 + 1, 0, 0, 10, 10) });
+        Assert.Contains("PlayResX: 1920", assa);
+        Assert.Contains("PlayResY: 1080", assa);
+        Assert.Contains(@"Dialogue: 0,0:00:02.00,0:00:04.00,Box,,0,0,0,,{\an7\pos(0,0)\bord0\shad0\p1}m 100 900 l 500 900 500 980 100 980{\p0}", assa);
+        Assert.Contains("Dialogue: 0,1:00:00.00,1:00:00.08,Box", assa);
+    }
+
+    [Fact]
     public void RegionIsSnappedToEvenValues()
     {
         // 346 * 33.2% = 115 rows: ffmpeg crops 4:2:0 video to 114, so the builder must too.
