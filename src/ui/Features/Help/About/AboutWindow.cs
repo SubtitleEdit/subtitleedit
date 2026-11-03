@@ -4,11 +4,13 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Svg.Skia;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using SkiaSharp;
 using System;
 using System.Threading.Tasks;
 
@@ -58,12 +60,10 @@ public class AboutWindow : Window
         };
 
         var imageNames = new[] { "about1.svg", "about2.svg", "about3.svg", "about4.svg", "about5.svg" };
-        var images = new SvgImage[imageNames.Length];
+        var images = new Bitmap[imageNames.Length];
         for (var i = 0; i < imageNames.Length; i++)
         {
-            var assetUri = new Uri($"avares://SubtitleEdit/Assets/{imageNames[i]}");
-            using var assetStream = AssetLoader.Open(assetUri);
-            images[i] = new SvgImage { Source = SvgSource.LoadFromStream(assetStream) };
+            images[i] = RasterizeSvg(imageNames[i]);
         }
 
         var imageIndex = Random.Shared.Next(images.Length); // start on a random image
@@ -121,7 +121,7 @@ public class AboutWindow : Window
             layerB.Source = null;
             foreach (var image in images)
             {
-                image.Source?.Dispose();
+                image.Dispose();
             }
         };
 
@@ -221,5 +221,32 @@ public class AboutWindow : Window
 
         UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
+    }
+
+    // SvgImage draws straight onto the Skia canvas and ignores the Opacity of its Image
+    // control, so the cross-dissolve layers would just stack (#16590). A bitmap honors
+    // Opacity; render at 4x of the 128 px box so it stays sharp on high-DPI screens.
+    private static Bitmap RasterizeSvg(string imageName)
+    {
+        const int size = 512;
+        using var assetStream = AssetLoader.Open(new Uri($"avares://SubtitleEdit/Assets/{imageName}"));
+        using var svg = SvgSource.LoadFromStream(assetStream);
+        using var skBitmap = new SKBitmap(size, size, SKColorType.Bgra8888, SKAlphaType.Premul);
+        using (var canvas = new SKCanvas(skBitmap))
+        {
+            canvas.Clear(SKColors.Transparent);
+            var picture = svg.Picture;
+            if (picture != null)
+            {
+                var bounds = picture.CullRect;
+                var scale = Math.Min(size / bounds.Width, size / bounds.Height);
+                canvas.Translate((size - bounds.Width * scale) / 2f, (size - bounds.Height * scale) / 2f);
+                canvas.Scale(scale);
+                canvas.Translate(-bounds.Left, -bounds.Top);
+                canvas.DrawPicture(picture);
+            }
+        }
+
+        return skBitmap.ToAvaloniaBitmap();
     }
 }
