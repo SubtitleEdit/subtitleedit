@@ -810,11 +810,28 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             if (total > MaxPaletteEntries)
             {
-                // Together they do not fit; give every object an equal share instead.
-                var maxColors = MaxPaletteEntries / objects.Count - 1;
+                // Together they do not fit. An object that needs no more than an equal share
+                // keeps all its colours, and what it leaves goes to the others - a plain white
+                // line next to an anti-aliased sign should not halve the sign's palette.
+                var order = new List<int>(objects.Count);
                 for (var k = 0; k < objects.Count; k++)
                 {
-                    palettes[k] = GetBitmapPalette(objects[k].Bitmap, objects[k].FontColor, maxColors);
+                    order.Add(k);
+                }
+
+                order.Sort((a, b) => palettes[a].Count.CompareTo(palettes[b].Count));
+                var budget = MaxPaletteEntries;
+                for (var i = 0; i < order.Count; i++)
+                {
+                    var k = order[i];
+                    var share = budget / (order.Count - i);
+                    if (palettes[k].Count > share)
+                    {
+                        // GetBitmapPalette adds the transparent entry on top of maxColors
+                        palettes[k] = GetBitmapPalette(objects[k].Bitmap, objects[k].FontColor, share - 1);
+                    }
+
+                    budget -= palettes[k].Count;
                 }
             }
 
