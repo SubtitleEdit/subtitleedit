@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Tools.AiReview;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppEngineSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
@@ -1145,7 +1146,55 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         await _windowService.ShowDialogAsync<LlamaCppAdvancedSettingsWindow, LlamaCppAdvancedSettingsViewModel>(
             Window!,
-            vm => vm.Initialize());
+            vm => vm.Initialize(_subtitle.Paragraphs.Count > 0 ? GenerateLlamaCppAdvancedSynopsisAsync : null));
+    }
+
+    /// <summary>
+    /// "Generate with AI" in the advanced settings (#16589): drafts names, terms and a synopsis
+    /// from the whole subtitle with the selected local model, like AI review's reference context.
+    /// </summary>
+    private async Task<string?> GenerateLlamaCppAdvancedSynopsisAsync(Window owner, Action<int, int> progress, CancellationToken cancellationToken)
+    {
+        if (_cancellationTokenSource.IsCancellationRequested)
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+
+        if (!await EnsureLlamaCppReady(owner))
+        {
+            return null;
+        }
+
+        var lines = new List<string>();
+        foreach (var p in _subtitle.Paragraphs)
+        {
+            var text = HtmlUtil.RemoveHtmlTags(p.Text ?? string.Empty, true)
+                .Replace(Environment.NewLine, " ")
+                .Replace('\n', ' ')
+                .Trim();
+            if (text.Length > 0)
+            {
+                lines.Add(string.IsNullOrWhiteSpace(p.Actor) ? text : $"[{p.Actor.Trim()}] {text}");
+            }
+        }
+
+        // The source combo may say "auto", so name the language the subtitle is actually in.
+        var languageName = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+        try
+        {
+            var name = System.Globalization.CultureInfo.GetCultureInfo(languageName).EnglishName;
+            var idx = name.IndexOf(" (", StringComparison.Ordinal);
+            languageName = idx > 0 ? name.Substring(0, idx) : name;
+        }
+        catch (System.Globalization.CultureNotFoundException)
+        {
+            // keep the code
+        }
+
+        using var client = new AiReviewClient();
+        return await AiReviewContextGenerator.GenerateAsync(lines, languageName,
+            (systemPrompt, userContent, jsonObject, ct) => client.ChatAsync(LlamaCppServerManager.ApiUrl, string.Empty, systemPrompt, userContent, ct, null, jsonObject),
+            progress, cancellationToken, s => Se.WriteToolsLog(s));
     }
 
     [RelayCommand]
@@ -1192,9 +1241,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         UpdateLlamaCppServerButtonText();
     }
 
-    private async Task<bool> EnsureLlamaCppReady()
+    private async Task<bool> EnsureLlamaCppReady(Window? owner = null)
     {
-        if (Window == null)
+        owner ??= Window;
+        if (owner == null)
         {
             return false;
         }
@@ -1205,7 +1255,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
-        if (!await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, model.FileName))
+        if (!await LlamaCppDownloadHelper.EnsureReadyAsync(owner, _windowService, model.FileName))
         {
             return false;
         }
@@ -1228,7 +1278,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         catch (Exception ex)
         {
             await MessageBox.Show(
-                Window!,
+                owner,
                 Se.Language.General.Error,
                 ex.Message,
                 MessageBoxButtons.OK,
