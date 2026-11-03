@@ -90,4 +90,43 @@ public class BdnXmlTest
         Assert.False(BdnXml.TryGetVideoSize("<Subtitle><Paragraph/></Subtitle>", out _, out _));
         Assert.False(BdnXml.TryGetVideoSize(null, out _, out _));
     }
+
+    private static Paragraph LoadOneEvent(string frameRate, string dropFrame, string inTc, string outTc)
+    {
+        var xml = $"""
+                   <?xml version="1.0" encoding="UTF-8"?>
+                   <BDN Version="0.93">
+                   <Description>
+                   <Format VideoFormat="1080i" FrameRate="{frameRate}" DropFrame="{dropFrame}"/>
+                   </Description>
+                   <Events>
+                   <Event InTC="{inTc}" OutTC="{outTc}" Forced="False">
+                   <Graphic Width="400" Height="60" X="760" Y="930">0001.png</Graphic>
+                   </Event>
+                   </Events>
+                   </BDN>
+                   """;
+        return Assert.Single(Load(xml).Paragraphs);
+    }
+
+    // 29.97 DF: 01:00:00;00 is frame 107892 (3.6 s less than the 108000 its label reads as)
+    [Theory]
+    [InlineData("00:00:01:00", 1001.0)]
+    [InlineData("00:01:00;02", 1800 * 1001 / 30.0)]
+    [InlineData("00:10:00;00", 17982 * 1001 / 30.0)]
+    [InlineData("01:00:00;00", 107892 * 1001 / 30.0)]
+    public void DropFrame2997_CountsDroppedFrameNumbers(string inTc, double expectedMs)
+    {
+        var p = LoadOneEvent("29.97", "true", inTc, "01:00:10;00");
+
+        Assert.Equal(expectedMs, p.StartTime.TotalMilliseconds, 3);
+    }
+
+    [Fact]
+    public void DropFrame5994_DropsFourPerMinute()
+    {
+        var p = LoadOneEvent("59.94", "True", "00:01:00:04", "00:01:01:00");
+
+        Assert.Equal(3600 * 1001 / 60.0, p.StartTime.TotalMilliseconds, 3);
+    }
 }
