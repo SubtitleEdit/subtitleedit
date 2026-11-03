@@ -543,9 +543,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 return 0x60;
             }
 
-            if (Math.Abs(fps - Core.FpsNtscI) < 0.1) // 59.94
+            if (Math.Abs(fps - Core.FpsNtscI) < 0.03) // 59.94
             {
                 return 0x70;
+            }
+
+            if (Math.Abs(fps - 60.0) < 0.01) // 60 - UHD Blu-ray high frame rate only
+            {
+                return 0x80;
             }
 
             return 0x10; // 23.976
@@ -566,6 +571,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 case 0x50: return 30.0;
                 case 0x60: return Core.FpsPalI;
                 case 0x70: return Core.FpsNtscI;
+                case 0x80: return 60.0;
                 default: return 0;
             }
         }

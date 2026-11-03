@@ -96,10 +96,35 @@ public class BluRaySupPictureFrameGridTests
     [InlineData(0x40, 30000.0 / 1001)]
     [InlineData(0x60, 50.0)]
     [InlineData(0x70, 60000.0 / 1001)]
+    [InlineData(0x80, 60.0)]
     [InlineData(0x00, 0.0)]
     public void GetFrameRate_FromPcsCode(int code, double expected)
     {
         Assert.Equal(expected, BluRaySupPicture.GetFrameRate(code), 6);
+    }
+
+    // 60 is UHD Blu-ray high frame rate; it used to be written as 59.94 (0x70)
+    [Theory]
+    [InlineData(23.976, 0x10)]
+    [InlineData(25.0, 0x30)]
+    [InlineData(59.94, 0x70)]
+    [InlineData(60000.0 / 1001, 0x70)]
+    [InlineData(60.0, 0x80)]
+    public void CreateSupFrame_WritesThePcsFrameRateCode(double fps, int code)
+    {
+        using var bitmap = new SKBitmap(100, 20);
+        using (var canvas = new SKCanvas(bitmap))
+        {
+            canvas.Clear(SKColors.White);
+        }
+
+        var sup = BluRaySupPicture.CreateSupFrame(Picture(1000, 2000), new[]
+        {
+            new BluRaySupCompositionObject { Bitmap = bitmap, FontColor = SKColors.White, X = 100, Y = 500 },
+        }, fps);
+
+        Assert.Equal(0x16, sup[10]); // PCS first
+        Assert.Equal(code, sup[13 + 4]);
     }
 
     [Fact]
