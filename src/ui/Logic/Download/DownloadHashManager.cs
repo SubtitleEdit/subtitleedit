@@ -1123,7 +1123,8 @@ public static class DownloadHashManager
             // recognized and offered the update (issue #11375).
             [Qwen3AsrCpp.Windows] = new[]
             {
-                "5f80872f619d62539fe3fd7747a92160e36c308b65423bc3e14f8dcd7728874a", // v0.1.10 (current download URL)
+                "a1f1bac36aac521a27f7f4ed71e252f0fa3577415c3e846984fe5264ac85610f", // v0.1.11 (current download URL)
+                "5f80872f619d62539fe3fd7747a92160e36c308b65423bc3e14f8dcd7728874a", // v0.1.10
                 "075e2e4a811235842ea7ce16f186c4af994dea39ebf4348a287a5b3a56876594", // v0.1.9
                 "ad9c196aa52ceb42a3f46946644e4145fc7e297c84fa54e4cdf7fd9c22556300", // v0.1.8
                 "2899cfd563b8343fde6b74b617f32b17a26b611e1187c91ba416334364075af7", // v0.1.7
@@ -1137,7 +1138,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.WindowsVulkan] = new[]
             {
-                "1dcb24785e282c9d2b4416ff9c9d140b74f0575c687e01547ced7748df293af8", // v0.1.10 (current download URL)
+                "67e6fb19d27630a7a8857e97c937385eee3c5dad8821be6ce45d4e27e64eedb5", // v0.1.11 (current download URL)
+                "1dcb24785e282c9d2b4416ff9c9d140b74f0575c687e01547ced7748df293af8", // v0.1.10
                 "8ab5a8eabd2c2bd76494de5a77fe3970c6406d2cd3f7d550b96ac83436fe54e6", // v0.1.9
                 "a9971a24ba08765568c8a83a547924e42f15bd576b2cf594f6757fff66baf244", // v0.1.8
                 "b1bff40ba1c7f0103c6016c4845481053686761f0c375eb71612d1f07192099b", // v0.1.7
@@ -1149,7 +1151,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.MacArm64] = new[]
             {
-                "e48f6d91180acdd8073b596e2e4a28fdc38bf188c677b01265a64bc9bd0e325c", // v0.1.10 (current download URL)
+                "3ab78a80cd21618dbb830778710fae2ba46e6777293c4c3f783b2aa4d5707151", // v0.1.11 (current download URL)
+                "e48f6d91180acdd8073b596e2e4a28fdc38bf188c677b01265a64bc9bd0e325c", // v0.1.10
                 "28c9f90f3e87a511f4e3685d438c862bec06b1e747399c6820a2f3f13ad243b7", // v0.1.9
                 "a9e9f33ff8ba651591974824e886ecd28a034d00aaf8203365a7198cd5012325", // v0.1.8
                 "a4355282cbde03d99ddc1be7724a2e0fd2520ad6d07e875bb4a01ce4f8a83fcd", // v0.1.7
@@ -1163,7 +1166,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.MacX64] = new[]
             {
-                "bcd7ada8a31ee17afe85d3d4526584b9bd9cbbcde6faebc3404959fda09d083f", // v0.1.10 (current download URL)
+                "2a99adbb1ba9953dde3f92f501e916ff504c3df29ff75b3de2972b83f3ca1706", // v0.1.11 (current download URL)
+                "bcd7ada8a31ee17afe85d3d4526584b9bd9cbbcde6faebc3404959fda09d083f", // v0.1.10
                 "b44a358669d59d3e354b88554b5898420050542067ef8a046b5c0fee5044e2e0", // v0.1.9
                 "6dbb978b74829c080177f6c70e89b363a8bc24d543b718ad06ecea7a7c833c53", // v0.1.8
                 "8295b7c36fd49fe6073d9a05b126a66ac1a5eaf0cc2768d45a5145f3d6a07fae", // v0.1.7
@@ -1176,7 +1180,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.Linux] = new[]
             {
-                "5de2c78636b7a9fc8bd603e797a5974cff7cdc44414357fe2363031159289ec3", // v0.1.10 (current download URL)
+                "073c3c1bed4d3157a6c54cff9b29c43a322c6a5bd30567cf91018ae209e105e6", // v0.1.11 (current download URL)
+                "5de2c78636b7a9fc8bd603e797a5974cff7cdc44414357fe2363031159289ec3", // v0.1.10
                 "28bcf1df65818674514fa88e7e1845b6bf15141c3931aa48a2f8607ffc7631b6", // v0.1.9
                 "22b37a1917ca4083df7b57c62497a9f30c237ee13c2eee4b36a46320cf8506ed", // v0.1.8
                 "d6843919444f447b5b4cc307565f07cdec4a233e8584f1cb88ded6d5413f5caa", // v0.1.7
@@ -1190,7 +1195,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.LinuxVulkan] = new[]
             {
-                "0641a35ba38c1eaba0b25f9f168ee1194a3ab6ccd4120af971caae38966a9528", // v0.1.10 (current download URL)
+                "3b152e58762c4436e8cf24f78b53852cbf28ec4a07f6511f225d3ebae2f0963e", // v0.1.11 (current download URL)
+                "0641a35ba38c1eaba0b25f9f168ee1194a3ab6ccd4120af971caae38966a9528", // v0.1.10
                 "4c7bf45a3d79ffe9a3eb5d9508a7121226055c013bd8c20659b9c88c4d9bb0e8", // v0.1.9
                 "d881e30dfc6f5311496355a08668d22d7f592ba4f7120a266abf8024d0f59a24", // v0.1.8
                 "4c3147af8e9077f8758d9ed86c23f213b22ccbc0df1d8990f27308e34279f831", // v0.1.7
@@ -1202,7 +1208,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.LinuxArm64] = new[]
             {
-                "1411d484f12ebccce4d682e63ba15ff675d74436115f9872d1977611d0d0ddae", // v0.1.10 (current download URL)
+                "8f69e3f9b07a39d7443cb286c391d21862bca87f9c69481dff0f58681acd4b66", // v0.1.11 (current download URL)
+                "1411d484f12ebccce4d682e63ba15ff675d74436115f9872d1977611d0d0ddae", // v0.1.10
                 "c74f8a79b66c4888fc6701dcb516f06c0ea5ef20f9982cbac78bd0694c008957", // v0.1.9
                 "8d3a1ac745fa60f5576a6db599c7b4b9bc0302ea527cbdab9be3223f80a555e4", // v0.1.8
                 "1a67596e18da7ad5ad2adcca72ce5986033120ba25835493a92b52885a6c1903", // v0.1.7
@@ -1215,7 +1222,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.WindowsExecutable] = new[]
             {
-                "b79f34d119ab7a3400284e780502a2c2e09b63d17958ed0b85cffd58cc3b7716", // v0.1.10 (current download URL)
+                "a31f07e5ae58ba6be807a5d33ddafc6476b35e91868556edf343bae0fe34470f", // v0.1.11 (current download URL)
+                "b79f34d119ab7a3400284e780502a2c2e09b63d17958ed0b85cffd58cc3b7716", // v0.1.10
                 "029b520b2a2e692bdf7a8855bdd6bda80afc55b3ee15d331f5fb952e2dc9eef9", // v0.1.9
                 "4774a1662b8dfd15083e8ffd1e318aeedc86a55931c0bcdec72890547e48c91b", // v0.1.8
                 "0abdde2ebb6cea8059aa8fe3b7ed61277b9c17bfa223715c431320c575e653c6", // v0.1.7
@@ -1229,7 +1237,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.WindowsVulkanExecutable] = new[]
             {
-                "d25487a319f7bc6a17ac6bc88b951da1361fb1e61710face5ae2b6cc7fa96411", // v0.1.10 (current download URL)
+                "11a8b267065eff8cb492226318edd551d7dd8021ef2b61cf385d55227d896bd8", // v0.1.11 (current download URL)
+                "d25487a319f7bc6a17ac6bc88b951da1361fb1e61710face5ae2b6cc7fa96411", // v0.1.10
                 "529222fe88a9f2ea7d7f0fa48c7b5770b150242800b8d441f38144b90e42ee9e", // v0.1.9
                 "f0e8dd1d4de3b5a71cfe8e9d04e8e1dbaff58768ccd8b0859279035e63c9c12a", // v0.1.8
                 "eba7c228d04a3124e48bcb6342bb372a2fc5338a344e2ee8bd3971518ea4e780", // v0.1.7
@@ -1241,7 +1250,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.MacArm64Executable] = new[]
             {
-                "37fbec028c82debade4cba2c07bfc535d1c00bfd3e3ec5ff1295ee92e9d6e6dc", // v0.1.10 (current download URL)
+                "23c8b935e8b528caa6c0b3f9ba5a8a9af4e47062869dd929f2f1926ff9912a7b", // v0.1.11 (current download URL)
+                "37fbec028c82debade4cba2c07bfc535d1c00bfd3e3ec5ff1295ee92e9d6e6dc", // v0.1.10
                 "5ec504cd96f6808b4d9a31e2a9bce9e0c6a2f5548dd8358249c701aa3bdf0bc7", // v0.1.9
                 "26e0cfb663aeb73999e6de0f946e2ddb37cb7a2a28161b41fc9e23ddb8247904", // v0.1.8
                 "0c637dad09da1198c755d75f4d0e52d74443220743ee4c5f396c8a95ecc41d2a", // v0.1.7
@@ -1254,7 +1264,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.MacX64Executable] = new[]
             {
-                "dc086961834263589a1b53fb362914eacea04dcb65eb1c58f497d801e2f03e4b", // v0.1.10 (current download URL)
+                "37fd84d8f4a41447022ffcdc79f78b8229bcd0c17657ad679ad2ab4e1a6255ad", // v0.1.11 (current download URL)
+                "dc086961834263589a1b53fb362914eacea04dcb65eb1c58f497d801e2f03e4b", // v0.1.10
                 "d277fd254bf55797ff63761eda7ce08d94bf8f5dde56d87d4e09f163bc2dca5e", // v0.1.9
                 "b2e55b521d97a731488caf6439b7ecc1e8166dd20fd8770d341849065cbc8172", // v0.1.8
                 "e4b9c56a373656d67ca0ef0ef383ccc75b62b788b323bdd43f922f351a3864c1", // v0.1.7
@@ -1266,7 +1277,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.LinuxExecutable] = new[]
             {
-                "b657c6baf867d9f832dca8f48155c59e4dc8ce91efba87b5ad86ff29d41cbc20", // v0.1.10 (current download URL)
+                "3f46e3de89809a452c00afa398ce98b73f2d8e3bb5aa8444bf892330314e6336", // v0.1.11 (current download URL)
+                "b657c6baf867d9f832dca8f48155c59e4dc8ce91efba87b5ad86ff29d41cbc20", // v0.1.10
                 "df95f8cd851f170a752a0dd84f72880f7ed0a8e546b921bae08911150dff558b", // v0.1.9
                 "1f768c0f8dfe3ac7ed21b3e6a4510fb9ee421b9949e813e1de54ecee57a18051", // v0.1.8
                 "a02d9e2ba60201ad8e778dca9a9f7ca1f5cafc145955488a1b2c611615b997ba", // v0.1.7 / v0.1.6
@@ -1278,7 +1290,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.LinuxVulkanExecutable] = new[]
             {
-                "75da7aca5cd8067f310ac639302cd0539de4d5dc9b86e18fca01d75be377bf78", // v0.1.10 (current download URL)
+                "3f46e3de89809a452c00afa398ce98b73f2d8e3bb5aa8444bf892330314e6336", // v0.1.11 (current download URL)
+                "75da7aca5cd8067f310ac639302cd0539de4d5dc9b86e18fca01d75be377bf78", // v0.1.10
                 "1d1e99ef0936321216fba2257c4d31fdfaf97779519e8ae333e0295c8b433081", // v0.1.9
                 "1f768c0f8dfe3ac7ed21b3e6a4510fb9ee421b9949e813e1de54ecee57a18051", // v0.1.8
                 "a02d9e2ba60201ad8e778dca9a9f7ca1f5cafc145955488a1b2c611615b997ba", // v0.1.7 / v0.1.6
@@ -1289,7 +1302,8 @@ public static class DownloadHashManager
             },
             [Qwen3AsrCpp.LinuxArm64Executable] = new[]
             {
-                "4e7a82912dceaac238776a32035ebf751afac1f6584f81cfcb79258b6ae6b732", // v0.1.10 (current download URL)
+                "76ef43ae9e00a7997a18ac420a4b81a95b3b2ad0efe85cabd005471d1aa36f41", // v0.1.11 (current download URL)
+                "4e7a82912dceaac238776a32035ebf751afac1f6584f81cfcb79258b6ae6b732", // v0.1.10
                 "a1c4c2941b47f64113bbe6f7819d97974eaf3b224e4e28f6761404bd13f47a36", // v0.1.9
                 "ffd6e80c743f5e2b977c2dfd3a7e945c29104fda9d2a43c91a2f3aa0dfef548d", // v0.1.8
                 "fe453c7f30efc717fbfb2b9d4ff4ff5d50f862300d8c390d6e4c0066c31e6c60", // v0.1.7 / v0.1.6
