@@ -11,8 +11,19 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 
+/// <summary>How the burned-in lines are removed (the order of the method combo box).</summary>
+public enum BurnedInMethod
+{
+    Inpaint,
+    BlackBox,
+    Blur,
+    Delogo,
+}
+
 public sealed class BurnedInRemovalOptions
 {
+    public BurnedInMethod Method { get; init; }
+
     public string VideoFileName { get; init; } = string.Empty;
     public string OutputFileName { get; init; } = string.Empty;
     public int VideoWidth { get; init; }
@@ -38,6 +49,9 @@ public sealed class BurnedInRemovalOptions
     public int ExtraWidth { get; init; } = 5;
     public bool Temporal { get; init; } = true;
 
+    /// <summary>Box blur radius in px (blur method).</summary>
+    public int BlurStrength { get; init; } = 20;
+
     public int Crf { get; init; } = 18;
     public string CrispEmbedExecutable { get; init; } = string.Empty;
     public string ModelFileName { get; init; } = string.Empty;
@@ -53,7 +67,8 @@ public sealed class BurnedInRemovalOptions
 /// that copies the audio from the source. No frames touch the disk.</item>
 /// </list>
 /// <see cref="MakeBoxesAssaAsync"/> runs pass 1 only and returns an ASSA subtitle with one black
-/// drawing per line instead - the video is not changed.
+/// drawing per line instead - the video is not changed. The blur and delogo methods replace
+/// pass 2 with one ffmpeg run that filters each line's box (<see cref="MakeFilterGraph"/>).
 /// </summary>
 public sealed class BurnedInSubtitleRemover
 {
@@ -114,8 +129,10 @@ public sealed class BurnedInSubtitleRemover
         AppendLog($"Masks: {builder.LinesWithText} of {o.Lines.Count} lines have text in the scan area");
         cancellationToken.ThrowIfCancellationRequested();
 
-        // Pass 2: decode -> mask -> crispembed -> encode.
-        return await InpaintAsync(o, builder, totalFrames, progress, cancellationToken);
+        // Pass 2: decode -> mask -> crispembed -> encode, or an ffmpeg blur/delogo of each line's box.
+        return o.Method is BurnedInMethod.Blur or BurnedInMethod.Delogo
+            ? await FilterAsync(o, builder, totalFrames, progress, cancellationToken)
+            : await InpaintAsync(o, builder, totalFrames, progress, cancellationToken);
     }
 
     /// <summary>
@@ -140,7 +157,8 @@ public sealed class BurnedInSubtitleRemover
     /// ASSA with a black rectangle drawing (\p1) per box, shown for the box's frame span. Times
     /// are rounded outwards to whole centiseconds so the box never shows a frame late.
     /// </summary>
-    public static string MakeBoxesAssa(BurnedInRemovalOptions o, IEnumerable<(long StartFrame, long EndFrame, int X, int Y, int Width, int Height)> boxes)
+    public static string MakeBoxesAssa(BurnedInRemovalOptions o, IEnumerable<(long StartFrame, long EndFrame, int X, int Y, int Width, int Height)> boxes,
+        string colour = "&H00000000")
     {
         var sb = new StringBuilder();
         sb.AppendLine("[Script Info]");
@@ -152,7 +170,7 @@ public sealed class BurnedInSubtitleRemover
         sb.AppendLine();
         sb.AppendLine("[V4+ Styles]");
         sb.AppendLine("Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding");
-        sb.AppendLine("Style: Box,Arial,20,&H00000000,&H00000000,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1");
+        sb.AppendLine($"Style: Box,Arial,20,{colour},{colour},{colour},{colour},0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1");
         sb.AppendLine();
         sb.AppendLine("[Events]");
         sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
@@ -174,6 +192,116 @@ public sealed class BurnedInSubtitleRemover
 
     private static string AssaTime(long centiseconds) =>
         FormattableString.Invariant($"{centiseconds / 360000}:{centiseconds / 6000 % 60:00}:{centiseconds / 100 % 60:00}.{centiseconds % 100:00}");
+
+    /// <summary>
+    /// ffmpeg filter graph ([0:v] in, [v] out) for the blur and delogo methods. Delogo is one
+    /// timeline-enabled delogo per box. Blur blurs the boxes' bounding area once and overlays it
+    /// through a soft matte: the boxes drawn white on black by the ass filter
+    /// (<paramref name="matteAssName"/>, a file in ffmpeg's working folder).
+    /// Timestamps start at 0 so box frame numbers line up with the mask pass.
+    /// </summary>
+    public static string MakeFilterGraph(BurnedInRemovalOptions o, IReadOnlyList<(long StartFrame, long EndFrame, int X, int Y, int Width, int Height)> boxes,
+        string matteAssName)
+    {
+        var sb = new StringBuilder("[0:v]setpts=PTS-STARTPTS");
+        if (o.Method == BurnedInMethod.Delogo)
+        {
+            foreach (var (startFrame, endFrame, bx, by, bw, bh) in boxes)
+            {
+                // delogo needs a band of real pixels on every side of the logo.
+                var x = Math.Clamp(bx, 1, o.VideoWidth - 3);
+                var y = Math.Clamp(by, 1, o.VideoHeight - 3);
+                var w = Math.Min(bx + bw, o.VideoWidth - 1) - x;
+                var h = Math.Min(by + bh, o.VideoHeight - 1) - y;
+                if (w < 2 || h < 2)
+                {
+                    continue;
+                }
+
+                sb.Append(FormattableString.Invariant(
+                    $",delogo=x={x}:y={y}:w={w}:h={h}:enable='between(t,{startFrame / o.FrameRate:0.###},{(endFrame + 1) / o.FrameRate:0.###})'"));
+            }
+
+            sb.Append(",format=yuv420p[v]");
+            return sb.ToString();
+        }
+
+        // Blur: the bounding area of all boxes plus room for the soft edge, on even values (4:2:0).
+        const int feather = 4;
+        var x0 = boxes.Count == 0 ? 0 : boxes.Min(b => b.X) - 2 * feather;
+        var y0 = boxes.Count == 0 ? 0 : boxes.Min(b => b.Y) - 2 * feather;
+        var x1 = boxes.Count == 0 ? 2 : boxes.Max(b => b.X + b.Width) + 2 * feather;
+        var y1 = boxes.Count == 0 ? 2 : boxes.Max(b => b.Y + b.Height) + 2 * feather;
+        x0 = Math.Max(0, x0) & ~1;
+        y0 = Math.Max(0, y0) & ~1;
+        x1 = Math.Min(o.VideoWidth & ~1, (x1 + 1) & ~1);
+        y1 = Math.Min(o.VideoHeight & ~1, (y1 + 1) & ~1);
+        var cw = Math.Max(2, x1 - x0);
+        var ch = Math.Max(2, y1 - y0);
+
+        // boxblur's radius may not exceed half the (chroma) plane size.
+        var radius = Math.Clamp(o.BlurStrength, 1, Math.Max(1, Math.Min(cw, ch) / 4 - 1));
+        var crop = $"crop={cw}:{ch}:{x0}:{y0}";
+        sb.Append($",split[base][src];[src]{crop},boxblur={radius}:2,format=yuva420p[blur];");
+        sb.Append(FormattableString.Invariant(
+            $"color=c=black:s={o.VideoWidth}x{o.VideoHeight}:r={o.FrameRate:0.######}:d={o.DurationSeconds + 5:0.###},format=yuv420p,"));
+        sb.Append($"ass={matteAssName},{crop},format=gray,lut=c0='255*gt(val,128)',boxblur={feather}:1[matte];");
+        sb.Append($"[blur][matte]alphamerge[soft];[base][soft]overlay={x0}:{y0}:eof_action=pass,format=yuv420p[v]");
+        return sb.ToString();
+    }
+
+    private async Task<bool> FilterAsync(BurnedInRemovalOptions o, BurnedInMaskBuilder builder, long totalFrames,
+        IProgress<ProgressInfo> progress, CancellationToken cancellationToken)
+    {
+        // ffmpeg's ass filter parses its argument (':' and '\' in a Windows path), so ffmpeg runs
+        // in the temp folder and gets bare file names, like the burn-in feature does.
+        var folder = Path.GetTempPath();
+        var id = Guid.NewGuid().ToString("N");
+        var assName = "se-burned-in-matte-" + id + ".ass";
+        var scriptName = "se-burned-in-filter-" + id + ".txt";
+        var boxes = builder.GetLineBoxes().ToList();
+        await File.WriteAllTextAsync(Path.Combine(folder, assName), MakeBoxesAssa(o, boxes, "&H00FFFFFF"), cancellationToken);
+        await File.WriteAllTextAsync(Path.Combine(folder, scriptName), MakeFilterGraph(o, boxes, assName), cancellationToken);
+        try
+        {
+            var args = $"-nostdin -v error -y -progress pipe:1 -nostats -i \"{o.VideoFileName}\" -filter_complex_script {scriptName} " +
+                       $"-map \"[v]\" -map 0:a? -c:a copy -c:v libx264 -crf {o.Crf} -preset medium \"{o.OutputFileName}\"";
+            AppendLog("ffmpeg " + args);
+            using var encoder = StartProcess(FfmpegHelper.GetFfmpegLocation(), args, redirectInput: false, workingDirectory: folder);
+            var stopwatch = Stopwatch.StartNew();
+            using (cancellationToken.Register(() => Kill(encoder)))
+            {
+                string? line;
+                while ((line = await encoder.StandardOutput.ReadLineAsync(cancellationToken)) != null)
+                {
+                    if (line.StartsWith("frame=", StringComparison.Ordinal) && long.TryParse(line.AsSpan(6), out var frame))
+                    {
+                        var fps = frame / Math.Max(0.001, stopwatch.Elapsed.TotalSeconds);
+                        progress.Report(new ProgressInfo(15 + 85.0 * Math.Min(1.0, (double)frame / totalFrames), 2, frame, totalFrames, fps));
+                    }
+                }
+            }
+
+            await encoder.WaitForExitAsync(CancellationToken.None);
+            cancellationToken.ThrowIfCancellationRequested();
+            AppendLog($"{o.Method} done in {stopwatch.Elapsed.TotalSeconds:0.0} s, exit code {encoder.ExitCode}");
+            return encoder.ExitCode == 0 && File.Exists(o.OutputFileName);
+        }
+        finally
+        {
+            foreach (var name in new[] { assName, scriptName })
+            {
+                try
+                {
+                    File.Delete(Path.Combine(folder, name));
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// Decodes the scan area (gray) and feeds the frames inside the line spans to the builder.
@@ -405,7 +533,7 @@ public sealed class BurnedInSubtitleRemover
         return ok;
     }
 
-    private Process StartProcess(string fileName, string arguments, bool redirectInput)
+    private Process StartProcess(string fileName, string arguments, bool redirectInput, string? workingDirectory = null)
     {
         var process = new Process
         {
@@ -416,7 +544,8 @@ public sealed class BurnedInSubtitleRemover
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 RedirectStandardInput = redirectInput,
-                WorkingDirectory = Path.GetDirectoryName(fileName) is { Length: > 0 } dir && Directory.Exists(dir) ? dir : string.Empty,
+                WorkingDirectory = workingDirectory ??
+                                   (Path.GetDirectoryName(fileName) is { Length: > 0 } dir && Directory.Exists(dir) ? dir : string.Empty),
             },
         };
 

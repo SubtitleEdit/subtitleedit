@@ -159,6 +159,98 @@ internal static class BurnedInPreviewRenderer
         }
     }
 
+    /// <summary>Box blurs a rectangle of an RGB24 frame (two passes, like ffmpeg's boxblur=r:2).</summary>
+    public static void BlurRect(byte[] rgb, int width, int x, int y, int w, int h, int radius)
+    {
+        var height = rgb.Length / 3 / width;
+        var x0 = Math.Max(0, x);
+        var y0 = Math.Max(0, y);
+        var x1 = Math.Min(width, x + w);
+        var y1 = Math.Min(height, y + h);
+        if (x1 <= x0 || y1 <= y0 || radius < 1)
+        {
+            return;
+        }
+
+        var rw = x1 - x0;
+        var rh = y1 - y0;
+        var line = new int[Math.Max(rw, rh) * 3];
+        for (var pass = 0; pass < 2; pass++)
+        {
+            for (var yy = y0; yy < y1; yy++)
+            {
+                BoxLine(rgb, (yy * width + x0) * 3, 3, rw, radius, line);
+            }
+
+            for (var xx = x0; xx < x1; xx++)
+            {
+                BoxLine(rgb, (y0 * width + xx) * 3, width * 3, rh, radius, line);
+            }
+        }
+    }
+
+    // One clamped running-mean pass over n pixels starting at offset, step bytes apart.
+    private static void BoxLine(byte[] rgb, int offset, int step, int n, int radius, int[] line)
+    {
+        for (var i = 0; i < n; i++)
+        {
+            for (var c = 0; c < 3; c++)
+            {
+                line[i * 3 + c] = rgb[offset + i * step + c];
+            }
+        }
+
+        for (var c = 0; c < 3; c++)
+        {
+            var sum = 0;
+            for (var i = -radius; i <= radius; i++)
+            {
+                sum += line[Math.Clamp(i, 0, n - 1) * 3 + c];
+            }
+
+            for (var i = 0; i < n; i++)
+            {
+                rgb[offset + i * step + c] = (byte)(sum / (2 * radius + 1));
+                sum += line[Math.Min(n - 1, i + radius + 1) * 3 + c] - line[Math.Max(0, i - radius) * 3 + c];
+            }
+        }
+    }
+
+    /// <summary>
+    /// Fills a rectangle of an RGB24 frame from the pixels around it, like ffmpeg's delogo: a
+    /// blend of the horizontal and vertical interpolations between the edges, the shorter
+    /// (more reliable) span weighted higher.
+    /// </summary>
+    public static void DelogoRect(byte[] rgb, int width, int x, int y, int w, int h)
+    {
+        var height = rgb.Length / 3 / width;
+        var x0 = Math.Clamp(x, 1, width - 2);
+        var y0 = Math.Clamp(y, 1, height - 2);
+        var x1 = Math.Clamp(x + w, x0 + 1, width - 1);
+        var y1 = Math.Clamp(y + h, y0 + 1, height - 1);
+        var rw = x1 - x0 + 1;
+        var rh = y1 - y0 + 1;
+        var source = (byte[])rgb.Clone();
+        for (var yy = y0; yy < y1; yy++)
+        {
+            var fy = (double)(yy - y0 + 1) / rh;
+            for (var xx = x0; xx < x1; xx++)
+            {
+                var fx = (double)(xx - x0 + 1) / rw;
+                for (var c = 0; c < 3; c++)
+                {
+                    var left = source[(yy * width + x0 - 1) * 3 + c];
+                    var right = source[(yy * width + x1) * 3 + c];
+                    var top = source[((y0 - 1) * width + xx) * 3 + c];
+                    var bottom = source[(y1 * width + xx) * 3 + c];
+                    var horizontal = left * (1 - fx) + right * fx;
+                    var vertical = top * (1 - fy) + bottom * fy;
+                    rgb[(yy * width + xx) * 3 + c] = (byte)Math.Round((horizontal * rh + vertical * rw) / (rw + rh));
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// The full frame as an Avalonia bitmap: the mask (when given) tinted in the accent red with
     /// a crisp edge, and the scan area outlined.

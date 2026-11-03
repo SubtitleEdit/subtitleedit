@@ -307,9 +307,15 @@ public class RemoveBurnedInWindow : Window
         modelRow.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInpaint)));
         temporal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInpaint)));
 
+        var blurStrength = EditorChrome.MakeField(nameof(vm.BlurStrength), 1, 100, 90);
+        ToolTip.SetTip(blurStrength, l.BlurStrengthHint);
+        var blurRow = EditorChrome.MakeLabeledRow(l.BlurStrength, blurStrength, LabelWidth);
+        blurRow.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsBlur)));
+
         var maskRows = new StackPanel { Spacing = 8 };
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.Method, methodCombo, LabelWidth));
         maskRows.Children.Add(modelRow);
+        maskRows.Children.Add(blurRow);
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Video.VideoOcr.TextBrightnessMinimum, brightness, LabelWidth));
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.GrowMask, grow, LabelWidth));
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.ExtraWidth, extraWidth, LabelWidth));
@@ -331,7 +337,7 @@ public class RemoveBurnedInWindow : Window
 
         // The black boxes go to the main window as an ASSA subtitle - no video is written.
         var outputSection = EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.VideoOutput, outputRows);
-        outputSection.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInpaint)));
+        outputSection.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.WritesVideo)));
 
         return new ScrollViewer
         {

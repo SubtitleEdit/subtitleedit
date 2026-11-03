@@ -49,7 +49,8 @@ public class SeVideoOcr
     public int RemoveBurnedInCrf { get; set; }
 
     /// <summary>Remove burned-in subtitles: cover each line with a black box instead of inpainting.</summary>
-    public bool RemoveBurnedInBlackBox { get; set; }
+    public int RemoveBurnedInMethod { get; set; }
+    public int RemoveBurnedInBlurStrength { get; set; }
 
     /// <summary>Inpainting model file name (CrispEmbedEngine.InpaintModelLama / InpaintModelMiGan).</summary>
     public string RemoveBurnedInModel { get; set; }

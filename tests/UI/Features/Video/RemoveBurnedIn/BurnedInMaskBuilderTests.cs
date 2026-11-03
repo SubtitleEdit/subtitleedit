@@ -354,6 +354,49 @@ public class BurnedInMaskBuilderTests
     }
 
     [Fact]
+    public void DelogoGraphHasOneTimedFilterPerBoxInsideTheFrame()
+    {
+        var o = new BurnedInRemovalOptions { VideoWidth = 1280, VideoHeight = 720, FrameRate = 25, Method = BurnedInMethod.Delogo };
+        var graph = BurnedInSubtitleRemover.MakeFilterGraph(o, new[] { (50L, 99L, 200, 600, 880, 80), (0L, 24L, 0, 0, 100, 800) }, "m.ass");
+        Assert.StartsWith("[0:v]setpts=PTS-STARTPTS,", graph);
+        Assert.Contains("delogo=x=200:y=600:w=880:h=80:enable='between(t,2,4)'", graph);
+        Assert.Contains("delogo=x=1:y=1:w=99:h=718:enable='between(t,0,1)'", graph); // kept 1 px inside
+        Assert.EndsWith(",format=yuv420p[v]", graph);
+    }
+
+    [Fact]
+    public void BlurGraphBlursTheBoxAreaThroughTheMatte()
+    {
+        var o = new BurnedInRemovalOptions
+        {
+            VideoWidth = 1280, VideoHeight = 720, FrameRate = 25, DurationSeconds = 10, Method = BurnedInMethod.Blur, BlurStrength = 20,
+        };
+        var graph = BurnedInSubtitleRemover.MakeFilterGraph(o, new[] { (50L, 99L, 201, 601, 879, 79) }, "m.ass");
+        Assert.Contains("[src]crop=896:96:192:592,boxblur=20:2", graph); // box + 8 px, even values
+        Assert.Contains("color=c=black:s=1280x720:r=25:d=15,format=yuv420p,ass=m.ass,crop=896:96:192:592", graph);
+        Assert.Contains("[base][soft]overlay=192:592:eof_action=pass,format=yuv420p[v]", graph);
+    }
+
+    [Fact]
+    public void DelogoPreviewInterpolatesFromTheEdges()
+    {
+        // 6x3 frame, left column 0 and right column 200: the 4x1 middle row becomes a ramp.
+        var rgb = new byte[6 * 3 * 3];
+        for (var y = 0; y < 3; y++)
+        {
+            for (var x = 0; x < 6; x++)
+            {
+                var v = (byte)(x == 5 ? 200 : x == 0 ? 0 : 99);
+                rgb[(y * 6 + x) * 3] = rgb[(y * 6 + x) * 3 + 1] = rgb[(y * 6 + x) * 3 + 2] = y == 1 ? v : (byte)(x * 40);
+            }
+        }
+
+        BurnedInPreviewRenderer.DelogoRect(rgb, 6, 1, 1, 4, 1);
+        var row = Enumerable.Range(1, 4).Select(x => (int)rgb[(6 + x) * 3]).ToArray();
+        Assert.True(row[0] < row[1] && row[1] < row[2] && row[2] < row[3], string.Join(",", row));
+    }
+
+    [Fact]
     public void RegionIsSnappedToEvenValues()
     {
         // 346 * 33.2% = 115 rows: ffmpeg crops 4:2:0 video to 114, so the builder must too.
