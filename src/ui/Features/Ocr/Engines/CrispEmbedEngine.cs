@@ -116,17 +116,15 @@ public static class CrispEmbedEngine
         return File.Exists(GetServerExecutable());
     }
 
-    public const string InpaintModelLama = "lama-big-f16.gguf";
-    public const string InpaintModelMiGan = "migan-512-f16.gguf";
+    /// <summary>MI-GAN 512 (Picsart AI Research, MIT), F16, as pinned in CrispEmbed's model registry.</summary>
+    public const string InpaintModel = "migan-512-places2-f16.gguf";
+    private const string InpaintModelSha256 = "932cfbd35db478dba4372f7ad9889ee68c84eac1c0b46025cf7336c8d55c0033";
+    private const string InpaintCheckpointSha256 = "1d6087eee0aac8923ad2606be5d8caeb4824d3e4de331995e420c74e124a466a";
 
     /// <summary>
-    /// Image inpainting models used to remove burned-in subtitles after Video OCR - not OCR
-    /// backends, so kept out of <see cref="GetBackends"/>. Needs a CrispEmbed build with
+    /// The image inpainting model used to remove burned-in subtitles after Video OCR - not an
+    /// OCR backend, so kept out of <see cref="GetBackends"/>. Needs a CrispEmbed build with
     /// --inpaint-stream (see <see cref="SupportsInpainting"/>).
-    /// <list type="bullet">
-    /// <item>LaMa (big-lama, advimman/lama, Apache-2.0): best quality, ~1 s per 512x512 window on Metal.</item>
-    /// <item>MI-GAN (Picsart-AI-Research, MIT): ~7x faster, visibly worse colours on large masks.</item>
-    /// </list>
     /// </summary>
     public static CrispEmbedBackend GetInpaintBackend()
     {
@@ -137,23 +135,30 @@ public static class CrispEmbedEngine
             {
                 new()
                 {
-                    Name = InpaintModelLama,
-                    Size = "102 MB",
-                    Url = "https://huggingface.co/niksedk/big-lama-GGUF/resolve/main/lama-big-f16.gguf",
-                    MinimumSizeBytes = 90_000_000,
-                },
-                new()
-                {
-                    Name = InpaintModelMiGan,
-                    Size = "15 MB",
-                    Url = "https://huggingface.co/niksedk/migan-512-GGUF/resolve/main/migan-512-f16.gguf",
-                    MinimumSizeBytes = 10_000_000,
+                    Name = InpaintModel,
+                    Size = "18 MB",
+                    Url = "https://huggingface.co/cstr/MI-GAN-512-GGUF/resolve/e1481f21784f99ec9d53ee935b978264be36abbb/" + InpaintModel,
+                    MinimumSizeBytes = 17_000_000,
                 },
             },
         };
     }
 
-    /// <summary>True when the installed CLI knows --inpaint-stream (CrispEmbed with MI-GAN).</summary>
+    /// <summary>crispembed arguments that select the pinned MI-GAN 512 model (GPU when there is one).</summary>
+    public static string GetInpaintArguments(string modelFileName) =>
+        $"--inpaint-engine migan512 --inpaint-model \"{modelFileName}\" --inpaint-model-sha256 {InpaintModelSha256} " +
+        $"--inpaint-checkpoint-sha256 {InpaintCheckpointSha256} --gpu-backend auto";
+
+    /// <summary>The opt-in gates CrispEmbed requires for MI-GAN 512 F16 and its fast graph.</summary>
+    public static void SetInpaintEnvironment(System.Diagnostics.ProcessStartInfo startInfo)
+    {
+        foreach (var name in new[] { "CRISPEMBED_MIGAN", "CRISPEMBED_MIGAN512", "CRISPEMBED_INPAINT_QUANT", "CRISPEMBED_INPAINT_GRAPH", "CRISPEMBED_INPAINT_FAST" })
+        {
+            startInfo.Environment[name] = "1";
+        }
+    }
+
+    /// <summary>True when the installed CLI knows --inpaint-stream.</summary>
     public static bool SupportsInpainting()
     {
         var exe = GetCliExecutable();
@@ -166,7 +171,7 @@ public static class CrispEmbedEngine
         {
             using var process = new System.Diagnostics.Process
             {
-                StartInfo = new System.Diagnostics.ProcessStartInfo(exe, "--help")
+                StartInfo = new System.Diagnostics.ProcessStartInfo(exe, "--inpaint-help")
                 {
                     UseShellExecute = false,
                     CreateNoWindow = true,

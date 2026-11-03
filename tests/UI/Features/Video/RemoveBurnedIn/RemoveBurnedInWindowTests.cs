@@ -48,8 +48,7 @@ public class RemoveBurnedInWindowTests : IDisposable
         Assert.Equal(200, vm.BrightnessMinimum);
         Assert.Equal(BurnedInMaskBuilder.DefaultGrow(1080), vm.Grow);
         Assert.EndsWith("movie.no-subs.mp4", vm.OutputFileName.Replace('\\', '/'));
-        Assert.Equal(2, vm.Models.Count);
-        Assert.NotNull(vm.SelectedModel);
+        Assert.Equal(4, vm.Methods.Count);
         Assert.NotNull(vm.AudioVisualizer); // the timeline is built with the window
         Assert.Equal(1.5, vm.PositionSeconds, 3); // middle of the first (selected) line
 

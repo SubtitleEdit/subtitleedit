@@ -52,8 +52,6 @@ public class SeVideoOcr
     public int RemoveBurnedInMethod { get; set; }
     public int RemoveBurnedInBlurStrength { get; set; }
 
-    /// <summary>Inpainting model file name (CrispEmbedEngine.InpaintModelLama / InpaintModelMiGan).</summary>
-    public string RemoveBurnedInModel { get; set; }
 
     public SeVideoOcr()
     {
@@ -101,6 +99,5 @@ public class SeVideoOcr
         RemoveBurnedInTemporal = true;
         RemoveBurnedInExtraWidth = 5;
         RemoveBurnedInCrf = 18;
-        RemoveBurnedInModel = CrispEmbedEngine.InpaintModelLama;
     }
 }

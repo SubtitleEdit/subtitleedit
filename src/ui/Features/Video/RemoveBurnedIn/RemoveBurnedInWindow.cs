@@ -286,11 +286,6 @@ public class RemoveBurnedInWindow : Window
         AutomationProperties.SetName(methodCombo, l.Method);
         ToolTip.SetTip(methodCombo, l.MethodHint);
 
-        var modelCombo = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel));
-        modelCombo.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.Models)));
-        modelCombo.HorizontalAlignment = HorizontalAlignment.Stretch;
-        AutomationProperties.SetName(modelCombo, l.Model);
-
         var brightness = EditorChrome.MakeField(nameof(vm.BrightnessMinimum), 1, 255, 90);
         ToolTip.SetTip(brightness, Se.Language.Video.VideoOcr.TextBrightnessMinimumHint);
         var grow = EditorChrome.MakeField(nameof(vm.Grow), 0, 40, 90);
@@ -302,9 +297,7 @@ public class RemoveBurnedInWindow : Window
         var temporal = EditorChrome.MakeSwitchRow(nameof(vm.Temporal), l.TemporalConsistency);
         ToolTip.SetTip(temporal, l.TemporalConsistencyHint);
 
-        // Model and temporal consistency only apply to inpainting, not to the black box.
-        var modelRow = EditorChrome.MakeLabeledRow(l.Model, modelCombo, LabelWidth);
-        modelRow.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInpaint)));
+        // Temporal consistency only applies to inpainting.
         temporal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInpaint)));
 
         var blurStrength = EditorChrome.MakeField(nameof(vm.BlurStrength), 1, 100, 90);
@@ -314,7 +307,6 @@ public class RemoveBurnedInWindow : Window
 
         var maskRows = new StackPanel { Spacing = 8 };
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.Method, methodCombo, LabelWidth));
-        maskRows.Children.Add(modelRow);
         maskRows.Children.Add(blurRow);
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(Se.Language.Video.VideoOcr.TextBrightnessMinimum, brightness, LabelWidth));
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.GrowMask, grow, LabelWidth));

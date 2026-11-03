@@ -1,4 +1,5 @@
 using Avalonia.Media.Imaging;
+using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
@@ -42,106 +43,67 @@ internal static class BurnedInPreviewRenderer
         return bytes.Length >= o.VideoWidth * o.VideoHeight * 3 ? bytes : null;
     }
 
-    /// <summary>Inpaints one frame with crispembed --inpaint; returns the RGB result or null.</summary>
+    /// <summary>
+    /// Inpaints one frame by streaming it through crispembed --inpaint-stream (the same engine
+    /// path as the full run, no temp files); returns the RGB result or null.
+    /// </summary>
     public static async Task<byte[]?> InpaintAsync(BurnedInRemovalOptions o, byte[] rgb, byte[] mask, CancellationToken cancellationToken)
     {
-        var folder = Path.Combine(Path.GetTempPath(), "se-remove-burned-in-" + Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(folder);
-        try
+        var startInfo = new ProcessStartInfo(o.CrispEmbedExecutable,
+            CrispEmbedEngine.GetInpaintArguments(o.ModelFileName) + $" --inpaint-stream {o.VideoWidth}x{o.VideoHeight}")
         {
-            var framePng = Path.Combine(folder, "frame.png");
-            var maskPng = Path.Combine(folder, "mask.png");
-            var outPng = Path.Combine(folder, "out.png");
-            SavePng(framePng, rgb, o.VideoWidth, o.VideoHeight, 3);
-            SavePng(maskPng, mask, o.VideoWidth, o.VideoHeight, 1);
-
-            using var process = new Process
-            {
-                StartInfo = new ProcessStartInfo(o.CrispEmbedExecutable,
-                    $"--inpaint-model \"{o.ModelFileName}\" --inpaint \"{framePng}\" --mask \"{maskPng}\"")
-                {
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    WorkingDirectory = Path.GetDirectoryName(o.CrispEmbedExecutable) ?? string.Empty,
-                },
-            };
-            process.Start();
-            using var registration = cancellationToken.Register(() =>
-            {
-                try
-                {
-                    process.Kill(true);
-                }
-                catch
-                {
-                    // ignore
-                }
-            });
-            var stderr = process.StandardError.ReadToEndAsync(CancellationToken.None);
-            await using (var file = File.Create(outPng))
-            {
-                await process.StandardOutput.BaseStream.CopyToAsync(file, CancellationToken.None);
-            }
-
-            await process.WaitForExitAsync(CancellationToken.None);
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
-
-            if (process.ExitCode != 0 || new FileInfo(outPng).Length == 0)
-            {
-                Se.LogError("Remove burned-in subtitles: crispembed --inpaint failed: " + await stderr);
-                return null;
-            }
-
-            using var result = SKBitmap.Decode(outPng);
-            var resultRgb = new byte[rgb.Length];
-            for (var y = 0; y < o.VideoHeight; y++)
-            {
-                for (var x = 0; x < o.VideoWidth; x++)
-                {
-                    var c = result.GetPixel(x, y);
-                    var i = (y * o.VideoWidth + x) * 3;
-                    resultRgb[i] = c.Red;
-                    resultRgb[i + 1] = c.Green;
-                    resultRgb[i + 2] = c.Blue;
-                }
-            }
-
-            return resultRgb;
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            WorkingDirectory = Path.GetDirectoryName(o.CrispEmbedExecutable) ?? string.Empty,
+        };
+        CrispEmbedEngine.SetInpaintEnvironment(startInfo);
+        using var process = Process.Start(startInfo);
+        if (process == null)
+        {
+            return null;
         }
-        finally
+
+        using var registration = cancellationToken.Register(() =>
         {
             try
             {
-                Directory.Delete(folder, true);
+                process.Kill(true);
             }
             catch
             {
                 // ignore
             }
-        }
-    }
-
-    private static void SavePng(string fileName, byte[] pixels, int width, int height, int channels)
-    {
-        using var bitmap = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Opaque);
-        var span = bitmap.GetPixelSpan();
-        for (int i = 0, o = 0; i < width * height; i++, o += 4)
+        });
+        var stderr = process.StandardError.ReadToEndAsync(CancellationToken.None);
+        var result = new byte[rgb.Length];
+        try
         {
-            var p = i * channels;
-            span[o] = pixels[p];
-            span[o + 1] = channels == 3 ? pixels[p + 1] : pixels[p];
-            span[o + 2] = channels == 3 ? pixels[p + 2] : pixels[p];
-            span[o + 3] = 255;
+            await process.StandardInput.BaseStream.WriteAsync(rgb, CancellationToken.None);
+            await process.StandardInput.BaseStream.WriteAsync(mask, CancellationToken.None);
+            process.StandardInput.Close();
+            await process.StandardOutput.BaseStream.ReadExactlyAsync(result, CancellationToken.None);
+        }
+        catch (Exception exception) when (exception is IOException or EndOfStreamException)
+        {
+            result = null;
         }
 
-        using var data = bitmap.Encode(SKEncodedImageFormat.Png, 100);
-        using var stream = File.Create(fileName);
-        data.SaveTo(stream);
+        await process.WaitForExitAsync(CancellationToken.None);
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return null;
+        }
+
+        if (result == null || process.ExitCode != 0)
+        {
+            Se.LogError("Remove burned-in subtitles: crispembed --inpaint-stream failed: " + await stderr);
+            return null;
+        }
+
+        return result;
     }
 
     /// <summary>Paints a black rectangle into an RGB24 frame (the black-box method's result).</summary>

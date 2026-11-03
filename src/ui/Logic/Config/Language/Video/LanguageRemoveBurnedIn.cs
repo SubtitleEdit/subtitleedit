@@ -15,9 +15,6 @@ public class LanguageRemoveBurnedIn
     public string BlurStrength { get; set; }
     public string BlurStrengthHint { get; set; }
     public string EncodingXYZ { get; set; }
-    public string Model { get; set; }
-    public string ModelLama { get; set; }
-    public string ModelMiGan { get; set; }
     public string RequireOutline { get; set; }
     public string RequireOutlineHint { get; set; }
     public string GrowMask { get; set; }
@@ -75,9 +72,6 @@ public class LanguageRemoveBurnedIn
         BlurStrength = "Blur strength";
         BlurStrengthHint = "Box blur radius in pixels";
         EncodingXYZ = "Encoding... frame {0:#,##0} of {1:#,##0} ({2:0.0} fps)";
-        Model = "Model";
-        ModelLama = "LaMa - best quality, slower";
-        ModelMiGan = "MI-GAN - fast";
         RequireOutline = "Text has a dark outline";
         RequireOutlineHint = "Only remove bright pixels next to a dark outline - keeps bright picture details out of the mask";
         GrowMask = "Grow mask (pixels)";

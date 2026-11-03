@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
@@ -365,7 +366,7 @@ public sealed class BurnedInSubtitleRemover
         var matrix = ColorMatrix(h);
         var decoderArgs = $"-nostdin -v error -i \"{o.VideoFileName}\" -map 0:v:0 " +
                           $"-vf \"scale=in_color_matrix={matrix}:in_range=tv,format=rgb24\" -f rawvideo -pix_fmt rgb24 -";
-        var crispArgs = $"--inpaint-model \"{o.ModelFileName}\" --inpaint-stream {w}x{h}" + (o.Temporal ? " --inpaint-temporal" : string.Empty);
+        var crispArgs = CrispEmbedEngine.GetInpaintArguments(o.ModelFileName) + $" --inpaint-stream {w}x{h}" + (o.Temporal ? " --inpaint-temporal 15" : string.Empty);
         var rate = o.FrameRate.ToString("0.######", CultureInfo.InvariantCulture);
         var encoderArgs = $"-nostdin -v error -y -f rawvideo -pix_fmt rgb24 -s {w}x{h} -framerate {rate} -i - -i \"{o.VideoFileName}\" " +
                           "-map 0:v:0 -map 1:a? -c:a copy " +
@@ -377,7 +378,7 @@ public sealed class BurnedInSubtitleRemover
         AppendLog("ffmpeg " + encoderArgs);
 
         using var decoder = StartProcess(FfmpegHelper.GetFfmpegLocation(), decoderArgs, redirectInput: false);
-        using var crisp = StartProcess(o.CrispEmbedExecutable, crispArgs, redirectInput: true);
+        using var crisp = StartProcess(o.CrispEmbedExecutable, crispArgs, redirectInput: true, inpaint: true);
         using var encoder = StartProcess(FfmpegHelper.GetFfmpegLocation(), encoderArgs, redirectInput: true);
         var all = new[] { decoder, crisp, encoder };
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -533,7 +534,7 @@ public sealed class BurnedInSubtitleRemover
         return ok;
     }
 
-    private Process StartProcess(string fileName, string arguments, bool redirectInput, string? workingDirectory = null)
+    private Process StartProcess(string fileName, string arguments, bool redirectInput, string? workingDirectory = null, bool inpaint = false)
     {
         var process = new Process
         {
@@ -548,6 +549,11 @@ public sealed class BurnedInSubtitleRemover
                                    (Path.GetDirectoryName(fileName) is { Length: > 0 } dir && Directory.Exists(dir) ? dir : string.Empty),
             },
         };
+
+        if (inpaint)
+        {
+            CrispEmbedEngine.SetInpaintEnvironment(process.StartInfo);
+        }
 
         var name = Path.GetFileNameWithoutExtension(fileName);
         process.ErrorDataReceived += (_, e) =>
