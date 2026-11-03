@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.UiLogic.Translate;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
@@ -1807,7 +1808,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                     break;
                 }
 
-                var translatedCount = await advancedTranslator.TranslateBatchAsync(rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken);
+                var translatedCount = await advancedTranslator.TranslateBatchAsync(rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken, ApplyRowUpdateOnUiThread);
                 index += translatedCount;
 
                 reportProgress(index);

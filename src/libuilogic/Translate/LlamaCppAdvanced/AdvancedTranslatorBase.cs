@@ -1,15 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using Avalonia.Threading;
-using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
-using Nikse.SubtitleEdit.UiLogic.Translate;
 
-namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
+namespace Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 /// <summary>
 /// Shared batch/context translation loop of the "advanced" local-LLM engines: sends numbered
@@ -18,7 +10,7 @@ namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 /// guaranteed. The Auto-translate loop and batch convert both call <see cref="TranslateBatchAsync"/>
 /// (via <see cref="IBatchContextTranslator"/>); the plain <see cref="Translate"/> path (used for
 /// "translate current line") is a context-free batch of one. Subclasses only supply the endpoint
-/// and, where the server needs one, the model name.
+/// and, where the server needs one, the model name; the host sets <see cref="Settings"/>.
 /// </summary>
 public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTranslator, IDisposable
 {
@@ -29,6 +21,12 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     public string Error { get; set; } = string.Empty;
     public int MaxCharacters => 1000;
 
+    /// <summary>
+    /// Batch/context options and sampling overrides, set before <see cref="Initialize"/>. The UI
+    /// engines point this at the persisted settings; a headless host (seconv) fills in its own.
+    /// </summary>
+    public SeLlamaCppAdvanced Settings { get; set; } = new();
+
     /// <summary>The chat-completions endpoint to call (read per request, after any server startup).</summary>
     protected abstract string GetApiUrl();
 
@@ -38,7 +36,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     public void Initialize()
     {
         _client?.Dispose();
-        _client = new LlamaCppAdvancedClient();
+        _client = new LlamaCppAdvancedClient(Settings);
     }
 
     public List<TranslationPair> GetSupportedSourceLanguages()
@@ -69,14 +67,17 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// invalid reply the batch is retried once, then halved - a model that cannot manage a full
     /// batch often still manages a smaller one.
     /// </summary>
-    public async Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+    /// <param name="applyRowUpdate">Optional marshaller invoked around every write to the rows -
+    /// the Auto-translate window passes a UI-thread invoke for its grid-bound rows; batch convert
+    /// and seconv omit it and the rows are written directly.</param>
+    public async Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken, Action<Action>? applyRowUpdate = null)
     {
-        var settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
-        var batchSize = Math.Clamp(settings.BatchSize, 1, 50);
+        applyRowUpdate ??= action => action();
+        var batchSize = Math.Clamp(Settings.BatchSize, 1, 50);
         if (MergeAndSplitHelper.IsKeptUntranslated(rows[index].Text))
         {
             var row = rows[index];
-            Dispatcher.UIThread.Invoke(() => row.TranslatedText = row.Text);
+            applyRowUpdate(() => row.TranslatedText = row.Text);
             return 1;
         }
 
@@ -88,10 +89,10 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
             count++;
         }
 
-        return await TranslateChunkAsync(rows, index, count, sourceLanguageCode, targetLanguageCode, cancellationToken);
+        return await TranslateChunkAsync(rows, index, count, sourceLanguageCode, targetLanguageCode, cancellationToken, applyRowUpdate);
     }
 
-    private async Task<int> TranslateChunkAsync(ObservableCollection<TranslateRow> rows, int index, int count, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+    private async Task<int> TranslateChunkAsync(ObservableCollection<TranslateRow> rows, int index, int count, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken, Action<Action> applyRowUpdate)
     {
         // This path deliberately skips MergeAndSplitHelper (its merge/split heuristics would
         // break the alignment the reply schema guarantees), and with it the Formatting pass that
@@ -122,9 +123,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                                                       FindDuplicatedTranslation(map, lines, history) < 0 &&
                                                       FindPlaceholderTranslation(map, lines) < 0)))
         {
-            // Runs on the background translation loop; the rows are DataGrid-bound, so the
-            // writes must happen on the UI thread.
-            Dispatcher.UIThread.Invoke(() =>
+            applyRowUpdate(() =>
             {
                 for (var i = 0; i < count; i++)
                 {
@@ -142,7 +141,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         {
             // The model could not fill the full batch - translate the first half only; the outer
             // loop calls again for the rest (with the successful half now part of the history).
-            return await TranslateChunkAsync(rows, index, count / 2, sourceLanguageCode, targetLanguageCode, cancellationToken);
+            return await TranslateChunkAsync(rows, index, count / 2, sourceLanguageCode, targetLanguageCode, cancellationToken, applyRowUpdate);
         }
 
         throw new HttpRequestException("No usable translation in " + Name + " reply" +
@@ -152,12 +151,11 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     private async Task<Dictionary<int, string>> TranslateLinesAsync(List<LlamaCppAdvancedProtocol.BatchLine> lines, List<LlamaCppAdvancedProtocol.HistoryPair> history, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
     {
         var client = _client ?? throw new InvalidOperationException("Initialize() not called");
-        var settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
         var url = GetApiUrl();
 
         // The "codes" this engine receives are English language names (ListLanguages puts the
         // name in TranslationPair.Code), which is what the prompt expects.
-        var systemPrompt = LlamaCppAdvancedProtocol.BuildSystemPrompt(sourceLanguageCode, targetLanguageCode, settings);
+        var systemPrompt = LlamaCppAdvancedProtocol.BuildSystemPrompt(sourceLanguageCode, targetLanguageCode, Settings);
         var userContent = LlamaCppAdvancedProtocol.BuildUserContent(history, lines);
         var responseFormat = LlamaCppAdvancedProtocol.BuildResponseFormatJson(lines);
 
@@ -259,10 +257,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// <summary>
     /// The rolling context: the last N already-translated rows immediately before the batch.
     /// </summary>
-    private static List<LlamaCppAdvancedProtocol.HistoryPair> CollectHistory(ObservableCollection<TranslateRow> rows, int index)
+    private List<LlamaCppAdvancedProtocol.HistoryPair> CollectHistory(ObservableCollection<TranslateRow> rows, int index)
     {
-        var settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
-        var maxPairs = Math.Clamp(settings.HistoryPairs, 0, 50);
+        var maxPairs = Math.Clamp(Settings.HistoryPairs, 0, 50);
         var history = new List<LlamaCppAdvancedProtocol.HistoryPair>(maxPairs);
         for (var i = index - 1; i >= 0 && history.Count < maxPairs; i--)
         {

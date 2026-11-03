@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 namespace UITests.Features.Tools.BatchConvert;
 
