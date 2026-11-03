@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -26,14 +27,14 @@ public static class SpeechIsolationModelDownload
             SpeechIsolationModel.ToWhisperModel(),
             SpeechIsolationModel.DisplayName,
             featureName,
-            "a source separation model");
+            Se.Language.Video.AudioToText.ASourceSeparationModel);
     }
 
     /// <summary>
     /// Makes sure a model that a Crisp ASR option needs on top of the transcription model is in
     /// the Crisp ASR models folder, prompting for the download when it is missing.
     /// </summary>
-    /// <param name="modelKind">What the model is, as the user reads it: "a source separation model".</param>
+    /// <param name="modelKind">What the model is, as the user reads it: "a source separation model" (localized).</param>
     /// <returns>False when the user declines or cancels - the run must not start in that case.</returns>
     public static async Task<bool> EnsureModelDownloadedAsync(
         Window window,
@@ -49,10 +50,11 @@ public static class SpeechIsolationModelDownload
             return true;
         }
 
+        var l = Se.Language.Video.AudioToText;
         var answer = await MessageBox.Show(
             window,
-            $"Download {displayName}?",
-            $"'{featureName}' requires {modelKind}.\nDownload and use {model.Name} ({model.Size})?",
+            string.Format(l.DownloadXQuestion, displayName),
+            string.Format(l.FeatureXRequiresYDownloadZ, featureName, modelKind, model.Name, model.Size),
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 
@@ -61,6 +63,21 @@ public static class SpeechIsolationModelDownload
             return false;
         }
 
+        return await DownloadModelAsync(window, windowService, crispAsrEngine, model, displayName);
+    }
+
+    /// <summary>
+    /// Downloads a model into the engine's models folder without asking first - for callers that
+    /// already got the user's go-ahead, e.g. one prompt covering several models.
+    /// </summary>
+    /// <returns>False when the download was cancelled or failed.</returns>
+    public static async Task<bool> DownloadModelAsync(
+        Window window,
+        IWindowService windowService,
+        ISpeechToTextEngine crispAsrEngine,
+        WhisperModel model,
+        string displayName)
+    {
         var displayModel = new SpeechToTextModelDisplay
         {
             Model = model,

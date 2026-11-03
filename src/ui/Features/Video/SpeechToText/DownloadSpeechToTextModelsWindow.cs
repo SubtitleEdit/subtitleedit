@@ -30,6 +30,7 @@ public class DownloadSpeechToTextModelsWindow : Window
 
         var buttonDownload = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCommand));
         buttonDownload.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.DownloadIsEnabled)));
+        buttonDownload.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsModelPickerVisible)));
 
         var buttonOpenFolder = EditorChrome.CreateToolButton("fa-solid fa-folder-open", Se.Language.General.OpenContainingFolder, vm.OpenModelFolderCommand, 28);
 
@@ -96,12 +97,24 @@ public class DownloadSpeechToTextModelsWindow : Window
         };
         fileText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressFileName)));
 
+        // Names the model in place of the hidden picker when the download started on its own.
+        var modelText = new TextBlock
+        {
+            Margin = new Thickness(0, 0, 0, 8),
+            FontWeight = FontWeight.SemiBold,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
+        modelText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.DownloadingModelText)));
+        modelText.Bind(IsVisibleProperty, new Binding(nameof(vm.IsModelPickerVisible)) { Converter = Avalonia.Data.Converters.BoolConverters.Not });
+
         var panelStatus = new StackPanel
         {
             Orientation = Orientation.Vertical,
             Margin = new Thickness(16, 14, 16, 14),
             Children =
             {
+                modelText,
                 progressBar,
                 statusText,
                 errorText,
@@ -112,17 +125,20 @@ public class DownloadSpeechToTextModelsWindow : Window
         var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand);
         var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonDownload);
 
+        var borderModelPicker = new Border
+        {
+            Child = EditorChrome.MakeEditorSection(Se.Language.Video.AudioToText.SelectModel, modelRows, first: true),
+            Background = EditorChrome.PanelBrush,
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(0, 0, 0, 1),
+        };
+        borderModelPicker.Bind(IsVisibleProperty, new Binding(nameof(vm.IsModelPickerVisible)));
+
         Content = new StackPanel
         {
             Children =
             {
-                new Border
-                {
-                    Child = EditorChrome.MakeEditorSection(Se.Language.Video.AudioToText.SelectModel, modelRows, first: true),
-                    Background = EditorChrome.PanelBrush,
-                    BorderBrush = EditorChrome.LineBrush,
-                    BorderThickness = new Thickness(0, 0, 0, 1),
-                },
+                borderModelPicker,
                 panelStatus,
                 buttonBar,
             },
