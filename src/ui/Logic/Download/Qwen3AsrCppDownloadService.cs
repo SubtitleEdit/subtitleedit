@@ -30,10 +30,15 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
     // model mis-detect languages on short clips and cost ~9 WER points versus transformers; it
     // also pads the trailing conv chunk like the reference and forces the language from the
     // prompt when -l is given. v0.1.10 adds beam search (--beam-size); SE passes --beam-size 3,
-    // which took a Danish fine-tune from 25.2 to about 23 WER at roughly 2x decode time.
+    // which took a Danish fine-tune from 25.2 to about 23 WER at roughly 2x decode time. v0.1.11
+    // fixes the instant SIGILL (exit code 132) on Linux (#16593): v0.1.10's Linux packages were
+    // built for the CI runner's CPU (AVX-512 on x64, SVE on arm64); Windows and Linux now ship one
+    // ggml CPU module per instruction set and pick the best at run time. It also replaces the
+    // Windows/Linux mel spectrogram's direct DFT with a threaded FFT (~4 min saved per hour of
+    // audio) and bumps ggml to 0.28.0.
     // CPU for every platform, plus Vulkan (GPU) for win64 and linux-x64. When bumping: also prepend the new archive + executable hashes in
     // DownloadHashManager (Qwen3AsrCpp keys) so the update prompt fires for old installs.
-    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-asr.cpp/releases/download/v0.1.10/";
+    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-asr.cpp/releases/download/v0.1.11/";
     private const string WindowsUrl = ReleaseUrlBase + "qwen3-asr-cpp-win64.zip";
     private const string WindowsVulkanUrl = ReleaseUrlBase + "qwen3-asr-cpp-win64-vulkan.zip";
     private const string MacArmUrl = ReleaseUrlBase + "qwen3-asr-cpp-mac.zip";

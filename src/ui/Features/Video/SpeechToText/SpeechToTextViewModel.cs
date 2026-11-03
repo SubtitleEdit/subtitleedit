@@ -1106,6 +1106,32 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Explains a Qwen3 ASR CPP run that produced no output JSON, or null for a clean exit.
+    /// An illegal instruction gets its own message: qwen3-asr.cpp v0.1.10's Linux packages were
+    /// built for the CI runner's CPU (AVX-512 on x64, SVE on arm64) and died instantly with exit
+    /// code 132 on most other CPUs (#16593), where the generic "try a different model" advice
+    /// sent users the wrong way. Builds from v0.1.11 pick their CPU code at run time.
+    /// </summary>
+    internal static string? DescribeQwen3AsrCrash(int? exitCode, bool isVulkan, string url)
+    {
+        if (exitCode is null or 0)
+        {
+            return null;
+        }
+
+        if (exitCode.Value is StatusIllegalInstruction or UnixSigill)
+        {
+            return "The Qwen3 ASR engine was stopped for using CPU instructions this computer does not have " +
+                   "(illegal instruction), so it never produced any output. Download the Qwen3 ASR engine again " +
+                   $"to get a build that runs on this CPU, or report it at {url}";
+        }
+
+        return isVulkan
+            ? $"The Qwen3 ASR GPU (Vulkan) engine crashed before producing output. Try the CPU build instead (re-download the engine and choose CPU), or report it at {url}"
+            : $"The Qwen3 ASR engine crashed before producing output. Try re-running, a different model, or report it at {url}";
+    }
+
+    /// <summary>
     /// The Crisp ASR package the user actually has installed, from the download sidecar. Best-effort:
     /// this only sharpens a diagnostic message, so an unreadable sidecar is not worth failing over.
     /// </summary>
@@ -1354,12 +1380,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                         Se.Language.Video.AudioToText.UnknownArgumentMessage);
                 }
                 LogToConsole($"Speech to text: Could not find output JSON file ({exitCodeText}){Environment.NewLine}");
-                if (exitCode is not (null or 0))
+                var crash = DescribeQwen3AsrCrash(exitCode, isVulkan, new Qwen3AsrCppEngine().Url);
+                if (crash != null)
                 {
-                    var url = new Qwen3AsrCppEngine().Url;
-                    LogToConsole(isVulkan
-                        ? $"The Qwen3 ASR GPU (Vulkan) engine crashed before producing output. Try the CPU build instead (re-download the engine and choose CPU), or report it at {url}{Environment.NewLine}"
-                        : $"The Qwen3 ASR engine crashed before producing output. Try re-running, a different model, or report it at {url}{Environment.NewLine}");
+                    LogToConsole(crash + Environment.NewLine);
                 }
                 ProgressValue = 100;
                 IsTranscribeEnabled = true;
