@@ -397,6 +397,13 @@ public partial class MainViewModel :
     /// Each has its own grid column; this gates the shared "Show style column" menu item.
     /// </summary>
     [ObservableProperty] private bool _hasFormatStyle;
+
+    /// <summary>
+    /// True when the current format keeps an actor (ASSA/SSA, WebVTT voice, dialogue-list CSV/Excel
+    /// and transcript formats). Gates the Actor/Voice column and its menu item, so the column
+    /// is not left showing for e.g. SubRip, where actors are lost on save (#16596).
+    /// </summary>
+    [ObservableProperty] private bool _hasFormatActor;
     [ObservableProperty] private bool _isFormatWebVtt;
 
     /// <summary>
@@ -9373,6 +9380,25 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             EndToolApply(toolApply, () => ApplyFixedSubtitle(result.FixedSubtitle, idx));
+            SwitchToAssaIfActorsWouldBeLost();
+        }
+    }
+
+    /// <summary>
+    /// Convert actors can fill in actors on e.g. SubRip, which drops them on save and hides the
+    /// Actor column (#16596): switch to ASSA, as auto-cast does, so the result shows and is kept.
+    /// </summary>
+    private void SwitchToAssaIfActorsWouldBeLost()
+    {
+        if (HasFormatActor || !Subtitles.Any(p => !string.IsNullOrWhiteSpace(p.Actor)))
+        {
+            return;
+        }
+
+        var assaFormat = SubtitleFormats.FirstOrDefault(f => f is AdvancedSubStationAlpha);
+        if (assaFormat != null)
+        {
+            SelectedSubtitleFormat = assaFormat;
         }
     }
 
@@ -9416,6 +9442,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             EndToolApply(toolApply, () => ApplyDialogRows(SpliceSelectedLinesResult(Subtitles, ordered, result.FixedSubtitle), before));
+            SwitchToAssaIfActorsWouldBeLost();
         }
 
         _shortcutManager.ClearKeys();
@@ -38064,6 +38091,7 @@ public partial class MainViewModel :
         UpdateTemporaryFrameMode();
 
         HasFormatStyle = IsFormatAssaOrSsa || IsFormatWebVtt || IsFormatYtt;
+        HasFormatActor = FormatHasActor(SelectedSubtitleFormat);
         ShowActorColumnMenuHeader = IsFormatWebVtt
             ? Se.Language.File.WebVtt.ShowVoiceColumn
             : Se.Language.General.ShowActorColumn;
@@ -38201,6 +38229,15 @@ public partial class MainViewModel :
         {
             SelectAndScrollToRow(idx);
         }
+    }
+
+    /// <summary>The formats that read or write <see cref="Paragraph.Actor"/> (WebVTT as the cue voice).</summary>
+    internal static bool FormatHasActor(SubtitleFormat? format)
+    {
+        return format is AdvancedSubStationAlpha or SubStationAlpha or WebVTT or WebVTTFileWithLineNumber
+            or CsvDaVinci or CsvExcel or CsvNuendo or MsOfficeWorkbook or FinalDraftTemplate2
+            or NVivoTranscript or OtterAi or PodcastIndexer or VocapiaSplit or JsonTypeOnlyLoad6
+            or UnknownSubtitle60 or UnknownSubtitle88 or UnknownSubtitle89;
     }
 
     internal void AutoSelectOnPlayCheckedChanged()
