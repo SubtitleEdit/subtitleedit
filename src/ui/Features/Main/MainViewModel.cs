@@ -1283,6 +1283,38 @@ public partial class MainViewModel :
         StartCheckForUpdates();
     }
 
+    private static bool _fontFacesPreloadStarted;
+
+    /// <summary>
+    /// Reads every installed font's face name once, in the background, so the first Settings,
+    /// Burn-in, ASSA styles, ... window does not stall while it scans the fonts (the list is
+    /// cached for the rest of the session).
+    /// </summary>
+    private static void PreloadFontFaces()
+    {
+        // Only in the real desktop app - headless unit tests also load this view model.
+        if (_fontFacesPreloadStarted || Application.Current?.ApplicationLifetime is not ClassicDesktopStyleApplicationLifetime)
+        {
+            return;
+        }
+
+        _fontFacesPreloadStarted = true;
+        _ = Task.Run(async () =>
+        {
+            // Let the main window and a start-up file come up first.
+            await Task.Delay(TimeSpan.FromSeconds(3));
+
+            try
+            {
+                FontHelper.GetLibAssaFonts();
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, "Preloading font faces failed");
+            }
+        });
+    }
+
     private void StartCheckForUpdates()
     {
         if (!Se.Settings.General.CheckForUpdatesOnStartup || UpdateCheckService.IsStoreManagedInstall)
@@ -30262,6 +30294,7 @@ public partial class MainViewModel :
     internal void OnLoaded()
     {
         StartBackgroundWork();
+        PreloadFontFaces();
 
         if (OperatingSystem.IsMacOS())
         {
