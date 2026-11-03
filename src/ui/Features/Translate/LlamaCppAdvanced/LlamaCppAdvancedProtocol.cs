@@ -26,8 +26,10 @@ public static class LlamaCppAdvancedProtocol
         "use them only for context and consistency (names, pronouns, formality), do not re-translate them. " +
         "\"lines\" holds the lines to translate now, each with a line number \"n\" and its \"text\" " +
         "(a \"\\n\" inside a text is a line break inside that subtitle).\n" +
+        "A sentence often continues from one line to the next: still translate each line on its own and " +
+        "never move words to another line - each translation holds only the meaning of its own line.\n" +
         "Answer with ONLY a JSON object mapping every line number to its translation, e.g. " +
-        "{\"1\":\"...\",\"2\":\"...\"}. Include each line number exactly once and nothing else.";
+        "{\"1\":\"<translation of line 1>\",\"2\":\"<translation of line 2>\"}. Include each line number exactly once and nothing else.";
 
     public record HistoryPair(string Source, string Target);
     public record BatchLine(int Number, string Text);

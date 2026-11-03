@@ -46,5 +46,40 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             return -1;
         }
+
+        /// <summary>
+        /// The index of the first row whose source has letters but whose translation has neither
+        /// letters nor digits ("...", "…", "-"); -1 when there is none. The same merge as in
+        /// <see cref="FindDuplicatedTranslation"/>, only padded with a placeholder instead of a
+        /// copy (#16585) - TranslateGemma 12B joined a sentence split over two rows into the
+        /// first, moved every later row up by one and filled the freed row with "...".
+        /// </summary>
+        public static int FindPlaceholderTranslation(IReadOnlyList<string> sources, IReadOnlyList<string> translations)
+        {
+            var count = Math.Min(sources.Count, translations.Count);
+            for (var i = 0; i < count; i++)
+            {
+                if (HasLetterOrDigit(TranslationEchoGuard.Normalize(sources[i] ?? string.Empty)) &&
+                    !HasLetterOrDigit(TranslationEchoGuard.Normalize(translations[i] ?? string.Empty)))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private static bool HasLetterOrDigit(string text)
+        {
+            foreach (var c in text)
+            {
+                if (char.IsLetterOrDigit(c))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

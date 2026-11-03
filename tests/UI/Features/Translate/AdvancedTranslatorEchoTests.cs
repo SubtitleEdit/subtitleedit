@@ -112,4 +112,31 @@ public class AdvancedTranslatorEchoTests
 
         Assert.Equal(-1, AdvancedTranslatorBase.FindDuplicatedTranslation(map, Lines, new List<LlamaCppAdvancedProtocol.HistoryPair>()));
     }
+
+    // Issue #16585: the same shift, but the freed row padded with "..." instead of a copy.
+    [Fact]
+    public void ShiftedBatchPaddedWithPlaceholder_IsReported()
+    {
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Wo warst du letzte Nacht? Erik.",
+            [2] = "Ich war bis spät im Büro.",
+            [3] = "...",
+        };
+
+        Assert.Equal(3, AdvancedTranslatorBase.FindPlaceholderTranslation(map, Lines));
+    }
+
+    [Fact]
+    public void AlignedBatch_HasNoPlaceholder()
+    {
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Wo warst du letzte Nacht?",
+            [2] = "Erik.",
+            [3] = "Ich war bis spät im Büro.",
+        };
+
+        Assert.Equal(-1, AdvancedTranslatorBase.FindPlaceholderTranslation(map, Lines));
+    }
 }
