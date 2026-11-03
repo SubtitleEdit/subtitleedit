@@ -213,6 +213,18 @@ public class LlamaCppAdvancedClientReasoningTests
         Assert.False(doc.RootElement.GetProperty("chat_template_kwargs").GetProperty("enable_thinking").GetBoolean());
     }
 
+    [Fact]
+    public void RequestUsesTheSamplingFromTheGivenSettings()
+    {
+        var settings = new SeLlamaCppAdvanced { Temperature = 0.7, TopK = 40, MaxTokens = 123 };
+        var json = LlamaCppAdvancedClient.BuildRequestJson(settings, "system", "user", null, null, 100);
+
+        using var doc = System.Text.Json.JsonDocument.Parse(json);
+        Assert.Equal(0.7, doc.RootElement.GetProperty("temperature").GetDouble());
+        Assert.Equal(40, doc.RootElement.GetProperty("top_k").GetInt32());
+        Assert.Equal(123, doc.RootElement.GetProperty("max_tokens").GetInt32());
+    }
+
     /// <summary>
     /// A hybrid Qwen model on a server started without "--reasoning off" thinks until the token
     /// budget runs out, leaving only reasoning_content; the next request must ask for no thinking.
