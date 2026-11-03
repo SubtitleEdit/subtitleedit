@@ -609,6 +609,7 @@ public static partial class InitListViewAndEditBox
             Bindings =
             {
                 new Binding(nameof(vm.IsFormatWebVtt)) { Source = vm, Mode = BindingMode.OneWay, Converter = inverseBooleanConverter },
+                new Binding(nameof(vm.HasFormatActor)) { Source = vm, Mode = BindingMode.OneWay },
                 new Binding(nameof(vm.ShowColumnActor)) { Source = vm, Mode = BindingMode.OneWay },
             }
         });
@@ -973,7 +974,15 @@ public static partial class InitListViewAndEditBox
                 [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnActor)),
             }
         };
-        showActorMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.OneWay });
+        showActorMenuItem.Bind(Visual.IsVisibleProperty, new MultiBinding
+        {
+            Converter = booleanAndConverter,
+            Bindings =
+            {
+                new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Source = vm, Mode = BindingMode.OneWay },
+                new Binding(nameof(vm.HasFormatActor)) { Source = vm, Mode = BindingMode.OneWay },
+            }
+        });
         flyout.Items.Add(showActorMenuItem);
 
         var showCpsMenuItem = new MenuItem
