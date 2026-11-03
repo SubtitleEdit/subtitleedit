@@ -84,4 +84,44 @@ public class TranslationShiftGuardTests
         Assert.Equal(1, TranslationShiftGuard.FindDuplicatedTranslation(sources, translations, firstCheckedIndex: 1));
         Assert.Equal(-1, TranslationShiftGuard.FindDuplicatedTranslation(sources, translations, firstCheckedIndex: 2));
     }
+
+    // Issue #16585: TranslateGemma 12B (en -> nl) joined "are the ocean's" + "most spectacular
+    // animals." into one row, moved the next rows up by one and padded the freed row with "...".
+    [Fact]
+    public void ShiftedReplyPaddedWithPlaceholder_ReportsThePlaceholder()
+    {
+        var sources = new[]
+        {
+            "...but hidden here\nare the ocean's",
+            "most spectacular animals.",
+            "A blue whale.",
+            "At 25 metres long,",
+            "it's the largest creature\nthat has ever existed.",
+        };
+        var translations = new[]
+        {
+            "...maar hier verborgen\nzich de meest spectaculaire\ndieren van de oceaan.",
+            "Een blauwe vinvis.",
+            "Met een lengte van 25 meter,",
+            "...",
+            "Het is het grootste wezen\nter wereld.",
+        };
+
+        Assert.Equal(3, TranslationShiftGuard.FindPlaceholderTranslation(sources, translations));
+    }
+
+    [Theory]
+    [InlineData("\u2026")]
+    [InlineData("-")]
+    [InlineData("<i>...</i>")]
+    public void PlaceholderVariants_AreReported(string placeholder)
+    {
+        Assert.Equal(1, TranslationShiftGuard.FindPlaceholderTranslation(new[] { "Close to the water...", "...the weed moves" }, new[] { "Dichtbij het water...", placeholder }));
+    }
+
+    [Fact]
+    public void PunctuationOnlySource_MayStayPunctuation()
+    {
+        Assert.Equal(-1, TranslationShiftGuard.FindPlaceholderTranslation(new[] { "Yes.", "...", "25" }, new[] { "Ja.", "...", "25" }));
+    }
 }
