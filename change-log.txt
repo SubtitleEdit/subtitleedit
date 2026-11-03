@@ -10,7 +10,7 @@ v5.4.0-rc2 (3rd of November 2026)
 * Auto-translate: skip more music/lyric line layouts - thx lordvorkosigan1968-cloud
 * Blu-ray sup: add HDR (BT.2020 PQ) palette option - thx Victory61
 * Bookmarks list: add import and export
-* Source view: Ctrl+S applies changes - thx pdjdev
+* Source view: Ctrl+Enter (Cmd+Enter on macOS) applies changes - thx pdjdev
 * Add Croatian UI translation (machine draft, needs review) - thx lordvorkosigan1968-cloud
 * Update Avalonia to 12.1.5
 * Fix Auto-translate shifting translations when the engine merges two rows - thx mmmsh-125
