@@ -15,5 +15,7 @@ public interface IBatchContextTranslator
     /// Translates the next batch starting at <paramref name="index"/>, writing the results into
     /// the rows, and returns the number of rows translated (always at least 1, or throws).
     /// </summary>
-    Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken);
+    /// <param name="applyRowUpdate">Optional marshaller invoked around every write to the rows;
+    /// a caller with grid-bound rows passes a UI-thread invoke, headless callers omit it.</param>
+    Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken, Action<Action>? applyRowUpdate = null);
 }
