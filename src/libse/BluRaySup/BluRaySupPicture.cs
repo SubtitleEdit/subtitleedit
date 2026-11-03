@@ -634,6 +634,15 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return frame * 90000 * denominator / numerator;
         }
 
+        /// <summary>
+        /// Whether a stream of video <paramref name="height"/> has its palette in BT.601: the SD
+        /// formats (480 and 576 lines) use BT.601, 720 and up BT.709 - as SD video does.
+        /// </summary>
+        public static bool UsesBt601(double height)
+        {
+            return height > 0 && height < 720;
+        }
+
         private static long _lastEndTimeForWrite = -1000;
 
         // PG segment types
@@ -1134,7 +1143,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 palSize += obj.Palette.Count;
             }
 
-            var pal = new BluRaySupPalette(palSize);
+            var pal = new BluRaySupPalette(palSize, UsesBt601(pic.Height));
             foreach (var obj in encoded)
             {
                 for (var i = 0; i < obj.Palette.Count; i++)
