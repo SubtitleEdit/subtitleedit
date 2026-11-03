@@ -75,6 +75,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
+
+    /// <summary>The black boxes as an ASSA subtitle (black box method), for the main window.</summary>
+    public string BoxesAssa { get; private set; } = string.Empty;
     public AudioVisualizer? AudioVisualizer { get; set; }
 
     private readonly IWindowService _windowService;
@@ -564,7 +567,6 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         Grow = Grow,
         ExtraWidth = ExtraWidth,
         Temporal = Temporal,
-        BlackBox = !IsInpaint,
         Crf = Crf,
         CrispEmbedExecutable = CrispEmbedEngine.GetCliExecutable(),
         ModelFileName = GetModelFileName(),
@@ -611,7 +613,18 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     private async Task Start()
     {
         var included = Lines.Where(l => l.IsIncluded).ToList();
-        if (IsRunning || included.Count == 0 || string.IsNullOrWhiteSpace(OutputFileName))
+        if (IsRunning || included.Count == 0)
+        {
+            return;
+        }
+
+        if (!IsInpaint)
+        {
+            await MakeBoxes(included);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(OutputFileName))
         {
             return;
         }
@@ -622,7 +635,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             return;
         }
 
-        if (IsInpaint && !await EnsureEngineReady())
+        if (!await EnsureEngineReady())
         {
             return;
         }
@@ -638,8 +651,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             ProgressValue = p.Percent;
             ProgressText = p.Pass == 1
                 ? string.Format(Se.Language.Video.RemoveBurnedIn.BuildingMasksX, $"{p.Percent / 15.0:0%}")
-                : string.Format(options.BlackBox ? Se.Language.Video.RemoveBurnedIn.CoveringXYZ : Se.Language.Video.RemoveBurnedIn.RemovingXYZ,
-                    p.Frame, p.TotalFrames, p.FramesPerSecond);
+                : string.Format(Se.Language.Video.RemoveBurnedIn.RemovingXYZ, p.Frame, p.TotalFrames, p.FramesPerSecond);
         });
 
         IsDone = false;
@@ -692,6 +704,62 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             elapsed.TotalHours >= 1 ? elapsed.ToString(@"h\:mm\:ss") : elapsed.ToString(@"m\:ss"));
         IsDone = true;
         OkPressed = true;
+    }
+
+    /// <summary>Black box method: builds the masks and hands the boxes to the main window as ASSA.</summary>
+    private async Task MakeBoxes(List<RemoveBurnedInLineItem> included)
+    {
+        SaveSettings();
+        await _previewCancellation.CancelAsync();
+        _cancellationTokenSource = new CancellationTokenSource();
+        var token = _cancellationTokenSource.Token;
+        var options = MakeOptions(included.Select(l => (l.Line.StartTime, l.Line.EndTime)).ToList());
+        var remover = new BurnedInSubtitleRemover();
+        var progress = new Progress<BurnedInSubtitleRemover.ProgressInfo>(p =>
+        {
+            ProgressValue = p.Percent;
+            ProgressText = string.Format(Se.Language.Video.RemoveBurnedIn.BuildingMasksX, $"{p.Percent / 100.0:0%}");
+        });
+
+        IsDone = false;
+        IsRunning = true;
+        ProgressValue = 0;
+        ProgressText = string.Format(Se.Language.Video.RemoveBurnedIn.BuildingMasksX, string.Empty);
+        string? assa;
+        try
+        {
+            assa = await Task.Run(() => remover.MakeBoxesAssaAsync(options, progress, token), token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Remove burned-in subtitles: black boxes failed");
+            assa = null;
+        }
+        finally
+        {
+            IsRunning = false;
+            ProgressText = string.Empty;
+            ProgressValue = 0;
+        }
+
+        if (string.IsNullOrEmpty(assa))
+        {
+            Se.LogError("Remove burned-in subtitles: black boxes failed:" + Environment.NewLine + remover.Log);
+            var noText = remover.Log.Contains("Masks: 0 of", StringComparison.Ordinal);
+            await MessageBox.Show(Window!, Se.Language.Video.RemoveBurnedIn.Title,
+                noText ? Se.Language.Video.RemoveBurnedIn.NoTextFound : Se.Language.Video.RemoveBurnedIn.Failed + Environment.NewLine +
+                Environment.NewLine + LastLines(remover.Log, 8),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        BoxesAssa = assa;
+        OkPressed = true;
+        Window?.Close();
     }
 
     [RelayCommand]

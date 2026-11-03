@@ -1,3 +1,5 @@
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 
 namespace UITests.Features.Video.RemoveBurnedIn;
@@ -341,6 +343,14 @@ public class BurnedInMaskBuilderTests
         Assert.Contains("PlayResY: 1080", assa);
         Assert.Contains(@"Dialogue: 0,0:00:02.00,0:00:04.00,Box,,0,0,0,,{\an7\pos(0,0)\bord0\shad0\p1}m 100 900 l 500 900 500 980 100 980{\p0}", assa);
         Assert.Contains("Dialogue: 0,1:00:00.00,1:00:00.08,Box", assa);
+
+        // The main window loads it as an ASSA subtitle.
+        var subtitle = new Subtitle();
+        new AdvancedSubStationAlpha().LoadSubtitle(subtitle, assa.SplitToLines(), null);
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("Box", subtitle.Paragraphs[0].Extra);
+        Assert.Equal(2000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Contains("PlayResX: 1920", subtitle.Header);
     }
 
     [Fact]

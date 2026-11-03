@@ -38,8 +38,6 @@ public sealed class BurnedInRemovalOptions
     public int ExtraWidth { get; init; } = 5;
     public bool Temporal { get; init; } = true;
 
-    /// <summary>Cover each line with a black box (ASSA drawing) instead of inpainting it.</summary>
-    public bool BlackBox { get; init; }
     public int Crf { get; init; } = 18;
     public string CrispEmbedExecutable { get; init; } = string.Empty;
     public string ModelFileName { get; init; } = string.Empty;
@@ -54,8 +52,8 @@ public sealed class BurnedInRemovalOptions
 /// (frame + mask in, inpainted frame out, with temporal consistency) into an ffmpeg encoder
 /// that copies the audio from the source. No frames touch the disk.</item>
 /// </list>
-/// With <see cref="BurnedInRemovalOptions.BlackBox"/>, pass 2 instead burns in an ASSA file with
-/// one black drawing per line (<see cref="MakeBoxesAssa"/>) - one ffmpeg run, no CrispEmbed.
+/// <see cref="MakeBoxesAssaAsync"/> runs pass 1 only and returns an ASSA subtitle with one black
+/// drawing per line instead - the video is not changed.
 /// </summary>
 public sealed class BurnedInSubtitleRemover
 {
@@ -116,10 +114,26 @@ public sealed class BurnedInSubtitleRemover
         AppendLog($"Masks: {builder.LinesWithText} of {o.Lines.Count} lines have text in the scan area");
         cancellationToken.ThrowIfCancellationRequested();
 
-        // Pass 2: decode -> mask -> crispembed -> encode, or burn in black boxes.
-        return o.BlackBox
-            ? await CoverAsync(o, builder, totalFrames, progress, cancellationToken)
-            : await InpaintAsync(o, builder, totalFrames, progress, cancellationToken);
+        // Pass 2: decode -> mask -> crispembed -> encode.
+        return await InpaintAsync(o, builder, totalFrames, progress, cancellationToken);
+    }
+
+    /// <summary>
+    /// Builds the masks (pass 1, reported as 0-100 %) and returns an ASSA subtitle that covers
+    /// each line with a black box, or null if it failed or no line has text in the scan area.
+    /// </summary>
+    public async Task<string?> MakeBoxesAssaAsync(BurnedInRemovalOptions o, IProgress<ProgressInfo> progress, CancellationToken cancellationToken)
+    {
+        var totalFrames = Math.Max(1, (long)Math.Round(o.DurationSeconds * o.FrameRate));
+        var builder = MakeMaskBuilder(o, GetSpans(o));
+        if (!await BuildMasksAsync(o, builder, -1, p => progress.Report(new ProgressInfo(p.Frame * 100.0 / totalFrames, 1, p.Frame, totalFrames, p.Fps)), cancellationToken))
+        {
+            return null;
+        }
+
+        AppendLog($"Masks: {builder.LinesWithText} of {o.Lines.Count} lines have text in the scan area");
+        cancellationToken.ThrowIfCancellationRequested();
+        return builder.LinesWithText > 0 ? MakeBoxesAssa(o, builder.GetLineBoxes()) : null;
     }
 
     /// <summary>
@@ -160,53 +174,6 @@ public sealed class BurnedInSubtitleRemover
 
     private static string AssaTime(long centiseconds) =>
         FormattableString.Invariant($"{centiseconds / 360000}:{centiseconds / 6000 % 60:00}:{centiseconds / 100 % 60:00}.{centiseconds % 100:00}");
-
-    private async Task<bool> CoverAsync(BurnedInRemovalOptions o, BurnedInMaskBuilder builder, long totalFrames,
-        IProgress<ProgressInfo> progress, CancellationToken cancellationToken)
-    {
-        // ffmpeg's ass filter parses its argument (':' and '\' in a Windows path); run it in the
-        // file's folder and pass the bare name, like the burn-in feature does.
-        var folder = Path.GetTempPath();
-        var assName = "se-burned-in-boxes-" + Guid.NewGuid().ToString("N") + ".ass";
-        var assFileName = Path.Combine(folder, assName);
-        await File.WriteAllTextAsync(assFileName, MakeBoxesAssa(o, builder.GetLineBoxes()), cancellationToken);
-        try
-        {
-            var args = $"-nostdin -v error -y -progress pipe:1 -nostats -i \"{o.VideoFileName}\" -map 0:v:0 -map 0:a? -c:a copy " +
-                       $"-vf \"ass={assName}\" -c:v libx264 -crf {o.Crf} -preset medium \"{o.OutputFileName}\"";
-            AppendLog("ffmpeg " + args);
-            using var encoder = StartProcess(FfmpegHelper.GetFfmpegLocation(), args, redirectInput: false, workingDirectory: folder);
-            var stopwatch = Stopwatch.StartNew();
-            using (cancellationToken.Register(() => Kill(encoder)))
-            {
-                string? line;
-                while ((line = await encoder.StandardOutput.ReadLineAsync(cancellationToken)) != null)
-                {
-                    if (line.StartsWith("frame=", StringComparison.Ordinal) && long.TryParse(line.AsSpan(6), out var frame))
-                    {
-                        var fps = frame / Math.Max(0.001, stopwatch.Elapsed.TotalSeconds);
-                        progress.Report(new ProgressInfo(15 + 85.0 * Math.Min(1.0, (double)frame / totalFrames), 2, frame, totalFrames, fps));
-                    }
-                }
-            }
-
-            await encoder.WaitForExitAsync(CancellationToken.None);
-            cancellationToken.ThrowIfCancellationRequested();
-            AppendLog($"Boxes burned in in {stopwatch.Elapsed.TotalSeconds:0.0} s, exit code {encoder.ExitCode}");
-            return encoder.ExitCode == 0 && File.Exists(o.OutputFileName);
-        }
-        finally
-        {
-            try
-            {
-                File.Delete(assFileName);
-            }
-            catch
-            {
-                // ignore
-            }
-        }
-    }
 
     /// <summary>
     /// Decodes the scan area (gray) and feeds the frames inside the line spans to the builder.
@@ -438,7 +405,7 @@ public sealed class BurnedInSubtitleRemover
         return ok;
     }
 
-    private Process StartProcess(string fileName, string arguments, bool redirectInput, string? workingDirectory = null)
+    private Process StartProcess(string fileName, string arguments, bool redirectInput)
     {
         var process = new Process
         {
@@ -449,8 +416,7 @@ public sealed class BurnedInSubtitleRemover
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 RedirectStandardInput = redirectInput,
-                WorkingDirectory = workingDirectory ??
-                                   (Path.GetDirectoryName(fileName) is { Length: > 0 } dir && Directory.Exists(dir) ? dir : string.Empty),
+                WorkingDirectory = Path.GetDirectoryName(fileName) is { Length: > 0 } dir && Directory.Exists(dir) ? dir : string.Empty,
             },
         };
 

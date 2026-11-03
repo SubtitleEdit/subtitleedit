@@ -104,6 +104,9 @@ public partial class VideoOcrViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public Subtitle ResultSubtitle { get; private set; } = new();
+
+    /// <summary>ASSA with black boxes over the burned-in lines (Remove burned-in subtitles, black box method).</summary>
+    public string ResultBoxesAssa { get; private set; } = string.Empty;
     public CropAreaSelector? CropSelector { get; set; }
 
     private string _videoFileName = string.Empty;
@@ -1672,9 +1675,17 @@ public partial class VideoOcrViewModel : ObservableObject
         }
 
         SaveSettings();
-        await _windowService.ShowDialogAsync<RemoveBurnedInWindow, RemoveBurnedInViewModel>(Window, vm =>
+        var result = await _windowService.ShowDialogAsync<RemoveBurnedInWindow, RemoveBurnedInViewModel>(Window, vm =>
             vm.Initialize(_videoFileName, VideoWidth, VideoHeight, DurationSeconds, SelectionX, SelectionY, SelectionWidth,
                 SelectionHeight, BrightnessMinimum, FramesPerSecond, Lines));
+
+        // Black box method: the boxes subtitle replaces the OCR result in the main window.
+        if (result.OkPressed && !string.IsNullOrEmpty(result.BoxesAssa))
+        {
+            ResultBoxesAssa = result.BoxesAssa;
+            OkPressed = true;
+            Window?.Close();
+        }
     }
 
     [RelayCommand]

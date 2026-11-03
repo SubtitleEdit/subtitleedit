@@ -329,6 +329,10 @@ public class RemoveBurnedInWindow : Window
         outputRows.Children.Add(EditorChrome.MakeLabeledRow(l.OutputFile, outputPanel, LabelWidth));
         outputRows.Children.Add(EditorChrome.MakeLabeledRow(l.Quality, crf, LabelWidth));
 
+        // The black boxes go to the main window as an ASSA subtitle - no video is written.
+        var outputSection = EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.VideoOutput, outputRows);
+        outputSection.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInpaint)));
+
         return new ScrollViewer
         {
             MaxHeight = 430,
@@ -337,7 +341,7 @@ public class RemoveBurnedInWindow : Window
                 Children =
                 {
                     EditorChrome.MakeEditorSection(l.TextMask, maskRows),
-                    EditorChrome.MakeEditorSection(Se.Language.Video.BurnIn.VideoOutput, outputRows),
+                    outputSection,
                 },
             },
         };

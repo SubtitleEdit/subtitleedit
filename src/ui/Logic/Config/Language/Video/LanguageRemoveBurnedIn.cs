@@ -10,7 +10,6 @@ public class LanguageRemoveBurnedIn
     public string MethodRemove { get; set; }
     public string MethodBlackBox { get; set; }
     public string MethodHint { get; set; }
-    public string CoveringXYZ { get; set; }
     public string Model { get; set; }
     public string ModelLama { get; set; }
     public string ModelMiGan { get; set; }
@@ -60,13 +59,12 @@ public class LanguageRemoveBurnedIn
     {
         Title = "Remove burned-in subtitles";
         RemoveBurnedInDotDotDot = "Remove burned-in subtitles...";
-        Info = "Paints over the burned-in subtitle text found by OCR with an AI inpainting model (CrispEmbed), or covers it with a black box. Only the scan area is changed, and only while an OCR line is shown. The video is re-encoded; the audio is copied.";
+        Info = "Paints over the burned-in subtitle text found by OCR with an AI inpainting model (CrispEmbed), or covers it with black boxes. Inpainting changes only the scan area, and only while an OCR line is shown; the video is re-encoded and the audio is copied. Black boxes are loaded into the main window as an ASSA subtitle and the video is not changed.";
         TextMask = "Text mask";
         Method = "Method";
         MethodRemove = "Remove - AI inpainting";
-        MethodBlackBox = "Cover with a black box";
-        MethodHint = "A black box over each line is fast and never shows leftovers, but hides the picture behind the text";
-        CoveringXYZ = "Covering subtitles... frame {0:#,##0} of {1:#,##0} ({2:0.0} fps)";
+        MethodBlackBox = "Cover with black boxes (ASSA subtitle)";
+        MethodHint = "Loads an ASSA subtitle with a black box drawing over each line into the main window - fast and no leftovers, but it hides the picture behind the text";
         Model = "Model";
         ModelLama = "LaMa - best quality, slower";
         ModelMiGan = "MI-GAN - fast";
