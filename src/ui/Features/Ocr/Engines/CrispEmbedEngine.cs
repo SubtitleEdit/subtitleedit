@@ -149,10 +149,10 @@ public static class CrispEmbedEngine
         $"--inpaint-engine migan512 --inpaint-model \"{modelFileName}\" --inpaint-model-sha256 {InpaintModelSha256} " +
         $"--inpaint-checkpoint-sha256 {InpaintCheckpointSha256} --gpu-backend auto";
 
-    /// <summary>The opt-in gates CrispEmbed requires for MI-GAN 512 F16 and its fast graph.</summary>
+    /// <summary>The opt-in gates CrispEmbed requires for MI-GAN 512 F16, its fast graph and the frame stream.</summary>
     public static void SetInpaintEnvironment(System.Diagnostics.ProcessStartInfo startInfo)
     {
-        foreach (var name in new[] { "CRISPEMBED_MIGAN", "CRISPEMBED_MIGAN512", "CRISPEMBED_INPAINT_QUANT", "CRISPEMBED_INPAINT_GRAPH", "CRISPEMBED_INPAINT_FAST" })
+        foreach (var name in new[] { "CRISPEMBED_MIGAN", "CRISPEMBED_MIGAN512", "CRISPEMBED_INPAINT_QUANT", "CRISPEMBED_INPAINT_GRAPH", "CRISPEMBED_INPAINT_FAST", "CRISPEMBED_INPAINT_STREAM" })
         {
             startInfo.Environment[name] = "1";
         }
