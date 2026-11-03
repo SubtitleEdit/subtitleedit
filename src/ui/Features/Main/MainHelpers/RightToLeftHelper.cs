@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls.SyntaxTextEditorControl;
@@ -12,6 +14,9 @@ namespace Nikse.SubtitleEdit.Features.Main.MainHelpers;
 
 internal static class RightToLeftHelper
 {
+    private static readonly AttachedProperty<FlowDirection?> TextDirectionOverrideProperty =
+        AvaloniaProperty.RegisterAttached<TextBox, FlowDirection?>("TextDirectionOverride", typeof(RightToLeftHelper));
+
     internal static void SetRightToLeftForDataGridAndText(Window window)
     {
         var flowDirection = Se.Settings.Appearance.RightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
@@ -39,14 +44,14 @@ internal static class RightToLeftHelper
     }
 
     /// <summary>
-    /// Keeps a text box's flow direction following its content while right to left
-    /// mode is enabled: right to left content stays right to left, left to right
-    /// content (for example a Turkish original next to an Arabic working language)
-    /// aligns left to right. Attach once when the text box is created; text set
-    /// while right to left mode is off is left alone.
+    /// Follows the subtitle's content direction until the user overrides it with
+    /// Ctrl+Left Shift (LTR) or Ctrl+Right Shift (RTL). The override belongs to the
+    /// edit box and survives typing and switching subtitles, without changing text.
+    /// Also corrects End navigation at a right-to-left line break (#16424).
     /// </summary>
-    internal static void FollowContentDirection(TextBox textBox)
+    internal static void ConfigureTextBox(TextBox textBox)
     {
+        textBox.Classes.Add("subtitleTextEditor");
         textBox.PropertyChanged += (_, e) =>
         {
             if (e.Property == TextBox.TextProperty)
@@ -54,9 +59,93 @@ internal static class RightToLeftHelper
                 var requested = Se.Settings.Appearance.RightToLeft
                     ? FlowDirection.RightToLeft
                     : FlowDirection.LeftToRight;
-                textBox.FlowDirection = GetContentDirection(textBox.Text, requested);
+                textBox.FlowDirection = GetTextBoxDirection(textBox, requested);
             }
         };
+
+        FlowDirection? pendingDirection = null;
+        // Commit on modifier release so Ctrl+Shift+letter shortcuts do not also
+        // switch direction. Observe handled keys too: the window may own that chord.
+        textBox.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            pendingDirection = e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift)
+                ? e.Key switch
+                {
+                    Key.LeftShift or Key.LeftCtrl => FlowDirection.LeftToRight,
+                    Key.RightShift or Key.RightCtrl => FlowDirection.RightToLeft,
+                    _ => null,
+                }
+                : null;
+
+            if (!e.Handled)
+            {
+                HandleLineEnd(textBox, e);
+            }
+        }, RoutingStrategies.Tunnel, handledEventsToo: true);
+
+        textBox.AddHandler(InputElement.KeyUpEvent, (_, e) =>
+        {
+            if (pendingDirection is { } direction &&
+                e.Key is Key.LeftShift or Key.RightShift or Key.LeftCtrl or Key.RightCtrl)
+            {
+                textBox.SetValue(TextDirectionOverrideProperty, direction);
+                textBox.FlowDirection = direction;
+                e.Handled = true;
+            }
+
+            pendingDirection = null;
+        }, RoutingStrategies.Tunnel);
+        textBox.LostFocus += (_, _) => pendingDirection = null;
+    }
+
+    private static FlowDirection GetTextBoxDirection(TextBox textBox, FlowDirection requested)
+        => textBox.GetValue(TextDirectionOverrideProperty) ?? GetContentDirection(textBox.Text, requested);
+
+    private static void HandleLineEnd(TextBox textBox, KeyEventArgs e)
+    {
+        if (e.Key != Key.End || (e.KeyModifiers & ~KeyModifiers.Shift) != KeyModifiers.None ||
+            !LanguageAutoDetect.ContainsRightToLeftLetter(textBox.Text ?? string.Empty))
+        {
+            return;
+        }
+
+        var presenter = textBox.GetVisualDescendants().OfType<SyntaxHighlightingTextPresenter>().FirstOrDefault();
+        if (presenter == null || !string.IsNullOrEmpty(presenter.PreeditText))
+        {
+            return;
+        }
+
+        var layout = presenter.TextLayout;
+        // The caret's visual line matters at a soft wrap, where one text offset
+        // belongs to both the end of one line and the start of the next.
+        var lineTop = 0.0;
+        var line = layout.TextLines[0];
+        foreach (var candidate in layout.TextLines)
+        {
+            line = candidate;
+            if (presenter.CursorRectangle.Center.Y < lineTop + line.Height)
+            {
+                break;
+            }
+
+            lineTop += line.Height;
+        }
+
+        var target = line.FirstTextSourceIndex + line.Length - line.NewLineLength;
+        var hit = new CharacterHit(target);
+        if (target > line.FirstTextSourceIndex)
+        {
+            var previous = line.GetPreviousCaretCharacterHit(hit);
+            hit = new CharacterHit(previous.FirstCharacterIndex, target - previous.FirstCharacterIndex);
+        }
+
+        var anchor = e.KeyModifiers.HasFlag(KeyModifiers.Shift) ? textBox.SelectionStart : target;
+        textBox.CaretIndex = target;
+        textBox.SelectionStart = anchor;
+        textBox.SelectionEnd = target;
+        // Restore the visual line affinity after the offset/selection bindings ran.
+        presenter.MoveCaretToLineEnd(hit);
+        e.Handled = true;
     }
 
     /// <summary>
@@ -155,7 +244,7 @@ internal static class RightToLeftHelper
         }
         else if (visual is TextBox textBox)
         {
-            textBox.FlowDirection = GetContentDirection(textBox.Text, flowDirection);
+            textBox.FlowDirection = GetTextBoxDirection(textBox, flowDirection);
         }
         else if (visual is SyntaxTextView sourceView)
         {

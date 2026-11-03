@@ -2483,7 +2483,7 @@ public static partial class InitListViewAndEditBox
         textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
 
         SetupMacContextMenuForTextBox(textBox, vm);
-        MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
+        MainHelpers.RightToLeftHelper.ConfigureTextBox(textBox);
 
         vm.EditTextBox = new TextBoxWrapper(textBox);
         return textBox;
@@ -2699,7 +2699,7 @@ public static partial class InitListViewAndEditBox
         // detection, and only the rare far-too-long auto-break uses it.
         TextBoxAutoWrap.Attach(textBox, () => string.Empty);
         SetupMacContextMenuForTextBox(textBox, vm);
-        MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
+        MainHelpers.RightToLeftHelper.ConfigureTextBox(textBox);
 
         vm.EditTextBoxOriginal = new TextBoxWrapper(textBox);
         return textBox;
