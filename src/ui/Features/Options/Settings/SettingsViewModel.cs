@@ -2862,12 +2862,11 @@ public partial class SettingsViewModel : ObservableObject
 
     private async Task UpdateWaveformSpaceInfoAsync()
     {
-        var files = GetWaveformAndSpecgtrogramFiles();
-
+        // Listing the folders (the spectrograms recursively) is file I/O too - keep it off the UI thread.
         long totalBytes = await Task.Run(() =>
         {
             long total = 0;
-            foreach (var file in files)
+            foreach (var file in GetWaveformAndSpecgtrogramFiles())
             {
                 try
                 {
