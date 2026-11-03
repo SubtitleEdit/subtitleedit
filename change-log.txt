@@ -3,6 +3,30 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-rc2 (3rd of November 2026)
+
+* Auto-translate: translate selected rows together, with context - thx mmmsh-125
+* Auto-translate: find and replace in the translation column - thx mmmsh-125
+* Auto-translate: skip more music/lyric line layouts - thx lordvorkosigan1968-cloud
+* Blu-ray sup: add HDR (BT.2020 PQ) palette option - thx Victory61
+* Bookmarks list: add import and export
+* Source view: Ctrl+S applies changes - thx pdjdev
+* Add Croatian UI translation (machine draft, needs review) - thx lordvorkosigan1968-cloud
+* Update Avalonia to 12.1.5
+* Fix Auto-translate shifting translations when the engine merges two rows - thx mmmsh-125
+* Fix List errors time codes ignoring video offset and leading zero hours - thx accessallareas
+* Fix toolbar drop-downs hidden under undocked tool windows - thx GrampaWildWilly
+* Fix macOS Ctrl+click collapsing a multi-row selection
+* Fix SMPTE timing not being applied until refresh - thx OmrSi
+* Fix copy text shortcuts adding a trailing new line - thx OmrSi
+* Update Chinese Traditional translation - thx love80312
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-rc1 (1st of November 2026)
 
 * New SVG icons in all themes and the About window, sharp at any display scale
