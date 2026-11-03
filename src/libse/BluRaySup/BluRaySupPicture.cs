@@ -787,16 +787,51 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return updates;
         }
 
-        private static int ClampY(BluRaySupPicture pic, int y)
+        /// <summary>
+        /// Smallest object (and window) a PG decoder takes, in both directions.
+        /// </summary>
+        private const int MinObjectSize = 8;
+
+        /// <summary>
+        /// Keeps an object of <paramref name="size"/> inside the frame: windows and objects may
+        /// not reach past its edge. An object larger than the frame starts at 0.
+        /// </summary>
+        private static int ClampPosition(int position, int size, int frameSize)
         {
-            var yOfs = y - Core.CropOfsY;
-            if (yOfs < 0)
+            var max = frameSize - size;
+            if (position > max)
             {
-                return 0;
+                position = max;
             }
 
-            var yMax = pic.Height - pic.WindowHeight - 2 * Core.CropOfsY;
-            return yOfs > yMax ? yMax : yOfs;
+            return position < 0 ? 0 : position;
+        }
+
+        private static int ClampY(BluRaySupPicture pic, int y, int height)
+        {
+            return ClampPosition(y - Core.CropOfsY, height, pic.Height - 2 * Core.CropOfsY);
+        }
+
+        /// <summary>
+        /// <paramref name="bitmap"/> padded with transparency to the minimum object size, or null
+        /// when it is large enough. A tiny caption - a dot, a short dash - would otherwise give an
+        /// object a decoder rejects.
+        /// </summary>
+        private static SKBitmap PadToMinimumSize(SKBitmap bitmap)
+        {
+            if (bitmap.Width >= MinObjectSize && bitmap.Height >= MinObjectSize)
+            {
+                return null;
+            }
+
+            var padded = new SKBitmap(Math.Max(MinObjectSize, bitmap.Width), Math.Max(MinObjectSize, bitmap.Height), SKColorType.Rgba8888, SKAlphaType.Unpremul);
+            using (var canvas = new SKCanvas(padded))
+            {
+                canvas.Clear(SKColors.Transparent);
+                canvas.DrawBitmap(bitmap, 0, 0);
+            }
+
+            return padded;
         }
 
         /// <summary>
@@ -808,48 +843,67 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// </summary>
         private static List<EncodedObject> EncodeObjects(BluRaySupPicture pic, IList<BluRaySupCompositionObject> objects)
         {
-            var palettes = new List<List<SKColor>>(objects.Count);
-            var total = 0;
-            foreach (var obj in objects)
-            {
-                var palette = GetBitmapPalette(obj.Bitmap, obj.FontColor, MaxPaletteColors);
-                palettes.Add(palette);
-                total += palette.Count;
-            }
-
-            if (total > MaxPaletteEntries)
-            {
-                // Together they do not fit; give every object an equal share instead.
-                var maxColors = MaxPaletteEntries / objects.Count - 1;
-                for (var k = 0; k < objects.Count; k++)
-                {
-                    palettes[k] = GetBitmapPalette(objects[k].Bitmap, objects[k].FontColor, maxColors);
-                }
-            }
-
-            var encoded = new List<EncodedObject>(objects.Count);
-            var offset = 0;
+            var padded = new SKBitmap[objects.Count];
+            var bitmaps = new SKBitmap[objects.Count];
             for (var k = 0; k < objects.Count; k++)
             {
-                var obj = objects[k];
-                var updates = GetFadeSteps(obj.FadeSteps, pic.StartTime, pic.EndTime, out var startAlphaPercent);
-                encoded.Add(new EncodedObject
-                {
-                    Palette = palettes[k],
-                    PaletteOffset = offset,
-                    Rle = EncodeImage(obj.Bitmap, palettes[k], offset),
-                    Width = obj.Bitmap.Width,
-                    Height = obj.Bitmap.Height,
-                    X = obj.X,
-                    Y = ClampY(pic, obj.Y),
-                    IsForced = obj.IsForced,
-                    StartAlphaPercent = startAlphaPercent,
-                    Updates = updates,
-                });
-                offset += palettes[k].Count;
+                padded[k] = PadToMinimumSize(objects[k].Bitmap);
+                bitmaps[k] = padded[k] ?? objects[k].Bitmap;
             }
 
-            return encoded;
+            try
+            {
+                var palettes = new List<List<SKColor>>(objects.Count);
+                var total = 0;
+                for (var k = 0; k < objects.Count; k++)
+                {
+                    var palette = GetBitmapPalette(bitmaps[k], objects[k].FontColor, MaxPaletteColors);
+                    palettes.Add(palette);
+                    total += palette.Count;
+                }
+
+                if (total > MaxPaletteEntries)
+                {
+                    // Together they do not fit; give every object an equal share instead.
+                    var maxColors = MaxPaletteEntries / objects.Count - 1;
+                    for (var k = 0; k < objects.Count; k++)
+                    {
+                        palettes[k] = GetBitmapPalette(bitmaps[k], objects[k].FontColor, maxColors);
+                    }
+                }
+
+                var encoded = new List<EncodedObject>(objects.Count);
+                var offset = 0;
+                for (var k = 0; k < objects.Count; k++)
+                {
+                    var obj = objects[k];
+                    var bitmap = bitmaps[k];
+                    var updates = GetFadeSteps(obj.FadeSteps, pic.StartTime, pic.EndTime, out var startAlphaPercent);
+                    encoded.Add(new EncodedObject
+                    {
+                        Palette = palettes[k],
+                        PaletteOffset = offset,
+                        Rle = EncodeImage(bitmap, palettes[k], offset),
+                        Width = bitmap.Width,
+                        Height = bitmap.Height,
+                        X = ClampPosition(obj.X, bitmap.Width, pic.Width),
+                        Y = ClampY(pic, obj.Y, bitmap.Height),
+                        IsForced = obj.IsForced,
+                        StartAlphaPercent = startAlphaPercent,
+                        Updates = updates,
+                    });
+                    offset += palettes[k].Count;
+                }
+
+                return encoded;
+            }
+            finally
+            {
+                foreach (var bitmap in padded)
+                {
+                    bitmap?.Dispose();
+                }
+            }
         }
 
         /// <summary>
