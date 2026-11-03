@@ -23441,6 +23441,7 @@ public partial class MainViewModel :
             return;
         }
 
+        PauseBeforeFrameStep();
         if (Se.Settings.General.CurrentFrameRate >= 10)
         {
             var frameInMs = (int)Math.Round(1000.0 / Se.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero);
@@ -23467,6 +23468,7 @@ public partial class MainViewModel :
             return;
         }
 
+        PauseBeforeFrameStep();
         if (Se.Settings.General.CurrentFrameRate >= 10)
         {
             var frameInMs = (int)Math.Round(1000.0 / Se.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero);
@@ -23613,6 +23615,20 @@ public partial class MainViewModel :
     /// constant frame rate video the two agree, and where they do not, the grid is the one that
     /// skips or repeats pictures.
     /// </summary>
+    /// <summary>
+    /// One frame back/forward stops playback, as in SE 4 (#16134). mpv's native frame-step and
+    /// the ffmpeg player's step pause by themselves; the seek-based steps (snap to frames, other
+    /// players) would otherwise leave the video playing on.
+    /// </summary>
+    private void PauseBeforeFrameStep()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp != null && vp.VideoPlayer.IsPlaying)
+        {
+            PauseVideoAndFreezePlayhead(vp);
+        }
+    }
+
     private bool TryStepFfmpegFrame(bool forward)
     {
         if (GetVideoPlayerControl()?.VideoPlayer is not FfmpegPlayer ffmpeg || string.IsNullOrEmpty(_videoFileName))
@@ -23664,6 +23680,7 @@ public partial class MainViewModel :
             return false;
         }
 
+        PauseBeforeFrameStep();
         var frameDur = 1.0 / fps;
         var currentFrame = vp.Position / frameDur;
         var targetFrame = forward
