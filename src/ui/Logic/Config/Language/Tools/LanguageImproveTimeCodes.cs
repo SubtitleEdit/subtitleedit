@@ -13,8 +13,6 @@ public class LanguageImproveTimeCodes
     public string IsolateSpeechHint { get; set; }
     public string IsolatingSpeech { get; set; }
     public string IsolateSpeechFailed { get; set; }
-    public string DownloadModelsTitle { get; set; }
-    public string DownloadModelsX { get; set; }
     public string CheckWithSpeechToText { get; set; }
     public string CheckWithSpeechToTextHint { get; set; }
     public string CheckWithSpeechToTextNotAvailableX { get; set; }
@@ -73,8 +71,6 @@ public class LanguageImproveTimeCodes
         IsolateSpeechHint = "Removes music and sound effects before aligning, so the aligner only hears the dialogue. Helps on lines spoken over loud music or action, but takes about as long as the audio itself with a GPU - and many times longer without one.";
         IsolatingSpeech = "Isolating speech... (this takes a while)";
         IsolateSpeechFailed = "Could not isolate the speech - aligned against the original audio instead.";
-        DownloadModelsTitle = "Download models?";
-        DownloadModelsX = "These models are needed and are not downloaded yet:\n\n{0}\n\nDownload them now?";
         CheckWithSpeechToText = "Check with speech-to-text";
         CheckWithSpeechToTextHint = "Transcribes the audio as well, and checks every move against where the words were actually heard. Large moves the speech confirms are ticked for you, and moves away from where a line is heard are left unticked for you to check. Also shows how much of each line was heard - a low share means the text differs from what is said. A subtitle that is further out of sync than the max shift - a constant offset, a drift from a frame rate mismatch, or jumps where scenes were cut - is synced by the heard words first. Uses Crisp ASR Parakeet, which takes a few minutes for a feature film with a GPU.";
         CheckWithSpeechToTextNotAvailableX = "Speech-to-text check is not available for {0}";

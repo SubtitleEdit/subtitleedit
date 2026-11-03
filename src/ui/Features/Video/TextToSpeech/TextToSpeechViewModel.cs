@@ -2404,7 +2404,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (Se.Settings.Video.TextToSpeech.RemoveOriginalSpeechFast)
         {
             return await SpeechIsolationModelDownload.EnsureModelDownloadedAsync(
-                Window!, _windowService, new CrispAsrCohere(), HtDemucsModel.ToWhisperModel(), HtDemucsModel.DisplayName, featureName, Se.Language.Video.AudioToText.ASourceSeparationModel);
+                Window!, _windowService, new CrispAsrCohere(), HtDemucsModel.ToWhisperModel(), HtDemucsModel.DisplayName, featureName);
         }
 
         return await SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, new CrispAsrCohere(), featureName);

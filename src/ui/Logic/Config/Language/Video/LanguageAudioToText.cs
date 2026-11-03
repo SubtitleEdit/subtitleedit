@@ -40,11 +40,6 @@ public class LanguageAudioToText
     public string UpdateXTitle { get; set; }
     public string UpdateXMessage { get; set; }
     public string? DownloadingSpeechToTextModel { get; set; }
-    public string DownloadXQuestion { get; set; }
-    public string FeatureXRequiresYDownloadZ { get; set; }
-    public string ASourceSeparationModel { get; set; }
-    public string ASpeakerDiarizationModel { get; set; }
-    public string AVoiceActivityDetectionModel { get; set; }
     public string WhisperPostProcessingTitle { get; set; }
     public string AdjustTimings { get; set; }
     public string MergeShortLines { get; set; }
@@ -203,11 +198,6 @@ public class LanguageAudioToText
         UpdateXTitle = "Update {0}?";
         UpdateXMessage = "A newer version of {0} is available.{1}{1}Download and install the update now?";
         DownloadingSpeechToTextModel = "Downloading speech-to-text model";
-        DownloadXQuestion = "Download {0}?";
-        FeatureXRequiresYDownloadZ = "'{0}' requires {1}.\nDownload and use {2} ({3})?";
-        ASourceSeparationModel = "a source separation model";
-        ASpeakerDiarizationModel = "a speaker diarization model";
-        AVoiceActivityDetectionModel = "a voice activity detection model";
         WhisperPostProcessingTitle = "Whisper post-processing";
         AdjustTimings = "Adjust timings";
         MergeShortLines = "Merge short lines";

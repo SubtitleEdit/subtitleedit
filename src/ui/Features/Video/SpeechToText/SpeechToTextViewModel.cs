@@ -3096,8 +3096,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             engine,
             SpeakerDiarizationModel.ToWhisperModel(),
             SpeakerDiarizationModel.DisplayName,
-            Se.Language.Video.AudioToText.DetectSpeakers,
-            Se.Language.Video.AudioToText.ASpeakerDiarizationModel);
+            Se.Language.Video.AudioToText.DetectSpeakers);
     }
 
     /// <summary>
@@ -3134,8 +3133,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             engine,
             vadOption.ToWhisperModel(),
             vadOption.DisplayName,
-            Se.Language.Video.AudioToText.Vad,
-            Se.Language.Video.AudioToText.AVoiceActivityDetectionModel);
+            Se.Language.Video.AudioToText.Vad);
     }
 
     private Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)

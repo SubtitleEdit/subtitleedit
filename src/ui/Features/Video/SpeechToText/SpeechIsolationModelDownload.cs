@@ -26,15 +26,13 @@ public static class SpeechIsolationModelDownload
             crispAsrEngine,
             SpeechIsolationModel.ToWhisperModel(),
             SpeechIsolationModel.DisplayName,
-            featureName,
-            Se.Language.Video.AudioToText.ASourceSeparationModel);
+            featureName);
     }
 
     /// <summary>
     /// Makes sure a model that a Crisp ASR option needs on top of the transcription model is in
     /// the Crisp ASR models folder, prompting for the download when it is missing.
     /// </summary>
-    /// <param name="modelKind">What the model is, as the user reads it: "a source separation model" (localized).</param>
     /// <returns>False when the user declines or cancels - the run must not start in that case.</returns>
     public static async Task<bool> EnsureModelDownloadedAsync(
         Window window,
@@ -42,19 +40,17 @@ public static class SpeechIsolationModelDownload
         ISpeechToTextEngine crispAsrEngine,
         WhisperModel model,
         string displayName,
-        string featureName,
-        string modelKind)
+        string featureName)
     {
         if (File.Exists(crispAsrEngine.GetModelForCmdLine(model.Name)))
         {
             return true;
         }
 
-        var l = Se.Language.Video.AudioToText;
         var answer = await MessageBox.Show(
             window,
-            string.Format(l.DownloadXQuestion, displayName),
-            string.Format(l.FeatureXRequiresYDownloadZ, featureName, modelKind, model.Name, model.Size),
+            string.Format(Se.Language.General.DownloadXQuestion, displayName),
+            featureName + "\n\n" + string.Format(Se.Language.General.DownloadAndUseXQuestion, $"{model.Name} ({model.Size})"),
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 

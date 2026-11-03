@@ -360,12 +360,14 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             return true;
         }
 
-        var l = Se.Language.Tools.ImproveTimeCodes;
+        var title = missing.Count == 1
+            ? string.Format(Se.Language.General.DownloadXQuestion, missing[0].DisplayName)
+            : string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, missing.Count);
         var list = string.Join(Environment.NewLine, missing.Select(m => $"\u2022 {m.DisplayName} ({m.Model.Size})"));
         var answer = await MessageBox.Show(
             Window!,
-            l.DownloadModelsTitle,
-            string.Format(l.DownloadModelsX, list),
+            title,
+            list,
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
         if (answer != MessageBoxResult.Yes)
