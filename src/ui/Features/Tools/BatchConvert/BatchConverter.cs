@@ -2287,6 +2287,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(item.Subtitle.Header);
 
+        // Each line drawn with its own ASSA style, as the export window does with "Use ASSA
+        // styles" - the same saved setting.
+        var assaStyles = Se.Settings.File.ExportImages.UseAssaStyles && IsAssaOrSsa(item.Subtitle)
+            ? ExportAssaStyles.FromHeader(item.Subtitle.Header)
+            : null;
+        if (assaStyles != null)
+        {
+            (scriptWidth, scriptHeight) = assaStyles.ScriptResolution;
+        }
+
         // Same fallback as the export dialog: an empty or unknown preset name in the profile
         // selects the first list item (soft shadow).
         var textEffectPreset = Enum.TryParse<TextEffectPreset>(profile.TextEffect, out var parsedPreset)
@@ -2353,6 +2363,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     profile.TextEffectArcBend,
                     profile.TextEffectWave),
             };
+
+            // The style first, so the override tags below win over it.
+            assaStyles?.Apply(imageParameter, subtitle.Extra, subtitle.Text, subtitle.MarginL, subtitle.MarginR, subtitle.MarginV);
 
             // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
             // change what is drawn - read before rendering, overrides before the

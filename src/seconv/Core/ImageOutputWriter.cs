@@ -75,8 +75,16 @@ internal static class ImageOutputWriter
         // "{\pos(x,y)}" is in the script's own resolution, the export canvas may be another one.
         var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(subtitle.Header);
 
+        // ASSA/SSA input - a header with styles - is drawn with each line's own style unless
+        // --no-assa-styles.
+        var assaStyles = options.ImageStyle.UseAssaStyles ? ExportAssaStyles.FromHeader(subtitle.Header) : null;
+        if (assaStyles != null)
+        {
+            (scriptWidth, scriptHeight) = assaStyles.ScriptResolution;
+        }
+
         // Pre-render header with the first paragraph as a representative
-        var firstParam = BuildParameter(subtitle.Paragraphs[0], 0, screenWidth, screenHeight, scriptHeight, options);
+        var firstParam = BuildParameter(subtitle.Paragraphs[0], 0, screenWidth, screenHeight, scriptHeight, options, assaStyles);
         firstParam.Bitmap = ImageRenderer.GenerateBitmap(firstParam);
         handler.WriteHeader(filePath, firstParam);
         firstParam.Bitmap?.Dispose();
@@ -85,7 +93,7 @@ internal static class ImageOutputWriter
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
             var p = subtitle.Paragraphs[i];
-            var ip = BuildParameter(p, i, screenWidth, screenHeight, scriptHeight, options);
+            var ip = BuildParameter(p, i, screenWidth, screenHeight, scriptHeight, options, assaStyles);
             ip.Bitmap = ImageRenderer.GenerateBitmap(ip);
             // Needs the rendered size, so it cannot happen in BuildParameter.
             ExportTextTags.ApplyPositionTag(ip, p.Text, scriptWidth, scriptHeight);
@@ -272,7 +280,7 @@ internal static class ImageOutputWriter
         };
     }
 
-    private static ImageParameter BuildParameter(Paragraph p, int index, int screenWidth, int screenHeight, int scriptHeight, ConversionOptions options)
+    private static ImageParameter BuildParameter(Paragraph p, int index, int screenWidth, int screenHeight, int scriptHeight, ConversionOptions options, ExportAssaStyles? assaStyles = null)
     {
         var style = options.ImageStyle;
 
@@ -323,6 +331,9 @@ internal static class ImageOutputWriter
             Plane3D = style.Plane3D,
             Error = string.Empty,
         };
+
+        // The line's own style first, so the override tags below win over it.
+        assaStyles?.Apply(imageParameter, p.Extra, text, p.MarginL, p.MarginR, p.MarginV);
 
         // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
         // change what is drawn, so they have to be read before the bitmap is rendered -
