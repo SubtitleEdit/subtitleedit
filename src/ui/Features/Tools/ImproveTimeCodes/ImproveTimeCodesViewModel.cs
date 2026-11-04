@@ -56,6 +56,8 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     [ObservableProperty] private string _changePositionLabel;
     [ObservableProperty] private bool _canGoPrevious;
     [ObservableProperty] private bool _canGoNext;
+    [ObservableProperty] private bool _canGoPreviousToCheck;
+    [ObservableProperty] private bool _canGoNextToCheck;
     [ObservableProperty] private bool _hasResult;
     [ObservableProperty] private AudioVisualizer? _audioVisualizerOriginal;
     [ObservableProperty] private AudioVisualizer? _audioVisualizerAligned;
@@ -685,6 +687,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         if (SelectedRow == null)
         {
             UpdateChangeNavigation();
+            UpdateToCheckNavigation();
         }
     }
 
@@ -795,6 +798,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         {
             HasResult = Rows.Any(r => r.IsChanged && r.Apply);
             UpdateChangeNavigation();
+            UpdateToCheckNavigation();
         }
     }
 
@@ -821,17 +825,21 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         RebuildAligned();
         HasResult = Rows.Any(r => r.IsChanged && r.Apply);
         UpdateChangeNavigation();
+        UpdateToCheckNavigation();
     }
 
     private void OnRowApplyChanged(ImproveTimeCodesRow row)
     {
         RebuildAligned();
         HasResult = Rows.Any(r => r.IsChanged && r.Apply);
+        // Ticking or unticking a line changes which lines still need to be checked.
+        UpdateToCheckNavigation();
     }
 
     partial void OnSelectedRowChanged(ImproveTimeCodesRow? value)
     {
         UpdateChangeNavigation();
+        UpdateToCheckNavigation();
         if (value == null)
         {
             PushParagraphsToVisualizers();
@@ -856,10 +864,27 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         CanGoPrevious = changed.Any(r => r.Index < index);
         CanGoNext = changed.Any(r => r.Index > index);
 
+        // A line left unticked is one the user has to check - while sitting on one, the label
+        // shows the position in the lines to check, the set F9/F10 steps through.
+        if (SelectedRow is { IsChanged: true, Apply: false })
+        {
+            var toCheck = Rows.Where(r => r.IsChanged && !r.Apply).ToList();
+            ChangePositionLabel = string.Format(Se.Language.General.ToCheckXOfY, toCheck.IndexOf(SelectedRow) + 1, toCheck.Count);
+            return;
+        }
+
         var position = SelectedRow != null ? changed.IndexOf(SelectedRow) : -1;
         ChangePositionLabel = position >= 0
             ? string.Format(Se.Language.General.ChangeXOfY, position + 1, changed.Count)
             : string.Empty;
+    }
+
+    private void UpdateToCheckNavigation()
+    {
+        var toCheck = Rows.Where(r => r.IsChanged && !r.Apply).ToList();
+        var index = SelectedRow == null ? -1 : SelectedRow.Index;
+        CanGoPreviousToCheck = toCheck.Any(r => r.Index < index);
+        CanGoNextToCheck = toCheck.Any(r => r.Index > index);
     }
 
     [RelayCommand]
@@ -874,6 +899,20 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     {
         var index = SelectedRow?.Index ?? -1;
         SelectAndScroll(Rows.FirstOrDefault(r => r.IsChanged && r.Index > index));
+    }
+
+    [RelayCommand]
+    private void PreviousToCheck()
+    {
+        var index = SelectedRow?.Index ?? Rows.Count;
+        SelectAndScroll(Rows.LastOrDefault(r => r.IsChanged && !r.Apply && r.Index < index));
+    }
+
+    [RelayCommand]
+    private void NextToCheck()
+    {
+        var index = SelectedRow?.Index ?? -1;
+        SelectAndScroll(Rows.FirstOrDefault(r => r.IsChanged && !r.Apply && r.Index > index));
     }
 
     private void SelectAndScroll(ImproveTimeCodesRow? row)
@@ -1330,6 +1369,16 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         {
             e.Handled = true;
             PreviousChange();
+        }
+        else if (e.Key == Key.F9 || (e.Key == Key.PageDown && e.KeyModifiers == KeyModifiers.Alt))
+        {
+            e.Handled = true;
+            NextToCheck();
+        }
+        else if (e.Key == Key.F10 || (e.Key == Key.PageUp && e.KeyModifiers == KeyModifiers.Alt))
+        {
+            e.Handled = true;
+            PreviousToCheck();
         }
     }
 

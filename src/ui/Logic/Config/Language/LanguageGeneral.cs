@@ -897,6 +897,9 @@ public class LanguageGeneral
     public string NextChange { get; set; }
     public string PreviousChange { get; set; }
     public string ChangeXOfY { get; set; }
+    public string PreviousToCheck { get; set; }
+    public string NextToCheck { get; set; }
+    public string ToCheckXOfY { get; set; }
     public string TooLong { get; set; }
     public string TooShort { get; set; }
     public string Overlapping { get; set; }
@@ -1915,6 +1918,9 @@ public class LanguageGeneral
         NextChange = "Next change";
         PreviousChange = "Previous change";
         ChangeXOfY = "Change {0} of {1}";
+        PreviousToCheck = "Previous line to check";
+        NextToCheck = "Next line to check";
+        ToCheckXOfY = "To check {0} of {1}";
         TooLong = "Too long";
         TooShort = "Too short";
         Overlapping = "Overlapping";

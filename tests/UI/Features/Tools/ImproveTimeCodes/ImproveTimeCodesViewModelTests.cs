@@ -284,4 +284,82 @@ public class ImproveTimeCodesViewModelTests
         Assert.False(vm.CanGoNext);
         Assert.Equal(string.Format(Nikse.SubtitleEdit.Logic.Config.Se.Language.General.ChangeXOfY, 2, 2), vm.ChangePositionLabel);
     }
+
+    private static ImproveTimeCodesViewModel MakeWithToCheckLines()
+    {
+        var lines = Enumerable.Range(0, 4).Select(i => new SubtitleLineViewModel
+        {
+            Number = i + 1,
+            Text = $"Line {i}",
+            StartTime = TimeSpan.FromSeconds(10 + (i * 3)),
+            EndTime = TimeSpan.FromSeconds(12 + (i * 3)),
+        }).ToList();
+
+        var vm = new ImproveTimeCodesViewModel(new StubWindowService());
+        vm.Initialize(lines, new AudioVisualizer(), "video.mkv", -1, "en");
+
+        var results = new List<SubtitleRetimer.LineResult>
+        {
+            new(10.3, 11.8, SubtitleRetimer.LineStatus.Retimed),
+            new(13, 15, SubtitleRetimer.LineStatus.LargeMoveUnconfirmed),
+            new(16, 18, SubtitleRetimer.LineStatus.DisputedBySpeech),
+            new(18.6, 20.9, SubtitleRetimer.LineStatus.Retimed),
+        };
+
+        typeof(ImproveTimeCodesViewModel)
+            .GetMethod("ShowResults", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .Invoke(vm, new object[] { results });
+        return vm;
+    }
+
+    [Fact]
+    public void ToCheckNavigation_StepsOnlyOverUntickedLines()
+    {
+        var vm = MakeWithToCheckLines();
+        var l = Nikse.SubtitleEdit.Logic.Config.Se.Language.General;
+
+        // Line 0 is the first changed line, ticked; 1 and 2 are left unticked to check.
+        Assert.Equal(0, vm.SelectedRow!.Index);
+        Assert.False(vm.CanGoPreviousToCheck);
+        Assert.True(vm.CanGoNextToCheck);
+
+        vm.NextToCheckCommand.Execute(null);
+        Assert.Equal(1, vm.SelectedRow!.Index);
+        Assert.Equal(string.Format(l.ToCheckXOfY, 1, 2), vm.ChangePositionLabel);
+        Assert.False(vm.CanGoPreviousToCheck);
+        Assert.True(vm.CanGoNextToCheck);
+
+        vm.NextToCheckCommand.Execute(null);
+        Assert.Equal(2, vm.SelectedRow!.Index);
+        Assert.Equal(string.Format(l.ToCheckXOfY, 2, 2), vm.ChangePositionLabel);
+        Assert.False(vm.CanGoNextToCheck);
+
+        vm.PreviousToCheckCommand.Execute(null);
+        Assert.Equal(1, vm.SelectedRow!.Index);
+
+        // Ticking a line removes it from the to-check set; F9 then jumps the remaining gap.
+        vm.SelectedRow!.Apply = true;
+        Assert.False(vm.CanGoPreviousToCheck);
+        vm.NextToCheckCommand.Execute(null);
+        Assert.Equal(2, vm.SelectedRow!.Index);
+        Assert.False(vm.CanGoNextToCheck);
+
+        // The re-timed navigation is untouched by all of that - line 1 is a changed line too.
+        vm.PreviousChangeCommand.Execute(null);
+        Assert.Equal(1, vm.SelectedRow!.Index);
+        Assert.Equal(string.Format(l.ChangeXOfY, 2, 4), vm.ChangePositionLabel);
+    }
+
+    [Fact]
+    public void ToCheckNavigation_WithNothingToCheck_LeavesTheSelectionAlone()
+    {
+        var (vm, _) = MakeWithResults();
+
+        Assert.False(vm.CanGoPreviousToCheck);
+        Assert.False(vm.CanGoNextToCheck);
+
+        vm.NextToCheckCommand.Execute(null);
+        vm.PreviousToCheckCommand.Execute(null);
+        Assert.Equal(0, vm.SelectedRow!.Index);
+    }
 }
