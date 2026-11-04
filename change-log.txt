@@ -3,6 +3,28 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-rc3 (4th of November 2026)
+
+* llama.cpp advanced translate: add Generate with AI button for the synopsis - thx fraternl
+* Hide the Actor column for formats that do not keep actors - thx accessallareas
+* Pause video when stepping one frame back/forward - thx accessallareas
+* Improve time codes: one prompt for missing models, no dead Download button - thx GitGianluc
+* Blu-ray sup: split the palette by need between two objects
+* Settings window opens faster
+* Fix Auto-translate accepting replies shifted and padded with "..." - thx fraternl
+* Fix Qwen3 ASR instant crash on Linux (engine v0.1.11) - thx JavierSanchezQ
+* Fix Cut video ignoring SMPTE timing - thx OmrSi
+* Fix long names cut off in Waveform toolbar items dialog - thx GitGianluc
+* Fix stacked images in About window cross-fade - thx GitGianluc
+* Update CrispASR to v0.8.50
+* Update Finnish translation - thx KarvaMaha
+* Update German translation - thx FunkyKnilch
+* Update Hungarian translation
+* Update Italian translation - thx GitGianluc
+
+
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-rc2 (3rd of November 2026)
 
 * Auto-translate: translate selected rows together, with context - thx mmmsh-125
