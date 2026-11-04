@@ -240,12 +240,20 @@ Tags in the text are read rather than drawn as literal characters:
 | `{\an1}` - `{\an9}` | Places the subtitle, overriding the alignment chosen in the window |
 | `{\pos(x,y)}` | Positions the subtitle (coordinates are in the script's own resolution) |
 | `{\i1}`, `{\b1}`, `{\c&H..&}`, `{\fn..}`, `{\fs..}` | Italic, bold, colour, font and size |
+| `{\u1}`, `{\s1}` | Underline and strikeout - the bars get the text's outline and shadow |
 | `{\alpha&H80&}`, `{\1a}`, `{\3a}`, `{\4a}` | Transparency — all parts at once, or text, outline and shadow separately |
 | `{\3c&H..&}`, `{\4c&H..&}` | Outline and shadow colour, overriding the colours chosen in the window |
 | `{\bord2}`, `{\shad0}` | Outline and shadow width (in the script's own resolution) — `{\bord0}` turns the outline off |
+| `{\fsp4}` | Letter spacing (in the script's own resolution) |
+| `{\blur2}`, `{\be1}` | Soft edges - the outline, or the text when it has none, and the shadow |
+| `{\fscx150}`, `{\fscy80}` | Stretches the text wider or taller, in percent - `\fscy` makes the line taller too |
+| `{\frz10}`, `{\fr10}` | Rotates the subtitle counter-clockwise, box included |
 | `{\fad(in,out)}`, `{\fade(..)}` | Fade in/out — **Blu-ray SUP only** (see below) |
+| `<u>`, `<s>` | Underline and strikeout in HTML-style text (SRT and others) |
 
-Anything else is removed before rendering.
+Anything else - `\k`, `\move`, `\t(..)`, `\clip`, `\frx`/`\fry`, ... - is removed before rendering, and the rest of the line keeps its formatting: `{\i1\k40}Hello` is still italic. Drawings (`{\p1}`) are left out rather than drawn as letters.
+
+Tags that change the whole subtitle (`\bord`, `\shad`, `\3c`, `\4c`, `\fsp`, `\blur`, `\fscx`, `\fscy`, `\frz`) apply to the whole line; when one is given twice, the last one wins. Inside a `\t(..)` transition they are an animation target, so they are not applied. `\frz` turns the subtitle around its centre - a player turns it around the `\org` point, so a large angle can sit slightly differently on screen.
 
 **Fading (Blu-ray SUP).** A subtitle with `{\fad(400,400)}` is written the way a Blu-ray disc does it: the image is encoded once and the fade follows as palette updates, one per video frame, which cost about a kilobyte each instead of a whole new image. Long fades are sampled coarser so a single subtitle never adds more than 60 of them. The other image formats have no way to animate a subtitle and ignore the tag - the image is written fully opaque.
 
