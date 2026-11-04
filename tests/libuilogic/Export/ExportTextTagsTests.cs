@@ -328,6 +328,24 @@ public class ExportTextTagsTests
     }
 
     [Theory]
+    [InlineData("{\\fscx150}Hello", 150f, 100f)]
+    [InlineData("{\\fscy80}Hello", 100f, 80f)]
+    [InlineData("{\\fscx120\\fscy90.5}Hello", 120f, 90.5f)]
+    [InlineData("Hello", 100f, 100f)]
+    [InlineData("{\\fs40\\fsp2}Hello", 100f, 100f)] // not "\fsc"
+    [InlineData("{\\t(0,200,\\fscx200)}Hello", 100f, 100f)] // an animation target, not the line's look
+    public void ApplyStyleOverrideTags_ScaleTags_SetTagScale(string text, float expectedX, float expectedY)
+    {
+        var ip = MakeStyledParameter();
+
+        // Percentages: the script resolution must not change them.
+        ExportTextTags.ApplyStyleOverrideTags(ip, text, scriptHeight: 288);
+
+        Assert.Equal(expectedX, ip.TagScaleX);
+        Assert.Equal(expectedY, ip.TagScaleY);
+    }
+
+    [Theory]
     [InlineData("Hello")]
     [InlineData("{\\b1\\bord2}Hello")] // "\b1"/"\bord" are not "\be"
     [InlineData("{\\fs40\\fscx120}Hello")] // "\fs"/"\fscx" are not "\fsp"

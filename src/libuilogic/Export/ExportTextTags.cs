@@ -47,6 +47,11 @@ public static class ExportTextTags
         @"\\fsp(-?\d+(?:\.\d+)?)",
         RegexOptions.Compiled);
 
+    // "{\fscx120}"/"{\fscy80}" glyph scale in percent, also with decimals
+    private static readonly Regex ScaleTagRegex = new(
+        @"\\fsc([xy])(\d+(?:\.\d+)?)",
+        RegexOptions.Compiled);
+
     // "{\blur2}" (gaussian) and "{\be1}" (box blur passes), also with decimals
     private static readonly Regex BlurTagRegex = new(
         @"\\(blur|be)(\d+(?:\.\d+)?)",
@@ -224,7 +229,8 @@ public static class ExportTextTags
     /// parameter: the colours of "{\3c&amp;H..&amp;}" (outline) and "{\4c&amp;H..&amp;}"
     /// (shadow), and the widths of "{\bord..}" and "{\shad..}" - "{\bord0}" in particular is
     /// how ASSA subtitles turn the outline off for one line - and the letter spacing of
-    /// "{\fsp..}" and the edge softness of "{\blur..}"/"{\be..}".
+    /// "{\fsp..}", the edge softness of "{\blur..}"/"{\be..}" and the glyph scale of
+    /// "{\fscx..}"/"{\fscy..}".
     /// <para>
     /// Call before <see cref="ApplyTransparencyTags"/>: "\3a"/"\4a" fade whatever colours are
     /// on the parameter, so the "\3c"/"\4c" colours have to be there first. The widths are in
@@ -287,6 +293,20 @@ public static class ExportTextTags
         foreach (Match match in LetterSpacingTagRegex.Matches(text))
         {
             ip.TagLetterSpacing = (float)(double.Parse(match.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture) * scale);
+        }
+
+        // "{\fscx..}"/"{\fscy..}" are percentages - nothing to scale to the canvas.
+        foreach (Match match in ScaleTagRegex.Matches(text))
+        {
+            var percent = float.Parse(match.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture);
+            if (match.Groups[1].Value == "x")
+            {
+                ip.TagScaleX = percent;
+            }
+            else
+            {
+                ip.TagScaleY = percent;
+            }
         }
 
         // libass applies "\be" and "\blur" one after the other, the last of each kind winning.
