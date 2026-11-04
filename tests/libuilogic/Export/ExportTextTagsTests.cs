@@ -100,12 +100,9 @@ public class ExportTextTagsTests
     [InlineData("{\\alpha&H80&\\i1}Hello", "<i>Hello</i>")]
     [InlineData("{\\1a&H80&\\3a&HFF&}{\\i1}Hello", "<i>Hello</i>")]
     [InlineData("{\\pos(10,20)\\c&H0000FF&}Red{\\c}", "<font color=\"#ff0000\">Red</font>")]
-    [InlineData("{\\move(10,20,30,40)\\i1}Hello", "Hello")] // \move is NOT consumed - still too complex
     [InlineData("{\\bord0\\i1}Hello", "<i>Hello</i>")]
     [InlineData("{\\bord2.5\\shad0\\b1}Hello", "<b>Hello</b>")]
     [InlineData("{\\3c&H0000FF&\\4c&H00FF00&\\i1}Hello", "<i>Hello</i>")]
-    [InlineData("{\\xbord4\\i1}Hello", "Hello")] // one axis variants are NOT consumed - still too complex
-    [InlineData("{\\t(0,200,\\bord0)\\i1}Hello", "Hello")] // inside \t nothing is consumed - still too complex
     public void ToRenderableText_ConsumedTags_DoNotCostTheLineItsFormatting(string text, string expected)
     {
         // "\pos", "\fad", "\alpha", "\3c"/"\4c" and "\bord"/"\shad" are read off the text
@@ -113,6 +110,34 @@ public class ExportTextTagsTests
         // so they must not make GetFormattedText treat the line as too complex and drop the
         // formatting tags next to them.
         Assert.Equal(expected, ExportTextTags.ToRenderableText(text));
+    }
+
+    [Theory]
+    [InlineData("{\\move(10,20,30,40)\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\xbord4\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\t(0,200,\\bord0)\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\blur2\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\be1}{\\b1}Hello", "<b>Hello</b>")]
+    [InlineData("{\\k50}Hel{\\k30\\i1}lo", "Hel<i>lo</i>")]
+    [InlineData("{\\fscx120\\fscy80\\fs40}Hello", "<font size=\"40\">Hello</font>")]
+    [InlineData("{\\clip(0,0,100,100)\\c&H0000FF&}Red", "<font color=\"#ff0000\">Red</font>")]
+    [InlineData("{\\frz10\\fnArial}Hello", "<font face=\"Arial\">Hello</font>")]
+    [InlineData("{\\t(0,200,\\i1)}Hello", "Hello")] // an italic inside \t is an animation target, not the line's look
+    [InlineData("{\\p1}m 0 0 l 100 0{\\p0}Hello", "Hello")] // drawing commands are not text
+    [InlineData("{\\i1}A{\\p2}m 0 0 l 100 0", "<i>A</i>")]
+    public void ToRenderableText_UndrawableTags_DoNotCostTheLineItsFormatting(string text, string expected)
+    {
+        // A tag the renderer cannot draw made GetFormattedText treat the whole line as too
+        // complex, which dropped the italic/bold/colour/font tags next to it as well.
+        Assert.Equal(expected, ExportTextTags.ToRenderableText(text));
+    }
+
+    [Fact]
+    public void ToRenderableText_CommentBlockNextToTags_IsKept()
+    {
+        // "{note}" has no backslash - a comment, not a tag block - and was never touched here
+        // (the export window removes comment blocks itself when asked to, #15584).
+        Assert.Equal("{note}<i>Hello</i>", ExportTextTags.ToRenderableText("{note}{\\blur1\\i1}Hello"));
     }
 
     [Theory]
