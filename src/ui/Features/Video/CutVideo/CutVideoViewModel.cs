@@ -107,6 +107,16 @@ public partial class CutVideoViewModel : ObservableObject
     private List<SubtitleLineViewModel> _generateSegments = new();
     private CutType _generateCutType;
 
+    // _generateSegments on the video's own clock - what ffmpeg cuts with. Differs from
+    // _generateSegments only in SMPTE mode, see _isSmpteTiming.
+    private List<SubtitleLineViewModel> _generateVideoSegments = new();
+
+    // SMPTE timing (main window): the rows, the waveform and the shot changes run on the
+    // drop-frame clock, where a row time t is t * 1.001 in the video file. The dialog's player
+    // converts itself; everything handed to ffmpeg goes through ToVideoSeconds, and the cut
+    // subtitle stays on the rows' clock.
+    private bool _isSmpteTiming;
+
     // The transition/fade settings of the run, completed with the input's frame rate and
     // duration once the job starts - the video and the cut subtitle are both built from them.
     private CutVideoTransitionOptions _generateTransitions = new();
@@ -195,6 +205,8 @@ public partial class CutVideoViewModel : ObservableObject
         MainViewModel mainVm,
         List<SubtitleLineViewModel>? selectedItems = null)
     {
+        _isSmpteTiming = mainVm.IsSmpteTimingEnabled;
+        VideoPlayer.IsSmpteTimingEnabled = _isSmpteTiming;
         VideoFileName = videoFileName;
         _inputVideoFileName = videoFileName;
         _currentSubtitle = subtitle;
@@ -288,14 +300,14 @@ public partial class CutVideoViewModel : ObservableObject
         var subtitle = Segments.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
         var firstSelectedIndex = -1;
 
-        var mediaPlayerSeconds = vp.Position;
+        var mediaPlayerSeconds = FromVideoSeconds(vp.Position); // the raw player is on the video's clock
         var startPos = mediaPlayerSeconds - 0.01;
         if (startPos < 0)
         {
             startPos = 0;
         }
 
-        av.CurrentVideoPositionSeconds = vp.Position;
+        av.CurrentVideoPositionSeconds = mediaPlayerSeconds;
         var isPlaying = vp.IsPlaying;
 
         if (!isPlaying)
@@ -340,7 +352,7 @@ public partial class CutVideoViewModel : ObservableObject
             {
                 lock (_keyFrameSeconds)
                 {
-                    _keyFrameSeconds.Add(seconds);
+                    _keyFrameSeconds.Add(FromVideoSeconds(seconds));
                     if (_keyFramePublishPending)
                     {
                         return;
@@ -603,7 +615,7 @@ public partial class CutVideoViewModel : ObservableObject
         if (_generateCutType == CutType.MergeSegments)
         {
             // Every segment is encoded, overlapping or not, so this is a plain sum.
-            keptSeconds = _generateSegments.Sum(s => Math.Max(0, Math.Min(s.EndTime.TotalSeconds, totalSeconds) - Math.Max(0, s.StartTime.TotalSeconds)));
+            keptSeconds = _generateVideoSegments.Sum(s => Math.Max(0, Math.Min(s.EndTime.TotalSeconds, totalSeconds) - Math.Max(0, s.StartTime.TotalSeconds)));
         }
         else
         {
@@ -611,7 +623,7 @@ public partial class CutVideoViewModel : ObservableObject
             // overlapping segments must not be subtracted twice.
             var removedSeconds = 0d;
             var position = 0d;
-            foreach (var segment in _generateSegments)
+            foreach (var segment in _generateVideoSegments)
             {
                 var start = Math.Max(position, segment.StartTime.TotalSeconds);
                 var end = Math.Min(totalSeconds, segment.EndTime.TotalSeconds);
@@ -647,11 +659,11 @@ public partial class CutVideoViewModel : ObservableObject
 
         if (_generateCutType == CutType.MergeSegments)
         {
-            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio, _generateTransitions, _generateVideoEncoding);
+            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateVideoSegments, hasVideo, hasAudio, _generateTransitions, _generateVideoEncoding);
         }
         else
         {
-            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateSegments, hasVideo, hasAudio, _generateTransitions, _generateVideoEncoding);
+            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, _generateVideoSegments, hasVideo, hasAudio, _generateTransitions, _generateVideoEncoding);
         }
 
         _ffmpegProcess = FfmpegGenerator.GetProcess(arguments, OutputHandler);
@@ -695,8 +707,32 @@ public partial class CutVideoViewModel : ObservableObject
     private List<(double? Start, double? End)> GetGenerateRanges()
     {
         return _generateCutType == CutType.MergeSegments
-            ? FfmpegGenerator.GetMergeRanges(_generateSegments)
-            : FfmpegGenerator.GetRemoveRanges(_generateSegments);
+            ? FfmpegGenerator.GetMergeRanges(_generateVideoSegments)
+            : FfmpegGenerator.GetRemoveRanges(_generateVideoSegments);
+    }
+
+    private double ToVideoSeconds(double seconds)
+    {
+        return _isSmpteTiming ? seconds * 1001.0 / 1000.0 : seconds;
+    }
+
+    private double FromVideoSeconds(double seconds)
+    {
+        return _isSmpteTiming ? seconds * 1000.0 / 1001.0 : seconds;
+    }
+
+    private List<SubtitleLineViewModel> ToVideoSegments(List<SubtitleLineViewModel> segments)
+    {
+        if (!_isSmpteTiming)
+        {
+            return segments;
+        }
+
+        return segments.Select(s => new SubtitleLineViewModel(s)
+        {
+            EndTime = TimeSpan.FromSeconds(ToVideoSeconds(s.EndTime.TotalSeconds)),
+            StartTime = TimeSpan.FromSeconds(ToVideoSeconds(s.StartTime.TotalSeconds)),
+        }).ToList();
     }
 
     private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
@@ -758,18 +794,19 @@ public partial class CutVideoViewModel : ObservableObject
             {
                 // The video was cut from the plan's ranges (whole frames, joins overlapping by
                 // the transition) - re-time the subtitle from exactly the same ones.
+                // The plan is on the video's clock - bring it back to the rows' (SMPTE).
                 var plan = CutVideoTransitionPlan.Create(GetGenerateRanges(), _generateTransitions);
                 var lastParagraphEnd = _currentSubtitle.Paragraphs.Max(p => p.EndTime.TotalSeconds);
                 var kept = plan.Ranges
-                    .Select(r => (r.Start, r.End ?? Math.Max(totalDurationSeconds, lastParagraphEnd)))
+                    .Select(r => (FromVideoSeconds(r.Start), r.End.HasValue ? FromVideoSeconds(r.End.Value) : Math.Max(FromVideoSeconds(totalDurationSeconds), lastParagraphEnd)))
                     .ToList();
-                cut = SubtitleSegmentCutter.KeepSegments(_currentSubtitle, kept, plan.TransitionSeconds);
+                cut = SubtitleSegmentCutter.KeepSegments(_currentSubtitle, kept, FromVideoSeconds(plan.TransitionSeconds));
             }
             else
             {
                 cut = _generateCutType == CutType.MergeSegments
                     ? SubtitleSegmentCutter.KeepSegments(_currentSubtitle, segments)
-                    : SubtitleSegmentCutter.RemoveSegments(_currentSubtitle, segments, totalDurationSeconds);
+                    : SubtitleSegmentCutter.RemoveSegments(_currentSubtitle, segments, FromVideoSeconds(totalDurationSeconds));
             }
 
             SubtitleFormat format = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat }
@@ -1007,6 +1044,7 @@ public partial class CutVideoViewModel : ObservableObject
             .OrderBy(s => s.StartTime.TotalMilliseconds)
             .Select(s => new SubtitleLineViewModel(s))
             .ToList();
+        _generateVideoSegments = ToVideoSegments(_generateSegments);
         _generateCutType = SelectedCutType.CutType;
         _generateTransitions = MakeTransitionOptions();
         _generateVideoEncoding = SelectedVideoEncoding.Codec;
@@ -1147,10 +1185,10 @@ public partial class CutVideoViewModel : ObservableObject
             return;
         }
 
-        var segments = Segments
+        var segments = ToVideoSegments(Segments
             .OrderBy(s => s.StartTime.TotalMilliseconds)
             .Select(s => new SubtitleLineViewModel(s))
-            .ToList();
+            .ToList());
         var cutType = SelectedCutType.CutType;
         var ranges = cutType == CutType.MergeSegments
             ? FfmpegGenerator.GetMergeRanges(segments)
@@ -1184,6 +1222,8 @@ public partial class CutVideoViewModel : ObservableObject
             {
                 reference = cutType == CutType.MergeSegments ? selected.EndTime.TotalSeconds : selected.StartTime.TotalSeconds;
             }
+
+            reference = ToVideoSeconds(reference);
 
             var joinIndex = 0;
             for (var i = 1; i < plan.Ranges.Count - 1; i++)
