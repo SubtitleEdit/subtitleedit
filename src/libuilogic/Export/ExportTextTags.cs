@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using SkiaSharp;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
@@ -40,6 +41,16 @@ public static class ExportTextTags
     private static readonly Regex OutlineShadowWidthTagRegex = new(
         @"\\(bord|shad)(\d+(?:\.\d+)?)",
         RegexOptions.Compiled);
+
+    // The tags GetFormattedText turns into HTML, without their backslash: "i1"/"i0"/"i",
+    // "b1"/"b0"/"b", "u1"/"u0"/"u", "fnArial", "fs40", "c&H0000FF&" and "1c&H0000FF&" - and
+    // their bare reset forms. "fscx"/"fsp" and "clip" are not "fs"/"c".
+    private static readonly Regex FormattingTagRegex = new(
+        @"^(?:[ibu][01]?|fn.*|fs(?:\d.*)?|1?c(?:&.*)?)$",
+        RegexOptions.Compiled);
+
+    // "p1".."p9" starts drawing mode, "p0" ends it - not "pos(..)" or "pbo".
+    private static readonly Regex DrawingTagRegex = new(@"^p(\d+)$", RegexOptions.Compiled);
 
     /// <summary>
     /// Returns the alignment from a leading "{\anX}" tag - also inside a multi tag block
@@ -102,12 +113,13 @@ public static class ExportTextTags
         // last "{\" away.
         if (text.Contains("{\\", StringComparison.Ordinal))
         {
-            // The position, fade and transparency tags have already been read off the text
-            // (GetAlignment, ApplyPositionTag, ApplyTransparencyTags) - but left in, any one
+            // The position, fade, transparency and outline/shadow tags have already been read
+            // off the text (GetAlignment, ApplyPositionTag, ApplyTransparencyTags,
+            // ApplyStyleOverrideTags), and the renderer cannot draw the rest. Left in, any one
             // of them makes GetFormattedText declare the whole line "too complex" and return
-            // every tag untranslated, so "{\i1\pos(10,20)}Hi" kept its position and lost its
-            // italic. Strip what has been consumed; the rest of the line can still convert.
-            s = RemoveConsumedTags(s);
+            // every tag untranslated, so "{\i1\blur2}Hi" lost its italic. Keep only the tags
+            // GetFormattedText turns into HTML.
+            s = KeepFormattingTagsOnly(s);
 
             // "{\i1}" -> "<i>", "{\b1}" -> "<b>", "{\c&H0000FF&}" -> "<font color=\"#ff0000\">", ...
             s = AdvancedSubStationAlpha.GetFormattedText(s);
@@ -342,31 +354,99 @@ public static class ExportTextTags
     }
 
     /// <summary>
-    /// Removes the tags this class consumes itself - "\pos(x,y)", "\fad(..)"/"\fade(..)",
-    /// the "\alpha"/"\1a"/"\3a"/"\4a" transparencies and the "\3c"/"\4c"/"\bord"/"\shad"
-    /// overrides - matching exactly what <see cref="TryGetPosition"/>,
-    /// <see cref="ExportFade.Parse"/>, <see cref="ApplyTransparencyTags"/> and
-    /// <see cref="ApplyStyleOverrideTags"/> read, so a tag those did not understand still
-    /// makes the line "too complex" instead of being dropped along with its effect.
+    /// Removes every override tag except the ones <see cref="AdvancedSubStationAlpha.GetFormattedText"/>
+    /// translates - "\i", "\b", "\u", "\fn", "\fs", "\c" and "\1c" - so a tag the renderer
+    /// cannot draw ("\blur", "\k", "\move", "\t(..)", ...) no longer costs the line its
+    /// formatting. Blocks without a backslash are comments, not tags, and are left alone.
     /// </summary>
-    private static string RemoveConsumedTags(string text)
+    private static string KeepFormattingTagsOnly(string text)
     {
-        var s = PositionTagRegex.Replace(text, string.Empty);
-        s = ExportFade.RemoveTags(s);
-        s = AlphaTagRegex.Replace(s, string.Empty);
-
-        // The outline/shadow overrides are only consumed outside "\t(..)" blocks (see
-        // ApplyStyleOverrideTags) - with a "\t" on the line nothing is consumed, and the "\t"
-        // makes the line too complex regardless.
-        if (!text.Contains("\\t(", StringComparison.Ordinal))
+        var sb = new StringBuilder(text.Length);
+        var pos = 0;
+        var isDrawing = false;
+        while (pos < text.Length)
         {
-            s = OutlineShadowColorTagRegex.Replace(s, string.Empty);
-            s = OutlineShadowWidthTagRegex.Replace(s, string.Empty);
+            var start = text.IndexOf("{\\", pos, StringComparison.Ordinal);
+            var end = start < 0 ? -1 : text.IndexOf('}', start);
+            if (end < 0)
+            {
+                if (!isDrawing)
+                {
+                    sb.Append(text, pos, text.Length - pos);
+                }
+
+                break;
+            }
+
+            // Between "{\p1}" and "{\p0}" the text is drawing commands ("m 0 0 l 100 0"),
+            // which drawn as letters are worse than not drawn at all.
+            if (!isDrawing)
+            {
+                sb.Append(text, pos, start - pos);
+            }
+
+            var kept = new StringBuilder();
+            foreach (var tag in SplitOverrideTags(text.Substring(start + 1, end - start - 1)))
+            {
+                if (FormattingTagRegex.IsMatch(tag))
+                {
+                    kept.Append('\\').Append(tag);
+                }
+                else if (DrawingTagRegex.Match(tag) is { Success: true } drawing)
+                {
+                    isDrawing = drawing.Groups[1].Value != "0";
+                }
+            }
+
+            if (kept.Length > 0)
+            {
+                sb.Append('{').Append(kept).Append('}');
+            }
+
+            pos = end + 1;
         }
 
-        // "{\pos(10,20)}Hello" is "{}Hello" now - GetFormattedText has no reason to see the
-        // leftover block.
-        return s.Replace("{}", string.Empty);
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// The tags of one override block, without their backslash. A backslash inside
+    /// parentheses belongs to the tag around it - "\t(0,200,\i1)" is one tag, not two.
+    /// Anything in front of the first backslash is not a tag and is skipped.
+    /// </summary>
+    private static List<string> SplitOverrideTags(string block)
+    {
+        var tags = new List<string>();
+        var depth = 0;
+        var tagStart = -1;
+        for (var i = 0; i < block.Length; i++)
+        {
+            var c = block[i];
+            if (c == '(')
+            {
+                depth++;
+            }
+            else if (c == ')')
+            {
+                depth = Math.Max(0, depth - 1);
+            }
+            else if (c == '\\' && depth == 0)
+            {
+                if (tagStart >= 0)
+                {
+                    tags.Add(block.Substring(tagStart, i - tagStart));
+                }
+
+                tagStart = i + 1;
+            }
+        }
+
+        if (tagStart >= 0)
+        {
+            tags.Add(block.Substring(tagStart));
+        }
+
+        return tags;
     }
 
     private static SKColor Fade(SKColor color, int opacity)
