@@ -42,6 +42,16 @@ public static class ExportTextTags
         @"\\(bord|shad)(\d+(?:\.\d+)?)",
         RegexOptions.Compiled);
 
+    // "{\fsp2}" letter spacing, also negative and with decimals ("{\fsp-1.5}")
+    private static readonly Regex LetterSpacingTagRegex = new(
+        @"\\fsp(-?\d+(?:\.\d+)?)",
+        RegexOptions.Compiled);
+
+    // "{\blur2}" (gaussian) and "{\be1}" (box blur passes), also with decimals
+    private static readonly Regex BlurTagRegex = new(
+        @"\\(blur|be)(\d+(?:\.\d+)?)",
+        RegexOptions.Compiled);
+
     // The tags GetFormattedText turns into HTML, without their backslash: "i1"/"i0"/"i",
     // "b1"/"b0"/"b", "u1"/"u0"/"u", "fnArial", "fs40", "c&H0000FF&" and "1c&H0000FF&" - and
     // their bare reset forms. "fscx"/"fsp" and "clip" are not "fs"/"c".
@@ -213,7 +223,8 @@ public static class ExportTextTags
     /// Reads the per line outline/shadow overrides off the text and puts them on the
     /// parameter: the colours of "{\3c&amp;H..&amp;}" (outline) and "{\4c&amp;H..&amp;}"
     /// (shadow), and the widths of "{\bord..}" and "{\shad..}" - "{\bord0}" in particular is
-    /// how ASSA subtitles turn the outline off for one line.
+    /// how ASSA subtitles turn the outline off for one line - and the letter spacing of
+    /// "{\fsp..}" and the edge softness of "{\blur..}"/"{\be..}".
     /// <para>
     /// Call before <see cref="ApplyTransparencyTags"/>: "\3a"/"\4a" fade whatever colours are
     /// on the parameter, so the "\3c"/"\4c" colours have to be there first. The widths are in
@@ -270,6 +281,36 @@ public static class ExportTextTags
             {
                 ip.ShadowWidth = width;
             }
+        }
+
+        // "{\fsp..}" - the last one wins, like the other overrides.
+        foreach (Match match in LetterSpacingTagRegex.Matches(text))
+        {
+            ip.TagLetterSpacing = (float)(double.Parse(match.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture) * scale);
+        }
+
+        // libass applies "\be" and "\blur" one after the other, the last of each kind winning.
+        // "\be" passes are a [1 2 1] box blur each, a variance of 1/2 per pass, so both become
+        // one gaussian sigma: sqrt(blur^2 + passes / 2).
+        double? blur = null;
+        double? passes = null;
+        foreach (Match match in BlurTagRegex.Matches(text))
+        {
+            var value = double.Parse(match.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture);
+            if (match.Groups[1].Value == "blur")
+            {
+                blur = value;
+            }
+            else
+            {
+                passes = Math.Round(value);
+            }
+        }
+
+        if (blur != null || passes != null)
+        {
+            var b = blur ?? 0;
+            ip.TagBlur = (float)(Math.Sqrt(b * b + (passes ?? 0) / 2.0) * scale);
         }
     }
 

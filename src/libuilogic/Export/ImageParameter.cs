@@ -103,6 +103,21 @@ public class ImageParameter
     /// </summary>
     public float TagFontSizeScale { get; set; } = 1f;
 
+    /// <summary>
+    /// Pixels between glyphs from an ASSA "{\fsp..}" tag, already scaled to the canvas, or null
+    /// when the line has none. Set by <see cref="ExportTextTags.ApplyStyleOverrideTags"/>; wins
+    /// over the letter spacing of <see cref="TextEffects"/>.
+    /// </summary>
+    public float? TagLetterSpacing { get; set; }
+
+    /// <summary>
+    /// Edge softness (blur sigma in pixels) from ASSA "{\blur..}"/"{\be..}" tags, already scaled
+    /// to the canvas, or null when the line has none. Set by
+    /// <see cref="ExportTextTags.ApplyStyleOverrideTags"/>; wins over the edge blur of
+    /// <see cref="TextEffects"/>.
+    /// </summary>
+    public float? TagBlur { get; set; }
+
     public ImageParameter()
     {
         Bitmap = new SKBitmap(1, 1, true);
