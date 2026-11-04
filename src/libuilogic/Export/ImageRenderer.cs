@@ -109,7 +109,7 @@ public static class ImageRenderer
         // italic are applied relative to the face's own weight/slant (issue #12537).
         // A segment inside a "<font face=.. size=..>" tag gets its own font, so the fonts are
         // made on demand and cached for this render (discussion #14476).
-        using var fonts = new FontSet(fontName, fontSize, ip.IsBold, ip.TagFontSizeScale);
+        using var fonts = new FontSet(fontName, fontSize, ip.IsBold, ip.TagFontSizeScale, ip.TagScaleX, ip.TagScaleY);
         var regularFont = fonts.Default;
 
         // Split segments into lines
@@ -281,14 +281,25 @@ public static class ImageRenderer
         private readonly float _defaultSize;
         private readonly bool _bold;
         private readonly float _tagSizeScale;
+        private readonly float _scaleY;
+        private readonly float _widthRatio;
 
-        public FontSet(string defaultFace, float defaultSize, bool bold, float tagSizeScale)
+        /// <summary>
+        /// <paramref name="scaleXPercent"/>/<paramref name="scaleYPercent"/> are "{\fscx}"/"{\fscy}":
+        /// the vertical scale goes into the font size, so the line heights follow it the
+        /// way libass does, and the horizontal one is the width relative to that height.
+        /// </summary>
+        public FontSet(string defaultFace, float defaultSize, bool bold, float tagSizeScale, float scaleXPercent = 100f, float scaleYPercent = 100f)
         {
             _defaultFace = defaultFace;
-            _defaultSize = defaultSize;
             _bold = bold;
             _tagSizeScale = tagSizeScale > 0 ? tagSizeScale : 1f;
-            Default = Get(defaultFace, defaultSize, bold, italic: false);
+
+            // 0% would draw nothing at all and make Skia measure zero-sized fonts.
+            _scaleY = Math.Max(scaleYPercent, 1f) / 100f;
+            _widthRatio = Math.Max(scaleXPercent, 1f) / 100f / _scaleY;
+            _defaultSize = defaultSize * _scaleY;
+            Default = Get(defaultFace, _defaultSize, bold, italic: false);
         }
 
         /// <summary>The dialog font: regular, or bold when the dialog says bold.</summary>
@@ -297,7 +308,7 @@ public static class ImageRenderer
         public SKFont Get(TextSegment segment)
         {
             var face = string.IsNullOrWhiteSpace(segment.FontName) ? _defaultFace : segment.FontName;
-            var size = segment.FontSize is { } tagSize && tagSize > 0 ? tagSize * _tagSizeScale : _defaultSize;
+            var size = segment.FontSize is { } tagSize && tagSize > 0 ? tagSize * _tagSizeScale * _scaleY : _defaultSize;
             return Get(face, size, _bold || segment.IsBold, segment.IsItalic);
         }
 
@@ -320,7 +331,7 @@ public static class ImageRenderer
             // between the fill and the outline stroked from the raw glyph path - thin
             // outlines then vanish on horizontal edges (issue #12206). Export renders at
             // video resolution, so hinting is not needed.
-            font = new SKFont(typeface, size)
+            font = new SKFont(typeface, size, _widthRatio)
             {
                 Hinting = SKFontHinting.None,
                 Subpixel = true,

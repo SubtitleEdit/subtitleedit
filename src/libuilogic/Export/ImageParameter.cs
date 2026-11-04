@@ -118,6 +118,18 @@ public class ImageParameter
     /// </summary>
     public float? TagBlur { get; set; }
 
+    /// <summary>
+    /// Horizontal glyph scale in percent from an ASSA "{\fscx..}" tag; 100 is unscaled. Set by
+    /// <see cref="ExportTextTags.ApplyStyleOverrideTags"/>.
+    /// </summary>
+    public float TagScaleX { get; set; } = 100f;
+
+    /// <summary>
+    /// Vertical glyph scale in percent from an ASSA "{\fscy..}" tag; 100 is unscaled. The line
+    /// height follows it, like in libass. Set by <see cref="ExportTextTags.ApplyStyleOverrideTags"/>.
+    /// </summary>
+    public float TagScaleY { get; set; } = 100f;
+
     public ImageParameter()
     {
         Bitmap = new SKBitmap(1, 1, true);
