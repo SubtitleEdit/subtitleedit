@@ -154,8 +154,7 @@ public static class ExportTextTags
             s = s.Replace("{}", string.Empty);
         }
 
-        // The renderer has no underline, so "<u>" would be drawn as literal text.
-        return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagUnderline);
+        return s;
     }
 
     /// <summary>
@@ -458,11 +457,18 @@ public static class ExportTextTags
             }
 
             var kept = new StringBuilder();
+            var strikeout = string.Empty;
             foreach (var tag in SplitOverrideTags(text.Substring(start + 1, end - start - 1)))
             {
                 if (FormattingTagRegex.IsMatch(tag))
                 {
                     kept.Append('\\').Append(tag);
+                }
+                else if (tag is "s1" or "s0" or "s")
+                {
+                    // GetFormattedText has no strikeout (it calls "\s" too complex), so it
+                    // becomes HTML here; the last one in the block wins.
+                    strikeout = tag == "s1" ? "<s>" : "</s>";
                 }
                 else if (DrawingTagRegex.Match(tag) is { Success: true } drawing)
                 {
@@ -474,6 +480,8 @@ public static class ExportTextTags
             {
                 sb.Append('{').Append(kept).Append('}');
             }
+
+            sb.Append(strikeout);
 
             pos = end + 1;
         }

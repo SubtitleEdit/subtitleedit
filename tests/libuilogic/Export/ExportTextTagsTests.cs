@@ -141,9 +141,13 @@ public class ExportTextTagsTests
     }
 
     [Theory]
-    [InlineData("<u>Hello</u>", "Hello")] // the renderer cannot underline
-    [InlineData("{\\u1}Hello{\\u0}", "Hello")]
-    public void ToRenderableText_UnderlineTags_AreRemoved(string text, string expected)
+    [InlineData("<u>Hello</u>", "<u>Hello</u>")]
+    [InlineData("{\\u1}Hello{\\u0}", "<u>Hello</u>")]
+    [InlineData("{\\s1}Hello{\\s0}", "<s>Hello</s>")]
+    [InlineData("{\\s1\\i1}Hel{\\i0}lo", "<i><s>Hel</i>lo")]
+    [InlineData("{\\s1\\s0}Hello", "</s>Hello")] // the last one in a block wins
+    [InlineData("{\\shad2\\s1}Hello", "<s>Hello")] // "\shad" is not "\s"
+    public void ToRenderableText_UnderlineAndStrikeoutTags_BecomeHtml(string text, string expected)
     {
         Assert.Equal(expected, ExportTextTags.ToRenderableText(text));
     }

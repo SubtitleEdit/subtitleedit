@@ -594,9 +594,16 @@ public static class ImageRenderer
                 // drawn on top covers the inner half, so the visible outline matches the
                 // requested width. Stroking through the glyph rasterizer instead loses thin
                 // horizontal outline edges entirely (issue #12206).
+                var segmentWidth = MeasureTextWithShaping(segment.Text, currentFont);
+                var gap = GetStyledSegmentGap(segment, currentFont, i, segmentsToRender.Count);
+                using var decorationPath = GetDecorationPath(segment, currentFont, currentX, textStartY + currentY, segmentWidth + gap);
                 using var textPath = outlineWidth > 0
                     ? GetShapedTextPath(segment.Text, currentX, textStartY + currentY, currentFont)
                     : null;
+                if (textPath != null && decorationPath != null)
+                {
+                    textPath.AddPath(decorationPath);
+                }
 
                 // Draw shadow first (if shadow width > 0)
                 if (shadowWidth > 0)
@@ -629,6 +636,12 @@ public static class ImageRenderer
                     };
 
                     DrawShapedText(canvas, segment.Text, shadowOffsetX, shadowOffsetY, currentFont, shadowTextPaint);
+                    if (decorationPath != null)
+                    {
+                        using var shadowDecorationPath = new SKPath(decorationPath);
+                        shadowDecorationPath.Offset((float)shadowWidth, (float)shadowWidth);
+                        canvas.DrawPath(shadowDecorationPath, shadowTextPaint);
+                    }
                 }
 
                 // Draw outline second (if outline width > 0)
@@ -656,15 +669,14 @@ public static class ImageRenderer
                 };
 
                 DrawShapedText(canvas, segment.Text, currentX, textStartY + currentY, currentFont, textPaint);
-
-                // Update X position for next segment
-                currentX += MeasureTextWithShaping(segment.Text, currentFont);
-
-                // Add small spacing after styled segments to prevent crowding
-                if ((segment.IsItalic || segment.IsBold) && i < segmentsToRender.Count - 1)
+                if (decorationPath != null)
                 {
-                    currentX += currentFont.Size * 0.17f;
+                    canvas.DrawPath(decorationPath, textPaint);
                 }
+
+                // Update X position for next segment, with the small spacing after styled
+                // segments that prevents crowding
+                currentX += segmentWidth + gap;
             }
         }
     }
@@ -673,7 +685,7 @@ public static class ImageRenderer
     /// A text segment laid out for the effects pipeline: where DrawShapedText will draw it,
     /// with which font, and its classic per-segment color (used when the effects have no fill).
     /// </summary>
-    private sealed record EffectSegmentDraw(string Text, float X, float Y, SKFont Font, SKColor Color);
+    private sealed record EffectSegmentDraw(string Text, float X, float Y, SKFont Font, SKColor Color, SKPath? Decoration);
 
     /// <summary>
     /// The advanced-formatting counterpart of <see cref="RenderTextToCanvas"/>: same layout
@@ -747,17 +759,31 @@ public static class ImageRenderer
                     combinedPath.AddPath(segmentPath);
                 }
 
-                segmentDraws.Add(new EffectSegmentDraw(segment.Text, currentX, y, font, segment.Color));
-
-                currentX += MeasureTextWithShaping(segment.Text, font);
-                if ((segment.IsItalic || segment.IsBold) && i < segmentsToRender.Count - 1)
+                var segmentWidth = MeasureTextWithShaping(segment.Text, font);
+                var gap = GetStyledSegmentGap(segment, font, i, segmentsToRender.Count);
+                var decoration = GetDecorationPath(segment, font, currentX, y, segmentWidth + gap);
+                if (decoration != null)
                 {
-                    currentX += font.Size * 0.17f;
+                    combinedPath.AddPath(decoration);
                 }
+
+                segmentDraws.Add(new EffectSegmentDraw(segment.Text, currentX, y, font, segment.Color, decoration));
+
+                currentX += segmentWidth + gap;
             }
         }
 
-        PaintEffectLayers(canvas, combinedPath, segmentDraws, null, effects);
+        try
+        {
+            PaintEffectLayers(canvas, combinedPath, segmentDraws, null, effects);
+        }
+        finally
+        {
+            foreach (var draw in segmentDraws)
+            {
+                draw.Decoration?.Dispose();
+            }
+        }
     }
 
     private sealed record GeometryGlyph(SKPath? Path, float X, float Advance, SKColor Color);
@@ -792,6 +818,7 @@ public static class ImageRenderer
             {
                 var segment = segmentsToRender[i];
                 var font = fonts.Get(segment);
+                var segmentStart = x;
                 ForEachFontRun(segment.Text, font, (runText, runFont) =>
                 {
                     using var shaper = new SKShaper(runFont.Typeface);
@@ -812,10 +839,18 @@ public static class ImageRenderer
                     x += result.Width + result.Codepoints.Length * spacing;
                 });
 
-                if ((segment.IsItalic || segment.IsBold) && i < segmentsToRender.Count - 1)
+                // The bars run under/through the spaced glyphs as one more "glyph" at the
+                // baseline, so the wave and arc move them along with the letters.
+                var gap = GetStyledSegmentGap(segment, font, i, segmentsToRender.Count);
+                var decorationWidth = x - segmentStart - spacing + gap;
+                var decoration = GetDecorationPath(segment, font, 0, 0, decorationWidth);
+                if (decoration != null)
                 {
-                    x += font.Size * 0.17f;
+                    glyphs.Add(new GeometryGlyph(decoration, segmentStart, decorationWidth, segment.Color));
                 }
+
+                x += gap;
+
             }
 
             lineGlyphs.Add(glyphs);
@@ -967,6 +1002,12 @@ public static class ImageRenderer
                 foreach (var seg in segments)
                 {
                     DrawShapedText(canvas, seg.Text, seg.X + shadow.Dx, seg.Y + shadow.Dy, seg.Font, paint);
+                    if (seg.Decoration != null)
+                    {
+                        using var decoration = new SKPath(seg.Decoration);
+                        decoration.Offset(shadow.Dx, shadow.Dy);
+                        canvas.DrawPath(decoration, paint);
+                    }
                 }
             }
             else
@@ -1039,6 +1080,10 @@ public static class ImageRenderer
                     foreach (var seg in segments)
                     {
                         DrawShapedText(canvas, seg.Text, seg.X, seg.Y, seg.Font, fillPaint);
+                        if (seg.Decoration != null)
+                        {
+                            canvas.DrawPath(seg.Decoration, fillPaint);
+                        }
                     }
                 }
                 else
@@ -1052,6 +1097,10 @@ public static class ImageRenderer
                 {
                     fillPaint.Color = seg.Color;
                     DrawShapedText(canvas, seg.Text, seg.X, seg.Y, seg.Font, fillPaint);
+                    if (seg.Decoration != null)
+                    {
+                        canvas.DrawPath(seg.Decoration, fillPaint);
+                    }
                 }
             }
             else if (pathGroups != null)
@@ -1408,6 +1457,48 @@ public static class ImageRenderer
         });
     }
 
+    /// <summary>
+    /// The small space after an italic or bold segment that keeps it from crowding the next
+    /// one - nothing after the last segment of a line.
+    /// </summary>
+    private static float GetStyledSegmentGap(TextSegment segment, SKFont font, int index, int count)
+    {
+        return (segment.IsItalic || segment.IsBold) && index < count - 1 ? font.Size * 0.17f : 0f;
+    }
+
+    /// <summary>
+    /// The underline and/or strikeout bars of a segment drawn from <paramref name="x"/> at the
+    /// baseline <paramref name="y"/>, <paramref name="width"/> wide - or null when it has neither.
+    /// The bars are paths so they get the outline and shadow of the letters, like in libass.
+    /// Fonts without the metrics fall back to the usual proportions.
+    /// </summary>
+    private static SKPath? GetDecorationPath(TextSegment segment, SKFont font, float x, float y, float width)
+    {
+        if (!segment.IsUnderline && !segment.IsStrikeout || width <= 0)
+        {
+            return null;
+        }
+
+        var metrics = font.Metrics;
+        var path = new SKPath();
+        if (segment.IsUnderline)
+        {
+            // Both relative to the baseline, positive is down.
+            var thickness = metrics.UnderlineThickness is > 0 and var t ? t : font.Size / 15f;
+            var top = metrics.UnderlinePosition ?? font.Size / 10f;
+            path.AddRect(new SKRect(x, y + top, x + width, y + top + thickness));
+        }
+
+        if (segment.IsStrikeout)
+        {
+            var thickness = metrics.StrikeoutThickness is > 0 and var t ? t : font.Size / 15f;
+            var top = metrics.StrikeoutPosition is < 0 and var p ? p : -Math.Abs(metrics.XHeight) / 2f - thickness / 2f;
+            path.AddRect(new SKRect(x, y + top, x + width, y + top + thickness));
+        }
+
+        return path;
+    }
+
     // Builds the combined glyph outline path for shaped text, positioned like
     // DrawShapedText draws it. Glyphs without an outline (whitespace, color emoji)
     // are skipped - they get no stroke, but the fill still renders them.
@@ -1535,7 +1626,7 @@ public static class ImageRenderer
                     case TagType.ItalicClose:
                         if (styleStack.Count > 0)
                         {
-                            currentStyle = styleStack.Pop();
+                            currentStyle = styleStack.Pop() with { IsUnderline = currentStyle.IsUnderline, IsStrikeout = currentStyle.IsStrikeout };
                         }
                         else
                         {
@@ -1550,13 +1641,24 @@ public static class ImageRenderer
                     case TagType.BoldClose:
                         if (styleStack.Count > 0)
                         {
-                            currentStyle = styleStack.Pop();
+                            currentStyle = styleStack.Pop() with { IsUnderline = currentStyle.IsUnderline, IsStrikeout = currentStyle.IsStrikeout };
                         }
                         else
                         {
                             currentStyle = currentStyle with { IsBold = false };
                         }
 
+                        break;
+                    // Underline and strikeout are on/off switches outside the stack: ASSA turns
+                    // them on and off on their own ("{\s1\i1}Hel{\i0}lo" strikes the whole
+                    // word), so closing an italic must not take them back.
+                    case TagType.UnderlineOpen:
+                    case TagType.UnderlineClose:
+                        currentStyle = currentStyle with { IsUnderline = tagInfo.TagType == TagType.UnderlineOpen };
+                        break;
+                    case TagType.StrikeoutOpen:
+                    case TagType.StrikeoutClose:
+                        currentStyle = currentStyle with { IsStrikeout = tagInfo.TagType == TagType.StrikeoutOpen };
                         break;
                     case TagType.FontOpen:
                         // Each attribute stands on its own: "<font size=..>" inside a
@@ -1572,7 +1674,7 @@ public static class ImageRenderer
                     case TagType.FontClose:
                         if (styleStack.Count > 0)
                         {
-                            currentStyle = styleStack.Pop();
+                            currentStyle = styleStack.Pop() with { IsUnderline = currentStyle.IsUnderline, IsStrikeout = currentStyle.IsStrikeout };
                         }
                         else
                         {
@@ -1641,6 +1743,26 @@ public static class ImageRenderer
         if (tagContent.Equals("/b", StringComparison.OrdinalIgnoreCase))
         {
             return new TagInfo(TagType.BoldClose, endPosition);
+        }
+
+        if (tagContent.Equals("u", StringComparison.OrdinalIgnoreCase))
+        {
+            return new TagInfo(TagType.UnderlineOpen, endPosition);
+        }
+
+        if (tagContent.Equals("/u", StringComparison.OrdinalIgnoreCase))
+        {
+            return new TagInfo(TagType.UnderlineClose, endPosition);
+        }
+
+        if (tagContent.Equals("s", StringComparison.OrdinalIgnoreCase))
+        {
+            return new TagInfo(TagType.StrikeoutOpen, endPosition);
+        }
+
+        if (tagContent.Equals("/s", StringComparison.OrdinalIgnoreCase))
+        {
+            return new TagInfo(TagType.StrikeoutClose, endPosition);
         }
 
         if (tagContent.Equals("/font", StringComparison.OrdinalIgnoreCase))
@@ -1875,13 +1997,13 @@ public static class ImageRenderer
     /// A run of text with one look. <paramref name="FontName"/> and <paramref name="FontSize"/>
     /// are null unless a "&lt;font face=.. size=..&gt;" tag set them - the dialog font applies.
     /// </summary>
-    record TextSegment(string Text, bool IsItalic, bool IsBold, SKColor Color, string? FontName = null, float? FontSize = null);
+    record TextSegment(string Text, bool IsItalic, bool IsBold, SKColor Color, string? FontName = null, float? FontSize = null, bool IsUnderline = false, bool IsStrikeout = false);
 
-    record TextStyle(bool IsItalic = false, bool IsBold = false, SKColor Color = default, string? FontName = null, float? FontSize = null)
+    record TextStyle(bool IsItalic = false, bool IsBold = false, SKColor Color = default, string? FontName = null, float? FontSize = null, bool IsUnderline = false, bool IsStrikeout = false)
     {
         public SKColor Color { get; init; } = Color == default ? SKColors.Black : Color;
 
-        public TextSegment ToSegment(string text) => new(text, IsItalic, IsBold, Color, FontName, FontSize);
+        public TextSegment ToSegment(string text) => new(text, IsItalic, IsBold, Color, FontName, FontSize, IsUnderline, IsStrikeout);
     }
 
     record TagInfo(TagType TagType, int EndPosition, SKColor? Color = null, string? FontName = null, float? FontSize = null);
@@ -1893,7 +2015,11 @@ public static class ImageRenderer
         BoldOpen,
         BoldClose,
         FontOpen,
-        FontClose
+        FontClose,
+        UnderlineOpen,
+        UnderlineClose,
+        StrikeoutOpen,
+        StrikeoutClose,
     }
 
 }
