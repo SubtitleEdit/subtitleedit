@@ -9140,7 +9140,7 @@ public partial class MainViewModel :
     private async Task CopyLinesToClipboard(IEnumerable<string> lines)
     {
         var list = lines.ToList();
-        await ClipboardHelper.SetTextAsync(Window!, string.Join(Environment.NewLine, list));
+        await ClipboardHelper.SetTextAsync(Window!, string.Join(Environment.NewLine + Environment.NewLine, list));
 
         ShowStatus(string.Format("{0} lines copied to clipboard", list.Count));
     }
