@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.4.0-rc2",
+  "version": "v5.4.0-rc3",
   "translatedBy": "Übersetzt von Christoph Kitsche. Überarbeitet von Netspark, Stephan Lenhart und FunkyKnilch.",
   "cultureName": "de-DE",
   "general": {
@@ -2770,7 +2770,7 @@
       "detectSpeakersNeedsNewerCrispAsr": "\"Sprecher erkennen\" benötigt Crisp ASR v{0} oder neuer, installiert ist aber v{1}.\n\nAktualisieren Sie Crisp ASR (Zahnrad-Schaltfläche neben der Engine) oder deaktivieren Sie \"Sprecher erkennen\".",
       "xNeedsNewerCrispAsr": "{0} benötigt Crisp ASR v{1} oder neuer, installiert ist aber v{2}.\n\nDas Update jetzt herunterladen und installieren?",
       "vad": "VAD",
-      "vadHint": "Sprachaktivitätserkennung: Nur die Sprache wird transkribiert, geschnitten dort, wo der Sprecher pausiert.\nAuto: Silero, und nur für die Engines, die es benötigen (Cohere, Mega, Index-Echo).\nSilero, FireRedVAD, Whisper-VAD, WebRTC: immer aktiv, für jede Crisp-ASR-Engine. FireRedVAD ist am genauesten, Whisper-VAD liefert die wenigsten und saubersten Schnitte, ist aber am langsamsten.\nIndex-Echo verwendet immer Silero. --vad, --vad-model oder --chunk-seconds in den erweiterten Einstellungen haben Vorrang.",
+      "vadHint": "Sprachaktivitätserkennung: Nur die Sprache wird transkribiert, geschnitten dort, wo der Sprecher pausiert.\nAuto: Silero, und nur für die Engines, die es benötigen (Cohere, Mega, Index-Echo, Granite).\nSilero, FireRedVAD, Whisper-VAD, WebRTC: immer aktiv, für jede Crisp-ASR-Engine. FireRedVAD ist am genauesten, Whisper-VAD liefert die wenigsten und saubersten Schnitte, ist aber am langsamsten.\nIndex-Echo verwendet immer Silero. --vad, --vad-model oder --chunk-seconds in den erweiterten Einstellungen haben Vorrang.",
       "inputLanguage": "Eingabesprache",
       "advancedWhisperSettings": "Erweiterte Whisper-Einstellungen",
       "downloadingSpeechToTextEngine": "Speech-To-Text-Engine wird heruntergeladen",

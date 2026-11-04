@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.4.0-rc1",
+  "version": "v5.4.0-rc3",
   "translatedBy": "Adam Malich (ostatnia aktualizacja: 2.11.2026)",
   "cultureName": "pl-PL",
   "general": {
@@ -3114,7 +3114,7 @@
       "xRequiresAppleSilicon": "\"{0}\" (audio.cpp) wymaga komputera Apple Silicon Mac.",
       "xOnlyBuiltForX64": "\"{0}\" (audio.cpp) jest kompilowany wyłącznie dla architektury x86-64 w systemach Windows i Linux.",
       "xRunsThroughYDownloadInstall": "\"{0}\" działa w środowisku uruchomieniowym {1}. Pobrać i zainstalować teraz?",
-      "xRunsThroughYSelectBuild": "działa w środowisku uruchomieniowym {1}. Wybierz wersję do pobrania:",
+      "xRunsThroughYSelectBuild": "\"{0}\" działa w środowisku uruchomieniowym {1}. Wybierz wersję do pobrania:",
       "updateCrispAsr": "Aktualizacja CrispASR",
       "crispAsrUpdateRequired": "Wymagana aktualizacja CrispASR",
       "newerCrispAsrAvailable": "Dostępna jest nowsza wersja środowiska uruchomieniowego CrispASR. Pobrać ponownie teraz?",
@@ -3603,7 +3603,7 @@
     "swapLanguages": "Zamień język źródłowy i docelowy",
     "engineSettings": "Ustawienia silnika tłumaczeniowego",
     "engineSettingsSubtitle": "Silnik tłumaczeniowy",
-    "crispAsrSwitchBuildInfo": "korzysta z tego samego silnika CrispASR co funkcja zamiany mowy na tekst, więc wybrana przez Ciebie wersja jest używana również tam. Pobrane modele są zachowywane.\n\nWybierz wersję do pobrania:",
+    "crispAsrSwitchBuildInfo": "\"{0}\" korzysta z tego samego silnika CrispASR co funkcja zamiany mowy na tekst, więc wybrana przez Ciebie wersja jest używana również tam. Pobrane modele są zachowywane.\n\nWybierz wersję do pobrania:",
     "xIsAlreadyDownloadedReDownload": "Plik {0} został już pobrany. Czy chcesz pobrać go ponownie?",
     "advancedSettingsSubtitle": "Opcje wsadowe, kontekstowe i próbkowania dla zaawansowanego silnika llama.cpp",
     "context": "Kontekst",

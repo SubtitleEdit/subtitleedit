@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.4.0-rc1",
+  "version": "v5.4.0-rc3",
   "translatedBy": "Hack茶ん, 12시27분(@12si27)",
   "cultureName": "ko-KR",
   "general": {
@@ -2770,7 +2770,7 @@
       "detectSpeakersNeedsNewerCrispAsr": "\"화자 감지\"를 사용하려면 Crisp ASR v{0} 이상이 필요하지만, 현재 v{1}이 설치되어 있습니다.\n\n엔진 옆의 기어 버튼에서 Crisp ASR을 업데이트하거나 \"화자 감지\"를 끄세요.",
       "xNeedsNewerCrispAsr": "{0}에는 Crisp ASR v{1} 이상이 필요하지만 현재 v{2}이(가) 설치되어 있습니다.\n\n지금 업데이트를 다운로드하여 설치하시겠습니까?",
       "vad": "VAD",
-      "vadHint": "음성 활동 감지: 말하는 부분만 텍스트로 변환하고, 화자가 쉬는 지점에서 구간을 나눕니다.\n자동: Silero를 사용하며, 필요한 엔진(Cohere, Mega, Index-Echo)에만 적용합니다.\nSilero, FireRedVAD, Whisper-VAD, WebRTC: 모든 Crisp ASR 엔진에 항상 적용합니다. FireRedVAD가 가장 정확하며, Whisper-VAD는 구간 분할이 가장 적고 깔끔하지만 가장 느립니다.\nIndex-Echo는 항상 Silero를 사용합니다. 고급 설정의 --vad, --vad-model, --chunk-seconds 옵션이 우선 적용됩니다.",
+      "vadHint": "음성 활동 감지: 말하는 부분만 텍스트로 변환하고, 화자가 쉬는 지점에서 구간을 나눕니다.\n자동: Silero를 사용하며, 필요한 엔진(Cohere, Mega, Index-Echo, Granite)에만 적용합니다.\nSilero, FireRedVAD, Whisper-VAD, WebRTC: 모든 Crisp ASR 엔진에 항상 적용합니다. FireRedVAD가 가장 정확하며, Whisper-VAD는 구간 분할이 가장 적고 깔끔하지만 가장 느립니다.\nIndex-Echo는 항상 Silero를 사용합니다. 고급 설정의 --vad, --vad-model, --chunk-seconds 옵션이 우선 적용됩니다.",
       "inputLanguage": "입력 언어",
       "advancedWhisperSettings": "고급 음성 텍스트 변환 매개변수",
       "downloadingSpeechToTextEngine": "STT 엔진 다운로드 중",

@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.4.0-rc1",
+  "version": "v5.4.0-rc3",
   "translatedBy": "昇（以下舊譯者：BAWAN、風逸蘭、Jackie Lam、SiderealArt）",
   "cultureName": "zh-Hant",
   "general": {
@@ -2330,8 +2330,8 @@
       "title": "批次轉換",
       "oneActionsSelected": "已選取 1 個動作",
       "xActionsSelected": "已選取 {0} 個動作",
-      "outputFolderSource": " 輸出資料夾：來源資料夾",
-      "outputFolderX": " 輸出資料夾：{0}",
+      "outputFolderSource": "輸出資料夾：來源資料夾",
+      "outputFolderX": "輸出資料夾：{0}",
       "encodingXOverwriteY": "編碼：{0}，覆寫現有檔案：{1}",
       "targetFormatSettings": "目標格式設定",
       "fileNameContainsDotDotDot": "檔案名稱包含...",
@@ -2770,7 +2770,7 @@
       "detectSpeakersNeedsNewerCrispAsr": "「偵測說話者」需用 Crisp ASR v{0} 或更新版本，但目前已安裝 v{1}。\n\n請更新 Crisp ASR（引擎旁的齒輪按鈕）或關閉「偵測說話者」。",
       "xNeedsNewerCrispAsr": "{0} 需用 Crisp ASR v{1} 或更新版本，但目前已安裝 v{2}。\n\n要立刻下載並安裝更新嗎？",
       "vad": "VAD",
-      "vadHint": "語音活動偵測 (VAD)：僅轉錄語音，並剪裁說話者停頓之處。\n自動：使用 Silero，且僅適用於需用的引擎 (Cohere、Mega、Index-Echo)。\nSilero、FireRedVAD、Whisper-VAD、WebRTC：對每個Crisp ASR引擎始終開啟。FireRedVAD 的精準度最高，Whisper-VAD剪裁最少、最清晰，但是最慢。\nIndex-Echo 始終使用 Silero。優先採取進階設定內的 --vad、--vad-model 或 --chunk-seconds 。",
+      "vadHint": "語音活動偵測 (VAD)：僅轉錄語音，並剪裁說話者停頓之處。\n自動：使用 Silero，且僅適用於需用的引擎 (Cohere、Mega、Index-Echo, Granite)。\nSilero、FireRedVAD、Whisper-VAD、WebRTC：對每個Crisp ASR引擎始終開啟。FireRedVAD 的精準度最高，Whisper-VAD剪裁最少、最清晰，但是最慢。\nIndex-Echo 始終使用 Silero。優先採取進階設定內的 --vad、--vad-model 或 --chunk-seconds 。",
       "inputLanguage": "輸入語言",
       "advancedWhisperSettings": "進階的語音轉文字參數",
       "downloadingSpeechToTextEngine": "下載語音轉文字引擎",
