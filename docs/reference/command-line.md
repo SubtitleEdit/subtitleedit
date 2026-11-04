@@ -197,11 +197,14 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--override-position:<x\|y\|xy>` | Image → image only (DVB-sub, PGS, VobSub pass-through): ignore the source bitmap position on that axis and place it by `--alignment` and the margins instead. The other axis keeps the source position. Matches SE4's transport-stream "override original X/Y position" |
 | `--full-frame` | Draw each subtitle onto a frame-sized image instead of one cropped to the text. Only `fcpimage` and `bluraysup` use it; other image targets warn and ignore it |
 | `--full-frame-background-color:<color>` | Background of the full frame image (default: `transparent`) |
+| `--no-assa-styles` | ASSA/SSA input: draw every line with these options instead of its own style from the file |
 | `--mode-3d:<mode>` | Draw each subtitle for frame-packed 3D video, once per eye: `none` (default) \| `half-side-by-side` (`sbs`) \| `half-top-bottom` (`tab`). Works for text → image and image → image; D-Cinema warns and ignores it |
 | `--depth-3d:<px>` | 3D depth, -100 to 100 (default: 0): positive brings the subtitle out of the screen, negative pushes it back. D-Cinema writes it as the image's Z-position |
 | `--plane-3d:<file.ofs>` | A 3D Blu-ray's 3D-Plane (OFS file from BD3D2MK3D or OFSExtractor): each subtitle gets the disc's depth for the frames it is shown on. `--depth-3d` is used where the 3D-Plane has none. Needs `--mode-3d` |
 
 Colours accept hex (`#AARRGGBB`, `#RRGGBB`, with or without `#`) or a colour name (`white`, `black`, `yellow`, ...).
+
+**ASSA styles.** ASSA/SSA input is drawn with each line's own style from the file - font, size, colours, outline, shadow, box (BorderStyle 3/4), alignment, margins, scale, spacing and angle - so the font, colour, outline, box, alignment and margin options above do not apply to it. Override tags in the text still win over the style. `--no-assa-styles` (or `"useAssaStyles": false` in the settings JSON) draws it with the options instead, as before.
 
 **Full frame** (`--full-frame`) draws the subtitle onto a canvas the size of the video frame, using the alignment and margins to place it there, so every image can be dropped on an editing timeline at 0,0 instead of being positioned one by one. It matches the "Full frame image" checkbox in the export dialog, and applies to `fcpimage` and `bluraysup` only. The background is transparent unless `--full-frame-background-color` says otherwise, so the images sit on a track above the video.
 

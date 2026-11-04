@@ -330,6 +330,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Image output: draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline). Only fcpimage and bluraysup use it")]
         public bool FullFrame { get; init; }
 
+        [CommandOption("--no-assa-styles|--noassastyles")]
+        [Description("Image output: draw ASSA/SSA lines with the image styling options instead of each line's own style from the file")]
+        public bool NoAssaStyles { get; init; }
+
         [CommandOption("--full-frame-background-color|--fullframebackgroundcolor")]
         [Description("Image output: background of the full frame image (default: transparent)")]
         public string? FullFrameBackgroundColor { get; init; }
@@ -1434,6 +1438,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         if (settings.FullFrame)
         {
             style.IsFullFrame = true;
+        }
+
+        if (settings.NoAssaStyles)
+        {
+            style.UseAssaStyles = false;
         }
 
         if (!string.IsNullOrWhiteSpace(settings.FullFrameBackgroundColor))
