@@ -69,6 +69,13 @@ public sealed class ExportAssaStyles
         return new ExportAssaStyles(styles, width, height);
     }
 
+    /// <summary>True when the file defines a style of that name.</summary>
+    public bool HasStyle(string? name)
+    {
+        var key = name?.Trim().TrimStart('*');
+        return !string.IsNullOrEmpty(key) && _styles.ContainsKey(key);
+    }
+
     /// <summary>The style of that name - "*Default" is "Default" - or the fallback style.</summary>
     public SsaStyle GetStyle(string? name)
     {
@@ -97,16 +104,11 @@ public sealed class ExportAssaStyles
         ip.OutlineWidth = (double)style.OutlineWidth * scaleY;
         ip.ShadowWidth = (double)style.ShadowWidth * scaleY;
 
-        // Italic goes into the text rather than on the whole line, so a "{\i0}" can still turn it
-        // off; underline and strikeout too. Bold stays on the parameter: a "<b>" around the whole
-        // line would add the renderer's styled-segment gap at every colour change.
-        var prefix = (style.Italic ? "<i>" : string.Empty) +
-                     (style.Underline ? "<u>" : string.Empty) +
-                     (style.Strikeout ? "<s>" : string.Empty);
-        if (prefix.Length > 0)
-        {
-            ip.Text = prefix + ip.Text;
-        }
+        // The text starts out italic/underlined/struck - a "{\i0}" can still turn it off, and a
+        // "{\r}" comes back to it.
+        ip.IsItalic = style.Italic;
+        ip.IsUnderline = style.Underline;
+        ip.IsStrikeout = style.Strikeout;
 
         // BorderStyle 3 is an opaque box per line in the outline colour, the outline width being
         // its padding; libass' BorderStyle 4 is one box around all lines in the shadow colour.

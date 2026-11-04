@@ -621,9 +621,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             PaddingTopBottom = SelectedPaddingTopBottom,
             Index = i,
             // ASSA renderers never draw a {comment} block, so neither does the image (#15584).
+            // With the styles, "{\rSign}" switches to the Sign style's font and colours.
             Text = ExportTextTags.ToRenderableText(_removeAssaCommentBlocks
                 ? AdvancedSubStationAlpha.RemoveCommentBlocks(subtitle.Text)
-                : subtitle.Text),
+                : subtitle.Text, UseAssaStyles ? _assaStyles : null, subtitle.Style),
             StartTime = subtitle.StartTime,
             EndTime = subtitle.EndTime,
             // Carry the forced flag through: BDN XML writes it as Forced="..." and the
