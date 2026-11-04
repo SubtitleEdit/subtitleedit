@@ -346,6 +346,22 @@ public class ExportTextTagsTests
     }
 
     [Theory]
+    [InlineData("{\\frz15}Hello", 15f)]
+    [InlineData("{\\fr-7.5}Hello", -7.5f)]
+    [InlineData("{\\frx30\\fry20}Hello", 0f)] // 3D rotations are not a flat turn
+    [InlineData("{\\fn Arial}Hello", 0f)]
+    [InlineData("{\\t(0,200,\\frz90)}Hello", 0f)] // an animation target, not the line's look
+    [InlineData("{\\frz10}Hel{\\frz20}lo", 20f)] // last one wins
+    public void ApplyStyleOverrideTags_RotationTag_SetsTagRotation(string text, float expected)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.Equal(expected, ip.TagRotation);
+    }
+
+    [Theory]
     [InlineData("Hello")]
     [InlineData("{\\b1\\bord2}Hello")] // "\b1"/"\bord" are not "\be"
     [InlineData("{\\fs40\\fscx120}Hello")] // "\fs"/"\fscx" are not "\fsp"

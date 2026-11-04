@@ -130,6 +130,13 @@ public class ImageParameter
     /// </summary>
     public float TagScaleY { get; set; } = 100f;
 
+    /// <summary>
+    /// Rotation in degrees from an ASSA "{\frz..}"/"{\fr..}" tag, counter-clockwise like in ASSA;
+    /// 0 is none. The finished bitmap turns around its centre. Set by
+    /// <see cref="ExportTextTags.ApplyStyleOverrideTags"/>.
+    /// </summary>
+    public float TagRotation { get; set; }
+
     public ImageParameter()
     {
         Bitmap = new SKBitmap(1, 1, true);

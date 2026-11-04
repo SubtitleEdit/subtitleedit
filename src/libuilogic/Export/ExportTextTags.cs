@@ -52,6 +52,12 @@ public static class ExportTextTags
         @"\\fsc([xy])(\d+(?:\.\d+)?)",
         RegexOptions.Compiled);
 
+    // "{\frz15}" and its short form "{\fr15}", also negative and with decimals - not the 3D
+    // "\frx"/"\fry", which need a perspective this flat rotation cannot give.
+    private static readonly Regex RotationTagRegex = new(
+        @"\\frz?(-?\d+(?:\.\d+)?)",
+        RegexOptions.Compiled);
+
     // "{\blur2}" (gaussian) and "{\be1}" (box blur passes), also with decimals
     private static readonly Regex BlurTagRegex = new(
         @"\\(blur|be)(\d+(?:\.\d+)?)",
@@ -230,7 +236,7 @@ public static class ExportTextTags
     /// (shadow), and the widths of "{\bord..}" and "{\shad..}" - "{\bord0}" in particular is
     /// how ASSA subtitles turn the outline off for one line - and the letter spacing of
     /// "{\fsp..}", the edge softness of "{\blur..}"/"{\be..}" and the glyph scale of
-    /// "{\fscx..}"/"{\fscy..}".
+    /// "{\fscx..}"/"{\fscy..}" and the rotation of "{\frz..}".
     /// <para>
     /// Call before <see cref="ApplyTransparencyTags"/>: "\3a"/"\4a" fade whatever colours are
     /// on the parameter, so the "\3c"/"\4c" colours have to be there first. The widths are in
@@ -307,6 +313,11 @@ public static class ExportTextTags
             {
                 ip.TagScaleY = percent;
             }
+        }
+
+        foreach (Match match in RotationTagRegex.Matches(text))
+        {
+            ip.TagRotation = float.Parse(match.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture);
         }
 
         // libass applies "\be" and "\blur" one after the other, the last of each kind winning.

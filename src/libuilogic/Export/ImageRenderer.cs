@@ -16,6 +16,11 @@ public static class ImageRenderer
     public static SKBitmap GenerateBitmap(ImageParameter ip)
     {
         var bitmap = RenderBitmap(ip, GetTextEffects(ip));
+        if (ip.TagRotation % 360 != 0)
+        {
+            bitmap = Replace(bitmap, Rotate(bitmap, ip.TagRotation));
+        }
+
         if (ip.AlphaPercent >= 100)
         {
             return bitmap;
@@ -33,6 +38,37 @@ public static class ImageRenderer
         }
 
         return Replace(bitmap, faded);
+    }
+
+    /// <summary>
+    /// "{\frz..}": the finished subtitle - box and padding included, like libass turns the box -
+    /// turned counter-clockwise by <paramref name="degrees"/> around its centre, on a bitmap
+    /// just big enough for the turned rectangle, so the centre stays where it was. libass turns
+    /// around the "\org" point (by default the alignment point), so a big angle can sit a
+    /// little differently than in a player; the image itself is the same.
+    /// </summary>
+    private static SKBitmap Rotate(SKBitmap bitmap, float degrees)
+    {
+        var radians = degrees * Math.PI / 180.0;
+        var cos = Math.Abs(Math.Cos(radians));
+        var sin = Math.Abs(Math.Sin(radians));
+
+        // Rounded, not ceilinged: 90 degrees comes out as 6e-17 rather than 0 and would add a
+        // pixel for nothing.
+        var width = Math.Max(1, (int)Math.Round(bitmap.Width * cos + bitmap.Height * sin));
+        var height = Math.Max(1, (int)Math.Round(bitmap.Width * sin + bitmap.Height * cos));
+
+        var rotated = new SKBitmap(width, height);
+        using var canvas = new SKCanvas(rotated);
+        using var image = SKImage.FromBitmap(bitmap);
+        using var paint = new SKPaint { IsAntialias = true };
+        canvas.Clear(SKColors.Transparent);
+        canvas.Translate(width / 2f, height / 2f);
+
+        // Screen y points down, so Skia's positive angle is clockwise - ASSA's is not.
+        canvas.RotateDegrees(-degrees);
+        canvas.DrawImage(image, -bitmap.Width / 2f, -bitmap.Height / 2f, new SKSamplingOptions(SKFilterMode.Linear), paint);
+        return rotated;
     }
 
     /// <summary>
