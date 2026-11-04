@@ -15,7 +15,7 @@ public static class ImageRenderer
 {
     public static SKBitmap GenerateBitmap(ImageParameter ip)
     {
-        var bitmap = RenderBitmap(ip);
+        var bitmap = RenderBitmap(ip, GetTextEffects(ip));
         if (ip.AlphaPercent >= 100)
         {
             return bitmap;
@@ -35,7 +35,59 @@ public static class ImageRenderer
         return Replace(bitmap, faded);
     }
 
-    private static SKBitmap RenderBitmap(ImageParameter ip)
+    /// <summary>
+    /// The effects the subtitle renders with: <see cref="ImageParameter.TextEffects"/>, with the
+    /// line's "{\fsp..}"/"{\blur..}" tags on top. Letter spacing and blur only exist in the
+    /// effects pipeline, so a classic render with one of those tags gets effects that draw the
+    /// classic look - one outline ring, one hard shadow, the segment colours.
+    /// </summary>
+    private static TextEffects? GetTextEffects(ImageParameter ip)
+    {
+        if (ip.TagLetterSpacing == null && ip.TagBlur == null)
+        {
+            return ip.TextEffects;
+        }
+
+        var effects = ip.TextEffects;
+        if (effects == null)
+        {
+            effects = new TextEffects();
+            if (ip.OutlineWidth > 0)
+            {
+                effects.Strokes.Add(new TextEffectStroke
+                {
+                    Width = (float)ip.OutlineWidth,
+                    Fill = TextEffectFill.Solid(ip.OutlineColor),
+                });
+            }
+
+            if (ip.ShadowWidth > 0)
+            {
+                // ASSA blurs the shadow along with the edges.
+                effects.Shadows.Add(new TextEffectShadow
+                {
+                    Dx = (float)ip.ShadowWidth,
+                    Dy = (float)ip.ShadowWidth,
+                    Blur = ip.TagBlur ?? 0,
+                    Color = ip.ShadowColor,
+                });
+            }
+        }
+
+        if (ip.TagLetterSpacing is { } letterSpacing)
+        {
+            effects.LetterSpacing = letterSpacing;
+        }
+
+        if (ip.TagBlur is { } blur)
+        {
+            effects.EdgeBlur = blur;
+        }
+
+        return effects;
+    }
+
+    private static SKBitmap RenderBitmap(ImageParameter ip, TextEffects? effects)
     {
         var fontName = ip.FontName;
         var fontSize = ip.FontSize;
@@ -98,8 +150,8 @@ public static class ImageRenderer
         var margin = 10;
         // Advanced effects (blurred shadows, glow, extrude) draw further out than the classic
         // outline+shadow, so pad the scratch canvas with their own safety margin too.
-        var effectMargin = ip.TextEffects?.GetSafetyMargin() ?? 0f;
-        if (ip.TextEffects is { ArcBendPercent: not 0 } arcEffects)
+        var effectMargin = effects?.GetSafetyMargin() ?? 0f;
+        if (effects is { ArcBendPercent: not 0 } arcEffects)
         {
             // Arc rise is width-dependent (~ w * bend / 400); the line width is not known yet,
             // so pad conservatively from the target frame width.
@@ -108,7 +160,7 @@ public static class ImageRenderer
         }
         var textStartX = (int)(Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin + effectMargin);
         var textStartY = (int)(lineMetrics[0].Ascent + Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin + effectMargin);
-        RenderTextToCanvas(tempCanvas, lines, ip, fonts, textStartX, textStartY, baselines,
+        RenderTextToCanvas(tempCanvas, lines, ip, effects, fonts, textStartX, textStartY, baselines,
             outlineColor, shadowColor, outlineWidth, shadowWidth);
 
         //System.IO.File.WriteAllBytes(@"C:\temp\debug_raw.png", tempBitmap.ToPngArray());
@@ -427,6 +479,7 @@ public static class ImageRenderer
         SKCanvas canvas,
         List<List<TextSegment>> lines,
         ImageParameter ip,
+        TextEffects? effects,
         FontSet fonts,
         float textStartX,
         float textStartY,
@@ -436,9 +489,9 @@ public static class ImageRenderer
         double outlineWidth,
         double shadowWidth)
     {
-        if (ip.TextEffects != null)
+        if (effects != null)
         {
-            RenderTextWithEffects(canvas, lines, ip, fonts, textStartX, textStartY, baselines);
+            RenderTextWithEffects(canvas, lines, ip, effects, fonts, textStartX, textStartY, baselines);
             return;
         }
 
@@ -585,16 +638,15 @@ public static class ImageRenderer
         SKCanvas canvas,
         List<List<TextSegment>> lines,
         ImageParameter ip,
+        TextEffects effects,
         FontSet fonts,
         float textStartX,
         float textStartY,
         float[] baselines)
     {
-        var effects = ip.TextEffects!;
-
         if (effects.HasGlyphGeometry)
         {
-            RenderTextWithGlyphGeometry(canvas, lines, ip, fonts, textStartX, textStartY, baselines);
+            RenderTextWithGlyphGeometry(canvas, lines, ip, effects, fonts, textStartX, textStartY, baselines);
             return;
         }
 
@@ -672,12 +724,12 @@ public static class ImageRenderer
         SKCanvas canvas,
         List<List<TextSegment>> lines,
         ImageParameter ip,
+        TextEffects effects,
         FontSet fonts,
         float textStartX,
         float textStartY,
         float[] baselines)
     {
-        var effects = ip.TextEffects!;
         var spacing = effects.LetterSpacing;
 
         // 1) Shape every line into glyphs at line-relative positions, letter spacing applied.

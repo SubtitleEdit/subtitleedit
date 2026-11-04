@@ -287,6 +287,62 @@ public class ExportTextTagsTests
     }
 
     [Theory]
+    [InlineData("{\\fsp4}Hello", 4f)]
+    [InlineData("{\\fsp-1.5}Hello", -1.5f)]
+    [InlineData("{\\fsp0}Hello", 0f)] // explicit 0 still overrides the dialog's spacing
+    [InlineData("{\\fsp2}Hel{\\fsp6}lo", 6f)] // last one wins
+    public void ApplyStyleOverrideTags_LetterSpacingTag_SetsTagLetterSpacing(string text, float expected)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.Equal(expected, ip.TagLetterSpacing);
+    }
+
+    [Theory]
+    [InlineData("{\\blur3}Hello", 3.0)]
+    [InlineData("{\\blur0.5}Hello", 0.5)]
+    [InlineData("{\\be2}Hello", 1.0)] // two [1 2 1] passes: sqrt(2 / 2)
+    [InlineData("{\\blur3\\be32}Hello", 5.0)] // sqrt(3^2 + 32 / 2)
+    [InlineData("{\\blur0}Hello", 0.0)]
+    public void ApplyStyleOverrideTags_BlurTags_SetTagBlur(string text, double expected)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.NotNull(ip.TagBlur);
+        Assert.Equal(expected, ip.TagBlur!.Value, 3);
+    }
+
+    [Fact]
+    public void ApplyStyleOverrideTags_ScriptResolutionDiffers_ScalesSpacingAndBlur()
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, "{\\fsp2\\blur2}Hello", scriptHeight: 288);
+
+        Assert.Equal(7.5f, ip.TagLetterSpacing!.Value, 3);
+        Assert.Equal(7.5f, ip.TagBlur!.Value, 3);
+    }
+
+    [Theory]
+    [InlineData("Hello")]
+    [InlineData("{\\b1\\bord2}Hello")] // "\b1"/"\bord" are not "\be"
+    [InlineData("{\\fs40\\fscx120}Hello")] // "\fs"/"\fscx" are not "\fsp"
+    [InlineData("{\\t(0,200,\\blur4\\fsp3)}Hello")] // an animation target, not the line's look
+    public void ApplyStyleOverrideTags_NoSpacingOrBlurTag_LeavesThemUnset(string text)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.Null(ip.TagLetterSpacing);
+        Assert.Null(ip.TagBlur);
+    }
+
+    [Theory]
     [InlineData("Hello")]
     [InlineData(null)]
     [InlineData("{\\i1}Hello")]
