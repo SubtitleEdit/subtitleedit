@@ -292,7 +292,7 @@ internal static class ImageOutputWriter
         var imageParameter = new ImageParameter
         {
             Index = index,
-            Text = ExportTextTags.ToRenderableText(text),
+            Text = ExportTextTags.ToRenderableText(text, assaStyles, p.Extra),
             StartTime = p.StartTime.TimeSpan,
             EndTime = p.EndTime.TimeSpan,
             Alignment = ExportTextTags.GetAlignment(text, style.Alignment),

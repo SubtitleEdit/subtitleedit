@@ -18,6 +18,17 @@ public class ImageParameter
     public string FontName { get; set; }
     public float FontSize { get; set; }
     public bool IsBold { get; set; }
+
+    /// <summary>
+    /// Italic, underline and strikeout for the whole line, as an ASSA style sets them: the text
+    /// starts out that way, a "&lt;/i&gt;" (ASSA "{\i0}") can still turn them off, and a reset
+    /// (ASSA "{\r}") comes back to them.
+    /// </summary>
+    public bool IsItalic { get; set; }
+
+    public bool IsUnderline { get; set; }
+
+    public bool IsStrikeout { get; set; }
     public SKColor OutlineColor { get; set; }
     public double OutlineWidth { get; set; }
     public SKColor ShadowColor { get; set; }

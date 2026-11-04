@@ -84,7 +84,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         Assert.True(ip.IsBold);
         Assert.Equal(new SKColor(255, 255, 0), ip.FontColor); // &H0000FFFF is yellow
         Assert.Equal(new SKColor(0, 0, 255), ip.OutlineColor); // &H00FF0000 is blue
-        Assert.Equal("<i><u><s>Hello", ip.Text);
+        Assert.True(ip.IsItalic);
+        Assert.True(ip.IsUnderline);
+        Assert.True(ip.IsStrikeout);
+        Assert.Equal("Hello", ip.Text);
         Assert.Equal(ExportAlignment.TopCenter, ip.Alignment);
         Assert.Equal(120f, ip.TagScaleX);
         Assert.Equal(90f, ip.TagScaleY);
@@ -167,6 +170,41 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         Assert.Equal(150f, ip.FontSize); // 40 * 1080 / 288
     }
 
+    [Theory]
+    [InlineData("A{\\r}B", "A<r>B")]
+    [InlineData("{\\i1}A{\\r}B", "<i>A<r>B</i>")]
+    [InlineData("{\\i1\\r\\b1}A", "<i><r><b>A</i></b>")] // a reset only undoes the tags before it
+    [InlineData("A{\\rDefault}B", "A<r>B")] // the line's own style: a plain reset
+    [InlineData("A{\\rNoSuchStyle}B", "A<r>B")] // libass falls back to a plain reset too
+    public void ToRenderableText_Reset_BecomesTheRendererReset(string text, string expected)
+    {
+        Assert.Equal(expected, ExportTextTags.ToRenderableText(text, ExportAssaStyles.FromHeader(Header), "Default"));
+    }
+
+    [Fact]
+    public void ToRenderableText_ResetToAnotherStyle_SwitchesToItsLook()
+    {
+        var text = ExportTextTags.ToRenderableText("A{\\rSign}B", ExportAssaStyles.FromHeader(Header), "Default");
+
+        // Sign: Impact 60, yellow, bold, italic, underline, strikeout (the closing tags at the end
+        // are GetFormattedText balancing what it sees open, and change nothing)
+        Assert.Equal("A<r><font face=\"Impact\" size=\"60\" color=\"#ffff00\"><b><i><u><s>B</i></u></b>", text);
+    }
+
+    [Fact]
+    public void ToRenderableText_ResetFromAnItalicStyle_TurnsItalicOff()
+    {
+        var text = ExportTextTags.ToRenderableText("A{\\rDefault}B", ExportAssaStyles.FromHeader(Header), "Sign");
+
+        Assert.Equal("A<r><font face=\"Arial\" size=\"40\" color=\"#ffffff\"></i></u></s>B", text);
+    }
+
+    [Fact]
+    public void ToRenderableText_ResetWithoutStyles_IsAPlainReset()
+    {
+        Assert.Equal("A<r>B", ExportTextTags.ToRenderableText("A{\\rSign}B"));
+    }
+
     [Fact]
     public void Apply_ItalicStyle_CanBeTurnedOffByATag()
     {
@@ -174,6 +212,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         ExportAssaStyles.FromHeader(Header)!.Apply(ip, "Sign", "{\\i0}Upright");
 
-        Assert.StartsWith("<i><u><s></i>Upright", ip.Text);
+        Assert.True(ip.IsItalic);
+        Assert.Equal("</i>Upright", ip.Text);
     }
 }

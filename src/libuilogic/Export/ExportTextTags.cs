@@ -118,8 +118,13 @@ public static class ExportTextTags
     /// Converts the text to what <see cref="ImageRenderer"/> can draw: alignment tags are
     /// removed (already read by <see cref="GetAlignment"/>), ASSA italic/bold/color/font tags
     /// become their HTML equivalents, and anything left over is dropped rather than drawn.
+    /// <para>
+    /// "{\r}" resets to how the line started. With the file's <paramref name="styles"/> and
+    /// the line's <paramref name="styleName"/>, "{\rSign}" also switches to the font, size,
+    /// colour, italic, underline and strikeout of the "Sign" style.
+    /// </para>
     /// </summary>
-    public static string ToRenderableText(string? text)
+    public static string ToRenderableText(string? text, ExportAssaStyles? styles = null, string? styleName = null)
     {
         if (string.IsNullOrEmpty(text))
         {
@@ -140,7 +145,7 @@ public static class ExportTextTags
             // of them makes GetFormattedText declare the whole line "too complex" and return
             // every tag untranslated, so "{\i1\blur2}Hi" lost its italic. Keep only the tags
             // GetFormattedText turns into HTML.
-            s = KeepFormattingTagsOnly(s);
+            s = KeepFormattingTagsOnly(s, styles, styleName);
 
             // "{\i1}" -> "<i>", "{\b1}" -> "<b>", "{\c&H0000FF&}" -> "<font color=\"#ff0000\">", ...
             s = AdvancedSubStationAlpha.GetFormattedText(s);
@@ -430,7 +435,7 @@ public static class ExportTextTags
     /// cannot draw ("\blur", "\k", "\move", "\t(..)", ...) no longer costs the line its
     /// formatting. Blocks without a backslash are comments, not tags, and are left alone.
     /// </summary>
-    private static string KeepFormattingTagsOnly(string text)
+    private static string KeepFormattingTagsOnly(string text, ExportAssaStyles? styles, string? styleName)
     {
         var sb = new StringBuilder(text.Length);
         var pos = 0;
@@ -458,6 +463,21 @@ public static class ExportTextTags
 
             var kept = new StringBuilder();
             var strikeout = string.Empty;
+
+            // A reset undoes the tags before it in the block, not the ones after it, so what
+            // has been kept so far goes out first.
+            void Flush()
+            {
+                if (kept.Length > 0)
+                {
+                    sb.Append('{').Append(kept).Append('}');
+                    kept.Clear();
+                }
+
+                sb.Append(strikeout);
+                strikeout = string.Empty;
+            }
+
             foreach (var tag in SplitOverrideTags(text.Substring(start + 1, end - start - 1)))
             {
                 if (FormattingTagRegex.IsMatch(tag))
@@ -470,20 +490,68 @@ public static class ExportTextTags
                     // becomes HTML here; the last one in the block wins.
                     strikeout = tag == "s1" ? "<s>" : "</s>";
                 }
+                else if (tag.StartsWith('r'))
+                {
+                    Flush();
+                    sb.Append(GetResetHtml(tag.Substring(1).Trim(), styles, styleName));
+                }
                 else if (DrawingTagRegex.Match(tag) is { Success: true } drawing)
                 {
                     isDrawing = drawing.Groups[1].Value != "0";
                 }
             }
 
-            if (kept.Length > 0)
-            {
-                sb.Append('{').Append(kept).Append('}');
-            }
-
-            sb.Append(strikeout);
+            Flush();
 
             pos = end + 1;
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// "{\r}" as the renderer's "&lt;r&gt;" - back to how the line started. "{\rSign}" then
+    /// switches to what the "Sign" style draws differently from the line's own style: font,
+    /// size and colour, italic, underline and strikeout, and bold (which a reset cannot take
+    /// off again, the line's bold being on the whole image). Without the file's styles, or for
+    /// a style the file does not have, it is a plain reset - libass does the same.
+    /// </summary>
+    private static string GetResetHtml(string targetStyleName, ExportAssaStyles? styles, string? styleName)
+    {
+        if (styles == null || targetStyleName.Length == 0 || !styles.HasStyle(targetStyleName))
+        {
+            return "<r>";
+        }
+
+        var target = styles.GetStyle(targetStyleName);
+        var line = styles.GetStyle(styleName);
+        if (ReferenceEquals(target, line))
+        {
+            return "<r>";
+        }
+
+        var color = target.Primary;
+        var sb = new StringBuilder("<r>");
+        sb.Append(CultureInfo.InvariantCulture,
+            $"<font face=\"{target.FontName}\" size=\"{target.FontSize}\" color=\"#{color.Red:x2}{color.Green:x2}{color.Blue:x2}\">");
+        if (target.Bold && !line.Bold)
+        {
+            sb.Append("<b>");
+        }
+
+        if (target.Italic != line.Italic)
+        {
+            sb.Append(target.Italic ? "<i>" : "</i>");
+        }
+
+        if (target.Underline != line.Underline)
+        {
+            sb.Append(target.Underline ? "<u>" : "</u>");
+        }
+
+        if (target.Strikeout != line.Strikeout)
+        {
+            sb.Append(target.Strikeout ? "<s>" : "</s>");
         }
 
         return sb.ToString();

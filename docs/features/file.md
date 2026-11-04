@@ -252,6 +252,7 @@ Tags in the text are read rather than drawn as literal characters:
 | `{\blur2}`, `{\be1}` | Soft edges - the outline, or the text when it has none, and the shadow |
 | `{\fscx150}`, `{\fscy80}` | Stretches the text wider or taller, in percent - `\fscy` makes the line taller too |
 | `{\frz10}`, `{\fr10}` | Rotates the subtitle counter-clockwise, box included |
+| `{\r}`, `{\rSign}` | Reset to the line's own formatting, or switch to the font, size, colour, bold/italic/underline/strikeout of another style (with **Use ASSA styles**) |
 | `{\fad(in,out)}`, `{\fade(..)}` | Fade in/out — **Blu-ray SUP only** (see below) |
 | `<u>`, `<s>` | Underline and strikeout in HTML-style text (SRT and others) |
 

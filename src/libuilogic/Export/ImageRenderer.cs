@@ -138,7 +138,8 @@ public static class ImageRenderer
         // Parse text and create text segments with styling
         var text = ReverseNumberAndLatinOnly(ip.Text, ip.IsRightToLeft);
 
-        var segments = ParseTextWithStyling(text, fontColor);
+        var baseStyle = new TextStyle(ip.IsItalic, false, fontColor, IsUnderline: ip.IsUnderline, IsStrikeout: ip.IsStrikeout);
+        var segments = ParseTextWithStyling(text, baseStyle);
 
         // Create fonts. The font name is a face name from FontFaces (e.g. "Segoe UI
         // Semibold", "Arial Black"), so resolution goes through the face map - bold and
@@ -1577,12 +1578,13 @@ public static class ImageRenderer
         return lines;
     }
 
-    private static List<TextSegment> ParseTextWithStyling(string text, SKColor defaultFontColor)
+    private static List<TextSegment> ParseTextWithStyling(string text, TextStyle baseStyle)
     {
         var segments = new List<TextSegment>();
         var currentPos = 0;
         var styleStack = new Stack<TextStyle>();
-        var currentStyle = new TextStyle { Color = defaultFontColor };
+        var defaultFontColor = baseStyle.Color;
+        var currentStyle = baseStyle;
 
         while (currentPos < text.Length)
         {
@@ -1659,6 +1661,11 @@ public static class ImageRenderer
                     case TagType.StrikeoutOpen:
                     case TagType.StrikeoutClose:
                         currentStyle = currentStyle with { IsStrikeout = tagInfo.TagType == TagType.StrikeoutOpen };
+                        break;
+                    // ASSA "{\r}": back to how the line started, whatever is open.
+                    case TagType.Reset:
+                        styleStack.Clear();
+                        currentStyle = baseStyle;
                         break;
                     case TagType.FontOpen:
                         // Each attribute stands on its own: "<font size=..>" inside a
@@ -1763,6 +1770,11 @@ public static class ImageRenderer
         if (tagContent.Equals("/s", StringComparison.OrdinalIgnoreCase))
         {
             return new TagInfo(TagType.StrikeoutClose, endPosition);
+        }
+
+        if (tagContent.Equals("r", StringComparison.OrdinalIgnoreCase))
+        {
+            return new TagInfo(TagType.Reset, endPosition);
         }
 
         if (tagContent.Equals("/font", StringComparison.OrdinalIgnoreCase))
@@ -2020,6 +2032,7 @@ public static class ImageRenderer
         UnderlineClose,
         StrikeoutOpen,
         StrikeoutClose,
+        Reset,
     }
 
 }

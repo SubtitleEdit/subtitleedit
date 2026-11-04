@@ -2323,7 +2323,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 PaddingLeftRight = profile.PaddingLeftRight,
                 PaddingTopBottom = profile.PaddingTopBottom,
                 Index = i,
-                Text = ExportTextTags.ToRenderableText(subtitle.Text),
+                Text = ExportTextTags.ToRenderableText(subtitle.Text, assaStyles, subtitle.Extra),
                 StartTime = subtitle.StartTime.TimeSpan,
                 EndTime = subtitle.EndTime.TimeSpan,
                 FontColor = profile.FontColor.FromHexToColor().ToSKColor(),
