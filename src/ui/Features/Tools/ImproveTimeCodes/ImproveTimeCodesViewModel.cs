@@ -204,6 +204,14 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     private async Task OpenVideoPlayerAsync(VideoPlayerControl player)
     {
         await player.Open(_videoFileName);
+        if (_audioTrackNumber < 0)
+        {
+            return;
+        }
+
+        // The track list is empty until the player has parsed the file, so switching right
+        // after Open found no match and left the container's default track playing.
+        await player.WaitForPlayersReadyAsync();
 
         if (_disposed || !ReferenceEquals(VideoPlayer, player) || _audioTrackNumber < 0)
         {
