@@ -1523,6 +1523,8 @@
       "halfTopBottom": "Half top/bottom",
       "depth3D": "Depth",
       "depth3DHint": "How far the subtitle stands out of the screen - positive brings it closer, negative pushes it back",
+      "useAssaStyles": "Use ASSA styles",
+      "useAssaStylesHint": "Draw each line with its own ASSA style - font, colours, outline, box, alignment and margins - instead of the settings below",
       "plane3D": "3D-Plane",
       "plane3DHint": "Give each subtitle the depth a 3D Blu-ray stores for it, from a 3D-Plane (.ofs) file made by BD3D2MK3D or OFSExtractor. Depth is used where the 3D-Plane has none",
       "openPlane3DTitle": "Open 3D-Plane file",
