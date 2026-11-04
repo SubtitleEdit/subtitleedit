@@ -225,7 +225,15 @@ public class ExportImageBasedWindow : Window
         switches.Children.Add(SwitchRow(Switch(vm, nameof(vm.IsBold), Se.Language.General.Bold), Se.Language.General.Bold));
         switches.Children.Add(SwitchRow(Switch(vm, nameof(vm.IsRightToLeft), Se.Language.General.RightToLeft), Se.Language.General.RightToLeft));
 
+        var useAssaStyles = SwitchRow(Switch(vm, nameof(vm.UseAssaStyles), Se.Language.File.Export.UseAssaStyles), Se.Language.File.Export.UseAssaStyles);
+        useAssaStyles.Bind(IsVisibleProperty, new Binding(nameof(vm.IsUseAssaStylesVisible)) { Source = vm });
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(useAssaStyles, Se.Language.File.Export.UseAssaStylesHint);
+        }
+
         return EditorChrome.MakeEditorSection(Se.Language.General.Font, Rows(
+            useAssaStyles,
             fontFamily,
             Row(Se.Language.General.FontSize, fontSize),
             Row(Se.Language.General.FontColor, Horizontal(ColorButton(vm, nameof(vm.FontColor), Se.Language.General.FontColor))),

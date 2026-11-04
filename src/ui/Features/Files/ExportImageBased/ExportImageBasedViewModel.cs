@@ -50,6 +50,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] double _selectedShadowWidth;
     [ObservableProperty] private bool _isBold;
     [ObservableProperty] private bool _isRightToLeft;
+    [ObservableProperty] private bool _useAssaStyles;
+    [ObservableProperty] private bool _isUseAssaStylesVisible;
     [ObservableProperty] private Color _fontColor;
     [ObservableProperty] private Color _shadowColor;
     [ObservableProperty] private Bitmap _bitmapPreview;
@@ -147,6 +149,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private int _scriptHeight;
     private bool _dirty;
     private bool _removeAssaCommentBlocks;
+    private ExportAssaStyles? _assaStyles;
     private Stereo3DPlane? _plane3D;
     private readonly Lock _generateLock;
     private bool _isCtrlDown;
@@ -261,6 +264,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         }
 
         SelectedProfile = profile;
+        UseAssaStyles = settings.UseAssaStyles;
 
         Profiles.Clear();
         Profiles.AddRange(settings.Profiles);
@@ -271,6 +275,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private void SaveSettings()
     {
         SaveProfile(SelectedProfile);
+        Se.Settings.File.ExportImages.UseAssaStyles = UseAssaStyles;
         Se.SaveSettings();
     }
 
@@ -672,6 +677,13 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 TextEffectWave),
         };
 
+        // The line's own ASSA style replaces the window's font, colours, outline, box, alignment
+        // and margins; the override tags below still win over it.
+        if (UseAssaStyles && _assaStyles != null)
+        {
+            _assaStyles.Apply(imageParameter, subtitle.Style, subtitle.Text, subtitle.MarginL, subtitle.MarginR, subtitle.MarginV);
+        }
+
         // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
         // change what is drawn, so unlike the position tag they have to be read before the
         // bitmap is rendered - overrides first, the transparencies fade whatever colours are
@@ -771,6 +783,17 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         _exportImageHandler = exportHandler;
         _subtitleFileName = subtitleFileName;
         (_scriptWidth, _scriptHeight) = ExportTextTags.GetScriptResolution(subtitleHeader);
+
+        // Only an ASSA/SSA subtitle has styles to draw with - a header left over from a file
+        // since converted to another format does not count.
+        _assaStyles = removeAssaCommentBlocks ? ExportAssaStyles.FromHeader(subtitleHeader) : null;
+        IsUseAssaStylesVisible = _assaStyles != null;
+        if (_assaStyles != null)
+        {
+            // A script without PlayResX/PlayResY is 384x288 in libass, for "\pos" and the tag
+            // widths as much as for the styles.
+            (_scriptWidth, _scriptHeight) = _assaStyles.ScriptResolution;
+        }
         Title = exportHandler.Title;
 
         // Only the formats that can carry a frame-sized image: the editing timelines the images

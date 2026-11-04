@@ -231,6 +231,10 @@ Tick **Text effect** (next to the bold and right-to-left check boxes) and press 
 
 The same setting is used by Batch convert's image-based output, so the two cannot drift apart.
 
+#### ASSA styles
+
+For an ASSA/SSA subtitle, **Use ASSA styles** (on by default) draws each line with its own style from the file: font, size, bold/italic/underline/strikeout, the text, outline and shadow colours with their transparency, outline and shadow width, an opaque box (BorderStyle 3, or 4 for one box around all lines), alignment, margins (a line's own margins win), scale, spacing and angle. Sizes are scaled from the script's PlayResX/PlayResY to the export resolution - 384x288 when the file has none, as in libass. The window's font, colour, outline, box, alignment and margin settings are then not used; resolution, line spacing, frame rate and the other image settings still are. Turn the option off to draw every line with the window's settings.
+
 #### ASSA override tags
 
 Tags in the text are read rather than drawn as literal characters:

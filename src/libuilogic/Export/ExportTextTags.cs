@@ -557,7 +557,7 @@ public static class ExportTextTags
         return (0, 0);
     }
 
-    private static ExportAlignment FromDigit(char digit, ExportAlignment fallback)
+    internal static ExportAlignment FromDigit(char digit, ExportAlignment fallback)
     {
         return digit switch
         {
