@@ -16,6 +16,10 @@ public static class OcrAssaAlignment
     // block are far closer than this at any resolution, also in tall images of many lines.
     private const double MinBlockGapRatio = 0.15;
 
+    // Fraction of the frame height: a block reaching this far into the top or bottom of the frame
+    // is placed there, also when its center is in the middle third, e.g. three lines of dialogue.
+    private const double OuterEdgeRatio = 0.25;
+
     /// <summary>
     /// Returns <paramref name="text"/> with an alignment tag matching the image's place in the
     /// frame. A tall image (more than a third of the frame) with a big empty gap between its
@@ -69,10 +73,10 @@ public static class OcrAssaAlignment
             }
 
             using var inkBitmap = ink.Value.Bitmap;
-            return GetImageLineBlockCentersY(inkBitmap, screenHeight) != null;
+            return GetImageLineBlocks(inkBitmap, screenHeight) != null;
         }
 
-        return GetImageLineBlockCentersY(bitmap, screenHeight) != null;
+        return GetImageLineBlocks(bitmap, screenHeight) != null;
     }
 
     private static (string Text, bool AlignmentAdded) DetectFromPlacedImage(
@@ -80,8 +84,8 @@ public static class OcrAssaAlignment
     {
         // Try to split lines and set alignment for each line
         var lines = text.Trim().SplitToLines();
-        var blockCentersY = lines.Count > 1 ? GetImageLineBlockCentersY(bitmap, screenHeight) : null;
-        if (blockCentersY != null)
+        var blocks = lines.Count > 1 ? GetImageLineBlocks(bitmap, screenHeight) : null;
+        if (blocks != null)
         {
             var lineAlignments = new List<string>();
             var multiLineCenterX = positionX + bitmap.Width / 2.0;
@@ -90,32 +94,32 @@ public static class OcrAssaAlignment
             for (var i = 0; i < lines.Count; i++)
             {
                 // OCR can find more or fewer lines than the image has: keep them in order, first to first and last to last
-                var imageLineIndex = (int)Math.Round(i * (blockCentersY.Length - 1.0) / (lines.Count - 1.0));
-                var lineRelativeY = (positionY + blockCentersY[imageLineIndex]) / screenHeight;
-                lineAlignments.Add(GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY));
+                var imageLineIndex = (int)Math.Round(i * (blocks.Length - 1.0) / (lines.Count - 1.0));
+                var block = blocks[imageLineIndex];
+                lineAlignments.Add(GetAssaPositionFromScreen(
+                    multiLineRelativeX,
+                    (positionY + block.Top) / screenHeight,
+                    (positionY + block.Bottom) / screenHeight));
             }
 
             return ApplyLineAlignmentTags(lines, lineAlignments, text, writeAn2Tag);
         }
 
-        // Calculate center point of the image on screen
-        var centerX = positionX + bitmap.Width / 2.0;
-        var centerY = positionY + bitmap.Height / 2.0;
+        // Relative position of the image on screen (0.0 = left/top, 1.0 = right/bottom)
+        var relativeX = (positionX + bitmap.Width / 2.0) / screenWidth;
+        var relativeTop = (double)positionY / screenHeight;
+        var relativeBottom = (double)(positionY + bitmap.Height) / screenHeight;
 
-        // Convert to relative position (0.0 = left/top, 1.0 = right/bottom)
-        var relativeX = centerX / screenWidth;
-        var relativeY = centerY / screenHeight;
-
-        return ApplyAlignmentTag(text, GetAssaPositionFromScreen(relativeX, relativeY), writeAn2Tag);
+        return ApplyAlignmentTag(text, GetAssaPositionFromScreen(relativeX, relativeTop, relativeBottom), writeAn2Tag);
     }
 
     /// <summary>
     /// Finds blocks of lines placed apart in a tall image, e.g. a sign at the top and dialogue at
     /// the bottom: lines further apart than <see cref="MinBlockGapRatio"/> of the frame are in
-    /// different blocks. Returns the Y center, in the image, of the block of each image line, or
-    /// null when the image holds a single block.
+    /// different blocks. Returns the top and bottom, in the image, of the block of each image line,
+    /// or null when the image holds a single block.
     /// </summary>
-    private static double[]? GetImageLineBlockCentersY(SKBitmap bitmap, int screenHeight)
+    private static (double Top, double Bottom)[]? GetImageLineBlocks(SKBitmap bitmap, int screenHeight)
     {
         // Check if image height is larger than approximately 1/3 of screen height
         var imageHeightRatio = (double)bitmap.Height / screenHeight;
@@ -133,7 +137,7 @@ public static class OcrAssaAlignment
         }
 
         var minGap = screenHeight * MinBlockGapRatio;
-        var blockCentersY = new double[imageLines.Count];
+        var blocks = new (double Top, double Bottom)[imageLines.Count];
         var blockStart = 0;
         for (var i = 1; i <= imageLines.Count; i++)
         {
@@ -143,12 +147,11 @@ public static class OcrAssaAlignment
                 continue;
             }
 
-            var centerY = (imageLines[blockStart].Y + bottom) / 2.0;
-            Array.Fill(blockCentersY, centerY, blockStart, i - blockStart);
+            Array.Fill(blocks, ((double)imageLines[blockStart].Y, (double)bottom), blockStart, i - blockStart);
             blockStart = i;
         }
 
-        return imageLines.Count == 0 || blockCentersY[0] == blockCentersY[^1] ? null : blockCentersY;
+        return imageLines.Count == 0 || blocks[0] == blocks[^1] ? null : blocks;
     }
 
     // "an2" is the default bottom-center alignment, so no tag is needed for it (#12393)
@@ -177,7 +180,8 @@ public static class OcrAssaAlignment
             perLine.Add(tag + lines[i].Trim());
         }
 
-        return (string.Join("\n", perLine), true);
+        // A bare "\n" is no line break in ASSA: it was saved as is and the line did not show (#16501)
+        return (string.Join(Environment.NewLine, perLine), true);
     }
 
     /// <summary>
@@ -189,6 +193,20 @@ public static class OcrAssaAlignment
         var column = relativeX < 0.33 ? 0 : relativeX > 0.67 ? 2 : 1; // left, center, right
         var row = relativeY < 0.33 ? 2 : relativeY > 0.67 ? 0 : 1;    // top of screen = an7-an9
         return "an" + (row * 3 + column + 1);
+    }
+
+    /// <summary>
+    /// Like <see cref="GetAssaPositionFromScreen(double, double)"/>, but for text with a height: text
+    /// reaching into the outer quarter at the top or bottom of the frame is placed there, even when
+    /// its center is in the middle third. Three lines of dialogue at the bottom are not mid-screen
+    /// text (#16501). Text reaching into both goes by its center.
+    /// </summary>
+    public static string GetAssaPositionFromScreen(double relativeX, double relativeTop, double relativeBottom)
+    {
+        var atTop = relativeTop < OuterEdgeRatio;
+        var atBottom = relativeBottom > 1.0 - OuterEdgeRatio;
+        var relativeY = atTop == atBottom ? (relativeTop + relativeBottom) / 2.0 : atTop ? 0.0 : 1.0;
+        return GetAssaPositionFromScreen(relativeX, relativeY);
     }
 
     /// <summary>
@@ -240,6 +258,6 @@ public static class OcrAssaAlignment
             return new List<string> { text };
         }
 
-        return groups.Select(g => string.Join("\n", g)).ToList();
+        return groups.Select(g => string.Join(Environment.NewLine, g)).ToList();
     }
 }
