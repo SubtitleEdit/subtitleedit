@@ -15264,8 +15264,10 @@ public partial class MainViewModel :
 
         var oldSettngsSerialized = SettingsChangeSnapshot.Take();
 
+        // Restore the remembered size/state before the window is shown - restoring it on Loaded
+        // showed the window at its default size first and then visibly grew/maximized it.
         var viewModel = await ShowDialogAsync<SettingsWindow, SettingsViewModel>(
-    vm => { vm.Initialize(this); });
+    vm => { vm.Initialize(this); }, UiUtil.RestoreWindowPosition);
 
         if (!viewModel.OkPressed && !viewModel.SettingsImported)
         {
