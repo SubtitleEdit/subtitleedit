@@ -367,10 +367,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
                 }
 
                 await MessageBox.Show(Window!,
-                    "Unable to generate video",
-                    "Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                    "ffmpeg exit code: " + exitCode + Environment.NewLine +
-                    "Parameters: " + process.StartInfo.Arguments,
+                    Se.Language.General.UnableToGenerateVideo,
+                    string.Format(Se.Language.General.OutputVideoFileNotGeneratedX, jobItem.OutputVideoFileName) + Environment.NewLine + string.Format(Se.Language.General.FfmpegExitCodeX, exitCode) + Environment.NewLine + string.Format(Se.Language.General.ParametersX, process.StartInfo.Arguments),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -1040,8 +1038,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         if (IsCutActive && CutFrom >= CutTo)
         {
             await MessageBox.Show(Window!,
-                "Cut settings error",
-                "Cut end time must be after cut start time",
+                Se.Language.General.CutSettingsError,
+                Se.Language.General.CutEndMustBeAfterCutStart,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
 
@@ -1074,8 +1072,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             if (string.IsNullOrWhiteSpace(jobItem.SubtitleFileName))
             {
                 await MessageBox.Show(Window!,
-                    "Missing subtitle",
-                    "Please add a subtitle to all batch items",
+                    Se.Language.General.MissingSubtitle,
+                    Se.Language.General.AddSubtitleToAllBatchItems,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 

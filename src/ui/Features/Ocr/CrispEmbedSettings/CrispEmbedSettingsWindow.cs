@@ -38,7 +38,7 @@ public class CrispEmbedSettingsWindow : Window
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Engine, BuildEngineSection(vm)));
         sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Models, BuildModelsSection(vm)));
 
-        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeFlushButtonBar(null, buttonClose), stretch: false);
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(null, buttonClose), stretch: false);
 
         UiUtil.FocusOnFirstActivation(this, buttonClose);
         KeyDown += (_, e) => vm.OnKeyDown(e);

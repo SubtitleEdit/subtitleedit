@@ -18,6 +18,17 @@ public class ImageParameter
     public string FontName { get; set; }
     public float FontSize { get; set; }
     public bool IsBold { get; set; }
+
+    /// <summary>
+    /// Italic, underline and strikeout for the whole line, as an ASSA style sets them: the text
+    /// starts out that way, a "&lt;/i&gt;" (ASSA "{\i0}") can still turn them off, and a reset
+    /// (ASSA "{\r}") comes back to them.
+    /// </summary>
+    public bool IsItalic { get; set; }
+
+    public bool IsUnderline { get; set; }
+
+    public bool IsStrikeout { get; set; }
     public SKColor OutlineColor { get; set; }
     public double OutlineWidth { get; set; }
     public SKColor ShadowColor { get; set; }
@@ -73,6 +84,12 @@ public class ImageParameter
     /// </summary>
     public List<ExportFadeKeyframe>? FadeKeyframes { get; set; }
 
+    /// <summary>
+    /// Blu-ray sup: write an HDR palette (BT.2020 + ST 2084 PQ) with white at this luminance.
+    /// 0 is the usual BT.709 palette.
+    /// </summary>
+    public int HdrWhiteNits { get; set; }
+
     public double FramesPerSecond { get; set; }
     public bool IsRightToLeft { get; set; } = false;
     public ExportBoxType BoxType { get; set; } = ExportBoxType.None;
@@ -96,6 +113,40 @@ public class ImageParameter
     /// ScreenHeight / PlayResY (discussion #14476).
     /// </summary>
     public float TagFontSizeScale { get; set; } = 1f;
+
+    /// <summary>
+    /// Pixels between glyphs from an ASSA "{\fsp..}" tag, already scaled to the canvas, or null
+    /// when the line has none. Set by <see cref="ExportTextTags.ApplyStyleOverrideTags"/>; wins
+    /// over the letter spacing of <see cref="TextEffects"/>.
+    /// </summary>
+    public float? TagLetterSpacing { get; set; }
+
+    /// <summary>
+    /// Edge softness (blur sigma in pixels) from ASSA "{\blur..}"/"{\be..}" tags, already scaled
+    /// to the canvas, or null when the line has none. Set by
+    /// <see cref="ExportTextTags.ApplyStyleOverrideTags"/>; wins over the edge blur of
+    /// <see cref="TextEffects"/>.
+    /// </summary>
+    public float? TagBlur { get; set; }
+
+    /// <summary>
+    /// Horizontal glyph scale in percent from an ASSA "{\fscx..}" tag; 100 is unscaled. Set by
+    /// <see cref="ExportTextTags.ApplyStyleOverrideTags"/>.
+    /// </summary>
+    public float TagScaleX { get; set; } = 100f;
+
+    /// <summary>
+    /// Vertical glyph scale in percent from an ASSA "{\fscy..}" tag; 100 is unscaled. The line
+    /// height follows it, like in libass. Set by <see cref="ExportTextTags.ApplyStyleOverrideTags"/>.
+    /// </summary>
+    public float TagScaleY { get; set; } = 100f;
+
+    /// <summary>
+    /// Rotation in degrees from an ASSA "{\frz..}"/"{\fr..}" tag, counter-clockwise like in ASSA;
+    /// 0 is none. The finished bitmap turns around its centre. Set by
+    /// <see cref="ExportTextTags.ApplyStyleOverrideTags"/>.
+    /// </summary>
+    public float TagRotation { get; set; }
 
     public ImageParameter()
     {

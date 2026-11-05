@@ -64,17 +64,26 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
             var modelName = string.IsNullOrWhiteSpace(options.OcrModel)
                 ? "glmocr"
                 : ModelStem(options.OcrModel);
-            // Only for the prompt: a curated model named by file/stem still gets its own tuned
-            // prompt against a user-managed server. The engine itself stays in URL mode.
-            var curated = LlamaCppServerManager.OcrModels.FirstOrDefault(m =>
-                Path.GetFileNameWithoutExtension(m.FileName).Equals(modelName, StringComparison.OrdinalIgnoreCase));
-            var promptTemplate = LlamaCppServerManager.ResolveOcrPrompt(curated, options.OcrPrompt);
+            var promptTemplate = ResolveUrlModePrompt(modelName, options.OcrPrompt);
             return new LlamaCppOcrEngine(fullUrl, null, modelName, options.OcrLanguage, promptTemplate, options.Quiet);
         }
 
         LlamaCppLocal.EnsureServerBinary("the OCR window > llama.cpp", "--ocr-url");
         var model = ResolveOcrModel(options.OcrModel);
         return new LlamaCppOcrEngine(null, model, Path.GetFileNameWithoutExtension(model.FileName), options.OcrLanguage, options.OcrPrompt, options.Quiet);
+    }
+
+    /// <summary>
+    /// Only for the prompt: a model named by file/stem still gets its own tuned prompt against a
+    /// user-managed server, curated or self-supplied like an LFM vision model. The engine itself
+    /// stays in URL mode.
+    /// </summary>
+    internal static string ResolveUrlModePrompt(string modelName, string? userPrompt)
+    {
+        var model = LlamaCppServerManager.OcrModels.FirstOrDefault(m =>
+                        Path.GetFileNameWithoutExtension(m.FileName).Equals(modelName, StringComparison.OrdinalIgnoreCase))
+                    ?? LlamaCppServerManager.CreateCustomOcrModel(modelName, modelName, string.Empty, string.Empty);
+        return LlamaCppServerManager.ResolveOcrPrompt(model, userPrompt);
     }
 
     /// <summary>
@@ -192,8 +201,7 @@ internal sealed class LlamaCppOcrEngine : IOcrEngine
                         $"expected 'mmproj-{fileName}' or '{stem}-mmproj.gguf' in the same folder.");
                 }
 
-                return new LlamaCppModel(Path.GetFileName(fullPath), fullPath, string.Empty, Url: string.Empty,
-                    MmprojFileName: mmproj);
+                return LlamaCppServerManager.CreateCustomOcrModel(Path.GetFileName(fullPath), fullPath, string.Empty, mmproj);
             }
 
             // Name: match the curated OCR models (with or without .gguf), plus any self-supplied

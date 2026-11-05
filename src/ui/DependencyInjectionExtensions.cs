@@ -8,7 +8,6 @@ using Nikse.SubtitleEdit.Features.Assa.AssaProgressBar;
 using Nikse.SubtitleEdit.Features.Assa.AssaSetBackground;
 using Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;
 using Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
-using Nikse.SubtitleEdit.Features.Edit.AlignmentPicker;
 using Nikse.SubtitleEdit.Features.Edit.Find;
 using Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
@@ -355,7 +354,6 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<AboutViewModel>();
         collection.AddTransient<AdjustAllTimesViewModel>();
         collection.AddTransient<AdjustDurationViewModel>();
-        collection.AddTransient<AlignmentPickerViewModel>();
         collection.AddTransient<ApplyDurationLimitsViewModel>();
         collection.AddTransient<ApplyMinGapViewModel>();
         collection.AddTransient<AssSetBackgroundViewModel>();

@@ -1512,7 +1512,10 @@ public class InitWaveform
 
         button.Content = (back ? "-" : "+") + ms.ToString(CultureInfo.InvariantCulture);
         button.Command = ShortcutsMain.GetMoveLinesCommand(vm, scope, slot, back);
-        ToolTip.SetTip(button, UiUtil.MakeToolTip(hint, shortcuts, ShortcutsMain.GetMoveLinesCommandName(scope, slot, back)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(button, UiUtil.MakeToolTip(hint, shortcuts, ShortcutsMain.GetMoveLinesCommandName(scope, slot, back)));
+        }
 
         // The content is just "-100", so give screen readers the full action.
         AutomationProperties.SetName(button, string.Format(hint, string.Empty).TrimEnd());

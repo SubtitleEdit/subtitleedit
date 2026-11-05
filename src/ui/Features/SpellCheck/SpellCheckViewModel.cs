@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Features.SpellCheck;
 public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
 {
     [ObservableProperty] private string _lineText;
+    [ObservableProperty] private double _lineProgress;
     [ObservableProperty] private string _wholeText;
 
     [ObservableProperty]
@@ -1160,6 +1161,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
 
             var lineIndex = Paragraphs.IndexOf(results[0].Paragraph) + 1;
             LineText = string.Format(Se.Language.SpellCheck.LineXofY, lineIndex, Paragraphs.Count);
+            LineProgress = lineIndex * 100.0 / Paragraphs.Count;
 
             _focusSubtitleLine?.GoToAndFocusLine(SelectedParagraph);
         }
@@ -1202,7 +1204,12 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
 
     private void HighLightCurrentWord(SpellCheckWord word, SubtitleLineViewModel paragraph)
     {
-        var textBlock = new TextBlock();
+        var textBlock = new TextBlock
+        {
+            FontSize = EditorChrome.ScaledFont(17),
+            LineHeight = EditorChrome.ScaledFont(26),
+            TextWrapping = TextWrapping.Wrap,
+        };
         var fontName = Se.Settings.Appearance.SubtitleTextBoxAndGridFontName;
         if (!string.IsNullOrEmpty(fontName))
         {
@@ -1219,11 +1226,13 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
             textBlock.Inlines!.Add(run);
         }
 
+        var highlightColor = Se.Settings.Appearance.SpellCheckHighlightColor.FromHexToColor();
         var highlightRun = new Run
         {
             Text = word.Text,
             FontWeight = FontWeight.Bold,
-            Foreground = new SolidColorBrush(Se.Settings.Appearance.SpellCheckHighlightColor.FromHexToColor())
+            Foreground = new SolidColorBrush(highlightColor),
+            Background = new SolidColorBrush(Color.FromArgb(0x38, highlightColor.R, highlightColor.G, highlightColor.B)),
         };
         if (!string.IsNullOrEmpty(fontName))
         {

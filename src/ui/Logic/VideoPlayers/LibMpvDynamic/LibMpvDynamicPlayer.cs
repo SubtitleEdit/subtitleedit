@@ -2180,7 +2180,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _lastRawTimePos = -1;
 
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+
+        // No core yet means nothing is playing: a player closed before its first render pass,
+        // or with its native window still hidden behind the theme art, never got one (#16513).
+        if (_mpv == IntPtr.Zero || !_coreInitialized)
         {
             return;
         }

@@ -1138,21 +1138,21 @@ public partial class RemuxVideoViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(VideoFileName) || !File.Exists(VideoFileName))
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoPleaseSelectBoth, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoPleaseSelectBoth, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         var videoExt = Path.GetExtension(VideoFileName);
         if (!AllowedVideoExtensions.Contains(videoExt))
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, $"Video format '{videoExt}' is not supported (allowed: mp4, mkv, mov, avi, webm, ts, mpg, mpeg, vob).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window, Se.Language.General.Error, $"Video format '{videoExt}' is not supported (allowed: mp4, mkv, mov, avi, webm, ts, mpg, mpeg, vob).", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         var audioFiles = AudioFiles.ToList();
         if (audioFiles.Count == 0)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoPleaseSelectBoth, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoPleaseSelectBoth, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -1160,14 +1160,14 @@ public partial class RemuxVideoViewModel : ObservableObject
         {
             if (!File.Exists(audioFile.FileName))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, $"Audio file '{audioFile.FileName}' does not exist.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, $"Audio file '{audioFile.FileName}' does not exist.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             var audioExt = Path.GetExtension(audioFile.FileName);
             if (!AllowedAudioExtensions.Contains(audioExt))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, $"Audio format '{audioExt}' is not supported (allowed: mp3, aac, m4a, ac3, wav, mka, mp4, mkv, mov, avi, webm, ts, mpg, mpeg, vob).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, $"Audio format '{audioExt}' is not supported (allowed: mp3, aac, m4a, ac3, wav, mka, mp4, mkv, mov, avi, webm, ts, mpg, mpeg, vob).", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
@@ -1177,14 +1177,14 @@ public partial class RemuxVideoViewModel : ObservableObject
         {
             if (!File.Exists(subFile.FileName))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle file '{subFile.FileName}' does not exist.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle file '{subFile.FileName}' does not exist.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             var subExt = Path.GetExtension(subFile.FileName);
             if (!AllowedSubtitleExtensions.Contains(subExt))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle format '{subExt}' is not supported (allowed: srt, ass, ssa, vtt, sub, scc, mcc).", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, $"Subtitle format '{subExt}' is not supported (allowed: srt, ass, ssa, vtt, sub, scc, mcc).", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
@@ -1194,21 +1194,21 @@ public partial class RemuxVideoViewModel : ObservableObject
         var isMpg = IsMpg(SelectedOutputFormat);
         if (!isMpg && !IsMp4WithCaptions && subFiles.Any(IsScc) && string.Equals(videoExt, ".webm", StringComparison.OrdinalIgnoreCase))
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoSccNotWithWebM, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoSccNotWithWebM, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         // .mpg: the subtitles become CEA-608 captions in the video - field 1 (CC1) and field 2 (CC3)
         if (isMpg && subFiles.Count > 2)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoMpgMaxTwoCaptionTracks, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoMpgMaxTwoCaptionTracks, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         var isMp4WithCaptions = IsMp4WithCaptions;
         if (isMp4WithCaptions && subFiles.Count > 2)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoMp4MaxTwoCaptionTracks, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Video.RemuxVideoMp4MaxTwoCaptionTracks, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -1281,7 +1281,7 @@ public partial class RemuxVideoViewModel : ObservableObject
             // SEI captions only exist in H.264/H.265 video
             if (isMp4WithCaptions && captionFiles.Count > 0 && videoCodec.Length > 0 && videoCodec != "h264" && videoCodec != "hevc")
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, string.Format(Se.Language.Video.RemuxVideoMp4CaptionsNeedH264X, videoCodec), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                await MessageBox.Show(Window, Se.Language.General.Error, string.Format(Se.Language.Video.RemuxVideoMp4CaptionsNeedH264X, videoCodec), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

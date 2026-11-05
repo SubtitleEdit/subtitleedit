@@ -28,10 +28,14 @@ public class IndexTts25LicenseWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        Content = BuildContent(vm);
+        var checkBoxAccept = BuildAcceptRow(vm);
+        Content = BuildContent(vm, checkBoxAccept);
+
+        UiUtil.FocusOnFirstActivation(this, checkBoxAccept);
+        KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Grid BuildContent(IndexTts25LicenseViewModel vm)
+    private static Grid BuildContent(IndexTts25LicenseViewModel vm, CheckBox checkBoxAccept)
     {
         var stack = new StackPanel
         {
@@ -42,7 +46,7 @@ public class IndexTts25LicenseWindow : Window
                 TtsVoicesChrome.MakeTitle(Se.Language.Video.IndexTts25LicenseHeader, Se.Language.Video.IndexTts25LicenseIntro),
                 TtsVoicesChrome.MakeBulletCard(IndexTts25LicenseViewModel.LicenseSummaryPoints),
                 BuildLinks(vm),
-                BuildAcceptRow(vm),
+                checkBoxAccept,
             },
         };
 
@@ -101,6 +105,6 @@ public class IndexTts25LicenseWindow : Window
 
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return EditorChrome.MakeFlushButtonBar(null, cancel, accept);
+        return EditorChrome.MakeButtonBar(null, cancel, accept);
     }
 }

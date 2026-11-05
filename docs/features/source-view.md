@@ -48,6 +48,7 @@ Beyond the usual typing, selection and clipboard keys, the editor supports:
 
 | Shortcut | Action |
 |----------|--------|
+| Ctrl+Enter / Cmd+Enter (macOS) | Apply changes (OK) |
 | Alt+Up / Alt+Down | Move the current line (or the selected block) up / down |
 | Ctrl+D | Duplicate the current line or selected block |
 | Ctrl+Shift+K | Delete the current line |

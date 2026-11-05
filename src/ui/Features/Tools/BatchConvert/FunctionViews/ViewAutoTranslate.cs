@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 
@@ -75,6 +76,11 @@ public static class ViewAutoTranslate
         var buttonEngineSettings = EditorChrome.CreateToolButton("fa-solid fa-gear", Se.Language.General.LlamaCppEngineSettings, vm.ShowLlamaCppEngineSettingsCommand, 28);
         buttonEngineSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppEngineSettingsButtonIsVisible)));
 
+        var buttonCrispAsrEngineSettings = EditorChrome.CreateToolButton("fa-solid fa-gear", Se.Language.Translate.EngineSettings,
+            vm.ShowCrispAsrEngineSettingsCommand, 28);
+        buttonCrispAsrEngineSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.CrispAsrModelComboIsVisible)));
+        buttonCrispAsrEngineSettings.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsConverting)) { Converter = InverseBooleanConverter.Instance });
+
         var buttonAdvanced = UiUtil.MakeButton(Se.Language.General.AdvancedDotDotDot, vm.ShowLlamaCppAdvancedSettingsCommand)
             .WithAccessibleName(Se.Language.General.AdvancedSettings);
         buttonAdvanced.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppAdvancedButtonIsVisible)));
@@ -95,7 +101,7 @@ public static class ViewAutoTranslate
         {
             Orientation = Orientation.Horizontal,
             Spacing = 6,
-            Children = { buttonEngineSettings, buttonAdvanced },
+            Children = { buttonEngineSettings, buttonCrispAsrEngineSettings, buttonAdvanced },
         };
 
         var panelEngineRow = new Grid

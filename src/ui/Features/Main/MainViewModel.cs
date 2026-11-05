@@ -397,6 +397,13 @@ public partial class MainViewModel :
     /// Each has its own grid column; this gates the shared "Show style column" menu item.
     /// </summary>
     [ObservableProperty] private bool _hasFormatStyle;
+
+    /// <summary>
+    /// True when the current format keeps an actor (ASSA/SSA, WebVTT voice, dialogue-list CSV/Excel
+    /// and transcript formats). Gates the Actor/Voice column and its menu item, so the column
+    /// is not left showing for e.g. SubRip, where actors are lost on save (#16596).
+    /// </summary>
+    [ObservableProperty] private bool _hasFormatActor;
     [ObservableProperty] private bool _isFormatWebVtt;
 
     /// <summary>
@@ -1274,6 +1281,38 @@ public partial class MainViewModel :
         };
 
         StartCheckForUpdates();
+    }
+
+    private static bool _fontFacesPreloadStarted;
+
+    /// <summary>
+    /// Reads every installed font's face name once, in the background, so the first Settings,
+    /// Burn-in, ASSA styles, ... window does not stall while it scans the fonts (the list is
+    /// cached for the rest of the session).
+    /// </summary>
+    private static void PreloadFontFaces()
+    {
+        // Only in the real desktop app - headless unit tests also load this view model.
+        if (_fontFacesPreloadStarted || Application.Current?.ApplicationLifetime is not ClassicDesktopStyleApplicationLifetime)
+        {
+            return;
+        }
+
+        _fontFacesPreloadStarted = true;
+        _ = Task.Run(async () =>
+        {
+            // Let the main window and a start-up file come up first.
+            await Task.Delay(TimeSpan.FromSeconds(3));
+
+            try
+            {
+                FontHelper.GetLibAssaFonts();
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, "Preloading font faces failed");
+            }
+        });
     }
 
     private void StartCheckForUpdates()
@@ -2733,6 +2772,16 @@ public partial class MainViewModel :
     private static readonly Regex AssaTagBlockRegex = new(@"\{[^}]*\}", RegexOptions.Compiled);
 
     /// <summary>
+    /// A row that draws a shape, such as a generated background box. Narrower than
+    /// <see cref="IsAssaDrawingText"/>, which also takes text lines: those have a real counterpart
+    /// in an original, a shape has one only if the original draws it too.
+    /// </summary>
+    internal static bool IsAssaVectorDrawing(string text)
+    {
+        return !string.IsNullOrEmpty(text) && AssaDrawingTagRegex.IsMatch(text);
+    }
+
+    /// <summary>
     /// A row the ASSA draw dialog imports as drawing: a \p1 drawing, a mask-only line
     /// (just an \iclip, no text) as the dialog writes for a layer of erase shapes, or a text
     /// line it wrote for a bubble or text box.
@@ -2960,6 +3009,7 @@ public partial class MainViewModel :
 
         SetAssaResolution(false);
 
+        var toolApply = BeginToolApply(Se.Language.Main.Menu.AssaGenerateBackground);
         var result = await ShowDialogAsync<AssSetBackgroundWindow, AssSetBackgroundViewModel>(vm =>
         {
             vm.Initialize(GetUpdateSubtitle(), selectedItems, _mediaInfo?.Dimension.Width ?? 1920, _mediaInfo?.Dimension.Height ?? 1080, _videoFileName, GetVideoPlayerControl()?.Position);
@@ -2970,9 +3020,57 @@ public partial class MainViewModel :
             return;
         }
 
-        _subtitle.Header = result.ResultSubtitle.Header;
-        SetSubtitles(result.ResultSubtitle);
+        EndToolApply(toolApply, () =>
+        {
+            _subtitle.Header = result.ResultSubtitle.Header;
+            InsertBackgroundBoxRows(result.BoxParagraphs);
+        });
         RefreshSubtitlePreview();
+    }
+
+    /// <summary>
+    /// Adds the generated box lines to the grid, each after the rows that start no later than it.
+    /// The existing rows stay as they are: a wholesale rebuild blanked the original column, and the
+    /// next save then emptied the original's file (#16499). A box has no original line, see
+    /// <see cref="GetSaveSubtitleOriginal"/>.
+    /// </summary>
+    private void InsertBackgroundBoxRows(IReadOnlyCollection<Paragraph> boxes)
+    {
+        if (boxes.Count == 0)
+        {
+            return;
+        }
+
+        var originalWasDirty = _changeSubtitleHashOriginal != GetFastHashOriginal();
+
+        var sortedBoxes = boxes.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+        var rows = new List<SubtitleLineViewModel>(Subtitles.Count + sortedBoxes.Count);
+        var nextBox = 0;
+        foreach (var row in Subtitles)
+        {
+            while (nextBox < sortedBoxes.Count &&
+                   sortedBoxes[nextBox].StartTime.TotalMilliseconds < row.StartTime.TotalMilliseconds)
+            {
+                rows.Add(new SubtitleLineViewModel(sortedBoxes[nextBox++], SelectedSubtitleFormat));
+            }
+
+            rows.Add(row);
+        }
+
+        for (; nextBox < sortedBoxes.Count; nextBox++)
+        {
+            rows.Add(new SubtitleLineViewModel(sortedBoxes[nextBox], SelectedSubtitleFormat));
+        }
+
+        ReplaceSubtitles(rows);
+        Renumber();
+        UpdateGaps();
+
+        // The baseline hash covers the rows, but the original's lines are unchanged.
+        if (!originalWasDirty)
+        {
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
+        }
     }
 
     [RelayCommand]
@@ -9041,17 +9139,10 @@ public partial class MainViewModel :
 
     private async Task CopyLinesToClipboard(IEnumerable<string> lines)
     {
-        var sb = new StringBuilder();
-        var count = 0;
-        foreach (var line in lines)
-        {
-            sb.AppendLine(line);
-            count++;
-        }
+        var list = lines.ToList();
+        await ClipboardHelper.SetTextAsync(Window!, string.Join(Environment.NewLine + Environment.NewLine, list));
 
-        await ClipboardHelper.SetTextAsync(Window!, sb.ToString());
-
-        ShowStatus(string.Format("{0} lines copied to clipboard", count));
+        ShowStatus(string.Format("{0} lines copied to clipboard", list.Count));
     }
 
     /// <summary>
@@ -9321,6 +9412,25 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             EndToolApply(toolApply, () => ApplyFixedSubtitle(result.FixedSubtitle, idx));
+            SwitchToAssaIfActorsWouldBeLost();
+        }
+    }
+
+    /// <summary>
+    /// Convert actors can fill in actors on e.g. SubRip, which drops them on save and hides the
+    /// Actor column (#16596): switch to ASSA, as auto-cast does, so the result shows and is kept.
+    /// </summary>
+    private void SwitchToAssaIfActorsWouldBeLost()
+    {
+        if (HasFormatActor || !Subtitles.Any(p => !string.IsNullOrWhiteSpace(p.Actor)))
+        {
+            return;
+        }
+
+        var assaFormat = SubtitleFormats.FirstOrDefault(f => f is AdvancedSubStationAlpha);
+        if (assaFormat != null)
+        {
+            SelectedSubtitleFormat = assaFormat;
         }
     }
 
@@ -9364,6 +9474,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             EndToolApply(toolApply, () => ApplyDialogRows(SpliceSelectedLinesResult(Subtitles, ordered, result.FixedSubtitle), before));
+            SwitchToAssaIfActorsWouldBeLost();
         }
 
         _shortcutManager.ClearKeys();
@@ -10384,7 +10495,7 @@ public partial class MainViewModel :
             Se.Settings.Video.RecentFiles.RemoveAll(f => string.Equals(f, videoFileName, StringComparison.OrdinalIgnoreCase));
             Se.SaveSettings();
             UpdateRecentVideoMenus();
-            await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.XNotFound, videoFileName), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.XNotFound, videoFileName), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         _shortcutManager.ClearKeys();
     }
@@ -10423,12 +10534,14 @@ public partial class MainViewModel :
             return;
         }
 
+        // The dialog works in displayed time, so the video offset goes on and comes off here (#16638).
+        var offsetSeconds = Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
         var viewModel =
-            await ShowDialogAsync<GoToVideoPositionWindow, GoToVideoPositionViewModel>(vm => { vm.Time = TimeSpan.FromSeconds(vp.Position); });
+            await ShowDialogAsync<GoToVideoPositionWindow, GoToVideoPositionViewModel>(vm => { vm.Time = TimeSpan.FromSeconds(vp.Position + offsetSeconds); });
 
-        if (viewModel is { OkPressed: true, Time.TotalMicroseconds: >= 0 })
+        if (viewModel is { OkPressed: true } && viewModel.Time.TotalSeconds - offsetSeconds >= 0)
         {
-            vp.Position = viewModel.Time.TotalSeconds;
+            vp.Position = viewModel.Time.TotalSeconds - offsetSeconds;
             _updateAudioVisualizer = true;
         }
     }
@@ -12184,15 +12297,6 @@ public partial class MainViewModel :
         }
 
         RestoreFrameNumbers(frameNumbers);
-
-        var vp = GetVideoPlayerControl();
-        if (vp != null)
-        {
-            vp.IsSmpteTimingEnabled = IsSmpteTimingEnabled;
-        }
-
-        _mpvReloader.SmpteMode = IsSmpteTimingEnabled;
-        _vlcReloader.SmpteMode = IsSmpteTimingEnabled;
     }
 
     /// <summary>
@@ -12244,6 +12348,17 @@ public partial class MainViewModel :
     {
         Se.Settings.General.CurrentVideoIsSmpte = value;
         Configuration.Settings.General.CurrentVideoIsSmpte = value;
+
+        var vp = GetVideoPlayerControl();
+        if (vp != null)
+        {
+            vp.IsSmpteTimingEnabled = value;
+        }
+
+        _mpvReloader.SmpteMode = value;
+        _vlcReloader.SmpteMode = value;
+
+        RefreshSubtitlePreview();
     }
 
     [RelayCommand]
@@ -14245,6 +14360,13 @@ public partial class MainViewModel :
             return;
         }
 
+        // OK can be enabled after a run that returned only blank text. Leave every subtitle,
+        // reference row, file name and language setting untouched.
+        if (!result.HasUsableTranslation)
+        {
+            return;
+        }
+
         var wasOldTranslationChanged = _changeSubtitleHash != GetFastHash();
 
         // The dialog was handed GetUpdateSubtitle(), which leaves the display-only rows of a
@@ -14267,7 +14389,7 @@ public partial class MainViewModel :
             // row has a translation (translate-one-row, translate-from-here, or Cancel part way),
             // so writing every row unconditionally blanked every line that was never sent.
             // Same guard the translate-via-copy-paste and translate-selected-lines paths use.
-            if (!string.IsNullOrEmpty(result.Rows[i].TranslatedText))
+            if (!string.IsNullOrWhiteSpace(result.Rows[i].TranslatedText))
             {
                 Subtitles[i].Text = result.Rows[i].TranslatedText;
             }
@@ -14431,18 +14553,22 @@ public partial class MainViewModel :
             }
         });
 
+        _shortcutManager.ClearKeys();
+
         if (!result.OkPressed)
         {
-            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // OK can be enabled after a partial/cancelled translation run. If no row actually
+        // contains translated text, the operation is a no-op in both modes: do not capture an
+        // original and do not reset language/spell-check state for unchanged subtitle content.
+        if (!result.HasUsableTranslation)
+        {
             return;
         }
 
         var captureOriginal = noOriginal && !result.TranslateInPlace;
-        if (captureOriginal && !result.Rows.Any(r => !string.IsNullOrEmpty(r.TranslatedText)))
-        {
-            return; // nothing came back - do not switch to translator mode for an unchanged subtitle
-        }
-
         var wasOldTranslationChanged = captureOriginal && _changeSubtitleHash != GetFastHash();
 
         if (captureOriginal)
@@ -14466,7 +14592,7 @@ public partial class MainViewModel :
         {
             var translatedText = result.Rows[i].TranslatedText;
             var id = selectedItems[i].Id;
-            if (rowsById.TryGetValue(id, out var p) && !string.IsNullOrEmpty(translatedText))
+            if (rowsById.TryGetValue(id, out var p) && !string.IsNullOrWhiteSpace(translatedText))
             {
                 p.Text = translatedText;
             }
@@ -14503,7 +14629,8 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<CopyPasteTranslateWindow, CopyPasteTranslateViewModel>(vm => { vm.Initialize(rows); });
 
-        if (!result.OkPressed)
+        // No translated rows means an unchanged subtitle: stay out of translator mode.
+        if (!result.OkPressed || result.TranslatedRowIndices.Count == 0)
         {
             return;
         }
@@ -15247,6 +15374,18 @@ public partial class MainViewModel :
         {
             subtitle.RefreshTextRendering();
         }
+
+        // The theme art follows the variant too - Light and Dark each have their own.
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.EmptyBackgroundTile = UiTheme.GetThemeArt(UiTheme.WaveformBackgroundFileName);
+        }
+
+        var videoPlayer = GetVideoPlayerControl();
+        if (videoPlayer != null)
+        {
+            videoPlayer.EmptyBackground = UiTheme.GetThemeArt(UiTheme.VideoBackgroundFileName);
+        }
     }
 
     private void UpdateAlternatingRowBrush()
@@ -15778,7 +15917,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<BookmarksListWindow, BookmarksListViewModel>(vm => { vm.Initialize(Subtitles.Where(p => p.Bookmark != null).ToList()); });
+        var result = await ShowDialogAsync<BookmarksListWindow, BookmarksListViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
 
         new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
 
@@ -16598,9 +16737,11 @@ public partial class MainViewModel :
         // Not the display-only reference rows: the copy constructor keeps IsReferenceOnly, so
         // duplicating one produced a second dimmed, unnumbered row that was never saved - and
         // that an editable original then captured as a new line.
+        // A new id, as rows are looked up by id - a shared one made the waveform select the
+        // source line when the duplicate was clicked (#16500).
         foreach (var selected in SubtitleGridSelectedItems)
         {
-            newSubtitles.Add(new SubtitleLineViewModel(selected));
+            newSubtitles.Add(new SubtitleLineViewModel(selected, generateNewId: true));
         }
 
         foreach (var newSubtitle in newSubtitles)
@@ -17331,9 +17472,10 @@ public partial class MainViewModel :
             var pushGapMs = Math.Min(gapMs, s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds);
             if (newStartMs - pushGapMs < prev.EndTime.TotalMilliseconds)
             {
-                // Push no further than the previous line's minimum duration.
-                newPrevEndMs = Math.Max(newStartMs - pushGapMs,
-                    prev.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+                // Push no further than the previous line's minimum duration. A line already
+                // shorter than that stays as it is - pushing it back never lengthens it.
+                newPrevEndMs = Math.Max(newStartMs - pushGapMs, Math.Min(prev.EndTime.TotalMilliseconds,
+                    prev.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds));
                 newStartMs = newPrevEndMs + pushGapMs;
                 if (newStartMs >= s.StartTime.TotalMilliseconds)
                 {
@@ -17444,8 +17586,8 @@ public partial class MainViewModel :
             var pushGapMs = Math.Min(gapMs, next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds);
             if (newEndMs + pushGapMs > next.StartTime.TotalMilliseconds)
             {
-                newNextStartMs = Math.Min(newEndMs + pushGapMs,
-                    next.EndTime.TotalMilliseconds - Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+                newNextStartMs = Math.Min(newEndMs + pushGapMs, Math.Max(next.StartTime.TotalMilliseconds,
+                    next.EndTime.TotalMilliseconds - Se.Settings.General.SubtitleMinimumDisplayMilliseconds));
                 newEndMs = newNextStartMs - pushGapMs;
                 if (newEndMs <= s.EndTime.TotalMilliseconds)
                 {
@@ -17891,6 +18033,18 @@ public partial class MainViewModel :
             SetAlignmentToSelected(result.Alignment);
             _updateAudioVisualizer = true;
         }
+    }
+
+    private (string Time, string Text)? GetGoToLinePreview(int number)
+    {
+        var line = Subtitles.FirstOrDefault(p => !p.IsReferenceOnly && p.Number == number);
+        if (line == null)
+        {
+            return null;
+        }
+
+        var text = HtmlUtil.RemoveHtmlTags(line.Text, true).SplitToLines();
+        return (new TimeCode(line.StartTime).ToDisplayString(), string.Join(" ", text));
     }
 
     private async Task ShowTeletextAlignmentPicker(SubtitleLineViewModel selected)
@@ -19651,7 +19805,7 @@ public partial class MainViewModel :
                     : Subtitles.IndexOf(SelectedSubtitle) + 1;
             }
 
-            vm.Initialize(idx, lineCount);
+            vm.Initialize(idx, lineCount, GetGoToLinePreview);
         });
 
         if (viewModel is { OkPressed: true, LineNumber: >= 0 } && viewModel.LineNumber <= lineCount)
@@ -20718,6 +20872,7 @@ public partial class MainViewModel :
         _fullScreenVideoPlayerControl.PlaybackSpeeds = Speeds;
         _fullScreenVideoPlayerControl.PlaybackSpeedText = SelectedSpeed;
         _fullScreenVideoPlayerControl.PlaybackSpeedIsVisible = true;
+        _fullScreenVideoPlayerControl.IsSmpteTimingEnabled = IsSmpteTimingEnabled;
         // The fullscreen player is created bare (not via MakeLayoutVideoPlayer), so wire the
         // pause/stop cursor-freeze here as well (issue #12233).
         _fullScreenVideoPlayerControl.PlayPauseRequested += willPause =>
@@ -20764,6 +20919,9 @@ public partial class MainViewModel :
 
         var fullScreenWindow = new FullScreenVideoWindow(_fullScreenVideoPlayerControl, _videoFileName, _subtitleFileName ?? string.Empty, position, volume, () =>
         {
+            // SMPTE timing may have changed while fullscreen, which only reached the fullscreen
+            // player - set it first, as the seek below expands the position by this flag.
+            control!.IsSmpteTimingEnabled = IsSmpteTimingEnabled;
             control!.Position = _fullScreenVideoPlayerControl.PositionForRestore;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
@@ -23285,6 +23443,7 @@ public partial class MainViewModel :
             return;
         }
 
+        PauseBeforeFrameStep();
         if (Se.Settings.General.CurrentFrameRate >= 10)
         {
             var frameInMs = (int)Math.Round(1000.0 / Se.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero);
@@ -23311,6 +23470,7 @@ public partial class MainViewModel :
             return;
         }
 
+        PauseBeforeFrameStep();
         if (Se.Settings.General.CurrentFrameRate >= 10)
         {
             var frameInMs = (int)Math.Round(1000.0 / Se.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero);
@@ -23457,6 +23617,20 @@ public partial class MainViewModel :
     /// constant frame rate video the two agree, and where they do not, the grid is the one that
     /// skips or repeats pictures.
     /// </summary>
+    /// <summary>
+    /// One frame back/forward stops playback, as in SE 4 (#16134). mpv's native frame-step and
+    /// the ffmpeg player's step pause by themselves; the seek-based steps (snap to frames, other
+    /// players) would otherwise leave the video playing on.
+    /// </summary>
+    private void PauseBeforeFrameStep()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp != null && vp.VideoPlayer.IsPlaying)
+        {
+            PauseVideoAndFreezePlayhead(vp);
+        }
+    }
+
     private bool TryStepFfmpegFrame(bool forward)
     {
         if (GetVideoPlayerControl()?.VideoPlayer is not FfmpegPlayer ffmpeg || string.IsNullOrEmpty(_videoFileName))
@@ -23508,6 +23682,7 @@ public partial class MainViewModel :
             return false;
         }
 
+        PauseBeforeFrameStep();
         var frameDur = 1.0 / fps;
         var currentFrame = vp.Position / frameDur;
         var targetFrame = forward
@@ -26648,81 +26823,77 @@ public partial class MainViewModel :
                 // check for .rar file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsRar(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadRar);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadRar, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .zip file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsZip(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadZip);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadZip, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .gzip file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsGZip(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadGZip);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadGZip, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .7z file
                 if (subtitle == null && fileSize > 100 && FileUtil.Is7Zip(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoad7Zip);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoad7Zip, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .png file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsPng(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadPng);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadPng, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .jpg file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsJpg(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadJpg);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadJpg, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for .srr file
                 if (subtitle == null && fileSize > 100 && ext == ".srr" && FileUtil.IsSrr(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadSrr);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadSrr, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for Torrent file
                 if (subtitle == null && fileSize > 50 && FileUtil.IsTorrentFile(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadTorrent);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadTorrent, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for all binary zeroes (I've heard about this a few times... perhaps related to crashes?)
                 if (subtitle == null && FileUtil.IsSubtitleFileAllBinaryZeroes(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadBinaryZeroes);
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadBinaryZeroes, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for mp3 file
                 if (subtitle == null && fileSize > 50 && FileUtil.IsMp3(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, "This file seems to be an .mp3 audio file which does not contains subtitles." + Environment.NewLine +
-                                                                              Environment.NewLine +
-                                                                              "You can open media files via the Video menu.");
+                    await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.AudioFileXHasNoSubtitles, ".mp3"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 // check for wav file
                 if (subtitle == null && fileSize > 50 && FileUtil.IsWav(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, "This file seems to be a .wav audio file which does not contains subtitles." + Environment.NewLine +
-                                                                              Environment.NewLine +
-                                                                              "You can open media files via the Video menu.");
+                    await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.General.AudioFileXHasNoSubtitles, ".wav"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -29143,16 +29314,15 @@ public partial class MainViewModel :
             return await SaveSubtitleOriginalAs();
         }
 
-        var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
-        var originalSubtitle = GetSaveSubtitleOriginal();
-
         // A whole original without a single line of text is never something the user typed - the
         // column was blanked somewhere (a rebuild, a lost translation source). Writing it out
         // would leave numbers and time codes and no subtitles at all, over the file the
         // translation was made from, so refuse instead (#14091) - a single-line original
-        // included, it is overwritten just as irreversibly.
-        if (originalSubtitle.Paragraphs.Count > 0 &&
-            originalSubtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        // included, it is overwritten just as irreversibly. Asked of the rows, before the original
+        // is rebuilt from them: that rebuild replaces the lines still held in _subtitleOriginal,
+        // and with the non-matching lines on screen it skips blank rows, so the result has no
+        // lines at all and an empty file went over the user's original (#16499).
+        if (Subtitles.All(line => string.IsNullOrWhiteSpace(line.OriginalText)))
         {
             if (!isAutoSave)
             {
@@ -29162,6 +29332,8 @@ public partial class MainViewModel :
             return false;
         }
 
+        var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
+        var originalSubtitle = GetSaveSubtitleOriginal();
         var text = originalSubtitle.ToText(originalFormat);
         if (Se.Settings.General.ForceCrLfOnSave)
         {
@@ -29264,10 +29436,37 @@ public partial class MainViewModel :
         return copy;
     }
 
-    /// <summary>Same as <see cref="GetSaveSubtitle"/> for the original subtitle.</summary>
+    /// <summary>
+    /// Same as <see cref="GetSaveSubtitle"/> for the original subtitle, without the blank lines of
+    /// the rows that only draw a shape: a background box belongs to the working subtitle, so each
+    /// one would otherwise add a blank line to the original's file (#16499). Left out here and not
+    /// in <see cref="GetUpdateSubtitleOriginal"/>, which the rebuilds re-fill the rows from by index.
+    /// </summary>
     public Subtitle GetSaveSubtitleOriginal()
     {
-        return AddVideoOffset(GetUpdateSubtitleOriginal());
+        var subtitle = GetUpdateSubtitleOriginal();
+
+        var shapeLines = new HashSet<Guid>();
+        foreach (var line in Subtitles)
+        {
+            if (line.ReferenceParagraphId is { } id &&
+                !line.IsReferenceOnly &&
+                string.IsNullOrWhiteSpace(line.OriginalText) &&
+                IsAssaVectorDrawing(line.Text))
+            {
+                shapeLines.Add(id);
+            }
+        }
+
+        if (shapeLines.Count > 0)
+        {
+            // generateNewId false: the lines are matched on the ids the rows point at.
+            subtitle = new Subtitle(subtitle, false);
+            subtitle.Paragraphs.RemoveAll(p => p.Id is { } id && shapeLines.Contains(id));
+            subtitle.Renumber();
+        }
+
+        return AddVideoOffset(subtitle);
     }
 
     private static Subtitle AddVideoOffset(Subtitle subtitle)
@@ -30114,6 +30313,7 @@ public partial class MainViewModel :
     internal void OnLoaded()
     {
         StartBackgroundWork();
+        PreloadFontFaces();
 
         if (OperatingSystem.IsMacOS())
         {
@@ -30128,8 +30328,8 @@ public partial class MainViewModel :
                 {
                     var answer = await MessageBox.Show(
                         Window!,
-                        "Download mpv?",
-                        $"{Environment.NewLine}\"Subtitle Edit\" requires mpv to play video/audio.{Environment.NewLine}{Environment.NewLine}Download and use mpv?",
+                        string.Format(Se.Language.General.DownloadXQuestion, "mpv"),
+                        Environment.NewLine + Se.Language.General.DownloadMpvPrompt,
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
 
@@ -34661,6 +34861,7 @@ public partial class MainViewModel :
             // On macOS, Cmd (Meta) is the multi-select modifier; Ctrl triggers the context menu instead
             var isMultiSelectModifier = _subtitleGridIsControlPressed
                 || (OperatingSystem.IsMacOS() && e.KeyModifiers.HasFlag(KeyModifiers.Meta));
+            var isMacContextClick = OperatingSystem.IsMacOS() && _subtitleGridIsLeftClick && _subtitleGridIsControlPressed;
 
             var hitTest = SubtitleGrid.InputHitTest(e.GetPosition(SubtitleGrid)) as Visual;
             if (TableViewExtras.IsInColumnHeader(hitTest))
@@ -34709,7 +34910,7 @@ public partial class MainViewModel :
                     return;
                 }
             }
-            else if (!isMultiSelectModifier || rowIndex < 0)
+            else if (!isMultiSelectModifier || rowIndex < 0 || isMacContextClick)
             {
                 _shiftSelectAnchorIndex = -1;
                 _shiftSelectCurrentIndex = -1;
@@ -37319,8 +37520,8 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (!string.IsNullOrEmpty(_videoFileName) && vp != null)
         {
-            var p = Subtitles.FirstOrDefault(p =>
-                Math.Abs(p.StartTime.TotalMilliseconds - e.Paragraph.StartTime.TotalMilliseconds) < 0.01);
+            // By id, not start time: same-start lines (ASSA layers) would all resolve to the first.
+            var p = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
             if (p != null)
             {
                 // Toggling has to go through the control's own (selection-ordered) list -
@@ -37942,6 +38143,7 @@ public partial class MainViewModel :
         UpdateTemporaryFrameMode();
 
         HasFormatStyle = IsFormatAssaOrSsa || IsFormatWebVtt || IsFormatYtt;
+        HasFormatActor = FormatHasActor(SelectedSubtitleFormat);
         ShowActorColumnMenuHeader = IsFormatWebVtt
             ? Se.Language.File.WebVtt.ShowVoiceColumn
             : Se.Language.General.ShowActorColumn;
@@ -38079,6 +38281,15 @@ public partial class MainViewModel :
         {
             SelectAndScrollToRow(idx);
         }
+    }
+
+    /// <summary>The formats that read or write <see cref="Paragraph.Actor"/> (WebVTT as the cue voice).</summary>
+    internal static bool FormatHasActor(SubtitleFormat? format)
+    {
+        return format is AdvancedSubStationAlpha or SubStationAlpha or WebVTT or WebVTTFileWithLineNumber
+            or CsvDaVinci or CsvExcel or CsvNuendo or MsOfficeWorkbook or FinalDraftTemplate2
+            or NVivoTranscript or OtterAi or PodcastIndexer or VocapiaSplit or JsonTypeOnlyLoad6
+            or UnknownSubtitle60 or UnknownSubtitle88 or UnknownSubtitle89;
     }
 
     internal void AutoSelectOnPlayCheckedChanged()
@@ -38371,8 +38582,7 @@ public partial class MainViewModel :
         if (!string.IsNullOrEmpty(_videoFileName) && vp != null)
         {
             vp.Position = e.Seconds;
-            var p = Subtitles.FirstOrDefault(p =>
-                Math.Abs(p.StartTime.TotalMilliseconds - e.Paragraph.StartTime.TotalMilliseconds) < 0.01);
+            var p = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
             if (p != null)
             {
                 SelectAndScrollToSubtitle(p);
@@ -38467,7 +38677,7 @@ public partial class MainViewModel :
                 case WaveformDoubleClickActionType.SelectSubtitle:
                     if (e.Paragraph != null)
                     {
-                        var p = Subtitles.FirstOrDefault(p => Math.Abs(p.StartTime.TotalMilliseconds - e.Paragraph.StartTime.TotalMilliseconds) < 0.01);
+                        var p = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
                         if (p != null)
                         {
                             SelectAndScrollToSubtitle(p);

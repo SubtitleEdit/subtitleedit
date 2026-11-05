@@ -573,7 +573,7 @@ public partial class SettingsViewModel : ObservableObject
         var iconFolders = Directory.Exists(Se.ThemesFolder)
             ? Directory.GetDirectories(Se.ThemesFolder)
                 // A folder unpacked before its theme had icons holds only background art - not an icon set to pick
-                .Where(p => File.Exists(Path.Combine(p, "Open.png")))
+                .Where(p => ThemeIcon.Exists(p, "Open"))
                 .Select(p => Path.GetFileName(p)).ToList()
             : new List<string>();
         iconFolders.Insert(0, Se.Language.General.Auto);
@@ -2862,12 +2862,11 @@ public partial class SettingsViewModel : ObservableObject
 
     private async Task UpdateWaveformSpaceInfoAsync()
     {
-        var files = GetWaveformAndSpecgtrogramFiles();
-
+        // Listing the folders (the spectrograms recursively) is file I/O too - keep it off the UI thread.
         long totalBytes = await Task.Run(() =>
         {
             long total = 0;
-            foreach (var file in files)
+            foreach (var file in GetWaveformAndSpecgtrogramFiles())
             {
                 try
                 {

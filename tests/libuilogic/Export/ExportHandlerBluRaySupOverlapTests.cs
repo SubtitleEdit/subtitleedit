@@ -116,6 +116,30 @@ public class ExportHandlerBluRaySupOverlapTests : IDisposable
     private static int PaletteAlpha(Segment pds, int entry) => pds.Payload[2 + entry * 5 + 4];
 
     [Fact]
+    public void OverlappingCues_KeepTheHdrPalette()
+    {
+        // The overlapping cues are written again from their bitmaps, on pictures of their own.
+        var cues = new[]
+        {
+            Cue(0, 1, 3, ExportAlignment.BottomCenter, SKColors.White),
+            Cue(1, 2, 4, ExportAlignment.TopCenter, SKColors.White),
+        };
+        foreach (var cue in cues)
+        {
+            cue.HdrWhiteNits = 203;
+        }
+
+        var palettes = ReadSegments(Export(cues)).Where(s => s.Type == Pds).ToList();
+
+        Assert.NotEmpty(palettes);
+        foreach (var palette in palettes)
+        {
+            var maxLuma = Enumerable.Range(0, (palette.Payload.Length - 2) / 5).Max(i => palette.Payload[2 + i * 5 + 1]);
+            Assert.Equal(143, maxLuma);
+        }
+    }
+
+    [Fact]
     public void CutPointsOnOneFrame_MakeNoEmptySlice()
     {
         // At 25 fps 3.000 and 3.010 s are the same frame (issue #15478): the overlap of 10 ms

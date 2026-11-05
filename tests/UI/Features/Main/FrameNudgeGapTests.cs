@@ -411,6 +411,39 @@ public class FrameNudgeGapTests : IDisposable
         window.Close();
     }
 
+    // A neighbour already under the minimum duration is not lengthened: the move stops at the gap.
+    [AvaloniaFact]
+    public void MoveStartXMsBackPushPrevious_DoesNotLengthenAShortPreviousLine()
+    {
+        var (window, vm) = TwoLines(gapMs: 150, minGapMs: 100);
+        Se.Settings.General.MoveStartEndStepMs = 100;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 2020;
+        vm.SelectedSubtitle = vm.Subtitles[1];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveStartXMsBackPushPreviousCommand.Execute(null);
+
+        Assert.Equal(3000, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(3100, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void MoveEndXMsForwardPushNext_DoesNotLengthenAShortNextLine()
+    {
+        var (window, vm) = TwoLines(gapMs: 150, minGapMs: 100);
+        Se.Settings.General.MoveStartEndStepMs = 100;
+        Se.Settings.General.SubtitleMinimumDisplayMilliseconds = 2870; // the next line is 2850 ms
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        Dispatcher.UIThread.RunJobs();
+
+        vm.MoveEndXMsForwardPushNextCommand.Execute(null);
+
+        Assert.Equal(3050, vm.Subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(3150, vm.Subtitles[1].StartTime.TotalMilliseconds, 3);
+        window.Close();
+    }
+
     // Touching lines stay touching - the push does not open them up to the minimum gap.
     [AvaloniaFact]
     public void MoveEndXMsForwardPushNext_TouchingLines_StayTouching()

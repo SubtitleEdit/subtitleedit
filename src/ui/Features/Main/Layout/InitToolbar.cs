@@ -585,6 +585,7 @@ public static class InitToolbar
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 }, true)
         };
+        WindowService.SuspendUndockedTopmostWhileOpen(comboBoxSubtitleFormat);
         comboBoxSubtitleFormat.SelectionChanged += vm.ComboBoxSubtitleFormatChanged;
         comboBoxSubtitleFormat.KeyDown += vm.ComboBoxSubtitleFormatKeyDown;
         // Tunnel phase so we see the event before ComboBox consumes a left-click to open
@@ -615,6 +616,7 @@ public static class InitToolbar
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedEncoding)),
                 DataContext = vm,
             };
+            WindowService.SuspendUndockedTopmostWhileOpen(comboBoxEncoding);
             stackPanelRight.Children.Add(comboBoxEncoding);
             toolbarPanel.AddCollapsible(comboBoxEncoding, rankEncoding);
         }
@@ -640,6 +642,7 @@ public static class InitToolbar
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedFrameRate)),
                 DataContext = vm,
             };
+            WindowService.SuspendUndockedTopmostWhileOpen(comboBoxFrameRate);
             stackPanelRight.Children.Add(comboBoxFrameRate);
             toolbarPanel.AddCollapsible(comboBoxFrameRate, rankFrameRate);
             comboBoxFrameRate.SelectionChanged += vm.ComboBoxFrameRateSelectionChanged;
@@ -700,14 +703,9 @@ public static class InitToolbar
     // themed/recolored toolbar icons using the current theme folder.
     public static Image MakeImage(string image)
     {
-        var filePath = Path.Combine(UiTheme.ImageFolder, image + ".png");
         try
         {
-            return new Image
-            {
-                Source = MakeOneColor(filePath),
-                Stretch = Stretch.Uniform,
-            };
+            return MakeThemeImage(image);
         }
         catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
         {
@@ -715,15 +713,12 @@ public static class InitToolbar
             // without a version bump made every startup crash here, since version.txt said the
             // folder was current). Repair by re-unpacking Themes.zip and retry once; if the icon
             // is still missing, show a blank image rather than killing the MainView build.
+            var filePath = Path.Combine(UiTheme.ImageFolder, image);
             if (Logic.Initializers.ThemeInitializer.TryRepair(filePath))
             {
                 try
                 {
-                    return new Image
-                    {
-                        Source = MakeOneColor(filePath),
-                        Stretch = Stretch.Uniform,
-                    };
+                    return MakeThemeImage(image);
                 }
                 catch (Exception retryException)
                 {
@@ -739,17 +734,35 @@ public static class InitToolbar
         }
     }
 
-    private static unsafe Bitmap MakeOneColor(string filePath)
+    private static Image MakeThemeImage(string image)
     {
+        var result = new Image
+        {
+            Source = MakeOneColor(image),
+            Stretch = Stretch.Uniform,
+        };
+
+        if (ThemeIcon.IsSvg(UiTheme.ImageFolder, image))
+        {
+            result.Width = ThemeIcon.LayoutSize;
+            result.Height = ThemeIcon.LayoutSize;
+        }
+
+        return result;
+    }
+
+    private static unsafe IImage MakeOneColor(string image)
+    {
+        var folder = UiTheme.ImageFolder;
         // A theme's own icons are already drawn in its colors
         if (!UiTheme.IsDarkThemeEnabled() || !Se.Settings.Appearance.MatchIconColorToDarkTheme || UiTheme.HasOwnIcons)
         {
-            return new Bitmap(filePath);
+            return ThemeIcon.Load(folder, image);
         }
 
         var foregroundColor = UiTheme.GetDarkThemeForegroundColor();
 
-        using var decodedBitmap = SKBitmap.Decode(filePath);
+        using var decodedBitmap = ThemeIcon.LoadPixels(folder, image);
         using var skBitmap = decodedBitmap.ColorType == SKColorType.Bgra8888
             ? decodedBitmap
             : decodedBitmap.Copy(SKColorType.Bgra8888);

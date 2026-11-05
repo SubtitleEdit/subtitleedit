@@ -137,7 +137,7 @@ public partial class GetAudioClipsViewModel : ObservableObject
             {
                 await MessageBox.Show(Window!,
                     Se.Language.General.Error,
-                    "Could not extract audio clip from video.");
+                    "Could not extract audio clip from video.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             });
             return;

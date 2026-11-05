@@ -137,6 +137,7 @@ internal sealed class SeConvSettings
                 BoxPaddingBottom = style.BoxPaddingBottom,
                 LineSpacingPercent = style.LineSpacingPercent,
                 IsFullFrame = style.IsFullFrame,
+                UseAssaStyles = style.UseAssaStyles,
                 FullFrameBackgroundColor = ToHex(style.FullFrameBackgroundColor),
                 Mode3D = style.Mode3D.ToString(),
                 Depth3D = style.Depth3D,
@@ -418,6 +419,7 @@ internal sealed class SeConvSettings
         public int? BoxPaddingBottom { get; set; }
         public int? LineSpacingPercent { get; set; }
         public bool? IsFullFrame { get; set; }
+        public bool? UseAssaStyles { get; set; }
         public string? FullFrameBackgroundColor { get; set; }
         public string? Mode3D { get; set; }
         public int? Depth3D { get; set; }
@@ -465,6 +467,8 @@ internal sealed class SeConvSettings
                 style.LineSpacingPercent = LineSpacingPercent.Value;
             if (IsFullFrame.HasValue)
                 style.IsFullFrame = IsFullFrame.Value;
+            if (UseAssaStyles.HasValue)
+                style.UseAssaStyles = UseAssaStyles.Value;
             if (!string.IsNullOrWhiteSpace(FullFrameBackgroundColor) && ImageExportStyle.TryParseColor(FullFrameBackgroundColor, out var fullFrameBackgroundColor))
                 style.FullFrameBackgroundColor = fullFrameBackgroundColor;
             if (!string.IsNullOrWhiteSpace(Mode3D) && ImageExportStyle.TryParseMode3D(Mode3D, out var mode3D))

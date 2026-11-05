@@ -44,6 +44,33 @@ public class ImportOriginalMatchTests
     private static string Unmatched(ImportOriginalHelper.OriginalMatch match) =>
         string.Join("|", match.Unmatched.Select(p => p.Text));
 
+    private const string Shape = @"{\p1}m 0 0 l 10 0 10 10 0 10{\p0}";
+
+    private static ObservableCollection<SubtitleLineViewModel> Rows(params (int Start, int End, string Text)[] rows) =>
+        new(rows.Select(r => new SubtitleLineViewModel(new Paragraph(r.Text, r.Start, r.End), new SubRip())));
+
+    [Fact]
+    public void ABackgroundBoxInFrontOfItsLine_LeavesTheOriginalLineToIt()
+    {
+        var match = ImportOriginalHelper.MatchOriginalLines(
+            Rows((1000, 2000, Shape), (1000, 2000, "one"), (2000, 3000, Shape), (2000, 3000, "two")),
+            Original((1000, 2000, "first"), (2000, 3000, "second")));
+
+        Assert.Equal("|first||second", Projected(match));
+        Assert.Equal(string.Empty, Unmatched(match));
+    }
+
+    [Fact]
+    public void AShapeInBothSubtitles_StaysMatched()
+    {
+        var match = ImportOriginalHelper.MatchOriginalLines(
+            Rows((1000, 2000, "one"), (1000, 2000, Shape)),
+            Original((1000, 2000, Shape), (1000, 2000, "first")));
+
+        Assert.Equal("first|" + Shape, Projected(match));
+        Assert.Equal(string.Empty, Unmatched(match));
+    }
+
     [Fact]
     public void OneOriginalLineSpanningTwoRows_GoesToOneRowOnly()
     {

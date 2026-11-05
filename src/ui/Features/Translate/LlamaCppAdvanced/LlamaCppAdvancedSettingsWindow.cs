@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -36,6 +37,8 @@ public class LlamaCppAdvancedSettingsWindow : Window
         DataContext = vm;
 
         Content = BuildContent(vm);
+
+        Closing += delegate { vm.OnClosing(); };
     }
 
     private static Grid BuildContent(LlamaCppAdvancedSettingsViewModel vm)
@@ -44,7 +47,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
 
         var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var sections = new StackPanel
         {
@@ -86,6 +89,27 @@ public class LlamaCppAdvancedSettingsWindow : Window
     {
         var synopsisBox = MakeMultilineTextBox(vm, nameof(vm.Synopsis), 56, Se.Language.Translate.Synopsis);
         SetHint(synopsisBox, Se.Language.Translate.SynopsisHint);
+        synopsisBox[!TextBox.IsReadOnlyProperty] = new Binding(nameof(vm.IsGenerating));
+
+        // "Generate with AI" under the synopsis, as in AI review's prompt dialog (#16589).
+        var buttonGenerate = UiUtil.MakeButton(Se.Language.Tools.AiReview.GenerateContext, vm.GenerateContextCommand);
+        buttonGenerate.Bind(Button.ContentProperty, new Binding(nameof(vm.GenerateButtonText)));
+        buttonGenerate.MinHeight = 28;
+        buttonGenerate.Height = EditorChrome.ScaledSize(28);
+        buttonGenerate.Padding = new Thickness(10, 0);
+        buttonGenerate.FontSize = EditorChrome.FieldFontSize;
+        buttonGenerate.VerticalContentAlignment = VerticalAlignment.Center;
+        SetHint(buttonGenerate, Se.Language.Tools.AiReview.GenerateContextHint);
+        var labelGenerateStatus = EditorChrome.MakeBoundHint(nameof(vm.GenerateStatus));
+        labelGenerateStatus.FontSize = EditorChrome.FieldFontSize;
+        labelGenerateStatus.VerticalAlignment = VerticalAlignment.Center;
+        var panelGenerate = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            Children = { buttonGenerate, labelGenerateStatus },
+        };
+        var rowGenerate = EditorChrome.MakeLabeledRow(string.Empty, panelGenerate, LabelWidth, spacing: 10, visibleProperty: nameof(vm.CanGenerate));
 
         var glossaryBox = MakeMultilineTextBox(vm, nameof(vm.Glossary), 76, Se.Language.Translate.Glossary);
         glossaryBox.PlaceholderText = Se.Language.Translate.GlossaryHint;
@@ -138,6 +162,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
             Children =
             {
                 EditorChrome.MakeLabeledRow(Se.Language.Translate.Synopsis, synopsisBox, LabelWidth, spacing: 10, alignTop: true),
+                rowGenerate,
                 EditorChrome.MakeLabeledRow(Se.Language.Translate.Glossary, glossaryBox, LabelWidth, spacing: 10, alignTop: true),
                 promptRow,
                 EditorChrome.MakeLabeledRow(Se.Language.Translate.PreviousLinesAsContext, historyPairs, LabelWidth, spacing: 10),

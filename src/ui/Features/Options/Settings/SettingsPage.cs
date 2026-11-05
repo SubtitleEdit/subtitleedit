@@ -40,6 +40,11 @@ public class SettingsPage : UserControl
     private readonly Border _contentBorder;
     private readonly Border _buttonBar;
 
+    // The app theme the chrome brushes and the sections were built for. Attaching the page to
+    // its window also raises ActualThemeVariantChanged (the default variant resolves to the
+    // window's), which must not rebuild everything a second time on every open.
+    private ThemeVariant? _builtThemeVariant = Application.Current?.ActualThemeVariant;
+
     public SettingsPage(SettingsViewModel vm)
     {
         _vm = vm;
@@ -158,6 +163,14 @@ public class SettingsPage : UserControl
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
         ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(() =>
         {
+            var themeVariant = Application.Current?.ActualThemeVariant;
+            if (themeVariant == _builtThemeVariant)
+            {
+                return;
+            }
+
+            _builtThemeVariant = themeVariant;
+
             // The editor brushes are picked when used - follow a theme changed with Apply.
             if (TopLevel.GetTopLevel(this) is Window window)
             {

@@ -54,7 +54,7 @@ public class ActorVoiceRowSettingsWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttons = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonOk);
+        var buttons = EditorChrome.MakeButtonBar(null, buttonCancel, buttonOk);
 
         var sections = new StackPanel
         {

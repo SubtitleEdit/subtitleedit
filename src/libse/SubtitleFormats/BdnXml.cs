@@ -80,12 +80,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             char[] splitChars = { ':', ';' };
 
             var convertToSmpte = false;
+            var dropFrameBase = 0;
             var frameRateElement = xml.DocumentElement.SelectSingleNode("Description/Format");
             if (frameRateElement?.Attributes["FrameRate"] != null)
             {
                 if (decimal.TryParse(frameRateElement.Attributes["FrameRate"].InnerText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fr))
                 {
                     convertToSmpte = fr % 1 != 0;
+
+                    // Drop-frame time codes only exist for 29.97 and 59.94
+                    var nominal = (int)Math.Round(fr);
+                    if (convertToSmpte && (nominal == 30 || nominal == 60) &&
+                        string.Equals(frameRateElement.Attributes["DropFrame"]?.InnerText, "true", StringComparison.OrdinalIgnoreCase))
+                    {
+                        dropFrameBase = nominal;
+                    }
                 }
             }
 
@@ -108,7 +117,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         textBuilder.AppendLine(graphic.InnerText);
                     }
 
-                    var p = new Paragraph(textBuilder.ToString().Trim(), DecodeTimeCodeFrames(start, splitChars).TotalMilliseconds, DecodeTimeCodeFrames(end, splitChars).TotalMilliseconds);
+                    var p = dropFrameBase > 0
+                        ? new Paragraph(textBuilder.ToString().Trim(), DecodeDropFrameTimeCode(start, dropFrameBase), DecodeDropFrameTimeCode(end, dropFrameBase))
+                        : new Paragraph(textBuilder.ToString().Trim(), DecodeTimeCodeFrames(start, splitChars).TotalMilliseconds, DecodeTimeCodeFrames(end, splitChars).TotalMilliseconds);
                     if (node.Attributes["Forced"] != null && node.Attributes["Forced"].Value.Equals("true", StringComparison.OrdinalIgnoreCase))
                     {
                         p.Forced = true;
@@ -128,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            if (convertToSmpte)
+            if (convertToSmpte && dropFrameBase == 0)
             {
                 foreach (var p in subtitle.Paragraphs)
                 {
@@ -141,6 +152,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Header = xmlString;
 
             subtitle.Renumber();
+        }
+
+        /// <summary>
+        /// Milliseconds of a drop-frame time code (HH:MM:SS:FF or HH:MM:SS;FF) at 29.97
+        /// (<paramref name="nominalFps"/> 30) or 59.94 (60): the labels skip 2 (or 4) frame
+        /// numbers at the start of every minute except each tenth, so the label is not the frame
+        /// count - read as non-drop-frame it runs 3.6 seconds ahead per hour.
+        /// </summary>
+        internal static double DecodeDropFrameTimeCode(string timeCode, int nominalFps)
+        {
+            var parts = timeCode.Split(':', ';', '.');
+            if (parts.Length != 4)
+            {
+                throw new FormatException("Invalid drop-frame time code: " + timeCode);
+            }
+
+            var hours = int.Parse(parts[0], CultureInfo.InvariantCulture);
+            var minutes = int.Parse(parts[1], CultureInfo.InvariantCulture);
+            var seconds = int.Parse(parts[2], CultureInfo.InvariantCulture);
+            var frames = int.Parse(parts[3], CultureInfo.InvariantCulture);
+
+            var droppedPerMinute = nominalFps / 15;
+            var totalMinutes = hours * 60L + minutes;
+            var frameNumber = (hours * 3600L + minutes * 60L + seconds) * nominalFps + frames
+                              - droppedPerMinute * (totalMinutes - totalMinutes / 10);
+            return frameNumber * 1001.0 / nominalFps;
         }
 
         /// <summary>
