@@ -32,7 +32,7 @@ public class LayoutWindow : Window
         _vm = viewViewModel;
         Title = Se.Language.Options.Shortcuts.GeneralChooseLayout;
         Width = 1180;
-        Height = 590;
+        SizeToContent = SizeToContent.Height; // a fixed height left a few pixels short (scrollbar), and fonts scale
         CanResize = false;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.TimeCodes);
 
