@@ -3358,7 +3358,11 @@ public static class UiUtil
 
         // A non-resizable window gets its size from its content (SizeToContent), so a saved
         // size can only be stale - applying one from an older layout clips the window.
-        if (!existing.IsFullScreen && !existing.IsMaximized &&
+        // The size saved for a maximized window is its maximized size. Applying it before the
+        // window is shown makes it open at that size - otherwise it opens at its default size
+        // and then visibly grows (macOS zooms it after showing).
+        var maximizeBeforeShow = existing.IsMaximized && !window.IsVisible;
+        if (!existing.IsFullScreen && (!existing.IsMaximized || maximizeBeforeShow) &&
             existing.Width > 0 && existing.Height > 0 && window.CanResize)
         {
             window.Width = existing.Width;
