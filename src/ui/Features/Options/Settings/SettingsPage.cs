@@ -1032,7 +1032,7 @@ public class SettingsPage : UserControl
         [
             new SettingsItem(Se.Language.General.Theme, () => ThemePicker.Make(_vm)),
             new SettingsItem(Se.Language.Options.Settings.IconTheme, () => UiUtil.MakeComboBox(_vm.IconThemes, _vm, nameof(_vm.SelectedIconTheme))),
-            MakeCheckboxSetting(Se.Language.Options.Settings.MatchIconColorToDarkTheme, nameof(_vm.MatchIconColorToDarkTheme)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.MatchIconColorToTheme, nameof(_vm.MatchIconColorToTheme)),
             new SettingsItem(Se.Language.Options.Settings.UiScale, () => UiUtil.MakeNumericUpDownInt(
                 (int)Math.Round(UiTheme.MinScale * 100.0, MidpointRounding.AwayFromZero) ,
                 (int)Math.Round(UiTheme.MaxScale * 100.0, MidpointRounding.AwayFromZero),

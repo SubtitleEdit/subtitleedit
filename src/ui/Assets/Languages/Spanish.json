@@ -3983,7 +3983,6 @@
       "WindowsRenderingModeSoftware": "Software (sin GPU, sin OpenGL de libmpv)",
       "TextSelectionOpacity": "Opacidad de la selección de texto (%)",
       "WaveformToolbarItems": "Elementos barra onda",
-      "MatchIconColorToDarkTheme": "Iconos acordes al tema oscuro",
       "SubtitlePreviewProperties": "Propiedades vista previa",
       "UsePositionFromSubtitleFile": "Usar la posición del archivo de subtítulos (TTML/PAC/EBU STL)",
       "MarginIsPartOfSubtitleArea": "El margen forma parte del área del subtítulo",
