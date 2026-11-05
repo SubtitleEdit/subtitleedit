@@ -166,25 +166,28 @@ public static class CrispEmbedEngine
                     },
                 },
             },
-            new()
-            {
-                Name = "GOT-OCR2",
-                Models = new List<CrispEmbedModel>
-                {
-                    new()
-                    {
-                        Name = "got-ocr2-q4_k.gguf",
-                        Size = "445 MB",
-                        Url = "https://huggingface.co/cstr/got-ocr2-crispembed-GGUF/resolve/main/got-ocr2-q4_k.gguf",
-                    },
-                    new()
-                    {
-                        Name = "got-ocr2-q8_0.gguf",
-                        Size = "600 MB",
-                        Url = "https://huggingface.co/cstr/got-ocr2-crispembed-GGUF/resolve/main/got-ocr2-q8_0.gguf",
-                    },
-                },
-            },
+            // GOT-OCR2 disabled: since CrispEmbed v0.17.14 it only loads with
+            // CRISPEMBED_ACCEPT_TONGYI_QIANWEN_LICENSE=1, because its Qwen1.5-0.5B decoder is under
+            // the non-commercial Tongyi Qianwen RESEARCH LICENSE.
+            // new()
+            // {
+            //     Name = "GOT-OCR2",
+            //     Models = new List<CrispEmbedModel>
+            //     {
+            //         new()
+            //         {
+            //             Name = "got-ocr2-q4_k.gguf",
+            //             Size = "445 MB",
+            //             Url = "https://huggingface.co/cstr/got-ocr2-crispembed-GGUF/resolve/main/got-ocr2-q4_k.gguf",
+            //         },
+            //         new()
+            //         {
+            //             Name = "got-ocr2-q8_0.gguf",
+            //             Size = "600 MB",
+            //             Url = "https://huggingface.co/cstr/got-ocr2-crispembed-GGUF/resolve/main/got-ocr2-q8_0.gguf",
+            //         },
+            //     },
+            // },
             // PaddleOCR-VL (109 languages) omitted for now: in CrispEmbed v0.14.0 both the
             // q4_k and q8_0 quants truncate or hallucinate on subtitle-style single-line
             // images via both the server and CLI single-model paths - verified 2026-07-11.
