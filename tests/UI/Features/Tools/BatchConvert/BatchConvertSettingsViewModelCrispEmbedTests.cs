@@ -56,7 +56,7 @@ public class BatchConvertSettingsViewModelCrispEmbedTests
             Assert.Equal("GLM-OCR", viewModel.SelectedCrispEmbedBackend?.Name);
             Assert.Equal("glm-ocr-q4_k.gguf", viewModel.SelectedCrispEmbedModel?.Model.Name);
 
-            var otherBackend = viewModel.CrispEmbedBackends.First(p => p.Name == "GOT-OCR2");
+            var otherBackend = viewModel.CrispEmbedBackends.First(p => p.Name == "Qwen3-VL-2B");
             viewModel.SelectedCrispEmbedBackend = otherBackend;
 
             Assert.All(viewModel.CrispEmbedModels, m => Assert.Equal(otherBackend, m.Backend));
