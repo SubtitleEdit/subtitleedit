@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v5.4.0-rc3",
-  "translatedBy": "v. 02.11.2026 di bovirus e GitGianluc",
+  "version": "v5.4.0-rc4",
+  "translatedBy": "v. 05.11.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -1523,6 +1523,8 @@
       "halfTopBottom": "Metà sopra/sotto",
       "depth3D": "Profondità",
       "depth3DHint": "Quanto dista il sottotitolo dallo schermo: un valore positivo lo avvicina, negativo lo allontana",
+      "useAssaStyles": "Usa stili ASSA",
+      "useAssaStylesHint": "Disegna ogni riga con il proprio stile ASSA (font, colori, bordo, sfondo, allineamento e margini) invece delle impostazioni sottostanti",
       "plane3D": "Piano 3D",
       "plane3DHint": "Assegna a ciascun sottotitolo la profondità memorizzata da un Blu-ray 3D, da un file 3D-Plane (.ofs) creato da BD3D2MK3D o OFSExtractor. La profondità viene usata laddove il piano 3D non ne ha.",
       "openPlane3DTitle": "Apri file 3D-Plane",
