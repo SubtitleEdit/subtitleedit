@@ -17,7 +17,6 @@ v5.4.0-rc4 (5th of November 2026)
 * Update Whisper.cpp advanced-parameter help to 1.9.5 - thx GitGianluc
 * Update translations: new strings in all languages (machine translated, needs review)
 
-
 -----------------------------------------------------------------------------------------------------
 
 v5.4.0-rc3 (4th of November 2026)
@@ -38,7 +37,6 @@ v5.4.0-rc3 (4th of November 2026)
 * Update German translation - thx FunkyKnilch
 * Update Hungarian translation
 * Update Italian translation - thx GitGianluc
-
 
 -----------------------------------------------------------------------------------------------------
 
