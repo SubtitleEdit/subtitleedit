@@ -96,11 +96,11 @@ public class FontCollectorWindow : Window
     {
         var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 7, Margin = new Thickness(10, 0) };
         content.Children.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 13, VerticalAlignment = VerticalAlignment.Center });
-        content.Children.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        content.Children.Add(new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center });
         var button = new Button
         {
             Content = content,
-            Height = 30,
+            Height = EditorChrome.ScaledSize(30),
             Command = command,
             VerticalContentAlignment = VerticalAlignment.Center,
         };
@@ -246,7 +246,7 @@ public class FontCollectorWindow : Window
             [!Border.IsVisibleProperty] = new Binding(nameof(FontCollectorItem.Status)) { Converter = StringConverters.IsNotNullOrEmpty },
             Child = new TextBlock
             {
-                FontSize = 11.5,
+                FontSize = EditorChrome.ScaledFont(11.5),
                 FontWeight = FontWeight.SemiBold,
                 Foreground = Brushes.White,
                 [!TextBlock.TextProperty] = new Binding(nameof(FontCollectorItem.Status)),
@@ -330,7 +330,7 @@ public class FontCollectorWindow : Window
     {
         var status = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),

@@ -160,7 +160,7 @@ public class AssSetBackgroundWindow : Window
 
         var name = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.BoxStyleName)),
@@ -234,11 +234,11 @@ public class AssSetBackgroundWindow : Window
             BorderBrush = EditorChrome.AccentBrush,
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(5),
-            Height = 28,
+            Height = EditorChrome.ScaledSize(28),
             Child = new TextBlock
             {
                 Text = Se.Language.General.Text,
-                FontSize = 12,
+                FontSize = EditorChrome.FieldFontSize,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             },
@@ -282,7 +282,7 @@ public class AssSetBackgroundWindow : Window
         AutomationProperties.SetName(toggle, Se.Language.Assa.BackgroundBoxFillWidth);
         var toggleRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
         toggleRow.Children.Add(toggle);
-        toggleRow.Children.Add(new TextBlock { Text = Se.Language.Assa.BackgroundBoxFillWidth, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center });
+        toggleRow.Children.Add(new TextBlock { Text = Se.Language.Assa.BackgroundBoxFillWidth, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center });
 
         var left = EditorChrome.MakeField(nameof(vm.FillWidthMarginLeft), 0, 2000, prefix: "L");
         var right = EditorChrome.MakeField(nameof(vm.FillWidthMarginRight), 0, 2000, prefix: "R");
@@ -331,7 +331,7 @@ public class AssSetBackgroundWindow : Window
     {
         var progress = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressText)),
@@ -341,8 +341,8 @@ public class AssSetBackgroundWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         var grid = new Grid
         {

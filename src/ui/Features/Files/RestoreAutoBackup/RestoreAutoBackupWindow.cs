@@ -156,13 +156,13 @@ public class RestoreAutoBackupWindow : Window
         var infoText = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SettingsBackupInfo)),
         };
         var lastBackupText = new TextBlock
         {
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LastSettingsBackupText)),
         };
 

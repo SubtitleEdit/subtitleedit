@@ -23,6 +23,7 @@ internal static class OperationOrderParser
         "ConvertColorsToDialog",
         "FixCommonErrors",
         "FixRtlViaUnicodeChars",
+        "MergeContinuationLines",
         "MergeSameTexts",
         "MergeSameTimeCodes",
         "MergeShortLines",

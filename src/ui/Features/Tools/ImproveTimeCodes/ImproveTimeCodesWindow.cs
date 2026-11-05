@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ImproveTimeCodes;
@@ -105,7 +106,7 @@ public class ImproveTimeCodesWindow : Window
         var engineStatus = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.EngineStatus)) { Source = vm },
         };
 
@@ -365,7 +366,7 @@ public class ImproveTimeCodesWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             MinWidth = 120,
             TextAlignment = TextAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangePositionLabel)) { Source = vm },
@@ -395,7 +396,7 @@ public class ImproveTimeCodesWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Right,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             // With the speech-to-text counts it can be longer than the room beside the buttons.
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Right,
@@ -571,7 +572,7 @@ public class ImproveTimeCodesWindow : Window
             TextWrapping = TextWrapping.Wrap,
             MaxLines = 2,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)) { Source = vm },
             [!IsVisibleProperty] = new Binding("!" + nameof(vm.IsAligning)) { Source = vm },
@@ -583,11 +584,12 @@ public class ImproveTimeCodesWindow : Window
     /// <summary>
     /// Progress bar and status while aligning, on the status color above the button bar.
     /// </summary>
-    private static Control BuildProgressStrip(ImproveTimeCodesViewModel vm)
+    private Control BuildProgressStrip(ImproveTimeCodesViewModel vm)
     {
         var progress = UiUtil.MakeProgressBar(6);
         progress.Bind(RangeBase.ValueProperty, new Binding(nameof(vm.ProgressValue)) { Source = vm });
         progress.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsProgressIndeterminate)) { Source = vm });
+        progress.WithPlatformProgress(this, nameof(vm.IsAligning));
 
         var strip = EditorChrome.MakeProgressStrip(progress, nameof(vm.StatusText), nameof(vm.IsAligning));
         strip.DataContext = vm;

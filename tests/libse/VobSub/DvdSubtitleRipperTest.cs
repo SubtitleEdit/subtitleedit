@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Core.VobSub;
 using System.Text;
 
 namespace LibSETests.VobSub;
@@ -48,7 +48,7 @@ public class DvdSubtitleRipperTest : IDisposable
         programChain.Cells.Add(new IfoParser.Cell { VobId = 1, CellId = 2, Start = TimeSpan.FromSeconds(10), Duration = TimeSpan.FromSeconds(5), FirstSector = 3, LastSector = 6 });
 
         var progress = new List<(long Done, long Total)>();
-        var packs = DvdSubtitleRipper.Rip(new[] { vob1, vob2 }, programChain, (done, total) => progress.Add((done, total)));
+        var packs = DvdSubtitleRipper.Rip(new[] { vob1, vob2 }, programChain, (done, total) => progress.Add((done, total)), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(2, packs.Count);
         Assert.Equal(0x20, packs[0].PacketizedElementaryStream.SubPictureStreamId);
@@ -69,14 +69,14 @@ public class DvdSubtitleRipperTest : IDisposable
         programChain.Cells.Add(new IfoParser.Cell { VobId = 1, CellId = 1, FirstSector = 0, LastSector = 1 });
         programChain.Cells.Add(new IfoParser.Cell { VobId = 1, CellId = 2, Start = TimeSpan.FromSeconds(1), FirstSector = 5000, LastSector = 6000 });
 
-        var packs = DvdSubtitleRipper.Rip(new[] { vob1 }, programChain);
+        var packs = DvdSubtitleRipper.Rip(new[] { vob1 }, programChain, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Single(packs);
         Assert.Equal(9000UL, packs[0].PacketizedElementaryStream.PresentationTimestamp);
     }
 
     [Fact]
-    public void Rip_ProgramChain_SkipsEmptyVobFile()
+    public async Task Rip_ProgramChain_SkipsEmptyVobFile()
     {
         // an empty VOB in the middle shares its first sector with the next VOB - reading must not loop forever
         var vob1 = WriteVob("VTS_01_1.VOB",
@@ -91,10 +91,9 @@ public class DvdSubtitleRipperTest : IDisposable
         programChain.Cells.Add(new IfoParser.Cell { VobId = 1, CellId = 1, FirstSector = 0, LastSector = 1 });
         programChain.Cells.Add(new IfoParser.Cell { VobId = 1, CellId = 2, Start = TimeSpan.FromSeconds(1), FirstSector = 2, LastSector = 3 });
 
-        var task = Task.Run(() => DvdSubtitleRipper.Rip(new[] { vob1, vob2, vob3 }, programChain));
-        Assert.True(task.Wait(TimeSpan.FromSeconds(30)), "Rip did not finish");
-
-        var packs = task.Result;
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        using var linked = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, TestContext.Current.CancellationToken);
+        var packs = await Task.Run(() => DvdSubtitleRipper.Rip(new[] { vob1, vob2, vob3 }, programChain, cancellationToken: linked.Token), TestContext.Current.CancellationToken);
         Assert.Equal(2, packs.Count);
         Assert.Equal(9000UL, packs[0].PacketizedElementaryStream.PresentationTimestamp);
         Assert.Equal(0x21, packs[1].PacketizedElementaryStream.SubPictureStreamId);
@@ -110,7 +109,7 @@ public class DvdSubtitleRipperTest : IDisposable
             MakeNavPack(1, 2, 500, 20000), // PTS restart: continues where the previous VOBU ended
             MakeSubtitlePack(0x20, 500 + 18000));
 
-        var packs = DvdSubtitleRipper.Rip(new[] { vob });
+        var packs = DvdSubtitleRipper.Rip(new[] { vob }, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(2, packs.Count);
         Assert.Equal(45000UL, packs[0].PacketizedElementaryStream.PresentationTimestamp);
@@ -129,7 +128,7 @@ public class DvdSubtitleRipperTest : IDisposable
         var programChain = new IfoParser.ProgramChain();
         programChain.Cells.Add(new IfoParser.Cell { VobId = 1, CellId = 1, Start = TimeSpan.FromMilliseconds(1), FirstSector = 0, LastSector = 1 });
 
-        var packs = DvdSubtitleRipper.Rip(new[] { vob }, programChain);
+        var packs = DvdSubtitleRipper.Rip(new[] { vob }, programChain, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal((ulong)pts + 90, packs[0].PacketizedElementaryStream.PresentationTimestamp);
         Assert.Equal(0x3F, packs[0].PacketizedElementaryStream.SubPictureStreamId);
@@ -145,7 +144,7 @@ public class DvdSubtitleRipperTest : IDisposable
             MakeSubtitlePack(0x20, 4500),
             encrypted);
 
-        var packs = DvdSubtitleRipper.Rip(new[] { vob });
+        var packs = DvdSubtitleRipper.Rip(new[] { vob }, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(2, packs.Count);
         Assert.Equal(1, DvdSubtitleRipper.CountEncrypted(packs));

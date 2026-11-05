@@ -270,6 +270,34 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
 
+        /// <summary>Puts the keyboard focus in the time code field (the control itself is not focusable).</summary>
+        internal void FocusTextBox()
+        {
+            _textBox?.Focus();
+        }
+
+        /// <summary>
+        /// Puts the keyboard focus in the time code field, ready for a whole time code to be typed:
+        /// the caret goes to the first digit instead of the last part, and a frame number is
+        /// selected so the first digit replaces it (#16649).
+        /// </summary>
+        internal void FocusTextBoxForTyping()
+        {
+            if (_textBox == null || !_textBox.Focus())
+            {
+                return;
+            }
+
+            if (Se.Settings.General.UseFrameNumbers)
+            {
+                _textBox.SelectAll();
+            }
+            else
+            {
+                _textBox.CaretIndex = SignOffset;
+            }
+        }
+
         private void OnTextBoxGotFocus(object? sender, FocusChangedEventArgs e)
         {
             if (_textBox != null)

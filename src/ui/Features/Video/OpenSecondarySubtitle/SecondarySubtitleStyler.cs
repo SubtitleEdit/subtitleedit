@@ -18,14 +18,12 @@ namespace Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 /// </summary>
 public static class SecondarySubtitleStyler
 {
-    public static SsaStyle MakeStyle(string styleName, int fontSize, bool bold, Color color, FontBoxType boxType, string alignment)
+    public static SsaStyle MakeStyle(string styleName, string fontName, int fontSize, bool bold, Color color, FontBoxType boxType, string alignment)
     {
         var style = new SsaStyle
         {
             Name = styleName,
-            // Follow the main preview's font (issue #13492): a hardcoded Arial showed a
-            // sans-serif secondary under a serif main whenever the preview font was changed.
-            FontName = Se.Settings.Video.MpvPreviewFontName,
+            FontName = string.IsNullOrWhiteSpace(fontName) ? GetDefaultFontName() : fontName,
             FontSize = fontSize,
             Bold = bold,
             Primary = color.ToSKColor(),
@@ -84,6 +82,7 @@ public static class SecondarySubtitleStyler
         var (width, height) = GetVideoSize(mediaInfo);
         var style = MakeStyle(
             "Style" + Guid.NewGuid().ToString().Replace("-", string.Empty),
+            video.SecondarySubtitleFontName,
             GetFontSizeFromSettings(height),
             video.SecondarySubtitleFontBold,
             video.SecondarySubtitleColor.FromHexToColor(),
@@ -106,6 +105,7 @@ public static class SecondarySubtitleStyler
         var (width, height) = GetVideoSize(mediaInfo);
         var style = MakeStyle(
             "Style" + Guid.NewGuid().ToString().Replace("-", string.Empty),
+            GetDefaultFontName(),
             AssaResampler.Resample(AdvancedSubStationAlpha.DefaultHeight, height, Se.Settings.Video.MpvPreviewFontSize),
             Se.Settings.Video.MpvPreviewFontBold,
             Colors.White,
@@ -128,18 +128,38 @@ public static class SecondarySubtitleStyler
             : (1920, 1080);
     }
 
+    /// <summary>
+    /// The main preview's font (issue #13492): a hardcoded Arial showed a sans-serif secondary
+    /// under a serif main whenever the preview font was changed.
+    /// </summary>
+    public static string GetDefaultFontName()
+    {
+        return Se.Settings.Video.MpvPreviewFontName;
+    }
+
+    /// <summary>
+    /// The saved font name, or the main preview's font when none was saved.
+    /// </summary>
+    public static string GetFontNameFromSettings()
+    {
+        var fontName = Se.Settings.Video.SecondarySubtitleFontName;
+        return string.IsNullOrWhiteSpace(fontName) ? GetDefaultFontName() : fontName;
+    }
+
     public static int GetFontSizeFromSettings(int videoHeight)
     {
         var fontSize = Se.Settings.Video.SecondarySubtitleFontSize * videoHeight / AdvancedSubStationAlpha.DefaultHeight;
         return Math.Max(1, (int)Math.Round(fontSize, MidpointRounding.AwayFromZero));
     }
 
-    public static void SaveToSettings(int fontSize, int videoHeight, bool bold, Color color, FontBoxType boxType, string alignment, string justify)
+    public static void SaveToSettings(string fontName, int fontSize, int videoHeight, bool bold, Color color, FontBoxType boxType, string alignment, string justify)
     {
         var video = Se.Settings.Video;
         // Not AssaResampler: it rounds to one decimal, which can drift the size by a pixel on a
         // 4K video when it is scaled back.
         video.SecondarySubtitleFontSize = Math.Round((decimal)fontSize * AdvancedSubStationAlpha.DefaultHeight / videoHeight, 4);
+        // Stored empty while it is the preview font, so it keeps following that font.
+        video.SecondarySubtitleFontName = fontName == GetDefaultFontName() ? string.Empty : fontName;
         video.SecondarySubtitleFontBold = bold;
         video.SecondarySubtitleColor = color.FromColorToHex();
         video.SecondarySubtitleBoxType = boxType;

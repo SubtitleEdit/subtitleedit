@@ -113,33 +113,17 @@ public static class UiTheme
     }
 
     /// <summary>
-    /// Themes that ship an icon set of their own in Themes.zip (plus background art).
-    /// </summary>
-    private static bool HasIconFolder(string themeName)
-    {
-        return themeName == ThemeNameMidnightCinema || themeName == ThemeNameSakura;
-    }
-
-    /// <summary>
-    /// Themes that ship background art in a folder of their own in Themes.zip. The Nord and
-    /// Pastel folders hold only the art - their icons are Dark's and Light's.
-    /// </summary>
-    private static bool HasThemeFolder(string themeName)
-    {
-        return HasIconFolder(themeName) || themeName == ThemeNameNord || themeName == ThemeNamePastel;
-    }
-
-    /// <summary>
-    /// True when the toolbar and message box images come from the theme's own folder (Midnight
-    /// Cinema, Sakura) - those are drawn in the theme's colors and must not be recolored.
+    /// True when the toolbar and message box images come from a theme's own icon set (Midnight
+    /// Cinema, Sakura, Pastel, Nord) - those are drawn in the theme's colors and must not be
+    /// recolored. Dark/Light/Classic share the plain glyphs, which may be.
     /// </summary>
     public static bool HasOwnIcons
     {
         get
         {
-            var themeName = ThemeName;
-            return HasIconFolder(themeName) &&
-                   string.Equals(ImageFolder, Path.Combine(Se.ThemesFolder, themeName), StringComparison.Ordinal);
+            var iconSetName = Path.GetFileName(ImageFolder);
+            return iconSetName == ThemeNameMidnightCinema || iconSetName == ThemeNameSakura ||
+                   iconSetName == ThemeNamePastel || iconSetName == ThemeNameNord;
         }
     }
 
@@ -147,9 +131,8 @@ public static class UiTheme
     /// Folder holding the current theme's images. These are unpacked from Themes.zip into
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
     /// be reached through an avares:// URI. A theme that ships no image folder of its own
-    /// (Pastel, for instance) falls back to Light - or Dark for a dark theme, as the Dark glyphs
-    /// are near-white and vanish on a light background - as do Nord and Pastel, whose folders
-    /// hold only background art. An explicit icon theme wins over both.
+    /// falls back to Light - or Dark for a dark theme, as the Dark glyphs are near-white and
+    /// vanish on a light background. An explicit icon theme wins over both.
     /// </summary>
     public static string ImageFolder
     {
@@ -157,14 +140,15 @@ public static class UiTheme
         {
             var themeName = ThemeName;
             var folder = Path.Combine(Se.ThemesFolder, themeName);
-            if (!Directory.Exists(folder) && HasThemeFolder(themeName))
+            if (!ThemeIcon.Exists(folder, "Open"))
             {
-                // A theme added after the folder was last unpacked (same version, so the start-up
-                // check saw nothing to do) - unpack Themes.zip again.
+                // A theme (or a theme's icons, as with Pastel's and Nord's once art-only folders)
+                // added after the folder was last unpacked (same version, so the start-up check
+                // saw nothing to do) - unpack Themes.zip again.
                 Initializers.ThemeInitializer.TryRepair(folder);
             }
 
-            if (!Directory.Exists(folder) || (HasThemeFolder(themeName) && !HasIconFolder(themeName)))
+            if (!Directory.Exists(folder))
             {
                 folder = Path.Combine(Se.ThemesFolder, IsDarkThemeEnabled() ? ThemeNameDark : ThemeNameLight);
             }
@@ -290,13 +274,15 @@ public static class UiTheme
     public const double MaxScale = 2.0;
 
     /// <summary>
-    /// Font scale (#14812): scales text only, leaving layout metrics alone, unlike
-    /// <see cref="ApplyScaleToWindow"/>'s layout transform. Applied through the inherited
-    /// window <see cref="TemplatedControl.FontSize"/>, so controls that set an explicit
-    /// FontSize keep it. Kept to a modest range as fixed-width controls clip at large values.
+    /// UI font size in pixels (#16314), shown in Settings instead of a percentage. Stored as
+    /// <see cref="SeAppearance.FontScale"/> = size / <see cref="BaseFontSize"/>, which scales text
+    /// only (#14812), leaving layout metrics alone, unlike <see cref="ApplyScaleToWindow"/>'s
+    /// layout transform. Kept to a modest range as fixed-width controls clip at large values.
     /// </summary>
-    public const double MinFontScale = 0.8;
-    public const double MaxFontScale = 1.5;
+    public const int MinFontSize = 10;
+    public const int MaxFontSize = 20;
+    public const double MinFontScale = MinFontSize / BaseFontSize;
+    public const double MaxFontScale = MaxFontSize / BaseFontSize;
 
     /// <summary>
     /// The text size of every window at 100 % font scale (#16276): the main window, the dialogs'
@@ -306,6 +292,27 @@ public static class UiTheme
     public const double BaseFontSize = 13.0;
 
     public static double FontScale => Math.Clamp(Se.Settings.Appearance.FontScale <= 0 ? 1.0 : Se.Settings.Appearance.FontScale, MinFontScale, MaxFontScale);
+
+    /// <summary>The UI font size in whole pixels that Settings shows for a stored font scale.</summary>
+    public static int FontSizeFromScale(double fontScale)
+    {
+        var scale = Math.Clamp(fontScale <= 0 ? 1.0 : fontScale, MinFontScale, MaxFontScale);
+        return (int)Math.Round(BaseFontSize * scale, MidpointRounding.AwayFromZero);
+    }
+
+    /// <summary>
+    /// The font scale to store for a UI font size picked in Settings. An untouched size keeps the
+    /// current scale, so an older percentage (120 % shows as 16 px) is not rounded on save.
+    /// </summary>
+    public static double FontScaleFromSize(int fontSize, double currentFontScale)
+    {
+        if (fontSize == FontSizeFromScale(currentFontScale))
+        {
+            return currentFontScale;
+        }
+
+        return Math.Clamp(fontSize, MinFontSize, MaxFontSize) / BaseFontSize;
+    }
 
     /// <summary>Font size for popup menu/combo items rendered outside the layout transform.</summary>
     private static double PopupFontSize(double layoutFactor) => BaseFontSize * layoutFactor * FontScale;
@@ -1954,24 +1961,28 @@ public static class UiTheme
     private static readonly System.Collections.Generic.Dictionary<string, Bitmap?> ThemeArtCache = new(StringComparer.Ordinal);
 
     /// <summary>
+    /// Where a theme image lives. Uses <see cref="ThemeName"/> rather than the setting, as System
+    /// has no folder of its own - it is always Light or Dark (issue #16502).
+    /// </summary>
+    internal static string GetThemeArtPath(string fileName)
+    {
+        return Path.Combine(Se.ThemesFolder, ThemeName, fileName);
+    }
+
+    /// <summary>
     /// A background image shipped in the current theme's folder (see
     /// <see cref="VideoBackgroundFileName"/>), or null when the theme has none.
     /// </summary>
     public static Bitmap? GetThemeArt(string fileName)
     {
-        var theme = Se.Settings.Appearance.Theme;
-        if (!HasThemeFolder(theme))
-        {
-            return null;
-        }
-
-        var path = Path.Combine(Se.ThemesFolder, theme, fileName);
+        var path = GetThemeArtPath(fileName);
         if (ThemeArtCache.TryGetValue(path, out var cached))
         {
             return cached;
         }
 
-        if (!File.Exists(path) && !Initializers.ThemeInitializer.TryRepair(path))
+        // A repair only says the zip was unpacked - the zip may not have the file either.
+        if (!File.Exists(path) && (!Initializers.ThemeInitializer.TryRepair(path) || !File.Exists(path)))
         {
             return null;
         }

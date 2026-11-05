@@ -14,7 +14,9 @@ using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Progress;
+using System;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
@@ -25,7 +27,13 @@ namespace Nikse.SubtitleEdit.Features.Translate;
 /// </summary>
 public class AutoTranslateWindow : Window
 {
+    private static readonly FuncValueConverter<TimeSpan, string> ShortTimeConverter = new(FormatShortTime);
+    private static readonly FuncValueConverter<string?, IBrush> SourceTextBrushConverter =
+        new(translated => string.IsNullOrEmpty(translated) ? EditorChrome.StrongTextBrush : EditorChrome.DimTextBrush);
+
     private readonly AutoTranslateViewModel _vm;
+    private SeTableViewColumn? _columnSource;
+    private SeTableViewColumn? _columnTranslation;
     private Button? _buttonTranslate;
     private Button? _buttonOk;
 
@@ -94,6 +102,12 @@ public class AutoTranslateWindow : Window
             return;
         }
 
+        if (e.PropertyName is nameof(AutoTranslateViewModel.SelectedSourceLanguage)
+            or nameof(AutoTranslateViewModel.SelectedTargetLanguage))
+        {
+            UpdateLanguageHeaders(_vm);
+        }
+
         if (e.PropertyName is nameof(AutoTranslateViewModel.IsTranslatePrimary)
             or nameof(AutoTranslateViewModel.IsOkPrimary))
         {
@@ -151,6 +165,7 @@ public class AutoTranslateWindow : Window
         var updateEngineButton = Flat(UiUtil.MakeButton(Se.Language.General.Update, vm.UpdateEngineCommand)
             .WithIconLeft(IconNames.Download));
         updateEngineButton.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.EngineUpdateButtonIsVisible)));
+        updateEngineButton.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
         if (Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(updateEngineButton, Se.Language.General.UpdateAvailable);
@@ -209,6 +224,13 @@ public class AutoTranslateWindow : Window
         var buttonDownloadCrispAsr = Flat(UiUtil.MakeButton(string.Empty, vm.DownloadCrispAsrCommand)
             .WithIconLeftBindText(IconNames.Download, nameof(vm.CrispAsrDownloadButtonText)));
         buttonDownloadCrispAsr.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ButtonDownloadIsVisible)));
+
+        // Disabled during a run: MADLAD starts one crispasr process per line, so a build switch
+        // would replace the binary underneath the translation.
+        var buttonCrispAsrEngineSettings = EditorChrome.CreateToolButton(IconNames.Settings, Se.Language.Translate.EngineSettings,
+            vm.ShowCrispAsrEngineSettingsCommand, 28);
+        buttonCrispAsrEngineSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.CrispAsrModelComboIsVisible)));
+        buttonCrispAsrEngineSettings.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
 
         var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
         crispAsrModelCombo.ItemTemplate = AutoTranslateCombos.CrispAsrModelItemTemplate();
@@ -278,6 +300,13 @@ public class AutoTranslateWindow : Window
         }
         settingsPanel.Children.Add(Group(nameof(vm.ApiKeyIsVisible), Label(Se.Language.General.ApiKey), panelApiKey));
 
+        var textBoxApiRegion = Text(UiUtil.MakeTextBox(120, vm, nameof(vm.ApiRegionText)).WithAccessibleName(Se.Language.General.Region));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(textBoxApiRegion, Se.Language.Translate.MicrosoftTranslatorRegionHint);
+        }
+        settingsPanel.Children.Add(Group(nameof(vm.ApiRegionIsVisible), Label(Se.Language.General.Region), textBoxApiRegion));
+
         settingsPanel.Children.Add(Group(nameof(vm.FormalityIsVisible), Label(Se.Language.General.Formality),
             UiUtil.MakeComboBox(vm.Formalities, vm, nameof(vm.SelectedFormality)).WithWidth(200).WithAccessibleName(Se.Language.General.Formality)));
 
@@ -317,6 +346,7 @@ public class AutoTranslateWindow : Window
 
         settingsPanel.Children.Add(Group(nameof(vm.CrispAsrModelComboIsVisible), Label(Se.Language.General.Model), crispAsrModelCombo));
         settingsPanel.Children.Add(buttonDownloadCrispAsr);
+        settingsPanel.Children.Add(buttonCrispAsrEngineSettings);
 
         settingsPanel.Children.Add(Group(nameof(vm.LlamaCppModelComboIsVisible), Label(Se.Language.General.Model), llamaCppModelCombo));
         var llamaCppButtons = new StackPanel
@@ -363,60 +393,61 @@ public class AutoTranslateWindow : Window
 
     private Border BuildRowGrid(AutoTranslateViewModel vm)
     {
+        var menuItemTranslateRow = new MenuItem
+        {
+            Header = Se.Language.General.TranslateRow,
+            Command = vm.TranslateRowCommand,
+        };
+        var menuItemTranslateRows = new MenuItem
+        {
+            Header = Se.Language.General.TranslateRows,
+            Command = vm.TranslateRowsCommand,
+        };
         var contextMenu = new MenuFlyout
         {
             Items =
             {
-                new MenuItem
-                {
-                    Header = Se.Language.General.TranslateRow,
-                    Command = vm.TranslateRowCommand,
-                },
+                menuItemTranslateRow,
+                menuItemTranslateRows,
+                new Separator(),
+                new MenuItem { Header = Se.Language.Main.Menu.Find, Command = vm.ShowFindCommand },
+                new MenuItem { Header = Se.Language.Main.Menu.Replace, Command = vm.ShowReplaceCommand },
             }
         };
 
         var tableView = TableViewExtras.MakeTableView();
+        contextMenu.Opening += (_, _) =>
+        {
+            // "Translate rows" only when more than one row is selected - one row keeps "Translate row".
+            var multipleSelected = (tableView.SelectedItems?.Count ?? 0) > 1;
+            menuItemTranslateRow.IsVisible = !multipleSelected;
+            menuItemTranslateRows.IsVisible = multipleSelected;
+        };
         tableView.Height = double.NaN;
         tableView.ContextFlyout = contextMenu;
         tableView.DataContext = vm;
 
-        // The DataGrid sized the number and show columns to content (Auto); TableView
-        // treats Auto as star, so they get fixed widths instead.
+        // The DataGrid sized the number column to content (Auto); TableView treats Auto as star,
+        // so it gets a fixed width instead.
         tableView.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
-            Binding = new Binding(nameof(TranslateRow.Number)),
-            Width = new GridLength(60),
+            CellTemplate = new FuncDataTemplate<TranslateRow>((_, _) => MakeNumberCell()),
+            NameBinding = new Binding(nameof(TranslateRow.Number)),
+            Width = new GridLength(76),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });
-        tableView.Columns.Add(new SeTableViewColumn
+        _columnSource = new SeTableViewColumn
         {
-            Header = Se.Language.General.Show,
-            Binding = new Binding(nameof(TranslateRow.Show)),
-            Width = new GridLength(110),
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-        });
-        tableView.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.Duration,
-            Binding = new Binding(nameof(TranslateRow.Duration)),
-            Width = new GridLength(80),
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-        });
-        tableView.Columns.Add(new SeTableViewColumn
-        {
-            Header = Se.Language.General.Text,
-            CellTemplate = TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.Text)),
+            CellTemplate = new FuncDataTemplate<TranslateRow>((row, _) => MakeSourceCell(row)),
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-        });
-        tableView.Columns.Add(new SeTableViewColumn
+        };
+        tableView.Columns.Add(_columnSource);
+        _columnTranslation = new SeTableViewColumn
         {
-            Header = Se.Language.General.Translation,
             // Editable in place: a click on the selected row's translation opens a TextBox, so a
             // slip in the machine translation is fixed here instead of after closing the window.
             // The display stays a binding, so rows keep updating while a translation runs; editing
@@ -431,12 +462,8 @@ public class AutoTranslateWindow : Window
                 var cell = new Border { Background = Brushes.Transparent };
                 _ = new TableViewInlineTextEditor(cell, tableView,
                     () => row.TranslatedText,
-                    text =>
-                    {
-                        row.TranslatedText = text;
-                        vm.HasTranslatedSomething = true; // an edited translation is something to keep - enables OK
-                    },
-                    () => TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.TranslatedText)).Build(row)!,
+                    text => vm.OnTranslationEdited(row, text),
+                    () => MakeTranslationDisplay(row),
                     canEdit: () => vm.IsTranslateEnabled,
                     hint: Se.Language.Translate.EditTranslationHint);
                 return cell;
@@ -444,7 +471,9 @@ public class AutoTranslateWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-        });
+        };
+        tableView.Columns.Add(_columnTranslation);
+        UpdateLanguageHeaders(vm);
 
         tableView.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Rows)));
         tableView.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedTranslateRow)));
@@ -455,6 +484,69 @@ public class AutoTranslateWindow : Window
         var frame = EditorChrome.MakeListFrame(tableView);
         frame.Margin = new Thickness(14, 12);
         return EditorChrome.MakePanel(frame);
+    }
+
+    /// <summary>
+    /// The columns are named after the languages they hold, as far as those are chosen.
+    /// </summary>
+    private void UpdateLanguageHeaders(AutoTranslateViewModel vm)
+    {
+        if (_columnSource != null && _columnTranslation != null)
+        {
+            _columnSource.Header = vm.SelectedSourceLanguage?.Name ?? Se.Language.General.Text;
+            _columnTranslation.Header = vm.SelectedTargetLanguage?.Name ?? Se.Language.General.Translation;
+        }
+    }
+
+    /// <summary>
+    /// The line number with its show time under it, to the second: the exact time codes are not
+    /// what a translator works with, they only tell where in the video a line is.
+    /// </summary>
+    private static StackPanel MakeNumberCell()
+    {
+        return new StackPanel
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                new TextBlock
+                {
+                    FontSize = EditorChrome.ScaledFont(12.5),
+                    FontWeight = FontWeight.SemiBold,
+                    Foreground = EditorChrome.DimTextBrush,
+                    [!TextBlock.TextProperty] = new Binding(nameof(TranslateRow.Number)),
+                },
+                new TextBlock
+                {
+                    FontSize = EditorChrome.ScaledFont(10.5),
+                    Foreground = EditorChrome.DimTextBrush,
+                    [!TextBlock.TextProperty] = new Binding(nameof(TranslateRow.Show)) { Converter = ShortTimeConverter },
+                },
+            },
+        };
+    }
+
+    internal static string FormatShortTime(TimeSpan time)
+    {
+        return time.ToString(time.TotalHours >= 1 ? @"h\:mm\:ss" : @"mm\:ss", CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>
+    /// The source text, stepping back once the line is translated, so the eye goes to what is left
+    /// and to the translation.
+    /// </summary>
+    private static Control MakeSourceCell(TranslateRow? row)
+    {
+        var text = TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.Text)).Build(row)!;
+        text.Bind(TextBlock.ForegroundProperty, new Binding(nameof(TranslateRow.TranslatedText)) { Converter = SourceTextBrushConverter });
+        return text;
+    }
+
+    private static Control MakeTranslationDisplay(TranslateRow row)
+    {
+        var text = (TextBlock)TableViewExtras.MakeTextCellTemplate(nameof(TranslateRow.TranslatedText)).Build(row)!;
+        text.FontWeight = FontWeight.Medium;
+        return text;
     }
 
     /// <summary>
@@ -476,11 +568,11 @@ public class AutoTranslateWindow : Window
         progressBar.WithAccessibleName(Se.Language.General.Translation);
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText));
-        statusText.FontSize = 12;
+        statusText.FontSize = EditorChrome.FieldFontSize;
         statusText.MaxWidth = 300;
 
         var progressLabel = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
-        progressLabel.FontSize = 12;
+        progressLabel.FontSize = EditorChrome.FieldFontSize;
         progressLabel.MinWidth = 40;
         progressLabel.TextAlignment = TextAlignment.Right;
 
@@ -518,10 +610,10 @@ public class AutoTranslateWindow : Window
     private Border BuildButtonBar(AutoTranslateViewModel vm)
     {
         var poweredByLabel = EditorChrome.MakeDimLabel(Se.Language.General.PoweredBy, new Thickness(0));
-        poweredByLabel.FontSize = 11.5;
+        poweredByLabel.FontSize = EditorChrome.ScaledFont(11.5);
 
         var poweredByLink = UiUtil.MakeLink("Google Translate V1", vm.GoToAutoTranslatorUriCommand, vm, nameof(vm.AutoTranslatorLinkText));
-        poweredByLink.FontSize = 11.5;
+        poweredByLink.FontSize = EditorChrome.ScaledFont(11.5);
         poweredByLink.VerticalAlignment = VerticalAlignment.Center;
 
         var poweredByPanel = new StackPanel
@@ -588,10 +680,10 @@ public class AutoTranslateWindow : Window
     private static Button Flat(Button button)
     {
         button.Classes.Add("tool");
-        button.Height = 28;
+        button.Height = EditorChrome.ScaledSize(28);
         button.MinWidth = 0;
         button.Padding = new Thickness(10, 0);
-        button.FontSize = 12.5;
+        button.FontSize = EditorChrome.FieldFontSize;
         button.Margin = new Thickness(0);
         button.VerticalAlignment = VerticalAlignment.Center;
         return button;
@@ -600,10 +692,10 @@ public class AutoTranslateWindow : Window
     private static Button Compact(Button button)
     {
         button.MinHeight = 28;
-        button.Height = 28;
+        button.Height = EditorChrome.ScaledSize(28);
         button.MinWidth = 0;
         button.Padding = new Thickness(10, 0);
-        button.FontSize = 12.5;
+        button.FontSize = EditorChrome.FieldFontSize;
         button.Margin = new Thickness(0);
         button.VerticalContentAlignment = VerticalAlignment.Center;
         return button;

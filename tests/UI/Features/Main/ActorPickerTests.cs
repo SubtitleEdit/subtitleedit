@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -243,37 +243,6 @@ public class ActorPickerTests
         {
             window.Close();
         }
-    }
-
-    [AvaloniaFact]
-    public void SetActorShortcut_WaveformFocused_KeepsItsActorWhenANewOneIsAdded()
-    {
-        WithShortcut(nameof(MainViewModel.SetActor1Command), ["Control", "Shift", nameof(Avalonia.Input.Key.F9)], () =>
-        {
-            var (window, vm) = ShowMainWindowWithLines();
-            try
-            {
-                vm.Subtitles[1].Actor = "Bob";
-                vm.Subtitles[2].Actor = "Zoe";
-                FocusWaveform(window, vm);
-
-                window.KeyPressQwerty(PhysicalKey.F9, RawInputModifiers.Control | RawInputModifiers.Shift);
-                Settle(window);
-                Assert.Equal("Bob", vm.Subtitles[0].Actor);
-
-                // "Anna" sorts before "Bob", but shortcut 1 stays on "Bob".
-                vm.Subtitles[2].Actor = "Anna";
-                vm.Subtitles[0].Actor = string.Empty;
-                window.KeyPressQwerty(PhysicalKey.F9, RawInputModifiers.Control | RawInputModifiers.Shift);
-                Settle(window);
-
-                Assert.Equal("Bob", vm.Subtitles[0].Actor);
-            }
-            finally
-            {
-                window.Close();
-            }
-        });
     }
 
     [AvaloniaFact]

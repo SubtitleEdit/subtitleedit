@@ -54,14 +54,14 @@ public class VideoOcrEngineSettingsWindow : Window
     {
         var title = new TextBlock
         {
-            FontSize = 16,
+            FontSize = EditorChrome.ScaledFont(16),
             FontWeight = FontWeight.SemiBold,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.TitleText)),
         };
 
         var subtitle = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = LabelWidth + ValueWidth + 40,
@@ -110,7 +110,7 @@ public class VideoOcrEngineSettingsWindow : Window
         var statusText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(8, 0, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusLabel)),
         };
@@ -126,7 +126,7 @@ public class VideoOcrEngineSettingsWindow : Window
             Background = Brushes.Transparent,
             Padding = new Thickness(0),
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBox.TextProperty] = new Binding(nameof(vm.InstallFolder)),
         };
         grid.Add(folderText.WithBindIsVisible(nameof(vm.HasInstallFolder)), 2, 1);
@@ -161,9 +161,9 @@ public class VideoOcrEngineSettingsWindow : Window
         foreach (var button in new[] { redownload, openFolder })
         {
             button.Classes.Add("tool");
-            button.Height = 30;
+            button.Height = EditorChrome.ScaledSize(30);
             button.Padding = new Thickness(10, 0);
-            button.FontSize = 12.5;
+            button.FontSize = EditorChrome.FieldFontSize;
         }
 
         return new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, Children = { redownload, openFolder } };
@@ -174,7 +174,7 @@ public class VideoOcrEngineSettingsWindow : Window
     private static TextBlock MakeValue(string bindingPath) => new()
     {
         FontWeight = FontWeight.SemiBold,
-        FontSize = 12.5,
+        FontSize = EditorChrome.FieldFontSize,
         VerticalAlignment = VerticalAlignment.Center,
         [!TextBlock.TextProperty] = new Binding(bindingPath),
     };

@@ -509,7 +509,7 @@ public class SpeechToTextWindow : Window
         var textBoxAdvancedSettings = new TextBox
         {
             IsReadOnly = true,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             Background = Brushes.Transparent,
             BorderThickness = new Thickness(0),
@@ -568,7 +568,7 @@ public class SpeechToTextWindow : Window
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             IsReadOnly = true,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Background = Brushes.Transparent,
             BorderThickness = new Thickness(0),
             Padding = new Thickness(10, 8),
@@ -752,8 +752,8 @@ public class SpeechToTextWindow : Window
         {
             var button = new Button
             {
-                Content = new TextBlock { Text = text, FontSize = 12.5, Margin = new Thickness(12, 0) },
-                Height = 28,
+                Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(12, 0) },
+                Height = EditorChrome.ScaledSize(28),
                 Command = command,
                 VerticalContentAlignment = VerticalAlignment.Center,
             };
@@ -802,7 +802,7 @@ public class SpeechToTextWindow : Window
 
         var transcribeButton = EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.Video.AudioToText.Transcribe, vm.TranscribeCommand))
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        var bar = EditorChrome.MakeFlushButtonBar(modes, UiUtil.MakeButtonCancel(vm.CancelCommand), transcribeButton);
+        var bar = EditorChrome.MakeButtonBar(modes, UiUtil.MakeButtonCancel(vm.CancelCommand), transcribeButton);
         bar.Name = ButtonBarName;
         return bar;
     }

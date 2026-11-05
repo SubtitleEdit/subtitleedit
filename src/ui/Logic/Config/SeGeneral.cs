@@ -131,6 +131,12 @@ public class SeGeneral
     public bool LockTimeCodes { get; set; }
 
     /// <summary>
+    /// Whether retiming a translation line moves the original line it shows by the same amounts,
+    /// keeping any offset between the two. Off lets the original's time codes be edited on their own.
+    /// </summary>
+    public bool LockOriginalToTranslation { get; set; }
+
+    /// <summary>
     /// SE4 parity: whether an original subtitle that does not line up 1:1 may be edited (and
     /// therefore saved back over its file). Off means it is shown read-only, which is what protects
     /// the lines with no counterpart here (#13449). Remembered from the import prompt.
@@ -152,6 +158,8 @@ public class SeGeneral
     public bool UndockVideoControls { get; set; }
     public List<SeWindowPosition> WindowPositions { get; set; } = new List<SeWindowPosition>();
     public bool AutoSave { get; set; }
+    public bool CheckSubtitleFileChangedOutside { get; set; }
+    public bool ConfirmOverwriteSubtitleFileChangedOutside { get; set; }
     public bool AutoBackupOn { get; set; }
     public int AutoBackupIntervalMinutes { get; set; }
     public int AutoBackupDeleteAfterDays { get; set; }
@@ -342,6 +350,9 @@ public class SeGeneral
         MoveAllLinesCustom1Ms = 10;
         MoveAllLinesCustom2Ms = 1000;
         PromptBeforeDelete = true;
+        LockOriginalToTranslation = true;
+        CheckSubtitleFileChangedOutside = true;
+        ConfirmOverwriteSubtitleFileChangedOutside = true;
         AutoBackupOn = true;
         AutoBackupIntervalMinutes = 5;
         AutoBackupDeleteAfterDays = 90;

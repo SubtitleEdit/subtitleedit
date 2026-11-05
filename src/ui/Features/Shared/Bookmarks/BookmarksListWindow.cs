@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Features.Shared.Bookmarks;
 
 /// <summary>
 /// The bookmarks of the subtitle, in the editor look (see <see cref="EditorChrome"/>): the list in a
-/// frame, count and Clear on the left of the button bar, Go to and Done on the right.
+/// frame, count, Clear, Import and Export on the left of the button bar, Go to and Done on the right.
 /// </summary>
 public class BookmarksListWindow : Window
 {
@@ -34,12 +34,14 @@ public class BookmarksListWindow : Window
 
         var buttonGoTo = UiUtil.MakeButton(Se.Language.General.GoTo, vm.GoToCommand).WithBindIsEnabled(nameof(vm.HasBookmarks));
         var buttonClear = EditorChrome.MakeTextToolButton("fa-solid fa-trash-can", Se.Language.General.Clear, vm.ClearCommand).WithBindIsEnabled(nameof(vm.HasBookmarks));
+        var buttonExport = EditorChrome.MakeTextToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand).WithBindIsEnabled(nameof(vm.HasBookmarks));
+        var buttonImport = EditorChrome.MakeTextToolButton("fa-solid fa-file-import", Se.Language.General.ImportDotDotDot, vm.ImportCommand);
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
         buttonCancel.Classes.Add("primary");
 
         var labelCount = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 12, 0),
@@ -55,7 +57,7 @@ public class BookmarksListWindow : Window
         {
             Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { labelCount, buttonClear },
+            Children = { labelCount, buttonClear, buttonImport, buttonExport },
         };
 
         var list = new Border

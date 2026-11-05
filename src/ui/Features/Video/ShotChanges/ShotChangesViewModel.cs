@@ -423,7 +423,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
         }
         catch (Exception ex)
         {
-            await MessageBox.Show(Window!, Se.Language.General.Error, ex.Message);
+            await MessageBox.Show(Window!, Se.Language.General.Error, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

@@ -50,6 +50,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] double _selectedShadowWidth;
     [ObservableProperty] private bool _isBold;
     [ObservableProperty] private bool _isRightToLeft;
+    [ObservableProperty] private bool _useAssaStyles;
+    [ObservableProperty] private bool _isUseAssaStylesVisible;
     [ObservableProperty] private Color _fontColor;
     [ObservableProperty] private Color _shadowColor;
     [ObservableProperty] private Bitmap _bitmapPreview;
@@ -86,6 +88,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     [ObservableProperty] private bool _isFullFrame;
     [ObservableProperty] private Color _fullFrameBackgroundColor;
     [ObservableProperty] private bool _isFullFrameVisible;
+    [ObservableProperty] private bool _isHdrPalette;
+    [ObservableProperty] private bool _isHdrPaletteVisible;
+    [ObservableProperty] private ObservableCollection<int> _hdrWhiteNits = [100, 150, 203, 250, 300, 400, 500];
+    [ObservableProperty] private int _selectedHdrWhiteNits = 203;
     [ObservableProperty] private ObservableCollection<Export3DModeDisplay> _modes3D = null!;
     [ObservableProperty] private Export3DModeDisplay _selectedMode3D = null!;
     [ObservableProperty] private ObservableCollection<int> _depths3D = null!;
@@ -143,6 +149,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private int _scriptHeight;
     private bool _dirty;
     private bool _removeAssaCommentBlocks;
+    private ExportAssaStyles? _assaStyles;
     private Stereo3DPlane? _plane3D;
     private readonly Lock _generateLock;
     private bool _isCtrlDown;
@@ -257,6 +264,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         }
 
         SelectedProfile = profile;
+        UseAssaStyles = settings.UseAssaStyles;
 
         Profiles.Clear();
         Profiles.AddRange(settings.Profiles);
@@ -267,6 +275,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     private void SaveSettings()
     {
         SaveProfile(SelectedProfile);
+        Se.Settings.File.ExportImages.UseAssaStyles = UseAssaStyles;
         Se.SaveSettings();
     }
 
@@ -382,8 +391,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         {
             var answer = await MessageBox.Show(
                 Window,
-                "Delete lines?",
-                $"Do you want to delete {selectedItems.Count} lines?",
+                Se.Language.General.DeleteLines,
+                string.Format(Se.Language.General.DeleteXLinesQuestion, selectedItems.Count),
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -612,9 +621,10 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             PaddingTopBottom = SelectedPaddingTopBottom,
             Index = i,
             // ASSA renderers never draw a {comment} block, so neither does the image (#15584).
+            // With the styles, "{\rSign}" switches to the Sign style's font and colours.
             Text = ExportTextTags.ToRenderableText(_removeAssaCommentBlocks
                 ? AdvancedSubStationAlpha.RemoveCommentBlocks(subtitle.Text)
-                : subtitle.Text),
+                : subtitle.Text, UseAssaStyles ? _assaStyles : null, subtitle.Style),
             StartTime = subtitle.StartTime,
             EndTime = subtitle.EndTime,
             // Carry the forced flag through: BDN XML writes it as Forced="..." and the
@@ -650,6 +660,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             FramesPerSecond = SelectedFrameRate,
             IsFullFrame = IsFullFrameVisible && IsFullFrame,
             FullFrameBackgroundColor = FullFrameBackgroundColor.ToSKColor(),
+            HdrWhiteNits = IsHdrPaletteVisible && IsHdrPalette ? SelectedHdrWhiteNits : 0,
             // D-Cinema has no 3D mode (see IsMode3DVisible), only the depth - its Z-position.
             Mode3D = IsMode3DVisible ? SelectedMode3D?.Mode ?? Export3DMode.None : Export3DMode.None,
             Depth3D = IsDepth3DEnabled ? SelectedDepth3D : 0,
@@ -666,6 +677,13 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 TextEffectArcBend,
                 TextEffectWave),
         };
+
+        // The line's own ASSA style replaces the window's font, colours, outline, box, alignment
+        // and margins; the override tags below still win over it.
+        if (UseAssaStyles && _assaStyles != null)
+        {
+            _assaStyles.Apply(imageParameter, subtitle.Style, subtitle.Text, subtitle.MarginL, subtitle.MarginR, subtitle.MarginV);
+        }
 
         // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
         // change what is drawn, so unlike the position tag they have to be read before the
@@ -766,12 +784,24 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         _exportImageHandler = exportHandler;
         _subtitleFileName = subtitleFileName;
         (_scriptWidth, _scriptHeight) = ExportTextTags.GetScriptResolution(subtitleHeader);
+
+        // Only an ASSA/SSA subtitle has styles to draw with - a header left over from a file
+        // since converted to another format does not count.
+        _assaStyles = removeAssaCommentBlocks ? ExportAssaStyles.FromHeader(subtitleHeader) : null;
+        IsUseAssaStylesVisible = _assaStyles != null;
+        if (_assaStyles != null)
+        {
+            // A script without PlayResX/PlayResY is 384x288 in libass, for "\pos" and the tag
+            // widths as much as for the styles.
+            (_scriptWidth, _scriptHeight) = _assaStyles.ScriptResolution;
+        }
         Title = exportHandler.Title;
 
         // Only the formats that can carry a frame-sized image: the editing timelines the images
         // are dropped on (Final Cut Pro & co), and Blu-ray sup, which SE4 offered it for too. The
         // other formats position the subtitle themselves from its own bitmap size.
         IsFullFrameVisible = exportHandler.ExportImageType is ExportImageType.Fcp or ExportImageType.BluRaySup;
+        IsHdrPaletteVisible = exportHandler.ExportImageType == ExportImageType.BluRaySup;
 
         // D-Cinema has no packed 3D frame to draw into; like SE4 it keeps only the depth, which it
         // writes as the Z-position of each image.
@@ -1187,6 +1217,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             SelectedFrameRate = FrameRates.Contains(profile.FramesPerSecond) ? profile.FramesPerSecond : 25;
             IsFullFrame = profile.IsFullFrame;
             FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHex().ToAvaloniaColor();
+            IsHdrPalette = profile.IsHdrPalette;
+            SelectedHdrWhiteNits = HdrWhiteNits.Contains(profile.HdrWhiteNits) ? profile.HdrWhiteNits : 203;
             SelectedMode3D = Modes3D.FirstOrDefault(m => m.Mode == profile.Mode3D) ?? Modes3D[0];
             SelectedDepth3D = Math.Clamp(profile.Depth3D, Stereo3DImage.MinDepth, Stereo3DImage.MaxDepth);
             SelectedTextEffect = TextEffectItems.FirstOrDefault(t => t.Preset.ToString() == profile.TextEffect)
@@ -1232,6 +1264,8 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 : SelectedFrameRate;
             profile.IsFullFrame = IsFullFrame;
             profile.FullFrameBackgroundColor = FullFrameBackgroundColor.FromColorToHex(true);
+            profile.IsHdrPalette = IsHdrPalette;
+            profile.HdrWhiteNits = SelectedHdrWhiteNits;
             profile.Mode3D = SelectedMode3D?.Mode ?? Export3DMode.None;
             profile.Depth3D = SelectedDepth3D;
             profile.TextEffect = SelectedTextEffect?.Preset.ToString() ?? string.Empty;

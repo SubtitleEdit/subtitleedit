@@ -65,6 +65,25 @@ public class BluRaySupPictureCompositionTests : IDisposable
         return bitmap;
     }
 
+    /// <summary>
+    /// A bitmap with <paramref name="colors"/> colours far enough apart that no close-colour
+    /// pass merges them - one per column.
+    /// </summary>
+    private static SKBitmap DistinctColors(int colors)
+    {
+        var bitmap = new SKBitmap(new SKImageInfo(colors, 10, SKColorType.Bgra8888, SKAlphaType.Unpremul));
+        for (var x = 0; x < colors; x++)
+        {
+            var color = new SKColor((byte)(x % 8 * 32), (byte)(x / 8 % 8 * 32), (byte)(x / 64 * 32 + 16));
+            for (var y = 0; y < 10; y++)
+            {
+                bitmap.SetPixel(x, y, color);
+            }
+        }
+
+        return bitmap;
+    }
+
     private static BluRaySupPicture Picture() => new()
     {
         Width = 1280,
@@ -199,6 +218,32 @@ public class BluRaySupPictureCompositionTests : IDisposable
         Assert.Equal(255, b.Alpha);
         Assert.InRange(a.Red, 120, 180);
         Assert.InRange(b.Red, 120, 180);
+    }
+
+    [Fact]
+    public void PalettesThatDoNotFitTogether_SmallOneKeepsItsColoursAndLeavesTheRest()
+    {
+        using var line = Solid(200, 40, SKColors.Yellow);
+        using var sign = DistinctColors(300);
+
+        var sup = BluRaySupPicture.CreateSupFrame(Picture(), new[]
+        {
+            Object(line, SKColors.White, 100, 100),
+            Object(sign, SKColors.White, 100, 400),
+        }, 25);
+
+        // line: font colour + yellow + transparent; the sign gets the other 252 entries
+        // instead of the 127 an equal split gave it
+        var pds = ReadSegments(sup).First(s => s.Type == 0x14).Payload;
+        var entries = (pds.Length - 2) / 5;
+        Assert.Equal(BluRaySupPicture.MaxPaletteEntries, entries);
+
+        var subtitle = Assert.Single(Parse(sup));
+        using var bitmap = subtitle.GetBitmap();
+        var yellow = bitmap.GetPixel(50, 5);
+        Assert.Equal(255, yellow.Red);
+        Assert.Equal(255, yellow.Green);
+        Assert.Equal(0, yellow.Blue);
     }
 
     [Fact]

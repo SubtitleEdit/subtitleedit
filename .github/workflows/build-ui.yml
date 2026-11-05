@@ -109,7 +109,7 @@ jobs:
       # must reference the same patch version or restore fails (NU1102).
       - name: Cache flatpak runtimes
         id: flatpak-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.local/share/flatpak
           key: flatpak-fd26.08-dotnet10-v2
@@ -138,7 +138,7 @@ jobs:
           fi
 
       - name: Upload regenerated nuget-sources.json
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: flatpak-nuget-sources
           path: installer/flatpak/nuget-sources.json
@@ -156,7 +156,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Download regenerated nuget-sources.json
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: flatpak-nuget-sources
           path: installer/flatpak/
@@ -173,7 +173,7 @@ jobs:
           arch: x86_64
 
       - name: Upload flatpak bundle artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: flatpak-bundle
           path: SubtitleEdit-linux-x64.flatpak
@@ -226,7 +226,7 @@ jobs:
 
       - name: Cache flatpak runtimes
         id: flatpak-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.local/share/flatpak
           key: flatpak-fd26.08-dotnet10-v2
@@ -286,7 +286,7 @@ jobs:
           fi
 
       - name: Upload regenerated nuget-sources.json
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: flathub-nuget-sources
           path: installer/flatpak/flathub/nuget-sources.json
@@ -317,7 +317,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Download regenerated nuget-sources.json
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: flathub-nuget-sources
           path: installer/flatpak/flathub/
@@ -331,7 +331,7 @@ jobs:
           arch: ${{ matrix.arch }}
 
       - name: Upload flathub bundle artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: flathub-bundle-${{ matrix.arch }}
           path: SubtitleEdit-flathub-${{ matrix.arch }}.flatpak
@@ -488,19 +488,19 @@ jobs:
           Compress-Archive -Path "./publish/windows-arm64/*" -DestinationPath "./SubtitleEdit-Windows-ARM64.zip"
 
       - name: Upload Windows x64 artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: se-windows-x64
           path: ./publish/windows-x64/
 
       - name: Upload Windows ARM64 artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: se-windows-arm64
           path: ./publish/windows-arm64/
 
       - name: Upload Windows ZIP packages
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: windows-zip-packages
           path: |
@@ -508,7 +508,7 @@ jobs:
             ./SubtitleEdit-Windows-ARM64.zip
 
       # - name: Upload Windows MSI Installers
-      #   uses: actions/upload-artifact@v5
+      #   uses: actions/upload-artifact@v6
       #   with:
       #     name: windows-msi-installers
       #     path: |
@@ -516,7 +516,7 @@ jobs:
       #       ./SubtitleEdit-Windows-ARM64.msi
 
       - name: Upload Inno Setup installer
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: windows-inno-installer
           path: ./SubtitleEdit-Windows-x64-Setup.exe
@@ -814,7 +814,7 @@ jobs:
           security delete-keychain build.keychain || true
 
       - name: Upload macOS DMG
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: macos-dmg-${{ matrix.arch }}
           path: ./SubtitleEdit-macOS-${{ matrix.arch_label }}.dmg
@@ -901,19 +901,19 @@ jobs:
           cd ./publish/linux-arm64 && tar -czf ../../SubtitleEdit-Linux-ARM64.tar.gz . && cd ../..
 
       - name: Upload Linux x64 artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: se-linux-x64
           path: ./publish/linux-x64/
 
       - name: Upload Linux ARM64 artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: se-linux-arm64
           path: ./publish/linux-arm64/
 
       - name: Upload Linux TAR packages
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: linux-tar-package
           path: |
@@ -943,7 +943,7 @@ jobs:
           fi
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           path: ./artifacts
 
@@ -968,7 +968,7 @@ jobs:
         run: echo "date=$(date +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

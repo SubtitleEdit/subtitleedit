@@ -25,7 +25,7 @@ public class BinaryOcrSettingsWindow : Window
 
         var labelTitle = new TextBlock
         {
-            FontSize = 13,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 480,
             HorizontalAlignment = HorizontalAlignment.Left,

@@ -203,23 +203,26 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
     public List<string> GetSuggestions(string word)
     {
+        IEnumerable<string> suggestions;
         if (WordSpellChecker != null)
         {
-            return WordSpellChecker.GetSuggestions(word);
+            suggestions = WordSpellChecker.GetSuggestions(word);
         }
-
-        if (_voikko != null)
+        else if (_voikko != null)
         {
-            return _voikko.Suggest(word);
+            suggestions = _voikko.Suggest(word);
         }
-
-        if (_hunspellWeCantSpell == null)
+        else if (_hunspellWeCantSpell == null)
         {
             return new List<string>();
         }
+        else
+        {
+            suggestions = _hunspellWeCantSpell.Suggest(word);
+        }
 
-        var suggestions = _hunspellWeCantSpell.Suggest(word);
-        return suggestions.ToList();
+        // A removed word is not a fix: "wasje" must not suggest the removed "watje".
+        return suggestions.Where(s => !IsRemovedWord(s)).ToList();
     }
 
     public void AddIgnoreWord(string word)
@@ -338,6 +341,11 @@ public class SpellChecker : ISpellChecker, IDoSpell
         if (AllowedTokens.Contains(word))
         {
             return true;
+        }
+
+        if (IsRemovedWord(word))
+        {
+            return false;
         }
 
         if (WordSpellChecker != null)
@@ -515,12 +523,27 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
     public bool DoSpell(string word)
     {
+        if (IsRemovedWord(word))
+        {
+            return false;
+        }
+
         if (WordSpellChecker != null)
         {
             return WordSpellChecker.DoSpell(word);
         }
 
         return CheckWithDictionary(word);
+    }
+
+    /// <summary>
+    /// A word removed from the dictionary in Options > Word lists (the &lt;removed&gt; section of
+    /// "&lt;lang&gt;_user.xml") is misspelled whatever Hunspell says - this also gates the OCR fix
+    /// rules that only fire on unknown words.
+    /// </summary>
+    private bool IsRemovedWord(string word)
+    {
+        return WordLists != null && WordLists.IsRemovedWord(word);
     }
 
     private bool CheckWithDictionary(string word)

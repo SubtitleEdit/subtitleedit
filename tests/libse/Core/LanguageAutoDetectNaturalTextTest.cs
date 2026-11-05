@@ -278,4 +278,18 @@ public class LanguageAutoDetectNaturalTextTest
     [Theory]
     [MemberData(nameof(Languages))]
     public void Everything(string key) => Assert.Equal(Expected(key), Detect(Dialogue[key].Concat(Narrative[key]).Concat(Scene[key]).Concat(Weather[key])));
+
+    // Older Persian files (Windows-1256) are typed with the Arabic ye/kaf (ي/ك); those letters
+    // must not turn a Persian text into Arabic.
+    [Theory]
+    [InlineData("خيلي ممنون.", "خواهش مي‌كنم.")]
+    [InlineData("ما بايد برويم.", "الان؟", "آره، همين الان.")]
+    [InlineData("من فكر مي‌كنم كه او اينجا نيست.", "كجا رفته؟", "نمي‌دانم.")]
+    public void PersianWithArabicYeAndKaf(params string[] lines) => Assert.Equal("fa", Detect(lines));
+
+    // Russian writes ъ before е/ё/ю/я (съел, подъезд); a short line without ы/э/ё is not Bulgarian.
+    [Theory]
+    [InlineData("Я съел твой обед.", "Прости.")]
+    [InlineData("Объявление.", "Подъезд закрыт.")]
+    public void RussianWithHardSign(params string[] lines) => Assert.Equal("ru", Detect(lines));
 }

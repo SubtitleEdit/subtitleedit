@@ -60,7 +60,7 @@ public class BurnInResolutionPickerWindow : Window
 
                 var textBlock = new TextBlock
                 {
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     Margin = new Thickness(10, 0),
                     // Use the theme-appropriate text color (white in dark mode, black in
                     // light mode). Previously the foreground was bound to

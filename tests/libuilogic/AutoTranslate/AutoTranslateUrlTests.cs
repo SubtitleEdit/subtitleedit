@@ -4,6 +4,30 @@ namespace LibUiLogicTests.AutoTranslate;
 
 public class AutoTranslateUrlTests
 {
+    private const string GlobalTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+
+    [Theory]
+    [InlineData("westeurope", "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken")]
+    // The portal's display name works too.
+    [InlineData("West Europe", "https://westeurope.api.cognitive.microsoft.com/sts/v1.0/issueToken")]
+    public void MicrosoftTranslator_Region_UsesRegionalTokenEndpoint(string region, string expected)
+    {
+        Assert.Equal(expected, MicrosoftTranslator.GetTokenEndpoint(GlobalTokenEndpoint, region));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData("global")]
+    [InlineData("Global")]
+    public void MicrosoftTranslator_NoRegion_KeepsConfiguredTokenEndpoint(string? region)
+    {
+        const string customEndpoint = "https://custom.example.com/sts/v1.0/issueToken";
+
+        Assert.Equal(customEndpoint, MicrosoftTranslator.GetTokenEndpoint(customEndpoint, region));
+    }
+
     [Theory]
     // The #13044 case: DeepSeek documents "https://api.deepseek.com" as the base url for the
     // OpenAI SDK, so that is what users paste - and posting to the origin root gives 404.

@@ -11,6 +11,12 @@ public class LanguageVideoOcr
     public string Engine { get; set; }
     public string Scan { get; set; }
     public string FramesPerSecond { get; set; }
+    public string TimeRanges { get; set; }
+    public string TimeRangesWatermark { get; set; }
+    public string TimeRangesHint { get; set; }
+    public string KeepExistingLines { get; set; }
+    public string InsertPreviewTime { get; set; }
+    public string InvalidTimeRangeX { get; set; }
     public string TextBrightnessMinimum { get; set; }
     public string PostProcessing { get; set; }
     public string TextSimilarityPercent { get; set; }
@@ -60,6 +66,12 @@ public class LanguageVideoOcr
         Engine = "OCR engine";
         Scan = "Scan";
         FramesPerSecond = "Frames per second";
+        TimeRanges = "Time ranges";
+        TimeRangesWatermark = "Whole video";
+        KeepExistingLines = "Keep existing lines";
+        TimeRangesHint = "Only scan these parts of the video, e.g. \"16:00-32:00; 36:00-41:00\". Times are m:ss or h:mm:ss, and an empty side means the start or end of the video (\"36:00-\"). Empty scans the whole video.";
+        InsertPreviewTime = "Insert preview position as range start/end";
+        InvalidTimeRangeX = "Invalid time range: \"{0}\"{1}{1}{2}";
         TextBrightnessMinimum = "Text brightness minimum (0=off)";
         PostProcessing = "Post-processing";
         TextSimilarityPercent = "Merge lines with similarity (%)";

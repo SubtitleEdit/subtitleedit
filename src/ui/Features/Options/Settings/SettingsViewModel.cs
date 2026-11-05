@@ -168,6 +168,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _textBoxLimitNewLines;
     [ObservableProperty] private bool _textBoxAutoWrapWhileTyping;
     [ObservableProperty] private bool _autoSave;
+    [ObservableProperty] private bool _checkSubtitleFileChangedOutside;
+    [ObservableProperty] private bool _confirmOverwriteSubtitleFileChangedOutside;
     [ObservableProperty] private bool _autoBackupOn;
     [ObservableProperty] private int? _autoBackupIntervalMinutes;
     [ObservableProperty] private int? _autoBackupDeleteAfterDays;
@@ -232,6 +234,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _mergeAutoBreak;
     [ObservableProperty] private ObservableCollection<string> _splitOddNumberOfLinesActions;
     [ObservableProperty] private string _selectedSplitOddNumberOfLinesAction;
+    [ObservableProperty] private bool _splitAtVideoAndTextBoxPositionAllowEmptySecond;
     [ObservableProperty] private bool _ocrUseWordSplitList;
     [ObservableProperty] private bool _spellCheckRememberUseAlwaysList;
     [ObservableProperty] private bool _fixShortDisplayTimesAllowMoveStartTime;
@@ -419,7 +422,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedIconTheme;
     [ObservableProperty] private bool _matchIconColorToDarkTheme;
     [ObservableProperty] private int _layoutScale;
-    [ObservableProperty] private int _fontScale;
+    [ObservableProperty] private int _uiFontSize;
     [ObservableProperty] private int _textSelectionOpacity;
     [ObservableProperty] private ObservableCollection<string> _fontNames;
     [ObservableProperty] private string _selectedFontName;
@@ -443,6 +446,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showHorizontalLineAboveToolbar;
     [ObservableProperty] private ObservableCollection<GridLinesVisibilityDisplay> _gridLinesVisibilities;
     [ObservableProperty] private GridLinesVisibilityDisplay _selectedGridLinesVisibility;
+    [ObservableProperty] private ObservableCollection<WindowsRenderingModeDisplay> _windowsRenderingModes;
+    [ObservableProperty] private WindowsRenderingModeDisplay _selectedWindowsRenderingMode;
     [ObservableProperty] private ObservableCollection<SubtitleGridTextDisplayModeDisplay> _subtitleGridTextDisplayModes;
     [ObservableProperty] private SubtitleGridTextDisplayModeDisplay _selectedSubtitleGridTextDisplayMode;
     [ObservableProperty] private Color _darkModeForegroundColor;
@@ -567,8 +572,8 @@ public partial class SettingsViewModel : ObservableObject
         // the folder is missing, which must not take the whole Settings window down with it.
         var iconFolders = Directory.Exists(Se.ThemesFolder)
             ? Directory.GetDirectories(Se.ThemesFolder)
-                // Nord's folder holds only background art - not an icon set to pick
-                .Where(p => File.Exists(Path.Combine(p, "Open.png")))
+                // A folder unpacked before its theme had icons holds only background art - not an icon set to pick
+                .Where(p => ThemeIcon.Exists(p, "Open"))
                 .Select(p => Path.GetFileName(p)).ToList()
             : new List<string>();
         iconFolders.Insert(0, Se.Language.General.Auto);
@@ -764,6 +769,8 @@ public partial class SettingsViewModel : ObservableObject
 
         GridLinesVisibilities = new ObservableCollection<GridLinesVisibilityDisplay>(GridLinesVisibilityDisplay.GetAll());
         SelectedGridLinesVisibility = GridLinesVisibilities[0];
+        WindowsRenderingModes = new ObservableCollection<WindowsRenderingModeDisplay>(WindowsRenderingModeDisplay.List());
+        SelectedWindowsRenderingMode = WindowsRenderingModes[0];
 
         SubtitleGridTextDisplayModes = new ObservableCollection<SubtitleGridTextDisplayModeDisplay>(SubtitleGridTextDisplayModeDisplay.GetAll());
         SelectedSubtitleGridTextDisplayMode = SubtitleGridTextDisplayModes[0];
@@ -880,6 +887,8 @@ public partial class SettingsViewModel : ObservableObject
         ShowRecentFiles = Se.Settings.File.ShowRecentFiles;
         OpenLastFileOnStart = Se.Settings.File.OpenLastFileOnStart;
         AutoSave = general.AutoSave;
+        CheckSubtitleFileChangedOutside = general.CheckSubtitleFileChangedOutside;
+        ConfirmOverwriteSubtitleFileChangedOutside = general.ConfirmOverwriteSubtitleFileChangedOutside;
         AutoBackupOn = general.AutoBackupOn;
         AutoBackupIntervalMinutes = general.AutoBackupIntervalMinutes;
         AutoBackupDeleteAfterDays = general.AutoBackupDeleteAfterDays;
@@ -956,6 +965,7 @@ public partial class SettingsViewModel : ObservableObject
         MergeKeepEndTimeOnlyAssa = Se.Settings.Tools.MergeKeepEndTimeOnlyAssa;
         MergeAutoBreak = Se.Settings.Tools.MergeAutoBreak;
         SelectedSplitOddNumberOfLinesAction = MapFromSplitOddActionToLanguageCode(Se.Settings.Tools.SplitOddLinesAction);
+        SplitAtVideoAndTextBoxPositionAllowEmptySecond = Se.Settings.Tools.SplitAtVideoAndTextBoxPositionAllowEmptySecond;
         SelectedSpellCheckEngine = MapFromSpellCheckEngine(Se.Settings.SpellCheck.SpellCheckProvider);
         OcrUseWordSplitList = Se.Settings.Ocr.UseWordSplitList;
         SpellCheckRememberUseAlwaysList = Se.Settings.Tools.SpellCheckRememberUseAlwaysList;
@@ -977,7 +987,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
         MatchIconColorToDarkTheme = appearance.MatchIconColorToDarkTheme;
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
-        FontScale = (int)Math.Round(appearance.FontScale * 100.0, MidpointRounding.AwayFromZero);
+        UiFontSize = UiTheme.FontSizeFromScale(appearance.FontScale);
         TextSelectionOpacity = appearance.TextSelectionOpacity;
         if (OperatingSystem.IsMacOS())
         {
@@ -1017,6 +1027,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowAssaLayer = appearance.ShowLayer;
         ShowHorizontalLineAboveToolbar = appearance.ShowHorizontalLineAboveToolbar;
         SelectedGridLinesVisibility = GridLinesVisibilities.FirstOrDefault(p => p.Type.ToString() == appearance.GridLinesAppearance) ?? GridLinesVisibilities[0];
+        SelectedWindowsRenderingMode = WindowsRenderingModes.FirstOrDefault(p => p.Mode.ToString() == appearance.WindowsRenderingMode) ?? WindowsRenderingModes[0];
         SelectedSubtitleGridTextDisplayMode = SubtitleGridTextDisplayModes.FirstOrDefault(p => p.Mode.ToString() == appearance.SubtitleGridTextDisplay) ?? SubtitleGridTextDisplayModes[0];
         DarkModeBackgroundColor = appearance.DarkModeBackgroundColor.FromHexToColor();
         DarkModeForegroundColor = appearance.DarkModeForegroundColor.FromHexToColor();
@@ -1816,6 +1827,8 @@ public partial class SettingsViewModel : ObservableObject
 
         Se.Settings.File.OpenLastFileOnStart = OpenLastFileOnStart;
         general.AutoSave = AutoSave;
+        general.CheckSubtitleFileChangedOutside = CheckSubtitleFileChangedOutside;
+        general.ConfirmOverwriteSubtitleFileChangedOutside = ConfirmOverwriteSubtitleFileChangedOutside;
         general.AutoBackupOn = AutoBackupOn;
         general.AutoBackupIntervalMinutes = AutoBackupIntervalMinutes ?? general.AutoBackupIntervalMinutes;
         general.AutoBackupDeleteAfterDays = AutoBackupDeleteAfterDays ?? general.AutoBackupDeleteAfterDays;
@@ -1864,6 +1877,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.MergeKeepEndTimeOnlyAssa = MergeKeepEndTimeOnlyAssa;
         Se.Settings.Tools.MergeAutoBreak = MergeAutoBreak;
         Se.Settings.Tools.SplitOddLinesAction = MapFromSplitOddActionTranslationToCode(SelectedSplitOddNumberOfLinesAction);
+        Se.Settings.Tools.SplitAtVideoAndTextBoxPositionAllowEmptySecond = SplitAtVideoAndTextBoxPositionAllowEmptySecond;
         Se.Settings.SpellCheck.SpellCheckProvider = MapFromUISpellCheckEngineToCode(SelectedSpellCheckEngine);
         Se.Settings.Ocr.UseWordSplitList = OcrUseWordSplitList;
         Se.Settings.Tools.SpellCheckRememberUseAlwaysList = SpellCheckRememberUseAlwaysList;
@@ -1886,7 +1900,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.IconTheme = SelectedIconTheme;
         appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
-        appearance.FontScale = FontScale / 100.0;
+        appearance.FontScale = UiTheme.FontScaleFromSize(UiFontSize, appearance.FontScale);
         appearance.TextSelectionOpacity = Math.Clamp(TextSelectionOpacity, UiTheme.MinTextSelectionOpacity, 100);
         if (OperatingSystem.IsMacOS())
         {
@@ -1940,6 +1954,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.GridCompactMode = GridCompactMode;
         appearance.GridAlternatingRows = GridAlternatingRows;
         appearance.GridLinesAppearance = SelectedGridLinesVisibility.Type.ToString();
+        appearance.WindowsRenderingMode = SelectedWindowsRenderingMode.Mode.ToString();
         appearance.SubtitleGridTextDisplay = SelectedSubtitleGridTextDisplayMode.Mode.ToString();
         appearance.ShowLayer = ShowAssaLayer;
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
@@ -2847,12 +2862,11 @@ public partial class SettingsViewModel : ObservableObject
 
     private async Task UpdateWaveformSpaceInfoAsync()
     {
-        var files = GetWaveformAndSpecgtrogramFiles();
-
+        // Listing the folders (the spectrograms recursively) is file I/O too - keep it off the UI thread.
         long totalBytes = await Task.Run(() =>
         {
             long total = 0;
-            foreach (var file in files)
+            foreach (var file in GetWaveformAndSpecgtrogramFiles())
             {
                 try
                 {
@@ -2993,7 +3007,8 @@ public partial class SettingsViewModel : ObservableObject
                 page.RefreshSections();
             }
 
-            return SelectedSection?.Panel;
+            // Include the section border's padding when positioning the header.
+            return SelectedSection?.Panel?.Parent as Control;
         }, navigationMethod);
     }
 

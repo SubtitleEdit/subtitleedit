@@ -26,7 +26,7 @@ public class FishTtsAudioCppDownloadService : IFishTtsAudioCppDownloadService
     private readonly HttpClient _httpClient;
 
     private const string ModelUrlBase =
-        "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/Fish-Audio-S2-Pro-GGUF/";
+        AudioCppRuntime.ModelRepoBaseUrl + "Fish-Audio-S2-Pro-GGUF/";
 
     public FishTtsAudioCppDownloadService(HttpClient httpClient)
     {

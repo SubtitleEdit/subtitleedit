@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Collections.ObjectModel;
 
@@ -23,6 +24,10 @@ namespace Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 public class ExportImageBasedWindow : Window
 {
     private const double LabelWidth = 112;
+
+    // Technical terms, the same in every language - not language strings.
+    private const string HdrPaletteLabel = "HDR (BT.2020 PQ)";
+    private const string NitsLabel = "nits";
 
     public ExportImageBasedWindow(ExportImageBasedViewModel vm)
     {
@@ -178,7 +183,7 @@ public class ExportImageBasedWindow : Window
             ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
         };
         row.Add(toggle, 0, 0);
-        row.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap }, 0, 1);
+        row.Add(new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap }, 0, 1);
         if (after.Length > 0)
         {
             row.Add(Horizontal(after), 0, 2);
@@ -220,7 +225,15 @@ public class ExportImageBasedWindow : Window
         switches.Children.Add(SwitchRow(Switch(vm, nameof(vm.IsBold), Se.Language.General.Bold), Se.Language.General.Bold));
         switches.Children.Add(SwitchRow(Switch(vm, nameof(vm.IsRightToLeft), Se.Language.General.RightToLeft), Se.Language.General.RightToLeft));
 
+        var useAssaStyles = SwitchRow(Switch(vm, nameof(vm.UseAssaStyles), Se.Language.File.Export.UseAssaStyles), Se.Language.File.Export.UseAssaStyles);
+        useAssaStyles.Bind(IsVisibleProperty, new Binding(nameof(vm.IsUseAssaStylesVisible)) { Source = vm });
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(useAssaStyles, Se.Language.File.Export.UseAssaStylesHint);
+        }
+
         return EditorChrome.MakeEditorSection(Se.Language.General.Font, Rows(
+            useAssaStyles,
             fontFamily,
             Row(Se.Language.General.FontSize, fontSize),
             Row(Se.Language.General.FontColor, Horizontal(ColorButton(vm, nameof(vm.FontColor), Se.Language.General.FontColor))),
@@ -269,7 +282,7 @@ public class ExportImageBasedWindow : Window
             cell.Children.Add(new TextBlock
             {
                 Text = name,
-                FontSize = 10.5,
+                FontSize = EditorChrome.ScaledFont(10.5),
                 Foreground = EditorChrome.FaintTextBrush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis,
@@ -310,6 +323,15 @@ public class ExportImageBasedWindow : Window
         var fullFrameRow = SwitchRow(fullFrame, Se.Language.File.Export.FullFrameImage, fullFrameColor)
             .WithBindIsVisible(vm, nameof(vm.IsFullFrameVisible));
 
+        // Only shown for Blu-ray sup (see IsHdrPaletteVisible).
+        var hdrWhiteNits = Combo(vm.HdrWhiteNits, vm, nameof(vm.SelectedHdrWhiteNits), NitsLabel);
+        hdrWhiteNits.MinWidth = 80;
+        hdrWhiteNits.Bind(IsVisibleProperty, new Binding(nameof(vm.IsHdrPalette)) { Source = vm });
+        var hdrNits = EditorChrome.MakeDimLabel(NitsLabel, new Thickness(0));
+        hdrNits.Bind(IsVisibleProperty, new Binding(nameof(vm.IsHdrPalette)) { Source = vm });
+        var hdrRow = SwitchRow(Switch(vm, nameof(vm.IsHdrPalette), HdrPaletteLabel), HdrPaletteLabel, hdrWhiteNits, hdrNits)
+            .WithBindIsVisible(vm, nameof(vm.IsHdrPaletteVisible));
+
         // SE4's "3D": the subtitle drawn once per eye for frame-packed 3D video. D-Cinema has only
         // the depth, as the Z-position (see IsMode3DVisible).
         var mode3D = Combo(vm.Modes3D, vm, nameof(vm.SelectedMode3D), Se.Language.File.Export.Stereo3D);
@@ -330,7 +352,7 @@ public class ExportImageBasedWindow : Window
         browsePlane3D.Bind(IsEnabledProperty, new Binding(nameof(vm.IsDepth3DEnabled)) { Source = vm });
         var plane3DFile = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -357,6 +379,7 @@ public class ExportImageBasedWindow : Window
             Row(Se.Language.General.Resolution, resolution),
             Row(Se.Language.General.FrameRate, frameRate),
             fullFrameRow,
+            hdrRow,
             mode3DRow,
             depth3DRow,
             plane3DRow));
@@ -535,7 +558,7 @@ public class ExportImageBasedWindow : Window
 
         var count = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding($"{nameof(vm.Subtitles)}.Count") { Source = vm },
@@ -587,7 +610,7 @@ public class ExportImageBasedWindow : Window
 
         var imageInfo = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -611,15 +634,16 @@ public class ExportImageBasedWindow : Window
         };
     }
 
-    private static Border MakeProgressView(ExportImageBasedViewModel vm)
+    private Border MakeProgressView(ExportImageBasedViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsGenerating));
 
         var statusText = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,

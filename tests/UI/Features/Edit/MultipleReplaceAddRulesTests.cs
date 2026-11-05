@@ -251,6 +251,35 @@ public class MultipleReplaceAddRulesTests : IDisposable
         Assert.Same(added, vm.SelectedNode);
     }
 
+    // The type-in row has the initial focus, so with nothing typed Enter must still reach the
+    // window, where it means OK (#14586).
+    [AvaloniaFact]
+    public void TypeInRow_EnterWithoutFindText_IsLeftForOk()
+    {
+        var (vm, category) = MakeViewModel();
+        vm.SelectedCategory = category;
+
+        var e = new KeyEventArgs { Key = Key.Enter, RoutedEvent = InputElement.KeyDownEvent };
+        vm.NewRuleTextBoxKeyDown(null, e);
+
+        Assert.False(e.Handled);
+        Assert.Equal("r1,r2", Order(category));
+    }
+
+    [AvaloniaFact]
+    public void TypeInRow_RegularExpression_IsNeverWholeWord()
+    {
+        var (vm, category) = MakeViewModel();
+        vm.SelectedCategory = category;
+        vm.NewWholeWord = true; // ticked before switching the type
+        vm.NewRuleType = vm.RuleTypes.First(t => t.Type == MultipleReplaceType.RegularExpression);
+        vm.NewFind = "a+";
+
+        vm.AddNewRuleCommand.Execute(null);
+
+        Assert.False(category.SubNodes![2].WholeWord);
+    }
+
     [AvaloniaFact]
     public void TypeInRow_WithoutFindText_AddsNothing()
     {

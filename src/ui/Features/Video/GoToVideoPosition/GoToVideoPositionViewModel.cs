@@ -1,9 +1,7 @@
 using System;
-using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
@@ -59,13 +57,8 @@ public partial class GoToVideoPositionViewModel : ObservableObject
 
     public void Activated()
     {
-        Dispatcher.UIThread.Post(() =>
-        {
-            var textBox = UpDown.GetVisualDescendants()
-                .OfType<TextBox>()
-                .FirstOrDefault();
-            textBox?.SelectAll();
-            UpDown.Focus(); 
-        });
+        // The control itself is not focusable - focus its text box so the time code can be typed
+        // right away, without a click first (#16649).
+        Dispatcher.UIThread.Post(UpDown.FocusTextBoxForTyping);
     }
 }

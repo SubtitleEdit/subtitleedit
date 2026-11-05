@@ -41,7 +41,7 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(expected, result.GetText());
+        Assert.Equal(expected.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
 
@@ -63,7 +63,7 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(expected, result.GetText());
+        Assert.Equal(expected.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     [Theory]
@@ -81,7 +81,7 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(input, result.GetText());
+        Assert.Equal(input.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     // A lone slash next to a number or between two all-caps words is a separator (a title card
@@ -99,7 +99,7 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(input, result.GetText());
+        Assert.Equal(input.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     // The capital I of the title card is read as "l"; the all-caps rule repairs that afterwards,
@@ -111,7 +111,7 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
 
         var result = engine.FixOcrErrors(0, "PlLOTEN / OMGEKOMEN", doTryToGuessUnknownWords: false);
 
-        Assert.Equal("PILOTEN / OMGEKOMEN", result.GetText());
+        Assert.Equal("PILOTEN / OMGEKOMEN", result.GetText().Replace("\r\n", "\n"));
     }
 
     // Only image matchers (nOCR, binary image compare) read a slanted stroke as "/"; text engines
@@ -128,7 +128,7 @@ public class OcrFixSlashMisreadAsLTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(input, result.GetText());
+        Assert.Equal(input.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     private static IOcrFixEngine CreateEngine(bool fixImageMatcherMisreads = true)

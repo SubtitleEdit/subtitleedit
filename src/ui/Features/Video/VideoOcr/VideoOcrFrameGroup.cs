@@ -38,13 +38,19 @@ public class VideoOcrFrameGroup
         return System.IO.Path.Combine(folder, $"img{frameIndex:000000}.jpg");
     }
 
+    /// <summary>
+    /// Video time of frame 0 - the start of the scanned time range (#16334). Frame indexes
+    /// count from the range start, so the times add this to land on the video's clock.
+    /// </summary>
+    public double OffsetMs { get; set; }
+
     public double GetStartMs(double framesPerSecond)
     {
-        return StartFrame * 1000.0 / framesPerSecond;
+        return OffsetMs + StartFrame * 1000.0 / framesPerSecond;
     }
 
     public double GetEndMs(double framesPerSecond)
     {
-        return (EndFrame + 1) * 1000.0 / framesPerSecond;
+        return OffsetMs + (EndFrame + 1) * 1000.0 / framesPerSecond;
     }
 }

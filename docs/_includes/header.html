@@ -1,0 +1,25 @@
+<header class="site-header">
+  <button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-label="Show navigation" aria-expanded="false" aria-controls="sidebar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+  </button>
+  <a class="brand" href="{{ '/' | relative_url }}">
+    <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="" width="28" height="28">
+    {{ site.title }}
+  </a>
+  <div class="search" id="search" role="search">
+    <label class="visually-hidden" for="search-input">Search the documentation</label>
+    <input id="search-input" type="search" placeholder="Search the docs" autocomplete="off" spellcheck="false">
+    <kbd class="search-hint" aria-hidden="true">Ctrl K</kbd>
+    <div class="search-panel" id="search-panel" hidden>
+      <p class="search-status" id="search-status" role="status"></p>
+      <ul class="search-results" id="search-results"></ul>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Site">
+    <a href="https://github.com/SubtitleEdit/subtitleedit/releases">Download</a>
+    <a href="https://github.com/SubtitleEdit/subtitleedit">GitHub</a>
+    <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch theme">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v18"></path><path d="M12 7h6"></path><path d="M12 12h9"></path><path d="M12 17h6"></path></svg>
+    </button>
+  </nav>
+</header>

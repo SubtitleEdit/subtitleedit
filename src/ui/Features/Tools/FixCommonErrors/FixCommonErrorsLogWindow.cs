@@ -50,7 +50,7 @@ public class FixCommonErrorsLogWindow : Window
 
         var labelImportant = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = ImportantBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,

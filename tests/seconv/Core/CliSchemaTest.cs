@@ -37,6 +37,16 @@ public class CliSchemaTest
     }
 
     [Fact]
+    public void Options_MergeContinuationLinesAndItsLimitsAreOperations()
+    {
+        var options = CliSchema.Options;
+
+        Assert.Equal("flag", options.Single(o => o.Name == "--merge-continuation-lines" && o.Group == "operation").Type);
+        Assert.Equal("integer", options.Single(o => o.Name == "--merge-continuation-lines-max-gap" && o.Group == "operation").Type);
+        Assert.Equal("integer", options.Single(o => o.Name == "--merge-continuation-lines-max-chars" && o.Group == "operation").Type);
+    }
+
+    [Fact]
     public void Options_CarryDiscoveryCommandsAndChoices()
     {
         var options = CliSchema.Options;

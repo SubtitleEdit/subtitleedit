@@ -3452,7 +3452,7 @@ public partial class BinaryEditViewModel : ObservableObject
                     answer = await MessageBox.Show(
                         Window!,
                         Se.Language.General.DeleteLines,
-                        $"Do you want to delete one line?",
+                        Se.Language.General.DeleteOneLineQuestion,
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
                 }
@@ -3461,7 +3461,7 @@ public partial class BinaryEditViewModel : ObservableObject
                     answer = await MessageBox.Show(
                         Window!,
                         Se.Language.General.DeleteLines,
-                        $"Do you want to delete {selectedItems.Count} lines?",
+                        string.Format(Se.Language.General.DeleteXLinesQuestion, selectedItems.Count),
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
                 }

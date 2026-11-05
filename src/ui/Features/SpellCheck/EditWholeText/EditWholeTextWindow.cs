@@ -26,7 +26,7 @@ public class EditWholeTextWindow : Window
         // "Line x of y" as the section header
         var labelLineInfo = new TextBlock
         {
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             FontWeight = FontWeight.SemiBold,
             LetterSpacing = 0.6,
             Foreground = EditorChrome.DimTextBrush,

@@ -20,6 +20,8 @@ public class ShowHistoryWindow : Window
         Title = UiUtil.MakeWindowTitle(Se.Language.Edit.ShowHistory);
         Width = 810;
         Height = 640;
+        MinWidth = 600;
+        MinHeight = 400;
         CanResize = true;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;

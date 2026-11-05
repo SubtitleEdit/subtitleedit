@@ -199,14 +199,14 @@ public class AdvancedTtsSettingsWindow : Window
             ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(GridLength.Auto) },
         };
         row.Add(toggle, 0, 0);
-        row.Add(new TextBlock { Text = title, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap }, 0, 1);
+        row.Add(new TextBlock { Text = title, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap }, 0, 1);
         return row;
     }
 
     private static Label MakeLabel(string text)
     {
         var label = UiUtil.MakeLabel(text);
-        label.FontSize = 12.5;
+        label.FontSize = EditorChrome.FieldFontSize;
         label.Padding = new Thickness(0);
         label.VerticalAlignment = VerticalAlignment.Center;
         return label;
@@ -225,7 +225,7 @@ public class AdvancedTtsSettingsWindow : Window
 
     private static TextBox MakeTextBox(TextBox textBox)
     {
-        textBox.FontSize = 12.5;
+        textBox.FontSize = EditorChrome.FieldFontSize;
         textBox.MinHeight = 28;
         textBox.Background = EditorChrome.FieldBrush;
         textBox.BorderBrush = EditorChrome.FieldBorderBrush;
@@ -238,7 +238,7 @@ public class AdvancedTtsSettingsWindow : Window
     {
         return new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             FontStyle = FontStyle.Italic,
             VerticalAlignment = VerticalAlignment.Center,
@@ -311,7 +311,7 @@ public class AdvancedTtsSettingsWindow : Window
                 new Label
                 {
                     Content = label,
-                    FontSize = 12,
+                    FontSize = EditorChrome.FieldFontSize,
                     Foreground = EditorChrome.DimTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                     Padding = new Thickness(0),

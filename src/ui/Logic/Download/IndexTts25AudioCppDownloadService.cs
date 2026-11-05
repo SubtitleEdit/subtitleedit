@@ -37,11 +37,12 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-10-19: upstream v0.9.2-drama3-base-small @ 50749561 with the same nine families as
-    // 2026-10-16b (index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio
-    // + sidon + breeze_tts + voxtral_tts). A seeded KugelAudio A/B against 2026-10-16b was
-    // byte-identical; the bump brings the Fish DAC reference-encoding fixes (#936, #937).
-    private const string ReleaseTag = "audiocpp-indextts25-2026-10-19";
+    // 2026-11-05: upstream v0.9.4 @ f7ac446f with the same nine families as 2026-10-28
+    // (index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon
+    // + breeze_tts + voxtral_tts). The bump brings the Vulkan RMSNorm fix for long voice
+    // references (#1120), the Vulkan oversized-buffer pipeline fix (#1183) and HTTP 400 instead
+    // of 500 for malformed option values (#1123).
+    private const string ReleaseTag = "audiocpp-indextts25-2026-11-05";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 
@@ -69,9 +70,9 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
     private static readonly Dictionary<string, string> ModelUrls = new(StringComparer.OrdinalIgnoreCase)
     {
         [IndexTts25AudioCpp.ModelQ8_0FileName] =
-            "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/IndexTTS2.5-GGUF/index-tts2_5-q8_0.gguf",
+            AudioCppRuntime.ModelRepoBaseUrl + "IndexTTS2.5-GGUF/index-tts2_5-q8_0.gguf",
         [IndexTts25AudioCpp.ModelF16FileName] =
-            "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/IndexTTS2.5-GGUF/index-tts2_5-f16.gguf",
+            AudioCppRuntime.ModelRepoBaseUrl + "IndexTTS2.5-GGUF/index-tts2_5-f16.gguf",
     };
 
     public IndexTts25AudioCppDownloadService(HttpClient httpClient)

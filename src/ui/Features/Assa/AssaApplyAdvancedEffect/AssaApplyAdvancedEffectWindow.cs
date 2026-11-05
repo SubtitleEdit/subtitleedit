@@ -41,7 +41,7 @@ public class AssaApplyAdvancedEffectWindow : Window
         // ── Left: search, categories, effect gallery ──────────────────────────
         var searchBox = new TextBox
         {
-            Watermark = Se.Language.Assa.AdvancedEffectSearchWatermark,
+            PlaceholderText = Se.Language.Assa.AdvancedEffectSearchWatermark,
             InnerLeftContent = new Icon
             {
                 Value = IconNames.Find,
@@ -249,7 +249,7 @@ public class AssaApplyAdvancedEffectWindow : Window
                 };
                 var icon = new ContentControl
                 {
-                    FontSize = 13,
+                    FontSize = EditorChrome.FieldFontSize,
                     Foreground = Brushes.White,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
@@ -599,6 +599,7 @@ public class AssaApplyAdvancedEffectWindow : Window
                 AddRow(l.AdvancedEffectFillColor, UiUtil.MakeColorPickerButton(smoothFill, nameof(AdvancedEffectSmoothFill.FillColor), false));
                 AddRow(Se.Language.General.TextColor, UiUtil.MakeColorPickerButton(smoothFill, nameof(AdvancedEffectSmoothFill.BaseColor), false));
                 AddRow(l.AdvancedEffectUpperCase, UiUtil.MakeCheckBox(smoothFill, nameof(AdvancedEffectSmoothFill.UpperCase)));
+                AddRow(l.AdvancedEffectKaraokeRightToLeft, UiUtil.MakeCheckBox(smoothFill, nameof(AdvancedEffectSmoothFill.RightToLeft)));
                 break;
             case AdvancedEffectBlurInWords blurInWords:
                 AddRow(l.AdvancedEffectRise, UiUtil.MakeCheckBox(blurInWords, nameof(AdvancedEffectBlurInWords.Rise)));

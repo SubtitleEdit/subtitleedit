@@ -58,7 +58,7 @@ public class BinaryAdjustDurationWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Left,
             Text = Se.Language.Tools.AdjustDurations.Note,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 380,
@@ -69,8 +69,8 @@ public class BinaryAdjustDurationWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Left,
             Text = Se.Language.Tools.AdjustDurations.RecalculateRequiresOcrNote,
-            FontSize = 12,
-            Foreground = Brushes.OrangeRed,
+            FontSize = EditorChrome.FieldFontSize,
+            Foreground = EditorChrome.WarningTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 380,
         };

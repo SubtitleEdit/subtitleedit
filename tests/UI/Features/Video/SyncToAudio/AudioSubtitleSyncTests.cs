@@ -60,7 +60,7 @@ public class AudioSubtitleSyncTests
         var truth = Truth();
         var late = Transform(truth, 1, 3.21); // the subtitle shows 3.21 s after the speech
 
-        var result = AudioSubtitleSync.Find(Speech(truth), late, new AudioSubtitleSync.Options());
+        var result = AudioSubtitleSync.Find(Speech(truth), late, new AudioSubtitleSync.Options(), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.Equal(-3.21, result.OffsetSeconds, 0.03);
@@ -74,7 +74,7 @@ public class AudioSubtitleSyncTests
         var truth = Truth(seed: 3);
         var early = Transform(truth, 1, -7.5);
 
-        var result = AudioSubtitleSync.Find(Speech(truth), early, new AudioSubtitleSync.Options(MaxOffsetSeconds: 10));
+        var result = AudioSubtitleSync.Find(Speech(truth), early, new AudioSubtitleSync.Options(MaxOffsetSeconds: 10), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.Equal(7.5, result.OffsetSeconds, 0.03);
@@ -90,7 +90,7 @@ public class AudioSubtitleSyncTests
         var k = 23.976 / 25;
         var wrong = Transform(truth, k, 2);
 
-        var result = AudioSubtitleSync.Find(Speech(truth), wrong, new AudioSubtitleSync.Options(VideoFrameRate: 23.976));
+        var result = AudioSubtitleSync.Find(Speech(truth), wrong, new AudioSubtitleSync.Options(VideoFrameRate: 23.976), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.True(result.IsFrameRateChanged);
@@ -106,7 +106,7 @@ public class AudioSubtitleSyncTests
         var truth = Truth(seed: 5);
         var late = Transform(truth, 1, 1.0);
 
-        var result = AudioSubtitleSync.Find(Speech(truth), late, new AudioSubtitleSync.Options(TryFrameRates: true));
+        var result = AudioSubtitleSync.Find(Speech(truth), late, new AudioSubtitleSync.Options(TryFrameRates: true), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.False(result.IsFrameRateChanged);
@@ -119,7 +119,7 @@ public class AudioSubtitleSyncTests
         var truth = Truth(seed: 6);
         var wrong = Transform(truth, 25 / 23.976, 0);
 
-        var result = AudioSubtitleSync.Find(Speech(truth), wrong, new AudioSubtitleSync.Options(TryFrameRates: false));
+        var result = AudioSubtitleSync.Find(Speech(truth), wrong, new AudioSubtitleSync.Options(TryFrameRates: false), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.False(result.IsFrameRateChanged);
@@ -131,7 +131,7 @@ public class AudioSubtitleSyncTests
         var truth = Truth(seed: 7);
         var other = Truth(seed: 8);
 
-        var result = AudioSubtitleSync.Find(Speech(truth), other, new AudioSubtitleSync.Options());
+        var result = AudioSubtitleSync.Find(Speech(truth), other, new AudioSubtitleSync.Options(), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.True(result.Confidence < AudioSubtitleSync.LowConfidence, $"confidence {result.Confidence}");
@@ -144,7 +144,7 @@ public class AudioSubtitleSyncTests
         var reference = AudioSubtitleSync.SignalFromLines(truth);
         var early = Transform(truth, 1, -12.34);
 
-        var result = AudioSubtitleSync.Find(reference, early, new AudioSubtitleSync.Options());
+        var result = AudioSubtitleSync.Find(reference, early, new AudioSubtitleSync.Options(), cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.Equal(12.34, result.OffsetSeconds, 0.011);
@@ -187,7 +187,7 @@ public class AudioSubtitleSyncTests
         Assert.True(agree > speech.Length * 0.97, $"agreement {agree / (double)speech.Length}");
 
         // ... and the whole chain: those peaks, that subtitle 4 s late.
-        var result = AudioSubtitleSync.Find(speech, Transform(truth, 1, 4), new AudioSubtitleSync.Options());
+        var result = AudioSubtitleSync.Find(speech, Transform(truth, 1, 4), new AudioSubtitleSync.Options(), cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(result);
         Assert.Equal(-4, result.OffsetSeconds, 0.03);
     }
@@ -202,7 +202,7 @@ public class AudioSubtitleSyncTests
     [Fact]
     public void Nothing_to_match_gives_null()
     {
-        Assert.Null(AudioSubtitleSync.Find(Array.Empty<double>(), Truth(), new AudioSubtitleSync.Options()));
-        Assert.Null(AudioSubtitleSync.Find(new double[100], new List<(double, double)>(), new AudioSubtitleSync.Options()));
+        Assert.Null(AudioSubtitleSync.Find(Array.Empty<double>(), Truth(), new AudioSubtitleSync.Options(), cancellationToken: TestContext.Current.CancellationToken));
+        Assert.Null(AudioSubtitleSync.Find(new double[100], new List<(double, double)>(), new AudioSubtitleSync.Options(), cancellationToken: TestContext.Current.CancellationToken));
     }
 }

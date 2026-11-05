@@ -364,6 +364,15 @@ public class InitWaveform
             };
             flyout.Items.Add(showOriginalSubtitleMenuItem);
 
+            var lockOriginalToTranslationMenuItem = new MenuItem
+            {
+                Header = Se.Language.Waveform.LockOriginalToTranslation,
+                ToggleType = MenuItemToggleType.CheckBox,
+                Command = vm.ToggleLockOriginalToTranslationCommand,
+            };
+            flyout.Items.Add(lockOriginalToTranslationMenuItem);
+            vm.MenuItemAudioVisualizerLockOriginalToTranslation = lockOriginalToTranslationMenuItem;
+
             var showSpeechOnlyMenuItem = new MenuItem
             {
                 Header = Se.Language.Waveform.ShowSpeechOnly,
@@ -426,6 +435,11 @@ public class InitWaveform
                 GetVideoFileName = () => vm.CurrentVideoFileName,
                 GetAllParagraphs = () => vm.Subtitles,
                 GetHasOriginal = () => vm.ShowColumnOriginalText,
+                GetCanEditOriginalTimeCodes = () => vm.CanEditOriginalTimeCodes && !vm.IsOriginalLockedToTranslation,
+                HasOriginalLine = vm.HasOriginalLine,
+                GetReadOnlyOriginalTimeCodes = vm.GetReadOnlyOriginalTimeCodes,
+                SetOriginalTimeCodes = vm.SetRowOriginalTimeCodes,
+                SelectParagraph = vm.SelectAndScrollToSubtitle,
                 TextLabel = Se.Language.General.Text,
                 OriginalLabel = Se.Language.General.OriginalText,
                 LayerLabel = Se.Language.General.Layer,
@@ -1498,7 +1512,10 @@ public class InitWaveform
 
         button.Content = (back ? "-" : "+") + ms.ToString(CultureInfo.InvariantCulture);
         button.Command = ShortcutsMain.GetMoveLinesCommand(vm, scope, slot, back);
-        ToolTip.SetTip(button, UiUtil.MakeToolTip(hint, shortcuts, ShortcutsMain.GetMoveLinesCommandName(scope, slot, back)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(button, UiUtil.MakeToolTip(hint, shortcuts, ShortcutsMain.GetMoveLinesCommandName(scope, slot, back)));
+        }
 
         // The content is just "-100", so give screen readers the full action.
         AutomationProperties.SetName(button, string.Format(hint, string.Empty).TrimEnd());

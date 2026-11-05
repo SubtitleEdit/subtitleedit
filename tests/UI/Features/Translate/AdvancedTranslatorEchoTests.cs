@@ -67,4 +67,76 @@ public class AdvancedTranslatorEchoTests
 
         Assert.Equal(-1, AdvancedTranslatorBase.FindUntranslatedEcho(map, Lines, "Spanish", "Spanish (Latin America)"));
     }
+
+    // Issue #16555: rows shifted up by one after the model merged two of them, and the last row
+    // padded with a copy of an earlier translation - in the batch or in the rolling history.
+    [Fact]
+    public void ShiftedBatchPaddedWithEarlierLine_IsReported()
+    {
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Wo warst du letzte Nacht? Ich war bis spät im Büro.",
+            [2] = "Erik.",
+            [3] = "Wo warst du letzte Nacht? Ich war bis spät im Büro.",
+        };
+
+        Assert.Equal(3, AdvancedTranslatorBase.FindDuplicatedTranslation(map, Lines, new List<LlamaCppAdvancedProtocol.HistoryPair>()));
+    }
+
+    [Fact]
+    public void BatchLineRepeatingHistoryTranslation_IsReported()
+    {
+        var history = new List<LlamaCppAdvancedProtocol.HistoryPair>
+        {
+            new("You know that I would do everything for you.", "Du weißt, dass ich alles für dich tun würde."),
+        };
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Wo warst du letzte Nacht?",
+            [2] = "Erik.",
+            [3] = "Du weißt, dass ich alles für dich tun würde.",
+        };
+
+        Assert.Equal(3, AdvancedTranslatorBase.FindDuplicatedTranslation(map, Lines, history));
+    }
+
+    [Fact]
+    public void AlignedBatch_HasNoDuplicate()
+    {
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Wo warst du letzte Nacht?",
+            [2] = "Erik.",
+            [3] = "Ich war bis spät im Büro.",
+        };
+
+        Assert.Equal(-1, AdvancedTranslatorBase.FindDuplicatedTranslation(map, Lines, new List<LlamaCppAdvancedProtocol.HistoryPair>()));
+    }
+
+    // Issue #16585: the same shift, but the freed row padded with "..." instead of a copy.
+    [Fact]
+    public void ShiftedBatchPaddedWithPlaceholder_IsReported()
+    {
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Wo warst du letzte Nacht? Erik.",
+            [2] = "Ich war bis spät im Büro.",
+            [3] = "...",
+        };
+
+        Assert.Equal(3, AdvancedTranslatorBase.FindPlaceholderTranslation(map, Lines));
+    }
+
+    [Fact]
+    public void AlignedBatch_HasNoPlaceholder()
+    {
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Wo warst du letzte Nacht?",
+            [2] = "Erik.",
+            [3] = "Ich war bis spät im Büro.",
+        };
+
+        Assert.Equal(-1, AdvancedTranslatorBase.FindPlaceholderTranslation(map, Lines));
+    }
 }

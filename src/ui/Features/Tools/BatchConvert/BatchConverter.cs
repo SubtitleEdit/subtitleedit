@@ -1453,7 +1453,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         item.Subtitle = new Subtitle();
 
         var batchImages = new List<PaddleOcrBatchInput>(numberOfImages);
-        item.Status = "Preparing OCR...";
+        item.Status = Se.Language.Ocr.PreparingOcr;
         for (var i = 0; i < imageSubtitles.Count; i++)
         {
             batchImages.Add(new PaddleOcrBatchInput
@@ -1947,6 +1947,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FramesPerSecond = profile.FramesPerSecond,
                 IsFullFrame = profile.IsFullFrame,
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
+                HdrWhiteNits = profile.IsHdrPalette ? profile.HdrWhiteNits : 0,
                 Mode3D = mode3D,
                 Depth3D = profile.Depth3D,
                 Plane3D = plane3D,
@@ -2286,6 +2287,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(item.Subtitle.Header);
 
+        // Each line drawn with its own ASSA style, as the export window does with "Use ASSA
+        // styles" - the same saved setting.
+        var assaStyles = Se.Settings.File.ExportImages.UseAssaStyles && IsAssaOrSsa(item.Subtitle)
+            ? ExportAssaStyles.FromHeader(item.Subtitle.Header)
+            : null;
+        if (assaStyles != null)
+        {
+            (scriptWidth, scriptHeight) = assaStyles.ScriptResolution;
+        }
+
         // Same fallback as the export dialog: an empty or unknown preset name in the profile
         // selects the first list item (soft shadow).
         var textEffectPreset = Enum.TryParse<TextEffectPreset>(profile.TextEffect, out var parsedPreset)
@@ -2312,7 +2323,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 PaddingLeftRight = profile.PaddingLeftRight,
                 PaddingTopBottom = profile.PaddingTopBottom,
                 Index = i,
-                Text = ExportTextTags.ToRenderableText(subtitle.Text),
+                Text = ExportTextTags.ToRenderableText(subtitle.Text, assaStyles, subtitle.Extra),
                 StartTime = subtitle.StartTime.TimeSpan,
                 EndTime = subtitle.EndTime.TimeSpan,
                 FontColor = profile.FontColor.FromHexToColor().ToSKColor(),
@@ -2336,6 +2347,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FramesPerSecond = profile.FramesPerSecond,
                 IsFullFrame = profile.IsFullFrame,
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
+                HdrWhiteNits = profile.IsHdrPalette ? profile.HdrWhiteNits : 0,
                 // The text effect configured in the shared export-images dialog - without this
                 // a batch convert silently rendered classic text while the dialog's preview
                 // showed the effect.
@@ -2351,6 +2363,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     profile.TextEffectArcBend,
                     profile.TextEffectWave),
             };
+
+            // The style first, so the override tags below win over it.
+            assaStyles?.Apply(imageParameter, subtitle.Extra, subtitle.Text, subtitle.MarginL, subtitle.MarginR, subtitle.MarginV);
 
             // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
             // change what is drawn - read before rendering, overrides before the
@@ -2433,7 +2448,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = ChangeSpeed(s);
             s = BridgeGaps(s);
             s = ApplyMinGap(s);
-            s = FixCommonErrors(s);
+            s = await FixCommonErrorsAsync(s);
             s = MergeLinesWithSameText(s);
             s = MergeLinesWithSameTimeCodes(s, Language);
             s = ConvertColorsToDialog(s, Language);
@@ -3359,7 +3374,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
-    private Subtitle FixCommonErrors(Subtitle subtitle)
+    private async Task<Subtitle> FixCommonErrorsAsync(Subtitle subtitle)
     {
         if (!_config.FixCommonErrors.IsActive || _config.FixCommonErrors.Profile == null)
         {
@@ -3370,7 +3385,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         if (!string.Equals(_namesListFolder, dictionaryFolder, StringComparison.Ordinal) ||
             !string.Equals(_namesListLanguage, Language, StringComparison.Ordinal))
         {
-            _namesList.Load(dictionaryFolder, Language);
+            await _namesList.LoadAsync(dictionaryFolder, Language);
             _namesListFolder = dictionaryFolder;
             _namesListLanguage = Language;
         }
@@ -3821,7 +3836,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             // A row the engine never returned text for keeps its source text rather than
             // being blanked - an engine failure part way through must not empty the rest.
-            if (!string.IsNullOrEmpty(translatedSubtitle[i].TranslatedText))
+            if (!string.IsNullOrWhiteSpace(translatedSubtitle[i].TranslatedText))
             {
                 subtitle.Paragraphs[i].Text = translatedSubtitle[i].TranslatedText;
             }

@@ -19,6 +19,31 @@ public partial class RuleTreeNode : ObservableObject
     [ObservableProperty] private bool _wholeWord;
 
     /// <summary>
+    /// True while the rule's row in the rules list shows text boxes instead of text.
+    /// </summary>
+    [ObservableProperty] private bool _isEditing;
+
+    /// <summary>
+    /// The text box the row editor puts the caret in: Find, ReplaceWith or Description.
+    /// </summary>
+    public string EditField { get; set; } = nameof(Find);
+
+    /// <summary>
+    /// Asks the row editor's text box for <see cref="EditField"/> to take focus.
+    /// </summary>
+    public event System.Action? EditFocusRequested;
+
+    public void RequestEditFocus() => EditFocusRequested?.Invoke();
+
+    partial void OnIsEditingChanged(bool value)
+    {
+        if (value)
+        {
+            RequestEditFocus();
+        }
+    }
+
+    /// <summary>
     /// The rule's place in its category, 1-based - the order the rules run in.
     /// </summary>
     [ObservableProperty] private int _number;

@@ -54,6 +54,7 @@ public class SeAutoTranslate
     public string MicrosoftTranslatorApiKey { get; set; }
     public string MicrosoftTranslatorTokenEndpoint { get; set; }
     public string MicrosoftTranslatorCategory { get; set; }
+    public string MicrosoftTranslatorRegion { get; set; }
     public decimal RequestMaxBytes { get; set; }
     public decimal RequestDelaySeconds { get; set; }
 
@@ -103,6 +104,10 @@ public class SeAutoTranslate
     public string ApiRoutePrompt { get; set; }
     public string ApiRouteApiKey { get; set; }
     public string ApiRouteModel { get; set; }
+    public string OpperUrl { get; set; }
+    public string OpperPrompt { get; set; }
+    public string OpperApiKey { get; set; }
+    public string OpperModel { get; set; }
 
     public string PerplexityUrl { get; set; }
     public string PerplexityPrompt { get; set; }
@@ -136,6 +141,10 @@ public class SeAutoTranslate
         ApiRouteModel = ApiRouteTranslate.Models[0];
         ApiRoutePrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
         ApiRouteUrl = ApiRouteTranslate.DefaultUrl;
+        OpperApiKey = string.Empty;
+        OpperModel = OpperTranslate.Models[0];
+        OpperPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+        OpperUrl = OpperTranslate.DefaultUrl;
         PerplexityApiKey = string.Empty;
         PerplexityModel = PerplexityTranslate.Models[0];
         PerplexityPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
@@ -184,6 +193,7 @@ public class SeAutoTranslate
         MicrosoftBingApiId = string.Empty;
         MicrosoftTranslatorApiKey = string.Empty;
         MicrosoftTranslatorCategory = string.Empty;
+        MicrosoftTranslatorRegion = string.Empty;
         MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
         MistralModel = MistralTranslate.Models[0];
         MistralPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";

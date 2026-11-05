@@ -25,7 +25,7 @@ public class KugelAudioAudioCppDownloadService : IKugelAudioAudioCppDownloadServ
     private readonly HttpClient _httpClient;
 
     private const string ModelUrlBase =
-        "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/KugelAudio-0-Open-GGUF/";
+        AudioCppRuntime.ModelRepoBaseUrl + "KugelAudio-0-Open-GGUF/";
 
     public KugelAudioAudioCppDownloadService(HttpClient httpClient)
     {

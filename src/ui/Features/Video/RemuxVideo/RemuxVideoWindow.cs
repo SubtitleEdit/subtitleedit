@@ -12,6 +12,7 @@ using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System.Windows.Input;
 
@@ -258,7 +259,7 @@ public class RemuxVideoWindow : Window
         var captionsHint = new TextBlock
         {
             Text = l.RemuxVideoMp4CaptionsHint,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
@@ -278,7 +279,7 @@ public class RemuxVideoWindow : Window
         var captionOffsetHint = new TextBlock
         {
             Text = l.RemuxVideoCaptionOffsetHint,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
@@ -339,7 +340,7 @@ public class RemuxVideoWindow : Window
             Children =
             {
                 switchMixAudio,
-                new TextBlock { Text = l.RemuxVideoMixAudio, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center },
+                new TextBlock { Text = l.RemuxVideoMixAudio, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center },
                 labelVolume,
                 numericVolume,
             },
@@ -415,7 +416,7 @@ public class RemuxVideoWindow : Window
                     Margin = new Thickness(2, 0, 8, 0),
                 };
 
-                var textName = new TextBlock { FontWeight = FontWeight.SemiBold, FontSize = 12.5, TextTrimming = TextTrimming.CharacterEllipsis };
+                var textName = new TextBlock { FontWeight = FontWeight.SemiBold, FontSize = EditorChrome.FieldFontSize, TextTrimming = TextTrimming.CharacterEllipsis };
                 textName.Bind(TextBlock.TextProperty, new Binding(nameof(RemuxFileItem.Name)));
                 if (Se.Settings.Appearance.ShowHints)
                 {
@@ -427,7 +428,7 @@ public class RemuxVideoWindow : Window
                 var textFolder = new TextBlock
                 {
                     Opacity = 0.6,
-                    FontSize = 12,
+                    FontSize = EditorChrome.FieldFontSize,
                     TextTrimming = TextTrimming.PrefixCharacterEllipsis,
                     VerticalAlignment = VerticalAlignment.Bottom,
                     Margin = new Thickness(8, 0, 0, 0),
@@ -635,9 +636,10 @@ public class RemuxVideoWindow : Window
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsFinalizing)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsRemuxing));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
-        statusText.FontSize = 12;
+        statusText.FontSize = EditorChrome.FieldFontSize;
 
         var grid = new Grid
         {
@@ -669,7 +671,7 @@ public class RemuxVideoWindow : Window
 
         // The result ("Remux completed", errors) - while remuxing the progress row shows the text
         var status = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
-        status.FontSize = 12;
+        status.FontSize = EditorChrome.FieldFontSize;
         status.Bind(Visual.IsVisibleProperty, NotRemuxing(vm));
 
         var buttonRemux = new SeSplitButton
@@ -697,9 +699,9 @@ public class RemuxVideoWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonDone);
-        buttons.Children.Add(buttonRemux);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonDone));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonRemux));
 
         var bar = new DockPanel();
         DockPanel.SetDock(buttonOpenFolder, Dock.Left);

@@ -36,6 +36,7 @@ public class SeVideoControlsItem
             new SeVideoControlsItem { Type = SeVideoControlsItemType.FullScreen, SortOrder = 30 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.PositionSlider, SortOrder = 40 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.Volume, SortOrder = 50 },
+            new SeVideoControlsItem { Type = SeVideoControlsItemType.PlaybackSpeed, IsVisible = false, SortOrder = 55 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.PositionText, SortOrder = 60 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.VideoFileName, SortOrder = 70 },
             new SeVideoControlsItem { Type = SeVideoControlsItemType.PlayerName, SortOrder = 80 },

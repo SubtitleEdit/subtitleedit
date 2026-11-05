@@ -33,6 +33,7 @@ public enum DrawLoopEffect
     Blink,
     Bounce,
     Shake,
+    ShakeHorizontal,
     Swing,
 
     /// <summary>
@@ -52,6 +53,7 @@ public enum DrawAnimationOrigin
     Top,
     FarOut,
     FarBounce,
+    FarAbove,
 }
 
 /// <summary>
@@ -111,6 +113,7 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
         DrawLoopEffect.Spin or DrawLoopEffect.Shake or DrawLoopEffect.Flip => DrawAnimationOrigin.Anchor,
         DrawLoopEffect.Swing => DrawAnimationOrigin.Top,
         DrawLoopEffect.Bounce => DrawAnimationOrigin.FarBounce,
+        DrawLoopEffect.ShakeHorizontal => DrawAnimationOrigin.FarAbove,
         _ => DrawAnimationOrigin.None,
     };
 
@@ -148,6 +151,17 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
     /// </summary>
     private static float GetBounceHeight((float Left, float Top, float Right, float Bottom) bounds) =>
         Math.Max(8, (bounds.Bottom - bounds.Top) * 0.1f);
+
+    /// <summary>
+    /// How far a horizontal shake sways to each side: a twentieth of the width, at least 4 px.
+    /// </summary>
+    private static float GetShakeDistance((float Left, float Top, float Right, float Bottom) bounds) =>
+        Math.Max(4, (bounds.Right - bounds.Left) * 0.05f);
+
+    /// <summary>
+    /// The shake wave over one cycle: 0 to 1, back to 0, to -1 and back to 0.
+    /// </summary>
+    private static double ShakeWave(double u) => u < 0.25 ? u * 4 : u < 0.75 ? 1 - (u - 0.25) * 4 : (u - 0.75) * 4 - 1;
 
     public static bool IsSlide(DrawAnimationEffect effect) => effect >= DrawAnimationEffect.Left;
 
@@ -281,7 +295,10 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
                         dy = -GetBounceHeight(bounds) * (float)height;
                         break;
                     case DrawLoopEffect.Shake:
-                        rotation = ShakeDegrees * (float)(u < 0.25 ? u * 4 : u < 0.75 ? 1 - (u - 0.25) * 4 : (u - 0.75) * 4 - 1);
+                        rotation = ShakeDegrees * (float)ShakeWave(u);
+                        break;
+                    case DrawLoopEffect.ShakeHorizontal:
+                        dx = GetShakeDistance(bounds) * (float)ShakeWave(u);
                         break;
                     case DrawLoopEffect.Swing:
                         var quarter = u * 4 - Math.Floor(u * 4);
@@ -385,6 +402,9 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
             case DrawAnimationOrigin.FarBounce:
                 // To the left, so a positive (counter-clockwise) turn lifts the anchor
                 return (anchorX - FarOriginDistance, anchorY);
+            case DrawAnimationOrigin.FarAbove:
+                // Above, so a positive (counter-clockwise) turn sways the anchor to the right
+                return (anchorX, anchorY - FarOriginDistance);
             default:
                 return null;
         }
@@ -480,6 +500,7 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
         int T(double cycle) => (int)Math.Round(start + cycle * period);
         var pulse = N(PulseScale * 100);
         var bounceDegrees = Precise(baseFrz + Math.Asin(GetBounceHeight(bounds) / FarOriginDistance) * 180 / Math.PI);
+        var swayDegrees = Math.Asin(GetShakeDistance(bounds) / FarOriginDistance) * 180 / Math.PI;
         var restFrz = baseFrz;
         for (var k = 0; k < cycles; k++)
         {
@@ -507,6 +528,9 @@ public sealed class DrawAnimation : IEquatable<DrawAnimation>
                     break;
                 case DrawLoopEffect.Shake:
                     sb.Append(CultureInfo.InvariantCulture, $"\\t({T(k)},{T(k + 0.25)},\\frz{N(baseFrz + ShakeDegrees)})\\t({T(k + 0.25)},{T(k + 0.75)},\\frz{N(baseFrz - ShakeDegrees)})\\t({T(k + 0.75)},{T(k + 1)},\\frz{N(baseFrz)})");
+                    break;
+                case DrawLoopEffect.ShakeHorizontal:
+                    sb.Append(CultureInfo.InvariantCulture, $"\\t({T(k)},{T(k + 0.25)},\\frz{Precise(baseFrz + swayDegrees)})\\t({T(k + 0.25)},{T(k + 0.75)},\\frz{Precise(baseFrz - swayDegrees)})\\t({T(k + 0.75)},{T(k + 1)},\\frz{Precise(baseFrz)})");
                     break;
                 case DrawLoopEffect.Swing:
                     sb.Append(CultureInfo.InvariantCulture, $"\\t({T(k)},{T(k + 0.25)},{N(EaseOut)},\\frz{N(baseFrz + SwingDegrees)})\\t({T(k + 0.25)},{T(k + 0.5)},{N(EaseIn)},\\frz{N(baseFrz)})");

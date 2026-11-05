@@ -54,6 +54,7 @@ public class LanguageAssa
     public string DrawCategoryBasicShapes { get; set; }
     public string DrawCategorySymbols { get; set; }
     public string DrawCategoryClipArt { get; set; }
+    public string DrawCategoryAnimatedClipArt { get; set; }
     public string DrawClipArtRedHeart { get; set; }
     public string DrawClipArtAngerMark { get; set; }
     public string DrawClipArtSweatDrop { get; set; }
@@ -144,6 +145,7 @@ public class LanguageAssa
     public string DrawAnimationBlink { get; set; }
     public string DrawAnimationBounce { get; set; }
     public string DrawAnimationShake { get; set; }
+    public string DrawAnimationShakeHorizontal { get; set; }
     public string DrawAnimationSwing { get; set; }
     public string DrawAnimationFlip { get; set; }
     public string DrawAnimationLoopBlocked { get; set; }
@@ -550,6 +552,7 @@ public class LanguageAssa
     public string AdvancedEffectFillColor { get; set; }
     public string AdvancedEffectRise { get; set; }
     public string OverrideTagsHistory { get; set; }
+    public string DeleteAttachmentQuestion { get; set; }
 
     public LanguageAssa()
     {
@@ -561,17 +564,17 @@ public class LanguageAssa
         DrawBezierTool = "Bezier curve";
         DrawRectangleTool = "Rectangle";
         DrawCircleTool = "Circle";
-        DrawCloseShape = "Close Shape (F8/Enter)";
-        DrawDeleteShape = "Delete Shape (Del)";
-        DrawChangeLayer = "Change Layer";
-        DrawClearAll = "Clear All (Ctrl+N)";
-        DrawZoomIn = "Zoom In (Ctrl++)";
-        DrawZoomOut = "Zoom Out (Ctrl+-)";
-        DrawResetView = "Reset View (Ctrl+0)";
-        DrawToggleGrid = "Toggle Grid (Ctrl+')";
+        DrawCloseShape = "Close shape (F8/Enter)";
+        DrawDeleteShape = "Delete shape (Del)";
+        DrawChangeLayer = "Change layer";
+        DrawClearAll = "Clear all (Ctrl+N)";
+        DrawZoomIn = "Zoom in (Ctrl++)";
+        DrawZoomOut = "Zoom out (Ctrl+-)";
+        DrawResetView = "Reset view (Ctrl+0)";
+        DrawToggleGrid = "Toggle grid (Ctrl+')";
         DrawTogglePreview = "Toggle preview (F9)";
         DrawPreviewFailed = "Preview failed - ffmpeg with libass (subtitles filter) is required";
-        DrawCopyToClipboard = "Copy to Clipboard (Ctrl+C)";
+        DrawCopyToClipboard = "Copy to clipboard (Ctrl+C)";
         DrawShapes = "Shapes";
         DrawSelectedPoint = "Selected point";
         DrawSelectedShape = "Selected shape";
@@ -605,6 +608,7 @@ public class LanguageAssa
         DrawCategoryBasicShapes = "Basic shapes";
         DrawCategorySymbols = "Symbols";
         DrawCategoryClipArt = "Clip art";
+        DrawCategoryAnimatedClipArt = "Animated clip art";
         DrawClipArtRedHeart = "Red heart";
         DrawClipArtAngerMark = "Anger mark";
         DrawClipArtSweatDrop = "Sweat drop";
@@ -695,6 +699,7 @@ public class LanguageAssa
         DrawAnimationBlink = "Blink";
         DrawAnimationBounce = "Bounce";
         DrawAnimationShake = "Shake";
+        DrawAnimationShakeHorizontal = "Shake horizontal";
         DrawAnimationSwing = "Swing";
         DrawAnimationFlip = "Flip";
         DrawAnimationLoopBlocked = "This loop turns around another point than the in/out effect, so it is left out.";
@@ -1100,5 +1105,6 @@ public class LanguageAssa
         OverrideTagsHistory = "Override tags history";
         MouseOverColor = "Mouse-over color";
         ClickedColor = "Clicked color";
+        DeleteAttachmentQuestion = "Delete attachment?";
     }
 }

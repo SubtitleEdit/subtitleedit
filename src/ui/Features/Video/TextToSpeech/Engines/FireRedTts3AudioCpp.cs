@@ -83,10 +83,10 @@ public class FireRedTts3AudioCpp : ITtsEngine, IPerLineCloneEngine
     /// loader rejects with "GGUF tensor data range is out of bounds", so size is checked
     /// before the server is ever started. Same guard as <see cref="IndexTts25AudioCpp"/>.
     /// </summary>
-    private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly Dictionary<string, long[]> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
     {
-        [ModelQ8_0FileName] = 4180334848L,
-        [ModelOrigFileName] = 12301253120L,
+        [ModelQ8_0FileName] = [4180336192L, 4180334848L],
+        [ModelOrigFileName] = [12301254464L, 12301253120L],
     };
 
     public static string ResolveModelKey(string? modelKey)
@@ -270,7 +270,7 @@ public class FireRedTts3AudioCpp : ITtsEngine, IPerLineCloneEngine
                 ? target.Length
                 : info.Length;
 
-            return length == expected;
+            return Array.IndexOf(expected, length) >= 0;
         }
         catch
         {

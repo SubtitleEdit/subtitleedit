@@ -43,17 +43,17 @@ public class SeNamesListMultiWordTests : IDisposable
         }
     }
 
-    private SeNamesList MakeNamesList()
+    private async Task<SeNamesList> MakeNamesListAsync()
     {
         var list = new SeNamesList();
-        list.Load(_folder + Path.DirectorySeparatorChar, "en_US");
+        await list.LoadAsync(_folder + Path.DirectorySeparatorChar, "en_US");
         return list;
     }
 
     [Fact]
-    public void MatchesTheFullScanForEveryPartOfEveryMultiWordName()
+    public async Task MatchesTheFullScanForEveryPartOfEveryMultiWordName()
     {
-        var namesList = MakeNamesList();
+        var namesList = await MakeNamesListAsync();
         var multiNames = namesList.GetMultiNames();
 
         foreach (var multiName in MultiWordNames)
@@ -78,16 +78,16 @@ public class SeNamesListMultiWordTests : IDisposable
     [InlineData("MARY ANN was here.", "MARY ANN")]
     [InlineData("Los Angeles is far.", "Angeles")]
     [InlineData("Angeles is far.", "Angeles")]
-    public void MatchesTheFullScanForWord(string text, string word)
+    public async Task MatchesTheFullScanForWord(string text, string word)
     {
-        var namesList = MakeNamesList();
+        var namesList = await MakeNamesListAsync();
         Assert.Equal(Reference(namesList.GetMultiNames(), text, word), namesList.IsInNamesMultiWordList(text, word));
     }
 
     [Fact]
-    public void AddedMultiWordNameIsSeenImmediately()
+    public async Task AddedMultiWordNameIsSeenImmediately()
     {
-        var namesList = MakeNamesList();
+        var namesList = await MakeNamesListAsync();
         const string word = "Zzyzx";
         const string line = "I met Zzyzx Quorbal today.";
 

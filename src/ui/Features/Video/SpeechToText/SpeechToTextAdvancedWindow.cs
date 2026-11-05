@@ -62,10 +62,10 @@ public class SpeechToTextAdvancedWindow : Window
         {
             var button = new Button
             {
-                Content = new TextBlock { Text = engine.Name, FontSize = 12.5, TextTrimming = TextTrimming.CharacterEllipsis },
+                Content = new TextBlock { Text = engine.Name, FontSize = EditorChrome.FieldFontSize, TextTrimming = TextTrimming.CharacterEllipsis },
                 Command = vm.EngineClickedCommand,
                 CommandParameter = engine,
-                Height = 30,
+                Height = EditorChrome.ScaledSize(30),
                 Padding = new Thickness(10, 0),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
@@ -94,7 +94,7 @@ public class SpeechToTextAdvancedWindow : Window
         {
             IsReadOnly = true,
             Margin = new Thickness(0),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Background = Brushes.Transparent,
             BorderThickness = new Thickness(0),
             Padding = new Thickness(10, 8),
@@ -177,8 +177,8 @@ public class SpeechToTextAdvancedWindow : Window
                 Content = text,
                 Margin = new Thickness(0),
                 Padding = new Thickness(12, 0),
-                Height = 30,
-                FontSize = 12.5,
+                Height = EditorChrome.ScaledSize(30),
+                FontSize = EditorChrome.FieldFontSize,
                 MinWidth = 80,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -227,7 +227,7 @@ public class SpeechToTextAdvancedWindow : Window
             },
         };
 
-        var buttonBar = EditorChrome.MakeFlushButtonBar(presets, UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand)));
+        var buttonBar = EditorChrome.MakeButtonBar(presets, UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand)));
 
         var parameters = new Border
         {

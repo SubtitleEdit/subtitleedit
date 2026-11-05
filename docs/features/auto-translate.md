@@ -23,11 +23,15 @@ Right-click selected lines in the grid and choose **Auto-translate** to translat
 
 The shortcut **Auto-translate selected lines (no prompt, use last engine/languages)** (no default key; set it in [Shortcuts](shortcuts.md)) starts right away with the last used engine and languages; the dialog only shows progress and closes when done. Until a translation has been run once, it prompts as usual.
 
+### Find and replace in the translation
+
+**Find...** and **Replace...** (right-click a line in the grid, Ctrl+F / Ctrl+H, Cmd+F / Cmd+Option+F on macOS) open the same Find and Replace windows as the main window, so a recurring error in the translation can be fixed before you click **OK**. F3 and Shift+F3 repeat the last search. Only the translation column is searched, and text can't be replaced while a translation is running.
+
 ## Supported Engines
 
 - **Google Translate V1 API** — Free Google Translate. When Google answers with its "unusual traffic" block page, Subtitle Edit retries the request through a fallback endpoint (`clients5.google.com`) before giving up; a block is on Google's side and is usually lifted again after minutes to a few hours
 - **Google Translate V2 API** — Google Cloud Translation (requires API key)
-- **Bing Microsoft Translator** — Azure Cognitive Services (requires API key)
+- **Bing Microsoft Translator** — Azure Cognitive Services (requires API key). For a regional or multi-service Azure resource, also enter its **Region**, for example `westeurope` (shown under Keys and Endpoint in the Azure portal); leave it empty for a global resource
 - **DeepL V2 translate** — DeepL translation (requires API key). Every language the DeepL API offers is listed, as source and as target (including the target-only regional variants such as fr-CA and de-CH). A **Formality** dropdown — Default, More formal, Less formal, More formal (fall back to default), Less formal (fall back to default) — appears for target languages that support it
 - **LibreTranslate** — Open-source, self-hosted translation
 - **MyMemory Translate** — Free translation memory
@@ -36,7 +40,7 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 - **LM Studio advanced (local LLM)** — LM Studio translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **Ollama (local LLM)** — Local LLM-based translation
 - **Ollama advanced (local LLM)** — Ollama translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
-- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT, Hy-MT2 or TranslatePsy-AfriSLM for English ↔ 19 African languages) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
+- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (Index-Translate, TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT, Hy-MT2 or TranslatePsy-AfriSLM for English ↔ 19 African languages) and runs a local `llama-server` for you. See [Best local models for translating from English](#best-local-models-for-translating-from-english) for a recommendation and [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
 - **llama.cpp advanced (local LLM)** — The managed llama.cpp server translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **OpenAI Compatible API** — Generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...); configure URL, model, prompt, and an optional API key
 - **Anthropic Claude** — AI translation (requires API key)
@@ -54,6 +58,43 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 - **winstxnhdw-nllb-api** — NLLB (No Language Left Behind) API
 - **Baidu Translate** — Baidu translation (requires App ID and secret)
 - **CrispASR MADLAD** — Local MADLAD-based translation with downloadable models (shown with size and install status); also available in Batch Convert. The language list is the 419 languages the MADLAD-400 model itself knows, so it is both longer and shorter than the usual one: it adds languages such as Iloko, Waray, Papiamento, Moroccan Arabic and Latin, and leaves out ones MADLAD cannot produce — including Cantonese, for which Google Translate, NLLB or any of the LLM engines are the alternatives. Quality varies a lot across that long tail — Google evaluated only about half of the languages the model claims
+
+## CrispASR MADLAD: CPU and GPU builds
+
+When CrispASR is downloaded you choose a build: **CPU**, **Vulkan** or **CUDA** on Windows, plus **ROCm** on Linux x64. macOS and Linux ARM64 have one build, so there is nothing to choose. MADLAD stays on the CPU on macOS.
+
+- **CPU** — no GPU needed and the smallest download. Windows also has a Legacy build for CPUs without AVX2.
+- **Vulkan** — AMD, NVIDIA and Intel GPUs, including integrated graphics, with a working Vulkan driver.
+- **CUDA** — NVIDIA GPUs. Pick CUDA 12 or CUDA 13 to match your driver.
+- **ROCm** — supported AMD GPUs on Linux. Not every AMD GPU supports it.
+
+To switch later, click the gear next to the **CrispASR MADLAD** model, in Auto Translate or Batch Convert, and then **Re-download** or **Update**. Downloaded models are kept. The **Update** button next to the engine keeps your current build.
+
+Speech-to-text shares the CrispASR engine, so a build you pick here is used there too, and a GPU build you installed for speech-to-text already runs MADLAD on the GPU.
+
+A GPU build uses the GPU automatically. The model is a 2.04 GB download and needs more than that in VRAM once it is running. If a line fails on the GPU, for example because the model does not fit, Subtitle Edit retries it on the CPU and stays on the CPU for the rest of that translation, so it finishes more slowly rather than failing. To see whether the GPU is doing the work, watch its activity while translating.
+
+A GPU build is not always faster here: each subtitle line starts CrispASR and loads the model again, and that time is the same however fast the GPU is.
+
+## Best local models for translating from English
+
+To translate English subtitles into Spanish, German, Danish or another language on your own machine, start with **Index-Translate 9B (Q4_K_M)** in the **llama.cpp** engine. All the models below are in its download list.
+
+| Model | Download | Why pick it |
+|-------|----------|-------------|
+| **Index-Translate 9B (Q4_K_M)** | 5.8 GB | Best overall, with the fewest meaning errors in every language we tested. About 1.3 s per line on an M4 Mac |
+| **Index-Translate 2B (Q8_0)** | 2.1 GB | Best small model, for limited memory or when speed matters most. About 0.6 s per line, with more slips than the 9B |
+| **Gemma 4 E4B it (Q4_K_M)** | 5.4 GB | Good alternative at about 1 s per line, with more errors than the 9B in Danish and German but not in Japanese |
+| **TranslateGemma 12B (Q4_K_M)** | 7.3 GB | Close to the 9B in quality, but it can return English lines untranslated when lines are merged into one request. Subtitle Edit detects this and retries, so it can take longer |
+| **TranslatePsy-AfriSLM 4B** | 3.1 GB | The one to use for the 19 African languages it covers |
+
+These recommendations come from small tests of about 24 lines of English dialogue, mostly into Danish, German and Japanese, with Index-Translate 9B also tested into Spanish, French, Russian and Chinese. Results for other languages can differ, so try a few lines before translating a whole file.
+
+**CrispASR MADLAD** made more meaning errors than Index-Translate 9B in the same tests (5 against 1 of 24 lines into German). Its strength is its long language list.
+
+A bigger download is not automatically better. Qwen 3.8 27B at 2-bit (9.8 GB) was about four times slower than Index-Translate 9B and clearly worse, because the heavy compression damages the output. Bonsai 27B is listed for [AI Review](ai-review.md) as English only, and is not a translation model.
+
+For a whole episode or film, use **llama.cpp advanced** so that names and terms stay consistent, see [Advanced local engines](auto-translate-advanced.md).
 
 ## llama.cpp: using your own model
 

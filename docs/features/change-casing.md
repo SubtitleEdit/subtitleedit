@@ -19,9 +19,9 @@ Fix the casing (capitalization) of subtitle text.
 ## Casing of the selected text
 
 The text box context menu has a **Casing** submenu that works on the text you have selected in the
-subtitle text box (or, for **Toggle casing**, on the selected lines when the subtitle list has focus):
+subtitle text box (or, for **Cycle casing**, on the selected lines when the subtitle list has focus):
 
-- **Toggle casing** — Cycles the selection: ALL CAPS → all lowercase → Title Case (`Ctrl+Shift+F3`)
+- **Cycle casing** — Cycles the selection: ALL CAPS → all lowercase → Title Case (`Ctrl+Shift+F3`)
 - **Selection to UPPERCASE** (`Ctrl+Shift+U`)
 - **Selection to lowercase** (`Ctrl+U`)
 - **Selection to Sentence case** — Same as **Normal casing** above, but only for the selection

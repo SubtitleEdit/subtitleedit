@@ -79,7 +79,7 @@ public class AddRulesWindow : Window
         };
 
         var labelHint = EditorChrome.MakeDimLabel(Se.Language.Edit.MultipleReplace.EnterAddsRule, new Thickness(0));
-        labelHint.FontSize = 11.5;
+        labelHint.FontSize = EditorChrome.ScaledFont(11.5);
 
         var entryPanel = new StackPanel
         {
@@ -118,7 +118,7 @@ public class AddRulesWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var labelRulesInfo = EditorChrome.MakeBoundHint(nameof(vm.RulesInfo));
-        labelRulesInfo.FontSize = 12;
+        labelRulesInfo.FontSize = EditorChrome.FieldFontSize;
         var buttonPanel = EditorChrome.MakeButtonBar(labelRulesInfo, buttonCancel, buttonOk);
 
         var root = new Grid

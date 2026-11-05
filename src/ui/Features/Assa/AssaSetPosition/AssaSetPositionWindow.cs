@@ -88,7 +88,7 @@ public class AssaSetPositionWindow : Window
 
     private static TextBlock MakeHeaderValue(string property, string? format = null) => new()
     {
-        FontSize = 12,
+        FontSize = EditorChrome.FieldFontSize,
         Foreground = EditorChrome.DimTextBrush,
         VerticalAlignment = VerticalAlignment.Center,
         [!TextBlock.TextProperty] = new Binding(property) { StringFormat = format },
@@ -162,7 +162,7 @@ public class AssaSetPositionWindow : Window
         content.Children.Add(new TextBlock
         {
             Text = Se.Language.Assa.SetPositionNudgeHint,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.FaintTextBrush,
             TextWrapping = TextWrapping.Wrap,
         });
@@ -395,12 +395,16 @@ public class AssaSetPositionWindow : Window
                 hasPlaced = false;
                 UpdateCursor();
             }
+            else if (e.PropertyName == nameof(vm.IsPreviewReady))
+            {
+                hasPlaced = false; // the position only means something once the frame is rendered
+            }
         };
         UpdateCursor();
 
         videoGrid.PointerMoved += (_, e) =>
         {
-            if (!vm.ClickToPlace || !following || !TryGetRenderPoint(e, out var point))
+            if (!vm.ClickToPlace || !vm.IsPreviewReady || !following || !TryGetRenderPoint(e, out var point))
             {
                 return;
             }
@@ -414,7 +418,7 @@ public class AssaSetPositionWindow : Window
         };
         videoGrid.PointerPressed += (_, e) =>
         {
-            if (!vm.ClickToPlace || !e.GetCurrentPoint(videoGrid).Properties.IsLeftButtonPressed || !TryGetRenderPoint(e, out var point))
+            if (!vm.ClickToPlace || !vm.IsPreviewReady || !e.GetCurrentPoint(videoGrid).Properties.IsLeftButtonPressed || !TryGetRenderPoint(e, out var point))
             {
                 return;
             }
@@ -441,13 +445,17 @@ public class AssaSetPositionWindow : Window
             {
                 vm.ScreenshotX = placedX; // exactly back, no snapping
                 vm.ScreenshotY = placedY;
+
+                // remember again on the next entry, so anchor picks, centering, typed X/Y and
+                // nudges made outside the frame are not undone the next time the mouse leaves it
+                hasPlaced = false;
             }
         };
 
         var info = new DockPanel { Margin = new Thickness(2, 8, 2, 0) };
         info.Children.Add(new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LineInfo)),
         });
@@ -463,7 +471,7 @@ public class AssaSetPositionWindow : Window
         var tags = new TextBlock
         {
             FontFamily = new FontFamily("Menlo, Consolas, Cascadia Mono, DejaVu Sans Mono, monospace"),
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -474,8 +482,8 @@ public class AssaSetPositionWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         var grid = new Grid
         {

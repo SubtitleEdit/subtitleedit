@@ -201,7 +201,7 @@ public class ModifySelectionWindow : Window
 
     private static RadioButton MakeRadio(RadioButton radioButton)
     {
-        radioButton.FontSize = 12.5;
+        radioButton.FontSize = EditorChrome.FieldFontSize;
         return radioButton;
     }
 

@@ -42,6 +42,7 @@ public class LanguageOcr
     public string FillSelectedLinesWithClipboard { get; set; }
     public string ShowImage { get; set; }
     public string PromptForUknownWords { get; set; }
+    public string VideoPreview { get; set; }
     public string TryToGuessUnknownWords { get; set; }
     public string AutoBreakIfMoreThanXLines { get; set; }
     public string UnknownWords { get; set; }
@@ -173,9 +174,46 @@ public class LanguageOcr
     public string NOcrZoomOut { get; set; }
     public string NOcrLineAlgorithm { get; set; }
     public string NOcrLineAlgorithmHint { get; set; }
+    public string NOcrSelectAction { get; set; }
+    public string NOcrDeleteDatabase { get; set; }
+    public string NOcrDeleteDatabaseDetails { get; set; }
+    public string NOcrDeleteItem { get; set; }
+    public string NOcrDeleteItemDetails { get; set; }
+    public string NOcrCharacterSaved { get; set; }
+    public string GeneratedForegroundXBackgroundY { get; set; }
+    public string DiscardOcrResultQuestion { get; set; }
+    public string DiscardOcrResultDetaulsQuestion { get; set; }
+    public string UpdateCrispEmbedQuestion { get; set; }
+    public string UpdateCrispEmbedDetailsQuestion { get; set; }
+    public string MistralApiKeyMissing { get; set; }
+    public string MistralApiKeyMessage { get; set; }
+    public string TesseractOcrFailedX { get; set; }
+    public string OllamaOcrFailedXYZ { get; set; }
+    public string LlamaCppOcrFailedXYZ { get; set; }
+    public string CrispEmbedError { get; set; }
+    public string CrispEmbedCouldNotStartX { get; set; }
+    public string NewerTesseractXAvailable { get; set; }
+    public string PleaseInstallTesseract { get; set; }
+    public string TesseractNotDetectedExampleX { get; set; }
+    public string InitializingX { get; set; }
+    public string LoadingXModel { get; set; }
+    public string PreparingOcr { get; set; }
 
     public LanguageOcr()
     {
+        MistralApiKeyMissing = "Mistral API key missing";
+        MistralApiKeyMessage = "You must enter a valid Mistral API key.\n\nGet your API key from https://mistral.ai/";
+        TesseractOcrFailedX = "Tesseract OCR failed:\n\n{0}";
+        OllamaOcrFailedXYZ = "Ollama OCR failed (model \"{0}\" at {1}):\n\n{2}";
+        LlamaCppOcrFailedXYZ = "llama.cpp OCR failed (model \"{0}\" at {1}):\n\n{2}";
+        CrispEmbedError = "CrispEmbed error";
+        CrispEmbedCouldNotStartX = "CrispEmbed could not be started:\n\n{0}";
+        NewerTesseractXAvailable = "A newer Tesseract OCR ({0}) is available.\n\nDownload and use it? Your downloaded languages are kept.";
+        PleaseInstallTesseract = "Please install Tesseract";
+        TesseractNotDetectedExampleX = "\"Tesseract\" was not detected. Please install Tesseract.\nE.g. {0}.";
+        InitializingX = "Initializing {0}...";
+        LoadingXModel = "Loading {0} model...";
+        PreparingOcr = "Preparing OCR...";
         LinesToDraw = "Lines to draw";
         CurrentImage = "Current image";
         AutoDrawAgain = "Auto draw again";
@@ -214,6 +252,7 @@ public class LanguageOcr
         FillSelectedLinesWithClipboard = "Fill selected lines with clipboard text";
         ShowImage = "Show image";
         PromptForUknownWords = "Prompt for unknown words";
+        VideoPreview = "Video preview";
         TryToGuessUnknownWords = "Try to guess unknown words";
         AutoBreakIfMoreThanXLines = "Auto break if more than {0} lines";
         UnknownWords = "Unknown words";
@@ -353,5 +392,16 @@ public class LanguageOcr
         NOcrZoomOut = "Zoom out";
         NOcrLineAlgorithm = "Algorithm";
         NOcrLineAlgorithmHint = "Algorithm used by Auto-draw to generate foreground/background lines";
+        NOcrSelectAction = "Select action to perform on nOCR database \"{0}\"";
+        NOcrDeleteDatabase = "Delete nOCR database?";
+        NOcrDeleteDatabaseDetails = "Do you want to delete the current nOCR database \"{0}\" with {1:#,###,##0} items?";
+        NOcrDeleteItem = "Delete nOCR item?";
+        NOcrDeleteItemDetails = "Do you want to delete the current nOCR item?";
+        NOcrCharacterSaved = "nOCR character saved";
+        GeneratedForegroundXBackgroundY = "Generated: {0} foreground, {1} background";
+        DiscardOcrResultQuestion = "Discard OCR result?";
+        DiscardOcrResultDetaulsQuestion = "Some items have OCR text. Close and discard the OCR result?";
+        UpdateCrispEmbedQuestion = "Update CrispEmbed?";
+        UpdateCrispEmbedDetailsQuestion = "A newer version of CrispEmbed is available.\n\nDownload it now?";
     }
 }

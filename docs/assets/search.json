@@ -1,0 +1,6 @@
+---
+layout: null
+---
+[{% assign first = true %}{% for group in site.data.nav %}{% for item in group.items %}{% assign url = '/' | append: item.url %}{% assign doc = site.pages | where: 'url', url | first %}{% unless first %},{% endunless %}{% assign first = false %}
+{"title":{{ item.title | jsonify }},"desc":{{ item.desc | jsonify }},"group":{{ group.name | jsonify }},"url":{{ item.url | jsonify }},"text":{{ doc.content | markdownify | strip_html | normalize_whitespace | jsonify }}}{% endfor %}{% endfor %}
+]

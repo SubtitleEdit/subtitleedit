@@ -27,7 +27,7 @@ public class BreezeTtsAudioCppDownloadService : IBreezeTtsAudioCppDownloadServic
     private readonly HttpClient _httpClient;
 
     private const string ModelUrlBase =
-        "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/Breeze-TTS-2-GGUF/";
+        AudioCppRuntime.ModelRepoBaseUrl + "Breeze-TTS-2-GGUF/";
 
     public BreezeTtsAudioCppDownloadService(HttpClient httpClient)
     {

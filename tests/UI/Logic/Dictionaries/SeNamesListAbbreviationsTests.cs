@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Logic.Dictionaries;
+﻿using Nikse.SubtitleEdit.Logic.Dictionaries;
 
 namespace UITests.Logic.Dictionaries;
 
@@ -37,12 +37,12 @@ public class SeNamesListAbbreviationsTests : IDisposable
 
     // Names ending with a period stay a source of abbreviations, but "Dr." must also match "dr.".
     [Fact]
-    public void NameAbbreviationsMatchCaseInsensitively()
+    public async Task NameAbbreviationsMatchCaseInsensitively()
     {
         WriteNames("names.xml", "Dr.", "Mr.", "Robert");
 
         var namesList = new SeNamesList();
-        namesList.Load(_folder, "nl");
+        await namesList.LoadAsync(_folder, "nl");
 
         var abbreviations = namesList.GetAbbreviations();
         Assert.Contains("dr.", abbreviations);
@@ -52,13 +52,13 @@ public class SeNamesListAbbreviationsTests : IDisposable
 
     // Abbreviations that are not names come from <lang>_abbreviations.xml (#13082).
     [Fact]
-    public void LoadsLanguageAbbreviationFile()
+    public async Task LoadsLanguageAbbreviationFile()
     {
         WriteNames("names.xml", "Dr.");
         WriteAbbreviations("nl_abbreviations.xml", "dhr.", "enz.");
 
         var namesList = new SeNamesList();
-        namesList.Load(_folder, "nl");
+        await namesList.LoadAsync(_folder, "nl");
 
         var abbreviations = namesList.GetAbbreviations();
         Assert.Contains("dhr.", abbreviations);
@@ -68,14 +68,32 @@ public class SeNamesListAbbreviationsTests : IDisposable
 
     // A second Load must not keep the previous language's abbreviations.
     [Fact]
-    public void ReloadReplacesPreviousLanguageAbbreviations()
+    public async Task ReloadReplacesPreviousLanguageAbbreviations()
     {
         WriteAbbreviations("nl_abbreviations.xml", "dhr.");
         WriteAbbreviations("es_abbreviations.xml", "sr.");
 
         var namesList = new SeNamesList();
-        namesList.Load(_folder, "nl");
-        namesList.Load(_folder, "es");
+        await namesList.LoadAsync(_folder, "nl");
+        await namesList.LoadAsync(_folder, "es");
+
+        var abbreviations = namesList.GetAbbreviations();
+        Assert.Contains("sr.", abbreviations);
+        Assert.DoesNotContain("dhr.", abbreviations);
+    }
+
+    // Overlapping loads (e.g. the language changed while a load was running) end with the
+    // lists of the last load started, whichever finishes first.
+    [Fact]
+    public async Task OverlappingLoadsKeepTheLastStarted()
+    {
+        WriteAbbreviations("nl_abbreviations.xml", "dhr.");
+        WriteAbbreviations("es_abbreviations.xml", "sr.");
+
+        var namesList = new SeNamesList();
+        var first = namesList.LoadAsync(_folder, "nl");
+        var second = namesList.LoadAsync(_folder, "es");
+        await Task.WhenAll(first, second);
 
         var abbreviations = namesList.GetAbbreviations();
         Assert.Contains("sr.", abbreviations);

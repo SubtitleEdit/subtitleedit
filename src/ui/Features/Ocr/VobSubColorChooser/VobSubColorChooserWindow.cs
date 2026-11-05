@@ -34,7 +34,7 @@ public class VobSubColorChooserWindow : Window
         var headerText = new TextBlock
         {
             Text = Se.Language.Ocr.VobSubColorsHeader,
-            FontSize = 14,
+            FontSize = EditorChrome.ScaledFont(14),
             FontWeight = FontWeight.SemiBold,
             Foreground = EditorChrome.StrongTextBrush,
         };
@@ -43,7 +43,7 @@ public class VobSubColorChooserWindow : Window
         {
             Text = Se.Language.Ocr.VobSubColorsDescription,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
         };
 
@@ -146,7 +146,7 @@ public class VobSubColorChooserWindow : Window
         var labelBlock = new TextBlock
         {
             Text = label,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = FontWeight.SemiBold,
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(0, 6, 0, 0),
@@ -156,7 +156,7 @@ public class VobSubColorChooserWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
         };
         hexBlock.Bind(TextBlock.TextProperty, new Binding(hexProperty));
 

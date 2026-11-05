@@ -355,13 +355,32 @@ public static class LlamaCppServerManager
             "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/GLM-OCR-Q8_0.gguf",
             MmprojFileName: "mmproj-GLM-OCR-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/mmproj-GLM-OCR-Q8_0.gguf"),
+        // LFM3-VL 2B (Liquid AI, LFM 1.0 license), a general vision model rather than an OCR
+        // specialist; needs llama.cpp b11960 or newer. Measured 2026-10-29 on b11968 against 220
+        // real Blu-ray subtitle images (Dutch 60, German/Danish/French/English 40 each, reference
+        // hand-checked wherever any model disagreed): 214 exact against GLM-OCR's 213 at 3.7 s vs
+        // 4.9 s per image, and 18/19 on the synthetic corpus (GLM-OCR 16/19). Its misses are fluent
+        // word swaps ("mistake" for "mistanke", "just" for "juist", "Yea" for "Yeah"), which are
+        // harder to catch when proofreading than GLM-OCR's l/I slips - hence second, not first.
+        // Thinking stays on: with it off the model merged 25 of 220 two-line subtitles into one
+        // line and wrote the ♩ and ♫ notes for ♪; with it on, neither (~570 reasoning characters
+        // per image, which the engines ignore - they read content only). Q4_K_M: the Q8_0 scored
+        // the same (192/220 with thinking off, 17/19 synthetic) at 1.7x the size. Replaces
+        // LFM2.5-VL 3B, which split lines into one word per line on real discs (171/220) and
+        // was a 3.5 GB download. Same prompt as LFM2.5: under the shared prompt it answers
+        // "There are two lines of text in the image..." instead of the text.
+        new LlamaCppModel("LFM3-VL 2B (Q4_K_M)", "LFM3-VL-2B-Q4_K_M.gguf", "1.3 GB",
+            "https://huggingface.co/LiquidAI/LFM3-VL-2B-GGUF/resolve/main/LFM3-VL-2B-Q4_K_M.gguf",
+            MmprojFileName: "mmproj-LFM3-VL-2B-Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/LiquidAI/LFM3-VL-2B-GGUF/resolve/main/mmproj-LFM3-VL-2B-Q8_0.gguf",
+            PromptTemplate: SeOcrDefaults.LlamaCppOcrPromptLfmVl),
         // LightOnOCR-3 4B (LightOn, Apache-2.0, Qwen 3.5 VL) as mradermacher's Q8_0 - no official
         // GGUF exists. As accurate as GLM-OCR on the 390 real images (384 vs 385 exact) and ~2.5x
         // faster (1.3-1.8 s vs 3.5-5 s per image), and right where GLM-OCR fails: it keeps the line
         // break in two-line ♪ lyrics and reads capital I where GLM-OCR writes "lst"/"ledereen". Its
         // misses: two misread words, a closing quote added to a quotation that continues in the next
-        // cue, and "- Hi!" for "-Hi!" on English dialogue dashes. Second, not first, because it is
-        // a 5.2 GB download against GLM-OCR's 1.4 GB. Q8_0 only: the i1-Q4_K_M was no better than
+        // cue, and "- Hi!" for "-Hi!" on English dialogue dashes. Behind GLM-OCR and LFM3-VL because
+        // it is a 5.2 GB download against their 1.4 GB and 1.3 GB. Q8_0 only: the i1-Q4_K_M was no better than
         // the 0.8B (143/150 Dutch vs 147/150 for Q8_0).
         // NoThinking: the Qwen 3.5 template thinks by default and the answer then lands in
         // reasoning_content, leaving content empty on most images. Border: the square cost it
@@ -372,18 +391,6 @@ public static class LlamaCppServerManager
             MmprojUrl: "https://huggingface.co/mradermacher/LightOnOCR-3-4B-GGUF/resolve/main/LightOnOCR-3-4B.mmproj-f16.gguf",
             NoThinking: true,
             OcrPadding: AiOcrPadding.Border),
-        // Liquid AI's general vision model (3B), not an OCR specialist. Measured 2026-09-05 on the
-        // same 14-image corpus: 0.00% character error - flawless across all eight scripts, italics,
-        // busy video backgrounds and small text, where GLM-OCR misread one Russian word - and with
-        // its own prompt 13/14 exact (its one miss over-splits a line; it never merges). Second,
-        // not first, because it is 2.5x the download (2.9 GB + 0.6 GB mmproj) and ~2.5x slower per
-        // image. It follows instructions literally, so it needs the PromptTemplate below: under the
-        // shared prompt it prefixes every answer with the line count it was asked to identify.
-        new LlamaCppModel("LFM2.5-VL 3B (Q8_0)", "LFM2.5-VL-3B-Q8_0.gguf", "3.5 GB",
-            "https://huggingface.co/LiquidAI/LFM2.5-VL-3B-GGUF/resolve/main/LFM2.5-VL-3B-Q8_0.gguf",
-            MmprojFileName: "mmproj-LFM2.5-VL-3B-Q8_0.gguf",
-            MmprojUrl: "https://huggingface.co/LiquidAI/LFM2.5-VL-3B-GGUF/resolve/main/mmproj-LFM2.5-VL-3B-Q8_0.gguf",
-            PromptTemplate: SeOcrDefaults.LlamaCppOcrPromptLfm25Vl),
         // PaddlePaddle's official llama.cpp package - 109 languages (NaViT + ERNIE-4.5).
         new LlamaCppModel("PaddleOCR-VL 1.6", "PaddleOCR-VL-1.6-GGUF.gguf", "1.8 GB",
             "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF.gguf",
@@ -694,10 +701,23 @@ public static class LlamaCppServerManager
     /// </summary>
     public static LlamaCppModel CreateCustomOcrModel(string displayName, string fileNameOrPath, string size, string mmprojFileNameOrPath)
     {
-        var (_, _, noThinking) = InferChatTemplate(Path.GetFileName(fileNameOrPath));
+        var fileName = Path.GetFileName(fileNameOrPath);
+        var (_, _, noThinking) = InferChatTemplate(fileName);
         return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
             MmprojFileName: mmprojFileNameOrPath,
-            NoThinking: noThinking);
+            NoThinking: noThinking,
+            PromptTemplate: IsLfmVisionModel(fileName) ? SeOcrDefaults.LlamaCppOcrPromptLfmVl : null);
+    }
+
+    /// <summary>
+    /// An LFM vision model (LFM2.5-VL, LFM3-VL, any quant) answers the shared OCR prompt's line count
+    /// literally, so a self-supplied one gets the LFM prompt too. This also keeps LFM2.5-VL working
+    /// for users who downloaded it while it was curated: it now shows up as a custom model.
+    /// </summary>
+    private static bool IsLfmVisionModel(string fileName)
+    {
+        return fileName.StartsWith("LFM", StringComparison.OrdinalIgnoreCase) &&
+               fileName.Contains("-VL", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>

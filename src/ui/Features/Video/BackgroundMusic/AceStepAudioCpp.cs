@@ -50,9 +50,10 @@ public static class AceStepAudioCpp
     public const string FamilyName = "ace_step";
     public const string DisplayName = "ACE-Step 1.5";
     public const string ModelFileName = "ace-step-1.5-turbo-q8_0.gguf";
-    public const long ModelFileSize = 6_185_460_032;
+    // Current upload first, then the pre-2026-10-19 one so existing installs stay valid (#16326).
+    private static readonly long[] ModelFileSizes = [6_185_468_096, 6_185_460_032];
     public const string ModelSizeText = "5.8 GB";
-    public const string ModelUrl = "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/ACE-Step1.5-GGUF/turbo/" + ModelFileName;
+    public const string ModelUrl = AudioCppRuntime.ModelRepoBaseUrl + "ACE-Step1.5-GGUF/turbo/" + ModelFileName;
 
     /// <summary>
     /// The model ignores lyrics-less requests unless told they are instrumental, and a talking-head
@@ -91,7 +92,7 @@ public static class AceStepAudioCpp
 
             // A symlinked GGUF reports the link's own length; measure the target.
             var length = info.ResolveLinkTarget(returnFinalTarget: true) is FileInfo target ? target.Length : info.Length;
-            return length == ModelFileSize;
+            return Array.IndexOf(ModelFileSizes, length) >= 0;
         }
         catch
         {

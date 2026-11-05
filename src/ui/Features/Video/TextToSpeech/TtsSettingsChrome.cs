@@ -82,14 +82,14 @@ internal static class TtsSettingsChrome
         panel.Children.Add(new TextBlock
         {
             Text = title,
-            FontSize = 15,
+            FontSize = EditorChrome.ScaledFont(15),
             FontWeight = FontWeight.SemiBold,
             Foreground = EditorChrome.StrongTextBrush,
         });
         panel.Children.Add(new TextBlock
         {
             Text = description,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         });
@@ -111,7 +111,7 @@ internal static class TtsSettingsChrome
     internal static TextBlock MakeLicenseLink(string text, CommunityToolkit.Mvvm.Input.IRelayCommand command)
     {
         var link = UiUtil.MakeLink(text, command);
-        link.FontSize = 12;
+        link.FontSize = EditorChrome.FieldFontSize;
         link.Margin = new Thickness(0, 2, 0, 0);
         return link;
     }
@@ -169,7 +169,7 @@ internal static class TtsSettingsChrome
                 },
                 new TextBlock
                 {
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     VerticalAlignment = VerticalAlignment.Center,
                     [!TextBlock.TextProperty] = new Binding(labelBindingPath),
                 },
@@ -205,7 +205,7 @@ internal static class TtsSettingsChrome
                 Children =
                 {
                     new Optris.Icons.Avalonia.Icon { Value = IconNames.Download, FontSize = 14, VerticalAlignment = VerticalAlignment.Center },
-                    new TextBlock { FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center, [!TextBlock.TextProperty] = new Binding(textBindingPath) },
+                    new TextBlock { FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center, [!TextBlock.TextProperty] = new Binding(textBindingPath) },
                 },
             },
         };
@@ -249,7 +249,7 @@ internal static class TtsSettingsChrome
 
     private static StackPanel MakeValuePanel(TextBlock text, Control[] actions)
     {
-        text.FontSize = 12.5;
+        text.FontSize = EditorChrome.FieldFontSize;
         text.VerticalAlignment = VerticalAlignment.Center;
         var panel = new StackPanel
         {
@@ -294,7 +294,7 @@ internal static class TtsSettingsChrome
 
         var label = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(labelBindingPath),
@@ -331,7 +331,7 @@ internal static class TtsSettingsChrome
             TextWrapping = TextWrapping.Wrap,
             VerticalAlignment = VerticalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBox.TextProperty] = new Binding(bindingPath),
         };
         AutomationProperties.SetName(text, Se.Language.General.InstallFolder);

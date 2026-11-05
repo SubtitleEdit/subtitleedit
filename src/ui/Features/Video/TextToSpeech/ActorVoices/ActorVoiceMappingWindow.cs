@@ -97,7 +97,7 @@ public class ActorVoiceMappingWindow : Window
         var title = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.ActorVoicesTitle,
-            FontSize = 16,
+            FontSize = EditorChrome.ScaledFont(16),
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -105,14 +105,14 @@ public class ActorVoiceMappingWindow : Window
         var subtitle = new TextBlock
         {
             Text = Se.Language.Video.TextToSpeech.ActorVoicesSubtitle,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };
 
         var status = new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 4, 0, 0),
@@ -340,7 +340,7 @@ public class ActorVoiceMappingWindow : Window
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, Margin = new Thickness(-10, 0, 0, 0), Children = { applyDefault, clearAll } };
-        return EditorChrome.MakeFlushButtonBar(actions, cancel, ok);
+        return EditorChrome.MakeButtonBar(actions, cancel, ok);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

@@ -40,6 +40,11 @@ public class SettingsPage : UserControl
     private readonly Border _contentBorder;
     private readonly Border _buttonBar;
 
+    // The app theme the chrome brushes and the sections were built for. Attaching the page to
+    // its window also raises ActualThemeVariantChanged (the default variant resolves to the
+    // window's), which must not rebuild everything a second time on every open.
+    private ThemeVariant? _builtThemeVariant = Application.Current?.ActualThemeVariant;
+
     public SettingsPage(SettingsViewModel vm)
     {
         _vm = vm;
@@ -158,6 +163,14 @@ public class SettingsPage : UserControl
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
         ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(() =>
         {
+            var themeVariant = Application.Current?.ActualThemeVariant;
+            if (themeVariant == _builtThemeVariant)
+            {
+                return;
+            }
+
+            _builtThemeVariant = themeVariant;
+
             // The editor brushes are picked when used - follow a theme changed with Apply.
             if (TopLevel.GetTopLevel(this) is Window window)
             {
@@ -595,6 +608,8 @@ public class SettingsPage : UserControl
 
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoSave, nameof(_vm.AutoSave)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.CheckSubtitleFileChangedOutside, nameof(_vm.CheckSubtitleFileChangedOutside)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ConfirmOverwriteSubtitleFileChangedOutside, nameof(_vm.ConfirmOverwriteSubtitleFileChangedOutside)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoBackupOn, nameof(_vm.AutoBackupOn)),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupIntervalMinutes, nameof(_vm.AutoBackupIntervalMinutes), 1),
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupDeleteAfterDays, nameof(_vm.AutoBackupDeleteAfterDays), 1),
@@ -983,6 +998,7 @@ public class SettingsPage : UserControl
                     Mode = BindingMode.TwoWay,
                 }
             }),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SplitAtVideoAndTextBoxPositionAllowEmptySecond, nameof(_vm.SplitAtVideoAndTextBoxPositionAllowEmptySecond)),
             new SettingsItem(Se.Language.Options.Settings.SpellCheckEngine, () => new ComboBox
             {
                 MinWidth = 200,
@@ -1024,13 +1040,13 @@ public class SettingsPage : UserControl
                 120,
                 _vm,
                 nameof(_vm.LayoutScale))),
-            new SettingsItem(Se.Language.Options.Settings.FontScale, () => UiUtil.MakeNumericUpDownInt(
-                (int)Math.Round(UiTheme.MinFontScale * 100.0, MidpointRounding.AwayFromZero),
-                (int)Math.Round(UiTheme.MaxFontScale * 100.0, MidpointRounding.AwayFromZero),
-                100,
+            new SettingsItem(Se.Language.Options.Settings.UiFontSize, () => UiUtil.MakeNumericUpDownInt(
+                UiTheme.MinFontSize,
+                UiTheme.MaxFontSize,
+                (int)UiTheme.BaseFontSize,
                 120,
                 _vm,
-                nameof(_vm.FontScale))),
+                nameof(_vm.UiFontSize))),
             new SettingsItem(Se.Language.Options.Settings.TextSelectionOpacity, () => UiUtil.MakeNumericUpDownInt(
                 UiTheme.MinTextSelectionOpacity,
                 100,
@@ -1106,6 +1122,26 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowAssaLayer, nameof(_vm.ShowAssaLayer)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowHorizontalLineAboveToolbar, nameof(_vm.ShowHorizontalLineAboveToolbar)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowPluginsMenu, nameof(_vm.ShowPluginsMenu)),
+            new SettingsItem(!OperatingSystem.IsWindows(), Se.Language.Options.Settings.WindowsRenderingMode, () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Children =
+                {
+                    new ComboBox
+                    {
+                        MinWidth = 250,
+                        DataContext = _vm,
+                        [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.WindowsRenderingModes)),
+                        [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedWindowsRenderingMode))
+                        {
+                            Mode = BindingMode.TwoWay,
+                        },
+                        ItemTemplate = new FuncDataTemplate<WindowsRenderingModeDisplay>((f, _) =>
+                            new TextBlock { Text = f?.Name }, true),
+                    },
+                    UiUtil.MakeLabel(Se.Language.General.RequiresRestart).WithMarginLeft(5).WithOpacity(0.6),
+                }
+            }),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Toolbar, IconNames.DotsHorizontal, "#58c9b4",

@@ -290,7 +290,7 @@ public class TransparentSubtitlesWindow : Window
         };
         row.Add(new Optris.Icons.Avalonia.Icon { Value = icon, FontSize = 13, Foreground = EditorChrome.IconBrush, VerticalAlignment = VerticalAlignment.Center }, 0, 0);
         var value = EditorChrome.MakeBoundHint(valueProperty);
-        value.FontSize = 12.5;
+        value.FontSize = EditorChrome.FieldFontSize;
         row.Add(value, 0, 1);
         row.Add(button, 0, 2);
         return row;
@@ -305,9 +305,9 @@ public class TransparentSubtitlesWindow : Window
         var sizeFactor = Field(vm, nameof(vm.FontFactor), 0.1, 1.0, "Aa", Se.Language.Video.BurnIn.FontSizeFactor, "0.00", 0.05m);
         var bold = new ToggleButton
         {
-            Content = new TextBlock { Text = "B", FontWeight = FontWeight.Bold, FontSize = 13 },
+            Content = new TextBlock { Text = "B", FontWeight = FontWeight.Bold, FontSize = EditorChrome.FieldFontSize },
             Width = 28,
-            Height = 28,
+            Height = EditorChrome.ScaledSize(28),
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.FontIsBold)) { Mode = BindingMode.TwoWay },
@@ -453,7 +453,7 @@ public class TransparentSubtitlesWindow : Window
         var cut = EditorChrome.MakeInlineRow(
             EditorChrome.MakeSwitch(nameof(vm.IsCutActive), Se.Language.General.Cut),
             new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-scissors", FontSize = 13, Foreground = EditorChrome.IconBrush, VerticalAlignment = VerticalAlignment.Center },
-            new TextBlock { Text = Se.Language.General.Cut, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) },
+            new TextBlock { Text = Se.Language.General.Cut, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) },
             Time(nameof(vm.CutFrom), Se.Language.Video.BurnIn.FromTime),
             pickFrom,
             new TextBlock { Text = "→", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center },
@@ -464,7 +464,7 @@ public class TransparentSubtitlesWindow : Window
         // The source video, single mode only
         var fileName = UiUtil.MakeFilePathLabel(vm, nameof(vm.VideoFileName));
         fileName.Foreground = EditorChrome.DimTextBrush;
-        fileName.FontSize = 12;
+        fileName.FontSize = EditorChrome.FieldFontSize;
         fileName.VerticalAlignment = VerticalAlignment.Center;
         var size = EditorChrome.MakeBoundHint(nameof(vm.VideoFileSize));
         var source = EditorChrome.MakeInlineRow(new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-file-video", FontSize = 12, Foreground = EditorChrome.FaintTextBrush, VerticalAlignment = VerticalAlignment.Center }, fileName, size);
@@ -498,7 +498,7 @@ public class TransparentSubtitlesWindow : Window
         var source = new TextBlock
         {
             Text = Se.Language.General.UseSourceResolution,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.UseSourceResolution)),
@@ -662,7 +662,7 @@ public class TransparentSubtitlesWindow : Window
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
-        statusText.FontSize = 12;
+        statusText.FontSize = EditorChrome.FieldFontSize;
 
         var grid = new Grid
         {
@@ -691,8 +691,8 @@ public class TransparentSubtitlesWindow : Window
         {
             var button = new Button
             {
-                Content = new TextBlock { Text = text, FontSize = 12.5, Margin = new Thickness(12, 0) },
-                Height = 28,
+                Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(12, 0) },
+                Height = EditorChrome.ScaledSize(28),
                 Command = command,
                 VerticalContentAlignment = VerticalAlignment.Center,
             };

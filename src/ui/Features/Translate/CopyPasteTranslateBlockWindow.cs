@@ -28,7 +28,7 @@ public class CopyPasteTranslateBlockWindow : Window
         var labelInfo = new TextBlock
         {
             Text = Se.Language.Translate.BlockCopyInfo,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 520,
             HorizontalAlignment = HorizontalAlignment.Left,

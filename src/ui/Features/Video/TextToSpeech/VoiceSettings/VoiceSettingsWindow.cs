@@ -46,7 +46,7 @@ public class VoiceSettingsWindow : Window
         var textBox = UiUtil.MakeTextBox(250, vm, nameof(vm.VoiceTestText));
         textBox.Width = double.NaN;
         textBox.HorizontalAlignment = HorizontalAlignment.Stretch;
-        textBox.FontSize = 12.5;
+        textBox.FontSize = EditorChrome.FieldFontSize;
         textBox.Background = EditorChrome.FieldBrush;
         textBox.BorderBrush = EditorChrome.FieldBorderBrush;
         textBox.CornerRadius = new CornerRadius(6);
@@ -126,7 +126,7 @@ public class VoiceSettingsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Center,
             TextAlignment = TextAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
         };
 
         var hintText = new TextBlock
@@ -135,7 +135,7 @@ public class VoiceSettingsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Center,
             TextAlignment = TextAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
         };
 

@@ -22,6 +22,8 @@ public class SelectVideoPositionWindow : Window
         Title = Se.Language.General.PickVideoPosition;
         Width = 1280;
         Height = 800;
+        MinWidth = 800;
+        MinHeight = 500;
         CanResize = true;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 

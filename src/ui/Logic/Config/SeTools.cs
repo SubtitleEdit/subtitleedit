@@ -58,6 +58,11 @@ public class SeTools
     public string SplitSubtitleFormat { get; set; }
     public string? SplitSubtitleEncoding { get; set; }
     public string SplitOddLinesAction { get; set; }
+
+    // #16095: "Split line at video and text box position" with the caret at the end keeps all
+    // text in the first half and leaves the second empty (SE 4). Off falls back to the line
+    // break like a caret at the start (#14962).
+    public bool SplitAtVideoAndTextBoxPositionAllowEmptySecond { get; set; }
     public bool GoToLineNumberAlsoSetVideoPosition { get; set; }
     public bool GoToFirstAndLastLineAlsoSetVideoPosition { get; set; }
     public bool SplitRebalanceLongLinesSplit { get; set; }

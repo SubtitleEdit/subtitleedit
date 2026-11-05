@@ -26,7 +26,7 @@ public class HiggsTtsAudioCppDownloadService : IHiggsTtsAudioCppDownloadService
     private readonly HttpClient _httpClient;
 
     private const string ModelUrlBase =
-        "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/Higgs-Audio-v3-TTS-4B-GGUF/";
+        AudioCppRuntime.ModelRepoBaseUrl + "Higgs-Audio-v3-TTS-4B-GGUF/";
 
     public HiggsTtsAudioCppDownloadService(HttpClient httpClient)
     {

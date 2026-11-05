@@ -123,6 +123,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--override-position:<x|y|xy>", "Image → image: ignore the source bitmap position on that axis and place it by --alignment and margins");
         ShowParameter(console, "--full-frame", "Draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline); only fcpimage and bluraysup");
         ShowParameter(console, "--full-frame-background-color:<colour>", "Background of the full frame image (default: transparent)");
+        ShowParameter(console, "--no-assa-styles", "Draw ASSA/SSA input with these image options instead of each line's own style");
         ShowParameter(console, "--mode-3d:<mode>", "3D video, one copy per eye: none (default) | half-side-by-side (sbs) | half-top-bottom (tab); also image → image");
         ShowParameter(console, "--depth-3d:<px>", "3D depth -100..100; positive brings the subtitle out of the screen. D-Cinema: the Z-position");
         ShowParameter(console, "--plane-3d:<file.ofs>", "3D Blu-ray 3D-Plane: each subtitle gets the disc's depth for its frames (--depth-3d where it has none)");
@@ -146,6 +147,9 @@ internal static class HelpDisplay
         ShowParameter(console, "--fce-language:<code>", "Force language for FCE language-gated rules (e.g. es or Spanish); default: auto-detect");
         ShowParameter(console, "--dictionary-folder:<path>", "Hunspell dictionaries + *_OCRFixReplaceList.xml; enables the 'Fix common OCR errors' FCE pass");
         ShowParameter(console, "--fix-rtl-via-unicode-chars", "Fix RTL via Unicode characters");
+        ShowParameter(console, "--merge-continuation-lines", "Merge lines that continue a sentence into the next line");
+        ShowParameter(console, "--merge-continuation-lines-max-gap:<ms>", "Only merge continuation lines closer than N ms (default: 250)");
+        ShowParameter(console, "--merge-continuation-lines-max-chars:<n>", "Max characters of a merged pair (default: max line length x max number of lines)");
         ShowParameter(console, "--merge-same-texts", "Merge entries with same text");
         ShowParameter(console, "--merge-same-time-codes", "Merge entries with same time codes");
         ShowParameter(console, "--merge-short-lines", "Merge short lines");

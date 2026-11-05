@@ -15,7 +15,6 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
-using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
@@ -44,7 +43,11 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
+using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
+using Nikse.SubtitleEdit.UiLogic.Ocr.Service;
+using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -55,9 +58,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
-using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
-using Nikse.SubtitleEdit.UiLogic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -100,6 +100,52 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private string _selectionStatus;
     [ObservableProperty] private Bitmap? _currentImageSource;
     [ObservableProperty] private string _currentBitmapInfo;
+    [ObservableProperty] private bool _showVideoPreview;
+    [ObservableProperty] private Bitmap? _videoPreviewBitmap;
+    [ObservableProperty] private double _videoPreviewScreenWidth = 1920;
+    [ObservableProperty] private double _videoPreviewScreenHeight = 1080;
+    [ObservableProperty] private double _videoPreviewLeft;
+    [ObservableProperty] private double _videoPreviewTop;
+    [ObservableProperty] private double _videoPreviewImageWidth;
+    [ObservableProperty] private double _videoPreviewImageHeight;
+
+    partial void OnSelectedOcrSubtitleItemChanged(OcrSubtitleItem? value)
+    {
+        UpdateVideoPreview();
+    }
+
+    partial void OnShowVideoPreviewChanged(bool value)
+    {
+        UpdateVideoPreview();
+    }
+
+    private void UpdateVideoPreview()
+    {
+        var item = SelectedOcrSubtitleItem;
+        if (!ShowVideoPreview || item == null)
+        {
+            VideoPreviewBitmap = null;
+            return;
+        }
+
+        try
+        {
+            using var skBitmap = item.GetSkBitmapClean();
+            var position = item.GetPosition();
+            var screen = item.GetScreenSize();
+            VideoPreviewImageWidth = skBitmap.Width;
+            VideoPreviewImageHeight = skBitmap.Height;
+            VideoPreviewLeft = position.X;
+            VideoPreviewTop = position.Y;
+            VideoPreviewScreenWidth = screen.Width > 0 ? screen.Width : Math.Max(1920, position.X + skBitmap.Width);
+            VideoPreviewScreenHeight = screen.Height > 0 ? screen.Height : Math.Max(1080, position.Y + skBitmap.Height);
+            VideoPreviewBitmap = skBitmap.ToAvaloniaBitmap();
+        }
+        catch (Exception)
+        {
+            VideoPreviewBitmap = null;
+        }
+    }
     [ObservableProperty] private string _currentText;
     [ObservableProperty] private bool _isOcrRunning;
     [ObservableProperty] private bool _hasForcedSubtitles;
@@ -968,7 +1014,7 @@ public partial class OcrViewModel : ObservableObject
 
         if (result == null)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, string.IsNullOrEmpty(errorMessage) ? Se.Language.General.UnknownError : errorMessage);
+            await MessageBox.Show(Window, Se.Language.General.Error, string.IsNullOrEmpty(errorMessage) ? Se.Language.General.UnknownError : errorMessage, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -1014,7 +1060,7 @@ public partial class OcrViewModel : ObservableObject
 
         if (subtitle == null || subtitle.Paragraphs.Count == 0)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat);
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -1499,15 +1545,9 @@ public partial class OcrViewModel : ObservableObject
         LlamaCppServerManager.StopServer();
         UpdateLlamaCppOcrServerButtonText();
 
-        // Re-download the same backend that is installed (CPU/Vulkan/CUDA all unpack into one
-        // folder); when nothing is installed yet, DownloadAsync falls back to asking the user.
-        var folder = LlamaCppServerManager.GetAndCreateFolder();
-        var variant = LlamaCppServerManager.IsEngineInstalled() && OperatingSystem.IsWindows()
-            ? DownloadHashManager.DetectLlamaCppWindowsVariant(folder)
-            : null;
-
+        // No forced variant: the user picks CPU/Vulkan/CUDA, which is how to change the installed build.
         var model = SelectedLlamaCppOcrModel?.Model;
-        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, variant, forceEngineDownload: true);
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, forceEngineDownload: true);
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
@@ -1704,8 +1744,8 @@ public partial class OcrViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window!,
-                    "Error deleting file",
-                    $"Could not delete the file {_nOcrDb!.FileName}.",
+                    Se.Language.General.ErrorDeletingFile,
+                    string.Format(Se.Language.General.CouldNotDeleteFileX, _nOcrDb!.FileName),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -1856,8 +1896,8 @@ public partial class OcrViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window!,
-                    "Error deleting file",
-                    $"Could not delete the file {Path.Combine(Se.OcrFolder, dbName + BinaryOcrDb.Extension)}.",
+                    Se.Language.General.ErrorDeletingFile,
+                    string.Format(Se.Language.General.CouldNotDeleteFileX, Path.Combine(Se.OcrFolder, dbName + BinaryOcrDb.Extension)),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -2365,7 +2405,7 @@ public partial class OcrViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void DeleteSelectedLines()
+    private async Task DeleteSelectedLines()
     {
         if (IsOcrRunning)
         {
@@ -2376,6 +2416,27 @@ public partial class OcrViewModel : ObservableObject
         if (selectedItems == null || selectedItems.Count == 0)
         {
             return;
+        }
+
+        if (Se.Settings.General.PromptBeforeDelete && Window != null)
+        {
+            var selectedLines = selectedItems.OfType<OcrSubtitleItem>().ToList();
+            var message = selectedLines.Count == 1
+                ? string.Format(Se.Language.General.DeleteLineXPrompt, selectedLines[0].Number)
+                : string.Format(Se.Language.General.DeleteXLinesPrompt, selectedLines.Count);
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Delete,
+                message,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            // OCR may have been started, or the selection changed, while the prompt was up
+            selectedItems = SubtitleGrid.SelectedItems;
+            if (answer != MessageBoxResult.Yes || IsOcrRunning || selectedItems == null || selectedItems.Count == 0)
+            {
+                return;
+            }
         }
 
         // Row -> index once: a Contains here plus a Remove per row below searched the whole
@@ -2697,8 +2758,8 @@ public partial class OcrViewModel : ObservableObject
             {
                 var answer = await MessageBox.Show(
                     Window!,
-                    "Download Paddle OCR?",
-                    $"{Environment.NewLine}\"Paddle OCR\" requires downloading Paddle OCR.{Environment.NewLine}{Environment.NewLine}Download and use Paddle OCR?",
+                    string.Format(Se.Language.General.DownloadXQuestion, "Paddle OCR"),
+                    Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Paddle OCR", "Paddle OCR", "Paddle OCR"),
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU",
@@ -2741,8 +2802,8 @@ public partial class OcrViewModel : ObservableObject
             {
                 var answer = await MessageBox.Show(
                     Window!,
-                    "Download Paddle OCR?",
-                    $"{Environment.NewLine}\"Paddle OCR\" requires downloading Paddle OCR.{Environment.NewLine}{Environment.NewLine}Download and use Paddle OCR?",
+                    string.Format(Se.Language.General.DownloadXQuestion, "Paddle OCR"),
+                    Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Paddle OCR", "Paddle OCR", "Paddle OCR"),
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU",
@@ -2835,8 +2896,8 @@ public partial class OcrViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window!,
-                    "Mistral API key missing",
-                    $"You must enter a valid Mistral API key.{Environment.NewLine}{Environment.NewLine}Get your API key from https://mistral.ai/",
+                    Se.Language.Ocr.MistralApiKeyMissing,
+                    Se.Language.Ocr.MistralApiKeyMessage,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 IsOcrRunning = false;
@@ -2859,8 +2920,8 @@ public partial class OcrViewModel : ObservableObject
             {
                 var answer = await MessageBox.Show(
                     Window!,
-                    "Download Google Lens OCR?",
-                    $"{Environment.NewLine}\"Google Lens OCR\" requires downloading Google Lens OCR standalone.{Environment.NewLine}{Environment.NewLine}Download and use Google Lens OCR?",
+                    string.Format(Se.Language.General.DownloadXQuestion, "Google Lens OCR"),
+                    Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Google Lens OCR", "Google Lens OCR standalone", "Google Lens OCR"),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -2902,7 +2963,7 @@ public partial class OcrViewModel : ObservableObject
 
         var batchImages = new List<PaddleOcrBatchInput>(numberOfImages);
         var count = 0;
-        ProgressText = $"Initializing Paddle OCR...";
+        ProgressText = string.Format(Se.Language.Ocr.InitializingX, "Paddle OCR");
         foreach (var i in selectedIndices)
         {
             count++;
@@ -3036,7 +3097,7 @@ public partial class OcrViewModel : ObservableObject
 
         var batchImages = new List<PaddleOcrBatchInput>(numberOfImages);
         var count = 0;
-        ProgressText = $"Initializing Google Lens OCR...";
+        ProgressText = string.Format(Se.Language.Ocr.InitializingX, "Google Lens OCR");
         foreach (var i in selectedIndices)
         {
             count++;
@@ -3128,7 +3189,7 @@ public partial class OcrViewModel : ObservableObject
 
         var batchImages = new List<PaddleOcrBatchInput>(numberOfImages);
         var count = 0;
-        ProgressText = $"Initializing Google Lens OCR...";
+        ProgressText = string.Format(Se.Language.Ocr.InitializingX, "Google Lens OCR");
         foreach (var i in selectedIndices)
         {
             count++;
@@ -4021,15 +4082,39 @@ public partial class OcrViewModel : ObservableObject
         return _autoBreakLanguage;
     }
 
+    private void AutoBreakIfNeeded(OcrSubtitleItem item)
+    {
+        // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
+        if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines && !HasSeparatedBlocks(item))
+        {
+            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
+        }
+    }
+
+    private bool HasSeparatedBlocks(OcrSubtitleItem item)
+    {
+        if (!HasCaptureAlignment)
+        {
+            return false;
+        }
+
+        try
+        {
+            var screenSize = item.GetScreenSize();
+            using var bitmap = item.GetSkBitmapClean(); // fresh bitmap each call; dispose to avoid a native leak
+            return OcrAssaAlignment.HasSeparatedBlocks(bitmap, screenSize.Width, screenSize.Height);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private OcrFixLineResultTemp OcrFixLine(int i, OcrSubtitleItem item)
     {
         var result = new OcrFixLineResultTemp();
 
-        // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
-        if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
-        {
-            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
-        }
+        AutoBreakIfNeeded(item);
 
         if (SelectedDictionary != null &&
             SelectedDictionary.Name != GetDictionaryNameNone() &&
@@ -4126,11 +4211,7 @@ public partial class OcrViewModel : ObservableObject
 
     private List<UnknownWordItem> OcrFixLineAndSetText(int i, OcrSubtitleItem item)
     {
-        // The checkbox promises "auto-break if more than X lines", so leave shorter results alone.
-        if (DoAutoBreak && Utilities.GetNumberOfLines(item.Text) > Se.Settings.General.MaxNumberOfLines)
-        {
-            item.Text = Utilities.AutoBreakLine(item.Text, GetAutoBreakLanguage());
-        }
+        AutoBreakIfNeeded(item);
 
         var unknownWords = new List<UnknownWordItem>();
         if (SelectedDictionary != null &&
@@ -4494,7 +4575,7 @@ public partial class OcrViewModel : ObservableObject
             await MessageBox.Show(
                 Window!,
                 Se.Language.General.Error,
-                "Tesseract OCR failed:" + Environment.NewLine + Environment.NewLine + error,
+                string.Format(Se.Language.Ocr.TesseractOcrFailedX, error),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error));
     }
@@ -4597,7 +4678,7 @@ public partial class OcrViewModel : ObservableObject
             await MessageBox.Show(
                 Window!,
                 Se.Language.General.Error,
-                "Ollama OCR failed (model \"" + model + "\" at " + url + "):" + Environment.NewLine + Environment.NewLine + error,
+                string.Format(Se.Language.Ocr.OllamaOcrFailedXYZ, model, url, error),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error));
     }
@@ -4704,7 +4785,7 @@ public partial class OcrViewModel : ObservableObject
             await MessageBox.Show(
                 Window!,
                 Se.Language.General.Error,
-                "llama.cpp OCR failed (model \"" + model + "\" at " + url + "):" + Environment.NewLine + Environment.NewLine + error,
+                string.Format(Se.Language.Ocr.LlamaCppOcrFailedXYZ, model, url, error),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error));
     }
@@ -4723,7 +4804,7 @@ public partial class OcrViewModel : ObservableObject
         {
             try
             {
-                ProgressText = "Loading CrispEmbed model...";
+                ProgressText = string.Format(Se.Language.Ocr.LoadingXModel, "CrispEmbed");
 
                 // PP-OCRv6 is a detector+recognizer pair driven through the CLI; the VLM backends
                 // load once into crispembed-server.
@@ -4745,8 +4826,8 @@ public partial class OcrViewModel : ObservableObject
                     {
                         await MessageBox.Show(
                             Window!,
-                            "CrispEmbed error",
-                            $"CrispEmbed could not be started:{Environment.NewLine}{Environment.NewLine}{error}",
+                            Se.Language.Ocr.CrispEmbedError,
+                            string.Format(Se.Language.Ocr.CrispEmbedCouldNotStartX, error),
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                     });
@@ -4960,10 +5041,10 @@ public partial class OcrViewModel : ObservableObject
 
             var answer = await MessageBox.Show(
                 Window!,
-                isOutdated ? "Update Tesseract OCR?" : "Download Tesseract OCR?",
+                isOutdated ? string.Format(Se.Language.General.UpdateXQuestion, "Tesseract OCR") : string.Format(Se.Language.General.DownloadXQuestion, "Tesseract OCR"),
                 isOutdated
-                    ? $"{Environment.NewLine}A newer Tesseract OCR ({TesseractDownloadService.WindowsVersion}) is available.{Environment.NewLine}{Environment.NewLine}Download and use it? Your downloaded languages are kept."
-                    : $"{Environment.NewLine}\"Tesseract\" requires downloading Tesseract OCR.{Environment.NewLine}{Environment.NewLine}Download and use Tesseract OCR?",
+                    ? Environment.NewLine + string.Format(Se.Language.Ocr.NewerTesseractXAvailable, TesseractDownloadService.WindowsVersion)
+                    : Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Tesseract", "Tesseract OCR", "Tesseract OCR"),
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -5017,10 +5098,8 @@ public partial class OcrViewModel : ObservableObject
         {
             await MessageBox.Show(
                 Window!,
-                "Please install Tesseract",
-                $"{Environment.NewLine}\"Tesseract\" was not detected. Please install Tesseract." +
-                Environment.NewLine + "" +
-                "E.g. ´brew install tesseract´.",
+                Se.Language.Ocr.PleaseInstallTesseract,
+                Environment.NewLine + string.Format(Se.Language.Ocr.TesseractNotDetectedExampleX, "´brew install tesseract´"),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }
@@ -5029,10 +5108,8 @@ public partial class OcrViewModel : ObservableObject
         {
             await MessageBox.Show(
                 Window!,
-                "Please install Tesseract",
-                $"{Environment.NewLine}\"Tesseract\" was not detected. Please install Tesseract." +
-                Environment.NewLine +
-                $"E.g. ´sudo apt install tesseract-ocr´ or ´sudo pacman -S tesseract´.",
+                Se.Language.Ocr.PleaseInstallTesseract,
+                Environment.NewLine + string.Format(Se.Language.Ocr.TesseractNotDetectedExampleX, "´sudo apt install tesseract-ocr´ / ´sudo pacman -S tesseract´"),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }
@@ -5096,10 +5173,11 @@ public partial class OcrViewModel : ObservableObject
             e.Handled = true; // prevent further handling if needed
             Dispatcher.UIThread.Post(async void () => { await ViewSelectedImage(); });
         }
-        else if (e.Key == Key.Delete)
+        else if ((e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None) ||
+                 (OperatingSystem.IsMacOS() && e.Key == Key.Back && e.KeyModifiers == KeyModifiers.Meta)) // Mac keyboards have no forward Delete - same keys as the main grid
         {
             e.Handled = true; // prevent further handling if needed
-            DeleteSelectedLines();
+            _ = DeleteSelectedLines();
         }
         else if (e.Key == Key.I && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
         {
@@ -5642,8 +5720,8 @@ public partial class OcrViewModel : ObservableObject
 
         var answer = await MessageBox.Show(
             Window,
-            "Update CrispEmbed?",
-            $"A newer version of CrispEmbed is available.{Environment.NewLine}{Environment.NewLine}Download it now?",
+            Se.Language.Ocr.UpdateCrispEmbedQuestion,
+            Se.Language.Ocr.UpdateCrispEmbedDetailsQuestion,
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 
@@ -5685,8 +5763,8 @@ public partial class OcrViewModel : ObservableObject
             {
                 var result = await MessageBox.Show(
                     Window!,
-                    "Discard OCR result?",
-                    "Some items have OCR text. Close and discard the OCR result?",
+                    Se.Language.Ocr.DiscardOcrResultQuestion,
+                    Se.Language.Ocr.DiscardOcrResultDetaulsQuestion,
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
 
@@ -5933,12 +6011,6 @@ public partial class OcrViewModel : ObservableObject
             var props = e.GetCurrentPoint(control).Properties;
             _subtitleGridIsLeftClick = props.IsLeftButtonPressed;
             _subtitleGridIsControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
-
-            // Block the DataGrid's default Ctrl+Click deselect behavior on Mac
-            if (_subtitleGridIsLeftClick && _subtitleGridIsControlPressed)
-            {
-                e.Handled = true;
-            }
         }
     }
 

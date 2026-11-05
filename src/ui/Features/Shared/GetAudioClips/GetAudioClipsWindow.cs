@@ -28,7 +28,7 @@ public class GetAudioClipsWindow : Window
         var errorText = EditorChrome.MakeDownloadError(nameof(GetAudioClipsViewModel.Error));
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel);
 
         Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 

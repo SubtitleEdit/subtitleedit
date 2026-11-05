@@ -26,7 +26,7 @@ internal static partial class EditorChrome
     // windows are open), so everything built from it repaints without rebuilding.
     internal static bool IsLightTheme => Application.Current?.ActualThemeVariant == ThemeVariant.Light;
 
-    // The editor look's sizes are design values at 100 % that follow the "Font scale (%)" setting
+    // The editor look's sizes are design values at 100 % that follow the "UI font size" setting
     // (#16242): an explicit FontSize does not inherit the scaled window font, so every text size
     // goes through ScaledFont, and the fixed heights and widths that must fit the text (the 28 px
     // fields) through ScaledSize. Icons keep their size: an Icon with its own FontSize is left
@@ -38,10 +38,10 @@ internal static partial class EditorChrome
     /// <summary>The height of the compact fields, combo boxes and buttons: 28 at 100 %.</summary>
     internal static double FieldHeight => ScaledSize(28);
 
-    /// <summary>A text size of the editor look scaled by the "Font scale (%)" setting.</summary>
+    /// <summary>A text size of the editor look scaled by the "UI font size" setting.</summary>
     internal static double ScaledFont(double designSize) => UiUtil.ScaledFontSize(designSize);
 
-    /// <summary>A height or width of the editor look that holds text, scaled by the "Font scale (%)" setting.</summary>
+    /// <summary>A height or width of the editor look that holds text, scaled by the "UI font size" setting.</summary>
     internal static double ScaledSize(double designSize) => Math.Round(designSize * UiTheme.FontScale);
 
     /// <summary>
@@ -108,6 +108,18 @@ internal static partial class EditorChrome
     private static readonly ThemedBrush MenuBorderColor = new(p => p.MenuBorder);
     private static readonly ThemedBrush BadgeTextColor = new(p => p.BadgeText);
     private static readonly ThemedBrush OnAccentColor = new(p => p.OnAccent);
+    private static readonly ThemedBrush ErrorTextColor = new(p => p.IsDark ? Color.FromRgb(0xFF, 0x8A, 0x80) : Color.FromRgb(0xC8, 0x32, 0x3D));
+    private static readonly ThemedBrush WarningTextColor = new(p => p.IsDark ? Color.FromRgb(0xE8, 0xA0, 0x20) : Color.FromRgb(0x9E, 0x55, 0x00));
+    private static readonly ThemedBrush SuccessTextColor = new(p => p.IsDark ? Color.FromRgb(0x6E, 0xCB, 0x87) : Color.FromRgb(0x1F, 0x8A, 0x52));
+
+    /// <summary>Error text, readable on both the dark and the light panels.</summary>
+    internal static IBrush ErrorTextBrush => ErrorTextColor.Brush;
+
+    /// <summary>Warning text, readable on both the dark and the light panels.</summary>
+    internal static IBrush WarningTextBrush => WarningTextColor.Brush;
+
+    /// <summary>Success text, readable on both the dark and the light panels.</summary>
+    internal static IBrush SuccessTextBrush => SuccessTextColor.Brush;
 
     /// <summary>
     /// A brush outside the palette that also follows the app theme (e.g. a status color with a
@@ -432,7 +444,7 @@ internal static partial class EditorChrome
             grid.Children.Add(new TextBlock
             {
                 Text = shortcut,
-                FontSize = 8,
+                FontSize = EditorChrome.ScaledFont(8),
                 Opacity = 0.6,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,

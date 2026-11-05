@@ -1,0 +1,338 @@
+# Site navigation: the sidebar, home page, search and previous/next links are all built from this list.
+# Add new pages here. Order matters: it sets the order of the sidebar and of previous/next.
+
+- name: "Getting Started"
+  items:
+    - title: "Overview"
+      url: overview.html
+      desc: "What is Subtitle Edit and how to get started"
+    - title: "What's New in Subtitle Edit 5"
+      url: features/whats-new-in-se5.html
+      desc: "Major changes from the Windows Forms version to the Avalonia-based version"
+    - title: "Main Window"
+      url: features/main-window.html
+      desc: "Main window layout, areas, and interaction guide"
+    - title: "FAQ"
+      url: faq.html
+      desc: "Frequently Asked Questions"
+- name: "File Operations"
+  items:
+    - title: "File Menu"
+      url: features/file.html
+      desc: "New, Open, Save, Import, Export"
+    - title: "Import Plain Text"
+      url: features/import-plain-text.html
+      desc: "Create subtitles from text, with forced-aligner timing"
+    - title: "Import Spreadsheets"
+      url: features/import-csv-xlsx.html
+      desc: "Import CSV, XLSX and ODS files, with custom column mapping"
+    - title: "Edit Image-based Subtitle"
+      url: features/binary-edit.html
+      desc: "Edit Blu-ray SUP/VobSub/DVB subtitles without OCR"
+- name: "Editing"
+  items:
+    - title: "Edit Menu"
+      url: features/edit.html
+      desc: "Find, Replace, Multiple Replace, History"
+    - title: "Command Palette"
+      url: features/command-palette.html
+      desc: "Find and run any command by typing part of its name (Ctrl+Shift+K)"
+    - title: "Source View"
+      url: features/source-view.html
+      desc: "Edit the raw subtitle source: syntax coloring, live parse check, find/replace, line commands"
+    - title: "Modify Selection"
+      url: features/modify-selection.html
+      desc: "Select lines by rules: text, hearing-impaired text, duration, CPS, gaps, styles, actors"
+    - title: "Assisted Split and Assisted Move"
+      url: features/assisted-split.html
+      desc: "Ranked one-click split points and word moves with full previews"
+    - title: "Subtitle Grid"
+      url: features/subtitle-grid.html
+      desc: "Working with the subtitle list/grid"
+    - title: "Text Editor"
+      url: features/text-editor.html
+      desc: "Editing subtitle text"
+    - title: "AI Assistant"
+      url: features/ai-assistant.html
+      desc: "AI help for the current line: fix errors, fit reading speed, change tone"
+- name: "Tools"
+  items:
+    - title: "AI Review"
+      url: features/ai-review.html
+      desc: "Proofread with a local LLM (llama.cpp, Ollama, or any OpenAI-compatible endpoint)"
+    - title: "Fix Common Errors"
+      url: features/fix-common-errors.html
+      desc: "Automatic error detection and fixing"
+    - title: "Check and Fix Netflix Errors"
+      url: features/netflix-errors.html
+      desc: "Netflix quality checks, proposed fixes, and CSV reports"
+    - title: "List Errors"
+      url: features/list-errors.html
+      desc: "Every rule violation with summary cards; export to clipboard, text, Excel or web page"
+    - title: "Batch Convert"
+      url: features/batch-convert.html
+      desc: "Convert multiple subtitle files"
+    - title: "Beautify Time Codes"
+      url: features/beautify-time-codes.html
+      desc: "Snap cues to shot changes and frames using a configurable profile, with a live before/after preview"
+    - title: "Improve Time Codes"
+      url: features/improve-time-codes.html
+      desc: "Tighten roughly synced time codes against the audio with a forced aligner, with a before/after waveform preview"
+    - title: "Change Casing"
+      url: features/change-casing.html
+      desc: "Fix casing issues"
+    - title: "Change Formatting"
+      url: features/change-formatting.html
+      desc: "Modify subtitle formatting"
+    - title: "Convert Actors"
+      url: features/convert-actors.html
+      desc: "Convert actor/voice labels between styles"
+    - title: "Make Empty Translation"
+      url: features/empty-translation.html
+      desc: "Create an empty translation column from the current subtitle"
+    - title: "Adjust Duration"
+      url: features/adjust-duration.html
+      desc: "Adjust subtitle display durations"
+    - title: "Apply Duration Limits"
+      url: features/apply-duration-limits.html
+      desc: "Enforce min/max duration rules"
+    - title: "Bridge Gaps"
+      url: features/bridge-gaps.html
+      desc: "Bridge gaps between subtitles"
+    - title: "Apply Minimum Gap"
+      url: features/apply-min-gap.html
+      desc: "Set minimum gap between subtitles"
+    - title: "Merge Short Lines"
+      url: features/merge-short-lines.html
+      desc: "Merge short subtitle lines"
+    - title: "Merge Continuation Lines"
+      url: features/merge-continuation-lines.html
+      desc: "Merge sentences split across several subtitles, with a preview"
+    - title: "Merge Lines with Same Text"
+      url: features/merge-same-text.html
+      desc: "Merge duplicate text lines"
+    - title: "Merge Lines with Same Time Codes"
+      url: features/merge-same-timecodes.html
+      desc: "Merge lines with identical timings"
+    - title: "Merge Two Subtitles"
+      url: features/merge-two-subtitles.html
+      desc: "Combine two subtitles into one bilingual subtitle"
+    - title: "Renumber"
+      url: features/renumber.html
+      desc: "Renumber subtitle lines from a chosen start number"
+    - title: "Split/Break Long Lines"
+      url: features/split-break-long-lines.html
+      desc: "Break overly long lines"
+    - title: "Split Subtitle"
+      url: features/split-subtitle.html
+      desc: "Split one subtitle file into multiple files"
+    - title: "Join Subtitles"
+      url: features/join-subtitles.html
+      desc: "Join multiple subtitle files"
+    - title: "Sort By"
+      url: features/sort-by.html
+      desc: "Sort subtitles by various criteria"
+    - title: "Remove Text for Hearing Impaired"
+      url: features/remove-text-hi.html
+      desc: "Remove HI annotations"
+    - title: "Remove/replace Unicode Characters"
+      url: features/remove-unicode-characters.html
+      desc: "Find, remove or replace characters outside Latin-1 (SE 4 plugin port)"
+    - title: "Command Line (seconv)"
+      url: features/seconv.html
+      desc: "Headless converter for scripts and bulk conversion"
+- name: "Synchronization"
+  items:
+    - title: "Adjust All Times"
+      url: features/adjust-all-times.html
+      desc: "Shift all timings"
+    - title: "Visual Sync"
+      url: features/visual-sync.html
+      desc: "Synchronize visually with video"
+    - title: "Point Sync"
+      url: features/point-sync.html
+      desc: "Sync using reference points"
+    - title: "Point Sync Via Other Subtitle"
+      url: features/point-sync-via-other.html
+      desc: "Sync using another subtitle"
+    - title: "Change Frame Rate"
+      url: features/change-frame-rate.html
+      desc: "Convert between frame rates"
+    - title: "Change Speed"
+      url: features/change-speed.html
+      desc: "Adjust playback speed"
+- name: "Video"
+  items:
+    - title: "Video Player"
+      url: features/video-player.html
+      desc: "Video playback controls"
+    - title: "Audio Visualizer / Waveform"
+      url: features/audio-visualizer.html
+      desc: "Waveform display and editing"
+    - title: "Speech to Text"
+      url: features/speech-to-text.html
+      desc: "Automatic speech recognition with Whisper, Qwen3 ASR, Crisp ASR, and related engines"
+    - title: "Video OCR"
+      url: features/video-ocr.html
+      desc: "Extract burned-in (hardcoded) subtitles via OCR"
+    - title: "Text to Speech"
+      url: features/text-to-speech.html
+      desc: "Generate speech from subtitles"
+    - title: "Burn-In Subtitles"
+      url: features/burn-in.html
+      desc: "Hardcode subtitles into video"
+    - title: "Embedded Subtitles"
+      url: features/embedded-subtitles.html
+      desc: "Add, remove, preview, and edit subtitle tracks in Matroska/WebM files"
+    - title: "Transparent Subtitles"
+      url: features/transparent-subtitles.html
+      desc: "Generate transparent subtitle video"
+    - title: "Shot Changes"
+      url: features/shot-changes.html
+      desc: "Detect and manage shot changes"
+    - title: "Chapters"
+      url: features/chapters.html
+      desc: "Edit, import, export and write video chapter marks"
+    - title: "Blank Video"
+      url: features/blank-video.html
+      desc: "Generate a blank video"
+    - title: "Re-encode Video"
+      url: features/re-encode-video.html
+      desc: "Re-encode video files"
+    - title: "Cut Video"
+      url: features/cut-video.html
+      desc: "Cut video segments"
+    - title: "Remux Video"
+      url: features/remux-video.html
+      desc: "Repackage video with new audio tracks and soft subtitles, without re-encoding"
+    - title: "Generate Background Music"
+      url: features/background-music.html
+      desc: "Generate looping instrumental music locally (ACE-Step) and add it to the video or under TTS speech"
+- name: "Translation"
+  items:
+    - title: "Auto Translate"
+      url: features/auto-translate.html
+      desc: "Automatic subtitle translation"
+    - title: "Auto Translate: Advanced Local Engines"
+      url: features/auto-translate-advanced.html
+      desc: "Batch/context settings for the llama.cpp, Ollama and LM Studio advanced engines"
+    - title: "Copy/Paste Translate"
+      url: features/copy-paste-translate.html
+      desc: "Translate via copy/paste workflow"
+- name: "Spell Check"
+  items:
+    - title: "Spell Check"
+      url: features/spell-check.html
+      desc: "Spell checking subtitles"
+    - title: "Find Double Words"
+      url: features/find-double-words.html
+      desc: "Find repeated words"
+    - title: "Find Double Lines"
+      url: features/find-double-lines.html
+      desc: "Find consecutive duplicate subtitle lines"
+- name: "OCR"
+  items:
+    - title: "OCR"
+      url: features/ocr.html
+      desc: "Convert image-based subtitles to text (nOCR, Binary OCR, Tesseract, PaddleOCR, CrispEmbed, LLM-based and cloud engines)"
+- name: "ASSA"
+  items:
+    - title: "ASSA Styles"
+      url: features/assa-styles.html
+      desc: "Manage ASS/SSA styles"
+    - title: "ASSA Properties"
+      url: features/assa-properties.html
+      desc: "Edit script properties"
+    - title: "ASSA Attachments"
+      url: features/assa-attachments.html
+      desc: "Manage font/image attachments"
+    - title: "ASSA Draw"
+      url: features/assa-draw.html
+      desc: "Vector drawing tool"
+    - title: "ASSA Set Position"
+      url: features/assa-set-position.html
+      desc: "Position subtitles on screen"
+    - title: "ASSA Set Background"
+      url: features/assa-set-background.html
+      desc: "Add background boxes"
+    - title: "ASSA Progress Bar"
+      url: features/assa-progress-bar.html
+      desc: "Generate progress bars"
+    - title: "ASSA Resolution Resampler"
+      url: features/assa-resolution-resampler.html
+      desc: "Resample for different resolutions"
+    - title: "ASSA Image Color Picker"
+      url: features/assa-image-color-picker.html
+      desc: "Pick colors from video"
+    - title: "ASSA Apply Advanced Effects"
+      url: features/assa-apply-advanced-effects.html
+      desc: "Apply cinematic and creative animation effects"
+    - title: "ASSA Apply Custom Override Tags"
+      url: features/assa-override-tags.html
+      desc: "Apply custom tags"
+- name: "WebVTT"
+  items:
+    - title: "WebVTT Styles and Voices"
+      url: features/webvtt-styles.html
+      desc: "Manage cue classes, voices and browser preview"
+    - title: "YouTube Timed Text Styles"
+      url: features/ytt-styles.html
+      desc: "Pens, positions, window styles and karaoke for .ytt"
+- name: "Options"
+  items:
+    - title: "Settings"
+      url: features/settings.html
+      desc: "Application settings"
+    - title: "Shortcuts"
+      url: features/shortcuts.html
+      desc: "Keyboard shortcuts"
+    - title: "Word Lists"
+      url: features/word-lists.html
+      desc: "Custom word lists and dictionaries"
+- name: "Other"
+  items:
+    - title: "Compare"
+      url: features/compare.html
+      desc: "Compare subtitle files"
+    - title: "Statistics"
+      url: features/statistics.html
+      desc: "Subtitle statistics"
+- name: "Contributing"
+  items:
+    - title: "Translating Subtitle Edit"
+      url: translating.html
+      desc: "How to translate the UI into another language"
+- name: "Formats"
+  items:
+    - title: "Supported Formats"
+      url: reference/supported-formats.html
+      desc: "List of all supported subtitle formats"
+    - title: "SubRip (SRT) Format"
+      url: reference/subrip.html
+      desc: "Complete SubRip format reference and guide"
+    - title: "WebVTT Format"
+      url: reference/webvtt.html
+      desc: "Complete WebVTT format reference (HTML5 standard)"
+    - title: "Advanced Sub Station Alpha (ASSA) Format"
+      url: reference/assa.html
+      desc: "Complete ASSA format reference and guide"
+    - title: "ASSA Override Tags Reference"
+      url: reference/assa-override-tags.html
+      desc: "Complete ASSA/SSA override tags reference"
+- name: "App reference"
+  items:
+    - title: "Keyboard Shortcuts Reference"
+      url: reference/keyboard-shortcuts.html
+      desc: "Complete list of keyboard shortcuts"
+    - title: "Mouse Controls Reference"
+      url: reference/mouse-controls.html
+      desc: "Mouse interactions"
+    - title: "Command Line (seconv)"
+      url: reference/command-line.html
+      desc: "Headless command-line converter"
+    - title: "Plugins"
+      url: plugin.html
+      desc: "Writing and installing plugins"
+    - title: "Third-Party Components"
+      url: third-party-components.html
+      desc: "FFmpeg, MPV, OCR, speech-to-text, and text-to-speech setup guide"

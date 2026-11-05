@@ -173,7 +173,7 @@ public class OpenFromUrlWindow : Window
         var titleText = new TextBlock
         {
             Text = title,
-            FontSize = 14,
+            FontSize = EditorChrome.ScaledFont(14),
             FontWeight = FontWeight.SemiBold,
             Margin = new Thickness(0, 0, 0, 3),
         };
@@ -181,7 +181,7 @@ public class OpenFromUrlWindow : Window
         var descriptionText = new TextBlock
         {
             Text = description,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 0, 0, 6),
         };
@@ -198,7 +198,7 @@ public class OpenFromUrlWindow : Window
         var noteText = new TextBlock
         {
             Text = note,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
         };

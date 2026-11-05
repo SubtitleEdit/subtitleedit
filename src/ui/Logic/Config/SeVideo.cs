@@ -149,6 +149,11 @@ public class SeVideo
     /// round trip exactly.
     /// </summary>
     public decimal SecondarySubtitleFontSize { get; set; }
+
+    /// <summary>
+    /// Empty follows <see cref="MpvPreviewFontName"/> (#13492).
+    /// </summary>
+    public string SecondarySubtitleFontName { get; set; }
     public bool SecondarySubtitleFontBold { get; set; }
     public string SecondarySubtitleColor { get; set; }
     public FontBoxType SecondarySubtitleBoxType { get; set; }
@@ -208,6 +213,7 @@ public class SeVideo
         SecondarySubtitleShowDialog = true;
         SecondarySubtitleRememberFile = true;
         SecondarySubtitleFontSize = 20;
+        SecondarySubtitleFontName = string.Empty;
         SecondarySubtitleFontBold = true;
         SecondarySubtitleColor = Colors.White.FromColorToHex();
         SecondarySubtitleBoxType = FontBoxType.None;

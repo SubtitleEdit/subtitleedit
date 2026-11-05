@@ -33,7 +33,7 @@ public class DownloadLlamaCppWindow : Window
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonRetry = EditorChrome.AsPrimary(DownloadWindowUi.MakeButtonRetry(vm.RetryCommand));
-        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonRetry);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonRetry);
 
         Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, progressBar, statusText, errorText), buttonBar, stretch: false);
 

@@ -170,7 +170,7 @@ public class VisualSyncWindow : Window
         var comboBox = UiUtil.MakeComboBoxBindText(vm.Paragraphs, vm, nameof(SubtitleDisplayItem.Text), selectedIndexProperty);
         comboBox.Width = double.NaN;
         comboBox.MinHeight = 50;
-        comboBox.FontSize = 12.5;
+        comboBox.FontSize = EditorChrome.FieldFontSize;
         comboBox.CornerRadius = new CornerRadius(6);
         comboBox.HorizontalAlignment = HorizontalAlignment.Stretch;
         AutomationProperties.SetName(comboBox, name);
@@ -289,10 +289,10 @@ public class VisualSyncWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
-        buttons.Children.Add(buttonSync);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonSync));
         buttons.Children.Add(EditorChrome.MakeToolbarSeparator());
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         var bar = new DockPanel();
         DockPanel.SetDock(buttons, Dock.Right);

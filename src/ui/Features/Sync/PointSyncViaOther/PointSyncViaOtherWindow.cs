@@ -174,7 +174,7 @@ public class PointSyncViaOtherWindow : Window
         {
             var seconds = (int)(SyncCandidateLevelMs[i] / 1000.0);
             var label = i == SyncCandidateLevelMs.Length - 1 ? $"{seconds}s+" : $"{seconds}s";
-            badges.Children.Add(MakeBadge(i + 1, new TextBlock { Text = label, FontSize = 11 }));
+            badges.Children.Add(MakeBadge(i + 1, new TextBlock { Text = label, FontSize = EditorChrome.ScaledFont(11) }));
         }
 
         // Badges first, then the explanation, which wraps in what is left of the button bar.
@@ -191,7 +191,7 @@ public class PointSyncViaOtherWindow : Window
         panel.Add(new TextBlock
         {
             Text = string.Format(Se.Language.Sync.SyncPointCandidateAfterInfo, (int)(SyncCandidateGapMs / 1000.0)),
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
@@ -447,7 +447,7 @@ public class PointSyncViaOtherWindow : Window
         var labelOpenHint = new TextBlock
         {
             Text = Se.Language.General.OpenSubtitleFileTitle,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.FaintTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,

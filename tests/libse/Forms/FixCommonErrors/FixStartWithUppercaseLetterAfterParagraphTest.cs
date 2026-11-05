@@ -116,4 +116,93 @@ public class FixStartWithUppercaseLetterAfterParagraphTest
         var input = "Dit is een zin." + Environment.NewLine + "en dit ook.";
         Assert.Equal(expected, Fix("Vorige regel.", input, "nl", "dhr."));
     }
+
+    // A lowercase letter followed by an uppercase one is not a missed capital: here the "i"
+    // is an OCR misread of "¡", and "IFuera" would hide that from the Spanish fixes (#16379).
+    [Fact]
+    public void KeepsLowercaseFollowedByUppercaseOnSecondDialogLine()
+    {
+        var text = "No irás a..." + Environment.NewLine + "- iFuera!";
+        Assert.Equal(text, Fix("Vete.", text, "es"));
+    }
+
+    [Fact]
+    public void KeepsLowercaseFollowedByUppercaseAtParagraphStart()
+    {
+        Assert.Equal("iTheo!", Fix("Vete.", "iTheo!", "es"));
+    }
+
+    [Fact]
+    public void KeepsLowercaseFollowedByUppercaseInDialog()
+    {
+        var text = "- iTheo!" + Environment.NewLine + "- iFuera!";
+        Assert.Equal(text, Fix("Vete.", text, "es"));
+    }
+
+    [Fact]
+    public void KeepsLowercaseFollowedByUppercaseOnSecondLine()
+    {
+        var text = "Se acabó." + Environment.NewLine + "iFuera!";
+        Assert.Equal(text, Fix("Vete.", text, "es"));
+    }
+
+    [Fact]
+    public void KeepsLowercaseFollowedByUppercaseOnItalicDialogLine()
+    {
+        var text = "Se acabó." + Environment.NewLine + "<i>- iFuera!</i>";
+        Assert.Equal(text, Fix("Vete.", text, "es"));
+    }
+
+    [Fact]
+    public void KeepsLowercaseFollowedByUppercaseInItalicDialog()
+    {
+        var text = "<i>- iTheo!" + Environment.NewLine + "- iFuera!</i>";
+        Assert.Equal(text, Fix("Vete.", text, "es"));
+    }
+
+    // ...also before a shouted word ("¡NO!" read as "iNO!").
+    [Fact]
+    public void KeepsLowercaseIFollowedByAllCaps()
+    {
+        Assert.Equal("iNO!", Fix("Vete.", "iNO!", "es"));
+    }
+
+    [Fact]
+    public void KeepsLowercaseIFollowedByAllCapsInDialog()
+    {
+        var text = "- iNO!" + Environment.NewLine + "- iSÍ!";
+        Assert.Equal(text, Fix("Vete.", text, "es"));
+    }
+
+    // Names written that way are kept too, also in Turkish (not "İPhone").
+    [Fact]
+    public void KeepsAppleStyleNameInTurkish()
+    {
+        var text = "Bir." + Environment.NewLine + "- iPhone aldım.";
+        Assert.Equal(text, Fix("Tamam.", text, "tr"));
+    }
+
+    // All-caps text with a misread first letter is still capitalized.
+    [Fact]
+    public void CapitalizesAllCapsWordWithLowercaseFirstLetter()
+    {
+        Assert.Equal("STOP RIGHT THERE!", Fix("Look.", "sTOP RIGHT THERE!", "en"));
+    }
+
+    [Fact]
+    public void CapitalizesAllCapsWordWithLowercaseFirstLetterOnDialogLine()
+    {
+        var expected = "Se acabó." + Environment.NewLine + "- THE END.";
+        var input = "Se acabó." + Environment.NewLine + "- tHE END.";
+        Assert.Equal(expected, Fix("Vete.", input, "en"));
+    }
+
+    // ...while an ordinary lowercase dialog line is still capitalized.
+    [Fact]
+    public void CapitalizesLowercaseDialogLine()
+    {
+        var expected = "No irás a..." + Environment.NewLine + "- Fuera!";
+        var input = "No irás a..." + Environment.NewLine + "- fuera!";
+        Assert.Equal(expected, Fix("Vete.", input, "es"));
+    }
 }

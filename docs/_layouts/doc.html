@@ -1,0 +1,45 @@
+---
+layout: default
+---
+{%- assign here = page.url | remove_first: '/' -%}
+{%- assign found = false -%}
+{%- assign group_name = nil -%}
+{%- assign prev_item = nil -%}
+{%- assign next_item = nil -%}
+{%- for group in site.data.nav -%}
+  {%- for item in group.items -%}
+    {%- if item.url == here -%}
+      {%- assign found = true -%}
+      {%- assign group_name = group.name -%}
+    {%- elsif found == false -%}
+      {%- assign prev_item = item -%}
+    {%- elsif next_item == nil -%}
+      {%- assign next_item = item -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+<div class="doc">
+  <main id="content" class="doc-main" tabindex="-1">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ '/' | relative_url }}">Docs</a>{% if group_name %} / {{ group_name }}{% endif %}
+    </nav>
+    <article class="prose">
+{{ content }}
+    </article>
+    {%- if found %}
+    <nav class="pager" aria-label="Previous and next page">
+      {%- if prev_item %}
+      <a class="pager-prev" href="{{ prev_item.url | prepend: '/' | relative_url }}"><span>Previous</span>{{ prev_item.title }}</a>
+      {%- endif %}
+      {%- if next_item %}
+      <a class="pager-next" href="{{ next_item.url | prepend: '/' | relative_url }}"><span>Next</span>{{ next_item.title }}</a>
+      {%- endif %}
+    </nav>
+    {%- endif %}
+    <p class="edit-link"><a href="https://github.com/SubtitleEdit/subtitleedit/edit/main/docs/{{ page.path }}">Edit this page on GitHub</a></p>
+  </main>
+  <aside class="toc" id="toc" aria-label="On this page" hidden>
+    <h2>On this page</h2>
+    <ul id="toc-list"></ul>
+  </aside>
+</div>

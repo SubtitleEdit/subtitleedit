@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Declarative;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main.Layout;
@@ -33,6 +34,24 @@ public partial class MainView : ViewBase
     /// for dialog owners and the Closing/Deactivated/Loaded hooks to target correctly.
     /// </summary>
     internal static Window? NextHostWindow;
+
+    private Styles? _editorStyles;
+
+    /// <summary>
+    /// Adds the editor styles, replacing the ones added before: their field font size and height
+    /// are picked when they are made, so a UI font size change in Settings needs new ones.
+    /// </summary>
+    internal void ApplyEditorStyles()
+    {
+        if (_editorStyles != null)
+        {
+            Styles.Remove(_editorStyles);
+        }
+
+        _editorStyles = new Styles();
+        EditorChrome.AddWindowStyles(_editorStyles, EditorWindowStyles.TimeCodes);
+        Styles.Add(_editorStyles);
+    }
 
     protected override object Build()
     {
@@ -85,7 +104,7 @@ public partial class MainView : ViewBase
         // The editor look of the dialogs (#16276): window color, compact combo boxes and time
         // codes, accent menus. Set on the view, not the window, so the styles reach the popups
         // and context menus of everything inside it.
-        EditorChrome.AddWindowStyles(Styles, EditorWindowStyles.TimeCodes);
+        ApplyEditorStyles();
 
         var root = new DockPanel { Background = EditorChrome.WindowBrush };
 

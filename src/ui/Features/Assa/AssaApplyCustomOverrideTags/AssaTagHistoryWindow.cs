@@ -43,7 +43,7 @@ public class AssaTagHistoryWindow : Window
             ItemTemplate = new FuncDataTemplate<string>((_, _) => new TextBlock
             {
                 FontFamily = MonoFont,
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 [!TextBlock.TextProperty] = new Binding("."),
             }),
@@ -73,8 +73,8 @@ public class AssaTagHistoryWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, HorizontalAlignment = HorizontalAlignment.Right };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         return EditorChrome.WrapButtonBar(buttons);
     }

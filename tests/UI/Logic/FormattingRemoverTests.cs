@@ -22,7 +22,7 @@ public class FormattingRemoverTests
     [InlineData("<i>A</i>\nB")]
     public void KeepsOneLineBreakBetweenText(string text)
     {
-        Assert.Equal("A" + Environment.NewLine + "B", FormattingRemover.RemoveAll(text));
+        Assert.Equal("A\nB", FormattingRemover.RemoveAll(text).Replace("\r\n", "\n"));
     }
 
     // An empty line between text may be an intended gap (e.g. between two dialogue lines), and

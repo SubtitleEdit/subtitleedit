@@ -127,6 +127,10 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
                 {
                     fancyKaraoke.RightToLeft = true;
                 }
+                else if (effect is AdvancedEffectSmoothFill smoothFill)
+                {
+                    smoothFill.RightToLeft = true;
+                }
             }
         }
 

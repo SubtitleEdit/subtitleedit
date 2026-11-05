@@ -78,6 +78,12 @@ public partial class AssSetBackgroundViewModel : ObservableObject
     public Subtitle ResultSubtitle => _subtitle;
 
     /// <summary>
+    /// The generated box lines, also part of <see cref="ResultSubtitle"/>. The main window adds these
+    /// to its rows rather than rebuilding them, which would lose the original column (#16499).
+    /// </summary>
+    public List<Paragraph> BoxParagraphs { get; } = new();
+
+    /// <summary>
     /// Only the rounded corners style uses the radius.
     /// </summary>
     public bool IsRadiusEnabled => BoxStyleIndex == 1;
@@ -303,6 +309,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
                 lock (_addSubtitleLock)
                 {
                     _subtitle.InsertParagraphInCorrectTimeOrder(boxParagraph);
+                    BoxParagraphs.Add(boxParagraph);
                 }
             });
         });

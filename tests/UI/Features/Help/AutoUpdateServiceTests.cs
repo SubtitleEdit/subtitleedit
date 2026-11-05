@@ -182,11 +182,11 @@ public class AutoUpdateServiceTests
         var path = Path.GetTempFileName();
         try
         {
-            await File.WriteAllTextAsync(path, "hello");
+            await File.WriteAllTextAsync(path, "hello", TestContext.Current.CancellationToken);
             var hash = Convert.ToHexString(SHA256.HashData("hello"u8.ToArray()));
 
-            Assert.True(await AutoUpdateService.IsSha256MatchAsync(path, hash.ToLowerInvariant(), CancellationToken.None));
-            Assert.False(await AutoUpdateService.IsSha256MatchAsync(path, Digest, CancellationToken.None));
+            Assert.True(await AutoUpdateService.IsSha256MatchAsync(path, hash.ToLowerInvariant(), TestContext.Current.CancellationToken));
+            Assert.False(await AutoUpdateService.IsSha256MatchAsync(path, Digest, TestContext.Current.CancellationToken));
         }
         finally
         {
@@ -281,31 +281,31 @@ public class AutoUpdateServiceTests
         try
         {
             var appFolder = Directory.CreateDirectory(Path.Combine(root, "app")).FullName;
-            await File.WriteAllTextAsync(Path.Combine(appFolder, "old.txt"), "old");
-            await File.WriteAllTextAsync(Path.Combine(appFolder, "version.txt"), "1");
+            await File.WriteAllTextAsync(Path.Combine(appFolder, "old.txt"), "old", TestContext.Current.CancellationToken);
+            await File.WriteAllTextAsync(Path.Combine(appFolder, "version.txt"), "1", TestContext.Current.CancellationToken);
 
             // The "new version": its executable records that it was started from the install folder.
             var staging = Directory.CreateDirectory(Path.Combine(root, "staging")).FullName;
             var marker = Path.Combine(root, "relaunched.txt");
-            await File.WriteAllTextAsync(Path.Combine(staging, "SubtitleEdit"), $"#!/bin/sh\npwd > '{marker}'\n");
+            await File.WriteAllTextAsync(Path.Combine(staging, "SubtitleEdit"), $"#!/bin/sh\npwd > '{marker}'\n", TestContext.Current.CancellationToken);
             File.SetUnixFileMode(Path.Combine(staging, "SubtitleEdit"), (UnixFileMode)0b111_101_101);
-            await File.WriteAllTextAsync(Path.Combine(staging, "version.txt"), "2");
+            await File.WriteAllTextAsync(Path.Combine(staging, "version.txt"), "2", TestContext.Current.CancellationToken);
             var archive = Path.Combine(root, "update.tar.gz");
             await RunAsync("tar", "-czf", archive, "-C", staging, ".");
 
             var exited = System.Diagnostics.Process.Start("/bin/sh", ["-c", "exit 0"]);
-            await exited.WaitForExitAsync();
+            await exited.WaitForExitAsync(TestContext.Current.CancellationToken);
 
             var script = Path.Combine(root, "install-update.sh");
-            await File.WriteAllTextAsync(script, AutoUpdateService.LinuxScript.Replace("\r\n", "\n"));
+            await File.WriteAllTextAsync(script, AutoUpdateService.LinuxScript.Replace("\r\n", "\n"), TestContext.Current.CancellationToken);
             await RunAsync("/bin/sh", script, exited.Id.ToString(), archive, appFolder, Path.Combine(appFolder, "SubtitleEdit"));
 
             for (var i = 0; i < 50 && !File.Exists(marker); i++)
             {
-                await Task.Delay(100);
+                await Task.Delay(100, TestContext.Current.CancellationToken);
             }
 
-            Assert.Equal("2", await File.ReadAllTextAsync(Path.Combine(appFolder, "version.txt")));
+            Assert.Equal("2", await File.ReadAllTextAsync(Path.Combine(appFolder, "version.txt"), TestContext.Current.CancellationToken));
             Assert.True(File.Exists(Path.Combine(appFolder, "old.txt"))); // user files in the folder survive
             Assert.False(File.Exists(archive));
             Assert.True(File.Exists(marker));
@@ -328,33 +328,33 @@ public class AutoUpdateServiceTests
         try
         {
             var target = Directory.CreateDirectory(Path.Combine(root, "Applications", "Subtitle Edit.app", "Contents")).Parent!.FullName;
-            await File.WriteAllTextAsync(Path.Combine(target, "Contents", "version.txt"), "1");
+            await File.WriteAllTextAsync(Path.Combine(target, "Contents", "version.txt"), "1", TestContext.Current.CancellationToken);
             var staged = Directory.CreateDirectory(Path.Combine(root, "staged", "Subtitle Edit.app", "Contents")).Parent!.FullName;
-            await File.WriteAllTextAsync(Path.Combine(staged, "Contents", "version.txt"), "2");
+            await File.WriteAllTextAsync(Path.Combine(staged, "Contents", "version.txt"), "2", TestContext.Current.CancellationToken);
 
             // A fake "open" first on PATH records what would be launched.
             var bin = Directory.CreateDirectory(Path.Combine(root, "bin")).FullName;
             var marker = Path.Combine(root, "opened.txt");
-            await File.WriteAllTextAsync(Path.Combine(bin, "open"), $"#!/bin/sh\necho \"$1\" > '{marker}'\n");
+            await File.WriteAllTextAsync(Path.Combine(bin, "open"), $"#!/bin/sh\necho \"$1\" > '{marker}'\n", TestContext.Current.CancellationToken);
             File.SetUnixFileMode(Path.Combine(bin, "open"), (UnixFileMode)0b111_101_101);
 
             var exited = System.Diagnostics.Process.Start("/bin/sh", ["-c", "exit 0"]);
-            await exited.WaitForExitAsync();
+            await exited.WaitForExitAsync(TestContext.Current.CancellationToken);
 
             var script = Path.Combine(root, "install-update.sh");
-            await File.WriteAllTextAsync(script, AutoUpdateService.MacScript.Replace("\r\n", "\n"));
+            await File.WriteAllTextAsync(script, AutoUpdateService.MacScript.Replace("\r\n", "\n"), TestContext.Current.CancellationToken);
             var startInfo = new System.Diagnostics.ProcessStartInfo("/bin/sh", [script, exited.Id.ToString(), staged, target]);
             startInfo.Environment["PATH"] = bin + ":" + Environment.GetEnvironmentVariable("PATH");
             using (var process = System.Diagnostics.Process.Start(startInfo)!)
             {
-                await process.WaitForExitAsync();
+                await process.WaitForExitAsync(TestContext.Current.CancellationToken);
                 Assert.Equal(0, process.ExitCode);
             }
 
-            Assert.Equal("2", await File.ReadAllTextAsync(Path.Combine(target, "Contents", "version.txt")));
+            Assert.Equal("2", await File.ReadAllTextAsync(Path.Combine(target, "Contents", "version.txt"), TestContext.Current.CancellationToken));
             Assert.False(Directory.Exists(staged));
             Assert.False(Directory.Exists(target + ".se-update-old"));
-            Assert.Equal(target, (await File.ReadAllTextAsync(marker)).Trim());
+            Assert.Equal(target, (await File.ReadAllTextAsync(marker, TestContext.Current.CancellationToken)).Trim());
         }
         finally
         {

@@ -31,7 +31,7 @@ public class PartsSavedWindow : Window
 
         var labelSavedTo = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 560,
         }.WithBindText(vm, nameof(vm.XPartsSavedToFolder));

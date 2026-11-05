@@ -135,10 +135,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             var serbianOnly = 0;         // ћ ђ
             var ukrainianOnly = 0;       // і ї є ґ
             var russianOnly = 0;         // ы э ё
-            var hardSign = 0;            // ъ
+            var hardSign = 0;            // ъ, not before е/ё/ю/я
             var eastSlavic = 0;          // ъ ы э ё й щ ь ю я - none of them in Macedonian or Serbian
-            foreach (var c in text)
+            for (var i = 0; i < text.Length; i++)
             {
+                var c = text[i];
                 switch (c)
                 {
                     case 'ј': case 'Ј': case 'љ': case 'Љ': case 'њ': case 'Њ': case 'џ': case 'Џ':
@@ -160,7 +161,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                         eastSlavic++;
                         break;
                     case 'ъ': case 'Ъ':
-                        hardSign++;
+                        // Russian writes ъ only before е/ё/ю/я (съел, подъезд, объявление),
+                        // Bulgarian mostly before consonants (дъжд, къде, със) - only the latter
+                        // says Bulgarian.
+                        if (i + 1 >= text.Length || "еёюяЕЁЮЯ".IndexOf(text[i + 1]) < 0)
+                        {
+                            hardSign++;
+                        }
+
                         eastSlavic++;
                         break;
                     case 'й': case 'Й': case 'щ': case 'Щ': case 'ь': case 'Ь': case 'ю': case 'Ю': case 'я': case 'Я':
@@ -269,8 +277,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         /// <summary>
         /// Arabic, Persian or Urdu by the letters each script adds: Persian and Urdu write
-        /// پ/چ/ژ/گ and the Persian ye/kaf (ی U+06CC, ک U+06A9), Arabic its own ye/kaf
-        /// (ي U+064A, ك U+0643) plus ة/ذ/ض/ظ/ء; Urdu alone has ٹ/ڈ/ڑ/ں/ے/ھ/ہ.
+        /// پ/چ/ژ/گ and the Persian ye/kaf (ی U+06CC, ک U+06A9), Arabic has ة; Urdu alone has
+        /// ٹ/ڈ/ڑ/ں/ے/ھ/ہ. The Arabic ye/kaf (ي U+064A, ك U+0643) and ذ/ض/ظ/ء say nothing: older
+        /// Persian files (Windows-1256) are typed with that ye/kaf, and ذ/ض/ظ/ء are common in
+        /// Persian loanwords.
         /// </summary>
         /// <param name="text">The text to look at.</param>
         /// <returns>"ur", "fa", "ar", or null when the letters do not say.</returns>
@@ -283,7 +293,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 switch (c)
                 {
-                    case 'ي': case 'ك': case 'ة': case 'ذ': case 'ض': case 'ظ': case 'ء':
+                    case 'ة':
                         arabic++;
                         break;
                     case 'ی': case 'ک': case 'پ': case 'چ': case 'ژ': case 'گ':
@@ -758,7 +768,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "djevojka", "umrijeti", "čovjeka", "mjesta", "djeca", "osjećam", "uopće", "djecu", "naprijed", "obitelji", "doista", "mjestu", "lijepa", "također", "riječ", "tijelo",
             "vrijeme", "mlijeko", "lijepo",
             "stol", "slijedite", "izvrsna", "sjeveru", "tijekom", "cestama", "jučer", "tisuću", "tjedan", "mjesec", "svjetlo", "glazba", "zrak", "kruh", "tvrtka",
-            "siječanj", "vjetar", "snijeg", "rijeka", "cijena", "vrijedi", "pješice", "sljedeći", "prijatelj", "prijatelji",
+            "siječanj", "vjetar", "snijeg", "rijeka", "cijena", "vrijedi", "pješice", "sljedeći",
         };
 
         private static readonly string[] AutoDetectWordsSerbian =
@@ -767,7 +777,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "verovatno", "verujem", "tačno", "razumem", "videla", "ceo", "svet", "porodica", "voleo", "srećan", "dođavola", "svetu", "htela", "videli", "negde", "želeo", "ponovo", "devojka", "umreti", "čoveka", "mesta", "deca", "osećam",
             "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo",
             "sto", "veče", "pratite", "odlična", "severu", "tokom", "putevima", "juče", "hiljadu", "nedelja", "mesec", "svetlo", "muzika", "vazduh", "hleb", "firma",
-            "januar", "trebalo", "budu", "vetar", "sneg", "reka", "cena", "vredi", "peške", "sledeći", "prijatelj", "prijatelji",
+            "januar", "trebalo", "budu", "vetar", "sneg", "reka", "cena", "vredi", "peške", "sledeći",
         };
 
         private static readonly string[] AutoDetectWordsSerbianCyrillic =
@@ -855,8 +865,10 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsKorean =
         {
-            "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", "일어나", "잘했어", "뭐라고", "있어요",
-            "있어요", "보여줘", "괜찮아요", "목소릴", "기억이", "저주를", "좋아요"
+            "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", 
+            "일어나", "잘했어", "뭐라고", "있어요", "있어요", "보여줘", "괜찮아요", "목소릴", "기억이", "저주를", 
+            "좋아요", "조사관", "회장님", "새끼야", "사모님", "가정부", "숨소리", "잠수부", "어떻게", "의미심장한",
+            "양장점", "긴장감", "거예요", "그래요", "없어요", "고마워요", "알았어요", "안녕하세요", "모르겠어요"
         };
 
         // Everyday Macedonian words, preferring the ones Bulgarian and Serbian spell
@@ -1092,7 +1104,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="text">The text to detect the language of.</param>
         /// <param name="bestCount">The minimum number of keyword hits for a match.</param>
         /// <param name="score">The number of keyword hits for the returned language.</param>
-        private static string AutoDetectGoogleLanguage(string text, int bestCount, out int score)
+        /// <param name="detectChineseScript">Whether to detect Chinese sub (Simplified/Traditional) script.</param>
+        private static string AutoDetectGoogleLanguage(string text, int bestCount, out int score, bool detectChineseScript = false)
         {
             // Score-based selection instead of first-match-wins: every language block below is
             // evaluated and records a candidate via Consider(); the candidate with the most
@@ -1115,18 +1128,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     best = languageCode;
                     bestScore = score;
                 }
-            }
-
-            // "mk", "sr", "uk", "bg", "ru" or null, scanning the letters once no matter how many blocks ask.
-            string CyrillicByLetters()
-            {
-                if (!cyrillicChecked)
-                {
-                    cyrillicByLetters = GetCyrillicLanguageByLetters(text, counts);
-                    cyrillicChecked = true;
-                }
-
-                return cyrillicByLetters;
             }
 
             var count = counts.Get(AutoDetectWordsEnglish);
@@ -1472,7 +1473,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             count += GetCountContains(text, "来", "卡", "拉", "吐", "滚", "他");
             if (count > bestCount * 2)
             {
-                Consider("zh", count); // Chinese (simplified) - not tested...
+                var script = "zh";
+                if (detectChineseScript)
+                {
+                    script = DetermineChineseScript(text);
+                }
+                
+                Consider(script, count); // Chinese (simplified) - not tested...
             }
 
             count = counts.Get(AutoDetectWordsCzechAndSlovak);
@@ -1600,11 +1607,91 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             score = bestScore;
             return best;
+
+            // "mk", "sr", "uk", "bg", "ru" or null, scanning the letters once no matter how many blocks ask.
+            string CyrillicByLetters()
+            {
+                if (!cyrillicChecked)
+                {
+                    cyrillicByLetters = GetCyrillicLanguageByLetters(text, counts);
+                    cyrillicChecked = true;
+                }
+
+                return cyrillicByLetters;
+            }
         }
 
-        public static string AutoDetectGoogleLanguage(Subtitle subtitle)
+        private static string DetermineChineseScript(string text)
+{
+    if (string.IsNullOrEmpty(text))
+    {
+        return "zh"; // Default to Simplified/generic
+    }
+
+    // Comprehensive Traditional Chinese character markers
+    int traditionalCount = GetCountContains(text, 
+        // Pronouns, Demographics & Measure Words
+        "們", "這", "個", "樣", "兩", "幾", "誰", "什", "傢", "伙",
+        // Verbs & Actions
+        "說", "聽", "看", "見", "會", "能", "開", "關", "讓", "給", 
+        "過", "來", "進", "帶", "選", "問", "愛", "買", "賣", "辦",
+        "寫", "讀", "講", "說", "試", "尋", "找", "換", "換", "搬",
+        "跑", "飛", "走", "過", "進", "出", "回", "到", "起", "坐",
+        // Adverbs, Prepositions & Particles
+        "還", "與", "後", "點", "為", "著", "麼", "裡", "裏", "邊",
+        "對", "從", "向", "往", "把", "被", "比", "象", "像", "經",
+        // Everyday Nouns & Objects
+        "國", "學", "書", "車", "門", "電", "機", "話", "語", "時",
+        "廣", "體", "灣", "臺", "台", "視", "頻", "錢", "萬", "東",
+        "風", "飯", "頭", "長", "遠", "親", "樂", "報", "隊", "師",
+        "員", "網", "劃", "園", "難", "雙", "無", "義", "業", "廠",
+        "產", "醫", "藥", "點", "實", "際", "關", "應", "該", "發",
+        // Additional Media, Emotion & Abstract Concepts
+        "歡", "迎", "愛", "情", "感", "覺", "意", "思", "想", "法",
+        "聲", "音", "樂", "器", "戲", "劇", "影", "片", "圖", "畫",
+        "燈", "鏡", "筆", "紙", "類", "別", "種", "類", "結", "構"
+    );
+
+    // Corresponding Simplified Chinese character markers for contrast
+    int simplifiedCount = GetCountContains(text, 
+        // Pronouns, Demographics & Measure Words
+        "们", "这", "个", "样", "两", "几", "谁", "什", "家", "伙",
+        // Verbs & Actions
+        "说", "听", "看", "见", "会", "能", "开", "关", "让", "给", 
+        "过", "来", "进", "带", "选", "问", "爱", "买", "卖", "办",
+        "写", "读", "讲", "说", "试", "寻", "找", "换", "换", "搬",
+        "跑", "飞", "走", "过", "进", "出", "回", "到", "起", "坐",
+        // Adverbs, Prepositions & Particles
+        "还", "与", "后", "点", "为", "着", "么", "里", "里", "边",
+        "对", "从", "向", "往", "把", "被", "比", "象", "像", "经",
+        // Everyday Nouns & Objects
+        "国", "学", "书", "车", "门", "电", "机", "话", "语", "时",
+        "广", "体", "湾", "台", "台", "视", "频", "钱", "万", "东",
+        "风", "饭", "头", "长", "远", "亲", "乐", "报", "队", "师",
+        "员", "网", "划", "园", "难", "双", "无", "义", "业", "厂",
+        "产", "医", "药", "点", "实", "际", "关", "应", "该", "发",
+        // Additional Media, Emotion & Abstract Concepts
+        "欢", "迎", "爱", "情", "感", "觉", "意", "思", "想", "法",
+        "声", "音", "乐", "器", "戏", "剧", "影", "片", "图", "画",
+        "灯", "镜", "笔", "纸", "类", "别", "种", "类", "结", "构"
+    );
+
+    if (traditionalCount > simplifiedCount && traditionalCount >= 2)
+    {
+        return "zh-Hant";
+    }
+
+    if (simplifiedCount > traditionalCount && simplifiedCount >= 2)
+    {
+        return "zh-Hans";
+    }
+
+    return "zh"; // Default / Simplified Chinese
+}
+        
+        public static string AutoDetectGoogleLanguage(Subtitle subtitle, bool detectChineseScript = false)
         {
-            return AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
+            return AutoDetectGoogleLanguageOrNull(subtitle, detectChineseScript) ?? "en";
         }
 
         public static string AutoDetectGoogleLanguage(Subtitle subtitle, int maxNumberOfSubtitlesToCheck)
@@ -1896,10 +1983,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
-        public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
+        public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle, bool detectChineseScript = false)
         {
             var allText = GetNonEmptyTexts(subtitle, 500000, out var nonEmptyCount);
-            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14);
+            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14, out var score, detectChineseScript);
             if (string.IsNullOrEmpty(languageId))
             {
                 languageId = GetEncodingViaLetter(allText);
@@ -2412,6 +2499,66 @@ namespace Nikse.SubtitleEdit.Core.Common
             return languageName;
         }
 
+        private static Encoding DetectJapaneseOrChineseEncoding(byte[] buffer)
+        {
+            var shiftJisText = Encoding.GetEncoding(932).GetString(buffer);
+            if (CountCharsInRange(shiftJisText, '\u3040', '\u30FF') > 10 && CountChars(shiftJisText, "\uFFFD") < 3) // Japanese kana
+            {
+                return Encoding.GetEncoding(932);
+            }
+
+            var gbkText = Encoding.GetEncoding(936).GetString(buffer);
+            var big5Text = Encoding.GetEncoding(950).GetString(buffer);
+            var isGbk = IsCjkText(gbkText);
+            var isBig5 = IsCjkText(big5Text);
+            var simplifiedCount = CountChars(gbkText, "\u4EEC\u8FD9\u8BF4\u6765\u4E3A\u5BF9\u6CA1\u8FC7\u56FD\u65F6\u4E2A\u4F1A\u5B66\u8BF7");
+            var traditionalCount = CountChars(big5Text, "\u5011\u9019\u8AAA\u4F86\u70BA\u5C0D\u6C92\u904E\u570B\u6642\u500B\u6703\u5B78\u8ACB");
+            if (isGbk && (!isBig5 || simplifiedCount >= traditionalCount))
+            {
+                return Encoding.GetEncoding(936); // Simplified Chinese
+            }
+
+            if (isBig5)
+            {
+                return Encoding.GetEncoding(950); // Traditional Chinese
+            }
+
+            return null;
+        }
+
+        private static bool IsCjkText(string text)
+        {
+            return CountCharsInRange(text, '\u4E00', '\u9FFF') > 10 && CountChars(text, "\uFFFD") < 3;
+        }
+
+        private static int CountCharsInRange(string text, char from, char to)
+        {
+            var count = 0;
+            foreach (var ch in text)
+            {
+                if (ch >= from && ch <= to)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private static int CountChars(string text, string chars)
+        {
+            var count = 0;
+            foreach (var ch in text)
+            {
+                if (chars.IndexOf(ch) >= 0)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         public static Encoding DetectAnsiEncoding(byte[] buffer)
         {
             try
@@ -2422,13 +2569,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var cyrillicCount = counts1251.Get(AutoDetectWordsRussianShort) + counts1251.Get(AutoDetectWordsSerbianCyrillic) +
                                     counts1251.Get(AutoDetectWordsBulgarianShort) + counts1251.Get(AutoDetectWordsMacedonian) +
                                     counts1251.Get(AutoDetectWordsUkrainian);
-
+                var koreanCount = GetCount(Encoding.GetEncoding(949).GetString(buffer), AutoDetectWordsKorean);
+                
                 // Cyrillic bytes read as 1253 are Greek letters too, and two-letter Greek words
                 // (να, το, με, ...) match such junk by chance - so Greek has to beat the Cyrillic count.
                 var greekEncoding = Encoding.GetEncoding(1253); // Greek
                 var greekCount = GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek);
                 if (greekCount > 5 && greekCount > cyrillicCount)
                 {
+                    if (koreanCount > greekCount)
+                    {
+                        return Encoding.GetEncoding(949); // Korean
+                    }
+
                     return greekEncoding;
                 }
 
@@ -2552,7 +2705,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var thaiEncoding = Encoding.GetEncoding(874); // Thai
                 var thaiCount = GetCount(thaiEncoding.GetString(buffer), AutoDetectWordsThai);
                 var koreanEncoding = Encoding.GetEncoding(949); // Korean
-                var koreanCount = GetCount(koreanEncoding.GetString(buffer), AutoDetectWordsKorean);
                 if (thaiCount > 10 || koreanCount > 10)
                 {
                     return thaiCount > koreanCount ? thaiEncoding : koreanEncoding;
@@ -2597,6 +2749,11 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (turkish1254Count > wordMinCount)
                 {
                     return encoding1254;
+                }
+
+                if (DetectJapaneseOrChineseEncoding(buffer) is { } cjkEncoding)
+                {
+                    return cjkEncoding;
                 }
 
                 var encoding = EncodingTools.DetectInputCodepage(buffer);

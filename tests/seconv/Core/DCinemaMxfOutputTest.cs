@@ -63,7 +63,7 @@ public class DCinemaMxfOutputTest : IDisposable
     public async Task TextMxf_EmbedsFontAndXml()
     {
         var font = Path.Combine(_tempRoot, "font.ttf");
-        await File.WriteAllBytesAsync(font, Enumerable.Range(0, 1000).Select(i => (byte)i).ToArray());
+        await File.WriteAllBytesAsync(font, Enumerable.Range(0, 1000).Select(i => (byte)i).ToArray(), TestContext.Current.CancellationToken);
 
         var (result, outFolder) = await Convert("dcinemasmpte2014mxf", font, "00:00:12:00");
 

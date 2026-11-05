@@ -55,7 +55,7 @@ public class AssaPropertiesWindow : Window
     {
         textBox = new TextBox
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             MinHeight = 28,
             Background = EditorChrome.FieldBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
@@ -65,7 +65,7 @@ public class AssaPropertiesWindow : Window
         AutomationProperties.SetName(textBox, label);
 
         var panel = new StackPanel { Spacing = 4 };
-        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = EditorChrome.DimTextBrush });
+        panel.Children.Add(new TextBlock { Text = label, FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush });
         panel.Children.Add(textBox);
         return panel;
     }
@@ -120,8 +120,8 @@ public class AssaPropertiesWindow : Window
         {
             var button = new Button
             {
-                Content = new TextBlock { Text = text, FontSize = 12, Margin = new Thickness(8, 0) },
-                Height = 26,
+                Content = new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(8, 0) },
+                Height = EditorChrome.ScaledSize(26),
                 VerticalContentAlignment = VerticalAlignment.Center,
             };
             button.Classes.Add("tool");
@@ -172,7 +172,7 @@ public class AssaPropertiesWindow : Window
     private static StackPanel Labeled(string label, Control control)
     {
         var panel = new StackPanel { Spacing = 4 };
-        panel.Children.Add(new TextBlock { Text = label, FontSize = 12, Foreground = EditorChrome.DimTextBrush, TextTrimming = TextTrimming.CharacterEllipsis });
+        panel.Children.Add(new TextBlock { Text = label, FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush, TextTrimming = TextTrimming.CharacterEllipsis });
         panel.Children.Add(control);
         return panel;
     }
@@ -183,8 +183,8 @@ public class AssaPropertiesWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, HorizontalAlignment = HorizontalAlignment.Right };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         return EditorChrome.WrapButtonBar(buttons);
     }

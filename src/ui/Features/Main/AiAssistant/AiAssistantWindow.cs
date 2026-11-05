@@ -113,7 +113,7 @@ public class AiAssistantWindow : Window
         comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
 
         var languageText = MakeBoundTextBlock(nameof(vm.LanguageDisplay));
-        languageText.FontSize = 12.5;
+        languageText.FontSize = EditorChrome.FieldFontSize;
         var languageChip = new Border
         {
             Background = EditorChrome.AccentSoftBrush,
@@ -280,7 +280,7 @@ public class AiAssistantWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
         var statusText = MakeBoundTextBlock(nameof(vm.StatusText));
-        statusText.FontSize = 12;
+        statusText.FontSize = EditorChrome.FieldFontSize;
         statusText.Foreground = EditorChrome.DimTextBrush;
         statusText.TextTrimming = TextTrimming.CharacterEllipsis;
         var busyBar = new ProgressBar
@@ -368,9 +368,9 @@ public class AiAssistantWindow : Window
     private static void CompactButton(Button button)
     {
         button.MinHeight = 28;
-        button.Height = 28;
+        button.Height = EditorChrome.ScaledSize(28);
         button.Padding = new Thickness(10, 0);
-        button.FontSize = 12.5;
+        button.FontSize = EditorChrome.FieldFontSize;
         button.VerticalContentAlignment = VerticalAlignment.Center;
     }
 

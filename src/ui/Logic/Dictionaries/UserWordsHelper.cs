@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -10,39 +11,29 @@ public static class UserWordsHelper
 {
     public static string LoadUserWordList(List<string> userWordList, string languageName)
     {
-        var folder = Se.DictionariesFolder;
-
         userWordList.Clear();
-        var userWordDictionary = new XmlDocument();
-        var userWordListXmlFileName = Path.Combine(folder, languageName + "_user.xml");
-
-        if (!File.Exists(userWordListXmlFileName) && languageName != null && languageName.Length > 2)
+        var userWordListXmlFileName = GetUserWordListFileName(languageName);
+        var doc = LoadDocument(userWordListXmlFileName);
+        if (doc != null)
         {
-            var newFileName = Path.Combine(folder, languageName.Substring(0, 2).ToLowerInvariant() + "_user.xml");
-            if (File.Exists(newFileName))
-            {
-                userWordListXmlFileName = newFileName;
-            }
+            userWordList.AddRange(UserDictionaryXml.ReadWords(doc));
         }
 
-        if (File.Exists(userWordListXmlFileName))
+        return userWordListXmlFileName;
+    }
+
+    /// <summary>
+    /// Words the spell checker must reject even though the Hunspell dictionary knows them, from
+    /// the &lt;removed&gt; section of the same "&lt;lang&gt;_user.xml" file.
+    /// </summary>
+    public static string LoadRemovedWordList(List<string> removedWordList, string languageName)
+    {
+        removedWordList.Clear();
+        var userWordListXmlFileName = GetUserWordListFileName(languageName);
+        var doc = LoadDocument(userWordListXmlFileName);
+        if (doc != null)
         {
-            userWordDictionary.Load(userWordListXmlFileName);
-            if (userWordDictionary != null && userWordDictionary.DocumentElement != null)
-            {
-                var nodes = userWordDictionary.DocumentElement.SelectNodes("word");
-                if (nodes != null)
-                {
-                    foreach (XmlNode node in nodes)
-                    {
-                        string s = Utilities.NormalizeUserDictionaryWord(node.InnerText);
-                        if (s.Length > 0 && !userWordList.Contains(s))
-                        {
-                            userWordList.Add(s);
-                        }
-                    }
-                }
-            }
+            removedWordList.AddRange(UserDictionaryXml.ReadRemovedWords(doc));
         }
 
         return userWordListXmlFileName;
@@ -69,14 +60,11 @@ public static class UserWordsHelper
         }
 
         words.Add(word);
-
-        bool flowControl = SaveWords(words, userWordFileName);
-        if (!flowControl)
+        return Save(userWordFileName, doc =>
         {
-            return false;
-        }
-
-        return true;
+            UserDictionaryXml.WriteWords(doc, words);
+            UserDictionaryXml.RemoveFromRemovedWords(doc, word);
+        });
     }
 
     public static bool RemoveWord(string word, string languageName)
@@ -89,49 +77,104 @@ public static class UserWordsHelper
 
         var words = new List<string>();
         var userWordFileName = LoadUserWordList(words, languageName);
-        if (!words.Contains(word))
+        if (!words.Remove(word))
         {
             return false;
         }
 
-        words.Remove(word);
-
-        bool flowControl = SaveWords(words, userWordFileName);
-        if (!flowControl)
-        {
-            return false;
-        }
-
-        return true;
+        return Save(userWordFileName, doc => UserDictionaryXml.WriteWords(doc, words));
     }
 
-    private static bool SaveWords(List<string> words, string userWordFileName)
+    /// <summary>
+    /// Makes the spell checker reject <paramref name="word"/>; also takes it out of the accepted
+    /// user words, which would otherwise win.
+    /// </summary>
+    public static bool AddRemovedWord(string word, string languageName)
     {
-        words.Sort();
-        var doc = new XmlDocument();
-        if (File.Exists(userWordFileName))
+        word = Utilities.NormalizeUserDictionaryWord(word);
+        if (word.Length == 0 || word.Contains(' '))
         {
-            doc.Load(userWordFileName);
+            return false;
         }
-        else
+
+        var removedWords = new List<string>();
+        var userWordFileName = LoadRemovedWordList(removedWords, languageName);
+        if (removedWords.Contains(word))
         {
+            return false;
+        }
+
+        removedWords.Add(word);
+        var words = new List<string>();
+        LoadUserWordList(words, languageName);
+        var wasUserWord = words.Remove(word);
+        return Save(userWordFileName, doc =>
+        {
+            UserDictionaryXml.WriteRemovedWords(doc, removedWords);
+            if (wasUserWord)
+            {
+                UserDictionaryXml.WriteWords(doc, words);
+            }
+        });
+    }
+
+    public static bool RemoveRemovedWord(string word, string languageName)
+    {
+        word = Utilities.NormalizeUserDictionaryWord(word);
+        if (word.Length == 0)
+        {
+            return false;
+        }
+
+        var removedWords = new List<string>();
+        var userWordFileName = LoadRemovedWordList(removedWords, languageName);
+        if (!removedWords.Remove(word))
+        {
+            return false;
+        }
+
+        return Save(userWordFileName, doc => UserDictionaryXml.WriteRemovedWords(doc, removedWords));
+    }
+
+    private static string GetUserWordListFileName(string languageName)
+    {
+        var folder = Se.DictionariesFolder;
+        var userWordListXmlFileName = Path.Combine(folder, languageName + "_user.xml");
+        if (!File.Exists(userWordListXmlFileName) && languageName != null && languageName.Length > 2)
+        {
+            var newFileName = Path.Combine(folder, languageName.Substring(0, 2).ToLowerInvariant() + "_user.xml");
+            if (File.Exists(newFileName))
+            {
+                userWordListXmlFileName = newFileName;
+            }
+        }
+
+        return userWordListXmlFileName;
+    }
+
+    private static XmlDocument? LoadDocument(string fileName)
+    {
+        if (!File.Exists(fileName))
+        {
+            return null;
+        }
+
+        var doc = new XmlDocument();
+        doc.Load(fileName);
+        return doc.DocumentElement == null ? null : doc;
+    }
+
+    private static bool Save(string userWordFileName, System.Action<XmlDocument> update)
+    {
+        var doc = LoadDocument(userWordFileName);
+        if (doc == null)
+        {
+            doc = new XmlDocument();
             doc.LoadXml("<Words />");
         }
 
-        if (doc.DocumentElement == null)
-        {
-            return false;
-        }
-
-        doc.DocumentElement.RemoveAll();
-        foreach (var w in words)
-        {
-            XmlNode node = doc.CreateElement("word");
-            node.InnerText = w;
-            doc.DocumentElement?.AppendChild(node);
-        }
+        update(doc);
         doc.Save(userWordFileName);
-
         return true;
     }
 }

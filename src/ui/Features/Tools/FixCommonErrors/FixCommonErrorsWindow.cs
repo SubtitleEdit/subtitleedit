@@ -26,6 +26,9 @@ public class FixCommonErrorsWindow : Window
     private static readonly IBrush NothingToFixBrush = EditorChrome.Themed(Color.FromRgb(0x6e, 0xcb, 0x87), Color.FromRgb(0x1e, 0x7e, 0x34));
     private static readonly IBrush ErrorsFoundBrush = EditorChrome.Themed(Color.FromRgb(0xff, 0x8a, 0x80), Color.FromRgb(0xc4, 0x28, 0x28));
 
+    // Rules that are off step back, so the ones that will run stand out
+    private static readonly FuncValueConverter<bool, IBrush> RuleNameBrushConverter = new(isEnabled => isEnabled ? EditorChrome.StrongTextBrush : EditorChrome.DimTextBrush);
+
     private readonly FixCommonErrorsViewModel _vm;
     private Button? _buttonApplySelectedFixes;
 
@@ -45,27 +48,29 @@ public class FixCommonErrorsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelStep1 = new TextBlock
+        var stepper = new StackPanel
         {
-            Text = Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep1,
-            FontSize = 13,
-            FontWeight = FontWeight.SemiBold,
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
             VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
             Margin = new Thickness(4, 0, 12, 0),
         };
-        labelStep1.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
-
-        var labelStep2 = new TextBlock
+        var step1 = MakeStep("1", Se.Language.Tools.FixCommonErrors.ChooseFixes, activeInStepOne: true);
+        AutomationProperties.SetName(step1, Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep1);
+        var step2 = MakeStep("2", Se.Language.Tools.FixCommonErrors.ApplyFixes, activeInStepOne: false);
+        step2.Bind(AutomationProperties.NameProperty, new Binding(nameof(vm.Step2Title)));
+        var fixesFoundBadge = EditorChrome.MakeCountBadge(new Binding(nameof(vm.FixesFoundBadge)), EditorChrome.AccentBrush, EditorChrome.AccentSoftBrush);
+        fixesFoundBadge.Bind(IsVisibleProperty, new Binding(nameof(vm.FixesFoundBadge)) { Converter = StringConverters.IsNotNullOrEmpty });
+        step2.Children.Add(fixesFoundBadge);
+        stepper.Children.Add(step1);
+        stepper.Children.Add(new Border
         {
-            FontSize = 13,
-            FontWeight = FontWeight.SemiBold,
+            Width = 28,
+            Height = 1,
+            Background = EditorChrome.FieldBorderBrush,
             VerticalAlignment = VerticalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis,
-            Margin = new Thickness(4, 0, 12, 0),
-        };
-        labelStep2.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Step2Title)));
-        labelStep2.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
+        });
+        stepper.Children.Add(step2);
 
         var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(16)
             .WithAccessibleName(Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot)
@@ -73,7 +78,7 @@ public class FixCommonErrorsWindow : Window
         textBoxSearch.Classes.Add("text");
         textBoxSearch.VerticalAlignment = VerticalAlignment.Center;
         textBoxSearch.PlaceholderText = Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot;
-        textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
+        textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.IsStepOne)));
         // Off by default (#12441) - keep it reachable here, next to the language it depends on,
         // instead of only in the OCR window where a Fix-common-errors user would never look.
         var switchGuessUnknownWords = EditorChrome.MakeSwitch(nameof(vm.TryToGuessUnknownWords), Se.Language.Ocr.TryToGuessUnknownWords);
@@ -86,10 +91,10 @@ public class FixCommonErrorsWindow : Window
             Children =
             {
                 switchGuessUnknownWords,
-                new TextBlock { Text = Se.Language.Ocr.TryToGuessUnknownWords, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center },
+                new TextBlock { Text = Se.Language.Ocr.TryToGuessUnknownWords, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center },
             },
         };
-        panelGuessUnknownWords.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
+        panelGuessUnknownWords.Bind(IsVisibleProperty, new Binding("!" + nameof(vm.IsStepOne)));
 
         var comboLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
             .WithAccessibleName(Se.Language.General.Language);
@@ -112,7 +117,7 @@ public class FixCommonErrorsWindow : Window
         var toolbarContent = new DockPanel { MinHeight = 32 };
         DockPanel.SetDock(panelTopRight, Dock.Right);
         toolbarContent.Children.Add(panelTopRight);
-        toolbarContent.Children.Add(new Panel { Children = { labelStep1, labelStep2 }, VerticalAlignment = VerticalAlignment.Center });
+        toolbarContent.Children.Add(stepper);
         var toolbar = EditorChrome.MakeToolbar(toolbarContent);
         toolbar.Padding = new Thickness(12, 8);
 
@@ -124,24 +129,35 @@ public class FixCommonErrorsWindow : Window
             Header = Se.Language.General.Enabled,
             CellTheme = UiUtil.TableViewNoPaddingCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<FixRuleDisplayItem>(nameof(FixRuleDisplayItem.IsSelected), nameof(FixRuleDisplayItem.Name)),
+            CellTemplate = TableViewExtras.MakeCheckBoxCellTemplate<FixRuleDisplayItem>(
+                nameof(FixRuleDisplayItem.IsSelected),
+                nameof(FixRuleDisplayItem.Name),
+                configure: checkBox => checkBox.Margin = new Thickness(0, -5)), // the theme's 32px check box sets the row height, so fewer rules fit
             // Content-sized (Auto) on the DataGrid; TableView treats Auto as star.
-            Width = new GridLength(80),
+            Width = new GridLength(72),
         };
         var rulesNameColumn = new SeTableViewColumn
         {
             Header = Se.Language.General.Name,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(FixRuleDisplayItem.Name)),
-            Width = new GridLength(320),
+            CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((_, _) => new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                [!TextBlock.TextProperty] = new Binding(nameof(FixRuleDisplayItem.Name)),
+                [!TextBlock.ForegroundProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)) { Converter = RuleNameBrushConverter },
+            }),
+            NameBinding = new Binding(nameof(FixRuleDisplayItem.Name)),
+            Width = new GridLength(420),
         };
         var rulesExampleColumn = new SeTableViewColumn
         {
             Header = Se.Language.General.Example,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(FixRuleDisplayItem.Example)),
+            CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) => MakeExampleCell(item)),
+            NameBinding = new Binding(nameof(FixRuleDisplayItem.Example)),
             Width = new GridLength(1, GridUnitType.Star),
         };
         rulesGrid.Columns.Add(rulesEnabledColumn);
@@ -183,7 +199,16 @@ public class FixCommonErrorsWindow : Window
         var rulesHeader = new DockPanel { Margin = new Thickness(0, 0, 0, 8) };
         DockPanel.SetDock(rulesActions, Dock.Right);
         rulesHeader.Children.Add(rulesActions);
-        rulesHeader.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Rules));
+        rulesHeader.Children.Add(new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children =
+            {
+                EditorChrome.MakeSectionHeader(Se.Language.General.Rules),
+                EditorChrome.MakeCountBadge(new Binding(nameof(vm.RulesEnabledText)), EditorChrome.AccentBrush, EditorChrome.AccentSoftBrush),
+            },
+        });
 
         var rulesPanel = new Grid
         {
@@ -197,26 +222,26 @@ public class FixCommonErrorsWindow : Window
         rulesPanel.Add(rulesHeader, 0);
         rulesPanel.Add(EditorChrome.MakeListFrame(rulesGrid, clearListBackground: true), 1);
         var step1View = EditorChrome.MakePanel(rulesPanel);
-        step1View.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
+        step1View.Bind(IsVisibleProperty, new Binding(nameof(vm.IsStepOne)));
 
         var step2Grid = MakeStep2Grid();
-        step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
+        step2Grid.Bind(IsVisibleProperty, new Binding("!" + nameof(_vm.IsStepOne)));
 
         var buttonToApplyFixes = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.GoToApplyFixes, vm.ToApplyFixesCommand)
             .WithIconRight("fa-solid fa-arrow-right")
-            .BindIsVisible(vm, nameof(vm.Step1IsVisible));
+            .BindIsVisible(vm, nameof(vm.IsStepOne));
         buttonToApplyFixes.Classes.Add("primary");
 
         var buttonBackToFixList = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.BackToFixList, vm.BackToFixListCommand)
             .WithIconLeft("fa-solid fa-arrow-left")
-            .BindIsVisible(vm, nameof(vm.Step2IsVisible));
+            .BindIsVisible(vm, "!" + nameof(vm.IsStepOne));
 
         var buttonDone = UiUtil.MakeButton(Se.Language.General.Done, vm.OkCommand)
-            .BindIsVisible(vm, nameof(vm.Step2IsVisible));
+            .BindIsVisible(vm, "!" + nameof(vm.IsStepOne));
         buttonDone.Classes.Add("primary");
 
         var labelFixesApplied = EditorChrome.MakeBoundHint(nameof(vm.FixesAppliedText));
-        labelFixesApplied.FontSize = 12;
+        labelFixesApplied.FontSize = EditorChrome.FieldFontSize;
         labelFixesApplied.Bind(IsVisibleProperty, new Binding(nameof(vm.FixesAppliedText)) { Converter = StringConverters.IsNotNullOrEmpty });
 
         // Green check + "Nothing to fix" so an empty re-scan gives visible feedback; the counters
@@ -225,7 +250,7 @@ public class FixCommonErrorsWindow : Window
         var nothingToFixText = new TextBlock
         {
             Text = Se.Language.Tools.FixCommonErrors.NothingToFix,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = nothingToFixBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -262,7 +287,7 @@ public class FixCommonErrorsWindow : Window
         };
         errorsFoundIcon.PointerPressed += (_, _) => vm.ShowLogCommand.Execute(null);
         var errorsFoundText = UiUtil.MakeLink(string.Empty, vm.ShowLogCommand);
-        errorsFoundText.FontSize = 12;
+        errorsFoundText.FontSize = EditorChrome.FieldFontSize;
         errorsFoundText.Foreground = errorsFoundBrush;
         errorsFoundText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ErrorsFoundText)));
         var errorsFoundPanel = new StackPanel
@@ -282,7 +307,7 @@ public class FixCommonErrorsWindow : Window
         // The log also holds what the applies changed, so it stays reachable when a subtitle has
         // no errors left - the warning above links to the same window when it does.
         var logLink = UiUtil.MakeLink(Se.Language.Tools.FixCommonErrors.Log, vm.ShowLogCommand);
-        logLink.FontSize = 12;
+        logLink.FontSize = EditorChrome.FieldFontSize;
         logLink.Bind(IsVisibleProperty, new Binding(nameof(vm.LogIsVisible)));
 
         // "Analyzing..." while a re-scan runs, so a scan that ends in the same state as it started
@@ -290,7 +315,7 @@ public class FixCommonErrorsWindow : Window
         var analysingText = new TextBlock
         {
             Text = Se.Language.Tools.FixCommonErrors.Analysing,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -304,7 +329,7 @@ public class FixCommonErrorsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children = { labelFixesApplied, nothingToFixPanel, errorsFoundPanel, logLink, analysingText },
         };
-        panelStep2Status.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
+        panelStep2Status.Bind(IsVisibleProperty, new Binding("!" + nameof(vm.IsStepOne)));
 
         var buttonBar = EditorChrome.MakeButtonBar(panelStep2Status, buttonBackToFixList, UiUtil.MakeButtonCancel(vm.CancelCommand), buttonToApplyFixes, buttonDone);
 
@@ -331,7 +356,7 @@ public class FixCommonErrorsWindow : Window
         // the window) still lets the window's OnKeyDown fire, as key events bubble up. (#12029)
         void FocusStepButton()
         {
-            var step2 = vm.Step2IsVisible;
+            var step2 = !vm.IsStepOne;
             buttonToApplyFixes.IsDefault = !step2;
             buttonDone.IsDefault = false;
             if (_buttonApplySelectedFixes != null)
@@ -348,11 +373,11 @@ public class FixCommonErrorsWindow : Window
 
         vm.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName is nameof(vm.Step1IsVisible) or nameof(vm.Step2IsVisible))
+            if (e.PropertyName == nameof(vm.IsStepOne))
             {
                 FocusStepButton();
             }
-            else if (e.PropertyName == nameof(vm.FixesAppliedText) && vm.Step2IsVisible && !string.IsNullOrEmpty(vm.FixesAppliedText))
+            else if (e.PropertyName == nameof(vm.FixesAppliedText) && !vm.IsStepOne && !string.IsNullOrEmpty(vm.FixesAppliedText))
             {
                 // After "Apply selected fixes": if nothing is left to fix, move focus/default to
                 // "Done" so the next Return finishes; otherwise keep it on "Apply selected fixes"
@@ -376,6 +401,93 @@ public class FixCommonErrorsWindow : Window
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
+    }
+
+    /// <summary>
+    /// A step of the stepper: its number in a circle, in the accent while it is the current step.
+    /// </summary>
+    private static StackPanel MakeStep(string number, string text, bool activeInStepOne)
+    {
+        var circleBrush = new FuncValueConverter<bool, IBrush>(isStepOne => isStepOne == activeInStepOne ? EditorChrome.AccentBrush : Brushes.Transparent);
+        var circleBorderBrush = new FuncValueConverter<bool, IBrush>(isStepOne => isStepOne == activeInStepOne ? EditorChrome.AccentBrush : EditorChrome.FieldBorderBrush);
+        var numberBrush = new FuncValueConverter<bool, IBrush>(isStepOne => isStepOne == activeInStepOne ? EditorChrome.OnAccentBrush : EditorChrome.DimTextBrush);
+        var textBrush = new FuncValueConverter<bool, IBrush>(isStepOne => isStepOne == activeInStepOne ? EditorChrome.StrongTextBrush : EditorChrome.DimTextBrush);
+        var textWeight = new FuncValueConverter<bool, FontWeight>(isStepOne => isStepOne == activeInStepOne ? FontWeight.SemiBold : FontWeight.Normal);
+
+        var circle = new Border
+        {
+            Width = 22,
+            Height = 22,
+            CornerRadius = new CornerRadius(11),
+            BorderThickness = new Thickness(1),
+            [!Border.BackgroundProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = circleBrush },
+            [!Border.BorderBrushProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = circleBorderBrush },
+            Child = new TextBlock
+            {
+                Text = number,
+                FontSize = EditorChrome.ScaledFont(11),
+                FontWeight = FontWeight.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!TextBlock.ForegroundProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = numberBrush },
+            },
+        };
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                circle,
+                new TextBlock
+                {
+                    Text = text,
+                    FontSize = EditorChrome.FieldFontSize,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.ForegroundProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = textBrush },
+                    [!TextBlock.FontWeightProperty] = new Binding(nameof(FixCommonErrorsViewModel.IsStepOne)) { Converter = textWeight },
+                },
+            },
+        };
+    }
+
+    /// <summary>
+    /// A rule's example with what it fixes dimmed and the result strong, an accent arrow between.
+    /// </summary>
+    private static Control MakeExampleCell(FixRuleDisplayItem? item)
+    {
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 7,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        if (item == null || item.Example.Length == 0)
+        {
+            return panel;
+        }
+
+        panel.Children.Add(MakeExampleText(item.ExampleBefore, EditorChrome.DimTextBrush));
+        if (item.ExampleAfter.Length > 0)
+        {
+            panel.Children.Add(MakeExampleText("\u2192", EditorChrome.AccentBrush));
+            panel.Children.Add(MakeExampleText(item.ExampleAfter, EditorChrome.StrongTextBrush));
+        }
+
+        return panel;
+    }
+
+    private static TextBlock MakeExampleText(string text, IBrush foreground)
+    {
+        return new TextBlock
+        {
+            Text = text,
+            FontSize = EditorChrome.ScaledFont(12),
+            Foreground = foreground,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
     }
 
     private Grid MakeStep2Grid()
@@ -536,7 +648,7 @@ public class FixCommonErrorsWindow : Window
         _buttonApplySelectedFixes.Margin = new Thickness(6, 0, 0, 0);
         _buttonApplySelectedFixes.MinHeight = 28;
         _buttonApplySelectedFixes.Padding = new Thickness(10, 4);
-        _buttonApplySelectedFixes.FontSize = 12.5;
+        _buttonApplySelectedFixes.FontSize = EditorChrome.FieldFontSize;
         _buttonApplySelectedFixes.VerticalAlignment = VerticalAlignment.Center;
 
         var fixesActions = new StackPanel
@@ -582,7 +694,7 @@ public class FixCommonErrorsWindow : Window
                 var toggle = new ToggleButton
                 {
                     Classes = { "chip" },
-                    FontSize = 12,
+                    FontSize = EditorChrome.FieldFontSize,
                     Padding = new Thickness(10, 3),
                     CornerRadius = new CornerRadius(12),
                     Command = _vm.SetFixFilterCommand,
@@ -726,6 +838,14 @@ public class FixCommonErrorsWindow : Window
         // Home/End jump to the first/last row even when focus is on the grid itself
         // (this replaces the hand-rolled tunnel handler the DataGrid needed).
         TableViewExtras.AttachListNavigation(dataGridSubtitles);
+
+        var flyout = new MenuFlyout();
+        dataGridSubtitles.ContextFlyout = flyout;
+        var deleteMenuItem = new MenuItem { Header = Se.Language.General.Delete, DataContext = _vm };
+        deleteMenuItem.Command = _vm.DeleteSelectedLinesCommand;
+        flyout.Items.Add(deleteMenuItem);
+        UiUtil.AttachMacContextFlyoutHandler(dataGridSubtitles);
+        dataGridSubtitles.KeyDown += (_, e) => _vm.GridSubtitlesKeyDown(e);
 
         var gridCurrentSubtbtitle = MakeStep2EditPanel();
 

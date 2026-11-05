@@ -26,7 +26,7 @@ public class VoxtralTtsAudioCppDownloadService : IVoxtralTtsAudioCppDownloadServ
     private readonly HttpClient _httpClient;
 
     private const string ModelUrlBase =
-        "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/main/Voxtral-4B-TTS-2603-GGUF/";
+        AudioCppRuntime.ModelRepoBaseUrl + "Voxtral-4B-TTS-2603-GGUF/";
 
     public VoxtralTtsAudioCppDownloadService(HttpClient httpClient)
     {

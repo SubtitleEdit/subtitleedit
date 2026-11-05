@@ -86,9 +86,9 @@ public static partial class MergeAndSplitHelper
             // rules are guarded by source == "en") and to Formatting.SetTagsAndReturnTrimmed,
             // which decides un-breaking from LanguagesAllowingLineMerging - both are properties
             // of the text being sent, not of the language being requested.
-            formattingList = HandleFormatting(tempSubtitle, 0, source.Code);
+            formattingList = HandleFormatting(tempSubtitle, 0, TextRulesLanguage(source.Code));
             noSentenceEndingSource = initialNoSentenceEndingSource;
-            mergeResult = TryMergeLines(tempSubtitle, 0, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget, source.TwoLetterIsoLanguageName ?? source.Code, joinContinuousRowsWithLineBreak);
+            mergeResult = TryMergeLines(tempSubtitle, 0, maxChars, ref noSentenceEndingSource, noSentenceEndingTarget, TextRulesLanguage(source.TwoLetterIsoLanguageName ?? source.Code), joinContinuousRowsWithLineBreak);
             if (!mergeResult.ReachedEndOfRows || index + count >= rows.Count)
             {
                 break;
@@ -116,15 +116,21 @@ public static partial class MergeAndSplitHelper
 
     /// <summary>
     /// True when the "do not translate lines in music symbols" setting is on and the text is a
-    /// music line: once tags are removed, it both starts and ends with ♪ or ♫. Such a row is
-    /// copied as-is instead of being sent to the translator, so lyrics stay in the original
-    /// language and do not use up the engine's quota (#9969).
+    /// music line, see <see cref="IsMusicLine"/>. Such a row is copied as-is instead of being sent
+    /// to the translator, so lyrics stay in the original language and do not use up the engine's
+    /// quota (#9969).
     /// </summary>
     public static bool IsKeptUntranslated(string? text)
     {
         return Configuration.Settings.Tools.AutoTranslateKeepMusicLines && IsMusicLine(text);
     }
 
+    /// <summary>
+    /// True when, once tags are removed, the text both starts and ends with a music symbol, or
+    /// every line starts or ends with one. The latter covers lyrics marked per line ("♪ One\n♪ Two")
+    /// and rows that open or close a verse ("♪ Still singing"), also after a dialog dash. A line
+    /// without any symbol is speech, so the row still goes to the translator (#16546).
+    /// </summary>
     public static bool IsMusicLine(string? text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -133,10 +139,66 @@ public static partial class MergeAndSplitHelper
         }
 
         var s = HtmlUtil.RemoveHtmlTags(text, true).Trim();
-        return s.Length > 0 && IsMusicSymbol(s[0]) && IsMusicSymbol(s[^1]);
+        if (s.Length == 0)
+        {
+            return false;
+        }
+
+        if (StartsWithMusicSymbol(s) && EndsWithMusicSymbol(s))
+        {
+            return true;
+        }
+
+        var hasMusicLine = false;
+        foreach (var rawLine in s.SplitToLines())
+        {
+            var line = rawLine.Trim().TrimStart(DialogDashes).TrimStart();
+            if (line.Length == 0)
+            {
+                continue;
+            }
+
+            if (!StartsWithMusicSymbol(line) && !EndsWithMusicSymbol(line))
+            {
+                return false;
+            }
+
+            hasMusicLine = true;
+        }
+
+        return hasMusicLine;
     }
 
-    private static bool IsMusicSymbol(char c) => c is '♪' or '♫';
+    // Strings, not chars: 🎵 and 🎶 are surrogate pairs.
+    private static readonly string[] MusicSymbols = ["♩", "♪", "♫", "♬", "🎵", "🎶"];
+
+    private static readonly char[] DialogDashes = ['-', '‐', '–', '—'];
+
+    private static bool StartsWithMusicSymbol(string s)
+    {
+        foreach (var symbol in MusicSymbols)
+        {
+            if (s.StartsWith(symbol, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool EndsWithMusicSymbol(string s)
+    {
+        foreach (var symbol in MusicSymbols)
+        {
+            if (s.EndsWith(symbol, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /// <summary>
     /// Honours the user's "delay in seconds between requests" setting by waiting until that delay
@@ -266,12 +328,12 @@ public static partial class MergeAndSplitHelper
         var sourceTexts = tempSubtitle.Select(p => p.Text).ToList();
         var mergeCount = mergeResult.ParagraphCount;
         var sourceAbbreviations = AbbreviationsForLanguage(mergeResult.SourceLanguage);
-        var targetAbbreviations = AbbreviationsForLanguage(target.TwoLetterIsoLanguageName ?? target.Code);
+        var targetAbbreviations = AbbreviationsForLanguage(TextRulesLanguage(target.TwoLetterIsoLanguageName ?? target.Code));
 
         // Strategy 1: Split by line ending chars where period count matches
-        var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
+        var splitResult = SplitMultipleLines(mergeResult, mergedTranslation, TextRulesLanguage(target.Code));
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
-            HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations))
+            (mergeResult.NoSentenceEndingSource || HasMatchingPeriodCount(mergeResult.Text, mergedTranslation, sourceAbbreviations, targetAbbreviations)))
         {
             return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate);
         }
@@ -285,9 +347,9 @@ public static partial class MergeAndSplitHelper
 
         // Strategy 3: Split with periods in numbers normalized
         var noPeriodsInNumbersTranslation = FixPeriodInNumbers(mergedTranslation);
-        splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, target.Code);
+        splitResult = SplitMultipleLines(mergeResult, noPeriodsInNumbersTranslation, TextRulesLanguage(target.Code));
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
-            HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations))
+            (mergeResult.NoSentenceEndingSource || HasMatchingPeriodCount(mergeResult.Text, noPeriodsInNumbersTranslation, sourceAbbreviations, targetAbbreviations)))
         {
             return ApplySplitResult(rows, target, index, formattingList, splitResult, applyRowUpdate, restorePeriodPlaceholder: true);
         }
@@ -298,7 +360,7 @@ public static partial class MergeAndSplitHelper
         // character like '?' the final row swallows the rest so the split still "succeeds"
         // (#14484). The proportion check catches that shape: a row cut off at "Mrs." is far
         // shorter than its source, and the final row is far longer.
-        splitResult = SplitMultipleLines(mergeResult, mergedTranslation, target.Code);
+        splitResult = SplitMultipleLines(mergeResult, mergedTranslation, TextRulesLanguage(target.Code));
         if (IsSplitValid(splitResult, mergeCount, sourceTexts, 0) &&
             HasPlausibleProportions(mergeResult, splitResult))
         {
@@ -311,7 +373,19 @@ public static partial class MergeAndSplitHelper
 
     private static bool IsSplitValid(List<string> splitResult, int expectedCount, List<string> sourceTexts, int index)
     {
-        return splitResult.Count == expectedCount && HasSameEmptyLines(splitResult, sourceTexts, index);
+        return splitResult.Count == expectedCount && HasSameEmptyLines(splitResult, sourceTexts, index) &&
+               !HasDuplicatedTranslation(splitResult, sourceTexts, index);
+    }
+
+    /// <summary>
+    /// True when a row got the same translation as an earlier row of a different source: the
+    /// engine merged two rows and padded the end with a copy, so every row in between holds its
+    /// neighbour's translation while the row count still matches (#16555).
+    /// </summary>
+    private static bool HasDuplicatedTranslation(List<string> translations, List<string> sourceTexts, int index)
+    {
+        var sources = sourceTexts.Skip(index).Take(translations.Count).ToList();
+        return TranslationShiftGuard.FindDuplicatedTranslation(sources, translations) >= 0;
     }
 
     private static bool HasMatchingPeriodCount(string source, string translation, HashSet<string> sourceAbbreviations, HashSet<string> targetAbbreviations)
@@ -485,9 +559,17 @@ public static partial class MergeAndSplitHelper
         Action<Action> applyRowUpdate)
     {
         var translatedLines = mergedTranslation.SplitToLines();
+        var separatorsOmitted = false;
         if (translatedLines.Count != mergeResult.Text.CountLines())
         {
-            return 0;
+            // Sources without sentence endings (Chinese/Japanese) are sent with "." separator lines.
+            // Models often drop them and reply with one line per row, so accept that reply too.
+            if (!mergeResult.NoSentenceEndingSource || translatedLines.Count != CountContentLines(mergeResult.Text))
+            {
+                return 0;
+            }
+
+            separatorsOmitted = true;
         }
 
         var translatedLinesIdx = 0;
@@ -495,28 +577,35 @@ public static partial class MergeAndSplitHelper
         // Build the candidate result in a scratch list first - the rows are live and
         // UI-bound, so nothing may be written to them until the split has validated.
         var pending = new List<string>();
+        var itemSources = new List<string>(mergeResult.MergeResultItems.Count);
+        var itemTranslations = new List<string>(mergeResult.MergeResultItems.Count);
         foreach (var mergeItem in mergeResult.MergeResultItems)
         {
             var numberOfParagraphs = mergeItem.EndIndex - mergeItem.StartIndex + 1;
-            var numberOfLines = mergeItem.Text.CountLines();
+            var numberOfLines = separatorsOmitted ? CountContentLines(mergeItem.Text) : mergeItem.Text.CountLines();
 
             var translatedText = BuildTranslatedText(translatedLines, ref translatedLinesIdx, numberOfLines);
+            itemSources.Add(mergeItem.Text);
+            itemTranslations.Add(translatedText);
 
             // The rows of a sentence were sent as lines: deal the reply's lines back out to them
             // instead of re-cutting the sentence by length, which moved words into the
             // neighbouring row (#15602).
             var splitParts = mergeResult.ContinuousRowsJoinedWithLineBreak && mergeItem.Continuous
-                ? SplitByPreservedLineBreaks(translatedText, mergeItem) ?? TextSplit.SplitMulti(translatedText, numberOfParagraphs, target.TwoLetterIsoLanguageName)
-                : TextSplit.SplitMulti(translatedText, numberOfParagraphs, target.TwoLetterIsoLanguageName);
+                ? SplitByPreservedLineBreaks(translatedText, mergeItem) ?? TextSplit.SplitMulti(translatedText, numberOfParagraphs, TextRulesLanguage(target.TwoLetterIsoLanguageName))
+                : TextSplit.SplitMulti(translatedText, numberOfParagraphs, TextRulesLanguage(target.TwoLetterIsoLanguageName));
 
             for (var i = 0; i < splitParts.Count && pending.Count < rows.Count - index; i++)
             {
-                pending.Add(AutoBreakIfNeeded(splitParts[i], target.TwoLetterIsoLanguageName));
+                pending.Add(AutoBreakIfNeeded(splitParts[i], TextRulesLanguage(target.TwoLetterIsoLanguageName)));
             }
         }
 
+        var pendingSources = rows.Skip(index).Take(pending.Count).Select(p => p.Text).ToList();
         if (pending.Count == mergeResult.ParagraphCount &&
-            HasSameEmptyLines(pending, rows.Skip(index).Take(pending.Count).Select(p => p.Text).ToList(), 0))
+            HasSameEmptyLines(pending, pendingSources, 0) &&
+            !HasDuplicatedTranslation(pending, pendingSources, 0) &&
+            !HasDuplicatedTranslation(itemTranslations, itemSources, 0))
         {
             applyRowUpdate(() =>
             {
@@ -541,6 +630,20 @@ public static partial class MergeAndSplitHelper
             translatedLinesIdx++;
         }
         return sb.ToString().Trim();
+    }
+
+    private static int CountContentLines(string text)
+    {
+        return text.SplitToLines().Count(line => line.Trim() != ".");
+    }
+
+    // Line merging and breaking rules are keyed on "pt", whatever the region the engine asks for.
+    internal static string TextRulesLanguage(string code)
+    {
+        return code.Equals("pt-BR", StringComparison.OrdinalIgnoreCase) ||
+               code.Equals("pt-PT", StringComparison.OrdinalIgnoreCase)
+            ? "pt"
+            : code;
     }
 
     private static string AutoBreakIfNeeded(string text, string language)
@@ -1448,7 +1551,7 @@ public static partial class MergeAndSplitHelper
             return text;
         }
 
-        var language = target.TwoLetterIsoLanguageName ?? target.Code;
+        var language = TextRulesLanguage(target.TwoLetterIsoLanguageName ?? target.Code);
         var rebalanced = Utilities.AutoBreakLine(Utilities.UnbreakLine(text), language);
         return string.IsNullOrWhiteSpace(rebalanced) ? text : rebalanced;
     }

@@ -176,15 +176,16 @@ public class AutoUpdateService : IAutoUpdateService
     /// <summary>"/Applications/Subtitle Edit.app" for ".../Subtitle Edit.app/Contents/MacOS/", else null.</summary>
     internal static string? GetMacAppBundle(string exeFolder)
     {
-        var macOsFolder = exeFolder.TrimEnd('/');
-        var contents = Path.GetDirectoryName(macOsFolder);
-        var bundle = contents == null ? null : Path.GetDirectoryName(contents);
-        return Path.GetFileName(macOsFolder) == "MacOS" &&
-               Path.GetFileName(contents) == "Contents" &&
-               bundle != null &&
-               bundle.EndsWith(".app", StringComparison.OrdinalIgnoreCase)
-            ? bundle
-            : null;
+        var parts = exeFolder.TrimEnd('/').Split('/');
+        if (parts.Length < 3 ||
+            parts[^1] != "MacOS" ||
+            parts[^2] != "Contents" ||
+            !parts[^3].EndsWith(".app", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return string.Join("/", parts[..^2]);
     }
 
     private static bool IsDirectoryWritable(string folder)

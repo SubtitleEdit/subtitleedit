@@ -30,6 +30,10 @@ public static class VideoOcrTimingRefiner
         public string FramesFolder { get; init; } = string.Empty;
 
         public double CoarseFps { get; init; }
+
+        /// <summary>Video time of the first coarse frame (the scanned range's start), so
+        /// a line's video time maps back to its frame file in <see cref="FramesFolder"/>.</summary>
+        public double OffsetMs { get; init; }
         public int BrightnessMinimum { get; init; }
         public int ImageSimilarityPercent { get; init; }
 
@@ -78,7 +82,7 @@ public static class VideoOcrTimingRefiner
 
         // Start: the subtitle was first seen on the coarse frame at StartMs, so the true
         // appearance lies within the coarse step before it.
-        var startReference = LoadCoarseMask(context, (int)Math.Round(line.StartMs * context.CoarseFps / 1000.0));
+        var startReference = LoadCoarseMask(context, (int)Math.Round((line.StartMs - context.OffsetMs) * context.CoarseFps / 1000.0));
         if (startReference != null)
         {
             var windowStart = Math.Max(0, line.StartMs - coarseStepMs);
@@ -93,7 +97,7 @@ public static class VideoOcrTimingRefiner
 
         // End: the subtitle was last seen on the coarse frame before EndMs, so the true
         // disappearance lies within the final coarse step.
-        var endReference = LoadCoarseMask(context, (int)Math.Round(line.EndMs * context.CoarseFps / 1000.0) - 1);
+        var endReference = LoadCoarseMask(context, (int)Math.Round((line.EndMs - context.OffsetMs) * context.CoarseFps / 1000.0) - 1);
         if (endReference != null)
         {
             var windowStart = Math.Max(0, line.EndMs - coarseStepMs);

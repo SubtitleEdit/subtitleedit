@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Features.Shared.FormatLimitWarning;
 /// </summary>
 public class FormatLimitWarningWindow : Window
 {
-    private static readonly IBrush WarningBrush = new SolidColorBrush(Color.FromRgb(0xE6, 0x7E, 0x22));
 
     public FormatLimitWarningWindow(FormatLimitWarningViewModel vm)
     {
@@ -75,7 +74,7 @@ public class FormatLimitWarningWindow : Window
             Text = Se.Language.Main.FormatLimitWarningTextWillBeRewrapped,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 460,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             HorizontalAlignment = HorizontalAlignment.Left,
         };
@@ -99,7 +98,7 @@ public class FormatLimitWarningWindow : Window
                 new TextBlock
                 {
                     Text = Se.Language.Main.FormatLimitWarningDoNotShowAgain,
-                    FontSize = 12,
+                    FontSize = EditorChrome.FieldFontSize,
                     Foreground = EditorChrome.DimTextBrush,
                     VerticalAlignment = VerticalAlignment.Center,
                 },
@@ -135,7 +134,7 @@ public class FormatLimitWarningWindow : Window
         {
             Value = IconNames.Alert,
             FontSize = 32,
-            Foreground = WarningBrush,
+            Foreground = EditorChrome.WarningTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 2, 0),
         };

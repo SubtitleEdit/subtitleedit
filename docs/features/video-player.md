@@ -61,7 +61,7 @@ Jump to a specific time code position in the video.
 
 ## Playback Speed
 
-- **Toggle playback speed** — Switch between normal and custom speed
+- **Cycle playback speed** — Step to the next playback speed, wrapping around after the last
 - **Slower** — Decrease playback speed
 - **Faster** — Increase playback speed
 

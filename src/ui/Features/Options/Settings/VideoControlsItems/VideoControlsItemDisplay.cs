@@ -35,6 +35,7 @@ public partial class VideoControlsItemDisplay : ObservableObject
             SeVideoControlsItemType.PreviousSubtitle => l.VideoControlsPreviousSubtitle,
             SeVideoControlsItemType.NextSubtitle => l.VideoControlsNextSubtitle,
             SeVideoControlsItemType.ToggleSubtitles => Se.Language.Video.ToggleSubtitlesOnVideoPlayer,
+            SeVideoControlsItemType.PlaybackSpeed => Se.Language.General.PlaybackSpeed,
             _ => type.ToString(),
         };
     }
@@ -55,6 +56,7 @@ public partial class VideoControlsItemDisplay : ObservableObject
             SeVideoControlsItemType.PreviousSubtitle => "fa-solid fa-backward-step",
             SeVideoControlsItemType.NextSubtitle => "fa-solid fa-forward-step",
             SeVideoControlsItemType.ToggleSubtitles => "fa-solid fa-closed-captioning",
+            SeVideoControlsItemType.PlaybackSpeed => "fa-solid fa-gauge-high",
             _ => "fa-solid fa-circle",
         };
     }

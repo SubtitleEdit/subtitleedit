@@ -21,7 +21,7 @@ public class SpeechToTextEngineSettingsWindow : Window
     public SpeechToTextEngineSettingsWindow(SpeechToTextEngineSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.AudioToText.EngineSettings;
+        Bind(TitleProperty, new Binding(nameof(vm.WindowTitle)));
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 540;
@@ -161,13 +161,13 @@ public class SpeechToTextEngineSettingsWindow : Window
             Children = { redownload, openFolder },
         };
 
-        return EditorChrome.MakeFlushButtonBar(leftPanel, close);
+        return EditorChrome.MakeButtonBar(leftPanel, close);
     }
 
     private static TextBlock MakeLabel(string text) => new()
     {
         Text = text,
-        FontSize = 12,
+        FontSize = EditorChrome.FieldFontSize,
         Foreground = EditorChrome.DimTextBrush,
         VerticalAlignment = VerticalAlignment.Center,
     };

@@ -610,6 +610,33 @@ public class AudioVisualizerDragTests : IDisposable
         window.Close();
     }
 
+    [AvaloniaFact]
+    public void NewSelection_LeftToRightDrag_WorksAfterPlainClickAtSameSpot_Issue15716()
+    {
+        // A plain click on empty waveform (to seek) must not leave an invisible empty selection
+        // behind: a later drag starting near the same spot grabbed its left edge, so dragging
+        // to the right did nothing and only right-to-left drags made a selection.
+        var (window, av, _) = Open(Line(1, 3));
+
+        window.MouseDown(new Point(504, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseUp(new Point(504, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Null(av.NewSelectionParagraph);
+
+        window.MouseDown(new Point(506, 100), MouseButton.Left, RawInputModifiers.None);
+        window.MouseMove(new Point(630, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseMove(new Point(756, 100), RawInputModifiers.LeftMouseButton);
+        window.MouseUp(new Point(756, 100), MouseButton.Left, RawInputModifiers.None);
+        Dispatcher.UIThread.RunJobs();
+
+        var selection = av.NewSelectionParagraph;
+        Assert.NotNull(selection);
+        Assert.Equal(506.0 / SampleRate, selection!.StartTime.TotalSeconds, 2);
+        Assert.Equal(756.0 / SampleRate, selection.EndTime.TotalSeconds, 2);
+
+        window.Close();
+    }
+
     // #14000: the generated-audio length bar. The provider is consulted once per drawn
     // paragraph with the very instance the control draws (hosts key on it), and a render with
     // a provider that overruns the cue, fits the cue, or returns 0 must not throw.

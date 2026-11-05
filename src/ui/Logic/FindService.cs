@@ -275,7 +275,13 @@ public partial class FindService : IFindService
         return results;
     }
 
-    public int ReplaceAll(string searchText, string replaceText)
+    /// <summary>
+    /// Replaces every match in the lines from <paramref name="startLineIndex"/> up to (not
+    /// including) <paramref name="stopAtLineIndex"/>. The range lets Replace all work like SE 4:
+    /// first from the current line to the end, then - if the user agrees - from the top down to
+    /// where it started, without touching the lines already done (#16453).
+    /// </summary>
+    public int ReplaceAll(string searchText, string replaceText, int startLineIndex = 0, int stopAtLineIndex = int.MaxValue)
     {
         if (string.IsNullOrEmpty(searchText) || _textLines.Count == 0)
         {
@@ -283,10 +289,12 @@ public partial class FindService : IFindService
         }
 
         int totalReplacements = 0;
+        var start = Math.Max(0, startLineIndex);
 
         if (IncludeText)
         {
-            for (int lineIndex = 0; lineIndex < _textLines.Count; lineIndex++)
+            var stop = Math.Min(stopAtLineIndex, _textLines.Count);
+            for (int lineIndex = start; lineIndex < stop; lineIndex++)
             {
                 var replacedText = ReplaceInLine(_textLines[lineIndex], searchText, replaceText);
                 if (replacedText.replaced)
@@ -299,7 +307,8 @@ public partial class FindService : IFindService
 
         if (_originalTextLines != null && IncludeOriginal)
         {
-            for (int lineIndex = 0; lineIndex < _originalTextLines.Count; lineIndex++)
+            var stop = Math.Min(stopAtLineIndex, _originalTextLines.Count);
+            for (int lineIndex = start; lineIndex < stop; lineIndex++)
             {
                 var replacedText = ReplaceInLine(_originalTextLines[lineIndex], searchText, replaceText);
                 if (replacedText.replaced)

@@ -57,7 +57,7 @@ public class WebVttStylePickerWindow : Window
             Child = new TextBlock
             {
                 FontFamily = MonoFont,
-                FontSize = 11.5,
+                FontSize = EditorChrome.ScaledFont(11.5),
                 TextWrapping = TextWrapping.Wrap,
                 [!TextBlock.TextProperty] = new Binding(nameof(vm.SelectedStyleCss)),
             },
@@ -92,8 +92,8 @@ public class WebVttStylePickerWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, HorizontalAlignment = HorizontalAlignment.Right };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         return EditorChrome.WrapButtonBar(buttons);
     }

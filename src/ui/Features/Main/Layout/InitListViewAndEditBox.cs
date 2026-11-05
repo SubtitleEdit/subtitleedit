@@ -609,6 +609,7 @@ public static partial class InitListViewAndEditBox
             Bindings =
             {
                 new Binding(nameof(vm.IsFormatWebVtt)) { Source = vm, Mode = BindingMode.OneWay, Converter = inverseBooleanConverter },
+                new Binding(nameof(vm.HasFormatActor)) { Source = vm, Mode = BindingMode.OneWay },
                 new Binding(nameof(vm.ShowColumnActor)) { Source = vm, Mode = BindingMode.OneWay },
             }
         });
@@ -831,6 +832,20 @@ public static partial class InitListViewAndEditBox
         sepWebVtt.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreWebVttContentMenuItemsVisible)));
         flyout.Items.Add(sepWebVtt);
 
+        // YouTube timed text: line pen, position and window style (filled on opening)
+        var yttMenuItem = new MenuItem
+        {
+            Header = Se.Language.File.Ytt.YouTube,
+            DataContext = vm,
+        };
+        yttMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreYttContentMenuItemsVisible)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(yttMenuItem);
+        vm.MenuItemYtt = yttMenuItem;
+
+        var sepYtt = new Separator { DataContext = vm };
+        sepYtt.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.AreYttContentMenuItemsVisible)));
+        flyout.Items.Add(sepYtt);
+
         var showStartTimeMenuItem = new MenuItem
         {
             Header = Se.Language.General.ShowStartColumn,
@@ -959,7 +974,15 @@ public static partial class InitListViewAndEditBox
                 [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnActor)),
             }
         };
-        showActorMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.OneWay });
+        showActorMenuItem.Bind(Visual.IsVisibleProperty, new MultiBinding
+        {
+            Converter = booleanAndConverter,
+            Bindings =
+            {
+                new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Source = vm, Mode = BindingMode.OneWay },
+                new Binding(nameof(vm.HasFormatActor)) { Source = vm, Mode = BindingMode.OneWay },
+            }
+        });
         flyout.Items.Add(showActorMenuItem);
 
         var showCpsMenuItem = new MenuItem

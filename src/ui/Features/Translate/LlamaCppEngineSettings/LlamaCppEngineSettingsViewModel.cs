@@ -119,8 +119,8 @@ public partial class LlamaCppEngineSettingsViewModel : ObservableObject
 
     /// <summary>
     /// llama.cpp ships CPU/Vulkan/CUDA builds into one folder, so the backend cannot be inferred from
-    /// the folder alone. Only Windows has a proven detector (<see cref="DownloadHashManager.DetectLlamaCppWindowsVariant"/>,
-    /// which reads the shipped ggml backend DLLs); elsewhere we report OS+arch only rather than guess.
+    /// the folder alone. Windows and Linux have a detector (<see cref="DownloadHashManager.DetectLlamaCppWindowsVariant"/>,
+    /// <see cref="DownloadHashManager.DetectLlamaCppLinuxVariant"/>) which reads the shipped ggml backend libraries.
     /// </summary>
     private static string DetectInstalledBackend(string folder)
     {
@@ -133,9 +133,13 @@ public partial class LlamaCppEngineSettingsViewModel : ObservableObject
 
         if (Configuration.IsRunningOnLinux)
         {
-            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
-                ? "Linux ARM64"
-                : "Linux x64";
+            var linux = RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "Linux ARM64" : "Linux x64";
+            return DownloadHashManager.DetectLlamaCppLinuxVariant(folder) switch
+            {
+                "vulkan" => $"{linux} (Vulkan)",
+                "cpu" => $"{linux} (CPU)",
+                _ => linux,
+            };
         }
 
         return DownloadHashManager.DetectLlamaCppWindowsVariant(folder) switch

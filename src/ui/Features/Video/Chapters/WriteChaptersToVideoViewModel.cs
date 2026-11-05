@@ -135,7 +135,7 @@ public partial class WriteChaptersToVideoViewModel : ObservableObject, IClosingC
         }
         catch (Exception exception)
         {
-            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message);
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

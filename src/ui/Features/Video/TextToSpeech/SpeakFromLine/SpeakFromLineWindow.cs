@@ -60,7 +60,7 @@ public class SpeakFromLineWindow : Window
         var labelHint = new TextBlock
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.Hint)),
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             MaxWidth = 420,
             TextWrapping = TextWrapping.Wrap,

@@ -359,7 +359,7 @@ public class AssaStylesWindow : Window
         categoryPicker.Add(new TextBlock
         {
             Text = Se.Language.General.Category,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 4, 0),
@@ -524,13 +524,13 @@ public class AssaStylesWindow : Window
         var editing = new TextBlock
         {
             Text = Se.Language.Assa.StylesEditing,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
         var name = new TextBlock
         {
-            FontSize = 13.5,
+            FontSize = EditorChrome.ScaledFont(13.5),
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
@@ -538,7 +538,7 @@ public class AssaStylesWindow : Window
         };
         var badgeText = new TextBlock
         {
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             FontWeight = FontWeight.SemiBold,
             Foreground = Brushes.White,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.CurrentTitle)),
@@ -603,9 +603,9 @@ public class AssaStylesWindow : Window
         {
             var toggle = new ToggleButton
             {
-                Content = new TextBlock { Text = text, FontWeight = weight, FontStyle = style, TextDecorations = decorations, FontSize = 13 },
+                Content = new TextBlock { Text = text, FontWeight = weight, FontStyle = style, TextDecorations = decorations, FontSize = EditorChrome.FieldFontSize },
                 Width = 28,
-                Height = 28,
+                Height = EditorChrome.ScaledSize(28),
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 [!ToggleButton.IsCheckedProperty] = new Binding(Current + property) { Mode = BindingMode.TwoWay },
@@ -653,7 +653,7 @@ public class AssaStylesWindow : Window
             cell.Children.Add(new TextBlock
             {
                 Text = name,
-                FontSize = 11,
+                FontSize = EditorChrome.ScaledFont(11),
                 Foreground = EditorChrome.DimTextBrush,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis,
@@ -746,7 +746,7 @@ public class AssaStylesWindow : Window
         backgrounds.Children.Add(new TextBlock
         {
             Text = Se.Language.General.Preview,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 6, 0),
@@ -757,8 +757,8 @@ public class AssaStylesWindow : Window
             var index = i;
             var button = new Button
             {
-                Content = new TextBlock { Text = names[i], FontSize = 12, Margin = new Thickness(10, 0) },
-                Height = 26,
+                Content = new TextBlock { Text = names[i], FontSize = EditorChrome.FieldFontSize, Margin = new Thickness(10, 0) },
+                Height = EditorChrome.ScaledSize(26),
                 VerticalContentAlignment = VerticalAlignment.Center,
             };
             button.Classes.Add("tool");
@@ -809,7 +809,7 @@ public class AssaStylesWindow : Window
     {
         var summary = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.SummaryText)),
@@ -821,9 +821,9 @@ public class AssaStylesWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-        buttons.Children.Add(buttonApply);
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonApply));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         var grid = new Grid
         {

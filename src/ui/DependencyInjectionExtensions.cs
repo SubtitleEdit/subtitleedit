@@ -8,7 +8,6 @@ using Nikse.SubtitleEdit.Features.Assa.AssaProgressBar;
 using Nikse.SubtitleEdit.Features.Assa.AssaSetBackground;
 using Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;
 using Nikse.SubtitleEdit.Features.Assa.ResolutionResampler;
-using Nikse.SubtitleEdit.Features.Edit.AlignmentPicker;
 using Nikse.SubtitleEdit.Features.Edit.Find;
 using Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 using Nikse.SubtitleEdit.Features.Edit.MultipleReplace;
@@ -32,6 +31,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.WebVttProperties;
 using Nikse.SubtitleEdit.Features.WebVtt;
+using Nikse.SubtitleEdit.Features.Ytt;
 using Nikse.SubtitleEdit.Features.Files.ImportDvd;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
@@ -355,7 +355,6 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<AboutViewModel>();
         collection.AddTransient<AdjustAllTimesViewModel>();
         collection.AddTransient<AdjustDurationViewModel>();
-        collection.AddTransient<AlignmentPickerViewModel>();
         collection.AddTransient<ApplyDurationLimitsViewModel>();
         collection.AddTransient<ApplyMinGapViewModel>();
         collection.AddTransient<AssSetBackgroundViewModel>();
@@ -666,11 +665,13 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<WaveformToolbarItemsViewModel>();
         collection.AddTransient<WebVttPropertiesViewModel>();
         collection.AddTransient<WebVttStylesViewModel>();
+        collection.AddTransient<YttStylesViewModel>();
         collection.AddTransient<WebVttStylePickerViewModel>();
         collection.AddTransient<SpeechToTextAdvancedViewModel>();
         collection.AddTransient<SpeechToTextPostProcessingViewModel>();
         collection.AddTransient<SpeechToTextQualityReportViewModel>();
         collection.AddTransient<WordListsViewModel>();
+        collection.AddTransient<RegexRulesViewModel>();
     }
 
     /// <summary>

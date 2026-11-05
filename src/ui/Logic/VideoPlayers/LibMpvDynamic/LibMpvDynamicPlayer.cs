@@ -2088,10 +2088,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             {
                 bound = Media.Mp3DurationReader.TryGetDurationSeconds(path);
             }
+            else if (ext.Equals(".aac", StringComparison.OrdinalIgnoreCase))
+            {
+                bound = Media.AacDurationReader.TryGetDurationSeconds(path);
+            }
 
             if (bound.HasValue && bound.Value > 0)
             {
-                SetOptionString("end", bound.Value.ToString(CultureInfo.InvariantCulture));
+                var rounded = Math.Round(bound.Value + 0.05, 1);
+                var str = rounded.ToString(CultureInfo.InvariantCulture);
+                SetOptionString("end", str);
                 _audioEndBound = bound.Value;
             }
             else
@@ -2101,7 +2107,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                     var d = Duration;
                     if (d > 0 && !double.IsInfinity(d) && !double.IsNaN(d))
                     {
-                        SetOptionString("end", d.ToString(CultureInfo.InvariantCulture));
+                        var rounded = Math.Round(d + 0.05, 1);
+                        var str = rounded.ToString(CultureInfo.InvariantCulture);
+                        SetOptionString("end", str);
                         _audioEndBound = d;
                         break;
                     }
@@ -2172,7 +2180,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _lastRawTimePos = -1;
 
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+
+        // No core yet means nothing is playing: a player closed before its first render pass,
+        // or with its native window still hidden behind the theme art, never got one (#16513).
+        if (_mpv == IntPtr.Zero || !_coreInitialized)
         {
             return;
         }
@@ -2744,6 +2755,32 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             SetObservedPause(true);
         }
+    }
+
+    // How far the decoded frame may be from the wanted time and still count as "the frame at
+    // that time" - mpv lands a precise seek on the first frame at or after the target.
+    private const double SaveCurrentFrameToleranceSeconds = 0.1;
+
+    public bool TrySaveCurrentFrame(string pngFileName, double seconds)
+    {
+        EnsureNotDisposed();
+        if (_disposed || _mpv == IntPtr.Zero || _mpvGetPropertyDouble == null || !IsPaused)
+        {
+            return false;
+        }
+
+        // The live time-pos, not Position: while paused Position answers with the seek target,
+        // even before mpv has decoded the frame there.
+        var timePos = 0.0;
+        if (_mpvGetPropertyDouble(_mpv, PropertyNameTimePos, MPV_FORMAT_DOUBLE, ref timePos) < 0 ||
+            Math.Abs(timePos - seconds) > SaveCurrentFrameToleranceSeconds)
+        {
+            return false;
+        }
+
+        // Compression 1: a 4K frame takes ~190 ms instead of ~750 ms at mpv's default 7.
+        DoMpvCommand("set", "screenshot-png-compression", "1");
+        return DoMpvCommand("screenshot-to-file", pngFileName, "video") >= 0;
     }
 
     public void StepOneFrameForward()

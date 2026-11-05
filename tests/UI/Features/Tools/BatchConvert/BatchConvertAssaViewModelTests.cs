@@ -1,4 +1,4 @@
-using Avalonia.Headless.XUnit;
+﻿using Avalonia.Headless.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
@@ -80,11 +80,11 @@ public class BatchConvertAssaViewModelTests
             var services = new ServiceCollection();
             services.AddSubtitleEditServices();
             using var provider = services.BuildServiceProvider();
-            const string embeddedFonts = "[Fonts]\nfontname: test_0.ttf\n!!!!";
-            var windowService = new OkStylesDialogWindowService(provider, vm =>
+            var embeddedFonts = "[Fonts]" + Environment.NewLine + "fontname: test_0.ttf" + Environment.NewLine + "!!!!";
+            var windowService = new OkStylesDialogWindowService(provider, async vm =>
             {
                 vm.ResultSubtitle.Footer = embeddedFonts;
-                vm.OkCommand.Execute(null);
+                await vm.OkCommand.ExecuteAsync(null);
             });
             var viewModel = new BatchConvertAssaViewModel(windowService) { Window = new Avalonia.Controls.Window() };
 
@@ -101,9 +101,9 @@ public class BatchConvertAssaViewModelTests
     }
 
     // Opens no window: builds the styles dialog's view model, lets the test act in it, returns it
-    private sealed class OkStylesDialogWindowService(IServiceProvider provider, Action<AssaStylesViewModel> act) : IWindowService
+    private sealed class OkStylesDialogWindowService(IServiceProvider provider, Func<AssaStylesViewModel, Task> act) : IWindowService
     {
-        public Task<TViewModel> ShowDialogAsync<TWindow, TViewModel>(
+        public async Task<TViewModel> ShowDialogAsync<TWindow, TViewModel>(
             Avalonia.Controls.Window owner,
             Action<TViewModel>? configureViewModel = null,
             Action<TWindow>? configureWindow = null)
@@ -111,8 +111,8 @@ public class BatchConvertAssaViewModelTests
         {
             var vm = provider.GetRequiredService<TViewModel>();
             configureViewModel?.Invoke(vm);
-            act((vm as AssaStylesViewModel)!);
-            return Task.FromResult(vm);
+            await act((vm as AssaStylesViewModel)!);
+            return vm;
         }
 
         public T ShowWindow<T>(Avalonia.Controls.Window owner, Action<T>? configure = null) where T : Avalonia.Controls.Window

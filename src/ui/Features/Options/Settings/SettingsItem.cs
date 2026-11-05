@@ -116,6 +116,7 @@ public class SettingsItem
             {
                 Text = _label,
                 FontSize = EditorChrome.FieldFontSize,
+                Foreground = EditorChrome.DimTextBrush,
                 VerticalAlignment = VerticalAlignment.Center,
                 TextWrapping = TextWrapping.Wrap,
             }

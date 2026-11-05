@@ -596,7 +596,7 @@ public class ShortcutsWindow : Window
         var labelEditing = new TextBlock
         {
             FontWeight = FontWeight.SemiBold,
-            FontSize = 13,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 12, 0),
             TextTrimming = TextTrimming.CharacterEllipsis,

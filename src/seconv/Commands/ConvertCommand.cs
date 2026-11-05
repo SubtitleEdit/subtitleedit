@@ -330,6 +330,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Image output: draw each subtitle on a frame-sized image (place at 0,0 in an editing timeline). Only fcpimage and bluraysup use it")]
         public bool FullFrame { get; init; }
 
+        [CommandOption("--no-assa-styles|--noassastyles")]
+        [Description("Image output: draw ASSA/SSA lines with the image styling options instead of each line's own style from the file")]
+        public bool NoAssaStyles { get; init; }
+
         [CommandOption("--full-frame-background-color|--fullframebackgroundcolor")]
         [Description("Image output: background of the full frame image (default: transparent)")]
         public string? FullFrameBackgroundColor { get; init; }
@@ -414,6 +418,18 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--fix-rtl-via-unicode-chars|--FixRtlViaUnicodeChars")]
         [Description("Fix RTL via Unicode characters")]
         public bool FixRtlViaUnicodeChars { get; init; }
+
+        [CommandOption("--merge-continuation-lines|--MergeContinuationLines")]
+        [Description("Merge lines that continue a sentence into the next line")]
+        public bool MergeContinuationLines { get; init; }
+
+        [CommandOption("--merge-continuation-lines-max-gap|--MergeContinuationLinesMaxGap")]
+        [Description("Merge continuation lines: only merge lines closer than this many ms (default: 250)")]
+        public int? MergeContinuationLinesMaxGap { get; init; }
+
+        [CommandOption("--merge-continuation-lines-max-chars|--MergeContinuationLinesMaxChars")]
+        [Description("Merge continuation lines: max characters of a merged pair (default: max line length x max number of lines)")]
+        public int? MergeContinuationLinesMaxChars { get; init; }
 
         [CommandOption("--merge-same-texts|--MergeSameTexts")]
         [Description("Merge same texts")]
@@ -736,6 +752,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 if (settings.ConvertColorsToDialog) operations.Add("ConvertColorsToDialog");
                 if (fceRequested) operations.Add("FixCommonErrors");
                 if (settings.FixRtlViaUnicodeChars) operations.Add("FixRtlViaUnicodeChars");
+                if (settings.MergeContinuationLines) operations.Add("MergeContinuationLines");
                 if (settings.MergeSameTexts) operations.Add("MergeSameTexts");
                 if (settings.MergeSameTimeCodes) operations.Add("MergeSameTimeCodes");
                 if (settings.MergeShortLines) operations.Add("MergeShortLines");
@@ -752,6 +769,16 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if (settings.ChangeSpeed.HasValue && settings.ChangeSpeed.Value <= 0)
             {
                 return Fail(settings, $"--change-speed must be greater than 0 (got {settings.ChangeSpeed.Value}).");
+            }
+
+            if (settings.MergeContinuationLinesMaxGap.HasValue && settings.MergeContinuationLinesMaxGap.Value < 0)
+            {
+                return Fail(settings, $"--merge-continuation-lines-max-gap must be 0 or greater (got {settings.MergeContinuationLinesMaxGap.Value}).");
+            }
+
+            if (settings.MergeContinuationLinesMaxChars.HasValue && settings.MergeContinuationLinesMaxChars.Value <= 0)
+            {
+                return Fail(settings, $"--merge-continuation-lines-max-chars must be greater than 0 (got {settings.MergeContinuationLinesMaxChars.Value}).");
             }
 
             // Parse offset if supplied
@@ -886,6 +913,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 FixCommonErrorsRules = fceRules,
                 FixCommonErrorsLanguage = settings.FixCommonErrorsLanguage,
                 RemoveFormattingRules = removeFormattingRules,
+                MergeContinuationLinesMaxGapMs = settings.MergeContinuationLinesMaxGap,
+                MergeContinuationLinesMaxCharacters = settings.MergeContinuationLinesMaxChars,
                 DeleteFirst = settings.DeleteFirst,
                 DeleteLast = settings.DeleteLast,
                 DeleteContains = settings.DeleteContains,
@@ -1409,6 +1438,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         if (settings.FullFrame)
         {
             style.IsFullFrame = true;
+        }
+
+        if (settings.NoAssaStyles)
+        {
+            style.UseAssaStyles = false;
         }
 
         if (!string.IsNullOrWhiteSpace(settings.FullFrameBackgroundColor))

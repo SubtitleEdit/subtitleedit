@@ -98,7 +98,7 @@ public class AddToNamesListWindow : Window
     {
         var text = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.MultiModeButtonText)),
         };

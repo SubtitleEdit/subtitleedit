@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -93,10 +94,10 @@ public sealed class CrispAsrAlignOnlyRunner : ForcedAligner.IRunner
             if (detail.Contains("failed to allocate", StringComparison.OrdinalIgnoreCase))
             {
                 throw new ForcedAlignerException(
-                    "The forced aligner ran out of memory on this window. Try a shorter window length.", detail);
+                    "The forced aligner ran out of memory on this window. Try a shorter window length.", detail, process.ExitCode);
             }
 
-            throw new ForcedAlignerException($"The forced aligner failed (exit code {process.ExitCode}).", detail);
+            throw ForcedAlignerException.FromProcessExit("The forced aligner failed", process.ExitCode, detail);
         }
 
         return await File.ReadAllTextAsync(outputFileName, cancellationToken).ConfigureAwait(false);
@@ -120,11 +121,82 @@ public sealed class CrispAsrAlignOnlyRunner : ForcedAligner.IRunner
 
 public sealed class ForcedAlignerException : Exception
 {
+    private const int MaxDetailLines = 4;
+    private const int MaxDetailLineLength = 200;
+
     public string Detail { get; }
 
-    public ForcedAlignerException(string message, string detail = "") : base(message)
+    /// <summary>The engine's exit code when the engine process itself failed, else null.</summary>
+    public int? ExitCode { get; }
+
+    public ForcedAlignerException(string message, string detail = "", int? exitCode = null) : base(message)
     {
         Detail = detail;
+        ExitCode = exitCode;
+    }
+
+    /// <summary>
+    /// For an engine run that failed or wrote no output file. Only a non-zero exit code is an
+    /// engine failure (<see cref="ExitCode"/> set, counted towards stopping early); an engine that
+    /// exited normally without output gets its own message instead of "exit code 0".
+    /// </summary>
+    public static ForcedAlignerException FromProcessExit(string what, int exitCode, string detail)
+    {
+        if (exitCode == 0)
+        {
+            var tail = GetDetailTail(detail);
+            var message = $"{what} (the engine produced no output).";
+            return new ForcedAlignerException(
+                tail.Length > 0 ? message + Environment.NewLine + Environment.NewLine + tail : message, detail);
+        }
+
+        return new ForcedAlignerException(FormatExitFailure(what, exitCode, detail), detail, exitCode);
+    }
+
+    /// <summary>
+    /// "&lt;what&gt; (exit code 0xC0000409 - the engine crashed)." followed by the last lines the
+    /// engine wrote to stderr - the exit code alone rarely says what went wrong.
+    /// </summary>
+    public static string FormatExitFailure(string what, int exitCode, string detail)
+    {
+        // Windows reports a native crash as an NTSTATUS, which only means something in hex.
+        var code = exitCode < 0
+            ? "0x" + exitCode.ToString("X8", CultureInfo.InvariantCulture)
+            : exitCode.ToString(CultureInfo.InvariantCulture);
+        var hint = DescribeExitCode(exitCode);
+        var message = $"{what} (exit code {code}{(hint.Length > 0 ? " - " + hint : string.Empty)}).";
+
+        var tail = GetDetailTail(detail);
+        return tail.Length > 0 ? message + Environment.NewLine + Environment.NewLine + tail : message;
+    }
+
+    internal static string DescribeExitCode(int exitCode) => unchecked((uint)exitCode) switch
+    {
+        0xC0000409 => "the engine crashed",
+        0xC0000005 => "the engine crashed (access violation)",
+        0xC000001D => "this CPU lacks an instruction the engine needs, try the CPU legacy build",
+        0xC0000135 => "a DLL the engine needs is missing",
+        0xC0000017 or 0xC000012D => "out of memory",
+        _ => string.Empty,
+    };
+
+    internal static string GetDetailTail(string detail)
+    {
+        if (string.IsNullOrWhiteSpace(detail))
+        {
+            return string.Empty;
+        }
+
+        var lines = detail
+            .Split('\n')
+            .Select(line => line.Trim())
+            .Where(line => line.Length > 0)
+            .ToList();
+
+        return string.Join(
+            Environment.NewLine,
+            lines.Skip(Math.Max(0, lines.Count - MaxDetailLines))
+                .Select(line => line.Length > MaxDetailLineLength ? line[..MaxDetailLineLength] + "…" : line));
     }
 }
 

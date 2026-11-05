@@ -747,6 +747,38 @@ namespace Nikse.SubtitleEdit.Logic
             };
         }
 
+        /// <summary>
+        /// Same as <see cref="SuspendUndockedTopmostWhileOpen(PopupFlyoutBase)"/> for a combo box
+        /// on the main window (#16315). DropDownOpened fires after the popup is on screen, which
+        /// is too late for the reason given there, and ComboBox has no Opening event. So this
+        /// follows IsDropDownOpen, which every way of opening the drop-down goes through.
+        ///
+        /// Call it right after creating the combo box: the template's binding to the popup listens
+        /// to the same PropertyChanged event, and subscribing before the template is applied is
+        /// what puts this handler first, ahead of the popup's native window being created.
+        /// </summary>
+        public static void SuspendUndockedTopmostWhileOpen(ComboBox comboBox)
+        {
+            IDisposable? suspension = null;
+            comboBox.PropertyChanged += (_, e) =>
+            {
+                if (e.Property != ComboBox.IsDropDownOpenProperty)
+                {
+                    return;
+                }
+
+                if (comboBox.IsDropDownOpen)
+                {
+                    suspension ??= SuspendUndockedTopmost(() => comboBox.IsDropDownOpen, "combo box");
+                }
+                else
+                {
+                    suspension?.Dispose();
+                    suspension = null;
+                }
+            };
+        }
+
         // Every open modal shown through this service (dialogs and message boxes) counts here.
         // While a modal is open its owner is input-disabled, so any code path that would give the
         // owner keyboard focus is wrong by definition - the main window consults this before

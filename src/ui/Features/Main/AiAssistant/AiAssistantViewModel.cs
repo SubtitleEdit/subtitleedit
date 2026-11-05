@@ -204,17 +204,11 @@ public partial class AiAssistantViewModel : ObservableObject
 
         LlamaCppServerManager.StopServer();
 
-        // Reuse the installed backend so the user is not re-asked CPU/Vulkan/CUDA on a re-download;
-        // null on a fresh install (or off Windows), which lets DownloadAsync prompt.
-        var variant = OperatingSystem.IsWindows()
-            ? DownloadHashManager.DetectLlamaCppWindowsVariant(LlamaCppServerManager.GetAndCreateFolder())
-            : null;
-
+        // No forced variant: the user picks CPU/Vulkan/CUDA, which is how to change the installed build.
         await LlamaCppDownloadHelper.DownloadAsync(
             Window,
             _windowService,
             SelectedLlamaCppModel?.Model,
-            variant,
             forceEngineDownload: true);
 
         RefreshLlamaCppModels();

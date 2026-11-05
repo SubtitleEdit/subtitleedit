@@ -602,7 +602,7 @@ public class FfmpegGenerator
             return outputFileName;
         }
 
-        var stderr2 = RunFfmpegScreenShot($"-y -i \"{inputFileName}\" -ss {timeCode} {vfMatrix} -frames:v 1 -c:v png \"{outputFileName}\"");
+        var stderr2 = RunFfmpegScreenShot(GetScreenShotFallbackArguments(inputFileName, timeCode, vfMatrix, outputFileName));
         if (HasFrame(outputFileName))
         {
             return outputFileName;
@@ -613,6 +613,52 @@ public class FfmpegGenerator
                     "input-seek: " + stderr + Environment.NewLine +
                     "output-seek: " + stderr2);
         return outputFileName;
+    }
+
+    // Seconds before the wanted time where the fallback starts decoding.
+    private const double ScreenShotFallbackPreRollSeconds = 10;
+
+    /// <summary>
+    /// Arguments for the accurate retry when input seeking gave no frame. Pure output seeking
+    /// decodes from the start of the file, which took 13-18 s for a line a few minutes in and
+    /// left the Set position preview on its checkered background meanwhile (#16289). Input seek
+    /// to a bit before the time, then output seek the rest, so the cost no longer grows with
+    /// the position (same frame; 720p at 13 min: 18 s -> 0.9 s).
+    /// </summary>
+    internal static string GetScreenShotFallbackArguments(string inputFileName, string timeCode, string vfMatrix, string outputFileName)
+    {
+        var seekArguments = $"-i \"{inputFileName}\" -ss {timeCode}";
+        if (TryGetFfmpegSeconds(timeCode, out var seconds) && seconds > ScreenShotFallbackPreRollSeconds)
+        {
+            var inputSeek = (seconds - ScreenShotFallbackPreRollSeconds).ToString("0.###", CultureInfo.InvariantCulture);
+            var outputSeek = ScreenShotFallbackPreRollSeconds.ToString(CultureInfo.InvariantCulture);
+            seekArguments = $"-ss {inputSeek} -i \"{inputFileName}\" -ss {outputSeek}";
+        }
+
+        return $"-y {seekArguments} {vfMatrix} -frames:v 1 -c:v png \"{outputFileName}\"";
+    }
+
+    // Parses a normalized ffmpeg time ("123.4", "MM:SS.ms" or "HH:MM:SS.ms") to seconds.
+    private static bool TryGetFfmpegSeconds(string timeCode, out double seconds)
+    {
+        seconds = 0;
+        var parts = timeCode.Split(':');
+        if (parts.Length > 3)
+        {
+            return false;
+        }
+
+        foreach (var part in parts)
+        {
+            if (!double.TryParse(part, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) || value < 0)
+            {
+                return false;
+            }
+
+            seconds = seconds * 60 + value;
+        }
+
+        return true;
     }
 
     private static string RunFfmpegScreenShot(string arguments)
@@ -723,12 +769,17 @@ public class FfmpegGenerator
             height++;
         }
 
+        // ffmpeg's subtitles filter does not load fonts from the [Fonts] attachment section, so a
+        // style using an attached font previewed in a fallback font. Hand them to libass as a fontsdir.
+        var fontsDirName = WriteEmbeddedFontsToTempFolder(previewSubtitle.Footer);
+        var fontsDirArgument = fontsDirName == null ? string.Empty : $":fontsdir={Path.GetFileName(fontsDirName)}";
+
         var process = new Process
         {
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-f lavfi -i \"color=c=black@0.0:s={width}x{height}:d=0.1,format=rgba,subtitles=f={Path.GetFileName(tempAssFileName)}:alpha=1\" -frames:v 1 -c:v png \"{outputFileName}\"",
+                Arguments = $"-f lavfi -i \"color=c=black@0.0:s={width}x{height}:d=0.1,format=rgba,subtitles=f={Path.GetFileName(tempAssFileName)}:alpha=1{fontsDirArgument}\" -frames:v 1 -c:v png \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 WorkingDirectory = Path.GetDirectoryName(tempAssFileName) ?? string.Empty
@@ -753,7 +804,49 @@ public class FfmpegGenerator
             // Ignore cleanup errors
         }
 
+        if (fontsDirName != null)
+        {
+            try
+            {
+                Directory.Delete(fontsDirName, true);
+            }
+            catch
+            {
+                // Ignore cleanup errors
+            }
+        }
+
         return File.Exists(outputFileName) ? outputFileName : null;
+    }
+
+    /// <summary>
+    /// Decodes the [Fonts] attachments of an ASSA footer into a new folder in the temp folder.
+    /// Returns null when there are no attached fonts.
+    /// </summary>
+    private static string? WriteEmbeddedFontsToTempFolder(string? footer)
+    {
+        var fonts = AssaFontEmbedder.GetEmbeddedFonts(footer);
+        if (fonts.Count == 0)
+        {
+            return null;
+        }
+
+        var folder = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        try
+        {
+            Directory.CreateDirectory(folder);
+            foreach (var (fileName, bytes) in fonts)
+            {
+                File.WriteAllBytes(Path.Combine(folder, fileName), bytes);
+            }
+
+            return folder;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Could not write attached fonts for libass preview");
+            return Directory.Exists(folder) ? folder : null;
+        }
     }
 
     private static string GetFfmpegLocation()

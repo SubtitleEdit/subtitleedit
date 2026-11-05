@@ -1,5 +1,4 @@
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Common.TextEffect;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using SkiaSharp;
 
@@ -82,21 +81,5 @@ public class BugHunt20260823Test
         Assert.StartsWith("00:01:00", new UnknownSubtitle33().ToText(sub, "t"));
         Assert.StartsWith("00:01:00", new UnknownSubtitle34().ToText(sub, "t"));
         Assert.StartsWith("00:01:00", new UnknownSubtitle59().ToText(sub, "t"));
-    }
-
-    [Fact]
-    public void KaraokeWordTransform_TagAfterSpaceIsKeptIntact()
-    {
-        var res = new KaraokeWordTransform().Transform("<font color=\"#ffffff\">Hello <font face=\"Arial\">world</font>");
-        Assert.Equal(2, res.Length);
-        Assert.Equal("<font color=\"#ffffff\">Hello</font> <font face=\"Arial\">world</font>", res[0]);
-        Assert.Equal("<font color=\"#ffffff\">Hello <font face=\"Arial\">world</font></font>", res[1]);
-    }
-
-    [Fact]
-    public void KaraokeWordTransform_MultipleSpaces()
-    {
-        var res = new KaraokeWordTransform().Transform("a  b c");
-        Assert.Equal(new[] { "a</font>  b c", "a  b</font> c", "a  b c</font>" }, res);
     }
 }

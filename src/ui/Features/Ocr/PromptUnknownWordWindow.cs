@@ -131,7 +131,7 @@ public class PromptUnknownWordWindow : Window
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.DoEditWholeText)) { Mode = BindingMode.TwoWay },
             [!AutomationProperties.NameProperty] = new Binding(nameof(vm.EditButtonLabel)),
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             MinHeight = 28,
             Padding = new Thickness(10, 4),
             CornerRadius = new CornerRadius(6),

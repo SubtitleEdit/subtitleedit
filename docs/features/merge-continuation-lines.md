@@ -47,6 +47,7 @@ The values are remembered for the next time the tool is opened from the Tools me
 
 - **[Text to Speech](text-to-speech.md#merge-continuation-lines)** - before generating, Subtitle Edit offers to merge continuation lines (using a 500 ms gap and 500 characters), so each sentence is spoken in one go. Turn the prompt off with **Text to speech: prompt to merge continuation lines** in **Options → Settings → Tools**.
 - **[Batch Convert](batch-convert.md)** - *Merge continuation lines* is one of the batch functions, with its own max gap and max characters.
+- **[Command line (seconv)](../reference/command-line.md#operations)** - `--merge-continuation-lines`, with `--merge-continuation-lines-max-gap:<ms>` and `--merge-continuation-lines-max-chars:<n>` for the limits.
 
 ## Keyboard Shortcuts
 

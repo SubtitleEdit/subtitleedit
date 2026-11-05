@@ -102,4 +102,80 @@ public class LibSEIntegrationTest
             Configuration.Settings.General.MinimumMillisecondsBetweenLines = saved;
         }
     }
+
+    private static Subtitle MakeContinuationSubtitle()
+    {
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("I was going to", 1000, 2000));
+        sub.Paragraphs.Add(new Paragraph("tell you something.", 2100, 3000)); // 100 ms gap
+        sub.Paragraphs.Add(new Paragraph("But then I", 4000, 5000));
+        sub.Paragraphs.Add(new Paragraph("forgot what it was.", 5300, 6000)); // 300 ms gap
+        sub.Renumber();
+        return sub;
+    }
+
+    [Fact]
+    public void ApplyOperations_MergeContinuationLines_DefaultGapIs250AndRenumbers()
+    {
+        var sub = MakeContinuationSubtitle();
+
+        LibSEIntegration.ApplyOperations(sub, new List<string> { "MergeContinuationLines" });
+
+        Assert.Equal(3, sub.Paragraphs.Count);
+        Assert.Equal("I was going to tell you something.", sub.Paragraphs[0].Text.Replace(Environment.NewLine, " "));
+        Assert.Equal(1000, sub.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(3000, sub.Paragraphs[0].EndTime.TotalMilliseconds);
+        Assert.Equal("But then I", sub.Paragraphs[1].Text);
+        Assert.Equal(new[] { 1, 2, 3 }, sub.Paragraphs.Select(p => p.Number));
+    }
+
+    [Fact]
+    public void ApplyOperations_MergeContinuationLines_UsesGivenMaxGap()
+    {
+        var sub = MakeContinuationSubtitle();
+
+        LibSEIntegration.ApplyOperations(sub, new List<string> { "MergeContinuationLines" }, mergeContinuationLinesMaxGapMs: 500);
+
+        Assert.Equal(2, sub.Paragraphs.Count);
+        Assert.Equal("But then I forgot what it was.", sub.Paragraphs[1].Text.Replace(Environment.NewLine, " "));
+        Assert.Equal(6000, sub.Paragraphs[1].EndTime.TotalMilliseconds);
+    }
+
+    [Fact]
+    public void ApplyOperations_MergeContinuationLines_UsesGivenMaxCharacters()
+    {
+        // "I was going to" + "tell you something." is 33 characters - not below 33.
+        var sub = MakeContinuationSubtitle();
+
+        LibSEIntegration.ApplyOperations(sub, new List<string> { "MergeContinuationLines" }, mergeContinuationLinesMaxCharacters: 33);
+
+        Assert.Equal(4, sub.Paragraphs.Count);
+    }
+
+    [Fact]
+    public void ApplyOperations_MergeContinuationLines_DefaultMaxCharactersIsLineLengthTimesLines()
+    {
+        var savedLength = Configuration.Settings.General.SubtitleLineMaximumLength;
+        var savedLines = Configuration.Settings.General.MaxNumberOfLines;
+        try
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 11;
+            Configuration.Settings.General.MaxNumberOfLines = 3; // 33: the first pair is not merged
+
+            var sub = MakeContinuationSubtitle();
+            LibSEIntegration.ApplyOperations(sub, new List<string> { "MergeContinuationLines" });
+            Assert.Equal(4, sub.Paragraphs.Count);
+
+            Configuration.Settings.General.SubtitleLineMaximumLength = 17; // 51: merged
+
+            sub = MakeContinuationSubtitle();
+            LibSEIntegration.ApplyOperations(sub, new List<string> { "MergeContinuationLines" });
+            Assert.Equal(3, sub.Paragraphs.Count);
+        }
+        finally
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = savedLength;
+            Configuration.Settings.General.MaxNumberOfLines = savedLines;
+        }
+    }
 }

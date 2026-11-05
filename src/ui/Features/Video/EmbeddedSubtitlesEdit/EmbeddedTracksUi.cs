@@ -196,7 +196,7 @@ internal static class EmbeddedTracksUi
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             MaxWidth = 360,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.FaintTextBrush,
             IsHitTestVisible = false,
         };

@@ -409,7 +409,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
             await MessageBox.Show(
                 Window,
                 Se.Language.General.Error,
-                string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeImported, importedFileName));
+                string.Format(Se.Language.Video.TextToSpeech.VoiceXCouldNotBeImported, importedFileName), MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

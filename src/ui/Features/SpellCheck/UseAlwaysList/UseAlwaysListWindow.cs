@@ -73,7 +73,7 @@ public class UseAlwaysListWindow : Window
         header.Children.Add(EditorChrome.MakeSectionHeader(Se.Language.SpellCheck.UseAlwaysListHeader));
 
         var description = EditorChrome.MakeWrappingDimLabel(Se.Language.SpellCheck.UseAlwaysListDescription);
-        description.FontSize = 12.5;
+        description.FontSize = EditorChrome.FieldFontSize;
 
         var listSection = new Grid
         {
@@ -167,7 +167,7 @@ public class UseAlwaysListWindow : Window
                     {
                         Text = Se.Language.SpellCheck.UseAlwaysRememberOff,
                         TextWrapping = TextWrapping.Wrap,
-                        FontSize = 12.5,
+                        FontSize = EditorChrome.FieldFontSize,
                         VerticalAlignment = VerticalAlignment.Center,
                     },
                 },
@@ -181,7 +181,7 @@ public class UseAlwaysListWindow : Window
     {
         var text = new TextBlock
         {
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             FontWeight = FontWeight.SemiBold,
             Foreground = foreground,
             VerticalAlignment = VerticalAlignment.Center,
@@ -328,7 +328,7 @@ public class UseAlwaysListWindow : Window
                 new TextBlock
                 {
                     Text = Se.Language.SpellCheck.UseAlwaysEmpty,
-                    FontSize = 14,
+                    FontSize = EditorChrome.ScaledFont(14),
                     FontWeight = FontWeight.SemiBold,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     TextAlignment = TextAlignment.Center,
@@ -337,7 +337,7 @@ public class UseAlwaysListWindow : Window
                 new TextBlock
                 {
                     Text = Se.Language.SpellCheck.UseAlwaysEmptyHint,
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     Foreground = EditorChrome.DimTextBrush,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     TextAlignment = TextAlignment.Center,
@@ -356,7 +356,7 @@ public class UseAlwaysListWindow : Window
             Children =
             {
                 MakeIcon(IconNames.Find, 18, EditorChrome.FaintTextBrush),
-                new TextBlock { Text = Se.Language.SpellCheck.UseAlwaysNoMatch, FontSize = 12.5, Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center },
+                new TextBlock { Text = Se.Language.SpellCheck.UseAlwaysNoMatch, FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center },
             },
         };
         noMatch.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsNoMatch)));

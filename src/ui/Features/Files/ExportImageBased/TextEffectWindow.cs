@@ -54,7 +54,7 @@ public class TextEffectWindow : Window
         Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(buttonReset, buttonCancel, buttonOk));
 
         KeyDown += (_, e) => vm.OnKeyDown(e);
-        UiUtil.FocusOnFirstActivation(this, buttonOk);
+        UiUtil.FocusOnFirstActivation(this, comboPreset);
     }
 
     // The settings are pushed into the export dialog live, so a close that is not an OK -
@@ -83,7 +83,7 @@ public class TextEffectWindow : Window
 
         var valueLabel = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextAlignment = TextAlignment.Right,
             MinWidth = 45,

@@ -37,14 +37,14 @@ public class TranslationErrorWindow : Window
             Text = "⚠",
             FontSize = UiUtil.ScaledFontSize(28),
             // Darker amber on the light theme - the dark-theme tone is too faint on white (#15768).
-            Foreground = new SolidColorBrush(Color.Parse(UiTheme.IsDarkThemeEnabled() ? "#E8A020" : "#9E5500")),
+            Foreground = EditorChrome.WarningTextBrush,
             VerticalAlignment = VerticalAlignment.Top,
             Margin = new Thickness(0, -4, 12, 0),
         };
 
         var titleBlock = new TextBlock
         {
-            FontSize = 15,
+            FontSize = EditorChrome.ScaledFont(15),
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
@@ -55,7 +55,7 @@ public class TranslationErrorWindow : Window
         var hintBlock = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
         };
         hintBlock.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Hint)));

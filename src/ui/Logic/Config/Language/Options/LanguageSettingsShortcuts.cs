@@ -336,6 +336,8 @@ public class LanguageSettingsShortcuts
     public string MoveStartXMsForward { get; set; }
     public string MoveEndXMsBack { get; set; }
     public string MoveEndXMsForward { get; set; }
+    public string MoveStartXMsBackPushPrevious { get; set; }
+    public string MoveEndXMsForwardPushNext { get; set; }
     public string MoveSelectedLinesXMsBack { get; set; }
     public string MoveSelectedLinesXMsForward { get; set; }
     public string MoveSelectedLinesAndForwardXMsBack { get; set; }
@@ -458,8 +460,8 @@ public class LanguageSettingsShortcuts
         ResetShortcuts = "Reset shortcuts";
         ResetShortcutsDetail = "Do you want to reset all shortcuts to default values?";
         ToggleLockTimeCodes = "Toggle lock time codes";
-        ToggleTimeCodeMode = "Toggle time code mode (time/frames/frame numbers)";
-        ToggleScreenPrivacy = "Toggle screen privacy (hide file names, then also texts)";
+        ToggleTimeCodeMode = "Cycle time code mode (time/frames/frame numbers)";
+        ToggleScreenPrivacy = "Cycle screen privacy (hide file names, then also texts)";
         ScreenPrivacyFileNamesHidden = "Screen privacy: file names hidden";
         ScreenPrivacyFileNamesAndTextsHidden = "Screen privacy: file names and texts hidden";
         ScreenPrivacyOff = "Screen privacy: off";
@@ -473,7 +475,7 @@ public class LanguageSettingsShortcuts
         GoToNextEmptyLine = "Go to next empty line";
         ToggleWaveformToolbar = "Toggle waveform toolbar";
         CycleTheme = "Cycle theme";
-        ToggleSubtitleGridFormatting = "Toggle grid formatting (show formatting/show tags/no formatting/hide tags)";
+        ToggleSubtitleGridFormatting = "Cycle grid formatting (show formatting/keep non-visual tags/show tags/no formatting/hide tags)";
         WaveformSetStartAndSetEndOfPreviousMinusGap = "Set start and set end of previous minus gap";
         WaveformSetEndAndStartOfNextAfterGap = "Set end and start of next plus gap";
         WaveformSetEndAndStartOfNextAfterGapAndGoToNext = "Set end and start of next plus gap and go to next";
@@ -575,7 +577,7 @@ public class LanguageSettingsShortcuts
         TextBoxUnderline = "Text box underline";
         TextBoxBox = "Text box box (EBU STL)";
         ResetWaveformZoomAndSpeed = "Reset waveform zoom and playback speed (play rate)";
-        TogglePlaybackSpeed = "Toggle playback speed (play rate)";
+        TogglePlaybackSpeed = "Cycle playback speed (play rate)";
         PlaybackSpeedSlower = "Playback speed slower (play rate)";
         PlaybackSpeedFaster = "Playback speed faster (play rate)";
         SwitchOriginalAndTranslationSelectedLines = "Switch original and translation (selected lines)";
@@ -589,7 +591,7 @@ public class LanguageSettingsShortcuts
         SetVideoPositionCurrentSubtitleStart = "Set video position to current line start";
         GoToSubtitlePositionAndPause = "Go to sub position and pause";
         SetVideoPositionCurrentSubtitleEnd = "Set video position to current line end";
-        ToggleAudioTracks = "Toggle audio tracks";
+        ToggleAudioTracks = "Cycle audio tracks";
         GoToPreviousError = "GoTo previous error";
         GoToNextError = "GoTo next error";
         AddNameToNameList = "Add name to name list";
@@ -667,8 +669,8 @@ public class LanguageSettingsShortcuts
         AssaProperties = "ASSA Properties";
         RecalculateDurationSelectedLines = "Recalculate duration (selected lines)";
         SetDurationMaxCpsSelectedLines = "Set duration to max CPS (selected lines)";
-        ToggleWaveformAndSpectrogramHeight = "Toggle waveform/spectrogram divided height";
-        ToggleSpectrogramStyle = "Toggle spectrogram style";
+        ToggleWaveformAndSpectrogramHeight = "Cycle waveform/spectrogram divided height";
+        ToggleSpectrogramStyle = "Cycle spectrogram style";
         CopyMsRelativeToCurrentSubtitleLineToClipboard = "Copy milliseconds relative to current subtitle line to clipboard";
         LayoutZoomIn = "Layout zoom in (scale UI)";
         LayoutZoomOut = "Layout zoom out (scale UI)";
@@ -676,7 +678,7 @@ public class LanguageSettingsShortcuts
         SelectionToLower = "Text box: Selection to lowercase";
         SelectionToUpper = "Text box: Selection to uppercase";
         SelectionToSentenceCase = "Text box: Selection to Sentence case";
-        SelectionToggleCasing = "Text box: Toggle casing (UPPER -> lower -> Title Case)";
+        SelectionToggleCasing = "Text box: Cycle casing (UPPER -> lower -> Title Case)";
         GoogleIt = "Google it (selected text)";
         SetActorX = "Set actor: {0}";
         SetNewActor = "Set new actor...";
@@ -696,6 +698,8 @@ public class LanguageSettingsShortcuts
         MoveStartXMsForward = "Move start X ms forward (X set in Settings, also in Visual Sync)";
         MoveEndXMsBack = "Move end X ms back (X set in Settings, also in Visual Sync)";
         MoveEndXMsForward = "Move end X ms forward (X set in Settings, also in Visual Sync)";
+        MoveStartXMsBackPushPrevious = "Move start X ms back, push previous end (X set in Settings)";
+        MoveEndXMsForwardPushNext = "Move end X ms forward, push next start (X set in Settings)";
         MoveSelectedLinesXMsBack = "Move selected lines X ms back (X set in Settings)";
         MoveSelectedLinesXMsForward = "Move selected lines X ms forward (X set in Settings)";
         MoveSelectedLinesAndForwardXMsBack = "Move selected lines and all following X ms back (X set in Settings)";

@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.CutVideo;
@@ -189,7 +190,7 @@ public class CutVideoWindow : Window
         {
             Text = "s",
             Foreground = EditorChrome.FaintTextBrush,
-            FontSize = 11,
+            FontSize = EditorChrome.ScaledFont(11),
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(8, 0, 0, 0),
         };
@@ -232,7 +233,7 @@ public class CutVideoWindow : Window
         {
             Content = EditorChrome.MakeInlineRow(
                 new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-play", FontSize = 11, VerticalAlignment = VerticalAlignment.Center },
-                new TextBlock { Text = Se.Language.Video.CutVideoPreviewTransition, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center }),
+                new TextBlock { Text = Se.Language.Video.CutVideoPreviewTransition, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center }),
             Command = vm.PreviewTransitionCommand,
             HorizontalAlignment = HorizontalAlignment.Left,
             [!Button.IsEnabledProperty] = new Binding(nameof(vm.IsPreviewTransitionEnabled)),
@@ -433,15 +434,16 @@ public class CutVideoWindow : Window
         };
     }
 
-    private static Border MakeProgressView(CutVideoViewModel vm)
+    private Border MakeProgressView(CutVideoViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsGenerating));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText));
-        statusText.FontSize = 12;
+        statusText.FontSize = EditorChrome.FieldFontSize;
 
         var grid = new Grid
         {
@@ -469,7 +471,7 @@ public class CutVideoWindow : Window
         // The source video
         var fileName = UiUtil.MakeFilePathLabel(vm, nameof(vm.VideoFileName));
         fileName.Foreground = EditorChrome.DimTextBrush;
-        fileName.FontSize = 12;
+        fileName.FontSize = EditorChrome.FieldFontSize;
         fileName.VerticalAlignment = VerticalAlignment.Center;
         var source = EditorChrome.MakeInlineRow(
             new Optris.Icons.Avalonia.Icon { Value = "fa-solid fa-file-video", FontSize = 12, Foreground = EditorChrome.FaintTextBrush, VerticalAlignment = VerticalAlignment.Center },

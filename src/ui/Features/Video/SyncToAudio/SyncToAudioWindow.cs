@@ -32,7 +32,7 @@ public class SyncToAudioWindow : Window
         var radioAudio = new RadioButton
         {
             Content = lang.SyncToAudioReferenceAudio,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseAudioReference)) { Mode = BindingMode.TwoWay },
             [!IsEnabledProperty] = new Binding(nameof(vm.IsAudioReferenceAvailable)),
@@ -40,13 +40,13 @@ public class SyncToAudioWindow : Window
         var radioSubtitle = new RadioButton
         {
             Content = lang.SyncToAudioReferenceSubtitle,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.UseSubtitleReference)) { Mode = BindingMode.TwoWay },
         };
         var textReferenceFile = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             Foreground = EditorChrome.DimTextBrush,
@@ -96,20 +96,20 @@ public class SyncToAudioWindow : Window
         var textLowConfidence = new TextBlock
         {
             Text = lang.SyncToAudioLowConfidence,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             [!IsVisibleProperty] = new Binding(nameof(vm.IsLowConfidence)),
         };
         var textError = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ErrorText)),
         };
         var textHint = new TextBlock
         {
             Text = lang.SyncToAudioHint,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             Foreground = EditorChrome.DimTextBrush,
         };
@@ -173,7 +173,7 @@ public class SyncToAudioWindow : Window
     {
         return new TextBlock
         {
-            FontSize = 13,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBlock.TextProperty] = new Binding(property),
         };
     }

@@ -50,8 +50,8 @@ public class BinaryMoveCaptionsWindow : Window
         var moveToPanel = new StackPanel { Spacing = 2 };
         var radioIntoBars = UiUtil.MakeRadioButton(l.MoveCaptionsIntoBars, vm, nameof(vm.MoveIntoBars), "mode");
         var radioIntoPicture = UiUtil.MakeRadioButton(l.MoveCaptionsIntoPicture, vm, nameof(vm.MoveIntoPicture), "mode");
-        radioIntoBars.FontSize = 12.5;
-        radioIntoPicture.FontSize = 12.5;
+        radioIntoBars.FontSize = EditorChrome.FieldFontSize;
+        radioIntoPicture.FontSize = EditorChrome.FieldFontSize;
         moveToPanel.Children.Add(radioIntoBars);
         moveToPanel.Children.Add(radioIntoPicture);
         var offsetRow = BinaryEditChrome.MakeRow(l.MoveCaptionsOffset, numericOffset, LabelWidth);
@@ -62,7 +62,7 @@ public class BinaryMoveCaptionsWindow : Window
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.InfoText)),
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(14, 12, 14, 14),
         };

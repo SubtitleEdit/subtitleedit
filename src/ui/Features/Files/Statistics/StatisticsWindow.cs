@@ -181,7 +181,7 @@ public class StatisticsWindow : Window
             Command = command,
             Width = 26,
             Height = 26,
-            FontSize = 13,
+            FontSize = EditorChrome.FieldFontSize,
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
         };

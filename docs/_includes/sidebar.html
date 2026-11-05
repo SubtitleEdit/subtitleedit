@@ -1,0 +1,14 @@
+{%- assign here = page.url | remove_first: '/' -%}
+<nav class="sidebar" id="sidebar" aria-label="Documentation">
+  {%- for group in site.data.nav %}
+  {%- assign match = group.items | where: 'url', here | first %}
+  <details{% if match or forloop.first and page.layout == 'home' %} open{% endif %}>
+    <summary>{{ group.name }}</summary>
+    <ul>
+      {%- for item in group.items %}
+      <li><a href="{{ item.url | prepend: '/' | relative_url }}"{% if item.url == here %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
+      {%- endfor %}
+    </ul>
+  </details>
+  {%- endfor %}
+</nav>

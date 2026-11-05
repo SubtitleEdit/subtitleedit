@@ -67,7 +67,7 @@ public static class StylesDialogHelper
             Child = new TextBlock
             {
                 Text = "Aa",
-                FontSize = 11.5,
+                FontSize = EditorChrome.ScaledFont(11.5),
                 FontWeight = FontWeight.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,

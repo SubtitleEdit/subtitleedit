@@ -15,6 +15,7 @@ using System.Linq;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 
@@ -70,12 +71,13 @@ public class BatchConvertWindow : Window
 
         // "No files to convert" and the end-of-run summary
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText));
-        statusText.FontSize = 12;
+        statusText.FontSize = EditorChrome.FieldFontSize;
         var buttonBar = EditorChrome.MakeButtonBar(statusText, buttonCancel, buttonDone, buttonConvert);
 
         var progressBar = UiUtil.MakeProgressBar(6);
         progressBar.Maximum = 1; // ProgressValue is the converted fraction
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsConverting));
         var progressStrip = EditorChrome.MakeProgressStrip(progressBar, nameof(vm.ProgressText), nameof(vm.IsConverting));
 
         // The file list and the functions share the height, resizable with the splitter between them,
@@ -433,14 +435,14 @@ public class BatchConvertWindow : Window
         // Output folder: "Source folder" as text, or the chosen folder as a link that opens it
         var labelOutputSourceFolder = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.OutputFolderLabel)),
         };
         var linkLabelOutputFolder = UiUtil.MakeLink(string.Empty, vm.OpenOutputFolderCommand, vm, nameof(vm.OutputFolderLinkLabel))
             .WithAlignmentLeft();
-        linkLabelOutputFolder.FontSize = 12;
+        linkLabelOutputFolder.FontSize = EditorChrome.FieldFontSize;
         linkLabelOutputFolder.TextTrimming = TextTrimming.CharacterEllipsis;
         var folder = new Panel { VerticalAlignment = VerticalAlignment.Center, Children = { labelOutputSourceFolder, linkLabelOutputFolder } };
         var encoding = EditorChrome.MakeBoundHint(nameof(vm.OutputEncodingLabel));
@@ -483,7 +485,7 @@ public class BatchConvertWindow : Window
             HorizontalAlignment = HorizontalAlignment.Center,
             MaxWidth = 360,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             Margin = new Thickness(0, 6, 0, 0),
         };

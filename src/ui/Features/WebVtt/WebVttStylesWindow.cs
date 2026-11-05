@@ -160,7 +160,7 @@ public class WebVttStylesWindow : Window
             Margin = new Thickness(8, 0, 8, 8),
             Child = new TextBlock
             {
-                FontSize = 12,
+                FontSize = EditorChrome.FieldFontSize,
                 TextWrapping = TextWrapping.Wrap,
                 [!TextBlock.TextProperty] = new Binding(nameof(vm.DuplicateStyleNames)),
             },
@@ -237,7 +237,7 @@ public class WebVttStylesWindow : Window
     {
         var name = new TextBox
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Background = EditorChrome.FieldBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
             CornerRadius = new CornerRadius(6),
@@ -268,9 +268,9 @@ public class WebVttStylesWindow : Window
         {
             var toggle = new ToggleButton
             {
-                Content = new TextBlock { Text = text, FontWeight = weight, FontStyle = style, TextDecorations = decorations, FontSize = 13 },
+                Content = new TextBlock { Text = text, FontWeight = weight, FontStyle = style, TextDecorations = decorations, FontSize = EditorChrome.FieldFontSize },
                 Width = 28,
-                Height = 28,
+                Height = EditorChrome.ScaledSize(28),
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 [!ToggleButton.IsCheckedProperty] = new Binding(Current + property) { Mode = BindingMode.TwoWay },
@@ -340,7 +340,7 @@ public class WebVttStylesWindow : Window
             ColumnDefinitions = { new ColumnDefinition(GridLength.Auto), new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
         };
         row.Add(toggle, 0, 0);
-        row.Add(new TextBlock { Text = text, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center }, 0, 1);
+        row.Add(new TextBlock { Text = text, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center }, 0, 1);
         row.Add(swatch, 0, 2);
         return row;
     }
@@ -362,7 +362,7 @@ public class WebVttStylesWindow : Window
             Child = new TextBlock
             {
                 FontFamily = MonoFont,
-                FontSize = 11.5,
+                FontSize = EditorChrome.ScaledFont(11.5),
                 TextWrapping = TextWrapping.Wrap,
                 [!TextBlock.TextProperty] = new Binding(property),
             },
@@ -394,7 +394,7 @@ public class WebVttStylesWindow : Window
     {
         var summary = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             VerticalAlignment = VerticalAlignment.Center,
         };
@@ -408,9 +408,9 @@ public class WebVttStylesWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-        buttons.Children.Add(buttonApply);
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonApply));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         var bar = new DockPanel();
         DockPanel.SetDock(buttons, Dock.Right);

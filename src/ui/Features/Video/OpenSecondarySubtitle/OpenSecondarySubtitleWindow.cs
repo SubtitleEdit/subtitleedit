@@ -51,6 +51,20 @@ public class OpenSecondarySubtitleWindow : Window
         });
         var panelColor = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Children = { colorPreview, buttonColor } };
 
+        // Font name row
+        var comboBoxFontName = UiUtil.MakeComboBox(vm.FontNames, vm, nameof(vm.SelectedFontName));
+        comboBoxFontName.Width = double.NaN;
+        comboBoxFontName.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(comboBoxFontName, Se.Language.General.FontName);
+        var buttonPickFont = EditorChrome.CreateToolButton("fa-solid fa-ellipsis", Se.Language.Tools.PickFontNameTitle, vm.PickFontCommand, 28);
+        var panelFontName = new Grid
+        {
+            ColumnSpacing = 6,
+            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(GridLength.Auto) },
+        };
+        panelFontName.Add(comboBoxFontName, 0, 0);
+        panelFontName.Add(buttonPickFont, 0, 1);
+
         // Font size row
         var numericFontSize = UiUtil.MakeNumericUpDownInt(6, 200, 46, 90, vm, nameof(vm.FontSize));
         numericFontSize.Classes.Add("field");
@@ -72,6 +86,7 @@ public class OpenSecondarySubtitleWindow : Window
             Children =
             {
                 EditorChrome.MakeLabeledRow(Se.Language.General.Color, panelColor, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontName, panelFontName, labelWidth),
                 EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, numericFontSize, labelWidth),
                 EditorChrome.MakeSwitchRow(nameof(vm.FontBold), Se.Language.General.Bold),
                 EditorChrome.MakeLabeledRow(Se.Language.General.BorderStyle, comboBoxBorderStyle, labelWidth),

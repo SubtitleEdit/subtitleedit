@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
@@ -862,6 +863,7 @@ public class OcrWindow : Window
         flyout.Items.Add(ImagePreviewBackground.MakeMenuItem(vm.WindowService, () => vm.Window, previewBackground));
 
         vm.SubtitleGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(vm.SubtitleGrid);
 
         return new Border
         {
@@ -882,6 +884,7 @@ public class OcrWindow : Window
             {
                 new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
             },
             Width = double.NaN,
@@ -989,7 +992,9 @@ public class OcrWindow : Window
         switchTryToGuessUnknownWords.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsDictionaryLoaded)));
         var switchAutoBreak = EditorChrome.MakeSwitchRow(nameof(vm.DoAutoBreak), string.Format(Se.Language.Ocr.AutoBreakIfMoreThanXLines, Se.Settings.General.MaxNumberOfLines));
 
-        var panelOptions = new StackPanel
+        var switchVideoPreview = EditorChrome.MakeSwitchRow(nameof(vm.ShowVideoPreview), Se.Language.Ocr.VideoPreview);
+
+        var panelOptions = new StackPanel        
         {
             Orientation = Orientation.Vertical,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -1002,6 +1007,7 @@ public class OcrWindow : Window
                 switchPromptForUnknownWords,
                 switchTryToGuessUnknownWords,
                 switchAutoBreak,
+                switchVideoPreview,
             }
         };
 
@@ -1056,6 +1062,41 @@ public class OcrWindow : Window
             BorderThickness = new Thickness(1, 0, 0, 0),
         }, 0, 1);
         grid.Add(tabsView, 0, 2);
+
+        var previewImage = new Image { Stretch = Avalonia.Media.Stretch.Fill };
+        previewImage.Bind(Image.SourceProperty, new Binding(nameof(vm.VideoPreviewBitmap)) { Source = vm });
+        previewImage.Bind(Layoutable.WidthProperty, new Binding(nameof(vm.VideoPreviewImageWidth)) { Source = vm });
+        previewImage.Bind(Layoutable.HeightProperty, new Binding(nameof(vm.VideoPreviewImageHeight)) { Source = vm });
+        previewImage.Bind(Canvas.LeftProperty, new Binding(nameof(vm.VideoPreviewLeft)) { Source = vm });
+        previewImage.Bind(Canvas.TopProperty, new Binding(nameof(vm.VideoPreviewTop)) { Source = vm });
+        var previewCanvas = new Canvas { Background = Avalonia.Media.Brushes.Black, ClipToBounds = true };
+        previewCanvas.Bind(Layoutable.WidthProperty, new Binding(nameof(vm.VideoPreviewScreenWidth)) { Source = vm });
+        previewCanvas.Bind(Layoutable.HeightProperty, new Binding(nameof(vm.VideoPreviewScreenHeight)) { Source = vm });
+        previewCanvas.Children.Add(previewImage);
+        var previewView = new Border
+        {
+            Child = new Viewbox { Stretch = Avalonia.Media.Stretch.Uniform, Child = previewCanvas },
+            Padding = new Thickness(10),
+            BorderBrush = EditorChrome.LineBrush,
+            BorderThickness = new Thickness(1, 0, 0, 0),
+        };
+        previewView.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowVideoPreview)) { Source = vm });
+        grid.Add(previewView, 0, 3);
+
+        // A hidden child still leaves its star column reserved - collapse the column so the
+        // other panels (e.g. Unknown words) get the space back when the preview is off.
+        var previewColumn = grid.ColumnDefinitions[3];
+        void UpdatePreviewColumn() => previewColumn.Width = vm.ShowVideoPreview
+            ? new GridLength(3, GridUnitType.Star)
+            : new GridLength(0);
+        UpdatePreviewColumn();
+        vm.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(vm.ShowVideoPreview))
+            {
+                UpdatePreviewColumn();
+            }
+        };
 
         var border = new Border
         {
@@ -1281,13 +1322,14 @@ public class OcrWindow : Window
     /// <summary>
     /// Progress bar and status in a strip above the buttons while the OCR runs.
     /// </summary>
-    private static Border MakeProgressView(OcrViewModel vm)
+    private Border MakeProgressView(OcrViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.Width = double.NaN;
         progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsOcrRunning));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.ProgressText), 12);
         statusText.HorizontalAlignment = HorizontalAlignment.Left;
@@ -1334,7 +1376,7 @@ public class OcrWindow : Window
 
         var subtitleCountText = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
             HorizontalAlignment = HorizontalAlignment.Left,
@@ -1353,7 +1395,7 @@ public class OcrWindow : Window
         AutomationProperties.SetAutomationId(buttonOk, "OcrOkButton");
         AutomationProperties.SetAutomationId(buttonCancel, "OcrCancelButton");
 
-        return EditorChrome.MakeButtonBar(subtitleCountText, buttonInspect, buttonInspectAdditions, buttonExport, buttonStart, buttonPause, buttonOk, buttonCancel);
+        return EditorChrome.MakeButtonBar(subtitleCountText, buttonInspect, buttonInspectAdditions, buttonExport, buttonStart, buttonPause, buttonCancel, buttonOk);
     }
 
     /// <summary>
@@ -1365,8 +1407,8 @@ public class OcrWindow : Window
         {
             Content = text,
             Command = command,
-            Height = 28,
-            FontSize = 12.5,
+            Height = EditorChrome.ScaledSize(28),
+            FontSize = EditorChrome.FieldFontSize,
             Padding = new Thickness(10, 0),
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,

@@ -36,7 +36,7 @@ public class OcrFixHashMisreadAsApostropheTests : IDisposable
 
         var result = engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false);
 
-        Assert.Equal(expected, result.GetText());
+        Assert.Equal(expected.Replace("\r\n", "\n"), result.GetText().Replace("\r\n", "\n"));
     }
 
     [Theory]

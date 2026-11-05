@@ -30,6 +30,7 @@ public class LanguageMainToolbar
     public string AssaDrawHint { get; set; }
     public string SsaStylesHint { get; set; }
     public string WebVttStylesHint { get; set; }
+    public string YttStylesHint { get; set; }
     public string SsaPropertiesHint { get; set; }
     public string SsaAttachmentsHint { get; set; }
     public string GetFrameRateFromVideoFileHint { get; set; }
@@ -65,6 +66,7 @@ public class LanguageMainToolbar
         AssaDrawHint = "Advanced Sub Station Alpha draw shapes";
         SsaStylesHint = "Sub Station Alpha styles";
         WebVttStylesHint = "WebVTT style manager";
+        YttStylesHint = "YouTube timed text style manager";
         SsaPropertiesHint = "Sub Station Alpha properties";
         SsaAttachmentsHint = "Sub Station Alpha attachments";
         GetFrameRateFromVideoFileHint = "Get frame rate from video file";

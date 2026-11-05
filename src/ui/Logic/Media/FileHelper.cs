@@ -310,7 +310,9 @@ namespace Nikse.SubtitleEdit.Logic.Media
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = MakePortalSafeSuggestedFileName(suggestedFileName, currentFormat.Extension),
+                SuggestedFileName = OperatingSystem.IsMacOS()
+                    ? MakeMacSuggestedFileName(suggestedFileName, currentFormat.Extension)
+                    : MakePortalSafeSuggestedFileName(suggestedFileName, currentFormat.Extension),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(currentFormat),
                 DefaultExtension = currentFormat.Extension.TrimStart('.')
             };
@@ -350,9 +352,11 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 // Pre-fill with the same extension rule the result goes through below
                 // (AddMissingExtension), so under the document portal the granted name is
                 // final-safe when the user keeps the suggestion (see NeedsPortalGrantedName).
-                SuggestedFileName = DocumentPortal.IsSandboxed
-                    ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
-                    : Path.GetFileName(suggestedFileName),
+                SuggestedFileName = OperatingSystem.IsMacOS()
+                    ? MakeMacSuggestedFileName(suggestedFileName, currentFormat.Extension)
+                    : DocumentPortal.IsSandboxed
+                        ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
+                        : Path.GetFileName(suggestedFileName),
                 FileTypeChoices = filePickerFileTypes,
                 SuggestedFileType = defaultChoice,
             };
@@ -432,6 +436,32 @@ namespace Nikse.SubtitleEdit.Logic.Media
         {
             var name = Path.GetFileName(suggestedFileName);
             return DocumentPortal.IsSandboxed ? AddDefaultExtension(name, extension) : name;
+        }
+
+        private static string MakeMacSuggestedFileName(string suggestedFileName, string extension)
+        {
+            return MakeMacSuggestedFileName(suggestedFileName, extension, MacFileTypes.PrefersOtherExtension(extension));
+        }
+
+        /// <summary>
+        /// The macOS save panel adds the file type's preferred extension to the name it is given.
+        /// It only sees an extension that an installed app has registered, so for an unregistered
+        /// one (".srt" without mpv or IINA) "movie.srt" became "movie.srt.srt" (#16535): the
+        /// suggestion must have no extension. But when the type prefers another extension, as
+        /// ".ssa" does with io.mpv.ass, a bare "movie" became "movie.ass": the suggestion must
+        /// carry the format's extension.
+        /// </summary>
+        internal static string MakeMacSuggestedFileName(string suggestedFileName, string extension, bool typePrefersOtherExtension)
+        {
+            var name = Path.GetFileName(suggestedFileName);
+            if (typePrefersOtherExtension)
+            {
+                return AddMissingExtension(name, extension);
+            }
+
+            return name.Length > extension.Length && name.EndsWith(extension, StringComparison.OrdinalIgnoreCase)
+                ? name.Substring(0, name.Length - extension.Length)
+                : name;
         }
 
         /// <summary>
@@ -630,7 +660,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             return fileTypes;
         }
         
-        private static List<FilePickerFileType> MakeSaveFilePickerAllFileTypes(SubtitleFormat currentFormat)
+        internal static List<FilePickerFileType> MakeSaveFilePickerAllFileTypes(SubtitleFormat currentFormat)
         {
             var fileType = new FilePickerFileType(currentFormat.Name)
             {
@@ -640,8 +670,9 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
             // EBU STL is binary but saves through the same "Save as" path (SaveBinarySubtitle),
             // so it belongs in the list like the text formats - it used to be reachable only by
-            // switching the toolbar format first.
-            foreach (var format in SubtitleFormat.AllSubtitleFormats)
+            // switching the toolbar format first. Favorites follow the current format, like in
+            // the toolbar's format list (#16540).
+            foreach (var format in SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop())
             {
                 if ((format.IsTextBased || format is Ebu) && format.Name != currentFormat.Name)
                 {

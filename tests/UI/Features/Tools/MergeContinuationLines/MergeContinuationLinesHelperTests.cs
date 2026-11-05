@@ -1,5 +1,7 @@
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
+using Nikse.SubtitleEdit.UiLogic.MergeContinuationLines;
 
 namespace UITests.Features.Tools.MergeContinuationLines;
 
@@ -103,5 +105,43 @@ public class MergeContinuationLinesHelperTests
         var candidates = MergeContinuationLinesHelper.Detect(subtitles, "de", maxGapMs: 500, maxTotalLength: 200);
 
         Assert.Empty(candidates);
+    }
+
+    [Fact]
+    public void Apply_AllCandidates_SameResultAsSharedSubtitleMerge()
+    {
+        // seconv runs MergeContinuationLinesUtils on a Subtitle; it must merge exactly what the
+        // tool merges with every candidate checked.
+        var lines = new (string Text, int StartMs, int EndMs)[]
+        {
+            ("an", 1000, 1100),
+            ("illusion,", 1120, 1300),
+            ("an echo.", 1320, 1600),
+            ("- Really?", 2000, 2500),
+            ("- Yes.", 2600, 3000),
+            ("But then I", 3100, 3500),
+            ("forgot what it was.", 4500, 5000),
+            ("<i>Das ist die Straße</i>", 5100, 5500),
+            ("<i>nach Hause.</i>", 5600, 6000),
+        };
+        var viewModels = lines.Select(l => new SubtitleLineViewModel
+        {
+            Text = l.Text,
+            StartTime = TimeSpan.FromMilliseconds(l.StartMs),
+            EndTime = TimeSpan.FromMilliseconds(l.EndMs),
+        }).ToList();
+        var subtitle = new Subtitle();
+        foreach (var l in lines)
+        {
+            subtitle.Paragraphs.Add(new Paragraph(l.Text, l.StartMs, l.EndMs));
+        }
+
+        var candidates = MergeContinuationLinesHelper.Detect(viewModels, "en", maxGapMs: 500, maxTotalLength: 200);
+        var expected = MergeContinuationLinesHelper.Apply(viewModels, candidates, "en");
+        var actual = MergeContinuationLinesUtils.MergeContinuationLinesInSubtitle(subtitle, "en", 500, 200);
+
+        Assert.Equal(
+            expected.Select(l => (l.Text, l.StartTime.TotalMilliseconds, l.EndTime.TotalMilliseconds)),
+            actual.Paragraphs.Select(p => (p.Text, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds)));
     }
 }

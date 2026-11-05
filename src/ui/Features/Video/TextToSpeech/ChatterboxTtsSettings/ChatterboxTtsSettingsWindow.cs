@@ -82,13 +82,13 @@ public class ChatterboxTtsSettingsWindow : Window
         panel.Children.Add(new TextBlock
         {
             Text = title,
-            FontSize = 16,
+            FontSize = EditorChrome.ScaledFont(16),
             FontWeight = FontWeight.SemiBold,
         });
         panel.Children.Add(new TextBlock
         {
             Text = description,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 500,
@@ -117,10 +117,10 @@ public class ChatterboxTtsSettingsWindow : Window
             CornerRadius = new CornerRadius(6),
             Padding = new Thickness(8, 0),
             MinHeight = 28,
-            Height = 28,
+            Height = EditorChrome.ScaledSize(28),
             VerticalAlignment = VerticalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         };
         AutomationProperties.SetName(folderText, Se.Language.General.InstallFolder);
@@ -150,7 +150,7 @@ public class ChatterboxTtsSettingsWindow : Window
                 var name = new TextBlock
                 {
                     Width = LabelWidth + 30,
-                    FontSize = 12.5,
+                    FontSize = EditorChrome.FieldFontSize,
                     VerticalAlignment = VerticalAlignment.Center,
                     TextTrimming = TextTrimming.CharacterEllipsis,
                     [!TextBlock.TextProperty] = new Binding(nameof(ChatterboxModelStatusViewModel.DisplayName)),
@@ -188,7 +188,7 @@ public class ChatterboxTtsSettingsWindow : Window
         var sourceLanguageHint = new TextBlock
         {
             Text = "Language spoken in imported reference WAVs (for cross-lingual cloning).",
-            FontSize = 11.5,
+            FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = ValueWidth,
@@ -229,7 +229,7 @@ public class ChatterboxTtsSettingsWindow : Window
         };
         var text = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             FontWeight = FontWeight.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 0, 6, 0),

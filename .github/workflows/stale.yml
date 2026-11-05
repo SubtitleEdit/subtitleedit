@@ -8,12 +8,12 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     env:
-      # actions/stale@v9 ships on Node.js 20, which GitHub starts force-upgrading on
+      # actions/stale@v10 ships on Node.js 20, which GitHub starts force-upgrading on
       # 2026-06-02 and removes on 2026-09-16. Opt in to Node.js 24 now to silence the
       # deprecation warning and avoid surprises around the cut-over.
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@v10
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs.'

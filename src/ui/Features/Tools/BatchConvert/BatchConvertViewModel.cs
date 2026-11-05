@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.UiLogic.Export;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -1027,7 +1027,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             SelectedAutoTranslator = translator;
         }
 
-        var sourceLanguage = SourceLanguages.FirstOrDefault(p => p.TwoLetterIsoLanguageName == Se.Settings.Tools.BatchConvert.AutoTranslateSourceLanguage);
+        var batchEngine = Se.Settings.Tools.BatchConvert.AutoTranslateEngine;
+        var sourceLanguage = AutoTranslateViewModel.FindBatchConvertLanguage(SourceLanguages, Se.Settings.Tools.BatchConvert.AutoTranslateSourceLanguage, batchEngine);
         if (sourceLanguage != null)
         {
             SelectedSourceLanguage = sourceLanguage;
@@ -1037,8 +1038,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             TargetLanguages,
             SelectedSourceLanguage,
             Se.Settings.AutoTranslate.AutoTranslateLastTarget,
-            Se.Language.CultureName);
-        var targetLanguage = TargetLanguages.FirstOrDefault(p => p.TwoLetterIsoLanguageName == Se.Settings.Tools.BatchConvert.AutoTranslateTargetLanguage);
+            Se.Language.CultureName,
+            savedProviderName: Se.Settings.AutoTranslate.AutoTranslateLastName);
+        var targetLanguage = AutoTranslateViewModel.FindBatchConvertLanguage(TargetLanguages, Se.Settings.Tools.BatchConvert.AutoTranslateTargetLanguage, batchEngine);
         if (targetLanguage != null)
         {
             SelectedTargetLanguage = targetLanguage;
@@ -1805,6 +1807,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         if (!config.RunPlugin.IsActive || config.RunPlugin.Plugin is { CanRun: true })
         {
             return true;
+        }
+
+        if (Window == null)
+        {
+            return false;
         }
 
         await MessageBox.Show(
@@ -3108,6 +3115,22 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     }
 
     /// <summary>
+    /// Installed build, pinned release and install status for CrispASR - the same dialog the
+    /// Auto-translate window's gear opens, and where the MADLAD build is switched.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowCrispAsrEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await CrispAsrTranslateDownloadHelper.ShowEngineSettingsAsync(Window, _windowService);
+        RefreshAutoTranslateEngineDots?.Invoke();
+    }
+
+    /// <summary>
     /// Installed backend, pinned release and install status for llama.cpp - the same dialog the
     /// Auto-translate window's gear opens. Its download button routes back through
     /// <see cref="RedownloadLlamaCppEngineAsync"/> so a running server is stopped first and the
@@ -3138,17 +3161,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         LlamaCppServerManager.StopServer();
 
-        // Reuse the installed backend so the user is not re-asked CPU/Vulkan/CUDA on a re-download;
-        // null on a fresh install (or off Windows), which lets DownloadAsync prompt.
-        var variant = OperatingSystem.IsWindows()
-            ? DownloadHashManager.DetectLlamaCppWindowsVariant(LlamaCppServerManager.GetAndCreateFolder())
-            : null;
-
+        // No forced variant: the user picks CPU/Vulkan/CUDA, which is how to change the installed build.
         await LlamaCppDownloadHelper.DownloadAsync(
             Window,
             _windowService,
             SelectedLlamaCppModel?.Model,
-            variant,
             forceEngineDownload: true);
 
         PopulateLlamaCppModels();
@@ -4449,7 +4466,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             TargetLanguages,
             SelectedSourceLanguage,
             Se.Settings.AutoTranslate.AutoTranslateLastTarget,
-            Se.Language.CultureName);
+            Se.Language.CultureName,
+            savedProviderName: Se.Settings.AutoTranslate.AutoTranslateLastName);
     }
 
     internal void Onloaded(object? sender, RoutedEventArgs e)

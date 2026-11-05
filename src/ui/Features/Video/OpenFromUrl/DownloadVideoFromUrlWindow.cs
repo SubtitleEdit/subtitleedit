@@ -5,6 +5,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Progress;
 
 namespace Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 
@@ -28,7 +29,7 @@ public class DownloadVideoFromUrlWindow : Window
 
         var fileName = new TextBlock
         {
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             TextWrapping = TextWrapping.Wrap,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.FileNameDisplay)),
         };
@@ -39,14 +40,15 @@ public class DownloadVideoFromUrlWindow : Window
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.Progress)));
         // Post-processing reports nothing, so the bar animates instead of sitting frozen at 100%.
         progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsProgressIndeterminate)));
+        progressBar.WithPlatformProgress(this, nameof(vm.IsDownloading));
 
         var statusText = EditorChrome.MakeBoundHint(nameof(vm.StatusText), 12);
 
         var errorText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
+            Foreground = EditorChrome.ErrorTextBrush,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
         };
         errorText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Error)));
         errorText.Bind(IsVisibleProperty, new Binding(nameof(vm.Error))

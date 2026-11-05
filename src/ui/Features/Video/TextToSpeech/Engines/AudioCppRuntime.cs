@@ -15,6 +15,15 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 public static class AudioCppRuntime
 {
     /// <summary>
+    /// Base URL of the audio-cpp/audio.cpp-gguf HuggingFace repo, pinned to a commit. Model
+    /// downloads are checked against fixed SHA-256 hashes and byte sizes, so resolving from
+    /// <c>main</c> broke every download the moment upstream re-uploaded a file (#16326: the
+    /// 2026-10-19 "Refresh embedded GGUF specs for v0.9.2" commit). Bump it together with
+    /// the hashes in DownloadHashManager and the sizes in each engine.
+    /// </summary>
+    public const string ModelRepoBaseUrl = "https://huggingface.co/audio-cpp/audio.cpp-gguf/resolve/6f45df32f8fb283e4cfce3d3e1cb7688986fcbe6/";
+
+    /// <summary>
     /// Where the audio.cpp binaries live: <c>&lt;data&gt;/audio.cpp/</c>, a top-level folder like
     /// CrispASR and llama.cpp — audio.cpp is a whole runtime rather than one model's engine.
     /// </summary>

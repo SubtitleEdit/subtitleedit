@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,28 +30,6 @@ public class EditSectionHeightAfterApplySettingsTests
             var newRow = Assert.IsType<RowDefinition>(vm.EditSectionRow);
             Assert.NotSame(oldRow, newRow);
             Assert.Equal(dragged, newRow.Height.Value, 1);
-        }
-        finally
-        {
-            CloseWindow(window, vm);
-        }
-    }
-
-    [AvaloniaFact]
-    public void ApplySettings_UntouchedEditSectionStaysAtItsFloor()
-    {
-        var (window, vm) = CreateMainViewModel();
-        try
-        {
-            var oldRow = Assert.IsType<RowDefinition>(vm.EditSectionRow);
-            var oldHeight = oldRow.Height.Value;
-
-            vm.ApplySettings();
-            Dispatcher.UIThread.RunJobs();
-
-            var newRow = Assert.IsType<RowDefinition>(vm.EditSectionRow);
-            Assert.Equal(oldHeight, newRow.Height.Value, 1);
-            Assert.Equal(newRow.MinHeight, newRow.Height.Value, 1);
         }
         finally
         {

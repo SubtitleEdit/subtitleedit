@@ -55,7 +55,7 @@ public class BeautifyTimeCodesWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Right,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(12, 0, 0, 0),
             TextTrimming = TextTrimming.CharacterEllipsis,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatsLine)) { Source = vm },
@@ -98,7 +98,7 @@ public class BeautifyTimeCodesWindow : Window
             },
         };
         AutomationProperties.SetName(toggleExact, l.UseExactTimeCodes);
-        var labelExact = new TextBlock { Text = l.UseExactTimeCodes, FontSize = 12.5, VerticalAlignment = VerticalAlignment.Center };
+        var labelExact = new TextBlock { Text = l.UseExactTimeCodes, FontSize = EditorChrome.FieldFontSize, VerticalAlignment = VerticalAlignment.Center };
 
         if (Se.Settings.Appearance.ShowHints)
         {
@@ -110,7 +110,7 @@ public class BeautifyTimeCodesWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(6, 0, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.TimeCodesStatus)) { Source = vm },
         };
@@ -215,7 +215,7 @@ public class BeautifyTimeCodesWindow : Window
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             MinWidth = 120,
             TextAlignment = TextAlignment.Center,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangePositionLabel)) { Source = vm },
@@ -226,7 +226,7 @@ public class BeautifyTimeCodesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             TextWrapping = TextWrapping.Wrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             Margin = new Thickness(4, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeDetail)) { Source = vm },
         };
@@ -237,7 +237,7 @@ public class BeautifyTimeCodesWindow : Window
             TextWrapping = TextWrapping.Wrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
             Foreground = EditorChrome.DimTextBrush,
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             FontStyle = FontStyle.Italic,
             Margin = new Thickness(4, 0, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeNotes)) { Source = vm },

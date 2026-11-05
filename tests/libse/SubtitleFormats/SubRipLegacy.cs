@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats.Legacy
     /// <summary>The SubRip reader/writer before the 2026-10 rewrite, kept for comparison.</summary>
     public partial class SubRipLegacy : SubtitleFormat
     {
-        public string Errors { get; private set; }
-        private StringBuilder _errors;
+        public string? Errors { get; private set; }
+        private StringBuilder _errors = new();
         private int _lineNumber;
         private bool _isMsFrames;
         private bool _isWsrt;
@@ -33,8 +33,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats.Legacy
             Text
         }
 
-        private Paragraph _paragraph;
-        private Paragraph _lastParagraph;
+        private Paragraph _paragraph = new();
+        private Paragraph? _lastParagraph;
         private ExpectingLine _expecting;
 
         public override string Extension => ".srt";
@@ -281,7 +281,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats.Legacy
             }
         }
 
-        private static string GetLastNumber(Paragraph p)
+        private static string GetLastNumber(Paragraph? p)
         {
             return p == null ? "1" : (p.Number + 1).ToString(CultureInfo.InvariantCulture);
         }
@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats.Legacy
             return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || TryReadTimeCodesLine(text.Trim(), null, false));
         }
 
-        private bool TryReadTimeCodesLine(string input, Paragraph paragraph, bool validate)
+        private bool TryReadTimeCodesLine(string input, Paragraph? paragraph, bool validate)
         {
             if (string.IsNullOrEmpty(input) || input.Length < 10)
             {
@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats.Legacy
         // Parses "00:00:01,000 --> 00:00:04,000" (fixed 29-char layout, digits only) without
         // any allocation. Returns false on the slightest deviation so the tolerant slow path
         // still handles it.
-        private static bool TryReadCanonicalTimeCodesLine(string line, Paragraph paragraph)
+        private static bool TryReadCanonicalTimeCodesLine(string line, Paragraph? paragraph)
         {
             if (line[2] != ':' || line[5] != ':' || line[8] != ',' ||
                 line[12] != ' ' || line[13] != '-' || line[14] != '-' || line[15] != '>' || line[16] != ' ' ||

@@ -14,7 +14,8 @@ namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
 /// <summary>
 /// The online plugin catalog in the editor look (see <see cref="EditorChrome"/>): one row per
-/// plugin with its install/update button, the status and Refresh + Close in the button bar.
+/// plugin with its install/update button, a search box filtering the list by name, author and
+/// description, the status and Refresh + Close in the button bar.
 /// </summary>
 public class GetPluginsWindow : Window
 {
@@ -23,8 +24,8 @@ public class GetPluginsWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Plugins.GetPluginsTitle;
         CanResize = true;
-        Width = 720;
-        Height = 540;
+        Width = 860;
+        Height = 660;
         MinWidth = 500;
         MinHeight = 300;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
@@ -41,10 +42,10 @@ public class GetPluginsWindow : Window
             var name = new TextBlock { FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Bottom };
             name.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Name)));
 
-            var version = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = 11.5, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var version = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = EditorChrome.ScaledFont(11.5), Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             version.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Version)));
 
-            var author = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = 11.5, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var author = new TextBlock { Foreground = EditorChrome.FaintTextBrush, FontSize = EditorChrome.ScaledFont(11.5), Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             author.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Author)));
 
             // Small accent-coloured "Update" pill that appears only when an update is available.
@@ -58,7 +59,7 @@ public class GetPluginsWindow : Window
                 Child = new TextBlock
                 {
                     Text = Se.Language.General.Update,
-                    FontSize = 10.5,
+                    FontSize = EditorChrome.ScaledFont(10.5),
                     FontWeight = FontWeight.SemiBold,
                     Foreground = Brushes.White,
                 },
@@ -71,10 +72,10 @@ public class GetPluginsWindow : Window
                 Children = { name, version, author, updateBadge },
             };
 
-            var description = new TextBlock { FontSize = 12.5, Foreground = EditorChrome.DimTextBrush, TextWrapping = TextWrapping.Wrap };
+            var description = new TextBlock { FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush, TextWrapping = TextWrapping.Wrap };
             description.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Description)));
 
-            var status = new TextBlock { FontSize = 11 };
+            var status = new TextBlock { FontSize = EditorChrome.ScaledFont(11) };
             status.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.StatusText)));
             status.Bind(TextBlock.ForegroundProperty, new Binding(nameof(GetPluginsDisplayItem.StatusBrush)));
             status.Bind(TextBlock.FontWeightProperty, new Binding(nameof(GetPluginsDisplayItem.StatusFontWeight)));
@@ -88,7 +89,7 @@ public class GetPluginsWindow : Window
 
             var actionLabel = new TextBlock
             {
-                FontSize = 12.5,
+                FontSize = EditorChrome.FieldFontSize,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
@@ -196,12 +197,13 @@ public class GetPluginsWindow : Window
             RowSpacing = 10,
             Margin = new Thickness(14, 12, 14, 14),
         };
-        listSection.Add(EditorChrome.MakeSectionHeader(Se.Language.Plugins.GetPluginsTitle), 0);
+        var searchBox = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.Search);
+        listSection.Add(EditorChrome.MakeSectionHeaderRow(Se.Language.Plugins.GetPluginsTitle, searchBox), 0);
         listSection.Add(EditorChrome.MakeCompactListFrame(listBox, compact: false), 1);
 
         var statusMessage = new TextBlock
         {
-            FontSize = 12,
+            FontSize = EditorChrome.FieldFontSize,
             Foreground = EditorChrome.DimTextBrush,
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center,

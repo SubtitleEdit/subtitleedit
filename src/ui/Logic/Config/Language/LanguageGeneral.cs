@@ -152,6 +152,9 @@ public class LanguageGeneral
     public string ContinueFindTitle { get; set; }
     public string SearchItemNotFoundContinueFromTop { get; set; }
     public string SearchItemNotFoundContinueFromBottom { get; set; }
+    public string ContinueReplaceTitle { get; set; }
+    public string ReplaceNotFoundContinueFromTop { get; set; }
+    public string ReplacedXContinueFromTop { get; set; }
     public string ConversionCancelledByUser { get; set; }
     public string Convert { get; set; }
     public string Converted { get; set; }
@@ -286,6 +289,7 @@ public class LanguageGeneral
     public string GetAudioClips { get; set; }
     public string GoTo { get; set; }
     public string GoToLineNumber { get; set; }
+    public string OfX { get; set; }
     public string GoToNextShotChange { get; set; }
     public string GoToPreviousShotChange { get; set; }
     public string GoogleIt { get; set; }
@@ -710,6 +714,7 @@ public class LanguageGeneral
     public string Translate { get; set; }
     public string TranslatePercentX { get; set; }
     public string TranslateRow { get; set; }
+    public string TranslateRows { get; set; }
     public string Translation { get; set; }
     public string TwoLetterLanguageCode { get; set; }
     public string Type { get; set; }
@@ -899,9 +904,124 @@ public class LanguageGeneral
     public string FixOcrErrors { get; set; }
     public string RunningOcrXY { get; set; }
     public string LlamaCppDownloadEnginePrompt { get; set; }
+    public string DoYouWantToDeleteX { get; set; }
+    public string DownloadXQuestion { get; set; }
+    public string DownloadAndUseXQuestion { get; set; }
+    public string UpdateXQuestion { get; set; }
+    public string DownloadMpvPrompt { get; set; }
+    public string XRequiresDownloadingYUseZ { get; set; }
+    public string AudioFileXHasNoSubtitles { get; set; }
+    public string DeleteOneLineQuestion { get; set; }
+    public string DeleteXLinesQuestion { get; set; }
+    public string UnableToGenerateVideo { get; set; }
+    public string UnableToGenerateBlankVideo { get; set; }
+    public string UnableToGeneratePreview { get; set; }
+    public string OutputVideoFileNotGeneratedX { get; set; }
+    public string FfmpegExitCodeX { get; set; }
+    public string ParametersX { get; set; }
+    public string TwoPassAnalyzeFailedFor { get; set; }
+    public string FfmpegFailedFor { get; set; }
+    public string OutputVideoFileNotGenerated { get; set; }
+    public string BitRateTooLowX { get; set; }
+    public string UnableToGetVideoInfo { get; set; }
+    public string FileSkippedNoVideoInfo { get; set; }
+    public string UnableToGetMediaInfo { get; set; }
+    public string CannotGenerateWithoutMediaInfo { get; set; }
+    public string CutSettingsError { get; set; }
+    public string CutEndMustBeAfterCutStart { get; set; }
+    public string OutputFileError { get; set; }
+    public string OutputVideoMustDifferFromInput { get; set; }
+    public string MissingSubtitle { get; set; }
+    public string AddSubtitleToAllBatchItems { get; set; }
+    public string UnableToOverwriteFileX { get; set; }
+    public string SelectedSubtitleFileHasNoSubtitles { get; set; }
+    public string NoTracksAdded { get; set; }
+    public string AddOneOrMoreTracks { get; set; }
+    public string NothingToImport { get; set; }
+    public string NoShortcutsFoundInFile { get; set; }
+    public string FailedToImportShortcutsX { get; set; }
+    public string FailedToImportSe4ShortcutsX { get; set; }
+    public string FailedToExportShortcutsX { get; set; }
+    public string UnableToImportProfilesX { get; set; }
+    public string NoProfilesFoundInFile { get; set; }
+    public string NoProfileSelectedForExport { get; set; }
+    public string PleaseEnterProfileName { get; set; }
+    public string ProfileNameXCanOnlyBeUsedOnce { get; set; }
+    public string ErrorDeletingFile { get; set; }
+    public string CouldNotDeleteFileX { get; set; }
+    public string SeeErrorLogForDetails { get; set; }
+    public string VulkanMayBeRequired { get; set; }
+    public string VulkanGpuBuildContinue { get; set; }
+    public string VulkanSdkMayBeRequired { get; set; }
+    public string VulkanSdkRequiredContinue { get; set; }
+    public string VulkanRuntimeMayBeRequired { get; set; }
+    public string VulkanRuntimeNotDetectedContinue { get; set; }
+    public string VulkanDriverMayBeRequired { get; set; }
+    public string VulkanDriverRequiredContinue { get; set; }
+    public string CrispAsrCudaBuild { get; set; }
+    public string CrispAsrCudaBuildInfo { get; set; }
+    public string CrispAsrCpuBuild { get; set; }
+    public string CrispAsrCpuBuildInfo { get; set; }
 
     public LanguageGeneral()
     {
+        DownloadXQuestion = "Download {0}?";
+        DownloadAndUseXQuestion = "Download and use {0}?";
+        UpdateXQuestion = "Update {0}?";
+        DownloadMpvPrompt = "\"Subtitle Edit\" requires mpv to play video/audio.\n\nDownload and use mpv?";
+        XRequiresDownloadingYUseZ = "\"{0}\" requires downloading {1}.\n\nDownload and use {2}?";
+        AudioFileXHasNoSubtitles = "This file seems to be an audio file ({0}), which does not contain subtitles.\n\nYou can open media files via the Video menu.";
+        DeleteOneLineQuestion = "Do you want to delete one line?";
+        DeleteXLinesQuestion = "Do you want to delete {0} lines?";
+        UnableToGenerateVideo = "Unable to generate video";
+        UnableToGenerateBlankVideo = "Unable to generate blank video";
+        UnableToGeneratePreview = "Unable to generate preview";
+        OutputVideoFileNotGeneratedX = "Output video file not generated: {0}";
+        FfmpegExitCodeX = "ffmpeg exit code: {0}";
+        ParametersX = "Parameters: {0}";
+        TwoPassAnalyzeFailedFor = "Two-pass analyze (pass 1) failed for";
+        FfmpegFailedFor = "ffmpeg failed for";
+        OutputVideoFileNotGenerated = "Output video file not generated:";
+        BitRateTooLowX = "Bit rate too low: {0}k";
+        UnableToGetVideoInfo = "Unable to get video info";
+        FileSkippedNoVideoInfo = "File skipped as video info was unavailable";
+        UnableToGetMediaInfo = "Unable to get media info";
+        CannotGenerateWithoutMediaInfo = "Cannot generate video without valid media info";
+        CutSettingsError = "Cut settings error";
+        CutEndMustBeAfterCutStart = "Cut end time must be after cut start time";
+        OutputFileError = "Output file error";
+        OutputVideoMustDifferFromInput = "Output video file must be different from input video file";
+        MissingSubtitle = "Missing subtitle";
+        AddSubtitleToAllBatchItems = "Please add a subtitle to all batch items";
+        UnableToOverwriteFileX = "Unable to overwrite file (is it open in the video player?): {0}";
+        SelectedSubtitleFileHasNoSubtitles = "The selected subtitle file contains no subtitles.";
+        NoTracksAdded = "No tracks added";
+        AddOneOrMoreTracks = "Add one or more tracks";
+        NothingToImport = "Nothing to import";
+        NoShortcutsFoundInFile = "No shortcuts found in file.";
+        FailedToImportShortcutsX = "Failed to import shortcuts:\n{0}";
+        FailedToImportSe4ShortcutsX = "Failed to import SE 4 shortcuts:\n{0}";
+        FailedToExportShortcutsX = "Failed to export shortcuts:\n{0}";
+        UnableToImportProfilesX = "Unable to import profiles: {0}";
+        NoProfilesFoundInFile = "No profiles found in file";
+        NoProfileSelectedForExport = "No profile selected for export";
+        PleaseEnterProfileName = "Please enter a profile name";
+        ProfileNameXCanOnlyBeUsedOnce = "Profile name \"{0}\" can only be used once. Please choose a different name.";
+        ErrorDeletingFile = "Error deleting file";
+        CouldNotDeleteFileX = "Could not delete the file {0}.";
+        SeeErrorLogForDetails = "See error-log.txt in the Subtitle Edit data folder for details.";
+        VulkanMayBeRequired = "Vulkan may be required";
+        VulkanGpuBuildContinue = "The GPU (Vulkan) build needs a Vulkan-capable GPU and runtime.\n\nYou can get the Vulkan SDK from:\nhttps://vulkan.lunarg.com/sdk/home\n\nContinue with the GPU download?";
+        VulkanSdkMayBeRequired = "Vulkan SDK may be required";
+        VulkanSdkRequiredContinue = "The Vulkan version requires the Vulkan SDK to be installed.\n\nYou can download it from:\nhttps://vulkan.lunarg.com/sdk/home\n\nContinue with Vulkan download?";
+        VulkanRuntimeMayBeRequired = "Vulkan runtime may be required";
+        VulkanRuntimeNotDetectedContinue = "The Vulkan version requires the Vulkan runtime (vulkan-1.dll) which usually ships with current GPU drivers, but was not detected on this system.\n\nYou can install it from:\nhttps://vulkan.lunarg.com/sdk/home\n\nContinue with Vulkan download anyway?";
+        VulkanDriverMayBeRequired = "Vulkan driver may be required";
+        VulkanDriverRequiredContinue = "The Vulkan build needs a Vulkan-capable GPU driver.\n\nWithout it audio.cpp cannot start at all. Pick the CPU build instead if you are unsure.\n\nContinue with Vulkan download?";
+        CrispAsrCudaBuild = "CrispASR CUDA build";
+        CrispAsrCudaBuildInfo = "CUDA 12 works with most current NVIDIA drivers.\n\nPick CUDA 13 only if your driver stack is built for CUDA 13.";
+        CrispAsrCpuBuild = "CrispASR CPU build";
+        CrispAsrCpuBuildInfo = "Standard is recommended for most machines.\n\nLegacy is a fallback for older CPUs without AVX2 support.";
         Abort = "Abort";
         Actor = "Actor";
         Actors = "Actors";
@@ -1058,6 +1178,9 @@ public class LanguageGeneral
         ContinueFindTitle = "Continue Find?";
         SearchItemNotFoundContinueFromTop = "The search item was not found.\nWould you like to start from the top of the document and search one more time?";
         SearchItemNotFoundContinueFromBottom = "The search item was not found.\nWould you like to start from the end of the document and search one more time?";
+        ContinueReplaceTitle = "Continue replace?";
+        ReplaceNotFoundContinueFromTop = "The search item was not found.\nWould you like to start from the top of the document and continue search and replace?";
+        ReplacedXContinueFromTop = "The search item was replaced {0} time(s).\nWould you like to start from the top of the document and continue search and replace?";
         ConversionCancelledByUser = "Conversion cancelled by user";
         Convert = "Convert";
         Converted = "Converted";
@@ -1192,9 +1315,10 @@ public class LanguageGeneral
         GetAudioClips = "Get audio clips";
         GoTo = "Go to";
         GoToLineNumber = "Go to line number";
+        OfX = "of {0}";
         GoToNextShotChange = "Go to next shot change";
         GoToPreviousShotChange = "Go to previous shot change";
-        GoogleIt = "Google it ";
+        GoogleIt = "Google it";
         Group = "Group";
         Header = "Header";
         Height = "Height";
@@ -1349,7 +1473,7 @@ public class LanguageGeneral
         Percent = "Percent";
         PickLayer = "Set layer";
         PickOllamaModel = "Pick Ollama model";
-        PickModel = "Pick model";
+        PickModel = "Select model";
         LlamaCppUseRemoteServer = "Use external server (URL)";
         LlamaCppEngineSettings = "llama.cpp engine settings";
         LlamaCppEngineSettingsSubtitle = "Local llama.cpp server build";
@@ -1590,7 +1714,7 @@ public class LanguageGeneral
         Timing = "Timing";
         Title = "Title";
         To = "To";
-        ToggleCasing = "Toggle casing";
+        ToggleCasing = "Cycle casing";
         ToggleDirection = "Toggle direction";
         ToggleForced = "Toggle forced";
         MarkedXLinesAsForced = "Marked {0} line(s) as forced";
@@ -1608,6 +1732,7 @@ public class LanguageGeneral
         Translate = "Translate";
         TranslatePercentX = "Translating: {0}%";
         TranslateRow = "Translate row";
+        TranslateRows = "Translate rows";
         Translation = "Translation";
         TwoLetterLanguageCode = "Two-letter language code";
         Type = "Type";
@@ -1797,5 +1922,6 @@ public class LanguageGeneral
         FixOcrErrors = "Fix OCR errors";
         RunningOcrXY = "Running OCR... {0}/{1}";
         LlamaCppDownloadEnginePrompt = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+        DoYouWantToDeleteX = "Do you want to delete \"{0}\"?";
     }
 }

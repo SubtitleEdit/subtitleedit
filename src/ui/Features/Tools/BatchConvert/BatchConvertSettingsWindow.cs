@@ -36,7 +36,7 @@ public class BatchConvertSettingsWindow : Window
         {
             Content = Se.Language.General.UseSourceFolder,
             IsChecked = vm.UseSourceFolder,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.UseSourceFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };
@@ -45,7 +45,7 @@ public class BatchConvertSettingsWindow : Window
         {
             Content = Se.Language.General.UseOutputFolder,
             IsChecked = vm.UseOutputFolder,
-            FontSize = 12.5,
+            FontSize = EditorChrome.FieldFontSize,
             VerticalAlignment = VerticalAlignment.Center,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.UseOutputFolder)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
         };

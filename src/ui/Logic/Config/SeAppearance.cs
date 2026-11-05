@@ -56,6 +56,12 @@ public class SeAppearance
     public bool UseFocusedButtonBackgroundColor { get; set; }
     public string FocusedButtonBackgroundColor { get; set; }
     public string GridLinesAppearance { get; set; }
+
+    /// <summary>
+    /// <see cref="WindowsRenderingModeType"/> name; Windows only, applied at startup. A way out
+    /// when the desktop flickers through SE's windows on some GPU/driver setups (#15848).
+    /// </summary>
+    public string WindowsRenderingMode { get; set; }
     public bool GridAlternatingRows { get; set; }
     public string GridAlternatingRowColor { get; set; }
     public string GridAlternatingRowColorDark { get; set; }
@@ -140,6 +146,7 @@ public class SeAppearance
         SubtitleTextBoxLiveSpellCheck = false;
         SubtitleGridFormattingType = (int)SubtitleGridFormattingTypes.ShowFormatting;
         GridLinesAppearance = SeGridLinesVisibility.None.ToString();
+        WindowsRenderingMode = nameof(WindowsRenderingModeType.Default);
         GridAlternatingRows = true;
         GridAlternatingRowColor = new Color(255, 245, 245, 245).FromColorToHex();
         GridAlternatingRowColorDark = new Color(255, 45, 45, 45).FromColorToHex();
