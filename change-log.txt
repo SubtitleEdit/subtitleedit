@@ -3,6 +3,23 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.4.0-rc4 (5th of November 2026)
+
+* Image-based export: draw ASSA lines with their own style (also in Batch convert and seconv)
+* Image-based export: support ASSA \r, \rStyle, \fsp, \blur, \be, \fscx, \fscy, \frz, underline and strikeout
+* Image-based export: an undrawable ASSA tag no longer drops the line's italic/bold/colour/font
+* Copy plain text keeps an empty line between lines (like SE4) - thx OmrSi
+* Fix Go to video position ignoring the video offset - thx accessallareas
+* Fix OCR to ASSA losing line breaks and tagging tall bottom text as middle - thx robinfire110
+* Fix Improve time codes preview playing the default audio track - thx VaLvOnAuTa1981
+* Update llama.cpp to b12110
+* Update CrispEmbed to v0.17.14
+* Update Whisper.cpp advanced-parameter help to 1.9.5 - thx GitGianluc
+* Update translations: new strings in all languages (machine translated, needs review)
+
+
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0-rc3 (4th of November 2026)
 
 * llama.cpp advanced translate: add Generate with AI button for the synopsis - thx fraternl
