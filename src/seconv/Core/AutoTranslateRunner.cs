@@ -60,7 +60,10 @@ internal sealed class AutoTranslateRunner
             {
                 try
                 {
-                    _targetLanguageCode = ResolveLanguage(_translator.GetSupportedTargetLanguages(), _options.TranslateTo!, "target").Code;
+                    var target = ResolveLanguage(_translator.GetSupportedTargetLanguages(), _options.TranslateTo!, "target");
+                    // The LLM engines' shared list keeps the English name as the pair's Code (their
+                    // prompts want the name) and the code in TwoLetterIsoLanguageName ("de", "zh-CN").
+                    _targetLanguageCode = target.Code == target.Name ? target.TwoLetterIsoLanguageName : target.Code;
                 }
                 catch (InvalidOperationException)
                 {

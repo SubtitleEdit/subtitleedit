@@ -499,6 +499,21 @@ public class AutoTranslateRunnerTest : IDisposable
         Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.ResolveLanguage(languages, "klingon", "target"));
     }
 
+    // The LLM engines' shared list keeps the English name as the pair's Code (their prompts
+    // want the name), so the output suffix has to come from TwoLetterIsoLanguageName; the
+    // other engines keep their own codes (NLLB's "deu_Latn" stays as it is).
+    [Theory]
+    [InlineData("lmstudio", "de", "de")]
+    [InlineData("lmstudio", "German", "de")]
+    [InlineData("lmstudio", "zh-CN", "zh-CN")]
+    [InlineData("nllb-serve", "de", "deu_Latn")]
+    public void TargetLanguageCode_IsTheEngineCode_NotTheEnglishName(string engine, string to, string expected)
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: engine, to: to));
+
+        Assert.Equal(expected, runner.TargetLanguageCode);
+    }
+
     // The OpenAI-style ".../v1" base (no trailing slash) used to fail the old "/v1/" check
     // and come out as ".../v1/v1/chat/completions".
     [Theory]
