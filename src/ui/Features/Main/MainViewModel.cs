@@ -10534,12 +10534,14 @@ public partial class MainViewModel :
             return;
         }
 
+        // The dialog works in displayed time, so the video offset goes on and comes off here (#16638).
+        var offsetSeconds = Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
         var viewModel =
-            await ShowDialogAsync<GoToVideoPositionWindow, GoToVideoPositionViewModel>(vm => { vm.Time = TimeSpan.FromSeconds(vp.Position); });
+            await ShowDialogAsync<GoToVideoPositionWindow, GoToVideoPositionViewModel>(vm => { vm.Time = TimeSpan.FromSeconds(vp.Position + offsetSeconds); });
 
-        if (viewModel is { OkPressed: true, Time.TotalMicroseconds: >= 0 })
+        if (viewModel is { OkPressed: true } && viewModel.Time.TotalSeconds - offsetSeconds >= 0)
         {
-            vp.Position = viewModel.Time.TotalSeconds;
+            vp.Position = viewModel.Time.TotalSeconds - offsetSeconds;
             _updateAudioVisualizer = true;
         }
     }
