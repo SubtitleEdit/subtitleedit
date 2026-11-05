@@ -1146,7 +1146,12 @@ public class AudioVisualizer : Control
         var nsp = NewSelectionParagraph;
         if (nsp is { Duration.TotalMilliseconds: <= 1 })
         {
+            // A plain click leaves an empty selection at the click point. Kept, it is invisible
+            // but still wins the hit test, so a later drag starting within ResizeMargin of it
+            // resized its left edge instead of starting a new selection - only a right-to-left
+            // drag then worked (#15716).
             nsp = null;
+            NewSelectionParagraph = null;
         }
 
         var pos = e.GetPosition(this);
