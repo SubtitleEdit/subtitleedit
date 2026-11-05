@@ -1331,7 +1331,8 @@ public static class DownloadHashManager
             // otherwise users will be prompted to "update" to the same version they just got.
             [CrispEmbed.WindowsCuda] = new[]
             {
-                "56d83fd25253de920d5d7f8f949366eddcb202ff6b57d4158f5e886fc39f9b31", // v0.17.11 (current download URL)
+                "5871d45f9fd5a05f4f16b0c8556f111eea28b89162d32059a78bec1102667c93", // v0.17.14 (current download URL)
+                "56d83fd25253de920d5d7f8f949366eddcb202ff6b57d4158f5e886fc39f9b31", // v0.17.11
                 "89bcdde6d81634461278bd877e6e35f477cd6771dec7de40f0cfeeca1c5b732a", // v0.17.9
                 "7572b58d33c70d308938a9cafa4fe26dd3521412ab1dbc8d6b75765140e3c5bd", // v0.17.8
                 "ff5d85824ecdbf2c29c4ed19f63024c94b963f3a7634e62f18140d9cb020ef8f", // v0.17.7
@@ -1423,7 +1424,7 @@ public static class DownloadHashManager
             },
             [CrispEmbed.LinuxArm] = new[]
             {
-                "ba1dfe5b9baa68b12def9397902aa13d60f23b6a54b48cfb76d112f34c852e44", // v0.17.14 (glibc 2.27 floor) (current download URL)
+                "e9e4bd2f210fcc7268bdc100c7dc8f2c6233996495cc2463c4529188692d11d1", // v0.17.14 (glibc 2.27 floor) (current download URL)
                 "38cbaaa020cd17d4cd4f0b78003c79fba7a1051628b06b8e39734c39f15032bb", // v0.17.12 (glibc 2.27 floor)
                 "6e459cadf7e2273a5aeb6a802f6bc55f47613ebde7a90f4bad5f6de03fc6e78d", // v0.17.11 (glibc 2.27 floor)
                 "247915ad0c870814498a81731ddc037a79d00be5f05aee7c7c85a5dd5fae9c40", // v0.17.9 (glibc 2.27 floor)

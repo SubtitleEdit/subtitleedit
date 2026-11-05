@@ -21,8 +21,7 @@ public class CrispEmbedDownloadService : ICrispEmbedDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    // v0.17.14 has no Windows CUDA asset (its release upload failed), so that variant stays on v0.17.11.
-    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.17.11/crispembed-windows-x86_64-cuda.zip";
+    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.17.14/crispembed-windows-x86_64-cuda.zip";
     private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.17.14/crispembed-windows-x86_64-vulkan.zip";
     private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.17.14/crispembed-windows-x86_64.zip";
     private const string MacUrl = "https://github.com/CrispStrobe/CrispEmbed/releases/download/v0.17.14/crispembed-macos-arm64.tar.gz";
