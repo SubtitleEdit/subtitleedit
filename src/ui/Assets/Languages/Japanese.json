@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.4.0-rc3",
+  "version": "v5.4.0-rc5",
   "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
@@ -1523,7 +1523,9 @@
       "halfTopBottom": "上下分割（Half）",
       "depth3D": "奥行き",
       "depth3DHint": "字幕を画面からどれだけ手前に浮かせるか。正の値で手前に、負の値で奥に移動します",
-      "plane3D": "3D-Plane",
+      "useAssaStyles": "ASSAスタイルを使用",
+      "useAssaStylesHint": "下記の設定ではなく、各字幕行に設定されたASSAスタイル（フォント、文字色、縁取り、背景ボックス、配置、余白）で描画します",      "plane3D": "3D-Plane",
+      "plane3D": "3D平面",
       "plane3DHint": "3D Blu-rayで字幕ごとに保存されている奥行きを使用します。BD3D2MK3DまたはOFSExtractorで作成した3D-Plane（.ofs）ファイルを指定してください。3D-Planeに奥行きがない部分には「奥行き」の値が使用されます",
       "openPlane3DTitle": "3D-Planeファイルを開く",
       "unableToLoadPlane3DX": "3D-Planeを読み込めません：{0}",
