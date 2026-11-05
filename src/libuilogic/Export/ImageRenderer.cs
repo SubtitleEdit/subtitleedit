@@ -496,8 +496,7 @@ public static class ImageRenderer
                     var seg = line[j];
                     var font = fonts.Get(seg);
                     lineWidths[li] += MeasureTextWithShaping(seg.Text, font);
-                    if ((seg.IsItalic || seg.IsBold) && j < line.Count - 1)
-                        lineWidths[li] += font.Size * 0.17f;
+                    lineWidths[li] += GetStyledSegmentGap(line, j, font, ip.IsRightToLeft);
                 }
             }
             var maxLineWidth = lineWidths.Length > 0 ? lineWidths.Max() : 0f;
@@ -559,8 +558,7 @@ public static class ImageRenderer
                 var seg = line[j];
                 var font = fonts.Get(seg);
                 lineWidths[li] += MeasureTextWithShaping(seg.Text, font);
-                if ((seg.IsItalic || seg.IsBold) && j < line.Count - 1)
-                    lineWidths[li] += font.Size * 0.17f;
+                lineWidths[li] += GetStyledSegmentGap(line, j, font, ip.IsRightToLeft);
             }
         }
         var maxLineWidth = lineWidths.Length > 0 ? lineWidths.Max() : 0f;
@@ -596,7 +594,7 @@ public static class ImageRenderer
                 // requested width. Stroking through the glyph rasterizer instead loses thin
                 // horizontal outline edges entirely (issue #12206).
                 var segmentWidth = MeasureTextWithShaping(segment.Text, currentFont);
-                var gap = GetStyledSegmentGap(segment, currentFont, i, segmentsToRender.Count);
+                var gap = GetStyledSegmentGap(segmentsToRender, i, currentFont, ip.IsRightToLeft);
                 using var decorationPath = GetDecorationPath(segment, currentFont, currentX, textStartY + currentY, segmentWidth + gap);
                 using var textPath = outlineWidth > 0
                     ? GetShapedTextPath(segment.Text, currentX, textStartY + currentY, currentFont)
@@ -724,10 +722,7 @@ public static class ImageRenderer
                 var seg = line[j];
                 var font = fonts.Get(seg);
                 lineWidths[li] += MeasureTextWithShaping(seg.Text, font);
-                if ((seg.IsItalic || seg.IsBold) && j < line.Count - 1)
-                {
-                    lineWidths[li] += font.Size * 0.17f;
-                }
+                lineWidths[li] += GetStyledSegmentGap(line, j, font, ip.IsRightToLeft);
             }
         }
 
@@ -761,7 +756,7 @@ public static class ImageRenderer
                 }
 
                 var segmentWidth = MeasureTextWithShaping(segment.Text, font);
-                var gap = GetStyledSegmentGap(segment, font, i, segmentsToRender.Count);
+                var gap = GetStyledSegmentGap(segmentsToRender, i, font, ip.IsRightToLeft);
                 var decoration = GetDecorationPath(segment, font, currentX, y, segmentWidth + gap);
                 if (decoration != null)
                 {
@@ -842,7 +837,7 @@ public static class ImageRenderer
 
                 // The bars run under/through the spaced glyphs as one more "glyph" at the
                 // baseline, so the wave and arc move them along with the letters.
-                var gap = GetStyledSegmentGap(segment, font, i, segmentsToRender.Count);
+                var gap = GetStyledSegmentGap(segmentsToRender, i, font, ip.IsRightToLeft);
                 var decorationWidth = x - segmentStart - spacing + gap;
                 var decoration = GetDecorationPath(segment, font, 0, 0, decorationWidth);
                 if (decoration != null)
@@ -1459,12 +1454,32 @@ public static class ImageRenderer
     }
 
     /// <summary>
-    /// The small space after an italic or bold segment that keeps it from crowding the next
-    /// one - nothing after the last segment of a line.
+    /// The small space after an italic segment that keeps its slanted last letter from touching
+    /// an upright letter right after it. Only there: between two italic segments - a colour
+    /// change inside italic text - the letters lean the same way, bold has no slant, and a
+    /// space at the boundary already keeps them apart. The gap was added after every italic or
+    /// bold segment, so a coloured word in an italic or bold line stood out with extra space
+    /// on both sides. <paramref name="segments"/> are in drawing order.
     /// </summary>
-    private static float GetStyledSegmentGap(TextSegment segment, SKFont font, int index, int count)
+    private static float GetStyledSegmentGap(IReadOnlyList<TextSegment> segments, int index, SKFont font, bool isRightToLeft)
     {
-        return (segment.IsItalic || segment.IsBold) && index < count - 1 ? font.Size * 0.17f : 0f;
+        if (index >= segments.Count - 1)
+        {
+            return 0f;
+        }
+
+        var segment = segments[index];
+        var next = segments[index + 1];
+        if (!segment.IsItalic || next.IsItalic)
+        {
+            return 0f;
+        }
+
+        // The characters that meet: drawn left to right, the end of this segment and the start
+        // of the next - for right-to-left text the other way round.
+        var left = isRightToLeft ? segment.Text.FirstOrDefault() : segment.Text.LastOrDefault();
+        var right = isRightToLeft ? next.Text.LastOrDefault() : next.Text.FirstOrDefault();
+        return char.IsWhiteSpace(left) || char.IsWhiteSpace(right) ? 0f : font.Size * 0.17f;
     }
 
     /// <summary>
