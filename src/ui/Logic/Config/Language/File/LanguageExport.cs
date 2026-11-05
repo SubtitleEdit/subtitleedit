@@ -30,6 +30,7 @@ public class LanguageExport
     public string CustomTextFormatsDotDotDot { get; set; }
     public string PlainTextDotDotDot { get; set; }
     public string DialogueListDotDotDot { get; set; }
+    public string ForcedLinesOnlyDotDotDot { get; set; }
     public string TitleExportDialogueList { get; set; }
     public string DialogueListLineBreaksInCell { get; set; }
     public string DialogueListHeaderRow { get; set; }
@@ -129,6 +130,7 @@ public class LanguageExport
         CustomTextFormatsDotDotDot = "_Custom text formats...";
         PlainTextDotDotDot = "_Plain text...";
         DialogueListDotDotDot = "Excel dialogue list (.xlsx)...";
+        ForcedLinesOnlyDotDotDot = "Forced lines only...";
         TitleExportDialogueList = "Export Excel dialogue list";
         DialogueListLineBreaksInCell = "Keep line breaks inside the cell (off: join lines with \" | \")";
         DialogueListHeaderRow = "Header row";
