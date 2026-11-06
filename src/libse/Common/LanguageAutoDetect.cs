@@ -2513,7 +2513,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // kana are enough when every byte decodes.
             var kanaCount = CountCharsInRange(shiftJisText, '\u3040', '\u30FF');
             var shiftJisInvalidCount = CountChars(shiftJisText, "\uFFFD");
-            if (kanaCount > CountLatinLetters(shiftJisText) && (kanaCount > 10 && shiftJisInvalidCount < 3 || kanaCount >= 3 && shiftJisInvalidCount == 0))
+            if (IsMostlyCjkRuns(shiftJisText) && (kanaCount > 10 && shiftJisInvalidCount < 3 || kanaCount >= 3 && shiftJisInvalidCount == 0))
             {
                 return Encoding.GetEncoding(932);
             }
@@ -2522,7 +2522,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // as well - but only real Korean has the common syllables (이, 다, 요, 는, ...) all over.
             var koreanText = GetStringWithReplacementChar(949, buffer);
             var hangulCount = CountCharsInRange(koreanText, '\uAC00', '\uD7A3');
-            if (hangulCount > 10 && hangulCount > CountLatinLetters(koreanText) &&
+            if (hangulCount > 10 && IsMostlyCjkRuns(koreanText) &&
                 CountChars(koreanText, CommonHangulSyllables) * 5 >= hangulCount && CountChars(koreanText, "\uFFFD") < 3)
             {
                 return Encoding.GetEncoding(949);
@@ -2562,16 +2562,42 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var cjkCount = CountCharsInRange(text, '\u4E00', '\u9FFF');
             var invalidCount = CountChars(text, "\uFFFD");
-            return cjkCount > 10 && cjkCount > CountLatinLetters(text) && invalidCount < 3 && invalidCount * 20 < cjkCount;
+            return cjkCount > 10 && IsMostlyCjkRuns(text) && invalidCount < 3 && invalidCount * 20 < cjkCount;
         }
 
         /// <summary>
-        /// ASCII letters. Accented letters of a Latin-script text read as a double-byte code page become
-        /// CJK characters, but the plain letters around them stay - real CJK text has few of them.
+        /// Whether most CJK characters stand next to another one. Accented letters of a Latin-script text
+        /// read as a double-byte code page become lone CJK characters between plain letters, while real
+        /// CJK text runs on. Not a count of the plain letters, which markup (ASSA Dialogue lines, WebVTT
+        /// cue settings, ...) adds to real CJK files too.
         /// </summary>
-        private static int CountLatinLetters(string text)
+        private static bool IsMostlyCjkRuns(string text)
         {
-            return CountCharsInRange(text, 'a', 'z') + CountCharsInRange(text, 'A', 'Z');
+            var cjkCount = 0;
+            var inRunCount = 0;
+            for (var i = 0; i < text.Length; i++)
+            {
+                if (!IsCjkChar(text[i]))
+                {
+                    continue;
+                }
+
+                cjkCount++;
+                if (i > 0 && IsCjkChar(text[i - 1]) || i + 1 < text.Length && IsCjkChar(text[i + 1]))
+                {
+                    inRunCount++;
+                }
+            }
+
+            return cjkCount > 0 && inRunCount * 4 >= cjkCount * 3;
+        }
+
+        private static bool IsCjkChar(char ch)
+        {
+            return ch >= '\u3000' && ch <= '\u30FF' || // CJK punctuation, kana
+                   ch >= '\u4E00' && ch <= '\u9FFF' || // CJK ideographs
+                   ch >= '\uAC00' && ch <= '\uD7A3' || // Hangul syllables
+                   ch >= '\uFF00' && ch <= '\uFFEF';   // full-width forms
         }
 
         private static int CountCharsInRange(string text, char from, char to)
