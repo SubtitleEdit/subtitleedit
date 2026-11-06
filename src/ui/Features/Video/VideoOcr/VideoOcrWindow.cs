@@ -50,7 +50,9 @@ public class VideoOcrWindow : Window
             .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance).AsPrimary();
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
             .WithBindEnabled(nameof(vm.IsOkEnabled));
-        var buttonPanel = EditorChrome.MakeButtonBar(MakeStatusText(vm), UiUtil.MakeButtonCancel(vm.CancelCommand), buttonOk, buttonStart);
+        var buttonRemoveBurnedIn = UiUtil.MakeButton(Se.Language.Video.RemoveBurnedIn.RemoveBurnedInDotDotDot, vm.RemoveBurnedInCommand)
+            .WithBindEnabled(nameof(vm.IsOkEnabled));
+        var buttonPanel = EditorChrome.MakeButtonBar(MakeStatusText(vm), UiUtil.MakeButtonCancel(vm.CancelCommand), buttonRemoveBurnedIn, buttonOk, buttonStart);
 
         // Preview on the left, the settings column on the right (it scrolls on its own), the
         // result lines under both; the lines give up height first on a short screen.
