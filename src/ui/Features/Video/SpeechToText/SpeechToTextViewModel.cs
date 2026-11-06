@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
+using Nikse.SubtitleEdit.Features.Shared.PromptFilesSaved;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
@@ -182,6 +183,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private string? _sttTempFolder;
     private readonly ConcurrentQueue<string> _outputText = new();
     private long _startTicks = 0;
+    private long _runStartTicks;
     private double _endSeconds;
     private double _showProgressPct = -1;
     private readonly VideoInfo _videoInfo = new();
@@ -2067,6 +2069,36 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Batch "done" dialog: one card per generated subtitle with show in folder / copy path
+    /// (failed media keep their status), instead of a plain "Videos converted: N" message box -
+    /// which was also wrong for audio files (#16673).
+    /// </summary>
+    private async Task ShowBatchResultAsync()
+    {
+        var runTime = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _runStartTicks);
+        var elapsed = runTime.TotalHours >= 1
+            ? $"{(int)runTime.TotalHours}:{runTime.Minutes:00}:{runTime.Seconds:00}"
+            : $"{runTime.Minutes}:{runTime.Seconds:00}";
+
+        var files = _jobItems
+            .Select(p =>
+            {
+                var isSuccess = p.Status == Se.Language.General.Converted && File.Exists(p.OutputSubtitleFileName);
+                return new SavedFileItem(isSuccess ? p.OutputSubtitleFileName : p.InputVideoFileName, isSuccess, p.Status);
+            })
+            .ToList();
+        var doneCount = files.Count(p => p.IsSuccess);
+        var headline = doneCount == files.Count
+            ? string.Format(Se.Language.Video.AudioToText.SubtitleFilesGeneratedX, doneCount)
+            : string.Format(Se.Language.Video.AudioToText.SubtitleFilesGeneratedXOfY, doneCount, files.Count);
+
+        await _windowService.ShowDialogAsync<PromptFilesSavedWindow, PromptFilesSavedViewModel>(Window!, vm =>
+        {
+            vm.Initialize(Se.Language.Video.AudioToText.SubtitleFilesGenerated, headline, files, elapsed);
+        });
+    }
+
+    /// <summary>
     /// Sets a batch row's status from its transcription result. A row with no text must be
     /// marked Error here, not left alone: the batch list is reused between runs, so a row
     /// left untouched keeps the Converted of an earlier run and is counted as converted
@@ -2088,6 +2120,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         foreach (var item in items)
         {
             item.Status = string.Empty;
+            item.OutputSubtitleFileName = string.Empty;
         }
     }
 
@@ -2103,6 +2136,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             var text = format.ToText(transcribedSubtitle, string.Empty);
             File.WriteAllText(subtitleFileName, text);
             LastBatchSubtitleFileName = subtitleFileName;
+            currentItem.OutputSubtitleFileName = subtitleFileName;
         }
 
         // Delete temp files from the just-finished item so disk usage doesn't grow across long batches
@@ -2157,18 +2191,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
-        var convertedJobs = _jobItems.Count(p => p.Status == Se.Language.General.Converted);
         var failed = _jobItems.Count(p => p.Status != Se.Language.General.Converted);
 
         Dispatcher.UIThread.Invoke<Task>(async () =>
         {
-            var msg = $"Videos converted: " + convertedJobs;
-            if (failed > 0)
-            {
-                msg += Environment.NewLine + $"Videos failed: " + failed +
-                       Environment.NewLine + "Please check the tools log for details.";
-            }
-
             _timerWhisper.Stop();
             await Task.Delay(250);
             HideProgressBar();
@@ -2182,12 +2208,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            await MessageBox.Show(
-                Window!,
-                Se.Language.Video.AudioToText.Title,
-                msg,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            await ShowBatchResultAsync();
 
             IsTranscribeEnabled = true;
 
@@ -4232,6 +4253,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         _batchIndex = 0;
+        _runStartTicks = DateTime.UtcNow.Ticks;
 
         if (_jobItems.Count == 0)
         {

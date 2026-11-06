@@ -7,6 +7,9 @@ public class LanguageAudioToText
     public string TranslateToEnglish { get; set; }
     public string Transcribing { get; set; }
     public string TranscribingXOfY { get; set; }
+    public string SubtitleFilesGenerated { get; set; }
+    public string SubtitleFilesGeneratedX { get; set; }
+    public string SubtitleFilesGeneratedXOfY { get; set; }
     public string LinesTranscribedXOfYFailedZ { get; set; }
     public string LinesTranscribedXOfYCancelled { get; set; }
     public string NoLinesTranscribed { get; set; }
@@ -165,6 +168,9 @@ public class LanguageAudioToText
         TranslateToEnglish = "Translate to English";
         Transcribing = "Transcribing...";
         TranscribingXOfY = "Transcribing {0} of {1}...";
+        SubtitleFilesGenerated = "Subtitle files generated";
+        SubtitleFilesGeneratedX = "Subtitle files generated: {0}";
+        SubtitleFilesGeneratedXOfY = "Subtitle files generated: {0} of {1}";
         LinesTranscribedXOfYFailedZ = "{0} of {1} lines were transcribed - {2} failed or had no speech.\n\nFailed lines keep their current text. Apply the transcribed lines, or retry the failed ones (you can change engine or settings first)?";
         LinesTranscribedXOfYCancelled = "Transcription was cancelled after {0} of {1} lines.\n\nApply the transcribed lines? The other lines keep their current text.";
         NoLinesTranscribed = "None of the {0} lines could be transcribed.\nPlease check the tools log for details.";
