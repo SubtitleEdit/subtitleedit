@@ -181,6 +181,10 @@ public class LanguageAutoDetectTest
     [InlineData("th", new[] { "ไปยังตำแหน่งวิดีโอ - 0.5 วินาทีและหยุดชั่วคราว", "libVLC - การเรนเดอร์ Native Window ID", "ดาวน์โหลดโมเดลหรือไม่?", "คำที่ใช้แทนต้องแตกต่างจากคำเดิม" })] // was en
     [InlineData("ckb", new[] { "فایلێک بکەرەوە", "ڕێکخستنەکان پاشەکەوت بکە", "ڤیدیۆکە لێرە دابنێ", "دەقەکە بگۆڕە" })] // Central Kurdish, was fa
     [InlineData("es", new[] { "Vídeo: alternar brillo (solo mpv)", "Añada uno o más segmentos, p. ej. desde la forma de onda", "Ancho de línea única - máximo: píxeles", "No se pudieron restaurar los ajustes:" })] // was lv: few listed Spanish words
+    [InlineData("gl", new[] { "Xa che dixen que non podo ir.", "A miña nai está na cociña.", "Hoxe hai moita xente na rúa.", "Imos tomar algo despois do traballo?" })] // was pt
+    [InlineData("eu", new[] { "Ez dakit zer egin behar dudan.", "Orain ez, mesedez, bihar hitz egingo dugu.", "Zergatik zaude hemen?", "Eskerrik asko laguntzeagatik." })] // was hu/fr
+    [InlineData("cy", new[] { "Dw i ddim yn gwybod beth i'w wneud.", "Mae hi wedi mynd adref yn barod.", "Pam wyt ti yma nawr?", "Diolch yn fawr am dy help." })] // was no/af/en
+    [InlineData("pt", new[] { "Já te disse que não posso ir.", "A minha mãe está na cozinha.", "Hoje há muita gente na rua.", "Vamos tomar alguma coisa depois do trabalho?" })] // stays Portuguese next to Galician
     public void AutoDetectLanguage(string expected, string[] lines)
     {
         var subtitle = new Subtitle();
