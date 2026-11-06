@@ -127,4 +127,20 @@ public class LanguageAutoDetectTest
         var encoding = LanguageAutoDetect.DetectAnsiEncoding(bytes);
         Assert.Equal(text, encoding.GetString(bytes));
     }
+
+    [Fact]
+    public void AutoDetectCodePageShiftJisInAssa()
+    {
+        // The Dialogue line prefixes and the header add many ASCII letters - real CJK files have those too.
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var sb = new StringBuilder("[Script Info]\r\nScriptType: v4.00+\r\nPlayResX: 1920\r\nPlayResY: 1080\r\n\r\n[Events]\r\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\r\n");
+        var lines = new[] { "ここで何をしているのか分かりません", "明日そのことについて話せますか？", "彼女はずっと前に家に帰った", "なぜか分からない" };
+        for (var i = 0; i < 20; i++)
+        {
+            sb.Append($"Dialogue: 0,0:00:{i:00}.00,0:00:{i:00}.90,Default,,0,0,0,,{lines[i % lines.Length]}\r\n");
+        }
+
+        var bytes = Encoding.GetEncoding(932).GetBytes(sb.ToString());
+        Assert.Equal(932, LanguageAutoDetect.DetectAnsiEncoding(bytes).CodePage);
+    }
 }
