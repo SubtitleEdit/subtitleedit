@@ -422,8 +422,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 case 28598:
                 case 1255:
                     return "he"; // Hebrew
-                case 28596:
-                case 1256:
+                case 28596: // not 1256, which Persian and Urdu use too - the text tells those apart
                     return "ar"; // Arabic
                 case 1258:
                     return "vi"; // Vietnamese
@@ -443,14 +442,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 case 20932:
                 case 10001:
                     return "ja"; // Japanese
-                case 20000:
-                case 20002:
-                case 20936:
-                case 950:
-                case 52936:
-                case 54936:
-                case 51936:
-                    return "zh"; // Chinese
+                // No Chinese code pages: a bare "zh" hid the Simplified/Traditional script, which the text tells.
                 default:
                     return null;
             }

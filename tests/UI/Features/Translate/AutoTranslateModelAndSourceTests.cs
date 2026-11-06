@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -739,6 +739,33 @@ public class AutoTranslateModelAndSourceTests
 
             Se.Settings.AutoTranslate.AutoTranslateLastSource = "de";
             Assert.Equal("es", AutoTranslateViewModel.EvaluateDefaultSourceLanguageCode(null, subtitle, languages));
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = lastSource;
+        }
+    }
+
+    [Theory]
+    [InlineData(1256, "fa", new[] { "من نمی‌دانم اینجا چه کار می‌کنی.", "می‌توانیم فردا درباره‌اش صحبت کنیم؟", "این اصلاً خوب نیست.", "خیلی ممنون، دوست من." })] // Persian, was Arabic
+    [InlineData(1256, "ar", new[] { "لا أعرف ماذا تفعل هنا.", "هل يمكننا التحدث عن هذا غدا؟", "هذا ليس جيدا على الإطلاق.", "شكرا جزيلا." })]
+    [InlineData(950, "zh-TW", new[] { "我不知道你在這裡做什麼。", "我們明天可以談談這個嗎？", "這一點也不好。", "辦公室裡沒有人。" })] // Traditional, was a bare "zh"
+    public void AnsiEncodingDoesNotHideTheLanguageOfTheText(int codePage, string expected, string[] lines)
+    {
+        var lastSource = Se.Settings.AutoTranslate.AutoTranslateLastSource;
+        try
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            var subtitle = new Subtitle();
+            for (var i = 0; i < 20; i++)
+            {
+                subtitle.Paragraphs.Add(new Paragraph(lines[i % lines.Length], i * 1000, i * 1000 + 900));
+            }
+
+            var languages = new ObservableCollection<TranslationPair>(new GoogleTranslateV1().GetSupportedSourceLanguages());
+            Se.Settings.AutoTranslate.AutoTranslateLastSource = "de";
+
+            Assert.Equal(expected, AutoTranslateViewModel.EvaluateDefaultSourceLanguageCode(System.Text.Encoding.GetEncoding(codePage), subtitle, languages));
         }
         finally
         {
