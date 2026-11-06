@@ -27,4 +27,16 @@ public class HtmFixCasingTestlUtilTest
         fc.Fix(s);
         Assert.Equal("W-W-What time is it? W-W-What time is it?", s.Paragraphs[0].Text);
     }
+
+    [Fact]
+    public void FixMakeUppercaseSharpS()
+    {
+        var fc = new FixCasing("de");
+        var s = new Subtitle(new List<Paragraph> { new Paragraph("Es ist <i>hei\u00DF</i>.", 0, 2000) });
+        fc.FixNormal = false;
+        fc.FixMakeLowercase = false;
+        fc.FixMakeUppercase = true;
+        fc.Fix(s);
+        Assert.Equal("ES IST <i>HEI\u1E9E</i>.", s.Paragraphs[0].Text);
+    }
 }
