@@ -2501,14 +2501,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static Encoding DetectJapaneseOrChineseEncoding(byte[] buffer)
         {
-            var shiftJisText = Encoding.GetEncoding(932).GetString(buffer);
+            var shiftJisText = GetStringWithReplacementChar(932, buffer);
             if (CountCharsInRange(shiftJisText, '\u3040', '\u30FF') > 10 && CountChars(shiftJisText, "\uFFFD") < 3) // Japanese kana
             {
                 return Encoding.GetEncoding(932);
             }
 
-            var gbkText = Encoding.GetEncoding(936).GetString(buffer);
-            var big5Text = Encoding.GetEncoding(950).GetString(buffer);
+            var gbkText = GetStringWithReplacementChar(936, buffer);
+            var big5Text = GetStringWithReplacementChar(950, buffer);
             var isGbk = IsCjkText(gbkText);
             var isBig5 = IsCjkText(big5Text);
             var simplifiedCount = CountChars(gbkText, "\u4EEC\u8FD9\u8BF4\u6765\u4E3A\u5BF9\u6CA1\u8FC7\u56FD\u65F6\u4E2A\u4F1A\u5B66\u8BF7");
@@ -2524,6 +2524,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Decodes with invalid bytes as U+FFFD. The default 932 decoder turns invalid bytes into
+        /// U+30FB (katakana middle dot), so accented letters in a Western ANSI file counted as kana.
+        /// </summary>
+        private static string GetStringWithReplacementChar(int codePage, byte[] buffer)
+        {
+            return Encoding.GetEncoding(codePage, EncoderFallback.ReplacementFallback, new DecoderReplacementFallback("\uFFFD")).GetString(buffer);
         }
 
         private static bool IsCjkText(string text)
