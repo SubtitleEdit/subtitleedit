@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 AutoDetectWordsDutch,
                 AutoDetectWordsPolish,
                 AutoDetectWordsGreek,
+                AutoDetectWordsGreekLong,
                 AutoDetectWordsRussian,
                 AutoDetectWordsBulgarian,
                 AutoDetectWordsUkrainian,
@@ -638,6 +639,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             "πόλη", "ποτάμι", "γέφυρα", "νερό", "σπίτια", "αργότερα", "εργοστάσιο", "ήσυχη", "περίμενε", "ανέβαινε", "δρόμοι", "λόφο", "έπαιρνε", "έλεγαν", "δουλεύω",
             "ψέματα", "ευκαιρία", "ειλικρινής", "μιλήσουμε", "λυπάμαι", "κοίτα",
         };
+
+        /// <summary>
+        /// The Greek words longer than three letters, for telling the encoding: read as 1253, the bytes of
+        /// Japanese, Thai or Korean text are Greek letters too, and short words (ή, να, το, ...) match that junk.
+        /// </summary>
+        private static readonly string[] AutoDetectWordsGreekLong = AutoDetectWordsGreek.Where(w => w.Length > 3).ToArray();
 
         private static readonly string[] AutoDetectWordsRussian =
         {
@@ -2499,12 +2506,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             return languageName;
         }
 
-        private static Encoding DetectJapaneseOrChineseEncoding(byte[] buffer)
+        private static Encoding DetectCjkEncoding(byte[] buffer)
         {
             var shiftJisText = GetStringWithReplacementChar(932, buffer);
-            if (CountCharsInRange(shiftJisText, '\u3040', '\u30FF') > 10 && CountChars(shiftJisText, "\uFFFD") < 3) // Japanese kana
+            // Japanese kana: other code pages' bytes almost never form the 0x82/0x83 kana pairs, so a few
+            // kana are enough when every byte decodes.
+            var kanaCount = CountCharsInRange(shiftJisText, '\u3040', '\u30FF');
+            var shiftJisInvalidCount = CountChars(shiftJisText, "\uFFFD");
+            if (IsMostlyCjkRuns(shiftJisText) && (kanaCount > 10 && shiftJisInvalidCount < 3 || kanaCount >= 3 && shiftJisInvalidCount == 0))
             {
                 return Encoding.GetEncoding(932);
+            }
+
+            // Korean bytes are valid GBK and Big5 too, and Chinese or Japanese bytes read as 949 are Hangul
+            // as well - but only real Korean has the common syllables (이, 다, 요, 는, ...) all over.
+            var koreanText = GetStringWithReplacementChar(949, buffer);
+            var hangulCount = CountCharsInRange(koreanText, '\uAC00', '\uD7A3');
+            if (hangulCount > 10 && IsMostlyCjkRuns(koreanText) &&
+                CountChars(koreanText, CommonHangulSyllables) * 5 >= hangulCount && CountChars(koreanText, "\uFFFD") < 3)
+            {
+                return Encoding.GetEncoding(949);
             }
 
             var gbkText = GetStringWithReplacementChar(936, buffer);
@@ -2535,9 +2556,48 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Encoding.GetEncoding(codePage, EncoderFallback.ReplacementFallback, new DecoderReplacementFallback("\uFFFD")).GetString(buffer);
         }
 
+        private const string CommonHangulSyllables = "이다요는가을를에의지고하서어니네게도한아그나내야해있습";
+
         private static bool IsCjkText(string text)
         {
-            return CountCharsInRange(text, '\u4E00', '\u9FFF') > 10 && CountChars(text, "\uFFFD") < 3;
+            var cjkCount = CountCharsInRange(text, '\u4E00', '\u9FFF');
+            var invalidCount = CountChars(text, "\uFFFD");
+            return cjkCount > 10 && IsMostlyCjkRuns(text) && invalidCount < 3 && invalidCount * 20 < cjkCount;
+        }
+
+        /// <summary>
+        /// Whether most CJK characters stand next to another one. Accented letters of a Latin-script text
+        /// read as a double-byte code page become lone CJK characters between plain letters, while real
+        /// CJK text runs on. Not a count of the plain letters, which markup (ASSA Dialogue lines, WebVTT
+        /// cue settings, ...) adds to real CJK files too.
+        /// </summary>
+        private static bool IsMostlyCjkRuns(string text)
+        {
+            var cjkCount = 0;
+            var inRunCount = 0;
+            for (var i = 0; i < text.Length; i++)
+            {
+                if (!IsCjkChar(text[i]))
+                {
+                    continue;
+                }
+
+                cjkCount++;
+                if (i > 0 && IsCjkChar(text[i - 1]) || i + 1 < text.Length && IsCjkChar(text[i + 1]))
+                {
+                    inRunCount++;
+                }
+            }
+
+            return cjkCount > 0 && inRunCount * 4 >= cjkCount * 3;
+        }
+
+        private static bool IsCjkChar(char ch)
+        {
+            return ch >= '\u3000' && ch <= '\u30FF' || // CJK punctuation, kana
+                   ch >= '\u4E00' && ch <= '\u9FFF' || // CJK ideographs
+                   ch >= '\uAC00' && ch <= '\uD7A3' || // Hangul syllables
+                   ch >= '\uFF00' && ch <= '\uFFEF';   // full-width forms
         }
 
         private static int CountCharsInRange(string text, char from, char to)
@@ -2583,7 +2643,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // Cyrillic bytes read as 1253 are Greek letters too, and two-letter Greek words
                 // (να, το, με, ...) match such junk by chance - so Greek has to beat the Cyrillic count.
                 var greekEncoding = Encoding.GetEncoding(1253); // Greek
-                var greekCount = GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek);
+                var greekCount = GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreekLong);
                 if (greekCount > 5 && greekCount > cyrillicCount)
                 {
                     if (koreanCount > greekCount)
@@ -2599,7 +2659,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return russianEncoding;
                 }
 
-                var wordMinCount = buffer.Length / 300;
+                // At least two hits: in a small file a single chance match must not decide.
+                var wordMinCount = Math.Max(1, buffer.Length / 300);
 
                 if (counts1251.Get(AutoDetectWordsSerbianCyrillic) > wordMinCount)
                 {
@@ -2617,27 +2678,44 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return russianEncoding;
                 }
 
+                // Before the Latin-script word lists: CJK bytes read as 1250/1252 match their short words by chance.
+                if (DetectCjkEncoding(buffer) is { } cjkEncoding)
+                {
+                    return cjkEncoding;
+                }
+
                 var encoding1250 = Encoding.GetEncoding(1250); // Central European/Eastern European: Polish, Czech, Slovak, Hungarian, Slovene, Bosnian, Croatian, Serbian (Latin script), Romanian (before 1993 spelling reform) and Albanian
                 var textEnc1250 = encoding1250.GetString(buffer);
                 var counts1250 = CountWords(textEnc1250);
-                if (counts1250.Get(AutoDetectWordsCroatianAndSerbian) > wordMinCount)
-                {
-                    return encoding1250;
-                }
-
-                if (counts1250.Get(AutoDetectWordsCzechAndSlovak) > wordMinCount)
-                {
-                    return encoding1250;
-                }
-
-                if (counts1250.Get(AutoDetectWordsHungarian) > wordMinCount)
-                {
-                    return encoding1250;
-                }
-
                 var encoding1252 = Encoding.GetEncoding(1252); // Latin - English and some other Western languages
                 var textEnc1252 = encoding1252.GetString(buffer);
                 var counts1252 = CountWords(textEnc1252);
+
+                // The Central European and Baltic lists share short words (je, se, ma, és, par, ...) with each
+                // other and with Western languages, so each must also beat the others - else Estonian, Catalan
+                // or French ends up as 1250, and Latvian as 1252.
+                var westernCount = GetBestCount(counts1252, AutoDetectWordsFrench, AutoDetectWordsSpanish, AutoDetectWordsItalian,
+                    AutoDetectWordsPortuguese, AutoDetectWordsGerman, AutoDetectWordsDutch, AutoDetectWordsDanish, AutoDetectWordsSwedish,
+                    AutoDetectWordsNorwegian, AutoDetectWordsFinnish, AutoDetectWordsIcelandic, AutoDetectWordsCatalan);
+                var encoding1257 = Encoding.GetEncoding(1257); // Baltic
+                var counts1257 = CountWords(encoding1257.GetString(buffer));
+                var balticCount = GetBestCount(counts1257, AutoDetectWordsEstonian, AutoDetectWordsLatvian, AutoDetectWordsLithuanian);
+                var competingCount = Math.Max(westernCount, balticCount);
+                // Not the Czech and Slovak lists: their "line contains ř/ô/ä" entries match any non-Latin text read as 1250.
+                var centralEuropeanCount = GetBestCount(counts1250, AutoDetectWordsCroatianAndSerbian, AutoDetectWordsCzechAndSlovak,
+                    AutoDetectWordsSlovenian, AutoDetectWordsHungarian);
+                if (centralEuropeanCount > wordMinCount && centralEuropeanCount > competingCount)
+                {
+                    return encoding1250;
+                }
+
+                // Latvian and Lithuanian letters (ā, ē, ī, ū, ė, į, ų, ...) need 1257; Estonian (õ, ä, ö, ü) reads fine as 1252.
+                var latvianOrLithuanianCount = GetBestCount(counts1257, AutoDetectWordsLatvian, AutoDetectWordsLithuanian);
+                if (latvianOrLithuanianCount > wordMinCount && latvianOrLithuanianCount > GetBestCount(counts1252, AutoDetectWordsLatvian, AutoDetectWordsLithuanian) &&
+                    latvianOrLithuanianCount > westernCount && latvianOrLithuanianCount > centralEuropeanCount && latvianOrLithuanianCount > counts1250.Get(AutoDetectWordsPolish))
+                {
+                    return encoding1257;
+                }
 
                 // Turkish: the dotless ı, ş and ğ (bytes 0xFD, 0xFE, 0xF0 in 1254) decode as ý, þ, ð in 1252,
                 // so a text whose Turkish word count grows when read as 1254 is Turkish. Checked before the
@@ -2760,11 +2838,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return encoding1254;
                 }
 
-                if (DetectJapaneseOrChineseEncoding(buffer) is { } cjkEncoding)
-                {
-                    return cjkEncoding;
-                }
-
                 var encoding = EncodingTools.DetectInputCodepage(buffer);
                 if (encoding.CodePage == 28599)
                 {
@@ -2783,12 +2856,30 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
+                // Only called for bytes that are not UTF-8, and Encoding.Default is UTF-8 on .NET (Core),
+                // so a UTF-8, ASCII or DOS code page guess would garble every non-ASCII letter.
+                if (encoding.CodePage < 874 || encoding.CodePage == Encoding.UTF8.CodePage || encoding.CodePage == Encoding.ASCII.CodePage)
+                {
+                    return encoding1252;
+                }
+
                 return encoding;
             }
             catch
             {
                 return Encoding.Default;
             }
+        }
+
+        private static int GetBestCount(WordListCounts counts, params string[][] wordLists)
+        {
+            var best = 0;
+            foreach (var wordList in wordLists)
+            {
+                best = Math.Max(best, counts.Get(wordList));
+            }
+
+            return best;
         }
 
         private static int CountWeirdCharacters(string textEnc1252)

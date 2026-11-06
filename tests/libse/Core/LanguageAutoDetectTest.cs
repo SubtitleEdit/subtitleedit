@@ -98,4 +98,49 @@ public class LanguageAutoDetectTest
         var bytes = Encoding.GetEncoding(932).GetBytes("これは日本語の字幕です・よろしくお願いします・ありがとうございました。");
         Assert.Equal(932, LanguageAutoDetect.DetectAnsiEncoding(bytes).CodePage);
     }
+
+    private static string BuildSrt(int cueCount, params string[] lines)
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < cueCount; i++)
+        {
+            sb.Append($"{i + 1}\r\n00:00:{i % 60:00},000 --> 00:00:{i % 60:00},900\r\n{lines[i % lines.Length]}\r\n\r\n");
+        }
+
+        return sb.ToString();
+    }
+
+    [Theory]
+    [InlineData(932, 40, new[] { "ここで何をしているのか分かりません", "明日そのことについて話せますか？", "彼女はずっと前に家に帰った", "なぜか分からない" })] // was Greek: short Greek words match Shift_JIS bytes read as 1253
+    [InlineData(874, 8, new[] { "ฉันไม่รู้ว่าคุณทำอะไรที่นี่ เราคุยเรื่องนี้พรุ่งนี้ได้ไหม นี่ไม่ดีเลย เธอกลับบ้านไปนานแล้ว เราต้องไปเดี๋ยวนี้ เขาพูดอะไรกับคุณ ฉันไม่เข้าใจว่าทำไม ขอบคุณมาก" })] // was Greek
+    [InlineData(949, 3, new[] { "여기서 뭐 하는지 모르겠어요.", "내일 다시 만나요.", "정말 미안해요." })] // was GBK
+    [InlineData(950, 12, new[] { "你是誰？我只是路過的。", "老師，請幫幫我。", "沒關係，別擔心。" })] // Big5 must not become Korean
+    [InlineData(1257, 12, new[] { "Kes sa oled? Ma lihtsalt möödusin siit.", "Õpetaja, palun aita mind.", "Ära muretse, kõik on korras." })] // Estonian, was 1250
+    [InlineData(1257, 3, new[] { "Vai mēs varam par to runāt rīt?", "Mums tagad jāiet.", "Es tikai gāju garām." })] // Latvian, was 1252
+    [InlineData(1252, 8, new[] { "No sé què estàs fent aquí.", "Això no és gaire bo.", "És veritat." })] // Catalan, was 1250
+    [InlineData(1252, 3, new[] { "Chi sei tu? Stavo solo passando di qui.", "Non lo sapevo.", "La stazione è a dieci minuti a piedi." })] // small file: the fallback must not be UTF-8
+    public void AutoDetectAnsiEncodingKeepsText(int codePage, int cueCount, string[] lines)
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var text = BuildSrt(cueCount, lines);
+        var bytes = Encoding.GetEncoding(codePage).GetBytes(text);
+        var encoding = LanguageAutoDetect.DetectAnsiEncoding(bytes);
+        Assert.Equal(text, encoding.GetString(bytes));
+    }
+
+    [Fact]
+    public void AutoDetectCodePageShiftJisInAssa()
+    {
+        // The Dialogue line prefixes and the header add many ASCII letters - real CJK files have those too.
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var sb = new StringBuilder("[Script Info]\r\nScriptType: v4.00+\r\nPlayResX: 1920\r\nPlayResY: 1080\r\n\r\n[Events]\r\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\r\n");
+        var lines = new[] { "ここで何をしているのか分かりません", "明日そのことについて話せますか？", "彼女はずっと前に家に帰った", "なぜか分からない" };
+        for (var i = 0; i < 20; i++)
+        {
+            sb.Append($"Dialogue: 0,0:00:{i:00}.00,0:00:{i:00}.90,Default,,0,0,0,,{lines[i % lines.Length]}\r\n");
+        }
+
+        var bytes = Encoding.GetEncoding(932).GetBytes(sb.ToString());
+        Assert.Equal(932, LanguageAutoDetect.DetectAnsiEncoding(bytes).CodePage);
+    }
 }
