@@ -876,9 +876,9 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformUseSkiaRenderer, nameof(_vm.WaveformUseSkiaRenderer)),
             // SE 4 parity: the per-paragraph footer in the waveform ("#43  01:10" and the
             // chars/sec line above it) can be turned off - some users find it noisy (#14707).
-            // Composed from existing strings so no new translatable text is needed.
-            MakeCheckboxSetting($"{Se.Language.General.Show} {Se.Language.General.NumberSymbol} + {Se.Language.General.Duration}", nameof(_vm.WaveformShowNumberAndDuration)),
-            MakeCheckboxSetting($"{Se.Language.General.Show} {Se.Language.General.CharsPerSec}", nameof(_vm.WaveformShowCps)),
+            // Own strings: General.Show is the start-time column header, not the verb (#16672).
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowNumberAndDuration, nameof(_vm.WaveformShowNumberAndDuration)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowCps, nameof(_vm.WaveformShowCps)),
             new SettingsItem(Se.Language.Options.Settings.WaveformTextFontSize, () => UiUtil.MakeNumericUpDownInt(
                 10 ,
                 100,

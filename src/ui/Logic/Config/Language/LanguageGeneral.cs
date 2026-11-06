@@ -597,8 +597,7 @@ public class LanguageGeneral
     public string ShowDurationColumn { get; set; }
     public string ShowGapColumn { get; set; }
     public string ShowForcedColumn { get; set; } = string.Empty;
-    public string ShowStartColumn { get; set; }
-    public string ShowHideColumn { get; set; }
+    public string ShowXColumn { get; set; }
     public string ShowHistory { get; set; }
     public string ClearHistory { get; set; }
     public string RemoveFromHistory { get; set; }
@@ -1626,8 +1625,7 @@ public class LanguageGeneral
         ShowDurationColumn = "Show \"Duration\" column";
         ShowGapColumn = "Show \"Gap\" column";
         ShowForcedColumn = "Show \"Forced\" column";
-        ShowStartColumn = "Show \"Start\" column";
-        ShowHideColumn = "Show \"Hide\" column";
+        ShowXColumn = "Show \"{0}\" column";
         ShowHistory = "Show history";
         ClearHistory = "Clear history";
         RemoveFromHistory = "Remove from history";
