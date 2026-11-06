@@ -18095,11 +18095,9 @@ public partial class MainViewModel :
         // Teletext line is only changed when explicitly selected.
         if (result.ApplyTeletextLine)
         {
-            var marginV = result.TeletextLine.ToString(CultureInfo.InvariantCulture);
-
             foreach (var item in selectedItems)
             {
-                item.MarginV = marginV;
+                SetTeletextLine(item, result.TeletextLine);
             }
         }
 
@@ -18121,7 +18119,7 @@ public partial class MainViewModel :
                         shiftedLine = 23;
                     }
 
-                    item.MarginV = shiftedLine.ToString(CultureInfo.InvariantCulture);
+                    SetTeletextLine(item, shiftedLine);
                 }
             }
         }
@@ -18135,7 +18133,7 @@ public partial class MainViewModel :
                 if (int.TryParse(item.MarginV, out var teletextLine) &&
                     teletextLine == result.ReplaceFromLine)
                 {
-                    item.MarginV = result.ReplaceToLine.ToString(CultureInfo.InvariantCulture);
+                    SetTeletextLine(item, result.ReplaceToLine);
                 }
             }
         }
@@ -18162,6 +18160,18 @@ public partial class MainViewModel :
         }
 
         _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// Stores the teletext row and moves the line's alignment tag to the band the row is in -
+    /// the tag is what positions the line wherever the row is not used (open subtitling, a
+    /// subtitle that was not read from an STL file), and the reader's bottom tag kept a line
+    /// moved to row 1 at the bottom there.
+    /// </summary>
+    private static void SetTeletextLine(SubtitleLineViewModel item, int teletextLine)
+    {
+        item.MarginV = teletextLine.ToString(CultureInfo.InvariantCulture);
+        item.Text = AlignmentTagHelper.SetTeletextRowBand(item.Text, teletextLine, Se.Settings.General.WriteAn2Tag);
     }
 
     /// <summary>
