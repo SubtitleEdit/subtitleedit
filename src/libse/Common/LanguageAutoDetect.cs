@@ -62,6 +62,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 AutoDetectWordsSerbian,
                 AutoDetectWordsSerbianCyrillic,
                 AutoDetectWordsSerbianCyrillicOnly,
+                AutoDetectWordsSerbianCyrillicNotMacedonian,
                 AutoDetectWordsIndonesian,
                 AutoDetectWordsCatalan,
                 AutoDetectWordsTagalog,
@@ -190,7 +191,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // Neither ќ/ѓ/ѕ nor ћ/ђ, or as many of each (an OCR tie): the word lists decide.
                 var c2 = counts ?? CountWords(text);
                 var macedonianCount = c2.Get(AutoDetectWordsMacedonian);
-                var serbianCount = c2.Get(AutoDetectWordsSerbianCyrillic) + c2.Get(AutoDetectWordsSerbianCyrillicOnly);
+                var serbianCount = c2.Get(AutoDetectWordsSerbianCyrillicNotMacedonian) + c2.Get(AutoDetectWordsSerbianCyrillicOnly);
                 return macedonianCount > serbianCount ? "mk" : "sr";
             }
 
@@ -603,7 +604,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsPolish =
         {
-            "Czy", "ale", "ty", "siê", "się", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko",
+            "Czy", "ale", "ty", "siê", "się", "jest", "są", "lub", "dla", "tylko", "przez", "który", "która", "które", "że", "już", "można", "oraz", "jeśli", "wszystkie", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko",
             "Wiem", "Przepraszam", "dobrze", "chciałam", "Dziękuję", "Żołnierzyk", "Łowca", "został", "stało", "dolarów",
             "wiadomości", "Dobrze", "będzie", "Dzień", "przyszłość", "Uratowałaś", "Cześć", "Trzeba", "zginąć", "walczyć",
             "ludzkość", "maszyny", "Jeszcze", "okrążenie", "wyścigu", "porządku", "detektywie", "przebieralni", "który",
@@ -772,7 +773,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsSerbian =
         {
-            "šta", "ovde", "gde", "ko", "pre", "uvek", "vreme", "videti", "neko", "video", "niko", "ćao", "lepo", "izvini", "hteo", "mesto", "izvinite", "čovek", "dole", "čoveče", "dve", "dete", "deo", "posle", "dešava", "verovati",
+            "šta", "ovde", "gde", "ko", "pre", "uvek", "vreme", "videti", "neko", "niko", "ćao", "lepo", "izvini", "hteo", "mesto", "izvinite", "čovek", "dole", "čoveče", "dve", "dete", "deo", "posle", "dešava", "verovati",
             "verovatno", "verujem", "tačno", "razumem", "videla", "ceo", "svet", "porodica", "voleo", "srećan", "dođavola", "svetu", "htela", "videli", "negde", "želeo", "ponovo", "devojka", "umreti", "čoveka", "mesta", "deca", "osećam",
             "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo",
             "sto", "veče", "pratite", "odlična", "severu", "tokom", "putevima", "juče", "hiljadu", "nedelja", "mesec", "svetlo", "muzika", "vazduh", "hleb", "firma",
@@ -790,6 +791,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             "њега", "њу", "нас", "вас", "их", "ми", "ти", "ви", "ко", "где", "кад", "јер", "ако", "или", "па", "још", "већ", "много", "мало", "лоше",
         };
 
+        /// <summary>
+        /// The Serbian words that Macedonian does not share, for telling the two apart when the letters do not:
+        /// за, или, само, како, ... are everyday words in both.
+        /// </summary>
+        private static readonly string[] AutoDetectWordsSerbianCyrillicNotMacedonian = AutoDetectWordsSerbianCyrillic.Except(new[]
+        {
+            "за", "или", "ја", "само", "како", "ако", "назад", "па", "прво", "сте", "она", "тебе", "ти", "нешто", "ми", "добро", "посебно", "мало", "сам", "тако",
+        }).ToArray();
+
         private static readonly string[] AutoDetectWordsSerbianCyrillicOnly =
         {
             "дођавола", "Дођи", "пронађемо", "ће", "ћемо", "Хоћу", "чекић", "неће",
@@ -802,7 +812,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "siapa", "mana", "kapan", "mengapa", "kenapa", "bagaimana", "berapa", "tidak", "bukan", "belum", "jangan", "ada", "adalah", "harus", "mau", "ingin", "boleh",
             "dapat", "sedang", "masih", "lagi", "juga", "saja", "hanya", "sangat", "sekali", "sekarang", "nanti", "tadi", "kemarin", "besok", "hari", "malam", "pagi",
             "waktu", "kali", "orang", "pria", "wanita", "anak", "ibu", "ayah", "teman", "hidup", "cinta", "uang", "mati", "cepat", "pelan", "bersama", "sendiri",
-            "sayang", "terima kasih", "maaf", "tolong", "selamat", "pak", "bu", "tuan", "nyonya", "semalaman", "kerja", "larut", "bohong", "dengar", "bicara", "soal",
+            "sayang", "terima kasih", "maaf", "tolong", "selamat", "pak", "tuan", "nyonya", "semalaman", "kerja", "larut", "bohong", "dengar", "bicara", "soal",
             "perlu", "dikatakan", "beri", "kesempatan", "lalu", "jujur", "kota", "sunyi", "pabrik", "ditutup", "menyangka", "sungai", "naik", "begitu", "menjelang",
             "jembatan", "hilang", "jalan", "terendam", "menyaksikan", "bukit", "menyapu", "belakangan", "berkata", "menduganya", "kubilang", "padaku", "dariku", "oke",
             "hujan", "turun", "utara", "diperkirakan", "suhu", "bawah", "nol", "pengemudi", "hati-hati", "ekstra", "meja", "tentu", "silakan", "ikuti", "lihat",
@@ -813,7 +823,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         // (accents matter: "què"/"gràcies"/"això" won't match the Spanish "qué"/"gracias").
         private static readonly string[] AutoDetectWordsCatalan =
         {
-            "què", "això", "amb", "però", "molt", "moltes", "molts", "gràcies", "aquest", "aquesta", "aquestes",
+            "què", "això", "amb", "els", "quan", "fins", "aquests", "però", "molt", "moltes", "molts", "gràcies", "aquest", "aquesta", "aquestes",
             "nosaltres", "vosaltres", "vull", "puc", "pots", "sóc", "ets", "són", "fer", "fas", "fem", "tinc",
             "tens", "seva", "teu", "meu", "ara", "res", "també", "perquè", "sisplau", "endavant", "ningú",
             "sempre", "doncs", "gairebé", "cadascú",
@@ -875,7 +885,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         // was mostly words from one space film plus OCR misreads with Latin letters in them.
         private static readonly string[] AutoDetectWordsMacedonian =
         {
-            "ќе", "што", "тоа", "дека", "дали", "јас", "тој", "таа", "тие", "сум", "треба", "требаат", "нема", "може", "можеби", "мора",
+            "ќе", "што", "тоа", "дека", "дали", "во", "со", "кој", "која", "кое", "кои", "овој", "оваа", "јас", "тој", "таа", "тие", "сум", "треба", "требаат", "нема", "може", "можеби", "мора",
             "многу", "нешто", "ништо", "некој", "никој", "сите", "колку", "каде", "зошто", "затоа", "тука", "таму", "уште", "веќе",
             "сега", "денес", "секогаш", "никогаш", "сакам", "мислам", "знаеме", "одиме", "правиш", "знаеш", "имаш", "беше", "време",
             "работа", "луѓе", "жени", "добро", "добра", "благодарам", "фала", "господине", "тоалет", "инженер", "вселената", "орбитата",
@@ -941,7 +951,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         // differences between Czech and Slovak languages / Slovak words / please keep the words aligned between these languages for better comparison
         private static readonly string[] AutoDetectWordsSlovak =
         {
-            ".*[Ôô].*", ".*[ä].*",  "[Bb]yť", "[Ss]om",  "[Ss]i",  "[Jj]a", "[Mm]ať", "[Áá]no", "[Nn]ie", "[Nn]ič", "[Dd]eň", "[Ll]en", "[Čč]o", "[Aa]ko", "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "[Pp]red.*", "([Íí]sť|[Ii](dem|de|deme|dú))",
+            ".*[Ôô].*", ".*[Ľľĺŕ].*", "[Bb]yť", "[Ss]om",  "[Ss]i",  "[Jj]a", "[Mm]ať", "[Áá]no", "[Nn]ie", "[Nn]ič", "[Dd]eň", "[Ll]en", "[Čč]o", "[Aa]ko", "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "[Pp]red.*", "([Íí]sť|[Ii](dem|de|deme|dú))",
             "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)",
             "bolo", "bola", "bol", "boli", "sme", "ste", "sú", "nikto", "niečo", "niekto", "všetko", "všetci", "kým", "keď", "ak", "pretože", "kto", "kedy", "prečo",
             "koľko", "ktorý", "ktorá", "ktoré", "teraz", "zajtra", "iba", "veľmi", "dobre", "zle", "ďakujem", "prepáč", "prepáčte", "pani", "ľudia", "dievča", "dieťa",
@@ -1063,7 +1073,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "palju", "selle", "nende", "üks", "ikkagi", "tegelikult", "metsad",
             "tere", "aitäh", "palun", "midagi", "mitte", "miks", "kuidas",
             "olen", "oota", "tahan", "mees", "naine", "poiss", "tüdruk",
-            "ma", "sa", "tema", "meie", "teie", "nema", "nad",
+            "ma", "sa", "tema", "meie", "teie", "nad",
             "see", "seda", "siin", "seal", "praegu", "veel", "päris",
             "tõesti", "muidugi", "vabandust", "hee", "kuule",
             "oli", "olnud", "olid", "oled", "oleme", "olete", "ole", "oleks", "enne", "kui", "keegi", "kedagi", "nii", "kes", "kus", "kuhu",
@@ -1419,6 +1429,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (count > bestCount)
             {
                 Consider("tr", count); // Turkish
+            }
+
+            // Azerbaijani by its letter: ə is in nearly every line, and in no other language here - the
+            // words it shares with Turkish made it Turkish.
+            count = CountChars(text, "əƏ");
+            if (count > bestCount && count > 2)
+            {
+                Consider("az", count); // Azerbaijani
             }
 
             count = counts.Get(AutoDetectWordsIndonesian);

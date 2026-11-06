@@ -170,4 +170,21 @@ public class LanguageAutoDetectTest
             File.Delete(path);
         }
     }
+
+    [Theory]
+    [InlineData("fi", new[] { "Mikä tahansa tyhjä merkki.", "Väli on enimmäisarvo.", "Merkkien määrä muodossa.", "Lähtövideotiedostoa ei luotu." })] // was sk: Slovak counted every line with ä
+    [InlineData("hr", new[] { "Što je ovo za video?", "Video je dobro, ali nije gotov.", "Pokreni video sada.", "Video ne radi kako treba." })] // was sr: "video" was a Serbian word
+    [InlineData("mk", new[] { "Отворете го видеото во новиот прозорец.", "Зачувај ги промените со оваа команда.", "Изберете кој формат сакате да го користите.", "Ова е текстот кој се прикажува на екранот." })] // was sr: за, само, како, ... are Macedonian too
+    [InlineData("az", new[] { "Bu faylı açmaq mümkün deyil.", "Videonu seçin və subtitr əlavə edin.", "Dəyişiklikləri yadda saxlamaq istəyirsiniz?", "Xəta baş verdi, yenidən cəhd edin." })] // was tr
+    [InlineData("pl", new[] { "To jest plik, który można otworzyć.", "Wybierz wideo lub plik audio.", "Napisy są już zapisane dla tego wideo.", "Kliknij tylko raz, aby przejść dalej." })] // Polish function words
+    public void AutoDetectLanguage(string expected, string[] lines)
+    {
+        var subtitle = new Subtitle();
+        for (var i = 0; i < 12; i++)
+        {
+            subtitle.Paragraphs.Add(new Paragraph(lines[i % lines.Length], i * 1000, i * 1000 + 900));
+        }
+
+        Assert.Equal(expected, LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
+    }
 }
