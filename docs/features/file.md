@@ -57,10 +57,6 @@ Save the current subtitle to a new file or format.
 
 Formats new in 5.2 in the format list include EBU-TT (Tech 3350), Csv Excel, Wistia json, DVD Junior SPC, Sonic DVD Producer, YouTube timed text srv3, DaVinci Resolve Marker EDL, Adobe Premiere Markers, Audacity labels and Final Cut Pro Xml Captions - see [Supported Formats](../reference/supported-formats.md).
 
-## Save Forced Lines As
-
-Save only the lines marked as forced (see **Toggle forced** in the [subtitle grid](subtitle-grid.md#context-menu)) to a file.
-
 ## Close Original
 
 Close the secondary (original) subtitle file in translation mode.
@@ -163,6 +159,12 @@ Copy the formatting — italic/bold/underline, font tags and ASSA override tags 
 ### Export as plain text
 
 Export subtitle text without time codes.
+
+### Export forced lines only
+
+Save only the lines marked as forced (see **Toggle forced** in the [subtitle grid](subtitle-grid.md#context-menu)) to a file of their own.
+
+- **Menu:** File → Export → Forced lines only...
 
 ### Export custom text format
 

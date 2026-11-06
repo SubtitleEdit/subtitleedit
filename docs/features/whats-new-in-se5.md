@@ -22,7 +22,7 @@ Subtitle Edit 5 is a rewrite of Subtitle Edit on Avalonia, so it runs on Windows
 - **Tools → Merge two subtitles** makes one bilingual subtitle, as SubRip or as ASSA with two styles (see [Merge two subtitles](merge-two-subtitles.md)).
 - **Tools → Merge continuation lines** merges lines unless a line ends a sentence (see [Merge continuation lines](merge-continuation-lines.md)).
 - **Tools → Remove/replace Unicode characters** - the Subtitle Edit 4 plugin, now built in (see [Remove/replace Unicode characters](remove-unicode-characters.md)).
-- **Forced narrative lines** - a *Forced* column, *Toggle forced*, and **Save forced lines as...** to write only those lines.
+- **Forced narrative lines** - a *Forced* column, *Toggle forced*, and **File → Export → Forced lines only...** to write only those lines.
 - **Edit original** in place, with the original's unmatched lines shown as reference rows.
 
 ## Subtitle Grid and Text Box
