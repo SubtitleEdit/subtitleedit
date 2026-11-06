@@ -535,14 +535,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsSpanish =
         {
-            "qué", "eso", "muy", "estoy?", "ahora", "hay", "tú", "así", "cuando", "cómo", "él", "sólo", "quiero", "gracias", "puedo", "bueno", "soy", "hacer", "fue", "eres", "usted", "tienes", "puede", "[Ss]eñor", "ese", "voy", "quién",
+            "qué", "eso", "muy", "los", "las", "más", "pero", "estoy?", "ahora", "hay", "tú", "así", "cuando", "cómo", "él", "sólo", "quiero", "gracias", "puedo", "bueno", "soy", "hacer", "fue", "eres", "usted", "tienes", "puede", "[Ss]eñor", "ese", "voy", "quién",
             "creo", "hola", "dónde", "sus", "verdad", "quieres", "mucho", "entonces", "estaba", "tiempo", "esa", "mejor", "hombre", "hace", "dios", "también", "están", "siempre", "hasta", "ahí", "siento",
             "puedes", "Dónde", "está", "estoy", "Vámonos", "vistiendo", "Caliente", "chimenea"
         };
 
         private static readonly string[] AutoDetectWordsItalian =
         {
-            "Buongiorno", "Grazie", "Cosa", "quest[ao]", "quell[ao]", "tutt[io]", "[st]uo", "qualcosa", "ancora", "sono", "bene", "più", "andare", "essere", "venire", "abbiamo", "andiamo", "ragazzi", "signore", "numero", "giorno",
+            "Buongiorno", "Grazie", "Cosa", "è", "gli", "della", "delle", "nella", "nel", "quest[ao]", "quell[ao]", "tutt[io]", "[st]uo", "qualcosa", "ancora", "sono", "bene", "più", "andare", "essere", "venire", "abbiamo", "andiamo", "ragazzi", "signore", "numero", "giorno",
             "propriamente", "sensitivo", "negativo", "davvero", "faccio", "voglio", "vuole", "perché", "allora", "niente", "anche", "stai", "detto", "fatto", "hanno", "molto", "stato", "siamo", "così", "vuoi", "noi", "vero", "loro",
             "fare", "gli", "due",
             "è", "sei", "siete", "erano", "stata", "stati", "state", "ho", "hai", "avete", "avevo", "aveva", "avevano", "io", "lui", "lei", "voi", "che", "chi",
@@ -565,7 +565,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsPortuguese =
         {
-            "[Nn]ão", "[Ee]ntão", "uma", "ele", "bem", "isso", "você", "sim", "meu", "muito", "estou", "ela", "fazer", "tem", "já", "minha", "tudo", "só", "tenho", "agora", "vou", "seu", "quem", "há",
+            "[Nn]ão", "[Ee]ntão", "uma", "é", "ao", "aos", "às", "pelo", "pela", "ele", "bem", "isso", "você", "sim", "meu", "muito", "estou", "ela", "fazer", "tem", "já", "minha", "tudo", "só", "tenho", "agora", "vou", "seu", "quem", "há",
             "lhe", "quero", "nós", "são", "ter", "coisa", "dizer", "eles", "pode", "bom", "mesmo", "mim", "estava", "assim", "estão", "até", "quer", "temos", "acho", "obrigado", "também", "tens",
             "deus", "quê", "ainda", "noite", "conversar", "Desculpe", "verdade",
             "é", "foi", "tinha", "têm", "eu", "elas", "vocês", "teu", "tua", "sua", "nosso", "nossa", "isto", "aquilo", "aquele", "aquela", "aqui", "lá", "cá", "hoje",
@@ -1157,9 +1157,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var dutchCount = counts.Get(AutoDetectWordsDutch);
                 var swedishCount = counts.Get(AutoDetectWordsSwedish);
                 var icelandicCount = counts.Get(AutoDetectWordsIcelandic);
-                // Norwegian-only spellings outnumbering the Danish-only ones say Norwegian, unless
-                // there are too few of them to mean anything (one odd word in a long Danish file).
-                if ((norwegianOnlyCount < 2 || norwegianOnlyCount <= danishOnlyCount) && dutchCount < count && swedishCount < count)
+                // Norwegian-only spellings outnumbering the Danish-only ones say Norwegian. One odd
+                // Norwegian word in a long Danish file is outnumbered anyway; in a short text with no
+                // Danish-only word it is the only evidence there is.
+                if (norwegianOnlyCount <= danishOnlyCount && dutchCount < count && swedishCount < count)
                 {
                     if (icelandicCount > count * 1.5)
                     {
@@ -1177,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 var dutchCount = counts.Get(AutoDetectWordsDutch);
                 var swedishCount = counts.Get(AutoDetectWordsSwedish);
-                if ((danishOnlyCount < 2 || danishOnlyCount <= norwegianOnlyCount) && dutchCount < count && swedishCount < count)
+                if (danishOnlyCount <= norwegianOnlyCount && dutchCount < count && swedishCount < count)
                 {
                     Consider("no", count);
                 }
@@ -1437,6 +1438,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (count > bestCount && count > 2)
             {
                 Consider("az", count); // Azerbaijani
+            }
+
+            // Central Kurdish (Sorani) by its letters ڕ ڵ ۆ ێ, which Persian, Arabic and Urdu do not use - its
+            // words in Arabic script made it Persian.
+            count = CountChars(text, "\u0695\u06B5\u06C6\u06CE");
+            if (count > bestCount && count > 2)
+            {
+                Consider("ckb", count); // Central Kurdish
             }
 
             count = counts.Get(AutoDetectWordsIndonesian);
@@ -2003,7 +2012,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle, bool detectChineseScript = false)
         {
             var allText = GetNonEmptyTexts(subtitle, 500000, out var nonEmptyCount);
-            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14, out var score, detectChineseScript);
+            var languageId = GetLanguageByDominantScript(allText, detectChineseScript) ??
+                             AutoDetectGoogleLanguage(allText, nonEmptyCount / 14, out _, detectChineseScript);
             if (string.IsNullOrEmpty(languageId))
             {
                 languageId = GetEncodingViaLetter(allText);
@@ -2015,6 +2025,83 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return languageId;
+        }
+
+        /// <summary>
+        /// The language of a script only one language here is written in, when most letters are in it:
+        /// Hangul, Thai, kana (with Han), Han alone, Greek, Hebrew. The word lists of those scripts are
+        /// short, so a few Latin words (names, "Video", ...) used to outscore them - Korean became English.
+        /// </summary>
+        /// <returns>The language code, or null when no such script dominates.</returns>
+        private static string GetLanguageByDominantScript(string text, bool detectChineseScript)
+        {
+            int letters = 0, hangul = 0, thai = 0, kana = 0, han = 0, greek = 0, hebrew = 0;
+            foreach (var ch in text)
+            {
+                if (!char.IsLetter(ch))
+                {
+                    continue;
+                }
+
+                letters++;
+                if (ch >= '\uAC00' && ch <= '\uD7A3' || ch >= '\u1100' && ch <= '\u11FF' || ch >= '\u3130' && ch <= '\u318F')
+                {
+                    hangul++;
+                }
+                else if (ch >= '\u0E00' && ch <= '\u0E7F')
+                {
+                    thai++;
+                }
+                else if (ch >= '\u3040' && ch <= '\u30FF')
+                {
+                    kana++;
+                }
+                else if (ch >= '\u4E00' && ch <= '\u9FFF')
+                {
+                    han++;
+                }
+                else if (ch >= '\u0370' && ch <= '\u03FF' || ch >= '\u1F00' && ch <= '\u1FFF')
+                {
+                    greek++;
+                }
+                else if (ch >= '\u0590' && ch <= '\u05FF')
+                {
+                    hebrew++;
+                }
+            }
+
+            if (letters < 5)
+            {
+                return null;
+            }
+
+            var half = letters / 2;
+            if (kana * 10 >= letters && kana + han > half)
+            {
+                return "ja"; // Chinese has no kana
+            }
+
+            if (hangul > half)
+            {
+                return "ko";
+            }
+
+            if (thai > half)
+            {
+                return "th";
+            }
+
+            if (han > half)
+            {
+                return detectChineseScript ? DetermineChineseScript(text) : "zh";
+            }
+
+            if (greek > half)
+            {
+                return "el";
+            }
+
+            return hebrew > half ? "he" : null;
         }
 
         /// <summary>
