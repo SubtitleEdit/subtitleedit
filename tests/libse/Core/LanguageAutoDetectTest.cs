@@ -195,4 +195,19 @@ public class LanguageAutoDetectTest
 
         Assert.Equal(expected, LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
     }
+
+    [Theory]
+    [InlineData("sv", new[] { "Vad sa han till dig?", "Vad sa han till dig?" })] // was da
+    [InlineData("tr", new[] { "Onun adı ne?", "Ofiste kimse yok." })] // guard: veya/olarak/yok are Turkish-only
+    [InlineData("fr", new[] { "Qu'est-ce que tu fais là?", "On se voit demain." })] // was fi
+    public void AutoDetectLanguageShortText(string expected, string[] lines)
+    {
+        var subtitle = new Subtitle();
+        for (var i = 0; i < lines.Length; i++)
+        {
+            subtitle.Paragraphs.Add(new Paragraph(lines[i], i * 1000, i * 1000 + 900));
+        }
+
+        Assert.Equal(expected, LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
+    }
 }
