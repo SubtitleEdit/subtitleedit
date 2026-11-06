@@ -532,16 +532,20 @@ public static class ExportTextTags
 
         var color = target.Primary;
         var sb = new StringBuilder("<r>");
+
+        // Italic goes first, right after the reset: the renderer's "</i>" pops the last opened
+        // tag, so after the "<font>" it took the target style's font and colour off again and
+        // left the text italic.
+        if (target.Italic != line.Italic)
+        {
+            sb.Append(target.Italic ? "<i>" : "</i>");
+        }
+
         sb.Append(CultureInfo.InvariantCulture,
             $"<font face=\"{target.FontName}\" size=\"{target.FontSize}\" color=\"#{color.Red:x2}{color.Green:x2}{color.Blue:x2}\">");
         if (target.Bold && !line.Bold)
         {
             sb.Append("<b>");
-        }
-
-        if (target.Italic != line.Italic)
-        {
-            sb.Append(target.Italic ? "<i>" : "</i>");
         }
 
         if (target.Underline != line.Underline)
