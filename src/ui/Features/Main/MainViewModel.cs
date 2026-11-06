@@ -11205,6 +11205,28 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<VideoOcrWindow, VideoOcrViewModel>(vm => { vm.Initialize(videoFileName); });
 
+        if (result.OkPressed && !string.IsNullOrEmpty(result.ResultBoxesAssa))
+        {
+            if (_videoFileName != videoFileName)
+            {
+                await VideoOpenFile(videoFileName);
+            }
+
+            ResetSubtitle();
+
+            var assa = new AdvancedSubStationAlpha();
+            _subtitle = new Subtitle();
+            assa.LoadSubtitle(_subtitle, result.ResultBoxesAssa.SplitToLines(), null);
+            SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p is AdvancedSubStationAlpha) ?? assa);
+            _subtitleFileName = Path.ChangeExtension(videoFileName, ".boxes" + assa.Extension);
+            _converted = true;
+
+            SetSubtitles(_subtitle);
+            SelectAndScrollToRow(0);
+            ShowStatus(string.Format(Se.Language.Video.VideoOcr.LinesFoundX, _subtitle.Paragraphs.Count));
+            return;
+        }
+
         if (result.OkPressed && result.ResultSubtitle.Paragraphs.Count > 0)
         {
             // Open the video before setting the subtitle state - VideoOpenFile persists
@@ -15264,8 +15286,10 @@ public partial class MainViewModel :
 
         var oldSettngsSerialized = SettingsChangeSnapshot.Take();
 
+        // Restore the remembered size/state before the window is shown - restoring it on Loaded
+        // showed the window at its default size first and then visibly grew/maximized it.
         var viewModel = await ShowDialogAsync<SettingsWindow, SettingsViewModel>(
-    vm => { vm.Initialize(this); });
+    vm => { vm.Initialize(this); }, UiUtil.RestoreWindowPosition);
 
         if (!viewModel.OkPressed && !viewModel.SettingsImported)
         {

@@ -116,6 +116,81 @@ public static class CrispEmbedEngine
         return File.Exists(GetServerExecutable());
     }
 
+    /// <summary>MI-GAN 512 (Picsart AI Research, MIT), F16, as pinned in CrispEmbed's model registry.</summary>
+    public const string InpaintModel = "migan-512-places2-f16.gguf";
+    private const string InpaintModelSha256 = "932cfbd35db478dba4372f7ad9889ee68c84eac1c0b46025cf7336c8d55c0033";
+    private const string InpaintCheckpointSha256 = "1d6087eee0aac8923ad2606be5d8caeb4824d3e4de331995e420c74e124a466a";
+
+    /// <summary>
+    /// The image inpainting model used to remove burned-in subtitles after Video OCR - not an
+    /// OCR backend, so kept out of <see cref="GetBackends"/>. Needs a CrispEmbed build with
+    /// --inpaint-stream (see <see cref="SupportsInpainting"/>).
+    /// </summary>
+    public static CrispEmbedBackend GetInpaintBackend()
+    {
+        return new CrispEmbedBackend
+        {
+            Name = "Inpainting",
+            Models = new List<CrispEmbedModel>
+            {
+                new()
+                {
+                    Name = InpaintModel,
+                    Size = "18 MB",
+                    Url = "https://huggingface.co/cstr/MI-GAN-512-GGUF/resolve/e1481f21784f99ec9d53ee935b978264be36abbb/" + InpaintModel,
+                    MinimumSizeBytes = 17_000_000,
+                },
+            },
+        };
+    }
+
+    /// <summary>crispembed arguments that select the pinned MI-GAN 512 model (GPU when there is one).</summary>
+    public static string GetInpaintArguments(string modelFileName) =>
+        $"--inpaint-engine migan512 --inpaint-model \"{modelFileName}\" --inpaint-model-sha256 {InpaintModelSha256} " +
+        $"--inpaint-checkpoint-sha256 {InpaintCheckpointSha256} --gpu-backend auto";
+
+    /// <summary>The opt-in gates CrispEmbed requires for MI-GAN 512 F16, its fast graph and the frame stream.</summary>
+    public static void SetInpaintEnvironment(System.Diagnostics.ProcessStartInfo startInfo)
+    {
+        foreach (var name in new[] { "CRISPEMBED_MIGAN", "CRISPEMBED_MIGAN512", "CRISPEMBED_INPAINT_QUANT", "CRISPEMBED_INPAINT_GRAPH", "CRISPEMBED_INPAINT_FAST", "CRISPEMBED_INPAINT_STREAM" })
+        {
+            startInfo.Environment[name] = "1";
+        }
+    }
+
+    /// <summary>True when the installed CLI knows --inpaint-stream.</summary>
+    public static bool SupportsInpainting()
+    {
+        var exe = GetCliExecutable();
+        if (!File.Exists(exe))
+        {
+            return false;
+        }
+
+        try
+        {
+            using var process = new System.Diagnostics.Process
+            {
+                StartInfo = new System.Diagnostics.ProcessStartInfo(exe, "--inpaint-help")
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                },
+            };
+            process.Start();
+            var stdout = process.StandardOutput.ReadToEndAsync();
+            var stderr = process.StandardError.ReadToEndAsync();
+            process.WaitForExit(15_000);
+            return (stdout.Result + stderr.Result).Contains("--inpaint-stream", StringComparison.Ordinal);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     /// <summary>
     /// The OCR backends offered in Subtitle Edit - the CrispEmbed models best suited for
     /// subtitle OCR. Model URLs/sizes match cstr's HuggingFace repos as referenced by the

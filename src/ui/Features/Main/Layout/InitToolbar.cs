@@ -738,7 +738,7 @@ public static class InitToolbar
     {
         var result = new Image
         {
-            Source = MakeOneColor(image),
+            Source = ThemeIcon.LoadForTheme(UiTheme.ImageFolder, image),
             Stretch = Stretch.Uniform,
         };
 
@@ -749,57 +749,6 @@ public static class InitToolbar
         }
 
         return result;
-    }
-
-    private static unsafe IImage MakeOneColor(string image)
-    {
-        var folder = UiTheme.ImageFolder;
-        // A theme's own icons are already drawn in its colors
-        if (!UiTheme.IsDarkThemeEnabled() || !Se.Settings.Appearance.MatchIconColorToDarkTheme || UiTheme.HasOwnIcons)
-        {
-            return ThemeIcon.Load(folder, image);
-        }
-
-        var foregroundColor = UiTheme.GetDarkThemeForegroundColor();
-
-        using var decodedBitmap = ThemeIcon.LoadPixels(folder, image);
-        using var skBitmap = decodedBitmap.ColorType == SKColorType.Bgra8888
-            ? decodedBitmap
-            : decodedBitmap.Copy(SKColorType.Bgra8888);
-
-        var width = skBitmap.Width;
-        var height = skBitmap.Height;
-        var result = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
-
-        byte* srcBase = (byte*)skBitmap.GetPixels();
-        byte* dstBase = (byte*)result.GetPixels();
-        int srcStride = skBitmap.RowBytes;
-        int dstStride = result.RowBytes;
-
-        for (var y = 0; y < height; y++)
-        {
-            uint* srcRow = (uint*)(srcBase + y * srcStride);
-            uint* dstRow = (uint*)(dstBase + y * dstStride);
-
-            for (var x = 0; x < width; x++)
-            {
-                uint pixel = srcRow[x];
-                byte b = (byte)(pixel & 0xFF);
-                byte g = (byte)((pixel >> 8) & 0xFF);
-                byte r = (byte)((pixel >> 16) & 0xFF);
-                byte a = (byte)(pixel >> 24);
-
-                var intensity = (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;
-
-                byte newR = (byte)(foregroundColor.R * intensity);
-                byte newG = (byte)(foregroundColor.G * intensity);
-                byte newB = (byte)(foregroundColor.B * intensity);
-
-                dstRow[x] = (uint)(a << 24) | (uint)(newR << 16) | (uint)(newG << 8) | newB;
-            }
-        }
-
-        return result.ToAvaloniaBitmap();
     }
 
     private static Border MakeSeparator()

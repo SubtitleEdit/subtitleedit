@@ -156,7 +156,7 @@ public class MessageBox : Window
             // relative to the working directory never resolved, so no icon was ever shown here.
             try
             {
-                iconImage.Source = ThemeIcon.Load(UiTheme.ImageFolder, icon.ToString());
+                iconImage.Source = ThemeIcon.LoadForTheme(UiTheme.ImageFolder, icon.ToString());
             }
             catch
             {
