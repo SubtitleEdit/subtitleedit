@@ -74,6 +74,12 @@
   </screenshots>
 
   <releases>
+    <release version="5.4.0" date="2026-11-06">
+      <url>https://github.com/SubtitleEdit/subtitleedit/releases/tag/v5.4.0</url>
+      <description>
+        <p>A more compact and polished look with SVG icons in all themes, new Nord, Midnight Cinema and Sakura themes, subtitle-to-audio sync, YouTube timed text, D-Cinema MXF export, in-app updates, side-by-side auto-translate, new OCR models, a faster SubRip reader, and many bug fixes.</p>
+      </description>
+    </release>
     <release version="5.3.0" date="2026-10-14">
       <url>https://github.com/SubtitleEdit/subtitleedit/releases/tag/v5.3.0</url>
       <description>
