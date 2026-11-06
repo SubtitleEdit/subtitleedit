@@ -62,4 +62,20 @@ public class AlignmentTagHelperTests
     {
         Assert.Equal(string.Empty, AlignmentTagHelper.SetAlignment(string.Empty, "an8", writeAn2Tag: false));
     }
+
+    // The EBU STL teletext dialog moves a line to another row; the tag must follow, or the
+    // reader's bottom tag keeps the line at the bottom wherever the row is not used.
+    [Theory]
+    [InlineData("Hello", 1, "{\\an8}Hello")]
+    [InlineData("{\\an2}Hello", 2, "{\\an8}Hello")]
+    [InlineData("{\\an1}Hello", 1, "{\\an7}Hello")]
+    [InlineData("{\\an3}Hello", 1, "{\\an9}Hello")]
+    [InlineData("{\\an8}Hello", 22, "Hello")]
+    [InlineData("{\\an7}Hello", 22, "{\\an1}Hello")]
+    [InlineData("{\\an8}Hello", 10, "{\\an5}Hello")]
+    [InlineData("{\\an9\\i1}Hello", 23, "{\\an3\\i1}Hello")]
+    public void SetTeletextRowBand(string text, int row, string expected)
+    {
+        Assert.Equal(expected, AlignmentTagHelper.SetTeletextRowBand(text, row, writeAn2Tag: false));
+    }
 }
