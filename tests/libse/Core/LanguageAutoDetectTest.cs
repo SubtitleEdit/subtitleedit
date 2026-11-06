@@ -119,6 +119,10 @@ public class LanguageAutoDetectTest
     [InlineData(1257, 3, new[] { "Vai mēs varam par to runāt rīt?", "Mums tagad jāiet.", "Es tikai gāju garām." })] // Latvian, was 1252
     [InlineData(1252, 8, new[] { "No sé què estàs fent aquí.", "Això no és gaire bo.", "És veritat." })] // Catalan, was 1250
     [InlineData(1252, 3, new[] { "Chi sei tu? Stavo solo passando di qui.", "Non lo sapevo.", "La stazione è a dieci minuti a piedi." })] // small file: the fallback must not be UTF-8
+    [InlineData(1252, 12, new[] { "Nuk e di çfarë po bën këtu.", "A mund të flasim nesër për këtë?", "Kjo nuk është mirë." })] // Albanian, was ISO-8859-13
+    [InlineData(1252, 9, new[] { "Má ég fá meira kaffi?", "Þetta er ekki gott.", "Hvað sagði hann við þig?", "Getum við talað um þetta á morgun?", "Það er enginn á skrifstofunni." })] // Icelandic: the fallback detector says ISO-8859-13 for some such files
+    [InlineData(1250, 12, new[] { "Nu ştiu ce faci aici.", "Putem vorbi despre asta mâine?", "Trebuie să plecăm acum.", "Mulţumesc frumos." })] // Romanian, was UTF-8 or Big5
+    [InlineData(1256, 40, new[] { "لا أعرف ماذا تفعل هنا؟", "هل يمكننا التحدث عن هذا غدا؟", "ماذا قال لك؟", "شكرا جزيلا، يا صديقي." })] // Arabic ، and ؟ are ¡ and ¿ in 1252, was taken as Spanish
     public void AutoDetectAnsiEncodingKeepsText(int codePage, int cueCount, string[] lines)
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);

@@ -2670,14 +2670,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // or French ends up as 1250, and Latvian as 1252.
                 var westernCount = GetBestCount(counts1252, AutoDetectWordsFrench, AutoDetectWordsSpanish, AutoDetectWordsItalian,
                     AutoDetectWordsPortuguese, AutoDetectWordsGerman, AutoDetectWordsDutch, AutoDetectWordsDanish, AutoDetectWordsSwedish,
-                    AutoDetectWordsNorwegian, AutoDetectWordsFinnish, AutoDetectWordsIcelandic, AutoDetectWordsCatalan);
+                    AutoDetectWordsNorwegian, AutoDetectWordsFinnish, AutoDetectWordsIcelandic, AutoDetectWordsCatalan, AutoDetectWordsAlbanian);
                 var encoding1257 = Encoding.GetEncoding(1257); // Baltic
                 var counts1257 = CountWords(encoding1257.GetString(buffer));
                 var balticCount = GetBestCount(counts1257, AutoDetectWordsEstonian, AutoDetectWordsLatvian, AutoDetectWordsLithuanian);
                 var competingCount = Math.Max(westernCount, balticCount);
                 // Not the Czech and Slovak lists: their "line contains ř/ô/ä" entries match any non-Latin text read as 1250.
                 var centralEuropeanCount = GetBestCount(counts1250, AutoDetectWordsCroatianAndSerbian, AutoDetectWordsCzechAndSlovak,
-                    AutoDetectWordsSlovenian, AutoDetectWordsHungarian);
+                    AutoDetectWordsSlovenian, AutoDetectWordsHungarian, AutoDetectWordsRomanian);
                 if (centralEuropeanCount > wordMinCount && centralEuropeanCount > competingCount)
                 {
                     return encoding1250;
@@ -2739,16 +2739,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return encoding1252;
                 }
 
+                // ¡ and ¿ only count along with Spanish words: their bytes are the Arabic comma and question mark in 1256.
                 var spanishCount1252 = counts1252.Get(AutoDetectWordsSpanish);
-                if (textEnc1252.Contains('¡'))
+                if (spanishCount1252 > 0 && textEnc1252.Contains('¡'))
                 {
                     spanishCount1252 += 5;
                 }
-                if (textEnc1252.Contains('¿'))
+                if (spanishCount1252 > 0 && textEnc1252.Contains('¿'))
                 {
                     spanishCount1252 += 5;
                 }
-                if (spanishCount1252 > wordMinCount && (textEnc1252.Contains('ú') || textEnc1252.Contains('í') || textEnc1252.Contains('ú') || textEnc1252.Contains('ó') || textEnc1252.Contains('é') || textEnc1252.Contains('ñ')))
+                if (spanishCount1252 > wordMinCount && (textEnc1252.Contains('ú') || textEnc1252.Contains('í') || textEnc1252.Contains('á') || textEnc1252.Contains('ó') || textEnc1252.Contains('é') || textEnc1252.Contains('ñ')))
                 {
                     var weirdChars = CountWeirdCharacters(textEnc1252);
                     if (weirdChars < 3)
@@ -2790,6 +2791,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (counts1250.Get(AutoDetectWordsRomanianShort) > 99)
                 {
                     return encoding1250;
+                }
+
+                // Albanian (ë, ç) and Icelandic (þ, ð, ý) are 1252 - the fallback detector says ISO-8859-13 for them.
+                var albanianOrIcelandicCount = GetBestCount(counts1252, AutoDetectWordsAlbanian, AutoDetectWordsIcelandic);
+                if (albanianOrIcelandicCount > wordMinCount && albanianOrIcelandicCount >= westernCount && albanianOrIcelandicCount > centralEuropeanCount)
+                {
+                    return encoding1252;
                 }
 
                 var encoding28591 = Encoding.GetEncoding(28591);
