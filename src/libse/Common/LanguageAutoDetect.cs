@@ -2919,7 +2919,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             return utf16;
                         }
 
-                        if (IsUtf8(buffer, out var couldBeUtf8))
+                        if (IsUtf8(buffer, length < file.Length, out var couldBeUtf8))
                         {
                             encoding = Encoding.UTF8;
                         }
@@ -2954,13 +2954,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Will try to determine if buffer is utf-8 encoded or not.
         /// If any non-utf8 sequences are found then false is returned, if no utf8 multi bytes sequences are found then false is returned.
         /// </summary>
-        private static bool IsUtf8(byte[] buffer, out bool couldBeUtf8)
+        /// <param name="buffer">The start of the file.</param>
+        /// <param name="isCutOff">True when the file is longer than the buffer, so its last character may be cut in two.</param>
+        /// <param name="couldBeUtf8">True when no invalid sequence was found.</param>
+        private static bool IsUtf8(byte[] buffer, bool isCutOff, out bool couldBeUtf8)
         {
             couldBeUtf8 = false;
             var utf8Count = 0;
             var i = 0;
-            var max = buffer.Length - 3;
-            while (i < max)
+            while (i < buffer.Length)
             {
                 byte b = buffer[i];
                 if (b <= 127)
@@ -2982,30 +2984,47 @@ namespace Nikse.SubtitleEdit.Core.Common
                     continue;
                 }
 
-                if (b >= 194 && b <= 223 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
-                { // 2-byte sequence
-                    utf8Count++;
-                    i++;
+                int sequenceLength;
+                if (b >= 194 && b <= 223)
+                {
+                    sequenceLength = 2;
                 }
-                else if (b >= 224 && b <= 239 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
-                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191)
-                { // 3-byte sequence
-                    utf8Count++;
-                    i += 2;
+                else if (b >= 224 && b <= 239)
+                {
+                    sequenceLength = 3;
                 }
-                else if (b >= 240 && b <= 244 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
-                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191 &&
-                                                 buffer[i + 3] >= 128 && buffer[i + 3] <= 191)
-                { // 4-byte sequence
-                    utf8Count++;
-                    i += 3;
+                else if (b >= 240 && b <= 244)
+                {
+                    sequenceLength = 4;
                 }
                 else
                 {
                     return false;
                 }
 
-                i++;
+                // Checked to the very end: a non-UTF-8 byte in the last bytes (an accented last
+                // letter before the final line break) used to slip through. Only a buffer cut off
+                // from a longer file may end inside a sequence.
+                if (i + sequenceLength > buffer.Length && !isCutOff)
+                {
+                    return false;
+                }
+
+                var end = Math.Min(i + sequenceLength, buffer.Length);
+                for (var j = i + 1; j < end; j++)
+                {
+                    if (buffer[j] < 128 || buffer[j] > 191)
+                    {
+                        return false;
+                    }
+                }
+
+                if (i + sequenceLength <= buffer.Length)
+                {
+                    utf8Count++;
+                }
+
+                i += sequenceLength;
             }
 
             couldBeUtf8 = true;
