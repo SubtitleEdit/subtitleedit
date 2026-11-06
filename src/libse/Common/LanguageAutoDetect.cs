@@ -77,6 +77,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 AutoDetectWordsSlovak,
                 AutoDetectWordsSlovenian,
                 AutoDetectWordsIcelandic,
+                AutoDetectWordsGalician,
+                AutoDetectWordsBasque,
+                AutoDetectWordsWelsh,
                 AutoDetectWordsLatvian,
                 AutoDetectWordsLithuanian,
                 AutoDetectWordsEstonian,
@@ -978,6 +981,33 @@ namespace Nikse.SubtitleEdit.Core.Common
             "pričakujemo", "močan", "dež", "ponoči", "padle", "ničlo", "vozniki", "naj", "posebej", "previdni", "dober", "mizo", "sledite", "jedilnik", "nocoj", "odlična", "najprej", "videli",
         };
 
+        // Galician, Basque and Welsh: everyday words their neighbours do not share (not non, da, du, han,
+        // nos, ti, ei, eu - French, Italian, Portuguese, Scandinavian, Finnish, ...). They used to come out
+        // as Portuguese, Hungarian and Norwegian.
+        private static readonly string[] AutoDetectWordsGalician =
+        {
+            "unha", "unhas", "grazas", "polo", "pola", "polos", "polas", "xa", "moito", "moita", "moitos", "moitas", "facer", "dicir",
+            "vostede", "tamén", "hoxe", "mañá", "xente", "ningún", "ningunha", "algunha", "coma", "cun", "cunha", "dun", "dunha", "nun",
+            "nunha", "iso", "teño", "fago", "fixen", "fixo", "dixo", "dixen", "xuntos", "despois", "irmán", "mellor",
+            "rapaza", "auga", "xantar", "onte", "estiven", "estivo", "moi", "máis", "miña", "nai", "che", "diso", "disto", "axuda", "imos",
+        };
+
+        private static readonly string[] AutoDetectWordsBasque =
+        {
+            "eta", "ez", "bai", "dira", "naiz", "zara", "gara", "dut", "duzu", "dugu", "dute", "zer", "nola", "zergatik", "noiz", "nor",
+            "hemen", "orain", "gero", "baina", "eskerrik", "asko", "batzuk", "hau", "hori", "hura", "nire", "zure", "gure", "beste", "oso",
+            "gabe", "behar", "nahi", "ezin", "dakit", "badakit", "dago", "daude", "egin", "egiten", "joan", "etorri", "esan", "ikusi",
+            "agur", "kaixo", "mesedez", "barkatu", "bihar", "atzo", "gaur", "zen", "zuen", "dela", "bezala", "guztia",
+        };
+
+        private static readonly string[] AutoDetectWordsWelsh =
+        {
+            "yn", "yr", "ddim", "mae", "wedi", "dw", "dwi", "rydw", "rwyt", "chi", "beth", "ble", "pam", "diolch", "gyda", "ond", "hefyd",
+            "nawr", "rŵan", "efo", "iawn", "bod", "oedd", "fydd", "hwn", "hon", "hyn", "fy", "dy", "ac", "gyd", "mewn", "drwy", "achos",
+            "rhaid", "eisiau", "gallu", "gwneud", "mynd", "dod", "dweud", "gweld", "fawr", "heddiw", "yfory", "croeso", "hwyl",
+            "fod", "ydy", "ydw", "wyt",
+        };
+
         private static readonly string[] AutoDetectWordsIcelandic =
         {
             "við",
@@ -1228,6 +1258,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (slovenianCount > count)
                 {
                     Consider("sl", count);
+                }
+                else if (counts.Get(AutoDetectWordsGalician) * 2 > count)
+                {
+                    // Galician shares most words with Portuguese, so its own list scores lower than the
+                    // Portuguese one on Galician text - but Portuguese text has next to no Galician words.
+                    Consider("gl", count);
                 }
                 else
                 {
@@ -1631,6 +1667,24 @@ namespace Nikse.SubtitleEdit.Core.Common
                 Consider("is", count);
             }
 
+            count = counts.Get(AutoDetectWordsGalician);
+            if (count > bestCount)
+            {
+                Consider("gl", count); // Galician
+            }
+
+            count = counts.Get(AutoDetectWordsBasque);
+            if (count > bestCount)
+            {
+                Consider("eu", count); // Basque
+            }
+
+            count = counts.Get(AutoDetectWordsWelsh);
+            if (count > bestCount)
+            {
+                Consider("cy", count); // Welsh
+            }
+
             score = bestScore;
             return best;
 
@@ -1972,6 +2026,21 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     LanguageCode = "is",
                     Words = AutoDetectWordsIcelandic,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "gl",
+                    Words = AutoDetectWordsGalician,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "eu",
+                    Words = AutoDetectWordsBasque,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "cy",
+                    Words = AutoDetectWordsWelsh,
                 },
                 new LanguageForAutoDetect
                 {
