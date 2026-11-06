@@ -74,4 +74,28 @@ public class LanguageAutoDetectTest
         var bytes = Encoding.GetEncoding(936).GetBytes("我们这个国家的时间很好，请来学习中文，说明一下为什么。");
         Assert.Equal(936, LanguageAutoDetect.DetectAnsiEncoding(bytes).CodePage);
     }
+
+    [Fact]
+    public void AutoDetectCodePage1252ItalianNotShiftJis()
+    {
+        // Issue #16678: invalid Shift_JIS bytes decode as U+30FB (a kana), so Italian 1252 text was read as Japanese.
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var bytes = Encoding.GetEncoding(1252).GetBytes(
+            "1\r\n00:00:01,000 --> 00:00:03,000\r\nPerché sei qui? È così difficile.\r\n\r\n" +
+            "2\r\n00:00:04,000 --> 00:00:06,000\r\nLì c'è già un uomo, lui è là.\r\n\r\n" +
+            "3\r\n00:00:07,000 --> 00:00:09,000\r\nCosì è, perciò andrò lì e poi là.\r\n\r\n" +
+            "4\r\n00:00:10,000 --> 00:00:12,000\r\nSì, c'è più gente qui. Cos'è? Lì!\r\n");
+        var codePage = LanguageAutoDetect.DetectAnsiEncoding(bytes).CodePage;
+        Assert.NotEqual(932, codePage);
+        Assert.NotEqual(936, codePage);
+        Assert.NotEqual(950, codePage);
+    }
+
+    [Fact]
+    public void AutoDetectCodePageShiftJisWithMiddleDot()
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var bytes = Encoding.GetEncoding(932).GetBytes("これは日本語の字幕です・よろしくお願いします・ありがとうございました。");
+        Assert.Equal(932, LanguageAutoDetect.DetectAnsiEncoding(bytes).CodePage);
+    }
 }
