@@ -366,7 +366,7 @@ public class LanguageSettings
     public string WindowsRenderingModeSoftware { get; set; }
     public string TextSelectionOpacity { get; set; }
     public string WaveformToolbarItems { get; set; }
-    public string MatchIconColorToDarkTheme { get; set; }
+    public string MatchIconColorToTheme { get; set; }
     public string SubtitlePreviewProperties { get; set; }
     public string UsePositionFromSubtitleFile { get; set; }
     public string MarginIsPartOfSubtitleArea { get; set; }
@@ -756,7 +756,7 @@ public class LanguageSettings
         WindowsRenderingModeSoftware = "Software (no GPU, no libmpv OpenGL)";
         TextSelectionOpacity = "Text selection opacity (%)";
         WaveformToolbarItems = "Waveform toolbar items";
-        MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";
+        MatchIconColorToTheme = "Match icon color to theme foreground color";
         SubtitlePreviewProperties = "Subtitle preview properties";
         UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
         MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";

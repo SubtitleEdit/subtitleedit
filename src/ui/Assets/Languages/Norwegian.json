@@ -3983,7 +3983,6 @@
       "WindowsRenderingModeSoftware": "Programvare (ingen GPU, ingen libmpv OpenGL)",
       "TextSelectionOpacity": "Gjennomsiktighet for tekstmarkering (%)",
       "WaveformToolbarItems": "Bølgeform verktøylinjeelementer",
-      "MatchIconColorToDarkTheme": "Samsvar ikonfarge med mørkt tema forgrunnsfarge",
       "SubtitlePreviewProperties": "Egenskaper for forhåndsvisning av undertekst",
       "UsePositionFromSubtitleFile": "Bruk posisjon fra undertekstfilen (TTML/PAC/EBU STL)",
       "MarginIsPartOfSubtitleArea": "Margen er en del av undertekstområdet",

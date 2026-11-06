@@ -420,7 +420,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedTheme;
     [ObservableProperty] private ObservableCollection<string> _iconThemes;
     [ObservableProperty] private string _selectedIconTheme;
-    [ObservableProperty] private bool _matchIconColorToDarkTheme;
+    [ObservableProperty] private bool _matchIconColorToTheme;
     [ObservableProperty] private int _layoutScale;
     [ObservableProperty] private int _uiFontSize;
     [ObservableProperty] private int _textSelectionOpacity;
@@ -985,7 +985,7 @@ public partial class SettingsViewModel : ObservableObject
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
-        MatchIconColorToDarkTheme = appearance.MatchIconColorToDarkTheme;
+        MatchIconColorToTheme = appearance.MatchIconColorToTheme;
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
         UiFontSize = UiTheme.FontSizeFromScale(appearance.FontScale);
         TextSelectionOpacity = appearance.TextSelectionOpacity;
@@ -1898,7 +1898,7 @@ public partial class SettingsViewModel : ObservableObject
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
         appearance.IconTheme = SelectedIconTheme;
-        appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;
+        appearance.MatchIconColorToTheme = MatchIconColorToTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
         appearance.FontScale = UiTheme.FontScaleFromSize(UiFontSize, appearance.FontScale);
         appearance.TextSelectionOpacity = Math.Clamp(TextSelectionOpacity, UiTheme.MinTextSelectionOpacity, 100);

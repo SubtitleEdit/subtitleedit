@@ -3983,7 +3983,6 @@
       "WindowsRenderingModeSoftware": "Software (geen GPU, geen libmpv OpenGL)",
       "TextSelectionOpacity": "Dekking tekstselectie (%)",
       "WaveformToolbarItems": "Items op de golfvormwerkbalk",
-      "MatchIconColorToDarkTheme": "Pictogramkleur afstemmen op voorgrondkleur van donker thema",
       "SubtitlePreviewProperties": "Eigenschappen van ondertitelvoorbeeld",
       "UsePositionFromSubtitleFile": "Positie uit ondertitelbestand gebruiken (TTML/PAC/EBU STL)",
       "MarginIsPartOfSubtitleArea": "Marge maakt deel uit van het ondertitelgebied",
