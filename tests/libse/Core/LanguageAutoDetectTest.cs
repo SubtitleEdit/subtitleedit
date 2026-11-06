@@ -185,6 +185,9 @@ public class LanguageAutoDetectTest
     [InlineData("eu", new[] { "Ez dakit zer egin behar dudan.", "Orain ez, mesedez, bihar hitz egingo dugu.", "Zergatik zaude hemen?", "Eskerrik asko laguntzeagatik." })] // was hu/fr
     [InlineData("cy", new[] { "Dw i ddim yn gwybod beth i'w wneud.", "Mae hi wedi mynd adref yn barod.", "Pam wyt ti yma nawr?", "Diolch yn fawr am dy help." })] // was no/af/en
     [InlineData("pt", new[] { "Já te disse que não posso ir.", "A minha mãe está na cozinha.", "Hoje há muita gente na rua.", "Vamos tomar alguma coisa depois do trabalho?" })] // stays Portuguese next to Galician
+    [InlineData("ru", new[] { "Выделять цвета VobSub для OCR", "Введите имя базы данных", "CEA-608 в видео (SEI)", "Добавить новую строку после номера строки", "Видео: переключить контраст (только mpv)", "Лицензия на модель IndexTTS 2.5" })] // was it: Latin words in Cyrillic text
+    [InlineData("hr", new[] { "Postavi linije ranije ili kasnije...", "Skrati fontove na korištene znakove...", "Dovršavanje izlazne datoteke (premještanje indeksa na početak)...", "Nije moguće dohvatiti podatke o videu", "Karaoke - iskakanje aktivne riječi" })] // was sr on a tie
+    [InlineData("pl", new[] { "Nagrywanie nie powiodło się.", "Długość pojedynczej linii.", "Maksymalna liczba klatek między liniami.", "Rozmiar czcionki tekstu na przebiegu fali." })] // was nl: Afrikaans "nie"
     public void AutoDetectLanguage(string expected, string[] lines)
     {
         var subtitle = new Subtitle();

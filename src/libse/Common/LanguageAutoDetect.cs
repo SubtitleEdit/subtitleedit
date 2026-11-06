@@ -1173,10 +1173,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             var counts = CountWords(text);
             var cyrillicChecked = false;
             string cyrillicByLetters = null;
+            var dominantScript = GetDominantScript(text);
 
             void Consider(string languageCode, int score)
             {
-                if (score > bestScore)
+                if (score > bestScore && IsWrittenIn(languageCode, dominantScript))
                 {
                     best = languageCode;
                     bestScore = score;
@@ -1299,7 +1300,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             count = counts.Get(AutoDetectWordsDutch);
             var afrikaansCount = counts.Get(AutoDetectWordsAfrikaans);
-            if (count > bestCount || afrikaansCount > bestCount)
+            // Not with Polish letters: Polish "nie" is the Afrikaans negation too, and Dutch and Afrikaans
+            // never write ł, ż, ź, ś or ń (one could be a name).
+            if ((count > bestCount || afrikaansCount > bestCount) && CountChars(text, "łŁżŻźŹśŚńŃ") < 2)
             {
                 // Afrikaans text hits the Dutch list too (het, van, een, ...); the spelling tells.
                 var afrikaansOrDutch = GetAfrikaansOrDutchByLetters(text);
@@ -1443,7 +1446,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var croatianCount = counts.Get(AutoDetectWordsCroatian);
                 var serbianCount = counts.Get(AutoDetectWordsSerbian);
                 var slovenianCount = counts.Get(AutoDetectWordsSlovenian);
-                if (croatianCount > serbianCount)
+                // On a tie (often none of either in a short text) the ijekavian spelling says Croatian:
+                // gdje, djeca, htjeti, vjerovati, mjesto - Serbian writes gde, deca, hteti, verovati, mesto.
+                if (croatianCount > serbianCount ||
+                    croatianCount == serbianCount && GetCountContains(text, "dje", "tje", "vje", "mje") > 0)
                 {
                     if (slovenianCount > croatianCount)
                     {
@@ -2108,6 +2114,80 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return languageId;
+        }
+
+        private enum Script
+        {
+            Mixed,
+            Latin,
+            Cyrillic,
+            Arabic,
+        }
+
+        /// <summary>
+        /// The script most letters are in, when it is more than half of them.
+        /// </summary>
+        private static Script GetDominantScript(string text)
+        {
+            int letters = 0, latin = 0, cyrillic = 0, arabic = 0;
+            foreach (var ch in text)
+            {
+                if (!char.IsLetter(ch))
+                {
+                    continue;
+                }
+
+                letters++;
+                if (ch < '\u0250')
+                {
+                    latin++;
+                }
+                else if (ch >= '\u0400' && ch <= '\u04FF')
+                {
+                    cyrillic++;
+                }
+                else if (ch >= '\u0600' && ch <= '\u06FF' || ch >= '\u0750' && ch <= '\u077F' || ch >= '\uFB50' && ch <= '\uFEFF')
+                {
+                    arabic++;
+                }
+            }
+
+            var half = letters / 2;
+            if (latin > half)
+            {
+                return Script.Latin;
+            }
+
+            if (cyrillic > half)
+            {
+                return Script.Cyrillic;
+            }
+
+            return arabic > half ? Script.Arabic : Script.Mixed;
+        }
+
+        /// <summary>
+        /// Whether a language can be the answer for a text mostly in the given script: a few Latin words
+        /// in a Cyrillic text (names, "Video") must not make it Hungarian, nor Cyrillic junk Latin text Russian.
+        /// Serbian is written in both Latin and Cyrillic.
+        /// </summary>
+        private static bool IsWrittenIn(string languageCode, Script script)
+        {
+            switch (script)
+            {
+                case Script.Cyrillic:
+                    return languageCode == "ru" || languageCode == "uk" || languageCode == "bg" || languageCode == "mk" || languageCode == "sr";
+                case Script.Arabic:
+                    return languageCode == "ar" || languageCode == "fa" || languageCode == "ur" || languageCode == "ckb";
+                case Script.Latin:
+                    return languageCode != "ru" && languageCode != "uk" && languageCode != "bg" && languageCode != "mk" &&
+                           languageCode != "ar" && languageCode != "fa" && languageCode != "ur" && languageCode != "ckb" &&
+                           languageCode != "el" && languageCode != "he" && languageCode != "th" && languageCode != "ko" &&
+                           languageCode != "ja" && !languageCode.StartsWith("zh", StringComparison.Ordinal) &&
+                           languageCode != "hi" && languageCode != "si";
+                default:
+                    return true;
+            }
         }
 
         /// <summary>
