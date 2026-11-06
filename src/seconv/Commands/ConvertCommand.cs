@@ -476,7 +476,12 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool SplitLongLines { get; init; }
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
+    public override Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellationToken)
+        => SubtitleConverter.RunExclusiveAsync(
+            () => ExecuteUnderGlobalGateAsync(context, settings, cancellationToken), cancellationToken);
+
+    private async Task<int> ExecuteUnderGlobalGateAsync(
+        CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         try
         {
@@ -996,7 +1001,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             // Perform conversion
             var stopwatch = Stopwatch.StartNew();
             var converter = new SubtitleConverter();
-            var result = await converter.ConvertAsync(options);
+            var result = await converter.ConvertInsideGlobalGateAsync(options, cancellationToken);
             stopwatch.Stop();
 
             // Surface settings-file warnings in the machine-readable output too; in non-silent
@@ -1061,6 +1066,12 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             }
 
             return 0;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Cancellation is not a failed file conversion. Let Spectre/CLI
+            // callers distinguish it from a normal --json or exit-1 failure.
+            throw;
         }
         catch (Exception ex)
         {

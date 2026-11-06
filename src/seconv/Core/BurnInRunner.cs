@@ -208,8 +208,10 @@ internal static class BurnInRunner
     /// Runs ffmpeg. <paramref name="progress"/> gets (encoded seconds, total seconds) parsed from
     /// ffmpeg's stats. Ctrl+C stops ffmpeg and removes the partial output before seconv exits.
     /// </summary>
-    public static string Run(string assaFileName, string videoFileName, string? ffmpegArgs, bool overwrite, Action<int, int>? progress = null)
+    public static string Run(string assaFileName, string videoFileName, string? ffmpegArgs, bool overwrite,
+        Action<int, int>? progress = null, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         EnsureOutputWritable(assaFileName, videoFileName, overwrite);
         var outputFileName = GetOutputFileName(assaFileName, videoFileName);
 
@@ -247,8 +249,12 @@ internal static class BurnInRunner
         }
 
         Console.CancelKeyPress += OnCancel;
+        // Cancelling the caller must stop ffmpeg too, not just future files.
+        // The process may not be started yet; TryKill safely tolerates that case.
+        using var cancellationRegistration = cancellationToken.Register(() => TryKill(process));
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             File.Copy(assaFileName, Path.Combine(workFolder, "subtitle.ass"));
 
             var tail = new Queue<string>();
@@ -291,9 +297,20 @@ internal static class BurnInRunner
                 }
             };
 
+            cancellationToken.ThrowIfCancellationRequested();
             process.Start();
+            // Close the small race between the pre-start check and process.Start:
+            // cancellation may have fired while the process was not yet running.
+            if (cancellationToken.IsCancellationRequested)
+            {
+                TryKill(process);
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
             process.BeginErrorReadLine();
             process.WaitForExit();
+            // A killed encode is cancellation, not an ordinary ffmpeg failure.
+            cancellationToken.ThrowIfCancellationRequested();
             if (process.ExitCode != 0)
             {
                 string log;
@@ -305,6 +322,8 @@ internal static class BurnInRunner
                 throw new InvalidOperationException($"ffmpeg burn-in failed (exit code {process.ExitCode}):{Environment.NewLine}{log}");
             }
 
+            // Existing output is only replaced if the caller still wants this result.
+            cancellationToken.ThrowIfCancellationRequested();
             File.Move(stagingFileName, outputFileName, overwrite: true);
             if (progress != null && totalSeconds > 0)
             {
