@@ -3245,7 +3245,7 @@
     "removeBurnedIn": {
       "title": "Rimuovi sottotitoli incorporati",
       "removeBurnedInDotDotDot": "Rimuovi sottotitoli incorporati...",
-      "info": "Rimuove il testo dei sottotitoli incorporati trovato dall'OCR con un modello di Inpainting IA (CrispEmbed), riquadri neri, una sfocatura o il logo di ffmpeg. Viene modificata solo l'area attorno a ciascuna riga e solo mentre viene visualizzata. Le caselle nere vengono caricate nella finestra principale come sottotitolo ASSA; gli altri metodi ricodificano il video e copiano l'audio.",
+      "info": "Rimuove il testo dei sottotitoli incorporati trovato dall'OCR con un modello di Inpainting IA (CrispEmbed), riquadri neri, una sfocatura o il delogo di ffmpeg. Viene modificata solo l'area attorno a ciascuna riga e solo mentre viene visualizzata. Le caselle nere vengono caricate nella finestra principale come sottotitolo ASSA; gli altri metodi ricodificano il video e copiano l'audio.",
       "textMask": "Maschera testo",
       "method": "Metodo",
       "methodRemove": "Rimuovi: Inpainting IA",
@@ -3289,7 +3289,7 @@
       "nextFrame": "Fotogramma successivo",
       "generatingWaveform": "Generazione forma d'onda...",
       "findingText": "Ricerca testo sottotitoli...",
-      "inpainting": "Ripittura...",
+      "inpainting": "Inpainting...",
       "resultInXMs": "Risultato ({0:#,##0} ms)",
       "noSubtitleHere": "Nessun sottotitolo qui",
       "maskedXPixels": "Maschera: {0:#,##0} pixel",
