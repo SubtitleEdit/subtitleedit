@@ -496,6 +496,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "never", "always", "maybe", "please", "thank", "thanks", "sorry", "look", "tell", "told", "said", "make", "made", "take", "took", "give", "gave", "back",
             "time", "night", "life", "love", "good", "great", "little", "much", "many", "more", "only", "very", "but", "if", "I'm", "it's", "don't", "didn't", "doesn't",
             "can't", "isn't", "wasn't", "won't", "we're", "they're", "I've", "you've", "nobody", "before", "after", "years", "closed", "expected", "quiet",
+            "or", "it", "one",
         };
 
         private static readonly string[] AutoDetectWordsDanish =
@@ -506,6 +507,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "uden", "mellem", "næste", "anden", "meget", "lidt", "hvad", "nej", "gøre", "gør", "siger", "kender", "kunne", "måtte", "selv", "mere", "andre", "dette", "hele", "sammen", "væk", "penge", "arbejde", "ked", "ærlig",
             "fik", "vand", "broen", "vejene", "husene", "senere", "komme", "kommet",
             "ventes", "kraftig", "regn", "morgen", "nordlige", "temperaturen", "frysepunktet", "bilister", "forsigtige",
+            "ud", "brug", "vælg",
         };
 
         private static readonly string[] AutoDetectWordsNorwegian =
@@ -517,6 +519,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "siste", "selv", "andre", "dette", "hele", "sammen", "vekk", "hjem", "tilbake", "jobb", "jobbet", "lei", "sjanse",
             "ærlig", "etter", "aldri", "å", "være", "vært", "hadde", "dere", "fikk", "vann", "brua", "veiene", "husene", "elva", "ventet", "senere", "fjor",
             "ventes", "kraftig", "regn", "morgen", "temperaturen", "faller", "løpet", "natten", "bilister", "forsiktige",
+            "inn", "opp",
         };
 
         private static readonly string[] AutoDetectWordsSwedish =
@@ -534,6 +537,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "arbetade", "jobbade", "levde", "väntade", "hoppades", "köpte", "betalade", "körde", "träffade", "ringde", "läste", "hittade", "öppnade",
             "väntas", "över", "norra", "morgon", "kraftigt", "delarna", "sjunker", "bör", "vara", "försiktiga", "noll", "bord", "två", "självklart", "följ", "menyn",
             "först", "utmärkt",
+            "till", "vid", "bort", "här", "endast",
         };
 
         private static readonly string[] AutoDetectWordsSpanish =
@@ -557,6 +561,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "lavoro", "lavoravo", "città", "fiume", "ponte", "acqua", "strade", "collina", "tardi", "mentire", "mentirmi", "possibilità", "onesto", "scorso",
             "tranquilla", "rimasta", "fabbrica", "chiudesse", "aspettava", "salisse", "fretta", "sparito", "inondate", "guardava", "portava", "arrivare", "disse",
             "averlo", "senti", "dammi", "avuto",
+            "dal",
         };
 
         private static readonly string[] AutoDetectWordsFrench =
@@ -564,6 +569,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "pas", "[vn]ous", "ça", "une", "pour", "[mt]oi", "dans", "elle", "tout", "plus", "[bmt]on", "suis", "avec", "oui", "fait", "ils", "être", "faire", "comme", "était", "quoi", "ici", "veux",
             "vouloir", "quelque", "pouvoir", "rien", "dit", "où", "votre", "pourquoi", "sont", "cette", "peux", "alors", "comment", "avez", "très", "même", "merci", "ont", "aussi", "chose", "voir",
             "allez", "tous", "ces", "deux", "avoir", " pouvoir", "même", "œil", "sœur",
+            "sous", "sur", "est",
         };
 
         private static readonly string[] AutoDetectWordsPortuguese =
@@ -593,6 +599,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "menschen", "abend", "zeit", "jahr", "jahre", "haus", "zuhause", "leben", "liebe", "schnell", "langsam", "zusammen", "allein", "schade", "danke", "bitte",
             "entschuldigung", "tschüss", "herr", "stadt", "fluss", "brücke", "wasser", "häuser", "straßen", "später", "fabrik", "lange", "gearbeitet", "lüg", "leid",
             "reden", "letztes", "ehrlich", "einmal", "ruhig", "jahrelang", "erwartet", "steigen", "hügel", "ganze", "nacht", "nochmal", "hattest", "schloss",
+            "zum", "nur",
         };
 
         private static readonly string[] AutoDetectWordsDutch =
@@ -603,6 +610,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "kwam", "doe", "doet", "doen", "deed", "gedaan", "zie", "ziet", "zien", "zag", "gezien", "weten", "wist", "denk", "denkt", "dacht", "zeg", "zegt",
             "zeggen", "zei", "gezegd", "praten", "mij", "jouw", "hem", "onze", "hun", "niets", "altijd", "misschien", "echt", "veel", "weinig", "slecht", "nieuw", "nacht", "avond", "gisteren", "vandaag", "tijd", "jaren", "thuis", "leven", "mensen", "vrouw", "jongen", "kinderen", "wegen", "huizen", "stijgen", "verwacht", "jarenlang",
             "sloot", "liegen", "spijt", "eerlijk", "dank", "bedankt", "alsjeblieft", "tot ziens",
+            "naar", "voor", "uit", "aan", "bij", "één",
         };
 
         private static readonly string[] AutoDetectWordsPolish =
@@ -751,7 +759,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             "tanrım", "hayatım", "aşkım", "yapıyorsun", "yapacağım", "lütfen", "kadın", "adamı", "bakalım",
             "bırak", "dışında", "hiçbir", "ışık", "kız", "sığ", "şans", "şöyle", "yaşam", "başladı",
             "olmalı", "bunları", "onları", "kızı", "sana", "seni", "beni", "bana", "hadi", "olur",
-            "gerçekten", "kesinlikle", "biliyorum", "olduğum", "ölmüş", "öldü", "gidiyorum", "kalsın"
+            "gerçekten", "kesinlikle", "biliyorum", "olduğum", "ölmüş", "öldü", "gidiyorum", "kalsın",
+            "veya", "olarak", "yok",
         };
 
         private static readonly string[] AutoDetectWordsCroatianAndSerbian =
@@ -820,6 +829,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "jembatan", "hilang", "jalan", "terendam", "menyaksikan", "bukit", "menyapu", "belakangan", "berkata", "menduganya", "kubilang", "padaku", "dariku", "oke",
             "hujan", "turun", "utara", "diperkirakan", "suhu", "bawah", "nol", "pengemudi", "hati-hati", "ekstra", "meja", "tentu", "silakan", "ikuti", "lihat",
             "menunya", "dulu", "ikannya", "enak", "deras",
+            "saat", "satu", "lebih",
         };
 
         // Catalan — distinctive words that don't collide with Spanish/French/Italian/Portuguese
@@ -916,6 +926,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "huomenna", "eilen", "tänään", "odotetaan", "pohjoisessa", "pohjoiseen", "etelässä", "sataa", "sadetta", "rankkasadetta", "lämpötila", "laskee", "pakkasen",
             "puolelle", "autoilijoiden", "kannattaa", "erityisen", "varovaisia", "iltaa", "teillä", "pöytää", "kahdelle", "tietysti", "seuratkaa", "voisimmeko",
             "ruokalistan", "ensin", "kala", "erinomaista",
+            "yksi", "uudelleen", "lisää",
         };
 
         private static readonly string[] AutoDetectWordsRomanian =
@@ -931,6 +942,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "timp", "ani", "anul", "acasă", "casă", "viață", "viața", "dragoste", "bani", "repede", "încet", "împreună", "singur", "păcat", "sigur", "desigur", "chiar",
             "deci", "așa", "astfel", "iar", "lucru", "lucrat", "lucrez", "târziu", "devreme", "orașul", "fabrica", "râul", "podul", "drumurile", "inundate", "privea",
             "apa", "casele", "văzuseră", "venind", "minți", "vorbim", "șansă", "trecut", "măcar", "dată", "ai fost",
+            "cu", "să", "pe",
         };
 
         // Czech and Slovak languages have many common words (especially when non flexed)
@@ -950,7 +962,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             "nemám", "potřebuju", "potřebuji", "jasně", "samozřejmě", "opravdu", "vážně", "tady", "pak", "protože", "jestli", "pokud", "nelži", "promluvit", "šanci",
             "loni", "upřímný", "nečekal", "stoupne", "dívala", "kopce", "bere", "domy", "přicházet",
             "očekává", "silný", "déšť", "teploty", "klesnou", "nulu", "řidiči", "měli", "silnicích", "zvlášť", "opatrní", "stůl", "pojďte",
-            "mnou", "bychom", "nejdřív", "jídelní", "lístek", "vynikající", };
+            "mnou", "bychom", "nejdřív", "jídelní", "lístek", "vynikající",
+            "pouze",
+        };
         // differences between Czech and Slovak languages / Slovak words / please keep the words aligned between these languages for better comparison
         private static readonly string[] AutoDetectWordsSlovak =
         {
