@@ -82,4 +82,35 @@ public class ImageRendererResetTagTests
 
         Assert.True(SamePixels(line, tag));
     }
+
+    // "{\rDefault}" on an italic "Sign" line: the reset's "</i>" came after the "<font>" of the
+    // Default style and took it off again - the text stayed italic in the Sign colour.
+    [Fact]
+    public void ResetToUprightStyle_FromItalicStyle_DrawsTheTargetStyle()
+    {
+        const string header = "[Script Info]\nPlayResX: 1280\nPlayResY: 720\n\n[V4+ Styles]\n" +
+            "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n" +
+            "Style: Default,Arial,40,&H000000FF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,0,2,10,10,10,1\n" +
+            "Style: Sign,Arial,40,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,-1,0,0,100,100,0,0,1,2,0,2,10,10,10,1\n";
+        var styles = ExportAssaStyles.FromHeader(header)!;
+
+        using var reset = RenderStyled(styles, "Sign", "{\\rDefault}Hello world");
+        using var plain = RenderStyled(styles, "Default", "Hello world");
+
+        Assert.True(HasRed(reset));
+        Assert.True(SamePixels(reset, plain));
+    }
+
+    private static SKBitmap RenderStyled(ExportAssaStyles styles, string styleName, string rawText)
+    {
+        var ip = new ImageParameter
+        {
+            Text = ExportTextTags.ToRenderableText(rawText, styles, styleName),
+            ScreenWidth = 1280,
+            ScreenHeight = 720,
+        };
+        styles.Apply(ip, styleName, rawText);
+        ip.ContentAlignment = ExportContentAlignment.Center;
+        return ImageRenderer.GenerateBitmap(ip);
+    }
 }

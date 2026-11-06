@@ -188,7 +188,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         // Sign: Impact 60, yellow, bold, italic, underline, strikeout (the closing tags at the end
         // are GetFormattedText balancing what it sees open, and change nothing)
-        Assert.Equal("A<r><font face=\"Impact\" size=\"60\" color=\"#ffff00\"><b><i><u><s>B</i></u></b>", text);
+        Assert.Equal("A<r><i><font face=\"Impact\" size=\"60\" color=\"#ffff00\"><b><u><s>B</i></u></b>", text);
     }
 
     [Fact]
@@ -196,7 +196,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     {
         var text = ExportTextTags.ToRenderableText("A{\\rDefault}B", ExportAssaStyles.FromHeader(Header), "Sign");
 
-        Assert.Equal("A<r><font face=\"Arial\" size=\"40\" color=\"#ffffff\"></i></u></s>B", text);
+        Assert.Equal("A<r></i><font face=\"Arial\" size=\"40\" color=\"#ffffff\"></u></s>B", text);
     }
 
     [Fact]
