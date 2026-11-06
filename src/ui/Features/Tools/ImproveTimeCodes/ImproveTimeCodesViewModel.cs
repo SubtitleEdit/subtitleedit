@@ -56,6 +56,8 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     [ObservableProperty] private string _changePositionLabel;
     [ObservableProperty] private bool _canGoPrevious;
     [ObservableProperty] private bool _canGoNext;
+    [ObservableProperty] private bool _canGoPreviousToCheck;
+    [ObservableProperty] private bool _canGoNextToCheck;
     [ObservableProperty] private bool _hasResult;
     [ObservableProperty] private AudioVisualizer? _audioVisualizerOriginal;
     [ObservableProperty] private AudioVisualizer? _audioVisualizerAligned;
@@ -647,7 +649,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
         var l = Se.Language.Tools.ImproveTimeCodes;
         var retimed = Rows.Where(r => r.IsChanged && r.Apply).ToList();
-        var toCheck = Rows.Count(r => r.Status is { } status && SubtitleRetimer.IsUnconfirmed(status));
+        var toCheck = Rows.Count(r => r.NeedsCheck);
         var noSpeech = Rows.Count(r => r.Status == SubtitleRetimer.LineStatus.NoSpeech);
         var meanShiftMs = retimed.Count == 0
             ? 0
@@ -693,6 +695,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         if (SelectedRow == null)
         {
             UpdateChangeNavigation();
+            UpdateToCheckNavigation();
         }
     }
 
@@ -840,6 +843,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     partial void OnSelectedRowChanged(ImproveTimeCodesRow? value)
     {
         UpdateChangeNavigation();
+        UpdateToCheckNavigation();
         if (value == null)
         {
             PushParagraphsToVisualizers();
@@ -864,10 +868,27 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         CanGoPrevious = changed.Any(r => r.Index < index);
         CanGoNext = changed.Any(r => r.Index > index);
 
+        // While sitting on a line flagged to check, the label shows the position in those lines,
+        // the set Shift+F7/Shift+F8 steps through.
+        if (SelectedRow is { NeedsCheck: true })
+        {
+            var toCheck = Rows.Where(r => r.NeedsCheck).ToList();
+            ChangePositionLabel = string.Format(Se.Language.General.ToCheckXOfY, toCheck.IndexOf(SelectedRow) + 1, toCheck.Count);
+            return;
+        }
+
         var position = SelectedRow != null ? changed.IndexOf(SelectedRow) : -1;
         ChangePositionLabel = position >= 0
             ? string.Format(Se.Language.General.ChangeXOfY, position + 1, changed.Count)
             : string.Empty;
+    }
+
+    private void UpdateToCheckNavigation()
+    {
+        var toCheck = Rows.Where(r => r.NeedsCheck).ToList();
+        var index = SelectedRow == null ? -1 : SelectedRow.Index;
+        CanGoPreviousToCheck = toCheck.Any(r => r.Index < index);
+        CanGoNextToCheck = toCheck.Any(r => r.Index > index);
     }
 
     [RelayCommand]
@@ -882,6 +903,20 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     {
         var index = SelectedRow?.Index ?? -1;
         SelectAndScroll(Rows.FirstOrDefault(r => r.IsChanged && r.Index > index));
+    }
+
+    [RelayCommand]
+    private void PreviousToCheck()
+    {
+        var index = SelectedRow?.Index ?? Rows.Count;
+        SelectAndScroll(Rows.LastOrDefault(r => r.NeedsCheck && r.Index < index));
+    }
+
+    [RelayCommand]
+    private void NextToCheck()
+    {
+        var index = SelectedRow?.Index ?? -1;
+        SelectAndScroll(Rows.FirstOrDefault(r => r.NeedsCheck && r.Index > index));
     }
 
     private void SelectAndScroll(ImproveTimeCodesRow? row)
@@ -1328,6 +1363,16 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             {
                 PlaySelectedAligned();
             }
+        }
+        else if ((e.Key == Key.F8 && e.KeyModifiers == KeyModifiers.Shift) || (e.Key == Key.Down && e.KeyModifiers == (KeyModifiers.Alt | KeyModifiers.Shift)))
+        {
+            e.Handled = true;
+            NextToCheck();
+        }
+        else if ((e.Key == Key.F7 && e.KeyModifiers == KeyModifiers.Shift) || (e.Key == Key.Up && e.KeyModifiers == (KeyModifiers.Alt | KeyModifiers.Shift)))
+        {
+            e.Handled = true;
+            PreviousToCheck();
         }
         else if (e.Key == Key.F8 || (e.Key == Key.Down && e.KeyModifiers == KeyModifiers.Alt))
         {
