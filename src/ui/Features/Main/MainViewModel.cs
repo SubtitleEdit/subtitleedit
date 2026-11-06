@@ -17771,7 +17771,7 @@ public partial class MainViewModel :
             return;
         }
 
-        ReplaceSelectedText(tb, tb.SelectedText.ToUpper(CultureInfo.CurrentCulture));
+        ReplaceSelectedText(tb, tb.SelectedText.ToUpperWithCapitalSharpS(CultureInfo.CurrentCulture));
     }
 
     [RelayCommand]

@@ -38,7 +38,7 @@ internal sealed class CaptionWords
             .Replace("\\N", "\n").Replace("\\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Trim();
         if (upperCase)
         {
-            text = text.ToUpper(CultureInfo.CurrentCulture);
+            text = text.ToUpperWithCapitalSharpS(CultureInfo.CurrentCulture);
         }
 
         var result = new CaptionWords();
