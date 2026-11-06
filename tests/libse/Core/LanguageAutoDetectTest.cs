@@ -177,6 +177,10 @@ public class LanguageAutoDetectTest
     [InlineData("mk", new[] { "Отворете го видеото во новиот прозорец.", "Зачувај ги промените со оваа команда.", "Изберете кој формат сакате да го користите.", "Ова е текстот кој се прикажува на екранот." })] // was sr: за, само, како, ... are Macedonian too
     [InlineData("az", new[] { "Bu faylı açmaq mümkün deyil.", "Videonu seçin və subtitr əlavə edin.", "Dəyişiklikləri yadda saxlamaq istəyirsiniz?", "Xəta baş verdi, yenidən cəhd edin." })] // was tr
     [InlineData("pl", new[] { "To jest plik, który można otworzyć.", "Wybierz wideo lub plik audio.", "Napisy są już zapisane dla tego wideo.", "Kliknij tylko raz, aby przejść dalej." })] // Polish function words
+    [InlineData("ko", new[] { "클립보드에서 줄 삽입", "보통 크기로 시작하여 자막이 재생되는 동안 서서히 커짐.", "'sweet dreams are' 대신 '♫ sweet dreams are'", "선택한 줄로 이동 (목록에서 보이도록 스크롤)" })] // was en: a few English words outscored the short Korean list
+    [InlineData("th", new[] { "ไปยังตำแหน่งวิดีโอ - 0.5 วินาทีและหยุดชั่วคราว", "libVLC - การเรนเดอร์ Native Window ID", "ดาวน์โหลดโมเดลหรือไม่?", "คำที่ใช้แทนต้องแตกต่างจากคำเดิม" })] // was en
+    [InlineData("ckb", new[] { "فایلێک بکەرەوە", "ڕێکخستنەکان پاشەکەوت بکە", "ڤیدیۆکە لێرە دابنێ", "دەقەکە بگۆڕە" })] // Central Kurdish, was fa
+    [InlineData("es", new[] { "Vídeo: alternar brillo (solo mpv)", "Añada uno o más segmentos, p. ej. desde la forma de onda", "Ancho de línea única - máximo: píxeles", "No se pudieron restaurar los ajustes:" })] // was lv: few listed Spanish words
     public void AutoDetectLanguage(string expected, string[] lines)
     {
         var subtitle = new Subtitle();
