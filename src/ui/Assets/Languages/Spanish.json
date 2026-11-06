@@ -2,7 +2,7 @@
   "Title": "Subtitle Edit",
   "TranslatedBy": "Gemini",
   "CultureName": "es-ES",
-  "version": "v5.4.0-rc3",
+  "version": "v5.4.0",
   "General": {
     "Prompt": "Indicación",
     "Temperature": "Temperatura",
