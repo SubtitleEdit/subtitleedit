@@ -123,6 +123,11 @@ public class LanguageAutoDetectTest
     [InlineData(1252, 9, new[] { "Má ég fá meira kaffi?", "Þetta er ekki gott.", "Hvað sagði hann við þig?", "Getum við talað um þetta á morgun?", "Það er enginn á skrifstofunni." })] // Icelandic: the fallback detector says ISO-8859-13 for some such files
     [InlineData(1250, 12, new[] { "Nu ştiu ce faci aici.", "Putem vorbi despre asta mâine?", "Trebuie să plecăm acum.", "Mulţumesc frumos." })] // Romanian, was UTF-8 or Big5
     [InlineData(1256, 40, new[] { "لا أعرف ماذا تفعل هنا؟", "هل يمكننا التحدث عن هذا غدا؟", "ماذا قال لك؟", "شكرا جزيلا، يا صديقي." })] // Arabic ، and ؟ are ¡ and ¿ in 1252, was taken as Spanish
+    [InlineData(51932, 8, new[] { "ここで何をしているの？", "何と言えばいいか分からない。", "今すぐ行かなければ、時間がない。", "一人で来るなと言ったでしょう。" })] // EUC-JP, was GBK
+    [InlineData(20866, 8, new[] { "Что ты здесь делаешь?", "Я не знаю, что сказать.", "Нам нужно идти прямо сейчас.", "Он был здесь вчера." })] // KOI8-R, was 1250/1252
+    [InlineData(866, 8, new[] { "Что ты здесь делаешь?", "Я не знаю, что сказать.", "Нам нужно идти прямо сейчас.", "Он был здесь вчера." })] // DOS, was 1251 (Serbian letters)
+    [InlineData(1256, 120, new[] { "اينجا چه کار مي‌کني؟", "نمي‌دانم چه بگويم.", "بايد همين حالا برويم، وقت نداريم.", "خيلي ممنونم، دوست من." })] // Persian, was Hebrew in long files
+    [InlineData(1256, 3, new[] { "تم يہاں کيا کر رہے ہو؟", "مجھے نہيں معلوم کيا کہوں.", "بہت شکريہ، دوست." })] // Urdu, was 1252
     public void AutoDetectAnsiEncodingKeepsText(int codePage, int cueCount, string[] lines)
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -146,5 +151,23 @@ public class LanguageAutoDetectTest
 
         var bytes = Encoding.GetEncoding(932).GetBytes(sb.ToString());
         Assert.Equal(932, LanguageAutoDetect.DetectAnsiEncoding(bytes).CodePage);
+    }
+
+    [Fact]
+    public void DosCodePageFileIsNotOpenedAsUtf8()
+    {
+        // GetEncodingFromFile turned every code page below 874 into Encoding.Default, which is UTF-8.
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var text = BuildSrt(8, "Что ты здесь делаешь?", "Я не знаю, что сказать.", "Нам нужно идти прямо сейчас.", "Он был здесь вчера.");
+        var path = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(path, Encoding.GetEncoding(866).GetBytes(text));
+            Assert.Equal(866, LanguageAutoDetect.GetEncodingFromFile(path).CodePage);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 }

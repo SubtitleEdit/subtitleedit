@@ -2510,6 +2510,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return Encoding.GetEncoding(932);
             }
 
+            // EUC-JP: its bytes are valid GBK too, so the kana have to be checked before the Chinese code pages.
+            var eucJpText = GetStringWithReplacementChar(51932, buffer);
+            if (CountCharsInRange(eucJpText, '\u3040', '\u30FF') > 10 && IsMostlyCjkRuns(eucJpText) && CountChars(eucJpText, "\uFFFD") < 3)
+            {
+                return Encoding.GetEncoding(51932);
+            }
+
             // Korean bytes are valid GBK and Big5 too, and Chinese or Japanese bytes read as 949 are Hangul
             // as well - but only real Korean has the common syllables (이, 다, 요, 는, ...) all over.
             var koreanText = GetStringWithReplacementChar(949, buffer);
@@ -2654,6 +2661,27 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // At least two hits: in a small file a single chance match must not decide.
                 var wordMinCount = Math.Max(1, buffer.Length / 300);
 
+                // Russian in the other Cyrillic code pages, before the Serbian check (DOS 866 letters read as 1251
+                // include Ђ, Љ, ...) and the Latin-script word lists (read as 1250/1252 they are accented letters).
+                var russianCount1251 = counts1251.Get(AutoDetectWordsRussian);
+                Encoding bestRussianEncoding = null;
+                var bestRussianCount = Math.Max(wordMinCount, russianCount1251);
+                foreach (var codePage in new[] { 20866, 28595, 866 }) // KOI8-R, ISO-8859-5, DOS
+                {
+                    var cyrillicEncoding = Encoding.GetEncoding(codePage);
+                    var count = GetCount(cyrillicEncoding.GetString(buffer), AutoDetectWordsRussian);
+                    if (count > bestRussianCount)
+                    {
+                        bestRussianEncoding = cyrillicEncoding;
+                        bestRussianCount = count;
+                    }
+                }
+
+                if (bestRussianEncoding != null)
+                {
+                    return bestRussianEncoding;
+                }
+
                 if (counts1251.Get(AutoDetectWordsSerbianCyrillic) > wordMinCount)
                 {
                     return russianEncoding;
@@ -2792,16 +2820,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 var arabicEncoding = Encoding.GetEncoding(1256); // Arabic
                 var hebrewEncoding = Encoding.GetEncoding(1255); // Hebrew
-                if (GetCount(arabicEncoding.GetString(buffer), AutoDetectWordsArabic) > 5)
+                // 1256 is the ANSI code page of Persian and Urdu too. Read as 1255, a long 1256 text matches
+                // Hebrew words as well, so Hebrew has to beat the 1256 count, not just pass a fixed one.
+                var arabicScriptCount = GetBestCount(CountWords(arabicEncoding.GetString(buffer)), AutoDetectWordsArabic, AutoDetectWordsFarsi, AutoDetectWordsUrdu);
+                var hebrewCount = GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew);
+                if (arabicScriptCount > 5 || arabicScriptCount > wordMinCount && arabicScriptCount > cyrillicCount)
                 {
-                    if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 10)
-                    {
-                        return hebrewEncoding;
-                    }
-
-                    return arabicEncoding;
+                    return hebrewCount > arabicScriptCount ? hebrewEncoding : arabicEncoding;
                 }
-                if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
+                if (hebrewCount > 5)
                 {
                     return hebrewEncoding;
                 }
@@ -3027,7 +3054,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             var autoDetected = DetectAnsiEncoding(buffer);
                             if (autoDetected != null)
                             {
-                                return autoDetected.CodePage < 874 ? Encoding.Default : autoDetected;
+                                return autoDetected; // DOS code pages only when the words say so, e.g. Russian in 866
                             }
                         }
                     }
