@@ -313,13 +313,14 @@ public class ImproveTimeCodesViewModelTests
     }
 
     [Fact]
-    public void ToCheckNavigation_StepsOnlyOverUntickedLines()
+    public void ToCheckNavigation_StepsOnlyOverFlaggedLines()
     {
         var vm = MakeWithToCheckLines();
         var l = Nikse.SubtitleEdit.Logic.Config.Se.Language.General;
 
-        // Line 0 is the first changed line, ticked; 1 and 2 are left unticked to check.
+        // Line 0 is the first changed line, ticked; 1 and 2 are flagged and left unticked to check.
         Assert.Equal(0, vm.SelectedRow!.Index);
+        Assert.Equal(string.Format(l.ChangeXOfY, 1, 4), vm.ChangePositionLabel);
         Assert.False(vm.CanGoPreviousToCheck);
         Assert.True(vm.CanGoNextToCheck);
 
@@ -337,9 +338,13 @@ public class ImproveTimeCodesViewModelTests
         vm.PreviousToCheckCommand.Execute(null);
         Assert.Equal(1, vm.SelectedRow!.Index);
 
-        // Ticking a line removes it from the to-check set; F9 then jumps the remaining gap.
+        // Ticking a flagged line keeps it in the set, so the count matches the "To check" summary.
         vm.SelectedRow!.Apply = true;
-        Assert.False(vm.CanGoPreviousToCheck);
+        Assert.Equal(string.Format(l.ToCheckXOfY, 1, 2), vm.ChangePositionLabel);
+        Assert.True(vm.CanGoNextToCheck);
+
+        // Unticking a line that was not flagged does not add it to the set.
+        vm.Rows[3].Apply = false;
         vm.NextToCheckCommand.Execute(null);
         Assert.Equal(2, vm.SelectedRow!.Index);
         Assert.False(vm.CanGoNextToCheck);
@@ -347,7 +352,9 @@ public class ImproveTimeCodesViewModelTests
         // The re-timed navigation is untouched by all of that - line 1 is a changed line too.
         vm.PreviousChangeCommand.Execute(null);
         Assert.Equal(1, vm.SelectedRow!.Index);
-        Assert.Equal(string.Format(l.ChangeXOfY, 2, 4), vm.ChangePositionLabel);
+        Assert.Equal(string.Format(l.ToCheckXOfY, 1, 2), vm.ChangePositionLabel);
+        vm.PreviousChangeCommand.Execute(null);
+        Assert.Equal(string.Format(l.ChangeXOfY, 1, 4), vm.ChangePositionLabel);
     }
 
     [Fact]

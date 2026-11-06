@@ -641,7 +641,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
         var l = Se.Language.Tools.ImproveTimeCodes;
         var retimed = Rows.Where(r => r.IsChanged && r.Apply).ToList();
-        var toCheck = Rows.Count(r => r.Status is { } status && SubtitleRetimer.IsUnconfirmed(status));
+        var toCheck = Rows.Count(r => r.NeedsCheck);
         var noSpeech = Rows.Count(r => r.Status == SubtitleRetimer.LineStatus.NoSpeech);
         var meanShiftMs = retimed.Count == 0
             ? 0
@@ -798,7 +798,6 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         {
             HasResult = Rows.Any(r => r.IsChanged && r.Apply);
             UpdateChangeNavigation();
-            UpdateToCheckNavigation();
         }
     }
 
@@ -825,15 +824,12 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         RebuildAligned();
         HasResult = Rows.Any(r => r.IsChanged && r.Apply);
         UpdateChangeNavigation();
-        UpdateToCheckNavigation();
     }
 
     private void OnRowApplyChanged(ImproveTimeCodesRow row)
     {
         RebuildAligned();
         HasResult = Rows.Any(r => r.IsChanged && r.Apply);
-        // Ticking or unticking a line changes which lines still need to be checked.
-        UpdateToCheckNavigation();
     }
 
     partial void OnSelectedRowChanged(ImproveTimeCodesRow? value)
@@ -864,11 +860,11 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         CanGoPrevious = changed.Any(r => r.Index < index);
         CanGoNext = changed.Any(r => r.Index > index);
 
-        // A line left unticked is one the user has to check - while sitting on one, the label
-        // shows the position in the lines to check, the set F9/F10 steps through.
-        if (SelectedRow is { IsChanged: true, Apply: false })
+        // While sitting on a line flagged to check, the label shows the position in those lines,
+        // the set Shift+F7/Shift+F8 steps through.
+        if (SelectedRow is { NeedsCheck: true })
         {
-            var toCheck = Rows.Where(r => r.IsChanged && !r.Apply).ToList();
+            var toCheck = Rows.Where(r => r.NeedsCheck).ToList();
             ChangePositionLabel = string.Format(Se.Language.General.ToCheckXOfY, toCheck.IndexOf(SelectedRow) + 1, toCheck.Count);
             return;
         }
@@ -881,7 +877,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
     private void UpdateToCheckNavigation()
     {
-        var toCheck = Rows.Where(r => r.IsChanged && !r.Apply).ToList();
+        var toCheck = Rows.Where(r => r.NeedsCheck).ToList();
         var index = SelectedRow == null ? -1 : SelectedRow.Index;
         CanGoPreviousToCheck = toCheck.Any(r => r.Index < index);
         CanGoNextToCheck = toCheck.Any(r => r.Index > index);
@@ -905,14 +901,14 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     private void PreviousToCheck()
     {
         var index = SelectedRow?.Index ?? Rows.Count;
-        SelectAndScroll(Rows.LastOrDefault(r => r.IsChanged && !r.Apply && r.Index < index));
+        SelectAndScroll(Rows.LastOrDefault(r => r.NeedsCheck && r.Index < index));
     }
 
     [RelayCommand]
     private void NextToCheck()
     {
         var index = SelectedRow?.Index ?? -1;
-        SelectAndScroll(Rows.FirstOrDefault(r => r.IsChanged && !r.Apply && r.Index > index));
+        SelectAndScroll(Rows.FirstOrDefault(r => r.NeedsCheck && r.Index > index));
     }
 
     private void SelectAndScroll(ImproveTimeCodesRow? row)
@@ -1360,6 +1356,16 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
                 PlaySelectedAligned();
             }
         }
+        else if ((e.Key == Key.F8 && e.KeyModifiers == KeyModifiers.Shift) || (e.Key == Key.Down && e.KeyModifiers == (KeyModifiers.Alt | KeyModifiers.Shift)))
+        {
+            e.Handled = true;
+            NextToCheck();
+        }
+        else if ((e.Key == Key.F7 && e.KeyModifiers == KeyModifiers.Shift) || (e.Key == Key.Up && e.KeyModifiers == (KeyModifiers.Alt | KeyModifiers.Shift)))
+        {
+            e.Handled = true;
+            PreviousToCheck();
+        }
         else if (e.Key == Key.F8 || (e.Key == Key.Down && e.KeyModifiers == KeyModifiers.Alt))
         {
             e.Handled = true;
@@ -1369,16 +1375,6 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         {
             e.Handled = true;
             PreviousChange();
-        }
-        else if (e.Key == Key.F9 || (e.Key == Key.PageDown && e.KeyModifiers == KeyModifiers.Alt))
-        {
-            e.Handled = true;
-            NextToCheck();
-        }
-        else if (e.Key == Key.F10 || (e.Key == Key.PageUp && e.KeyModifiers == KeyModifiers.Alt))
-        {
-            e.Handled = true;
-            PreviousToCheck();
         }
     }
 
