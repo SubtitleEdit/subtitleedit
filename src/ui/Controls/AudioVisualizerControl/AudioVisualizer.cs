@@ -263,12 +263,6 @@ public class AudioVisualizer : Control
 
     public double MinGapSeconds { get; set; } = 0.1;
 
-    /// <summary>
-    /// Lets this timeline move and resize lines over their neighbours, as the "allow overlap"
-    /// setting does for every timeline - for tools where overlapping lines are fine.
-    /// </summary>
-    public bool AllowOverlap { get; set; }
-
     /// <summary>Fallback capture distance when the pixel distance cannot be converted (no peaks yet).</summary>
     public double ShotChangeSnapSeconds { get; set; } = 0.05;
     public WaveformDrawStyle WaveformDrawStyle { get; set; } = WaveformDrawStyle.Classic;
@@ -1678,7 +1672,7 @@ public class AudioVisualizer : Control
             // Block overlap with neighbouring subtitles by default, like SE4 and the resize/move
             // path: keep the dragged selection inside the empty gap around its anchor. Holding Shift
             // or enabling "allow overlap" in settings bypasses the clamp.
-            if (!_isShiftDown && !Se.Settings.Waveform.AllowOverlap && !AllowOverlap)
+            if (!_isShiftDown && !Se.Settings.Waveform.AllowOverlap)
             {
                 var lowerBound = 0.0;
                 var upperBound = double.MaxValue;
@@ -1801,7 +1795,7 @@ public class AudioVisualizer : Control
         var previous = previousIndex >= 0 ? _displayableParagraphs[previousIndex] : null;
         var next = nextIndex >= 0 ? _displayableParagraphs[nextIndex] : null;
 
-        if (_isShiftDown || Se.Settings.Waveform.AllowOverlap || AllowOverlap)
+        if (_isShiftDown || Se.Settings.Waveform.AllowOverlap)
         {
             previous = null;
             next = null;
@@ -1847,7 +1841,7 @@ public class AudioVisualizer : Control
                 }
 
                 // Allow overlap if shift key, setting, or already overlapping
-                // (previous and next are already null if _isShiftDown, Se.Settings.Waveform.AllowOverlap or AllowOverlap)
+                // (previous and next are already null if _isShiftDown or Se.Settings.Waveform.AllowOverlap)
                 bool allowOverlap = (previous == null && next == null) || alreadyOverlapping;
 
                 // SE4 parity: a whole-paragraph drag snaps to shot changes too, not just an edge

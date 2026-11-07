@@ -214,9 +214,8 @@ public class RemoveBurnedInWindow : Window
             Width = double.NaN,
             IsReadOnly = false,
 
-            // OCR lines often touch (no gap), and overlapping lines are fine here (each has its own
-            // mask) - without this a line between two touching neighbours could not be moved.
-            AllowOverlap = true,
+            // OCR lines often touch (no gap): with the default 0.1 s minimum gap such a line could
+            // not be moved or resized against its neighbour. Overlap stays blocked.
             MinGapSeconds = 0,
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
             WaveformColor = colors.Waveform,
