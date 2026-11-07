@@ -3133,6 +3133,16 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return encoding1254;
                 }
 
+                // A Western language's words lead (English, Afrikaans, Catalan, Finnish, Icelandic, ...): its letters
+                // are all in 1252, while the fallback detector guessed Mac or Baltic code pages for small such files.
+                var westernOrEnglishCount = GetBestCount(counts1252, AutoDetectWordsEnglish, AutoDetectWordsAfrikaans);
+                westernOrEnglishCount = Math.Max(westernOrEnglishCount, westernCount);
+                if (westernOrEnglishCount > wordMinCount && westernOrEnglishCount > centralEuropeanCount && westernOrEnglishCount > balticCount &&
+                    westernOrEnglishCount > GetBestCount(counts1250, AutoDetectWordsCzech, AutoDetectWordsSlovak) && HasMostlyLoneNonAsciiBytes(buffer))
+                {
+                    return encoding1252;
+                }
+
                 // Only typographic punctuation outside ASCII (smart quotes, …, dashes, bullet): the same bytes
                 // in all Windows code pages, and UTF.Unknown guessed Mac Central European for such small files.
                 var encoding = HasOnlyWindowsPunctuation(buffer) ? encoding1252 : EncodingTools.DetectInputCodepage(buffer);
@@ -3166,6 +3176,33 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return Encoding.Default;
             }
+        }
+
+        /// <summary>
+        /// Whether the bytes outside ASCII are mostly lone accents between plain letters (café, für), as in a
+        /// Western-language text - not whole words of them, as Cyrillic, Greek, Arabic or CJK bytes are, which
+        /// read as 1252 are accented letters and match a word by chance. Not a share of ASCII letters: an ASSA
+        /// header or WebVTT cue settings add plenty of those to any file.
+        /// </summary>
+        private static bool HasMostlyLoneNonAsciiBytes(byte[] buffer)
+        {
+            var nonAscii = 0;
+            var inRun = 0;
+            for (var i = 0; i < buffer.Length; i++)
+            {
+                if (buffer[i] < 0x80)
+                {
+                    continue;
+                }
+
+                nonAscii++;
+                if (i > 0 && buffer[i - 1] >= 0x80 || i + 1 < buffer.Length && buffer[i + 1] >= 0x80)
+                {
+                    inRun++;
+                }
+            }
+
+            return inRun * 2 < nonAscii;
         }
 
         /// <summary>

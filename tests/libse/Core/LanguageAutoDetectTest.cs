@@ -129,6 +129,7 @@ public class LanguageAutoDetectTest
     [InlineData(1256, 120, new[] { "اينجا چه کار مي‌کني؟", "نمي‌دانم چه بگويم.", "بايد همين حالا برويم، وقت نداريم.", "خيلي ممنونم، دوست من." })] // Persian, was Hebrew in long files
     [InlineData(1256, 3, new[] { "تم يہاں کيا کر رہے ہو؟", "مجھے نہيں معلوم کيا کہوں.", "بہت شکريہ، دوست." })] // Urdu, was 1252
     [InlineData(1252, 1, new[] { "- Sorry isn’t enough anymore.\r\n[sighs] I know, I know." })] // only a smart quote: was Mac Central European
+    [InlineData(1252, 3, new[] { "Waar is jou broer?\r\nOns moet nou gaan, daar is nie tyd nie.", "Ek weet nie wat om te sê nie.", "Ons moet nou gaan, daar is nie tyd nie." })] // Afrikaans: was Mac Central European
     public void AutoDetectAnsiEncodingKeepsText(int codePage, int cueCount, string[] lines)
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
