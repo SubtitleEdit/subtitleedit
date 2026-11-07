@@ -87,4 +87,23 @@ public class SubtitleTextInfoHelperPanelTests
 
         Assert.Equal(new List<string> { Se.Language.Main.SingleLineLength, "3" }, LabelTexts(panel));
     }
+
+    [AvaloniaFact]
+    public void FormatLength_KeepsHalfCountsAndDropsTrailingZero()
+    {
+        // The CJK strategies count half-width chars as 0.5, and decimal sums keep their scale
+        // (0.5m + 0.5m is "1.0"), so the label has to show "5.5" but plain "1".
+        var culture = System.Globalization.CultureInfo.CurrentCulture;
+        try
+        {
+            System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            Assert.Equal("5.5", SubtitleTextInfoHelper.FormatLength(5.5m));
+            Assert.Equal("1", SubtitleTextInfoHelper.FormatLength(0.5m + 0.5m));
+            Assert.Equal("0", SubtitleTextInfoHelper.FormatLength(0m));
+        }
+        finally
+        {
+            System.Globalization.CultureInfo.CurrentCulture = culture;
+        }
+    }
 }

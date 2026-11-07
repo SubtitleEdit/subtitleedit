@@ -201,12 +201,13 @@ https://github.com/SubtitleEdit/subtitleedit
         }
 
         var allText = new StringBuilder();
-        int minimumLineLength = 99999999;
-        int maximumLineLength = 0;
-        long totalLineLength = 0;
-        int minimumSingleLineLength = 99999999;
-        int maximumSingleLineLength = 0;
-        long totalSingleLineLength = 0;
+        // Lengths are decimal: the CJK strategies count half-width chars as 0.5.
+        decimal minimumLineLength = 99999999;
+        decimal maximumLineLength = 0;
+        decimal totalLineLength = 0;
+        decimal minimumSingleLineLength = 99999999;
+        decimal maximumSingleLineLength = 0;
+        decimal totalSingleLineLength = 0;
         long totalSingleLines = 0;
         int minimumSingleLineWidth = 99999999;
         int maximumSingleLineWidth = 0;
@@ -340,7 +341,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
         sb.AppendLine(string.Format(_l.NumberOfLinesX, _subtitle.Paragraphs.Count));
         sb.AppendLine(string.Format(_l.LengthInFormatXinCharactersY, _format.FriendlyName, sourceLength));
-        sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.ToString().CountCharacters(false)));
+        sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, FormatCount(allText.ToString().CountCharacters(false))));
         sb.AppendLine(string.Format(_l.TotalDuration, new TimeCode(totalDuration).ToDisplayString()));
         sb.AppendLine(string.Format(_l.TotalCharsPerSecond, (double)allText.ToString().CountCharacters(true) / (totalDuration / TimeCode.BaseUnit)));
         sb.AppendLine(string.Format(_l.TotalWords, _totalWords));
@@ -350,14 +351,14 @@ https://github.com/SubtitleEdit/subtitleedit
         sb.AppendLine(string.Format(_l.NumberOfFontTags, Utilities.CountTagInText(allTextToLower, "<font ")));
         sb.AppendLine(string.Format(_l.NumberOfAlignmentTags, Utilities.CountTagInText(allTextToLower, "{\\an")));
         sb.AppendLine();
-        sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength) + " (" + GetIndicesWithLength(minimumLineLength) + ")");
-        sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength) + " (" + GetIndicesWithLength(maximumLineLength) + ")");
-        sb.AppendLine(string.Format(_l.LineLengthAverage, (double)totalLineLength / _subtitle.Paragraphs.Count));
+        sb.AppendLine(string.Format(_l.LineLengthMinimum, SubtitleTextInfoHelper.FormatLength(minimumLineLength)) + " (" + GetIndicesWithLength(minimumLineLength) + ")");
+        sb.AppendLine(string.Format(_l.LineLengthMaximum, SubtitleTextInfoHelper.FormatLength(maximumLineLength)) + " (" + GetIndicesWithLength(maximumLineLength) + ")");
+        sb.AppendLine(string.Format(_l.LineLengthAverage, (double)(totalLineLength / _subtitle.Paragraphs.Count)));
         sb.AppendLine();
         sb.AppendLine(string.Format(_l.LinesPerSubtitleAverage, (double)totalSingleLines / _subtitle.Paragraphs.Count));
         sb.AppendLine();
-        sb.AppendLine(string.Format(_l.SingleLineLengthMinimum, minimumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(minimumSingleLineLength) + ")");
-        sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(maximumSingleLineLength) + ")");
+        sb.AppendLine(string.Format(_l.SingleLineLengthMinimum, SubtitleTextInfoHelper.FormatLength(minimumSingleLineLength)) + " (" + GetIndicesWithSingleLineLength(minimumSingleLineLength) + ")");
+        sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, SubtitleTextInfoHelper.FormatLength(maximumSingleLineLength)) + " (" + GetIndicesWithSingleLineLength(maximumSingleLineLength) + ")");
         sb.AppendLine(string.Format(_l.SingleLineLengthAverage, (double)totalSingleLineLength / totalSingleLines));
         sb.AppendLine();
         sb.AppendLine(string.Format(_l.SingleLineLengthExceedingMaximum, Configuration.Settings.General.SubtitleLineMaximumLength, aboveMaximumLineLengthCount, ((double)aboveMaximumLineLengthCount / Math.Max(1, totalSingleLines)) * 100.0));
@@ -416,7 +417,7 @@ https://github.com/SubtitleEdit/subtitleedit
     }
 
     private void BuildDashboardData(string allText, double totalDuration,
-        int minimumLineLength, int maximumLineLength, long totalLineLength,
+        decimal minimumLineLength, decimal maximumLineLength, decimal totalLineLength,
         double minimumDuration, double maximumDuration,
         double minimumCharsSec, double maximumCharsSec, double totalCharsSec,
         double minimumWpm, double maximumWpm, double totalWpm,
@@ -431,11 +432,11 @@ https://github.com/SubtitleEdit/subtitleedit
 
         KpiSubtitles = count.ToString("#,##0", CultureInfo.CurrentCulture);
         KpiWords = _totalWords.ToString("#,##0", CultureInfo.CurrentCulture);
-        KpiCharacters = allText.CountCharacters(false).ToString("#,##0", CultureInfo.CurrentCulture);
+        KpiCharacters = FormatCount(allText.CountCharacters(false));
         KpiDuration = new TimeCode(totalDuration).ToDisplayString();
 
         Ranges.Clear();
-        Ranges.Add(MakeRange(_l.SubtitleLength, minimumLineLength, (double)totalLineLength / count, maximumLineLength, "#,##0", "#,##0.#"));
+        Ranges.Add(MakeRange(_l.SubtitleLength, (double)minimumLineLength, (double)(totalLineLength / count), (double)maximumLineLength, "#,##0.#", "#,##0.#"));
         Ranges.Add(MakeRange(Se.Language.General.Duration,
             minimumDuration / TimeCode.BaseUnit, totalDuration / count / TimeCode.BaseUnit, maximumDuration / TimeCode.BaseUnit, "0.0#", "0.0#"));
         Ranges.Add(MakeRange(Se.Language.General.CharsPerSec, minimumCharsSec, totalCharsSec / count, maximumCharsSec, "0.0", "0.0"));
@@ -526,14 +527,25 @@ https://github.com/SubtitleEdit/subtitleedit
         };
     }
 
-    private static int GetLineLength(Paragraph p)
+    // The decimal CountCharacters overload - the strategy overload rounds to int, which turned
+    // CJK half-width counts like 5.5 into 6 here while the main window showed 5.5.
+    private static decimal GetLineLength(Paragraph p)
     {
-        return p.Text.Replace(Environment.NewLine, string.Empty).CountCharacters(Configuration.Settings.General.CpsLineLengthStrategy, false);
+        return p.Text.Replace(Environment.NewLine, string.Empty).CountCharacters(false);
     }
 
-    private static int GetSingleLineLength(string s)
+    private static decimal GetSingleLineLength(string s)
     {
-        return s.CountCharacters(Configuration.Settings.General.CpsLineLengthStrategy, false);
+        return s.CountCharacters(false);
+    }
+
+    /// <summary>
+    /// Character count with thousands separators, keeping a .5 from the CJK strategies. Passed to
+    /// the "{0:#,###,##0}" language strings as text so translations need no new format.
+    /// </summary>
+    private static string FormatCount(decimal count)
+    {
+        return count.ToString("#,##0.#", CultureInfo.CurrentCulture);
     }
 
     private static int GetSingleLineWidth(string s)
@@ -625,7 +637,7 @@ https://github.com/SubtitleEdit/subtitleedit
         return string.Join(", ", indices);
     }
 
-    private string GetIndicesWithLength(int length)
+    private string GetIndicesWithLength(decimal length)
     {
         var indices = new List<string>();
         for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
@@ -644,7 +656,7 @@ https://github.com/SubtitleEdit/subtitleedit
         return string.Join(", ", indices);
     }
 
-    private string GetIndicesWithSingleLineLength(int length)
+    private string GetIndicesWithSingleLineLength(decimal length)
     {
         var indices = new List<string>();
         for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
