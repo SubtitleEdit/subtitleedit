@@ -53,7 +53,14 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     [ObservableProperty] private int _crf;
     [ObservableProperty] private int _blurStrength;
     [ObservableProperty] private ObservableCollection<RemoveBurnedInLineItem> _lines = new();
-    [ObservableProperty] private RemoveBurnedInLineItem? _selectedLine;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanDeleteLine))]
+    private RemoveBurnedInLineItem? _selectedLine;
+    [ObservableProperty] private bool _isRectangleSelected;
+    [ObservableProperty] private int _selectedRectX;
+    [ObservableProperty] private int _selectedRectY;
+    [ObservableProperty] private int _selectedRectWidth;
+    [ObservableProperty] private int _selectedRectHeight;
     [ObservableProperty] private Bitmap? _previewBitmap;
     [ObservableProperty] private bool _showResult;
     [ObservableProperty] private double _positionSeconds;
@@ -64,6 +71,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     [ObservableProperty] private string _linesSummary = string.Empty;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanStart))]
+    [NotifyPropertyChangedFor(nameof(CanDeleteLine))]
     private bool _isRunning;
     [ObservableProperty] private bool _isDone;
     [ObservableProperty] private string _doneText = string.Empty;
@@ -79,9 +87,13 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     /// <summary>Start needs at least one included line, and no run going.</summary>
     public bool CanStart => !IsRunning && Lines.Any(l => l.IsIncluded);
 
+    public bool CanDeleteLine => !IsRunning && SelectedLine != null;
+
     /// <summary>The black boxes as an ASSA subtitle (black box method), for the main window.</summary>
     public string BoxesAssa { get; private set; } = string.Empty;
     public AudioVisualizer? AudioVisualizer { get; set; }
+    public int VideoWidth => _videoWidth;
+    public int VideoHeight => _videoHeight;
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
@@ -94,6 +106,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     // Set when the output file was picked with the save dialog, which already asked about overwriting.
     private bool _outputOverwriteConfirmed;
+
+    // Set while the rectangle fields are loaded from a newly selected line (not a user edit).
+    private bool _loadingRectangle;
 
     private string _videoFileName = string.Empty;
     private int _videoWidth;
@@ -163,16 +178,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             .Select(l => new RemoveBurnedInLineItem(number++, l.StartTime, l.EndTime, l.Text)));
         foreach (var item in Lines)
         {
-            item.PropertyChanged += (_, e) =>
-            {
-                if (e.PropertyName == nameof(RemoveBurnedInLineItem.IsIncluded))
-                {
-                    UpdateLinesSummary();
-                    OnPropertyChanged(nameof(CanStart));
-                    _waveformDirty = true;
-                    InvalidatePreview();
-                }
-            };
+            Hook(item);
         }
 
         UpdateLinesSummary();
@@ -184,6 +190,20 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             : ".mkv";
         OutputFileName = Path.Combine(Path.GetDirectoryName(videoFileName) ?? string.Empty,
             Path.GetFileNameWithoutExtension(videoFileName) + ".no-subs" + extension);
+    }
+
+    private void Hook(RemoveBurnedInLineItem item)
+    {
+        item.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(RemoveBurnedInLineItem.IsIncluded))
+            {
+                UpdateLinesSummary();
+                OnPropertyChanged(nameof(CanStart));
+                _waveformDirty = true;
+                InvalidatePreview();
+            }
+        };
     }
 
     internal void OnLoaded()
@@ -326,6 +346,56 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         }
     }
 
+    /// <summary>Right-click with "right-click selects subtitle" on: select the line under the pointer.</summary>
+    internal void AudioVisualizerSelectRequested(object sender, ParagraphEventArgs e)
+    {
+        var item = Lines.FirstOrDefault(l => l.Line.Id == e.Paragraph.Id);
+        if (item != null)
+        {
+            SelectedLine = item;
+        }
+    }
+
+    /// <summary>Enter on a timeline selection (drag on an empty spot): a rectangle line for that span.</summary>
+    internal void AudioVisualizerNewSelectionInsert(object sender, ParagraphEventArgs e)
+    {
+        InsertRectangleAt(e.Paragraph.StartTime, e.Paragraph.EndTime);
+    }
+
+    /// <summary>Timeline right-click menu: insert a rectangle (for the dragged selection, or at the position) and delete.</summary>
+    internal void AudioVisualizerFlyoutMenuOpening(object sender, AudioVisualizer.ContextEventArgs e)
+    {
+        var av = AudioVisualizer;
+        if (av == null)
+        {
+            return;
+        }
+
+        var l = Se.Language.Video.RemoveBurnedIn;
+        av.MenuFlyout.Items.Clear();
+        var selection = e.NewParagraph is { } p && p.EndTime - p.StartTime >= TimeSpan.FromMilliseconds(100)
+            ? (p.StartTime, p.EndTime)
+            : ((TimeSpan Start, TimeSpan End)?)null;
+        var insert = new MenuItem { Header = l.InsertRectangle, IsEnabled = !IsRunning };
+        insert.Click += (_, _) =>
+        {
+            if (selection is { } span)
+            {
+                InsertRectangleAt(span.Start, span.End);
+                av.NewSelectionParagraph = null;
+            }
+            else
+            {
+                InsertRectangle();
+            }
+        };
+        av.MenuFlyout.Items.Add(insert);
+
+        var delete = new MenuItem { Header = Se.Language.General.Delete, IsEnabled = CanDeleteLine && selection == null };
+        delete.Click += (_, _) => DeleteLine();
+        av.MenuFlyout.Items.Add(delete);
+    }
+
     internal void AudioVisualizerDragEnded(object? sender, EventArgs e)
     {
         // A box was moved or resized: its mask is rebuilt from the new span (MaskKey changes).
@@ -334,9 +404,20 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     partial void OnSelectedLineChanged(RemoveBurnedInLineItem? value)
     {
+        IsRectangleSelected = value?.IsRectangle == true;
         if (value == null)
         {
             return;
+        }
+
+        if (value.IsRectangle)
+        {
+            _loadingRectangle = true;
+            SelectedRectX = value.RectX;
+            SelectedRectY = value.RectY;
+            SelectedRectWidth = value.RectWidth;
+            SelectedRectHeight = value.RectHeight;
+            _loadingRectangle = false;
         }
 
         PositionSeconds = (value.Line.StartTime.TotalSeconds + value.Line.EndTime.TotalSeconds) / 2.0;
@@ -347,6 +428,106 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     {
         // Same time code format as the lines list (frames, separator and video offset settings).
         PositionText = _timeConverter.Convert(TimeSpan.FromSeconds(value), typeof(string), null, CultureInfo.CurrentCulture) as string ?? string.Empty;
+        InvalidatePreview();
+    }
+
+    // The rectangle drawn on the preview goes to the selected rectangle line.
+    partial void OnSelectedRectXChanged(int value) => UpdateSelectedRectangle();
+    partial void OnSelectedRectYChanged(int value) => UpdateSelectedRectangle();
+    partial void OnSelectedRectWidthChanged(int value) => UpdateSelectedRectangle();
+    partial void OnSelectedRectHeightChanged(int value) => UpdateSelectedRectangle();
+
+    private void UpdateSelectedRectangle()
+    {
+        if (_loadingRectangle || SelectedLine is not { IsRectangle: true } item)
+        {
+            return;
+        }
+
+        item.RectX = SelectedRectX;
+        item.RectY = SelectedRectY;
+        item.RectWidth = SelectedRectWidth;
+        item.RectHeight = SelectedRectHeight;
+        InvalidatePreview();
+    }
+
+    /// <summary>
+    /// Inserts a rectangle line of two seconds around the current position, with a box in the
+    /// middle of the scan area - drag on the preview to draw it, and on the timeline to time it.
+    /// </summary>
+    [RelayCommand]
+    private void InsertRectangle()
+    {
+        var duration = _durationSeconds > 0 ? _durationSeconds : PositionSeconds + 1;
+        var start = Math.Clamp(PositionSeconds - 1, 0, Math.Max(0, duration - 0.1));
+        InsertRectangleAt(TimeSpan.FromSeconds(start), TimeSpan.FromSeconds(Math.Min(duration, start + 2)));
+    }
+
+    /// <summary>Inserts a rectangle line for the given span (in time order) and selects it.</summary>
+    internal void InsertRectangleAt(TimeSpan start, TimeSpan end)
+    {
+        if (IsRunning || _videoWidth <= 0 || _videoHeight <= 0 || end <= start)
+        {
+            return;
+        }
+
+        var width = Math.Max(16, _regionWidth / 2);
+        var height = Math.Max(16, _regionHeight / 2);
+        var x = Math.Clamp(_regionX + (_regionWidth - width) / 2, 0, Math.Max(0, _videoWidth - width));
+        var y = Math.Clamp(_regionY + (_regionHeight - height) / 2, 0, Math.Max(0, _videoHeight - height));
+        var item = new RemoveBurnedInLineItem(0, start, end, x, y, width, height);
+        Hook(item);
+
+        var index = 0;
+        while (index < Lines.Count && Lines[index].Line.StartTime <= item.Line.StartTime)
+        {
+            index++;
+        }
+
+        Lines.Insert(index, item);
+        LinesChanged();
+        SelectedLine = item;
+    }
+
+    /// <summary>Deletes the selected line (OCR line or rectangle).</summary>
+    [RelayCommand]
+    private void DeleteLine()
+    {
+        if (SelectedLine != null)
+        {
+            DeleteLines(new[] { SelectedLine });
+        }
+    }
+
+    /// <summary>Deletes lines from the review (the OCR result in Video OCR is not changed).</summary>
+    internal void DeleteLines(IReadOnlyCollection<RemoveBurnedInLineItem> items)
+    {
+        if (IsRunning || items.Count == 0)
+        {
+            return;
+        }
+
+        var index = items.Min(i => Lines.IndexOf(i) is var n && n >= 0 ? n : int.MaxValue);
+        foreach (var item in items)
+        {
+            Lines.Remove(item);
+            _masks.Remove(item.Line.Id);
+        }
+
+        LinesChanged();
+        SelectedLine = Lines.Count == 0 ? null : Lines[Math.Clamp(index, 0, Lines.Count - 1)];
+    }
+
+    private void LinesChanged()
+    {
+        for (var i = 0; i < Lines.Count; i++)
+        {
+            Lines[i].SetNumber(i + 1);
+        }
+
+        UpdateLinesSummary();
+        OnPropertyChanged(nameof(CanStart));
+        _waveformDirty = true;
         InvalidatePreview();
     }
 
@@ -419,9 +600,14 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         var options = MakeOptions(new List<(TimeSpan, TimeSpan)>());
         const double margin = 1.5; // same apply margin as the run (BurnedInSubtitleRemover.MakeMaskBuilder)
         var candidates = Lines
-            .Where(l => l.IsIncluded &&
+            .Where(l => l.IsIncluded && !l.IsRectangle &&
                         seconds >= l.Line.StartTime.TotalSeconds - margin &&
                         seconds <= l.Line.EndTime.TotalSeconds + margin)
+            .ToList();
+        var frameIndex = (long)Math.Floor(seconds * options.FrameRate + 0.001);
+        var rectangleBoxes = BurnedInSubtitleRemover.GetRectangleBoxes(MakeOptions(new List<(TimeSpan, TimeSpan)>(),
+                Lines.Where(l => l.IsIncluded && l.IsRectangle).Select(l => l.ToRectangle()).ToList()))
+            .Where(b => frameIndex >= b.StartFrame && frameIndex <= b.EndFrame)
             .ToList();
 
         try
@@ -471,10 +657,16 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                 }
             }
 
+            if (BurnedInSubtitleRemover.FillBoxes(rectangleBoxes, frameIndex, _videoWidth, mask))
+            {
+                masked++;
+            }
+
             var pixels = mask.Count(v => v != 0);
             var method = Method;
             if (showResult && pixels > 0 && method != BurnedInMethod.Inpaint)
             {
+                var boxes = new List<(int X, int Y, int Width, int Height)>(rectangleBoxes.Select(b => (b.X, b.Y, b.Width, b.Height)));
                 foreach (var item in candidates)
                 {
                     if (!_masks.TryGetValue(item.Line.Id, out var m))
@@ -483,23 +675,24 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                     }
 
                     var relative = (long)Math.Round((seconds - m.StartSeconds) * options.FrameRate);
-                    foreach (var box in m.Builder.GetLineBoxes())
+                    boxes.AddRange(m.Builder.GetLineBoxes()
+                        .Where(b => relative >= b.StartFrame && relative <= b.EndFrame)
+                        .Select(b => (b.X, b.Y, b.Width, b.Height)));
+                }
+
+                foreach (var box in boxes)
+                {
+                    switch (method)
                     {
-                        if (relative >= box.StartFrame && relative <= box.EndFrame)
-                        {
-                            switch (method)
-                            {
-                                case BurnedInMethod.Blur:
-                                    BurnedInPreviewRenderer.BlurRect(rgb, _videoWidth, box.X, box.Y, box.Width, box.Height, BlurStrength);
-                                    break;
-                                case BurnedInMethod.Delogo:
-                                    BurnedInPreviewRenderer.DelogoRect(rgb, _videoWidth, box.X, box.Y, box.Width, box.Height);
-                                    break;
-                                default:
-                                    BurnedInPreviewRenderer.FillBlack(rgb, _videoWidth, box.X, box.Y, box.Width, box.Height);
-                                    break;
-                            }
-                        }
+                        case BurnedInMethod.Blur:
+                            BurnedInPreviewRenderer.BlurRect(rgb, _videoWidth, box.X, box.Y, box.Width, box.Height, BlurStrength);
+                            break;
+                        case BurnedInMethod.Delogo:
+                            BurnedInPreviewRenderer.DelogoRect(rgb, _videoWidth, box.X, box.Y, box.Width, box.Height);
+                            break;
+                        default:
+                            BurnedInPreviewRenderer.FillBlack(rgb, _videoWidth, box.X, box.Y, box.Width, box.Height);
+                            break;
                     }
                 }
 
@@ -560,7 +753,16 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     // ── run ──────────────────────────────────────────────────────────
 
-    private BurnedInRemovalOptions MakeOptions(IReadOnlyList<(TimeSpan, TimeSpan)> lines) => new()
+    /// <summary>Options for a run over the included lines: OCR lines and drawn rectangles.</summary>
+    private BurnedInRemovalOptions MakeRunOptions(IEnumerable<RemoveBurnedInLineItem> included)
+    {
+        var items = included.ToList();
+        return MakeOptions(
+            items.Where(l => !l.IsRectangle).Select(l => (l.Line.StartTime, l.Line.EndTime)).ToList(),
+            items.Where(l => l.IsRectangle).Select(l => l.ToRectangle()).ToList());
+    }
+
+    private BurnedInRemovalOptions MakeOptions(IReadOnlyList<(TimeSpan, TimeSpan)> lines, IReadOnlyList<BurnedInRectangle>? rectangles = null) => new()
     {
         VideoFileName = _videoFileName,
         OutputFileName = OutputFileName,
@@ -573,6 +775,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         RegionWidth = _regionWidth,
         RegionHeight = _regionHeight,
         Lines = lines,
+        Rectangles = rectangles ?? Array.Empty<BurnedInRectangle>(),
         OcrFramesPerSecond = _ocrFramesPerSecond,
         BrightnessMinimum = BrightnessMinimum,
         RequireOutline = RequireOutline,
@@ -672,7 +875,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         await _previewCancellation.CancelAsync();
         _cancellationTokenSource = new CancellationTokenSource();
         var token = _cancellationTokenSource.Token;
-        var options = MakeOptions(included.Select(l => (l.Line.StartTime, l.Line.EndTime)).ToList());
+        var options = MakeRunOptions(included);
         var remover = new BurnedInSubtitleRemover();
         var progress = new Progress<BurnedInSubtitleRemover.ProgressInfo>(p =>
         {
@@ -742,7 +945,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         await _previewCancellation.CancelAsync();
         _cancellationTokenSource = new CancellationTokenSource();
         var token = _cancellationTokenSource.Token;
-        var options = MakeOptions(included.Select(l => (l.Line.StartTime, l.Line.EndTime)).ToList());
+        var options = MakeRunOptions(included);
         var remover = new BurnedInSubtitleRemover();
         var progress = new Progress<BurnedInSubtitleRemover.ProgressInfo>(p =>
         {
@@ -885,6 +1088,11 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     internal void OnKeyDown(KeyEventArgs e)
     {
+        if (e.Handled)
+        {
+            return;
+        }
+
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
@@ -920,6 +1128,14 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                 break;
             case Key.PageDown:
                 MoveLine(1);
+                e.Handled = true;
+                break;
+            case Key.Insert:
+                InsertRectangle();
+                e.Handled = true;
+                break;
+            case Key.Delete:
+                DeleteLine();
                 e.Handled = true;
                 break;
             case Key.R:
