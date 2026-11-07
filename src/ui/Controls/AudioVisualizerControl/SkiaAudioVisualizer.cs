@@ -107,7 +107,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
 
         f.Width = (float)width;
         f.Height = (float)height;
-        f.Peaks = peaks;
+        f.Peaks = peaks is { IsPlaceholder: true } ? null : peaks; // a placeholder only sets the time scale
         f.SampleRate = peaks?.SampleRate ?? 0;
         f.HighestPeak = Math.Max(1, peaks?.HighestPeak ?? 1);
         f.StartSeconds = StartPositionSeconds;
@@ -146,9 +146,12 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.FrameRate = settings.General.CurrentFrameRate;
 
         f.IsFocused = IsFocused;
-        f.HintText = peaks == null && ShowClickToGenerateHint && !string.IsNullOrEmpty(ClickToGenerateText)
-            ? ClickToGenerateText
-            : null;
+        f.HintText = IsClickToGenerateHintVisible ? ClickToGenerateText : null;
+        if (f.HintText != null && peaks != null)
+        {
+            var label = GetClickToGenerateLabelRect();
+            f.HintRect = new SKRect((float)label.Left, (float)label.Top, (float)label.Right, (float)label.Bottom);
+        }
 
         if (f.SampleRate == 0)
         {
@@ -533,6 +536,7 @@ internal sealed class SkiaWaveformFrame
     public double FrameRate;
     public bool IsFocused;
     public string? HintText;
+    public SKRect HintRect; // empty: centered hint over an empty control, else the label box
 
     public double CursorSeconds = -1;
     public bool CursorOnShotChange;
@@ -585,6 +589,7 @@ internal sealed class SkiaWaveformFrame
         Peaks = null;
         SampleRate = 0;
         HintText = null;
+        HintRect = SKRect.Empty;
         CursorSeconds = -1;
         CursorOnShotChange = false;
         HasNewSelection = false;

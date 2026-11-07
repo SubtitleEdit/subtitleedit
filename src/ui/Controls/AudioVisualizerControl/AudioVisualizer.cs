@@ -490,6 +490,11 @@ public class AudioVisualizer : Control
     /// </summary>
     public static WavePeakData2 ToSmpteDropFrameTime(WavePeakData2 wavePeaks)
     {
+        if (wavePeaks.IsPlaceholder)
+        {
+            return wavePeaks; // silent, nothing to move - and it must stay a placeholder
+        }
+
         var list = new List<WavePeak2>(wavePeaks.Peaks.Count);
         for (var i = 0; i < wavePeaks.Peaks.Count; i++)
         {
@@ -753,9 +758,36 @@ public class AudioVisualizer : Control
     /// (shown only when auto-generate is off and there are no cached peaks).</summary>
     public event EventHandler? OnGenerateWaveformRequested;
 
-    /// <summary>When true and there are no <see cref="WavePeaks"/>, a "click to generate"
-    /// hint is drawn and a click raises <see cref="OnGenerateWaveformRequested"/>.</summary>
+    /// <summary>When true and there are no real <see cref="WavePeaks"/>, a "click to generate"
+    /// hint is drawn and a click on it raises <see cref="OnGenerateWaveformRequested"/>. With no
+    /// peaks at all the hint fills the control and any click counts; over placeholder peaks
+    /// (<see cref="WavePeakData2.IsPlaceholder"/>) it is a small label at the top, so the rest of
+    /// the timeline stays free for editing the subtitles.</summary>
     public bool ShowClickToGenerateHint { get; set; }
+
+    /// <summary>True when <see cref="WavePeaks"/> is the silent stand-in that only gives the
+    /// timeline a time scale - there is no audio to draw or analyze.</summary>
+    public bool HasPlaceholderPeaks => WavePeaks?.IsPlaceholder == true;
+
+    protected bool IsClickToGenerateHintVisible =>
+        ShowClickToGenerateHint && !string.IsNullOrEmpty(ClickToGenerateText) &&
+        (WavePeaks == null || WavePeaks.IsPlaceholder);
+
+    private const double HintLabelPaddingX = 10;
+    private const double HintLabelPaddingY = 4;
+    private const double HintLabelTop = 6;
+
+    /// <summary>The clickable "click to generate" label drawn over placeholder peaks.</summary>
+    protected Rect GetClickToGenerateLabelRect()
+    {
+        var hint = GetClickToGenerateHintText();
+        var width = hint.Width + HintLabelPaddingX * 2;
+        var height = hint.Height + HintLabelPaddingY * 2;
+        return new Rect(Math.Round((Bounds.Width - width) / 2), HintLabelTop, Math.Ceiling(width), Math.Ceiling(height));
+    }
+
+    private bool IsOverClickToGenerateLabel(Point point) =>
+        HasPlaceholderPeaks && IsClickToGenerateHintVisible && GetClickToGenerateLabelRect().Contains(point);
 
     /// <summary>Localized hint text drawn over the empty waveform (see <see cref="ShowClickToGenerateHint"/>).</summary>
     public string ClickToGenerateText { get; set; } = string.Empty;
@@ -1335,9 +1367,10 @@ public class AudioVisualizer : Control
         // the paths that bail out before that are plain clicks and must not hold the flag.
         _pointerDragActive = false;
 
-        // No waveform yet and auto-generate is off: a click generates it on demand.
-        if (WavePeaks == null && ShowClickToGenerateHint &&
-            e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        // No waveform yet and auto-generate is off: a click generates it on demand - anywhere
+        // when there is nothing to edit yet, only on the label over placeholder peaks (#16710).
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed &&
+            (WavePeaks == null && ShowClickToGenerateHint || IsOverClickToGenerateLabel(point)))
         {
             OnGenerateWaveformRequested?.Invoke(this, EventArgs.Empty);
             return;
@@ -2269,6 +2302,15 @@ public class AudioVisualizer : Control
 
     private void UpdateCursor(Point point)
     {
+        if (IsOverClickToGenerateLabel(point))
+        {
+            _cachedHitParagraph = null;
+            _cachedIsNearLeftEdge = false;
+            _cachedIsNearRightEdge = false;
+            Cursor = _cursorHand;
+            return;
+        }
+
         var p = HitTestParagraph(point);
         _cachedHitParagraph = p;
         _cachedIsNearLeftEdge = false;
@@ -2582,10 +2624,19 @@ public class AudioVisualizer : Control
             DrawCurrentVideoPosition(context, ref renderCtx);
             DrawNewParagraph(context, ref renderCtx);
 
-            if (WavePeaks == null && ShowClickToGenerateHint && !string.IsNullOrEmpty(ClickToGenerateText))
+            if (IsClickToGenerateHintVisible)
             {
                 var hint = GetClickToGenerateHintText();
-                context.DrawText(hint, new Point((width - hint.Width) / 2, (height - hint.Height) / 2));
+                if (WavePeaks == null)
+                {
+                    context.DrawText(hint, new Point((width - hint.Width) / 2, (height - hint.Height) / 2));
+                }
+                else
+                {
+                    var label = GetClickToGenerateLabelRect();
+                    context.DrawRectangle(_hintLabelBackground, _hintLabelBorder, label, 4, 4);
+                    context.DrawText(hint, new Point(label.X + HintLabelPaddingX, label.Y + HintLabelPaddingY));
+                }
             }
 
             if (IsFocused)
@@ -2604,6 +2655,8 @@ public class AudioVisualizer : Control
     // that only changes with the UI language.
     private FormattedText? _clickToGenerateHintText;
     private string? _clickToGenerateHintSource;
+    private static readonly IBrush _hintLabelBackground = new ImmutableSolidColorBrush(Color.FromArgb(170, 0, 0, 0));
+    private static readonly IPen _hintLabelBorder = new ImmutablePen(new ImmutableSolidColorBrush(Color.FromArgb(110, 220, 220, 220)), 1);
 
     private FormattedText GetClickToGenerateHintText()
     {
@@ -3073,7 +3126,7 @@ public class AudioVisualizer : Control
 
     private void DrawWaveForm(DrawingContext context, ref RenderContext renderCtx)
     {
-        if (WavePeaks == null || _displayMode == WaveformDisplayMode.OnlySpectrogram)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || _displayMode == WaveformDisplayMode.OnlySpectrogram)
         {
             return;
         }
@@ -4854,7 +4907,7 @@ public class AudioVisualizer : Control
 
     public double FindDataBelowThreshold(double thresholdPercent, double durationInSeconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return -1;
         }
@@ -4896,7 +4949,7 @@ public class AudioVisualizer : Control
     /// <returns>video position in seconds, -1 if not found</returns>
     public double FindDataBelowThresholdBack(double thresholdPercent, double durationInSeconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return -1;
         }
@@ -4949,7 +5002,7 @@ public class AudioVisualizer : Control
     /// <returns>video position in seconds, -1 if not found</returns>
     public double FindDataBelowThresholdBackForStart(double thresholdPercent, double durationInSeconds, double startSeconds, double maxForwardSeconds = 0.8)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return -1;
         }
@@ -5039,7 +5092,7 @@ public class AudioVisualizer : Control
     /// <returns>video position in seconds, -1 if not found</returns>
     public double FindDataBelowThresholdForwardForEnd(double thresholdPercent, double durationInSeconds, double endSeconds, double maxBackSeconds = 1)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return -1;
         }
@@ -5146,7 +5199,7 @@ public class AudioVisualizer : Control
     /// </summary>
     public double FindLowPercentage(double startSeconds, double endSeconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
         {
             return 0;
         }
@@ -5167,7 +5220,7 @@ public class AudioVisualizer : Control
     /// </summary>
     public double FindHighPercentage(double startSeconds, double endSeconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
         {
             return 0;
         }
@@ -5185,7 +5238,7 @@ public class AudioVisualizer : Control
 
     private MinMax GetMinAndMax(int startIndex, int endIndex)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return new MinMax { Min = 0, Max = 0, Avg = 0 };
         }
@@ -5224,7 +5277,7 @@ public class AudioVisualizer : Control
     internal void GenerateTimeCodes(Subtitle subtitle, double startFromSeconds, int blockSizeMilliseconds, int minimumVolumePercent, int maximumVolumePercent,
         int defaultMilliseconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return;
         }

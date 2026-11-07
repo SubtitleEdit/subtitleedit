@@ -945,6 +945,8 @@ public partial class MainViewModel :
     public MenuItem MenuItemExtendToLineAfter { get; internal set; }
     public MenuItem MenuItemMerge { get; internal set; }
     public MenuItem MenuItemAudioVisualizerInsertNewSelection { get; set; }
+    public MenuItem MenuItemAudioVisualizerGenerateWaveform { get; set; }
+    public Separator MenuItemAudioVisualizerGenerateWaveformSeparator { get; set; }
     public MenuItem MenuItemAudioVisualizerPasteNewSelection { get; set; }
     public MenuItem MenuIteminsertSubtitleFileAtPositionMenuItem { get; set; }
     public MenuItem MenuItemAudioVisualizerDelete { get; set; }
@@ -1078,6 +1080,8 @@ public partial class MainViewModel :
         MenuItemExtendToLineAfter = new MenuItem();
         MenuItemMerge = new MenuItem();
         MenuItemAudioVisualizerInsertNewSelection = new MenuItem();
+        MenuItemAudioVisualizerGenerateWaveform = new MenuItem();
+        MenuItemAudioVisualizerGenerateWaveformSeparator = new Separator();
         MenuItemAudioVisualizerPasteNewSelection = new MenuItem();
         MenuIteminsertSubtitleFileAtPositionMenuItem = new MenuItem();
         MenuItemAudioVisualizerDelete = new MenuItem();
@@ -6729,13 +6733,14 @@ public partial class MainViewModel :
     private async Task ShowWaveformSeekSilence()
     {
         var vp = GetVideoPlayerControl();
-        if (Window == null || AudioVisualizer?.WavePeaks == null || vp == null)
+        var audioPeaks = AudioPeaks;
+        if (Window == null || audioPeaks == null || vp == null)
         {
             return;
         }
 
         var result =
-            await ShowDialogAsync<WaveformSeekSilenceWindow, WaveformSeekSilenceViewModel>(vm => { vm.Initialize(AudioVisualizer.WavePeaks); });
+            await ShowDialogAsync<WaveformSeekSilenceWindow, WaveformSeekSilenceViewModel>(vm => { vm.Initialize(audioPeaks); });
 
         if (!result.OkPressed || !result.SilenceMaxVolume.HasValue || !result.SilenceMinDuration.HasValue)
         {
@@ -6762,7 +6767,7 @@ public partial class MainViewModel :
     private void SeekSilenceBack()
     {
         var vp = GetVideoPlayerControl();
-        if (AudioVisualizer?.WavePeaks == null || vp == null)
+        if (AudioPeaks == null || vp == null)
         {
             return;
         }
@@ -6779,7 +6784,7 @@ public partial class MainViewModel :
     private void SeekSilenceForward()
     {
         var vp = GetVideoPlayerControl();
-        if (AudioVisualizer?.WavePeaks == null || vp == null)
+        if (AudioPeaks == null || vp == null)
         {
             return;
         }
@@ -6848,7 +6853,7 @@ public partial class MainViewModel :
             return Se.Language.Main.Waveform.GuessStartTimeCodesLocked;
         }
 
-        if (AudioVisualizer?.WavePeaks == null)
+        if (AudioPeaks == null)
         {
             return Se.Language.Main.Waveform.GuessStartNoWaveform;
         }
@@ -7027,7 +7032,7 @@ public partial class MainViewModel :
             return Se.Language.Main.Waveform.GuessEndTimeCodesLocked;
         }
 
-        if (AudioVisualizer?.WavePeaks == null)
+        if (AudioPeaks == null)
         {
             return Se.Language.Main.Waveform.GuessEndNoWaveform;
         }
@@ -7564,7 +7569,7 @@ public partial class MainViewModel :
     private async Task ShowWaveformGuessTimeCodes()
     {
         var vp = GetVideoPlayerControl();
-        if (Window == null || AudioVisualizer?.WavePeaks == null || vp == null)
+        if (Window == null || AudioPeaks == null || vp == null)
         {
             return;
         }
@@ -8365,7 +8370,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<CutVideoWindow, CutVideoViewModel>(vm =>
         {
-            vm.Initialize(_videoFileName, AudioVisualizer?.WavePeaks, GetUpdateSubtitle(), SelectedSubtitleFormat, this);
+            vm.Initialize(_videoFileName, AudioPeaks, GetUpdateSubtitle(), SelectedSubtitleFormat, this);
         });
 
         if (!result.OkPressed)
@@ -8401,7 +8406,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<CutVideoWindow, CutVideoViewModel>(vm =>
         {
-            vm.Initialize(_videoFileName, AudioVisualizer?.WavePeaks, GetUpdateSubtitle(), SelectedSubtitleFormat, this, selectedItems);
+            vm.Initialize(_videoFileName, AudioPeaks, GetUpdateSubtitle(), SelectedSubtitleFormat, this, selectedItems);
         });
 
         if (!result.OkPressed)
@@ -8456,7 +8461,7 @@ public partial class MainViewModel :
         var toolApply = BeginToolApply(Se.Language.Video.SyncToAudioTitle);
         var result = await ShowDialogAsync<SyncToAudioWindow, SyncToAudioViewModel>(vm =>
         {
-            vm.Initialize(Subtitles, AudioVisualizer?.WavePeaks, (double)(_mediaInfo?.FramesRate ?? 0), _subtitleFileName ?? _videoFileName);
+            vm.Initialize(Subtitles, AudioPeaks, (double)(_mediaInfo?.FramesRate ?? 0), _subtitleFileName ?? _videoFileName);
         });
 
         if (result.OkPressed && result.Result != null)
@@ -13199,7 +13204,7 @@ public partial class MainViewModel :
             // its reference from the video, and the original line - not the translation being
             // dubbed - is what is spoken in that clip.
             vm.Initialize(subtitle, SelectedSubtitleFormat,
-                _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath(),
+                _videoFileName ?? string.Empty, AudioPeaks, Path.GetTempPath(),
                 originalSubtitle);
         });
 
@@ -30928,7 +30933,55 @@ public partial class MainViewModel :
         {
             audioVisualizer.ShowClickToGenerateHint = true;
             audioVisualizer.InvalidateVisual();
+            _ = ShowPlaceholderWaveformAsync();
         });
+    }
+
+    /// <summary>
+    /// The real audio peaks of the current video, or null when there are none - the silent
+    /// placeholder that only gives the timeline a time scale does not count.
+    /// </summary>
+    private WavePeakData2? AudioPeaks => AudioVisualizer?.WavePeaks is { IsPlaceholder: false } peaks ? peaks : null;
+
+    /// <summary>
+    /// With no waveform generated (auto-generate off, generation cancelled, ffmpeg missing), give
+    /// the timeline silent placeholder peaks so the subtitles, the time ruler and the cursor are
+    /// shown and can be edited right away, without extracting any audio (#16710). The "click to
+    /// generate" hint then shrinks to a small label at the top of the timeline. Real peaks replace
+    /// the placeholder as soon as they are generated.
+    /// </summary>
+    private async Task ShowPlaceholderWaveformAsync()
+    {
+        var videoFileName = _videoFileName;
+        var vp = GetVideoPlayerControl();
+        if (AudioVisualizer == null || vp == null || string.IsNullOrEmpty(videoFileName) || AudioPeaks != null)
+        {
+            return;
+        }
+
+        try
+        {
+            await vp.WaitForPlayersReadyAsync(10_000);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Waiting for the video player before showing the placeholder waveform failed");
+            return;
+        }
+
+        var duration = vp.VideoPlayer.Duration;
+        var av = AudioVisualizer;
+        if (av == null || AudioPeaks != null || _videoFileName != videoFileName || !av.ShowClickToGenerateHint || duration <= 0)
+        {
+            return;
+        }
+
+        // Cover subtitles that run past the end of the video too, so they can still be reached.
+        var lastEnd = Subtitles.Count > 0 ? Subtitles.Max(p => p.EndTime.TotalSeconds) : 0;
+        av.WavePeaks = WavePeakData2.CreatePlaceholder(Math.Max(duration, lastEnd));
+        CenterAudioVisualizerOnCurrentVideoPosition();
+        _updateAudioVisualizer = true;
+        av.InvalidateVisual();
     }
 
     /// <summary>
@@ -31002,12 +31055,7 @@ public partial class MainViewModel :
             // The auto-on-open path must not pop a modal (session restore, drag/drop, CLI opens),
             // so show the click-to-generate hint instead - clicking it runs RequireFfmpegOk,
             // which offers the download (or explains how to install ffmpeg on Linux).
-            if (AudioVisualizer != null)
-            {
-                AudioVisualizer.ShowClickToGenerateHint = true;
-                AudioVisualizer.InvalidateVisual();
-            }
-
+            ShowClickToGenerateWaveformHint();
             ShowStatus(Se.Language.Main.WaveformFfmpegNotFoundClickToSetUp);
             return;
         }
@@ -31543,8 +31591,7 @@ public partial class MainViewModel :
                     if (AudioVisualizer != null)
                     {
                         AudioVisualizer.WavePeaks = null;
-                        AudioVisualizer.ShowClickToGenerateHint = true;
-                        AudioVisualizer.InvalidateVisual();
+                        ShowClickToGenerateWaveformHint();
                     }
                 });
             }
@@ -37866,6 +37913,10 @@ public partial class MainViewModel :
         // Remembered so "Insert subtitle file at video position..." anchors the file at the
         // right-clicked waveform position instead of wherever the play-head happens to be.
         _waveformContextMenuSeconds = e.PositionInSeconds;
+
+        var canGenerateWaveform = AudioVisualizer?.HasPlaceholderPeaks == true && !IsWaveformGenerating;
+        MenuItemAudioVisualizerGenerateWaveform.IsVisible = canGenerateWaveform;
+        MenuItemAudioVisualizerGenerateWaveformSeparator.IsVisible = canGenerateWaveform;
 
         MenuItemAudioVisualizerInsertNewSelection.IsVisible = false;
         MenuItemAudioVisualizerPasteNewSelection.IsVisible = false;
