@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Features.Main;
 using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ConvertActors;
 
@@ -14,6 +15,11 @@ public partial class ConvertActorsDisplayItem : ObservableObject
     [ObservableProperty] private bool _isChecked;
 
     public bool IsNextParagraph { get; set; }
+
+    /// <summary>
+    /// The speaker names in this row, used to tick or untick every line of one actor.
+    /// </summary>
+    public List<string> Actors { get; set; } = new List<string>();
     public Guid OriginalId { get; set; }
     public SubtitleLineViewModel UpdatedViewModel { get; set; }
 
