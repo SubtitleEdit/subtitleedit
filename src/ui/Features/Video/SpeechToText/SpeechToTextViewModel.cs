@@ -2711,6 +2711,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             Text = engine is CrispAsrIndexEcho ? CrispAsrIndexEcho.GetTranslation(p.Text) : p.Text
         }).ToList();
 
+        if (engine is ICrispAsrEngine && CrispAsrHighlightWords.IsActive(engine.CommandLineParameter))
+        {
+            // "Highlight word" only gets one word per cue out of crispasr; build the lines with
+            // the active word underlined here (merging would otherwise glue the words back).
+            resultTexts = CrispAsrHighlightWords.Build(resultTexts, SpeechToTextPostProcessor.GetParagraphMaxChars());
+        }
+
         if (!string.IsNullOrEmpty(srtFileName))
         {
             filesToDelete?.Add(srtFileName);

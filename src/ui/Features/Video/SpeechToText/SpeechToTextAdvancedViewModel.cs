@@ -133,18 +133,6 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
         @"(?:^|\s)(-ml\s+\S+|--max-len\s+\S+|-sow|--split-on-word)(?=\s|$)",
         RegexOptions.Compiled);
 
-    // "Highlight word" is the two together: one word per segment, split at word boundaries.
-    // A maximum length on its own is not that - the "Standard" preset sets one - so matching
-    // any --max-len left the button lit after "Standard", and the press that should have
-    // switched highlighting on took the preset's --max-len back out instead.
-    private static readonly Regex MaxLenOneCrispAsrRegex = new(
-        @"(?:^|\s)(-ml|--max-len)\s+1(?=\s|$)",
-        RegexOptions.Compiled);
-
-    private static readonly Regex SplitOnWordCrispAsrRegex = new(
-        @"(?:^|\s)(-sow|--split-on-word)(?=\s|$)",
-        RegexOptions.Compiled);
-
     private static readonly Regex HighlightWordsCrispAsrConflictRegex = new(
         @"(?:^|\s)(-ml\s+\S+|--max-len\s+\S+|-sow|--split-on-word|--split-on-punct|-sp)(?=\s|$)",
         RegexOptions.Compiled);
@@ -175,7 +163,7 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
         IsVadCrispAsrActive = IsVadCppActive;
         IsVadCTranslate2Active = VadCTranslate2DetectRegex.IsMatch(text);
         IsHighlightWordsCTranslate2Active = HighlightWordsCTranslate2DetectRegex.IsMatch(text);
-        IsHighlightWordsCrispAsrActive = MaxLenOneCrispAsrRegex.IsMatch(text) && SplitOnWordCrispAsrRegex.IsMatch(text);
+        IsHighlightWordsCrispAsrActive = CrispAsrHighlightWords.IsActive(text);
     }
 
     [RelayCommand]

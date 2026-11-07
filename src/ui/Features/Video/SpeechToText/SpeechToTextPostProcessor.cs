@@ -286,7 +286,9 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
         {
             if (usePostProcessing)
             {
-                if (addPeriods)
+                // Crisp ASR's highlighted lines repeat one cue per word - a period added to the
+                // copy before a pause only would make the line jump as the last word lights up.
+                if (addPeriods && !(engine == Engine.Whisper && CrispAsrHighlightWords.IsActive(EngineCommandLineArguments)))
                 {
                     subtitle = AddPeriods(subtitle, TwoLetterLanguageCode);
                 }
@@ -344,7 +346,8 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText
             return !es.Contains("--highlight_words", StringComparison.OrdinalIgnoreCase) &&
                    !es.Contains("-hw ", StringComparison.OrdinalIgnoreCase) &&
                    !es.Contains("-hw=true", StringComparison.OrdinalIgnoreCase) &&
-                   !es.Contains("--one_word", StringComparison.OrdinalIgnoreCase);
+                   !es.Contains("--one_word", StringComparison.OrdinalIgnoreCase) &&
+                   !CrispAsrHighlightWords.IsActive(es);
         }
 
         // Characters that already terminate a line, so no period should be appended.
