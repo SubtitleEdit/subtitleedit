@@ -53,6 +53,7 @@ public class LanguageMain
     public string LineXTimingChanged { get; set; }
     public string LoadingWaveInfoFromCache { get; set; }
     public string ClickToGenerateWaveform { get; set; }
+    public string GenerateWaveform { get; set; }
     public string WaveformFfmpegNotFoundClickToSetUp { get; set; }
     public string NumberOfLinesEvenlyDistributedX { get; set; }
     public string OneLineCopiedFromOriginal { get; set; }
@@ -223,6 +224,7 @@ public class LanguageMain
         LineXTimingChanged = "Line {0}: Timing changed";
         LoadingWaveInfoFromCache = "Loading wave info from cache...";
         ClickToGenerateWaveform = "Click to generate waveform";
+        GenerateWaveform = "Generate waveform";
         WaveformFfmpegNotFoundClickToSetUp = "FFmpeg not found - click the waveform to set up FFmpeg and generate the waveform";
         NumberOfLinesEvenlyDistributedX = "Evenly distributed {0} lines";
         OneLineCopiedFromOriginal = "One line copied from original subtitle";

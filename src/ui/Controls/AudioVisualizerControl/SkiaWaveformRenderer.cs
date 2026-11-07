@@ -101,6 +101,8 @@ internal sealed class SkiaWaveformRenderer
     private readonly HashSet<int> _paragraphStartXs = new();
     private readonly HashSet<int> _paragraphEndXs = new();
 
+    private readonly SKPaint _hintPaint = new() { IsAntialias = true };
+
     public void Render(SKCanvas canvas, SkiaWaveformFrame f)
     {
         lock (_lock)
@@ -130,7 +132,23 @@ internal sealed class SkiaWaveformRenderer
                 if (f.HintText != null)
                 {
                     var hint = _textCache.Get(f.HintText, 14);
-                    DrawText(canvas, hint, (f.Width - hint.Width) / 2, (f.Height - hint.Height) / 2, new SKColor(220, 220, 220));
+                    if (f.HintRect.IsEmpty)
+                    {
+                        DrawText(canvas, hint, (f.Width - hint.Width) / 2, (f.Height - hint.Height) / 2, new SKColor(220, 220, 220));
+                    }
+                    else
+                    {
+                        // The clickable "generate waveform" label over a placeholder time line.
+                        var box = f.HintRect;
+                        _hintPaint.Style = SKPaintStyle.Fill;
+                        _hintPaint.Color = new SKColor(0, 0, 0, 170);
+                        canvas.DrawRoundRect(box, 4, 4, _hintPaint);
+                        _hintPaint.Style = SKPaintStyle.Stroke;
+                        _hintPaint.StrokeWidth = 1 / _scale;
+                        _hintPaint.Color = new SKColor(220, 220, 220, 110);
+                        canvas.DrawRoundRect(box, 4, 4, _hintPaint);
+                        DrawText(canvas, hint, box.MidX - hint.Width / 2, box.MidY - hint.Height / 2, new SKColor(220, 220, 220));
+                    }
                 }
 
                 if (f.IsFocused)
