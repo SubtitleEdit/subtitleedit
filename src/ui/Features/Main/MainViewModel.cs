@@ -30093,7 +30093,8 @@ public partial class MainViewModel :
             Se.Settings.General.CurrentVideoOffsetInMs,
             IsSmpteTimingEnabled,
             _audioTrack?.Id ?? -1,
-            _subtitleSecondaryFileName ?? string.Empty);
+            _subtitleSecondaryFileName ?? string.Empty,
+            IsEmptyWaveformChosen(_videoFileName) ? true : null);
         Se.SaveSettings();
 
         if (updateMenu)
@@ -30854,6 +30855,14 @@ public partial class MainViewModel :
             else
             {
                 ShowClickToGenerateWaveformHint();
+
+                // "Use empty waveform" was picked for this subtitle and video before: go straight
+                // to it instead of asking again.
+                if (IsEmptyWaveformChosen(videoFileName) || IsEmptyWaveformRemembered(videoFileName))
+                {
+                    _emptyWaveformVideoFileName = videoFileName;
+                    Dispatcher.UIThread.Post(() => _ = ShowPlaceholderWaveformAsync());
+                }
             }
 
             return;
@@ -30943,10 +30952,29 @@ public partial class MainViewModel :
         });
     }
 
-    // "Use empty waveform" on the timeline: show the subtitles without extracting the audio.
+    // "Use empty waveform" on the timeline: show the subtitles without extracting the audio, and
+    // remember the choice for this subtitle and video so reopening them does the same.
     internal void AudioVisualizerOnUseEmptyWaveformRequested(object? sender, EventArgs e)
     {
+        _emptyWaveformVideoFileName = _videoFileName;
         _ = ShowPlaceholderWaveformAsync();
+        AddToRecentFiles(false);
+    }
+
+    // The video "Use empty waveform" was picked for - this session or remembered with the subtitle
+    // in the recent files. Cleared by "Generate waveform".
+    private string? _emptyWaveformVideoFileName;
+
+    private bool IsEmptyWaveformChosen(string? videoFileName) =>
+        !string.IsNullOrEmpty(videoFileName) && string.Equals(_emptyWaveformVideoFileName, videoFileName, StringComparison.Ordinal);
+
+    private bool IsEmptyWaveformRemembered(string videoFileName)
+    {
+        var subtitleFileName = _subtitleFileName;
+        return !string.IsNullOrEmpty(subtitleFileName) && Se.Settings.File.RecentFiles.Any(rf =>
+            rf.UseEmptyWaveform &&
+            string.Equals(rf.SubtitleFileName, subtitleFileName, StringComparison.Ordinal) &&
+            string.Equals(rf.VideoFileName, videoFileName, StringComparison.Ordinal));
     }
 
     /// <summary>
@@ -31115,6 +31143,17 @@ public partial class MainViewModel :
         if (string.IsNullOrEmpty(_videoFileName))
         {
             return;
+        }
+
+        // Picking "Generate waveform" ends "Use empty waveform" for this subtitle and video.
+        _emptyWaveformVideoFileName = null;
+        var remembered = Se.Settings.File.RecentFiles.Where(rf => rf.UseEmptyWaveform &&
+            string.Equals(rf.SubtitleFileName, _subtitleFileName, StringComparison.Ordinal) &&
+            string.Equals(rf.VideoFileName, _videoFileName, StringComparison.Ordinal)).ToList();
+        if (remembered.Count > 0)
+        {
+            remembered.ForEach(rf => rf.UseEmptyWaveform = false);
+            Se.SaveSettings();
         }
 
         // Explicit user action, so a modal "download ffmpeg?" prompt is fine here (#14390).
