@@ -146,11 +146,11 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.FrameRate = settings.General.CurrentFrameRate;
 
         f.IsFocused = IsFocused;
-        f.HintText = IsClickToGenerateHintVisible ? ClickToGenerateText : null;
-        if (f.HintText != null && peaks != null)
+        f.HintButtons.Clear();
+        foreach (var button in GetHintButtons())
         {
-            var label = GetClickToGenerateLabelRect();
-            f.HintRect = new SKRect((float)label.Left, (float)label.Top, (float)label.Right, (float)label.Bottom);
+            var r = button.Rect;
+            f.HintButtons.Add(new SkiaHintButton(button.Text, new SKRect((float)r.Left, (float)r.Top, (float)r.Right, (float)r.Bottom), button.IsHovered));
         }
 
         if (f.SampleRate == 0)
@@ -535,8 +535,7 @@ internal sealed class SkiaWaveformFrame
     public bool FrameMode;
     public double FrameRate;
     public bool IsFocused;
-    public string? HintText;
-    public SKRect HintRect; // empty: centered hint over an empty control, else the label box
+    public readonly List<SkiaHintButton> HintButtons = new(2);
 
     public double CursorSeconds = -1;
     public bool CursorOnShotChange;
@@ -588,8 +587,7 @@ internal sealed class SkiaWaveformFrame
     {
         Peaks = null;
         SampleRate = 0;
-        HintText = null;
-        HintRect = SKRect.Empty;
+        HintButtons.Clear();
         CursorSeconds = -1;
         CursorOnShotChange = false;
         HasNewSelection = false;
@@ -691,3 +689,6 @@ internal sealed class SkiaWaveformDrawOperation : ICustomDrawOperation
         }
     }
 }
+
+/// <summary>A "Generate waveform" / "Use empty waveform" button on a timeline without a waveform.</summary>
+public readonly record struct SkiaHintButton(string Text, SKRect Rect, bool IsHovered);

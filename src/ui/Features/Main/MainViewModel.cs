@@ -947,6 +947,9 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerInsertNewSelection { get; set; }
     public MenuItem MenuItemAudioVisualizerGenerateWaveform { get; set; }
     public Separator MenuItemAudioVisualizerGenerateWaveformSeparator { get; set; }
+    public MenuItem MenuItemAudioVisualizerGuessTimeCodes { get; set; }
+    public MenuItem MenuItemAudioVisualizerSeekSilence { get; set; }
+    public MenuItem MenuItemAudioVisualizerShowSpeechOnly { get; set; }
     public MenuItem MenuItemAudioVisualizerPasteNewSelection { get; set; }
     public MenuItem MenuIteminsertSubtitleFileAtPositionMenuItem { get; set; }
     public MenuItem MenuItemAudioVisualizerDelete { get; set; }
@@ -1082,6 +1085,9 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerInsertNewSelection = new MenuItem();
         MenuItemAudioVisualizerGenerateWaveform = new MenuItem();
         MenuItemAudioVisualizerGenerateWaveformSeparator = new Separator();
+        MenuItemAudioVisualizerGuessTimeCodes = new MenuItem();
+        MenuItemAudioVisualizerSeekSilence = new MenuItem();
+        MenuItemAudioVisualizerShowSpeechOnly = new MenuItem();
         MenuItemAudioVisualizerPasteNewSelection = new MenuItem();
         MenuIteminsertSubtitleFileAtPositionMenuItem = new MenuItem();
         MenuItemAudioVisualizerDelete = new MenuItem();
@@ -30814,7 +30820,8 @@ public partial class MainViewModel :
 
         if (AudioVisualizer != null)
         {
-            AudioVisualizer.ClickToGenerateText = Se.Language.Main.ClickToGenerateWaveform;
+            AudioVisualizer.ClickToGenerateText = Se.Language.Main.GenerateWaveform;
+            AudioVisualizer.UseEmptyWaveformText = Se.Language.Main.UseEmptyWaveform;
         }
 
         CachedWaveform cached;
@@ -30933,8 +30940,13 @@ public partial class MainViewModel :
         {
             audioVisualizer.ShowClickToGenerateHint = true;
             audioVisualizer.InvalidateVisual();
-            _ = ShowPlaceholderWaveformAsync();
         });
+    }
+
+    // "Use empty waveform" on the timeline: show the subtitles without extracting the audio.
+    internal void AudioVisualizerOnUseEmptyWaveformRequested(object? sender, EventArgs e)
+    {
+        _ = ShowPlaceholderWaveformAsync();
     }
 
     /// <summary>
@@ -30944,11 +30956,11 @@ public partial class MainViewModel :
     private WavePeakData2? AudioPeaks => AudioVisualizer?.WavePeaks is { IsPlaceholder: false } peaks ? peaks : null;
 
     /// <summary>
-    /// With no waveform generated (auto-generate off, generation cancelled, ffmpeg missing), give
-    /// the timeline silent placeholder peaks so the subtitles, the time ruler and the cursor are
-    /// shown and can be edited right away, without extracting any audio (#16710). The "click to
-    /// generate" hint then shrinks to a small label at the top of the timeline. Real peaks replace
-    /// the placeholder as soon as they are generated.
+    /// "Use empty waveform": with no waveform generated (auto-generate off, generation cancelled,
+    /// ffmpeg missing), give the timeline silent placeholder peaks so the subtitles, the time
+    /// ruler and the cursor are shown and can be edited without extracting any audio (#16710).
+    /// "Generate waveform" then moves to a small button in the timeline's top right corner. Real
+    /// peaks replace the placeholder as soon as they are generated.
     /// </summary>
     private async Task ShowPlaceholderWaveformAsync()
     {
@@ -31590,7 +31602,12 @@ public partial class MainViewModel :
                 {
                     if (AudioVisualizer != null)
                     {
-                        AudioVisualizer.WavePeaks = null;
+                        // Back to how it was before: the empty waveform stays if it was in use.
+                        if (!AudioVisualizer.HasPlaceholderPeaks)
+                        {
+                            AudioVisualizer.WavePeaks = null;
+                        }
+
                         ShowClickToGenerateWaveformHint();
                     }
                 });
@@ -37914,9 +37931,15 @@ public partial class MainViewModel :
         // right-clicked waveform position instead of wherever the play-head happens to be.
         _waveformContextMenuSeconds = e.PositionInSeconds;
 
-        var canGenerateWaveform = AudioVisualizer?.HasPlaceholderPeaks == true && !IsWaveformGenerating;
+        // On the empty (placeholder) waveform: offer generating the real one, and hide what
+        // needs real audio to work on (#16710).
+        var isEmptyWaveform = AudioVisualizer?.HasPlaceholderPeaks == true;
+        var canGenerateWaveform = isEmptyWaveform && !IsWaveformGenerating;
         MenuItemAudioVisualizerGenerateWaveform.IsVisible = canGenerateWaveform;
         MenuItemAudioVisualizerGenerateWaveformSeparator.IsVisible = canGenerateWaveform;
+        MenuItemAudioVisualizerGuessTimeCodes.IsVisible = !isEmptyWaveform;
+        MenuItemAudioVisualizerSeekSilence.IsVisible = !isEmptyWaveform;
+        MenuItemAudioVisualizerShowSpeechOnly.IsVisible = !isEmptyWaveform;
 
         MenuItemAudioVisualizerInsertNewSelection.IsVisible = false;
         MenuItemAudioVisualizerPasteNewSelection.IsVisible = false;
