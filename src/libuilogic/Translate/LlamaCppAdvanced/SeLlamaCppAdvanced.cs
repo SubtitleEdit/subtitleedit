@@ -1,4 +1,4 @@
-namespace Nikse.SubtitleEdit.Logic.Config;
+namespace Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 /// <summary>
 /// Settings for the "llama.cpp (advanced)" auto-translate engine: batch/context options plus

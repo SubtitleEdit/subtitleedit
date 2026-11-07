@@ -42,7 +42,7 @@ public class BatchConverterAutoTranslateProgressTests
             return Task.FromResult("[t] " + text);
         }
 
-        public Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        public Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken, Action<Action>? applyRowUpdate = null)
         {
             rows[index].TranslatedText = "[t] " + rows[index].Text;
             return Task.FromResult(1);

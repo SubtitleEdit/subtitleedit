@@ -1,15 +1,10 @@
-using System;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Http;
 
-namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
+namespace Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 /// <summary>
 /// OpenAI-compatible chat-completions client for the advanced llama.cpp translate engine.
@@ -34,6 +29,7 @@ namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 public class LlamaCppAdvancedClient : IDisposable
 {
     private readonly HttpClient _httpClient;
+    private readonly SeLlamaCppAdvanced _settings;
 
     // Watchdog knobs (internal so tests can shrink them). FirstData covers prompt processing,
     // which streams nothing - a large context on slow hardware can legitimately take minutes
@@ -60,8 +56,10 @@ public class LlamaCppAdvancedClient : IDisposable
     /// </summary>
     public bool LastRequestDisabledThinking { get; private set; }
 
-    public LlamaCppAdvancedClient()
+    /// <param name="settings">The sampling overrides sent with every request.</param>
+    public LlamaCppAdvancedClient(SeLlamaCppAdvanced settings)
     {
+        _settings = settings;
         _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
         _httpClient.Timeout = TimeSpan.FromMinutes(15);
     }
@@ -113,13 +111,13 @@ public class LlamaCppAdvancedClient : IDisposable
     private async Task<(bool ok, bool stalled, bool isAssembledContent, string body, string reasoning, int status)> PostWithThinkingFallbackAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump, CancellationToken cancellationToken)
     {
         LastRequestDisabledThinking = DisableThinking;
-        var response = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
+        var response = await PostAsync(url, BuildRequestJson(_settings, systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
         if (response.ok || response.stalled || !DisableThinking || response.status < 400 || response.status >= 500 || cancellationToken.IsCancellationRequested)
         {
             return response;
         }
 
-        var retry = await PostAsync(url, BuildRequestJson(systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, false), cancellationToken);
+        var retry = await PostAsync(url, BuildRequestJson(_settings, systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, false), cancellationToken);
         if (!retry.ok)
         {
             return response;
@@ -138,7 +136,7 @@ public class LlamaCppAdvancedClient : IDisposable
     /// chat_template_kwargs.enable_thinking=false is read by llama-server (Jinja templates) and
     /// vLLM - the Qwen 3 / Qwen 3.5 family and their fine-tunes honour it.
     /// </summary>
-    internal static string BuildRequestJson(string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump = 0, bool disableThinking = false)
+    internal static string BuildRequestJson(SeLlamaCppAdvanced settings, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump = 0, bool disableThinking = false)
     {
         using var stream = new System.IO.MemoryStream();
         using (var writer = new Utf8JsonWriter(stream))
@@ -152,7 +150,7 @@ public class LlamaCppAdvancedClient : IDisposable
             writer.WriteBoolean("stream", true);
             writer.WriteBoolean("cache_prompt", true);
 
-            WriteSampling(writer, defaultMaxTokens, temperatureBump);
+            WriteSampling(writer, settings, defaultMaxTokens, temperatureBump);
 
             if (disableThinking)
             {
@@ -195,9 +193,8 @@ public class LlamaCppAdvancedClient : IDisposable
     /// temperature for a retry after the model echoed the source untranslated - the same request
     /// at the same low temperature tends to echo again.
     /// </summary>
-    private static void WriteSampling(Utf8JsonWriter writer, int defaultMaxTokens, double temperatureBump = 0)
+    private static void WriteSampling(Utf8JsonWriter writer, SeLlamaCppAdvanced advanced, int defaultMaxTokens, double temperatureBump = 0)
     {
-        var advanced = Se.Settings.AutoTranslate.LlamaCppAdvanced;
         var tools = Configuration.Settings.Tools;
 
         var temperature = advanced.Temperature >= 0 ? advanced.Temperature
