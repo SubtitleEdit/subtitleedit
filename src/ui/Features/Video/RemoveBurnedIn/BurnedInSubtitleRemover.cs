@@ -39,6 +39,12 @@ public sealed class BurnedInRemovalOptions
     /// <summary>OCR line times (start, end).</summary>
     public IReadOnlyList<(TimeSpan Start, TimeSpan End)> Lines { get; init; } = Array.Empty<(TimeSpan, TimeSpan)>();
 
+    /// <summary>
+    /// Drawn rectangles (video pixels): everything inside is removed on every frame of the span -
+    /// no text detection, like a manual delogo (logos, signs, a line OCR missed).
+    /// </summary>
+    public IReadOnlyList<BurnedInRectangle> Rectangles { get; init; } = Array.Empty<BurnedInRectangle>();
+
     /// <summary>Sample rate the OCR ran at - sets how much each line span is padded.</summary>
     public double OcrFramesPerSecond { get; init; } = 5;
 
@@ -57,6 +63,9 @@ public sealed class BurnedInRemovalOptions
     public string CrispEmbedExecutable { get; init; } = string.Empty;
     public string ModelFileName { get; init; } = string.Empty;
 }
+
+/// <summary>A drawn rectangle (video pixels) removed while it is shown.</summary>
+public readonly record struct BurnedInRectangle(TimeSpan Start, TimeSpan End, int X, int Y, int Width, int Height);
 
 /// <summary>
 /// Removes burned-in subtitles from a video with CrispEmbed's MI-GAN inpainting.
@@ -100,6 +109,53 @@ public sealed class BurnedInSubtitleRemover
             .ToList();
     }
 
+    /// <summary>
+    /// The drawn rectangles as frame spans + boxes, clamped to the video. A rectangle covers the
+    /// frames whose start time is inside its span (no padding - it was placed by hand).
+    /// </summary>
+    public static List<(long StartFrame, long EndFrame, int X, int Y, int Width, int Height)> GetRectangleBoxes(BurnedInRemovalOptions o)
+    {
+        var boxes = new List<(long, long, int, int, int, int)>();
+        foreach (var r in o.Rectangles)
+        {
+            var x0 = Math.Clamp(r.X, 0, o.VideoWidth);
+            var y0 = Math.Clamp(r.Y, 0, o.VideoHeight);
+            var x1 = Math.Clamp(r.X + r.Width, 0, o.VideoWidth);
+            var y1 = Math.Clamp(r.Y + r.Height, 0, o.VideoHeight);
+            var startFrame = Math.Max(0, (long)Math.Ceiling(r.Start.TotalSeconds * o.FrameRate - 0.001));
+            var endFrame = (long)Math.Ceiling(r.End.TotalSeconds * o.FrameRate - 0.001) - 1;
+            if (x1 - x0 > 0 && y1 - y0 > 0 && endFrame >= startFrame)
+            {
+                boxes.Add((startFrame, endFrame, x0, y0, x1 - x0, y1 - y0));
+            }
+        }
+
+        return boxes;
+    }
+
+    /// <summary>Fills the boxes that cover <paramref name="frameIndex"/> into the full-frame mask; true if any did.</summary>
+    public static bool FillBoxes(IReadOnlyList<(long StartFrame, long EndFrame, int X, int Y, int Width, int Height)> boxes,
+        long frameIndex, int videoWidth, Span<byte> mask)
+    {
+        var any = false;
+        foreach (var (startFrame, endFrame, x, y, w, h) in boxes)
+        {
+            if (frameIndex < startFrame || frameIndex > endFrame)
+            {
+                continue;
+            }
+
+            for (var row = y; row < y + h; row++)
+            {
+                mask.Slice(row * videoWidth + x, w).Fill(255);
+            }
+
+            any = true;
+        }
+
+        return any;
+    }
+
     public static BurnedInMaskBuilder MakeMaskBuilder(BurnedInRemovalOptions o, IEnumerable<(long StartFrame, long EndFrame)> spans)
     {
         return new BurnedInMaskBuilder(o.VideoWidth, o.VideoHeight, o.RegionX, o.RegionY, o.RegionWidth, o.RegionHeight,
@@ -121,13 +177,17 @@ public sealed class BurnedInSubtitleRemover
         var totalFrames = Math.Max(1, (long)Math.Round(o.DurationSeconds * o.FrameRate));
         var builder = MakeMaskBuilder(o, GetSpans(o));
 
-        // Pass 1: masks.
-        if (!await BuildMasksAsync(o, builder, -1, p => progress.Report(new ProgressInfo(p.Frame * 15.0 / totalFrames, 1, p.Frame, totalFrames, p.Fps)), cancellationToken))
+        // Pass 1: masks (only drawn rectangles - nothing to find).
+        if (o.Lines.Count > 0)
         {
-            return false;
+            if (!await BuildMasksAsync(o, builder, -1, p => progress.Report(new ProgressInfo(p.Frame * 15.0 / totalFrames, 1, p.Frame, totalFrames, p.Fps)), cancellationToken))
+            {
+                return false;
+            }
+
+            AppendLog($"Masks: {builder.LinesWithText} of {o.Lines.Count} lines have text in the scan area");
         }
 
-        AppendLog($"Masks: {builder.LinesWithText} of {o.Lines.Count} lines have text in the scan area");
         cancellationToken.ThrowIfCancellationRequested();
 
         // Pass 2: decode -> mask -> crispembed -> encode, or an ffmpeg blur/delogo of each line's box.
@@ -144,14 +204,23 @@ public sealed class BurnedInSubtitleRemover
     {
         var totalFrames = Math.Max(1, (long)Math.Round(o.DurationSeconds * o.FrameRate));
         var builder = MakeMaskBuilder(o, GetSpans(o));
-        if (!await BuildMasksAsync(o, builder, -1, p => progress.Report(new ProgressInfo(p.Frame * 100.0 / totalFrames, 1, p.Frame, totalFrames, p.Fps)), cancellationToken))
+        var boxes = GetRectangleBoxes(o);
+        if (o.Lines.Count > 0)
         {
-            return null;
+            if (!await BuildMasksAsync(o, builder, -1, p => progress.Report(new ProgressInfo(p.Frame * 100.0 / totalFrames, 1, p.Frame, totalFrames, p.Fps)), cancellationToken))
+            {
+                return null;
+            }
+
+            AppendLog($"Masks: {builder.LinesWithText} of {o.Lines.Count} lines have text in the scan area");
+            if (builder.LinesWithText > 0)
+            {
+                boxes.AddRange(builder.GetLineBoxes());
+            }
         }
 
-        AppendLog($"Masks: {builder.LinesWithText} of {o.Lines.Count} lines have text in the scan area");
         cancellationToken.ThrowIfCancellationRequested();
-        return builder.LinesWithText > 0 ? MakeBoxesAssa(o, builder.GetLineBoxes()) : null;
+        return boxes.Count > 0 ? MakeBoxesAssa(o, boxes.OrderBy(b => b.StartFrame)) : null;
     }
 
     /// <summary>
@@ -260,7 +329,7 @@ public sealed class BurnedInSubtitleRemover
         var id = Guid.NewGuid().ToString("N");
         var assName = "se-burned-in-matte-" + id + ".ass";
         var scriptName = "se-burned-in-filter-" + id + ".txt";
-        var boxes = builder.GetLineBoxes().ToList();
+        var boxes = builder.GetLineBoxes().Concat(GetRectangleBoxes(o)).ToList();
         await File.WriteAllTextAsync(Path.Combine(folder, assName), MakeBoxesAssa(o, boxes, "&H00FFFFFF"), cancellationToken);
         await File.WriteAllTextAsync(Path.Combine(folder, scriptName), MakeFilterGraph(o, boxes, assName), cancellationToken);
         try
@@ -429,6 +498,7 @@ public sealed class BurnedInSubtitleRemover
         }
 
         var frameBytes = w * h * 3;
+        var rectangles = GetRectangleBoxes(o);
         long framesOut = 0;
         var stopwatch = Stopwatch.StartNew();
 
@@ -445,6 +515,7 @@ public sealed class BurnedInSubtitleRemover
                 {
                     Array.Clear(mask);
                     builder.GetFrameMask(frame, rgb, mask);
+                    FillBoxes(rectangles, frame, w, mask);
                     await input.WriteAsync(rgb, token);
                     await input.WriteAsync(mask, token);
                     frame++;
