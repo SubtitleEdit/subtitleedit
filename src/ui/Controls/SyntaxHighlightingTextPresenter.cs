@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Controls;
 
@@ -26,6 +27,45 @@ namespace Nikse.SubtitleEdit.Controls;
 /// </summary>
 public class SyntaxHighlightingTextPresenter : TextPresenter
 {
+    private bool _settingLineEnd;
+
+    [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "UpdateCaret")]
+    private static extern void UpdateCaret(TextPresenter presenter, CharacterHit hit, bool notify);
+
+    [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "CaretChanged")]
+    private static extern void NotifyCaretChanged(TextPresenter presenter);
+
+    [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_navigationPosition")]
+    private static extern ref Point GetNavigationPosition(TextPresenter presenter);
+
+    internal void MoveCaretToLineEnd(CharacterHit hit)
+    {
+        _settingLineEnd = true;
+        try
+        {
+            UpdateCaret(this, hit, true);
+            GetNavigationPosition(this) = CursorRectangle.Position;
+            NotifyCaretChanged(this);
+        }
+        finally
+        {
+            _settingLineEnd = false;
+        }
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        // Avalonia 12.1.5 re-normalizes every CaretIndex change through its bidi
+        // caret walkers, which skip the end of an RTL line before LF (#16424).
+        // The line-end command already supplied a cluster-valid CharacterHit.
+        if (_settingLineEnd && change.Property == CaretIndexProperty)
+        {
+            return;
+        }
+
+        base.OnPropertyChanged(change);
+    }
+
     private static readonly Dictionary<Color, ImmutableSolidColorBrush> BrushCache = new();
 
     private static ImmutableSolidColorBrush GetBrush(Color color)
@@ -166,7 +206,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         var length = Math.Max(selectionStart, selectionEnd) - start;
         var isPassword = PasswordChar != default(char) && !RevealPassword;
 
-        var textStyleOverrides = isPassword ? null : BuildSyntaxSpans(text, typeface);
+        var textStyleOverrides = isPassword || TemplatedParent is not SyntaxHighlightingTextBox ? null : BuildSyntaxSpans(text, typeface);
 
         // Spell check underlines are skipped during IME composition: the combined text has the
         // preedit string spliced in at the caret, so the word positions would not line up.
@@ -199,6 +239,27 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         if (isPassword)
         {
             return CreateTextLayoutInternal(this, constraint, new string(PasswordChar, text?.Length ?? 0), typeface, textStyleOverrides);
+        }
+
+        if (text != null && LanguageAutoDetect.ContainsRightToLeftLetter(text))
+        {
+            // Avalonia can shape LF into the preceding RTL letter's cluster,
+            // putting the line-end caret before that letter (#16424). A distinct
+            // baseline on the break forces a shaping boundary (CanShapeTogether).
+            // The transparent brush also keeps FormattedTextSource from merging
+            // the styles: TextRunProperties.Equals ignores baseline alignment.
+            // The break has no ink, so neither property changes visible text.
+            var breakProperties = new GenericTextRunProperties(typeface, FontSize,
+                foregroundBrush: Brushes.Transparent, fontFeatures: FontFeatures, baselineAlignment: BaselineAlignment.Center);
+            for (var i = 0; i < text.Length; i++)
+            {
+                if (text[i] is '\r' or '\n')
+                {
+                    var breakLength = text[i] == '\r' && i + 1 < text.Length && text[i + 1] == '\n' ? 2 : 1;
+                    textStyleOverrides = OverlaySpan(textStyleOverrides, new ValueSpan<TextRunProperties>(i, breakLength, breakProperties));
+                    i += breakLength - 1;
+                }
+            }
         }
 
         return CreateTextLayoutInternal(this, constraint, text, typeface, textStyleOverrides);

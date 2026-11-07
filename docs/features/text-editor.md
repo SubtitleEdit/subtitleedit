@@ -9,6 +9,8 @@ The text editor allows you to edit the text content of the currently selected su
 
 Type directly in the text editor to modify the subtitle text. Changes are reflected immediately in the subtitle grid.
 
+The editor detects text direction from the subtitle. To override it in the focused text box, press **Ctrl+Left Shift** for left-to-right or **Ctrl+Right Shift** for right-to-left. The choice stays in effect while typing and switching subtitles, and applies separately to the working and original text boxes. It changes how the text is displayed without modifying the subtitle text or the subtitle list layout.
+
 ## Formatting
 
 | Shortcut | Action |
