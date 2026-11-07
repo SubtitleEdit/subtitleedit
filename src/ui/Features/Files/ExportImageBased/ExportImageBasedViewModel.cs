@@ -491,13 +491,25 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         }
     }
 
-    private async Task ExportRun(string fileOrFolderName, CancellationToken cancellationToken)
+    internal async Task ExportRun(string fileOrFolderName, CancellationToken cancellationToken)
     {
         var exportImageHandler = _exportImageHandler!;
-        var imageParameters = new List<ImageParameter>();
-        for (var i = 0; i < Subtitles.Count; i++)
+
+        // Written in time order, not in the order of the lines: an ASSA script is often grouped
+        // by what the author worked on, and a Blu-ray sup written in that order jumps back in
+        // time - a decoder drops what comes after the timeline has passed it (issue #16714).
+        // OrderBy is stable, so lines starting together keep their order. Only the export is
+        // sorted; the lines themselves stay as they are.
+        var order = Enumerable.Range(0, Subtitles.Count)
+            .OrderBy(i => Subtitles[i].StartTime)
+            .ToList();
+        var imageParameters = new List<ImageParameter>(order.Count);
+        for (var k = 0; k < order.Count; k++)
         {
-            var imageParameter = GetImageParameter(i);
+            var imageParameter = GetImageParameter(order[k]);
+
+            // The position in the file: the Blu-ray composition numbers count up with it.
+            imageParameter.Index = k;
             imageParameters.Add(imageParameter);
         }
 
@@ -516,7 +528,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 ip.Bitmap = GenerateBitmap(ip);
                 // "{\pos(x,y)}" anchors the rendered text, so it needs the bitmap size - and
                 // the coordinates are in the script's own resolution, not the export canvas.
-                ExportTextTags.ApplyPositionTag(ip, Subtitles[i].Text, _scriptWidth, _scriptHeight);
+                ExportTextTags.ApplyPositionTag(ip, Subtitles[order[i]].Text, _scriptWidth, _scriptHeight);
                 // 3D goes last: each eye's copy is placed where the flat subtitle ended up.
                 Stereo3DImage.Apply(ip);
                 exportImageHandler.CreateParagraph(ip);

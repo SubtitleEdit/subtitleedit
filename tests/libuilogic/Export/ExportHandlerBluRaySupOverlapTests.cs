@@ -176,6 +176,38 @@ public class ExportHandlerBluRaySupOverlapTests : IDisposable
         Assert.Equal(new[] { 1, 0 }, pcs.Select(ObjectCount));
     }
 
+    /// <summary>
+    /// The export window makes every display set first (in parallel) and opens the file after:
+    /// the header must not throw those away, or nothing is composed (issue #16714).
+    /// </summary>
+    [Fact]
+    public void ParagraphsCreatedBeforeHeader_StillCompose()
+    {
+        var cues = new[]
+        {
+            Cue(0, 1, 3, ExportAlignment.BottomCenter, SKColors.White),
+            Cue(1, 2, 4, ExportAlignment.TopCenter, SKColors.White),
+        };
+        var fileName = Path.Combine(_dir, Guid.NewGuid().ToString("N") + ".sup");
+        var handler = new ExportHandlerBluRaySup();
+        foreach (var cue in cues)
+        {
+            handler.CreateParagraph(cue);
+        }
+
+        handler.WriteHeader(fileName, cues[0]);
+        foreach (var cue in cues)
+        {
+            handler.WriteParagraph(cue);
+        }
+
+        handler.WriteFooter();
+
+        var pcs = ReadSegments(fileName).Where(s => s.Type == Pcs).ToList();
+        Assert.Equal(new[] { 1, 2, 1, 0 }, pcs.Select(ObjectCount));
+        Assert.Equal(new long[] { 1000 * 90, 2000 * 90, 3000 * 90, 4000 * 90 }, pcs.Select(p => p.Pts));
+    }
+
     [Fact]
     public void TwoOverlappingLines_ShareTheScreenWhileBothAreOn()
     {
