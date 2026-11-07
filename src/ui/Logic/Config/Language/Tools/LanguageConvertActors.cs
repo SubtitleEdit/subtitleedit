@@ -9,6 +9,8 @@ public class LanguageConvertActors
     public string SetColor { get; set; }
     public string OnlyNames { get; set; }
     public string NumberOfConversionsX { get; set; }
+    public string SelectActor { get; set; }
+    public string UnselectActor { get; set; }
 
     public LanguageConvertActors()
     {
@@ -19,5 +21,7 @@ public class LanguageConvertActors
         SetColor = "Set color";
         OnlyNames = "Only names";
         NumberOfConversionsX = "Number of conversions: {0}";
+        SelectActor = "Select actor";
+        UnselectActor = "Unselect actor";
     }
 }
