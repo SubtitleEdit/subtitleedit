@@ -4,7 +4,6 @@ public class LanguageRemoveBurnedIn
 {
     public string Title { get; set; }
     public string RemoveBurnedInDotDotDot { get; set; }
-    public string Info { get; set; }
     public string TextMask { get; set; }
     public string Method { get; set; }
     public string MethodRemove { get; set; }
@@ -55,13 +54,11 @@ public class LanguageRemoveBurnedIn
     public string MaskedXPixels { get; set; }
     public string DoneInXY { get; set; }
     public string OpenVideo { get; set; }
-    public string ShowInFolder { get; set; }
 
     public LanguageRemoveBurnedIn()
     {
         Title = "Remove burned-in subtitles";
         RemoveBurnedInDotDotDot = "Remove burned-in subtitles...";
-        Info = "Removes the burned-in subtitle text found by OCR with an AI inpainting model (CrispEmbed), black boxes, a blur or ffmpeg's delogo. Only the area around each line is changed, and only while it is shown. Black boxes are loaded into the main window as an ASSA subtitle; the other methods re-encode the video and copy the audio.";
         TextMask = "Text mask";
         Method = "Method";
         MethodRemove = "Remove - AI inpainting";
@@ -110,7 +107,6 @@ public class LanguageRemoveBurnedIn
         MaskedXPixels = "Mask: {0:#,##0} pixels";
         DoneInXY = "Done: {0} ({1})";
         OpenVideo = "Open video";
-        ShowInFolder = "Show in folder";
         AbortMessage = "Stop removing burned-in subtitles?";
     }
 }

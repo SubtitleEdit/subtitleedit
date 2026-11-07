@@ -13,10 +13,12 @@ using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -60,7 +62,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     [ObservableProperty] private bool _isPreviewBusy;
     [ObservableProperty] private string _waveformStatus = string.Empty;
     [ObservableProperty] private string _linesSummary = string.Empty;
-    [ObservableProperty] private bool _isRunning;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanStart))]
+    private bool _isRunning;
     [ObservableProperty] private bool _isDone;
     [ObservableProperty] private string _doneText = string.Empty;
     [ObservableProperty] private double _progressValue;
@@ -68,6 +72,12 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
+
+    /// <summary>The user said yes to stopping the run when closing the window.</summary>
+    public bool CloseConfirmed { get; private set; }
+
+    /// <summary>Start needs at least one included line, and no run going.</summary>
+    public bool CanStart => !IsRunning && Lines.Any(l => l.IsIncluded);
 
     /// <summary>The black boxes as an ASSA subtitle (black box method), for the main window.</summary>
     public string BoxesAssa { get; private set; } = string.Empty;
@@ -80,6 +90,10 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     private CancellationTokenSource _cancellationTokenSource = new();
     private CancellationTokenSource _previewCancellation = new();
     private readonly DispatcherTimer _timer;
+    private readonly TimeSpanToDisplayFullConverter _timeConverter = new();
+
+    // Set when the output file was picked with the save dialog, which already asked about overwriting.
+    private bool _outputOverwriteConfirmed;
 
     private string _videoFileName = string.Empty;
     private int _videoWidth;
@@ -154,6 +168,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                 if (e.PropertyName == nameof(RemoveBurnedInLineItem.IsIncluded))
                 {
                     UpdateLinesSummary();
+                    OnPropertyChanged(nameof(CanStart));
                     _waveformDirty = true;
                     InvalidatePreview();
                 }
@@ -161,6 +176,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         }
 
         UpdateLinesSummary();
+        OnPropertyChanged(nameof(CanStart));
         SelectedLine = Lines.FirstOrDefault();
 
         var extension = Path.GetExtension(videoFileName).ToLowerInvariant() is ".mp4" or ".mkv" or ".mov"
@@ -329,7 +345,8 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     partial void OnPositionSecondsChanged(double value)
     {
-        PositionText = TimeSpan.FromSeconds(value).ToString(@"h\:mm\:ss\.fff");
+        // Same time code format as the lines list (frames, separator and video offset settings).
+        PositionText = _timeConverter.Convert(TimeSpan.FromSeconds(value), typeof(string), null, CultureInfo.CurrentCulture) as string ?? string.Empty;
         InvalidatePreview();
     }
 
@@ -603,8 +620,11 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         if (!string.IsNullOrEmpty(fileName))
         {
             OutputFileName = fileName;
+            _outputOverwriteConfirmed = true;
         }
     }
+
+    partial void OnOutputFileNameChanged(string value) => _outputOverwriteConfirmed = false;
 
     [RelayCommand]
     private async Task Start()
@@ -628,8 +648,19 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
         if (string.Equals(Path.GetFullPath(OutputFileName), Path.GetFullPath(_videoFileName), StringComparison.OrdinalIgnoreCase))
         {
-            await BrowseOutput();
+            await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.General.OutputFileCannotBeTheInputFile,
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
+        }
+
+        if (File.Exists(OutputFileName) && !_outputOverwriteConfirmed)
+        {
+            var answer = await MessageBox.Show(Window!, Se.Language.General.OverwriteQuestion,
+                string.Format(Se.Language.General.FileXAlreadyExists, OutputFileName), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         if (IsInpaint && !await EnsureEngineReady())
@@ -819,6 +850,19 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         Se.SaveSettings();
     }
 
+    /// <summary>The window is being closed during a run: ask first, as Cancel/Escape do.</summary>
+    internal async Task ConfirmCloseWhileRunning()
+    {
+        var answer = await MessageBox.Show(Window!, Se.Language.Video.RemoveBurnedIn.AbortTitle,
+            Se.Language.Video.RemoveBurnedIn.AbortMessage, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        if (answer == MessageBoxResult.Yes)
+        {
+            CloseConfirmed = true;
+            await _cancellationTokenSource.CancelAsync();
+            Window?.Close();
+        }
+    }
+
     [RelayCommand]
     private async Task Cancel()
     {
@@ -845,6 +889,13 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         {
             e.Handled = true;
             _ = Cancel();
+            return;
+        }
+
+        if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/video-ocr", "remove-burned-in-subtitles");
             return;
         }
 
@@ -880,6 +931,12 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        if (!IsRunning)
+        {
+            // Keep the method and mask settings even when the window is closed without a run.
+            SaveSettings();
+        }
+
         _timer.Stop();
         _cancellationTokenSource.Cancel();
         _previewCancellation.Cancel();
