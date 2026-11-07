@@ -113,4 +113,32 @@ public class RemoveBurnedInWindowTests : IDisposable
         Assert.Equal(TimeSpan.FromSeconds(23.5), vm.SelectedLine.Line.EndTime);
         Assert.Equal(2, vm.SelectedLine.Number);
     }
+
+    [AvaloniaFact]
+    public void Timeline_Allows_Overlap_And_Lines_Resort_After_A_Drag()
+    {
+        var vm = new RemoveBurnedInViewModel(new WindowService(new NullServiceProvider()), new FileHelper(), new FolderHelper());
+        vm.Initialize("/videos/movie.mp4", 1920, 1080, 60, 0, 720, 1920, 360, 200, 5, new[]
+        {
+            new VideoOcrLineItem { StartTime = TimeSpan.FromSeconds(1), EndTime = TimeSpan.FromSeconds(2), Text = "A" },
+            new VideoOcrLineItem { StartTime = TimeSpan.FromSeconds(2), EndTime = TimeSpan.FromSeconds(3), Text = "B" },
+            new VideoOcrLineItem { StartTime = TimeSpan.FromSeconds(3), EndTime = TimeSpan.FromSeconds(4), Text = "C" },
+        });
+        var window = new RemoveBurnedInWindow(vm);
+        _windows.Add(window);
+        window.Show();
+
+        // Touching lines (no gap) can be moved: no overlap block, no minimum gap.
+        Assert.True(vm.AudioVisualizer!.AllowOverlap);
+        Assert.Equal(0, vm.AudioVisualizer.MinGapSeconds);
+
+        // "A" dragged past "C": the list follows the times, keeps the selection, and renumbers.
+        var a = vm.Lines[0];
+        vm.SelectedLine = a;
+        a.Line.SetTimes(TimeSpan.FromSeconds(3.5), TimeSpan.FromSeconds(4.5));
+        vm.AudioVisualizerDragEnded(null, EventArgs.Empty);
+        Assert.Equal(new[] { "B", "C", "A" }, vm.Lines.Select(l => l.Text));
+        Assert.Equal(new[] { 1, 2, 3 }, vm.Lines.Select(l => l.Number));
+        Assert.Same(a, vm.SelectedLine);
+    }
 }

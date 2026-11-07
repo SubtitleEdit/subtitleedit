@@ -399,7 +399,30 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     internal void AudioVisualizerDragEnded(object? sender, EventArgs e)
     {
         // A box was moved or resized: its mask is rebuilt from the new span (MaskKey changes).
+        // Lines may now pass each other (overlap is allowed), so keep the list in time order.
+        SortLines();
         InvalidatePreview();
+    }
+
+    /// <summary>Puts the lines back in time order (Move keeps the selection) and renumbers them if needed.</summary>
+    internal void SortLines()
+    {
+        var sorted = Lines.OrderBy(l => l.Line.StartTime).ThenBy(l => l.Line.EndTime).ToList();
+        if (sorted.SequenceEqual(Lines))
+        {
+            return;
+        }
+
+        for (var i = 0; i < sorted.Count; i++)
+        {
+            var from = Lines.IndexOf(sorted[i]);
+            if (from != i)
+            {
+                Lines.Move(from, i);
+            }
+        }
+
+        LinesChanged();
     }
 
     partial void OnSelectedLineChanged(RemoveBurnedInLineItem? value)

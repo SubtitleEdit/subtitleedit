@@ -213,6 +213,11 @@ public class RemoveBurnedInWindow : Window
         {
             Width = double.NaN,
             IsReadOnly = false,
+
+            // OCR lines often touch (no gap), and overlapping lines are fine here (each has its own
+            // mask) - without this a line between two touching neighbours could not be moved.
+            AllowOverlap = true,
+            MinGapSeconds = 0,
             DrawGridLines = Se.Settings.Waveform.DrawGridLines,
             WaveformColor = colors.Waveform,
             WaveformSelectedColor = colors.Selected,
