@@ -5,6 +5,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
@@ -13,6 +14,9 @@ namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 /// Splits a line into words and line breaks for the word-by-word caption styles (highlight
 /// box, single word pop, bold captions), and times each word by its length - a long word is
 /// spoken longer than "a", which an even split ignores.
+/// A line that already marks its active word (underline or a highlight color, like the
+/// one-line-per-word output of speech-to-text) keeps its own timing: it becomes a single
+/// slice with that word active.
 /// </summary>
 internal sealed class CaptionWords
 {
@@ -31,6 +35,26 @@ internal sealed class CaptionWords
 
     /// <summary>Word i is active from WordStartMs[i] to WordStartMs[i + 1] (ms from the line start).</summary>
     public double[] WordStartMs { get; private set; } = [];
+
+    /// <summary>Index of the word the line itself marks as active, or -1 when none is marked.</summary>
+    public int MarkedWordIndex { get; private set; } = -1;
+
+    public bool HasMarkedWord => MarkedWordIndex >= 0;
+
+    /// <summary>The active word of each slice: just the marked word, or every word in turn.</summary>
+    public IEnumerable<int> ActiveWordIndices()
+    {
+        if (HasMarkedWord)
+        {
+            yield return MarkedWordIndex;
+            yield break;
+        }
+
+        for (var i = 0; i < Words.Count; i++)
+        {
+            yield return i;
+        }
+    }
 
     public static CaptionWords? Parse(SubtitleLineViewModel line, bool upperCase)
     {
@@ -65,7 +89,46 @@ internal sealed class CaptionWords
         }
 
         result.WordStartMs = MakeTiming(result.Words, line.Duration.TotalMilliseconds);
+        result.MarkedWordIndex = FindMarkedWord(line.Text, result.Words);
         return result;
+    }
+
+    /// <summary>
+    /// The word marked as active by {\u1}/&lt;u&gt; or a highlight \1c color, or -1. Only a single
+    /// marked word counts, so a fully colored line is not mistaken for an active word.
+    /// </summary>
+    internal static int FindMarkedWord(string rawText, List<string> words)
+    {
+        if (string.IsNullOrEmpty(rawText) || words.Count == 0)
+        {
+            return -1;
+        }
+
+        var text = rawText
+            .Replace("<u>", "{\\u1}", StringComparison.OrdinalIgnoreCase)
+            .Replace("</u>", "{\\u0}", StringComparison.OrdinalIgnoreCase);
+        var parsed = AdvancedEffectFancyKaraoke.ParseActiveWord(text);
+        if (parsed == null)
+        {
+            return -1;
+        }
+
+        var activeWords = SplitPlainWords(parsed.Value.Active);
+        if (activeWords.Count != 1)
+        {
+            return -1;
+        }
+
+        var index = SplitPlainWords(parsed.Value.Before).Count;
+        return index < words.Count && string.Equals(words[index], activeWords[0], StringComparison.OrdinalIgnoreCase)
+            ? index
+            : -1;
+    }
+
+    private static List<string> SplitPlainWords(string s)
+    {
+        var plain = HtmlUtil.RemoveHtmlTags(s, true).Replace("\\N", " ").Replace("\\n", " ");
+        return plain.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).ToList();
     }
 
     private static double[] MakeTiming(List<string> words, double totalMs)
@@ -96,6 +159,12 @@ internal sealed class CaptionWords
     public SubtitleLineViewModel MakeSlice(SubtitleLineViewModel line, int wordIndex, string posTags, out string slicePosTags)
     {
         var slice = new SubtitleLineViewModel(line, generateNewId: true);
+        if (HasMarkedWord)
+        {
+            slicePosTags = posTags;
+            return slice;
+        }
+
         var startMs = WordStartMs[wordIndex];
         var endMs = WordStartMs[wordIndex + 1];
         slice.StartTime = line.StartTime.Add(TimeSpan.FromMilliseconds(startMs));

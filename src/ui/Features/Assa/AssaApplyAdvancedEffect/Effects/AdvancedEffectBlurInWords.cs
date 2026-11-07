@@ -10,7 +10,8 @@ namespace Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 /// <summary>
 /// Words appear one after another as they are spoken: each starts transparent and blurred,
 /// then sharpens and rises from the baseline with a small overshoot. One event per line - the
-/// per-word \t times are relative to the line start.
+/// per-word \t times are relative to the line start. A line that marks its active word
+/// (one line per word) blurs in just that word, with the earlier words already shown.
 /// </summary>
 public class AdvancedEffectBlurInWords : IAdvancedEffectDisplay
 {
@@ -42,10 +43,21 @@ public class AdvancedEffectBlurInWords : IAdvancedEffectDisplay
             sb.Append(AdvancedEffectUtil.ExtractPositionalTags(sub.Text));
             foreach (var token in words.Tokens)
             {
-                if (token.IsWord)
+                if (token.IsWord && words.HasMarkedWord && token.WordIndex != words.MarkedWordIndex)
                 {
-                    var start = (int)Math.Round(words.WordStartMs[token.WordIndex]);
-                    var length = (int)Math.Clamp(words.WordStartMs[token.WordIndex + 1] - start, 120, 280);
+                    // a line per word with the active word marked: earlier words have already
+                    // appeared, later ones are still to come
+                    if (token.WordIndex > words.MarkedWordIndex)
+                    {
+                        sb.Append("{\\alpha&HFF&\\blur0\\fscy").Append(AdvancedEffectUtil.Tag((double)style.ScaleY)).Append('}');
+                    }
+                }
+                else if (token.IsWord)
+                {
+                    var start = words.HasMarkedWord ? 0 : (int)Math.Round(words.WordStartMs[token.WordIndex]);
+                    var length = words.HasMarkedWord
+                        ? (int)Math.Clamp(sub.Duration.TotalMilliseconds, 120, 280)
+                        : (int)Math.Clamp(words.WordStartMs[token.WordIndex + 1] - start, 120, 280);
                     sb.Append("{\\alpha&HFF&\\blur").Append(blur);
                     if (Rise)
                     {

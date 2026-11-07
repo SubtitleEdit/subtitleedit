@@ -81,7 +81,7 @@ public class AdvancedEffectHighlightBox : IAdvancedEffectDisplay, IAdvancedEffec
             var posTags = AdvancedEffectUtil.ExtractPositionalTags(sub.Text);
             var boxStyle = GetBoxStyleName(CaptionWords.GetStyleName(sub));
 
-            for (var w = 0; w < words.Words.Count; w++)
+            foreach (var w in words.ActiveWordIndices())
             {
                 var box = words.MakeSlice(sub, w, posTags, out var slicePosTags);
                 box.Style = boxStyle;
