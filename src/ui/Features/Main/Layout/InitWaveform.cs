@@ -142,6 +142,19 @@ public class InitWaveform
         {
             // Rebuild the menu whenever the layout is rebuilt so a language change refreshes its text.
             var flyout = new MenuFlyout();
+
+            // Shown only over the placeholder time line (no waveform generated yet, #16710).
+            var generateWaveformMenuItem = new MenuItem
+            {
+                Header = Se.Language.Main.GenerateWaveform,
+            };
+            generateWaveformMenuItem.Click += (_, _) => vm.AudioVisualizerOnGenerateWaveformRequested(vm.AudioVisualizer, EventArgs.Empty);
+            flyout.Items.Add(generateWaveformMenuItem);
+            vm.MenuItemAudioVisualizerGenerateWaveform = generateWaveformMenuItem;
+            var generateWaveformSeparator = new Separator();
+            flyout.Items.Add(generateWaveformSeparator);
+            vm.MenuItemAudioVisualizerGenerateWaveformSeparator = generateWaveformSeparator;
+
             var insertSelectionMenuItem = new MenuItem
             {
                 Header = Se.Language.General.InsertNewSelection,
