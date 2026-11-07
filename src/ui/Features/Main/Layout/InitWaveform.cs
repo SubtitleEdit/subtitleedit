@@ -113,6 +113,7 @@ public class InitWaveform
             vm.AudioVisualizer.OnSelectRequested += vm.AudioVisualizerSelectRequested;
             vm.AudioVisualizer.OnSetStartAndOffsetTheRest += vm.AudioVisualizerSetStartAndOffsetTheRest;
             vm.AudioVisualizer.OnGenerateWaveformRequested += vm.AudioVisualizerOnGenerateWaveformRequested;
+            vm.AudioVisualizer.OnUseEmptyWaveformRequested += vm.AudioVisualizerOnUseEmptyWaveformRequested;
 
             vm.AudioVisualizer.FlyoutMenuOpening += vm.AudioVisualizerFlyoutMenuOpening;
 
@@ -303,6 +304,7 @@ public class InitWaveform
                 Command = vm.ShowWaveformGuessTimeCodesCommand,
             };
             flyout.Items.Add(menuItemGuessTimeCodes);
+            vm.MenuItemAudioVisualizerGuessTimeCodes = menuItemGuessTimeCodes;
 
             var menuItemAddShotChange = new MenuItem
             {
@@ -324,6 +326,7 @@ public class InitWaveform
                 Command = vm.ShowWaveformSeekSilenceCommand,
             };
             flyout.Items.Add(menuItemSeekSilence);
+            vm.MenuItemAudioVisualizerSeekSilence = menuItemSeekSilence;
 
             var menuItemExtractAudio = new MenuItem
             {
@@ -400,6 +403,7 @@ public class InitWaveform
                 showSpeechOnlyMenuItem.IsChecked = settings.ShowSpeechOnly;
             };
             flyout.Items.Add(showSpeechOnlyMenuItem);
+            vm.MenuItemAudioVisualizerShowSpeechOnly = showSpeechOnlyMenuItem;
 
             var separatorDisplayMode = new Separator();
             separatorDisplayMode.DataContext = vm;
@@ -1709,10 +1713,11 @@ public class InitWaveform
         to.StartPositionSeconds = from.StartPositionSeconds;
         to.CurrentVideoPositionSeconds = from.CurrentVideoPositionSeconds;
 
-        // A video without a waveform yet shows "click to generate" and turns a click into the
-        // generation; both live on the control, so the new one has to keep offering them.
+        // A video without a waveform yet shows the "Generate waveform" / "Use empty waveform"
+        // buttons; they live on the control, so the new one has to keep offering them.
         to.ShowClickToGenerateHint = from.ShowClickToGenerateHint;
         to.ClickToGenerateText = from.ClickToGenerateText;
+        to.UseEmptyWaveformText = from.UseEmptyWaveformText;
     }
 
     public static WaveformDrawStyle GetWaveformDrawStyle(string waveformDrawStyle)

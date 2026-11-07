@@ -56,7 +56,8 @@ public class AudioVisualizerPlaceholderPeaksTests : IDisposable
         av.WavePeaks = peaks;
         av.Width = WidthPx;
         av.Height = HeightPx;
-        av.ClickToGenerateText = "Click to generate waveform";
+        av.ClickToGenerateText = "Generate waveform";
+        av.UseEmptyWaveformText = "Use empty waveform";
         av.ShowClickToGenerateHint = true;
         av.SetPosition(0, new List<SubtitleLineViewModel>(lines), 0, 0, new List<SubtitleLineViewModel>());
 
@@ -116,16 +117,16 @@ public class AudioVisualizerPlaceholderPeaksTests : IDisposable
     [AvaloniaTheory]
     [InlineData(false)]
     [InlineData(true)]
-    public void Placeholder_ClickOnLabelRequestsGeneration(bool useSkia)
+    public void Placeholder_ClickOnCornerButtonRequestsGeneration(bool useSkia)
     {
         var line = Line(1, 3);
         var (window, av) = Open(useSkia, WavePeakData2.CreatePlaceholder(60), line);
         var requested = 0;
         av.OnGenerateWaveformRequested += (_, _) => requested++;
 
-        // The label is centered horizontally near the top.
-        window.MouseDown(new Point(WidthPx / 2, 14), MouseButton.Left, RawInputModifiers.None);
-        window.MouseUp(new Point(WidthPx / 2, 14), MouseButton.Left, RawInputModifiers.None);
+        // The button sits in the top right corner.
+        window.MouseDown(new Point(WidthPx - 20, 16), MouseButton.Left, RawInputModifiers.None);
+        window.MouseUp(new Point(WidthPx - 20, 16), MouseButton.Left, RawInputModifiers.None);
         Dispatcher.UIThread.RunJobs();
 
         Assert.Equal(1, requested);
@@ -135,17 +136,30 @@ public class AudioVisualizerPlaceholderPeaksTests : IDisposable
     [AvaloniaTheory]
     [InlineData(false)]
     [InlineData(true)]
-    public void NoPeaks_ClickAnywhereRequestsGeneration(bool useSkia)
+    public void NoPeaks_TwoButtonsInTheMiddle(bool useSkia)
     {
         var (window, av) = Open(useSkia, null);
-        var requested = 0;
-        av.OnGenerateWaveformRequested += (_, _) => requested++;
+        var generate = 0;
+        var useEmpty = 0;
+        av.OnGenerateWaveformRequested += (_, _) => generate++;
+        av.OnUseEmptyWaveformRequested += (_, _) => useEmpty++;
 
-        window.MouseDown(new Point(100, 150), MouseButton.Left, RawInputModifiers.None);
-        window.MouseUp(new Point(100, 150), MouseButton.Left, RawInputModifiers.None);
+        // Away from the buttons: nothing happens.
+        Click(window, new Point(20, 20));
+        Assert.Equal((0, 0), (generate, useEmpty));
+
+        // Generate is left of the center, Use empty right of it.
+        Click(window, new Point(WidthPx / 2 - 40, HeightPx / 2));
+        Assert.Equal((1, 0), (generate, useEmpty));
+        Click(window, new Point(WidthPx / 2 + 40, HeightPx / 2));
+        Assert.Equal((1, 1), (generate, useEmpty));
+    }
+
+    private static void Click(Window window, Point point)
+    {
+        window.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+        window.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
         Dispatcher.UIThread.RunJobs();
-
-        Assert.Equal(1, requested);
     }
 
     [AvaloniaFact]
@@ -168,5 +182,29 @@ public class AudioVisualizerPlaceholderPeaksTests : IDisposable
         var frame = window.CaptureRenderedFrame();
 
         Assert.NotNull(frame);
+    }
+
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Placeholder_DrawsTheCues(bool useSkia)
+    {
+        var (emptyWindow, _) = Open(useSkia, WavePeakData2.CreatePlaceholder(60));
+        var empty = emptyWindow.CaptureRenderedFrame()!;
+        var (cueWindow, av) = Open(useSkia, WavePeakData2.CreatePlaceholder(60), Line(1, 3));
+        var withCue = cueWindow.CaptureRenderedFrame()!;
+
+        // Somewhere inside the cue (1-3 s), below the label, the frame must differ from the empty one.
+        var sampleRate = av.WavePeaks!.SampleRate;
+        Assert.NotEqual(Pixel(empty, (int)(1.5 * sampleRate), 120), Pixel(withCue, (int)(1.5 * sampleRate), 120));
+    }
+
+    private static uint Pixel(Avalonia.Media.Imaging.WriteableBitmap bitmap, int x, int y)
+    {
+        using var fb = bitmap.Lock();
+        unsafe
+        {
+            return ((uint*)fb.Address)[y * (fb.RowBytes / 4) + x];
+        }
     }
 }

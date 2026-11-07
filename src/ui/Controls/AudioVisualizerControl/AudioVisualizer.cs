@@ -754,43 +754,112 @@ public class AudioVisualizer : Control
     public event ParagraphEventHandler? OnDragStarted;
     public event EventHandler? OnDragEnded;
 
-    /// <summary>Raised when the user clicks the empty waveform to generate it on demand
-    /// (shown only when auto-generate is off and there are no cached peaks).</summary>
+    /// <summary>Raised when the user clicks "Generate waveform" on the timeline (shown when
+    /// auto-generate is off and there are no cached peaks).</summary>
     public event EventHandler? OnGenerateWaveformRequested;
 
-    /// <summary>When true and there are no real <see cref="WavePeaks"/>, a "click to generate"
-    /// hint is drawn and a click on it raises <see cref="OnGenerateWaveformRequested"/>. With no
-    /// peaks at all the hint fills the control and any click counts; over placeholder peaks
-    /// (<see cref="WavePeakData2.IsPlaceholder"/>) it is a small label at the top, so the rest of
-    /// the timeline stays free for editing the subtitles.</summary>
+    /// <summary>Raised when the user clicks "Use empty waveform": show the subtitles on a silent
+    /// placeholder time line instead of extracting the audio (#16710).</summary>
+    public event EventHandler? OnUseEmptyWaveformRequested;
+
+    /// <summary>When true and there are no real <see cref="WavePeaks"/>, buttons are drawn on the
+    /// timeline: with no peaks at all "Generate waveform" and "Use empty waveform" in the middle;
+    /// over placeholder peaks (<see cref="WavePeakData2.IsPlaceholder"/>) a small "Generate
+    /// waveform" in the top right corner, so the rest of the timeline stays free for editing the
+    /// subtitles.</summary>
     public bool ShowClickToGenerateHint { get; set; }
+
+    /// <summary>Localized text of the "Generate waveform" button (see <see cref="ShowClickToGenerateHint"/>).</summary>
+    public string ClickToGenerateText { get; set; } = string.Empty;
+
+    /// <summary>Localized text of the "Use empty waveform" button; no button when empty.</summary>
+    public string UseEmptyWaveformText { get; set; } = string.Empty;
 
     /// <summary>True when <see cref="WavePeaks"/> is the silent stand-in that only gives the
     /// timeline a time scale - there is no audio to draw or analyze.</summary>
     public bool HasPlaceholderPeaks => WavePeaks?.IsPlaceholder == true;
 
-    protected bool IsClickToGenerateHintVisible =>
-        ShowClickToGenerateHint && !string.IsNullOrEmpty(ClickToGenerateText) &&
-        (WavePeaks == null || WavePeaks.IsPlaceholder);
-
-    private const double HintLabelPaddingX = 10;
-    private const double HintLabelPaddingY = 4;
-    private const double HintLabelTop = 6;
-
-    /// <summary>The clickable "click to generate" label drawn over placeholder peaks.</summary>
-    protected Rect GetClickToGenerateLabelRect()
+    public enum HintButtonKind
     {
-        var hint = GetClickToGenerateHintText();
-        var width = hint.Width + HintLabelPaddingX * 2;
-        var height = hint.Height + HintLabelPaddingY * 2;
-        return new Rect(Math.Round((Bounds.Width - width) / 2), HintLabelTop, Math.Ceiling(width), Math.Ceiling(height));
+        None,
+        GenerateWaveform,
+        UseEmptyWaveform,
     }
 
-    private bool IsOverClickToGenerateLabel(Point point) =>
-        HasPlaceholderPeaks && IsClickToGenerateHintVisible && GetClickToGenerateLabelRect().Contains(point);
+    protected readonly record struct HintButton(HintButtonKind Kind, string Text, Rect Rect, bool IsHovered);
 
-    /// <summary>Localized hint text drawn over the empty waveform (see <see cref="ShowClickToGenerateHint"/>).</summary>
-    public string ClickToGenerateText { get; set; } = string.Empty;
+    private const double HintButtonPaddingX = 14;
+    private const double HintButtonPaddingY = 6;
+    private const double HintButtonGap = 12;
+    private const double HintButtonMargin = 6;
+    private const double HintButtonFontSize = 13;
+    private readonly List<HintButton> _hintButtons = new(2);
+    private HintButtonKind _hoveredHintButton;
+
+    /// <summary>The timeline buttons to draw now - empty when there are none. Reuses one list.</summary>
+    protected List<HintButton> GetHintButtons()
+    {
+        _hintButtons.Clear();
+        var peaks = WavePeaks;
+        if (!ShowClickToGenerateHint || string.IsNullOrEmpty(ClickToGenerateText) ||
+            peaks is { IsPlaceholder: false } || Bounds.Width <= 0)
+        {
+            return _hintButtons;
+        }
+
+        var generate = GetHintButtonText(ClickToGenerateText);
+        var generateSize = new Size(Math.Ceiling(generate.Width + HintButtonPaddingX * 2), Math.Ceiling(generate.Height + HintButtonPaddingY * 2));
+        if (peaks != null)
+        {
+            // Over the placeholder: out of the way in the top right corner.
+            var rect = new Rect(new Point(Math.Round(Bounds.Width - generateSize.Width - HintButtonMargin), HintButtonMargin), generateSize);
+            _hintButtons.Add(new HintButton(HintButtonKind.GenerateWaveform, ClickToGenerateText, rect, _hoveredHintButton == HintButtonKind.GenerateWaveform));
+            return _hintButtons;
+        }
+
+        var hasUseEmpty = !string.IsNullOrEmpty(UseEmptyWaveformText);
+        var useEmptySize = new Size();
+        if (hasUseEmpty)
+        {
+            var useEmpty = GetHintButtonText(UseEmptyWaveformText);
+            useEmptySize = new Size(Math.Ceiling(useEmpty.Width + HintButtonPaddingX * 2), generateSize.Height);
+        }
+
+        var total = generateSize.Width + (hasUseEmpty ? HintButtonGap + useEmptySize.Width : 0);
+        var x = Math.Round((Bounds.Width - total) / 2);
+        var y = Math.Round((Bounds.Height - generateSize.Height) / 2);
+        _hintButtons.Add(new HintButton(HintButtonKind.GenerateWaveform, ClickToGenerateText,
+            new Rect(new Point(x, y), generateSize), _hoveredHintButton == HintButtonKind.GenerateWaveform));
+        if (hasUseEmpty)
+        {
+            _hintButtons.Add(new HintButton(HintButtonKind.UseEmptyWaveform, UseEmptyWaveformText,
+                new Rect(new Point(x + generateSize.Width + HintButtonGap, y), useEmptySize), _hoveredHintButton == HintButtonKind.UseEmptyWaveform));
+        }
+
+        return _hintButtons;
+    }
+
+    private HintButtonKind HitTestHintButton(Point point)
+    {
+        foreach (var button in GetHintButtons())
+        {
+            if (button.Rect.Contains(point))
+            {
+                return button.Kind;
+            }
+        }
+
+        return HintButtonKind.None;
+    }
+
+    private void SetHoveredHintButton(HintButtonKind kind)
+    {
+        if (_hoveredHintButton != kind)
+        {
+            _hoveredHintButton = kind;
+            InvalidateVisual();
+        }
+    }
 
     public AudioVisualizer()
     {
@@ -1367,12 +1436,24 @@ public class AudioVisualizer : Control
         // the paths that bail out before that are plain clicks and must not hold the flag.
         _pointerDragActive = false;
 
-        // No waveform yet and auto-generate is off: a click generates it on demand - anywhere
-        // when there is nothing to edit yet, only on the label over placeholder peaks (#16710).
-        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed &&
-            (WavePeaks == null && ShowClickToGenerateHint || IsOverClickToGenerateLabel(point)))
+        // No waveform yet and auto-generate is off: the timeline buttons generate it on demand or
+        // switch to an empty waveform (#16710). Without peaks there is nothing to edit, so the
+        // rest of the press is ignored.
+        var hintButton = e.GetCurrentPoint(this).Properties.IsLeftButtonPressed ? HitTestHintButton(point) : HintButtonKind.None;
+        if (hintButton == HintButtonKind.GenerateWaveform)
         {
             OnGenerateWaveformRequested?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
+        if (hintButton == HintButtonKind.UseEmptyWaveform)
+        {
+            OnUseEmptyWaveformRequested?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
+        if (WavePeaks == null && ShowClickToGenerateHint)
+        {
             return;
         }
 
@@ -1630,6 +1711,7 @@ public class AudioVisualizer : Control
     private void OnPointerExited(object? sender, PointerEventArgs e)
     {
         base.OnPointerExited(e);
+        _hoveredHintButton = HintButtonKind.None;
         InvalidateVisual();
     }
 
@@ -1669,6 +1751,21 @@ public class AudioVisualizer : Control
 
     private void OnPointerMoved(object? sender, PointerEventArgs e)
     {
+        if (ShowClickToGenerateHint && _interactionMode == InteractionMode.None)
+        {
+            var hovered = HitTestHintButton(e.GetPosition(this));
+            SetHoveredHintButton(hovered);
+            if (hovered != HintButtonKind.None || WavePeaks == null)
+            {
+                Cursor = hovered != HintButtonKind.None ? _cursorHand : _cursorArrow;
+                return;
+            }
+        }
+        else
+        {
+            SetHoveredHintButton(HintButtonKind.None);
+        }
+
         if (IsReadOnly)
         {
             return;
@@ -2302,7 +2399,7 @@ public class AudioVisualizer : Control
 
     private void UpdateCursor(Point point)
     {
-        if (IsOverClickToGenerateLabel(point))
+        if (HitTestHintButton(point) != HintButtonKind.None)
         {
             _cachedHitParagraph = null;
             _cachedIsNearLeftEdge = false;
@@ -2624,19 +2721,13 @@ public class AudioVisualizer : Control
             DrawCurrentVideoPosition(context, ref renderCtx);
             DrawNewParagraph(context, ref renderCtx);
 
-            if (IsClickToGenerateHintVisible)
+            foreach (var button in GetHintButtons())
             {
-                var hint = GetClickToGenerateHintText();
-                if (WavePeaks == null)
-                {
-                    context.DrawText(hint, new Point((width - hint.Width) / 2, (height - hint.Height) / 2));
-                }
-                else
-                {
-                    var label = GetClickToGenerateLabelRect();
-                    context.DrawRectangle(_hintLabelBackground, _hintLabelBorder, label, 4, 4);
-                    context.DrawText(hint, new Point(label.X + HintLabelPaddingX, label.Y + HintLabelPaddingY));
-                }
+                var text = GetHintButtonText(button.Text);
+                context.DrawRectangle(button.IsHovered ? _hintButtonHoverBackground : _hintButtonBackground,
+                    button.IsHovered ? _hintButtonHoverBorder : _hintButtonBorder, button.Rect, 5, 5);
+                context.DrawText(text, new Point(button.Rect.X + (button.Rect.Width - text.Width) / 2,
+                    button.Rect.Y + (button.Rect.Height - text.Height) / 2));
             }
 
             if (IsFocused)
@@ -2648,31 +2739,36 @@ public class AudioVisualizer : Control
         RaiseRendered();
     }
 
-    // The "click to generate" hint is drawn while a video is loaded but its waveform has not been
+    // The timeline buttons are drawn while a video is loaded but its waveform has not been
     // generated yet - and CurrentVideoPositionSeconds is an AffectsRender property the ~60 fps
     // cursor timer writes on every tick, so that state renders at full frame rate. Shaping the
-    // hint per frame was a FormattedText (and a full text layout) 60 times a second for a string
-    // that only changes with the UI language.
-    private FormattedText? _clickToGenerateHintText;
-    private string? _clickToGenerateHintSource;
-    private static readonly IBrush _hintLabelBackground = new ImmutableSolidColorBrush(Color.FromArgb(170, 0, 0, 0));
-    private static readonly IPen _hintLabelBorder = new ImmutablePen(new ImmutableSolidColorBrush(Color.FromArgb(110, 220, 220, 220)), 1);
+    // texts per frame was a FormattedText (and a full text layout) 60 times a second for strings
+    // that only change with the UI language.
+    private readonly Dictionary<string, FormattedText> _hintButtonTexts = new(2);
+    internal static readonly Color HintButtonBackgroundColor = Color.FromArgb(200, 30, 30, 30);
+    internal static readonly Color HintButtonHoverBackgroundColor = Color.FromArgb(230, 60, 60, 60);
+    internal static readonly Color HintButtonBorderColor = Color.FromArgb(120, 220, 220, 220);
+    internal static readonly Color HintButtonHoverBorderColor = Color.FromArgb(220, 240, 240, 240);
+    private static readonly IBrush _hintButtonBackground = new ImmutableSolidColorBrush(HintButtonBackgroundColor);
+    private static readonly IBrush _hintButtonHoverBackground = new ImmutableSolidColorBrush(HintButtonHoverBackgroundColor);
+    private static readonly IPen _hintButtonBorder = new ImmutablePen(new ImmutableSolidColorBrush(HintButtonBorderColor), 1);
+    private static readonly IPen _hintButtonHoverBorder = new ImmutablePen(new ImmutableSolidColorBrush(HintButtonHoverBorderColor), 1);
 
-    private FormattedText GetClickToGenerateHintText()
+    private FormattedText GetHintButtonText(string text)
     {
-        if (_clickToGenerateHintText == null || !ReferenceEquals(_clickToGenerateHintSource, ClickToGenerateText))
+        if (!_hintButtonTexts.TryGetValue(text, out var formatted))
         {
-            _clickToGenerateHintSource = ClickToGenerateText;
-            _clickToGenerateHintText = new FormattedText(
-                ClickToGenerateText,
-                CultureInfo.CurrentCulture,
-                FlowDirection.LeftToRight,
-                Typeface.Default,
-                14,
-                Brushes.Gainsboro);
+            if (_hintButtonTexts.Count > 8)
+            {
+                _hintButtonTexts.Clear(); // UI language changed a few times
+            }
+
+            formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                Typeface.Default, HintButtonFontSize, Brushes.Gainsboro);
+            _hintButtonTexts[text] = formatted;
         }
 
-        return _clickToGenerateHintText;
+        return formatted;
     }
 
     private void DrawSpectrogram(DrawingContext context, ref RenderContext renderCtx)
