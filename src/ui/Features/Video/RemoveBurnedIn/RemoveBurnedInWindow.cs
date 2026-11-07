@@ -11,6 +11,8 @@ using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 
@@ -219,6 +221,9 @@ public class RemoveBurnedInWindow : Window
         av.OnVideoPositionChanged += vm.AudioVisualizerPositionChanged;
         av.OnPrimarySingleClicked += vm.AudioVisualizerParagraphClicked;
         av.OnDragEnded += vm.AudioVisualizerDragEnded;
+        av.OnSelectRequested += vm.AudioVisualizerSelectRequested;
+        av.OnNewSelectionInsert += vm.AudioVisualizerNewSelectionInsert;
+        av.FlyoutMenuOpening += vm.AudioVisualizerFlyoutMenuOpening;
         AutomationProperties.SetName(av, Se.Language.General.Waveform);
         vm.AudioVisualizer = av;
 
@@ -248,7 +253,7 @@ public class RemoveBurnedInWindow : Window
     {
         var l = Se.Language.Video.RemoveBurnedIn;
         var timeConverter = new TimeSpanToDisplayFullConverter();
-        var table = TableViewExtras.MakeTableView(multiSelect: false);
+        var table = TableViewExtras.MakeTableView(multiSelect: true);
         table.DataContext = vm;
         table.Bind(TableView.ItemsSourceProperty, new Binding(nameof(vm.Lines)) { Source = vm });
         table.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedLine)) { Source = vm, Mode = BindingMode.TwoWay });
@@ -289,8 +294,33 @@ public class RemoveBurnedInWindow : Window
         var insert = EditorChrome.MakeTextToolButton(IconNames.Plus, l.InsertRectangle, vm.InsertRectangleCommand)
             .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance);
         SetHint(insert, l.InsertRectangleHint);
-        var delete = EditorChrome.CreateToolButton(IconNames.Trash, l.DeleteRectangle, vm.DeleteRectangleCommand, 30, "Delete")
-            .WithBindEnabled(nameof(vm.IsRectangleSelected));
+        var delete = EditorChrome.CreateToolButton(IconNames.Trash, Se.Language.General.Delete, vm.DeleteLineCommand, 30, "Delete")
+            .WithBindEnabled(nameof(vm.CanDeleteLine));
+
+        // Right-click menu and Delete key: delete the selected lines, or insert a rectangle.
+        List<RemoveBurnedInLineItem> SelectedItems() => table.SelectedItems?.OfType<RemoveBurnedInLineItem>().ToList() ?? new();
+        var flyout = new MenuFlyout();
+        var menuInsert = new MenuItem { Header = l.InsertRectangle, InputGesture = new KeyGesture(Key.Insert) };
+        menuInsert.Click += (_, _) => vm.InsertRectangleCommand.Execute(null);
+        var menuDelete = new MenuItem { Header = Se.Language.General.Delete, InputGesture = new KeyGesture(Key.Delete) };
+        menuDelete.Click += (_, _) => vm.DeleteLines(SelectedItems());
+        flyout.Items.Add(menuInsert);
+        flyout.Items.Add(menuDelete);
+        flyout.Opening += (_, _) =>
+        {
+            menuInsert.IsEnabled = !vm.IsRunning;
+            menuDelete.IsEnabled = !vm.IsRunning && SelectedItems().Count > 0;
+        };
+        table.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(table);
+        table.KeyDown += (_, e) =>
+        {
+            if (e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None && e.Source is not TextBox)
+            {
+                vm.DeleteLines(SelectedItems());
+                e.Handled = true;
+            }
+        };
         var toolbar = new StackPanel
         {
             Orientation = Orientation.Horizontal,

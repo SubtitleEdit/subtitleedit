@@ -36,7 +36,6 @@ public class LanguageRemoveBurnedIn
     public string AbortMessage { get; set; }
     public string InsertRectangle { get; set; }
     public string InsertRectangleHint { get; set; }
-    public string DeleteRectangle { get; set; }
     public string RectangleXY { get; set; }
     public string RectangleHint { get; set; }
 
@@ -95,7 +94,7 @@ public class LanguageRemoveBurnedIn
         AbortTitle = "Abort?";
         Review = "Review";
         Timeline = "Timeline";
-        TimelineHint = "Click to move - drag a box or its edges to fix a line's timing";
+        TimelineHint = "Drag a box or its edges to fix timing - drag an empty spot, then Enter or right-click, to insert a rectangle";
         Lines = "Lines";
         LinesIncludedXY = "{0} of {1} included";
         ShowResult = "Show result";
@@ -115,7 +114,6 @@ public class LanguageRemoveBurnedIn
         AbortMessage = "Stop removing burned-in subtitles?";
         InsertRectangle = "Insert rectangle";
         InsertRectangleHint = "Insert a rectangle at the current position: everything inside it is removed while it is shown - for a logo, a sign or a line OCR missed (Insert)";
-        DeleteRectangle = "Delete rectangle";
         RectangleXY = "Rectangle {0}x{1}";
         RectangleHint = "Drag on the preview to draw the rectangle - drag its box on the timeline to time it";
     }

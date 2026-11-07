@@ -94,14 +94,23 @@ public class RemoveBurnedInWindowTests : IDisposable
         Assert.Equal("Rectangle 300x180", rectangle.Text);
         Assert.Equal(new BurnedInRectangle(TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(6), 1500, 810, 300, 180), rectangle.ToRectangle());
 
-        // OCR lines are not deleted, only rectangles.
-        vm.SelectedLine = vm.Lines[0];
-        vm.DeleteRectangleCommand.Execute(null);
-        Assert.Equal(3, vm.Lines.Count);
+        // Delete removes rectangles and OCR lines alike, and selects the next line.
         vm.SelectedLine = rectangle;
-        vm.DeleteRectangleCommand.Execute(null);
+        vm.DeleteLineCommand.Execute(null);
         Assert.Equal(2, vm.Lines.Count);
         Assert.DoesNotContain(rectangle, vm.Lines);
-        Assert.Equal(new[] { 1, 2 }, vm.Lines.Select(l => l.Number));
+        Assert.Equal("Second", vm.SelectedLine?.Text);
+        vm.DeleteLines(new[] { vm.Lines[0] });
+        Assert.Equal("Second", Assert.Single(vm.Lines).Text);
+        Assert.Equal(1, vm.Lines[0].Number);
+
+        // A timeline selection (drag on an empty spot + Enter) inserts a rectangle for that span.
+        vm.AudioVisualizerNewSelectionInsert(vm.AudioVisualizer!, new Nikse.SubtitleEdit.Controls.AudioVisualizerControl.ParagraphEventArgs(
+            new Nikse.SubtitleEdit.Features.Main.SubtitleLineViewModel { StartTime = TimeSpan.FromSeconds(20), EndTime = TimeSpan.FromSeconds(23.5) }));
+        Assert.Equal(2, vm.Lines.Count);
+        Assert.True(vm.SelectedLine?.IsRectangle);
+        Assert.Equal(TimeSpan.FromSeconds(20), vm.SelectedLine!.Line.StartTime);
+        Assert.Equal(TimeSpan.FromSeconds(23.5), vm.SelectedLine.Line.EndTime);
+        Assert.Equal(2, vm.SelectedLine.Number);
     }
 }

@@ -3277,7 +3277,7 @@
       "abortMessage": "Stop removing burned-in subtitles?",
       "review": "Review",
       "timeline": "Timeline",
-      "timelineHint": "Click to move - drag a box or its edges to fix a line's timing",
+      "timelineHint": "Drag a box or its edges to fix timing - drag an empty spot, then Enter or right-click, to insert a rectangle",
       "lines": "Lines",
       "linesIncludedXY": "{0} of {1} included",
       "showResult": "Show result",
@@ -3296,7 +3296,6 @@
       "openVideo": "Open video",
       "insertRectangle": "Insert rectangle",
       "insertRectangleHint": "Insert a rectangle at the current position: everything inside it is removed while it is shown - for a logo, a sign or a line OCR missed (Insert)",
-      "deleteRectangle": "Delete rectangle",
       "rectangleXY": "Rectangle {0}x{1}",
       "rectangleHint": "Drag on the preview to draw the rectangle - drag its box on the timeline to time it"
     },
