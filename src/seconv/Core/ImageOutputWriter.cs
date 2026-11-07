@@ -89,10 +89,16 @@ internal static class ImageOutputWriter
         handler.WriteHeader(filePath, firstParam);
         firstParam.Bitmap?.Dispose();
 
+        // Written in time order, not in the order of the lines: an ASSA script is often grouped
+        // by what the author worked on, and a Blu-ray sup written in that order jumps back in
+        // time - a decoder drops what comes after the timeline has passed it (issue #16714).
+        // OrderBy is stable, so lines starting together keep their order. The index is the
+        // position in the file: the Blu-ray composition numbers count up with it.
+        var paragraphs = subtitle.Paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
         var apply3D = Stereo3DImage.IsModeSupported(handler.ExportImageType);
-        for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+        for (var i = 0; i < paragraphs.Count; i++)
         {
-            var p = subtitle.Paragraphs[i];
+            var p = paragraphs[i];
             var ip = BuildParameter(p, i, screenWidth, screenHeight, scriptHeight, options, assaStyles);
             ip.Bitmap = ImageRenderer.GenerateBitmap(ip);
             // Needs the rendered size, so it cannot happen in BuildParameter.
