@@ -41,10 +41,24 @@ internal sealed class CaptionWords
 
     public bool HasMarkedWord => MarkedWordIndex >= 0;
 
-    /// <summary>The active word of each slice: just the marked word, or every word in turn.</summary>
+    /// <summary>
+    /// True when the line's own active-word marking drives the effect: one slice with the line's
+    /// timing. Set for every line of a file that marks active words, also for the lines where no
+    /// word is marked (the pauses between words) - those get no active word.
+    /// </summary>
+    public bool UsesMarks { get; private set; }
+
+    /// <summary>True when any line marks an active word, so unmarked lines mean "no active word".</summary>
+    public static bool AnyMarked(List<SubtitleLineViewModel> lines) =>
+        lines.Any(l => Parse(l, upperCase: false)?.HasMarkedWord == true);
+
+    /// <summary>
+    /// The active word of each slice: every word in turn, or with marks the marked word only
+    /// (-1 = a slice with no active word).
+    /// </summary>
     public IEnumerable<int> ActiveWordIndices()
     {
-        if (HasMarkedWord)
+        if (UsesMarks)
         {
             yield return MarkedWordIndex;
             yield break;
@@ -56,7 +70,7 @@ internal sealed class CaptionWords
         }
     }
 
-    public static CaptionWords? Parse(SubtitleLineViewModel line, bool upperCase)
+    public static CaptionWords? Parse(SubtitleLineViewModel line, bool upperCase, bool useMarks = false)
     {
         var text = HtmlUtil.RemoveHtmlTags(Utilities.RemoveSsaTags(line.Text), true)
             .Replace("\\N", "\n").Replace("\\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Trim();
@@ -90,6 +104,7 @@ internal sealed class CaptionWords
 
         result.WordStartMs = MakeTiming(result.Words, line.Duration.TotalMilliseconds);
         result.MarkedWordIndex = FindMarkedWord(line.Text, result.Words);
+        result.UsesMarks = useMarks || result.HasMarkedWord;
         return result;
     }
 
@@ -159,7 +174,7 @@ internal sealed class CaptionWords
     public SubtitleLineViewModel MakeSlice(SubtitleLineViewModel line, int wordIndex, string posTags, out string slicePosTags)
     {
         var slice = new SubtitleLineViewModel(line, generateNewId: true);
-        if (HasMarkedWord)
+        if (UsesMarks)
         {
             slicePosTags = posTags;
             return slice;
