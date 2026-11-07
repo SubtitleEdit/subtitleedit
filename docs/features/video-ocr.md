@@ -71,6 +71,12 @@ the line is shown.
 **Page Up/Page Down** to jump between lines. Drag a box on the timeline to fix a line's timing,
 and clear a line's check box to leave it out.
 
+**Rectangles:** for a logo, a sign or a line OCR missed, click **Insert rectangle** (or press
+**Insert**). It is added for two seconds around the current position — drag on the preview to
+draw the box, and drag it on the timeline to time it. Everything inside the box is removed on
+every frame it is shown (no text detection), with any method. **Delete** removes the selected
+rectangle.
+
 **Text mask settings:** *Text brightness minimum*, *Text has a dark outline*, *Grow mask* and
 *Extra width* control which pixels are removed — check the preview after each change.
 The video methods re-encode the video with x264 at the chosen **Quality (CRF)** and copy the audio.

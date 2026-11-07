@@ -3293,7 +3293,12 @@
       "noSubtitleHere": "No subtitle here",
       "maskedXPixels": "Mask: {0:#,##0} pixels",
       "doneInXY": "Done: {0} ({1})",
-      "openVideo": "Open video"
+      "openVideo": "Open video",
+      "insertRectangle": "Insert rectangle",
+      "insertRectangleHint": "Insert a rectangle at the current position: everything inside it is removed while it is shown - for a logo, a sign or a line OCR missed (Insert)",
+      "deleteRectangle": "Delete rectangle",
+      "rectangleXY": "Rectangle {0}x{1}",
+      "rectangleHint": "Drag on the preview to draw the rectangle - drag its box on the timeline to time it"
     },
     "backgroundMusic": {
       "title": "Generate background music",

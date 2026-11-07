@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -143,11 +144,28 @@ public class RemoveBurnedInWindow : Window
             },
         };
 
+        // The selected rectangle line's box, drawn and edited in video pixels over the frame.
+        var rectangleSelector = new CropAreaSelector
+        {
+            DimOutside = false,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsRectangleSelected)),
+        };
+        rectangleSelector.Bind(CropAreaSelector.VideoWidthProperty, new Binding(nameof(vm.VideoWidth)));
+        rectangleSelector.Bind(CropAreaSelector.VideoHeightProperty, new Binding(nameof(vm.VideoHeight)));
+        rectangleSelector.Bind(CropAreaSelector.SelectionXProperty, new Binding(nameof(vm.SelectedRectX)) { Mode = BindingMode.TwoWay });
+        rectangleSelector.Bind(CropAreaSelector.SelectionYProperty, new Binding(nameof(vm.SelectedRectY)) { Mode = BindingMode.TwoWay });
+        rectangleSelector.Bind(CropAreaSelector.SelectionWidthProperty, new Binding(nameof(vm.SelectedRectWidth)) { Mode = BindingMode.TwoWay });
+        rectangleSelector.Bind(CropAreaSelector.SelectionHeightProperty, new Binding(nameof(vm.SelectedRectHeight)) { Mode = BindingMode.TwoWay });
+        AutomationProperties.SetName(rectangleSelector, l.RectangleHint);
+        SetHint(rectangleSelector, l.RectangleHint);
+
         var frame = new Panel
         {
             Background = Brushes.Black,
             ClipToBounds = true,
-            Children = { image, busy, status },
+            Children = { image, rectangleSelector, busy, status },
         };
 
         var navigation = new StackPanel
@@ -268,7 +286,24 @@ public class RemoveBurnedInWindow : Window
             Width = new GridLength(1, GridUnitType.Star),
         });
 
-        return EditorChrome.MakeDockedFillSection(l.Lines, EditorChrome.MakeListFrame(table), EditorChrome.MakeBoundHint(nameof(vm.LinesSummary)), first: true);
+        var insert = EditorChrome.MakeTextToolButton(IconNames.Plus, l.InsertRectangle, vm.InsertRectangleCommand)
+            .WithBindEnabled(nameof(vm.IsRunning), InverseBooleanConverter.Instance);
+        SetHint(insert, l.InsertRectangleHint);
+        var delete = EditorChrome.CreateToolButton(IconNames.Trash, l.DeleteRectangle, vm.DeleteRectangleCommand, 30, "Delete")
+            .WithBindEnabled(nameof(vm.IsRectangleSelected));
+        var toolbar = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
+            Margin = new Thickness(0, 6, 0, 0),
+            Children = { insert, delete },
+        };
+
+        var content = new DockPanel { LastChildFill = true };
+        DockPanel.SetDock(toolbar, Dock.Bottom);
+        content.Children.Add(toolbar);
+        content.Children.Add(EditorChrome.MakeListFrame(table));
+        return EditorChrome.MakeDockedFillSection(l.Lines, content, EditorChrome.MakeBoundHint(nameof(vm.LinesSummary)), first: true);
     }
 
     // ── settings ─────────────────────────────────────────────────────

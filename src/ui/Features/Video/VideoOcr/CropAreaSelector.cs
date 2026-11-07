@@ -34,6 +34,10 @@ public class CropAreaSelector : Control
     public static readonly StyledProperty<int> SelectionHeightProperty =
         AvaloniaProperty.Register<CropAreaSelector, int>(nameof(SelectionHeight), 360);
 
+    /// <summary>Dim the frame outside the selection (the scan area); off for a box drawn over a mask preview.</summary>
+    public static readonly StyledProperty<bool> DimOutsideProperty =
+        AvaloniaProperty.Register<CropAreaSelector, bool>(nameof(DimOutside), true);
+
     private const double HandleHitSize = 8;
     private const int MinSelectionSize = 16;
 
@@ -96,9 +100,16 @@ public class CropAreaSelector : Control
         set => SetValue(SelectionHeightProperty, value);
     }
 
+    public bool DimOutside
+    {
+        get => GetValue(DimOutsideProperty);
+        set => SetValue(DimOutsideProperty, value);
+    }
+
     static CropAreaSelector()
     {
         AffectsRender<CropAreaSelector>(
+            DimOutsideProperty,
             VideoWidthProperty,
             VideoHeightProperty,
             SelectionXProperty,
@@ -167,10 +178,13 @@ public class CropAreaSelector : Control
         var selection = VideoToDisplay(new Rect(SelectionX, SelectionY, SelectionWidth, SelectionHeight));
 
         // Dim everything outside the selection.
-        context.FillRectangle(DimBrush, new Rect(display.X, display.Y, display.Width, Math.Max(0, selection.Y - display.Y)));
-        context.FillRectangle(DimBrush, new Rect(display.X, selection.Bottom, display.Width, Math.Max(0, display.Bottom - selection.Bottom)));
-        context.FillRectangle(DimBrush, new Rect(display.X, selection.Y, Math.Max(0, selection.X - display.X), selection.Height));
-        context.FillRectangle(DimBrush, new Rect(selection.Right, selection.Y, Math.Max(0, display.Right - selection.Right), selection.Height));
+        if (DimOutside)
+        {
+            context.FillRectangle(DimBrush, new Rect(display.X, display.Y, display.Width, Math.Max(0, selection.Y - display.Y)));
+            context.FillRectangle(DimBrush, new Rect(display.X, selection.Bottom, display.Width, Math.Max(0, display.Bottom - selection.Bottom)));
+            context.FillRectangle(DimBrush, new Rect(display.X, selection.Y, Math.Max(0, selection.X - display.X), selection.Height));
+            context.FillRectangle(DimBrush, new Rect(selection.Right, selection.Y, Math.Max(0, display.Right - selection.Right), selection.Height));
+        }
 
         // Selection border + corner handles.
         context.DrawRectangle(BorderPen, selection);
