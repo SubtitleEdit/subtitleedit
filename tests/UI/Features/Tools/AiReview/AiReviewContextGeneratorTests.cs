@@ -128,4 +128,37 @@ public class AiReviewContextGeneratorTests
 
         Assert.Equal(string.Empty, result);
     }
+
+    [Fact]
+    public async Task GenerateAsync_InvalidReply_ForcesLogWithReplyExcerpt()
+    {
+        var log = new List<(string Message, bool Force)>();
+        await AiReviewContextGenerator.GenerateAsync(new[] { "Hello there." }, "English",
+            (_, _, _, _) => Task.FromResult("I cannot help with that."), null, CancellationToken.None, (m, f) => log.Add((m, f)));
+
+        var forced = log.Where(l => l.Force).Select(l => l.Message).ToList();
+        Assert.Contains(forced, m => m.Contains("part 1/1") && m.Contains("no usable JSON") && m.Contains("I cannot help with that."));
+        Assert.Contains(forced, m => m.Contains("nothing generated"));
+        Assert.Contains(log, l => !l.Force && l.Message.Contains("1 part(s)"));
+    }
+
+    [Fact]
+    public async Task GenerateAsync_GoodReply_ForcesNothing()
+    {
+        var log = new List<(string Message, bool Force)>();
+        await AiReviewContextGenerator.GenerateAsync(new[] { "Kaito ran." }, "English",
+            (_, _, _, _) => Task.FromResult("{\"names\":[\"Kaito\"],\"terms\":[],\"summary\":\"He runs.\"}"), null, CancellationToken.None, (m, f) => log.Add((m, f)));
+
+        Assert.DoesNotContain(log, l => l.Force);
+    }
+
+    [Fact]
+    public async Task GenerateAsync_EngineError_ForcesLogAndRethrows()
+    {
+        var log = new List<(string Message, bool Force)>();
+        await Assert.ThrowsAsync<HttpRequestException>(() => AiReviewContextGenerator.GenerateAsync(new[] { "Hello there." }, "English",
+            (_, _, _, _) => throw new HttpRequestException("exceeds the available context size"), null, CancellationToken.None, (m, f) => log.Add((m, f))));
+
+        Assert.Contains(log, l => l.Force && l.Message.Contains("part 1/1") && l.Message.Contains("exceeds the available context size"));
+    }
 }

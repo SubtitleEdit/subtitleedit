@@ -981,7 +981,7 @@ public partial class AiReviewViewModel : ObservableObject
             }
         }
 
-        using var client = new AiReviewClient();
+        using var client = new AiReviewClient { Log = s => Se.WriteToolsLog(s, true) };
         var delay = TimeSpan.FromSeconds(Math.Max(0, RequestDelaySeconds));
         var lastRequestCompletedUtc = DateTime.MinValue;
         async Task<string> ChatAsync(string systemPrompt, string userContent, bool jsonObject, CancellationToken ct)
@@ -1005,7 +1005,7 @@ public partial class AiReviewViewModel : ObservableObject
         try
         {
             return await AiReviewContextGenerator.GenerateAsync(lines, GetLanguageDisplayName(_languageCode), ChatAsync,
-                progress, cancellationToken, s => Se.WriteToolsLog(s));
+                progress, cancellationToken, (s, force) => Se.WriteToolsLog(s, force));
         }
         catch (OperationCanceledException)
         {

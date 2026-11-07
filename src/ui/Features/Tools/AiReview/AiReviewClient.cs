@@ -25,6 +25,12 @@ public class AiReviewClient : IDisposable
 
     public string Error { get; private set; } = string.Empty;
 
+    /// <summary>
+    /// Gets problem replies - cut off at the length limit, or empty content - with the server's
+    /// finish_reason and token usage (#16701). Null = no logging.
+    /// </summary>
+    public Action<string>? Log { get; set; }
+
     public AiReviewClient()
     {
         _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
@@ -80,7 +86,96 @@ public class AiReviewClient : IDisposable
             throw new HttpRequestException(ShortError(response.body));
         }
 
-        return ExtractContent(response.body);
+        var content = ExtractContent(response.body);
+        if (Log != null)
+        {
+            var problem = DescribeProblemReply(response.body, content);
+            if (problem != null)
+            {
+                Log(problem);
+            }
+        }
+
+        return content;
+    }
+
+    /// <summary>
+    /// A log line when the reply looks unusable for a reason the server states - finish_reason
+    /// "length" (context or max_tokens too small) or empty content (often a thinking model that
+    /// spent the whole budget on reasoning_content) - else null.
+    /// </summary>
+    internal static string? DescribeProblemReply(string body, string content)
+    {
+        string? finishReason = null;
+        int? promptTokens = null;
+        int? completionTokens = null;
+        var reasoningLength = 0;
+        try
+        {
+            using var doc = JsonDocument.Parse(body);
+            var root = doc.RootElement;
+            if (root.ValueKind != JsonValueKind.Object)
+            {
+                return null;
+            }
+
+            if (root.TryGetProperty("choices", out var choices) && choices.ValueKind == JsonValueKind.Array && choices.GetArrayLength() > 0)
+            {
+                var choice = choices[0];
+                if (choice.TryGetProperty("finish_reason", out var fr) && fr.ValueKind == JsonValueKind.String)
+                {
+                    finishReason = fr.GetString();
+                }
+
+                if (choice.TryGetProperty("message", out var message) &&
+                    message.TryGetProperty("reasoning_content", out var reasoning) &&
+                    reasoning.ValueKind == JsonValueKind.String)
+                {
+                    reasoningLength = reasoning.GetString()?.Length ?? 0;
+                }
+            }
+            else if (root.TryGetProperty("done_reason", out var dr) && dr.ValueKind == JsonValueKind.String)
+            {
+                finishReason = dr.GetString(); // Ollama native
+            }
+
+            if (root.TryGetProperty("usage", out var usage) && usage.ValueKind == JsonValueKind.Object)
+            {
+                promptTokens = ReadInt(usage, "prompt_tokens");
+                completionTokens = ReadInt(usage, "completion_tokens");
+            }
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+
+        var cutOff = string.Equals(finishReason, "length", StringComparison.OrdinalIgnoreCase);
+        var empty = string.IsNullOrWhiteSpace(content);
+        if (!cutOff && !empty)
+        {
+            return null;
+        }
+
+        var sb = new StringBuilder("AI chat: ");
+        sb.Append(cutOff
+            ? "reply cut off at the length limit - the server context size or max_tokens is too small"
+            : "reply has no content");
+        sb.Append($" (finish_reason={finishReason ?? "?"}");
+        sb.Append($", prompt_tokens={promptTokens?.ToString() ?? "?"}");
+        sb.Append($", completion_tokens={completionTokens?.ToString() ?? "?"}");
+        if (reasoningLength > 0)
+        {
+            sb.Append($", reasoning_content={reasoningLength} chars");
+        }
+
+        sb.Append(')');
+        return sb.ToString();
+    }
+
+    private static int? ReadInt(JsonElement element, string name)
+    {
+        return element.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var i) ? i : null;
     }
 
     /// <summary>

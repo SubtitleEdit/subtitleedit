@@ -231,6 +231,9 @@ public static class AiReviewContextGenerator
     /// Runs the whole generation. <paramref name="progress"/> gets (part number, part count), and
     /// (0, part count) while the synopsis is written. Returns an empty string when the engine gave
     /// nothing usable. Engine errors (HttpRequestException) and cancellation propagate.
+    /// <paramref name="log"/> gets (message, force): force is true for the lines that explain a
+    /// failure (unusable reply, engine error, nothing generated), which belong in a bug report even
+    /// when the tools log setting is off (#16701); the rest is detail for an opted-in tools log.
     /// </summary>
     public static async Task<string> GenerateAsync(
         IReadOnlyList<string> lines,
@@ -238,7 +241,7 @@ public static class AiReviewContextGenerator
         AiChatFunc chat,
         Action<int, int>? progress,
         CancellationToken cancellationToken,
-        Action<string>? log = null,
+        Action<string, bool>? log = null,
         int maxTokensPerPart = MaxTokensPerPart)
     {
         var parts = BuildParts(lines, maxTokensPerPart);
@@ -246,6 +249,10 @@ public static class AiReviewContextGenerator
         {
             return string.Empty;
         }
+
+        var partTokens = parts.Select(EstimateTokens).ToList();
+        log?.Invoke($"AI review context: {lines.Count} lines in {parts.Count} part(s) of at most {maxTokensPerPart} estimated tokens " +
+                    $"({string.Join(", ", partTokens)}), language: {languageName}", false);
 
         var extractPrompt = ExtractPrompt.Replace("{language}", languageName);
         var names = new List<string>();
@@ -255,8 +262,18 @@ public static class AiReviewContextGenerator
         {
             cancellationToken.ThrowIfCancellationRequested();
             progress?.Invoke(i + 1, parts.Count);
-            var reply = await chat(extractPrompt, parts[i], true, cancellationToken);
-            log?.Invoke($"AI review context: reply for part {i + 1}/{parts.Count}: {reply}");
+            string reply;
+            try
+            {
+                reply = await chat(extractPrompt, parts[i], true, cancellationToken);
+            }
+            catch (HttpRequestException e)
+            {
+                log?.Invoke($"AI review context: part {i + 1}/{parts.Count} (~{partTokens[i]} estimated tokens) failed: {e.Message}", true);
+                throw;
+            }
+
+            log?.Invoke($"AI review context: reply for part {i + 1}/{parts.Count}: {reply}", false);
             PartResult? result = null;
             try
             {
@@ -269,7 +286,7 @@ public static class AiReviewContextGenerator
 
             if (result == null)
             {
-                log?.Invoke($"AI review context: part {i + 1}/{parts.Count} gave no usable JSON - skipped");
+                log?.Invoke($"AI review context: part {i + 1}/{parts.Count} (~{partTokens[i]} estimated tokens) gave no usable JSON - skipped. Reply: {Excerpt(reply)}", true);
                 continue;
             }
 
@@ -299,11 +316,27 @@ public static class AiReviewContextGenerator
             catch (HttpRequestException e)
             {
                 // the names/terms are the valuable part - keep them even when the last call fails
-                log?.Invoke("AI review context: synopsis request failed: " + e.Message);
+                log?.Invoke("AI review context: synopsis request failed: " + e.Message, true);
                 synopsis = string.Empty;
             }
         }
 
-        return Format(mergedNames, mergedTerms, synopsis);
+        var formatted = Format(mergedNames, mergedTerms, synopsis);
+        log?.Invoke(formatted.Length == 0
+                ? $"AI review context: nothing generated - {parts.Count} part(s), summaries: {summaries.Count}, names: {names.Count}, terms: {terms.Count} before the in-text check"
+                : $"AI review context: {mergedNames.Count} name(s), {mergedTerms.Count} term(s), synopsis {synopsis.Length} chars",
+            formatted.Length == 0);
+        return formatted;
+    }
+
+    private static string Excerpt(string reply)
+    {
+        var s = (reply ?? string.Empty).Trim();
+        if (s.Length == 0)
+        {
+            return "(empty)";
+        }
+
+        return s.Length > 500 ? s.Substring(0, 500) + "..." : s;
     }
 }
