@@ -385,6 +385,17 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             //load words via xml
             string noBreakAfterFileName = DictionaryFolder + languageName + "_NoBreakAfterList.xml";
+            if (!File.Exists(noBreakAfterFileName))
+            {
+                // A regional code ("pt-BR", "pt_BR") uses the language's list - the lists are
+                // per language, so Brazilian Portuguese shares pt_NoBreakAfterList.xml (#16698).
+                var separatorIndex = languageName.IndexOfAny(new[] { '-', '_' });
+                if (separatorIndex > 0)
+                {
+                    noBreakAfterFileName = DictionaryFolder + languageName.Substring(0, separatorIndex).ToLowerInvariant() + "_NoBreakAfterList.xml";
+                }
+            }
+
             var doc = new XmlDocument();
             if (File.Exists(noBreakAfterFileName))
             {
