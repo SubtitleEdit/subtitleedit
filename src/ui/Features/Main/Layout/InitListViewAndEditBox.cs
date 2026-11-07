@@ -1749,6 +1749,7 @@ public static partial class InitListViewAndEditBox
         var upDownLayer = UiUtil.MakeNumericUpDownInt(int.MinValue, int.MaxValue, 0, double.NaN, vm, $"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.Layer)}");
         AutomationProperties.SetName(upDownLayer, Se.Language.General.Layer);
         upDownLayer.HorizontalAlignment = HorizontalAlignment.Stretch;
+        CompactSpinner.Attach(upDownLayer);
         if (!vm.ShowUpDownLabels && Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(upDownLayer, Se.Language.General.Layer);
