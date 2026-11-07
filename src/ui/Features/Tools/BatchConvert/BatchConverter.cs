@@ -2055,6 +2055,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return;
         }
 
+        // Written in time order, not in the order of the lines: an ASSA script is often grouped
+        // by what the author worked on, and a Blu-ray sup written in that order jumps back in
+        // time - a decoder drops what comes after the timeline has passed it (issue #16714).
+        // OrderBy is stable, so lines starting together keep their order. The index is the
+        // position in the file: the Blu-ray composition numbers count up with it.
+        imageParameters = imageParameters.OrderBy(p => p.StartTime).ToList();
+        for (var i = 0; i < imageParameters.Count; i++)
+        {
+            imageParameters[i].Index = i;
+        }
+
         var path = MakeOutputFileName(item, extension);
         exportHandler.WriteHeader(path, imageParameters[0]);
         for (var i = 0; i < imageParameters.Count; i++)
