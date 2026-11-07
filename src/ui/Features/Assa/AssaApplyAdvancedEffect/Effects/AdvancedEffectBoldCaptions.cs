@@ -28,9 +28,10 @@ public class AdvancedEffectBoldCaptions : IAdvancedEffectDisplay
         var result = new List<SubtitleLineViewModel>();
         var highlight = AdvancedEffectUtil.ToAssColor(HighlightColor);
         var sb = new StringBuilder();
+        var useMarks = CaptionWords.AnyMarked(subtitles);
         foreach (var sub in subtitles)
         {
-            var words = CaptionWords.Parse(sub, UpperCase);
+            var words = CaptionWords.Parse(sub, UpperCase, useMarks);
             if (words == null)
             {
                 result.Add(AdvancedEffectUtil.PassThrough(sub));
@@ -52,7 +53,7 @@ public class AdvancedEffectBoldCaptions : IAdvancedEffectDisplay
                   .Append("\\shad").Append(shadow).Append('}');
                 foreach (var token in words.Tokens)
                 {
-                    if (token.WordIndex == w)
+                    if (token.IsWord && token.WordIndex == w)
                     {
                         sb.Append("{\\1c").Append(highlight)
                           .Append(CaptionWords.Scale(style, 125)).Append("\\t(0,110,").Append(CaptionWords.Scale(style, 115)).Append(")}")
