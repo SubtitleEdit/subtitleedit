@@ -103,6 +103,8 @@ internal sealed class SkiaWaveformRenderer
 
     private readonly SKPaint _hintPaint = new() { IsAntialias = true };
 
+    private static SKColor ToSk(Avalonia.Media.Color c) => new(c.R, c.G, c.B, c.A);
+
     public void Render(SKCanvas canvas, SkiaWaveformFrame f)
     {
         lock (_lock)
@@ -129,26 +131,18 @@ internal sealed class SkiaWaveformRenderer
                     DrawNewSelection(canvas, f);
                 }
 
-                if (f.HintText != null)
+                foreach (var button in f.HintButtons)
                 {
-                    var hint = _textCache.Get(f.HintText, 14);
-                    if (f.HintRect.IsEmpty)
-                    {
-                        DrawText(canvas, hint, (f.Width - hint.Width) / 2, (f.Height - hint.Height) / 2, new SKColor(220, 220, 220));
-                    }
-                    else
-                    {
-                        // The clickable "generate waveform" label over a placeholder time line.
-                        var box = f.HintRect;
-                        _hintPaint.Style = SKPaintStyle.Fill;
-                        _hintPaint.Color = new SKColor(0, 0, 0, 170);
-                        canvas.DrawRoundRect(box, 4, 4, _hintPaint);
-                        _hintPaint.Style = SKPaintStyle.Stroke;
-                        _hintPaint.StrokeWidth = 1 / _scale;
-                        _hintPaint.Color = new SKColor(220, 220, 220, 110);
-                        canvas.DrawRoundRect(box, 4, 4, _hintPaint);
-                        DrawText(canvas, hint, box.MidX - hint.Width / 2, box.MidY - hint.Height / 2, new SKColor(220, 220, 220));
-                    }
+                    var text = _textCache.Get(button.Text, 13);
+                    var box = button.Rect;
+                    _hintPaint.Style = SKPaintStyle.Fill;
+                    _hintPaint.Color = ToSk(button.IsHovered ? AudioVisualizer.HintButtonHoverBackgroundColor : AudioVisualizer.HintButtonBackgroundColor);
+                    canvas.DrawRoundRect(box, 5, 5, _hintPaint);
+                    _hintPaint.Style = SKPaintStyle.Stroke;
+                    _hintPaint.StrokeWidth = 1 / _scale;
+                    _hintPaint.Color = ToSk(button.IsHovered ? AudioVisualizer.HintButtonHoverBorderColor : AudioVisualizer.HintButtonBorderColor);
+                    canvas.DrawRoundRect(box, 5, 5, _hintPaint);
+                    DrawText(canvas, text, box.MidX - text.Width / 2, box.MidY - text.Height / 2, new SKColor(220, 220, 220));
                 }
 
                 if (f.IsFocused)
