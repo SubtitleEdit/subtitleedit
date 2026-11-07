@@ -3133,7 +3133,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return encoding1254;
                 }
 
-                var encoding = EncodingTools.DetectInputCodepage(buffer);
+                // Only typographic punctuation outside ASCII (smart quotes, …, dashes, bullet): the same bytes
+                // in all Windows code pages, and UTF.Unknown guessed Mac Central European for such small files.
+                var encoding = HasOnlyWindowsPunctuation(buffer) ? encoding1252 : EncodingTools.DetectInputCodepage(buffer);
                 if (encoding.CodePage == 28599)
                 {
                     return Encoding.GetEncoding(1254); // prefer 1254 over 28599 
@@ -3164,6 +3166,30 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return Encoding.Default;
             }
+        }
+
+        /// <summary>
+        /// Whether every byte outside ASCII is one of ‘ ’ “ ” … – — • in the Windows code pages (and there is one).
+        /// </summary>
+        private static bool HasOnlyWindowsPunctuation(byte[] buffer)
+        {
+            var found = false;
+            foreach (var b in buffer)
+            {
+                if (b < 0x80)
+                {
+                    continue;
+                }
+
+                if (b != 0x85 && (b < 0x91 || b > 0x97))
+                {
+                    return false;
+                }
+
+                found = true;
+            }
+
+            return found;
         }
 
         private static int GetBestCount(WordListCounts counts, params string[][] wordLists)
