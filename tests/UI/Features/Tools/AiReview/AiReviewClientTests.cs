@@ -56,6 +56,16 @@ public class AiReviewClientTests
         Assert.Contains("\"model\":\"gpt-5.6-luna\"", json);
     }
 
+    [Fact]
+    public void BuildRequestJson_MaxTokensOnlyWhenGiven()
+    {
+        var capped = AiReviewClient.BuildRequestJson(string.Empty, "system", "user", jsonMode: true, includeTemperature: true, maxTokens: 1024);
+        var uncapped = AiReviewClient.BuildRequestJson("gpt-5.6-luna", "system", "user", jsonMode: true, includeTemperature: true);
+
+        Assert.Contains("\"max_tokens\":1024", capped);
+        Assert.DoesNotContain("max_tokens", uncapped);
+    }
+
     [Theory]
     [InlineData(TemperatureError, "temperature", true)]
     [InlineData(TemperatureError, "response_format", false)]

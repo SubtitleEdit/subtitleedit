@@ -31,7 +31,7 @@ public class AiReviewClient : IDisposable
         _httpClient.Timeout = TimeSpan.FromMinutes(15);
     }
 
-    public async Task<string> ChatAsync(string url, string model, string systemPrompt, string userContent, CancellationToken cancellationToken, string? apiKey = null, bool preferJsonObject = true)
+    public async Task<string> ChatAsync(string url, string model, string systemPrompt, string userContent, CancellationToken cancellationToken, string? apiKey = null, bool preferJsonObject = true, int? maxTokens = null)
     {
         Error = string.Empty;
 
@@ -44,7 +44,7 @@ public class AiReviewClient : IDisposable
         while (true)
         {
             response = await PostAsync(url,
-                BuildRequestJson(model, systemPrompt, userContent, jsonMode, includeTemperature),
+                BuildRequestJson(model, systemPrompt, userContent, jsonMode, includeTemperature, maxTokens),
                 apiKey, cancellationToken);
             if (response.ok || cancellationToken.IsCancellationRequested)
             {
@@ -119,7 +119,9 @@ public class AiReviewClient : IDisposable
         return false;
     }
 
-    internal static string BuildRequestJson(string model, string systemPrompt, string userContent, bool jsonMode, bool includeTemperature)
+    /// <param name="maxTokens">Output cap; only for servers that take "max_tokens" (llama-server) - OpenAI's
+    /// reasoning models reject it, so remote engines leave it null.</param>
+    internal static string BuildRequestJson(string model, string systemPrompt, string userContent, bool jsonMode, bool includeTemperature, int? maxTokens = null)
     {
         using var stream = new System.IO.MemoryStream();
         using (var writer = new Utf8JsonWriter(stream))
@@ -136,6 +138,11 @@ public class AiReviewClient : IDisposable
             }
 
             writer.WriteBoolean("stream", false);
+            if (maxTokens is > 0)
+            {
+                writer.WriteNumber("max_tokens", maxTokens.Value);
+            }
+
             if (jsonMode)
             {
                 writer.WriteStartObject("response_format");

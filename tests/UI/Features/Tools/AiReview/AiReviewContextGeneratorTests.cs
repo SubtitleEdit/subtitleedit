@@ -24,6 +24,48 @@ public class AiReviewContextGeneratorTests
         Assert.Equal("Proofread." + AiReviewProtocol.ProtocolText, prompt);
     }
 
+    [Theory]
+    [InlineData(2048)]
+    [InlineData(4096)]
+    [InlineData(8192)]
+    [InlineData(16384)]
+    public void TokensPerPartForContextSize_PartPromptAndAnswerFitTheContext(int contextSize)
+    {
+        var part = AiReviewContextGenerator.TokensPerPartForContextSize(contextSize);
+
+        // #16701: a 4096 context got 3000-token parts and an uncapped answer. Even if the estimate is
+        // a quarter low, part + prompt + answer must still fit.
+        Assert.True(part * 5 / 4 + 300 + AiReviewContextGenerator.MaxAnswerTokens <= contextSize);
+        Assert.True(part <= AiReviewContextGenerator.MaxTokensPerPart);
+        Assert.True(part >= 256);
+    }
+
+    [Fact]
+    public void TokensPerPartForContextSize_LargeContextKeepsDefaultPartSize()
+    {
+        Assert.Equal(AiReviewContextGenerator.MaxTokensPerPart, AiReviewContextGenerator.TokensPerPartForContextSize(8192));
+        Assert.Equal(AiReviewContextGenerator.MaxTokensPerPart, AiReviewContextGenerator.TokensPerPartForContextSize(262144));
+    }
+
+    [Fact]
+    public async Task GenerateAsync_SmallContextUsesMoreParts()
+    {
+        var lines = Enumerable.Range(1, 1000).Select(i => $"Line number {i} of the subtitle with a few more words in it.").ToList();
+        var calls = 0;
+        AiChatFunc chat = (_, _, _, _) =>
+        {
+            calls++;
+            return Task.FromResult("{\"names\":[],\"terms\":[],\"summary\":\"x\"}");
+        };
+
+        await AiReviewContextGenerator.GenerateAsync(lines, "English", chat, null, CancellationToken.None, null, AiReviewContextGenerator.MaxTokensPerPart);
+        var defaultCalls = calls;
+        calls = 0;
+        await AiReviewContextGenerator.GenerateAsync(lines, "English", chat, null, CancellationToken.None, null, AiReviewContextGenerator.TokensPerPartForContextSize(4096));
+
+        Assert.True(calls > defaultCalls);
+    }
+
     [Fact]
     public void BuildParts_SplitsOnTokenBudgetWithoutSplittingLines()
     {

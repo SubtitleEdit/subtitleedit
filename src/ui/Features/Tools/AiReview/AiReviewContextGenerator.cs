@@ -22,6 +22,13 @@ public static class AiReviewContextGenerator
 {
     // llama.cpp is started with an 8192-token context - leave room for the prompt and the answer.
     public const int MaxTokensPerPart = 3000;
+
+    /// <summary>Output cap for one request when the server's context size is known (#16701).</summary>
+    public const int MaxAnswerTokens = 1024;
+
+    // System prompt (~200 tokens) plus chat-template overhead.
+    private const int PromptReserveTokens = 300;
+    private const int MinTokensPerPart = 256;
     private const int MaxNames = 60;
     private const int MaxTerms = 60;
 
@@ -31,13 +38,27 @@ public static class AiReviewContextGenerator
         "\"names\": people, characters, places and organizations, spelled as they most often appear in the text.\n" +
         "\"terms\": unusual words, jargon, invented words and foreign words a proofreader must not \"correct\". Leave out ordinary words.\n" +
         "\"summary\": two or three sentences in {language} about what happens in this part.\n" +
-        "Only include what actually appears in the text.";
+        "Only include what actually appears in the text. " +
+        "The text may contain violence, sex or crude language - describe it neutrally, do not refuse or censor.";
 
     public const string SynopsisPrompt =
         "The user message holds summaries of consecutive parts of one film or TV episode. " +
-        "Combine them into one synopsis of at most five sentences in {language}. Answer with the synopsis only, as plain text.";
+        "Combine them into one synopsis of at most five sentences in {language}. Answer with the synopsis only, as plain text. " +
+        "Describe mature content neutrally, do not refuse or censor.";
 
     public record PartResult(List<string> Names, List<string> Terms, string Summary);
+
+    /// <summary>
+    /// Part size that fits a server started with <paramref name="contextSize"/> tokens, leaving room
+    /// for the prompt and a <see cref="MaxAnswerTokens"/> answer (#16701: a 4096 context could not hold
+    /// a 3000-token part plus the reply). <see cref="EstimateTokens"/> often runs low on subtitle text,
+    /// so the budget is shrunk by a quarter. Never more than <see cref="MaxTokensPerPart"/>.
+    /// </summary>
+    public static int TokensPerPartForContextSize(int contextSize)
+    {
+        var budget = (contextSize - MaxAnswerTokens - PromptReserveTokens) * 4 / 5;
+        return Math.Clamp(budget, MinTokensPerPart, MaxTokensPerPart);
+    }
 
     /// <summary>Joins the lines into parts of at most <paramref name="maxTokens"/> estimated tokens, never splitting a line.</summary>
     public static List<string> BuildParts(IEnumerable<string> lines, int maxTokens = MaxTokensPerPart)
