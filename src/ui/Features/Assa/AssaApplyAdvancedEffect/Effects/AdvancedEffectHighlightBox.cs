@@ -65,9 +65,10 @@ public class AdvancedEffectHighlightBox : IAdvancedEffectDisplay, IAdvancedEffec
         var sb = new StringBuilder();
         var boxColor = AdvancedEffectUtil.ToAssColor(BoxColor);
         var activeColor = AdvancedEffectUtil.ToAssColor(ActiveTextColor);
+        var useMarks = CaptionWords.AnyMarked(subtitles);
         foreach (var sub in subtitles)
         {
-            var words = CaptionWords.Parse(sub, UpperCase);
+            var words = CaptionWords.Parse(sub, UpperCase, useMarks);
             if (words == null)
             {
                 result.Add(AdvancedEffectUtil.PassThrough(sub));
@@ -84,13 +85,22 @@ public class AdvancedEffectHighlightBox : IAdvancedEffectDisplay, IAdvancedEffec
             foreach (var w in words.ActiveWordIndices())
             {
                 var box = words.MakeSlice(sub, w, posTags, out var slicePosTags);
+                if (w < 0)
+                {
+                    // no active word (a pause between words): text only, no box
+                    box.Layer = sub.Layer + 1;
+                    box.Text = slicePosTags + string.Concat(words.Tokens.Select(t => t.Text));
+                    result.Add(box);
+                    continue;
+                }
+
                 box.Style = boxStyle;
                 box.Layer = sub.Layer;
                 sb.Clear();
                 sb.Append(slicePosTags).Append("{\\1a&HFF&\\3a&HFF&\\4a&HFF&\\3c").Append(boxColor).Append('}');
                 foreach (var token in words.Tokens)
                 {
-                    if (token.WordIndex == w)
+                    if (token.IsWord && token.WordIndex == w)
                     {
                         sb.Append("{\\3a&H00&").Append(pop).Append('}').Append(token.Text).Append("{\\3a&HFF&").Append(normalScale).Append('}');
                     }
@@ -109,7 +119,7 @@ public class AdvancedEffectHighlightBox : IAdvancedEffectDisplay, IAdvancedEffec
                 sb.Append(slicePosTags);
                 foreach (var token in words.Tokens)
                 {
-                    if (token.WordIndex == w)
+                    if (token.IsWord && token.WordIndex == w)
                     {
                         sb.Append("{\\1c").Append(activeColor).Append(pop).Append('}').Append(token.Text)
                           .Append("{\\1c").Append(primary).Append(normalScale).Append('}');

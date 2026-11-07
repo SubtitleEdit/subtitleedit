@@ -206,6 +206,60 @@ public class CaptionWordEffectsTests
         Assert.Contains("{\\alpha&HFF&\\blur0\\fscy100}everyone", line.Text);
     }
 
+    private static List<SubtitleLineViewModel> MarkedSequence() => new()
+    {
+        new SubtitleLineViewModel { Text = "Hi there", StartTime = TimeSpan.FromSeconds(9), EndTime = TimeSpan.FromSeconds(10) },
+        new SubtitleLineViewModel { Text = "<u>Hi</u> there", StartTime = TimeSpan.FromSeconds(10), EndTime = TimeSpan.FromSeconds(11) },
+        new SubtitleLineViewModel { Text = "Hi there", StartTime = TimeSpan.FromSeconds(11), EndTime = TimeSpan.FromSeconds(12) },
+        new SubtitleLineViewModel { Text = "Hi <u>there</u>", StartTime = TimeSpan.FromSeconds(12), EndTime = TimeSpan.FromSeconds(13) },
+    };
+
+    [Fact]
+    public void BoldCaptions_UnmarkedLineAmongMarked_HasNoActiveWordAndKeepsTiming()
+    {
+        var lines = MarkedSequence();
+        var result = new AdvancedEffectBoldCaptions().ApplyEffect(AdvancedSubStationAlpha.DefaultHeader, lines, 1920, 1080, null);
+
+        Assert.Equal(4, result.Count);
+        Assert.Equal(lines.Select(l => l.StartTime), result.Select(l => l.StartTime));
+        Assert.DoesNotContain("\\1c&H0AD6FF&", result[0].Text);
+        Assert.DoesNotContain("\\1c&H0AD6FF&", result[2].Text);
+        Assert.Contains("\\1c&H0AD6FF&", result[1].Text);
+    }
+
+    [Fact]
+    public void HighlightBox_UnmarkedLineAmongMarked_IsTextOnly()
+    {
+        var effect = new AdvancedEffectHighlightBox();
+        var lines = MarkedSequence();
+        var result = effect.ApplyEffect(effect.UpdateHeader(AdvancedSubStationAlpha.DefaultHeader, lines), lines, 1920, 1080, null);
+
+        // 2 unmarked lines (text only) + 2 marked lines (box + text)
+        Assert.Equal(6, result.Count);
+        Assert.Equal(2, result.Count(l => l.Style == AdvancedEffectHighlightBox.GetBoxStyleName("Default")));
+        Assert.Equal("Hi there", result[0].Text);
+    }
+
+    [Fact]
+    public void SingleWordPop_UnmarkedLineAmongMarked_ShowsNothing()
+    {
+        var result = new AdvancedEffectSingleWordPop().ApplyEffect(AdvancedSubStationAlpha.DefaultHeader, MarkedSequence(), 1920, 1080, null);
+
+        Assert.Equal(2, result.Count);
+        Assert.EndsWith("}HI", result[0].Text);
+        Assert.EndsWith("}THERE", result[1].Text);
+    }
+
+    [Fact]
+    public void BlurInWords_UnmarkedLineAmongMarked_KeepsWhatWasShown()
+    {
+        var result = new AdvancedEffectBlurInWords().ApplyEffect(AdvancedSubStationAlpha.DefaultHeader, MarkedSequence(), 1920, 1080, null);
+
+        Assert.Equal(4, result.Count);
+        Assert.StartsWith("{\\alpha&HFF&\\blur0\\fscy100}Hi", result[0].Text); // before the first word: hidden
+        Assert.StartsWith("Hi {\\alpha&HFF&\\blur0\\fscy100}there", result[2].Text); // pause after "Hi"
+    }
+
     [Fact]
     public void RollingCaptions_PushesPreviousLineUp_WhenNextFollowsClosely()
     {

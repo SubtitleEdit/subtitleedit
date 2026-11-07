@@ -28,9 +28,12 @@ public class AdvancedEffectBlurInWords : IAdvancedEffectDisplay
     {
         var result = new List<SubtitleLineViewModel>();
         var sb = new StringBuilder();
+        var previousWords = string.Empty;
+        var previousShown = -1;
+        var useMarks = CaptionWords.AnyMarked(subtitles);
         foreach (var sub in subtitles)
         {
-            var words = CaptionWords.Parse(sub, UpperCase);
+            var words = CaptionWords.Parse(sub, UpperCase, useMarks);
             if (words == null)
             {
                 result.Add(AdvancedEffectUtil.PassThrough(sub));
@@ -39,15 +42,23 @@ public class AdvancedEffectBlurInWords : IAdvancedEffectDisplay
 
             var style = CaptionWords.GetStyle(header, sub);
             var blur = AdvancedEffectUtil.Tag(Math.Max(3, (double)style.FontSize * 0.12));
+
+            // with marks: words before the marked one have appeared, later ones are still to
+            // come; a line with no marked word (a pause) keeps what the previous line showed
+            var lineWords = string.Join(" ", words.Words);
+            var shownThrough = words.HasMarkedWord
+                ? words.MarkedWordIndex - 1
+                : lineWords == previousWords ? previousShown : -1;
+            previousWords = lineWords;
+            previousShown = words.HasMarkedWord ? words.MarkedWordIndex : shownThrough;
+
             sb.Clear();
             sb.Append(AdvancedEffectUtil.ExtractPositionalTags(sub.Text));
             foreach (var token in words.Tokens)
             {
-                if (token.IsWord && words.HasMarkedWord && token.WordIndex != words.MarkedWordIndex)
+                if (token.IsWord && words.UsesMarks && token.WordIndex != words.MarkedWordIndex)
                 {
-                    // a line per word with the active word marked: earlier words have already
-                    // appeared, later ones are still to come
-                    if (token.WordIndex > words.MarkedWordIndex)
+                    if (token.WordIndex > shownThrough)
                     {
                         sb.Append("{\\alpha&HFF&\\blur0\\fscy").Append(AdvancedEffectUtil.Tag((double)style.ScaleY)).Append('}');
                     }
