@@ -3794,11 +3794,6 @@ public partial class SpeechToTextViewModel : ObservableObject
     [RelayCommand]
     private async Task DownloadModel()
     {
-        if (GetEffectiveSelectedEngine().DownloadsOwnModels)
-        {
-            return;
-        }
-
         var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
             Window!, viewModel => { viewModel.SetModels(Models, GetEffectiveSelectedEngine(), SelectedModel); });
 
@@ -4087,10 +4082,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            // Engines that download their own models (WhisperX) are never routed through SE's
-            // downloader: it would fill a folder the engine does not read and re-prompt on
-            // every run. Their IsModelInstalled only drives the model dot.
-            if (!engine.DownloadsOwnModels && !engine.IsModelInstalled(model.Model))
+            if (!engine.IsModelInstalled(model.Model))
             {
                 var answer = await MessageBox.Show(
                     Window!,
@@ -4637,7 +4629,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 ? GetSttTempFolder()
                 : engineOutputFolder;
             var parametersX =
-                $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
+                $"{languageArgX}--model \"{whisperX.GetModelForCmdLine(model)}\" --output_format srt --output_dir \"{outputDir}\" " +
                 $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
 
             // The generic launch path is bypassed here, so repeat the piece of its setup a
@@ -5578,9 +5570,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             SelectedModel = null;
         }
 
-        // SE's downloader saves into a folder an engine that downloads its own models never
-        // reads (WhisperX: the Hugging Face hub cache), so offering it only wastes gigabytes.
-        IsModelDownloadVisible = IsModelSelectionVisible && !engine.DownloadsOwnModels;
+        IsModelDownloadVisible = IsModelSelectionVisible;
 
         IsLanguageSelectionVisible = !isOnlineSttEngine;
         if (!IsLanguageSelectionVisible)

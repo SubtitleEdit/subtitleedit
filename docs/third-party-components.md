@@ -34,7 +34,7 @@ Subtitle Edit stores these components in its **Data Folder**.
 | **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract` |
 | **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/SpeechToText/Cpp` |
 | **Purfview Faster-Whisper XXL** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/SpeechToText/Purfview-Faster-Whisper-XXL` |
-| **WhisperX** | standalone build (no Python); models in the Hugging Face cache | `[Data Folder]/SpeechToText/WhisperX` |
+| **WhisperX** | standalone build (no Python); models shared with Purfview (or the Hugging Face cache) | `[Data Folder]/SpeechToText/WhisperX` |
 | **Crisp ASR** | `crispasr.exe`, `models/` folder | `[Data Folder]/CrispASR` |
 | **Qwen3 ASR CPP** | `qwen3-asr-cli.exe`, `models/` folder | `[Data Folder]/Qwen3ASR` |
 | **PaddleOCR** | `paddleocr.exe`, `models/` folder | `[Data Folder]/OCR/PaddleOCR3-7` |
@@ -117,7 +117,7 @@ Faster-Whisper with wav2vec2 word-level alignment, shipped as a standalone build
 
 *   **Download:** Built by Subtitle Edit's own workflow and published in [SubtitleEdit/support-files releases](https://github.com/SubtitleEdit/support-files/releases); the Speech to text window downloads it for you. Windows x64, Linux x64 and macOS Apple Silicon.
 *   **Destination:** `[Data Folder]/SpeechToText/WhisperX`
-*   **Models:** The Whisper model list is shared with Purfview Faster-Whisper XXL; WhisperX itself keeps the downloaded weights in the Hugging Face cache rather than in the Data Folder.
+*   **Models:** The Whisper model list is shared with Purfview Faster-Whisper XXL; models downloaded in Subtitle Edit go to Purfview's `_models` folder and are used by both engines. A model WhisperX fetched itself (into the Hugging Face cache) also counts as downloaded.
 
 ### SE5 Speech-to-Text Engines
 Subtitle Edit 5 can download additional ASR engines directly from the **Speech to text** window.
