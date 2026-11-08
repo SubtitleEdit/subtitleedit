@@ -61,7 +61,10 @@ public class PickMp4TrackWindow : Window
         dataGridTracks.ItemsSource = _vm.Tracks;
 
         // Content-sized (Auto) on the DataGrid; TableView treats Auto as star, so the
-        // narrow columns get fixed widths and Name becomes the star column.
+        // narrow columns get fixed widths and Name becomes the star column. The tracks pane
+        // is only ~480 px at the default window size, and the star column gets what the fixed
+        // ones leave - at 600 px of fixed columns Name vanished (#16730). There is no VobSub
+        // column: it only repeated Type ("subp" is the VobSub handler).
         var handlerColumn = new SeTableViewColumn
         {
             // Localized, and not the raw C# property name: this dialog showed "HandlerName" and
@@ -71,7 +74,7 @@ public class PickMp4TrackWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.HandlerType)),
-            Width = new GridLength(120),
+            Width = new GridLength(60),
         };
         var nameColumn = new SeTableViewColumn
         {
@@ -87,7 +90,7 @@ public class PickMp4TrackWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.Language)),
-            Width = new GridLength(140),
+            Width = new GridLength(110),
         };
         var durationColumn = new SeTableViewColumn
         {
@@ -97,28 +100,19 @@ public class PickMp4TrackWindow : Window
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.Duration)) { Converter = new TimeSpanToDisplayFullConverter() },
             Width = new GridLength(100),
         };
-        var vobSubColumn = new SeTableViewColumn
-        {
-            Header = Se.Language.General.VobSub,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(Mp4TrackInfoDisplay.IsVobSubSubtitle)),
-            Width = new GridLength(130),
-        };
         var startPositionColumn = new SeTableViewColumn
         {
             Header = Se.Language.General.Start,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.StartPosition)),
-            Width = new GridLength(110),
+            Width = new GridLength(90),
         };
 
         dataGridTracks.Columns.Add(handlerColumn);
         dataGridTracks.Columns.Add(languageColumn);
         dataGridTracks.Columns.Add(nameColumn);
         dataGridTracks.Columns.Add(durationColumn);
-        dataGridTracks.Columns.Add(vobSubColumn);
         dataGridTracks.Columns.Add(startPositionColumn);
 
         dataGridTracks.Bind(TableView.SelectedItemProperty, new Binding(nameof(_vm.SelectedTrack)));
@@ -132,7 +126,6 @@ public class PickMp4TrackWindow : Window
             .AddSortable<Mp4TrackInfoDisplay, string>(languageColumn, x => x.Language)
             .AddSortable<Mp4TrackInfoDisplay, string>(nameColumn, x => x.Name)
             .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration)
-            .AddSortable<Mp4TrackInfoDisplay, bool>(vobSubColumn, x => x.IsVobSubSubtitle)
             .AddSortable<Mp4TrackInfoDisplay, ulong>(startPositionColumn, x => x.StartPosition);
 
         return dataGridTracks;

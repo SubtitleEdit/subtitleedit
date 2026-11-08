@@ -92,7 +92,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
             {
                 HandlerType = mdia.HandlerType,
                 Name = name,
-                Language = LanguageOrUnknown(mdia.LanguageDisplayName),
+                Language = LanguageOrUnknown(track.LanguageDisplayName),
                 StartPosition = mdia.StartPosition,
                 IsVobSubSubtitle = mdia.IsVobSubSubtitle,
                 Duration = LastCueEnd(mdia.Minf?.Stbl?.GetParagraphs()),
@@ -141,7 +141,13 @@ public partial class PickMp4TrackViewModel : ObservableObject
 
         var language = Iso639Dash2LanguageCode.List.FirstOrDefault(p =>
             p.ThreeLetterCode == code || p.BibliographicCode == code || p.TwoLetterCode == code);
-        return language?.EnglishName ?? code;
+        if (language == null)
+        {
+            return code;
+        }
+
+        var index = language.EnglishName.IndexOf(';');
+        return index > 0 ? language.EnglishName.Substring(0, index) : language.EnglishName;
     }
 
     private static TimeSpan LastCueEnd(List<Paragraph>? paragraphs)

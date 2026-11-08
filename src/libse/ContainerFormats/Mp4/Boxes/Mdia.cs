@@ -63,8 +63,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 return null;
             }
 
-            return Iso639Dash2LanguageCode.List.FirstOrDefault(p =>
+            var englishName = Iso639Dash2LanguageCode.List.FirstOrDefault(p =>
                 p.TwoLetterCode == code || p.ThreeLetterCode == code || p.BibliographicCode == code)?.EnglishName;
+            return FirstName(englishName);
+        }
+
+        /// <summary>"Spanish; Castilian" -> "Spanish".</summary>
+        internal static string FirstName(string englishName)
+        {
+            if (englishName == null)
+            {
+                return null;
+            }
+
+            var index = englishName.IndexOf(';');
+            return index > 0 ? englishName.Substring(0, index).Trim() : englishName;
         }
 
         public Mdia(Stream fs, ulong maximumLength)
