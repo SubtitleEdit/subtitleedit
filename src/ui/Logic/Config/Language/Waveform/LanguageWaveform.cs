@@ -24,6 +24,8 @@ public class LanguageWaveform
     public string ResetWaveformZoomAndSpeed { get; set; }
     public string ShowOriginalSubtitle { get; set; }
     public string LockOriginalToTranslation { get; set; }
+    public string EditOriginalTiming { get; set; }
+    public string EditOriginalTimingReadOnly { get; set; }
     public string TimelineGroupTracksBy { get; set; }
     public string TimelineShowThumbnails { get; set; }
     public string ShowSpeechOnly { get; set; }
@@ -70,6 +72,8 @@ public class LanguageWaveform
         ResetWaveformZoomAndSpeed = "Reset waveform zoom & speed";
         ShowOriginalSubtitle = "Show original subtitle";
         LockOriginalToTranslation = "Lock original to translation";
+        EditOriginalTiming = "Edit original subtitle timing";
+        EditOriginalTimingReadOnly = "The original subtitle is read-only - turn on File > Edit original subtitle to edit its timing";
         TimelineGroupTracksBy = "Group subtitle tracks by";
         TimelineShowThumbnails = "Show video thumbnails";
         ShowSpeechOnly = "Show speech only (slow to generate)";

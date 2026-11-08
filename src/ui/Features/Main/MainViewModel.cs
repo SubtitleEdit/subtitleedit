@@ -29674,7 +29674,7 @@ public partial class MainViewModel :
 
     internal void UpdateWaveformOriginalSubtitleCues(AudioVisualizer audioVisualizer)
     {
-        if (!ShowColumnOriginalText || !Se.Settings.Waveform.ShowOriginalSubtitle || _subtitleOriginal == null)
+        if (!ShowColumnOriginalText || !(Se.Settings.Waveform.ShowOriginalSubtitle || IsWaveformEditingOriginal) || _subtitleOriginal == null)
         {
             audioVisualizer.SetOriginalSubtitleCues(null);
             return;
@@ -35492,6 +35492,11 @@ public partial class MainViewModel :
         if (!value && ShowOriginalTextInPreview)
         {
             SetOriginalTextInPreview(false);
+        }
+
+        if (!value)
+        {
+            IsWaveformEditingOriginal = false;
         }
     }
 

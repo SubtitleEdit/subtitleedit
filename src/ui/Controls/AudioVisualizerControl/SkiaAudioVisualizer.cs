@@ -140,6 +140,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.FontBold = settings.Waveform.WaveformTextFontBold;
         f.UnwrapText = settings.Waveform.WaveformUnwrapText;
         f.BlurText = BlurText;
+        f.EditOriginal = EditOriginalTimeCodes;
 
         f.DrawGridLines = DrawGridLines;
         f.FrameMode = settings.General.UseFrameMode;
@@ -497,6 +498,8 @@ public class SkiaAudioVisualizer : AudioVisualizer
 /// </summary>
 internal sealed class SkiaWaveformFrame
 {
+    /// <summary>The original is the layer being edited (AudioVisualizer.EditOriginalTimeCodes).</summary>
+    public bool EditOriginal;
     public float Width;
     public float Height;
     public WavePeakData2? Peaks;

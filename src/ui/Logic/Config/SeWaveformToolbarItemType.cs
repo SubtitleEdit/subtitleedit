@@ -66,5 +66,9 @@ public enum SeWaveformToolbarItemType
 
     // Compact rule-profile picker (#16236): an icon and a slim drop-down of the profiles from
     // Options > Settings > Rules, the same switch as the Choose profile shortcut, without the dialog.
-    RuleProfile = 32
+    RuleProfile = 32,
+
+    // The A/B switch (#16354): toggles whether the waveform edits the working subtitle's timing
+    // or the original's. Only rendered while an original is open.
+    EditOriginalTiming = 33,
 }
