@@ -28,7 +28,6 @@ public partial class PickMp4TrackViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<Mp4TrackInfoDisplay> _tracks;
     [ObservableProperty] private Mp4TrackInfoDisplay? _selectedTrack;
     [ObservableProperty] private ObservableCollection<Mp4SubtitleCueDisplay> _rows;
-    [ObservableProperty] private string _subtitleCountText;
 
     public Window? Window { get; set; }
     public TableView TracksGrid { get; set; }
@@ -49,7 +48,6 @@ public partial class PickMp4TrackViewModel : ObservableObject
         Tracks = new ObservableCollection<Mp4TrackInfoDisplay>();
         TracksGrid = new TableView();
         WindowTitle = string.Empty;
-        SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<Mp4SubtitleCueDisplay>();
         _mp4Tracks = new List<Trak>();
         _fileName = string.Empty;
@@ -386,13 +384,11 @@ public partial class PickMp4TrackViewModel : ObservableObject
         var selectedTrack = SelectedTrack;
         if (selectedTrack == null || (selectedTrack.Track == null && selectedTrack.FragmentedTrack == null))
         {
-            SubtitleCountText = string.Empty;
             return false;
         }
 
         Rows.Clear();
         var subtitles = GetTrackParagraphs(selectedTrack);
-        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count.ToString("N0"));
         var i = 0;
         foreach (var item in subtitles)
         {

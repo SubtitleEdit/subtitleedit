@@ -33,8 +33,8 @@ public class PickMp4TrackWindow : Window
         DataContext = vm;
 
         var tracksView = EditorChrome.MakePickerListSection(Se.Language.Video.EmbeddedTracks, MakeTracksView(vm));
-        var labelSubtitleCount = EditorChrome.MakeBoundHint(nameof(vm.SubtitleCountText));
-        var subtitleView = EditorChrome.MakePickerListSection(Se.Language.General.Preview, MakeSubtitleView(vm), labelSubtitleCount);
+        // No "Number of subtitles" hint here - the tracks table has a Lines column.
+        var subtitleView = EditorChrome.MakePickerListSection(Se.Language.General.Preview, MakeSubtitleView(vm));
 
         var buttonExport = EditorChrome.MakeTextToolButton("fa-solid fa-file-export", Se.Language.General.ExportDotDotDot, vm.ExportCommand);
         var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
