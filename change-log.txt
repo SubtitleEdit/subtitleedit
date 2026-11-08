@@ -5,9 +5,9 @@ Subtitle Edit Changelog
 
 v5.5.0-beta1 (8th of November 2026)
 
-* Icon colors now match the theme foreground on every theme and icon set
-* Main window: ASSA layer field gets the editor field look
 * Video OCR: remove burned-in subtitles (AI inpainting, black boxes, blur, delogo), also inside a drawn rectangle
+* Icon colors match theme foreground option, now works on every theme and icon set
+* Main window: ASSA layer field gets the editor field look
 * Timeline: show subtitles without generating the waveform, with "Generate waveform" / "Use empty waveform" buttons - thx Danilo2000
 * ASSA advanced effects: word caption and reveal effects follow a pre-marked active word
 * Crisp ASR highlight word: underline the active word (Parakeet and all backends)
