@@ -15,4 +15,12 @@ public class RecentFile
     /// <summary>"Use empty waveform" was picked for this subtitle and video: reopening them shows
     /// the subtitles on the empty waveform again instead of the "Generate waveform" buttons.</summary>
     public bool UseEmptyWaveform { get; set; }
+
+    /// <summary>The original did not line up 1:1 with the subtitle, and this was the "Show all original
+    /// lines" choice made for it: reopening the pair applies it again instead of asking (#16752).
+    /// Null when the question was never asked.</summary>
+    public bool? OriginalShowAllLines { get; set; }
+
+    /// <summary>The "Allow edit of original subtitle" choice that goes with <see cref="OriginalShowAllLines"/>.</summary>
+    public bool? OriginalAllowEdit { get; set; }
 }
