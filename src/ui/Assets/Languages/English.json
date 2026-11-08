@@ -3585,6 +3585,8 @@
     "resetWaveformZoomAndSpeed": "Reset waveform zoom & speed",
     "showOriginalSubtitle": "Show original subtitle",
     "lockOriginalToTranslation": "Lock original to translation",
+    "editOriginalTiming": "Edit original subtitle timing",
+    "editOriginalTimingReadOnly": "The original subtitle is read-only - turn on File > Edit original subtitle to edit its timing",
     "timelineGroupTracksBy": "Group subtitle tracks by",
     "timelineShowThumbnails": "Show video thumbnails",
     "showSpeechOnly": "Show speech only (slow to generate)",

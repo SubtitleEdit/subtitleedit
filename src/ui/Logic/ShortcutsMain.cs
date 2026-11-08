@@ -767,6 +767,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.RemoveFormattingItalicCommand), Se.Language.General.RemoveItalic },
         { nameof(MainViewModel.ToggleEditOriginalModeCommand), Se.Language.Main.Menu.EditOriginalSubtitle },
         { nameof(MainViewModel.ToggleLockOriginalToTranslationCommand), Se.Language.Waveform.LockOriginalToTranslation },
+        { nameof(MainViewModel.ToggleWaveformEditOriginalCommand), Se.Language.Waveform.EditOriginalTiming },
         { nameof(MainViewModel.WaveformShowOnlyWaveformCommand), Se.Language.Waveform.ShowOnlyWaveform },
         { nameof(MainViewModel.WaveformShowOnlySpectrogramCommand), Se.Language.Waveform.ShowOnlySpectrogram },
         { nameof(MainViewModel.WaveformShowWaveformAndSpectrogramCommand), Se.Language.Waveform.ShowWaveformAndSpectrogram },
@@ -1342,6 +1343,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.RemoveFormattingItalicCommand, nameof(vm.RemoveFormattingItalicCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.ToggleEditOriginalModeCommand, nameof(vm.ToggleEditOriginalModeCommand), ShortcutCategory.General, ShortcutGroup.Translate);
         AddShortcut(shortcuts, vm.ToggleLockOriginalToTranslationCommand, nameof(vm.ToggleLockOriginalToTranslationCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.ToggleWaveformEditOriginalCommand, nameof(vm.ToggleWaveformEditOriginalCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformShowOnlyWaveformCommand, nameof(vm.WaveformShowOnlyWaveformCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformShowOnlySpectrogramCommand, nameof(vm.WaveformShowOnlySpectrogramCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformShowWaveformAndSpectrogramCommand, nameof(vm.WaveformShowWaveformAndSpectrogramCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
