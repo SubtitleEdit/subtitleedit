@@ -76,7 +76,7 @@ public class PickMp4TrackWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.Format)),
-            Width = new GridLength(140),
+            Width = new GridLength(100),
         };
         var nameColumn = new SeTableViewColumn
         {
@@ -92,7 +92,7 @@ public class PickMp4TrackWindow : Window
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.Language)),
-            Width = new GridLength(110),
+            Width = new GridLength(100),
         };
         var durationColumn = new SeTableViewColumn
         {
@@ -102,11 +102,20 @@ public class PickMp4TrackWindow : Window
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.Duration)) { Converter = new TimeSpanToDisplayFullConverter() },
             Width = new GridLength(100),
         };
+        var lineCountColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Lines,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(Mp4TrackInfoDisplay.LineCount)) { StringFormat = "{0:N0}" },
+            Width = new GridLength(60),
+        };
 
         dataGridTracks.Columns.Add(handlerColumn);
         dataGridTracks.Columns.Add(languageColumn);
         dataGridTracks.Columns.Add(nameColumn);
         dataGridTracks.Columns.Add(durationColumn);
+        dataGridTracks.Columns.Add(lineCountColumn);
 
         dataGridTracks.Bind(TableView.SelectedItemProperty, new Binding(nameof(_vm.SelectedTrack)));
         dataGridTracks.SelectionChanged += vm.TracksGridSelectionChanged;
@@ -118,7 +127,8 @@ public class PickMp4TrackWindow : Window
             .AddSortable<Mp4TrackInfoDisplay, string>(handlerColumn, x => x.Format)
             .AddSortable<Mp4TrackInfoDisplay, string>(languageColumn, x => x.Language)
             .AddSortable<Mp4TrackInfoDisplay, string>(nameColumn, x => x.Name)
-            .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration);
+            .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration)
+            .AddSortable<Mp4TrackInfoDisplay, int>(lineCountColumn, x => x.LineCount);
 
         return dataGridTracks;
     }

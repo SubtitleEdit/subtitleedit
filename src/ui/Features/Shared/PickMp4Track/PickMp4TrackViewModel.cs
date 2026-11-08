@@ -99,6 +99,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 Language = LanguageOrDetected(track.LanguageDisplayName, paragraphs),
                 IsVobSubSubtitle = mdia.IsVobSubSubtitle,
                 Duration = LastCueEnd(paragraphs),
+                LineCount = paragraphs?.Count ?? 0,
                 Track = track,
             };
             Tracks.Add(display);
@@ -123,6 +124,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 Language = LanguageOrDetected(LanguageNameFromCode(track.Language), track.Subtitle.Paragraphs),
                 IsVobSubSubtitle = false,
                 Duration = LastCueEnd(track.Subtitle.Paragraphs),
+                LineCount = track.Subtitle.Paragraphs.Count,
                 FragmentedTrack = track,
             });
         }
@@ -143,7 +145,8 @@ public partial class PickMp4TrackViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Sample entry code (stsd) as a readable format, e.g. "tx3g" -> "Timed Text (tx3g)".
+    /// Sample entry code (stsd) as a readable format, e.g. "tx3g" -> "Timed Text"; an
+    /// unknown code is shown as is.
     /// Falls back to the handler type when the sample description is missing.
     /// </summary>
     private static string FormatDisplayName(string? sampleEntry, string handlerType)
@@ -163,7 +166,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
             _ => null,
         };
 
-        return name == null ? code : $"{name} ({code})";
+        return name ?? code;
     }
 
     /// <summary>
