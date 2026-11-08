@@ -708,6 +708,7 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeButton(Se.Language.Options.Settings.VideoControlsEdit, _vm.EditVideoControlsCommand)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FullscreenHideControls, nameof(_vm.FullscreenHideControls)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoDetectSmpteTiming, nameof(_vm.AutoDetectSmpteTiming)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowSecondarySubtitleDialog, nameof(_vm.ShowSecondarySubtitleDialog)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RememberSecondarySubtitleFile, nameof(_vm.RememberSecondarySubtitleFile)),
             new SettingsItem(Se.Language.Options.Settings.Deinterlace,

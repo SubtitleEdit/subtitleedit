@@ -295,6 +295,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private VideoPlayerItem _selectedVideoPlayer;
     [ObservableProperty] private bool _fullscreenHideControls;
     [ObservableProperty] private bool _autoOpenVideoFile;
+    [ObservableProperty] private bool _autoDetectSmpteTiming;
     [ObservableProperty] private bool _showSecondarySubtitleDialog;
     [ObservableProperty] private bool _rememberSecondarySubtitleFile;
 
@@ -1187,6 +1188,7 @@ public partial class SettingsViewModel : ObservableObject
         _videoControlsItems = SeVideoControlsItem.Normalize(video.ControlsItems);
         FullscreenHideControls = video.FullscreenHideControls;
         AutoOpenVideoFile = video.AutoOpen;
+        AutoDetectSmpteTiming = video.AutoDetectSmpteTiming;
         ShowSecondarySubtitleDialog = video.SecondarySubtitleShowDialog;
         RememberSecondarySubtitleFile = video.SecondarySubtitleRememberFile;
 
@@ -2081,6 +2083,7 @@ public partial class SettingsViewModel : ObservableObject
         video.ControlsItems = _videoControlsItems.Select(p => new SeVideoControlsItem(p)).ToList();
         video.FullscreenHideControls = FullscreenHideControls;
         video.AutoOpen = AutoOpenVideoFile;
+        video.AutoDetectSmpteTiming = AutoDetectSmpteTiming;
         video.SecondarySubtitleShowDialog = ShowSecondarySubtitleDialog;
         video.SecondarySubtitleRememberFile = RememberSecondarySubtitleFile;
 

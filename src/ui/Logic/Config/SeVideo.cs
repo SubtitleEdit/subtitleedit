@@ -29,6 +29,12 @@ public class SeVideo
     public bool? ShowFullscreenButton { get; set; }
     public bool FullscreenHideControls { get; set; }
     public bool AutoOpen { get; set; }
+
+    /// <summary>
+    /// Turn SMPTE timing on when a Timed Text file declares non-drop SMPTE time codes at an NTSC
+    /// rate (see <see cref="Logic.Media.SmpteTimingDetector"/>). Off by default.
+    /// </summary>
+    public bool AutoDetectSmpteTiming { get; set; }
     public bool OpenSearchParentFolder { get; set; }
     public int RecentFilesMaximum { get; set; } = 25;
     public List<string> RecentFiles { get; set; } = new();

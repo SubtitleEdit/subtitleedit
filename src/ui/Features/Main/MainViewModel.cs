@@ -4879,12 +4879,15 @@ public partial class MainViewModel :
     {
         if (recentFile.VideoIsSmpte)
         {
-            IsSmpteTimingEnabled = false;
-            ToggleSmpteTiming();
+            if (!IsSmpteTimingEnabled)
+            {
+                ToggleSmpteTiming();
+            }
         }
-        else
+        else if (IsSmpteTimingEnabled && !IsSmpteTimingAutoDetected())
         {
-            IsSmpteTimingEnabled = false;
+            // Through the toggle, not just the flag, so the waveform leaves drop-frame time too.
+            ToggleSmpteTiming();
         }
 
         Se.Settings.General.CurrentVideoOffsetInMs = recentFile.VideoOffsetInMs;
@@ -12312,6 +12315,25 @@ public partial class MainViewModel :
 
         // The waveform ruler is labeled with the offset too.
         _updateAudioVisualizer = true;
+    }
+
+    /// <summary>
+    /// Opt-in (Settings > Video player): a Timed Text file with non-drop SMPTE time codes at an
+    /// NTSC rate turns SMPTE timing on once both it and a video are loaded.
+    /// </summary>
+    private bool IsSmpteTimingAutoDetected()
+    {
+        return Se.Settings.Video.AutoDetectSmpteTiming && SmpteTimingDetector.IsSmpteTimedText(_subtitle?.Header);
+    }
+
+    private void AutoEnableSmpteTiming()
+    {
+        if (IsSmpteTimingEnabled || IsEmpty || string.IsNullOrEmpty(_videoFileName) || !IsSmpteTimingAutoDetected())
+        {
+            return;
+        }
+
+        ToggleSmpteTiming();
     }
 
     [RelayCommand]
@@ -27129,6 +27151,9 @@ public partial class MainViewModel :
             // would otherwise persist the entry without it.
             RestoreRememberedSecondarySubtitle(rememberedSecondaryFileName);
 
+            // For a video that was already open and stayed open: ResetSubtitle turned SMPTE off.
+            AutoEnableSmpteTiming();
+
             // Pass the index explicitly: SelectAndScrollToRow applies the selection via a
             // dispatcher post that may not have run yet, so reading SelectedSubtitleIndex
             // here could persist 0 and erase the remembered line.
@@ -30767,6 +30792,9 @@ public partial class MainViewModel :
         {
             AddToRecentVideoFiles(videoFileName);
         }
+
+        // Before the recent-file write below, so the entry remembers it.
+        AutoEnableSmpteTiming();
 
         // Persist the media association as soon as the file opens so reopening this subtitle
         // reloads the same video/audio even if the app is force-quit before OnClosing runs.
