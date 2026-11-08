@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using System.Text;
 
 namespace LibSETests.ContainerFormats;
@@ -63,6 +63,33 @@ public class Mp4TrackLanguageAndNameTest
         Assert.Equal("Simplified Chinese", trak.TrackName);
         Assert.Equal("sbtl", trak.Mdia.HandlerType);
         Assert.Equal(string.Empty, trak.Mdia.LanguageDisplayName);
+        Assert.Equal("Chinese", trak.LanguageDisplayName);
+    }
+
+    [Theory]
+    [InlineData("English", "English")]
+    [InlineData("spanish", "Spanish")]
+    [InlineData("Bahasa Malaysia", "Malay")]
+    [InlineData("Bahasa Indonesia", "Indonesian")]
+    [InlineData("Traditional Chinese", "Chinese")]
+    [InlineData("English (SDH)", "English")]
+    [InlineData("Portuguese [Brazil]", "Portuguese")]
+    [InlineData("Commentary", "")]
+    [InlineData("SubtitleHandler", "")]
+    [InlineData("", "")]
+    public void LanguageFromTrackName(string trackName, string expected)
+    {
+        Assert.Equal(expected, Trak.LanguageFromTrackName(trackName));
+    }
+
+    [Fact]
+    public void MdhdLanguageWinsOverTrackName()
+    {
+        var trak = ParseTrak(Concat(
+            Mdia(Mdhd("jpn"), Hdlr("sbtl", "SubtitleHandler")),
+            MakeBox("udta", MakeBox("name", Encoding.UTF8.GetBytes("English")))));
+
+        Assert.Equal("Japanese", trak.LanguageDisplayName);
     }
 
     [Fact]
@@ -81,6 +108,7 @@ public class Mp4TrackLanguageAndNameTest
 
         Assert.Equal("zh-Hant", trak.Mdia.ExtendedLanguage);
         Assert.Equal("Chinese (zh-Hant)", trak.Mdia.LanguageDisplayName);
+        Assert.Equal("Chinese (zh-Hant)", trak.LanguageDisplayName);
     }
 
     [Fact]

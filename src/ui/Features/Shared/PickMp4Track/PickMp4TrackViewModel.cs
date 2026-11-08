@@ -28,7 +28,6 @@ public partial class PickMp4TrackViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<Mp4TrackInfoDisplay> _tracks;
     [ObservableProperty] private Mp4TrackInfoDisplay? _selectedTrack;
     [ObservableProperty] private ObservableCollection<Mp4SubtitleCueDisplay> _rows;
-    [ObservableProperty] private string _subtitleCountText;
 
     public Window? Window { get; set; }
     public TableView TracksGrid { get; set; }
@@ -49,7 +48,6 @@ public partial class PickMp4TrackViewModel : ObservableObject
         Tracks = new ObservableCollection<Mp4TrackInfoDisplay>();
         TracksGrid = new TableView();
         WindowTitle = string.Empty;
-        SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<Mp4SubtitleCueDisplay>();
         _mp4Tracks = new List<Trak>();
         _fileName = string.Empty;
@@ -75,27 +73,31 @@ public partial class PickMp4TrackViewModel : ObservableObject
             // so it must not be shown as the track name. The title from the track's user
             // data (udta/name - "English", "Simplified Chinese") is the real name; streaming
             // services often only label tracks that way and leave the mdhd language at
-            // "und" (#16730). Without one, show the hdlr handler name, or the handler type
-            // when that is blank (#13225).
+            // "und" (#16730). The hdlr name is only used when it is not a muxer's generic
+            // "SubtitleHandler" style label - that told the user nothing (#16730, #13225).
             var name = track.TrackName;
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name) && !IsGenericHandlerName(mdia.HandlerName))
             {
-                name = string.IsNullOrEmpty(mdia.HandlerName) ? mdia.HandlerType : mdia.HandlerName;
+                name = mdia.HandlerName.Trim();
             }
 
             if (mdia.Minf?.Stbl?.Stsd?.IsForcedSubtitle == true)
             {
-                name += $" ({Se.Language.General.Forced})";
+                name = string.IsNullOrEmpty(name)
+                    ? Se.Language.General.Forced
+                    : $"{name} ({Se.Language.General.Forced})";
             }
 
+            var paragraphs = mdia.Minf?.Stbl?.GetParagraphs();
             var display = new Mp4TrackInfoDisplay
             {
                 HandlerType = mdia.HandlerType,
+                Format = FormatDisplayName(mdia.Minf?.Stbl?.Stsd?.Name, mdia.HandlerType),
                 Name = name,
-                Language = LanguageOrUnknown(mdia.LanguageDisplayName),
-                StartPosition = mdia.StartPosition,
+                Language = LanguageOrDetected(track.LanguageDisplayName, paragraphs),
                 IsVobSubSubtitle = mdia.IsVobSubSubtitle,
-                Duration = LastCueEnd(mdia.Minf?.Stbl?.GetParagraphs()),
+                Duration = LastCueEnd(paragraphs),
+                LineCount = paragraphs?.Count ?? 0,
                 Track = track,
             };
             Tracks.Add(display);
@@ -115,21 +117,96 @@ public partial class PickMp4TrackViewModel : ObservableObject
             Tracks.Add(new Mp4TrackInfoDisplay
             {
                 HandlerType = track.Codec ?? string.Empty,
-                Name = track.TrackId != null
-                    ? $"Track {track.TrackId} ({track.Language ?? "?"})"
-                    : track.Language ?? string.Empty,
-                Language = LanguageOrUnknown(LanguageNameFromCode(track.Language)),
-                StartPosition = 0,
+                Format = FormatDisplayName(track.Codec, string.Empty),
+                Name = track.TrackId != null ? $"Track {track.TrackId}" : string.Empty,
+                Language = LanguageOrDetected(LanguageNameFromCode(track.Language), track.Subtitle.Paragraphs),
                 IsVobSubSubtitle = false,
                 Duration = LastCueEnd(track.Subtitle.Paragraphs),
+                LineCount = track.Subtitle.Paragraphs.Count,
                 FragmentedTrack = track,
             });
         }
     }
 
-    private static string LanguageOrUnknown(string? language)
+    private static bool IsGenericHandlerName(string? handlerName)
     {
-        return string.IsNullOrEmpty(language) ? Se.Language.General.Unknown : language;
+        if (string.IsNullOrWhiteSpace(handlerName))
+        {
+            return true;
+        }
+
+        // ffmpeg "SubtitleHandler", Apple "Core Media Text", "Apple Text Media Handler",
+        // MP4Box "GPAC ISO Subtitle Handler", "ClosedCaptionHandler", ...
+        return handlerName.Contains("handler", StringComparison.OrdinalIgnoreCase) ||
+               handlerName.Contains("Core Media", StringComparison.OrdinalIgnoreCase) ||
+               handlerName.StartsWith("GPAC", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Sample entry code (stsd) as a readable format, e.g. "tx3g" -> "Timed Text"; an
+    /// unknown code is shown as is.
+    /// Falls back to the handler type when the sample description is missing.
+    /// </summary>
+    private static string FormatDisplayName(string? sampleEntry, string handlerType)
+    {
+        var code = string.IsNullOrWhiteSpace(sampleEntry) ? handlerType : sampleEntry.Trim();
+        var name = code switch
+        {
+            "tx3g" => "Timed Text",
+            "text" => "QuickTime Text",
+            "wvtt" => "WebVTT",
+            "stpp" => "TTML",
+            "sbtt" => "Text",
+            "c608" => "CEA-608",
+            "c708" => "CEA-708",
+            "mp4s" => "VobSub",
+            "subp" => "VobSub",
+            _ => null,
+        };
+
+        return name ?? code;
+    }
+
+    /// <summary>
+    /// The metadata/track-name language, else one detected from the cue text and marked
+    /// "(Auto)" - streaming MP4s often carry "und" and no usable track name (#16730).
+    /// </summary>
+    private static string LanguageOrDetected(string? language, List<Paragraph>? paragraphs)
+    {
+        if (!string.IsNullOrEmpty(language))
+        {
+            return language;
+        }
+
+        var detected = DetectLanguageName(paragraphs);
+        return string.IsNullOrEmpty(detected)
+            ? Se.Language.General.Unknown
+            : $"{detected} ({Se.Language.General.Auto})";
+    }
+
+    private static string DetectLanguageName(List<Paragraph>? paragraphs)
+    {
+        if (paragraphs == null || paragraphs.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            var code = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(new Subtitle(paragraphs));
+            if (string.IsNullOrEmpty(code))
+            {
+                return string.Empty;
+            }
+
+            // "zh-Hans" -> "zh"
+            var dash = code.IndexOf('-');
+            return LanguageNameFromCode(dash > 0 ? code.Substring(0, dash) : code);
+        }
+        catch
+        {
+            return string.Empty; // detection is a display nicety, never a reason to fail the picker
+        }
     }
 
     private static string LanguageNameFromCode(string? code)
@@ -141,7 +218,13 @@ public partial class PickMp4TrackViewModel : ObservableObject
 
         var language = Iso639Dash2LanguageCode.List.FirstOrDefault(p =>
             p.ThreeLetterCode == code || p.BibliographicCode == code || p.TwoLetterCode == code);
-        return language?.EnglishName ?? code;
+        if (language == null)
+        {
+            return code;
+        }
+
+        var index = language.EnglishName.IndexOf(';');
+        return index > 0 ? language.EnglishName.Substring(0, index) : language.EnglishName;
     }
 
     private static TimeSpan LastCueEnd(List<Paragraph>? paragraphs)
@@ -301,13 +384,11 @@ public partial class PickMp4TrackViewModel : ObservableObject
         var selectedTrack = SelectedTrack;
         if (selectedTrack == null || (selectedTrack.Track == null && selectedTrack.FragmentedTrack == null))
         {
-            SubtitleCountText = string.Empty;
             return false;
         }
 
         Rows.Clear();
         var subtitles = GetTrackParagraphs(selectedTrack);
-        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count.ToString("N0"));
         var i = 0;
         foreach (var item in subtitles)
         {

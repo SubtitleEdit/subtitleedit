@@ -16,10 +16,15 @@ public class Mp4TrackInfoDisplay
 
     public string Name { get; internal set; }
 
+    /// <summary>Readable sample format, e.g. "Timed Text" or "WebVTT".</summary>
+    public string Format { get; internal set; }
+
     /// <summary>English language name, or "Unknown" for an unlabeled track.</summary>
     public string Language { get; internal set; }
-    public ulong StartPosition { get; internal set; }
     public bool IsVobSubSubtitle { get; internal set; }
+
+    /// <summary>Number of subtitle cues in the track.</summary>
+    public int LineCount { get; internal set; }
 
     /// <summary>
     /// End of the track's last cue. Taken from the cues themselves for both track kinds -
@@ -33,5 +38,6 @@ public class Mp4TrackInfoDisplay
         HandlerType = string.Empty;
         Name = string.Empty;
         Language = string.Empty;
+        Format = string.Empty;
     }
 }

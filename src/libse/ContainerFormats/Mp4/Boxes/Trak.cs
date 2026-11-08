@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
@@ -20,6 +23,73 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         /// services often leave the mdhd language at "und" and only name the tracks.
         /// </summary>
         public string TrackName { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// English name of the track language: from elng/mdhd, or - when the track carries no
+        /// language metadata - from a track name that is itself a language name ("English",
+        /// "Simplified Chinese", "Bahasa Malaysia", "Portuguese (Brazil)"). Empty when unknown.
+        /// </summary>
+        public string LanguageDisplayName
+        {
+            get
+            {
+                var language = Mdia?.LanguageDisplayName;
+                return string.IsNullOrEmpty(language) ? LanguageFromTrackName(TrackName) : language;
+            }
+        }
+
+        // Track names streaming services use that are not an ISO 639-2 English name.
+        private static readonly Dictionary<string, string> LanguageNameAliases = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "Simplified Chinese", "Chinese" },
+            { "Traditional Chinese", "Chinese" },
+            { "Chinese Simplified", "Chinese" },
+            { "Chinese Traditional", "Chinese" },
+            { "Mandarin", "Chinese" },
+            { "Cantonese", "Chinese" },
+            { "Bahasa Malaysia", "Malay" },
+            { "Bahasa Melayu", "Malay" },
+            { "Bahasa Indonesia", "Indonesian" },
+            { "Brazilian Portuguese", "Portuguese" },
+            { "European Portuguese", "Portuguese" },
+            { "Latin American Spanish", "Spanish" },
+            { "European Spanish", "Spanish" },
+            { "Castilian", "Spanish" },
+            { "Farsi", "Persian" },
+            { "Flemish", "Dutch" },
+            { "Filipino", "Filipino" },
+            { "Tagalog", "Tagalog" },
+        };
+
+        public static string LanguageFromTrackName(string trackName)
+        {
+            if (string.IsNullOrWhiteSpace(trackName))
+            {
+                return string.Empty;
+            }
+
+            // "English (SDH)", "Portuguese [Brazil]", "English - Forced" -> try the leading part too
+            var name = trackName.Trim();
+            var cut = name.IndexOfAny(new[] { '(', '[', '-', ',' });
+            var candidates = cut > 0 ? new[] { name, name.Substring(0, cut).Trim() } : new[] { name };
+            foreach (var candidate in candidates)
+            {
+                if (LanguageNameAliases.TryGetValue(candidate, out var alias))
+                {
+                    return alias;
+                }
+
+                foreach (var language in Iso639Dash2LanguageCode.List)
+                {
+                    if (language.EnglishName.Split(';').Any(p => p.Trim().Equals(candidate, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        return Mdia.FirstName(language.EnglishName);
+                    }
+                }
+            }
+
+            return string.Empty;
+        }
 
         // Track titles are short; anything larger is a misread size.
         private const ulong MaxNameSize = 4096;
