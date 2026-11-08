@@ -88,18 +88,17 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 url += "&category=" + _category.Trim();
             }
 
-            var results = new List<string>();
-
+            // One array element per line, like SE 3.5 did: the merged request text has one row
+            // (or sentence) per line, and sent as a single element Bing sometimes handed back a
+            // whole block untranslated - the source language again, or the English pivot - while
+            // the same rows translated fine as separate elements. The reply also keeps the line
+            // count exactly, so the merge/split helper reads the rows straight back.
+            var lines = text.SplitToLines();
+            var json = BuildRequestJson(lines);
             var httpClient = GetTranslateClient();
-            var jsonBuilder = new StringBuilder();
-            jsonBuilder.Append("[");
-            jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
-            jsonBuilder.Append("]");
-            var json = jsonBuilder.ToString();
             var content = new StringContent(json, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await httpClient.PostAsync(url, content, cancellationToken);
-            var parser = new JsonParser();
             var jsonResult = await result.Content.ReadAsStringAsync(cancellationToken);
 
             if (!result.IsSuccessStatusCode)
@@ -114,11 +113,50 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 throw new Exception("An error occurred during translate:" + Environment.NewLine + Environment.NewLine + jsonResult);
             }
 
+            return string.Join(Environment.NewLine, MapResponseToLines(lines, ParseResponse(jsonResult)));
+        }
+
+        /// <summary>
+        /// The request body: one element per non-blank line. Blank lines are not sent (Bing
+        /// rejects an empty Text) and are put back by <see cref="MapResponseToLines"/>.
+        /// </summary>
+        internal static string BuildRequestJson(List<string> lines)
+        {
+            var jsonBuilder = new StringBuilder("[");
+            var first = true;
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                if (!first)
+                {
+                    jsonBuilder.Append(',');
+                }
+
+                first = false;
+                jsonBuilder.Append("{\"Text\":\"" + Json.EncodeJsonText(line) + "\"}");
+            }
+
+            jsonBuilder.Append(']');
+            return jsonBuilder.ToString();
+        }
+
+        /// <summary>
+        /// The translation of each element of the reply, in request order.
+        /// </summary>
+        internal static List<string> ParseResponse(string jsonResult)
+        {
+            var results = new List<string>();
+            var parser = new JsonParser();
             var x = (List<object>)parser.Parse(jsonResult);
             foreach (var xElement in x)
             {
                 var dict = (Dictionary<string, object>)xElement;
                 var y = (List<object>)dict["translations"];
+                var parts = new List<string>();
                 foreach (var o in y)
                 {
                     var textDictionary = (Dictionary<string, object>)o;
@@ -126,11 +164,42 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                     res = res.Replace("<br />", Environment.NewLine);
                     res = res.Replace("<br/>", Environment.NewLine);
                     res = res.Replace("<br>", Environment.NewLine);
-                    results.Add(res);
+                    parts.Add(res);
+                }
+
+                results.Add(string.Join(Environment.NewLine, parts));
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Puts the translations back at the lines they came from, keeping blank lines blank. A
+        /// line without a translation (a short reply) is left empty rather than given its source
+        /// text: the blank-line check of the merge/split helper then rejects the reply and the
+        /// rows are retried, instead of an untranslated line being written out as translated.
+        /// </summary>
+        internal static List<string> MapResponseToLines(List<string> lines, List<string> translations)
+        {
+            var output = new List<string>(lines.Count);
+            var translationIndex = 0;
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    output.Add(string.Empty);
+                }
+                else if (translationIndex < translations.Count)
+                {
+                    output.Add(translations[translationIndex++].Trim());
+                }
+                else
+                {
+                    output.Add(string.Empty);
                 }
             }
 
-            return string.Join(Environment.NewLine, results);
+            return output;
         }
 
         private IDownloader GetTranslateClient()
