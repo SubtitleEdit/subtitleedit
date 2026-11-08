@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -71,26 +72,27 @@ public partial class PickMp4TrackViewModel : ObservableObject
             }
 
             // mdia.Name is the Box.Name of the last parsed child box (typically "minf"),
-            // so it must not be shown as the track name - the track language from the
-            // media header (mdhd) is what identifies the track. LanguageString maps an
-            // unknown/unset code to the literal "Any", so that cannot drive the fallback:
-            // an unlabeled track (the common ffmpeg/MP4Box output) shows the handler name
-            // from hdlr, or the handler type when that is blank (review follow-up, #13225).
-            var language = mdia.Mdhd?.LanguageString;
-            if (string.IsNullOrEmpty(language) || language == "Any")
+            // so it must not be shown as the track name. The title from the track's user
+            // data (udta/name - "English", "Simplified Chinese") is the real name; streaming
+            // services often only label tracks that way and leave the mdhd language at
+            // "und" (#16730). Without one, show the hdlr handler name, or the handler type
+            // when that is blank (#13225).
+            var name = track.TrackName;
+            if (string.IsNullOrEmpty(name))
             {
-                language = string.IsNullOrEmpty(mdia.HandlerName) ? mdia.HandlerType : mdia.HandlerName;
+                name = string.IsNullOrEmpty(mdia.HandlerName) ? mdia.HandlerType : mdia.HandlerName;
             }
 
             if (mdia.Minf?.Stbl?.Stsd?.IsForcedSubtitle == true)
             {
-                language += $" ({Se.Language.General.Forced})";
+                name += $" ({Se.Language.General.Forced})";
             }
 
             var display = new Mp4TrackInfoDisplay
             {
                 HandlerType = mdia.HandlerType,
-                Name = language,
+                Name = name,
+                Language = LanguageOrUnknown(mdia.LanguageDisplayName),
                 StartPosition = mdia.StartPosition,
                 IsVobSubSubtitle = mdia.IsVobSubSubtitle,
                 Duration = LastCueEnd(mdia.Minf?.Stbl?.GetParagraphs()),
@@ -116,12 +118,30 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 Name = track.TrackId != null
                     ? $"Track {track.TrackId} ({track.Language ?? "?"})"
                     : track.Language ?? string.Empty,
+                Language = LanguageOrUnknown(LanguageNameFromCode(track.Language)),
                 StartPosition = 0,
                 IsVobSubSubtitle = false,
                 Duration = LastCueEnd(track.Subtitle.Paragraphs),
                 FragmentedTrack = track,
             });
         }
+    }
+
+    private static string LanguageOrUnknown(string? language)
+    {
+        return string.IsNullOrEmpty(language) ? Se.Language.General.Unknown : language;
+    }
+
+    private static string LanguageNameFromCode(string? code)
+    {
+        if (string.IsNullOrEmpty(code) || code == "und")
+        {
+            return string.Empty;
+        }
+
+        var language = Iso639Dash2LanguageCode.List.FirstOrDefault(p =>
+            p.ThreeLetterCode == code || p.BibliographicCode == code || p.TwoLetterCode == code);
+        return language?.EnglishName ?? code;
     }
 
     private static TimeSpan LastCueEnd(List<Paragraph>? paragraphs)

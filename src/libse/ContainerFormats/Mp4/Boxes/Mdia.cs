@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
@@ -13,6 +14,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public readonly string HandlerType;
         public readonly string HandlerName = string.Empty;
 
+        /// <summary>
+        /// BCP 47 language tag from the Extended Language Tag box (elng), e.g. "zh-Hans" or
+        /// "pt-BR". Empty when absent. When present it overrides the mdhd language.
+        /// </summary>
+        public readonly string ExtendedLanguage = string.Empty;
+
         // "subt" is the handler for stpp (TTML/IMSC1) tracks, ISO/IEC 14496-30
         public bool IsTextSubtitle => HandlerType == "sbtl" || HandlerType == "text" || HandlerType == "subt";
 
@@ -23,6 +30,42 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public bool IsVideo => HandlerType == "vide";
 
         public bool IsAudio => HandlerType == "soun";
+
+        /// <summary>
+        /// English name of the track language - from elng when present ("Chinese (zh-Hans)"),
+        /// else from mdhd ("Korean"). Empty when the track is unlabeled ("und" or unset).
+        /// </summary>
+        public string LanguageDisplayName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ExtendedLanguage))
+                {
+                    var primary = ExtendedLanguage.Split('-')[0].ToLowerInvariant();
+                    var name = FindEnglishName(primary);
+                    if (name == null)
+                    {
+                        return ExtendedLanguage;
+                    }
+
+                    return primary.Length == ExtendedLanguage.Length ? name : $"{name} ({ExtendedLanguage})";
+                }
+
+                var code = Mdhd?.Iso639ThreeLetterCode;
+                return string.IsNullOrEmpty(code) ? string.Empty : FindEnglishName(code) ?? string.Empty;
+            }
+        }
+
+        private static string FindEnglishName(string code)
+        {
+            if (code.Length != 2 && code.Length != 3)
+            {
+                return null;
+            }
+
+            return Iso639Dash2LanguageCode.List.FirstOrDefault(p =>
+                p.TwoLetterCode == code || p.ThreeLetterCode == code || p.BibliographicCode == code)?.EnglishName;
+        }
 
         public Mdia(Stream fs, ulong maximumLength)
         {
@@ -66,6 +109,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 else if (Name == "mdhd")
                 {
                     Mdhd = new Mdhd(fs, Size);
+                }
+                else if (Name == "elng" && Size > 12 && Size < 512)
+                {
+                    // full box: version + flags, then a null-terminated tag
+                    Buffer = ReadPayload(fs, Size - 8);
+                    var end = System.Array.IndexOf(Buffer, (byte)0, 4);
+                    var tag = GetString(4, (end < 0 ? Buffer.Length : end) - 4).Trim();
+                    if (tag.Length > 0 && tag != "und")
+                    {
+                        ExtendedLanguage = tag;
+                    }
                 }
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }

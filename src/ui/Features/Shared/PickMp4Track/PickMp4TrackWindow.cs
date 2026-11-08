@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -81,6 +81,14 @@ public class PickMp4TrackWindow : Window
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.Name)),
             Width = new GridLength(1, GridUnitType.Star),
         };
+        var languageColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.General.Language,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            Binding = new Binding(nameof(Mp4TrackInfoDisplay.Language)),
+            Width = new GridLength(140),
+        };
         var durationColumn = new SeTableViewColumn
         {
             Header = Se.Language.General.Duration,
@@ -107,6 +115,7 @@ public class PickMp4TrackWindow : Window
         };
 
         dataGridTracks.Columns.Add(handlerColumn);
+        dataGridTracks.Columns.Add(languageColumn);
         dataGridTracks.Columns.Add(nameColumn);
         dataGridTracks.Columns.Add(durationColumn);
         dataGridTracks.Columns.Add(vobSubColumn);
@@ -120,6 +129,7 @@ public class PickMp4TrackWindow : Window
         // in-place header sorter is safe.
         new TableViewHeaderSorter(dataGridTracks)
             .AddSortable<Mp4TrackInfoDisplay, string>(handlerColumn, x => x.HandlerType)
+            .AddSortable<Mp4TrackInfoDisplay, string>(languageColumn, x => x.Language)
             .AddSortable<Mp4TrackInfoDisplay, string>(nameColumn, x => x.Name)
             .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration)
             .AddSortable<Mp4TrackInfoDisplay, bool>(vobSubColumn, x => x.IsVobSubSubtitle)
