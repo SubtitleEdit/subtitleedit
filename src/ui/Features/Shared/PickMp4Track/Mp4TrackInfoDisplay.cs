@@ -18,7 +18,6 @@ public class Mp4TrackInfoDisplay
 
     /// <summary>English language name, or "Unknown" for an unlabeled track.</summary>
     public string Language { get; internal set; }
-    public ulong StartPosition { get; internal set; }
     public bool IsVobSubSubtitle { get; internal set; }
 
     /// <summary>

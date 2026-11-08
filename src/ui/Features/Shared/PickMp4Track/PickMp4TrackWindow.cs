@@ -64,7 +64,8 @@ public class PickMp4TrackWindow : Window
         // narrow columns get fixed widths and Name becomes the star column. The tracks pane
         // is only ~480 px at the default window size, and the star column gets what the fixed
         // ones leave - at 600 px of fixed columns Name vanished (#16730). There is no VobSub
-        // column: it only repeated Type ("subp" is the VobSub handler).
+        // column (it only repeated Type: "subp" is the VobSub handler) and no Start column
+        // (a byte offset into the file, meaningless to the user).
         var handlerColumn = new SeTableViewColumn
         {
             // Localized, and not the raw C# property name: this dialog showed "HandlerName" and
@@ -100,20 +101,11 @@ public class PickMp4TrackWindow : Window
             Binding = new Binding(nameof(Mp4TrackInfoDisplay.Duration)) { Converter = new TimeSpanToDisplayFullConverter() },
             Width = new GridLength(100),
         };
-        var startPositionColumn = new SeTableViewColumn
-        {
-            Header = Se.Language.General.Start,
-            CellTheme = UiUtil.TableViewCellTheme,
-            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(Mp4TrackInfoDisplay.StartPosition)),
-            Width = new GridLength(90),
-        };
 
         dataGridTracks.Columns.Add(handlerColumn);
         dataGridTracks.Columns.Add(languageColumn);
         dataGridTracks.Columns.Add(nameColumn);
         dataGridTracks.Columns.Add(durationColumn);
-        dataGridTracks.Columns.Add(startPositionColumn);
 
         dataGridTracks.Bind(TableView.SelectedItemProperty, new Binding(nameof(_vm.SelectedTrack)));
         dataGridTracks.SelectionChanged += vm.TracksGridSelectionChanged;
@@ -125,8 +117,7 @@ public class PickMp4TrackWindow : Window
             .AddSortable<Mp4TrackInfoDisplay, string>(handlerColumn, x => x.HandlerType)
             .AddSortable<Mp4TrackInfoDisplay, string>(languageColumn, x => x.Language)
             .AddSortable<Mp4TrackInfoDisplay, string>(nameColumn, x => x.Name)
-            .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration)
-            .AddSortable<Mp4TrackInfoDisplay, ulong>(startPositionColumn, x => x.StartPosition);
+            .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration);
 
         return dataGridTracks;
     }

@@ -88,14 +88,14 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 name += $" ({Se.Language.General.Forced})";
             }
 
+            var paragraphs = mdia.Minf?.Stbl?.GetParagraphs();
             var display = new Mp4TrackInfoDisplay
             {
                 HandlerType = mdia.HandlerType,
                 Name = name,
-                Language = LanguageOrUnknown(track.LanguageDisplayName),
-                StartPosition = mdia.StartPosition,
+                Language = LanguageOrDetected(track.LanguageDisplayName, paragraphs),
                 IsVobSubSubtitle = mdia.IsVobSubSubtitle,
-                Duration = LastCueEnd(mdia.Minf?.Stbl?.GetParagraphs()),
+                Duration = LastCueEnd(paragraphs),
                 Track = track,
             };
             Tracks.Add(display);
@@ -118,8 +118,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
                 Name = track.TrackId != null
                     ? $"Track {track.TrackId} ({track.Language ?? "?"})"
                     : track.Language ?? string.Empty,
-                Language = LanguageOrUnknown(LanguageNameFromCode(track.Language)),
-                StartPosition = 0,
+                Language = LanguageOrDetected(LanguageNameFromCode(track.Language), track.Subtitle.Paragraphs),
                 IsVobSubSubtitle = false,
                 Duration = LastCueEnd(track.Subtitle.Paragraphs),
                 FragmentedTrack = track,
@@ -127,9 +126,46 @@ public partial class PickMp4TrackViewModel : ObservableObject
         }
     }
 
-    private static string LanguageOrUnknown(string? language)
+    /// <summary>
+    /// The metadata/track-name language, else one detected from the cue text and marked
+    /// "(Auto)" - streaming MP4s often carry "und" and no usable track name (#16730).
+    /// </summary>
+    private static string LanguageOrDetected(string? language, List<Paragraph>? paragraphs)
     {
-        return string.IsNullOrEmpty(language) ? Se.Language.General.Unknown : language;
+        if (!string.IsNullOrEmpty(language))
+        {
+            return language;
+        }
+
+        var detected = DetectLanguageName(paragraphs);
+        return string.IsNullOrEmpty(detected)
+            ? Se.Language.General.Unknown
+            : $"{detected} ({Se.Language.General.Auto})";
+    }
+
+    private static string DetectLanguageName(List<Paragraph>? paragraphs)
+    {
+        if (paragraphs == null || paragraphs.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            var code = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(new Subtitle(paragraphs));
+            if (string.IsNullOrEmpty(code))
+            {
+                return string.Empty;
+            }
+
+            // "zh-Hans" -> "zh"
+            var dash = code.IndexOf('-');
+            return LanguageNameFromCode(dash > 0 ? code.Substring(0, dash) : code);
+        }
+        catch
+        {
+            return string.Empty; // detection is a display nicety, never a reason to fail the picker
+        }
     }
 
     private static string LanguageNameFromCode(string? code)
