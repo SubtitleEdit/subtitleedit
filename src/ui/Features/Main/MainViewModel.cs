@@ -363,6 +363,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showUpDownEndTime;
     [ObservableProperty] private bool _showUpDownDuration;
     [ObservableProperty] private bool _showUpDownLabels;
+    [ObservableProperty] private bool _showTimeCodeModeInStatusBar;
     [ObservableProperty] private bool _isColumnLayerVisible;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(AreTimeCodesEditable))]
@@ -1185,6 +1186,7 @@ public partial class MainViewModel :
         ShowUpDownEndTime = Se.Settings.Appearance.ShowUpDownEndTime;
         ShowUpDownDuration = Se.Settings.Appearance.ShowUpDownDuration;
         ShowUpDownLabels = Se.Settings.Appearance.ShowUpDownLabels;
+        ShowTimeCodeModeInStatusBar = Se.Settings.Appearance.ShowTimeCodeModeInStatusBar;
         SelectCurrentSubtitleWhilePlaying = Se.Settings.General.SelectCurrentSubtitleWhilePlaying;
         WaveformCenter = Se.Settings.Waveform.CenterVideoPosition;
         EditTextBoxOriginal = new TextBoxWrapper(new TextBox());
@@ -15700,6 +15702,7 @@ public partial class MainViewModel :
         ShowUpDownEndTime = Se.Settings.Appearance.ShowUpDownEndTime;
         ShowUpDownDuration = Se.Settings.Appearance.ShowUpDownDuration;
         ShowUpDownLabels = Se.Settings.Appearance.ShowUpDownLabels;
+        ShowTimeCodeModeInStatusBar = Se.Settings.Appearance.ShowTimeCodeModeInStatusBar;
 
         _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
         _errorBrush = new ImmutableSolidColorBrush(_errorColor);

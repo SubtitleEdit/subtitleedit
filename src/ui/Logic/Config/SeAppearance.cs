@@ -109,6 +109,7 @@ public class SeAppearance
     public bool ShowUpDownEndTime { get; set; }
     public bool ShowUpDownDuration { get; set; }
     public bool ShowUpDownLabels { get; set; }
+    public bool ShowTimeCodeModeInStatusBar { get; set; }
 
     public LayoutPositions CurrentLayoutPositions { get; set; }
     public bool TextBoxShowButtonAutoBreak { get; set; }
@@ -162,6 +163,7 @@ public class SeAppearance
         ShowUpDownEndTime = false;
         ShowUpDownDuration = true;
         ShowUpDownLabels = true;
+        ShowTimeCodeModeInStatusBar = false;
 
         ToolbarShowFileNew = true;
         ToolbarShowFileOpen = true;
