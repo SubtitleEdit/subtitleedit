@@ -75,23 +75,26 @@ public partial class PickMp4TrackViewModel : ObservableObject
             // so it must not be shown as the track name. The title from the track's user
             // data (udta/name - "English", "Simplified Chinese") is the real name; streaming
             // services often only label tracks that way and leave the mdhd language at
-            // "und" (#16730). Without one, show the hdlr handler name, or the handler type
-            // when that is blank (#13225).
+            // "und" (#16730). The hdlr name is only used when it is not a muxer's generic
+            // "SubtitleHandler" style label - that told the user nothing (#16730, #13225).
             var name = track.TrackName;
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name) && !IsGenericHandlerName(mdia.HandlerName))
             {
-                name = string.IsNullOrEmpty(mdia.HandlerName) ? mdia.HandlerType : mdia.HandlerName;
+                name = mdia.HandlerName.Trim();
             }
 
             if (mdia.Minf?.Stbl?.Stsd?.IsForcedSubtitle == true)
             {
-                name += $" ({Se.Language.General.Forced})";
+                name = string.IsNullOrEmpty(name)
+                    ? Se.Language.General.Forced
+                    : $"{name} ({Se.Language.General.Forced})";
             }
 
             var paragraphs = mdia.Minf?.Stbl?.GetParagraphs();
             var display = new Mp4TrackInfoDisplay
             {
                 HandlerType = mdia.HandlerType,
+                Format = FormatDisplayName(mdia.Minf?.Stbl?.Stsd?.Name, mdia.HandlerType),
                 Name = name,
                 Language = LanguageOrDetected(track.LanguageDisplayName, paragraphs),
                 IsVobSubSubtitle = mdia.IsVobSubSubtitle,
@@ -115,15 +118,52 @@ public partial class PickMp4TrackViewModel : ObservableObject
             Tracks.Add(new Mp4TrackInfoDisplay
             {
                 HandlerType = track.Codec ?? string.Empty,
-                Name = track.TrackId != null
-                    ? $"Track {track.TrackId} ({track.Language ?? "?"})"
-                    : track.Language ?? string.Empty,
+                Format = FormatDisplayName(track.Codec, string.Empty),
+                Name = track.TrackId != null ? $"Track {track.TrackId}" : string.Empty,
                 Language = LanguageOrDetected(LanguageNameFromCode(track.Language), track.Subtitle.Paragraphs),
                 IsVobSubSubtitle = false,
                 Duration = LastCueEnd(track.Subtitle.Paragraphs),
                 FragmentedTrack = track,
             });
         }
+    }
+
+    private static bool IsGenericHandlerName(string? handlerName)
+    {
+        if (string.IsNullOrWhiteSpace(handlerName))
+        {
+            return true;
+        }
+
+        // ffmpeg "SubtitleHandler", Apple "Core Media Text", "Apple Text Media Handler",
+        // MP4Box "GPAC ISO Subtitle Handler", "ClosedCaptionHandler", ...
+        return handlerName.Contains("handler", StringComparison.OrdinalIgnoreCase) ||
+               handlerName.Contains("Core Media", StringComparison.OrdinalIgnoreCase) ||
+               handlerName.StartsWith("GPAC", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Sample entry code (stsd) as a readable format, e.g. "tx3g" -> "Timed Text (tx3g)".
+    /// Falls back to the handler type when the sample description is missing.
+    /// </summary>
+    private static string FormatDisplayName(string? sampleEntry, string handlerType)
+    {
+        var code = string.IsNullOrWhiteSpace(sampleEntry) ? handlerType : sampleEntry.Trim();
+        var name = code switch
+        {
+            "tx3g" => "Timed Text",
+            "text" => "QuickTime Text",
+            "wvtt" => "WebVTT",
+            "stpp" => "TTML",
+            "sbtt" => "Text",
+            "c608" => "CEA-608",
+            "c708" => "CEA-708",
+            "mp4s" => "VobSub",
+            "subp" => "VobSub",
+            _ => null,
+        };
+
+        return name == null ? code : $"{name} ({code})";
     }
 
     /// <summary>

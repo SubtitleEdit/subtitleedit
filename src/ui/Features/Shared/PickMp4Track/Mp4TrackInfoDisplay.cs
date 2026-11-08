@@ -16,6 +16,9 @@ public class Mp4TrackInfoDisplay
 
     public string Name { get; internal set; }
 
+    /// <summary>Readable sample format, e.g. "Timed Text (tx3g)" or "WebVTT (wvtt)".</summary>
+    public string Format { get; internal set; }
+
     /// <summary>English language name, or "Unknown" for an unlabeled track.</summary>
     public string Language { get; internal set; }
     public bool IsVobSubSubtitle { get; internal set; }
@@ -32,5 +35,6 @@ public class Mp4TrackInfoDisplay
         HandlerType = string.Empty;
         Name = string.Empty;
         Language = string.Empty;
+        Format = string.Empty;
     }
 }

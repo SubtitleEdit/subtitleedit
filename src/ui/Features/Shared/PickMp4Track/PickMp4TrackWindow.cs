@@ -64,18 +64,19 @@ public class PickMp4TrackWindow : Window
         // narrow columns get fixed widths and Name becomes the star column. The tracks pane
         // is only ~480 px at the default window size, and the star column gets what the fixed
         // ones leave - at 600 px of fixed columns Name vanished (#16730). There is no VobSub
-        // column (it only repeated Type: "subp" is the VobSub handler) and no Start column
+        // column (Format says "VobSub (mp4s)") and no Start column
         // (a byte offset into the file, meaningless to the user).
         var handlerColumn = new SeTableViewColumn
         {
             // Localized, and not the raw C# property name: this dialog showed "HandlerName" and
             // "IsVobSubSubtitle" to the user as column headers. The Matroska track picker beside
-            // it uses Se.Language for every header.
-            Header = Se.Language.General.Type,
+            // it uses Se.Language for every header. Format (the stsd sample entry) replaced the
+            // handler type ("sbtl"), which every text track shared.
+            Header = Se.Language.General.Format,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(Mp4TrackInfoDisplay.HandlerType)),
-            Width = new GridLength(60),
+            Binding = new Binding(nameof(Mp4TrackInfoDisplay.Format)),
+            Width = new GridLength(140),
         };
         var nameColumn = new SeTableViewColumn
         {
@@ -114,7 +115,7 @@ public class PickMp4TrackWindow : Window
         // Track order is presentation-only (OK uses the selected item), so the
         // in-place header sorter is safe.
         new TableViewHeaderSorter(dataGridTracks)
-            .AddSortable<Mp4TrackInfoDisplay, string>(handlerColumn, x => x.HandlerType)
+            .AddSortable<Mp4TrackInfoDisplay, string>(handlerColumn, x => x.Format)
             .AddSortable<Mp4TrackInfoDisplay, string>(languageColumn, x => x.Language)
             .AddSortable<Mp4TrackInfoDisplay, string>(nameColumn, x => x.Name)
             .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration);
