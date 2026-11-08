@@ -306,7 +306,119 @@ public class AudioVisualizer : Control
     /// </summary>
     private readonly List<double> _originalSubtitleCueMaxEnds = new();
     private protected const double OriginalSubtitleOpacity = 0.5;
-    private protected bool IsOriginalSubtitleOverlayVisible => ShowOriginalSubtitleOverlay && _originalSubtitleCues.Count > 0;
+    private protected bool IsOriginalSubtitleOverlayVisible => (ShowOriginalSubtitleOverlay || EditOriginalTimeCodes) && _originalSubtitleCues.Count > 0;
+
+    /// <summary>
+    /// The A/B switch of the waveform (#16354): false edits the working subtitle as always; true
+    /// makes the original the layer being edited. The original's blocks are then drawn in full
+    /// (the working subtitle's at half strength, the other way round from normal) and a drag on
+    /// one moves or resizes the original line's own time codes, while the working subtitle's
+    /// blocks cannot be grabbed - so one waveform, in any layout, edits either file's timing. The
+    /// original strip shows in this mode even with "Show original subtitle" off. Call
+    /// InvalidateVisual after changing it.
+    /// </summary>
+    public bool EditOriginalTimeCodes { get; set; }
+
+    /// <summary>The rows whose original lines <see cref="EditOriginalTimeCodes"/> drags.</summary>
+    internal Func<IReadOnlyList<SubtitleLineViewModel>>? GetOriginalRows { get; set; }
+
+    /// <summary>Whether a row stands for an original line (one with no counterpart does not).</summary>
+    internal Func<SubtitleLineViewModel, bool>? HasOriginalLine { get; set; }
+
+    /// <summary>Writes the new time codes of the original line a row stands for.</summary>
+    internal Action<SubtitleLineViewModel, TimeSpan, TimeSpan>? SetOriginalTimeCodes { get; set; }
+
+    /// <summary>Selects the row whose original block was grabbed.</summary>
+    internal Action<SubtitleLineViewModel>? SelectOriginalRow { get; set; }
+
+    private SubtitleLineViewModel? _originalDragRow;
+    private OriginalDragEdge _originalDragEdge;
+    private double _originalDragPressX;
+    private TimeSpan _originalDragStart;
+    private TimeSpan _originalDragEnd;
+    private bool _originalDragMoved;
+
+    private SubtitleLineViewModel? HitTestOriginalBlock(Point point, out OriginalDragEdge edge)
+    {
+        edge = OriginalDragEdge.Move;
+        var rows = GetOriginalRows?.Invoke();
+        var hasOriginalLine = HasOriginalLine;
+        var peaks = WavePeaks;
+        if (rows == null || hasOriginalLine == null || peaks == null || peaks.SampleRate == 0 || ZoomFactor <= 0)
+        {
+            return null;
+        }
+
+        var tolerance = OriginalTimeCodeDrag.EdgeGrabPixels / (peaks.SampleRate * ZoomFactor);
+        return OriginalTimeCodeDrag.HitTest(rows, hasOriginalLine, RelativeXPositionToSeconds(point.X), tolerance, out edge);
+    }
+
+    /// <summary>
+    /// A left press while editing the original: grabs the original block under the pointer, or,
+    /// off every block, is a plain click (it seeks on tap) - no new selection is started, as that
+    /// would add a line to the working subtitle.
+    /// </summary>
+    private void PressWhileEditingOriginal(Point point)
+    {
+        NewSelectionParagraph = null;
+        _interactionMode = InteractionMode.None;
+        _activeParagraph = null;
+        _dragStack = null;
+
+        var row = HitTestOriginalBlock(point, out var edge);
+        if (row == null)
+        {
+            return;
+        }
+
+        _originalDragRow = row;
+        _originalDragEdge = edge;
+        _originalDragPressX = point.X;
+        _originalDragStart = row.EffectiveOriginalStartTime;
+        _originalDragEnd = row.EffectiveOriginalEndTime;
+        _originalDragMoved = false;
+        _pointerDragActive = true;
+        SelectOriginalRow?.Invoke(row);
+    }
+
+    private void DragOriginal(double x)
+    {
+        var row = _originalDragRow;
+        var peaks = WavePeaks;
+        if (row == null || peaks == null || peaks.SampleRate == 0 || ZoomFactor <= 0)
+        {
+            return;
+        }
+
+        if (!_originalDragMoved && Math.Abs(x - _originalDragPressX) < ClickDragSlopPixels)
+        {
+            return;
+        }
+
+        _originalDragMoved = true;
+        var delta = TimeSpan.FromSeconds((x - _originalDragPressX) / (peaks.SampleRate * ZoomFactor));
+        var (start, end) = OriginalTimeCodeDrag.Apply(_originalDragStart, _originalDragEnd, delta, _originalDragEdge);
+        SetOriginalTimeCodes?.Invoke(row, start, end);
+        _lastPointerEditMs = Environment.TickCount64;
+        InvalidateVisual();
+    }
+
+    /// <summary>Ends an original drag; false when none was going on.</summary>
+    private bool EndOriginalDrag()
+    {
+        if (_originalDragRow == null)
+        {
+            return false;
+        }
+
+        // A real drag must not also seek/select on the Tapped that follows; a click still does.
+        _preventNextTap = _originalDragMoved;
+        _originalDragRow = null;
+        _originalDragMoved = false;
+        _pointerDragActive = false;
+        OnDragEnded?.Invoke(this, EventArgs.Empty);
+        return true;
+    }
     private protected bool ShowOriginalTextInWaveform => ShowOriginalText && !IsOriginalSubtitleOverlayVisible;
     private protected IReadOnlyList<WaveformOriginalSubtitleCue> OriginalSubtitleCues => _originalSubtitleCues;
     private protected IReadOnlyList<double> OriginalSubtitleCueMaxEnds => _originalSubtitleCueMaxEnds;
@@ -1232,6 +1344,12 @@ public class AudioVisualizer : Control
 
     private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
+        if (EndOriginalDrag())
+        {
+            InvalidateVisual();
+            return;
+        }
+
         var wasDragging = _pointerDragActive;
         _pointerDragActive = false;
         if (wasDragging)
@@ -1459,6 +1577,13 @@ public class AudioVisualizer : Control
 
         if (IsReadOnly)
         {
+            InvalidateVisual();
+            return;
+        }
+
+        if (EditOriginalTimeCodes && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            PressWhileEditingOriginal(point);
             InvalidateVisual();
             return;
         }
@@ -1700,6 +1825,11 @@ public class AudioVisualizer : Control
     /// </summary>
     private void OnPointerCaptureLost(object? sender, PointerCaptureLostEventArgs e)
     {
+        if (EndOriginalDrag())
+        {
+            return;
+        }
+
         var wasDragging = _pointerDragActive;
         _pointerDragActive = false;
         if (wasDragging)
@@ -1769,6 +1899,19 @@ public class AudioVisualizer : Control
         if (IsReadOnly)
         {
             return;
+        }
+
+        if (_originalDragRow != null)
+        {
+            if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                EndOriginalDrag();
+            }
+            else
+            {
+                DragOriginal(e.GetPosition(this).X);
+                return;
+            }
         }
 
         // Self-heal: a move with no button down means the drag is over, whatever happened to the
@@ -2408,6 +2551,17 @@ public class AudioVisualizer : Control
             return;
         }
 
+        if (EditOriginalTimeCodes)
+        {
+            _cachedHitParagraph = null;
+            _cachedIsNearLeftEdge = false;
+            _cachedIsNearRightEdge = false;
+            Cursor = HitTestOriginalBlock(point, out var edge) == null
+                ? _cursorArrow
+                : edge == OriginalDragEdge.Move ? _cursorHand : _cursorSizeWestEast;
+            return;
+        }
+
         var p = HitTestParagraph(point);
         _cachedHitParagraph = p;
         _cachedIsNearLeftEdge = false;
@@ -2468,8 +2622,9 @@ public class AudioVisualizer : Control
             }
         }
 
-        // Early exit if no displayable paragraphs
-        if (_displayableParagraphs.Count == 0)
+        // While the original is being edited the working subtitle cannot be grabbed: no drag, and
+        // a click or right-click seeks instead of selecting.
+        if (EditOriginalTimeCodes || _displayableParagraphs.Count == 0)
         {
             return null;
         }
@@ -3887,11 +4042,15 @@ public class AudioVisualizer : Control
         var showOriginalSubtitle = IsOriginalSubtitleOverlayVisible;
         var workingTextHeight = showOriginalSubtitle ? renderCtx.Height / 2.0 : renderCtx.Height;
 
-        foreach (var p in paragraphs)
+        // Editing the original swaps which layer is drawn at half strength.
+        using (EditOriginalTimeCodes ? context.PushOpacity(OriginalSubtitleOpacity) : (IDisposable?)null)
         {
-            if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
+            foreach (var p in paragraphs)
             {
-                DrawParagraph(p, context, ref renderCtx, 0, workingTextHeight);
+                if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
+                {
+                    DrawParagraph(p, context, ref renderCtx, 0, workingTextHeight);
+                }
             }
         }
 
@@ -4139,7 +4298,7 @@ public class AudioVisualizer : Control
             }
 
             // Draw original subtitle cues with the waveform theme at half opacity.
-            using (context.PushOpacity(OriginalSubtitleOpacity))
+            using (context.PushOpacity(EditOriginalTimeCodes ? 1.0 : OriginalSubtitleOpacity))
             {
                 context.FillRectangle(_paintParagraphBackground, new Rect(left, top, right - left, height));
                 context.DrawLine(_paintLeft, new Point(left, top), new Point(left, top + height));

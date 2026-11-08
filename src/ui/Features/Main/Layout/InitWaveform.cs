@@ -169,6 +169,11 @@ public class InitWaveform
             // two previews show different texts (see SetOriginalTextInPreview).
             vm.AudioVisualizer.ShowOriginalText = vm.ShowOriginalTextInPreview;
             vm.AudioVisualizer.ShowOriginalSubtitleOverlay = settings.ShowOriginalSubtitle;
+            vm.AudioVisualizer.EditOriginalTimeCodes = vm.IsWaveformEditingOriginal;
+            vm.AudioVisualizer.GetOriginalRows = () => vm.Subtitles;
+            vm.AudioVisualizer.HasOriginalLine = vm.HasOriginalLine;
+            vm.AudioVisualizer.SetOriginalTimeCodes = vm.SetRowOriginalTimeCodes;
+            vm.AudioVisualizer.SelectOriginalRow = vm.SelectAndScrollToSubtitle;
 
             vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
@@ -449,6 +454,15 @@ public class InitWaveform
                 vm.UpdateWaveformOriginalSubtitleCues(vm.AudioVisualizer);
             };
             flyout.Items.Add(showOriginalSubtitleMenuItem);
+
+            var editOriginalTimingMenuItem = new MenuItem
+            {
+                Header = Se.Language.Waveform.EditOriginalTiming,
+                ToggleType = MenuItemToggleType.CheckBox,
+                DataContext = vm,
+                [!MenuItem.IsCheckedProperty] = new Binding(nameof(vm.IsWaveformEditingOriginal)) { Mode = BindingMode.TwoWay },
+            }.BindIsVisible(vm, nameof(vm.ShowColumnOriginalText));
+            flyout.Items.Add(editOriginalTimingMenuItem);
 
             // Outside the editor-style layout the track rows are optional; switching them
             // rebuilds the layout, as the Settings check box does.
@@ -1146,6 +1160,22 @@ public class InitWaveform
         Attached.SetIcon(toggleButtonAutoSelectOnPlay, IconNames.AnimationPlay);
         toggleButtonAutoSelectOnPlay.IsCheckedChanged += (s, e) => vm.AutoSelectOnPlayCheckedChanged();
 
+        // The A/B switch (#16354): which subtitle's timing the waveform edits. Only shown with an
+        // original open, like the audio-track picker only shows for a multi-track video.
+        var settingEditOriginal = GetToolbarSettingFor(SeWaveformToolbarItemType.EditOriginalTiming);
+        var toggleButtonEditOriginal = new ToggleButton
+        {
+            DataContext = vm,
+            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.IsWaveformEditingOriginal)) { Mode = BindingMode.TwoWay },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText)),
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(settingEditOriginal.LeftMargin, 0, settingEditOriginal.RightMargin, 0),
+            FontSize = settingEditOriginal.FontSize,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(Se.Language.Waveform.EditOriginalTiming, shortcuts, nameof(vm.ToggleWaveformEditOriginalCommand)),
+        };
+        Attached.SetIcon(toggleButtonEditOriginal, IconNames.SwapVertical);
+        AutomationProperties.SetName(toggleButtonEditOriginal, Se.Language.Waveform.EditOriginalTiming);
+
         var settingCenter = GetToolbarSettingFor(SeWaveformToolbarItemType.Center);
         var toggleButtonCenter = new ToggleButton
         {
@@ -1424,6 +1454,7 @@ public class InitWaveform
             panelSpeed,
             toggleButtonAutoSelectOnPlay,
             toggleButtonCenter,
+            toggleButtonEditOriginal,
             panelVideoSeek,
             textBoxInitialText,
             panelRuleProfile,
@@ -1652,6 +1683,7 @@ public class InitWaveform
         StackPanel panelSpeed,
         ToggleButton toggleButtonAutoSelectOnPlay,
         ToggleButton toggleButtonCenter,
+        ToggleButton toggleButtonEditOriginal,
         StackPanel panelVideoSeek,
         TextBox textBoxInitialText,
         StackPanel panelRuleProfile,
@@ -1748,6 +1780,9 @@ public class InitWaveform
                     break;
                 case SeWaveformToolbarItemType.Center:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = toggleButtonCenter });
+                    break;
+                case SeWaveformToolbarItemType.EditOriginalTiming:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = toggleButtonEditOriginal });
                     break;
                 case SeWaveformToolbarItemType.VideoSeek:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelVideoSeek });

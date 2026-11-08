@@ -102,6 +102,7 @@ internal sealed class SkiaWaveformRenderer
     private readonly HashSet<int> _paragraphEndXs = new();
 
     private readonly SKPaint _hintPaint = new() { IsAntialias = true };
+    private readonly SKPaint _halfLayerPaint = new() { Color = SKColors.White.WithAlpha(128) };
 
     private static SKColor ToSk(Avalonia.Media.Color c) => new(c.R, c.G, c.B, c.A);
 
@@ -798,6 +799,22 @@ internal sealed class SkiaWaveformRenderer
 
     private void DrawParagraphs(SKCanvas canvas, SkiaWaveformFrame f)
     {
+        // Editing the original swaps which layer is drawn at half strength.
+        if (f.EditOriginal)
+        {
+            canvas.SaveLayer(_halfLayerPaint);
+        }
+
+        DrawParagraphsInner(canvas, f);
+
+        if (f.EditOriginal)
+        {
+            canvas.Restore();
+        }
+    }
+
+    private void DrawParagraphsInner(SKCanvas canvas, SkiaWaveformFrame f)
+    {
         foreach (var p in f.Paragraphs)
         {
             var left = X(f, p.StartSeconds);
@@ -924,7 +941,9 @@ internal sealed class SkiaWaveformRenderer
 
         var top = f.Height / 2;
         var height = f.Height - top;
-        static SKColor Half(SKColor c) => c.WithAlpha((byte)(c.Alpha / 2));
+        // Half strength as a reference, full while the original is the layer being edited.
+        var full = f.EditOriginal;
+        SKColor Half(SKColor c) => full ? c : c.WithAlpha((byte)(c.Alpha / 2));
         foreach (var cue in f.OriginalCues)
         {
             var left = X(f, cue.StartSeconds);
@@ -939,7 +958,7 @@ internal sealed class SkiaWaveformRenderer
             VerticalLine(canvas, right - 0.5, top, f.Height, 1, Half(f.ParagraphRightColor));
             canvas.Save();
             canvas.ClipRect(SKRect.Create(left + 1, top, right - left - 3, height));
-            DrawParagraphText(canvas, f, cue, left + 3, top + TimeLineTextOffset, 128);
+            DrawParagraphText(canvas, f, cue, left + 3, top + TimeLineTextOffset, full ? (byte)255 : (byte)128);
             canvas.Restore();
         }
     }
