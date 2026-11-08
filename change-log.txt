@@ -3,6 +3,45 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta1 (8th of November 2026)
+
+* Icon colors now match the theme foreground on every theme and icon set
+* Main window: ASSA layer field gets the editor field look
+* Video OCR: remove burned-in subtitles (AI inpainting, black boxes, blur, delogo), also inside a drawn rectangle
+* Timeline: show subtitles without generating the waveform, with "Generate waveform" / "Use empty waveform" buttons - thx Danilo2000
+* ASSA advanced effects: word caption and reveal effects follow a pre-marked active word
+* Crisp ASR highlight word: underline the active word (Parakeet and all backends)
+* Crisp ASR: add Granite Speech 5.0 2B models
+* WhisperX: download models in Subtitle Edit like the other engines - thx GitGianluc
+* Timed Text: optional SMPTE timing auto-detect
+* Speech to text selected lines: honor SMPTE timing
+* Speech to text batch: show a dialog listing the generated files - thx vivadavid
+* Improve time codes: step through the lines left to check with Shift+F7/F8 - thx Uer9-create
+* Convert actors: select all/none/invert and select by actor
+* Show CJK half counts in line length and statistics
+* Upper-case German ß as capital ẞ - thx accessallareas
+* Move "Save forced lines as" to File > Export
+* llama.cpp advanced: fit "Generate with AI" to the server context size, and explain in the log why nothing was generated - thx SangenBR
+* seconv: name LLM-engine translate output with the language code, not the English name - thx Makar8000
+* Improve language auto-detect (Finnish, Croatian, Macedonian, Polish, Azerbaijani, Galician, Basque, Welsh, Central Kurdish, short text)
+* Improve ANSI encoding detection: EUC-JP, KOI8-R, DOS 866, Persian, Urdu, Romanian, Albanian, Icelandic, Arabic and smart quotes
+* Fix Western ANSI files detected as Shift_JIS and other 5.4 encoding regressions - thx Larxen
+* Fix Blu-ray sup export of overlapping/out-of-order cues (also seconv/batch image exports) - thx k6G52m4Dz75W
+* Fix Remove text for HI dropping en/em dash dialog dashes - thx Aemstel2
+* Fix OCR regex rules: \n in "Replace with" is now a line break - thx Lentzeris
+* Fix "Do not break after" for pt-BR (uses the Portuguese list) - thx mariajuferreira1958-creator
+* Fix "Show" column menu label not matching its header - thx accessallareas
+* Fix EBU STL teletext dialog not moving the alignment tag with the row
+* Fix Binary Edit bottom align to use the text baseline
+* Fix Cut video losing the SMPTE flag on the real video player
+* Update CrispEmbed to v0.17.15
+* Update Chinese Traditional translation - thx love80312
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.4.0 (6th of November 2026)
 
 Subtitle Edit 5.4 collects the work of 12 betas and 4 release candidates.
