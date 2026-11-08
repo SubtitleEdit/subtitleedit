@@ -20777,7 +20777,15 @@ public partial class MainViewModel :
     [RelayCommand]
     private void FocusSelectedLine()
     {
-        var idx = SelectedSubtitleIndex ?? -1;
+        // Go to the topmost selected line like SE4's "Go to first selected line" - the current
+        // row is the moving end of a shift-selection, so it was the last line when selecting
+        // downwards and the first only when selecting upwards (#16751).
+        var idx = FirstSelectedSubtitleIndex;
+        if (idx < 0)
+        {
+            idx = SelectedSubtitleIndex ?? -1;
+        }
+
         if (Subtitles.Count == 0 || idx < 0 || idx >= Subtitles.Count)
         {
             return;
