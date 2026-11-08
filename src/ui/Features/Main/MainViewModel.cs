@@ -7250,8 +7250,8 @@ public partial class MainViewModel :
 
             var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
                 _videoFileName,
-                line.StartTime.TotalSeconds,
-                line.Duration.TotalSeconds,
+                ToVideoSeconds(line.StartTime.TotalSeconds),
+                ToVideoSeconds(line.Duration.TotalSeconds),
                 false,
                 outputFileName,
                 _audioTrack?.FfIndex ?? -1,
@@ -7390,8 +7390,8 @@ public partial class MainViewModel :
             // cloning engine resamples it to whatever its backend wants on import.
             var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
                 _videoFileName,
-                line.StartTime.TotalSeconds,
-                line.Duration.TotalSeconds,
+                ToVideoSeconds(line.StartTime.TotalSeconds),
+                ToVideoSeconds(line.Duration.TotalSeconds),
                 false,
                 clipFileName,
                 _audioTrack?.FfIndex ?? -1,
@@ -11303,6 +11303,15 @@ public partial class MainViewModel :
         _audioTrackLangauge = language;
     }
 
+    /// <summary>
+    /// A row time (or duration) on the video file's clock, for ffmpeg: with SMPTE timing the rows
+    /// run on the time code clock, where t is t * 1.001 in the video.
+    /// </summary>
+    private double ToVideoSeconds(double rowSeconds)
+    {
+        return IsSmpteTimingEnabled ? rowSeconds * SmptePreviewStretch.Factor : rowSeconds;
+    }
+
     private async Task<bool> SpeechToTextSelectedLines(bool promptEngineAndLanguage, string? language)
     {
         var selectedItems = SubtitleGridSelectedItems.Cast<SubtitleLineViewModel>().ToList();
@@ -11317,7 +11326,7 @@ public partial class MainViewModel :
             return false;
         }
 
-        var resultGetAudioClips = await ShowDialogAsync<GetAudioClipsWindow, GetAudioClipsViewModel>(vm => { vm.Initialize(_videoFileName ?? string.Empty, selectedItems, _audioTrack?.FfIndex ?? -1); });
+        var resultGetAudioClips = await ShowDialogAsync<GetAudioClipsWindow, GetAudioClipsViewModel>(vm => { vm.Initialize(_videoFileName ?? string.Empty, selectedItems, _audioTrack?.FfIndex ?? -1, IsSmpteTimingEnabled); });
 
         if (!resultGetAudioClips.OkPressed || resultGetAudioClips.AudioClips.Count == 0)
         {
@@ -11351,10 +11360,18 @@ public partial class MainViewModel :
                 {
                     // generate new subtitles
                     deleteLines.Add(selectedLine);
+                    // The clip was cut on the video's clock; with SMPTE timing its times are
+                    // brought back to the rows' clock (1.001 slower) before they are placed.
+                    var rowTimeFactor = IsSmpteTimingEnabled ? 1.0 / SmptePreviewStretch.Factor : 1.0;
                     foreach (var p in transcribedLine.Transcription.Paragraphs)
                     {
                         var newLine = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
-                        newLine.SetStartTimeKeepDuration(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(selectedLine.StartTime.TotalMilliseconds + p.StartTime.TotalMilliseconds));
+                        newLine.SetStartTimeKeepDuration(TimeSpanExtensions.FromMillisecondsWholeMilliseconds(selectedLine.StartTime.TotalMilliseconds + p.StartTime.TotalMilliseconds * rowTimeFactor));
+                        if (IsSmpteTimingEnabled)
+                        {
+                            newLine.EndTime = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(selectedLine.StartTime.TotalMilliseconds + p.EndTime.TotalMilliseconds * rowTimeFactor);
+                        }
+
                         newLine.Style = selectedLine.Style; // the lines replace selectedLine, so they keep its style
                         newLines.Add(newLine);
                     }
@@ -37116,8 +37133,8 @@ public partial class MainViewModel :
                                        FfmpegMediaInfo.Parse(videoFileName).HasFrontCenterAudio(-1);
             var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
                 videoFileName,
-                paragraph.StartTime.TotalSeconds,
-                paragraph.Duration.TotalSeconds,
+                ToVideoSeconds(paragraph.StartTime.TotalSeconds),
+                ToVideoSeconds(paragraph.Duration.TotalSeconds),
                 useCenterChannelOnly,
                 outputFileName);
 
