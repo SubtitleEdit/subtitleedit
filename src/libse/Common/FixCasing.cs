@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                         insideCurly = false;
                     }
 
-                    span[i] = insideAngle || insideCurly ? c : char.ToUpper(c, ci);
+                    span[i] = insideAngle || insideCurly ? c : StringExtensions.ToUpperWithCapitalSharpS(c, ci);
                 }
             });
         }

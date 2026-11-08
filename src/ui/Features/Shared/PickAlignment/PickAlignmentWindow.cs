@@ -1,21 +1,36 @@
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
+using Avalonia.Controls.Presenters;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickAlignment;
 
 /// <summary>
-/// Choose alignment, in the editor look (see <see cref="EditorChrome"/>): a "screen" with the
-/// nine positions as anchors, each placed where the text would go - like the Edit menu's alignment
-/// picker. Picking one closes the window.
+/// Choose alignment, in the editor look (see <see cref="EditorChrome"/>): a video frame with the
+/// nine positions as subtitles, each placed where the text would go, the selected line's position
+/// marked. Picking one closes the window.
 /// </summary>
 public class PickAlignmentWindow : Window
 {
+    private static readonly IBrush SubtitleBoxBrush = new SolidColorBrush(Color.FromArgb(0xb8, 0, 0, 0));
+    private static readonly IBrush FrameBrush = new LinearGradientBrush
+    {
+        StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+        EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
+        GradientStops =
+        {
+            new GradientStop(Color.Parse("#2b3a4d"), 0),
+            new GradientStop(Color.Parse("#141a22"), 1),
+        },
+    };
+
     public PickAlignmentWindow(PickAlignmentViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -38,20 +53,8 @@ public class PickAlignmentWindow : Window
 
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 4,
-            RowSpacing = 4,
+            RowDefinitions = new RowDefinitions("*,*,*"),
+            ColumnDefinitions = new ColumnDefinitions("*,*,*"),
         };
 
         grid.Add(buttonAn7, 0);
@@ -64,16 +67,22 @@ public class PickAlignmentWindow : Window
         grid.Add(buttonAn2, 2, 1);
         grid.Add(buttonAn3, 2, 2);
 
-        // The video frame the positions are on
+        // The video frame the positions are on: 16:9 and dark in every theme, like a video
         var screen = new Border
         {
             Child = grid,
-            Background = EditorChrome.FieldBrush,
+            Width = 480,
+            Height = 270,
+            Background = FrameBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(6),
+            CornerRadius = new CornerRadius(8),
+            ClipToBounds = true,
         };
+        screen.Styles.Add(new Style(x => x.OfType<Button>().Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"))
+        {
+            Setters = { new Setter(ContentPresenter.BackgroundProperty, Brushes.Transparent) },
+        });
 
         Content = new Border
         {
@@ -82,60 +91,79 @@ public class PickAlignmentWindow : Window
             Padding = new Thickness(16),
         };
 
-        UiUtil.FocusOnFirstActivation(this, buttonAn2); // hack to make OnKeyDown work
+        Button[] buttons = [buttonAn1, buttonAn2, buttonAn3, buttonAn4, buttonAn5, buttonAn6, buttonAn7, buttonAn8, buttonAn9];
+
+        // On the current position, so Enter keeps it; otherwise on the default
+        UiUtil.FocusOnFirstActivation(this, () => (buttons.FirstOrDefault(b => Equals(b.CommandParameter, vm.CurrentAlignment)) ?? buttonAn2).Focus()); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
     /// <summary>
-    /// A flat button with an anchor dot and the position name, both placed at that position in
-    /// the cell - so the grid reads like a frame with the text placements on it.
+    /// A position on the frame: its name as a subtitle on the video, where the text would go. It
+    /// turns to the accent while hovered or focused, and the line's current position stays in the
+    /// accent with a check.
     /// </summary>
     private static Button MakeAnchorButton(string text, PickAlignmentViewModel vm, string alignment, HorizontalAlignment horizontal, VerticalAlignment vertical)
     {
-        var dot = new Ellipse
+        var check = new Optris.Icons.Avalonia.Icon
         {
-            Width = 7,
-            Height = 7,
-            Fill = EditorChrome.AccentBrush,
-            HorizontalAlignment = horizontal,
+            Value = IconNames.Check,
+            FontSize = 12,
+            Foreground = Brushes.White,
+            VerticalAlignment = VerticalAlignment.Center,
+            IsVisible = false,
         };
-        var label = new TextBlock
+        var pill = new Border
         {
-            Text = text,
-            FontSize = EditorChrome.FieldFontSize,
-            HorizontalAlignment = horizontal,
-            TextAlignment = horizontal switch
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(8, 3),
+            Child = new StackPanel
             {
-                HorizontalAlignment.Left => TextAlignment.Left,
-                HorizontalAlignment.Right => TextAlignment.Right,
-                _ => TextAlignment.Center,
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                Children =
+                {
+                    check,
+                    new TextBlock
+                    {
+                        Text = text,
+                        FontSize = EditorChrome.FieldFontSize,
+                        Foreground = Brushes.White,
+                        VerticalAlignment = VerticalAlignment.Center,
+                    },
+                },
             },
         };
-        var content = new StackPanel { Spacing = 5 };
-        if (vertical == VerticalAlignment.Bottom)
-        {
-            content.Children.Add(label);
-            content.Children.Add(dot);
-        }
-        else
-        {
-            content.Children.Add(dot);
-            content.Children.Add(label);
-        }
 
         var button = new Button
         {
-            Content = content,
+            Content = pill,
             Command = vm.SetAlignmentCommand,
             CommandParameter = alignment,
-            MinWidth = 116,
-            MinHeight = 64,
-            Padding = new Thickness(10, 8),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Padding = new Thickness(12, 10),
+            Background = Brushes.Transparent,
             HorizontalContentAlignment = horizontal,
             VerticalContentAlignment = vertical,
+            Cursor = new Cursor(StandardCursorType.Hand),
         };
-        button.Classes.Add("tool");
-        button.Foreground = EditorChrome.StrongTextBrush;
+
+        void UpdateLook()
+        {
+            var isCurrent = vm.CurrentAlignment == alignment;
+            check.IsVisible = isCurrent;
+            pill.Background = isCurrent || button.IsPointerOver || button.IsFocused ? EditorChrome.AccentBrush : SubtitleBoxBrush;
+        }
+
+        button.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == IsPointerOverProperty || e.Property == IsFocusedProperty)
+            {
+                UpdateLook();
+            }
+        };
+        UpdateLook();
 
         // Panel content has no name of its own for a screen reader (#12087)
         AutomationProperties.SetName(button, text);

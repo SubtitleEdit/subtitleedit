@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 AutoDetectWordsDutch,
                 AutoDetectWordsPolish,
                 AutoDetectWordsGreek,
+                AutoDetectWordsGreekLong,
                 AutoDetectWordsRussian,
                 AutoDetectWordsBulgarian,
                 AutoDetectWordsUkrainian,
@@ -61,6 +62,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 AutoDetectWordsSerbian,
                 AutoDetectWordsSerbianCyrillic,
                 AutoDetectWordsSerbianCyrillicOnly,
+                AutoDetectWordsSerbianCyrillicNotMacedonian,
                 AutoDetectWordsIndonesian,
                 AutoDetectWordsCatalan,
                 AutoDetectWordsTagalog,
@@ -75,6 +77,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 AutoDetectWordsSlovak,
                 AutoDetectWordsSlovenian,
                 AutoDetectWordsIcelandic,
+                AutoDetectWordsGalician,
+                AutoDetectWordsBasque,
+                AutoDetectWordsWelsh,
                 AutoDetectWordsLatvian,
                 AutoDetectWordsLithuanian,
                 AutoDetectWordsEstonian,
@@ -189,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // Neither ќ/ѓ/ѕ nor ћ/ђ, or as many of each (an OCR tie): the word lists decide.
                 var c2 = counts ?? CountWords(text);
                 var macedonianCount = c2.Get(AutoDetectWordsMacedonian);
-                var serbianCount = c2.Get(AutoDetectWordsSerbianCyrillic) + c2.Get(AutoDetectWordsSerbianCyrillicOnly);
+                var serbianCount = c2.Get(AutoDetectWordsSerbianCyrillicNotMacedonian) + c2.Get(AutoDetectWordsSerbianCyrillicOnly);
                 return macedonianCount > serbianCount ? "mk" : "sr";
             }
 
@@ -422,8 +427,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 case 28598:
                 case 1255:
                     return "he"; // Hebrew
-                case 28596:
-                case 1256:
+                case 28596: // not 1256, which Persian and Urdu use too - the text tells those apart
                     return "ar"; // Arabic
                 case 1258:
                     return "vi"; // Vietnamese
@@ -443,14 +447,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 case 20932:
                 case 10001:
                     return "ja"; // Japanese
-                case 20000:
-                case 20002:
-                case 20936:
-                case 950:
-                case 52936:
-                case 54936:
-                case 51936:
-                    return "zh"; // Chinese
+                // No Chinese code pages: a bare "zh" hid the Simplified/Traditional script, which the text tells.
                 default:
                     return null;
             }
@@ -499,6 +496,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "never", "always", "maybe", "please", "thank", "thanks", "sorry", "look", "tell", "told", "said", "make", "made", "take", "took", "give", "gave", "back",
             "time", "night", "life", "love", "good", "great", "little", "much", "many", "more", "only", "very", "but", "if", "I'm", "it's", "don't", "didn't", "doesn't",
             "can't", "isn't", "wasn't", "won't", "we're", "they're", "I've", "you've", "nobody", "before", "after", "years", "closed", "expected", "quiet",
+            "or", "it", "one",
         };
 
         private static readonly string[] AutoDetectWordsDanish =
@@ -509,6 +507,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "uden", "mellem", "næste", "anden", "meget", "lidt", "hvad", "nej", "gøre", "gør", "siger", "kender", "kunne", "måtte", "selv", "mere", "andre", "dette", "hele", "sammen", "væk", "penge", "arbejde", "ked", "ærlig",
             "fik", "vand", "broen", "vejene", "husene", "senere", "komme", "kommet",
             "ventes", "kraftig", "regn", "morgen", "nordlige", "temperaturen", "frysepunktet", "bilister", "forsigtige",
+            "ud", "brug", "vælg",
         };
 
         private static readonly string[] AutoDetectWordsNorwegian =
@@ -520,6 +519,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "siste", "selv", "andre", "dette", "hele", "sammen", "vekk", "hjem", "tilbake", "jobb", "jobbet", "lei", "sjanse",
             "ærlig", "etter", "aldri", "å", "være", "vært", "hadde", "dere", "fikk", "vann", "brua", "veiene", "husene", "elva", "ventet", "senere", "fjor",
             "ventes", "kraftig", "regn", "morgen", "temperaturen", "faller", "løpet", "natten", "bilister", "forsiktige",
+            "inn", "opp",
         };
 
         private static readonly string[] AutoDetectWordsSwedish =
@@ -537,18 +537,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             "arbetade", "jobbade", "levde", "väntade", "hoppades", "köpte", "betalade", "körde", "träffade", "ringde", "läste", "hittade", "öppnade",
             "väntas", "över", "norra", "morgon", "kraftigt", "delarna", "sjunker", "bör", "vara", "försiktiga", "noll", "bord", "två", "självklart", "följ", "menyn",
             "först", "utmärkt",
+            "till", "vid", "bort", "här", "endast",
         };
 
         private static readonly string[] AutoDetectWordsSpanish =
         {
-            "qué", "eso", "muy", "estoy?", "ahora", "hay", "tú", "así", "cuando", "cómo", "él", "sólo", "quiero", "gracias", "puedo", "bueno", "soy", "hacer", "fue", "eres", "usted", "tienes", "puede", "[Ss]eñor", "ese", "voy", "quién",
+            "qué", "eso", "muy", "los", "las", "más", "pero", "estoy?", "ahora", "hay", "tú", "así", "cuando", "cómo", "él", "sólo", "quiero", "gracias", "puedo", "bueno", "soy", "hacer", "fue", "eres", "usted", "tienes", "puede", "[Ss]eñor", "ese", "voy", "quién",
             "creo", "hola", "dónde", "sus", "verdad", "quieres", "mucho", "entonces", "estaba", "tiempo", "esa", "mejor", "hombre", "hace", "dios", "también", "están", "siempre", "hasta", "ahí", "siento",
             "puedes", "Dónde", "está", "estoy", "Vámonos", "vistiendo", "Caliente", "chimenea"
         };
 
         private static readonly string[] AutoDetectWordsItalian =
         {
-            "Buongiorno", "Grazie", "Cosa", "quest[ao]", "quell[ao]", "tutt[io]", "[st]uo", "qualcosa", "ancora", "sono", "bene", "più", "andare", "essere", "venire", "abbiamo", "andiamo", "ragazzi", "signore", "numero", "giorno",
+            "Buongiorno", "Grazie", "Cosa", "è", "gli", "della", "delle", "nella", "nel", "quest[ao]", "quell[ao]", "tutt[io]", "[st]uo", "qualcosa", "ancora", "sono", "bene", "più", "andare", "essere", "venire", "abbiamo", "andiamo", "ragazzi", "signore", "numero", "giorno",
             "propriamente", "sensitivo", "negativo", "davvero", "faccio", "voglio", "vuole", "perché", "allora", "niente", "anche", "stai", "detto", "fatto", "hanno", "molto", "stato", "siamo", "così", "vuoi", "noi", "vero", "loro",
             "fare", "gli", "due",
             "è", "sei", "siete", "erano", "stata", "stati", "state", "ho", "hai", "avete", "avevo", "aveva", "avevano", "io", "lui", "lei", "voi", "che", "chi",
@@ -560,6 +561,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "lavoro", "lavoravo", "città", "fiume", "ponte", "acqua", "strade", "collina", "tardi", "mentire", "mentirmi", "possibilità", "onesto", "scorso",
             "tranquilla", "rimasta", "fabbrica", "chiudesse", "aspettava", "salisse", "fretta", "sparito", "inondate", "guardava", "portava", "arrivare", "disse",
             "averlo", "senti", "dammi", "avuto",
+            "dal",
         };
 
         private static readonly string[] AutoDetectWordsFrench =
@@ -567,11 +569,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             "pas", "[vn]ous", "ça", "une", "pour", "[mt]oi", "dans", "elle", "tout", "plus", "[bmt]on", "suis", "avec", "oui", "fait", "ils", "être", "faire", "comme", "était", "quoi", "ici", "veux",
             "vouloir", "quelque", "pouvoir", "rien", "dit", "où", "votre", "pourquoi", "sont", "cette", "peux", "alors", "comment", "avez", "très", "même", "merci", "ont", "aussi", "chose", "voir",
             "allez", "tous", "ces", "deux", "avoir", " pouvoir", "même", "œil", "sœur",
+            "sous", "sur", "est",
         };
 
         private static readonly string[] AutoDetectWordsPortuguese =
         {
-            "[Nn]ão", "[Ee]ntão", "uma", "ele", "bem", "isso", "você", "sim", "meu", "muito", "estou", "ela", "fazer", "tem", "já", "minha", "tudo", "só", "tenho", "agora", "vou", "seu", "quem", "há",
+            "[Nn]ão", "[Ee]ntão", "uma", "é", "ao", "aos", "às", "pelo", "pela", "ele", "bem", "isso", "você", "sim", "meu", "muito", "estou", "ela", "fazer", "tem", "já", "minha", "tudo", "só", "tenho", "agora", "vou", "seu", "quem", "há",
             "lhe", "quero", "nós", "são", "ter", "coisa", "dizer", "eles", "pode", "bom", "mesmo", "mim", "estava", "assim", "estão", "até", "quer", "temos", "acho", "obrigado", "também", "tens",
             "deus", "quê", "ainda", "noite", "conversar", "Desculpe", "verdade",
             "é", "foi", "tinha", "têm", "eu", "elas", "vocês", "teu", "tua", "sua", "nosso", "nossa", "isto", "aquilo", "aquele", "aquela", "aqui", "lá", "cá", "hoje",
@@ -596,6 +599,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "menschen", "abend", "zeit", "jahr", "jahre", "haus", "zuhause", "leben", "liebe", "schnell", "langsam", "zusammen", "allein", "schade", "danke", "bitte",
             "entschuldigung", "tschüss", "herr", "stadt", "fluss", "brücke", "wasser", "häuser", "straßen", "später", "fabrik", "lange", "gearbeitet", "lüg", "leid",
             "reden", "letztes", "ehrlich", "einmal", "ruhig", "jahrelang", "erwartet", "steigen", "hügel", "ganze", "nacht", "nochmal", "hattest", "schloss",
+            "zum", "nur",
         };
 
         private static readonly string[] AutoDetectWordsDutch =
@@ -606,11 +610,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             "kwam", "doe", "doet", "doen", "deed", "gedaan", "zie", "ziet", "zien", "zag", "gezien", "weten", "wist", "denk", "denkt", "dacht", "zeg", "zegt",
             "zeggen", "zei", "gezegd", "praten", "mij", "jouw", "hem", "onze", "hun", "niets", "altijd", "misschien", "echt", "veel", "weinig", "slecht", "nieuw", "nacht", "avond", "gisteren", "vandaag", "tijd", "jaren", "thuis", "leven", "mensen", "vrouw", "jongen", "kinderen", "wegen", "huizen", "stijgen", "verwacht", "jarenlang",
             "sloot", "liegen", "spijt", "eerlijk", "dank", "bedankt", "alsjeblieft", "tot ziens",
+            "naar", "voor", "uit", "aan", "bij", "één",
         };
 
         private static readonly string[] AutoDetectWordsPolish =
         {
-            "Czy", "ale", "ty", "siê", "się", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko",
+            "Czy", "ale", "ty", "siê", "się", "jest", "są", "lub", "dla", "tylko", "przez", "który", "która", "które", "że", "już", "można", "oraz", "jeśli", "wszystkie", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko",
             "Wiem", "Przepraszam", "dobrze", "chciałam", "Dziękuję", "Żołnierzyk", "Łowca", "został", "stało", "dolarów",
             "wiadomości", "Dobrze", "będzie", "Dzień", "przyszłość", "Uratowałaś", "Cześć", "Trzeba", "zginąć", "walczyć",
             "ludzkość", "maszyny", "Jeszcze", "okrążenie", "wyścigu", "porządku", "detektywie", "przebieralni", "który",
@@ -638,6 +643,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             "πόλη", "ποτάμι", "γέφυρα", "νερό", "σπίτια", "αργότερα", "εργοστάσιο", "ήσυχη", "περίμενε", "ανέβαινε", "δρόμοι", "λόφο", "έπαιρνε", "έλεγαν", "δουλεύω",
             "ψέματα", "ευκαιρία", "ειλικρινής", "μιλήσουμε", "λυπάμαι", "κοίτα",
         };
+
+        /// <summary>
+        /// The Greek words longer than three letters, for telling the encoding: read as 1253, the bytes of
+        /// Japanese, Thai or Korean text are Greek letters too, and short words (ή, να, το, ...) match that junk.
+        /// </summary>
+        private static readonly string[] AutoDetectWordsGreekLong = AutoDetectWordsGreek.Where(w => w.Length > 3).ToArray();
 
         private static readonly string[] AutoDetectWordsRussian =
         {
@@ -748,7 +759,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             "tanrım", "hayatım", "aşkım", "yapıyorsun", "yapacağım", "lütfen", "kadın", "adamı", "bakalım",
             "bırak", "dışında", "hiçbir", "ışık", "kız", "sığ", "şans", "şöyle", "yaşam", "başladı",
             "olmalı", "bunları", "onları", "kızı", "sana", "seni", "beni", "bana", "hadi", "olur",
-            "gerçekten", "kesinlikle", "biliyorum", "olduğum", "ölmüş", "öldü", "gidiyorum", "kalsın"
+            "gerçekten", "kesinlikle", "biliyorum", "olduğum", "ölmüş", "öldü", "gidiyorum", "kalsın",
+            "veya", "olarak", "yok",
         };
 
         private static readonly string[] AutoDetectWordsCroatianAndSerbian =
@@ -773,7 +785,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static readonly string[] AutoDetectWordsSerbian =
         {
-            "šta", "ovde", "gde", "ko", "pre", "uvek", "vreme", "videti", "neko", "video", "niko", "ćao", "lepo", "izvini", "hteo", "mesto", "izvinite", "čovek", "dole", "čoveče", "dve", "dete", "deo", "posle", "dešava", "verovati",
+            "šta", "ovde", "gde", "ko", "pre", "uvek", "vreme", "videti", "neko", "niko", "ćao", "lepo", "izvini", "hteo", "mesto", "izvinite", "čovek", "dole", "čoveče", "dve", "dete", "deo", "posle", "dešava", "verovati",
             "verovatno", "verujem", "tačno", "razumem", "videla", "ceo", "svet", "porodica", "voleo", "srećan", "dođavola", "svetu", "htela", "videli", "negde", "želeo", "ponovo", "devojka", "umreti", "čoveka", "mesta", "deca", "osećam",
             "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo",
             "sto", "veče", "pratite", "odlična", "severu", "tokom", "putevima", "juče", "hiljadu", "nedelja", "mesec", "svetlo", "muzika", "vazduh", "hleb", "firma",
@@ -791,6 +803,15 @@ namespace Nikse.SubtitleEdit.Core.Common
             "њега", "њу", "нас", "вас", "их", "ми", "ти", "ви", "ко", "где", "кад", "јер", "ако", "или", "па", "још", "већ", "много", "мало", "лоше",
         };
 
+        /// <summary>
+        /// The Serbian words that Macedonian does not share, for telling the two apart when the letters do not:
+        /// за, или, само, како, ... are everyday words in both.
+        /// </summary>
+        private static readonly string[] AutoDetectWordsSerbianCyrillicNotMacedonian = AutoDetectWordsSerbianCyrillic.Except(new[]
+        {
+            "за", "или", "ја", "само", "како", "ако", "назад", "па", "прво", "сте", "она", "тебе", "ти", "нешто", "ми", "добро", "посебно", "мало", "сам", "тако",
+        }).ToArray();
+
         private static readonly string[] AutoDetectWordsSerbianCyrillicOnly =
         {
             "дођавола", "Дођи", "пронађемо", "ће", "ћемо", "Хоћу", "чекић", "неће",
@@ -803,18 +824,19 @@ namespace Nikse.SubtitleEdit.Core.Common
             "siapa", "mana", "kapan", "mengapa", "kenapa", "bagaimana", "berapa", "tidak", "bukan", "belum", "jangan", "ada", "adalah", "harus", "mau", "ingin", "boleh",
             "dapat", "sedang", "masih", "lagi", "juga", "saja", "hanya", "sangat", "sekali", "sekarang", "nanti", "tadi", "kemarin", "besok", "hari", "malam", "pagi",
             "waktu", "kali", "orang", "pria", "wanita", "anak", "ibu", "ayah", "teman", "hidup", "cinta", "uang", "mati", "cepat", "pelan", "bersama", "sendiri",
-            "sayang", "terima kasih", "maaf", "tolong", "selamat", "pak", "bu", "tuan", "nyonya", "semalaman", "kerja", "larut", "bohong", "dengar", "bicara", "soal",
+            "sayang", "terima kasih", "maaf", "tolong", "selamat", "pak", "tuan", "nyonya", "semalaman", "kerja", "larut", "bohong", "dengar", "bicara", "soal",
             "perlu", "dikatakan", "beri", "kesempatan", "lalu", "jujur", "kota", "sunyi", "pabrik", "ditutup", "menyangka", "sungai", "naik", "begitu", "menjelang",
             "jembatan", "hilang", "jalan", "terendam", "menyaksikan", "bukit", "menyapu", "belakangan", "berkata", "menduganya", "kubilang", "padaku", "dariku", "oke",
             "hujan", "turun", "utara", "diperkirakan", "suhu", "bawah", "nol", "pengemudi", "hati-hati", "ekstra", "meja", "tentu", "silakan", "ikuti", "lihat",
             "menunya", "dulu", "ikannya", "enak", "deras",
+            "saat", "satu", "lebih",
         };
 
         // Catalan — distinctive words that don't collide with Spanish/French/Italian/Portuguese
         // (accents matter: "què"/"gràcies"/"això" won't match the Spanish "qué"/"gracias").
         private static readonly string[] AutoDetectWordsCatalan =
         {
-            "què", "això", "amb", "però", "molt", "moltes", "molts", "gràcies", "aquest", "aquesta", "aquestes",
+            "què", "això", "amb", "els", "quan", "fins", "aquests", "però", "molt", "moltes", "molts", "gràcies", "aquest", "aquesta", "aquestes",
             "nosaltres", "vosaltres", "vull", "puc", "pots", "sóc", "ets", "són", "fer", "fas", "fem", "tinc",
             "tens", "seva", "teu", "meu", "ara", "res", "també", "perquè", "sisplau", "endavant", "ningú",
             "sempre", "doncs", "gairebé", "cadascú",
@@ -876,7 +898,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         // was mostly words from one space film plus OCR misreads with Latin letters in them.
         private static readonly string[] AutoDetectWordsMacedonian =
         {
-            "ќе", "што", "тоа", "дека", "дали", "јас", "тој", "таа", "тие", "сум", "треба", "требаат", "нема", "може", "можеби", "мора",
+            "ќе", "што", "тоа", "дека", "дали", "во", "со", "кој", "која", "кое", "кои", "овој", "оваа", "јас", "тој", "таа", "тие", "сум", "треба", "требаат", "нема", "може", "можеби", "мора",
             "многу", "нешто", "ништо", "некој", "никој", "сите", "колку", "каде", "зошто", "затоа", "тука", "таму", "уште", "веќе",
             "сега", "денес", "секогаш", "никогаш", "сакам", "мислам", "знаеме", "одиме", "правиш", "знаеш", "имаш", "беше", "време",
             "работа", "луѓе", "жени", "добро", "добра", "благодарам", "фала", "господине", "тоалет", "инженер", "вселената", "орбитата",
@@ -904,6 +926,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "huomenna", "eilen", "tänään", "odotetaan", "pohjoisessa", "pohjoiseen", "etelässä", "sataa", "sadetta", "rankkasadetta", "lämpötila", "laskee", "pakkasen",
             "puolelle", "autoilijoiden", "kannattaa", "erityisen", "varovaisia", "iltaa", "teillä", "pöytää", "kahdelle", "tietysti", "seuratkaa", "voisimmeko",
             "ruokalistan", "ensin", "kala", "erinomaista",
+            "yksi", "uudelleen", "lisää",
         };
 
         private static readonly string[] AutoDetectWordsRomanian =
@@ -919,6 +942,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "timp", "ani", "anul", "acasă", "casă", "viață", "viața", "dragoste", "bani", "repede", "încet", "împreună", "singur", "păcat", "sigur", "desigur", "chiar",
             "deci", "așa", "astfel", "iar", "lucru", "lucrat", "lucrez", "târziu", "devreme", "orașul", "fabrica", "râul", "podul", "drumurile", "inundate", "privea",
             "apa", "casele", "văzuseră", "venind", "minți", "vorbim", "șansă", "trecut", "măcar", "dată", "ai fost",
+            "cu", "să", "pe",
         };
 
         // Czech and Slovak languages have many common words (especially when non flexed)
@@ -938,11 +962,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             "nemám", "potřebuju", "potřebuji", "jasně", "samozřejmě", "opravdu", "vážně", "tady", "pak", "protože", "jestli", "pokud", "nelži", "promluvit", "šanci",
             "loni", "upřímný", "nečekal", "stoupne", "dívala", "kopce", "bere", "domy", "přicházet",
             "očekává", "silný", "déšť", "teploty", "klesnou", "nulu", "řidiči", "měli", "silnicích", "zvlášť", "opatrní", "stůl", "pojďte",
-            "mnou", "bychom", "nejdřív", "jídelní", "lístek", "vynikající", };
+            "mnou", "bychom", "nejdřív", "jídelní", "lístek", "vynikající",
+            "pouze",
+        };
         // differences between Czech and Slovak languages / Slovak words / please keep the words aligned between these languages for better comparison
         private static readonly string[] AutoDetectWordsSlovak =
         {
-            ".*[Ôô].*", ".*[ä].*",  "[Bb]yť", "[Ss]om",  "[Ss]i",  "[Jj]a", "[Mm]ať", "[Áá]no", "[Nn]ie", "[Nn]ič", "[Dd]eň", "[Ll]en", "[Čč]o", "[Aa]ko", "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "[Pp]red.*", "([Íí]sť|[Ii](dem|de|deme|dú))",
+            ".*[Ôô].*", ".*[Ľľĺŕ].*", "[Bb]yť", "[Ss]om",  "[Ss]i",  "[Jj]a", "[Mm]ať", "[Áá]no", "[Nn]ie", "[Nn]ič", "[Dd]eň", "[Ll]en", "[Čč]o", "[Aa]ko", "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "[Pp]red.*", "([Íí]sť|[Ii](dem|de|deme|dú))",
             "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)",
             "bolo", "bola", "bol", "boli", "sme", "ste", "sú", "nikto", "niečo", "niekto", "všetko", "všetci", "kým", "keď", "ak", "pretože", "kto", "kedy", "prečo",
             "koľko", "ktorý", "ktorá", "ktoré", "teraz", "zajtra", "iba", "veľmi", "dobre", "zle", "ďakujem", "prepáč", "prepáčte", "pani", "ľudia", "dievča", "dieťa",
@@ -967,6 +993,33 @@ namespace Nikse.SubtitleEdit.Core.Common
             "narediti", "naredil", "delaš", "preden", "pričakoval", "narasla", "pozneje", "prihajati", "hiše", "vodo", "tovarna", "zaprla", "celo", "delal", "pozno",
             "poslušaj", "žal", "morava", "pogovoriti", "reči", "priložnost", "lani", "odnaša", "mostu",
             "pričakujemo", "močan", "dež", "ponoči", "padle", "ničlo", "vozniki", "naj", "posebej", "previdni", "dober", "mizo", "sledite", "jedilnik", "nocoj", "odlična", "najprej", "videli",
+        };
+
+        // Galician, Basque and Welsh: everyday words their neighbours do not share (not non, da, du, han,
+        // nos, ti, ei, eu - French, Italian, Portuguese, Scandinavian, Finnish, ...). They used to come out
+        // as Portuguese, Hungarian and Norwegian.
+        private static readonly string[] AutoDetectWordsGalician =
+        {
+            "unha", "unhas", "grazas", "polo", "pola", "polos", "polas", "xa", "moito", "moita", "moitos", "moitas", "facer", "dicir",
+            "vostede", "tamén", "hoxe", "mañá", "xente", "ningún", "ningunha", "algunha", "coma", "cun", "cunha", "dun", "dunha", "nun",
+            "nunha", "iso", "teño", "fago", "fixen", "fixo", "dixo", "dixen", "xuntos", "despois", "irmán", "mellor",
+            "rapaza", "auga", "xantar", "onte", "estiven", "estivo", "moi", "máis", "miña", "nai", "che", "diso", "disto", "axuda", "imos",
+        };
+
+        private static readonly string[] AutoDetectWordsBasque =
+        {
+            "eta", "ez", "bai", "dira", "naiz", "zara", "gara", "dut", "duzu", "dugu", "dute", "zer", "nola", "zergatik", "noiz", "nor",
+            "hemen", "orain", "gero", "baina", "eskerrik", "asko", "batzuk", "hau", "hori", "hura", "nire", "zure", "gure", "beste", "oso",
+            "gabe", "behar", "nahi", "ezin", "dakit", "badakit", "dago", "daude", "egin", "egiten", "joan", "etorri", "esan", "ikusi",
+            "agur", "kaixo", "mesedez", "barkatu", "bihar", "atzo", "gaur", "zen", "zuen", "dela", "bezala", "guztia",
+        };
+
+        private static readonly string[] AutoDetectWordsWelsh =
+        {
+            "yn", "yr", "ddim", "mae", "wedi", "dw", "dwi", "rydw", "rwyt", "chi", "beth", "ble", "pam", "diolch", "gyda", "ond", "hefyd",
+            "nawr", "rŵan", "efo", "iawn", "bod", "oedd", "fydd", "hwn", "hon", "hyn", "fy", "dy", "ac", "gyd", "mewn", "drwy", "achos",
+            "rhaid", "eisiau", "gallu", "gwneud", "mynd", "dod", "dweud", "gweld", "fawr", "heddiw", "yfory", "croeso", "hwyl",
+            "fod", "ydy", "ydw", "wyt",
         };
 
         private static readonly string[] AutoDetectWordsIcelandic =
@@ -1064,7 +1117,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "palju", "selle", "nende", "üks", "ikkagi", "tegelikult", "metsad",
             "tere", "aitäh", "palun", "midagi", "mitte", "miks", "kuidas",
             "olen", "oota", "tahan", "mees", "naine", "poiss", "tüdruk",
-            "ma", "sa", "tema", "meie", "teie", "nema", "nad",
+            "ma", "sa", "tema", "meie", "teie", "nad",
             "see", "seda", "siin", "seal", "praegu", "veel", "päris",
             "tõesti", "muidugi", "vabandust", "hee", "kuule",
             "oli", "olnud", "olid", "oled", "oleme", "olete", "ole", "oleks", "enne", "kui", "keegi", "kedagi", "nii", "kes", "kus", "kuhu",
@@ -1120,10 +1173,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             var counts = CountWords(text);
             var cyrillicChecked = false;
             string cyrillicByLetters = null;
+            var dominantScript = GetDominantScript(text);
 
             void Consider(string languageCode, int score)
             {
-                if (score > bestScore)
+                if (score > bestScore && IsWrittenIn(languageCode, dominantScript))
                 {
                     best = languageCode;
                     bestScore = score;
@@ -1148,9 +1202,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var dutchCount = counts.Get(AutoDetectWordsDutch);
                 var swedishCount = counts.Get(AutoDetectWordsSwedish);
                 var icelandicCount = counts.Get(AutoDetectWordsIcelandic);
-                // Norwegian-only spellings outnumbering the Danish-only ones say Norwegian, unless
-                // there are too few of them to mean anything (one odd word in a long Danish file).
-                if ((norwegianOnlyCount < 2 || norwegianOnlyCount <= danishOnlyCount) && dutchCount < count && swedishCount < count)
+                // Norwegian-only spellings outnumbering the Danish-only ones say Norwegian. One odd
+                // Norwegian word in a long Danish file is outnumbered anyway; in a short text with no
+                // Danish-only word it is the only evidence there is.
+                if (norwegianOnlyCount <= danishOnlyCount && dutchCount < count && swedishCount < count)
                 {
                     if (icelandicCount > count * 1.5)
                     {
@@ -1168,7 +1223,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 var dutchCount = counts.Get(AutoDetectWordsDutch);
                 var swedishCount = counts.Get(AutoDetectWordsSwedish);
-                if ((danishOnlyCount < 2 || danishOnlyCount <= norwegianOnlyCount) && dutchCount < count && swedishCount < count)
+                if (danishOnlyCount <= norwegianOnlyCount && dutchCount < count && swedishCount < count)
                 {
                     Consider("no", count);
                 }
@@ -1219,6 +1274,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     Consider("sl", count);
                 }
+                else if (counts.Get(AutoDetectWordsGalician) * 2 > count)
+                {
+                    // Galician shares most words with Portuguese, so its own list scores lower than the
+                    // Portuguese one on Galician text - but Portuguese text has next to no Galician words.
+                    Consider("gl", count);
+                }
                 else
                 {
                     Consider("pt", count); // Portuguese
@@ -1239,7 +1300,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             count = counts.Get(AutoDetectWordsDutch);
             var afrikaansCount = counts.Get(AutoDetectWordsAfrikaans);
-            if (count > bestCount || afrikaansCount > bestCount)
+            // Not with Polish letters: Polish "nie" is the Afrikaans negation too, and Dutch and Afrikaans
+            // never write ł, ż, ź, ś or ń (one could be a name).
+            if ((count > bestCount || afrikaansCount > bestCount) && CountChars(text, "łŁżŻźŹśŚńŃ") < 2)
             {
                 // Afrikaans text hits the Dutch list too (het, van, een, ...); the spelling tells.
                 var afrikaansOrDutch = GetAfrikaansOrDutchByLetters(text);
@@ -1383,7 +1446,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var croatianCount = counts.Get(AutoDetectWordsCroatian);
                 var serbianCount = counts.Get(AutoDetectWordsSerbian);
                 var slovenianCount = counts.Get(AutoDetectWordsSlovenian);
-                if (croatianCount > serbianCount)
+                // On a tie (often none of either in a short text) the ijekavian spelling says Croatian:
+                // gdje, djeca, htjeti, vjerovati, mjesto - Serbian writes gde, deca, hteti, verovati, mesto.
+                if (croatianCount > serbianCount ||
+                    croatianCount == serbianCount && GetCountContains(text, "dje", "tje", "vje", "mje") > 0)
                 {
                     if (slovenianCount > croatianCount)
                     {
@@ -1420,6 +1486,22 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (count > bestCount)
             {
                 Consider("tr", count); // Turkish
+            }
+
+            // Azerbaijani by its letter: ə is in nearly every line, and in no other language here - the
+            // words it shares with Turkish made it Turkish.
+            count = CountChars(text, "əƏ");
+            if (count > bestCount && count > 2)
+            {
+                Consider("az", count); // Azerbaijani
+            }
+
+            // Central Kurdish (Sorani) by its letters ڕ ڵ ۆ ێ, which Persian, Arabic and Urdu do not use - its
+            // words in Arabic script made it Persian.
+            count = CountChars(text, "\u0695\u06B5\u06C6\u06CE");
+            if (count > bestCount && count > 2)
+            {
+                Consider("ckb", count); // Central Kurdish
             }
 
             count = counts.Get(AutoDetectWordsIndonesian);
@@ -1603,6 +1685,24 @@ namespace Nikse.SubtitleEdit.Core.Common
             if (count > bestCount)
             {
                 Consider("is", count);
+            }
+
+            count = counts.Get(AutoDetectWordsGalician);
+            if (count > bestCount)
+            {
+                Consider("gl", count); // Galician
+            }
+
+            count = counts.Get(AutoDetectWordsBasque);
+            if (count > bestCount)
+            {
+                Consider("eu", count); // Basque
+            }
+
+            count = counts.Get(AutoDetectWordsWelsh);
+            if (count > bestCount)
+            {
+                Consider("cy", count); // Welsh
             }
 
             score = bestScore;
@@ -1949,6 +2049,21 @@ namespace Nikse.SubtitleEdit.Core.Common
                 },
                 new LanguageForAutoDetect
                 {
+                    LanguageCode = "gl",
+                    Words = AutoDetectWordsGalician,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "eu",
+                    Words = AutoDetectWordsBasque,
+                },
+                new LanguageForAutoDetect
+                {
+                    LanguageCode = "cy",
+                    Words = AutoDetectWordsWelsh,
+                },
+                new LanguageForAutoDetect
+                {
                     LanguageCode = "lv",
                     Words = AutoDetectWordsLatvian,
                 },
@@ -1986,7 +2101,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle, bool detectChineseScript = false)
         {
             var allText = GetNonEmptyTexts(subtitle, 500000, out var nonEmptyCount);
-            var languageId = AutoDetectGoogleLanguage(allText, nonEmptyCount / 14, out var score, detectChineseScript);
+            var languageId = GetLanguageByDominantScript(allText, detectChineseScript) ??
+                             AutoDetectGoogleLanguage(allText, nonEmptyCount / 14, out _, detectChineseScript);
             if (string.IsNullOrEmpty(languageId))
             {
                 languageId = GetEncodingViaLetter(allText);
@@ -1998,6 +2114,157 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return languageId;
+        }
+
+        private enum Script
+        {
+            Mixed,
+            Latin,
+            Cyrillic,
+            Arabic,
+        }
+
+        /// <summary>
+        /// The script most letters are in, when it is more than half of them.
+        /// </summary>
+        private static Script GetDominantScript(string text)
+        {
+            int letters = 0, latin = 0, cyrillic = 0, arabic = 0;
+            foreach (var ch in text)
+            {
+                if (!char.IsLetter(ch))
+                {
+                    continue;
+                }
+
+                letters++;
+                if (ch < '\u0250')
+                {
+                    latin++;
+                }
+                else if (ch >= '\u0400' && ch <= '\u04FF')
+                {
+                    cyrillic++;
+                }
+                else if (ch >= '\u0600' && ch <= '\u06FF' || ch >= '\u0750' && ch <= '\u077F' || ch >= '\uFB50' && ch <= '\uFEFF')
+                {
+                    arabic++;
+                }
+            }
+
+            var half = letters / 2;
+            if (latin > half)
+            {
+                return Script.Latin;
+            }
+
+            if (cyrillic > half)
+            {
+                return Script.Cyrillic;
+            }
+
+            return arabic > half ? Script.Arabic : Script.Mixed;
+        }
+
+        /// <summary>
+        /// Whether a language can be the answer for a text mostly in the given script: a few Latin words
+        /// in a Cyrillic text (names, "Video") must not make it Hungarian, nor Cyrillic junk Latin text Russian.
+        /// Serbian is written in both Latin and Cyrillic.
+        /// </summary>
+        private static bool IsWrittenIn(string languageCode, Script script)
+        {
+            switch (script)
+            {
+                case Script.Cyrillic:
+                    return languageCode == "ru" || languageCode == "uk" || languageCode == "bg" || languageCode == "mk" || languageCode == "sr";
+                case Script.Arabic:
+                    return languageCode == "ar" || languageCode == "fa" || languageCode == "ur" || languageCode == "ckb";
+                case Script.Latin:
+                    return languageCode != "ru" && languageCode != "uk" && languageCode != "bg" && languageCode != "mk" &&
+                           languageCode != "ar" && languageCode != "fa" && languageCode != "ur" && languageCode != "ckb" &&
+                           languageCode != "el" && languageCode != "he" && languageCode != "th" && languageCode != "ko" &&
+                           languageCode != "ja" && !languageCode.StartsWith("zh", StringComparison.Ordinal) &&
+                           languageCode != "hi" && languageCode != "si";
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// The language of a script only one language here is written in, when most letters are in it:
+        /// Hangul, Thai, kana (with Han), Han alone, Greek, Hebrew. The word lists of those scripts are
+        /// short, so a few Latin words (names, "Video", ...) used to outscore them - Korean became English.
+        /// </summary>
+        /// <returns>The language code, or null when no such script dominates.</returns>
+        private static string GetLanguageByDominantScript(string text, bool detectChineseScript)
+        {
+            int letters = 0, hangul = 0, thai = 0, kana = 0, han = 0, greek = 0, hebrew = 0;
+            foreach (var ch in text)
+            {
+                if (!char.IsLetter(ch))
+                {
+                    continue;
+                }
+
+                letters++;
+                if (ch >= '\uAC00' && ch <= '\uD7A3' || ch >= '\u1100' && ch <= '\u11FF' || ch >= '\u3130' && ch <= '\u318F')
+                {
+                    hangul++;
+                }
+                else if (ch >= '\u0E00' && ch <= '\u0E7F')
+                {
+                    thai++;
+                }
+                else if (ch >= '\u3040' && ch <= '\u30FF')
+                {
+                    kana++;
+                }
+                else if (ch >= '\u4E00' && ch <= '\u9FFF')
+                {
+                    han++;
+                }
+                else if (ch >= '\u0370' && ch <= '\u03FF' || ch >= '\u1F00' && ch <= '\u1FFF')
+                {
+                    greek++;
+                }
+                else if (ch >= '\u0590' && ch <= '\u05FF')
+                {
+                    hebrew++;
+                }
+            }
+
+            if (letters < 5)
+            {
+                return null;
+            }
+
+            var half = letters / 2;
+            if (kana * 10 >= letters && kana + han > half)
+            {
+                return "ja"; // Chinese has no kana
+            }
+
+            if (hangul > half)
+            {
+                return "ko";
+            }
+
+            if (thai > half)
+            {
+                return "th";
+            }
+
+            if (han > half)
+            {
+                return detectChineseScript ? DetermineChineseScript(text) : "zh";
+            }
+
+            if (greek > half)
+            {
+                return "el";
+            }
+
+            return hebrew > half ? "he" : null;
         }
 
         /// <summary>
@@ -2499,16 +2766,37 @@ namespace Nikse.SubtitleEdit.Core.Common
             return languageName;
         }
 
-        private static Encoding DetectJapaneseOrChineseEncoding(byte[] buffer)
+        private static Encoding DetectCjkEncoding(byte[] buffer)
         {
-            var shiftJisText = Encoding.GetEncoding(932).GetString(buffer);
-            if (CountCharsInRange(shiftJisText, '\u3040', '\u30FF') > 10 && CountChars(shiftJisText, "\uFFFD") < 3) // Japanese kana
+            var shiftJisText = GetStringWithReplacementChar(932, buffer);
+            // Japanese kana: other code pages' bytes almost never form the 0x82/0x83 kana pairs, so a few
+            // kana are enough when every byte decodes.
+            var kanaCount = CountCharsInRange(shiftJisText, '\u3040', '\u30FF');
+            var shiftJisInvalidCount = CountChars(shiftJisText, "\uFFFD");
+            if (IsMostlyCjkRuns(shiftJisText) && (kanaCount > 10 && shiftJisInvalidCount < 3 || kanaCount >= 3 && shiftJisInvalidCount == 0))
             {
                 return Encoding.GetEncoding(932);
             }
 
-            var gbkText = Encoding.GetEncoding(936).GetString(buffer);
-            var big5Text = Encoding.GetEncoding(950).GetString(buffer);
+            // EUC-JP: its bytes are valid GBK too, so the kana have to be checked before the Chinese code pages.
+            var eucJpText = GetStringWithReplacementChar(51932, buffer);
+            if (CountCharsInRange(eucJpText, '\u3040', '\u30FF') > 10 && IsMostlyCjkRuns(eucJpText) && CountChars(eucJpText, "\uFFFD") < 3)
+            {
+                return Encoding.GetEncoding(51932);
+            }
+
+            // Korean bytes are valid GBK and Big5 too, and Chinese or Japanese bytes read as 949 are Hangul
+            // as well - but only real Korean has the common syllables (이, 다, 요, 는, ...) all over.
+            var koreanText = GetStringWithReplacementChar(949, buffer);
+            var hangulCount = CountCharsInRange(koreanText, '\uAC00', '\uD7A3');
+            if (hangulCount > 10 && IsMostlyCjkRuns(koreanText) &&
+                CountChars(koreanText, CommonHangulSyllables) * 5 >= hangulCount && CountChars(koreanText, "\uFFFD") < 3)
+            {
+                return Encoding.GetEncoding(949);
+            }
+
+            var gbkText = GetStringWithReplacementChar(936, buffer);
+            var big5Text = GetStringWithReplacementChar(950, buffer);
             var isGbk = IsCjkText(gbkText);
             var isBig5 = IsCjkText(big5Text);
             var simplifiedCount = CountChars(gbkText, "\u4EEC\u8FD9\u8BF4\u6765\u4E3A\u5BF9\u6CA1\u8FC7\u56FD\u65F6\u4E2A\u4F1A\u5B66\u8BF7");
@@ -2526,9 +2814,57 @@ namespace Nikse.SubtitleEdit.Core.Common
             return null;
         }
 
+        /// <summary>
+        /// Decodes with invalid bytes as U+FFFD. The default 932 decoder turns invalid bytes into
+        /// U+30FB (katakana middle dot), so accented letters in a Western ANSI file counted as kana.
+        /// </summary>
+        private static string GetStringWithReplacementChar(int codePage, byte[] buffer)
+        {
+            return Encoding.GetEncoding(codePage, EncoderFallback.ReplacementFallback, new DecoderReplacementFallback("\uFFFD")).GetString(buffer);
+        }
+
+        private const string CommonHangulSyllables = "이다요는가을를에의지고하서어니네게도한아그나내야해있습";
+
         private static bool IsCjkText(string text)
         {
-            return CountCharsInRange(text, '\u4E00', '\u9FFF') > 10 && CountChars(text, "\uFFFD") < 3;
+            var cjkCount = CountCharsInRange(text, '\u4E00', '\u9FFF');
+            var invalidCount = CountChars(text, "\uFFFD");
+            return cjkCount > 10 && IsMostlyCjkRuns(text) && invalidCount < 3 && invalidCount * 20 < cjkCount;
+        }
+
+        /// <summary>
+        /// Whether most CJK characters stand next to another one. Accented letters of a Latin-script text
+        /// read as a double-byte code page become lone CJK characters between plain letters, while real
+        /// CJK text runs on. Not a count of the plain letters, which markup (ASSA Dialogue lines, WebVTT
+        /// cue settings, ...) adds to real CJK files too.
+        /// </summary>
+        private static bool IsMostlyCjkRuns(string text)
+        {
+            var cjkCount = 0;
+            var inRunCount = 0;
+            for (var i = 0; i < text.Length; i++)
+            {
+                if (!IsCjkChar(text[i]))
+                {
+                    continue;
+                }
+
+                cjkCount++;
+                if (i > 0 && IsCjkChar(text[i - 1]) || i + 1 < text.Length && IsCjkChar(text[i + 1]))
+                {
+                    inRunCount++;
+                }
+            }
+
+            return cjkCount > 0 && inRunCount * 4 >= cjkCount * 3;
+        }
+
+        private static bool IsCjkChar(char ch)
+        {
+            return ch >= '\u3000' && ch <= '\u30FF' || // CJK punctuation, kana
+                   ch >= '\u4E00' && ch <= '\u9FFF' || // CJK ideographs
+                   ch >= '\uAC00' && ch <= '\uD7A3' || // Hangul syllables
+                   ch >= '\uFF00' && ch <= '\uFFEF';   // full-width forms
         }
 
         private static int CountCharsInRange(string text, char from, char to)
@@ -2574,7 +2910,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // Cyrillic bytes read as 1253 are Greek letters too, and two-letter Greek words
                 // (να, το, με, ...) match such junk by chance - so Greek has to beat the Cyrillic count.
                 var greekEncoding = Encoding.GetEncoding(1253); // Greek
-                var greekCount = GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek);
+                var greekCount = GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreekLong);
                 if (greekCount > 5 && greekCount > cyrillicCount)
                 {
                     if (koreanCount > greekCount)
@@ -2590,7 +2926,29 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return russianEncoding;
                 }
 
-                var wordMinCount = buffer.Length / 300;
+                // At least two hits: in a small file a single chance match must not decide.
+                var wordMinCount = Math.Max(1, buffer.Length / 300);
+
+                // Russian in the other Cyrillic code pages, before the Serbian check (DOS 866 letters read as 1251
+                // include Ђ, Љ, ...) and the Latin-script word lists (read as 1250/1252 they are accented letters).
+                var russianCount1251 = counts1251.Get(AutoDetectWordsRussian);
+                Encoding bestRussianEncoding = null;
+                var bestRussianCount = Math.Max(wordMinCount, russianCount1251);
+                foreach (var codePage in new[] { 20866, 28595, 866 }) // KOI8-R, ISO-8859-5, DOS
+                {
+                    var cyrillicEncoding = Encoding.GetEncoding(codePage);
+                    var count = GetCount(cyrillicEncoding.GetString(buffer), AutoDetectWordsRussian);
+                    if (count > bestRussianCount)
+                    {
+                        bestRussianEncoding = cyrillicEncoding;
+                        bestRussianCount = count;
+                    }
+                }
+
+                if (bestRussianEncoding != null)
+                {
+                    return bestRussianEncoding;
+                }
 
                 if (counts1251.Get(AutoDetectWordsSerbianCyrillic) > wordMinCount)
                 {
@@ -2608,27 +2966,44 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return russianEncoding;
                 }
 
+                // Before the Latin-script word lists: CJK bytes read as 1250/1252 match their short words by chance.
+                if (DetectCjkEncoding(buffer) is { } cjkEncoding)
+                {
+                    return cjkEncoding;
+                }
+
                 var encoding1250 = Encoding.GetEncoding(1250); // Central European/Eastern European: Polish, Czech, Slovak, Hungarian, Slovene, Bosnian, Croatian, Serbian (Latin script), Romanian (before 1993 spelling reform) and Albanian
                 var textEnc1250 = encoding1250.GetString(buffer);
                 var counts1250 = CountWords(textEnc1250);
-                if (counts1250.Get(AutoDetectWordsCroatianAndSerbian) > wordMinCount)
-                {
-                    return encoding1250;
-                }
-
-                if (counts1250.Get(AutoDetectWordsCzechAndSlovak) > wordMinCount)
-                {
-                    return encoding1250;
-                }
-
-                if (counts1250.Get(AutoDetectWordsHungarian) > wordMinCount)
-                {
-                    return encoding1250;
-                }
-
                 var encoding1252 = Encoding.GetEncoding(1252); // Latin - English and some other Western languages
                 var textEnc1252 = encoding1252.GetString(buffer);
                 var counts1252 = CountWords(textEnc1252);
+
+                // The Central European and Baltic lists share short words (je, se, ma, és, par, ...) with each
+                // other and with Western languages, so each must also beat the others - else Estonian, Catalan
+                // or French ends up as 1250, and Latvian as 1252.
+                var westernCount = GetBestCount(counts1252, AutoDetectWordsFrench, AutoDetectWordsSpanish, AutoDetectWordsItalian,
+                    AutoDetectWordsPortuguese, AutoDetectWordsGerman, AutoDetectWordsDutch, AutoDetectWordsDanish, AutoDetectWordsSwedish,
+                    AutoDetectWordsNorwegian, AutoDetectWordsFinnish, AutoDetectWordsIcelandic, AutoDetectWordsCatalan, AutoDetectWordsAlbanian);
+                var encoding1257 = Encoding.GetEncoding(1257); // Baltic
+                var counts1257 = CountWords(encoding1257.GetString(buffer));
+                var balticCount = GetBestCount(counts1257, AutoDetectWordsEstonian, AutoDetectWordsLatvian, AutoDetectWordsLithuanian);
+                var competingCount = Math.Max(westernCount, balticCount);
+                // Not the Czech and Slovak lists: their "line contains ř/ô/ä" entries match any non-Latin text read as 1250.
+                var centralEuropeanCount = GetBestCount(counts1250, AutoDetectWordsCroatianAndSerbian, AutoDetectWordsCzechAndSlovak,
+                    AutoDetectWordsSlovenian, AutoDetectWordsHungarian, AutoDetectWordsRomanian);
+                if (centralEuropeanCount > wordMinCount && centralEuropeanCount > competingCount)
+                {
+                    return encoding1250;
+                }
+
+                // Latvian and Lithuanian letters (ā, ē, ī, ū, ė, į, ų, ...) need 1257; Estonian (õ, ä, ö, ü) reads fine as 1252.
+                var latvianOrLithuanianCount = GetBestCount(counts1257, AutoDetectWordsLatvian, AutoDetectWordsLithuanian);
+                if (latvianOrLithuanianCount > wordMinCount && latvianOrLithuanianCount > GetBestCount(counts1252, AutoDetectWordsLatvian, AutoDetectWordsLithuanian) &&
+                    latvianOrLithuanianCount > westernCount && latvianOrLithuanianCount > centralEuropeanCount && latvianOrLithuanianCount > counts1250.Get(AutoDetectWordsPolish))
+                {
+                    return encoding1257;
+                }
 
                 // Turkish: the dotless ı, ş and ğ (bytes 0xFD, 0xFE, 0xF0 in 1254) decode as ý, þ, ð in 1252,
                 // so a text whose Turkish word count grows when read as 1254 is Turkish. Checked before the
@@ -2678,16 +3053,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return encoding1252;
                 }
 
+                // ¡ and ¿ only count along with Spanish words: their bytes are the Arabic comma and question mark in 1256.
                 var spanishCount1252 = counts1252.Get(AutoDetectWordsSpanish);
-                if (textEnc1252.Contains('¡'))
+                if (spanishCount1252 > 0 && textEnc1252.Contains('¡'))
                 {
                     spanishCount1252 += 5;
                 }
-                if (textEnc1252.Contains('¿'))
+                if (spanishCount1252 > 0 && textEnc1252.Contains('¿'))
                 {
                     spanishCount1252 += 5;
                 }
-                if (spanishCount1252 > wordMinCount && (textEnc1252.Contains('ú') || textEnc1252.Contains('í') || textEnc1252.Contains('ú') || textEnc1252.Contains('ó') || textEnc1252.Contains('é') || textEnc1252.Contains('ñ')))
+                if (spanishCount1252 > wordMinCount && (textEnc1252.Contains('ú') || textEnc1252.Contains('í') || textEnc1252.Contains('á') || textEnc1252.Contains('ó') || textEnc1252.Contains('é') || textEnc1252.Contains('ñ')))
                 {
                     var weirdChars = CountWeirdCharacters(textEnc1252);
                     if (weirdChars < 3)
@@ -2712,16 +3088,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 var arabicEncoding = Encoding.GetEncoding(1256); // Arabic
                 var hebrewEncoding = Encoding.GetEncoding(1255); // Hebrew
-                if (GetCount(arabicEncoding.GetString(buffer), AutoDetectWordsArabic) > 5)
+                // 1256 is the ANSI code page of Persian and Urdu too. Read as 1255, a long 1256 text matches
+                // Hebrew words as well, so Hebrew has to beat the 1256 count, not just pass a fixed one.
+                var arabicScriptCount = GetBestCount(CountWords(arabicEncoding.GetString(buffer)), AutoDetectWordsArabic, AutoDetectWordsFarsi, AutoDetectWordsUrdu);
+                var hebrewCount = GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew);
+                if (arabicScriptCount > 5 || arabicScriptCount > wordMinCount && arabicScriptCount > cyrillicCount)
                 {
-                    if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 10)
-                    {
-                        return hebrewEncoding;
-                    }
-
-                    return arabicEncoding;
+                    return hebrewCount > arabicScriptCount ? hebrewEncoding : arabicEncoding;
                 }
-                if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
+                if (hebrewCount > 5)
                 {
                     return hebrewEncoding;
                 }
@@ -2729,6 +3104,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (counts1250.Get(AutoDetectWordsRomanianShort) > 99)
                 {
                     return encoding1250;
+                }
+
+                // Albanian (ë, ç) and Icelandic (þ, ð, ý) are 1252 - the fallback detector says ISO-8859-13 for them.
+                var albanianOrIcelandicCount = GetBestCount(counts1252, AutoDetectWordsAlbanian, AutoDetectWordsIcelandic);
+                if (albanianOrIcelandicCount > wordMinCount && albanianOrIcelandicCount >= westernCount && albanianOrIcelandicCount > centralEuropeanCount)
+                {
+                    return encoding1252;
                 }
 
                 var encoding28591 = Encoding.GetEncoding(28591);
@@ -2751,12 +3133,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return encoding1254;
                 }
 
-                if (DetectJapaneseOrChineseEncoding(buffer) is { } cjkEncoding)
+                // A Western language's words lead (English, Afrikaans, Catalan, Finnish, Icelandic, ...): its letters
+                // are all in 1252, while the fallback detector guessed Mac or Baltic code pages for small such files.
+                var westernOrEnglishCount = GetBestCount(counts1252, AutoDetectWordsEnglish, AutoDetectWordsAfrikaans);
+                westernOrEnglishCount = Math.Max(westernOrEnglishCount, westernCount);
+                if (westernOrEnglishCount > wordMinCount && westernOrEnglishCount > centralEuropeanCount && westernOrEnglishCount > balticCount &&
+                    westernOrEnglishCount > GetBestCount(counts1250, AutoDetectWordsCzech, AutoDetectWordsSlovak) && HasMostlyLoneNonAsciiBytes(buffer))
                 {
-                    return cjkEncoding;
+                    return encoding1252;
                 }
 
-                var encoding = EncodingTools.DetectInputCodepage(buffer);
+                // Only typographic punctuation outside ASCII (smart quotes, …, dashes, bullet): the same bytes
+                // in all Windows code pages, and UTF.Unknown guessed Mac Central European for such small files.
+                var encoding = HasOnlyWindowsPunctuation(buffer) ? encoding1252 : EncodingTools.DetectInputCodepage(buffer);
                 if (encoding.CodePage == 28599)
                 {
                     return Encoding.GetEncoding(1254); // prefer 1254 over 28599 
@@ -2774,12 +3163,81 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
 
+                // Only called for bytes that are not UTF-8, and Encoding.Default is UTF-8 on .NET (Core),
+                // so a UTF-8, ASCII or DOS code page guess would garble every non-ASCII letter.
+                if (encoding.CodePage < 874 || encoding.CodePage == Encoding.UTF8.CodePage || encoding.CodePage == Encoding.ASCII.CodePage)
+                {
+                    return encoding1252;
+                }
+
                 return encoding;
             }
             catch
             {
                 return Encoding.Default;
             }
+        }
+
+        /// <summary>
+        /// Whether the bytes outside ASCII are mostly lone accents between plain letters (café, für), as in a
+        /// Western-language text - not whole words of them, as Cyrillic, Greek, Arabic or CJK bytes are, which
+        /// read as 1252 are accented letters and match a word by chance. Not a share of ASCII letters: an ASSA
+        /// header or WebVTT cue settings add plenty of those to any file.
+        /// </summary>
+        private static bool HasMostlyLoneNonAsciiBytes(byte[] buffer)
+        {
+            var nonAscii = 0;
+            var inRun = 0;
+            for (var i = 0; i < buffer.Length; i++)
+            {
+                if (buffer[i] < 0x80)
+                {
+                    continue;
+                }
+
+                nonAscii++;
+                if (i > 0 && buffer[i - 1] >= 0x80 || i + 1 < buffer.Length && buffer[i + 1] >= 0x80)
+                {
+                    inRun++;
+                }
+            }
+
+            return inRun * 2 < nonAscii;
+        }
+
+        /// <summary>
+        /// Whether every byte outside ASCII is one of ‘ ’ “ ” … – — • in the Windows code pages (and there is one).
+        /// </summary>
+        private static bool HasOnlyWindowsPunctuation(byte[] buffer)
+        {
+            var found = false;
+            foreach (var b in buffer)
+            {
+                if (b < 0x80)
+                {
+                    continue;
+                }
+
+                if (b != 0x85 && (b < 0x91 || b > 0x97))
+                {
+                    return false;
+                }
+
+                found = true;
+            }
+
+            return found;
+        }
+
+        private static int GetBestCount(WordListCounts counts, params string[][] wordLists)
+        {
+            var best = 0;
+            foreach (var wordList in wordLists)
+            {
+                best = Math.Max(best, counts.Get(wordList));
+            }
+
+            return best;
         }
 
         private static int CountWeirdCharacters(string textEnc1252)
@@ -2910,7 +3368,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             return utf16;
                         }
 
-                        if (IsUtf8(buffer, out var couldBeUtf8))
+                        if (IsUtf8(buffer, length < file.Length, out var couldBeUtf8))
                         {
                             encoding = Encoding.UTF8;
                         }
@@ -2927,7 +3385,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             var autoDetected = DetectAnsiEncoding(buffer);
                             if (autoDetected != null)
                             {
-                                return autoDetected.CodePage < 874 ? Encoding.Default : autoDetected;
+                                return autoDetected; // DOS code pages only when the words say so, e.g. Russian in 866
                             }
                         }
                     }
@@ -2945,13 +3403,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// Will try to determine if buffer is utf-8 encoded or not.
         /// If any non-utf8 sequences are found then false is returned, if no utf8 multi bytes sequences are found then false is returned.
         /// </summary>
-        private static bool IsUtf8(byte[] buffer, out bool couldBeUtf8)
+        /// <param name="buffer">The start of the file.</param>
+        /// <param name="isCutOff">True when the file is longer than the buffer, so its last character may be cut in two.</param>
+        /// <param name="couldBeUtf8">True when no invalid sequence was found.</param>
+        private static bool IsUtf8(byte[] buffer, bool isCutOff, out bool couldBeUtf8)
         {
             couldBeUtf8 = false;
             var utf8Count = 0;
             var i = 0;
-            var max = buffer.Length - 3;
-            while (i < max)
+            while (i < buffer.Length)
             {
                 byte b = buffer[i];
                 if (b <= 127)
@@ -2973,30 +3433,47 @@ namespace Nikse.SubtitleEdit.Core.Common
                     continue;
                 }
 
-                if (b >= 194 && b <= 223 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
-                { // 2-byte sequence
-                    utf8Count++;
-                    i++;
+                int sequenceLength;
+                if (b >= 194 && b <= 223)
+                {
+                    sequenceLength = 2;
                 }
-                else if (b >= 224 && b <= 239 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
-                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191)
-                { // 3-byte sequence
-                    utf8Count++;
-                    i += 2;
+                else if (b >= 224 && b <= 239)
+                {
+                    sequenceLength = 3;
                 }
-                else if (b >= 240 && b <= 244 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
-                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191 &&
-                                                 buffer[i + 3] >= 128 && buffer[i + 3] <= 191)
-                { // 4-byte sequence
-                    utf8Count++;
-                    i += 3;
+                else if (b >= 240 && b <= 244)
+                {
+                    sequenceLength = 4;
                 }
                 else
                 {
                     return false;
                 }
 
-                i++;
+                // Checked to the very end: a non-UTF-8 byte in the last bytes (an accented last
+                // letter before the final line break) used to slip through. Only a buffer cut off
+                // from a longer file may end inside a sequence.
+                if (i + sequenceLength > buffer.Length && !isCutOff)
+                {
+                    return false;
+                }
+
+                var end = Math.Min(i + sequenceLength, buffer.Length);
+                for (var j = i + 1; j < end; j++)
+                {
+                    if (buffer[j] < 128 || buffer[j] > 191)
+                    {
+                        return false;
+                    }
+                }
+
+                if (i + sequenceLength <= buffer.Length)
+                {
+                    utf8Count++;
+                }
+
+                i += sequenceLength;
             }
 
             couldBeUtf8 = true;

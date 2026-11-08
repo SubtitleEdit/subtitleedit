@@ -20,6 +20,8 @@ public class BinaryAdjustAlphaWindow : Window
         Title = Se.Language.General.AdjustAlpha;
         Width = 800;
         Height = 600;
+        MinWidth = 600;
+        MinHeight = 400;
         CanResize = true;
         BinaryEditChrome.Apply(this);
         vm.Window = this;

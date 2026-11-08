@@ -52,8 +52,8 @@ public static class TtsEngineInstaller
                 {
                     var variantAnswer = await MessageBox.Show(
                         window,
-                        "Download Qwen3 TTS?",
-                        $"{Environment.NewLine}\"Text to speech\" requires Qwen3 TTS.{Environment.NewLine}{Environment.NewLine}Select a build to download:",
+                        string.Format(Se.Language.General.DownloadXQuestion, "Qwen3 TTS"),
+                        Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.RequiresXSelectBuild, "Qwen3 TTS"),
                         MessageBoxButtons.Cancel,
                         MessageBoxIcon.Question,
                         "CPU",
@@ -76,8 +76,8 @@ public static class TtsEngineInstaller
                     {
                         var vulkanAnswer = await MessageBox.Show(
                             window,
-                            "Vulkan runtime may be required",
-                            $"The Vulkan version requires the Vulkan runtime (vulkan-1.dll) which usually ships with current GPU drivers, but was not detected on this system.{Environment.NewLine}{Environment.NewLine}You can install it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download anyway?",
+                            Se.Language.General.VulkanRuntimeMayBeRequired,
+                            Se.Language.General.VulkanRuntimeNotDetectedContinue,
                             MessageBoxButtons.YesNoCancel,
                             MessageBoxIcon.Question);
 
@@ -97,8 +97,8 @@ public static class TtsEngineInstaller
                 {
                     var answer = await MessageBox.Show(
                         window,
-                        "Download Qwen3 TTS?",
-                        $"{Environment.NewLine}\"Text to speech\" requires Qwen3 TTS.{Environment.NewLine}{Environment.NewLine}Download and use Qwen3 TTS?",
+                        string.Format(Se.Language.General.DownloadXQuestion, "Qwen3 TTS"),
+                        Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.RequiresXDownloadAndUse, "Qwen3 TTS"),
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
 
@@ -126,8 +126,8 @@ public static class TtsEngineInstaller
                 var sizeText = GetModelDownloadSizeText(engine, model);
                 var answer = await MessageBox.Show(
                     window,
-                    "Download Qwen3 TTS models?",
-                    $"{Environment.NewLine}\"Qwen3 TTS\" ({qwen3ModelKey}) requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "Qwen3 TTS"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelsSizeZDownload, "Qwen3 TTS", qwen3ModelKey, sizeText),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -157,8 +157,8 @@ public static class TtsEngineInstaller
                 var sizeText = GetModelDownloadSizeText(engine, model);
                 var answer = await MessageBox.Show(
                     window,
-                    "Download Qwen3 TTS (CrispASR) models?",
-                    $"{Environment.NewLine}\"Qwen3 TTS (CrispASR)\" ({crispAsrModelKey}) requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "Qwen3 TTS (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelsSizeZDownload, "Qwen3 TTS (CrispASR)", crispAsrModelKey, sizeText),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -199,8 +199,8 @@ public static class TtsEngineInstaller
                 // we don't append a separate size — avoids duplication in the prompt.
                 var answer = await MessageBox.Show(
                     window,
-                    "Download VibeVoice (CrispASR) model?",
-                    $"{Environment.NewLine}\"VibeVoice (CrispASR)\" ({vibeModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelQuestion, "VibeVoice (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelDownload, "VibeVoice (CrispASR)", vibeModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -239,8 +239,8 @@ public static class TtsEngineInstaller
                 // so we don't append a separate size — avoids duplication in the prompt.
                 var answer = await MessageBox.Show(
                     window,
-                    "Download IndexTTS (CrispASR) models?",
-                    $"{Environment.NewLine}\"IndexTTS (CrispASR)\" ({indexModelKey}) requires models.{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "IndexTTS (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelsDownload, "IndexTTS (CrispASR)", indexModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -276,8 +276,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download Supertonic (CrispASR) model?",
-                    $"{Environment.NewLine}\"Supertonic (CrispASR)\" requires a model (~200 MB).{Environment.NewLine}{Environment.NewLine}Download model?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelQuestion, "Supertonic (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRequiresModelSizeYDownload, "Supertonic (CrispASR)", "~200 MB"),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -316,8 +316,8 @@ public static class TtsEngineInstaller
                 // "German Q8_0 (~124 MB)") so we don't append a separate size.
                 var answer = await MessageBox.Show(
                     window,
-                    "Download Pocket TTS (CrispASR) model?",
-                    $"{Environment.NewLine}\"Pocket TTS (CrispASR)\" ({pocketModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelQuestion, "Pocket TTS (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelDownload, "Pocket TTS (CrispASR)", pocketModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -355,8 +355,8 @@ public static class TtsEngineInstaller
                 // Model key already carries the total download size, so no separate size here.
                 var answer = await MessageBox.Show(
                     window,
-                    "Download Confucius4-TTS (CrispASR) models?",
-                    $"{Environment.NewLine}\"Confucius4-TTS (CrispASR)\" ({confuciusModelKey}) requires models.{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "Confucius4-TTS (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelsDownload, "Confucius4-TTS (CrispASR)", confuciusModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -394,8 +394,8 @@ public static class TtsEngineInstaller
                 // Model key already carries the total download size, so no separate size here.
                 var answer = await MessageBox.Show(
                     window,
-                    "Download dots.tts (CrispASR) models?",
-                    $"{Environment.NewLine}\"dots.tts (CrispASR)\" ({dotsModelKey}) requires models.{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "dots.tts (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelsDownload, "dots.tts (CrispASR)", dotsModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -451,8 +451,8 @@ public static class TtsEngineInstaller
                 // Model key already carries its size (e.g. "Q8_0 (~3.3 GB)").
                 var answer = await MessageBox.Show(
                     window,
-                    "Download IndexTTS 2.5 model?",
-                    $"{Environment.NewLine}\"IndexTTS 2.5 (audio.cpp)\" ({indexTts25ModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelQuestion, "IndexTTS 2.5"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelDownload, "IndexTTS 2.5 (audio.cpp)", indexTts25ModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -569,8 +569,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download Zonos TTS (CrispASR) models?",
-                    $"{Environment.NewLine}\"Zonos TTS (CrispASR)\" requires the Zonos transformer + DAC codec (~1.8 GB).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "Zonos TTS (CrispASR)"),
+                    Environment.NewLine + Se.Language.Video.TextToSpeech.ZonosRequiresModels,
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -607,8 +607,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download CosyVoice3 (CrispASR) models?",
-                    $"{Environment.NewLine}\"CosyVoice3 (CrispASR)\" ({cosyModelKey}) requires LLM + flow + hift + s3tok + campplus + voice-bank GGUFs (all sized into the total above).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "CosyVoice3 (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.CosyVoiceXRequiresModels, cosyModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -645,8 +645,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download F5-TTS (CrispASR) model?",
-                    $"{Environment.NewLine}\"F5-TTS (CrispASR)\" ({f5ModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelQuestion, "F5-TTS (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelDownload, "F5-TTS (CrispASR)", f5ModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -683,8 +683,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download VoxCPM2 (CrispASR) model?",
-                    $"{Environment.NewLine}\"VoxCPM2 (CrispASR)\" ({voxModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelQuestion, "VoxCPM2 (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelDownload, "VoxCPM2 (CrispASR)", voxModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -721,8 +721,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download OmniVoice (CrispASR) model?",
-                    $"{Environment.NewLine}\"OmniVoice TTS (CrispASR)\" ({omniCrispModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelQuestion, "OmniVoice (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelDownload, "OmniVoice TTS (CrispASR)", omniCrispModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -759,8 +759,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download MOSS-TTS (CrispASR) model?",
-                    $"{Environment.NewLine}\"MOSS-TTS (CrispASR)\" ({mossModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelQuestion, "MOSS-TTS (CrispASR)"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelDownload, "MOSS-TTS (CrispASR)", mossModelKey),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -791,8 +791,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download Kokoro TTS?",
-                    $"{Environment.NewLine}\"Text to speech\" requires Kokoro TTS.{Environment.NewLine}{Environment.NewLine}Download and use Kokoro TTS?",
+                    string.Format(Se.Language.General.DownloadXQuestion, "Kokoro TTS"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.RequiresXDownloadAndUse, "Kokoro TTS"),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -817,8 +817,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download Kokoro TTS models?",
-                    $"{Environment.NewLine}\"Kokoro TTS\" requires models (~380 MB).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "Kokoro TTS"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRequiresModelsSizeYDownload, "Kokoro TTS", "~380 MB"),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -847,8 +847,8 @@ public static class TtsEngineInstaller
                 var sizeText = GetModelDownloadSizeText(engine, model);
                 var answer = await MessageBox.Show(
                     window,
-                    "Download Chatterbox TTS models?",
-                    $"{Environment.NewLine}\"Chatterbox TTS\" ({chatterboxModelKey}) requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "Chatterbox TTS"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelsSizeZDownload, "Chatterbox TTS", chatterboxModelKey, sizeText),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -873,8 +873,8 @@ public static class TtsEngineInstaller
                 {
                     var variantAnswer = await MessageBox.Show(
                         window,
-                        "Download OmniVoice TTS?",
-                        $"{Environment.NewLine}\"Text to speech\" requires OmniVoice TTS.{Environment.NewLine}{Environment.NewLine}Select a build to download:",
+                        string.Format(Se.Language.General.DownloadXQuestion, "OmniVoice TTS"),
+                        Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.RequiresXSelectBuild, "OmniVoice TTS"),
                         MessageBoxButtons.Cancel,
                         MessageBoxIcon.Question,
                         "CPU",
@@ -897,8 +897,8 @@ public static class TtsEngineInstaller
                     {
                         var vulkanAnswer = await MessageBox.Show(
                             window,
-                            "Vulkan runtime may be required",
-                            $"The Vulkan version requires the Vulkan runtime (vulkan-1.dll) which usually ships with current GPU drivers, but was not detected on this system.{Environment.NewLine}{Environment.NewLine}You can install it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download anyway?",
+                            Se.Language.General.VulkanRuntimeMayBeRequired,
+                            Se.Language.General.VulkanRuntimeNotDetectedContinue,
                             MessageBoxButtons.YesNoCancel,
                             MessageBoxIcon.Question);
 
@@ -918,8 +918,8 @@ public static class TtsEngineInstaller
                 {
                     var answer = await MessageBox.Show(
                         window,
-                        "Download OmniVoice TTS?",
-                        $"{Environment.NewLine}\"Text to speech\" requires OmniVoice TTS.{Environment.NewLine}{Environment.NewLine}Download and use OmniVoice TTS?",
+                        string.Format(Se.Language.General.DownloadXQuestion, "OmniVoice TTS"),
+                        Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.RequiresXDownloadAndUse, "OmniVoice TTS"),
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
 
@@ -945,8 +945,8 @@ public static class TtsEngineInstaller
             {
                 var answer = await MessageBox.Show(
                     window,
-                    "Download OmniVoice TTS models?",
-                    $"{Environment.NewLine}\"OmniVoice TTS\" requires models (~1.4 GB).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, "OmniVoice TTS"),
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRequiresModelsSizeYDownload, "OmniVoice TTS", "~1.4 GB"),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -990,7 +990,7 @@ public static class TtsEngineInstaller
             var answer = await MessageBox.Show(
                 window,
                 Se.Language.General.Error,
-                $"\"AllTalk\" text to speech requires a running local AllTalk web server.{Environment.NewLine}{Environment.NewLine}Read more?",
+                Se.Language.Video.TextToSpeech.AllTalkRequiresServer,
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -1009,7 +1009,7 @@ public static class TtsEngineInstaller
             var answer = await MessageBox.Show(
                 window,
                 Se.Language.General.Error,
-                $"\"EdgeTts\" text to speech requires the edge-tts CLI tool.{Environment.NewLine}{Environment.NewLine}Install with: pipx install edge-tts{Environment.NewLine}(or pip install edge-tts){Environment.NewLine}{Environment.NewLine}Read more?",
+                Se.Language.Video.TextToSpeech.EdgeTtsRequiresCli,
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -1029,7 +1029,7 @@ public static class TtsEngineInstaller
                 await MessageBox.Show(
                 window,
                 Se.Language.General.Error,
-                $"\"{engine.Name}\" requires a key file",
+                string.Format(Se.Language.Video.TextToSpeech.XRequiresKeyFile, engine.Name),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
 
@@ -1046,7 +1046,7 @@ public static class TtsEngineInstaller
                 await MessageBox.Show(
                 window,
                 Se.Language.General.Error,
-                $"\"{engine.Name}\" requires an API key",
+                string.Format(Se.Language.Video.TextToSpeech.XRequiresApiKey, engine.Name),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
 
@@ -1111,7 +1111,7 @@ public static class TtsEngineInstaller
                 await MessageBox.Show(
                     window,
                     engineDisplayName,
-                    $"{Environment.NewLine}{engineDisplayName} cannot be used until the model license is accepted.",
+                    Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XNeedsModelLicense, engineDisplayName),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 return false;
@@ -1128,8 +1128,8 @@ public static class TtsEngineInstaller
             // Model key already carries its size (e.g. "Q8_0 (~4.7 GB)").
             var answer = await MessageBox.Show(
                 window,
-                $"Download {engineDisplayName} model?",
-                $"{Environment.NewLine}\"{engineDisplayName} (audio.cpp)\" ({modelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                string.Format(Se.Language.Video.TextToSpeech.DownloadXModelQuestion, engineDisplayName),
+                Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XYRequiresModelDownload, engineDisplayName + " (audio.cpp)", modelKey),
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 

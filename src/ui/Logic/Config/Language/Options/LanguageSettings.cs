@@ -93,6 +93,7 @@ public class LanguageSettings
     public string AutoBreakPreferBottomHeavy { get; set; }
     public string AutoBreakPreferBottomPercent { get; set; }
     public string UseDoNotBreakAfterList { get; set; }
+    public string DoNotBreakAfterListRegionHint { get; set; }
     public string NewEmptyDefaultMs { get; set; }
     public string TimeCodeUpDownStepMs { get; set; }
     public string MoveSelectedLinesStepMs { get; set; }
@@ -141,6 +142,8 @@ public class LanguageSettings
     public string CustomErrorRulesOff { get; set; }
     public string WaveformDrawGridLines { get; set; }
     public string WaveformUseSkiaRenderer { get; set; }
+    public string WaveformShowNumberAndDuration { get; set; }
+    public string WaveformShowCps { get; set; }
     public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
     public string WaveformSelectCurrentSubtitleWhilePaused { get; set; }
     public string WaveformRememberZoom { get; set; }
@@ -210,6 +213,7 @@ public class LanguageSettings
     public string ShowSecondarySubtitleDialog { get; set; }
     public string RememberSecondarySubtitleFile { get; set; }
     public string AutoOpenVideoFile { get; set; }
+    public string AutoDetectSmpteTiming { get; set; }
     public string DownloadMpv { get; set; }
     public string DownloadVlc { get; set; }
     public string AllowSingleLetterShortcutsInTextbox { get; set; }
@@ -366,7 +370,7 @@ public class LanguageSettings
     public string WindowsRenderingModeSoftware { get; set; }
     public string TextSelectionOpacity { get; set; }
     public string WaveformToolbarItems { get; set; }
-    public string MatchIconColorToDarkTheme { get; set; }
+    public string MatchIconColorToTheme { get; set; }
     public string SubtitlePreviewProperties { get; set; }
     public string UsePositionFromSubtitleFile { get; set; }
     public string MarginIsPartOfSubtitleArea { get; set; }
@@ -484,6 +488,7 @@ public class LanguageSettings
         AutoBreakPreferBottomHeavy = "Auto-break prefer bottom heavy";
         AutoBreakPreferBottomPercent = "Auto-break bottom heavy percentage";
         UseDoNotBreakAfterList = "Use do-not-break-after list";
+        DoNotBreakAfterListRegionHint = "Each list is used for all regions of its language, for example the Portuguese list for both Portugal (pt-PT) and Brazil (pt-BR).";
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         TimeCodeUpDownStepMs = "Time up/down increment (ms)";
         MoveSelectedLinesStepMs = "Move selected lines shortcut step (ms)";
@@ -532,6 +537,8 @@ public class LanguageSettings
         CustomErrorRulesOff = "Custom error rules: off";
         WaveformDrawGridLines = "Draw grid lines";
         WaveformUseSkiaRenderer = "Use experimental fast renderer";
+        WaveformShowNumberAndDuration = "Show # + duration";
+        WaveformShowCps = "Show chars/sec";
         WaveformFocusOnMouseOver = "Focus on mouse over";
         WaveformCenterVideoPositionAlsoWhenPaused = "Center video position also while paused";
         WaveformSelectCurrentSubtitleWhilePaused = "Select current subtitle also while paused";
@@ -594,6 +601,7 @@ public class LanguageSettings
         ShowSecondarySubtitleDialog = "Show style dialog when opening a second subtitle file";
         RememberSecondarySubtitleFile = "Remember second subtitle file";
         AutoOpenVideoFile = "Auto-open video file when opening subtitle";
+        AutoDetectSmpteTiming = "Auto-enable SMPTE timing for Timed Text files with non-drop SMPTE time codes";
         DownloadMpv = "Download mpv";
         DownloadVlc = "Download VLC";
         AllowSingleLetterShortcutsInTextbox = "Allow single-letter shortcuts in text box";
@@ -756,7 +764,7 @@ public class LanguageSettings
         WindowsRenderingModeSoftware = "Software (no GPU, no libmpv OpenGL)";
         TextSelectionOpacity = "Text selection opacity (%)";
         WaveformToolbarItems = "Waveform toolbar items";
-        MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";
+        MatchIconColorToTheme = "Match icon color to theme foreground color";
         SubtitlePreviewProperties = "Subtitle preview properties";
         UsePositionFromSubtitleFile = "Use position from subtitle file (TTML/PAC/EBU STL)";
         MarginIsPartOfSubtitleArea = "Margin is part of the subtitle area";

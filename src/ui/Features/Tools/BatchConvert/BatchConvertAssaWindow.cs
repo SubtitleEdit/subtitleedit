@@ -69,7 +69,7 @@ public class BatchConvertAssaWindow : Window
         Loaded += (_, _) =>
         {
             vm.Loaded();
-            buttonOk.Focus();
+            vm.SourceViewTextBox.Focus();
         };
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }

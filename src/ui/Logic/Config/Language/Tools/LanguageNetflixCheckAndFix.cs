@@ -105,7 +105,7 @@ public class LanguageNetflixCheckAndFix
         DualSpeakersHyphenWithoutSpaceSecondOnly = "Dual Speakers: Use a hyphen without a space to denote the second speaker only";
         MinimumTwoFramesGapOverlapping = "Minimum two frames gap (Overlapping)";
         MinimumTwoFramesGap = "Minimum two frames gap";
-        FrameRateIsInvalidX = "Frame rate is invalid: '{0}'";
+        FrameRateIsInvalidX = "Frame rate is invalid: \"{0}\"";
         FrameRateIsInvalid = "Frame rate is invalid";
         MinimumDurationJapanese = "Minimum duration: 0.5 second";
         MinimumDuration = "Minimum duration: 5/6 second (833 ms)";

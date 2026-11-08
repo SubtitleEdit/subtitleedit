@@ -46,9 +46,12 @@ public class AdvancedEffectSmoothFill : IAdvancedEffectDisplay
     {
         var result = new List<SubtitleLineViewModel>();
         var sb = new StringBuilder();
-        foreach (var sub in subtitles)
+        var plan = MarkedReveal.Plan(subtitles);
+        for (var n = 0; n < subtitles.Count; n++)
         {
-            var words = CaptionWords.Parse(sub, UpperCase);
+            var sub = subtitles[n];
+            var reveal = plan?[n];
+            var words = CaptionWords.Parse(sub, UpperCase, useMarks: plan != null);
             if (words == null)
             {
                 result.Add(AdvancedEffectUtil.PassThrough(sub));
@@ -69,12 +72,38 @@ public class AdvancedEffectSmoothFill : IAdvancedEffectDisplay
             bool? wordRightToLeft = null;
             foreach (var token in words.Tokens)
             {
-                if (token.IsWord)
+                if (token.IsWord && reveal != null)
+                {
+                    // a line per word with the active word marked: earlier words are filled, the
+                    // marked word fills over the line, later words stay unfilled past the line end
+                    var lineCs = (int)Math.Round(sub.Duration.TotalMilliseconds / 10.0);
+                    if (token.WordIndex < reveal.ShownWords)
+                    {
+                        sb.Append("{\\kf0");
+                    }
+                    else if (token.WordIndex == reveal.ActiveWord)
+                    {
+                        sb.Append("{\\kf").Append(lineCs);
+                    }
+                    else
+                    {
+                        if (reveal.IsPause && token.WordIndex == reveal.ShownWords)
+                        {
+                            sb.Append("{\\k").Append(lineCs).Append('}'); // empty syllable: wait out the pause
+                        }
+
+                        sb.Append("{\\k100");
+                    }
+                }
+                else if (token.IsWord)
                 {
                     var endCs = (int)Math.Round(words.WordStartMs[token.WordIndex + 1] / 10.0);
                     sb.Append("{\\kf").Append(Math.Max(0, endCs - doneCs));
                     doneCs = Math.Max(doneCs, endCs);
+                }
 
+                if (token.IsWord)
+                {
                     if (rightToLeft)
                     {
                         var isRightToLeft = LanguageAutoDetect.ContainsRightToLeftLetter(token.Text);

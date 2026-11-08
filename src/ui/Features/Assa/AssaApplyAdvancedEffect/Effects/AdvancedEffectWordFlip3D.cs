@@ -30,10 +30,13 @@ public class AdvancedEffectWordFlip3D : IAdvancedEffectDisplay
     {
         var result = new List<SubtitleLineViewModel>();
         var sb = new StringBuilder();
+        var plan = MarkedReveal.Plan(subtitles);
 
-        foreach (var sub in subtitles)
+        for (var n = 0; n < subtitles.Count; n++)
         {
-            var cleanText = Utilities.RemoveSsaTags(sub.Text);
+            var sub = subtitles[n];
+            var reveal = plan?[n];
+            var cleanText = plan == null ? Utilities.RemoveSsaTags(sub.Text) : reveal?.Text ?? string.Empty;
             var totalMs = sub.Duration.TotalMilliseconds;
             if (string.IsNullOrWhiteSpace(cleanText) || totalMs <= 0)
             {
@@ -50,7 +53,15 @@ public class AdvancedEffectWordFlip3D : IAdvancedEffectDisplay
                 continue;
             }
 
-            var msPerWord = totalMs / wordCount;
+            // a line per word with the active word marked: one event that flips in just that word,
+            // with the earlier words shown (a pause flips nothing)
+            if (reveal != null && reveal.ShownWords == 0 && reveal.IsPause)
+            {
+                continue; // nothing spoken yet
+            }
+
+            var steps = reveal == null ? wordCount : 1;
+            var msPerWord = totalMs / steps;
             string posTags = AdvancedEffectUtil.ExtractPositionalTags(sub.Text);
 
             // Flip timing scaled to the word window: fold in over the first ~45%,
@@ -69,11 +80,13 @@ public class AdvancedEffectWordFlip3D : IAdvancedEffectDisplay
             const string shownTags = "{\\alpha&H00&\\frx0\\fscy100}";
             const string hiddenTags = "{\\alpha&HFF&\\frx0\\fscy100}";
 
-            for (int w = 0; w < wordCount; w++)
+            for (int step = 0; step < steps; step++)
             {
+                var w = reveal == null ? step : reveal.ShownWords;
+                var flipWord = reveal == null || !reveal.IsPause ? w : -1;
                 var line = new SubtitleLineViewModel(sub, generateNewId: true);
-                line.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(w * msPerWord));
-                line.EndTime = w == wordCount - 1
+                line.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(step * msPerWord));
+                line.EndTime = step == steps - 1
                     ? sub.EndTime
                     : sub.StartTime.Add(TimeSpan.FromMilliseconds((w + 1) * msPerWord));
 
@@ -82,7 +95,7 @@ public class AdvancedEffectWordFlip3D : IAdvancedEffectDisplay
                 {
                     // Keep one continuous motion across the word-events (see AdjustMoveForSegment)
                     sb.Append(AdvancedEffectUtil.AdjustMoveForSegment(
-                        posTags, w * msPerWord, (line.EndTime - line.StartTime).TotalMilliseconds, totalMs));
+                        posTags, step * msPerWord, (line.EndTime - line.StartTime).TotalMilliseconds, totalMs));
                 }
 
                 string? currentTags = null;
@@ -103,7 +116,7 @@ public class AdvancedEffectWordFlip3D : IAdvancedEffectDisplay
                         continue;
                     }
 
-                    var tags = wordIndex < w ? shownTags : wordIndex == w ? flipTags : hiddenTags;
+                    var tags = wordIndex < w ? shownTags : wordIndex == flipWord ? flipTags : hiddenTags;
                     if (tags != currentTags)
                     {
                         sb.Append(tags);

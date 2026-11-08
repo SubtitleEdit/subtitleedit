@@ -975,6 +975,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         /// <summary>
+        /// The ASSA alignment band the reader gives a vertical position: 2 = top (an7..an9),
+        /// 1 = middle (an4..an6), 0 = bottom (an1..an3).
+        /// </summary>
+        public static int GetVerticalAlignmentBand(int verticalPosition, int rows)
+        {
+            if (verticalPosition < 3)
+            {
+                return 2;
+            }
+
+            return verticalPosition <= rows / 2 + 1 ? 1 : 0;
+        }
+
+        /// <summary>
         /// True when <paramref name="header"/> is an STL header whose display standard code is
         /// teletext (level 1 or 2). Open subtitling (code 0) has no teletext page, so the 40 cell
         /// row and its control-code overhead do not apply to it.
@@ -2038,7 +2052,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (!isContinuationBlock)
                 {
-                    if (tti.VerticalPosition < 3)
+                    var band = GetVerticalAlignmentBand(tti.VerticalPosition, rows);
+                    if (band == 2)
                     {
                         if (tti.JustificationCode == 1) // left
                         {
@@ -2053,7 +2068,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             tti.TextField = "{\\an8}" + tti.TextField;
                         }
                     }
-                    else if (tti.VerticalPosition <= rows / 2 + 1)
+                    else if (band == 1)
                     {
                         if (tti.JustificationCode == 1) // left
                         {

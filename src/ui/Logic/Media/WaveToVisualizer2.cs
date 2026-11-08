@@ -351,6 +351,26 @@ public class WavePeakData2
     public int HighestPeak { get; private set; }
 
     /// <summary>
+    /// True for the flat stand-in made by <see cref="CreatePlaceholder"/>: it only gives the
+    /// timeline a time scale (so subtitles, ruler and cursor can be drawn and edited before any
+    /// audio is extracted) and holds no audio - nothing should be drawn from or measured on it.
+    /// </summary>
+    public bool IsPlaceholder { get; private set; }
+
+    /// <summary>
+    /// Silent in-memory peaks covering <paramref name="totalSeconds"/>, used when the waveform is
+    /// not generated (auto-generate off) so the timeline still shows the subtitles (#16710).
+    /// Never written to the cache: a cached placeholder would load as a real waveform on the next
+    /// open and stop the real one from ever being generated.
+    /// </summary>
+    public static WavePeakData2 CreatePlaceholder(double totalSeconds)
+    {
+        var peaksPerSecond = Math.Max(1, Se.Settings.Waveform.WaveformMinimumSampleRate);
+        var count = (int)Math.Ceiling(Math.Max(1, totalSeconds) * peaksPerSecond);
+        return new WavePeakData2(peaksPerSecond, new WavePeak2[count]) { IsPlaceholder = true };
+    }
+
+    /// <summary>
     /// Returns a Span over the underlying peak storage so hot loops can skip the
     /// IList&lt;T&gt; interface dispatch. Supports the two concrete types currently in
     /// use (List&lt;WavePeak2&gt; and WavePeak2[]); falls back to copying for any other

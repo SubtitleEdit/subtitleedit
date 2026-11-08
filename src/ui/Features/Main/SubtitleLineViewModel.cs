@@ -1548,7 +1548,7 @@ public partial class SubtitleLineViewModel : ObservableObject
                 var lineLength = SubtitleTextInfoHelper.GetLineLength(line);
                 if (lineLength > general.SubtitleLineMaximumLength)
                 {
-                    errors.Add(new LineError(LineErrorType.LineTooLong, string.Format(l.DetailXGreaterThanY, lineLength, general.SubtitleLineMaximumLength)));
+                    errors.Add(new LineError(LineErrorType.LineTooLong, string.Format(l.DetailXGreaterThanY, SubtitleTextInfoHelper.FormatLength(lineLength), general.SubtitleLineMaximumLength)));
                 }
             }
         }

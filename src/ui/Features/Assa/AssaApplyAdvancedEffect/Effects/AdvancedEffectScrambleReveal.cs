@@ -27,8 +27,33 @@ public class AdvancedEffectScrambleReveal : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        foreach (var subtitle in subtitles)
+        var plan = MarkedReveal.Plan(subtitles);
+        for (var n = 0; n < subtitles.Count; n++)
         {
+            var subtitle = subtitles[n];
+            if (plan != null)
+            {
+                var reveal = plan[n];
+                if (reveal == null)
+                {
+                    result.Add(AdvancedEffectUtil.PassThrough(subtitle));
+                    continue;
+                }
+
+                // a line per word with the active word marked: unscramble just that word; seed by
+                // the plain text so the placeholders stay put from line to line
+                var realChars = reveal.Text.ToCharArray();
+                var placeholders = Scramble(realChars, reveal.Text.GetHashCode());
+                foreach (var (revealedTo, start, end) in reveal.CharSteps(subtitle))
+                {
+                    var line = new SubtitleLineViewModel(subtitle, generateNewId: true) { StartTime = start, EndTime = end };
+                    line.Text = BuildScrambledText(realChars, placeholders, revealedTo);
+                    result.Add(line);
+                }
+
+                continue;
+            }
+
             var cleanText = Utilities.RemoveSsaTags(subtitle.Text);
             if (string.IsNullOrEmpty(cleanText))
             {
@@ -44,14 +69,7 @@ public class AdvancedEffectScrambleReveal : IAdvancedEffectDisplay
             var totalMs = subtitle.Duration.TotalMilliseconds;
             var msPerChar = totalMs / charCount;
 
-            var rng = new Random(subtitle.Text.GetHashCode());
-            var scrambled = new char[charCount];
-            for (var k = 0; k < charCount; k++)
-            {
-                scrambled[k] = chars[k] is '\n' or ' '
-                    ? chars[k]
-                    : ScramblePool[rng.Next(ScramblePool.Length)];
-            }
+            var scrambled = Scramble(chars, subtitle.Text.GetHashCode());
 
             for (var i = 0; i < charCount; i++)
             {
@@ -67,6 +85,20 @@ public class AdvancedEffectScrambleReveal : IAdvancedEffectDisplay
             }
         }
         return result;
+    }
+
+    private static char[] Scramble(char[] chars, int seed)
+    {
+        var rng = new Random(seed);
+        var scrambled = new char[chars.Length];
+        for (var k = 0; k < chars.Length; k++)
+        {
+            scrambled[k] = chars[k] is '\n' or ' '
+                ? chars[k]
+                : ScramblePool[rng.Next(ScramblePool.Length)];
+        }
+
+        return scrambled;
     }
 
     private static string BuildScrambledText(char[] real, char[] scrambled, int revealedUpTo)

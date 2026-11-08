@@ -48,6 +48,12 @@ internal sealed class ImageExportStyle
     public bool IsFullFrame { get; set; }
 
     /// <summary>
+    /// For ASSA/SSA input, draw each line with its own style from the file (font, colours,
+    /// outline, box, alignment, margins, ...) instead of these settings - override tags still win.
+    /// </summary>
+    public bool UseAssaStyles { get; set; } = true;
+
+    /// <summary>
     /// Background of the frame-sized image made when <see cref="IsFullFrame"/> is set. Separate
     /// from <see cref="BackgroundColor"/>, which is the box behind the text - transparent by
     /// default, because the images normally go on a track above the video.

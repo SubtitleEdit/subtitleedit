@@ -95,7 +95,7 @@ public class AiReviewTests
     public void ParseChanges_ValidReply_Parsed()
     {
         var reply = """{"changes":[{"n":12,"text":"We received it.","reason":"typo","category":"spelling"}]}""";
-        var changes = AiReviewProtocol.ParseChanges(reply, Lines((12, "We recieved it.")));
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((12, "We received it.")));
 
         var change = Assert.Single(changes);
         Assert.Equal(12, change.Number);
@@ -141,8 +141,8 @@ public class AiReviewTests
     [Fact]
     public void ParseChanges_EchoConfirmsLineNumber_Kept()
     {
-        var reply = """{"changes":[{"n":2,"orig":"We recieved it.","text":"We received it.","reason":"typo","category":"spelling"}]}""";
-        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "Hello."), (2, "We recieved it.")));
+        var reply = """{"changes":[{"n":2,"orig":"We received it.","text":"We received it.","reason":"typo","category":"spelling"}]}""";
+        var changes = AiReviewProtocol.ParseChanges(reply, Lines((1, "Hello."), (2, "We received it.")));
 
         var change = Assert.Single(changes);
         Assert.Equal(2, change.Number);
@@ -332,7 +332,7 @@ public class AiReviewTests
         // A real correction resembles its own line - it must stay put even when another
         // line in the batch is similar.
         var lines = Lines(
-            (10, "We recieved it yesterday."),
+            (10, "We received it yesterday."),
             (11, "We received it today."));
         var reply = """{"changes":[{"n":10,"text":"We received it yesterday.","reason":"typo","category":"spelling"}]}""";
 

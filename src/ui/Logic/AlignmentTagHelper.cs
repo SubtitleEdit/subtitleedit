@@ -1,4 +1,6 @@
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -63,4 +65,29 @@ public static class AlignmentTagHelper
 
         return $"{{\\{alignment}}}{result}";
     }
+
+    /// <summary>
+    /// Moves the alignment tag to the top/middle/bottom band a teletext row (1..23) falls in,
+    /// keeping its left/centre/right column. The bands are the ones the EBU STL reader uses
+    /// for the vertical position, so a saved file reads back with the same tag. Without this a
+    /// line moved to row 1 kept the reader's bottom tag, and everything that goes by the tag -
+    /// open subtitling, a subtitle not read from an STL file - left it at the bottom.
+    /// </summary>
+    public static string SetTeletextRowBand(string text, int teletextRow, bool writeAn2Tag)
+    {
+        var column = 2;
+        if (HasAlignment(text, "an1") || HasAlignment(text, "an4") || HasAlignment(text, "an7"))
+        {
+            column = 1;
+        }
+        else if (HasAlignment(text, "an3") || HasAlignment(text, "an6") || HasAlignment(text, "an9"))
+        {
+            column = 3;
+        }
+
+        var band = Ebu.GetVerticalAlignmentBand(teletextRow, TeletextRows);
+        return SetAlignment(text, "an" + (band * 3 + column).ToString(CultureInfo.InvariantCulture), writeAn2Tag);
+    }
+
+    private const int TeletextRows = 23;
 }

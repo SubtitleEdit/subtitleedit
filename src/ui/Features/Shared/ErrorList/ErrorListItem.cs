@@ -27,8 +27,9 @@ public class ErrorListItem
         Subtitle = subtitle;
         Text = subtitle.Text.Replace("\r\n", " ").Replace('\n', ' ').Replace('\r', ' ');
         Number = subtitle.Number;
-        Show = (string)TimeSpanToDisplayShortConverter.Instance.Convert(subtitle.StartTime, typeof(string), null, System.Globalization.CultureInfo.CurrentCulture);
-        Hide = (string)TimeSpanToDisplayShortConverter.Instance.Convert(subtitle.EndTime, typeof(string), null, System.Globalization.CultureInfo.CurrentCulture);
+        // Same converter as the main grid: full hh:mm:ss and the video offset applied (#16571).
+        Show = (string)TimeSpanToDisplayFullConverter.Instance.Convert(subtitle.StartTime, typeof(string), null, System.Globalization.CultureInfo.CurrentCulture);
+        Hide = (string)TimeSpanToDisplayFullConverter.Instance.Convert(subtitle.EndTime, typeof(string), null, System.Globalization.CultureInfo.CurrentCulture);
         Type = error.Type;
         Category = error.Label;
         Detail = error.Detail;

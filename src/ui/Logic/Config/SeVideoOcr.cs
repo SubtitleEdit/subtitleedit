@@ -39,6 +39,20 @@ public class SeVideoOcr
     public double CropWidthPercent { get; set; }
     public double CropHeightPercent { get; set; }
 
+    /// <summary>Remove burned-in subtitles: mask growth in px (0 = by video height).</summary>
+    public int RemoveBurnedInGrow { get; set; }
+    public bool RemoveBurnedInRequireOutline { get; set; }
+    public bool RemoveBurnedInTemporal { get; set; }
+
+    /// <summary>Remove burned-in subtitles: extra mask width in px left and right of each line.</summary>
+    public int RemoveBurnedInExtraWidth { get; set; }
+    public int RemoveBurnedInCrf { get; set; }
+
+    /// <summary>Remove burned-in subtitles: cover each line with a black box instead of inpainting.</summary>
+    public int RemoveBurnedInMethod { get; set; }
+    public int RemoveBurnedInBlurStrength { get; set; }
+
+
     public SeVideoOcr()
     {
         // Unlike the other two, this setting stores the enum name rather than the display name.
@@ -79,5 +93,11 @@ public class SeVideoOcr
         CropYPercent = 200.0 / 3.0;
         CropWidthPercent = 100;
         CropHeightPercent = 100.0 / 3.0;
+
+        RemoveBurnedInGrow = 0;
+        RemoveBurnedInRequireOutline = true;
+        RemoveBurnedInTemporal = true;
+        RemoveBurnedInExtraWidth = 5;
+        RemoveBurnedInCrf = 18;
     }
 }

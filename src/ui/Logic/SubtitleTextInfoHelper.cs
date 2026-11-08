@@ -124,7 +124,7 @@ internal static class SubtitleTextInfoHelper
             var lineLength = GetLineLength(lines[i]);
             SetLabel(children,
                 ref index,
-                lineLength.ToString(CultureInfo.InvariantCulture),
+                FormatLength(lineLength),
                 colorTextTooLong && lineLength > maxLineLength ? _errorBrush : null);
         }
 
@@ -293,8 +293,19 @@ internal static class SubtitleTextInfoHelper
     internal static double GetTotalLength(string text)
         => (double)text.CountCharacters(false);
 
-    internal static int GetLineLength(string line)
-        => (int)line.CountCharacters(false);
+    /// <summary>
+    /// Kept as decimal: the CJK strategies count half-width chars as 0.5, so truncating to int
+    /// showed "5" for a line the total-characters label (and Fix common errors) counts as 5.5.
+    /// </summary>
+    internal static decimal GetLineLength(string line)
+        => line.CountCharacters(false);
+
+    /// <summary>
+    /// Line length as shown to the user: "5" or "5.5" (decimal sums like 0.5 + 0.5 keep a
+    /// trailing ".0" scale, which "0.##" drops). Current culture, like the total-characters label.
+    /// </summary>
+    internal static string FormatLength(decimal length)
+        => length.ToString("0.##", CultureInfo.CurrentCulture);
 
     internal static double GetCharactersPerSecond(string text, TimeSpan startTime, TimeSpan endTime)
     {

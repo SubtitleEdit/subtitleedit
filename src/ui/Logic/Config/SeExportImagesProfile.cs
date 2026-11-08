@@ -41,6 +41,12 @@ public class SeExportImagesProfile
     public int LineSpacingPercent { get; set; }
     public FontBoxType BoxType { get; set; }
 
+    /// <summary>Blu-ray sup for HDR video: BT.2020 + ST 2084 PQ palette.</summary>
+    public bool IsHdrPalette { get; set; }
+
+    /// <summary>The luminance of white in the HDR palette. 203 is the graphics white of BT.2408.</summary>
+    public int HdrWhiteNits { get; set; } = 203;
+
     /// <summary>Name of the <see cref="TextEffectPreset"/>; empty = classic rendering.</summary>
     public string TextEffect { get; set; } = string.Empty;
 

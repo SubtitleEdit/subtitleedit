@@ -70,7 +70,7 @@ public class BinaryAdjustDurationWindow : Window
             HorizontalAlignment = HorizontalAlignment.Left,
             Text = Se.Language.Tools.AdjustDurations.RecalculateRequiresOcrNote,
             FontSize = EditorChrome.FieldFontSize,
-            Foreground = Brushes.OrangeRed,
+            Foreground = EditorChrome.WarningTextBrush,
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 380,
         };

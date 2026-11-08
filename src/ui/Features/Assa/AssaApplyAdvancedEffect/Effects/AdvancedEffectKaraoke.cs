@@ -34,8 +34,32 @@ public class AdvancedEffectKaraoke : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        foreach (var subtitle in subtitles)
+        var plan = MarkedReveal.Plan(subtitles);
+        for (var n = 0; n < subtitles.Count; n++)
         {
+            var subtitle = subtitles[n];
+            if (plan != null)
+            {
+                var reveal = plan[n];
+                if (reveal == null)
+                {
+                    result.Add(AdvancedEffectUtil.PassThrough(subtitle));
+                    continue;
+                }
+
+                // a line per word with the active word marked: color just that word over the line.
+                // The marked word is in reading order, so no right-to-left flip here.
+                var realChars = reveal.Text.ToCharArray();
+                foreach (var (revealedTo, start, end) in reveal.CharSteps(subtitle))
+                {
+                    var line = new SubtitleLineViewModel(subtitle, generateNewId: true) { StartTime = start, EndTime = end };
+                    line.Text = BuildKaraokeText(realChars, revealedTo, rightToLeft: false);
+                    result.Add(line);
+                }
+
+                continue;
+            }
+
             var cleanText = Utilities.RemoveSsaTags(subtitle.Text);
             if (string.IsNullOrEmpty(cleanText))
             {

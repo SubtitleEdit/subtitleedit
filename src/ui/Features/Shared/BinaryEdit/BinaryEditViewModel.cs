@@ -31,6 +31,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using Nikse.SubtitleEdit.UiLogic.Export;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -2064,6 +2065,38 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void BottomAlignBaseline()
+    {
+        BottomAlignOnBaseline(Subtitles.ToList());
+    }
+
+    [RelayCommand]
+    private void BottomAlignBaselineSelectedLines()
+    {
+        if (SubtitleGrid?.SelectedItems == null) return;
+        BottomAlignOnBaseline(SubtitleGrid.SelectedItems.OfType<BinarySubtitleItem>().ToList());
+    }
+
+    /// <summary>
+    /// Bottom aligns on the last text line's baseline instead of the image edge, so a line with
+    /// descenders ("jabc") sits on the same line as one without ("abc").
+    /// </summary>
+    private void BottomAlignOnBaseline(List<BinarySubtitleItem> subtitles)
+    {
+        var marginBottom = Se.Settings.Tools.BinEditBottomMargin;
+        foreach (var subtitle in subtitles)
+        {
+            if (subtitle.Bitmap == null) continue;
+            using var skBitmap = subtitle.Bitmap.ToSkBitmap();
+            var minLineHeight = subtitle.ScreenSize.Height >= 1080 ? 25 : 12;
+            var descent = ImageBaselineFinder.GetDescent(skBitmap, minLineHeight);
+            subtitle.Y = subtitle.ScreenSize.Height - skBitmap.Height - marginBottom + descent;
+        }
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
     private void Crop()
     {
         var itemsToCrop = Subtitles.ToList();
@@ -3452,7 +3485,7 @@ public partial class BinaryEditViewModel : ObservableObject
                     answer = await MessageBox.Show(
                         Window!,
                         Se.Language.General.DeleteLines,
-                        $"Do you want to delete one line?",
+                        Se.Language.General.DeleteOneLineQuestion,
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
                 }
@@ -3461,7 +3494,7 @@ public partial class BinaryEditViewModel : ObservableObject
                     answer = await MessageBox.Show(
                         Window!,
                         Se.Language.General.DeleteLines,
-                        $"Do you want to delete {selectedItems.Count} lines?",
+                        string.Format(Se.Language.General.DeleteXLinesQuestion, selectedItems.Count),
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
                 }

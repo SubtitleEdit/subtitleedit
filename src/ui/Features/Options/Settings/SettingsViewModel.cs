@@ -295,6 +295,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private VideoPlayerItem _selectedVideoPlayer;
     [ObservableProperty] private bool _fullscreenHideControls;
     [ObservableProperty] private bool _autoOpenVideoFile;
+    [ObservableProperty] private bool _autoDetectSmpteTiming;
     [ObservableProperty] private bool _showSecondarySubtitleDialog;
     [ObservableProperty] private bool _rememberSecondarySubtitleFile;
 
@@ -320,6 +321,8 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private bool _waveformShowToolbar;
     [ObservableProperty] private bool _waveformShowOriginalSubtitle;
+    [ObservableProperty] private bool _waveformShowTimelineTracks;
+    [ObservableProperty] private bool _waveformTimelineShowThumbnails;
 
     [ObservableProperty] private bool _waveformFocusTextboxAfterInsertNew;
     [ObservableProperty] private string _waveformSpaceInfo;
@@ -420,7 +423,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedTheme;
     [ObservableProperty] private ObservableCollection<string> _iconThemes;
     [ObservableProperty] private string _selectedIconTheme;
-    [ObservableProperty] private bool _matchIconColorToDarkTheme;
+    [ObservableProperty] private bool _matchIconColorToTheme;
     [ObservableProperty] private int _layoutScale;
     [ObservableProperty] private int _uiFontSize;
     [ObservableProperty] private int _textSelectionOpacity;
@@ -573,7 +576,7 @@ public partial class SettingsViewModel : ObservableObject
         var iconFolders = Directory.Exists(Se.ThemesFolder)
             ? Directory.GetDirectories(Se.ThemesFolder)
                 // A folder unpacked before its theme had icons holds only background art - not an icon set to pick
-                .Where(p => File.Exists(Path.Combine(p, "Open.png")))
+                .Where(p => ThemeIcon.Exists(p, "Open"))
                 .Select(p => Path.GetFileName(p)).ToList()
             : new List<string>();
         iconFolders.Insert(0, Se.Language.General.Auto);
@@ -985,7 +988,7 @@ public partial class SettingsViewModel : ObservableObject
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
-        MatchIconColorToDarkTheme = appearance.MatchIconColorToDarkTheme;
+        MatchIconColorToTheme = appearance.MatchIconColorToTheme;
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
         UiFontSize = UiTheme.FontSizeFromScale(appearance.FontScale);
         TextSelectionOpacity = appearance.TextSelectionOpacity;
@@ -1053,6 +1056,8 @@ public partial class SettingsViewModel : ObservableObject
         WaveformRememberZoom = Se.Settings.Waveform.RememberZoom;
         WaveformShowToolbar = Se.Settings.Waveform.ShowToolbar;
         WaveformShowOriginalSubtitle = Se.Settings.Waveform.ShowOriginalSubtitle;
+        WaveformShowTimelineTracks = Se.Settings.Waveform.ShowTimelineTracks;
+        WaveformTimelineShowThumbnails = Se.Settings.Waveform.TimelineShowThumbnails;
 
         if (Se.Settings.Waveform.WaveformDrawStyle == WaveformDrawStyle.Classic.ToString())
         {
@@ -1187,6 +1192,7 @@ public partial class SettingsViewModel : ObservableObject
         _videoControlsItems = SeVideoControlsItem.Normalize(video.ControlsItems);
         FullscreenHideControls = video.FullscreenHideControls;
         AutoOpenVideoFile = video.AutoOpen;
+        AutoDetectSmpteTiming = video.AutoDetectSmpteTiming;
         ShowSecondarySubtitleDialog = video.SecondarySubtitleShowDialog;
         RememberSecondarySubtitleFile = video.SecondarySubtitleRememberFile;
 
@@ -1898,7 +1904,7 @@ public partial class SettingsViewModel : ObservableObject
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
         appearance.IconTheme = SelectedIconTheme;
-        appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;
+        appearance.MatchIconColorToTheme = MatchIconColorToTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
         appearance.FontScale = UiTheme.FontScaleFromSize(UiFontSize, appearance.FontScale);
         appearance.TextSelectionOpacity = Math.Clamp(TextSelectionOpacity, UiTheme.MinTextSelectionOpacity, 100);
@@ -2010,6 +2016,8 @@ public partial class SettingsViewModel : ObservableObject
 
         Se.Settings.Waveform.ShowToolbar = WaveformShowToolbar;
         Se.Settings.Waveform.ShowOriginalSubtitle = WaveformShowOriginalSubtitle;
+        Se.Settings.Waveform.ShowTimelineTracks = WaveformShowTimelineTracks;
+        Se.Settings.Waveform.TimelineShowThumbnails = WaveformTimelineShowThumbnails;
         Se.Settings.Waveform.ToolbarItems = _waveformToolbarItems;
 
         Se.Settings.Waveform.WaveformTextFontSize = WaveformTextFontSize;
@@ -2081,6 +2089,7 @@ public partial class SettingsViewModel : ObservableObject
         video.ControlsItems = _videoControlsItems.Select(p => new SeVideoControlsItem(p)).ToList();
         video.FullscreenHideControls = FullscreenHideControls;
         video.AutoOpen = AutoOpenVideoFile;
+        video.AutoDetectSmpteTiming = AutoDetectSmpteTiming;
         video.SecondarySubtitleShowDialog = ShowSecondarySubtitleDialog;
         video.SecondarySubtitleRememberFile = RememberSecondarySubtitleFile;
 
@@ -2862,12 +2871,11 @@ public partial class SettingsViewModel : ObservableObject
 
     private async Task UpdateWaveformSpaceInfoAsync()
     {
-        var files = GetWaveformAndSpecgtrogramFiles();
-
+        // Listing the folders (the spectrograms recursively) is file I/O too - keep it off the UI thread.
         long totalBytes = await Task.Run(() =>
         {
             long total = 0;
-            foreach (var file in files)
+            foreach (var file in GetWaveformAndSpecgtrogramFiles())
             {
                 try
                 {
@@ -3544,7 +3552,6 @@ public partial class SettingsViewModel : ObservableObject
 
     internal void Onloaded(object? sender, RoutedEventArgs e)
     {
-        UiUtil.RestoreWindowPosition(Window);
         _ = UpdateWaveformSpaceInfoAsync();
     }
 

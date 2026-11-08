@@ -11,6 +11,7 @@ public class LanguageVideo
     public LanguageShotChanges ShotChanges { get; set; } = new();
     public LanguageChapters Chapters { get; set; } = new();
     public LanguageVideoOcr VideoOcr { get; set; } = new();
+    public LanguageRemoveBurnedIn RemoveBurnedIn { get; set; } = new();
     public LanguageBackgroundMusic BackgroundMusic { get; set; } = new();
     public string GoToVideoPosition { get; set; }
     public string GoToVideoPositionDotDotDot { get; set; }
@@ -266,7 +267,7 @@ public class LanguageVideo
         RemuxVideoAddingClosedCaptions = "Adding closed captions...";
         RemuxVideoSelectAudioTrack = "Select audio track";
         RemuxVideoSelectAudioTrackFor = "Select audio track for {0}";
-        RemuxVideoSelectAudioTrackPrompt = "The file '{0}' contains {1} audio tracks. Please select the audio track to remux:";
+        RemuxVideoSelectAudioTrackPrompt = "The file \"{0}\" contains {1} audio tracks. Please select the audio track to remux:";
         RemuxVideoVideoFile = "video";
         RemuxVideoAudioFile = "audio";
         RemuxVideoAudioFiles = "Audio files:";

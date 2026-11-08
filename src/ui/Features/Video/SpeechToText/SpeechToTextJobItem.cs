@@ -13,6 +13,9 @@ public partial class SpeechToTextJobItem : ObservableObject
     [ObservableProperty] private string _sizeDisplay;
     [ObservableProperty] private string _status;
 
+    /// <summary>The subtitle file written for this item by the last batch run, if any.</summary>
+    public string OutputSubtitleFileName { get; set; } = string.Empty;
+
     public FfmpegMediaInfo MediaInfo { get; set; }
 
     public SpeechToTextJobItem(string inputVideoFileName, string status, FfmpegMediaInfo mediaInfo)
