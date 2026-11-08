@@ -88,6 +88,13 @@ public class SeWaveform
 
     /// <summary>Whether the editor-style layout shows its row of video thumbnails.</summary>
     public bool TimelineShowThumbnails { get; set; }
+
+    /// <summary>
+    /// Layout 14's video and subtitle track rows above the waveform in every layout (#16354), so
+    /// they can be had with the panels arranged any way - grid on one monitor, video and
+    /// waveform on another. Layout 14 always has them.
+    /// </summary>
+    public bool ShowTimelineTracks { get; set; }
     public bool GuessTimeCodeStartFromBeginning { get; set; }
     public int GuessTimeCodeScanBlockSize { get; set; }
     public int GuessTimeCodeScanBlockAverageMin { get; set; }
