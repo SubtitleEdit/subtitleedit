@@ -213,6 +213,7 @@ public class LanguageSettings
     public string ShowSecondarySubtitleDialog { get; set; }
     public string RememberSecondarySubtitleFile { get; set; }
     public string AutoOpenVideoFile { get; set; }
+    public string AutoDetectSmpteTiming { get; set; }
     public string DownloadMpv { get; set; }
     public string DownloadVlc { get; set; }
     public string AllowSingleLetterShortcutsInTextbox { get; set; }
@@ -600,6 +601,7 @@ public class LanguageSettings
         ShowSecondarySubtitleDialog = "Show style dialog when opening a second subtitle file";
         RememberSecondarySubtitleFile = "Remember second subtitle file";
         AutoOpenVideoFile = "Auto-open video file when opening subtitle";
+        AutoDetectSmpteTiming = "Auto-enable SMPTE timing for Timed Text files with non-drop SMPTE time codes";
         DownloadMpv = "Download mpv";
         DownloadVlc = "Download VLC";
         AllowSingleLetterShortcutsInTextbox = "Allow single-letter shortcuts in text box";
