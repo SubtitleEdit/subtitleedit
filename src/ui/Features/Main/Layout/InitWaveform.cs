@@ -36,7 +36,77 @@ public class InitWaveform
 
     public static Grid MakeWaveform(MainViewModel vm)
     {
-        return MakeWaveform(vm, withTimelineTracks: false, out _);
+        // Every layout but the editor-style one (which always has them) gets the track rows on
+        // request; the room for them comes from the waveform's own row, which grows to match.
+        var grid = MakeWaveform(vm, Se.Settings.Waveform.ShowTimelineTracks, out var timelineTracks, offerTimelineTracksToggle: true);
+        if (timelineTracks != null)
+        {
+            GrowContainingRowWithTracks(vm, grid, timelineTracks);
+        }
+
+        return grid;
+    }
+
+    /// <summary>
+    /// The layouts give the waveform a fixed-height row sized for the waveform alone. With the
+    /// track rows on top that row grows by their height, and keeps following them when they are
+    /// regrouped or the thumbnails are switched off, so the waveform keeps its height - like the
+    /// timeline row of layout 14. A waveform in a star-sized row (or an undocked window) has no
+    /// fixed row to grow and simply shares its space.
+    /// </summary>
+    private static void GrowContainingRowWithTracks(MainViewModel vm, Grid waveformGrid, TimelineTracks tracks)
+    {
+        RowDefinition? row = null;
+        var grown = false;
+
+        void OnAttached(object? sender, VisualTreeAttachmentEventArgs e)
+        {
+            waveformGrid.AttachedToVisualTree -= OnAttached;
+
+            // The layouts set the row height right after adding the waveform, so wait for that.
+            Dispatcher.UIThread.Post(() =>
+            {
+                row = FindFixedHeightRow(vm, waveformGrid);
+                if (row != null && !grown)
+                {
+                    grown = true;
+                    row.Height = new GridLength(row.Height.Value + tracks.Height, GridUnitType.Pixel);
+                }
+            });
+        }
+
+        waveformGrid.AttachedToVisualTree += OnAttached;
+        tracks.HeightChangedByUser += delta =>
+        {
+            if (row is { Height.IsAbsolute: true })
+            {
+                row.Height = new GridLength(Math.Max(TimelineTracks.TotalHeight, row.Height.Value + delta), GridUnitType.Pixel);
+            }
+        };
+    }
+
+    /// <summary>
+    /// The nearest fixed-height grid row holding <paramref name="control"/>, looking no further
+    /// out than the main window's content grid.
+    /// </summary>
+    private static RowDefinition? FindFixedHeightRow(MainViewModel vm, Control control)
+    {
+        var child = control;
+        while (child.Parent is Control parent && child != vm.ContentGrid)
+        {
+            if (parent is Grid grid && grid.RowDefinitions.Count > 0)
+            {
+                var row = grid.RowDefinitions[Math.Clamp(Grid.GetRow(child), 0, grid.RowDefinitions.Count - 1)];
+                if (row.Height.IsAbsolute)
+                {
+                    return row;
+                }
+            }
+
+            child = parent;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -44,7 +114,7 @@ public class InitWaveform
     /// subtitle rows of the editor-style layout (<see cref="TimelineTracks"/>) sit directly on
     /// top of the waveform, inside the same margins so the three rows share one time axis.
     /// </summary>
-    internal static Grid MakeWaveform(MainViewModel vm, bool withTimelineTracks, out TimelineTracks? timelineTracks)
+    internal static Grid MakeWaveform(MainViewModel vm, bool withTimelineTracks, out TimelineTracks? timelineTracks, bool offerTimelineTracksToggle = false)
     {
         timelineTracks = null;
         var languageHints = Se.Language.Main.Waveform;
@@ -393,6 +463,20 @@ public class InitWaveform
                 [!MenuItem.IsCheckedProperty] = new Binding(nameof(vm.IsWaveformEditingOriginal)) { Mode = BindingMode.TwoWay },
             }.BindIsVisible(vm, nameof(vm.ShowColumnOriginalText));
             flyout.Items.Add(editOriginalTimingMenuItem);
+
+            // Outside the editor-style layout the track rows are optional; switching them
+            // rebuilds the layout, as the Settings check box does.
+            if (offerTimelineTracksToggle)
+            {
+                var showTimelineTracksMenuItem = new MenuItem
+                {
+                    Header = Se.Language.Waveform.ShowTimelineTracks,
+                    ToggleType = MenuItemToggleType.CheckBox,
+                    IsChecked = settings.ShowTimelineTracks,
+                };
+                showTimelineTracksMenuItem.Click += (_, _) => vm.ToggleWaveformTimelineTracks();
+                flyout.Items.Add(showTimelineTracksMenuItem);
+            }
 
             var lockOriginalToTranslationMenuItem = new MenuItem
             {

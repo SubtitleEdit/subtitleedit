@@ -321,6 +321,8 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private bool _waveformShowToolbar;
     [ObservableProperty] private bool _waveformShowOriginalSubtitle;
+    [ObservableProperty] private bool _waveformShowTimelineTracks;
+    [ObservableProperty] private bool _waveformTimelineShowThumbnails;
 
     [ObservableProperty] private bool _waveformFocusTextboxAfterInsertNew;
     [ObservableProperty] private string _waveformSpaceInfo;
@@ -1054,6 +1056,8 @@ public partial class SettingsViewModel : ObservableObject
         WaveformRememberZoom = Se.Settings.Waveform.RememberZoom;
         WaveformShowToolbar = Se.Settings.Waveform.ShowToolbar;
         WaveformShowOriginalSubtitle = Se.Settings.Waveform.ShowOriginalSubtitle;
+        WaveformShowTimelineTracks = Se.Settings.Waveform.ShowTimelineTracks;
+        WaveformTimelineShowThumbnails = Se.Settings.Waveform.TimelineShowThumbnails;
 
         if (Se.Settings.Waveform.WaveformDrawStyle == WaveformDrawStyle.Classic.ToString())
         {
@@ -2012,6 +2016,8 @@ public partial class SettingsViewModel : ObservableObject
 
         Se.Settings.Waveform.ShowToolbar = WaveformShowToolbar;
         Se.Settings.Waveform.ShowOriginalSubtitle = WaveformShowOriginalSubtitle;
+        Se.Settings.Waveform.ShowTimelineTracks = WaveformShowTimelineTracks;
+        Se.Settings.Waveform.TimelineShowThumbnails = WaveformTimelineShowThumbnails;
         Se.Settings.Waveform.ToolbarItems = _waveformToolbarItems;
 
         Se.Settings.Waveform.WaveformTextFontSize = WaveformTextFontSize;

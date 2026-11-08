@@ -809,6 +809,8 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.WaveformShowToolbarEditLabel,
                 () => UiUtil.MakeButton(Se.Language.Options.Settings.WaveformShowToolbarEdit, _vm.EditWaveformToolbarPropertiesCommand)),
             MakeCheckboxSetting(Se.Language.Waveform.ShowOriginalSubtitle, nameof(_vm.WaveformShowOriginalSubtitle)),
+            MakeCheckboxSetting(Se.Language.Waveform.ShowTimelineTracks, nameof(_vm.WaveformShowTimelineTracks)),
+            MakeCheckboxSetting(Se.Language.Waveform.TimelineShowThumbnails, nameof(_vm.WaveformTimelineShowThumbnails)),
 
             new SettingsItem(Se.Language.Options.Settings.WaveformSingleClickAction, () => new ComboBox
             {

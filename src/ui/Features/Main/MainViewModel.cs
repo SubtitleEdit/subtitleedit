@@ -1579,6 +1579,32 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Switches layout 14's track rows above the waveform on or off for the other layouts
+    /// (#16354) and rebuilds the layout to show it. Posted, as the menu item that calls this
+    /// lives in the waveform the rebuild replaces.
+    /// </summary>
+    [RelayCommand]
+    internal void ToggleWaveformTimelineTracks()
+    {
+        _shortcutManager.ClearKeys();
+        Se.Settings.Waveform.ShowTimelineTracks = !Se.Settings.Waveform.ShowTimelineTracks;
+        if (Se.Settings.General.LayoutNumber == 14)
+        {
+            return; // the editor-style layout always has them
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (AreVideoControlsUndocked)
+            {
+                VideoRedockControls();
+            }
+
+            SetLayout(Se.Settings.General.LayoutNumber);
+        });
+    }
+
     private void SetLayout(int layoutNumber)
     {
         var idx = SubtitleGrid.SelectedIndex;

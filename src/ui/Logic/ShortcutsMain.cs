@@ -768,6 +768,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ToggleEditOriginalModeCommand), Se.Language.Main.Menu.EditOriginalSubtitle },
         { nameof(MainViewModel.ToggleLockOriginalToTranslationCommand), Se.Language.Waveform.LockOriginalToTranslation },
         { nameof(MainViewModel.ToggleWaveformEditOriginalCommand), Se.Language.Waveform.EditOriginalTiming },
+        { nameof(MainViewModel.ToggleWaveformTimelineTracksCommand), Se.Language.Waveform.ShowTimelineTracks },
         { nameof(MainViewModel.WaveformShowOnlyWaveformCommand), Se.Language.Waveform.ShowOnlyWaveform },
         { nameof(MainViewModel.WaveformShowOnlySpectrogramCommand), Se.Language.Waveform.ShowOnlySpectrogram },
         { nameof(MainViewModel.WaveformShowWaveformAndSpectrogramCommand), Se.Language.Waveform.ShowWaveformAndSpectrogram },
@@ -1344,6 +1345,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ToggleEditOriginalModeCommand, nameof(vm.ToggleEditOriginalModeCommand), ShortcutCategory.General, ShortcutGroup.Translate);
         AddShortcut(shortcuts, vm.ToggleLockOriginalToTranslationCommand, nameof(vm.ToggleLockOriginalToTranslationCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.ToggleWaveformEditOriginalCommand, nameof(vm.ToggleWaveformEditOriginalCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
+        AddShortcut(shortcuts, vm.ToggleWaveformTimelineTracksCommand, nameof(vm.ToggleWaveformTimelineTracksCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformShowOnlyWaveformCommand, nameof(vm.WaveformShowOnlyWaveformCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformShowOnlySpectrogramCommand, nameof(vm.WaveformShowOnlySpectrogramCommand), ShortcutCategory.General, ShortcutGroup.Waveform);
         AddShortcut(shortcuts, vm.WaveformShowWaveformAndSpectrogramCommand, nameof(vm.WaveformShowWaveformAndSpectrogramCommand), ShortcutCategory.General, ShortcutGroup.Waveform);

@@ -28,6 +28,7 @@ public class LanguageWaveform
     public string EditOriginalTimingReadOnly { get; set; }
     public string TimelineGroupTracksBy { get; set; }
     public string TimelineShowThumbnails { get; set; }
+    public string ShowTimelineTracks { get; set; }
     public string ShowSpeechOnly { get; set; }
     public string IsolatingSpeechForWaveformX { get; set; }
     public string IsolatingSpeechForWaveformFailed { get; set; }
@@ -76,6 +77,7 @@ public class LanguageWaveform
         EditOriginalTimingReadOnly = "The original subtitle is read-only - turn on File > Edit original subtitle to edit its timing";
         TimelineGroupTracksBy = "Group subtitle tracks by";
         TimelineShowThumbnails = "Show video thumbnails";
+        ShowTimelineTracks = "Show subtitle tracks above waveform";
         ShowSpeechOnly = "Show speech only (slow to generate)";
         IsolatingSpeechForWaveformX = "Isolating speech for the waveform... {0}";
         IsolatingSpeechForWaveformFailed = "Could not isolate the speech for the waveform - see the tools log";

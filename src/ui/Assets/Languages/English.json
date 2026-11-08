@@ -3589,6 +3589,7 @@
     "editOriginalTimingReadOnly": "The original subtitle is read-only - turn on File > Edit original subtitle to edit its timing",
     "timelineGroupTracksBy": "Group subtitle tracks by",
     "timelineShowThumbnails": "Show video thumbnails",
+    "showTimelineTracks": "Show subtitle tracks above waveform",
     "showSpeechOnly": "Show speech only (slow to generate)",
     "isolatingSpeechForWaveformX": "Isolating speech for the waveform... {0}",
     "isolatingSpeechForWaveformFailed": "Could not isolate the speech for the waveform - see the tools log",
