@@ -33826,7 +33826,8 @@ public partial class MainViewModel :
 
     private static bool IsAlphaNumericWordChar(char c)
     {
-        return char.IsLetterOrDigit(c) || c == '_';
+        // Combining marks (e.g. Arabic tanween) belong to the word (#16750).
+        return CombiningMarkWordSelection.IsWordChar(c) || c == '_';
     }
 
     private readonly Lock _onKeyDownHandlerLock = new();
