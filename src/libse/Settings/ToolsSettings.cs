@@ -62,6 +62,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string OpperPrompt { get; set; }
         public string OpperApiKey { get; set; }
         public string OpperModel { get; set; }
+        public string RuncrateUrl { get; set; }
+        public string RuncratePrompt { get; set; }
+        public string RuncrateApiKey { get; set; }
+        public string RuncrateModel { get; set; }
         
         public string PerplexityUrl { get; set; }
         public string PerplexityPrompt { get; set; }
@@ -169,6 +173,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OpperUrl = "https://api.opper.ai/v3/compat/chat/completions";
             OpperPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             OpperModel = "claude-sonnet-4-6"; // OpperTranslate.Models[0] in LibUiLogic
+            RuncrateUrl = "https://api.runcrate.ai/v1/chat/completions";
+            RuncratePrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
+            RuncrateModel = "Qwen/Qwen3-235B-A22B-Instruct-2507"; // RuncrateTranslate.Models[0] in LibUiLogic
             OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             OpenRouterModel = "openai/gpt-5.6-sol"; // OpenRouterTranslate.Models[0] in LibUiLogic

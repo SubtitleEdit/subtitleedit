@@ -108,6 +108,10 @@ public class SeAutoTranslate
     public string OpperPrompt { get; set; }
     public string OpperApiKey { get; set; }
     public string OpperModel { get; set; }
+    public string RuncrateUrl { get; set; }
+    public string RuncratePrompt { get; set; }
+    public string RuncrateApiKey { get; set; }
+    public string RuncrateModel { get; set; }
 
     public string PerplexityUrl { get; set; }
     public string PerplexityPrompt { get; set; }
@@ -145,6 +149,10 @@ public class SeAutoTranslate
         OpperModel = OpperTranslate.Models[0];
         OpperPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
         OpperUrl = OpperTranslate.DefaultUrl;
+        RuncrateApiKey = string.Empty;
+        RuncrateModel = RuncrateTranslate.Models[0];
+        RuncratePrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+        RuncrateUrl = RuncrateTranslate.DefaultUrl;
         PerplexityApiKey = string.Empty;
         PerplexityModel = PerplexityTranslate.Models[0];
         PerplexityPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
