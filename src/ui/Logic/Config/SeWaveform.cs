@@ -148,7 +148,7 @@ public class SeWaveform
         ShowToolbar = true;
         ShowOriginalSubtitle = false;
         TimelineTrackGrouping = "None";
-        TimelineShowThumbnails = true;
+        TimelineShowThumbnails = false;
         DrawGridLines = false;
         RememberZoom = false;
         ZoomFactor = 1.0;
