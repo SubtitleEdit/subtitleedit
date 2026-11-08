@@ -1302,7 +1302,8 @@ public class SyntaxTextView : Control
         return _document.GetLineEndOffset(_document.GetPosition(_caretOffset).Line);
     }
 
-    private static bool IsWordChar(char c) => char.IsLetterOrDigit(c) || c == '_';
+    // Combining marks (e.g. Arabic tanween) belong to the word (#16750).
+    private static bool IsWordChar(char c) => CombiningMarkWordSelection.IsWordChar(c) || c == '_';
 
     private static bool IsNonNewlineWhiteSpace(char c) => c != '\n' && char.IsWhiteSpace(c);
 
