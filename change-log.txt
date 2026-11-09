@@ -3,6 +3,24 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta2 (9th of November 2026)
+
+* Waveform: "Edit original subtitle timing" toggle edits the original subtitle's timing in any layout - thx hisui3393
+* Subtitle track rows above the waveform in every layout (not only layout 14) - thx hisui3393
+* MP4 track picker: Language and Name columns, language read from track names - thx korsosattila73
+* Remember the "original subtitle has different line count" choice per recent file - thx OmrSi
+* New setting to show the time code mode in the status bar (hidden by default)
+* Focus selected line: go to the first selected line - thx OmrSi
+* Fix mpv failure at startup (playback commands sent before mpv started) - thx GrampaWildWilly
+* Fix Speech to text leaving temp files behind - thx OmrSi
+* Fix double-click/Ctrl+Backspace word selection splitting words with combining marks (e.g. Arabic tanween) - thx OmrSi
+* Fix save dialogs keeping a wrong extension (e.g. Blu-ray sup saved as .hdr) - thx k6G52m4Dz75W
+* Fix OCR inspect/add character: AltGr+Z now types ż instead of undoing
+* Update German translation - thx FunkyKnilch/accessallareas
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+
 v5.5.0-beta1 (8th of November 2026)
 
 * Video OCR: remove burned-in subtitles (AI inpainting, black boxes, blur, delogo), also inside a drawn rectangle
