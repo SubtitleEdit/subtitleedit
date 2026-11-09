@@ -1,7 +1,7 @@
 {
   "title": "SubtitleEdit",
-  "version": "v5.5.0-beta1",
-  "translatedBy": "v. 08.11.2026 di bovirus e GitGianluc",
+  "version": "v5.5.0-beta2",
+  "translatedBy": "v. 09.11.2026 di bovirus e GitGianluc",
   "cultureName": "it-IT",
   "general": {
     "abort": "Annulla",
@@ -3759,6 +3759,7 @@
       "showUpDownDuration": "Visualizza il controllo su/giù per 'Durata'",
       "showUpDownLabels": "Visualizza etichette per i controlli su/giù (visualizza/nascondi/durata)",
       "showButtonHints": "Visualizza suggerimenti pulsanti",
+      "showTimeCodeModeInStatusBar": "Visualizza la modalità timecode nella barra di stato",
       "gridCompactMode": "Usa modalità compatta per le griglie",
       "gridAlternatingRows": "Nella griglia usa colori riga alternati",
       "gridAlternatingRowColor": "Colore riga alternato (tema chiaro)",
