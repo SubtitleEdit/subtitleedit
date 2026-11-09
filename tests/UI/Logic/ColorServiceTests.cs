@@ -57,6 +57,7 @@ public class ColorServiceTests
     [InlineData("<font color=\"#FFFFFF\">Hello world</font>", "<font color=\"#0000FF\">Hello world</font>")]
     [InlineData("<font color=\"#FFFFFF\" face=\"Arial\">Hello world</font>", "<font color=\"#0000FF\" face=\"Arial\">Hello world</font>")]
     [InlineData("<font color=red face=\"Arial\">Hello world</font>", "<font color=\"#0000FF\" face=\"Arial\">Hello world</font>")]
+    [InlineData("<font color=\"#FFFFFF>Hello \"world\"</font>", "<font color=\"#0000FF\">Hello \"world\"</font>")]
     public void SetColorTag_Srt_ReplacesExistingColor(string input, string expected)
     {
         var result = new ColorService().SetColorTag(input, Blue, new Subtitle(), new SubRip());
