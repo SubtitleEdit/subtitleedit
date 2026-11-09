@@ -67,11 +67,19 @@ public class DoNotBreakAfterListEditTests : IDisposable
         return window;
     }
 
-    private string[] ReadSavedItems()
+    private string[] ReadShippedItems() => ReadElements("en_NoBreakAfterList.xml", "Item");
+
+    private string[] ReadElements(string fileName, string elementName)
     {
+        var path = Path.Combine(_tempFolder, fileName);
+        if (!File.Exists(path))
+        {
+            return Array.Empty<string>();
+        }
+
         var doc = new XmlDocument();
-        doc.Load(Path.Combine(_tempFolder, "en_NoBreakAfterList.xml"));
-        return doc.DocumentElement!.SelectNodes("Item")!.Cast<XmlNode>().Select(n => n.InnerText).ToArray();
+        doc.Load(path);
+        return doc.DocumentElement!.SelectNodes(elementName)!.Cast<XmlNode>().Select(n => n.InnerText).ToArray();
     }
 
     [AvaloniaFact]
@@ -102,7 +110,9 @@ public class DoNotBreakAfterListEditTests : IDisposable
 
         Assert.Equal(new[] { "Dr.", "Mrs.", "Prof.", "^\\d+$" }, vm.Items.Select(p => p.Text));
         Assert.Equal("Prof.", vm.SelectedItem?.Text);
-        Assert.Contains("Prof.", ReadSavedItems());
+        // #16375: the edit goes to the user overlay file, the shipped file (replaced on upgrade) is untouched.
+        Assert.Equal(new[] { "Prof." }, ReadElements("en_NoBreakAfterList_User.xml", "Item"));
+        Assert.DoesNotContain("Prof.", ReadShippedItems());
 
         // A fresh view model sees the saved item, including the kept regex flag.
         var vm2 = BuildViewModel();
@@ -136,8 +146,31 @@ public class DoNotBreakAfterListEditTests : IDisposable
         vm.RemoveItemCommand.Execute(null);
 
         Assert.DoesNotContain(vm.Items, p => p.Text == "Dr.");
-        Assert.DoesNotContain("Dr.", ReadSavedItems());
+        Assert.Equal(new[] { "Dr." }, ReadElements("en_NoBreakAfterList_User.xml", "Removed"));
+        Assert.Contains("Dr.", ReadShippedItems());
         Assert.NotNull(vm.SelectedItem); // selection moves to a neighbor
+
+        var vm2 = BuildViewModel();
+        vm2.SelectedLanguageChanged();
+        Assert.DoesNotContain(vm2.Items, p => p.Text == "Dr.");
+    }
+
+    [AvaloniaFact]
+    public void Edits_SurviveShippedFileBeingReplacedOnUpgrade()
+    {
+        var vm = BuildViewModel();
+        BuildWindow(vm);
+        vm.SelectedLanguageChanged();
+        vm.NewItemText = "Prof.";
+        vm.AddItemCommand.Execute(null);
+
+        // What the dictionaries unpack does on every app upgrade (#16375).
+        File.WriteAllText(Path.Combine(_tempFolder, "en_NoBreakAfterList.xml"),
+            "<NoBreakAfterList><Item>Mrs.</Item><Item>Dr.</Item><Item>Ms.</Item></NoBreakAfterList>");
+
+        var vm2 = BuildViewModel();
+        vm2.SelectedLanguageChanged();
+        Assert.Equal(new[] { "Dr.", "Mrs.", "Ms.", "Prof." }, vm2.Items.Select(p => p.Text));
     }
 
     [AvaloniaFact]

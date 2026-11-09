@@ -396,24 +396,17 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
-            var doc = new XmlDocument();
-            if (File.Exists(noBreakAfterFileName))
+            // The shipped list plus the user's overlay file (#16375) - see NoBreakAfterListFile.
+            foreach (var entry in NoBreakAfterListFile.LoadMerged(noBreakAfterFileName))
             {
-                doc.Load(noBreakAfterFileName);
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("Item"))
+                if (entry.IsRegex)
                 {
-                    if (!string.IsNullOrEmpty(node.InnerText))
-                    {
-                        if (node.Attributes?["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var r = new Regex(node.InnerText, RegexOptions.Compiled);
-                            items.Add(new NoBreakAfterItem(r, node.InnerText));
-                        }
-                        else
-                        {
-                            items.Add(new NoBreakAfterItem(node.InnerText.TrimStart()));
-                        }
-                    }
+                    var r = new Regex(entry.Text, RegexOptions.Compiled);
+                    items.Add(new NoBreakAfterItem(r, entry.Text));
+                }
+                else
+                {
+                    items.Add(new NoBreakAfterItem(entry.Text.TrimStart()));
                 }
             }
 
