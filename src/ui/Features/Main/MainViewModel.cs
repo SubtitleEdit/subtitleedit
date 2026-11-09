@@ -11393,6 +11393,7 @@ public partial class MainViewModel :
 
         if (!resultGetAudioClips.OkPressed || resultGetAudioClips.AudioClips.Count == 0)
         {
+            GetAudioClipsViewModel.DeleteAudioClipFiles(resultGetAudioClips.AudioClips);
             return false;
         }
 
@@ -11400,6 +11401,10 @@ public partial class MainViewModel :
         {
             vm.InitializeBatch(resultGetAudioClips.AudioClips, _audioTrack?.FfIndex ?? -1, !promptEngineAndLanguage, language);
         });
+
+        // The transcriptions are in memory now - the "se_audioclip_*.wav" temp files were left
+        // behind after every run (#16760).
+        GetAudioClipsViewModel.DeleteAudioClipFiles(resultGetAudioClips.AudioClips);
 
         if (!resultSpeechToText.OkPressed)
         {
