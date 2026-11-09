@@ -240,4 +240,17 @@ public class WebVttHelperTest
         Assert.Empty(WebVttHelper.GetParagraphStyles("<i>Hello</i>"));
         Assert.Empty(WebVttHelper.GetParagraphStyles(string.Empty));
     }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    [InlineData(null)]
+    public void CopyConstructorCopiesItalic(bool? italic)
+    {
+        var style = new WebVttStyle { Italic = italic };
+
+        var copy = new WebVttStyle(style);
+
+        Assert.Equal(italic, copy.Italic);
+    }
 }
