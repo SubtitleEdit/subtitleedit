@@ -2624,8 +2624,12 @@ public partial class SpeechToTextViewModel : ObservableObject
                 using var waveFile = new WavePeakGenerator2(targetFile);
                 if (!string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName))
                 {
-                    return waveFile.GeneratePeaks(delayInMilliseconds,
-                        WavePeakGenerator2.GetPeakWaveFileName(_videoFileName));
+                    // A clip of selected lines is a temp file, deleted after the run - caching its
+                    // peaks left one never-read file in the Waveforms folder per line (#16760).
+                    var peakFileName = _audioClips != null
+                        ? string.Empty
+                        : WavePeakGenerator2.GetPeakWaveFileName(_videoFileName);
+                    return waveFile.GeneratePeaks(delayInMilliseconds, peakFileName);
                 }
             }
         }

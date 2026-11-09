@@ -74,6 +74,7 @@ public partial class GetAudioClipsViewModel : ObservableObject
         {
             if (_cancellationTokenSource.Token.IsCancellationRequested)
             {
+                DeleteAudioClips();
                 return;
             }
 
@@ -115,6 +116,10 @@ public partial class GetAudioClipsViewModel : ObservableObject
                 {
                     // Process may have already exited
                 }
+
+                // Nobody takes the clips of a cancelled run, so they would stay in the temp folder (#16760).
+                TryDelete(outputFileName);
+                DeleteAudioClips();
                 return;
             }
 
@@ -165,6 +170,27 @@ public partial class GetAudioClipsViewModel : ObservableObject
             await MessageBox.Show(Window!, Se.Language.General.Information, message);
             Close();
         });
+    }
+
+    /// <summary>
+    /// Deletes the clip files of <paramref name="audioClips"/> - they are temp files cut for one
+    /// speech-to-text run, and nothing else ever removes them (#16760).
+    /// </summary>
+    public static void DeleteAudioClipFiles(IEnumerable<AudioClip> audioClips)
+    {
+        foreach (var clip in audioClips)
+        {
+            if (!string.IsNullOrEmpty(clip.AudioFileName))
+            {
+                TryDelete(clip.AudioFileName);
+            }
+        }
+    }
+
+    private void DeleteAudioClips()
+    {
+        DeleteAudioClipFiles(AudioClips);
+        AudioClips.Clear();
     }
 
     private static void TryDelete(string fileName)
