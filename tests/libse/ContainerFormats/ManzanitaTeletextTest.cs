@@ -40,6 +40,39 @@ public class ManzanitaTeletextTest
         Assert.Equal(8500, paragraphs[1].EndTime.TotalMilliseconds);
     }
 
+    [Theory]
+    [InlineData(0, 3)]
+    [InlineData(3, 3)]
+    [InlineData(4, 7)]
+    [InlineData(5, 7)]
+    [InlineData(7, 7)]
+    [InlineData(8, 11)]
+    public void DataUnitsPerPacketFillWholeTransportPackets(int maxDataUnits, int expected)
+    {
+        var dataUnits = ManzanitaTeletextWriter.GetDataUnitsPerPacket(maxDataUnits);
+
+        Assert.Equal(expected, dataUnits);
+        // 45 byte PES header (EN 300 472: header data length 0x24) + data_identifier + data units
+        Assert.Equal(0, (45 + 1 + dataUnits * 46) % 184);
+    }
+
+    [Fact]
+    public void FourLineSubtitleKeepsPesPacketsTransportAligned()
+    {
+        var subtitle = MakeSubtitle(new Paragraph("One" + Environment.NewLine + "Two" + Environment.NewLine +
+                                                  "Three" + Environment.NewLine + "Four", 1000, 3000));
+        var writer = new ManzanitaTeletextWriter { PageNumber = 888, Date = new DateTime(2026, 1, 1) };
+
+        var xml = System.Text.Encoding.ASCII.GetString(writer.GetBytes(subtitle));
+        var lengths = System.Text.RegularExpressions.Regex.Matches(xml, "length=\"(\\d+)\"")
+            .Select(m => int.Parse(m.Groups[1].Value)).ToList();
+
+        Assert.NotEmpty(lengths);
+        Assert.All(lengths, length => Assert.Equal(323, length)); // header row + 4 rows = 5 units, padded to 7
+        Assert.Equal("One" + Environment.NewLine + "Two" + Environment.NewLine + "Three" + Environment.NewLine + "Four",
+            WriteAndRead(subtitle)[888][0].Text);
+    }
+
     [Fact]
     public void RoundTripKeepsTeletextColors()
     {
