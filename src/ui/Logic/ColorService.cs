@@ -199,7 +199,9 @@ public class ColorService : IColorService
                 if (colorStart >= 0)
                 {
                     var valueStart = colorStart + " color=".Length;
-                    var quoteEnd = s.IndexOf('"', valueStart);
+                    var quoteEnd = valueStart < end && s[valueStart] == '"'
+                        ? s.IndexOf('"', valueStart + 1)
+                        : -1;
                     if (quoteEnd > 0)
                     {
                         // Quoted value: the closing quote comes from the tail we keep.
