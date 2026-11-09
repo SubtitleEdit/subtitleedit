@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.5.0-beta1",
+  "version": "v5.5.0-beta2",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -3759,6 +3759,7 @@
       "showUpDownDuration": "Show up/down control for \"Duration\"",
       "showUpDownLabels": "Show labels for up/down controls (Show/Hide/Duration)",
       "showButtonHints": "Show button hints",
+      "showTimeCodeModeInStatusBar": "Show time code mode in status bar",
       "gridCompactMode": "Use compact mode for grids",
       "gridAlternatingRows": "Use alternating row colors in grid",
       "gridAlternatingRowColor": "Alternating row color (light theme)",
