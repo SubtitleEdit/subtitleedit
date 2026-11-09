@@ -12,10 +12,18 @@ public static class OcrAssaAlignment
 {
     private static readonly Regex AlignmentTagRegex = new(@"^\{\\an[1-9]\}", RegexOptions.Compiled);
 
+    // Fraction of the frame height: the empty gap that separates two blocks of lines. Lines of one
+    // block are far closer than this at any resolution, also in tall images of many lines.
+    private const double MinBlockGapRatio = 0.15;
+
+    // Fraction of the frame height: a block reaching this far into the top or bottom of the frame
+    // is placed there, also when its center is in the middle third, e.g. three lines of dialogue.
+    private const double OuterEdgeRatio = 0.25;
+
     /// <summary>
     /// Returns <paramref name="text"/> with an alignment tag matching the image's place in the
-    /// frame. A tall image (more than a third of the frame) holding a short multi-line text is
-    /// taken to be several separately placed lines, which are then tagged one by one.
+    /// frame. A tall image (more than a third of the frame) with a big empty gap between its
+    /// lines is taken to be several separately placed blocks, which are then tagged one by one.
     /// Nothing is added when the frame size is unknown.
     /// </summary>
     public static (string Text, bool AlignmentAdded) Detect(
@@ -45,53 +53,105 @@ public static class OcrAssaAlignment
         return DetectFromPlacedImage(bitmap, positionX, positionY, screenWidth, screenHeight, text, writeAn2Tag);
     }
 
+    /// <summary>
+    /// True when <see cref="Detect"/> would see separately placed blocks in the image. Their text
+    /// must keep its line breaks: re-breaking it moves words from one block to the other (#16501).
+    /// </summary>
+    public static bool HasSeparatedBlocks(SKBitmap? bitmap, int screenWidth, int screenHeight)
+    {
+        if (bitmap == null || screenWidth <= 0 || screenHeight <= 0)
+        {
+            return false;
+        }
+
+        if (bitmap.Width >= screenWidth && bitmap.Height >= screenHeight)
+        {
+            var ink = BitmapInkBounds.Crop(bitmap);
+            if (ink is null)
+            {
+                return false;
+            }
+
+            using var inkBitmap = ink.Value.Bitmap;
+            return GetImageLineBlocks(inkBitmap, screenHeight) != null;
+        }
+
+        return GetImageLineBlocks(bitmap, screenHeight) != null;
+    }
+
     private static (string Text, bool AlignmentAdded) DetectFromPlacedImage(
         SKBitmap bitmap, int positionX, int positionY, int screenWidth, int screenHeight, string text, bool writeAn2Tag)
     {
-        // Check if image height is larger than approximately 1/3 of screen height
-        var imageHeightRatio = (double)bitmap.Height / screenHeight;
-        if (imageHeightRatio > 0.33)
+        // Try to split lines and set alignment for each line
+        var lines = text.Trim().SplitToLines();
+        var blocks = lines.Count > 1 ? GetImageLineBlocks(bitmap, screenHeight) : null;
+        if (blocks != null)
         {
-            // Try to split lines and set alignment for each line
-            var lines = text.Trim().SplitToLines();
-            if (lines.Count > 1 && text.Length < 40)
+            var lineAlignments = new List<string>();
+            var multiLineCenterX = positionX + bitmap.Width / 2.0;
+            var multiLineRelativeX = multiLineCenterX / screenWidth;
+
+            for (var i = 0; i < lines.Count; i++)
             {
-                var nbmp = new NikseBitmap2(bitmap);
-                nbmp.MakeOneColor(SKColors.White);
-                var lineImages = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
-                var lineImages2 = NikseBitmapImageSplitter2.SplitToLines(nbmp, 20);
-
-                if (lineImages.Count > 1 || lineImages2.Count > 1)
-                {
-                    // Multiple lines detected - apply alignment to each line
-                    var lineAlignments = new List<string>();
-                    var multiLineCenterX = positionX + bitmap.Width / 2.0;
-                    var multiLineRelativeX = multiLineCenterX / screenWidth;
-
-                    for (var i = 0; i < lines.Count; i++)
-                    {
-                        // Calculate relative Y position for each line
-                        var lineHeight = bitmap.Height / (double)lines.Count;
-                        var lineY = positionY + (i * lineHeight) + (lineHeight / 2.0);
-                        var lineRelativeY = lineY / screenHeight;
-
-                        lineAlignments.Add(GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY));
-                    }
-
-                    return ApplyLineAlignmentTags(lines, lineAlignments, text, writeAn2Tag);
-                }
+                // OCR can find more or fewer lines than the image has: keep them in order, first to first and last to last
+                var imageLineIndex = (int)Math.Round(i * (blocks.Length - 1.0) / (lines.Count - 1.0));
+                var block = blocks[imageLineIndex];
+                lineAlignments.Add(GetAssaPositionFromScreen(
+                    multiLineRelativeX,
+                    (positionY + block.Top) / screenHeight,
+                    (positionY + block.Bottom) / screenHeight));
             }
+
+            return ApplyLineAlignmentTags(lines, lineAlignments, text, writeAn2Tag);
         }
 
-        // Calculate center point of the image on screen
-        var centerX = positionX + bitmap.Width / 2.0;
-        var centerY = positionY + bitmap.Height / 2.0;
+        // Relative position of the image on screen (0.0 = left/top, 1.0 = right/bottom)
+        var relativeX = (positionX + bitmap.Width / 2.0) / screenWidth;
+        var relativeTop = (double)positionY / screenHeight;
+        var relativeBottom = (double)(positionY + bitmap.Height) / screenHeight;
 
-        // Convert to relative position (0.0 = left/top, 1.0 = right/bottom)
-        var relativeX = centerX / screenWidth;
-        var relativeY = centerY / screenHeight;
+        return ApplyAlignmentTag(text, GetAssaPositionFromScreen(relativeX, relativeTop, relativeBottom), writeAn2Tag);
+    }
 
-        return ApplyAlignmentTag(text, GetAssaPositionFromScreen(relativeX, relativeY), writeAn2Tag);
+    /// <summary>
+    /// Finds blocks of lines placed apart in a tall image, e.g. a sign at the top and dialogue at
+    /// the bottom: lines further apart than <see cref="MinBlockGapRatio"/> of the frame are in
+    /// different blocks. Returns the top and bottom, in the image, of the block of each image line,
+    /// or null when the image holds a single block.
+    /// </summary>
+    private static (double Top, double Bottom)[]? GetImageLineBlocks(SKBitmap bitmap, int screenHeight)
+    {
+        // Check if image height is larger than approximately 1/3 of screen height
+        var imageHeightRatio = (double)bitmap.Height / screenHeight;
+        if (imageHeightRatio <= 0.33)
+        {
+            return null;
+        }
+
+        var nbmp = new NikseBitmap2(bitmap);
+        nbmp.MakeOneColor(SKColors.White);
+        var imageLines = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
+        if (imageLines.Count < 2)
+        {
+            imageLines = NikseBitmapImageSplitter2.SplitToLines(nbmp, 20);
+        }
+
+        var minGap = screenHeight * MinBlockGapRatio;
+        var blocks = new (double Top, double Bottom)[imageLines.Count];
+        var blockStart = 0;
+        for (var i = 1; i <= imageLines.Count; i++)
+        {
+            var bottom = imageLines[i - 1].Y + imageLines[i - 1].NikseBitmap!.Height;
+            if (i < imageLines.Count && imageLines[i].Y - bottom <= minGap)
+            {
+                continue;
+            }
+
+            Array.Fill(blocks, ((double)imageLines[blockStart].Y, (double)bottom), blockStart, i - blockStart);
+            blockStart = i;
+        }
+
+        return imageLines.Count == 0 || blocks[0] == blocks[^1] ? null : blocks;
     }
 
     // "an2" is the default bottom-center alignment, so no tag is needed for it (#12393)
@@ -112,13 +172,16 @@ public static class OcrAssaAlignment
             return (originalText, false);
         }
 
+        // A line with the same alignment as the one above needs no tag of its own
         var perLine = new List<string>();
         for (var i = 0; i < lines.Count; i++)
         {
-            perLine.Add($"{{\\{lineAlignments[i]}}}{lines[i].Trim()}");
+            var tag = i > 0 && lineAlignments[i] == lineAlignments[i - 1] ? string.Empty : $"{{\\{lineAlignments[i]}}}";
+            perLine.Add(tag + lines[i].Trim());
         }
 
-        return (string.Join("\n", perLine), true);
+        // A bare "\n" is no line break in ASSA: it was saved as is and the line did not show (#16501)
+        return (string.Join(Environment.NewLine, perLine), true);
     }
 
     /// <summary>
@@ -130,6 +193,20 @@ public static class OcrAssaAlignment
         var column = relativeX < 0.33 ? 0 : relativeX > 0.67 ? 2 : 1; // left, center, right
         var row = relativeY < 0.33 ? 2 : relativeY > 0.67 ? 0 : 1;    // top of screen = an7-an9
         return "an" + (row * 3 + column + 1);
+    }
+
+    /// <summary>
+    /// Like <see cref="GetAssaPositionFromScreen(double, double)"/>, but for text with a height: text
+    /// reaching into the outer quarter at the top or bottom of the frame is placed there, even when
+    /// its center is in the middle third. Three lines of dialogue at the bottom are not mid-screen
+    /// text (#16501). Text reaching into both goes by its center.
+    /// </summary>
+    public static string GetAssaPositionFromScreen(double relativeX, double relativeTop, double relativeBottom)
+    {
+        var atTop = relativeTop < OuterEdgeRatio;
+        var atBottom = relativeBottom > 1.0 - OuterEdgeRatio;
+        var relativeY = atTop == atBottom ? (relativeTop + relativeBottom) / 2.0 : atTop ? 0.0 : 1.0;
+        return GetAssaPositionFromScreen(relativeX, relativeY);
     }
 
     /// <summary>
@@ -181,6 +258,6 @@ public static class OcrAssaAlignment
             return new List<string> { text };
         }
 
-        return groups.Select(g => string.Join("\n", g)).ToList();
+        return groups.Select(g => string.Join(Environment.NewLine, g)).ToList();
     }
 }

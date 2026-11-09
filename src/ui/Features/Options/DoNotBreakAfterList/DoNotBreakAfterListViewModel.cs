@@ -3,6 +3,7 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
@@ -14,7 +15,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Features.Options.DoNotBreakAfterList;
 
@@ -96,55 +96,39 @@ public partial class DoNotBreakAfterListViewModel : ObservableObject
         var items = new List<NoBreakAfterListItem>();
         try
         {
-            var doc = new XmlDocument();
-            doc.Load(fileName);
-            foreach (XmlNode node in doc.DocumentElement!.SelectNodes("Item")!)
-            {
-                if (!string.IsNullOrEmpty(node.InnerText))
-                {
-                    var isRegex = node.Attributes?["RegEx"] != null &&
-                                  node.Attributes["RegEx"]!.InnerText.Equals("true", StringComparison.OrdinalIgnoreCase);
-                    items.Add(new NoBreakAfterListItem(node.InnerText, isRegex));
-                }
-            }
+            // The shipped list plus the user's edits from <lang>_NoBreakAfterList_User.xml (#16375).
+            items.AddRange(NoBreakAfterListFile.LoadMerged(fileName).Select(p => new NoBreakAfterListItem(p.Text, p.IsRegex)));
         }
         catch
         {
-            // an unreadable list shows as empty; saving a new item will rewrite the file
+            // an unreadable list shows as empty; saving a new item will rewrite the user file
         }
 
         return items.OrderBy(p => p.Text, StringComparer.OrdinalIgnoreCase).ToList();
     }
 
-    private bool SaveItems(string fileName, IEnumerable<NoBreakAfterListItem> items)
+    /// <summary>
+    /// Saves the list as edits on top of the shipped file. The shipped file is replaced on every
+    /// upgrade, so writing to it directly lost the user's changes (#16375).
+    /// </summary>
+    private static bool SaveItems(string fileName, IEnumerable<NoBreakAfterListItem> items)
     {
         try
         {
-            var doc = new XmlDocument();
-            doc.LoadXml("<NoBreakAfterList />");
-            foreach (var item in items)
-            {
-                XmlNode node = doc.CreateElement("Item");
-                node.InnerText = item.Text;
-                if (item.IsRegex)
-                {
-                    var attribute = doc.CreateAttribute("RegEx");
-                    attribute.InnerText = true.ToString();
-                    node.Attributes!.Append(attribute);
-                }
-
-                doc.DocumentElement!.AppendChild(node);
-            }
-
-            doc.Save(fileName);
+            NoBreakAfterListFile.SaveUserChanges(fileName, ToEntries(items));
             Utilities.ResetNoBreakAfterList(); // the break engine caches the active list per language
             return true;
         }
         catch (Exception exception)
         {
-            Se.LogError(exception, $"Failed to save no-break-after list to '{fileName}'");
+            Se.LogError(exception, $"Failed to save no-break-after list for '{fileName}'");
             return false;
         }
+    }
+
+    private static IEnumerable<NoBreakAfterListFile.Entry> ToEntries(IEnumerable<NoBreakAfterListItem> items)
+    {
+        return items.Select(p => new NoBreakAfterListFile.Entry(p.Text, p.IsRegex));
     }
 
     [RelayCommand]
@@ -248,8 +232,14 @@ public partial class DoNotBreakAfterListViewModel : ObservableObject
         {
             var seedItems = new[] { "Dr", "Dr.", "Mr.", "Mrs.", "Ms." }
                 .Select(p => new NoBreakAfterListItem(p, false));
-            if (!SaveItems(fileName, seedItems))
+            try
             {
+                NoBreakAfterListFile.SaveItems(fileName, ToEntries(seedItems));
+                Utilities.ResetNoBreakAfterList();
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, $"Failed to create no-break-after list '{fileName}'");
                 await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.Options.WordLists.UnableToAddItem, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }

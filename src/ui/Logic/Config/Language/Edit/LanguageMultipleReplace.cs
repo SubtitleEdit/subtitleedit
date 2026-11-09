@@ -44,22 +44,22 @@ public class LanguageMultipleReplace
         AppliedRules = "Applied rules";
         FindRule = "Find rule";
         XLinesAffected = "{0:#,##0} lines affected";
-        DeleteCategoryConfirm = "Delete category '{0}'?";
-        DeleteRuleConfirm = "Delete rule '{0}'?";
+        DeleteCategoryConfirm = "Delete category \"{0}\"?";
+        DeleteRuleConfirm = "Delete rule \"{0}\"?";
         FindWhat = "Find what";
         DescriptionOptional = "Description (optional)";
         RegularExpressionTooSlowX = "Regular expression gave up after {0} seconds - the rule is skipped, try a simpler pattern";
         MoveToCategory = "Move to category";
         AddRules = "Add rules";
         AddRulesDotDotDot = "Add rules...";
-        AddRulesToX = "Add rules to '{0}'";
+        AddRulesToX = "Add rules to \"{0}\"";
         XRules = "{0:#,##0} rules";
         DiscardXRules = "Discard the {0} rules entered?";
         EnterAddsRule = "Enter adds the rule to the list, OK adds the list to the category (Ctrl+Enter)";
         Categories = "Categories";
         NewestFirst = "Newest first";
         FilterRules = "Filter rules...";
-        RulesInX = "Rules in '{0}'";
+        RulesInX = "Rules in \"{0}\"";
         EnterAddsRuleToCategory = "Enter adds the rule to the end of the category";
     }
 }

@@ -108,5 +108,9 @@ public class TranscriptionProgressWindow : Window
         sections.Add(segmentsSection, 2);
 
         Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeDockedButtonBar(null, cancelButton, closeButton));
+
+        // The list, not Cancel: a stray Space must not stop a long transcription.
+        UiUtil.FocusOnFirstActivation(this, segmentsList);
+        KeyDown += (_, e) => (DataContext as TranscriptionProgressViewModel)?.OnKeyDown(e);
     }
 }

@@ -43,4 +43,54 @@ public class UiThemeSystemVariantTests
             app.RequestedThemeVariant = savedVariant;
         }
     }
+
+    /// <summary>
+    /// There is no System folder under Themes, so looking for the art there found nothing, logged
+    /// an error, re-unpacked Themes.zip on every start-up and left the empty video and waveform
+    /// areas without art (issue #16502).
+    /// </summary>
+    [AvaloniaFact]
+    public void ThemeArtPath_UsesTheVariantFolder_WithSystemTheme()
+    {
+        var app = Application.Current!;
+        var savedTheme = Se.Settings.Appearance.Theme;
+        var savedVariant = app.RequestedThemeVariant;
+        try
+        {
+            Se.Settings.Appearance.Theme = UiTheme.ThemeNameSystem;
+
+            app.RequestedThemeVariant = ThemeVariant.Dark;
+            Assert.Equal(
+                Path.Combine(Se.ThemesFolder, UiTheme.ThemeNameDark, UiTheme.VideoBackgroundFileName),
+                UiTheme.GetThemeArtPath(UiTheme.VideoBackgroundFileName));
+
+            app.RequestedThemeVariant = ThemeVariant.Light;
+            Assert.Equal(
+                Path.Combine(Se.ThemesFolder, UiTheme.ThemeNameLight, UiTheme.WaveformBackgroundFileName),
+                UiTheme.GetThemeArtPath(UiTheme.WaveformBackgroundFileName));
+        }
+        finally
+        {
+            Se.Settings.Appearance.Theme = savedTheme;
+            app.RequestedThemeVariant = savedVariant;
+        }
+    }
+
+    [AvaloniaFact]
+    public void ThemeArtPath_UsesTheThemeFolder_WithExplicitTheme()
+    {
+        var savedTheme = Se.Settings.Appearance.Theme;
+        try
+        {
+            Se.Settings.Appearance.Theme = UiTheme.ThemeNameNord;
+
+            Assert.Equal(
+                Path.Combine(Se.ThemesFolder, UiTheme.ThemeNameNord, UiTheme.VideoBackgroundFileName),
+                UiTheme.GetThemeArtPath(UiTheme.VideoBackgroundFileName));
+        }
+        finally
+        {
+            Se.Settings.Appearance.Theme = savedTheme;
+        }
+    }
 }

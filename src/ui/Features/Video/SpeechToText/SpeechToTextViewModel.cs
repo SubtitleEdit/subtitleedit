@@ -10,6 +10,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
+using Nikse.SubtitleEdit.Features.Shared.PromptFilesSaved;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
@@ -182,6 +183,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private string? _sttTempFolder;
     private readonly ConcurrentQueue<string> _outputText = new();
     private long _startTicks = 0;
+    private long _runStartTicks;
     private double _endSeconds;
     private double _showProgressPct = -1;
     private readonly VideoInfo _videoInfo = new();
@@ -832,8 +834,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                     {
                         var answer = await MessageBox.Show(
                             Window!,
-                            $"Keep partial transcription?",
-                            $"Do you want to keep {partialSub.Paragraphs.Count} lines?",
+                            Se.Language.Video.AudioToText.KeepPartialTranscriptionQuestion,
+                            string.Format(Se.Language.Video.AudioToText.KeepXLinesQuestion, partialSub.Paragraphs.Count),
                             MessageBoxButtons.YesNoCancel,
                             MessageBoxIcon.Question);
 
@@ -929,14 +931,14 @@ public partial class SpeechToTextViewModel : ObservableObject
                 var hasError = false;
                 if (_missingSharedLibrary != null)
                 {
-                    await MessageBox.Show(Window!, "Speech to text engine could not start",
+                    await MessageBox.Show(Window!, Se.Language.Video.AudioToText.EngineCouldNotStart,
                         GetMissingSharedLibraryMessage(_missingSharedLibrary));
                     hasError = true;
                 }
                 else if (_incompleteModel)
                 {
-                    await MessageBox.Show(Window!, "Incomplete model",
-                        "The model is incomplete. Please download the full model.");
+                    await MessageBox.Show(Window!, Se.Language.Video.AudioToText.IncompleteModel,
+                        Se.Language.Video.AudioToText.IncompleteModelMessage);
                     hasError = true;
                 }
                 else if (_unknownArgument)
@@ -945,14 +947,14 @@ public partial class SpeechToTextViewModel : ObservableObject
                     // gated on a global setting nothing ever writes, so a mistyped flag made
                     // the run fail with no message at all.
                     var badArgs = GetEffectiveSelectedEngine()?.CommandLineParameter ?? string.Empty;
-                    await MessageBox.Show(Window!, $"Unknown argument: {badArgs}",
-                        "Unknown argument. Please check the advanced settings.");
+                    await MessageBox.Show(Window!, string.Format(Se.Language.Video.AudioToText.UnknownArgumentX, badArgs),
+                        Se.Language.Video.AudioToText.UnknownArgumentMessage);
                     hasError = true;
                 }
                 else if (_cudaOutOfMemory)
                 {
-                    await MessageBox.Show(Window!, $"CUDA failed",
-                        "Whisper ran out of CUDA memory - try a smaller model or run on CPU.");
+                    await MessageBox.Show(Window!, Se.Language.Video.AudioToText.CudaFailed,
+                        Se.Language.Video.AudioToText.CudaOutOfMemory);
                     hasError = true;
                 }
                 else if (_cudaComputeTypeNotSupported)
@@ -1070,7 +1072,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// was the crispasr v0.8.29 GPU packages, built with AVX-512 against a CI runner that had it
     /// (CrispASR #374) - every CPU without AVX-512 got this on the CUDA/Vulkan build while the CPU
     /// build ran fine, so naming the installed package is most of the answer. That build flaw is
-    /// fixed from v0.8.30 (SE now pins v0.8.48), but the message still earns its keep: a pre-AVX2 CPU
+    /// fixed from v0.8.30 (SE now pins v0.8.50), but the message still earns its keep: a pre-AVX2 CPU
     /// hits the same silent death on the AVX2 CPU package, and an install predating the pin bump
     /// keeps the broken GPU binary until the user downloads the engine again.
     /// </summary>
@@ -1103,6 +1105,32 @@ public partial class SpeechToTextViewModel : ObservableObject
         return $"Crisp ASR was stopped for using CPU instructions this computer does not have ({code}, " +
                $"illegal instruction), so it never produced any output.{Environment.NewLine}{Environment.NewLine}" +
                advice;
+    }
+
+    /// <summary>
+    /// Explains a Qwen3 ASR CPP run that produced no output JSON, or null for a clean exit.
+    /// An illegal instruction gets its own message: qwen3-asr.cpp v0.1.10's Linux packages were
+    /// built for the CI runner's CPU (AVX-512 on x64, SVE on arm64) and died instantly with exit
+    /// code 132 on most other CPUs (#16593), where the generic "try a different model" advice
+    /// sent users the wrong way. Builds from v0.1.11 pick their CPU code at run time.
+    /// </summary>
+    internal static string? DescribeQwen3AsrCrash(int? exitCode, bool isVulkan, string url)
+    {
+        if (exitCode is null or 0)
+        {
+            return null;
+        }
+
+        if (exitCode.Value is StatusIllegalInstruction or UnixSigill)
+        {
+            return "The Qwen3 ASR engine was stopped for using CPU instructions this computer does not have " +
+                   "(illegal instruction), so it never produced any output. Download the Qwen3 ASR engine again " +
+                   $"to get a build that runs on this CPU, or report it at {url}";
+        }
+
+        return isVulkan
+            ? $"The Qwen3 ASR GPU (Vulkan) engine crashed before producing output. Try the CPU build instead (re-download the engine and choose CPU), or report it at {url}"
+            : $"The Qwen3 ASR engine crashed before producing output. Try re-running, a different model, or report it at {url}";
     }
 
     /// <summary>
@@ -1170,19 +1198,18 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// </summary>
     private async Task ShowCudaComputeTypeNotSupported(ISpeechToTextEngine engine)
     {
-        const string title = "cuBLAS failed";
+        var title = Se.Language.Video.AudioToText.CuBlasFailed;
         const string computeTypeArgument = "--compute_type float16";
         var nl = Environment.NewLine;
         var cause =
-            "The GPU could not run the model with the compute type the engine picked - cuBLAS " +
-            $"returned CUBLAS_STATUS_NOT_SUPPORTED, and no text was transcribed.{nl}{nl}";
+            Se.Language.Video.AudioToText.CuBlasNotSupportedCause + nl + nl;
 
         // Only the faster-whisper based engines take --compute_type; suggesting it anywhere else
         // would just trade this error for "unrecognized argument".
         if (!SupportsComputeTypeParameter(engine))
         {
             await MessageBox.Show(Window!, title,
-                cause + "Try another model, another engine, or run on CPU.");
+                cause + Se.Language.Video.AudioToText.TryAnotherModelEngineOrCpu);
             return;
         }
 
@@ -1194,15 +1221,12 @@ public partial class SpeechToTextViewModel : ObservableObject
             // error, so listing "int8" sent the user straight back to the same dialog
             // (Purfview/whisper-standalone-win#403, OpenNMT/CTranslate2#1865).
             await MessageBox.Show(Window!, title,
-                cause + "The parameters already set \"--compute_type\" - try another value, " +
-                "such as \"float16\", \"float32\", or \"bfloat16\" - the \"int8\" types fail " +
-                "this way on many newer GPUs.");
+                cause + Se.Language.Video.AudioToText.ComputeTypeAlreadySet);
             return;
         }
 
         var answer = await MessageBox.Show(Window!, title,
-            cause + $"Adding \"{computeTypeArgument}\" to the parameters normally fixes this.{nl}{nl}" +
-            "Add it now?",
+            cause + string.Format(Se.Language.Video.AudioToText.AddingXFixesThisAddNow, computeTypeArgument),
             MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
         if (answer != MessageBoxResult.Yes)
@@ -1231,24 +1255,23 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task ShowTorchWithoutCuda(ISpeechToTextEngine engine)
     {
-        const string title = "CUDA not available";
+        var title = Se.Language.Video.AudioToText.CudaNotAvailable;
         var nl = Environment.NewLine;
         var cause = engine is WhisperEngineWhisperX
-            ? $"This WhisperX build runs on the CPU only - it cannot use \"--device cuda\", so no text was transcribed.{nl}{nl}"
-            : $"This engine was built without CUDA support, so it cannot run on the GPU and no text was transcribed.{nl}{nl}";
+            ? Se.Language.Video.AudioToText.WhisperXCpuOnly + nl + nl
+            : Se.Language.Video.AudioToText.EngineBuiltWithoutCuda + nl + nl;
 
         var parameters = Parameters ?? string.Empty;
         var cpuParameters = RemoveGpuParameters(parameters);
         if (cpuParameters == parameters.Trim())
         {
-            await MessageBox.Show(Window!, title, cause + "Remove any GPU settings from the parameters, or run on CPU.");
+            await MessageBox.Show(Window!, title, cause + Se.Language.Video.AudioToText.RemoveGpuSettingsOrRunOnCpu);
             return;
         }
 
         var shownParameters = string.IsNullOrEmpty(cpuParameters) ? "(none)" : cpuParameters;
         var answer = await MessageBox.Show(Window!, title,
-            cause + $"Remove the GPU settings from the parameters so it runs on the CPU?{nl}{nl}" +
-            $"New parameters: {shownParameters}",
+            cause + string.Format(Se.Language.Video.AudioToText.RemoveGpuSettingsQuestionX, shownParameters),
             MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
         if (answer != MessageBoxResult.Yes)
@@ -1296,15 +1319,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (MissingSharedLibrary.IsBundledWithEngine(libraryName))
         {
             return
-                $"The speech to text engine could not start - the shared library \"{libraryName}\" is missing.{Environment.NewLine}{Environment.NewLine}" +
-                "This library is part of the engine download, so the installed engine is incomplete." +
-                $"{Environment.NewLine}{Environment.NewLine}" +
-                "Re-download the engine (Download button next to the engine) and try again.";
+                string.Format(Se.Language.Video.AudioToText.SharedLibraryXMissing, libraryName) + $"{Environment.NewLine}{Environment.NewLine}" + Se.Language.Video.AudioToText.SharedLibraryBundledRedownload;
         }
 
         var message =
-            $"The speech to text engine could not start - the shared library \"{libraryName}\" is missing.{Environment.NewLine}{Environment.NewLine}" +
-            "Install it with your package manager and try again.";
+            string.Format(Se.Language.Video.AudioToText.SharedLibraryXMissing, libraryName) + $"{Environment.NewLine}{Environment.NewLine}" + Se.Language.Video.AudioToText.SharedLibraryInstallIt;
 
         if (libraryName.StartsWith("libopenblas", StringComparison.OrdinalIgnoreCase))
         {
@@ -1349,7 +1368,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
                 if (_missingSharedLibrary != null)
                 {
-                    await MessageBox.Show(Window!, "Speech to text engine could not start",
+                    await MessageBox.Show(Window!, Se.Language.Video.AudioToText.EngineCouldNotStart,
                         GetMissingSharedLibraryMessage(_missingSharedLibrary));
                     ProgressValue = 100;
                     IsTranscribeEnabled = true;
@@ -1359,16 +1378,14 @@ public partial class SpeechToTextViewModel : ObservableObject
                 if (_unknownArgument)
                 {
                     var badArgs = GetEffectiveSelectedEngine()?.CommandLineParameter ?? string.Empty;
-                    await MessageBox.Show(Window!, $"Unknown argument: {badArgs}",
-                        "Unknown argument. Please check the advanced settings.");
+                    await MessageBox.Show(Window!, string.Format(Se.Language.Video.AudioToText.UnknownArgumentX, badArgs),
+                        Se.Language.Video.AudioToText.UnknownArgumentMessage);
                 }
                 LogToConsole($"Speech to text: Could not find output JSON file ({exitCodeText}){Environment.NewLine}");
-                if (exitCode is not (null or 0))
+                var crash = DescribeQwen3AsrCrash(exitCode, isVulkan, new Qwen3AsrCppEngine().Url);
+                if (crash != null)
                 {
-                    var url = new Qwen3AsrCppEngine().Url;
-                    LogToConsole(isVulkan
-                        ? $"The Qwen3 ASR GPU (Vulkan) engine crashed before producing output. Try the CPU build instead (re-download the engine and choose CPU), or report it at {url}{Environment.NewLine}"
-                        : $"The Qwen3 ASR engine crashed before producing output. Try re-running, a different model, or report it at {url}{Environment.NewLine}");
+                    LogToConsole(crash + Environment.NewLine);
                 }
                 ProgressValue = 100;
                 IsTranscribeEnabled = true;
@@ -2052,6 +2069,36 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Batch "done" dialog: one card per generated subtitle with show in folder / copy path
+    /// (failed media keep their status), instead of a plain "Videos converted: N" message box -
+    /// which was also wrong for audio files (#16673).
+    /// </summary>
+    private async Task ShowBatchResultAsync()
+    {
+        var runTime = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _runStartTicks);
+        var elapsed = runTime.TotalHours >= 1
+            ? $"{(int)runTime.TotalHours}:{runTime.Minutes:00}:{runTime.Seconds:00}"
+            : $"{runTime.Minutes}:{runTime.Seconds:00}";
+
+        var files = _jobItems
+            .Select(p =>
+            {
+                var isSuccess = p.Status == Se.Language.General.Converted && File.Exists(p.OutputSubtitleFileName);
+                return new SavedFileItem(isSuccess ? p.OutputSubtitleFileName : p.InputVideoFileName, isSuccess, p.Status);
+            })
+            .ToList();
+        var doneCount = files.Count(p => p.IsSuccess);
+        var headline = doneCount == files.Count
+            ? string.Format(Se.Language.Video.AudioToText.SubtitleFilesGeneratedX, doneCount)
+            : string.Format(Se.Language.Video.AudioToText.SubtitleFilesGeneratedXOfY, doneCount, files.Count);
+
+        await _windowService.ShowDialogAsync<PromptFilesSavedWindow, PromptFilesSavedViewModel>(Window!, vm =>
+        {
+            vm.Initialize(Se.Language.Video.AudioToText.SubtitleFilesGenerated, headline, files, elapsed);
+        });
+    }
+
+    /// <summary>
     /// Sets a batch row's status from its transcription result. A row with no text must be
     /// marked Error here, not left alone: the batch list is reused between runs, so a row
     /// left untouched keeps the Converted of an earlier run and is counted as converted
@@ -2073,6 +2120,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         foreach (var item in items)
         {
             item.Status = string.Empty;
+            item.OutputSubtitleFileName = string.Empty;
         }
     }
 
@@ -2088,6 +2136,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             var text = format.ToText(transcribedSubtitle, string.Empty);
             File.WriteAllText(subtitleFileName, text);
             LastBatchSubtitleFileName = subtitleFileName;
+            currentItem.OutputSubtitleFileName = subtitleFileName;
         }
 
         // Delete temp files from the just-finished item so disk usage doesn't grow across long batches
@@ -2142,18 +2191,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
-        var convertedJobs = _jobItems.Count(p => p.Status == Se.Language.General.Converted);
         var failed = _jobItems.Count(p => p.Status != Se.Language.General.Converted);
 
         Dispatcher.UIThread.Invoke<Task>(async () =>
         {
-            var msg = $"Videos converted: " + convertedJobs;
-            if (failed > 0)
-            {
-                msg += Environment.NewLine + $"Videos failed: " + failed +
-                       Environment.NewLine + "Please check the tools log for details.";
-            }
-
             _timerWhisper.Stop();
             await Task.Delay(250);
             HideProgressBar();
@@ -2167,12 +2208,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            await MessageBox.Show(
-                Window!,
-                Se.Language.Video.AudioToText.Title,
-                msg,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            await ShowBatchResultAsync();
 
             IsTranscribeEnabled = true;
 
@@ -2588,8 +2624,12 @@ public partial class SpeechToTextViewModel : ObservableObject
                 using var waveFile = new WavePeakGenerator2(targetFile);
                 if (!string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName))
                 {
-                    return waveFile.GeneratePeaks(delayInMilliseconds,
-                        WavePeakGenerator2.GetPeakWaveFileName(_videoFileName));
+                    // A clip of selected lines is a temp file, deleted after the run - caching its
+                    // peaks left one never-read file in the Waveforms folder per line (#16760).
+                    var peakFileName = _audioClips != null
+                        ? string.Empty
+                        : WavePeakGenerator2.GetPeakWaveFileName(_videoFileName);
+                    return waveFile.GeneratePeaks(delayInMilliseconds, peakFileName);
                 }
             }
         }
@@ -2674,6 +2714,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             End = (decimal)p.EndTime.TotalSeconds,
             Text = engine is CrispAsrIndexEcho ? CrispAsrIndexEcho.GetTranslation(p.Text) : p.Text
         }).ToList();
+
+        if (engine is ICrispAsrEngine && CrispAsrHighlightWords.IsActive(engine.CommandLineParameter))
+        {
+            // "Highlight word" only gets one word per cue out of crispasr; build the lines with
+            // the active word underlined here (merging would otherwise glue the words back).
+            resultTexts = CrispAsrHighlightWords.Build(resultTexts, SpeechToTextPostProcessor.GetParagraphMaxChars());
+        }
 
         if (!string.IsNullOrEmpty(srtFileName))
         {
@@ -2894,8 +2941,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             if (_loadedFromStdOut)
             {
-                await MessageBox.Show(Window!, "No result file",
-                    "No result file was generated by Whisper, but some text was captured from standard output.");
+                await MessageBox.Show(Window!, Se.Language.Video.AudioToText.NoResultFile,
+                    Se.Language.Video.AudioToText.NoResultFileMessage);
 
                 if (Window != null)
                 {
@@ -2915,9 +2962,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
             else if (GetEffectiveSelectedEngine() is ICrispAsrEngine)
             {
-                await MessageBox.Show(Window!, "No transcription result",
+                await MessageBox.Show(Window!, Se.Language.Video.AudioToText.NoTranscriptionResult,
                     crispAsrCrash ??
-                    "Crisp ASR finished without generating subtitles. Please check the tools log for engine output.");
+                    Se.Language.Video.AudioToText.CrispAsrNoSubtitles);
 
                 if (Window != null)
                 {
@@ -3018,8 +3065,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 Dispatcher.UIThread.Post(async () =>
                 {
                     await MessageBox.Show(Window!, Se.Language.General.Error,
-                        $"Could not generate the audio file (ffmpeg exit code {exitCode})." +
-                        Environment.NewLine + "Please check the tools log for the ffmpeg output.");
+                        string.Format(Se.Language.Video.AudioToText.CouldNotGenerateAudioFileX, exitCode), MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     if (Window != null)
                     {
@@ -3036,7 +3082,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 IsTranscribeEnabled = true;
                 Dispatcher.UIThread.Invoke(async () =>
                 {
-                    await MessageBox.Show(Window!, "No video file", "No video file found!");
+                    await MessageBox.Show(Window!, Se.Language.Video.AudioToText.NoVideoFile, Se.Language.Video.AudioToText.NoVideoFileFound);
                 });
 
                 return;
@@ -3106,8 +3152,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             engine,
             SpeakerDiarizationModel.ToWhisperModel(),
             SpeakerDiarizationModel.DisplayName,
-            Se.Language.Video.AudioToText.DetectSpeakers,
-            "a speaker diarization model");
+            Se.Language.Video.AudioToText.DetectSpeakers);
     }
 
     /// <summary>
@@ -3144,8 +3189,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             engine,
             vadOption.ToWhisperModel(),
             vadOption.DisplayName,
-            Se.Language.Video.AudioToText.Vad,
-            "a voice activity detection model");
+            Se.Language.Video.AudioToText.Vad);
     }
 
     private Task<bool> EnsureSpeechIsolationModelDownloadedAsync(ISpeechToTextEngine engine)
@@ -3357,11 +3401,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             var answer = await MessageBox.Show(
                 Window!,
-                $"Unable to start {engine.Name}",
-                $"The {engine.Name} program file was not found:{Environment.NewLine}" +
-                $"{engine.GetExecutable()}{Environment.NewLine}{Environment.NewLine}" +
-                $"It may have been deleted or quarantined by antivirus software - if so, please restore it or add an exclusion for the folder.{Environment.NewLine}{Environment.NewLine}" +
-                $"Do you want to re-download \"{engine.Name}\"?",
+                string.Format(Se.Language.Video.AudioToText.UnableToStartX, engine.Name),
+                string.Format(Se.Language.Video.AudioToText.ProgramFileXNotFoundYRedownload, engine.Name, engine.GetExecutable()),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
@@ -3375,11 +3416,11 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(error))
         {
-            await MessageBox.Show(Window!, Se.Language.General.UnknownError, $"Unable to start {engine.Name}!");
+            await MessageBox.Show(Window!, Se.Language.General.UnknownError, string.Format(Se.Language.Video.AudioToText.UnableToStartX, engine.Name));
         }
         else
         {
-            await MessageBox.Show(Window!, "Error", $"Unable to start {engine.Name}: {error}");
+            await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.Video.AudioToText.UnableToStartXY, engine.Name, error), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -3503,7 +3544,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var crispVariant = "vulkan";
         if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
         {
-            var windowsVariant = await PromptCrispAsrWindowsVariantAsync(CrispAsrEngine.StaticName);
+            var windowsVariant = await CrispAsrDownloadHelper.PromptWindowsVariantAsync(Window, CrispAsrEngine.StaticName);
             if (windowsVariant == null)
             {
                 return;
@@ -3514,7 +3555,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                  && OperatingSystem.IsLinux()
                  && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
         {
-            var linuxAnswer = await PromptCrispAsrLinuxVariantAsync(CrispAsrEngine.StaticName);
+            var linuxAnswer = await CrispAsrDownloadHelper.PromptLinuxVariantAsync(Window, CrispAsrEngine.StaticName);
             if (linuxAnswer == null)
             {
                 return;
@@ -3554,8 +3595,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         var answer = await MessageBox.Show(
             Window!,
-            $"Download {engineName}?",
-            $"{Environment.NewLine}\"{engineName}\" requires downloading the engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
+            string.Format(Se.Language.General.DownloadXQuestion, engineName),
+            Environment.NewLine + string.Format(Se.Language.Video.AudioToText.XRequiresEngineSelectVersion, engineName),
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CPU",
@@ -3571,8 +3612,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             var vulkanAnswer = await MessageBox.Show(
                 Window!,
-                "Vulkan may be required",
-                $"The GPU (Vulkan) build needs a Vulkan-capable GPU and runtime.{Environment.NewLine}{Environment.NewLine}You can get the Vulkan SDK from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with the GPU download?",
+                Se.Language.General.VulkanMayBeRequired,
+                Se.Language.General.VulkanGpuBuildContinue,
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -3589,151 +3630,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         return useVulkan;
-    }
-
-    /// <summary>
-    /// Windows build prompt: CPU (with a standard/legacy follow-up), Vulkan (with a
-    /// Vulkan-SDK warning when none is detected) or CUDA. Returns the variant string
-    /// for the download dialog, or null when the user cancels.
-    /// </summary>
-    private async Task<string?> PromptCrispAsrWindowsVariantAsync(string engineName)
-    {
-        var answer = await MessageBox.Show(
-            Window!,
-            $"Download {engineName}?",
-            $"{Environment.NewLine}\"{engineName}\" requires downloading the CrispASR engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
-            MessageBoxButtons.Cancel,
-            MessageBoxIcon.Question,
-            "CPU",
-            "Vulkan",
-            "CUDA");
-
-        if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
-        {
-            return null;
-        }
-
-        var crispVariant = answer switch
-        {
-            MessageBoxResult.Custom1 => "cpu",
-            MessageBoxResult.Custom3 => "cuda",
-            _ => "vulkan",
-        };
-
-        if (crispVariant == "cuda")
-        {
-            // Upstream added a Windows CUDA 13 build alongside the CUDA 12 one in v0.8.31, so
-            // Windows now gets the same follow-up Linux has had since v0.8.30 (#14343).
-            return await PromptCrispAsrCudaVersionAsync();
-        }
-
-        if (crispVariant == "cpu")
-        {
-            return await PromptCrispAsrCpuFlavorAsync();
-        }
-
-        if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
-        {
-            var vulkanAnswer = await MessageBox.Show(
-                Window!,
-                "Vulkan SDK may be required",
-                $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (vulkanAnswer == MessageBoxResult.No)
-            {
-                UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
-                return null;
-            }
-
-            if (vulkanAnswer != MessageBoxResult.Yes)
-            {
-                return null;
-            }
-        }
-
-        return crispVariant;
-    }
-
-    /// <summary>
-    /// Linux x86_64 build prompt: CPU, Vulkan (any GPU), CUDA (NVIDIA) or ROCm (AMD).
-    /// Returns "vulkan" / "cuda" / "cuda13" / "hip", empty string for the default CPU build,
-    /// or null when the user cancels.
-    /// </summary>
-    private async Task<string?> PromptCrispAsrLinuxVariantAsync(string engineName)
-    {
-        var answer = await MessageBox.Show(
-            Window!,
-            $"Download {engineName}?",
-            $"{Environment.NewLine}\"{engineName}\" requires downloading the CrispASR engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
-            MessageBoxButtons.Cancel,
-            MessageBoxIcon.Question,
-            "CPU",
-            "Vulkan",
-            "CUDA",
-            "ROCm");
-
-        if (answer == MessageBoxResult.Custom3)
-        {
-            return await PromptCrispAsrCudaVersionAsync();
-        }
-
-        return answer switch
-        {
-            MessageBoxResult.Custom1 => string.Empty,
-            MessageBoxResult.Custom2 => "vulkan",
-            MessageBoxResult.Custom4 => "hip",
-            _ => null,
-        };
-    }
-
-    /// <summary>
-    /// Follow-up prompt after the user picks "CUDA" in the CrispASR variant selector, on both
-    /// Windows and Linux - upstream ships a CUDA 12 and a CUDA 13 build for each.
-    /// Returns "cuda" (CUDA 12 build) or "cuda13", or null when the user cancels.
-    /// </summary>
-    private async Task<string?> PromptCrispAsrCudaVersionAsync()
-    {
-        var answer = await MessageBox.Show(
-            Window!,
-            "CrispASR CUDA build",
-            $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
-            MessageBoxButtons.Cancel,
-            MessageBoxIcon.Question,
-            "CUDA 12",
-            "CUDA 13");
-
-        return answer switch
-        {
-            MessageBoxResult.Custom1 => "cuda",
-            MessageBoxResult.Custom2 => "cuda13",
-            _ => null,
-        };
-    }
-
-    /// <summary>
-    /// Follow-up prompt after the user picks "CPU" in the CrispASR variant selector.
-    /// Returns "cpu" (modern, recommended), "cpu-legacy" (compatibility build for CPUs without AVX2),
-    /// or null when the user cancels.
-    /// </summary>
-    private async Task<string?> PromptCrispAsrCpuFlavorAsync()
-    {
-        var cpuAnswer = await MessageBox.Show(
-            Window!,
-            "CrispASR CPU build",
-            $"{Environment.NewLine}Standard is recommended for most machines.{Environment.NewLine}{Environment.NewLine}Legacy is a fallback for older CPUs without AVX2 support.",
-            MessageBoxButtons.Cancel,
-            MessageBoxIcon.Question,
-            "Standard",
-            "Legacy");
-
-        return cpuAnswer switch
-        {
-            MessageBoxResult.Custom1 => "cpu",
-            MessageBoxResult.Custom2 => "cpu-legacy",
-            _ => null,
-        };
     }
 
     [RelayCommand]
@@ -3784,8 +3680,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (error)
         {
             await MessageBox.Show(Window!,
-                 "Unable to get video info",
-                 "File skipped as video info was unavailable",
+                 Se.Language.General.UnableToGetVideoInfo,
+                 Se.Language.General.FileSkippedNoVideoInfo,
              MessageBoxButtons.OK,
              MessageBoxIcon.Error);
         }
@@ -3909,11 +3805,6 @@ public partial class SpeechToTextViewModel : ObservableObject
     [RelayCommand]
     private async Task DownloadModel()
     {
-        if (GetEffectiveSelectedEngine().DownloadsOwnModels)
-        {
-            return;
-        }
-
         var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
             Window!, viewModel => { viewModel.SetModels(Models, GetEffectiveSelectedEngine(), SelectedModel); });
 
@@ -4011,8 +3902,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var answer = await MessageBox.Show(
             Window!,
-            $"Download {modelAligner}?",
-            $"'{engineDisplayName}' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
+            string.Format(Se.Language.General.DownloadXQuestion, modelAligner),
+            string.Format(Se.Language.Video.AudioToText.XRequiresForcedAlignerUseY, engineDisplayName, modelAligner.Name),
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 
@@ -4109,7 +4000,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
                 {
-                    var crispVariant = await PromptCrispAsrWindowsVariantAsync(engine.Name);
+                    var crispVariant = await CrispAsrDownloadHelper.PromptWindowsVariantAsync(Window!, engine.Name);
                     if (crispVariant == null)
                     {
                         return;
@@ -4132,7 +4023,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                          && OperatingSystem.IsLinux()
                          && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
                 {
-                    var crispVariant = await PromptCrispAsrLinuxVariantAsync(engine.Name);
+                    var crispVariant = await CrispAsrDownloadHelper.PromptLinuxVariantAsync(Window!, engine.Name);
                     if (crispVariant == null)
                     {
                         return;
@@ -4169,8 +4060,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                     {
                         var answer = await MessageBox.Show(
                             Window!,
-                            $"Download {engine.Name}?",
-                            $"Download and use {engine.Name}?",
+                            string.Format(Se.Language.General.DownloadXQuestion, engine.Name),
+                            string.Format(Se.Language.General.DownloadAndUseXQuestion, engine.Name),
                             MessageBoxButtons.YesNoCancel,
                             MessageBoxIcon.Question);
 
@@ -4202,17 +4093,14 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            // Engines that download their own models (WhisperX) are never routed through SE's
-            // downloader: it would fill a folder the engine does not read and re-prompt on
-            // every run. Their IsModelInstalled only drives the model dot.
-            if (!engine.DownloadsOwnModels && !engine.IsModelInstalled(model.Model))
+            if (!engine.IsModelInstalled(model.Model))
             {
                 var answer = await MessageBox.Show(
                     Window!,
-                    $"Download {model}?",
+                    string.Format(Se.Language.General.DownloadXQuestion, model),
                     (engine as CrispAsrEngine)?.SelectedBackend is CrispAsrSenseVoice senseVoice && senseVoice.IsModelOutdated(model.Model)
-                        ? $"An updated {model.Model.Name} is available (re-converted for Crisp ASR v0.8.36).\nDownload and use it?"
-                        : $"Download and use {model.Model.Name}?",
+                        ? string.Format(Se.Language.Video.AudioToText.UpdatedModelXAvailable, model.Model.Name)
+                        : string.Format(Se.Language.General.DownloadAndUseXQuestion, model.Model.Name),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -4261,8 +4149,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                     };
                     var answer = await MessageBox.Show(
                                     Window!,
-                                    $"Download {SelectedForcedAligner.BaseDisplay}?",
-                                    $"'{SelectedForcedAligner.BaseDisplay}' is selected but not installed.\nDownload and use {SelectedForcedAligner.FileName}?",
+                                    string.Format(Se.Language.General.DownloadXQuestion, SelectedForcedAligner.BaseDisplay),
+                                    string.Format(Se.Language.Video.AudioToText.XSelectedNotInstalledUseY, SelectedForcedAligner.BaseDisplay, SelectedForcedAligner.FileName),
                                     MessageBoxButtons.YesNoCancel,
                                     MessageBoxIcon.Question);
 
@@ -4307,8 +4195,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 var answer = await MessageBox.Show(
                     Window!,
-                    "Warning",
-                    "English model should only be used with English language.\nContinue anyway?",
+                    Se.Language.General.Warning,
+                    Se.Language.Video.AudioToText.EnglishModelContinue,
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -4329,8 +4217,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 var answer = await MessageBox.Show(
                     Window!,
-                    "No audio track found",
-                    $"No audio track was found in {_videoFileName}",
+                    Se.Language.Video.AudioToText.NoAudioTrackFound,
+                    string.Format(Se.Language.Video.AudioToText.NoAudioTrackFoundInX, _videoFileName),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -4368,6 +4256,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         _batchIndex = 0;
+        _runStartTicks = DateTime.UtcNow.Ticks;
 
         if (_jobItems.Count == 0)
         {
@@ -4751,7 +4640,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 ? GetSttTempFolder()
                 : engineOutputFolder;
             var parametersX =
-                $"{languageArgX}--model \"{model}\" --output_format srt --output_dir \"{outputDir}\" " +
+                $"{languageArgX}--model \"{whisperX.GetModelForCmdLine(model)}\" --output_format srt --output_dir \"{outputDir}\" " +
                 $"{taskArg}{whisperXArgs} \"{waveFileName}\"";
 
             // The generic launch path is bypassed here, so repeat the piece of its setup a
@@ -4829,6 +4718,17 @@ public partial class SpeechToTextViewModel : ObservableObject
             var langPart = crispAsrEngine.IncludeLanguage || langCode == "auto"
                 ? $"-l {langCode} "
                 : string.Empty;
+            if (langCode == "auto")
+            {
+                // Backends without their own language detection run an external LID model
+                // (whisper-tiny, ~75 MB). Since CrispASR v0.8.50 (#570) a missing one is only
+                // fetched with --auto-download or after a [Y/n] prompt on a TTY; otherwise LID is
+                // skipped and the run silently falls back to English. SE's stdin is not
+                // redirected, so the prompt could also hang the run. -m is always an existing
+                // file here, so this only fetches the LID model - as every earlier release did.
+                langPart += "--auto-download ";
+            }
+
             if (crispAsrEngine is CrispAsrIndexEcho)
             {
                 // A speech translation model: the language list is the target, the source is Chinese.
@@ -5681,9 +5581,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             SelectedModel = null;
         }
 
-        // SE's downloader saves into a folder an engine that downloads its own models never
-        // reads (WhisperX: the Hugging Face hub cache), so offering it only wastes gigabytes.
-        IsModelDownloadVisible = IsModelSelectionVisible && !engine.DownloadsOwnModels;
+        IsModelDownloadVisible = IsModelSelectionVisible;
 
         IsLanguageSelectionVisible = !isOnlineSttEngine;
         if (!IsLanguageSelectionVisible)

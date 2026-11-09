@@ -385,24 +385,28 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             //load words via xml
             string noBreakAfterFileName = DictionaryFolder + languageName + "_NoBreakAfterList.xml";
-            var doc = new XmlDocument();
-            if (File.Exists(noBreakAfterFileName))
+            if (!File.Exists(noBreakAfterFileName))
             {
-                doc.Load(noBreakAfterFileName);
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("Item"))
+                // A regional code ("pt-BR", "pt_BR") uses the language's list - the lists are
+                // per language, so Brazilian Portuguese shares pt_NoBreakAfterList.xml (#16698).
+                var separatorIndex = languageName.IndexOfAny(new[] { '-', '_' });
+                if (separatorIndex > 0)
                 {
-                    if (!string.IsNullOrEmpty(node.InnerText))
-                    {
-                        if (node.Attributes?["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var r = new Regex(node.InnerText, RegexOptions.Compiled);
-                            items.Add(new NoBreakAfterItem(r, node.InnerText));
-                        }
-                        else
-                        {
-                            items.Add(new NoBreakAfterItem(node.InnerText.TrimStart()));
-                        }
-                    }
+                    noBreakAfterFileName = DictionaryFolder + languageName.Substring(0, separatorIndex).ToLowerInvariant() + "_NoBreakAfterList.xml";
+                }
+            }
+
+            // The shipped list plus the user's overlay file (#16375) - see NoBreakAfterListFile.
+            foreach (var entry in NoBreakAfterListFile.LoadMerged(noBreakAfterFileName))
+            {
+                if (entry.IsRegex)
+                {
+                    var r = new Regex(entry.Text, RegexOptions.Compiled);
+                    items.Add(new NoBreakAfterItem(r, entry.Text));
+                }
+                else
+                {
+                    items.Add(new NoBreakAfterItem(entry.Text.TrimStart()));
                 }
             }
 

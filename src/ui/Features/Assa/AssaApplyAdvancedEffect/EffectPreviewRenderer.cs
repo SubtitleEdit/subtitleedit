@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 using System;
 using System.Collections.Generic;
@@ -122,7 +123,7 @@ public static class EffectPreviewRenderer
         if (effect is AdvancedEffectHighlightBox { UpperCase: true } or AdvancedEffectSingleWordPop { UpperCase: true } or
             AdvancedEffectBoldCaptions { UpperCase: true } or AdvancedEffectSmoothFill { UpperCase: true } or AdvancedEffectBlurInWords { UpperCase: true })
         {
-            text = text.ToUpper(CultureInfo.CurrentCulture);
+            text = text.ToUpperWithCapitalSharpS(CultureInfo.CurrentCulture);
         }
 
         var layout = GetLayout(text, fontSize, bounds.Width * 0.86, maxLines);

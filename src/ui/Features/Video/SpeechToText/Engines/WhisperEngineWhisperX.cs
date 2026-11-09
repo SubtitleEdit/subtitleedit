@@ -89,21 +89,44 @@ public class WhisperEngineWhisperX : ISpeechToTextEngine
         return OperatingSystem.IsWindows() ? "whisperx-standalone.exe" : "whisperx-standalone";
     }
 
-    // WhisperX owns its models: the bare model name goes on the command line and the
-    // faster-whisper backend fetches it into the Hugging Face hub cache on first use, showing
-    // its progress in the console log. SE's own model downloader must never run for this
-    // engine - it lands in Purfview's model folder, which whisperx never reads, so the user
-    // paid for gigabytes twice and the prompt came back on every run (#15170 history).
-    public bool DownloadsOwnModels => true;
-
+    // A model can be in either of two places: the shared faster-whisper "_models" folder SE's
+    // own downloader fills for Purfview/CTranslate2 (and now WhisperX), or the Hugging Face hub
+    // cache whisperx fills itself when it gets a bare model name. Either one counts, so a model
+    // whisperx fetched earlier is not offered for download again.
     public bool IsModelInstalled(WhisperModel model)
     {
-        // Purely informational (the model dot): SE never downloads for this engine, see
-        // DownloadsOwnModels. The models come from the same Hugging Face repos as
-        // WhisperEngineCTranslate2/Purfview (same backend), so a complete snapshot for that
-        // repo id in the hub cache is what "downloaded" means here (#15170 - reporting every
-        // model as installed showed a green dot for models never downloaded).
-        return IsModelInHubCache(model, GetHuggingFaceHubCacheDir());
+        return GetLocalModelFolder(model, GetModelsFolder()) != null ||
+               IsModelInHubCache(model, GetHuggingFaceHubCacheDir());
+    }
+
+    private static string GetModelsFolder()
+    {
+        return new WhisperEnginePurfviewFasterWhisperXxl().GetAndCreateWhisperModelFolder(null);
+    }
+
+    /// <summary>
+    /// The model's folder in SE's shared faster-whisper "_models" folder when a finished
+    /// download is there, else null. faster-whisper loads such a folder directly when it is
+    /// given as --model, with no network access.
+    /// </summary>
+    internal static string? GetLocalModelFolder(WhisperModel model, string modelsFolder)
+    {
+        var folder = Path.Combine(modelsFolder, WhisperEnginePurfviewFasterWhisperXxl.GetModelFolderName(model));
+        var modelBin = Path.Combine(folder, "model.bin");
+        try
+        {
+            // The downloader writes "model.bin.$$$" and renames it when done, so a partial
+            // download never matches; the size floor guards against a truncated file.
+            return File.Exists(modelBin) &&
+                   File.Exists(Path.Combine(folder, "config.json")) &&
+                   new FileInfo(modelBin).Length > 10_000_000
+                ? folder
+                : null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     internal static bool IsModelInHubCache(WhisperModel model, string hubCacheDir)
@@ -231,16 +254,28 @@ public class WhisperEngineWhisperX : ISpeechToTextEngine
         return path;
     }
 
-    // A model faster-whisper has no name for (e.g. "anime.ja") goes on the command line as its
-    // repo id, which faster-whisper downloads into the same hub cache the model dot checks.
+    // A model SE downloaded goes on the command line as its folder path, so whisperx uses it
+    // instead of fetching a second copy into the Hugging Face cache. Otherwise whisperx gets a
+    // name faster-whisper knows, or the repo id for one it has no name for (e.g. "anime.ja"),
+    // and downloads the model into the hub cache itself.
     public string GetModelForCmdLine(string modelName)
     {
+        return GetModelForCmdLine(modelName, GetModelsFolder());
+    }
+
+    internal string GetModelForCmdLine(string modelName, string modelsFolder)
+    {
+        var model = Models.FirstOrDefault(m => m.Name == modelName);
+        if (model != null && GetLocalModelFolder(model, modelsFolder) is { } localFolder)
+        {
+            return localFolder;
+        }
+
         if (FasterWhisperModelNames.Contains(modelName))
         {
             return modelName;
         }
 
-        var model = Models.FirstOrDefault(m => m.Name == modelName);
         return (model != null ? GetHuggingFaceRepoId(model) : null) ?? modelName;
     }
 

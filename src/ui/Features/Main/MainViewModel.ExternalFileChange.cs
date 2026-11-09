@@ -204,6 +204,11 @@ public partial class MainViewModel
     private async Task ReloadSubtitleChangedOutside(string fileName)
     {
         var selectedLine = SelectedSubtitleIndex ?? 0;
+
+        // Reload the original the way it is shown now, without asking the mismatch question again.
+        var mismatchChoice = string.Equals(_originalMismatchChoiceFileName, _subtitleFileNameOriginal, StringComparison.Ordinal)
+            ? _originalMismatchChoice
+            : null;
         var state = new RecentFile
         {
             SubtitleFileName = fileName,
@@ -214,6 +219,8 @@ public partial class MainViewModel
             VideoOffsetInMs = Se.Settings.General.CurrentVideoOffsetInMs,
             VideoIsSmpte = IsSmpteTimingEnabled,
             AudioTrack = _audioTrack?.Id ?? -1,
+            OriginalShowAllLines = mismatchChoice?.ShowAllLines,
+            OriginalAllowEdit = mismatchChoice?.AllowEdit,
         };
 
         // A successful open takes a new stamp; none means the new content could not be read and
@@ -236,7 +243,7 @@ public partial class MainViewModel
             return;
         }
 
-        await RestoreRememberedOriginal(selectedLine, state.SubtitleFileNameOriginal, fileName);
+        await RestoreRememberedOriginal(selectedLine, state);
         SetRecentFileProperties(state);
         ShowStatus(string.Format(Se.Language.General.SubtitleReloadedChangedOutsideX, fileName));
     }

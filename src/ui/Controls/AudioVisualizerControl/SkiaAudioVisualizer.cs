@@ -107,7 +107,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
 
         f.Width = (float)width;
         f.Height = (float)height;
-        f.Peaks = peaks;
+        f.Peaks = peaks is { IsPlaceholder: true } ? null : peaks; // a placeholder only sets the time scale
         f.SampleRate = peaks?.SampleRate ?? 0;
         f.HighestPeak = Math.Max(1, peaks?.HighestPeak ?? 1);
         f.StartSeconds = StartPositionSeconds;
@@ -140,15 +140,19 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.FontBold = settings.Waveform.WaveformTextFontBold;
         f.UnwrapText = settings.Waveform.WaveformUnwrapText;
         f.BlurText = BlurText;
+        f.EditOriginal = EditOriginalTimeCodes;
 
         f.DrawGridLines = DrawGridLines;
         f.FrameMode = settings.General.UseFrameMode;
         f.FrameRate = settings.General.CurrentFrameRate;
 
         f.IsFocused = IsFocused;
-        f.HintText = peaks == null && ShowClickToGenerateHint && !string.IsNullOrEmpty(ClickToGenerateText)
-            ? ClickToGenerateText
-            : null;
+        f.HintButtons.Clear();
+        foreach (var button in GetHintButtons())
+        {
+            var r = button.Rect;
+            f.HintButtons.Add(new SkiaHintButton(button.Text, new SKRect((float)r.Left, (float)r.Top, (float)r.Right, (float)r.Bottom), button.IsHovered));
+        }
 
         if (f.SampleRate == 0)
         {
@@ -494,6 +498,8 @@ public class SkiaAudioVisualizer : AudioVisualizer
 /// </summary>
 internal sealed class SkiaWaveformFrame
 {
+    /// <summary>The original is the layer being edited (AudioVisualizer.EditOriginalTimeCodes).</summary>
+    public bool EditOriginal;
     public float Width;
     public float Height;
     public WavePeakData2? Peaks;
@@ -532,7 +538,7 @@ internal sealed class SkiaWaveformFrame
     public bool FrameMode;
     public double FrameRate;
     public bool IsFocused;
-    public string? HintText;
+    public readonly List<SkiaHintButton> HintButtons = new(2);
 
     public double CursorSeconds = -1;
     public bool CursorOnShotChange;
@@ -584,7 +590,7 @@ internal sealed class SkiaWaveformFrame
     {
         Peaks = null;
         SampleRate = 0;
-        HintText = null;
+        HintButtons.Clear();
         CursorSeconds = -1;
         CursorOnShotChange = false;
         HasNewSelection = false;
@@ -686,3 +692,6 @@ internal sealed class SkiaWaveformDrawOperation : ICustomDrawOperation
         }
     }
 }
+
+/// <summary>A "Generate waveform" / "Use empty waveform" button on a timeline without a waveform.</summary>
+public readonly record struct SkiaHintButton(string Text, SKRect Rect, bool IsHovered);

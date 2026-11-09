@@ -37,12 +37,12 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-10-28: upstream v0.9.3 @ 41c1f8ff with the same nine families as 2026-10-19
+    // 2026-11-05: upstream v0.9.4 @ f7ac446f with the same nine families as 2026-10-28
     // (index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon
-    // + breeze_tts + voxtral_tts). A seeded KugelAudio A/B against 2026-10-19 was byte-identical;
-    // the bump brings the Fish DAC chunked reference encoding (#960), the Higgs voice kept across
-    // reference-free chunks (#985) and the lower ACE-Step tokenizer VRAM peak (#1012).
-    private const string ReleaseTag = "audiocpp-indextts25-2026-10-28";
+    // + breeze_tts + voxtral_tts). The bump brings the Vulkan RMSNorm fix for long voice
+    // references (#1120), the Vulkan oversized-buffer pipeline fix (#1183) and HTTP 400 instead
+    // of 500 for malformed option values (#1123).
+    private const string ReleaseTag = "audiocpp-indextts25-2026-11-05";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 

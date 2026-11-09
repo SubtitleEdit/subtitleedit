@@ -23,7 +23,7 @@ public class LanguageSplitBreakLongLines
         RebalanceOnlyLinesTooLongHint = "Leave existing line breaks untouched when all lines are already within the single line max length - an intentionally unbalanced subtitle can be editorially correct";
         SplitLongLine = "Split long line";
         RebalanceLongLine = "Rebalance long line";
-        SplitIntoXLines = "Split into {0} lines: '{1}' → '{2}...'";
+        SplitIntoXLines = "Split into {0} lines: \"{1}\" → \"{2}...\"";
         LinesSplitX = "Lines split: {0}";
         LinesSplitXLinesRebalancedY = "Lines split: {0}, lines rebalanced: {1}";
         UnbreakLinesShorterThanHint = "Text shorter than this stays on (or is merged to) a single line - set it to the single line max length to keep any text that fits on one line unbroken";

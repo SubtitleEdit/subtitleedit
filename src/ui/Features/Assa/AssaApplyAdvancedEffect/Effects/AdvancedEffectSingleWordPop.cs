@@ -27,9 +27,10 @@ public class AdvancedEffectSingleWordPop : IAdvancedEffectDisplay
         var result = new List<SubtitleLineViewModel>();
         var color = AdvancedEffectUtil.ToAssColor(TextColor);
         var size = TextSizePercent is >= 50 and <= 500 ? TextSizePercent : 150; // transient spinner values
+        var useMarks = CaptionWords.AnyMarked(subtitles);
         foreach (var sub in subtitles)
         {
-            var words = CaptionWords.Parse(sub, UpperCase);
+            var words = CaptionWords.Parse(sub, UpperCase, useMarks);
             if (words == null)
             {
                 result.Add(AdvancedEffectUtil.PassThrough(sub));
@@ -38,8 +39,13 @@ public class AdvancedEffectSingleWordPop : IAdvancedEffectDisplay
 
             var style = CaptionWords.GetStyle(header, sub);
             var posTags = AdvancedEffectUtil.ExtractPositionalTags(sub.Text);
-            for (var w = 0; w < words.Words.Count; w++)
+            foreach (var w in words.ActiveWordIndices())
             {
+                if (w < 0)
+                {
+                    continue; // a pause between words: nothing to show
+                }
+
                 var slice = words.MakeSlice(sub, w, posTags, out var slicePosTags);
                 var word = words.Tokens.Find(t => t.WordIndex == w)!.Text;
                 slice.Text = slicePosTags +

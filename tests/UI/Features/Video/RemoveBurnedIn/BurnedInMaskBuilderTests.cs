@@ -1,0 +1,421 @@
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
+
+namespace UITests.Features.Video.RemoveBurnedIn;
+
+public class BurnedInMaskBuilderTests
+{
+    private const int W = 120;
+    private const int H = 80;
+
+    // Gray frame (luma == R == G == B) with a mid-gray background.
+    private static byte[] Frame(byte background = 100) => Enumerable.Repeat(background, W * H).ToArray();
+
+    // "Subtitle": a white bar with a black 2 px outline.
+    private static void DrawText(byte[] luma, int x0, int y0, int w, int h)
+    {
+        for (var y = y0 - 2; y < y0 + h + 2; y++)
+        {
+            for (var x = x0 - 2; x < x0 + w + 2; x++)
+            {
+                var inside = x >= x0 && x < x0 + w && y >= y0 && y < y0 + h;
+                luma[y * W + x] = inside ? (byte)240 : (byte)10;
+            }
+        }
+    }
+
+    private static void FillRect(byte[] luma, int x0, int y0, int w, int h, byte value)
+    {
+        for (var y = y0; y < y0 + h; y++)
+        {
+            for (var x = x0; x < x0 + w; x++)
+            {
+                luma[y * W + x] = value;
+            }
+        }
+    }
+
+    private static byte[] ToRgb(byte[] luma) => luma.SelectMany(v => new[] { v, v, v }).ToArray();
+
+    private static BurnedInMaskBuilder Build(bool requireOutline, Func<int, byte[]> frame, int frames = 30)
+    {
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, (long)frames - 1) }, 190, requireOutline, 2);
+        for (var i = 0; i < frames; i++)
+        {
+            var luma = frame(i);
+            var region = new byte[W * 40];
+            Array.Copy(luma, 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        return builder;
+    }
+
+    private static byte[] TextFrame(int i)
+    {
+        var luma = Frame();
+        DrawText(luma, 30, 55, 60, 8);
+        FillRect(luma, 2 + i * 3, 45, 6, 6, 250); // bright object moving through the scan area
+        return luma;
+    }
+
+    [Fact]
+    public void MaskCoversStaticTextAndOutline()
+    {
+        var builder = Build(true, TextFrame);
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(10, ToRgb(TextFrame(10)), mask));
+        Assert.Equal(255, mask[59 * W + 60]); // text
+        Assert.Equal(255, mask[54 * W + 60]); // outline (1 px above the text)
+        Assert.Equal(255, mask[64 * W + 28]); // grown corner (text ends at y 62 / x 30, grow 2)
+        Assert.Equal(0, mask[70 * W + 20]); // background outside text + outline + grow
+        Assert.Equal(0, mask[70 * W + 60]); // background below
+        Assert.Equal(0, mask[20 * W + 60]); // outside the scan area
+    }
+
+    [Fact]
+    public void MovingBrightObjectIsNotMasked()
+    {
+        var builder = Build(false, TextFrame);
+        var mask = new byte[W * H];
+        builder.GetFrameMask(10, ToRgb(TextFrame(10)), mask);
+        Assert.Equal(0, mask[47 * W + 34]); // where the moving object is in frame 10
+    }
+
+    [Fact]
+    public void StaticBrightBackgroundNeedsOutline()
+    {
+        byte[] F(int i)
+        {
+            var luma = TextFrame(i);
+            FillRect(luma, 100, 42, 15, 10, 230); // white wall patch, no outline
+            return luma;
+        }
+
+        var mask = new byte[W * H];
+        Build(false, F).GetFrameMask(5, ToRgb(F(5)), mask);
+        Assert.Equal(255, mask[46 * W + 107]);
+
+        Array.Clear(mask);
+        Build(true, F).GetFrameMask(5, ToRgb(F(5)), mask);
+        Assert.Equal(0, mask[46 * W + 107]);
+        Assert.Equal(255, mask[59 * W + 60]);
+    }
+
+    [Fact]
+    public void FrameWithoutTextGetsNoMask()
+    {
+        // Padded span: the text is only on screen in frames 5..29.
+        byte[] F(int i)
+        {
+            var luma = Frame();
+            if (i >= 5)
+            {
+                DrawText(luma, 30, 55, 60, 8);
+            }
+
+            return luma;
+        }
+
+        var builder = Build(true, F);
+        var mask = new byte[W * H];
+        Assert.False(builder.GetFrameMask(2, ToRgb(F(2)), mask));
+        Assert.All(mask, v => Assert.Equal(0, v));
+        Assert.True(builder.GetFrameMask(20, ToRgb(F(20)), mask));
+        Assert.False(builder.GetFrameMask(40, ToRgb(F(20)), mask)); // outside every span
+    }
+
+    [Fact]
+    public void NoTextGivesNoLines()
+    {
+        var builder = Build(true, _ => Frame());
+        Assert.Equal(0, builder.LinesWithText);
+        Assert.False(builder.GetFrameMask(3, ToRgb(Frame()), new byte[W * H]));
+    }
+
+    [Fact]
+    public void ThickOutlineIsCovered()
+    {
+        // 5 px black box around the text; grow is only 2, the outline growth takes the rest.
+        byte[] F(int i)
+        {
+            var luma = Frame();
+            FillRect(luma, 25, 50, 70, 18, 10);
+            FillRect(luma, 30, 55, 60, 8, 240);
+            return luma;
+        }
+
+        var mask = new byte[W * H];
+        Assert.True(Build(true, F).GetFrameMask(5, ToRgb(F(5)), mask));
+        Assert.Equal(255, mask[50 * W + 25]); // outer corner of the box
+        Assert.Equal(255, mask[67 * W + 94]);
+        Assert.Equal(0, mask[77 * W + 60]); // background well below
+    }
+
+    [Fact]
+    public void FrameMaskTakesThisFramesDarkShadow()
+    {
+        // The line mask is built over 30 frames; frame 20 also has a dark shadow band right
+        // under the text that the line average does not see. Left on the rim, the models
+        // would fill the hole dark - the per-frame growth must take it.
+        var builder = Build(true, TextFrame);
+        var luma = TextFrame(20);
+        FillRect(luma, 30, 65, 60, 2, 20); // directly under the outline (outline ends at y 64)
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(20, ToRgb(luma), mask));
+        Assert.Equal(255, mask[66 * W + 60]);
+        Assert.Equal(255, mask[67 * W + 60]); // + 1 px rim
+        Assert.Equal(0, mask[75 * W + 60]);
+    }
+
+    [Fact]
+    public void ShortLineInLongPaddingIsFound()
+    {
+        // 40 frames incl. 15 frames of padding on each side: the text is only on screen for the
+        // 10 frames of the line itself - still found (stability counts the line's own frames).
+        byte[] F(int i)
+        {
+            var luma = Frame();
+            if (i >= 15 && i < 25)
+            {
+                DrawText(luma, 30, 55, 60, 8);
+            }
+
+            return luma;
+        }
+
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 39L) }, 190, true, 2, padFrames: 15);
+        for (var i = 0; i < 40; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(F(i), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        Assert.Equal(1, builder.LinesWithText);
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(20, ToRgb(F(20)), mask));
+        Assert.Equal(255, mask[59 * W + 60]);
+    }
+
+    [Fact]
+    public void SemiTransparentShadowOnBrightBackgroundIsCovered()
+    {
+        // Bright background (220), shadow band at 120: above the absolute dark threshold, but
+        // well below 65% of the background - must be grown into.
+        byte[] F(int i)
+        {
+            var luma = Frame(220);
+            DrawText(luma, 30, 55, 60, 8);
+            return luma;
+        }
+
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L) }, 230, true, 2);
+        for (var i = 0; i < 30; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(F(i), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        var luma = F(5);
+        FillRect(luma, 30, 65, 62, 3, 120);
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(5, ToRgb(luma), mask));
+        Assert.Equal(255, mask[67 * W + 60]);
+        Assert.Equal(0, mask[76 * W + 60]);
+    }
+
+    [Fact]
+    public void SoftShadowFadingIntoBrightBackgroundIsCovered()
+    {
+        // Bright background (230) and a soft shadow below the outline that fades 165 -> 195:
+        // all above 65% of the background, but still clearly darker than the picture around it.
+        // Left on the rim of the hole, the models fill it as a grey shadow.
+        byte[] F(int i)
+        {
+            var luma = Frame(230);
+            DrawText(luma, 30, 55, 60, 8);
+            return luma;
+        }
+
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L) }, 235, true, 2);
+        for (var i = 0; i < 30; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(F(i), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        var luma = F(5);
+        FillRect(luma, 28, 65, 64, 2, 165);
+        FillRect(luma, 28, 67, 64, 2, 180);
+        FillRect(luma, 28, 69, 64, 2, 195);
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(5, ToRgb(luma), mask));
+        Assert.Equal(255, mask[66 * W + 60]);
+        Assert.Equal(255, mask[70 * W + 60]); // the faintest part of the shadow
+        Assert.Equal(0, mask[78 * W + 60]); // background below the shadow + margin
+        Assert.Equal(0, mask[59 * W + 5]); // background beside the text
+    }
+
+    [Fact]
+    public void MaskFollowsTheTextBeyondInexactOcrTiming()
+    {
+        // OCR says frames 0..29, the text is still on screen at frame 45: with a 30-frame apply
+        // margin the mask follows it there (text visible), but not to a frame without text.
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L) }, 190, true, 2, applyMarginFrames: 30);
+        for (var i = 0; i < 30; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(TextFrame(i), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        var mask = new byte[W * H];
+        Assert.True(builder.GetFrameMask(45, ToRgb(TextFrame(10)), mask));
+        Assert.Equal(255, mask[59 * W + 60]);
+        Assert.False(builder.GetFrameMask(45, ToRgb(Frame()), new byte[W * H]));
+        Assert.False(builder.GetFrameMask(70, ToRgb(TextFrame(10)), new byte[W * H]));
+    }
+
+    [Fact]
+    public void ExtraWidthWidensLeftAndRightOnly()
+    {
+        var narrow = new byte[W * H];
+        var wide = new byte[W * H];
+        foreach (var (extra, mask) in new[] { (0, narrow), (5, wide) })
+        {
+            var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L) }, 190, true, 2, extraWidth: extra);
+            for (var i = 0; i < 30; i++)
+            {
+                var region = new byte[W * 40];
+                Array.Copy(TextFrame(i), 40 * W, region, 0, region.Length);
+                builder.AddRegionFrame(i, region);
+            }
+
+            builder.Finish();
+            builder.GetFrameMask(10, ToRgb(TextFrame(10)), mask);
+        }
+
+        int Right(byte[] m) => Enumerable.Range(0, W).Last(x => m[59 * W + x] != 0);
+        int Left(byte[] m) => Enumerable.Range(0, W).First(x => m[59 * W + x] != 0);
+        int Bottom(byte[] m) => Enumerable.Range(0, H).Last(y => m[y * W + 60] != 0);
+        Assert.Equal(Right(narrow) + 5, Right(wide));
+        Assert.Equal(Left(narrow) - 5, Left(wide));
+        Assert.Equal(Bottom(narrow), Bottom(wide));
+    }
+
+    [Fact]
+    public void LineBoxCoversTheMaskAndTheScanAreaWithoutText()
+    {
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, 29L), (40L, 49L) }, 190, true, 2);
+        for (var i = 0; i < 50; i++)
+        {
+            var region = new byte[W * 40];
+            Array.Copy(i < 30 ? TextFrame(i) : Frame(), 40 * W, region, 0, region.Length);
+            builder.AddRegionFrame(i, region);
+        }
+
+        builder.Finish();
+        var boxes = builder.GetLineBoxes();
+        Assert.Equal(2, boxes.Count);
+        var (start, end, x, y, w, h) = boxes[0];
+        Assert.Equal((0L, 29L), (start, end));
+        Assert.True(x <= 28 && x + w >= 92, $"x {x} w {w}"); // text + outline is x 28..92
+        Assert.True(y <= 53 && y + h >= 65, $"y {y} h {h}"); // and y 53..65
+        Assert.True(w < W && y > 40, "box stays near the text");
+        Assert.Equal((40L, 49L, 0, 40, W, 40), boxes[1]); // no text found: the whole scan area
+    }
+
+    [Fact]
+    public void BoxesAssaHasOneBlackDrawingPerBox()
+    {
+        var o = new BurnedInRemovalOptions { VideoWidth = 1920, VideoHeight = 1080, FrameRate = 25 };
+        var assa = BurnedInSubtitleRemover.MakeBoxesAssa(o, new[] { (50L, 99L, 100, 900, 400, 80), (3600L * 25, 3600L * 25 + 1, 0, 0, 10, 10) });
+        Assert.Contains("PlayResX: 1920", assa);
+        Assert.Contains("PlayResY: 1080", assa);
+        Assert.Contains(@"Dialogue: 0,0:00:02.00,0:00:04.00,Box,,0,0,0,,{\an7\pos(0,0)\bord0\shad0\p1}m 100 900 l 500 900 500 980 100 980{\p0}", assa);
+        Assert.Contains("Dialogue: 0,1:00:00.00,1:00:00.08,Box", assa);
+
+        // The main window loads it as an ASSA subtitle.
+        var subtitle = new Subtitle();
+        new AdvancedSubStationAlpha().LoadSubtitle(subtitle, assa.SplitToLines(), null);
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("Box", subtitle.Paragraphs[0].Extra);
+        Assert.Equal(2000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Contains("PlayResX: 1920", subtitle.Header);
+    }
+
+    [Fact]
+    public void DelogoGraphHasOneTimedFilterPerBoxInsideTheFrame()
+    {
+        var o = new BurnedInRemovalOptions { VideoWidth = 1280, VideoHeight = 720, FrameRate = 25, Method = BurnedInMethod.Delogo };
+        var graph = BurnedInSubtitleRemover.MakeFilterGraph(o, new[] { (50L, 99L, 200, 600, 880, 80), (0L, 24L, 0, 0, 100, 800) }, "m.ass");
+        Assert.StartsWith("[0:v]setpts=PTS-STARTPTS,", graph);
+        Assert.Contains("delogo=x=200:y=600:w=880:h=80:enable='between(t,2,4)'", graph);
+        Assert.Contains("delogo=x=1:y=1:w=99:h=718:enable='between(t,0,1)'", graph); // kept 1 px inside
+        Assert.EndsWith(",format=yuv420p[v]", graph);
+    }
+
+    [Fact]
+    public void BlurGraphBlursTheBoxAreaThroughTheMatte()
+    {
+        var o = new BurnedInRemovalOptions
+        {
+            VideoWidth = 1280, VideoHeight = 720, FrameRate = 25, DurationSeconds = 10, Method = BurnedInMethod.Blur, BlurStrength = 20,
+        };
+        var graph = BurnedInSubtitleRemover.MakeFilterGraph(o, new[] { (50L, 99L, 201, 601, 879, 79) }, "m.ass");
+        Assert.Contains("[src]crop=896:96:192:592,boxblur=20:2", graph); // box + 8 px, even values
+        Assert.Contains("color=c=black:s=1280x720:r=25:d=15,format=yuv420p,ass=m.ass,crop=896:96:192:592", graph);
+        Assert.Contains("[base][soft]overlay=192:592:eof_action=pass,format=yuv420p[v]", graph);
+    }
+
+    [Fact]
+    public void DelogoPreviewInterpolatesFromTheEdges()
+    {
+        // 6x3 frame, left column 0 and right column 200: the 4x1 middle row becomes a ramp.
+        var rgb = new byte[6 * 3 * 3];
+        for (var y = 0; y < 3; y++)
+        {
+            for (var x = 0; x < 6; x++)
+            {
+                var v = (byte)(x == 5 ? 200 : x == 0 ? 0 : 99);
+                rgb[(y * 6 + x) * 3] = rgb[(y * 6 + x) * 3 + 1] = rgb[(y * 6 + x) * 3 + 2] = y == 1 ? v : (byte)(x * 40);
+            }
+        }
+
+        BurnedInPreviewRenderer.DelogoRect(rgb, 6, 1, 1, 4, 1);
+        var row = Enumerable.Range(1, 4).Select(x => (int)rgb[(6 + x) * 3]).ToArray();
+        Assert.True(row[0] < row[1] && row[1] < row[2] && row[2] < row[3], string.Join(",", row));
+    }
+
+    [Fact]
+    public void RegionIsSnappedToEvenValues()
+    {
+        // 346 * 33.2% = 115 rows: ffmpeg crops 4:2:0 video to 114, so the builder must too.
+        var builder = new BurnedInMaskBuilder(640, 346, 1, 231, 639, 115, new[] { (0L, 10L) }, 190, true, 2);
+        Assert.Equal(0, builder.RegionX);
+        Assert.Equal(230, builder.RegionY);
+        Assert.Equal(638, builder.RegionWidth);
+        Assert.Equal(114, builder.RegionHeight);
+    }
+
+    [Fact]
+    public void SpansArePaddedBySampleRate()
+    {
+        var spans = BurnedInSubtitleRemover.GetSpans(new BurnedInRemovalOptions
+        {
+            FrameRate = 25,
+            OcrFramesPerSecond = 5,
+            Lines = new List<(TimeSpan, TimeSpan)> { (TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(4)) },
+        });
+        Assert.Equal((43L, 107L), spans[0]); // 50 - (5 + 2), 100 + (5 + 2)
+    }
+}

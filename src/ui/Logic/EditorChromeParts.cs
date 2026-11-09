@@ -113,8 +113,6 @@ internal static partial class EditorChrome
     /// <summary>The class of the compact text fields (see <see cref="EditorWindowStyles.TextFields"/>).</summary>
     internal const string TextClass = "text";
 
-    private static readonly IBrush DownloadErrorBrush = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B));
-
     /// <summary>
     /// Window background, the editor styles, compact combo boxes and the given extra styles.
     /// </summary>
@@ -358,6 +356,10 @@ internal static partial class EditorChrome
         styles.Add(style);
         if (extra.HasFlag(EditorWindowStyles.AutoComplete))
         {
+            styles.Add(new Style(x => x.OfType<AutoCompleteBox>())
+            {
+                Setters = { new Setter(TemplatedControl.CornerRadiusProperty, new CornerRadius(6)) },
+            });
             styles.Add(autoCompleteStyle);
         }
     }
@@ -706,29 +708,10 @@ internal static partial class EditorChrome
     /// </summary>
     internal static Border MakeButtonBar(Control? left, params Control[] buttons)
     {
-        return MakeButtonBar(left, false, buttons);
-    }
-
-    /// <summary>
-    /// <see cref="MakeButtonBar(Control?, Control[])"/> with the buttons' own margins dropped (the
-    /// UiUtil buttons have 4px side margins), so only the bar spaces them.
-    /// </summary>
-    internal static Border MakeFlushButtonBar(Control? left, params Control[] buttons)
-    {
-        return MakeButtonBar(left, true, buttons);
-    }
-
-    private static Border MakeButtonBar(Control? left, bool flush, Control[] buttons)
-    {
         var panel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, VerticalAlignment = VerticalAlignment.Center };
         foreach (var button in buttons)
         {
-            if (flush)
-            {
-                button.Margin = new Thickness(0);
-            }
-
-            panel.Children.Add(button);
+            panel.Children.Add(WithoutMargin(button)); // the UiUtil buttons have 4px side margins, only the bar spaces them
         }
 
         var grid = new Grid
@@ -761,7 +744,7 @@ internal static partial class EditorChrome
         };
         foreach (var button in buttons)
         {
-            panel.Children.Add(button);
+            panel.Children.Add(WithoutMargin(button));
         }
 
         var bar = new DockPanel();
@@ -899,6 +882,15 @@ internal static partial class EditorChrome
 
     // ---- Sections and frames ----
 
+    private const double ListFrameRadius = 8;
+    private const double ListFrameBorderThickness = 1;
+
+    /// <summary>
+    /// The inner radius of <see cref="MakeListFrame"/>, for content that paints its own background
+    /// and would otherwise cover the frame's rounded corners.
+    /// </summary>
+    internal const double ListFrameContentRadius = ListFrameRadius - ListFrameBorderThickness;
+
     /// <summary>
     /// A list (table view, list box) or text area in a rounded frame on the field color. With
     /// <paramref name="clearListBackground"/> the list's own background is cleared so the frame
@@ -921,8 +913,8 @@ internal static partial class EditorChrome
             Child = list,
             Background = FieldBrush,
             BorderBrush = FieldBorderBrush,
-            BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(8),
+            BorderThickness = new Thickness(ListFrameBorderThickness),
+            CornerRadius = new CornerRadius(ListFrameRadius),
             ClipToBounds = true,
         };
     }
@@ -1485,7 +1477,7 @@ internal static partial class EditorChrome
     {
         var errorText = new TextBlock
         {
-            Foreground = DownloadErrorBrush,
+            Foreground = ErrorTextBrush,
             TextWrapping = TextWrapping.Wrap,
             FontSize = ScaledFont(12),
             MaxWidth = 460,

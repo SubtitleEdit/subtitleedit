@@ -6,6 +6,26 @@ namespace LibSETests.Core;
 public class ActorConverterTest
 {
     [Fact]
+    public void Actors_HoldsTheSourceNamesBeforeCasingAndBrackets()
+    {
+        var c = new ActorConverter(new SubRip(), "en") { ToParentheses = true };
+
+        var p = new Paragraph { Text = "[Joe] How are you?" + Environment.NewLine + "[Jane] Fine." };
+        var result = c.FixActors(p, '[', ']', ActorConverter.UpperCase, null);
+
+        Assert.Equal(new[] { "Joe", "Jane" }, result.Actors);
+    }
+
+    [Fact]
+    public void Actors_FromBeforeColonAndFromActorColumn()
+    {
+        var c = new ActorConverter(new SubRip(), "en") { ToSquare = true };
+
+        Assert.Equal(new[] { "NARRATOR" }, c.FixActorsFromBeforeColon(new Paragraph { Text = "NARRATOR: Long ago." }, ':', null, null).Actors);
+        Assert.Equal(new[] { "Joe" }, c.FixActorsFromActor(new Paragraph { Text = "Hi.", Actor = "Joe" }, null, null).Actors);
+    }
+
+    [Fact]
     public void SquareToSquare()
     {
         var c = new ActorConverter(new SubRip(), "en")

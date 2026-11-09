@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -235,7 +236,7 @@ public partial class RegexRulesViewModel : ObservableObject
             {
                 try
                 {
-                    var replaced = Regex.Replace(result, rule.Find, rule.ReplaceWith, RegexOptions.Multiline, TestTimeout);
+                    var replaced = Regex.Replace(result, rule.Find, RegexUtils.FixNewLine(rule.ReplaceWith), RegexOptions.Multiline, TestTimeout);
                     if (replaced != result)
                     {
                         changedBy++;
@@ -266,6 +267,7 @@ public partial class RegexRulesViewModel : ObservableObject
         {
             var regex = new Regex(EditFind, RegexOptions.Multiline, TestTimeout);
             var matches = regex.Matches(text);
+            var replaceWith = RegexUtils.FixNewLine(EditReplace);
             var input = new List<RegexTestSegment>();
             var output = new List<RegexTestSegment>();
             var position = 0;
@@ -279,7 +281,7 @@ public partial class RegexRulesViewModel : ObservableObject
                 }
 
                 input.Add(new RegexTestSegment(match.Value, true));
-                output.Add(new RegexTestSegment(match.Result(EditReplace), true));
+                output.Add(new RegexTestSegment(match.Result(replaceWith), true));
                 position = match.Index + match.Length;
             }
 

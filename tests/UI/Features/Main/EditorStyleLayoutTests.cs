@@ -92,6 +92,9 @@ public class EditorStyleLayoutTests
     [AvaloniaFact]
     public void TimelineTracks_HitTestsSubtitleBlocksOnTheWaveformsTimeAxis()
     {
+        // The positions below are under the filmstrip row.
+        using var _ = new SettingsScope("Waveform.TimelineShowThumbnails");
+        Se.Settings.Waveform.TimelineShowThumbnails = true;
         var (window, vm) = CreateMainViewModel();
         try
         {
@@ -205,6 +208,9 @@ public class EditorStyleLayoutTests
     [AvaloniaFact]
     public void GroupedByActor_EachActorGetsARow_AndADragPicksTheSubtitleOfItsRow()
     {
+        // The positions below are under the filmstrip row.
+        using var _ = new SettingsScope("Waveform.TimelineShowThumbnails");
+        Se.Settings.Waveform.TimelineShowThumbnails = true;
         var (window, vm) = CreateMainViewModel();
         try
         {
@@ -359,6 +365,8 @@ public class EditorStyleLayoutTests
     [AvaloniaFact]
     public void TheThumbnailRow_IsSwitchedFromTheContextMenu_AndTheSubtitleRowsMoveUp()
     {
+        using var _ = new SettingsScope("Waveform.TimelineShowThumbnails");
+        Se.Settings.Waveform.TimelineShowThumbnails = true;
         var (window, vm) = CreateMainViewModel();
         try
         {
@@ -389,9 +397,14 @@ public class EditorStyleLayoutTests
         }
         finally
         {
-            Se.Settings.Waveform.TimelineShowThumbnails = true;
             CloseWindow(window, vm);
         }
+    }
+
+    [Fact]
+    public void Thumbnails_AreOffByDefault()
+    {
+        Assert.False(new SeWaveform().TimelineShowThumbnails);
     }
 
     [Fact]

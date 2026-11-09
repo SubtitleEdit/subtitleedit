@@ -56,6 +56,49 @@ public class AiReviewClientTests
         Assert.Contains("\"model\":\"gpt-5.6-luna\"", json);
     }
 
+    [Fact]
+    public void DescribeProblemReply_LengthCutOff_HasFinishReasonAndUsage()
+    {
+        const string body = "{\"choices\":[{\"finish_reason\":\"length\",\"message\":{\"content\":\"{\\\"names\\\":[\"}}],\"usage\":{\"prompt_tokens\":3900,\"completion_tokens\":196}}";
+
+        var line = AiReviewClient.DescribeProblemReply(body, "{\"names\":[");
+
+        Assert.NotNull(line);
+        Assert.Contains("cut off", line);
+        Assert.Contains("finish_reason=length", line);
+        Assert.Contains("prompt_tokens=3900", line);
+        Assert.Contains("completion_tokens=196", line);
+    }
+
+    [Fact]
+    public void DescribeProblemReply_EmptyContentWithReasoning()
+    {
+        const string body = "{\"choices\":[{\"finish_reason\":\"stop\",\"message\":{\"content\":\"\",\"reasoning_content\":\"Let me think\"}}]}";
+
+        var line = AiReviewClient.DescribeProblemReply(body, string.Empty);
+
+        Assert.NotNull(line);
+        Assert.Contains("no content", line);
+        Assert.Contains("reasoning_content=12 chars", line);
+    }
+
+    [Fact]
+    public void DescribeProblemReply_NormalReply_IsNull()
+    {
+        Assert.Null(AiReviewClient.DescribeProblemReply(Reply, "all good"));
+        Assert.Null(AiReviewClient.DescribeProblemReply("not json", "not json"));
+    }
+
+    [Fact]
+    public void BuildRequestJson_MaxTokensOnlyWhenGiven()
+    {
+        var capped = AiReviewClient.BuildRequestJson(string.Empty, "system", "user", jsonMode: true, includeTemperature: true, maxTokens: 1024);
+        var uncapped = AiReviewClient.BuildRequestJson("gpt-5.6-luna", "system", "user", jsonMode: true, includeTemperature: true);
+
+        Assert.Contains("\"max_tokens\":1024", capped);
+        Assert.DoesNotContain("max_tokens", uncapped);
+    }
+
     [Theory]
     [InlineData(TemperatureError, "temperature", true)]
     [InlineData(TemperatureError, "response_format", false)]

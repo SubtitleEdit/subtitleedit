@@ -20,12 +20,15 @@ public partial class GetPluginsViewModel : ObservableObject
     [ObservableProperty] private GetPluginsDisplayItem? _selectedPlugin;
     [ObservableProperty] private string _statusMessage;
     [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private string _searchText = string.Empty;
 
     public Window? Window { get; set; }
 
     /// <summary>True when at least one plugin was installed/updated during this session.</summary>
     public bool InstalledAnything { get; private set; }
 
+    // Everything from the index; Plugins holds the entries matching SearchText.
+    private readonly List<GetPluginsDisplayItem> _allPlugins = new();
     private readonly IPluginDownloadService _downloadService;
     private readonly IPluginCatalog _pluginCatalog;
     private CancellationTokenSource? _cancellationTokenSource;
@@ -60,6 +63,7 @@ public partial class GetPluginsViewModel : ObservableObject
     {
         IsLoading = true;
         StatusMessage = Se.Language.Plugins.LoadingPluginList;
+        _allPlugins.Clear();
         Plugins.Clear();
 
         try
@@ -72,13 +76,13 @@ public partial class GetPluginsViewModel : ObservableObject
             {
                 var match = installed.FirstOrDefault(p =>
                     p.Manifest.Name.Equals(entry.Name, StringComparison.OrdinalIgnoreCase));
-                Plugins.Add(new GetPluginsDisplayItem(entry, match?.Manifest.Version));
+                _allPlugins.Add(new GetPluginsDisplayItem(entry, match?.Manifest.Version));
             }
 
-            SelectedPlugin = Plugins.FirstOrDefault();
-            StatusMessage = Plugins.Count == 0
+            ApplyFilter();
+            StatusMessage = _allPlugins.Count == 0
                 ? Se.Language.Plugins.NoPluginsAvailable
-                : string.Format(Se.Language.Plugins.XPluginsAvailable, Plugins.Count);
+                : string.Format(Se.Language.Plugins.XPluginsAvailable, _allPlugins.Count);
         }
         catch (Exception exception)
         {
@@ -89,6 +93,30 @@ public partial class GetPluginsViewModel : ObservableObject
         {
             IsLoading = false;
         }
+    }
+
+    partial void OnSearchTextChanged(string value)
+    {
+        ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
+        var selected = SelectedPlugin;
+        var search = SearchText.Trim();
+        Plugins.Clear();
+        foreach (var item in _allPlugins)
+        {
+            if (search.Length == 0 ||
+                item.Name.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                item.Author.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                item.Description.Contains(search, StringComparison.OrdinalIgnoreCase))
+            {
+                Plugins.Add(item);
+            }
+        }
+
+        SelectedPlugin = selected != null && Plugins.Contains(selected) ? selected : Plugins.FirstOrDefault();
     }
 
     [RelayCommand]

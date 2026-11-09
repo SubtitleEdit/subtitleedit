@@ -482,7 +482,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             public RegexEntry(string pattern, string replacement)
             {
                 Pattern = pattern;
-                Replacement = replacement;
+                // "\n" in a replacement means a line break, as in Multiple replace (#16687).
+                Replacement = RegexUtils.FixNewLine(replacement);
                 var literal = GetRequiredLiteral(pattern);
                 Bit = literal != null ? BigramSignature.BitIndex(literal[0], literal[1]) : -1;
             }

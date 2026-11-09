@@ -52,7 +52,7 @@ public sealed class DownloadTtsWindow : Window
         // window bound. DownloadVideoFromUrlWindow and DownloadCrispEmbedWindow show it this way.
         var errorText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
+            Foreground = EditorChrome.ErrorTextBrush,
             TextWrapping = TextWrapping.Wrap,
             FontSize = EditorChrome.FieldFontSize,
             MaxWidth = 460,
@@ -64,7 +64,7 @@ public sealed class DownloadTtsWindow : Window
         });
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel);
 
         var body = new Border
         {

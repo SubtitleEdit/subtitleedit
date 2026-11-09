@@ -106,9 +106,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             private const int AlphaCrop = 14;
 
-            public static BluRaySupPalette DecodePalette(IList<PaletteInfo> paletteInfos)
+            public static BluRaySupPalette DecodePalette(IList<PaletteInfo> paletteInfos, bool useBt601 = false)
             {
-                var palette = new BluRaySupPalette(256);
+                var palette = new BluRaySupPalette(256, useBt601);
                 // by definition, index 0xff is always completely transparent
                 // also all entries must be fully transparent after initialization
 
@@ -164,8 +164,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             /// <summary>
             /// Decode caption from the input stream
             /// </summary>
+            /// <remarks>The palette is BT.601 when <paramref name="useBt601"/> is set (SD video), else BT.709.</remarks>
             /// <returns>bitmap of the decoded caption</returns>
-            public static SKBitmap DecodeImage(PcsObject pcs, IList<OdsData> data, List<PaletteInfo> palettes)
+            public static SKBitmap DecodeImage(PcsObject pcs, IList<OdsData> data, List<PaletteInfo> palettes, bool useBt601 = false)
             {
                 if (data.Count == 0 || data[0].Fragment?.ImageBuffer == null)
                 {
@@ -193,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 {
                     var buf = data[0].Fragment.ImageBuffer;
                     var pixelData = new Span<byte>(pixelPtr.ToPointer(), bm.ByteCount); // Create writable span
-                    var pal = DecodePalette(palettes);
+                    var pal = DecodePalette(palettes, useBt601);
 
                     var ofs = 0;
                     var xpos = 0;
@@ -351,7 +352,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             {
                 if (PcsObjects.Count == 1)
                 {
-                    return SupDecoder.DecodeImage(PcsObjects[0], BitmapObjects[0], PaletteInfos);
+                    return SupDecoder.DecodeImage(PcsObjects[0], BitmapObjects[0], PaletteInfos, BluRaySupPicture.UsesBt601(Size.Height));
                 }
 
                 var r = BluRayRectangle.Empty;
@@ -372,7 +373,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         if (ioIndex < BitmapObjects.Count)
                         {
                             var offset = new BluRayPoint(PcsObjects[ioIndex].Origin.X - r.Location.X, PcsObjects[ioIndex].Origin.Y - r.Location.Y);
-                            using (var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos))
+                            using (var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos, BluRaySupPicture.UsesBt601(Size.Height)))
                             {
                                 canvas.DrawBitmap(singleBmp, offset.X, offset.Y);
                             }

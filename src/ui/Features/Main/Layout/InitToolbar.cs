@@ -585,6 +585,7 @@ public static class InitToolbar
                     TextTrimming = TextTrimming.CharacterEllipsis,
                 }, true)
         };
+        WindowService.SuspendUndockedTopmostWhileOpen(comboBoxSubtitleFormat);
         comboBoxSubtitleFormat.SelectionChanged += vm.ComboBoxSubtitleFormatChanged;
         comboBoxSubtitleFormat.KeyDown += vm.ComboBoxSubtitleFormatKeyDown;
         // Tunnel phase so we see the event before ComboBox consumes a left-click to open
@@ -615,6 +616,7 @@ public static class InitToolbar
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedEncoding)),
                 DataContext = vm,
             };
+            WindowService.SuspendUndockedTopmostWhileOpen(comboBoxEncoding);
             stackPanelRight.Children.Add(comboBoxEncoding);
             toolbarPanel.AddCollapsible(comboBoxEncoding, rankEncoding);
         }
@@ -640,6 +642,7 @@ public static class InitToolbar
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedFrameRate)),
                 DataContext = vm,
             };
+            WindowService.SuspendUndockedTopmostWhileOpen(comboBoxFrameRate);
             stackPanelRight.Children.Add(comboBoxFrameRate);
             toolbarPanel.AddCollapsible(comboBoxFrameRate, rankFrameRate);
             comboBoxFrameRate.SelectionChanged += vm.ComboBoxFrameRateSelectionChanged;
@@ -700,14 +703,9 @@ public static class InitToolbar
     // themed/recolored toolbar icons using the current theme folder.
     public static Image MakeImage(string image)
     {
-        var filePath = Path.Combine(UiTheme.ImageFolder, image + ".png");
         try
         {
-            return new Image
-            {
-                Source = MakeOneColor(filePath),
-                Stretch = Stretch.Uniform,
-            };
+            return MakeThemeImage(image);
         }
         catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
         {
@@ -715,15 +713,12 @@ public static class InitToolbar
             // without a version bump made every startup crash here, since version.txt said the
             // folder was current). Repair by re-unpacking Themes.zip and retry once; if the icon
             // is still missing, show a blank image rather than killing the MainView build.
+            var filePath = Path.Combine(UiTheme.ImageFolder, image);
             if (Logic.Initializers.ThemeInitializer.TryRepair(filePath))
             {
                 try
                 {
-                    return new Image
-                    {
-                        Source = MakeOneColor(filePath),
-                        Stretch = Stretch.Uniform,
-                    };
+                    return MakeThemeImage(image);
                 }
                 catch (Exception retryException)
                 {
@@ -739,54 +734,21 @@ public static class InitToolbar
         }
     }
 
-    private static unsafe Bitmap MakeOneColor(string filePath)
+    private static Image MakeThemeImage(string image)
     {
-        // A theme's own icons are already drawn in its colors
-        if (!UiTheme.IsDarkThemeEnabled() || !Se.Settings.Appearance.MatchIconColorToDarkTheme || UiTheme.HasOwnIcons)
+        var result = new Image
         {
-            return new Bitmap(filePath);
+            Source = ThemeIcon.LoadForTheme(UiTheme.ImageFolder, image),
+            Stretch = Stretch.Uniform,
+        };
+
+        if (ThemeIcon.IsSvg(UiTheme.ImageFolder, image))
+        {
+            result.Width = ThemeIcon.LayoutSize;
+            result.Height = ThemeIcon.LayoutSize;
         }
 
-        var foregroundColor = UiTheme.GetDarkThemeForegroundColor();
-
-        using var decodedBitmap = SKBitmap.Decode(filePath);
-        using var skBitmap = decodedBitmap.ColorType == SKColorType.Bgra8888
-            ? decodedBitmap
-            : decodedBitmap.Copy(SKColorType.Bgra8888);
-
-        var width = skBitmap.Width;
-        var height = skBitmap.Height;
-        var result = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
-
-        byte* srcBase = (byte*)skBitmap.GetPixels();
-        byte* dstBase = (byte*)result.GetPixels();
-        int srcStride = skBitmap.RowBytes;
-        int dstStride = result.RowBytes;
-
-        for (var y = 0; y < height; y++)
-        {
-            uint* srcRow = (uint*)(srcBase + y * srcStride);
-            uint* dstRow = (uint*)(dstBase + y * dstStride);
-
-            for (var x = 0; x < width; x++)
-            {
-                uint pixel = srcRow[x];
-                byte b = (byte)(pixel & 0xFF);
-                byte g = (byte)((pixel >> 8) & 0xFF);
-                byte r = (byte)((pixel >> 16) & 0xFF);
-                byte a = (byte)(pixel >> 24);
-
-                var intensity = (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;
-
-                byte newR = (byte)(foregroundColor.R * intensity);
-                byte newG = (byte)(foregroundColor.G * intensity);
-                byte newB = (byte)(foregroundColor.B * intensity);
-
-                dstRow[x] = (uint)(a << 24) | (uint)(newR << 16) | (uint)(newG << 8) | newB;
-            }
-        }
-
-        return result.ToAvaloniaBitmap();
+        return result;
     }
 
     private static Border MakeSeparator()

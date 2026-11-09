@@ -30,10 +30,14 @@ public class ModelLicenseWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        Content = BuildContent(vm);
+        var checkBoxAccept = BuildAcceptRow(vm);
+        Content = BuildContent(vm, checkBoxAccept);
+
+        UiUtil.FocusOnFirstActivation(this, checkBoxAccept);
+        KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Grid BuildContent(ModelLicenseViewModel vm)
+    private static Grid BuildContent(ModelLicenseViewModel vm, CheckBox checkBoxAccept)
     {
         var stack = new StackPanel
         {
@@ -44,7 +48,7 @@ public class ModelLicenseWindow : Window
                 TtsVoicesChrome.MakeTitle(vm.Definition.Header, vm.Definition.Intro),
                 TtsVoicesChrome.MakeBulletCard(vm.Definition.SummaryPoints),
                 BuildLinks(vm),
-                BuildAcceptRow(vm),
+                checkBoxAccept,
             },
         };
 
@@ -103,6 +107,6 @@ public class ModelLicenseWindow : Window
 
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        return EditorChrome.MakeFlushButtonBar(null, cancel, accept);
+        return EditorChrome.MakeButtonBar(null, cancel, accept);
     }
 }

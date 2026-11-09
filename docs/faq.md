@@ -116,7 +116,7 @@ Use **Synchronization → Change frame rate...** and select the source and targe
 - **nOCR** — Nikse's built-in OCR with trainable databases
 - **Binary OCR** — For binary image comparison
 - **PaddleOCR** — Local OCR (standalone build for Windows/Linux, or the pip-installed Python engine)
-- **CrispEmbed** — Local OCR with downloadable model backends (PP-OCRv6, GLM-OCR, GOT-OCR2, Qwen3-VL, DeepSeek-OCR-2)
+- **CrispEmbed** — Local OCR with downloadable model backends (PP-OCRv6, GLM-OCR, Qwen3-VL, DeepSeek-OCR-2)
 - **llama.cpp** — Local vision-LLM OCR with a managed server and curated models
 - **Ollama OCR** — Local LLM-based
 - **Apple Vision** — Built-in OCR on macOS

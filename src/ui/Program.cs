@@ -457,6 +457,9 @@ namespace Nikse.SubtitleEdit
                 }
             });
 
+            // Keep the selection on a macOS Ctrl+click on a selected row of any list
+            MacContextClickSelection.Register();
+
             // Set custom font
             if (Application.Current != null && !string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
             {
@@ -486,6 +489,9 @@ namespace Nikse.SubtitleEdit
 
             // Shift+Delete cut in every text box, in every window (#13711).
             NativeKeymap.AddShiftDeleteCut();
+
+            // Double-click and Ctrl+Backspace/Delete keep combining marks inside the word (#16750).
+            CombiningMarkWordSelection.Register();
 
             // Context menus kept their first, too small size (#15965).
             PointerPopupPlacement.Initialize();

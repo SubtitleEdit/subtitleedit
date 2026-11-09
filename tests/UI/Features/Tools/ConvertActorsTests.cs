@@ -147,6 +147,75 @@ public class ConvertActorsTests
         Assert.Equal(new[] { string.Empty }, rows.Select(r => r.Actor));
     }
 
+    /// <summary>
+    /// The actor picker lists each speaker once with its number of rows, whatever the casing, and
+    /// without the brackets or formatting around the name.
+    /// </summary>
+    [AvaloniaFact]
+    public void Actors_ListsEachSpeakerWithItsRowCount()
+    {
+        var vm = Preview(ConvertActorType.InlineSquareBrackets, ConvertActorType.InlineColon, new SubRip(), onlyNames: true,
+            (Text: "[NARRATOR] Long ago.", Actor: string.Empty),
+            (Text: "[Joe] Hi.", Actor: string.Empty),
+            (Text: "[narrator] Far away." + Environment.NewLine + "[<i>Jane</i>] Yes.", Actor: string.Empty));
+
+        Assert.Equal(new[] { "Jane (1)", "Joe (1)", "NARRATOR (2)" }, vm.Actors.Select(a => a.ToString()));
+    }
+
+    /// <summary>
+    /// "Only names" leaves NARRATOR unticked as it is not a name - "Select actor" ticks all of its
+    /// lines at once instead of one by one, and "Unselect actor" unticks them again.
+    /// </summary>
+    [AvaloniaFact]
+    public void SelectActor_TicksEveryLineOfThatActor()
+    {
+        var vm = Preview(ConvertActorType.InlineSquareBrackets, ConvertActorType.InlineColon, new SubRip(), onlyNames: true,
+            (Text: "[NARRATOR] Long ago.", Actor: string.Empty),
+            (Text: "[Joe] Hi.", Actor: string.Empty),
+            (Text: "[NARRATOR] Far away.", Actor: string.Empty));
+
+        Assert.Equal(new[] { false, true, false }, vm.Subtitles.Select(s => s.IsChecked));
+
+        vm.SelectedActor = vm.Actors.Single(a => a.Name == "NARRATOR");
+        vm.SelectActorCommand.Execute(null);
+        Assert.Equal(new[] { true, true, true }, vm.Subtitles.Select(s => s.IsChecked));
+
+        vm.UnselectActorCommand.Execute(null);
+        Assert.Equal(new[] { false, true, false }, vm.Subtitles.Select(s => s.IsChecked));
+    }
+
+    /// <summary>A two-speaker paragraph split for the actor column gives each row its own speaker.</summary>
+    [AvaloniaFact]
+    public void SelectActor_SplitParagraph_TicksOnlyThatSpeakersRow()
+    {
+        var vm = Preview(ConvertActorType.InlineColon, ConvertActorType.Actor, new SubRip(), onlyNames: false,
+            (Text: "Joe: How are you?" + Environment.NewLine + "Jane: I am fine.", Actor: string.Empty));
+        Assert.Equal(2, vm.Subtitles.Count);
+
+        vm.SelectNoneCommand.Execute(null);
+        vm.SelectedActor = vm.Actors.Single(a => a.Name == "Jane");
+        vm.SelectActorCommand.Execute(null);
+
+        Assert.Equal(new[] { false, true }, vm.Subtitles.Select(s => s.IsChecked));
+    }
+
+    [AvaloniaFact]
+    public void SelectAllNoneAndInvert_SetTheApplyColumn()
+    {
+        var vm = Preview(ConvertActorType.InlineSquareBrackets, ConvertActorType.InlineColon, new SubRip(), onlyNames: true,
+            (Text: "[NARRATOR] Long ago.", Actor: string.Empty),
+            (Text: "[Joe] Hi.", Actor: string.Empty));
+
+        vm.InvertSelectionCommand.Execute(null);
+        Assert.Equal(new[] { true, false }, vm.Subtitles.Select(s => s.IsChecked));
+
+        vm.SelectAllCommand.Execute(null);
+        Assert.All(vm.Subtitles, s => Assert.True(s.IsChecked));
+
+        vm.SelectNoneCommand.Execute(null);
+        Assert.All(vm.Subtitles, s => Assert.False(s.IsChecked));
+    }
+
     private static List<SubtitleLineViewModel> Convert(ConvertActorType from, ConvertActorType to, params string[] texts)
         => Convert(from, to, new SubRip(), texts.Select(t => (Text: t, Actor: string.Empty)).ToArray());
 

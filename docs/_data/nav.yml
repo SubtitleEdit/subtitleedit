@@ -8,7 +8,7 @@
       desc: "What is Subtitle Edit and how to get started"
     - title: "What's New in Subtitle Edit 5"
       url: features/whats-new-in-se5.html
-      desc: "Major changes from the Windows Forms version to the Avalonia-based version"
+      desc: "What Subtitle Edit 5 adds compared to Subtitle Edit 4"
     - title: "Main Window"
       url: features/main-window.html
       desc: "Main window layout, areas, and interaction guide"

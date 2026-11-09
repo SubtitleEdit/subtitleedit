@@ -251,12 +251,12 @@ public partial class SortByViewModel : ObservableObject, IClosingCleanup
         return (int)SubtitleTextInfoHelper.GetTotalLength(SubtitleTextInfoHelper.StripHtml(text ?? string.Empty));
     }
 
-    internal static int GetTextSingleLineMaxLength(string? text)
+    internal static decimal GetTextSingleLineMaxLength(string? text)
     {
         return SubtitleTextInfoHelper.StripHtml(text ?? string.Empty)
             .SplitToLines()
             .Select(SubtitleTextInfoHelper.GetLineLength)
-            .DefaultIfEmpty(0)
+            .DefaultIfEmpty(0m)
             .Max();
     }
 

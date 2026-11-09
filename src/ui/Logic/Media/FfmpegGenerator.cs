@@ -19,43 +19,26 @@ namespace Nikse.SubtitleEdit.Logic.Media;
 
 public class FfmpegGenerator
 {
-    public static Process GenerateEmptyAudio(string outputFileName, float seconds, DataReceivedEventHandler? dataReceivedHandler = null)
+    /// <summary>
+    /// Decodes any audio file to raw interleaved 16-bit little-endian PCM (no header) at the given
+    /// sample rate and channel count, e.g. for mixing in <c>PcmWaveMixer</c>.
+    /// </summary>
+    public static Process DecodeToRawPcm(string inputFileName, string outputFileName, int sampleRate, int channels, DataReceivedEventHandler? dataReceivedHandler = null)
     {
-        var processMakeVideo = new Process
+        var process = new Process
         {
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-f lavfi -i anullsrc -t {seconds.ToString(CultureInfo.InvariantCulture)} \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -vn -f s16le -acodec pcm_s16le -ar {sampleRate.ToString(CultureInfo.InvariantCulture)} -ac {channels.ToString(CultureInfo.InvariantCulture)} \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
         };
 
-        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
+        SetupDataReceiveHandler(dataReceivedHandler, process);
 
-        return processMakeVideo;
-    }
-
-    public static Process MergeAudioTracks(string inputFileName1, string inputFileName2, string outputFileName, float startSeconds, bool forceStereo, DataReceivedEventHandler? dataReceivedHandler = null)
-    {
-        var filterSuffix = forceStereo ? ",aformat=channel_layouts=stereo" : string.Empty;
-        var stereoParameter = forceStereo ? " -ac 2" : string.Empty;
-
-        var processMakeVideo = new Process
-        {
-            StartInfo =
-            {
-                FileName = GetFfmpegLocation(),
-                Arguments = $"-nostdin -y -i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"aevalsrc=0:d={startSeconds.ToString(CultureInfo.InvariantCulture)}[s1];[s1][1:a]concat=n=2:v=0:a=1[ac1];[0:a][ac1]amix=2:normalize=false{filterSuffix}[aout]\" -map [aout]{stereoParameter} \"{outputFileName}\"",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            }
-        };
-
-        SetupDataReceiveHandler(dataReceivedHandler, processMakeVideo);
-
-        return processMakeVideo;
+        return process;
     }
 
     private static void SetupDataReceiveHandler(DataReceivedEventHandler? dataReceivedHandler, Process processMakeVideo)

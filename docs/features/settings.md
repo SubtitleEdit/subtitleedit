@@ -146,7 +146,7 @@ Good to know:
 
 ## Appearance
 
-- **Theme**, **icon theme**, **match icon color to dark theme foreground color**, **UI scale (%)**, **Font scale (%)**
+- **Theme**, **icon theme**, **match icon color to theme foreground color**, **UI scale (%)**, **Font scale (%)**
 - **Text selection opacity (%)** — How strong the selection highlight in text boxes is. 100 (default) is the theme's solid highlight with white text; lower values make it see-through and keep the text in its own color
 - **Dark theme foreground / background color**, **focused button background color**
 - **UI font**, and a separate font for the subtitle text box and grid, with **Font size in subtitle grid** and **Font size in subtitle text box**

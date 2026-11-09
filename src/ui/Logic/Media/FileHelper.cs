@@ -307,13 +307,13 @@ namespace Nikse.SubtitleEdit.Logic.Media
             string title)
         {
             var topLevel = TopLevel.GetTopLevel(sender)!;
+            var allowedExtensions = GetFormatExtensions(currentFormat);
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                // See the macOS note in PickSaveSubtitleFileAs.
                 SuggestedFileName = OperatingSystem.IsMacOS()
-                    ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
-                    : MakePortalSafeSuggestedFileName(suggestedFileName, currentFormat.Extension),
+                    ? MakeMacSuggestedFileName(suggestedFileName, currentFormat.Extension)
+                    : MakePortalSafeSuggestedFileName(suggestedFileName, allowedExtensions),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(currentFormat),
                 DefaultExtension = currentFormat.Extension.TrimStart('.')
             };
@@ -328,9 +328,10 @@ namespace Nikse.SubtitleEdit.Logic.Media
                     return string.Empty;
                 }
 
-                var fileName = file.Path.LocalPath;
+                var pickedFileName = file.Path.LocalPath;
+                var fileName = EnsureExtension(pickedFileName, allowedExtensions);
                 if (attempt >= MaxPortalNameRetries ||
-                    !NeedsPortalGrantedName(fileName, options, AddDefaultExtension(Path.GetFileName(fileName), currentFormat.Extension)))
+                    !NeedsPortalGrantedName(pickedFileName, options, Path.GetFileName(fileName)))
                 {
                     return fileName;
                 }
@@ -353,12 +354,11 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 // Pre-fill with the same extension rule the result goes through below
                 // (AddMissingExtension), so under the document portal the granted name is
                 // final-safe when the user keeps the suggestion (see NeedsPortalGrantedName).
-                // macOS: without an extension in the name, the save panel appends the preferred
-                // extension of the format's file type, and ".ssa" shares a type with ".ass" (e.g.
-                // io.mpv.ass) - so Sub Station Alpha was suggested as "movie.ass".
-                SuggestedFileName = DocumentPortal.IsSandboxed || OperatingSystem.IsMacOS()
-                    ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
-                    : Path.GetFileName(suggestedFileName),
+                SuggestedFileName = OperatingSystem.IsMacOS()
+                    ? MakeMacSuggestedFileName(suggestedFileName, currentFormat.Extension)
+                    : DocumentPortal.IsSandboxed
+                        ? AddMissingExtension(Path.GetFileName(suggestedFileName), currentFormat.Extension)
+                        : Path.GetFileName(suggestedFileName),
                 FileTypeChoices = filePickerFileTypes,
                 SuggestedFileType = defaultChoice,
             };
@@ -434,24 +434,89 @@ namespace Nikse.SubtitleEdit.Logic.Media
         /// Flatpak the suggestion must already carry the extension (see NeedsPortalGrantedName).
         /// Elsewhere the suggestion is passed through unchanged.
         /// </summary>
-        private static string MakePortalSafeSuggestedFileName(string suggestedFileName, string extension)
+        private static string MakePortalSafeSuggestedFileName(string suggestedFileName, IReadOnlyList<string> allowedExtensions)
         {
             var name = Path.GetFileName(suggestedFileName);
-            return DocumentPortal.IsSandboxed ? AddDefaultExtension(name, extension) : name;
+            return DocumentPortal.IsSandboxed ? EnsureExtension(name, allowedExtensions) : name;
+        }
+
+        private static string MakeMacSuggestedFileName(string suggestedFileName, string extension)
+        {
+            return MakeMacSuggestedFileName(suggestedFileName, extension, MacFileTypes.PrefersOtherExtension(extension));
         }
 
         /// <summary>
-        /// Mirrors Avalonia's post-dialog DefaultExtension handling: the extension is only
-        /// added when the file name has none at all.
+        /// The macOS save panel adds the file type's preferred extension to the name it is given.
+        /// It only sees an extension that an installed app has registered, so for an unregistered
+        /// one (".srt" without mpv or IINA) "movie.srt" became "movie.srt.srt" (#16535): the
+        /// suggestion must have no extension. But when the type prefers another extension, as
+        /// ".ssa" does with io.mpv.ass, a bare "movie" became "movie.ass": the suggestion must
+        /// carry the format's extension.
         /// </summary>
-        private static string AddDefaultExtension(string fileName, string extension)
+        internal static string MakeMacSuggestedFileName(string suggestedFileName, string extension, bool typePrefersOtherExtension)
         {
-            if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(extension) || Path.HasExtension(fileName))
+            var name = Path.GetFileName(suggestedFileName);
+            if (typePrefersOtherExtension)
+            {
+                return AddMissingExtension(name, extension);
+            }
+
+            return name.Length > extension.Length && name.EndsWith(extension, StringComparison.OrdinalIgnoreCase)
+                ? name.Substring(0, name.Length - extension.Length)
+                : name;
+        }
+
+        /// <summary>
+        /// The one rule for a picked save name (issue #16740): the name must end in one of the
+        /// picker's extensions, otherwise the first one is appended. The dialogs themselves only
+        /// add the default extension when the typed name has none at all, so "test.hdr" - or a
+        /// suggestion like "Movie.en" from "Movie.en.srt" - used to come back unchanged and a
+        /// Blu-ray sup was written as "test.hdr" / "Movie.en". With no usable extension (empty,
+        /// "*") the name is returned unchanged.
+        /// </summary>
+        internal static string EnsureExtension(string fileName, IReadOnlyList<string> allowedExtensions)
+        {
+            if (string.IsNullOrEmpty(fileName) || allowedExtensions == null)
+            {
+                return fileName ?? string.Empty;
+            }
+
+            string? defaultExtension = null;
+            foreach (var allowed in allowedExtensions)
+            {
+                var ext = NormalizeExtension(allowed);
+                if (ext == null)
+                {
+                    continue;
+                }
+
+                defaultExtension ??= ext;
+                if (fileName.Length > ext.Length && fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase))
+                {
+                    return fileName;
+                }
+            }
+
+            if (defaultExtension == null)
             {
                 return fileName;
             }
 
-            return fileName + (extension.StartsWith('.') ? extension : "." + extension);
+            // Windows drops trailing dots from file names, so "test." must not become "test..sup".
+            return fileName.TrimEnd('.') + defaultExtension;
+        }
+
+        private static string? NormalizeExtension(string? extension)
+        {
+            var trimmed = (extension ?? string.Empty).Trim().TrimStart('*').TrimStart('.');
+            return trimmed.Length == 0 || trimmed.Contains('*') ? null : "." + trimmed;
+        }
+
+        private static List<string> GetFormatExtensions(SubtitleFormat format)
+        {
+            var extensions = new List<string> { format.Extension };
+            extensions.AddRange(format.AlternateExtensions);
+            return extensions;
         }
 
         /// <summary>
@@ -531,10 +596,11 @@ namespace Nikse.SubtitleEdit.Logic.Media
             string title)
         {
             var topLevel = TopLevel.GetTopLevel(sender)!;
+            var allowedExtensions = new[] { extension };
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = MakePortalSafeSuggestedFileName(suggestedFileName, extension),
+                SuggestedFileName = MakePortalSafeSuggestedFileName(suggestedFileName, allowedExtensions),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(extension, extension),
                 DefaultExtension = extension.TrimStart('.')
             };
@@ -549,9 +615,10 @@ namespace Nikse.SubtitleEdit.Logic.Media
                     return string.Empty;
                 }
 
-                var fileName = file.Path.LocalPath;
+                var pickedFileName = file.Path.LocalPath;
+                var fileName = EnsureExtension(pickedFileName, allowedExtensions);
                 if (attempt >= MaxPortalNameRetries ||
-                    !NeedsPortalGrantedName(fileName, options, AddDefaultExtension(Path.GetFileName(fileName), extension)))
+                    !NeedsPortalGrantedName(pickedFileName, options, Path.GetFileName(fileName)))
                 {
                     return fileName;
                 }
@@ -575,10 +642,11 @@ namespace Nikse.SubtitleEdit.Logic.Media
         {
             var topLevel = TopLevel.GetTopLevel(sender)!;
             var defaultExtension = fileTypes.Count > 0 ? fileTypes[0].Extension : string.Empty;
+            var allowedExtensions = fileTypes.Select(f => f.Extension).ToList();
             var options = new FilePickerSaveOptions
             {
                 Title = title,
-                SuggestedFileName = MakePortalSafeSuggestedFileName(suggestedFileName, defaultExtension),
+                SuggestedFileName = MakePortalSafeSuggestedFileName(suggestedFileName, allowedExtensions),
                 FileTypeChoices = MakeSaveFilePickerFileTypes(fileTypes),
                 DefaultExtension = defaultExtension.TrimStart('.'),
             };
@@ -593,9 +661,10 @@ namespace Nikse.SubtitleEdit.Logic.Media
                     return string.Empty;
                 }
 
-                var fileName = file.Path.LocalPath;
+                var pickedFileName = file.Path.LocalPath;
+                var fileName = EnsureExtension(pickedFileName, allowedExtensions);
                 if (attempt >= MaxPortalNameRetries ||
-                    !NeedsPortalGrantedName(fileName, options, AddDefaultExtension(Path.GetFileName(fileName), defaultExtension)))
+                    !NeedsPortalGrantedName(pickedFileName, options, Path.GetFileName(fileName)))
                 {
                     return fileName;
                 }
@@ -636,7 +705,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             return fileTypes;
         }
         
-        private static List<FilePickerFileType> MakeSaveFilePickerAllFileTypes(SubtitleFormat currentFormat)
+        internal static List<FilePickerFileType> MakeSaveFilePickerAllFileTypes(SubtitleFormat currentFormat)
         {
             var fileType = new FilePickerFileType(currentFormat.Name)
             {
@@ -646,8 +715,9 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
             // EBU STL is binary but saves through the same "Save as" path (SaveBinarySubtitle),
             // so it belongs in the list like the text formats - it used to be reachable only by
-            // switching the toolbar format first.
-            foreach (var format in SubtitleFormat.AllSubtitleFormats)
+            // switching the toolbar format first. Favorites follow the current format, like in
+            // the toolbar's format list (#16540).
+            foreach (var format in SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop())
             {
                 if ((format.IsTextBased || format is Ebu) && format.Name != currentFormat.Name)
                 {

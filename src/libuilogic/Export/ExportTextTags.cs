@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using SkiaSharp;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
@@ -40,6 +41,37 @@ public static class ExportTextTags
     private static readonly Regex OutlineShadowWidthTagRegex = new(
         @"\\(bord|shad)(\d+(?:\.\d+)?)",
         RegexOptions.Compiled);
+
+    // "{\fsp2}" letter spacing, also negative and with decimals ("{\fsp-1.5}")
+    private static readonly Regex LetterSpacingTagRegex = new(
+        @"\\fsp(-?\d+(?:\.\d+)?)",
+        RegexOptions.Compiled);
+
+    // "{\fscx120}"/"{\fscy80}" glyph scale in percent, also with decimals
+    private static readonly Regex ScaleTagRegex = new(
+        @"\\fsc([xy])(\d+(?:\.\d+)?)",
+        RegexOptions.Compiled);
+
+    // "{\frz15}" and its short form "{\fr15}", also negative and with decimals - not the 3D
+    // "\frx"/"\fry", which need a perspective this flat rotation cannot give.
+    private static readonly Regex RotationTagRegex = new(
+        @"\\frz?(-?\d+(?:\.\d+)?)",
+        RegexOptions.Compiled);
+
+    // "{\blur2}" (gaussian) and "{\be1}" (box blur passes), also with decimals
+    private static readonly Regex BlurTagRegex = new(
+        @"\\(blur|be)(\d+(?:\.\d+)?)",
+        RegexOptions.Compiled);
+
+    // The tags GetFormattedText turns into HTML, without their backslash: "i1"/"i0"/"i",
+    // "b1"/"b0"/"b", "u1"/"u0"/"u", "fnArial", "fs40", "c&H0000FF&" and "1c&H0000FF&" - and
+    // their bare reset forms. "fscx"/"fsp" and "clip" are not "fs"/"c".
+    private static readonly Regex FormattingTagRegex = new(
+        @"^(?:[ibu][01]?|fn.*|fs(?:\d.*)?|1?c(?:&.*)?)$",
+        RegexOptions.Compiled);
+
+    // "p1".."p9" starts drawing mode, "p0" ends it - not "pos(..)" or "pbo".
+    private static readonly Regex DrawingTagRegex = new(@"^p(\d+)$", RegexOptions.Compiled);
 
     /// <summary>
     /// Returns the alignment from a leading "{\anX}" tag - also inside a multi tag block
@@ -86,8 +118,13 @@ public static class ExportTextTags
     /// Converts the text to what <see cref="ImageRenderer"/> can draw: alignment tags are
     /// removed (already read by <see cref="GetAlignment"/>), ASSA italic/bold/color/font tags
     /// become their HTML equivalents, and anything left over is dropped rather than drawn.
+    /// <para>
+    /// "{\r}" resets to how the line started. With the file's <paramref name="styles"/> and
+    /// the line's <paramref name="styleName"/>, "{\rSign}" also switches to the font, size,
+    /// colour, italic, underline and strikeout of the "Sign" style.
+    /// </para>
     /// </summary>
-    public static string ToRenderableText(string? text)
+    public static string ToRenderableText(string? text, ExportAssaStyles? styles = null, string? styleName = null)
     {
         if (string.IsNullOrEmpty(text))
         {
@@ -102,12 +139,13 @@ public static class ExportTextTags
         // last "{\" away.
         if (text.Contains("{\\", StringComparison.Ordinal))
         {
-            // The position, fade and transparency tags have already been read off the text
-            // (GetAlignment, ApplyPositionTag, ApplyTransparencyTags) - but left in, any one
+            // The position, fade, transparency and outline/shadow tags have already been read
+            // off the text (GetAlignment, ApplyPositionTag, ApplyTransparencyTags,
+            // ApplyStyleOverrideTags), and the renderer cannot draw the rest. Left in, any one
             // of them makes GetFormattedText declare the whole line "too complex" and return
-            // every tag untranslated, so "{\i1\pos(10,20)}Hi" kept its position and lost its
-            // italic. Strip what has been consumed; the rest of the line can still convert.
-            s = RemoveConsumedTags(s);
+            // every tag untranslated, so "{\i1\blur2}Hi" lost its italic. Keep only the tags
+            // GetFormattedText turns into HTML.
+            s = KeepFormattingTagsOnly(s, styles, styleName);
 
             // "{\i1}" -> "<i>", "{\b1}" -> "<b>", "{\c&H0000FF&}" -> "<font color=\"#ff0000\">", ...
             s = AdvancedSubStationAlpha.GetFormattedText(s);
@@ -121,8 +159,7 @@ public static class ExportTextTags
             s = s.Replace("{}", string.Empty);
         }
 
-        // The renderer has no underline, so "<u>" would be drawn as literal text.
-        return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagUnderline);
+        return s;
     }
 
     /// <summary>
@@ -201,7 +238,9 @@ public static class ExportTextTags
     /// Reads the per line outline/shadow overrides off the text and puts them on the
     /// parameter: the colours of "{\3c&amp;H..&amp;}" (outline) and "{\4c&amp;H..&amp;}"
     /// (shadow), and the widths of "{\bord..}" and "{\shad..}" - "{\bord0}" in particular is
-    /// how ASSA subtitles turn the outline off for one line.
+    /// how ASSA subtitles turn the outline off for one line - and the letter spacing of
+    /// "{\fsp..}", the edge softness of "{\blur..}"/"{\be..}" and the glyph scale of
+    /// "{\fscx..}"/"{\fscy..}" and the rotation of "{\frz..}".
     /// <para>
     /// Call before <see cref="ApplyTransparencyTags"/>: "\3a"/"\4a" fade whatever colours are
     /// on the parameter, so the "\3c"/"\4c" colours have to be there first. The widths are in
@@ -258,6 +297,55 @@ public static class ExportTextTags
             {
                 ip.ShadowWidth = width;
             }
+        }
+
+        // "{\fsp..}" - the last one wins, like the other overrides.
+        foreach (Match match in LetterSpacingTagRegex.Matches(text))
+        {
+            ip.TagLetterSpacing = (float)(double.Parse(match.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture) * scale);
+        }
+
+        // "{\fscx..}"/"{\fscy..}" are percentages - nothing to scale to the canvas.
+        foreach (Match match in ScaleTagRegex.Matches(text))
+        {
+            var percent = float.Parse(match.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture);
+            if (match.Groups[1].Value == "x")
+            {
+                ip.TagScaleX = percent;
+            }
+            else
+            {
+                ip.TagScaleY = percent;
+            }
+        }
+
+        foreach (Match match in RotationTagRegex.Matches(text))
+        {
+            ip.TagRotation = float.Parse(match.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture);
+        }
+
+        // libass applies "\be" and "\blur" one after the other, the last of each kind winning.
+        // "\be" passes are a [1 2 1] box blur each, a variance of 1/2 per pass, so both become
+        // one gaussian sigma: sqrt(blur^2 + passes / 2).
+        double? blur = null;
+        double? passes = null;
+        foreach (Match match in BlurTagRegex.Matches(text))
+        {
+            var value = double.Parse(match.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture);
+            if (match.Groups[1].Value == "blur")
+            {
+                blur = value;
+            }
+            else
+            {
+                passes = Math.Round(value);
+            }
+        }
+
+        if (blur != null || passes != null)
+        {
+            var b = blur ?? 0;
+            ip.TagBlur = (float)(Math.Sqrt(b * b + (passes ?? 0) / 2.0) * scale);
         }
     }
 
@@ -342,31 +430,175 @@ public static class ExportTextTags
     }
 
     /// <summary>
-    /// Removes the tags this class consumes itself - "\pos(x,y)", "\fad(..)"/"\fade(..)",
-    /// the "\alpha"/"\1a"/"\3a"/"\4a" transparencies and the "\3c"/"\4c"/"\bord"/"\shad"
-    /// overrides - matching exactly what <see cref="TryGetPosition"/>,
-    /// <see cref="ExportFade.Parse"/>, <see cref="ApplyTransparencyTags"/> and
-    /// <see cref="ApplyStyleOverrideTags"/> read, so a tag those did not understand still
-    /// makes the line "too complex" instead of being dropped along with its effect.
+    /// Removes every override tag except the ones <see cref="AdvancedSubStationAlpha.GetFormattedText"/>
+    /// translates - "\i", "\b", "\u", "\fn", "\fs", "\c" and "\1c" - so a tag the renderer
+    /// cannot draw ("\blur", "\k", "\move", "\t(..)", ...) no longer costs the line its
+    /// formatting. Blocks without a backslash are comments, not tags, and are left alone.
     /// </summary>
-    private static string RemoveConsumedTags(string text)
+    private static string KeepFormattingTagsOnly(string text, ExportAssaStyles? styles, string? styleName)
     {
-        var s = PositionTagRegex.Replace(text, string.Empty);
-        s = ExportFade.RemoveTags(s);
-        s = AlphaTagRegex.Replace(s, string.Empty);
-
-        // The outline/shadow overrides are only consumed outside "\t(..)" blocks (see
-        // ApplyStyleOverrideTags) - with a "\t" on the line nothing is consumed, and the "\t"
-        // makes the line too complex regardless.
-        if (!text.Contains("\\t(", StringComparison.Ordinal))
+        var sb = new StringBuilder(text.Length);
+        var pos = 0;
+        var isDrawing = false;
+        while (pos < text.Length)
         {
-            s = OutlineShadowColorTagRegex.Replace(s, string.Empty);
-            s = OutlineShadowWidthTagRegex.Replace(s, string.Empty);
+            var start = text.IndexOf("{\\", pos, StringComparison.Ordinal);
+            var end = start < 0 ? -1 : text.IndexOf('}', start);
+            if (end < 0)
+            {
+                if (!isDrawing)
+                {
+                    sb.Append(text, pos, text.Length - pos);
+                }
+
+                break;
+            }
+
+            // Between "{\p1}" and "{\p0}" the text is drawing commands ("m 0 0 l 100 0"),
+            // which drawn as letters are worse than not drawn at all.
+            if (!isDrawing)
+            {
+                sb.Append(text, pos, start - pos);
+            }
+
+            var kept = new StringBuilder();
+            var strikeout = string.Empty;
+
+            // A reset undoes the tags before it in the block, not the ones after it, so what
+            // has been kept so far goes out first.
+            void Flush()
+            {
+                if (kept.Length > 0)
+                {
+                    sb.Append('{').Append(kept).Append('}');
+                    kept.Clear();
+                }
+
+                sb.Append(strikeout);
+                strikeout = string.Empty;
+            }
+
+            foreach (var tag in SplitOverrideTags(text.Substring(start + 1, end - start - 1)))
+            {
+                if (FormattingTagRegex.IsMatch(tag))
+                {
+                    kept.Append('\\').Append(tag);
+                }
+                else if (tag is "s1" or "s0" or "s")
+                {
+                    // GetFormattedText has no strikeout (it calls "\s" too complex), so it
+                    // becomes HTML here; the last one in the block wins.
+                    strikeout = tag == "s1" ? "<s>" : "</s>";
+                }
+                else if (tag.StartsWith('r'))
+                {
+                    Flush();
+                    sb.Append(GetResetHtml(tag.Substring(1).Trim(), styles, styleName));
+                }
+                else if (DrawingTagRegex.Match(tag) is { Success: true } drawing)
+                {
+                    isDrawing = drawing.Groups[1].Value != "0";
+                }
+            }
+
+            Flush();
+
+            pos = end + 1;
         }
 
-        // "{\pos(10,20)}Hello" is "{}Hello" now - GetFormattedText has no reason to see the
-        // leftover block.
-        return s.Replace("{}", string.Empty);
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// "{\r}" as the renderer's "&lt;r&gt;" - back to how the line started. "{\rSign}" then
+    /// switches to what the "Sign" style draws differently from the line's own style: font,
+    /// size and colour, italic, underline and strikeout, and bold (which a reset cannot take
+    /// off again, the line's bold being on the whole image). Without the file's styles, or for
+    /// a style the file does not have, it is a plain reset - libass does the same.
+    /// </summary>
+    private static string GetResetHtml(string targetStyleName, ExportAssaStyles? styles, string? styleName)
+    {
+        if (styles == null || targetStyleName.Length == 0 || !styles.HasStyle(targetStyleName))
+        {
+            return "<r>";
+        }
+
+        var target = styles.GetStyle(targetStyleName);
+        var line = styles.GetStyle(styleName);
+        if (ReferenceEquals(target, line))
+        {
+            return "<r>";
+        }
+
+        var color = target.Primary;
+        var sb = new StringBuilder("<r>");
+
+        // Italic goes first, right after the reset: the renderer's "</i>" pops the last opened
+        // tag, so after the "<font>" it took the target style's font and colour off again and
+        // left the text italic.
+        if (target.Italic != line.Italic)
+        {
+            sb.Append(target.Italic ? "<i>" : "</i>");
+        }
+
+        sb.Append(CultureInfo.InvariantCulture,
+            $"<font face=\"{target.FontName}\" size=\"{target.FontSize}\" color=\"#{color.Red:x2}{color.Green:x2}{color.Blue:x2}\">");
+        if (target.Bold && !line.Bold)
+        {
+            sb.Append("<b>");
+        }
+
+        if (target.Underline != line.Underline)
+        {
+            sb.Append(target.Underline ? "<u>" : "</u>");
+        }
+
+        if (target.Strikeout != line.Strikeout)
+        {
+            sb.Append(target.Strikeout ? "<s>" : "</s>");
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// The tags of one override block, without their backslash. A backslash inside
+    /// parentheses belongs to the tag around it - "\t(0,200,\i1)" is one tag, not two.
+    /// Anything in front of the first backslash is not a tag and is skipped.
+    /// </summary>
+    private static List<string> SplitOverrideTags(string block)
+    {
+        var tags = new List<string>();
+        var depth = 0;
+        var tagStart = -1;
+        for (var i = 0; i < block.Length; i++)
+        {
+            var c = block[i];
+            if (c == '(')
+            {
+                depth++;
+            }
+            else if (c == ')')
+            {
+                depth = Math.Max(0, depth - 1);
+            }
+            else if (c == '\\' && depth == 0)
+            {
+                if (tagStart >= 0)
+                {
+                    tags.Add(block.Substring(tagStart, i - tagStart));
+                }
+
+                tagStart = i + 1;
+            }
+        }
+
+        if (tagStart >= 0)
+        {
+            tags.Add(block.Substring(tagStart));
+        }
+
+        return tags;
     }
 
     private static SKColor Fade(SKColor color, int opacity)
@@ -397,7 +629,7 @@ public static class ExportTextTags
         return (0, 0);
     }
 
-    private static ExportAlignment FromDigit(char digit, ExportAlignment fallback)
+    internal static ExportAlignment FromDigit(char digit, ExportAlignment fallback)
     {
         return digit switch
         {

@@ -1,4 +1,4 @@
-﻿Whisper CPP 1.9.1
+﻿Whisper CPP 1.9.5
 
 If you get an error, try running with "-nfa" to disable flash attention, which is not compatible with all GPUs.
 Use "-dev N" to pick the GPU device when more than one is present.
