@@ -13,6 +13,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
@@ -515,8 +516,16 @@ public class SettingsPage : UserControl
                     new Binding(nameof(_vm.SelectedTargetEncoding)) { Mode = BindingMode.TwoWay },
             })
             {
-                // Search text only - users look for "auto-convert" and the BOM names (#15945).
-                EnglishLabel = "Auto-convert encoding to UTF-8 with or without BOM on open",
+                // Search text only (#15945). EnglishLabel replaces the automatic English lookup, so
+                // it has to carry everything this row is known by: the label the docs use, both
+                // variant names, and the wording from before the row was renamed - otherwise a
+                // translated UI cannot find the row by its documented name.
+                EnglishLabel = string.Join(
+                    " ",
+                    EnglishLabelLookup.English.Options.Settings.TargetEncodingOnOpen,
+                    TextEncoding.Utf8WithBom,
+                    TextEncoding.Utf8WithoutBom,
+                    "Auto-convert encoding to UTF-8 with or without BOM on open"),
             },
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
             new SettingsItem(Se.Language.Options.Settings.FileChangedOutsideAction, () => new ComboBox
