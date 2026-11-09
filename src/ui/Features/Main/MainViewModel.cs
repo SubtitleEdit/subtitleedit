@@ -27129,9 +27129,15 @@ public partial class MainViewModel :
                 SelectedEncoding = otherEncoding ?? Encodings.First(p => p.DisplayName == TextEncoding.Utf8WithBom);
             }
 
-            if (Se.Settings.General.AutoConvertToUtf8 && !SelectedEncoding.DisplayName.StartsWith("utf-8", StringComparison.OrdinalIgnoreCase))
+            // (#9382) No "not UTF-8 yet" guard: the option normalises every opened file, including
+            // one that already is UTF-8 but carries the other BOM variant - that file used to be
+            // left exactly as it was, which is what made the option look broken.
+            if (Se.Settings.General.AutoConvertToUtf8)
             {
-                SelectedEncoding = Encodings.FirstOrDefault(p => p.DisplayName.StartsWith("utf-8", StringComparison.OrdinalIgnoreCase)) ?? SelectedEncoding;
+                var utf8Variant = Se.Settings.General.AutoConvertToUtf8WithoutBom
+                    ? TextEncoding.Utf8WithoutBom
+                    : TextEncoding.Utf8WithBom;
+                SelectedEncoding = Encodings.First(p => p.DisplayName == utf8Variant);
             }
 
             _subtitleFileName = fileName;

@@ -13,6 +13,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
@@ -500,7 +501,32 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowRecentFiles, nameof(_vm.ShowRecentFiles)),
             MakeCheckboxSetting(Se.Language.Options.Settings.OpenLastFileOnStart, nameof(_vm.OpenLastFileOnStart),
                 new Binding(nameof(_vm.ShowRecentFiles)) { Source = _vm }),
-            MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
+            // (#9382) One row, three values: leave the save encoding alone, or preset it to one of
+            // the two UTF-8 variants. A switch plus a second control would be the only mixed row in
+            // the window - every other row is either a switch with a button or a named value, and so
+            // the label has to read as one or the other. "auto-selected" names the action outright:
+            // the past participle of "set" is spelled like the imperative, so "encoding set on open"
+            // also parses as an instruction.
+            new SettingsItem(Se.Language.Options.Settings.TargetEncodingOnOpen, () => new ComboBox
+            {
+                MinWidth = 170,
+                DataContext = _vm,
+                [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.TargetEncodingOptions)),
+                [!SelectingItemsControl.SelectedItemProperty] =
+                    new Binding(nameof(_vm.SelectedTargetEncoding)) { Mode = BindingMode.TwoWay },
+            })
+            {
+                // Search text only (#15945). EnglishLabel replaces the automatic English lookup, so
+                // it has to carry everything this row is known by: the label the docs use, both
+                // variant names, and the wording from before the row was renamed - otherwise a
+                // translated UI cannot find the row by its documented name.
+                EnglishLabel = string.Join(
+                    " ",
+                    EnglishLabelLookup.English.Options.Settings.TargetEncodingOnOpen,
+                    TextEncoding.Utf8WithBom,
+                    TextEncoding.Utf8WithoutBom,
+                    "Auto-convert encoding to UTF-8 with or without BOM on open"),
+            },
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
             new SettingsItem(Se.Language.Options.Settings.FileChangedOutsideAction, () => new ComboBox
             {
