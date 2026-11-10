@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using SeConv.Core;
 using SeConv.Helpers;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 namespace SeConv.Commands;
 
@@ -635,9 +636,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             // The batch/context options only mean something to the advanced engines; the rest
             // translate line by line (or merged) with no history, synopsis or glossary. Fail
-            // instead of silently ignoring them, and build the settings (the synopsis and
-            // glossary may be files, the prompt must not be a completion template) up front so
-            // a typo never costs a conversion.
+            // instead of silently ignoring them. The settings themselves are built once the
+            // --settings file is loaded (below), so its values are validated the same way.
             if ((settings.TranslateBatchSize.HasValue || settings.TranslateHistory.HasValue ||
                  !string.IsNullOrWhiteSpace(settings.TranslateSynopsis) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateGlossary) ||
@@ -648,21 +648,6 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     settings,
                     $"{AutoTranslateRunner.AdvancedOptionNames} require an advanced translate engine: " +
                     $"--translate-engine:{string.Join(" | ", AutoTranslateRunner.AdvancedEngines)}.");
-            }
-
-            if (AutoTranslateRunner.IsAdvancedEngine(settings.TranslateEngine))
-            {
-                try
-                {
-                    AutoTranslateRunner.CreateAdvancedSettings(
-                        settings.TranslateBatchSize, settings.TranslateHistory, settings.TranslateSynopsis,
-                        settings.TranslateGlossary, settings.TranslateFormality,
-                        AutoTranslateRunner.ReadPromptOption(settings.TranslatePrompt));
-                }
-                catch (Exception ex)
-                {
-                    return Fail(settings, ex.Message);
-                }
             }
 
             // Fail fast on a typo in --encoding so we don't silently substitute UTF-8 and
@@ -692,6 +677,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             // Load --settings:path.json overrides into libse Configuration before any conversion.
             // --profile <name> selects a named overlay from the same file.
             var imageStyle = new ImageExportStyle();
+            var advancedSettings = new SeLlamaCppAdvanced(); // the dialog's defaults, overlaid by tools.llamaCppAdvanced
             var settingsWarnings = new List<string>();
             if (!string.IsNullOrWhiteSpace(settings.SettingsPath))
             {
@@ -700,6 +686,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     var seConvSettings = SeConvSettings.Load(settings.SettingsPath);
                     seConvSettings.ApplyToLibSe(settings.Profile);
                     seConvSettings.ApplyExportImages(imageStyle, settings.Profile);
+                    seConvSettings.ApplyLlamaCppAdvanced(advancedSettings, settings.Profile);
 
                     // Unknown keys are ignored by the JSON reader, which used to mean a typo - or a
                     // key from a newer seconv - silently produced default output (issue #12437).
@@ -729,6 +716,25 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             else if (!string.IsNullOrWhiteSpace(settings.Profile))
             {
                 return Fail(settings, "--profile requires --settings:<path.json>");
+            }
+
+            // Build the advanced engine's settings up front - the command-line options on top of
+            // the file's tools.llamaCppAdvanced section - so a bad value from either source (the
+            // synopsis and glossary may be files, the prompt must not be a completion template)
+            // never costs a conversion.
+            if (AutoTranslateRunner.IsAdvancedEngine(settings.TranslateEngine))
+            {
+                try
+                {
+                    AutoTranslateRunner.CreateAdvancedSettings(
+                        settings.TranslateBatchSize, settings.TranslateHistory, settings.TranslateSynopsis,
+                        settings.TranslateGlossary, settings.TranslateFormality,
+                        AutoTranslateRunner.ReadPromptOption(settings.TranslatePrompt), advancedSettings);
+                }
+                catch (Exception ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
             }
 
             // Image styling flags override the settings JSON. Unlike the JSON (which only warns
@@ -1037,6 +1043,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 TranslateSynopsis = settings.TranslateSynopsis,
                 TranslateGlossary = settings.TranslateGlossary,
                 TranslateFormality = settings.TranslateFormality,
+                TranslateAdvancedSettings = advancedSettings,
                 TeletextOnly = settings.TeletextOnly,
                 TeletextOnlyPage = settings.TeletextOnlyPage,
                 Quiet = silent,

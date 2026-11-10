@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 using Spectre.Console;
 
 namespace SeConv.Core;
@@ -1563,6 +1564,13 @@ internal record class ConversionOptions
 
     /// <summary>Advanced engines: default | formal | informal (see <see cref="AutoTranslateRunner.FormalityValues"/>).</summary>
     public string? TranslateFormality { get; init; }
+
+    /// <summary>
+    /// Advanced engines: the <c>tools.llamaCppAdvanced</c> section of a <c>--settings</c> file
+    /// (what the GUI's "Advanced..." dialog edits), the base the five options above and the
+    /// prompt are applied onto. Null = the dialog's defaults.
+    /// </summary>
+    public SeLlamaCppAdvanced? TranslateAdvancedSettings { get; init; }
 
     public bool TeletextOnly { get; init; }
     public bool SkipTeletext { get; init; }

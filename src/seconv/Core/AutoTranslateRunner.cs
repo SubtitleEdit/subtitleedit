@@ -144,7 +144,7 @@ internal sealed class AutoTranslateRunner
         }
 
         var advancedSettings = AdvancedEngines.Contains(engine)
-            ? CreateAdvancedSettings(options.TranslateBatchSize, options.TranslateHistory, options.TranslateSynopsis, options.TranslateGlossary, options.TranslateFormality, prompt)
+            ? CreateAdvancedSettings(options.TranslateBatchSize, options.TranslateHistory, options.TranslateSynopsis, options.TranslateGlossary, options.TranslateFormality, prompt, options.TranslateAdvancedSettings)
             : null;
         if (advancedSettings == null && HasAdvancedOptions(options))
         {
@@ -342,56 +342,74 @@ internal sealed class AutoTranslateRunner
     }
 
     /// <summary>
-    /// The batch/context settings of an advanced engine from the command line: what the GUI's
-    /// "Advanced..." dialog edits, with the dialog's defaults (10 lines per batch, 12 history
-    /// pairs, no synopsis/glossary, default formality) for everything not given. The synopsis
-    /// and glossary are read like <c>--translate-prompt</c> (inline text or a file). Throws
+    /// The batch/context settings of an advanced engine: what the GUI's "Advanced..." dialog
+    /// edits. The command-line options are applied onto <paramref name="baseSettings"/>, the
+    /// <c>tools.llamaCppAdvanced</c> section of a <c>--settings</c> file (null = the dialog's
+    /// defaults: 10 lines per batch, 12 history pairs, no synopsis/glossary, default formality),
+    /// so an option given wins over the file and the file over the defaults. The synopsis and
+    /// glossary are read like <c>--translate-prompt</c> (inline text or a file). The merged result
+    /// is validated once, so a bad value from either source throws
     /// <see cref="InvalidOperationException"/> with an actionable message.
     /// </summary>
-    internal static SeLlamaCppAdvanced CreateAdvancedSettings(int? batchSize, int? history, string? synopsis, string? glossary, string? formality, string? prompt)
+    internal static SeLlamaCppAdvanced CreateAdvancedSettings(int? batchSize, int? history, string? synopsis, string? glossary, string? formality, string? prompt, SeLlamaCppAdvanced? baseSettings = null)
     {
-        var settings = new SeLlamaCppAdvanced();
+        var settings = baseSettings ?? new SeLlamaCppAdvanced();
         if (prompt != null)
         {
-            // The protocol sends the lines as JSON in the user message and the prompt is the
-            // system prompt, so a completion template with the text at {2} has nowhere to put it.
-            if (prompt.Contains("{2}"))
-            {
-                throw new InvalidOperationException(
-                    "--translate-prompt is the system prompt for an advanced engine ({0}=source language, {1}=target language) and cannot contain {2}; " +
-                    "use --translate-engine:llamacpp for completion-format models.");
-            }
-
             settings.Prompt = prompt;
         }
 
         if (batchSize.HasValue)
         {
-            if (batchSize < 1 || batchSize > 50)
-            {
-                throw new InvalidOperationException($"--translate-batch-size must be between 1 and 50 (got {batchSize}).");
-            }
-
             settings.BatchSize = batchSize.Value;
         }
 
         if (history.HasValue)
         {
-            if (history < 0 || history > 50)
-            {
-                throw new InvalidOperationException($"--translate-history must be between 0 and 50 (got {history}).");
-            }
-
             settings.HistoryPairs = history.Value;
         }
 
-        settings.Synopsis = ReadPromptOption(synopsis, "--translate-synopsis", string.Empty) ?? string.Empty;
-        settings.Glossary = ReadPromptOption(glossary, "--translate-glossary", string.Empty) ?? string.Empty;
-        settings.Formality = ParseFormality(formality);
+        var synopsisText = ReadPromptOption(synopsis, "--translate-synopsis", string.Empty);
+        if (synopsisText != null)
+        {
+            settings.Synopsis = synopsisText;
+        }
+
+        var glossaryText = ReadPromptOption(glossary, "--translate-glossary", string.Empty);
+        if (glossaryText != null)
+        {
+            settings.Glossary = glossaryText;
+        }
+
+        if (!string.IsNullOrWhiteSpace(formality))
+        {
+            settings.Formality = ParseFormality(formality);
+        }
+
+        // The protocol sends the lines as JSON in the user message and the prompt is the system
+        // prompt, so a completion template with the text at {2} has nowhere to put it.
+        if (settings.Prompt.Contains("{2}"))
+        {
+            throw new InvalidOperationException(
+                "--translate-prompt (or tools.llamaCppAdvanced.prompt in --settings) is the system prompt for an advanced engine ({0}=source language, {1}=target language) and cannot contain {2}; " +
+                "use --translate-engine:llamacpp for completion-format models.");
+        }
+
+        if (settings.BatchSize is < 1 or > 50)
+        {
+            throw new InvalidOperationException($"--translate-batch-size (or tools.llamaCppAdvanced.batchSize in --settings) must be between 1 and 50 (got {settings.BatchSize}).");
+        }
+
+        if (settings.HistoryPairs is < 0 or > 50)
+        {
+            throw new InvalidOperationException($"--translate-history (or tools.llamaCppAdvanced.historyPairs in --settings) must be between 0 and 50 (got {settings.HistoryPairs}).");
+        }
+
         return settings;
     }
 
-    internal static string ParseFormality(string? value)
+    /// <summary>Maps a formality value (case-insensitive) to the engine's constant; <paramref name="optionName"/> names the source in the error.</summary>
+    internal static string ParseFormality(string? value, string optionName = "--translate-formality")
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -403,7 +421,7 @@ internal sealed class AutoTranslateRunner
             "default" => SeLlamaCppAdvanced.FormalityDefault,
             "formal" => SeLlamaCppAdvanced.FormalityFormal,
             "informal" => SeLlamaCppAdvanced.FormalityInformal,
-            _ => throw new InvalidOperationException($"--translate-formality '{value}' is not valid. Use one of: {string.Join(", ", FormalityValues)}."),
+            _ => throw new InvalidOperationException($"{optionName} '{value}' is not valid. Use one of: {string.Join(", ", FormalityValues)}."),
         };
     }
 
