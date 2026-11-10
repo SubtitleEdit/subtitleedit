@@ -2730,7 +2730,7 @@
   },
   "video": {
     "burnIn": {
-      "title": "Gerar vídeo com legendas fixas",
+      "title": "Gerar vídeo com legendas gravadas",
       "targetFileSize": "Tamanho do ficheiro de destino (requer codificação de 2 passagens)",
       "fileSizeMb": "Tamanho do ficheiro em MB",
       "matchSourceVideoSize": "Corresponder ao tamanho do vídeo original",
@@ -4276,7 +4276,7 @@
       "speechToText": "Fala para texto (Whisper)",
       "textToSpeech": "Texto para voz",
       "videoOcr": "OCR de legenda gravada",
-      "burnIn": "Gerar vídeo com legendas fixas",
+      "burnIn": "Gerar vídeo com legendas gravadas",
       "generateTransparent": "Gerar vídeo transparente com legendas",
       "undockVideoControls": "Separar controlos de vídeo",
       "redockVideoControls": "Unir controlos de vídeo",
