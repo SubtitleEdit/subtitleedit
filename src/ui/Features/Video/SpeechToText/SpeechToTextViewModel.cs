@@ -637,6 +637,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         newOptions.Add(ForcedAlignerOption.CanaryCtc());
         newOptions.Add(ForcedAlignerOption.Qwen3());
+        newOptions.Add(ForcedAlignerOption.Qwen3Ultra());
         // wav2vec2 "WhisperX aligner zoo" — 12 language-specific CTC aligners
         // that work on top of any Crisp ASR backend via `-am <path>`.
         newOptions.AddRange(ForcedAlignerOption.Wav2Vec2All());

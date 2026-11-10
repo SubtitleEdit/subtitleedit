@@ -9,6 +9,7 @@ public class ForcedAlignerOption
     public const string BuiltInChoice = "built-in";
     public const string CanaryCtcChoice = "canary-ctc";
     public const string Qwen3Choice = "qwen3-forced";
+    public const string Qwen3UltraChoice = "qwen3-forced-ultra";
 
     // wav2vec2 forced aligner choices. The choice string mirrors CrispASR's
     // `-am wav2vec2-aligner-<code>` alias so the persisted setting is self-
@@ -77,6 +78,20 @@ public class ForcedAlignerOption
             "qwen3-forced-aligner-0.6b-q8_0.gguf",
             "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf",
             "986 MB");
+
+    /// <summary>
+    /// Qwen3-ForcedAligner-Ultra (17slever17, Apache-2.0): the 0.6B aligner fine-tuned on
+    /// hand-corrected word boundaries. Same architecture and 5000-class timestamp head, so
+    /// CrispASR runs it through its Qwen3 aligner path; the file name must keep
+    /// "forced-aligner" for CrispASR to pick that path. Only an F16 conversion exists, and it
+    /// leaves out the optional local boundary-refinement head.
+    /// </summary>
+    public static ForcedAlignerOption Qwen3Ultra() =>
+        new("Qwen3 forced aligner Ultra",
+            Qwen3UltraChoice,
+            "qwen3-forced-aligner-ultra-f16.gguf",
+            "https://huggingface.co/cstr/qwen3-forced-aligner-ultra-GGUF/resolve/main/qwen3-forced-aligner-ultra-f16.gguf",
+            "1.84 GB");
 
     /// <summary>
     /// 12 language-specific wav2vec2 CTC forced aligners shipped by CrispASR
@@ -199,6 +214,7 @@ public class ForcedAlignerOption
             BuiltIn(),
             CanaryCtc(),
             Qwen3(),
+            Qwen3Ultra(),
         };
         list.AddRange(Wav2Vec2All());
         return list;
@@ -220,6 +236,7 @@ public class ForcedAlignerOption
         {
             CanaryCtcChoice => CanaryCtc(),
             Qwen3Choice => Qwen3(),
+            Qwen3UltraChoice => Qwen3Ultra(),
             _ => BuiltIn(),
         };
     }
