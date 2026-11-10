@@ -9,6 +9,11 @@ public class SeAppearance
     // Keep this nullable: System.Text.Json runs this constructor for legacy files, so a non-null default
     // would make an absent migration marker indistinguishable from a completed migration.
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    // #E6E6E6: the earlier #F5F5F5 was too faint to notice on white (#16779).
+    internal static readonly Color OldDefaultGridAlternatingRowColor = new(255, 245, 245, 245);
+    internal static readonly Color DefaultGridAlternatingRowColor = new(255, 230, 230, 230);
+    internal const int CurrentGridAlternatingRowColorMigrationVersion = 1;
+
     public int? MacOsFontMigrationVersion { get; set; }
     public string Theme { get; set; }
     public string IconTheme { get; set; }
@@ -64,6 +69,7 @@ public class SeAppearance
     public string WindowsRenderingMode { get; set; }
     public bool GridAlternatingRows { get; set; }
     public string GridAlternatingRowColor { get; set; }
+    public int? GridAlternatingRowColorMigrationVersion { get; set; }
     public string GridAlternatingRowColorDark { get; set; }
     public bool ShowHorizontalLineAboveToolbar { get; set; }
 
@@ -150,7 +156,7 @@ public class SeAppearance
         GridLinesAppearance = SeGridLinesVisibility.None.ToString();
         WindowsRenderingMode = nameof(WindowsRenderingModeType.Default);
         GridAlternatingRows = true;
-        GridAlternatingRowColor = new Color(255, 245, 245, 245).FromColorToHex();
+        GridAlternatingRowColor = DefaultGridAlternatingRowColor.FromColorToHex();
         GridAlternatingRowColorDark = new Color(255, 45, 45, 45).FromColorToHex();
         DarkModeBackgroundColor = new Color(255, 33, 33, 33).FromColorToHex();
         DarkModeForegroundColor = new Color(255, 220, 220, 220).FromColorToHex();
