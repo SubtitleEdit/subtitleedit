@@ -137,7 +137,8 @@ public class EditBoxActorTests : IDisposable
         Settle(window);
 
         Assert.True(box.IsDropDownOpen);
-        Assert.Equal(new[] { "John", "Mary" }, box.Items.Cast<string>());
+        // Every actor in the file, then "New..." for the new-actor prompt.
+        Assert.Equal(new[] { "John", "Mary", Se.Language.General.NewDotDotDot }, box.Items.Select(item => item?.ToString()));
     }
 
     [AvaloniaFact]

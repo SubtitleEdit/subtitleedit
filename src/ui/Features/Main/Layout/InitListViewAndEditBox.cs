@@ -14,6 +14,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
@@ -2591,7 +2592,9 @@ public static partial class InitListViewAndEditBox
         }
 
         // Replaced in place, never re-assigned: a new ItemsSource would reset the typed text.
-        var actors = new ObservableCollection<string>();
+        // The last item is "New..." (its own type, so an actor called "New..." stays an actor).
+        var newActorItem = new EditBoxNewActorItem();
+        var actors = new ObservableCollection<object> { newActorItem };
         box.ItemsSource = actors;
 
         var syncing = false;
@@ -2609,7 +2612,7 @@ public static partial class InitListViewAndEditBox
         void RefreshActors()
         {
             var current = vm.GetActorsInSubtitle();
-            if (current.SequenceEqual(actors))
+            if (current.SequenceEqual(actors.OfType<string>()))
             {
                 return;
             }
@@ -2621,6 +2624,8 @@ public static partial class InitListViewAndEditBox
             {
                 actors.Add(actor);
             }
+
+            actors.Add(newActorItem);
 
             box.Text = text;
             syncing = false;
@@ -2739,7 +2744,7 @@ public static partial class InitListViewAndEditBox
                     return;
                 }
 
-                var match = actors.FirstOrDefault(actor =>
+                var match = actors.OfType<string>().FirstOrDefault(actor =>
                     actor.Length > typed.Length && actor.StartsWith(typed, StringComparison.CurrentCultureIgnoreCase));
                 if (match == null)
                 {
@@ -2781,6 +2786,24 @@ public static partial class InitListViewAndEditBox
                 e.Handled = true;
             }
         }, RoutingStrategies.Bubble, handledEventsToo: true);
+
+        // "New..." asks for a name in the same prompt as the grid's Actors > New... menu item.
+        box.SelectionChanged += (_, _) =>
+        {
+            if (box.SelectedItem != newActorItem)
+            {
+                return;
+            }
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                box.IsDropDownOpen = false;
+                box.SelectedItem = null;
+                targets = null;
+                ShowCurrentActor();
+                vm.SetNewActorForSelectedLinesCommand.Execute(null);
+            });
+        };
 
         box.DropDownClosed += (_, _) =>
         {
@@ -3009,4 +3032,10 @@ public static partial class InitListViewAndEditBox
             RoutingStrategies.Tunnel);
     }
 
+}
+
+/// <summary>The "New..." entry at the end of the edit panel's Actor drop-down (#16797).</summary>
+internal sealed class EditBoxNewActorItem
+{
+    public override string ToString() => Se.Language.General.NewDotDotDot;
 }
