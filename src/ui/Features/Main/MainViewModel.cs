@@ -6804,7 +6804,7 @@ public partial class MainViewModel :
     {
         var vp = GetVideoPlayerControl();
         var audioPeaks = AudioPeaks;
-        if (Window == null || audioPeaks == null || vp == null)
+        if (Window == null || audioPeaks == null || vp == null || AudioVisualizer == null)
         {
             return;
         }
@@ -6837,7 +6837,7 @@ public partial class MainViewModel :
     private void SeekSilenceBack()
     {
         var vp = GetVideoPlayerControl();
-        if (AudioPeaks == null || vp == null)
+        if (AudioPeaks == null || vp == null || AudioVisualizer == null)
         {
             return;
         }
@@ -6854,7 +6854,7 @@ public partial class MainViewModel :
     private void SeekSilenceForward()
     {
         var vp = GetVideoPlayerControl();
-        if (AudioPeaks == null || vp == null)
+        if (AudioPeaks == null || vp == null || AudioVisualizer == null)
         {
             return;
         }
@@ -6923,7 +6923,7 @@ public partial class MainViewModel :
             return Se.Language.Main.Waveform.GuessStartTimeCodesLocked;
         }
 
-        if (AudioPeaks == null)
+        if (AudioPeaks == null || AudioVisualizer == null)
         {
             return Se.Language.Main.Waveform.GuessStartNoWaveform;
         }
@@ -7102,7 +7102,7 @@ public partial class MainViewModel :
             return Se.Language.Main.Waveform.GuessEndTimeCodesLocked;
         }
 
-        if (AudioPeaks == null)
+        if (AudioPeaks == null || AudioVisualizer == null)
         {
             return Se.Language.Main.Waveform.GuessEndNoWaveform;
         }
@@ -7639,7 +7639,7 @@ public partial class MainViewModel :
     private async Task ShowWaveformGuessTimeCodes()
     {
         var vp = GetVideoPlayerControl();
-        if (Window == null || AudioPeaks == null || vp == null)
+        if (Window == null || AudioPeaks == null || vp == null || AudioVisualizer == null)
         {
             return;
         }

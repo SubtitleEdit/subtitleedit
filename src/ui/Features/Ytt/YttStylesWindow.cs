@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Features.Ytt;
 public class YttStylesWindow : Window
 {
     private const string Pen = nameof(YttStylesViewModel.SelectedPen) + ".";
-    private const string Position = nameof(YttStylesViewModel.SelectedPosition) + ".";
+    private const string PositionPath = nameof(YttStylesViewModel.SelectedPosition) + ".";
     private const string WindowStyle = nameof(YttStylesViewModel.SelectedWindowStyle) + ".";
 
     public YttStylesWindow(YttStylesViewModel vm)
@@ -251,13 +251,13 @@ public class YttStylesWindow : Window
 
     private static Control MakePositionEditor(YttStylesViewModel vm)
     {
-        var anchor = MakeIndexCombo(YttStylesViewModel.AnchorPointNames, Position + nameof(YttPositionDisplay.AnchorPointIndex), Se.Language.File.Ytt.AnchorPoint);
-        var horizontal = EditorChrome.MakeField(Position + nameof(YttPositionDisplay.Horizontal), 0, 100, 90, "ah");
+        var anchor = MakeIndexCombo(YttStylesViewModel.AnchorPointNames, PositionPath + nameof(YttPositionDisplay.AnchorPointIndex), Se.Language.File.Ytt.AnchorPoint);
+        var horizontal = EditorChrome.MakeField(PositionPath + nameof(YttPositionDisplay.Horizontal), 0, 100, 90, "ah");
         AutomationProperties.SetName(horizontal, Se.Language.File.Ytt.Horizontal);
-        var vertical = EditorChrome.MakeField(Position + nameof(YttPositionDisplay.Vertical), 0, 100, 90, "av");
+        var vertical = EditorChrome.MakeField(PositionPath + nameof(YttPositionDisplay.Vertical), 0, 100, 90, "av");
         AutomationProperties.SetName(vertical, Se.Language.File.Ytt.Vertical);
         var real = EditorChrome.MakeDimLabel(string.Empty, new Thickness(0));
-        real.Bind(TextBlock.TextProperty, new Binding(Position + nameof(YttPositionDisplay.RealPositionText)));
+        real.Bind(TextBlock.TextProperty, new Binding(PositionPath + nameof(YttPositionDisplay.RealPositionText)));
 
         var rows = new StackPanel { Spacing = 8 };
         rows.Children.Add(EditorChrome.MakePropertyRow(Se.Language.File.Ytt.AnchorPoint, anchor));
