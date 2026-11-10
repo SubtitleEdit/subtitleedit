@@ -1,6 +1,6 @@
-using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
-namespace UITests.Features.Translate;
+namespace LibUiLogicTests.Translate;
 
 /// <summary>
 /// A batch reply where the model handed a line back in the source language (TranslateGemma 12B,

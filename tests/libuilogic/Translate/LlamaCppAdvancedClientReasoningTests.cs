@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
-namespace UITests.Features.Translate;
+namespace LibUiLogicTests.Translate;
 
 /// <summary>
 /// KoboldCpp streams the whole reply as "reasoning_content" when the chat template opens a think
@@ -177,7 +177,7 @@ public class LlamaCppAdvancedClientReasoningTests
         sse.Append("data: {\"id\":\"chatcmpl-1\",\"object\":\"chat.completion.chunk\",\"choices\":[{\"index\":0,\"finish_reason\":\"stop\",\"delta\":{}}]}\n\n");
         sse.Append("data: [DONE]\n\n");
 
-        using var client = new LlamaCppAdvancedClient();
+        using var client = new LlamaCppAdvancedClient(new SeLlamaCppAdvanced());
         var reply = await ChatAgainstFakeServerAsync(client, sse.ToString());
 
         Assert.Equal(TranslationJson, reply);
@@ -189,7 +189,7 @@ public class LlamaCppAdvancedClientReasoningTests
     {
         var sse = "data: " + Chunk("content", TranslationJson) + "\n\ndata: [DONE]\n\n";
 
-        using var client = new LlamaCppAdvancedClient();
+        using var client = new LlamaCppAdvancedClient(new SeLlamaCppAdvanced());
         var reply = await ChatAgainstFakeServerAsync(client, sse);
 
         Assert.Equal(TranslationJson, reply);
@@ -199,7 +199,7 @@ public class LlamaCppAdvancedClientReasoningTests
     [Fact]
     public void RequestLeavesThinkingAloneByDefault()
     {
-        var json = LlamaCppAdvancedClient.BuildRequestJson("system", "user", null, null, 100);
+        var json = LlamaCppAdvancedClient.BuildRequestJson(new SeLlamaCppAdvanced(), "system", "user", null, null, 100);
 
         Assert.DoesNotContain("chat_template_kwargs", json);
     }
@@ -207,10 +207,22 @@ public class LlamaCppAdvancedClientReasoningTests
     [Fact]
     public void RequestCanTurnThinkingOff()
     {
-        var json = LlamaCppAdvancedClient.BuildRequestJson("system", "user", null, null, 100, disableThinking: true);
+        var json = LlamaCppAdvancedClient.BuildRequestJson(new SeLlamaCppAdvanced(), "system", "user", null, null, 100, disableThinking: true);
 
         using var doc = System.Text.Json.JsonDocument.Parse(json);
         Assert.False(doc.RootElement.GetProperty("chat_template_kwargs").GetProperty("enable_thinking").GetBoolean());
+    }
+
+    [Fact]
+    public void RequestUsesTheSamplingFromTheGivenSettings()
+    {
+        var settings = new SeLlamaCppAdvanced { Temperature = 0.7, TopK = 40, MaxTokens = 123 };
+        var json = LlamaCppAdvancedClient.BuildRequestJson(settings, "system", "user", null, null, 100);
+
+        using var doc = System.Text.Json.JsonDocument.Parse(json);
+        Assert.Equal(0.7, doc.RootElement.GetProperty("temperature").GetDouble());
+        Assert.Equal(40, doc.RootElement.GetProperty("top_k").GetInt32());
+        Assert.Equal(123, doc.RootElement.GetProperty("max_tokens").GetInt32());
     }
 
     /// <summary>
@@ -220,7 +232,7 @@ public class LlamaCppAdvancedClientReasoningTests
     [Fact]
     public async Task ReasoningOnlyReplyTurnsThinkingOffForTheNextRequest()
     {
-        using var client = new LlamaCppAdvancedClient();
+        using var client = new LlamaCppAdvancedClient(new SeLlamaCppAdvanced());
         var firstRequest = string.Empty;
         await ChatAgainstFakeServerAsync(client, "data: " + Chunk("reasoning_content", "Okay, let's see. The user wants Danish.") + "\n\ndata: [DONE]\n\n", body => firstRequest = body);
         Assert.True(client.DisableThinking);

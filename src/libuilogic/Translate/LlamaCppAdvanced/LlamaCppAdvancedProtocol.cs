@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic.Config;
 
-namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
+namespace Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 /// <summary>
 /// The wire format for the advanced llama.cpp engine: numbered lines in, a JSON object mapping
