@@ -59,7 +59,7 @@ public class DoAutoTranslateTests
             throw new InvalidOperationException("The per-line path must not be used for a batch-context engine");
         }
 
-        public Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken, Action<Action>? applyRowUpdate = null)
+        public Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, Action<Action>? applyRowUpdate, CancellationToken cancellationToken)
         {
             BatchStartIndexes.Add(index);
             var count = Math.Min(BatchSize, rows.Count - index);

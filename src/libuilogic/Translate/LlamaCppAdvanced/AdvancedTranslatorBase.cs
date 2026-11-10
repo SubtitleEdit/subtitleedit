@@ -22,10 +22,12 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     public int MaxCharacters => 1000;
 
     /// <summary>
-    /// Batch/context options and sampling overrides, set before <see cref="Initialize"/>. The UI
-    /// engines point this at the persisted settings; a headless host (seconv) fills in its own.
+    /// Batch/context options and sampling overrides, read per batch (the client takes a copy of
+    /// the reference in <see cref="Initialize"/>). A headless host (seconv) sets its own; the UI
+    /// engines override this to read the persisted settings live, so a settings reset or import
+    /// that replaces the settings object is picked up by the next translation run.
     /// </summary>
-    public SeLlamaCppAdvanced Settings { get; set; } = new();
+    public virtual SeLlamaCppAdvanced Settings { get; set; } = new();
 
     /// <summary>The chat-completions endpoint to call (read per request, after any server startup).</summary>
     protected abstract string GetApiUrl();
@@ -67,10 +69,10 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// invalid reply the batch is retried once, then halved - a model that cannot manage a full
     /// batch often still manages a smaller one.
     /// </summary>
-    /// <param name="applyRowUpdate">Optional marshaller invoked around every write to the rows -
+    /// <param name="applyRowUpdate">Marshaller invoked around every write to the rows, or null -
     /// the Auto-translate window passes a UI-thread invoke for its grid-bound rows; batch convert
-    /// and seconv omit it and the rows are written directly.</param>
-    public async Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken, Action<Action>? applyRowUpdate = null)
+    /// and seconv pass null and the rows are written directly.</param>
+    public async Task<int> TranslateBatchAsync(ObservableCollection<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode, Action<Action>? applyRowUpdate, CancellationToken cancellationToken)
     {
         applyRowUpdate ??= action => action();
         var batchSize = Math.Clamp(Settings.BatchSize, 1, 50);
@@ -89,10 +91,10 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
             count++;
         }
 
-        return await TranslateChunkAsync(rows, index, count, sourceLanguageCode, targetLanguageCode, cancellationToken, applyRowUpdate);
+        return await TranslateChunkAsync(rows, index, count, sourceLanguageCode, targetLanguageCode, applyRowUpdate, cancellationToken);
     }
 
-    private async Task<int> TranslateChunkAsync(ObservableCollection<TranslateRow> rows, int index, int count, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken, Action<Action> applyRowUpdate)
+    private async Task<int> TranslateChunkAsync(ObservableCollection<TranslateRow> rows, int index, int count, string sourceLanguageCode, string targetLanguageCode, Action<Action> applyRowUpdate, CancellationToken cancellationToken)
     {
         // This path deliberately skips MergeAndSplitHelper (its merge/split heuristics would
         // break the alignment the reply schema guarantees), and with it the Formatting pass that
@@ -141,7 +143,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         {
             // The model could not fill the full batch - translate the first half only; the outer
             // loop calls again for the rest (with the successful half now part of the history).
-            return await TranslateChunkAsync(rows, index, count / 2, sourceLanguageCode, targetLanguageCode, cancellationToken, applyRowUpdate);
+            return await TranslateChunkAsync(rows, index, count / 2, sourceLanguageCode, targetLanguageCode, applyRowUpdate, cancellationToken);
         }
 
         throw new HttpRequestException("No usable translation in " + Name + " reply" +

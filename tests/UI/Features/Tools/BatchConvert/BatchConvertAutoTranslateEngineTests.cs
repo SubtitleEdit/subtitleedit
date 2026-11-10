@@ -28,6 +28,28 @@ public class BatchConvertAutoTranslateEngineTests
         Assert.Contains(viewModel.AutoTranslators, t => t is LlamaCppAdvancedTranslate);
     }
 
+    /// <summary>
+    /// A settings reset or import replaces the settings object; an engine created before that
+    /// must translate with the new values, not the ones it saw at construction.
+    /// </summary>
+    [AvaloniaFact]
+    public void AdvancedEngines_ReadReplacedSettingsLive()
+    {
+        var original = Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        try
+        {
+            var engines = new AdvancedTranslatorBase[] { new LlamaCppAdvancedTranslate(), new OllamaAdvancedTranslate(), new LmStudioAdvancedTranslate() };
+            var replaced = new SeLlamaCppAdvanced { BatchSize = 7 };
+            Se.Settings.AutoTranslate.LlamaCppAdvanced = replaced;
+
+            Assert.All(engines, e => Assert.Same(replaced, e.Settings));
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.LlamaCppAdvanced = original;
+        }
+    }
+
     [AvaloniaFact]
     public void EngineList_ContainsOllamaAdvanced()
     {

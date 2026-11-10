@@ -1812,7 +1812,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                     break;
                 }
 
-                var translatedCount = await advancedTranslator.TranslateBatchAsync(rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken, ApplyRowUpdateOnUiThread);
+                var translatedCount = await advancedTranslator.TranslateBatchAsync(rows, index, sourceLanguage.Code, targetLanguage.Code, ApplyRowUpdateOnUiThread, cancellationToken);
                 index += translatedCount;
 
                 reportProgress(index);

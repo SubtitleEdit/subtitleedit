@@ -17,9 +17,10 @@ public class LmStudioAdvancedTranslate : AdvancedTranslatorBase
     public override string Name => StaticName;
     public override string Url => "https://lmstudio.ai/";
 
-    public LmStudioAdvancedTranslate()
+    public override SeLlamaCppAdvanced Settings
     {
-        Settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        get => Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        set => Se.Settings.AutoTranslate.LlamaCppAdvanced = value;
     }
 
     /// <summary>

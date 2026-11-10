@@ -18,9 +18,10 @@ public class OllamaAdvancedTranslate : AdvancedTranslatorBase
     public override string Name => StaticName;
     public override string Url => "https://ollama.com";
 
-    public OllamaAdvancedTranslate()
+    public override SeLlamaCppAdvanced Settings
     {
-        Settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        get => Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        set => Se.Settings.AutoTranslate.LlamaCppAdvanced = value;
     }
 
     /// <summary>

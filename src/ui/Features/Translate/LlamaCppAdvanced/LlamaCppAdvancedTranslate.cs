@@ -18,9 +18,10 @@ public class LlamaCppAdvancedTranslate : AdvancedTranslatorBase
     public override string Name => StaticName;
     public override string Url => "https://github.com/ggml-org/llama.cpp";
 
-    public LlamaCppAdvancedTranslate()
+    public override SeLlamaCppAdvanced Settings
     {
-        Settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        get => Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        set => Se.Settings.AutoTranslate.LlamaCppAdvanced = value;
     }
 
     protected override string GetApiUrl()
