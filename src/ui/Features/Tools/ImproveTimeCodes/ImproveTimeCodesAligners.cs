@@ -84,7 +84,9 @@ public static class ImproveTimeCodesAligners
                 return CanaryLanguages.Contains(language) || language.Length == 0 ? 1 : 3;
             }
 
-            if (option.Choice == ForcedAlignerOption.Qwen3Choice)
+            // Ultra is a fine-tune of the same model with the same languages. Not yet measured on
+            // re-timing windows, so it ties with Qwen3 and stays behind it (stable sort).
+            if (option.Choice is ForcedAlignerOption.Qwen3Choice or ForcedAlignerOption.Qwen3UltraChoice)
             {
                 return Qwen3Languages.Contains(language) ? 2 : 4;
             }

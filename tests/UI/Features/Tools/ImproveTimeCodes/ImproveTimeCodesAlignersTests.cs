@@ -9,8 +9,8 @@ public class ImproveTimeCodesAlignersTests
     [InlineData("en", ForcedAlignerOption.CanaryCtcChoice, ForcedAlignerOption.Wav2Vec2EnChoice, ForcedAlignerOption.Qwen3Choice)]
     [InlineData("de", ForcedAlignerOption.Wav2Vec2DeChoice, ForcedAlignerOption.CanaryCtcChoice, ForcedAlignerOption.Qwen3Choice)]
     [InlineData("da", ForcedAlignerOption.CanaryCtcChoice, ForcedAlignerOption.Qwen3Choice, null)]
-    [InlineData("ja", ForcedAlignerOption.Wav2Vec2JaChoice, ForcedAlignerOption.Qwen3Choice, ForcedAlignerOption.CanaryCtcChoice)]
-    [InlineData("ko", ForcedAlignerOption.Qwen3Choice, ForcedAlignerOption.CanaryCtcChoice, null)]
+    [InlineData("ja", ForcedAlignerOption.Wav2Vec2JaChoice, ForcedAlignerOption.Qwen3Choice, ForcedAlignerOption.Qwen3UltraChoice)]
+    [InlineData("ko", ForcedAlignerOption.Qwen3Choice, ForcedAlignerOption.Qwen3UltraChoice, ForcedAlignerOption.CanaryCtcChoice)]
     [InlineData("", ForcedAlignerOption.CanaryCtcChoice, ForcedAlignerOption.Qwen3Choice, null)]
     public void Rank_PutsTheBestAlignersForTheLanguageFirst(string language, string first, string second, string? third)
     {
@@ -32,6 +32,16 @@ public class ImproveTimeCodesAlignersTests
         Assert.Equal(ForcedAlignerOption.All().Count(o => !o.IsBuiltIn), ranked.Count);
         Assert.Equal(ranked.Count, ranked.Select(o => o.Choice).Distinct().Count());
         Assert.DoesNotContain(ranked, o => o.IsBuiltIn);
+    }
+
+    [Fact]
+    public void Qwen3Ultra_RoundTripsThroughItsChoice_AndKeepsTheAlignerFileName()
+    {
+        var option = ForcedAlignerOption.FromChoice(ForcedAlignerOption.Qwen3UltraChoice);
+
+        Assert.Equal(ForcedAlignerOption.Qwen3UltraChoice, option.Choice);
+        // CrispASR selects its Qwen3 aligner path from "forced-aligner" in the file name.
+        Assert.Contains("forced-aligner", option.FileName);
     }
 
     [Theory]
