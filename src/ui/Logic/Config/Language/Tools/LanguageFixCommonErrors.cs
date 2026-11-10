@@ -205,8 +205,8 @@ public class LanguageFixCommonErrors
         XFixesApplied = "Fixes applied: {0}";
         XFixesYSelected = "{0} fixes - {1} selected";
         FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph";
-        MergeShortLine = "Merge short line (single sentence)";
-        MergeShortLineAll = "Merge short line (all except dialogs)";
+        MergeShortLine = "Remove line break (single sentence)";
+        MergeShortLineAll = "Remove line break (all except dialogs)";
         BreakLongLine = "Break long line";
         FixLongDisplayTime = "Fix long display time";
         FixInvalidItalicTag = "Fix invalid italic tag";
