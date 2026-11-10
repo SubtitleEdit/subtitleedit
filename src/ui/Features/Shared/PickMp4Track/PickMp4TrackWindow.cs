@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
 
@@ -130,6 +131,14 @@ public class PickMp4TrackWindow : Window
             .AddSortable<Mp4TrackInfoDisplay, TimeSpan>(durationColumn, x => x.Duration)
             .AddSortable<Mp4TrackInfoDisplay, int>(lineCountColumn, x => x.LineCount);
 
+        // Fit the narrow columns to their content so Name (the star column) gets the rest.
+        var trackDurationConverter = new TimeSpanToDisplayFullConverter();
+        TableViewExtras.AutoFitColumnsOnItemsChanged(dataGridTracks, _vm.Tracks,
+            (handlerColumn, x => x.Format),
+            (languageColumn, x => x.Language),
+            (durationColumn, x => trackDurationConverter.Convert(x.Duration, typeof(string), null, CultureInfo.CurrentCulture) as string),
+            (lineCountColumn, x => x.LineCount.ToString("N0", CultureInfo.CurrentCulture)));
+
         return dataGridTracks;
     }
 
@@ -192,8 +201,7 @@ public class PickMp4TrackWindow : Window
                             var textBlock = new TextBlock
                             {
                                 Text = item.Text,
-                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                                MaxWidth = 300 // Adjust as needed
+                                TextWrapping = Avalonia.Media.TextWrapping.Wrap
                             };
                             stackPanel.Children.Add(textBlock);
                         }
@@ -215,6 +223,12 @@ public class PickMp4TrackWindow : Window
                     })
                 },
         });
+
+        // Fit #, Show and Duration to the loaded cues so the Text column gets the rest of the pane.
+        TableViewExtras.AutoFitColumnsOnItemsChanged(dataGridSubtitle, _vm.Rows,
+            (dataGridSubtitle.Columns[0], x => x.Number.ToString(CultureInfo.CurrentCulture)),
+            (dataGridSubtitle.Columns[1], x => fullTimeConverter.Convert(x.Show, typeof(string), null, CultureInfo.CurrentCulture) as string),
+            (dataGridSubtitle.Columns[2], x => shortTimeConverter.Convert(x.Duration, typeof(string), null, CultureInfo.CurrentCulture) as string));
 
         return dataGridSubtitle;
     }
