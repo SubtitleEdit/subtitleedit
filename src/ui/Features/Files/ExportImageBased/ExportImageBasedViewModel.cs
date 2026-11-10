@@ -666,6 +666,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             BoxPaddingBottom = BoxPaddingBottom,
             ScreenWidth = SelectedResolution?.Width ?? 1920,
             ScreenHeight = SelectedResolution?.Height ?? 1080,
+            PixelAspectRatio = SelectedResolution?.PixelAspectRatio ?? 1,
             BottomTopMargin = SelectedTopBottomMargin,
             LeftRightMargin = SelectedLeftRightMargin,
             IsRightToLeft = IsRightToLeft,
@@ -1160,20 +1161,22 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     /// reopen instead of snapping to a same-width preset or the 1920x1080 default (#12244). Returns
     /// null for non-positive sizes.
     /// </summary>
-    private ResolutionItem? EnsureResolutionItem(int width, int height)
+    private ResolutionItem? EnsureResolutionItem(int width, int height, string? pixelAspect = null)
     {
         if (width <= 0 || height <= 0)
         {
             return null;
         }
 
-        var existing = Resolutions.FirstOrDefault(r => r.Width == width && r.Height == height);
+        // The pixel aspect has to match too: PAL 16:9, PAL 4:3 and square-pixel PAL are all
+        // 720x576. A size from a video (no pixel aspect) gets the square-pixel item.
+        var existing = Resolutions.FirstOrDefault(r => r.Matches(width, height, pixelAspect));
         if (existing != null)
         {
             return existing;
         }
 
-        var item = new ResolutionItem(string.Empty, width, height);
+        var item = new ResolutionItem(string.Empty, width, height, pixelAspect ?? string.Empty);
         // Index 0 is the "Pick resolution from video..." entry; keep custom sizes right below it.
         Resolutions.Insert(1, item);
         return item;
@@ -1185,7 +1188,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         {
             _videoFrameRateProfile = null;
             SelectedFontSize = (int)profile.FontSize;
-            SelectedResolution = EnsureResolutionItem(profile.ScreenWidth, profile.ScreenHeight)
+            SelectedResolution = EnsureResolutionItem(profile.ScreenWidth, profile.ScreenHeight, profile.PixelAspect)
                                  ?? Resolutions.FirstOrDefault(r => r.Width == 1920);
             SelectedTopBottomMargin = profile.BottomTopMargin;
             SelectedLeftRightMargin = profile.LeftRightMargin;
@@ -1250,6 +1253,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             profile.FontSize = SelectedFontSize;
             profile.ScreenWidth = SelectedResolution?.Width ?? 1920;
             profile.ScreenHeight = SelectedResolution?.Height ?? 1080;
+            profile.PixelAspect = SelectedResolution?.PixelAspect ?? string.Empty;
             profile.BottomTopMargin = SelectedTopBottomMargin;
             profile.LeftRightMargin = SelectedLeftRightMargin;
             profile.OutlineWidth = SelectedOutlineWidth;

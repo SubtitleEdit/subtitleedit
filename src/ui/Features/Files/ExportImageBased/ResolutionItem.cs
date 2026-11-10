@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Export;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 
@@ -11,6 +13,13 @@ public partial class ResolutionItem : ObservableObject
     public int Width { get; set; }
     public int Height { get; set; }
 
+    /// <summary>
+    /// Sample (pixel) aspect ratio like "64:45" (see <see cref="ExportPixelAspect"/>); empty for
+    /// square pixels.
+    /// </summary>
+    public string PixelAspect { get; set; } = string.Empty;
+
+    public double PixelAspectRatio => ExportPixelAspect.Parse(PixelAspect);
 
     public ResolutionItem(string name)
     {
@@ -42,13 +51,20 @@ public partial class ResolutionItem : ObservableObject
         DisplayName = name; 
     }
 
-    public ResolutionItem(string name, int width, int height)
+    public ResolutionItem(string name, int width, int height, string pixelAspect = "")
     {
         DisplayName = string.Empty;
         Name = name;
         Width = width;
         Height = height;
+        PixelAspect = pixelAspect;
         SetDisplayName(name);
+    }
+
+    public bool Matches(int width, int height, string? pixelAspect)
+    {
+        return Width == width && Height == height &&
+               Math.Abs(PixelAspectRatio - ExportPixelAspect.Parse(pixelAspect)) < 0.001;
     }
 
     public static IEnumerable<ResolutionItem> GetResolutions()
@@ -62,8 +78,14 @@ public partial class ResolutionItem : ObservableObject
         yield return new ResolutionItem("Full HD", 1920, 1080);
         yield return new ResolutionItem("HD 720p", 1280, 720);
         yield return new ResolutionItem("540p", 960, 540);
-        yield return new ResolutionItem("SD PAL (4:3)", 720, 576);
-        yield return new ResolutionItem("SD NTSC (3:2)", 720, 480);
+        // DVD/SD Blu-ray: stored at 720x576/720x480 with non-square pixels - the player
+        // stretches them to 4:3 or 16:9, so the images are pre-squeezed (doom9 p=2052176).
+        yield return new ResolutionItem("PAL 16:9 (anamorphic)", 720, 576, ExportPixelAspect.Pal16x9);
+        yield return new ResolutionItem("PAL 4:3", 720, 576, ExportPixelAspect.Pal4x3);
+        yield return new ResolutionItem("NTSC 16:9 (anamorphic)", 720, 480, ExportPixelAspect.Ntsc16x9);
+        yield return new ResolutionItem("NTSC 4:3", 720, 480, ExportPixelAspect.Ntsc4x3);
+        yield return new ResolutionItem("SD PAL (square pixels)", 720, 576);
+        yield return new ResolutionItem("SD NTSC (square pixels)", 720, 480);
         yield return new ResolutionItem("VGA (4:3)", 640, 480);
         yield return new ResolutionItem("360p", 640, 360);
 

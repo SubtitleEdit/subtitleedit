@@ -39,6 +39,13 @@ public class ImageParameter
     public byte[] Buffer { get; set; }
     public int ScreenWidth { get; set; }
     public int ScreenHeight { get; set; }
+
+    /// <summary>
+    /// Sample (pixel) aspect ratio of the target frame, see <see cref="ExportPixelAspect"/>.
+    /// 1 is square pixels; e.g. 64/45 for PAL 16:9 squeezes the subtitle to 45/64 of its width.
+    /// </summary>
+    public double PixelAspectRatio { get; set; } = 1;
+
     public int BottomTopMargin { get; set; }
     public int LeftRightMargin { get; set; }
     public SKPointI? OverridePosition { get; set; }
