@@ -36,6 +36,14 @@ internal static class SubtitleInfoGatherer
             ? SubtitleLanguageDetector.DetectOrNull(subtitle)
             : null;
 
+        // Report the Chinese script (zh-Hans / zh-Hant) like the translate path does. Only
+        // Chinese pays for the second detection; the shared detector stays two-letter because
+        // Fix Common Errors and the other operations look up their rules by "zh".
+        if (language == "zh")
+        {
+            language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle, detectChineseScript: true) ?? language;
+        }
+
         return new SubtitleInfo
         {
             Path = filePath,
