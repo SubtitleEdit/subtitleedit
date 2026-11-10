@@ -3,6 +3,25 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta3 (10th of November 2026)
+
+* Option to preset the save encoding on open to a chosen UTF-8 variant now also works for UTF-8 files - thx darnn
+* Text to speech: much faster "Joining audio" on long projects (merge in one pass) - thx lekien992
+* Fix speech to text failing on AVI and other odd containers (Purfview XXL, CTranslate2, WhisperX) - thx weifu8435
+* Fix do-not-break-after list edits being reset when dictionaries update - thx rRobis
+* Fix DVB teletext export PES packets not aligned to whole transport packets
+* Fix changing an existing font color tag in the text box leaving malformed markup - thx pdjdev
+* Fix WebVTT style copy losing italic - thx unsafePtr
+* Update Brazilian Portuguese translation - thx Manavagg2003
+* Update Bulgarian translation
+* Update Dutch translation - thx Manavagg2003
+* Update German translation - thx FunkyKnilch/accessallareas
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Russian translation - thx Manavagg2003
+
+-----------------------------------------------------------------------------------------------------
 v5.5.0-beta2 (9th of November 2026)
 
 * Waveform: "Edit original subtitle timing" toggle edits the original subtitle's timing in any layout - thx hisui3393
