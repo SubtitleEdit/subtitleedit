@@ -602,9 +602,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                                       AutoTranslateRunner.AdvancedOptionNames + " require --translate-to:<language>.");
             }
 
-            if (!string.IsNullOrWhiteSpace(settings.TranslateEngine) &&
-                !AutoTranslateRunner.SupportedEngines.Contains(settings.TranslateEngine.Trim(), StringComparer.OrdinalIgnoreCase) &&
-                !settings.TranslateEngine.Trim().Equals("llama.cpp", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(settings.TranslateEngine) && !AutoTranslateRunner.IsSupportedEngine(settings.TranslateEngine))
             {
                 return Fail(
                     settings,

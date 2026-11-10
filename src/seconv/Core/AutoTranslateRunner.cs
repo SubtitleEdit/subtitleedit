@@ -320,6 +320,12 @@ internal sealed class AutoTranslateRunner
         return PromptEngines.Contains(NormalizeEngine(engine));
     }
 
+    /// <summary>True when the value, after alias resolution, names one of the <see cref="SupportedEngines"/>.</summary>
+    public static bool IsSupportedEngine(string? engine)
+    {
+        return SupportedEngines.Contains(NormalizeEngine(engine));
+    }
+
     /// <summary>True for the engines that run the advanced batch/context loop (see <see cref="AdvancedEngines"/>).</summary>
     public static bool IsAdvancedEngine(string? engine)
     {
@@ -676,6 +682,7 @@ internal sealed class AutoTranslateRunner
         if (!string.IsNullOrWhiteSpace(requestedModel))
         {
             var name = requestedModel.Trim();
+            LlamaCppModel? model;
 
             // Full path to a .gguf: use it directly, but infer the chat-template flags from the file
             // name (TranslateGemma/Qwen need them, whether or not we curate that exact quant).
@@ -687,22 +694,25 @@ internal sealed class AutoTranslateRunner
                 }
 
                 var fileName = Path.GetFileName(name);
-                return LlamaCppServerManager.CreateCustomModel(fileName, Path.GetFullPath(name), string.Empty);
+                model = LlamaCppServerManager.CreateCustomModel(fileName, Path.GetFullPath(name), string.Empty);
             }
-
-            // Name: match curated + custom models in the models folder (with or without .gguf).
-            var all = LlamaCppServerManager.GetAllTranslateModels();
-            var model = all.FirstOrDefault(m => m.FileName.Equals(name, StringComparison.OrdinalIgnoreCase))
+            else
+            {
+                // Name: match curated + custom models in the models folder (with or without .gguf).
+                var all = LlamaCppServerManager.GetAllTranslateModels();
+                model = all.FirstOrDefault(m => m.FileName.Equals(name, StringComparison.OrdinalIgnoreCase))
                         ?? all.FirstOrDefault(m => m.FileName.Equals(name + ".gguf", StringComparison.OrdinalIgnoreCase))
                         ?? all.FirstOrDefault(m => m.DisplayName.Equals(name, StringComparison.OrdinalIgnoreCase));
-            if (model == null || !LlamaCppServerManager.IsModelInstalled(model))
-            {
-                throw new InvalidOperationException(
-                    $"Translate model '{name}' not found in {LlamaCppServerManager.GetAndCreateModelsFolder()}. " +
-                    "Download one in Subtitle Edit (Auto-translate > llama.cpp), drop a .gguf into that folder, " +
-                    "or pass a full path via --translate-model.");
+                if (model == null || !LlamaCppServerManager.IsModelInstalled(model))
+                {
+                    throw new InvalidOperationException(
+                        $"Translate model '{name}' not found in {LlamaCppServerManager.GetAndCreateModelsFolder()}. " +
+                        "Download one in Subtitle Edit (Auto-translate > llama.cpp), drop a .gguf into that folder, " +
+                        "or pass a full path via --translate-model.");
+                }
             }
 
+            // Checked for both forms (name and path): CreateCustomModel flags MiLMMT files too.
             if (chatModelsOnly && model.CompletionOnly)
             {
                 // Same rule as the GUI's model list for the advanced engine: a raw-completion model

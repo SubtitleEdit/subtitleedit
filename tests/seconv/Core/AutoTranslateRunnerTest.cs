@@ -276,6 +276,20 @@ public class AutoTranslateRunnerTest : IDisposable
         Assert.Equal(expected, AutoTranslateRunner.NormalizeEngine(engine));
     }
 
+    // ConvertCommand validates --translate-engine with IsSupportedEngine, so the aliases are
+    // accepted at the command level too (the raw value used to be checked against the list).
+    [Theory]
+    [InlineData("llama-advanced", true)]
+    [InlineData("llama.cpp-advanced", true)]
+    [InlineData("llama", true)]
+    [InlineData("llama.cpp", true)]
+    [InlineData(" LLAMACPP-ADVANCED ", true)]
+    [InlineData("bing", false)]
+    public void IsSupportedEngine_ResolvesAliasesBeforeChecking(string engine, bool expected)
+    {
+        Assert.Equal(expected, AutoTranslateRunner.IsSupportedEngine(engine));
+    }
+
     [Theory]
     [InlineData(null, true)] // default engine is llamacpp
     [InlineData("llama.cpp", true)]
@@ -730,6 +744,22 @@ public class AutoTranslateRunnerTest : IDisposable
 
         Assert.Contains("completion-only", ex.Message);
         Assert.Contains("--translate-engine:llamacpp", ex.Message);
+    }
+
+    // A completion-only model given by full path used to return before the check above ran.
+    [Fact]
+    public void Create_LlamaCppAdvancedLocal_CompletionOnlyModelByPath_Throws()
+    {
+        PlantFakeInstall();
+        var path = Path.Combine(_fakeLlamaFolder, "models", "MiLMMT-46-4B-v1.0.Q4_K_M.gguf");
+        File.WriteAllText(path, "fake");
+
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => AutoTranslateRunner.Create(MakeOptions(engine: "llamacpp-advanced", model: path)));
+        Assert.Contains("completion-only", ex.Message);
+
+        // The regular engine still takes it: completion-only only matters for the batch protocol.
+        Assert.True(AutoTranslateRunner.Create(MakeOptions(model: path)).LlamaCppModel!.CompletionOnly);
     }
 
     [Fact]
