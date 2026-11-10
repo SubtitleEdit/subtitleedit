@@ -144,7 +144,7 @@ public class EditBoxActorTests : IDisposable
     public void Enter_sets_the_actor_on_every_selected_line()
     {
         var (window, vm, box) = ShowMainWindow();
-        vm.SubtitleGrid.SelectedItems.Clear();
+        vm.SubtitleGrid.SelectedItems!.Clear();
         vm.SubtitleGrid.SelectedItems.Add(vm.Subtitles[1]);
         vm.SubtitleGrid.SelectedItems.Add(vm.Subtitles[2]);
         Settle(window);

@@ -50,7 +50,9 @@ public class SeTableViewColumn : TableViewColumn
 
     public object? Tag { get; set; }
 
-    public double MinWidth { get; set; }
+    // Hides TableViewColumn.MinWidth on purpose: SE's own width hint, read when sizing columns,
+    // not a layout constraint on the control.
+    public new double MinWidth { get; set; }
 
     /// <summary>
     /// What a screen reader should say for this column's cell when reading the row. Defaults

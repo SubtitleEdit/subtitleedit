@@ -354,9 +354,8 @@ public class FfmpegSoftwareControl : Control
             var origin = new Point(x, y);
             Geometry? box = null;
             IPen? boxPen = null;
-            if (blockPaint.BoxBrush != null)
+            if (blockPaint.BoxBrush != null && formatted.BuildHighlightGeometry(origin, 0, text.Length) is { } highlight)
             {
-                var highlight = formatted.BuildHighlightGeometry(origin, 0, text.Length);
                 if (blockPaint.OneBox)
                 {
                     box = new RectangleGeometry(highlight.Bounds.Inflate(blockPaint.BoxPadding));
