@@ -21,6 +21,10 @@ public static class ImageRenderer
             bitmap = Replace(bitmap, Rotate(bitmap, ip.TagRotation));
         }
 
+        // Non-square SD pixels (PAL/NTSC 4:3 and 16:9): squeeze so the player's stretch
+        // gives the glyphs their normal shape again.
+        bitmap = Replace(bitmap, ExportPixelAspect.Apply(bitmap, ip.PixelAspectRatio));
+
         if (ip.AlphaPercent >= 100)
         {
             return bitmap;

@@ -2350,6 +2350,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 BackgroundCornerRadius = profile.BackgroundCornerRadius,
                 ScreenWidth = profile.ScreenWidth,
                 ScreenHeight = profile.ScreenHeight,
+                PixelAspectRatio = ExportPixelAspect.Parse(profile.PixelAspect),
                 BottomTopMargin = profile.BottomTopMargin,
                 LeftRightMargin = profile.LeftRightMargin,
                 // The export handlers read these off the parameters: FCP/BDN take their
