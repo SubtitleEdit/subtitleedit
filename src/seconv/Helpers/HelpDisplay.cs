@@ -83,11 +83,16 @@ internal static class HelpDisplay
         ShowParameter(console, "--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter(console, "--translate-to:<lang>", "Auto-translate to this language (code or English name, e.g. de or German)");
         ShowParameter(console, "--translate-from:<lang>", "Auto-translate source language (default: auto-detect per file)");
-        ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | ollama | lmstudio | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl");
+        ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | llamacpp-advanced | ollama | ollama-advanced | lmstudio | lmstudio-advanced | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl; the advanced engines translate in batches with context");
         ShowParameter(console, "--translate-url:<url>", "Endpoint of an already-running translate server (llamacpp: skips the auto-start)");
-        ShowParameter(console, "--translate-model:<model>", "Ollama/LM Studio/OpenAI-compatible model name, or llamacpp .gguf file name/path");
+        ShowParameter(console, "--translate-model:<model>", "Ollama/LM Studio/OpenAI-compatible model name (required for ollama-advanced), or llamacpp .gguf file name/path");
         ShowParameter(console, "--translate-api-key:<key>", "API key for openai-compatible and deepl (required for deepl)");
-        ShowParameter(console, "--translate-prompt:<text|file>", "Prompt for llamacpp/ollama/lmstudio/openai-compatible: inline text (\\n = line break) or a text file; {0}=source, {1}=target, {2}=text (completion-format models)");
+        ShowParameter(console, "--translate-prompt:<text|file>", "Prompt for llamacpp/ollama/lmstudio/openai-compatible and the advanced engines' system prompt: inline text (\\n = line break) or a text file; {0}=source, {1}=target, {2}=text (completion-format models, regular llamacpp only)");
+        ShowParameter(console, "--translate-batch-size:<n>", "Advanced engines: subtitle lines per request, 1-50 (default: 10)");
+        ShowParameter(console, "--translate-history:<n>", "Advanced engines: already-translated lines sent as context before each batch, 0-50 (default: 12)");
+        ShowParameter(console, "--translate-synopsis:<text|file>", "Advanced engines: what the content is about (genre, setting, tone); inline text or a text file");
+        ShowParameter(console, "--translate-glossary:<text|file>", "Advanced engines: one \"source term = translation\" per line; inline text (\\n = line break) or a text file");
+        ShowParameter(console, "--translate-formality:<value>", "Advanced engines: default | formal | informal");
         ShowParameter(console, "--multiple-replace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");
         ShowParameter(console, "--custom-format:<path.xml>", "SE CustomFormatItem XML (use with --format customtext)");
         ShowParameter(console, "--settings:<path.json>", "JSON settings file overriding libse defaults");
@@ -223,6 +228,9 @@ internal static class HelpDisplay
         ShowExample(console,
             "seconv movie.srt subrip --translate-to:de --translate-prompt:my-prompt.txt",
             "Translate with your own prompt ({0}=source language, {1}=target language)");
+        ShowExample(console,
+            "seconv movie.srt subrip --translate-to:de --translate-engine:llamacpp-advanced --translate-synopsis:\"A crime drama\" --translate-glossary:terms.txt",
+            "Translate in batches with context, a synopsis and a glossary (advanced local LLM engine)");
         ShowExample(console,
             "seconv formats",
             "List all available formats");

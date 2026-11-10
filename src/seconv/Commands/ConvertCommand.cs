@@ -177,7 +177,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateFrom { get; init; }
 
         [CommandOption("--translate-engine|--translateengine")]
-        [Description("Translate engine: llamacpp (default) | ollama | lmstudio | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl")]
+        [Description("Translate engine: llamacpp (default) | llamacpp-advanced | ollama | ollama-advanced | lmstudio | lmstudio-advanced | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl (the advanced engines translate in batches with context)")]
         public string? TranslateEngine { get; init; }
 
         [CommandOption("--translate-url|--translateurl")]
@@ -185,7 +185,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateUrl { get; init; }
 
         [CommandOption("--translate-model|--translatemodel")]
-        [Description("Translate model: ollama/lmstudio/openai-compatible model name, or llamacpp .gguf file name/path (default: first downloaded translate model)")]
+        [Description("Translate model: ollama/lmstudio/openai-compatible model name (required for ollama-advanced), or llamacpp .gguf file name/path (default: first downloaded translate model)")]
         public string? TranslateModel { get; init; }
 
         [CommandOption("--translate-api-key|--translateapikey")]
@@ -193,8 +193,28 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateApiKey { get; init; }
 
         [CommandOption("--translate-prompt|--translateprompt")]
-        [Description("Prompt for llamacpp/ollama/lmstudio/openai-compatible: inline text (\\n = line break) or a path to a text file; {0}=source language, {1}=target language, {2}=the text (completion-format models)")]
+        [Description("Prompt for llamacpp/ollama/lmstudio/openai-compatible and the system prompt of the advanced engines: inline text (\\n = line break) or a path to a text file; {0}=source language, {1}=target language, {2}=the text (completion-format models, not for the advanced engines)")]
         public string? TranslatePrompt { get; init; }
+
+        [CommandOption("--translate-batch-size|--translatebatchsize")]
+        [Description("Advanced engines (llamacpp-advanced/ollama-advanced/lmstudio-advanced): subtitle lines per request, 1-50 (default: 10)")]
+        public int? TranslateBatchSize { get; init; }
+
+        [CommandOption("--translate-history|--translatehistory")]
+        [Description("Advanced engines: already-translated lines sent as context before each batch, 0-50 (default: 12)")]
+        public int? TranslateHistory { get; init; }
+
+        [CommandOption("--translate-synopsis|--translatesynopsis")]
+        [Description("Advanced engines: what the content is about (genre, setting, tone), included in every request; inline text or a path to a text file")]
+        public string? TranslateSynopsis { get; init; }
+
+        [CommandOption("--translate-glossary|--translateglossary")]
+        [Description("Advanced engines: terms to translate exactly as given, one \"source term = translation\" per line; inline text (\\n = line break) or a path to a text file")]
+        public string? TranslateGlossary { get; init; }
+
+        [CommandOption("--translate-formality|--translateformality")]
+        [Description("Advanced engines: default | formal | informal (adds an instruction to use e.g. German Sie or du)")]
+        public string? TranslateFormality { get; init; }
 
         [CommandOption("--offset")]
         [Description("Offset time (hh:mm:ss:ms)")]
@@ -571,14 +591,18 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                  !string.IsNullOrWhiteSpace(settings.TranslateUrl) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateModel) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateApiKey) ||
-                 !string.IsNullOrWhiteSpace(settings.TranslatePrompt)))
+                 !string.IsNullOrWhiteSpace(settings.TranslatePrompt) ||
+                 settings.TranslateBatchSize.HasValue ||
+                 settings.TranslateHistory.HasValue ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateSynopsis) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateGlossary) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateFormality)))
             {
-                return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model/--translate-api-key/--translate-prompt require --translate-to:<language>.");
+                return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model/--translate-api-key/--translate-prompt/" +
+                                      AutoTranslateRunner.AdvancedOptionNames + " require --translate-to:<language>.");
             }
 
-            if (!string.IsNullOrWhiteSpace(settings.TranslateEngine) &&
-                !AutoTranslateRunner.SupportedEngines.Contains(settings.TranslateEngine.Trim(), StringComparer.OrdinalIgnoreCase) &&
-                !settings.TranslateEngine.Trim().Equals("llama.cpp", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(settings.TranslateEngine) && !AutoTranslateRunner.IsSupportedEngine(settings.TranslateEngine))
             {
                 return Fail(
                     settings,
@@ -602,6 +626,38 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 try
                 {
                     AutoTranslateRunner.ReadPromptOption(settings.TranslatePrompt);
+                }
+                catch (Exception ex)
+                {
+                    return Fail(settings, ex.Message);
+                }
+            }
+
+            // The batch/context options only mean something to the advanced engines; the rest
+            // translate line by line (or merged) with no history, synopsis or glossary. Fail
+            // instead of silently ignoring them, and build the settings (the synopsis and
+            // glossary may be files, the prompt must not be a completion template) up front so
+            // a typo never costs a conversion.
+            if ((settings.TranslateBatchSize.HasValue || settings.TranslateHistory.HasValue ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateSynopsis) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateGlossary) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateFormality)) &&
+                !AutoTranslateRunner.IsAdvancedEngine(settings.TranslateEngine))
+            {
+                return Fail(
+                    settings,
+                    $"{AutoTranslateRunner.AdvancedOptionNames} require an advanced translate engine: " +
+                    $"--translate-engine:{string.Join(" | ", AutoTranslateRunner.AdvancedEngines)}.");
+            }
+
+            if (AutoTranslateRunner.IsAdvancedEngine(settings.TranslateEngine))
+            {
+                try
+                {
+                    AutoTranslateRunner.CreateAdvancedSettings(
+                        settings.TranslateBatchSize, settings.TranslateHistory, settings.TranslateSynopsis,
+                        settings.TranslateGlossary, settings.TranslateFormality,
+                        AutoTranslateRunner.ReadPromptOption(settings.TranslatePrompt));
                 }
                 catch (Exception ex)
                 {
@@ -976,6 +1032,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 TranslateModel = settings.TranslateModel,
                 TranslateApiKey = settings.TranslateApiKey,
                 TranslatePrompt = settings.TranslatePrompt,
+                TranslateBatchSize = settings.TranslateBatchSize,
+                TranslateHistory = settings.TranslateHistory,
+                TranslateSynopsis = settings.TranslateSynopsis,
+                TranslateGlossary = settings.TranslateGlossary,
+                TranslateFormality = settings.TranslateFormality,
                 TeletextOnly = settings.TeletextOnly,
                 TeletextOnlyPage = settings.TeletextOnlyPage,
                 Quiet = silent,
