@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
@@ -609,6 +611,7 @@ public static partial class InitListViewAndEditBox
             Bindings =
             {
                 new Binding(nameof(vm.IsFormatWebVtt)) { Source = vm, Mode = BindingMode.OneWay, Converter = inverseBooleanConverter },
+                new Binding(nameof(vm.HasFormatActor)) { Source = vm, Mode = BindingMode.OneWay },
                 new Binding(nameof(vm.ShowColumnActor)) { Source = vm, Mode = BindingMode.OneWay },
             }
         });
@@ -847,7 +850,7 @@ public static partial class InitListViewAndEditBox
 
         var showStartTimeMenuItem = new MenuItem
         {
-            Header = Se.Language.General.ShowStartColumn,
+            Header = string.Format(Se.Language.General.ShowXColumn, Se.Language.General.Show),
             Command = vm.ToggleShowColumnStartTimeCommand,
             DataContext = vm,
             Icon = new Icon
@@ -862,7 +865,7 @@ public static partial class InitListViewAndEditBox
         
         var showEndTimeMenuItem = new MenuItem
         {
-            Header = Se.Language.General.ShowHideColumn,
+            Header = string.Format(Se.Language.General.ShowXColumn, Se.Language.General.Hide),
             Command = vm.ToggleShowColumnEndTimeCommand,
             DataContext = vm,
             Icon = new Icon
@@ -973,7 +976,15 @@ public static partial class InitListViewAndEditBox
                 [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnActor)),
             }
         };
-        showActorMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.OneWay });
+        showActorMenuItem.Bind(Visual.IsVisibleProperty, new MultiBinding
+        {
+            Converter = booleanAndConverter,
+            Bindings =
+            {
+                new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Source = vm, Mode = BindingMode.OneWay },
+                new Binding(nameof(vm.HasFormatActor)) { Source = vm, Mode = BindingMode.OneWay },
+            }
+        });
         flyout.Items.Add(showActorMenuItem);
 
         var showCpsMenuItem = new MenuItem
@@ -1740,12 +1751,15 @@ public static partial class InitListViewAndEditBox
         var upDownLayer = UiUtil.MakeNumericUpDownInt(int.MinValue, int.MaxValue, 0, double.NaN, vm, $"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.Layer)}");
         AutomationProperties.SetName(upDownLayer, Se.Language.General.Layer);
         upDownLayer.HorizontalAlignment = HorizontalAlignment.Stretch;
+        CompactSpinner.Attach(upDownLayer);
         if (!vm.ShowUpDownLabels && Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(upDownLayer, Se.Language.General.Layer);
         }
         panelLayer.Children.Add(upDownLayer);
         timeControlsPanel.Children.Add(panelLayer);
+
+        timeControlsPanel.Children.Add(MakeEditBoxActorPanel(vm));
 
         if (!Se.Settings.Appearance.ShowUpDownStartTime ||
             !Se.Settings.Appearance.ShowUpDownEndTime || 
@@ -2539,6 +2553,254 @@ public static partial class InitListViewAndEditBox
         }
 
         return new GridLength(oldHeight, GridUnitType.Pixel);
+    }
+
+    /// <summary>
+    /// Optional "Actor" drop-down under Show/Hide/Duration/Layer (#16797), for formats that carry
+    /// an actor. One editable combo box both picks and creates: the arrow (or Down/F4) lists the
+    /// actors in the file, typing completes inline ("Jo" + Enter = "John"), and a name that
+    /// matches nothing becomes a new actor. The value is written on Enter, on picking from the list or
+    /// when focus leaves - not per keystroke - to every line that was selected when typing
+    /// started, so changing the selection mid-edit cannot move the name to another line.
+    /// </summary>
+    private static StackPanel MakeEditBoxActorPanel(MainViewModel vm)
+    {
+        var panel = new StackPanel
+        {
+            Spacing = 0,
+            Orientation = Orientation.Vertical,
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowActorBox)),
+            Margin = new Thickness(0, 0, 10, 0),
+        };
+        panel.Children.Add(new TextBlock
+        {
+            Text = Se.Language.General.Actor,
+            FontWeight = FontWeight.Bold,
+        }.WithBindVisible(vm, nameof(vm.ShowUpDownLabels)));
+
+        var box = new ComboBox
+        {
+            IsEditable = true,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalContentAlignment = HorizontalAlignment.Left,
+            MaxDropDownHeight = 300,
+        }.WithAccessibleName(Se.Language.General.Actor);
+        if (!vm.ShowUpDownLabels && Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(box, Se.Language.General.Actor);
+        }
+
+        // Replaced in place, never re-assigned: a new ItemsSource would reset the typed text.
+        var actors = new ObservableCollection<string>();
+        box.ItemsSource = actors;
+
+        var syncing = false;
+        List<SubtitleLineViewModel>? targets = null; // non-null while the user has uncommitted text
+        SubtitleLineViewModel? watchedLine = null;
+        TextBox? textBox = null;
+
+        void SetText(string text)
+        {
+            syncing = true;
+            box.Text = text;
+            syncing = false;
+        }
+
+        void RefreshActors()
+        {
+            var current = vm.GetActorsInSubtitle();
+            if (current.SequenceEqual(actors))
+            {
+                return;
+            }
+
+            var text = box.Text;
+            syncing = true;
+            actors.Clear();
+            foreach (var actor in current)
+            {
+                actors.Add(actor);
+            }
+
+            box.Text = text;
+            syncing = false;
+        }
+
+        void ShowCurrentActor()
+        {
+            if (targets == null)
+            {
+                SetText(vm.SelectedSubtitle?.Actor ?? string.Empty);
+            }
+        }
+
+        void Commit()
+        {
+            var lines = targets;
+            targets = null;
+            if (lines != null)
+            {
+                var actor = (box.Text ?? string.Empty).Trim();
+                foreach (var line in lines.Where(line => line.Actor != actor))
+                {
+                    line.Actor = actor;
+                }
+            }
+
+            ShowCurrentActor();
+        }
+
+        void OnLinePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SubtitleLineViewModel.Actor))
+            {
+                ShowCurrentActor();
+            }
+        }
+
+        void WatchSelectedLine()
+        {
+            if (watchedLine != null)
+            {
+                watchedLine.PropertyChanged -= OnLinePropertyChanged;
+            }
+
+            watchedLine = vm.SelectedSubtitle;
+            if (watchedLine != null)
+            {
+                watchedLine.PropertyChanged += OnLinePropertyChanged;
+            }
+        }
+
+        void OnVmPropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
+        {
+            if (e.PropertyName == nameof(vm.SelectedSubtitle) && targets != null)
+            {
+                Commit();
+            }
+        }
+
+        void OnVmPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(vm.SelectedSubtitle))
+            {
+                WatchSelectedLine();
+                ShowCurrentActor();
+            }
+        }
+
+        box.AttachedToVisualTree += (_, _) =>
+        {
+            vm.PropertyChanging += OnVmPropertyChanging;
+            vm.PropertyChanged += OnVmPropertyChanged;
+            WatchSelectedLine();
+            ShowCurrentActor();
+        };
+        box.DetachedFromVisualTree += (_, _) =>
+        {
+            vm.PropertyChanging -= OnVmPropertyChanging;
+            vm.PropertyChanged -= OnVmPropertyChanged;
+            if (watchedLine != null)
+            {
+                watchedLine.PropertyChanged -= OnLinePropertyChanged;
+                watchedLine = null;
+            }
+        };
+
+        box.PropertyChanged += (_, e) =>
+        {
+            if (e.Property != ComboBox.TextProperty || syncing || targets != null)
+            {
+                return;
+            }
+
+            var selected = vm.SubtitleGridSelectedItems;
+            if (selected.Count == 0 && vm.SelectedSubtitle != null)
+            {
+                selected.Add(vm.SelectedSubtitle);
+            }
+
+            targets = selected;
+        };
+
+        box.GotFocus += (_, _) => RefreshActors();
+        box.DropDownOpened += (_, _) => RefreshActors();
+
+        // Inline completion: typing "Jo" fills in "John" with "hn" selected, so Enter picks
+        // John and typing on replaces the suggestion (a new actor).
+        box.TemplateApplied += (_, e) =>
+        {
+            textBox = e.NameScope.Find<TextBox>("PART_EditableTextBox");
+            textBox?.AddHandler(InputElement.TextInputEvent, (_, _) =>
+            {
+                var typed = textBox.Text ?? string.Empty;
+                if (typed.Length == 0 || textBox.CaretIndex != typed.Length || textBox.SelectionStart != textBox.SelectionEnd)
+                {
+                    return;
+                }
+
+                var match = actors.FirstOrDefault(actor =>
+                    actor.Length > typed.Length && actor.StartsWith(typed, StringComparison.CurrentCultureIgnoreCase));
+                if (match == null)
+                {
+                    return;
+                }
+
+                textBox.Text = typed + match.Substring(typed.Length);
+                textBox.SelectionStart = typed.Length;
+                textBox.SelectionEnd = textBox.Text.Length;
+            }, RoutingStrategies.Bubble, handledEventsToo: true);
+        };
+
+        box.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            // Down/F4 opens the list rather than stepping through actors one commit at a time.
+            if ((e.Key == Key.Down || e.Key == Key.F4) && e.KeyModifiers == KeyModifiers.None && !box.IsDropDownOpen)
+            {
+                box.IsDropDownOpen = true;
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+
+        box.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if (box.IsDropDownOpen || e.KeyModifiers != KeyModifiers.None)
+            {
+                return;
+            }
+
+            if (e.Key == Key.Enter)
+            {
+                Commit();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape && targets != null)
+            {
+                targets = null; // revert to the line's actor
+                ShowCurrentActor();
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Bubble, handledEventsToo: true);
+
+        box.DropDownClosed += (_, _) =>
+        {
+            // A pick from the list is final, like Enter.
+            if (targets != null && box.SelectedItem is string picked && picked == box.Text)
+            {
+                Commit();
+            }
+        };
+
+        box.LostFocus += (_, _) =>
+        {
+            if (!box.IsKeyboardFocusWithin && !box.IsDropDownOpen && targets != null)
+            {
+                Commit();
+            }
+        };
+
+        panel.Children.Add(box);
+        return panel;
     }
 
     /// <summary>

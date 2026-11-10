@@ -9,7 +9,7 @@
 - **380+ subtitle formats** — text, binary, and image-based.
 - **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, MXF, AVI (`.avi` / `.divx`), transport stream teletext, Blu-Ray `.sup`.
 - **OCR for image-based sources** via seven engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, llama.cpp HTTP with automatic server start, PaddleOCR subprocess, Apple Vision built into macOS).
-- **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio), any OpenAI-compatible API, DeepL, or self-hosted services (LibreTranslate, NLLB).
+- **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio — each also as an *advanced* engine that translates in batches with context, a synopsis and a glossary), any OpenAI-compatible API, DeepL, or self-hosted services (LibreTranslate, NLLB).
 - **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014 (also as a DCP-ready SMPTE MXF track file), images-with-time-code.
 - **Operations pipeline** — offset, fps change, change-speed, renumber, adjust-duration, fix-common-errors, merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text.
 - **Cross-platform** — Windows, Linux, macOS. Only requires the .NET runtime; no display or GUI needed.
@@ -197,11 +197,14 @@ When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, 
 | `--override-position:<x\|y\|xy>` | Image → image only (DVB-sub, PGS, VobSub pass-through): ignore the source bitmap position on that axis and place it by `--alignment` and the margins instead. The other axis keeps the source position. Matches SE4's transport-stream "override original X/Y position" |
 | `--full-frame` | Draw each subtitle onto a frame-sized image instead of one cropped to the text. Only `fcpimage` and `bluraysup` use it; other image targets warn and ignore it |
 | `--full-frame-background-color:<color>` | Background of the full frame image (default: `transparent`) |
+| `--no-assa-styles` | ASSA/SSA input: draw every line with these options instead of its own style from the file |
 | `--mode-3d:<mode>` | Draw each subtitle for frame-packed 3D video, once per eye: `none` (default) \| `half-side-by-side` (`sbs`) \| `half-top-bottom` (`tab`). Works for text → image and image → image; D-Cinema warns and ignores it |
 | `--depth-3d:<px>` | 3D depth, -100 to 100 (default: 0): positive brings the subtitle out of the screen, negative pushes it back. D-Cinema writes it as the image's Z-position |
 | `--plane-3d:<file.ofs>` | A 3D Blu-ray's 3D-Plane (OFS file from BD3D2MK3D or OFSExtractor): each subtitle gets the disc's depth for the frames it is shown on. `--depth-3d` is used where the 3D-Plane has none. Needs `--mode-3d` |
 
 Colours accept hex (`#AARRGGBB`, `#RRGGBB`, with or without `#`) or a colour name (`white`, `black`, `yellow`, ...).
+
+**ASSA styles.** ASSA/SSA input is drawn with each line's own style from the file - font, size, colours, outline, shadow, box (BorderStyle 3/4), alignment, margins, scale, spacing and angle - so the font, colour, outline, box, alignment and margin options above do not apply to it. Override tags in the text still win over the style. `--no-assa-styles` (or `"useAssaStyles": false` in the settings JSON) draws it with the options instead, as before.
 
 **Full frame** (`--full-frame`) draws the subtitle onto a canvas the size of the video frame, using the alignment and margins to place it there, so every image can be dropped on an editing timeline at 0,0 instead of being positioned one by one. It matches the "Full frame image" checkbox in the export dialog, and applies to `fcpimage` and `bluraysup` only. The background is transparent unless `--full-frame-background-color` says otherwise, so the images sit on a track above the video.
 
@@ -279,7 +282,7 @@ An AVI stream header carries no language, so a multi-stream `.avi` names its out
 | `--ocr-db:<path>` | OCR database file: `.nocr` for `nocr`, `.db` for `binaryocr` (required for both) |
 | `--dictionary-folder:<path>` | Folder with Hunspell dictionaries + `*_OCRFixReplaceList.xml`; enables the "Fix common OCR errors" pass of `--fix-common-errors` (English is bundled, so this is only needed for other languages) |
 | `--ocr-auto-detect-assa-alignment` | Add an ASSA alignment tag from where each subtitle image sits in the video frame — the same logic as **Auto-detect ASSA alignment** in the OCR window. The frame is divided into a 3×3 grid: a caption at the top centre gets `{\an8}`, a sign at the left edge `{\an4}`, and so on; bottom-centre is the default and gets no tag. A tall image holding a few short lines placed apart (one at the top, one at the bottom) is tagged per line and written as separate subtitles with the same time codes. Sources that do not report a frame size (MP4 VobSub) are left untagged. Ignored with `--time-codes-only`. |
-| `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
+| `--ollama-url:<url>` | Default `http://localhost:11434/api/chat`. A bare `host:port` is completed to `http://host:port/api/chat` |
 | `--ollama-model:<model>` | Default `llama3.2-vision` |
 | `--ocr-model:<model>` | llama.cpp OCR model: the file name of a model in the llama.cpp models folder - curated (e.g. `GLM-OCR-Q8_0.gguf`) or your own vision model with its `mmproj` sidecar next to it - or a full path to a `.gguf` with its `mmproj` sidecar next to it. Default: the first downloaded OCR model. |
 | `--ocr-url:<url>` | llama.cpp: endpoint of an already-running `llama-server` (a bare `host:port` is completed to `/v1/chat/completions`); skips the local auto-start. |
@@ -354,11 +357,16 @@ Translated output is named with the target language code — `way.srt --translat
 |---|---|
 | `--translate-to:<lang>` | Target language — enables translation |
 | `--translate-from:<lang>` | Source language (default: auto-detect per file) |
-| `--translate-engine:<engine>` | `llamacpp` (default) \| `ollama` \| `lmstudio` \| `openai-compatible` \| `libretranslate` \| `nllb-serve` \| `nllb-api` \| `deepl` |
+| `--translate-engine:<engine>` | `llamacpp` (default) \| `llamacpp-advanced` \| `ollama` \| `ollama-advanced` \| `lmstudio` \| `lmstudio-advanced` \| `openai-compatible` \| `libretranslate` \| `nllb-serve` \| `nllb-api` \| `deepl`. The `-advanced` engines translate in batches with context, see [Advanced local engines](#advanced-local-engines). |
 | `--translate-url:<url>` | Endpoint of an already-running translate server. For `llamacpp` this skips the local server auto-start; a bare `host:port` is completed to `/v1/chat/completions`. |
-| `--translate-model:<model>` | `ollama`/`lmstudio`/`openai-compatible`: model name. `llamacpp`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model). |
+| `--translate-model:<model>` | `ollama`/`lmstudio`/`openai-compatible` and their `-advanced` variants: model name (required for `ollama-advanced`). `llamacpp`/`llamacpp-advanced`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model; the advanced engine skips completion-only models). |
 | `--translate-api-key:<key>` | API key for `openai-compatible` (sent as a Bearer token, optional) and `deepl` (required; a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
-| `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` / `openai-compatible` — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
+| `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` / `openai-compatible`, and the system prompt of the advanced engines — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
+| `--translate-batch-size:<n>` | Advanced engines: subtitle lines per request, 1-50 (default 10). See [Advanced local engines](#advanced-local-engines). |
+| `--translate-history:<n>` | Advanced engines: already-translated lines sent as context before each batch, 0-50 (default 12). |
+| `--translate-synopsis:<text\|file>` | Advanced engines: what the content is about (genre, setting, tone), included in every request. Inline text or a path to a text file. |
+| `--translate-glossary:<text\|file>` | Advanced engines: terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
+| `--translate-formality:<value>` | Advanced engines: `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
 
 **llama.cpp (default engine).** With no `--translate-url`, seconv runs a local `llama-server` for you: it looks for the binary in Subtitle Edit's data folder (`llama.cpp` next to `seconv`, then `%AppData%\Subtitle Edit\llama.cpp` / `~/Library/Application Support/Subtitle Edit/llama.cpp` / `~/.config/Subtitle Edit/llama.cpp`) and falls back to `llama-server` on `PATH`. The server is started on a free localhost port with the model's correct chat-template flags and stopped again when seconv exits. Models resolve against the data folder's `models` subfolder.
 
@@ -395,9 +403,10 @@ seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng --translate-to
 
 `--translate-prompt` is the command-line equivalent of the prompt field the GUI offers for the
 local-LLM engines (see [Prompts: chat models and completion models](../features/auto-translate.md#prompts-chat-models-and-completion-models)).
-It applies to `llamacpp`, `ollama` and `lmstudio`; the translation services (`libretranslate`,
-`nllb-serve`, `nllb-api`) have no prompt, and passing it to them is an error rather than a silent
-no-op.
+It applies to `llamacpp`, `ollama`, `lmstudio` and `openai-compatible`, and to the advanced engines
+as their system prompt (`{0}`/`{1}` only, see [Advanced local engines](#advanced-local-engines));
+the translation services (`libretranslate`, `nllb-serve`, `nllb-api`) have no prompt, and passing
+it to them is an error rather than a silent no-op.
 
 The same placeholders as in the GUI are substituted: `{0}` = source language, `{1}` = target
 language (both as English names, e.g. `English` / `German`). A prompt that also contains `{2}` is a
@@ -437,6 +446,53 @@ prompt (MiLMMT-46, Hy-MT2 — applied automatically when that model is selected)
 deliberately overrides the curated template too: an option given on the command line must never be
 a no-op. `ollama` and `lmstudio` have no per-model template, so it is simply
 `--translate-prompt` > `--settings` > built-in default.
+
+#### Advanced local engines
+
+`llamacpp-advanced`, `ollama-advanced` and `lmstudio-advanced` are the command-line form of the GUI's
+*llama.cpp advanced*, *Ollama advanced* and *LM Studio advanced* engines (see
+[Auto Translate: Advanced Local Engines](../features/auto-translate-advanced.md)). Instead of one
+request per line or merged block, they send numbered batches of lines together with a rolling
+history of the lines already translated, plus an optional synopsis, glossary and formality, and
+require a schema-constrained JSON reply so every line stays in place. That is what keeps names,
+terms and tone consistent across a whole file. It needs an instruction-tuned chat model: the
+completion-only MiLMMT models are refused (use them with `llamacpp`).
+
+| Option | Description |
+|---|---|
+| `--translate-batch-size:<n>` | Lines per request, 1-50 (default 10). An invalid reply is retried once, then the batch is halved. |
+| `--translate-history:<n>` | Already-translated lines sent as context before each batch, 0-50 (default 12). |
+| `--translate-synopsis:<text\|file>` | What the content is about (genre, setting, tone), included in every request. Inline text or a path to a text file. |
+| `--translate-glossary:<text\|file>` | Terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
+| `--translate-formality:<value>` | `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
+
+`--translate-prompt` replaces the built-in system prompt for these engines (`{0}` = source language,
+`{1}` = target language; no `{2}`, the lines travel in the request as JSON). The options are read
+like `--translate-prompt`: a value with no spaces, or ending in `.txt`/`.prompt`/`.md`, is a file
+path, so write an inline glossary with spaces around the `=`. Passing them to any other engine is an
+error.
+
+`llamacpp-advanced` finds and starts `llama-server` exactly like `llamacpp`, with the engine's larger
+default context (16384 tokens) so history, synopsis and glossary fit. `--translate-model` picks the
+`.gguf` as for `llamacpp`; the default is the first installed chat model. `ollama-advanced` uses
+Ollama's OpenAI-compatible endpoint (default `http://localhost:11434/v1/chat/completions`) and needs
+`--translate-model`; `lmstudio-advanced` uses `http://localhost:1234/v1/chat/completions` and sends
+`--translate-model` when given. The dialog's remaining settings (sampling, server context size,
+extra server arguments) keep their defaults.
+
+```bash
+# Batches of 8 with 10 lines of history, a synopsis and a glossary file, local llama-server
+seconv movie.srt subrip --translate-to:de --translate-engine:llamacpp-advanced \
+  --translate-batch-size:8 --translate-history:10 \
+  --translate-synopsis:"A Scandinavian crime drama. Erik is a police detective." \
+  --translate-glossary:terms.txt --translate-formality:informal
+
+# Ollama (model required)
+seconv movie.srt subrip --translate-to:de --translate-engine:ollama-advanced --translate-model:gemma4
+
+# LM Studio on another machine
+seconv movie.srt subrip --translate-to:de --translate-engine:lmstudio-advanced --translate-url:http://192.168.1.10:1234
+```
 
 ### Templates / replacements
 

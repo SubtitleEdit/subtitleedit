@@ -25,6 +25,7 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
     private ISpeechToTextEngine? _engine;
     private Func<Task>? _redownloadAsync;
 
+    [ObservableProperty] private string _windowTitle = Se.Language.Video.AudioToText.EngineSettings;
     [ObservableProperty] private string _titleText = string.Empty;
     [ObservableProperty] private string _subtitleText = string.Empty;
     [ObservableProperty] private string _backendLabel = string.Empty;
@@ -71,7 +72,8 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
         _redownloadAsync = redownloadAsync;
 
         TitleText = engine.Name;
-        SubtitleText = Se.Language.Video.AudioToText.EngineSettingsSubtitle;
+        WindowTitle = engine is CrispAsrMadlad ? Se.Language.Translate.EngineSettings : Se.Language.Video.AudioToText.EngineSettings;
+        SubtitleText = engine is CrispAsrMadlad ? Se.Language.Translate.EngineSettingsSubtitle : Se.Language.Video.AudioToText.EngineSettingsSubtitle;
 
         Refresh();
     }
@@ -353,7 +355,14 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
-            UiUtil.ShowHelp("features/speech-to-text", "se5-engine-notes");
+            if (_engine is CrispAsrMadlad)
+            {
+                UiUtil.ShowHelp("features/auto-translate", "crispasr-madlad-cpu-and-gpu-builds");
+            }
+            else
+            {
+                UiUtil.ShowHelp("features/speech-to-text", "se5-engine-notes");
+            }
         }
     }
 }

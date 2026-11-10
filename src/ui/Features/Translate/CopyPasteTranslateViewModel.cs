@@ -141,7 +141,8 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
         var index = start;
         foreach (string s in translatedLines)
         {
-            if (index < Subtitles.Count)
+            // A blank line is no translation - the row keeps its text rather than being emptied.
+            if (index < Subtitles.Count && !string.IsNullOrWhiteSpace(s))
             {
                 Subtitles[index].Text = s;
                 TranslatedRowIndices.Add(index);

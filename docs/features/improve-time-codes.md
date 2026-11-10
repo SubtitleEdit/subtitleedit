@@ -41,6 +41,7 @@ Under the waveforms:
 - **Play / pause** (or **Space**, wherever the focus is) plays from the playhead. Click in either waveform to move the playhead.
 - **▶ Aligned** (**F5**) plays just the selected line with its new time codes, and **Shift+F5** plays it with its old ones - the quickest way to hear whether a cue now starts and stops with the speech. Double-clicking a cue in a waveform plays it with that waveform's time codes; double-clicking a row plays the aligned version.
 - **▲ / ▼** (or **F7** / **F8**) step to the previous / next re-timed line, and *Change X of Y* shows where you are.
+- The amber **▲ / ▼** (or **Shift+F7** / **Shift+F8**, or **Alt+Shift+Up** / **Alt+Shift+Down**) step to the previous / next line flagged to check - the ones the tool left unticked because a move is too large or the speech-to-text check disputed it. While on such a line the label reads *To check X of Y*, counting the same lines as *To check* in the summary; ticking or unticking a line doesn't change the set.
 - The summary on the right counts re-timed lines, lines that were kept, lines with no speech, and the mean shift - and, after a speech-to-text check, how many moves it confirmed and disputed.
 
 ## Line list

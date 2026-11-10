@@ -1549,6 +1549,21 @@ internal record class ConversionOptions
     /// </summary>
     public string? TranslatePrompt { get; init; }
 
+    /// <summary>Advanced engines (<see cref="AutoTranslateRunner.AdvancedEngines"/>): subtitle lines per request, 1-50. Null = 10.</summary>
+    public int? TranslateBatchSize { get; init; }
+
+    /// <summary>Advanced engines: already-translated lines sent as context before each batch, 0-50. Null = 12.</summary>
+    public int? TranslateHistory { get; init; }
+
+    /// <summary>Advanced engines: what the content is about; inline text or the path to a text file (see <see cref="AutoTranslateRunner.ReadPromptOption"/>).</summary>
+    public string? TranslateSynopsis { get; init; }
+
+    /// <summary>Advanced engines: glossary, one "source term = translation" per line; inline text (<c>\n</c> for a line break) or the path to a text file.</summary>
+    public string? TranslateGlossary { get; init; }
+
+    /// <summary>Advanced engines: default | formal | informal (see <see cref="AutoTranslateRunner.FormalityValues"/>).</summary>
+    public string? TranslateFormality { get; init; }
+
     public bool TeletextOnly { get; init; }
     public bool SkipTeletext { get; init; }
     public int? TeletextOnlyPage { get; init; }

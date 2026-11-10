@@ -39,6 +39,13 @@ public partial class ImproveTimeCodesRow : ObservableObject
     /// <summary>The user moved or resized the line in the waveform; <see cref="UndoAdjustment"/> brings back the result.</summary>
     public bool IsAdjustedByHand => Status == SubtitleRetimer.LineStatus.AdjustedByHand;
 
+    /// <summary>
+    /// The aligner flagged the move for the user to check (too large to vouch for, or disputed by
+    /// speech-to-text). Follows the result, not the tick box or a hand adjustment, so the set stays
+    /// the one the "To check" summary counts while the user works through it.
+    /// </summary>
+    public bool NeedsCheck => _result is { } result && SubtitleRetimer.IsUnconfirmed(result.Status);
+
     private readonly double _startSeconds;
     private readonly double _endSeconds;
     private readonly Action<ImproveTimeCodesRow> _applyChanged;

@@ -6,9 +6,11 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Svg.Skia;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using SkiaSharp;
 using System;
 using System.Threading.Tasks;
 
@@ -57,15 +59,14 @@ public class AboutWindow : Window
             TextWrapping = TextWrapping.Wrap,
         };
 
-        var imageNames = new[] { "about.png", "about1.png", "about2.png", "about3.png" };
-        var bitmaps = new Bitmap[imageNames.Length];
+        var imageNames = new[] { "about1.svg", "about2.svg", "about3.svg", "about4.svg", "about5.svg" };
+        var images = new Bitmap[imageNames.Length];
         for (var i = 0; i < imageNames.Length; i++)
         {
-            var assetUri = new Uri($"avares://SubtitleEdit/Assets/{imageNames[i]}");
-            bitmaps[i] = new Bitmap(AssetLoader.Open(assetUri));
+            images[i] = RasterizeSvg(imageNames[i]);
         }
 
-        var imageIndex = Random.Shared.Next(bitmaps.Length); // start on a random image
+        var imageIndex = Random.Shared.Next(images.Length); // start on a random image
 
         // Two stacked image layers that cross-dissolve: each cycle the old
         // picture fades out on one layer while the next fades in on the other.
@@ -85,7 +86,7 @@ public class AboutWindow : Window
 
         var layerA = MakeImageLayer();
         var layerB = MakeImageLayer();
-        layerA.Source = bitmaps[imageIndex];
+        layerA.Source = images[imageIndex];
         var currentLayer = layerA;
 
         var imageAbout = new Panel
@@ -99,9 +100,9 @@ public class AboutWindow : Window
         var cycleTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(5500) };
         cycleTimer.Tick += (_, _) =>
         {
-            imageIndex = (imageIndex + 1) % bitmaps.Length;
+            imageIndex = (imageIndex + 1) % images.Length;
             var nextLayer = ReferenceEquals(currentLayer, layerA) ? layerB : layerA;
-            nextLayer.Source = bitmaps[imageIndex];
+            nextLayer.Source = images[imageIndex];
             nextLayer.Opacity = 1;    // new image fades in...
             currentLayer.Opacity = 0; // ...as the old image fades out at the same time
             currentLayer = nextLayer;
@@ -116,9 +117,11 @@ public class AboutWindow : Window
         Closed += delegate
         {
             cycleTimer.Stop();
-            foreach (var bitmap in bitmaps)
+            layerA.Source = null;
+            layerB.Source = null;
+            foreach (var image in images)
             {
-                bitmap.Dispose();
+                image.Dispose();
             }
         };
 
@@ -218,5 +221,32 @@ public class AboutWindow : Window
 
         UiUtil.FocusOnFirstActivation(this, buttonOk); // hack to make OnKeyDown work
         KeyDown += vm.OnKeyDown;
+    }
+
+    // SvgImage draws straight onto the Skia canvas and ignores the Opacity of its Image
+    // control, so the cross-dissolve layers would just stack (#16590). A bitmap honors
+    // Opacity; render at 4x of the 128 px box so it stays sharp on high-DPI screens.
+    private static Bitmap RasterizeSvg(string imageName)
+    {
+        const int size = 512;
+        using var assetStream = AssetLoader.Open(new Uri($"avares://SubtitleEdit/Assets/{imageName}"));
+        using var svg = SvgSource.LoadFromStream(assetStream);
+        using var skBitmap = new SKBitmap(size, size, SKColorType.Bgra8888, SKAlphaType.Premul);
+        using (var canvas = new SKCanvas(skBitmap))
+        {
+            canvas.Clear(SKColors.Transparent);
+            var picture = svg.Picture;
+            if (picture != null)
+            {
+                var bounds = picture.CullRect;
+                var scale = Math.Min(size / bounds.Width, size / bounds.Height);
+                canvas.Translate((size - bounds.Width * scale) / 2f, (size - bounds.Height * scale) / 2f);
+                canvas.Scale(scale);
+                canvas.Translate(-bounds.Left, -bounds.Top);
+                canvas.DrawPicture(picture);
+            }
+        }
+
+        return skBitmap.ToAvaloniaBitmap();
     }
 }

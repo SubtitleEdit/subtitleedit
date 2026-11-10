@@ -530,6 +530,14 @@ public class OcrWindow : Window
         }
         double ColumnWidth(string header, string widestCellText) =>
             Math.Max(MeasureWidth(header), MeasureWidth(widestCellText)) + cellChrome;
+        double ImageColumnStarWidth(double imageMaxWidth) =>
+            // Single definition for the column seeding and the zoom handler below. GridLength
+            // star weights must be finite and strictly positive: the VM's zoom clamp keeps the
+            // ratio in (~0.5, ~3.3), and the clamp here keeps a stray 0/negative/NaN from
+            // collapsing or corrupting the column.
+            double.IsFinite(imageMaxWidth)
+                ? Math.Clamp(imageMaxWidth / OcrViewModel.DefaultImageMaxWidth, 0.05, 5)
+                : 1;
 
         var lastItem = vm.OcrSubtitleItems.LastOrDefault();
         var maxDuration = vm.OcrSubtitleItems.Count > 0 ? vm.OcrSubtitleItems.Max(p => p.Duration) : TimeSpan.Zero;
@@ -595,10 +603,13 @@ public class OcrWindow : Window
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     Binding = new Binding(nameof(OcrSubtitleItem.Duration)) { Converter = shortTimeConverter },
                 },
+                // Star-sized so the thumbnails follow the window width (#10533); the weight is
+                // seeded from the VM (1 at the default ImageMaxWidth) and Ctrl+zoom rescales it
+                // (see the ImageMaxWidth handler below).
                 new TableViewColumn
                 {
                     Header = Se.Language.General.Image,
-                    Width = new GridLength(vm.ImageMaxWidth + cellChrome),
+                    Width = new GridLength(ImageColumnStarWidth(vm.ImageMaxWidth), GridUnitType.Star),
                     CellTheme = UiUtil.TableViewNoPaddingCellTheme,
                     HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
                     CellTemplate = new FuncDataTemplate<OcrSubtitleItem>((item, _) =>
@@ -617,8 +628,9 @@ public class OcrWindow : Window
                                 Source = bitmap,
                                 Stretch = Avalonia.Media.Stretch.Uniform
                             };
+                            // Width follows the star column; only the height stays capped by the VM
+                            // (zoom), so the bitmap keeps its own aspect while filling the cell (#10533).
                             image.Bind(Image.MaxHeightProperty, new Binding(nameof(vm.ImageMaxHeight)) { Source = vm });
-                            image.Bind(Image.MaxWidthProperty, new Binding(nameof(vm.ImageMaxWidth)) { Source = vm });
 
                             // Subtitle bitmaps are usually light text on a transparent background, which
                             // is invisible on a light grid - give them a backdrop so they show. A
@@ -626,8 +638,12 @@ public class OcrWindow : Window
                             // glyphs at thumbnail size; it is kept only in the pre-processing preview,
                             // where the image is large enough for it. The colour is shared with the
                             // binary-edit grid and configurable from either (#14328).
+                            // Hug the fitted bitmap instead of stretching across the cell: a
+                            // height-capped thumbnail would otherwise letterbox inside a
+                            // full-width dark box (#10533).
                             var imageContainer = new Border
                             {
+                                HorizontalAlignment = HorizontalAlignment.Left,
                                 Background = previewBackground,
                                 CornerRadius = new CornerRadius(3),
                                 Padding = new Thickness(3),
@@ -685,14 +701,17 @@ public class OcrWindow : Window
         // panel re-estimates its pixel extent, and the grid scrolled away from the line.
         TableViewScrollAnchor.Attach(dataGridSubtitle);
 
-        // The image thumbnails scale with Ctrl+plus/minus/0 and Ctrl+wheel (Image.MaxWidth/MaxHeight are
-        // bound to the VM) - keep the pixel-sized image column in step with the zoom.
+        // The thumbnails follow the window width via the star-sized image column (#10533); zoom
+        // (Ctrl+plus/minus/0 and Ctrl+wheel) scales the column's star weight linearly in
+        // ImageMaxWidth. A star weight acts through the column's share w/(w+1) of the flexible
+        // width, so width-bound thumbnails grow sub-linearly per step; height-capped ones keep
+        // the previous ~10% per step through the Image.MaxHeight binding, which zoom also scales.
         var imageColumn = dataGridSubtitle.Columns[dataGridSubtitle.Columns.Count - 2];
         vm.PropertyChanged += (_, args) =>
         {
             if (args.PropertyName == nameof(vm.ImageMaxWidth))
             {
-                imageColumn.Width = new GridLength(vm.ImageMaxWidth + cellChrome);
+                imageColumn.Width = new GridLength(ImageColumnStarWidth(vm.ImageMaxWidth), GridUnitType.Star);
 
                 // Zooming re-measures every row, and the ScrollViewer keeps its pixel
                 // offset - which lands on a different row (zooming out far enough pins the
@@ -1395,7 +1414,7 @@ public class OcrWindow : Window
         AutomationProperties.SetAutomationId(buttonOk, "OcrOkButton");
         AutomationProperties.SetAutomationId(buttonCancel, "OcrCancelButton");
 
-        return EditorChrome.MakeButtonBar(subtitleCountText, buttonInspect, buttonInspectAdditions, buttonExport, buttonStart, buttonPause, buttonOk, buttonCancel);
+        return EditorChrome.MakeButtonBar(subtitleCountText, buttonInspect, buttonInspectAdditions, buttonExport, buttonStart, buttonPause, buttonCancel, buttonOk);
     }
 
     /// <summary>

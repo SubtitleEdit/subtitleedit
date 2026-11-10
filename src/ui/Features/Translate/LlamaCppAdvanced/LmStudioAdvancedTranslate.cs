@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 
@@ -15,6 +16,12 @@ public class LmStudioAdvancedTranslate : AdvancedTranslatorBase
     public override string ToString() => StaticName;
     public override string Name => StaticName;
     public override string Url => "https://lmstudio.ai/";
+
+    public override SeLlamaCppAdvanced Settings
+    {
+        get => Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        set => Se.Settings.AutoTranslate.LlamaCppAdvanced = value;
+    }
 
     /// <summary>
     /// Endpoint used when the url in settings is only the service base - see <see cref="AutoTranslateUrl"/>.

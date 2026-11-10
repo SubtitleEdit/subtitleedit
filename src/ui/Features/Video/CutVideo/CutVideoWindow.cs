@@ -286,7 +286,11 @@ public class CutVideoWindow : Window
 
     private static Border MakeVideoPlayerView(CutVideoViewModel vm)
     {
+        // Initialize runs before the window is built, so the SMPTE flag sits on the view model's
+        // placeholder player - carry it over, or row seeks and set start/end use the wrong clock
+        var isSmpteTimingEnabled = vm.VideoPlayer.IsSmpteTimingEnabled;
         vm.VideoPlayer = InitVideoPlayer.MakeVideoPlayer();
+        vm.VideoPlayer.IsSmpteTimingEnabled = isSmpteTimingEnabled;
         vm.VideoPlayer.FullScreenIsVisible = false;
         vm.VideoPlayer.HorizontalAlignment = HorizontalAlignment.Stretch;
         vm.VideoPlayer.VerticalAlignment = VerticalAlignment.Stretch;

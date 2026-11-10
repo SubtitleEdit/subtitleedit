@@ -118,6 +118,9 @@ public class LanguageFixCommonErrors
     public string FixCommonOcrErrorsStep1 { get; set; }
     public string SearchRulesDotDotDot { get; set; }
     public string GoToApplyFixes { get; set; }
+    public string ChooseFixes { get; set; }
+    public string ApplyFixes { get; set; }
+    public string RulesEnabledXOfY { get; set; }
     public string BackToFixList { get; set; }
     public string FixCommonOcrErrorsStep2 { get; set; }
     public string FixCommonOcrErrorsStep2FixesFoundX { get; set; }
@@ -198,12 +201,12 @@ public class LanguageFixCommonErrors
         XFixedBut = "{0} issue(s) fixed but the subtitle still contains errors - see log for details";
         XCouldBeFixedBut = "{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details";
         NumberOfImportantLogMessages = "{0} important log messages!";
-        FixedOkXY = "Fixed and OK - '{0}': {1}";
+        FixedOkXY = "Fixed and OK - \"{0}\": {1}";
         XFixesApplied = "Fixes applied: {0}";
         XFixesYSelected = "{0} fixes - {1} selected";
         FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph";
-        MergeShortLine = "Merge short line (single sentence)";
-        MergeShortLineAll = "Merge short line (all except dialogs)";
+        MergeShortLine = "Remove line break (single sentence)";
+        MergeShortLineAll = "Remove line break (all except dialogs)";
         BreakLongLine = "Break long line";
         FixLongDisplayTime = "Fix long display time";
         FixInvalidItalicTag = "Fix invalid italic tag";
@@ -249,6 +252,9 @@ public class LanguageFixCommonErrors
         FixCommonOcrErrorsStep2 = "Fix common errors, step 2 (apply fixes)";
         SearchRulesDotDotDot = "Search rules...";
         GoToApplyFixes = "Go to apply fixes";
+        ChooseFixes = "Choose fixes";
+        ApplyFixes = "Apply fixes";
+        RulesEnabledXOfY = "{0} of {1} on";
         BackToFixList =  "Back to fix list";
         FixCommonOcrErrorsStep2FixesFoundX =  "Fix common errors, step 2 - Fixes found: {0}";
         Action = "Action";

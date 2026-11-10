@@ -340,7 +340,7 @@ public class ActorVoiceMappingWindow : Window
         var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, Margin = new Thickness(-10, 0, 0, 0), Children = { applyDefault, clearAll } };
-        return EditorChrome.MakeFlushButtonBar(actions, cancel, ok);
+        return EditorChrome.MakeButtonBar(actions, cancel, ok);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

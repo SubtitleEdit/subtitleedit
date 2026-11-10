@@ -33,6 +33,24 @@ public class CrispAsrGranite : CrispAsrEngineBase
        {
             new WhisperModel
             {
+                Name = "granite-speech-5.0-2b-q4_k.gguf",
+                Size = "4.07 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/granite-speech-5.0-2b-GGUF/resolve/main/granite-speech-5.0-2b-q4_k.gguf"
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "granite-speech-5.0-2b-f16.gguf",
+                Size = "5.58 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/granite-speech-5.0-2b-GGUF/resolve/main/granite-speech-5.0-2b-f16.gguf"
+                ],
+            },
+            new WhisperModel
+            {
                 Name = "granite-speech-4.1-2b-q4_k-mini.gguf",
                 Size = "1.78 GB",
                 Urls =

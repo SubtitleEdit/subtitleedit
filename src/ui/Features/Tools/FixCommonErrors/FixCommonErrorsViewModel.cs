@@ -16,6 +16,8 @@ using Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine;
 using System;
+using System.ComponentModel;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -45,6 +47,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private SubtitleLineViewModel? _selectedParagraph;
     [ObservableProperty] private ObservableCollection<ProfileDisplayItem> _profiles;
     [ObservableProperty] private ProfileDisplayItem? _selectedProfile;
+    [ObservableProperty] private string _rulesEnabledText = string.Empty;
+    [ObservableProperty] private string _fixesFoundBadge = string.Empty;
     [ObservableProperty] private bool _isStepOne;
     [ObservableProperty] private bool _tryToGuessUnknownWords;
     [ObservableProperty] private string _step2Title;
@@ -70,6 +74,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     public Subtitle FixedSubtitle = new();
 
     private List<FixRuleDisplayItem> _allFixRules = new();
+    private ProfileDisplayItem? _watchedProfile;
     private readonly LanguageFixCommonErrors _language;
     private bool _previewMode = true;
 
@@ -359,6 +364,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private void EnterStep2()
     {
         IsStepOne = false;
+        FixesFoundBadge = string.Empty;
         _totalFixes = 0;
         _appliedLogEntries.Clear();
         FixesAppliedText = string.Empty;
@@ -842,6 +848,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         UpdateGaps();
 
         Step2Title = string.Format(Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep2FixesFoundX, Fixes.Count);
+        FixesFoundBadge = Fixes.Count.ToString(CultureInfo.CurrentCulture);
         RebuildFixChips();
     }
 
@@ -1075,6 +1082,41 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     {
         // Each profile has its own grid collection - keep the search text applied to it.
         ApplyRuleFilter();
+        WatchRulesEnabled(value);
+    }
+
+    /// <summary>
+    /// Keeps the "x of y on" count current. It counts the profile's full rule list, so searching
+    /// the grid does not change it.
+    /// </summary>
+    private void WatchRulesEnabled(ProfileDisplayItem? profile)
+    {
+        foreach (var rule in _watchedProfile?.AllFixRules ?? [])
+        {
+            rule.PropertyChanged -= OnRulePropertyChanged;
+        }
+
+        _watchedProfile = profile;
+        foreach (var rule in profile?.AllFixRules ?? [])
+        {
+            rule.PropertyChanged += OnRulePropertyChanged;
+        }
+
+        UpdateRulesEnabledText();
+    }
+
+    private void OnRulePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(FixRuleDisplayItem.IsSelected))
+        {
+            UpdateRulesEnabledText();
+        }
+    }
+
+    private void UpdateRulesEnabledText()
+    {
+        var rules = _watchedProfile?.AllFixRules ?? [];
+        RulesEnabledText = string.Format(Se.Language.Tools.FixCommonErrors.RulesEnabledXOfY, rules.Count(rule => rule.IsSelected), rules.Count);
     }
 
     /// <summary>

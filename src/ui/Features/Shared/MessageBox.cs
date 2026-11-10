@@ -4,13 +4,14 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
@@ -153,14 +154,13 @@ public class MessageBox : Window
         {
             // Theme images are unpacked from Themes.zip into Se.ThemesFolder at start-up; a path
             // relative to the working directory never resolved, so no icon was ever shown here.
-            var iconPath = Path.Combine(UiTheme.ImageFolder, $"{icon}.png");
             try
             {
-                iconImage.Source = new Bitmap(iconPath);
+                iconImage.Source = ThemeIcon.LoadForTheme(UiTheme.ImageFolder, icon.ToString());
             }
             catch
             {
-                Se.LogError($"Could not load message box icon \"{iconPath}\".");
+                Se.LogError($"Could not load message box icon \"{icon}\" from \"{UiTheme.ImageFolder}\".");
             }
 
             grid.Children.Add(iconImage);
@@ -228,67 +228,24 @@ public class MessageBox : Window
         };
         _buttonPanel = buttonPanel;
 
-        void AddButton(string text, MessageBoxResult result)
+        Button? defaultButton = null;
+        foreach (var (result, isDefault) in GetButtonLayout(buttons, custom1, custom2, custom3, custom4))
         {
-            var btn = UiUtil.MakeButton(text);
+            var btn = UiUtil.MakeButton(GetButtonText(result, custom1, custom2, custom3, custom4));
             btn.Margin = new Thickness(0);
-            if (buttonPanel.Children.Count == 0)
+            if (isDefault)
             {
-                btn.Classes.Add("primary"); // the default (first) choice, focused below
+                btn.Classes.Add("primary"); // the default choice, focused below
+                defaultButton = btn;
             }
 
             btn.Click += (_, _) => { _result = result; Close(_result); };
             buttonPanel.Children.Add(btn);
         }
 
-        if (!string.IsNullOrEmpty(custom1))
-        {
-            AddButton(custom1, MessageBoxResult.Custom1);
-        }
-
-        if (!string.IsNullOrEmpty(custom2))
-        {
-            AddButton(custom2, MessageBoxResult.Custom2);
-        }
-
-        if (!string.IsNullOrEmpty(custom3))
-        {
-            AddButton(custom3, MessageBoxResult.Custom3);
-        }
-
-        if (!string.IsNullOrEmpty(custom4))
-        {
-            AddButton(custom4, MessageBoxResult.Custom4);
-        }
-
-        // Add buttons based on MessageBoxButtons
-        switch (buttons)
-        {
-            case MessageBoxButtons.OK:
-                AddButton(Se.Language.General.Ok, MessageBoxResult.OK);
-                _hasOnlyOk = true;
-                break;
-            case MessageBoxButtons.OKCancel:
-                AddButton(Se.Language.General.Ok, MessageBoxResult.OK);
-                AddButton(Se.Language.General.Cancel, MessageBoxResult.Cancel);
-                _hasCancel = true;
-                break;
-            case MessageBoxButtons.YesNo:
-                AddButton(Se.Language.General.Yes, MessageBoxResult.Yes);
-                AddButton(Se.Language.General.No, MessageBoxResult.No);
-                _hasNo = true;
-                break;
-            case MessageBoxButtons.YesNoCancel:
-                AddButton(Se.Language.General.Yes, MessageBoxResult.Yes);
-                AddButton(Se.Language.General.No, MessageBoxResult.No);
-                AddButton(Se.Language.General.Cancel, MessageBoxResult.Cancel);
-                _hasCancel = true;
-                break;
-            case MessageBoxButtons.Cancel:
-                AddButton(Se.Language.General.Cancel, MessageBoxResult.Cancel);
-                _hasCancel = true;
-                break;
-        }
+        _hasOnlyOk = buttons == MessageBoxButtons.OK;
+        _hasCancel = buttons is MessageBoxButtons.OKCancel or MessageBoxButtons.YesNoCancel or MessageBoxButtons.Cancel;
+        _hasNo = buttons == MessageBoxButtons.YesNo;
 
         var buttonBar = EditorChrome.WrapButtonBar(buttonPanel);
 
@@ -320,7 +277,7 @@ public class MessageBox : Window
         grid.ContextFlyout = contextMenu;
         UiUtil.AttachMacContextFlyoutHandler(this, grid);
 
-        // Focus the first button (the positive/default choice - Yes or OK), like classic Win32
+        // Focus the default button (the first custom choice, else Yes or OK), like classic Win32
         // message boxes: Space/Enter accepts, Escape cancels, arrow keys move focus. That makes
         // the key that opened this dialog a hazard: Avalonia's Button clicks on Space KeyUp
         // without checking it also saw the KeyDown, and a key still held from the previous
@@ -374,7 +331,7 @@ public class MessageBox : Window
             // once, so arrow-key navigation survives a focus round-trip to another window.
             _openedTimestamp = Stopwatch.GetTimestamp();
         };
-        UiUtil.FocusOnFirstActivation(this, () => buttonPanel.Children[0].Focus());
+        UiUtil.FocusOnFirstActivation(this, () => (defaultButton ?? buttonPanel.Children[0]).Focus());
         Deactivated += delegate
         {
             // Key releases go to the newly focused window, so presses counted here would
@@ -385,6 +342,71 @@ public class MessageBox : Window
 
         UiTheme.ApplyScaleToWindow(this);
     }
+
+    /// <summary>
+    /// The buttons left to right, in the order the other dialogs' button bars use: the dismissing
+    /// buttons (Cancel, No) on the left, the custom choices in the order given, and the positive
+    /// answer (Yes/OK) on the far right. The default (primary, initially focused) button is the
+    /// first custom choice when there is one, else Yes/OK, else Cancel - unchanged from when the
+    /// default was simply the leftmost button.
+    /// </summary>
+    internal static IReadOnlyList<(MessageBoxResult Result, bool IsDefault)> GetButtonLayout(
+        MessageBoxButtons buttons,
+        string? custom1 = null,
+        string? custom2 = null,
+        string? custom3 = null,
+        string? custom4 = null)
+    {
+        var results = new List<MessageBoxResult>();
+        if (buttons is MessageBoxButtons.OKCancel or MessageBoxButtons.YesNoCancel or MessageBoxButtons.Cancel)
+        {
+            results.Add(MessageBoxResult.Cancel);
+        }
+
+        if (buttons is MessageBoxButtons.YesNo or MessageBoxButtons.YesNoCancel)
+        {
+            results.Add(MessageBoxResult.No);
+        }
+
+        var customs = new[]
+            {
+                (custom1, MessageBoxResult.Custom1),
+                (custom2, MessageBoxResult.Custom2),
+                (custom3, MessageBoxResult.Custom3),
+                (custom4, MessageBoxResult.Custom4),
+            }
+            .Where(c => !string.IsNullOrEmpty(c.Item1))
+            .Select(c => c.Item2)
+            .ToList();
+        results.AddRange(customs);
+
+        MessageBoxResult? positive = buttons switch
+        {
+            MessageBoxButtons.OK or MessageBoxButtons.OKCancel => MessageBoxResult.OK,
+            MessageBoxButtons.YesNo or MessageBoxButtons.YesNoCancel => MessageBoxResult.Yes,
+            _ => null,
+        };
+        if (positive != null)
+        {
+            results.Add(positive.Value);
+        }
+
+        var defaultResult = customs.Count > 0 ? customs[0] : positive ?? results.FirstOrDefault();
+        return results.Select(r => (r, r == defaultResult)).ToList();
+    }
+
+    private static string GetButtonText(MessageBoxResult result, string? custom1, string? custom2, string? custom3, string? custom4) => result switch
+    {
+        MessageBoxResult.OK => Se.Language.General.Ok,
+        MessageBoxResult.Cancel => Se.Language.General.Cancel,
+        MessageBoxResult.Yes => Se.Language.General.Yes,
+        MessageBoxResult.No => Se.Language.General.No,
+        MessageBoxResult.Custom1 => custom1!,
+        MessageBoxResult.Custom2 => custom2!,
+        MessageBoxResult.Custom3 => custom3!,
+        MessageBoxResult.Custom4 => custom4!,
+        _ => result.ToString(),
+    };
 
     public static async Task<MessageBoxResult> Show(
         Window owner,

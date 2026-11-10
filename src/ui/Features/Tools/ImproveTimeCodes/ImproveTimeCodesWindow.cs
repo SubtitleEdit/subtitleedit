@@ -362,6 +362,15 @@ public class ImproveTimeCodesWindow : Window
         var buttonNext = EditorChrome.CreateToolButton(IconNames.ArrowDownThin, $"{Se.Language.General.NextChange} (F8)", vm.NextChangeCommand, 28);
         buttonNext.Bind(IsEnabledProperty, new Binding(nameof(vm.CanGoNext)) { Source = vm });
 
+        // Amber like the status dot of the lines they step to, so they don't read as a second ▲ / ▼ pair.
+        var buttonPrevToCheck = EditorChrome.CreateToolButton(IconNames.ArrowUpThin, $"{Se.Language.General.PreviousToCheck} (Shift+F7)", vm.PreviousToCheckCommand, 28);
+        buttonPrevToCheck.Foreground = StatusDots.Amber;
+        buttonPrevToCheck.Bind(IsEnabledProperty, new Binding(nameof(vm.CanGoPreviousToCheck)) { Source = vm });
+
+        var buttonNextToCheck = EditorChrome.CreateToolButton(IconNames.ArrowDownThin, $"{Se.Language.General.NextToCheck} (Shift+F8)", vm.NextToCheckCommand, 28);
+        buttonNextToCheck.Foreground = StatusDots.Amber;
+        buttonNextToCheck.Bind(IsEnabledProperty, new Binding(nameof(vm.CanGoNextToCheck)) { Source = vm });
+
         var labelPosition = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
@@ -379,6 +388,10 @@ public class ImproveTimeCodesWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Children = { buttonPrev, labelPosition, buttonNext },
         };
+        // Shift+F7/Shift+F8 step through the lines flagged for the user to check.
+        nav.Children.Add(EditorChrome.MakeToolbarSeparator());
+        nav.Children.Add(buttonPrevToCheck);
+        nav.Children.Add(buttonNextToCheck);
 
         var buttonPlayPause = EditorChrome.CreateToolButton("mdi-play-pause", $"{l.PlayPause} (Space)", vm.TogglePlayPauseCommand, 28);
         var buttonPlayAligned = EditorChrome.MakeActionButton(IconNames.Play, l.PlayAligned, vm.PlaySelectedAlignedCommand);

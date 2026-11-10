@@ -2154,7 +2154,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SettlePendingExactSeek();
         _pausedValue = null;
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+        if (!IsCoreUp)
         {
             return;
         }
@@ -2180,7 +2180,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _lastRawTimePos = -1;
 
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+
+        // No core yet means nothing is playing: a player closed before its first render pass,
+        // or with its native window still hidden behind the theme art, never got one (#16513).
+        if (_mpv == IntPtr.Zero || !_coreInitialized)
         {
             return;
         }
@@ -2665,7 +2668,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _pausedValue = null;
         CancelPendingExactSeek();
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+        if (!IsCoreUp)
         {
             return;
         }
@@ -2697,7 +2700,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SettlePendingExactSeek();
         _pausedValue = null;
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+        if (!IsCoreUp)
         {
             return;
         }
@@ -2716,7 +2719,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public void Pause()
     {
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+        if (!IsCoreUp)
         {
             return;
         }
@@ -2785,7 +2788,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SettlePendingExactSeek();
         _pausedValue = null;
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+        if (!IsCoreUp)
         {
             return;
         }
@@ -2802,7 +2805,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SettlePendingExactSeek();
         _pausedValue = null;
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+        if (!IsCoreUp)
         {
             return;
         }
@@ -2817,7 +2820,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public AudioTrackInfo? ToggleAudioTrack()
     {
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+        if (!IsCoreUp)
         {
             return null;
         }
@@ -2992,7 +2995,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public void SetAudioTrack(int trackId)
     {
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+        if (!IsCoreUp)
         {
             return;
         }
@@ -3009,7 +3012,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public void SetAudioDelay(double seconds)
     {
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero)
+        if (!IsCoreUp)
         {
             return;
         }
@@ -3214,6 +3217,14 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     {
         return DoSubtitleCommand("sub-add", fileName, "select");
     }
+
+    /// <summary>
+    /// Whether mpv will accept commands. The handle exists from CanLoad on, but the core only
+    /// starts with the first render pass, and a player that never renders - undocked at start-up,
+    /// or hidden behind the theme art - has none. A transport command sent to it can't change
+    /// anything (nothing is loaded) and only logs mpv's "core not initialized" (#16513, #16734).
+    /// </summary>
+    private bool IsCoreUp => _mpv != IntPtr.Zero && _coreInitialized;
 
     private int DoSubtitleCommand(params string[] args)
     {

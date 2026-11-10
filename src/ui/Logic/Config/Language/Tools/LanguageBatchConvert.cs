@@ -101,8 +101,8 @@ public class LanguageBatchConvert
         BatchConvertSettings = "Batch convert settings";
         OneActionsSelected = "One action selected";
         XActionsSelected = "{0} actions selected";
-        OutputFolderSource = " Output folder: Source folder";
-        OutputFolderX = " Output folder: {0}";
+        OutputFolderSource = "Output folder: Source folder";
+        OutputFolderX = "Output folder: {0}";
         EncodingXOverwriteY = "Encoding: {0}, overwrite existing files: {1}";
         TargetFormatSettings = "Target format settings";
         FileNameContainsDotDotDot = "File name contains...";

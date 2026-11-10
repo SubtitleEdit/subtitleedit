@@ -46,15 +46,78 @@ public static class Qwen3AsrWordSegmenter
     public static Subtitle BuildSubtitle(IReadOnlyList<Qwen3AsrWord> words, int maxCharsLatin = DefaultMaxCharsLatin, int maxCharsCjk = DefaultMaxCharsCjk)
     {
         var subtitle = new Subtitle();
+        foreach (var cue in BuildCues(words, maxCharsLatin, maxCharsCjk))
+        {
+            subtitle.Paragraphs.Add(new Paragraph(JoinText(cue, -1), cue.Start * 1000.0, cue.End * 1000.0));
+        }
+
+        return subtitle;
+    }
+
+    /// <summary>
+    /// The same cues as <see cref="BuildSubtitle"/>, but each cue is repeated once per word with
+    /// that word underlined ("Hello <u>world</u>."), each copy shown from its word's start until
+    /// the next word starts - the "highlight word" output whisper.cpp gives from its JSON.
+    /// </summary>
+    public static Subtitle BuildHighlightedSubtitle(IReadOnlyList<Qwen3AsrWord> words, int maxCharsLatin = DefaultMaxCharsLatin, int maxCharsCjk = DefaultMaxCharsCjk)
+    {
+        var subtitle = new Subtitle();
+        foreach (var cue in BuildCues(words, maxCharsLatin, maxCharsCjk))
+        {
+            // Punctuation that came as its own token is shown with its word, never on its own.
+            var highlightable = new List<int>();
+            for (var i = 0; i < cue.Pieces.Count; i++)
+            {
+                if (!IsPunctuationOnly(cue.Pieces[i].Token))
+                {
+                    highlightable.Add(i);
+                }
+            }
+
+            if (highlightable.Count == 0)
+            {
+                subtitle.Paragraphs.Add(new Paragraph(JoinText(cue, -1), cue.Start * 1000.0, cue.End * 1000.0));
+                continue;
+            }
+
+            for (var h = 0; h < highlightable.Count; h++)
+            {
+                var piece = cue.Pieces[highlightable[h]];
+                var start = h == 0 ? cue.Start : piece.Start;
+                var end = h + 1 < highlightable.Count ? cue.Pieces[highlightable[h + 1]].Start : cue.End;
+                if (end <= start)
+                {
+                    end = piece.End > start ? piece.End : start + 0.001;
+                }
+
+                subtitle.Paragraphs.Add(new Paragraph(JoinText(cue, highlightable[h]), start * 1000.0, end * 1000.0));
+            }
+        }
+
+        return subtitle;
+    }
+
+    private readonly record struct Piece(string Token, double Start, double End, bool Attach);
+
+    private sealed class Cue
+    {
+        public List<Piece> Pieces { get; } = new();
+        public double Start { get; set; }
+        public double End { get; set; }
+    }
+
+    private static List<Cue> BuildCues(IReadOnlyList<Qwen3AsrWord> words, int maxCharsLatin, int maxCharsCjk)
+    {
+        var cues = new List<Cue>();
         var text = new StringBuilder();
-        var startTime = 0.0;
-        var endTime = 0.0;
+        var current = new Cue();
 
         void Flush()
         {
             if (text.Length > 0)
             {
-                subtitle.Paragraphs.Add(new Paragraph(text.ToString().Trim(), startTime * 1000.0, endTime * 1000.0));
+                cues.Add(current);
+                current = new Cue();
                 text.Clear();
             }
         }
@@ -73,16 +136,16 @@ public static class Qwen3AsrWordSegmenter
             var breakAfter = raw.Contains('\n');
 
             var isPunctuationOnly = IsPunctuationOnly(token);
-            if (text.Length == 0 && isPunctuationOnly && subtitle.Paragraphs.Count > 0 && ClosesText(token))
+            if (text.Length == 0 && isPunctuationOnly && cues.Count > 0 && ClosesText(token))
             {
                 // A stray closing mark right after a sentence break (e.g. a closing quote emitted
                 // as its own token) belongs to the cue that was just closed, not to a new one.
                 // An opening mark or a dialog dash ("「", "“", "-") opens the next cue instead.
-                var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                last.Text += token;
-                if (word.EndSeconds * 1000.0 > last.EndTime.TotalMilliseconds)
+                var last = cues[cues.Count - 1];
+                last.Pieces.Add(new Piece(token, word.StartSeconds, word.EndSeconds, Attach: true));
+                if (word.EndSeconds > last.End)
                 {
-                    last.EndTime.TotalMilliseconds = word.EndSeconds * 1000.0;
+                    last.End = word.EndSeconds;
                 }
 
                 continue;
@@ -90,7 +153,7 @@ public static class Qwen3AsrWordSegmenter
 
             if (text.Length > 0 && !isPunctuationOnly)
             {
-                var gap = word.StartSeconds - endTime;
+                var gap = word.StartSeconds - current.End;
                 var endsClause = text.EndsWithAny(ClauseTerminators, ClosingMarks) || text.EndsWithAny(SentenceTerminators, ClosingMarks);
                 var maxChars = ContainsCjk(text) ? maxCharsCjk : maxCharsLatin;
                 var space = NeedsSpace(text[text.Length - 1], token[0]) ? 1 : 0;
@@ -103,8 +166,8 @@ public static class Qwen3AsrWordSegmenter
 
             if (text.Length == 0)
             {
-                startTime = word.StartSeconds;
-                endTime = word.EndSeconds;
+                current.Start = word.StartSeconds;
+                current.End = word.EndSeconds;
             }
             else
             {
@@ -113,13 +176,14 @@ public static class Qwen3AsrWordSegmenter
                     text.Append(' ');
                 }
 
-                if (word.EndSeconds > endTime)
+                if (word.EndSeconds > current.End)
                 {
-                    endTime = word.EndSeconds;
+                    current.End = word.EndSeconds;
                 }
             }
 
             text.Append(token);
+            current.Pieces.Add(new Piece(token, word.StartSeconds, word.EndSeconds, Attach: false));
 
             if (breakAfter || EndsSentence(token))
             {
@@ -128,7 +192,35 @@ public static class Qwen3AsrWordSegmenter
         }
 
         Flush();
-        return subtitle;
+        return cues;
+    }
+
+    /// <param name="underlineIndex">The piece to wrap in &lt;u&gt;, or -1 for none.</param>
+    private static string JoinText(Cue cue, int underlineIndex)
+    {
+        var sb = new StringBuilder();
+        var lastChar = '\0';
+        for (var i = 0; i < cue.Pieces.Count; i++)
+        {
+            var piece = cue.Pieces[i];
+            if (lastChar != '\0' && !piece.Attach && NeedsSpace(lastChar, piece.Token[0]))
+            {
+                sb.Append(' ');
+            }
+
+            if (i == underlineIndex)
+            {
+                sb.Append("<u>").Append(piece.Token).Append("</u>");
+            }
+            else
+            {
+                sb.Append(piece.Token);
+            }
+
+            lastChar = piece.Token[piece.Token.Length - 1];
+        }
+
+        return sb.ToString();
     }
 
     private static bool NeedsSpace(char previous, char next)

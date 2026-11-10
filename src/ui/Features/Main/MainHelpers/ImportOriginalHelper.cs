@@ -85,8 +85,15 @@ public static class ImportOriginalHelper
     /// two rows. A row that finds only used lines gets an empty original, which is the truthful
     /// answer - it has no source line of its own.
     /// </param>
+    /// <remarks>
+    /// A row that draws a shape only takes a line that draws one, and the other way around. A
+    /// background box has the times of the line it sits behind, so it could otherwise take that
+    /// line's original text away from it (#16499).
+    /// </remarks>
     internal static int FindOriginalLineIndex(SubtitleLineViewModel line, Subtitle original, bool[] used)
     {
+        var isShape = MainViewModel.IsAssaVectorDrawing(line.Text);
+
         for (var i = 0; i < original.Paragraphs.Count; i++)
         {
             if (used[i])
@@ -96,7 +103,8 @@ public static class ImportOriginalHelper
 
             var originalLine = original.Paragraphs[i];
             if (line.StartTime.TotalMilliseconds == originalLine.StartTime.TotalMilliseconds &&
-                line.EndTime.TotalMilliseconds == originalLine.EndTime.TotalMilliseconds)
+                line.EndTime.TotalMilliseconds == originalLine.EndTime.TotalMilliseconds &&
+                MainViewModel.IsAssaVectorDrawing(originalLine.Text) == isShape)
             {
                 return i;
             }
@@ -112,7 +120,8 @@ public static class ImportOriginalHelper
 
             var originalLine = original.Paragraphs[i];
             if (Math.Abs(line.StartTime.TotalMilliseconds - originalLine.StartTime.TotalMilliseconds) < 250 &&
-                Math.Abs(line.EndTime.TotalMilliseconds - originalLine.EndTime.TotalMilliseconds) < 500)
+                Math.Abs(line.EndTime.TotalMilliseconds - originalLine.EndTime.TotalMilliseconds) < 500 &&
+                MainViewModel.IsAssaVectorDrawing(originalLine.Text) == isShape)
             {
                 return i;
             }
@@ -128,13 +137,15 @@ public static class ImportOriginalHelper
             }
 
             var originalLine = original.Paragraphs[i];
-            if (originalLine.StartTime.TotalMilliseconds <= lineMiddle && originalLine.EndTime.TotalMilliseconds >= lineMiddle)
+            if (originalLine.StartTime.TotalMilliseconds <= lineMiddle && originalLine.EndTime.TotalMilliseconds >= lineMiddle &&
+                MainViewModel.IsAssaVectorDrawing(originalLine.Text) == isShape)
             {
                 return i;
             }
 
             var originalMiddle = (originalLine.StartTime.TotalMilliseconds + originalLine.EndTime.TotalMilliseconds) / 2.0;
-            if (line.StartTime.TotalMilliseconds <= originalMiddle && line.EndTime.TotalMilliseconds >= originalMiddle)
+            if (line.StartTime.TotalMilliseconds <= originalMiddle && line.EndTime.TotalMilliseconds >= originalMiddle &&
+                MainViewModel.IsAssaVectorDrawing(originalLine.Text) == isShape)
             {
                 return i;
             }

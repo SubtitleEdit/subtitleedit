@@ -1,5 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 namespace Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 
@@ -15,6 +17,12 @@ public class LlamaCppAdvancedTranslate : AdvancedTranslatorBase
     public override string ToString() => StaticName;
     public override string Name => StaticName;
     public override string Url => "https://github.com/ggml-org/llama.cpp";
+
+    public override SeLlamaCppAdvanced Settings
+    {
+        get => Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        set => Se.Settings.AutoTranslate.LlamaCppAdvanced = value;
+    }
 
     protected override string GetApiUrl()
     {

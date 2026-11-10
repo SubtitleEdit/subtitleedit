@@ -60,7 +60,7 @@ public class SeFile
         });
     }
 
-    public void AddToRecentFiles(string subtitleFileName, string subtitleFileNameOriginal, string videoFileName, int selectedLine, string encoding, long VideoOffsetInMs, bool videoIsSmpte, int audioTrack, string subtitleFileNameSecondary = "")
+    public void AddToRecentFiles(string subtitleFileName, string subtitleFileNameOriginal, string videoFileName, int selectedLine, string encoding, long VideoOffsetInMs, bool videoIsSmpte, int audioTrack, string subtitleFileNameSecondary = "", bool? useEmptyWaveform = null, bool? originalShowAllLines = null, bool? originalAllowEdit = null)
     {
         var existing = RecentFiles.FirstOrDefault(rf =>
             rf.SubtitleFileName == subtitleFileName && rf.SubtitleFileNameOriginal == subtitleFileNameOriginal);
@@ -79,6 +79,10 @@ public class SeFile
             }
         }
 
+        // null: keep the "Use empty waveform" choice remembered for this subtitle and video.
+        useEmptyWaveform ??= existing != null && existing.UseEmptyWaveform &&
+                             string.Equals(existing.VideoFileName, videoFileName, StringComparison.Ordinal);
+
         RecentFiles.RemoveAll(rf => rf.SubtitleFileName == subtitleFileName && rf.SubtitleFileNameOriginal == subtitleFileNameOriginal);
 
         RecentFiles.Insert(0, new RecentFile
@@ -92,6 +96,9 @@ public class SeFile
             VideoOffsetInMs = VideoOffsetInMs,
             VideoIsSmpte = videoIsSmpte,
             AudioTrack = audioTrack,
+            UseEmptyWaveform = useEmptyWaveform.Value,
+            OriginalShowAllLines = originalShowAllLines,
+            OriginalAllowEdit = originalAllowEdit,
         });
 
         if (RecentFiles.Count > RecentFilesMaximum)

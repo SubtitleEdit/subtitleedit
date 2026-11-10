@@ -558,6 +558,13 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         }
     }
 
+    // Windows reports AltGr as a synthetic LeftCtrl + right Alt, so _isControlDown is also set while
+    // AltGr is held - require Alt to be up so AltGr+letter (e.g. Polish AltGr+Z = ż) still types.
+    private bool IsShortcutModifierDown(KeyEventArgs e)
+    {
+        return (_isControlDown || _isWinDown) && !e.KeyModifiers.HasFlag(KeyModifiers.Alt);
+    }
+
     public void KeyDown(KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
@@ -591,7 +598,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         }
         else if (e.Key == Key.I)
         {
-            if (_isControlDown || _isWinDown)
+            if (IsShortcutModifierDown(e))
             {
                 e.Handled = true;
                 IsNewTextItalic = !IsNewTextItalic;
@@ -599,7 +606,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         }
         else if (e.Key == Key.F)
         {
-            if (_isControlDown || _isWinDown)
+            if (IsShortcutModifierDown(e))
             {
                 e.Handled = true;
                 SubmitOnFirstLetter = !SubmitOnFirstLetter;
@@ -607,7 +614,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         }
         else if (e.Key == Key.Z)
         {
-            if (_isControlDown || _isWinDown)
+            if (IsShortcutModifierDown(e))
             {
                 e.Handled = true;
                 NOcrDrawingCanvas.UndoLastPath();
@@ -615,7 +622,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         }
         else if (e.Key == Key.Y)
         {
-            if (_isControlDown || _isWinDown)
+            if (IsShortcutModifierDown(e))
             {
                 e.Handled = true;
                 NOcrDrawingCanvas.ReDoLastPath();

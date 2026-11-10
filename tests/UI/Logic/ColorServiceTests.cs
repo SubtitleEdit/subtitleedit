@@ -53,6 +53,18 @@ public class ColorServiceTests
         Assert.Equal("<font color=\"#FF0000\">Hello</font>", result);
     }
 
+    [Theory]
+    [InlineData("<font color=\"#FFFFFF\">Hello world</font>", "<font color=\"#0000FF\">Hello world</font>")]
+    [InlineData("<font color=\"#FFFFFF\" face=\"Arial\">Hello world</font>", "<font color=\"#0000FF\" face=\"Arial\">Hello world</font>")]
+    [InlineData("<font color=red face=\"Arial\">Hello world</font>", "<font color=\"#0000FF\" face=\"Arial\">Hello world</font>")]
+    [InlineData("<font color=\"#FFFFFF>Hello \"world\"</font>", "<font color=\"#0000FF\">Hello \"world\"</font>")]
+    public void SetColorTag_Srt_ReplacesExistingColor(string input, string expected)
+    {
+        var result = new ColorService().SetColorTag(input, Blue, new Subtitle(), new SubRip());
+
+        Assert.Equal(expected, result);
+    }
+
     [Fact]
     public void RemoveColorTag_WebVtt_StripsClassWrapperForGivenColor()
     {

@@ -6,8 +6,12 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.Bookmarks;
@@ -22,9 +26,83 @@ public partial class BookmarksListViewModel : ObservableObject
 
     public bool GoToPressed { get; private set; }
 
-    public BookmarksListViewModel()
+    private readonly IFileHelper _fileHelper;
+    private List<SubtitleLineViewModel> _allSubtitles = new();
+
+    public BookmarksListViewModel(IFileHelper fileHelper)
     {
+        _fileHelper = fileHelper;
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
+    }
+
+    /// <summary>
+    /// Saves the bookmarks to a text file, see <see cref="BookmarksFile"/>.
+    /// </summary>
+    [RelayCommand]
+    private async Task Export()
+    {
+        if (Window == null || Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickSaveFile(
+            Window,
+            new[] { (Se.Language.General.TextFiles, ".txt") },
+            "bookmarks",
+            Se.Language.General.BookmarksList);
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        try
+        {
+            await File.WriteAllTextAsync(fileName, BookmarksFile.ToText(Subtitles));
+        }
+        catch (Exception ex)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileName, ex.Message),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    /// <summary>
+    /// Reads a file saved by <see cref="Export"/> and sets its bookmarks on the matching lines -
+    /// existing bookmarks on other lines are kept.
+    /// </summary>
+    [RelayCommand]
+    private async Task Import()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.BookmarksList, Se.Language.General.TextFiles, ".txt");
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        try
+        {
+            BookmarksFile.Apply(await File.ReadAllTextAsync(fileName), _allSubtitles);
+        }
+        catch (Exception ex)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.Format(Se.Language.General.CouldNotOpenFileXErrorY, fileName, ex.Message),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        var selected = SelectedSubtitle;
+        Subtitles.Clear();
+        Subtitles.AddRange(_allSubtitles.Where(p => p.Bookmark != null));
+        SelectedSubtitle = selected != null && Subtitles.Contains(selected) ? selected : Subtitles.FirstOrDefault();
+        HasBookmarks = SelectedSubtitle != null;
     }
 
     [RelayCommand]
@@ -119,9 +197,10 @@ public partial class BookmarksListViewModel : ObservableObject
         }
     }
 
-    internal void Initialize(List<SubtitleLineViewModel> subtitleLineViewModels)
+    internal void Initialize(List<SubtitleLineViewModel> allSubtitles)
     {
-        Subtitles.AddRange(subtitleLineViewModels);
+        _allSubtitles = allSubtitles;
+        Subtitles.AddRange(allSubtitles.Where(p => p.Bookmark != null));
         if (Subtitles.Count > 0)
         {
             SelectedSubtitle = Subtitles[0];

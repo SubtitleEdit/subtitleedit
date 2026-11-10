@@ -210,7 +210,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         catch (Exception exception)
         {
             Se.LogError(exception);
-            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message);
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -218,7 +218,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         {
             if (!string.IsNullOrEmpty(containerResult.Error))
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, containerResult.Error);
+                await MessageBox.Show(Window, Se.Language.General.Error, containerResult.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -249,7 +249,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
 
             if (subtitle == null)
             {
-                await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat);
+                await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

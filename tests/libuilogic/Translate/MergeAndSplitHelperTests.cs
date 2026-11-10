@@ -242,9 +242,23 @@ public class MergeAndSplitHelperTests
     [InlineData("<i>♪ That David played\nAnd it pleased the Lord ♪</i>", true)]
     [InlineData("{\\an8}♫ La la la ♫", true)]
     [InlineData("♪♪", true)]
-    [InlineData("♪ Still singing", false)]
+    [InlineData("♪ Still singing", true)]
+    [InlineData("Last line of the verse ♪", true)]
+    [InlineData("♪ First line\n♪ Second line", true)]
+    [InlineData("First line ♪\nSecond line ♪", true)]
+    [InlineData("<i>♪ First line</i>\r\n<i>♪ Second line</i>", true)]
+    [InlineData("- ♪ La la ♪", true)]
+    [InlineData("- ♪ La la\n- ♪ Da da", true)]
+    [InlineData("♬ La la ♬", true)]
+    [InlineData("♩ La la", true)]
+    [InlineData("🎵 La la 🎵", true)]
+    [InlineData("🎶 First line\n🎶 Second line", true)]
     [InlineData("- ♪ La la ♪\n- Hello!", false)]
+    [InlineData("♪ La la\nHello!", false)]
+    [InlineData("Hello!\n♪ La la ♪", false)]
     [InlineData("Hello ♪ there", false)]
+    [InlineData("-", false)]
+    [InlineData("<i></i>", false)]
     [InlineData("", false)]
     public void IsMusicLine(string text, bool expected)
     {
@@ -764,6 +778,42 @@ public class MergeAndSplitHelperTests
         Assert.Equal("Er hat ebenfalls vorgesprochen und einen tollen Job gemacht.", rows[2].TranslatedText.Replace(Environment.NewLine, " "));
     }
 
+    // Issue #16555: an LLM folded two request lines into one and padded the end with a copy of
+    // the first line's translation, so the line count still matched and every row after the
+    // fold got its neighbour's translation, the last row a duplicate of the first.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_RejectsShiftedReplyPaddedWithDuplicate()
+    {
+        MergeAndSplitHelper.MergeSplitProblems = false;
+        var nl = Environment.NewLine;
+        var rows = MakeRows(
+            "You know that I would do" + nl + "everything for you. If you are",
+            "always that nice to me I" + nl + "will give you everything I have.",
+            "Come on. You don't know how beautiful this is.",
+            "I'm also very careful. You see?",
+            "It only hurts the first time.",
+            "Do you like it?");
+        var first = "Du weißt, dass ich alles für dich tun würde. Wenn du immer so nett zu mir bist, gebe ich dir alles, was ich habe.";
+        var reply = string.Join(nl,
+            first,
+            "Komm schon. Du weißt nicht, wie schön das ist. Ich bin auch sehr vorsichtig. Verstehst du?",
+            "Es tut nur beim ersten Mal weh.",
+            "Gefällt es dir?",
+            first);
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("English", "en"),
+            new TranslationPair("German", "de"),
+            0,
+            new FixedResultTranslator { Result = reply },
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(0, count);
+        Assert.All(rows, r => Assert.Equal(string.Empty, r.TranslatedText));
+    }
+
     private sealed class CapturingTranslator : IAutoTranslator
     {
         private readonly Action<string> _onTranslate;
@@ -885,3 +935,4 @@ public class MergeAndSplitHelperTests
         Assert.Equal("I think that's where Bianchi was born.", rows[2].TranslatedText);
     }
 }
+

@@ -26,8 +26,13 @@ public class OcrUrlCompletionTest
     [InlineData("localhost:11434/api/chat", "http://localhost:11434/api/chat")]
     [InlineData("http://localhost:11434/api/chat", "http://localhost:11434/api/chat")]
     [InlineData("https://ollama.example.com/api/chat", "https://ollama.example.com/api/chat")]
-    public void OllamaUrl_GetsHttpSchemeWhenMissing(string input, string expected)
+    [InlineData("localhost:11434/api/chat/", "http://localhost:11434/api/chat")]
+    [InlineData("127.0.0.1:11434", "http://127.0.0.1:11434/api/chat")]
+    [InlineData(" 127.0.0.1:11434/ ", "http://127.0.0.1:11434/api/chat")]
+    [InlineData("http://127.0.0.1:11434", "http://127.0.0.1:11434/api/chat")]
+    [InlineData("https://proxy.example.com/ollama/api/chat", "https://proxy.example.com/ollama/api/chat")]
+    public void OllamaUrl_IsCompletedWithSchemeAndPath(string input, string expected)
     {
-        Assert.Equal(expected, OllamaOcrEngine.CompleteScheme(input));
+        Assert.Equal(expected, OllamaOcrEngine.CompleteUrl(input));
     }
 }

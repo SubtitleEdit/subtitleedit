@@ -51,7 +51,7 @@ public class DoAutoTranslate
             {
                 while (index < subtitle.Paragraphs.Count && !cancellationToken.IsCancellationRequested)
                 {
-                    index += await batchTranslator.TranslateBatchAsync(rows, index, sourceLanguage.Code, targetLanguage.Code, cancellationToken);
+                    index += await batchTranslator.TranslateBatchAsync(rows, index, sourceLanguage.Code, targetLanguage.Code, null, cancellationToken);
                     Progress?.Invoke(Math.Min(index, subtitle.Paragraphs.Count), subtitle.Paragraphs.Count);
                 }
 

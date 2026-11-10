@@ -50,7 +50,9 @@ public class SeTableViewColumn : TableViewColumn
 
     public object? Tag { get; set; }
 
-    public double MinWidth { get; set; }
+    // Hides TableViewColumn.MinWidth on purpose: SE's own width hint, read when sizing columns,
+    // not a layout constraint on the control.
+    public new double MinWidth { get; set; }
 
     /// <summary>
     /// What a screen reader should say for this column's cell when reading the row. Defaults
@@ -318,6 +320,99 @@ public sealed class TableViewColumnManager
 /// </summary>
 public static class TableViewExtras
 {
+    /// <summary>
+    /// Fits the given columns to their header and cell text each time <paramref name="items"/>
+    /// changes (batched into one pass after the fill), so fixed-width columns such as number
+    /// and time take only the room they need and the star column gets the rest. TableView
+    /// has no content-based (Auto) sizing of its own.
+    /// </summary>
+    public static void AutoFitColumnsOnItemsChanged<T>(
+        TableView tableView,
+        ObservableCollection<T> items,
+        params (TableViewColumn Column, Func<T, string?> GetText)[] columns)
+    {
+        var pending = false;
+        void ScheduleFit()
+        {
+            if (pending)
+            {
+                return;
+            }
+
+            pending = true;
+            Dispatcher.UIThread.Post(() =>
+            {
+                pending = false;
+                AutoFitColumns(tableView, items, columns);
+            }, DispatcherPriority.Background);
+        }
+
+        items.CollectionChanged += (_, _) => ScheduleFit();
+
+        // Items filled before the grid was built (e.g. the track list) never raise a change.
+        if (items.Count > 0)
+        {
+            ScheduleFit();
+        }
+    }
+
+    /// <summary>
+    /// Sets each column's width to fit its header and the widest of its cell texts.
+    /// </summary>
+    public static void AutoFitColumns<T>(
+        TableView tableView,
+        IReadOnlyCollection<T> items,
+        params (TableViewColumn Column, Func<T, string?> GetText)[] columns)
+    {
+        var fontSize = tableView.FontSize > 0 ? tableView.FontSize : Se.Settings.Appearance.SubtitleGridFontSize;
+        var typeface = new Typeface(tableView.FontFamily ?? FontFamily.Default);
+        var headerTypeface = new Typeface(tableView.FontFamily ?? FontFamily.Default, FontStyle.Normal, FontWeight.SemiBold);
+        const double cellPadding = 8; // cell and header themes: 4 left + 4 right
+        // Grid line, sort-arrow room and sub-pixel rounding grow with the font size.
+        var safetyBuffer = Math.Max(10.0, fontSize);
+
+        foreach (var (column, getText) in columns)
+        {
+            var width = column.Header is string header ? MeasureTextWidth(header, headerTypeface, fontSize) : 0;
+
+            // Only the longest strings can be the widest (digits are about equally wide),
+            // which keeps the pass cheap on tracks with thousands of cues.
+            var longest = items
+                .Select(item => getText(item) ?? string.Empty)
+                .GroupBy(text => text.Length)
+                .OrderByDescending(group => group.Key)
+                .Take(2)
+                .SelectMany(group => group.Distinct().Take(20));
+            foreach (var text in longest)
+            {
+                width = Math.Max(width, MeasureTextWidth(text, typeface, fontSize));
+            }
+
+            if (width > 0)
+            {
+                column.Width = new GridLength(Math.Ceiling(width + cellPadding + safetyBuffer));
+            }
+        }
+    }
+
+    private static double MeasureTextWidth(string text, Typeface typeface, double fontSize)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return 0;
+        }
+
+        try
+        {
+            var formattedText = new FormattedText(text, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, fontSize, Brushes.Black);
+            return formattedText.WidthIncludingTrailingWhitespace;
+        }
+        catch
+        {
+            return text.Length * fontSize * 0.6;
+        }
+    }
+
     /// <summary>
     /// The visual whose origin is the viewport's top-left corner. The TableView template keeps the
     /// column header INSIDE the ScrollViewer (pinned above the rows), so the ScrollViewer's own

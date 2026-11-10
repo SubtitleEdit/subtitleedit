@@ -1453,7 +1453,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         item.Subtitle = new Subtitle();
 
         var batchImages = new List<PaddleOcrBatchInput>(numberOfImages);
-        item.Status = "Preparing OCR...";
+        item.Status = Se.Language.Ocr.PreparingOcr;
         for (var i = 0; i < imageSubtitles.Count; i++)
         {
             batchImages.Add(new PaddleOcrBatchInput
@@ -1947,6 +1947,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FramesPerSecond = profile.FramesPerSecond,
                 IsFullFrame = profile.IsFullFrame,
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
+                HdrWhiteNits = profile.IsHdrPalette ? profile.HdrWhiteNits : 0,
                 Mode3D = mode3D,
                 Depth3D = profile.Depth3D,
                 Plane3D = plane3D,
@@ -2052,6 +2053,17 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             item.Status = string.Format(Se.Language.General.ErrorX, Se.Language.General.Error);
             return;
+        }
+
+        // Written in time order, not in the order of the lines: an ASSA script is often grouped
+        // by what the author worked on, and a Blu-ray sup written in that order jumps back in
+        // time - a decoder drops what comes after the timeline has passed it (issue #16714).
+        // OrderBy is stable, so lines starting together keep their order. The index is the
+        // position in the file: the Blu-ray composition numbers count up with it.
+        imageParameters = imageParameters.OrderBy(p => p.StartTime).ToList();
+        for (var i = 0; i < imageParameters.Count; i++)
+        {
+            imageParameters[i].Index = i;
         }
 
         var path = MakeOutputFileName(item, extension);
@@ -2286,6 +2298,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         var (scriptWidth, scriptHeight) = ExportTextTags.GetScriptResolution(item.Subtitle.Header);
 
+        // Each line drawn with its own ASSA style, as the export window does with "Use ASSA
+        // styles" - the same saved setting.
+        var assaStyles = Se.Settings.File.ExportImages.UseAssaStyles && IsAssaOrSsa(item.Subtitle)
+            ? ExportAssaStyles.FromHeader(item.Subtitle.Header)
+            : null;
+        if (assaStyles != null)
+        {
+            (scriptWidth, scriptHeight) = assaStyles.ScriptResolution;
+        }
+
         // Same fallback as the export dialog: an empty or unknown preset name in the profile
         // selects the first list item (soft shadow).
         var textEffectPreset = Enum.TryParse<TextEffectPreset>(profile.TextEffect, out var parsedPreset)
@@ -2312,7 +2334,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 PaddingLeftRight = profile.PaddingLeftRight,
                 PaddingTopBottom = profile.PaddingTopBottom,
                 Index = i,
-                Text = ExportTextTags.ToRenderableText(subtitle.Text),
+                Text = ExportTextTags.ToRenderableText(subtitle.Text, assaStyles, subtitle.Extra),
                 StartTime = subtitle.StartTime.TimeSpan,
                 EndTime = subtitle.EndTime.TimeSpan,
                 FontColor = profile.FontColor.FromHexToColor().ToSKColor(),
@@ -2328,6 +2350,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 BackgroundCornerRadius = profile.BackgroundCornerRadius,
                 ScreenWidth = profile.ScreenWidth,
                 ScreenHeight = profile.ScreenHeight,
+                PixelAspectRatio = ExportPixelAspect.Parse(profile.PixelAspect),
                 BottomTopMargin = profile.BottomTopMargin,
                 LeftRightMargin = profile.LeftRightMargin,
                 // The export handlers read these off the parameters: FCP/BDN take their
@@ -2336,6 +2359,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FramesPerSecond = profile.FramesPerSecond,
                 IsFullFrame = profile.IsFullFrame,
                 FullFrameBackgroundColor = profile.FullFrameBackgroundColor.FromHexToColor().ToSKColor(),
+                HdrWhiteNits = profile.IsHdrPalette ? profile.HdrWhiteNits : 0,
                 // The text effect configured in the shared export-images dialog - without this
                 // a batch convert silently rendered classic text while the dialog's preview
                 // showed the effect.
@@ -2351,6 +2375,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     profile.TextEffectArcBend,
                     profile.TextEffectWave),
             };
+
+            // The style first, so the override tags below win over it.
+            assaStyles?.Apply(imageParameter, subtitle.Extra, subtitle.Text, subtitle.MarginL, subtitle.MarginR, subtitle.MarginV);
 
             // "{\3c..}"/"{\4c..}"/"{\bord..}"/"{\shad..}", "{\fad(..)}" and "{\alpha&H..&}"
             // change what is drawn - read before rendering, overrides before the
@@ -3821,7 +3848,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             // A row the engine never returned text for keeps its source text rather than
             // being blanked - an engine failure part way through must not empty the rest.
-            if (!string.IsNullOrEmpty(translatedSubtitle[i].TranslatedText))
+            if (!string.IsNullOrWhiteSpace(translatedSubtitle[i].TranslatedText))
             {
                 subtitle.Paragraphs[i].Text = translatedSubtitle[i].TranslatedText;
             }

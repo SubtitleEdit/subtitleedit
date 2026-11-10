@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -218,10 +217,11 @@ public partial class BatchConvertAssaViewModel : ObservableObject
     {
         var editor = new SyntaxTextEditor
         {
-            Margin = new Thickness(0, 0, 10, 0),
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             ShowLineNumbers = true,
+            CornerRadius = new CornerRadius(EditorChrome.ListFrameContentRadius),
+            ClipToBounds = true,
             SourceHighlighter = new AssaSourceSyntaxHighlighting(),
             Text = text,
         };
@@ -266,16 +266,7 @@ public partial class BatchConvertAssaViewModel : ObservableObject
             }
         };
 
-        var textBoxBorder = new Border
-        {
-            BorderBrush = Brushes.Gray,
-            BorderThickness = new Thickness(1),
-            Child = editor,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        return new SyntaxTextEditorWrapper(editor, textBoxBorder);
+        return new SyntaxTextEditorWrapper(editor);
     }
 
     internal void OnKeyDown(KeyEventArgs e)

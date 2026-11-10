@@ -46,7 +46,7 @@ public class DownloadVideoFromUrlWindow : Window
 
         var errorText = new TextBlock
         {
-            Foreground = new SolidColorBrush(Color.FromRgb(0xC0, 0x39, 0x2B)),
+            Foreground = EditorChrome.ErrorTextBrush,
             TextWrapping = TextWrapping.Wrap,
             FontSize = EditorChrome.FieldFontSize,
         };

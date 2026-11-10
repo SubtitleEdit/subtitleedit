@@ -40,6 +40,8 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
     [ObservableProperty] bool _downloadIsEnabled;
     [ObservableProperty] private bool _supportsCustomModels;
     [ObservableProperty] private string _customModelHelpText;
+    [ObservableProperty] private bool _isModelPickerVisible;
+    [ObservableProperty] private string _downloadingModelText;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; internal set; }
@@ -74,6 +76,8 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
         Error = string.Empty;
         CustomModelHelpText = Se.Language.Video.AudioToText.CustomModelHelp;
         DownloadIsEnabled = true;
+        IsModelPickerVisible = true;
+        DownloadingModelText = string.Empty;
 
         _timer = new Timer(500);
         _timer.Elapsed += OnTimerOnElapsed;
@@ -470,6 +474,10 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject, ICl
 
     internal async void StartDownload()
     {
+        // The model was picked before the dialog opened, so it is only a progress dialog now:
+        // a model combo and an enabled-looking Download button there just confused. (#16598)
+        IsModelPickerVisible = false;
+        DownloadingModelText = SelectedModel?.ToString() ?? string.Empty;
         try
         {
             await Task.Delay(200);

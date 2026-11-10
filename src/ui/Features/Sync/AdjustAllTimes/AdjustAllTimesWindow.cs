@@ -68,11 +68,8 @@ public class AdjustAllTimesWindow : Window
 
         Content = EditorChrome.MakeRoot(EditorChrome.MakeSideBySide(adjustmentSection, linesSection), EditorChrome.MakeDockedButtonBar(labelStatus, buttonHelp, buttonOk));
 
-        Loaded += delegate
-        {
-            buttonOk.Focus(); // hack to make OnKeyDown work
-            UiUtil.RestoreWindowPosition(this);
-        };
+        UiUtil.FocusOnFirstActivation(this, timeCodeUpDown.FocusTextBox);
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         AddHandler(KeyDownEvent, (_, e) => vm.OnKeyDown(e), RoutingStrategies.Tunnel);
         Closing += (_, e) => vm.OnClosing(e);
     }

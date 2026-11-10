@@ -199,7 +199,11 @@ public class ColorService : IColorService
                 if (colorStart >= 0)
                 {
                     var valueStart = colorStart + " color=".Length;
-                    var quoteEnd = s.IndexOf('"', valueStart);
+                    // Only look for the closing quote inside the opening tag, so an unmatched quote
+                    // ('<font color="#FFFFFF>Hello "world"') falls back instead of eating dialogue.
+                    var quoteEnd = valueStart + 1 < end && s[valueStart] == '"'
+                        ? s.IndexOf('"', valueStart + 1, end - valueStart - 1)
+                        : -1;
                     if (quoteEnd > 0)
                     {
                         // Quoted value: the closing quote comes from the tail we keep.

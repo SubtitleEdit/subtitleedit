@@ -24,6 +24,48 @@ public class AiReviewContextGeneratorTests
         Assert.Equal("Proofread." + AiReviewProtocol.ProtocolText, prompt);
     }
 
+    [Theory]
+    [InlineData(2048)]
+    [InlineData(4096)]
+    [InlineData(8192)]
+    [InlineData(16384)]
+    public void TokensPerPartForContextSize_PartPromptAndAnswerFitTheContext(int contextSize)
+    {
+        var part = AiReviewContextGenerator.TokensPerPartForContextSize(contextSize);
+
+        // #16701: a 4096 context got 3000-token parts and an uncapped answer. Even if the estimate is
+        // a quarter low, part + prompt + answer must still fit.
+        Assert.True(part * 5 / 4 + 300 + AiReviewContextGenerator.MaxAnswerTokens <= contextSize);
+        Assert.True(part <= AiReviewContextGenerator.MaxTokensPerPart);
+        Assert.True(part >= 256);
+    }
+
+    [Fact]
+    public void TokensPerPartForContextSize_LargeContextKeepsDefaultPartSize()
+    {
+        Assert.Equal(AiReviewContextGenerator.MaxTokensPerPart, AiReviewContextGenerator.TokensPerPartForContextSize(8192));
+        Assert.Equal(AiReviewContextGenerator.MaxTokensPerPart, AiReviewContextGenerator.TokensPerPartForContextSize(262144));
+    }
+
+    [Fact]
+    public async Task GenerateAsync_SmallContextUsesMoreParts()
+    {
+        var lines = Enumerable.Range(1, 1000).Select(i => $"Line number {i} of the subtitle with a few more words in it.").ToList();
+        var calls = 0;
+        AiChatFunc chat = (_, _, _, _) =>
+        {
+            calls++;
+            return Task.FromResult("{\"names\":[],\"terms\":[],\"summary\":\"x\"}");
+        };
+
+        await AiReviewContextGenerator.GenerateAsync(lines, "English", chat, null, CancellationToken.None, null, AiReviewContextGenerator.MaxTokensPerPart);
+        var defaultCalls = calls;
+        calls = 0;
+        await AiReviewContextGenerator.GenerateAsync(lines, "English", chat, null, CancellationToken.None, null, AiReviewContextGenerator.TokensPerPartForContextSize(4096));
+
+        Assert.True(calls > defaultCalls);
+    }
+
     [Fact]
     public void BuildParts_SplitsOnTokenBudgetWithoutSplittingLines()
     {
@@ -85,5 +127,38 @@ public class AiReviewContextGeneratorTests
             (_, _, _, _) => Task.FromResult("sorry, no"), null, CancellationToken.None);
 
         Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public async Task GenerateAsync_InvalidReply_ForcesLogWithReplyExcerpt()
+    {
+        var log = new List<(string Message, bool Force)>();
+        await AiReviewContextGenerator.GenerateAsync(new[] { "Hello there." }, "English",
+            (_, _, _, _) => Task.FromResult("I cannot help with that."), null, CancellationToken.None, (m, f) => log.Add((m, f)));
+
+        var forced = log.Where(l => l.Force).Select(l => l.Message).ToList();
+        Assert.Contains(forced, m => m.Contains("part 1/1") && m.Contains("no usable JSON") && m.Contains("I cannot help with that."));
+        Assert.Contains(forced, m => m.Contains("nothing generated"));
+        Assert.Contains(log, l => !l.Force && l.Message.Contains("1 part(s)"));
+    }
+
+    [Fact]
+    public async Task GenerateAsync_GoodReply_ForcesNothing()
+    {
+        var log = new List<(string Message, bool Force)>();
+        await AiReviewContextGenerator.GenerateAsync(new[] { "Kaito ran." }, "English",
+            (_, _, _, _) => Task.FromResult("{\"names\":[\"Kaito\"],\"terms\":[],\"summary\":\"He runs.\"}"), null, CancellationToken.None, (m, f) => log.Add((m, f)));
+
+        Assert.DoesNotContain(log, l => l.Force);
+    }
+
+    [Fact]
+    public async Task GenerateAsync_EngineError_ForcesLogAndRethrows()
+    {
+        var log = new List<(string Message, bool Force)>();
+        await Assert.ThrowsAsync<HttpRequestException>(() => AiReviewContextGenerator.GenerateAsync(new[] { "Hello there." }, "English",
+            (_, _, _, _) => throw new HttpRequestException("exceeds the available context size"), null, CancellationToken.None, (m, f) => log.Add((m, f))));
+
+        Assert.Contains(log, l => l.Force && l.Message.Contains("part 1/1") && l.Message.Contains("exceeds the available context size"));
     }
 }

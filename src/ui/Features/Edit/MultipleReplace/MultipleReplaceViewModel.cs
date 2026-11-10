@@ -1945,6 +1945,15 @@ public partial class MultipleReplaceViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
+            // The preview is rebuilt whenever something might have changed - scrolling the rules
+            // list is enough, as recycled cells raise the check box and text events. A line the
+            // user unticked stays unticked for as long as the same fix comes back.
+            var unticked = Fixes.Where(f => !f.Apply).Select(f => (f.Number, f.Before, f.After)).ToHashSet();
+            foreach (var fix in fixes)
+            {
+                fix.Apply = !unticked.Contains((fix.Number, fix.Before, fix.After));
+            }
+
             Fixes.Clear();
             Fixes.AddRange(fixes);
             FixesInfo = string.Format(Se.Language.Edit.MultipleReplace.XLinesAffected, TotalReplaced);

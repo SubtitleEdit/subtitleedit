@@ -281,7 +281,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
         return result;
     }
 
-    private static (string Before, string Active, string After)? ParseActiveWord(string text)
+    internal static (string Before, string Active, string After)? ParseActiveWord(string text)
     {
         if (string.IsNullOrEmpty(text))
         {

@@ -195,7 +195,8 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private ObservableCollection<TextEncoding> _encodings;
     [ObservableProperty] private TextEncoding _defaultEncoding;
-    [ObservableProperty] private bool _autoConvertToUtf8;
+    [ObservableProperty] private ObservableCollection<string> _targetEncodingOptions;
+    [ObservableProperty] private string _selectedTargetEncoding;
     [ObservableProperty] private bool _forceCrLfOnSave;
     [ObservableProperty] private bool _linuxClipboardUseExternalTool;
     [ObservableProperty] private bool _showFormatLimitWarning;
@@ -255,6 +256,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showUpDownEndTime;
     [ObservableProperty] private bool _showUpDownDuration;
     [ObservableProperty] private bool _showUpDownLabels;
+    [ObservableProperty] private bool _showTimeCodeModeInStatusBar;
 
     public IReadOnlyList<ToolbarSettingItem> ToolbarItems { get; } = ToolbarSettingItem.CreateItems();
 
@@ -295,6 +297,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private VideoPlayerItem _selectedVideoPlayer;
     [ObservableProperty] private bool _fullscreenHideControls;
     [ObservableProperty] private bool _autoOpenVideoFile;
+    [ObservableProperty] private bool _autoDetectSmpteTiming;
     [ObservableProperty] private bool _showSecondarySubtitleDialog;
     [ObservableProperty] private bool _rememberSecondarySubtitleFile;
 
@@ -320,6 +323,8 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private bool _waveformShowToolbar;
     [ObservableProperty] private bool _waveformShowOriginalSubtitle;
+    [ObservableProperty] private bool _waveformShowTimelineTracks;
+    [ObservableProperty] private bool _waveformTimelineShowThumbnails;
 
     [ObservableProperty] private bool _waveformFocusTextboxAfterInsertNew;
     [ObservableProperty] private string _waveformSpaceInfo;
@@ -420,7 +425,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedTheme;
     [ObservableProperty] private ObservableCollection<string> _iconThemes;
     [ObservableProperty] private string _selectedIconTheme;
-    [ObservableProperty] private bool _matchIconColorToDarkTheme;
+    [ObservableProperty] private bool _matchIconColorToTheme;
     [ObservableProperty] private int _layoutScale;
     [ObservableProperty] private int _uiFontSize;
     [ObservableProperty] private int _textSelectionOpacity;
@@ -443,6 +448,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _gridCompactMode;
     [ObservableProperty] private bool _gridAlternatingRows;
     [ObservableProperty] private bool _showAssaLayer;
+    [ObservableProperty] private bool _showActorBox;
     [ObservableProperty] private bool _showHorizontalLineAboveToolbar;
     [ObservableProperty] private ObservableCollection<GridLinesVisibilityDisplay> _gridLinesVisibilities;
     [ObservableProperty] private GridLinesVisibilityDisplay _selectedGridLinesVisibility;
@@ -573,7 +579,7 @@ public partial class SettingsViewModel : ObservableObject
         var iconFolders = Directory.Exists(Se.ThemesFolder)
             ? Directory.GetDirectories(Se.ThemesFolder)
                 // A folder unpacked before its theme had icons holds only background art - not an icon set to pick
-                .Where(p => File.Exists(Path.Combine(p, "Open.png")))
+                .Where(p => ThemeIcon.Exists(p, "Open"))
                 .Select(p => Path.GetFileName(p)).ToList()
             : new List<string>();
         iconFolders.Insert(0, Se.Language.General.Auto);
@@ -682,6 +688,17 @@ public partial class SettingsViewModel : ObservableObject
         SelectedSaveSubtitleFormat = SaveSubtitleFormats.First();
         Encodings = new ObservableCollection<TextEncoding>(EncodingHelper.GetEncodings());
         DefaultEncoding = Encodings.First();
+
+        // (#9382) One row, three values: leave the save encoding alone, or preset it to one of the
+        // two UTF-8 variants when a file is opened. Both variants are UTF-8, so the choice can never
+        // make a character the target cannot hold.
+        TargetEncodingOptions = new ObservableCollection<string>
+        {
+            Se.Language.Options.Settings.TargetEncodingAsIs,
+            TextEncoding.Utf8WithBom,
+            TextEncoding.Utf8WithoutBom,
+        };
+        SelectedTargetEncoding = TargetEncodingOptions[0];
 
         SubtitleEnterKeyActionTypes =
         [
@@ -905,7 +922,11 @@ public partial class SettingsViewModel : ObservableObject
         SelectedSaveAsAppendLanguageCode = MapFromSelectedSaveAsAppendLanguageCode(Se.Settings.General.SaveAsAppendLanguageCode);
         SelectedDefaultSaveLocationType = MapFromDefaultSaveLocation(Se.Settings.General.DefaultSaveLocation);
         DefaultSaveLocationCustomFolder = Se.Settings.General.DefaultSaveLocationCustomFolder ?? string.Empty;
-        AutoConvertToUtf8 = general.AutoConvertToUtf8;
+        // The stored settings are still the SE4 switch plus the BOM variant, so an old configuration
+        // maps onto the three visible values without a migration step.
+        SelectedTargetEncoding = !general.AutoConvertToUtf8
+            ? TargetEncodingOptions[0]
+            : general.AutoConvertToUtf8WithoutBom ? TextEncoding.Utf8WithoutBom : TextEncoding.Utf8WithBom;
         ForceCrLfOnSave = general.ForceCrLfOnSave;
         LinuxClipboardUseExternalTool = general.LinuxClipboardUseExternalTool;
         ShowFormatLimitWarning = general.ShowFormatLimitWarning;
@@ -985,7 +1006,7 @@ public partial class SettingsViewModel : ObservableObject
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
-        MatchIconColorToDarkTheme = appearance.MatchIconColorToDarkTheme;
+        MatchIconColorToTheme = appearance.MatchIconColorToTheme;
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
         UiFontSize = UiTheme.FontSizeFromScale(appearance.FontScale);
         TextSelectionOpacity = appearance.TextSelectionOpacity;
@@ -1025,6 +1046,7 @@ public partial class SettingsViewModel : ObservableObject
         GridCompactMode = appearance.GridCompactMode;
         GridAlternatingRows = appearance.GridAlternatingRows;
         ShowAssaLayer = appearance.ShowLayer;
+        ShowActorBox = appearance.ShowActor;
         ShowHorizontalLineAboveToolbar = appearance.ShowHorizontalLineAboveToolbar;
         SelectedGridLinesVisibility = GridLinesVisibilities.FirstOrDefault(p => p.Type.ToString() == appearance.GridLinesAppearance) ?? GridLinesVisibilities[0];
         SelectedWindowsRenderingMode = WindowsRenderingModes.FirstOrDefault(p => p.Mode.ToString() == appearance.WindowsRenderingMode) ?? WindowsRenderingModes[0];
@@ -1038,6 +1060,7 @@ public partial class SettingsViewModel : ObservableObject
         GridAlternatingRowColor = appearance.GridAlternatingRowColor.FromHexToColor();
         GridAlternatingRowColorDark = appearance.GridAlternatingRowColorDark.FromHexToColor();
         ShowUpDownStartTime = appearance.ShowUpDownStartTime;
+        ShowTimeCodeModeInStatusBar = appearance.ShowTimeCodeModeInStatusBar;
         ShowUpDownEndTime = appearance.ShowUpDownEndTime;
         ShowUpDownDuration = appearance.ShowUpDownDuration;
         ShowUpDownLabels = appearance.ShowUpDownLabels;
@@ -1053,6 +1076,8 @@ public partial class SettingsViewModel : ObservableObject
         WaveformRememberZoom = Se.Settings.Waveform.RememberZoom;
         WaveformShowToolbar = Se.Settings.Waveform.ShowToolbar;
         WaveformShowOriginalSubtitle = Se.Settings.Waveform.ShowOriginalSubtitle;
+        WaveformShowTimelineTracks = Se.Settings.Waveform.ShowTimelineTracks;
+        WaveformTimelineShowThumbnails = Se.Settings.Waveform.TimelineShowThumbnails;
 
         if (Se.Settings.Waveform.WaveformDrawStyle == WaveformDrawStyle.Classic.ToString())
         {
@@ -1187,6 +1212,7 @@ public partial class SettingsViewModel : ObservableObject
         _videoControlsItems = SeVideoControlsItem.Normalize(video.ControlsItems);
         FullscreenHideControls = video.FullscreenHideControls;
         AutoOpenVideoFile = video.AutoOpen;
+        AutoDetectSmpteTiming = video.AutoDetectSmpteTiming;
         ShowSecondarySubtitleDialog = video.SecondarySubtitleShowDialog;
         RememberSecondarySubtitleFile = video.SecondarySubtitleRememberFile;
 
@@ -1845,7 +1871,8 @@ public partial class SettingsViewModel : ObservableObject
         general.SaveAsAppendLanguageCode = MapToSaveAsAppendLanguageCode(SelectedSaveAsAppendLanguageCode);
         general.DefaultSaveLocation = MapToDefaultSaveLocation(SelectedDefaultSaveLocationType);
         general.DefaultSaveLocationCustomFolder = DefaultSaveLocationCustomFolder;
-        general.AutoConvertToUtf8 = AutoConvertToUtf8;
+        general.AutoConvertToUtf8 = SelectedTargetEncoding != TargetEncodingOptions[0];
+        general.AutoConvertToUtf8WithoutBom = SelectedTargetEncoding == TextEncoding.Utf8WithoutBom;
         general.ForceCrLfOnSave = ForceCrLfOnSave;
         general.LinuxClipboardUseExternalTool = LinuxClipboardUseExternalTool;
         general.ShowFormatLimitWarning = ShowFormatLimitWarning;
@@ -1898,7 +1925,7 @@ public partial class SettingsViewModel : ObservableObject
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
         appearance.IconTheme = SelectedIconTheme;
-        appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;
+        appearance.MatchIconColorToTheme = MatchIconColorToTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
         appearance.FontScale = UiTheme.FontScaleFromSize(UiFontSize, appearance.FontScale);
         appearance.TextSelectionOpacity = Math.Clamp(TextSelectionOpacity, UiTheme.MinTextSelectionOpacity, 100);
@@ -1948,6 +1975,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.GridAlternatingRowColor = GridAlternatingRowColor.FromColorToHex();
         appearance.GridAlternatingRowColorDark = GridAlternatingRowColorDark.FromColorToHex();
         appearance.ShowUpDownStartTime = ShowUpDownStartTime;
+        appearance.ShowTimeCodeModeInStatusBar = ShowTimeCodeModeInStatusBar;
         appearance.ShowUpDownEndTime = ShowUpDownEndTime;
         appearance.ShowUpDownDuration = ShowUpDownDuration;
         appearance.ShowUpDownLabels = ShowUpDownLabels;
@@ -1957,6 +1985,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.WindowsRenderingMode = SelectedWindowsRenderingMode.Mode.ToString();
         appearance.SubtitleGridTextDisplay = SelectedSubtitleGridTextDisplayMode.Mode.ToString();
         appearance.ShowLayer = ShowAssaLayer;
+        appearance.ShowActor = ShowActorBox;
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
 
         Se.Settings.Waveform.DrawGridLines = WaveformDrawGridLines;
@@ -2010,6 +2039,8 @@ public partial class SettingsViewModel : ObservableObject
 
         Se.Settings.Waveform.ShowToolbar = WaveformShowToolbar;
         Se.Settings.Waveform.ShowOriginalSubtitle = WaveformShowOriginalSubtitle;
+        Se.Settings.Waveform.ShowTimelineTracks = WaveformShowTimelineTracks;
+        Se.Settings.Waveform.TimelineShowThumbnails = WaveformTimelineShowThumbnails;
         Se.Settings.Waveform.ToolbarItems = _waveformToolbarItems;
 
         Se.Settings.Waveform.WaveformTextFontSize = WaveformTextFontSize;
@@ -2081,6 +2112,7 @@ public partial class SettingsViewModel : ObservableObject
         video.ControlsItems = _videoControlsItems.Select(p => new SeVideoControlsItem(p)).ToList();
         video.FullscreenHideControls = FullscreenHideControls;
         video.AutoOpen = AutoOpenVideoFile;
+        video.AutoDetectSmpteTiming = AutoDetectSmpteTiming;
         video.SecondarySubtitleShowDialog = ShowSecondarySubtitleDialog;
         video.SecondarySubtitleRememberFile = RememberSecondarySubtitleFile;
 
@@ -2862,12 +2894,11 @@ public partial class SettingsViewModel : ObservableObject
 
     private async Task UpdateWaveformSpaceInfoAsync()
     {
-        var files = GetWaveformAndSpecgtrogramFiles();
-
+        // Listing the folders (the spectrograms recursively) is file I/O too - keep it off the UI thread.
         long totalBytes = await Task.Run(() =>
         {
             long total = 0;
-            foreach (var file in files)
+            foreach (var file in GetWaveformAndSpecgtrogramFiles())
             {
                 try
                 {
@@ -3544,7 +3575,6 @@ public partial class SettingsViewModel : ObservableObject
 
     internal void Onloaded(object? sender, RoutedEventArgs e)
     {
-        UiUtil.RestoreWindowPosition(Window);
         _ = UpdateWaveformSpaceInfoAsync();
     }
 

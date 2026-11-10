@@ -229,6 +229,7 @@ public static class InitFooter
             Content = UiUtil.MakeLabel().WithBindText(vm, vm => vm.TimeCodeModeText),
             [AutomationProperties.NameProperty] = Se.Language.Options.Settings.TimeCodeMode,
             [!Button.CommandProperty] = new Binding(nameof(vm.ToggleTimeCodeModeCommand)),
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowTimeCodeModeInStatusBar)),
             DataContext = vm,
 
             // Transparent, not null, so the whole label is hit-testable.

@@ -116,6 +116,30 @@ public class ExportHandlerBluRaySupOverlapTests : IDisposable
     private static int PaletteAlpha(Segment pds, int entry) => pds.Payload[2 + entry * 5 + 4];
 
     [Fact]
+    public void OverlappingCues_KeepTheHdrPalette()
+    {
+        // The overlapping cues are written again from their bitmaps, on pictures of their own.
+        var cues = new[]
+        {
+            Cue(0, 1, 3, ExportAlignment.BottomCenter, SKColors.White),
+            Cue(1, 2, 4, ExportAlignment.TopCenter, SKColors.White),
+        };
+        foreach (var cue in cues)
+        {
+            cue.HdrWhiteNits = 203;
+        }
+
+        var palettes = ReadSegments(Export(cues)).Where(s => s.Type == Pds).ToList();
+
+        Assert.NotEmpty(palettes);
+        foreach (var palette in palettes)
+        {
+            var maxLuma = Enumerable.Range(0, (palette.Payload.Length - 2) / 5).Max(i => palette.Payload[2 + i * 5 + 1]);
+            Assert.Equal(143, maxLuma);
+        }
+    }
+
+    [Fact]
     public void CutPointsOnOneFrame_MakeNoEmptySlice()
     {
         // At 25 fps 3.000 and 3.010 s are the same frame (issue #15478): the overlap of 10 ms
@@ -150,6 +174,38 @@ public class ExportHandlerBluRaySupOverlapTests : IDisposable
         var pcs = segments.Where(s => s.Type == Pcs).ToList();
         Assert.Equal(new long[] { BluRaySupPicture.MillisecondsToPts(1010, 23.976), BluRaySupPicture.MillisecondsToPts(2000, 23.976) }, pcs.Select(p => p.Pts));
         Assert.Equal(new[] { 1, 0 }, pcs.Select(ObjectCount));
+    }
+
+    /// <summary>
+    /// The export window makes every display set first (in parallel) and opens the file after:
+    /// the header must not throw those away, or nothing is composed (issue #16714).
+    /// </summary>
+    [Fact]
+    public void ParagraphsCreatedBeforeHeader_StillCompose()
+    {
+        var cues = new[]
+        {
+            Cue(0, 1, 3, ExportAlignment.BottomCenter, SKColors.White),
+            Cue(1, 2, 4, ExportAlignment.TopCenter, SKColors.White),
+        };
+        var fileName = Path.Combine(_dir, Guid.NewGuid().ToString("N") + ".sup");
+        var handler = new ExportHandlerBluRaySup();
+        foreach (var cue in cues)
+        {
+            handler.CreateParagraph(cue);
+        }
+
+        handler.WriteHeader(fileName, cues[0]);
+        foreach (var cue in cues)
+        {
+            handler.WriteParagraph(cue);
+        }
+
+        handler.WriteFooter();
+
+        var pcs = ReadSegments(fileName).Where(s => s.Type == Pcs).ToList();
+        Assert.Equal(new[] { 1, 2, 1, 0 }, pcs.Select(ObjectCount));
+        Assert.Equal(new long[] { 1000 * 90, 2000 * 90, 3000 * 90, 4000 * 90 }, pcs.Select(p => p.Pts));
     }
 
     [Fact]

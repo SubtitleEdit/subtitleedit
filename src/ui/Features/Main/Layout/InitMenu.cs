@@ -132,11 +132,6 @@ public static class InitMenu
                     Header = l.SaveAs,
                     Command = vm.CommandFileSaveAsCommand,
                 },
-                new MenuItem
-                {
-                    Header = Se.Language.General.SaveForcedLinesAs,
-                    Command = vm.SaveForcedLinesAsCommand,
-                },
                 new Separator(),
                 new MenuItem
                 {
@@ -345,6 +340,11 @@ public static class InitMenu
                         {
                             Header = Se.Language.File.Export.DialogueListDotDotDot,
                             Command = vm.ShowExportDialogueListCommand,
+                        },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Export.ForcedLinesOnlyDotDotDot,
+                            Command = vm.SaveForcedLinesAsCommand,
                         },
                     }
                 },

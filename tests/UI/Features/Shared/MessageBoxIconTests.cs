@@ -6,7 +6,7 @@ using System.IO.Compression;
 namespace UITests.Features.Shared;
 
 /// <summary>
-/// <see cref="MessageBox"/> resolves its icon by name - <c>{MessageBoxIcon}.png</c> inside the
+/// <see cref="MessageBox"/> resolves its icon by name - <c>{MessageBoxIcon}.svg</c> or <c>.png</c> inside the
 /// current theme's image folder, unpacked from Themes.zip at start-up. Nothing at compile time
 /// ties the enum to those file names, and the load sits behind a catch, so a rename would just
 /// silently drop the icon. That is how the icons came to be loaded from a path that never
@@ -37,8 +37,8 @@ public class MessageBoxIconTests
 
         var missing = Enum.GetValues<MessageBoxIcon>()
             .Where(i => i != MessageBoxIcon.None)
-            .Select(i => $"{themeFolder}/{i}.png")
-            .Where(p => !entries.Contains(p))
+            .Select(i => $"{themeFolder}/{i}")
+            .Where(p => !entries.Contains(p + ".svg") && !entries.Contains(p + ".png"))
             .ToList();
 
         Assert.True(

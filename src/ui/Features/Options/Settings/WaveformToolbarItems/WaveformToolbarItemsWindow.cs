@@ -28,9 +28,12 @@ public class WaveformToolbarItemsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
+        // No fixed width: the window sizes to content, so the list grows to fit long item names in
+        // verbose languages (#16591).
         var listBox = new ListBox
         {
-            Width = 340,
+            MinWidth = 460,
+            MaxWidth = 800,
             Height = 380,
         };
         listBox.Bind(ListBox.ItemsSourceProperty, new Binding(nameof(WaveformToolbarItemsViewModel.ToolbarItems)));

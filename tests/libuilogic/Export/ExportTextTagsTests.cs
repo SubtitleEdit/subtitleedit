@@ -100,12 +100,9 @@ public class ExportTextTagsTests
     [InlineData("{\\alpha&H80&\\i1}Hello", "<i>Hello</i>")]
     [InlineData("{\\1a&H80&\\3a&HFF&}{\\i1}Hello", "<i>Hello</i>")]
     [InlineData("{\\pos(10,20)\\c&H0000FF&}Red{\\c}", "<font color=\"#ff0000\">Red</font>")]
-    [InlineData("{\\move(10,20,30,40)\\i1}Hello", "Hello")] // \move is NOT consumed - still too complex
     [InlineData("{\\bord0\\i1}Hello", "<i>Hello</i>")]
     [InlineData("{\\bord2.5\\shad0\\b1}Hello", "<b>Hello</b>")]
     [InlineData("{\\3c&H0000FF&\\4c&H00FF00&\\i1}Hello", "<i>Hello</i>")]
-    [InlineData("{\\xbord4\\i1}Hello", "Hello")] // one axis variants are NOT consumed - still too complex
-    [InlineData("{\\t(0,200,\\bord0)\\i1}Hello", "Hello")] // inside \t nothing is consumed - still too complex
     public void ToRenderableText_ConsumedTags_DoNotCostTheLineItsFormatting(string text, string expected)
     {
         // "\pos", "\fad", "\alpha", "\3c"/"\4c" and "\bord"/"\shad" are read off the text
@@ -116,9 +113,41 @@ public class ExportTextTagsTests
     }
 
     [Theory]
-    [InlineData("<u>Hello</u>", "Hello")] // the renderer cannot underline
-    [InlineData("{\\u1}Hello{\\u0}", "Hello")]
-    public void ToRenderableText_UnderlineTags_AreRemoved(string text, string expected)
+    [InlineData("{\\move(10,20,30,40)\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\xbord4\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\t(0,200,\\bord0)\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\blur2\\i1}Hello", "<i>Hello</i>")]
+    [InlineData("{\\be1}{\\b1}Hello", "<b>Hello</b>")]
+    [InlineData("{\\k50}Hel{\\k30\\i1}lo", "Hel<i>lo</i>")]
+    [InlineData("{\\fscx120\\fscy80\\fs40}Hello", "<font size=\"40\">Hello</font>")]
+    [InlineData("{\\clip(0,0,100,100)\\c&H0000FF&}Red", "<font color=\"#ff0000\">Red</font>")]
+    [InlineData("{\\frz10\\fnArial}Hello", "<font face=\"Arial\">Hello</font>")]
+    [InlineData("{\\t(0,200,\\i1)}Hello", "Hello")] // an italic inside \t is an animation target, not the line's look
+    [InlineData("{\\p1}m 0 0 l 100 0{\\p0}Hello", "Hello")] // drawing commands are not text
+    [InlineData("{\\i1}A{\\p2}m 0 0 l 100 0", "<i>A</i>")]
+    public void ToRenderableText_UndrawableTags_DoNotCostTheLineItsFormatting(string text, string expected)
+    {
+        // A tag the renderer cannot draw made GetFormattedText treat the whole line as too
+        // complex, which dropped the italic/bold/colour/font tags next to it as well.
+        Assert.Equal(expected, ExportTextTags.ToRenderableText(text));
+    }
+
+    [Fact]
+    public void ToRenderableText_CommentBlockNextToTags_IsKept()
+    {
+        // "{note}" has no backslash - a comment, not a tag block - and was never touched here
+        // (the export window removes comment blocks itself when asked to, #15584).
+        Assert.Equal("{note}<i>Hello</i>", ExportTextTags.ToRenderableText("{note}{\\blur1\\i1}Hello"));
+    }
+
+    [Theory]
+    [InlineData("<u>Hello</u>", "<u>Hello</u>")]
+    [InlineData("{\\u1}Hello{\\u0}", "<u>Hello</u>")]
+    [InlineData("{\\s1}Hello{\\s0}", "<s>Hello</s>")]
+    [InlineData("{\\s1\\i1}Hel{\\i0}lo", "<i><s>Hel</i>lo")]
+    [InlineData("{\\s1\\s0}Hello", "</s>Hello")] // the last one in a block wins
+    [InlineData("{\\shad2\\s1}Hello", "<s>Hello")] // "\shad" is not "\s"
+    public void ToRenderableText_UnderlineAndStrikeoutTags_BecomeHtml(string text, string expected)
     {
         Assert.Equal(expected, ExportTextTags.ToRenderableText(text));
     }
@@ -259,6 +288,96 @@ public class ExportTextTagsTests
         ExportTextTags.ApplyStyleOverrideTags(ip, "{\\bord2}Hello", scriptHeight: 288);
 
         Assert.Equal(7.5, ip.OutlineWidth);
+    }
+
+    [Theory]
+    [InlineData("{\\fsp4}Hello", 4f)]
+    [InlineData("{\\fsp-1.5}Hello", -1.5f)]
+    [InlineData("{\\fsp0}Hello", 0f)] // explicit 0 still overrides the dialog's spacing
+    [InlineData("{\\fsp2}Hel{\\fsp6}lo", 6f)] // last one wins
+    public void ApplyStyleOverrideTags_LetterSpacingTag_SetsTagLetterSpacing(string text, float expected)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.Equal(expected, ip.TagLetterSpacing);
+    }
+
+    [Theory]
+    [InlineData("{\\blur3}Hello", 3.0)]
+    [InlineData("{\\blur0.5}Hello", 0.5)]
+    [InlineData("{\\be2}Hello", 1.0)] // two [1 2 1] passes: sqrt(2 / 2)
+    [InlineData("{\\blur3\\be32}Hello", 5.0)] // sqrt(3^2 + 32 / 2)
+    [InlineData("{\\blur0}Hello", 0.0)]
+    public void ApplyStyleOverrideTags_BlurTags_SetTagBlur(string text, double expected)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.NotNull(ip.TagBlur);
+        Assert.Equal(expected, ip.TagBlur!.Value, 3);
+    }
+
+    [Fact]
+    public void ApplyStyleOverrideTags_ScriptResolutionDiffers_ScalesSpacingAndBlur()
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, "{\\fsp2\\blur2}Hello", scriptHeight: 288);
+
+        Assert.Equal(7.5f, ip.TagLetterSpacing!.Value, 3);
+        Assert.Equal(7.5f, ip.TagBlur!.Value, 3);
+    }
+
+    [Theory]
+    [InlineData("{\\fscx150}Hello", 150f, 100f)]
+    [InlineData("{\\fscy80}Hello", 100f, 80f)]
+    [InlineData("{\\fscx120\\fscy90.5}Hello", 120f, 90.5f)]
+    [InlineData("Hello", 100f, 100f)]
+    [InlineData("{\\fs40\\fsp2}Hello", 100f, 100f)] // not "\fsc"
+    [InlineData("{\\t(0,200,\\fscx200)}Hello", 100f, 100f)] // an animation target, not the line's look
+    public void ApplyStyleOverrideTags_ScaleTags_SetTagScale(string text, float expectedX, float expectedY)
+    {
+        var ip = MakeStyledParameter();
+
+        // Percentages: the script resolution must not change them.
+        ExportTextTags.ApplyStyleOverrideTags(ip, text, scriptHeight: 288);
+
+        Assert.Equal(expectedX, ip.TagScaleX);
+        Assert.Equal(expectedY, ip.TagScaleY);
+    }
+
+    [Theory]
+    [InlineData("{\\frz15}Hello", 15f)]
+    [InlineData("{\\fr-7.5}Hello", -7.5f)]
+    [InlineData("{\\frx30\\fry20}Hello", 0f)] // 3D rotations are not a flat turn
+    [InlineData("{\\fn Arial}Hello", 0f)]
+    [InlineData("{\\t(0,200,\\frz90)}Hello", 0f)] // an animation target, not the line's look
+    [InlineData("{\\frz10}Hel{\\frz20}lo", 20f)] // last one wins
+    public void ApplyStyleOverrideTags_RotationTag_SetsTagRotation(string text, float expected)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.Equal(expected, ip.TagRotation);
+    }
+
+    [Theory]
+    [InlineData("Hello")]
+    [InlineData("{\\b1\\bord2}Hello")] // "\b1"/"\bord" are not "\be"
+    [InlineData("{\\fs40\\fscx120}Hello")] // "\fs"/"\fscx" are not "\fsp"
+    [InlineData("{\\t(0,200,\\blur4\\fsp3)}Hello")] // an animation target, not the line's look
+    public void ApplyStyleOverrideTags_NoSpacingOrBlurTag_LeavesThemUnset(string text)
+    {
+        var ip = MakeStyledParameter();
+
+        ExportTextTags.ApplyStyleOverrideTags(ip, text);
+
+        Assert.Null(ip.TagLetterSpacing);
+        Assert.Null(ip.TagBlur);
     }
 
     [Theory]

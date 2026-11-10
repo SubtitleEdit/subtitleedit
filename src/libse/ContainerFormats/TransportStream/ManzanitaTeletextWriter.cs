@@ -54,6 +54,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private const byte DataIdentifier = 0x10;
         private const byte DataUnitLength = 44;
         private const int DataUnitSize = DataUnitLength + 2; // data_unit_id + data_unit_length
+        private const int PesHeaderLength = 9 + 0x24; // EN 300 472: PES_header_data_length is 0x24
         private const byte StuffingDataUnitId = (byte)Teletext.DataUnitT.DataUnitStuffing;
         private const byte SubtitleDataUnitId = (byte)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle;
 
@@ -169,7 +170,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             var packets = BuildPackets(subtitle);
 
             // EN 300 472 wants a constant PES payload size - pad every packet to the widest one.
-            var dataUnitsPerPacket = Math.Max(3, packets.Count == 0 ? 3 : packets.Max(p => p.DataUnits.Count));
+            var maxDataUnits = packets.Count == 0 ? 0 : packets.Max(p => p.DataUnits.Count);
+            var dataUnitsPerPacket = GetDataUnitsPerPacket(maxDataUnits);
             var payloadLength = 1 + dataUnitsPerPacket * DataUnitSize;
 
             var binary = new List<byte>(payloadLength * Math.Max(1, packets.Count));
@@ -201,11 +203,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return result.ToArray();
         }
 
+        /// <summary>
+        /// EN 300 472 section 4.2: PES_header_data_length is 0x24, so the PES header is 45 bytes, and
+        /// PES_packet_length is N x 184 - 6 so the packet ends with a transport packet. With the
+        /// data_identifier byte and 46 byte data units that leaves room for 4N - 1 data units
+        /// (3, 7, 11, ...) - round the widest packet up to the next such count.
+        /// </summary>
+        public static int GetDataUnitsPerPacket(int maxDataUnits)
+        {
+            var transportPackets = Math.Max(1, (maxDataUnits + 4) / 4);
+            return transportPackets * 4 - 1;
+        }
+
         private string GetXml(string dataIndex, int payloadLength)
         {
             // A muxer hint only: how much bandwidth the stream needs if every frame carries a
             // packet of this size, counting the PES header and the 188 byte transport packets.
-            var transportPackets = (int)Math.Ceiling((payloadLength + 14) / 184.0);
+            var transportPackets = (int)Math.Ceiling((payloadLength + PesHeaderLength) / 184.0);
             var rate = transportPackets * 188 * 8 * FrameRate;
 
             var magazine = PageNumber / 100 % 8; // magazine 8 is transmitted as 0

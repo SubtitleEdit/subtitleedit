@@ -12,7 +12,7 @@ public class SeAppearance
     public int? MacOsFontMigrationVersion { get; set; }
     public string Theme { get; set; }
     public string IconTheme { get; set; }
-    public bool MatchIconColorToDarkTheme { get; set; }
+    public bool MatchIconColorToTheme { get; set; }
     public double LayoutScale { get; set; }
     public double FontScale { get; set; }
 
@@ -105,10 +105,12 @@ public class SeAppearance
     public bool ShowPluginsMenu { get; set; }
     public bool RightToLeft { get; set; }
     public bool ShowLayer { get; set; }
+    public bool ShowActor { get; set; }
     public bool ShowUpDownStartTime { get; set; }
     public bool ShowUpDownEndTime { get; set; }
     public bool ShowUpDownDuration { get; set; }
     public bool ShowUpDownLabels { get; set; }
+    public bool ShowTimeCodeModeInStatusBar { get; set; }
 
     public LayoutPositions CurrentLayoutPositions { get; set; }
     public bool TextBoxShowButtonAutoBreak { get; set; }
@@ -124,7 +126,7 @@ public class SeAppearance
         CurrentLayoutPositions = new LayoutPositions();
         Theme = "System";
         IconTheme = string.Empty;
-        MatchIconColorToDarkTheme = false;
+        MatchIconColorToTheme = false;
         LayoutScale = 1.0;
         FontScale = 1.0;
         TextSelectionOpacity = 100;
@@ -162,6 +164,7 @@ public class SeAppearance
         ShowUpDownEndTime = false;
         ShowUpDownDuration = true;
         ShowUpDownLabels = true;
+        ShowTimeCodeModeInStatusBar = false;
 
         ToolbarShowFileNew = true;
         ToolbarShowFileOpen = true;

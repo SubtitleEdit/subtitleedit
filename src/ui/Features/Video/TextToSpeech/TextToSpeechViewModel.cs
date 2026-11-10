@@ -1584,7 +1584,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             await MessageBox.Show(
                 Window!,
                 Se.Language.General.Error,
-                "No voices are loaded for the selected engine - check the engine settings (e.g. API key) and re-select the engine to reload its voices.",
+                Se.Language.Video.TextToSpeech.NoVoicesLoaded,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
@@ -1715,8 +1715,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 await MessageBox.Show(
                     Window,
                     Se.Language.General.Error,
-                    "Text to speech failed: " + ex.Message + Environment.NewLine + Environment.NewLine +
-                    "See error-log.txt in the Subtitle Edit data folder for details.",
+                    string.Format(Se.Language.Video.TextToSpeech.TextToSpeechFailedX, ex.Message) + Environment.NewLine + Environment.NewLine + Se.Language.General.SeeErrorLogForDetails,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -1783,7 +1782,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             var answer = await MessageBox.Show(
                 Window,
                 string.Format(Se.Language.General.ReDownloadX, SelectedModel),
-                $"{Environment.NewLine}\"{SelectedModel}\" is already downloaded.{sizeSuffix}{Environment.NewLine}{Environment.NewLine}Re-download it?",
+                Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XAlreadyDownloadedYRedownload, SelectedModel, sizeSuffix),
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -2071,7 +2070,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                         : result.ErrorMessage;
                     await MessageBox.Show(
                         Window,
-                        "Test voice error",
+                        Se.Language.Video.TextToSpeech.TestVoiceError,
                         detail,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
@@ -2097,7 +2096,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window,
-                    "Test voice error",
+                    Se.Language.Video.TextToSpeech.TestVoiceError,
                     ex.Message,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -2185,10 +2184,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </remarks>
     private void AddPerLineCloneVoiceIfSupported(ITtsEngine engine)
     {
-        if (PerLineVoiceClone.CanBeOffered(engine, _videoFileName))
-        {
-            Voices.Insert(0, PerLineVoiceClone.CreateVoice());
-        }
+        PerLineVoiceClone.InsertIfSupported(Voices, engine, _videoFileName);
     }
 
     /// <summary>
@@ -2216,7 +2212,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 await MessageBox.Show(
                     Window,
                     Se.Language.General.Error,
-                    $"Refreshing voices failed: {ex.Message}",
+                    string.Format(Se.Language.Video.TextToSpeech.RefreshingVoicesFailedX, ex.Message),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -2405,7 +2401,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (Se.Settings.Video.TextToSpeech.RemoveOriginalSpeechFast)
         {
             return await SpeechIsolationModelDownload.EnsureModelDownloadedAsync(
-                Window!, _windowService, new CrispAsrCohere(), HtDemucsModel.ToWhisperModel(), HtDemucsModel.DisplayName, featureName, "a source separation model");
+                Window!, _windowService, new CrispAsrCohere(), HtDemucsModel.ToWhisperModel(), HtDemucsModel.DisplayName, featureName);
         }
 
         return await SpeechIsolationModelDownload.EnsureDownloadedAsync(Window!, _windowService, new CrispAsrCohere(), featureName);
@@ -2663,8 +2659,8 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             var answer = await MessageBox.Show(
                 Window,
-                "Text to speech",
-                "Nothing to import",
+                Se.Language.Video.TextToSpeech.Title,
+                Se.Language.General.NothingToImport,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
 
@@ -2762,7 +2758,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             await MessageBox.Show(
                 Window,
                 Se.Language.General.Error,
-                "No usable TTS engines are available - check the engine settings and try again.",
+                Se.Language.Video.TextToSpeech.NoUsableTtsEngines,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
@@ -2841,8 +2837,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 await MessageBox.Show(
                     Window,
                     Se.Language.General.Error,
-                    "Merging the audio segments failed: " + ex.Message + Environment.NewLine + Environment.NewLine +
-                    "See error-log.txt in the Subtitle Edit data folder for details.",
+                    string.Format(Se.Language.Video.TextToSpeech.MergingAudioSegmentsFailedX, ex.Message) + Environment.NewLine + Environment.NewLine + Se.Language.General.SeeErrorLogForDetails,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -3353,8 +3348,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 await MessageBox.Show(
                     Window,
                     Se.Language.General.Error,
-                    "Adding the audio track to the video failed - the audio file was still saved." + Environment.NewLine + Environment.NewLine +
-                    "See error-log.txt in the Subtitle Edit data folder for details.",
+                    Se.Language.Video.TextToSpeech.AddingAudioTrackFailed + Environment.NewLine + Environment.NewLine + Se.Language.General.SeeErrorLogForDetails,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -3407,29 +3401,37 @@ public partial class TextToSpeechViewModel : ObservableObject
         return duration.TotalHours >= 1 ? duration.ToString(@"h\:mm\:ss") : duration.ToString(@"m\:ss");
     }
 
+    // Merged track format: what the old ffmpeg amix chain produced - 44.1 kHz (its anullsrc
+    // base) and mono (its aevalsrc pad), stereo only with the custom-encoding stereo setting.
+    private const int MergeSampleRate = 44100;
+
     private async Task<string?> MergeAudioParagraphs(TtsStepResult[] previousStepResult, CancellationToken cancellationToken)
     {
+        // No engine/voice needed here - each step result carries its own audio file. An
+        // engine/voice null-guard used to silently abort the merge for imported sessions
+        // whose selected engine had no loadable voice list ("OK does nothing", #12093).
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return null;
+        }
+
+        var forceStereo = Se.Settings.Video.TextToSpeech.CustomAudioStereo &&
+                          !string.IsNullOrEmpty(Se.Settings.Video.TextToSpeech.CustomAudioEncoding);
+        var channels = forceStereo ? 2 : 1;
+
+        ProgressText = Se.Language.Video.TextToSpeech.PreparingMergeDotDotDot;
+        ProgressValue = 0;
+
+        var mergedFileName = GetUniqueWaveFolderFileName("merged", ".wav");
+        var rawFileName = GetUniqueWaveFolderFileName("merge_segment", ".raw");
+
+        // One silent base track, and each segment added into just its own region (#16767). The
+        // old chain re-read and re-wrote the whole full-length track per line through ffmpeg
+        // amix, so a 2-hour, 1,500-line project wrote terabytes to temp and took hours.
+        var mixer = new PcmWaveMixer(mergedFileName, MergeSampleRate, channels, GetMergeDurationSeconds(previousStepResult));
+        var completed = false;
         try
         {
-            // No engine/voice needed here - each step result carries its own audio file. An
-            // engine/voice null-guard used to silently abort the merge for imported sessions
-            // whose selected engine had no loadable voice list ("OK does nothing", #12093).
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
-
-            bool forceStereo = false;
-            var useCustomAudioEncoding = !string.IsNullOrEmpty(Se.Settings.Video.TextToSpeech.CustomAudioEncoding);
-            if (Se.Settings.Video.TextToSpeech.CustomAudioStereo && useCustomAudioEncoding)
-            {
-                forceStereo = true;
-            }
-
-            var silenceFileName = await GenerateSilenceWaveFile(previousStepResult, cancellationToken);
-
-            var inputFileName = silenceFileName;
-            ProgressValue = 0;
             for (var index = 0; index < previousStepResult.Length; index++)
             {
                 ProgressText = string.Format(Se.Language.Video.TextToSpeech.MergingAudioSegmentXOfY, index + 1, previousStepResult.Length);
@@ -3445,19 +3447,15 @@ public partial class TextToSpeechViewModel : ObservableObject
                     continue;
                 }
 
-                var outputFileName = Path.Combine(_waveFolder, $"silence{index}.wav");
-                if (File.Exists(outputFileName))
-                {
-                    outputFileName = Path.Combine(_waveFolder, $"silence_{Guid.NewGuid()}.wav");
-                }
+                // ffmpeg still does the decoding, resampling and channel mapping, so every
+                // engine's output format works - but only over this segment's few seconds.
+                DeleteFileNoError(rawFileName);
+                var decodeProcess = FfmpegGenerator.DecodeToRawPcm(item.CurrentFileName, rawFileName, MergeSampleRate, channels);
+                await decodeProcess.StartAndWaitAsync(cancellationToken);
 
-                var mergeProcess = FfmpegGenerator.MergeAudioTracks(inputFileName, item.CurrentFileName, outputFileName, (float)item.Paragraph.StartTime.TotalSeconds, forceStereo);
-                await mergeProcess.StartAndWaitAsync(cancellationToken);
-
-                // A failed merge used to go unnoticed: the loop advanced to the (missing) output
-                // and deleted the last good intermediate, so every later merge failed too and the
-                // wreck only surfaced far downstream. Stop with an error instead.
-                if (!File.Exists(outputFileName) || new FileInfo(outputFileName).Length == 0)
+                // A failed segment stops the merge with an error instead of silently leaving a
+                // hole that only surfaces far downstream.
+                if (!File.Exists(rawFileName) || new FileInfo(rawFileName).Length == 0)
                 {
                     SeLogger.Error($"TextToSpeech: merging segment {index + 1} produced no output (input=\"{item.CurrentFileName}\")");
                     Se.WriteToolsLog($"TTS merge: segment {index + 1} failed - ffmpeg produced no output for \"{item.CurrentFileName}\"", true);
@@ -3468,8 +3466,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                             await MessageBox.Show(
                                 Window,
                                 Se.Language.General.Error,
-                                $"Merging audio failed at segment {index + 1}." + Environment.NewLine + Environment.NewLine +
-                                "See error-log.txt in the Subtitle Edit data folder for details.",
+                                string.Format(Se.Language.Video.TextToSpeech.MergingAudioFailedAtSegmentX, index + 1) + Environment.NewLine + Environment.NewLine + Se.Language.General.SeeErrorLogForDetails,
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
                         }
@@ -3477,23 +3474,43 @@ public partial class TextToSpeechViewModel : ObservableObject
                     return null;
                 }
 
-                DeleteFileNoError(inputFileName);
-                inputFileName = outputFileName;
+                var pcm = await File.ReadAllBytesAsync(rawFileName, cancellationToken);
+                mixer.Mix(item.Paragraph.StartTime.TotalSeconds, pcm);
 
                 ProgressValue = (double)(index + 1) / previousStepResult.Length * 100.0;
             }
+
+            mixer.Complete();
+            completed = true;
             ProgressValue = 100;
 
-            // The chain head is the fully merged track (or the bare silence track if every
-            // segment was skipped - still a valid, if empty, result the user gets told about
-            // via the forced tools-log entries above).
-            return inputFileName;
+            // The fully merged track (or the bare silence track if every segment was skipped -
+            // still a valid, if empty, result the user gets told about via the forced
+            // tools-log entries above).
+            return mergedFileName;
         }
         catch (OperationCanceledException)
         {
-            ProgressText = Se.Language.General.Cancelled; ;
+            ProgressText = Se.Language.General.Cancelled;
             return null;
         }
+        finally
+        {
+            mixer.Dispose();
+            DeleteFileNoError(rawFileName);
+            if (!completed)
+            {
+                DeleteFileNoError(mergedFileName);
+            }
+        }
+    }
+
+    private string GetUniqueWaveFolderFileName(string baseName, string extension)
+    {
+        var fileName = Path.Combine(_waveFolder, baseName + extension);
+        return File.Exists(fileName)
+            ? Path.Combine(_waveFolder, $"{baseName}_{Guid.NewGuid()}{extension}")
+            : fileName;
     }
 
     private static void DeleteFileNoError(string file)
@@ -3508,40 +3525,27 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
-    private async Task<string> GenerateSilenceWaveFile(TtsStepResult[] stepResults, CancellationToken cancellationToken)
+    private double GetMergeDurationSeconds(TtsStepResult[] stepResults)
     {
-        ProgressText = Se.Language.Video.TextToSpeech.PreparingMergeDotDotDot;
-        ProgressValue = 0;
-        var silenceFileName = Path.Combine(_waveFolder, "silence.wav");
-        var silenceIdx = 0;
-        while (File.Exists(silenceFileName))
-        {
-            silenceIdx++;
-            silenceFileName = Path.Combine(_waveFolder, $"silence_{silenceIdx}.wav");
-        }
-
-        var durationInSeconds = 10f;
+        var durationInSeconds = 10d;
         if (_mediaInfo != null)
         {
-            durationInSeconds = (float)_mediaInfo.Duration.TotalSeconds;
+            durationInSeconds = _mediaInfo.Duration.TotalSeconds;
         }
         else if (_subtitle.Paragraphs.Count > 0)
         {
-            durationInSeconds = (float)_subtitle.Paragraphs.Max(p => p.EndTime.TotalSeconds);
+            durationInSeconds = _subtitle.Paragraphs.Max(p => p.EndTime.TotalSeconds);
         }
 
         // An imported session can outlast the subtitle currently open in the main window (or
         // there may be no video at all) - the silence base track must cover every segment being
-        // merged, or the tail would be dropped.
+        // merged. (A segment running past it still extends the track rather than being cut.)
         if (stepResults.Length > 0)
         {
-            var maxEndSeconds = (float)stepResults.Max(r => r.Paragraph.EndTime.TotalSeconds);
-            durationInSeconds = Math.Max(durationInSeconds, maxEndSeconds);
+            durationInSeconds = Math.Max(durationInSeconds, stepResults.Max(r => r.Paragraph.EndTime.TotalSeconds));
         }
 
-        var silenceProcess = FfmpegGenerator.GenerateEmptyAudio(silenceFileName, durationInSeconds);
-        await silenceProcess.StartAndWaitAsync(cancellationToken);
-        return silenceFileName;
+        return durationInSeconds;
     }
 
     /// <summary>
@@ -3741,9 +3745,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     var answer = await MessageBox.Show(
                         Window,
                         Se.Language.General.Warning,
-                        $"{failedCount} of {resultList.Count} segments failed to generate (see error-log.txt in the Subtitle Edit data folder).{detail}" +
-                        Environment.NewLine + Environment.NewLine +
-                        "Continue with the remaining segments? The failed lines will be missing from the audio.",
+                        string.Format(Se.Language.Video.TextToSpeech.XOfYSegmentsFailedZContinue, failedCount, resultList.Count, detail),
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Warning);
                     return answer == MessageBoxResult.Yes;
@@ -3775,7 +3777,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     await MessageBox.Show(
                         Window,
                         Se.Language.General.Error,
-                        "TTS server error: " + ex.Message,
+                        string.Format(Se.Language.Video.TextToSpeech.TtsServerErrorX, ex.Message),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
@@ -4610,8 +4612,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     await MessageBox.Show(
                         Window,
                         Se.Language.General.Error,
-                        "Adjusting audio speed failed: " + ex.Message + Environment.NewLine + Environment.NewLine +
-                        "See error-log.txt in the Subtitle Edit data folder for details.",
+                        string.Format(Se.Language.Video.TextToSpeech.AdjustingAudioSpeedFailedX, ex.Message) + Environment.NewLine + Environment.NewLine + Se.Language.General.SeeErrorLogForDetails,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
@@ -4705,8 +4706,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     await MessageBox.Show(
                         Window,
                         Se.Language.General.Error,
-                        "Audio post-processing failed: " + ex.Message + Environment.NewLine + Environment.NewLine +
-                        "See error-log.txt in the Subtitle Edit data folder for details.",
+                        string.Format(Se.Language.Video.TextToSpeech.AudioPostProcessingFailedX, ex.Message) + Environment.NewLine + Environment.NewLine + Se.Language.General.SeeErrorLogForDetails,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }

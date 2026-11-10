@@ -1,4 +1,4 @@
-﻿# Subtitle Edit
+﻿# <img src="src/ui/Assets/SE.png" alt="" width="32" height="32"> Subtitle Edit
 
 The subtitle editor :)
 

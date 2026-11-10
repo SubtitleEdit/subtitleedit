@@ -92,8 +92,8 @@ public class WebVttStylePickerWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, HorizontalAlignment = HorizontalAlignment.Right };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         return EditorChrome.WrapButtonBar(buttons);
     }

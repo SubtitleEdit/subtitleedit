@@ -5,6 +5,7 @@ using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
 
@@ -36,10 +37,7 @@ public class PickTsTrackWindow : Window
 
         Content = EditorChrome.MakeRoot(EditorChrome.MakeTwoPanes(tracksView, subtitleView), EditorChrome.MakeButtonBar(buttonExport, buttonCancel, buttonOk));
 
-        UiUtil.FocusOnFirstActivation(this, () =>
-        {
-            buttonOk.Focus(); // hack to make OnKeyDown work
-        });
+        UiUtil.FocusOnFirstActivation(this, () => TableViewExtras.FocusRow(vm.TracksGrid));
 
         Loaded += (_, _) => vm.SelectAndScrollToRow(0);
         KeyDown += (_, e) => vm.OnKeyDown(e);
@@ -127,6 +125,14 @@ public class PickTsTrackWindow : Window
             .AddSortable<TsTrackInfoDisplay, bool>(defaultColumn, x => x.IsDefault)
             .AddSortable<TsTrackInfoDisplay, bool>(forcedColumn, x => x.IsForced);
 
+        // Fit the narrow columns to their content so Name (the star column) is not squeezed to "...".
+        TableViewExtras.AutoFitColumnsOnItemsChanged(dataGridTracks, vm.Tracks,
+            (numberColumn, x => x.TrackNumber.ToString(CultureInfo.CurrentCulture)),
+            (languageColumn, x => x.Language),
+            (codecColumn, x => x.Codec),
+            (defaultColumn, x => x.IsDefault.ToString()),
+            (forcedColumn, x => x.IsForced.ToString()));
+
         return dataGridTracks;
     }
 
@@ -189,8 +195,7 @@ public class PickTsTrackWindow : Window
                             var textBlock = new TextBlock
                             {
                                 Text = item.Text,
-                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                                MaxWidth = 300 // Adjust as needed
+                                TextWrapping = Avalonia.Media.TextWrapping.Wrap
                             };
                             stackPanel.Children.Add(textBlock);
                         }
@@ -212,6 +217,12 @@ public class PickTsTrackWindow : Window
                     })
                 },
         });
+
+        // Fit #, Show and Duration to the loaded cues so the Text column gets the rest of the pane.
+        TableViewExtras.AutoFitColumnsOnItemsChanged(dataGridSubtitle, vm.Rows,
+            (dataGridSubtitle.Columns[0], x => x.Number.ToString(CultureInfo.CurrentCulture)),
+            (dataGridSubtitle.Columns[1], x => fullTimeConverter.Convert(x.Show, typeof(string), null, CultureInfo.CurrentCulture) as string),
+            (dataGridSubtitle.Columns[2], x => shortTimeConverter.Convert(x.Duration, typeof(string), null, CultureInfo.CurrentCulture) as string));
 
         return dataGridSubtitle;
     }

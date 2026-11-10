@@ -22,8 +22,16 @@ public class AdvancedEffectTypewriter : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        foreach (var subtitle in subtitles)
+        var plan = MarkedReveal.Plan(subtitles);
+        for (var n = 0; n < subtitles.Count; n++)
         {
+            var subtitle = subtitles[n];
+            if (plan != null)
+            {
+                AddMarked(result, subtitle, plan[n]);
+                continue;
+            }
+
             var cleanText = Utilities.RemoveSsaTags(subtitle.Text);
             if (string.IsNullOrEmpty(cleanText))
             {
@@ -53,6 +61,32 @@ public class AdvancedEffectTypewriter : IAdvancedEffectDisplay
             }
         }
         return result;
+    }
+
+    // a line per word with the active word marked: type just that word over the line
+    private static void AddMarked(List<SubtitleLineViewModel> result, SubtitleLineViewModel subtitle, MarkedReveal? reveal)
+    {
+        if (reveal == null)
+        {
+            result.Add(AdvancedEffectUtil.PassThrough(subtitle));
+            return;
+        }
+
+        foreach (var (revealedTo, start, end) in reveal.CharSteps(subtitle))
+        {
+            if (revealedTo < 0)
+            {
+                continue; // a pause before the first word: nothing typed yet
+            }
+
+            var line = new SubtitleLineViewModel(subtitle, generateNewId: true)
+            {
+                StartTime = start,
+                EndTime = end,
+                Text = reveal.Text[..(revealedTo + 1)].Replace("\n", "\\N"),
+            };
+            result.Add(line);
+        }
     }
 }
 

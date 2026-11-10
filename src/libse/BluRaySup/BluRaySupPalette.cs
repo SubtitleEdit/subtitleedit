@@ -148,6 +148,51 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
         }
 
+        /// <summary>
+        /// The palette of a UHD Blu-ray HDR subtitle stream: BT.2020 with the ST 2084 (PQ)
+        /// transfer, still 8 bit. PGS has no field for the colour space, so these values are all
+        /// that tells a player how to read the stream. Follows the display light mapping of
+        /// BT.2408: the SDR colour as a BT.1886 display shows it, scaled so white is
+        /// <paramref name="whiteNits"/>.
+        /// </summary>
+        private static int[] Rgb2YCbCrHdr(int r, int g, int b, int whiteNits)
+        {
+            var linearR = Math.Pow(r / 255.0, 2.4);
+            var linearG = Math.Pow(g / 255.0, 2.4);
+            var linearB = Math.Pow(b / 255.0, 2.4);
+
+            // BT.709 primaries -> BT.2020 primaries, then PQ
+            var pqR = PqEncode((0.6274 * linearR + 0.3293 * linearG + 0.0433 * linearB) * whiteNits);
+            var pqG = PqEncode((0.0691 * linearR + 0.9195 * linearG + 0.0114 * linearB) * whiteNits);
+            var pqB = PqEncode((0.0164 * linearR + 0.0880 * linearG + 0.8956 * linearB) * whiteNits);
+
+            var y = 0.2627 * pqR + 0.6780 * pqG + 0.0593 * pqB;
+            var cb = (pqB - y) / 1.8814;
+            var cr = (pqR - y) / 1.4746;
+
+            return new[]
+            {
+                (int)Math.Round(16 + y * 219.0, MidpointRounding.AwayFromZero),
+                (int)Math.Round(128 + cb * 224.0, MidpointRounding.AwayFromZero),
+                (int)Math.Round(128 + cr * 224.0, MidpointRounding.AwayFromZero)
+            };
+        }
+
+        /// <summary>
+        /// ST 2084 inverse EOTF: absolute luminance to a signal of 0..1.
+        /// </summary>
+        private static double PqEncode(double nits)
+        {
+            const double m1 = 2610.0 / 16384.0;
+            const double m2 = 2523.0 / 32.0;
+            const double c1 = 3424.0 / 4096.0;
+            const double c2 = 2413.0 / 128.0;
+            const double c3 = 2392.0 / 128.0;
+
+            var yPowM1 = Math.Pow(nits / 10000.0, m1);
+            return Math.Pow((c1 + c2 * yPowM1) / (1.0 + c3 * yPowM1), m2);
+        }
+
         /**
          * Ctor - initializes palette with transparent black (RGBA: 0x00000000)
          * @param palSize Number of palette entries
@@ -279,6 +324,19 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             SetRgb(index, color.Red, color.Green, color.Blue);
             SetAlpha(index, color.Alpha);
+        }
+
+        /// <summary>
+        /// Same as <see cref="SetColor"/>, with the YCbCr of the entry in HDR. The RGB of the entry
+        /// stays the colour that went in.
+        /// </summary>
+        internal void SetHdrColor(int index, SKColor color, int whiteNits)
+        {
+            SetColor(index, color);
+            var yCbCr = Rgb2YCbCrHdr(color.Red, color.Green, color.Blue, whiteNits);
+            _y[index] = (byte)yCbCr[0];
+            _cb[index] = (byte)yCbCr[1];
+            _cr[index] = (byte)yCbCr[2];
         }
 
         /**

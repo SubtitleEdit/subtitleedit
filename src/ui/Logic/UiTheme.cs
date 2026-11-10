@@ -113,21 +113,6 @@ public static class UiTheme
     }
 
     /// <summary>
-    /// True when the toolbar and message box images come from a theme's own icon set (Midnight
-    /// Cinema, Sakura, Pastel, Nord) - those are drawn in the theme's colors and must not be
-    /// recolored. Dark/Light/Classic share the plain glyphs, which may be.
-    /// </summary>
-    public static bool HasOwnIcons
-    {
-        get
-        {
-            var iconSetName = Path.GetFileName(ImageFolder);
-            return iconSetName == ThemeNameMidnightCinema || iconSetName == ThemeNameSakura ||
-                   iconSetName == ThemeNamePastel || iconSetName == ThemeNameNord;
-        }
-    }
-
-    /// <summary>
     /// Folder holding the current theme's images. These are unpacked from Themes.zip into
     /// <see cref="Se.ThemesFolder"/> at start-up - they are not embedded assets, so they cannot
     /// be reached through an avares:// URI. A theme that ships no image folder of its own
@@ -140,7 +125,7 @@ public static class UiTheme
         {
             var themeName = ThemeName;
             var folder = Path.Combine(Se.ThemesFolder, themeName);
-            if (!File.Exists(Path.Combine(folder, "Open.png")))
+            if (!ThemeIcon.Exists(folder, "Open"))
             {
                 // A theme (or a theme's icons, as with Pastel's and Nord's once art-only folders)
                 // added after the folder was last unpacked (same version, so the start-up check
@@ -1961,19 +1946,28 @@ public static class UiTheme
     private static readonly System.Collections.Generic.Dictionary<string, Bitmap?> ThemeArtCache = new(StringComparer.Ordinal);
 
     /// <summary>
+    /// Where a theme image lives. Uses <see cref="ThemeName"/> rather than the setting, as System
+    /// has no folder of its own - it is always Light or Dark (issue #16502).
+    /// </summary>
+    internal static string GetThemeArtPath(string fileName)
+    {
+        return Path.Combine(Se.ThemesFolder, ThemeName, fileName);
+    }
+
+    /// <summary>
     /// A background image shipped in the current theme's folder (see
     /// <see cref="VideoBackgroundFileName"/>), or null when the theme has none.
     /// </summary>
     public static Bitmap? GetThemeArt(string fileName)
     {
-        var theme = Se.Settings.Appearance.Theme;
-        var path = Path.Combine(Se.ThemesFolder, theme, fileName);
+        var path = GetThemeArtPath(fileName);
         if (ThemeArtCache.TryGetValue(path, out var cached))
         {
             return cached;
         }
 
-        if (!File.Exists(path) && !Initializers.ThemeInitializer.TryRepair(path))
+        // A repair only says the zip was unpacked - the zip may not have the file either.
+        if (!File.Exists(path) && (!Initializers.ThemeInitializer.TryRepair(path) || !File.Exists(path)))
         {
             return null;
         }
@@ -1990,6 +1984,19 @@ public static class UiTheme
             ThemeArtCache[path] = null;
             return null;
         }
+    }
+
+    /// <summary>
+    /// The text color of the current theme, light or dark.
+    /// </summary>
+    public static Color GetThemeForegroundColor()
+    {
+        if (IsDarkThemeEnabled())
+        {
+            return GetDarkThemeForegroundColor();
+        }
+
+        return ThemeName == ThemeNameSakura ? SakuraForegroundColor : Colors.Black;
     }
 
     public static Color GetDarkThemeForegroundColor()

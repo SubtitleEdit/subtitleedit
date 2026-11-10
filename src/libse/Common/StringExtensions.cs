@@ -711,6 +711,28 @@ namespace Nikse.SubtitleEdit.Core.Common
             return RestoreSavedAndRemovedTags(properCaseText, tags);
         }
 
+        /// <summary>
+        /// Upper-cases like <see cref="string.ToUpper(CultureInfo)"/>, but also maps German 'ß' to
+        /// the capital sharp s 'ẞ' (U+1E9E) - .NET has no one-to-one uppercase for 'ß' and leaves it as is.
+        /// </summary>
+        public static string ToUpperWithCapitalSharpS(this string s, CultureInfo ci)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+
+            return s.ToUpper(ci).Replace('\u00DF', '\u1E9E');
+        }
+
+        /// <summary>
+        /// Upper-cases like <see cref="char.ToUpper(char, CultureInfo)"/>, but also maps 'ß' to 'ẞ' (U+1E9E).
+        /// </summary>
+        public static char ToUpperWithCapitalSharpS(char c, CultureInfo ci)
+        {
+            return c == '\u00DF' ? '\u1E9E' : char.ToUpper(c, ci);
+        }
+
         public static string ToLowercaseButKeepTags(this string input)
         {
             if (string.IsNullOrWhiteSpace(input))
@@ -759,7 +781,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (containsUppercase && containsLowercase)
             {
-                return RestoreSavedAndRemovedTags(text.ToUpperInvariant(), tags);
+                return RestoreSavedAndRemovedTags(text.ToUpperWithCapitalSharpS(CultureInfo.InvariantCulture), tags);
             }
 
             if (containsUppercase)
