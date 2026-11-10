@@ -103,6 +103,41 @@ public class PerLineVoiceCloneTests
     }
 
     [Fact]
+    public void InsertIfSupportedPutsCloneFromVideoFirst()
+    {
+        var voices = new List<Voice> { new Voice(new object(), "Some voice") };
+
+        PerLineVoiceClone.InsertIfSupported(voices, new HiggsTtsAudioCpp(), "video.mkv");
+
+        Assert.Equal(2, voices.Count);
+        Assert.True(PerLineVoiceClone.IsSelected(voices[0]));
+    }
+
+    [Fact]
+    public void InsertIfSupportedDoesNotAddItTwice()
+    {
+        var voices = new List<Voice>();
+
+        // A rebuilt Review voice list must offer "Clone from video" again, exactly once (#16812).
+        PerLineVoiceClone.InsertIfSupported(voices, new HiggsTtsAudioCpp(), "video.mkv");
+        PerLineVoiceClone.InsertIfSupported(voices, new HiggsTtsAudioCpp(), "video.mkv");
+
+        Assert.Single(voices);
+    }
+
+    [Fact]
+    public void InsertIfSupportedSkipsWithoutVideoOrCapableEngine()
+    {
+        var voices = new List<Voice>();
+
+        PerLineVoiceClone.InsertIfSupported(voices, new HiggsTtsAudioCpp(), string.Empty);
+        PerLineVoiceClone.InsertIfSupported(voices, new EdgeTts(), "video.mkv");
+        PerLineVoiceClone.InsertIfSupported(voices, null, "video.mkv");
+
+        Assert.Empty(voices);
+    }
+
+    [Fact]
     public void TheMarkerIsRecognisedAndCountsAsCloning()
     {
         var voice = PerLineVoiceClone.CreateVoice();

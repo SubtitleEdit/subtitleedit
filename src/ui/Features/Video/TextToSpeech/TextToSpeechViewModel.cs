@@ -2184,10 +2184,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </remarks>
     private void AddPerLineCloneVoiceIfSupported(ITtsEngine engine)
     {
-        if (PerLineVoiceClone.CanBeOffered(engine, _videoFileName))
-        {
-            Voices.Insert(0, PerLineVoiceClone.CreateVoice());
-        }
+        PerLineVoiceClone.InsertIfSupported(Voices, engine, _videoFileName);
     }
 
     /// <summary>
