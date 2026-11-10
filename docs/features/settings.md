@@ -169,6 +169,8 @@ Proxy settings for every download and online engine: **address**, **username**, 
 - **Check for updates when the app starts** — Hidden for store-managed installs (e.g. Flatpak), which update through the store
 - **Notify about** — **Stable versions only**, or **Stable and beta versions**
 
+See [Check for Updates](check-for-updates.md) for in-app updating and which installs support it.
+
 ## File Type Associations
 
 Windows only. Tick the subtitle file types Subtitle Edit should open by default.

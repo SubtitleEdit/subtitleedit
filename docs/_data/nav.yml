@@ -289,6 +289,9 @@
     - title: "Word Lists"
       url: features/word-lists.html
       desc: "Custom word lists and dictionaries"
+    - title: "Check for Updates"
+      url: features/check-for-updates.html
+      desc: "In-app updates and stable/beta channel"
 - name: "Other"
   items:
     - title: "Compare"
