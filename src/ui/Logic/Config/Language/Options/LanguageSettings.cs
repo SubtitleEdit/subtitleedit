@@ -64,8 +64,7 @@ public class LanguageSettings
     public string ShowTimeCodeModeInStatusBar { get; set; }
     public string GridCompactMode { get; set; }
     public string GridAlternatingRows { get; set; }
-    public string GridAlternatingRowColor { get; set; }
-    public string GridAlternatingRowColorDark { get; set; }
+    public string GridAlternatingRowContrast { get; set; }
     public string UiFont { get; set; }
     public string IconTheme { get; set; }
     public string DarkThemeForegroundColor { get; set; }
@@ -462,8 +461,7 @@ public class LanguageSettings
         ShowTimeCodeModeInStatusBar = "Show time code mode in status bar";
         GridCompactMode = "Use compact mode for grids";
         GridAlternatingRows = "Use alternating row colors in grid";
-        GridAlternatingRowColor = "Alternating row color (light theme)";
-        GridAlternatingRowColorDark = "Alternating row color (dark theme)";
+        GridAlternatingRowContrast = "Alternating row contrast (%)";
         UiFont = "UI font";
         IconTheme = "Icon theme";
         DarkThemeForegroundColor = "Dark theme foreground color";

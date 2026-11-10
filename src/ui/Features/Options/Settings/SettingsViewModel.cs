@@ -462,8 +462,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private Color _focusedButtonBackgroundColor;
     [ObservableProperty] private Color _bookmarkColor;
     [ObservableProperty] private Color _spellCheckHighlightColor;
-    [ObservableProperty] private Color _gridAlternatingRowColor;
-    [ObservableProperty] private Color _gridAlternatingRowColorDark;
+    [ObservableProperty] private int _gridAlternatingRowContrast;
     [ObservableProperty] private bool _isEditCustomContinuationStyleVisible;
     [ObservableProperty] private bool _isMpvChosen;
 
@@ -1057,8 +1056,7 @@ public partial class SettingsViewModel : ObservableObject
         FocusedButtonBackgroundColor = appearance.FocusedButtonBackgroundColor.FromHexToColor();
         BookmarkColor = appearance.BookmarkColor.FromHexToColor();
         SpellCheckHighlightColor = appearance.SpellCheckHighlightColor.FromHexToColor();
-        GridAlternatingRowColor = appearance.GridAlternatingRowColor.FromHexToColor();
-        GridAlternatingRowColorDark = appearance.GridAlternatingRowColorDark.FromHexToColor();
+        GridAlternatingRowContrast = UiTheme.ClampGridAlternatingRowContrast(appearance.GridAlternatingRowContrast);
         ShowUpDownStartTime = appearance.ShowUpDownStartTime;
         ShowTimeCodeModeInStatusBar = appearance.ShowTimeCodeModeInStatusBar;
         ShowUpDownEndTime = appearance.ShowUpDownEndTime;
@@ -1972,8 +1970,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.FocusedButtonBackgroundColor = FocusedButtonBackgroundColor.FromColorToHex();
         appearance.BookmarkColor = BookmarkColor.FromColorToHex();
         appearance.SpellCheckHighlightColor = SpellCheckHighlightColor.FromColorToHex();
-        appearance.GridAlternatingRowColor = GridAlternatingRowColor.FromColorToHex();
-        appearance.GridAlternatingRowColorDark = GridAlternatingRowColorDark.FromColorToHex();
+        appearance.GridAlternatingRowContrast = UiTheme.ClampGridAlternatingRowContrast(GridAlternatingRowContrast);
         appearance.ShowUpDownStartTime = ShowUpDownStartTime;
         appearance.ShowTimeCodeModeInStatusBar = ShowTimeCodeModeInStatusBar;
         appearance.ShowUpDownEndTime = ShowUpDownEndTime;

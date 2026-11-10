@@ -1837,39 +1837,53 @@ public static class UiTheme
     private static readonly Color PastelBackgroundColor = Color.FromRgb(240, 235, 255);
     internal static readonly Color NordBackgroundColor = Color.FromRgb(0x2E, 0x34, 0x40); // nord0
     internal static readonly Color NordForegroundColor = Color.FromRgb(0xE5, 0xE9, 0xF0); // nord5
-    private static readonly Color NordAlternatingRowColor = Color.FromRgb(0x34, 0x3B, 0x48);
     internal static readonly Color MidnightCinemaBackgroundColor = Color.FromRgb(0x14, 0x12, 0x18);
     internal static readonly Color MidnightCinemaForegroundColor = Color.FromRgb(0xEC, 0xE6, 0xD9);
     internal static readonly Color MidnightCinemaHeaderColor = Color.FromRgb(0x1E, 0x1B, 0x24);
     internal static readonly Color MidnightCinemaAccentColor = Color.FromRgb(0xE8, 0xA3, 0x3D);
-    private static readonly Color MidnightCinemaAlternatingRowColor = Color.FromRgb(0x1A, 0x17, 0x20);
     internal static readonly Color SakuraBackgroundColor = Color.FromRgb(0xFF, 0xF7, 0xF9);
     internal static readonly Color SakuraForegroundColor = Color.FromRgb(0x3A, 0x2A, 0x31);
     internal static readonly Color SakuraAccentColor = Color.FromRgb(0xD9, 0x46, 0x6F);
-    private static readonly Color SakuraAlternatingRowColor = Color.FromRgb(0xFD, 0xEF, 0xF3);
+
+    public const int MinGridAlternatingRowContrast = 4;
+    public const int MaxGridAlternatingRowContrast = 20;
+
+    public static int ClampGridAlternatingRowContrast(int percent) =>
+        Math.Clamp(percent, MinGridAlternatingRowContrast, MaxGridAlternatingRowContrast);
 
     /// <summary>
-    /// The subtitle grid's alternating row color. The fixed-palette themes have their own - the
-    /// gray settings read as stray gray stripes on their tinted rows.
+    /// The subtitle grid's alternating row color: the theme background moved the configured
+    /// percentage toward the theme text color. Following both colors keeps the stripe in the
+    /// theme's own tint (Sakura pink, Nord blue-gray) and makes it darker on light themes and
+    /// lighter on dark ones without a light/dark color pair to keep in step (#16779).
     /// </summary>
-    public static string GetGridAlternatingRowColorHex(bool isDark)
+    public static Color GetGridAlternatingRowColor(bool isDark)
     {
-        var theme = Se.Settings.Appearance.Theme;
-        if (!isDark)
+        Color background;
+        Color foreground;
+        try
         {
-            return theme == ThemeNameSakura
-                ? SakuraAlternatingRowColor.FromColorToHex()
-                : Se.Settings.Appearance.GridAlternatingRowColor;
+            background = isDark ? GetDarkThemeBackgroundColor() : GetLightThemeBackgroundColor(Se.Settings.Appearance.Theme);
+            foreground = isDark ? GetDarkThemeForegroundColor() : GetLightThemeForegroundColor(Se.Settings.Appearance.Theme);
+        }
+        catch
+        {
+            // malformed dark-mode colors in the settings file
+            background = isDark ? Color.FromRgb(0x21, 0x21, 0x21) : Colors.White;
+            foreground = isDark ? Color.FromRgb(0xDC, 0xDC, 0xDC) : Colors.Black;
         }
 
-        if (theme == ThemeNameNord)
-        {
-            return NordAlternatingRowColor.FromColorToHex();
-        }
+        return BlendGridAlternatingRowColor(background, foreground, Se.Settings.Appearance.GridAlternatingRowContrast);
+    }
 
-        return theme == ThemeNameMidnightCinema
-            ? MidnightCinemaAlternatingRowColor.FromColorToHex()
-            : Se.Settings.Appearance.GridAlternatingRowColorDark;
+    internal static Color BlendGridAlternatingRowColor(Color background, Color foreground, int percent)
+    {
+        var amount = ClampGridAlternatingRowContrast(percent) / 100.0;
+        static byte Mix(byte from, byte to, double t) => (byte)Math.Round(from + (to - from) * t);
+        return Color.FromRgb(
+            Mix(background.R, foreground.R, amount),
+            Mix(background.G, foreground.G, amount),
+            Mix(background.B, foreground.B, amount));
     }
 
     private static readonly WaveformColors MidnightCinemaWaveformColors = new(
@@ -1996,8 +2010,11 @@ public static class UiTheme
             return GetDarkThemeForegroundColor();
         }
 
-        return ThemeName == ThemeNameSakura ? SakuraForegroundColor : Colors.Black;
+        return GetLightThemeForegroundColor(ThemeName);
     }
+
+    internal static Color GetLightThemeForegroundColor(string? themeSetting) =>
+        themeSetting == ThemeNameSakura ? SakuraForegroundColor : Colors.Black;
 
     public static Color GetDarkThemeForegroundColor()
     {

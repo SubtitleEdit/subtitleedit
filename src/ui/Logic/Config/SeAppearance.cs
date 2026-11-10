@@ -63,8 +63,7 @@ public class SeAppearance
     /// </summary>
     public string WindowsRenderingMode { get; set; }
     public bool GridAlternatingRows { get; set; }
-    public string GridAlternatingRowColor { get; set; }
-    public string GridAlternatingRowColorDark { get; set; }
+    public int GridAlternatingRowContrast { get; set; }
     public bool ShowHorizontalLineAboveToolbar { get; set; }
 
     /// <summary>
@@ -150,8 +149,7 @@ public class SeAppearance
         GridLinesAppearance = SeGridLinesVisibility.None.ToString();
         WindowsRenderingMode = nameof(WindowsRenderingModeType.Default);
         GridAlternatingRows = true;
-        GridAlternatingRowColor = new Color(255, 245, 245, 245).FromColorToHex();
-        GridAlternatingRowColorDark = new Color(255, 45, 45, 45).FromColorToHex();
+        GridAlternatingRowContrast = 6;
         DarkModeBackgroundColor = new Color(255, 33, 33, 33).FromColorToHex();
         DarkModeForegroundColor = new Color(255, 220, 220, 220).FromColorToHex();
         UseFocusedButtonBackgroundColor = true;

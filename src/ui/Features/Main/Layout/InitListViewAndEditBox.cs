@@ -175,19 +175,8 @@ public static partial class InitListViewAndEditBox
         if (Se.Settings.Appearance.GridAlternatingRows)
         {
             var isDark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
-            var altColorHex = UiTheme.GetGridAlternatingRowColorHex(isDark);
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(altColorHex))
-                {
-                    alternatingRowBrush = new SolidColorBrush(altColorHex.FromHexToColor());
-                    vm.SubtitleGridAlternatingRowBrush = alternatingRowBrush;
-                }
-            }
-            catch
-            {
-                alternatingRowBrush = null;
-            }
+            alternatingRowBrush = new SolidColorBrush(UiTheme.GetGridAlternatingRowColor(isDark));
+            vm.SubtitleGridAlternatingRowBrush = alternatingRowBrush;
         }
 
         // Collapse hidden rows (style bindings evaluate against the row's item).

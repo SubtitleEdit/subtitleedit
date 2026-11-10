@@ -15534,15 +15534,7 @@ public partial class MainViewModel :
         // Color notifies every realized row without rebuilding the grid (and losing its state).
         if (SubtitleGridAlternatingRowBrush != null)
         {
-            var colorHex = UiTheme.GetGridAlternatingRowColorHex(Application.Current?.ActualThemeVariant == ThemeVariant.Dark);
-            try
-            {
-                SubtitleGridAlternatingRowBrush.Color = colorHex.FromHexToColor();
-            }
-            catch
-            {
-                // Keep the current brush color when the configured value is invalid.
-            }
+            SubtitleGridAlternatingRowBrush.Color = UiTheme.GetGridAlternatingRowColor(Application.Current?.ActualThemeVariant == ThemeVariant.Dark);
         }
     }
 
