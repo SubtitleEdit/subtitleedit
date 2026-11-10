@@ -232,6 +232,7 @@ public class LanguageSettings
     public string WriteToolsLog { get; set; }
     public string ShowSettingsFile { get; set; }
     public string ShowAssaLayer { get; set; }
+    public string ShowActorBox { get; set; }
     public string WaveformCursorColor { get; set; }
     public string WaveformShotChangeColor { get; set; }
     public string WaveformGridColor { get; set; }
@@ -629,6 +630,7 @@ public class LanguageSettings
         WriteToolsLog = "Write tools log";
         ShowSettingsFile = "Show settings file";
         ShowAssaLayer = "Show ASSA layer box";
+        ShowActorBox = "Show actor box";
         WaveformCursorColor = "Waveform cursor/head color";
         WaveformShotChangeColor = "Waveform shot change color";
         WaveformGridColor = "Waveform grid color";

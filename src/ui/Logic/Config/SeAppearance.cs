@@ -105,6 +105,7 @@ public class SeAppearance
     public bool ShowPluginsMenu { get; set; }
     public bool RightToLeft { get; set; }
     public bool ShowLayer { get; set; }
+    public bool ShowActor { get; set; }
     public bool ShowUpDownStartTime { get; set; }
     public bool ShowUpDownEndTime { get; set; }
     public bool ShowUpDownDuration { get; set; }
