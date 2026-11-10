@@ -1,6 +1,5 @@
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -47,6 +46,41 @@ public class EditBoxActorTests : IDisposable
         Assert.Equal("John", vm.Subtitles[2].Actor);
         Assert.Equal("John", vm.Subtitles[0].Actor);
         Assert.Equal("Mary", vm.Subtitles[1].Actor);
+    }
+
+    [AvaloniaFact]
+    public void Picking_from_the_drop_down_sets_the_actor()
+    {
+        var (window, vm, box) = ShowMainWindow();
+        Select(window, vm, 2);
+
+        FocusBox(window, box);
+        window.KeyPressQwerty(PhysicalKey.ArrowDown, RawInputModifiers.None);
+        Settle(window);
+        Assert.True(box.IsDropDownOpen);
+        box.SelectedItem = "Mary";
+        box.IsDropDownOpen = false;
+        Settle(window);
+
+        Assert.Equal("Mary", vm.Subtitles[2].Actor);
+    }
+
+    [AvaloniaFact]
+    public void Typing_on_past_the_suggestion_creates_a_new_actor()
+    {
+        var (window, vm, box) = ShowMainWindow();
+        Select(window, vm, 2);
+
+        FocusBox(window, box);
+        window.KeyTextInput("Jo");
+        Settle(window);
+        Assert.Equal("John", box.Text);
+        window.KeyTextInput("e");
+        Settle(window);
+        window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        Settle(window);
+
+        Assert.Equal("Joe", vm.Subtitles[2].Actor);
     }
 
     [AvaloniaFact]
@@ -103,9 +137,7 @@ public class EditBoxActorTests : IDisposable
         Settle(window);
 
         Assert.True(box.IsDropDownOpen);
-        var popup = box.GetVisualDescendants().OfType<Popup>().First();
-        var listBox = popup.Child!.GetVisualDescendants().Prepend(popup.Child).OfType<ListBox>().First();
-        Assert.Equal(new[] { "John", "Mary" }, listBox.Items.Cast<string>());
+        Assert.Equal(new[] { "John", "Mary" }, box.Items.Cast<string>());
     }
 
     [AvaloniaFact]
@@ -129,7 +161,7 @@ public class EditBoxActorTests : IDisposable
         Assert.Equal("Kim", vm.Subtitles[2].Actor);
     }
 
-    private (Window Window, MainViewModel Vm, AutoCompleteBox Box) ShowMainWindow()
+    private (Window Window, MainViewModel Vm, ComboBox Box) ShowMainWindow()
     {
         var services = new ServiceCollection();
         services.AddSubtitleEditServices();
@@ -151,7 +183,7 @@ public class EditBoxActorTests : IDisposable
         vm.ShowActorBox = true;
         Settle(window);
 
-        var box = view.GetVisualDescendants().OfType<AutoCompleteBox>()
+        var box = view.GetVisualDescendants().OfType<ComboBox>()
             .Single(b => AutomationProperties.GetName(b) == Se.Language.General.Actor);
         Assert.True(box.IsEffectivelyVisible);
         return (window, vm, box);
@@ -164,7 +196,7 @@ public class EditBoxActorTests : IDisposable
         Assert.Same(vm.Subtitles[index], vm.SelectedSubtitle);
     }
 
-    private static void FocusBox(Window window, AutoCompleteBox box)
+    private static void FocusBox(Window window, ComboBox box)
     {
         var textBox = box.GetVisualDescendants().OfType<TextBox>().First();
         textBox.Focus();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
@@ -2555,10 +2556,10 @@ public static partial class InitListViewAndEditBox
     }
 
     /// <summary>
-    /// Optional "Actor" box under Show/Hide/Duration/Layer (#16797), for formats that carry an
-    /// actor. One box both picks and creates: typing completes inline from the actors already
-    /// in the file ("Jo" + Enter = "John"), a name that matches nothing becomes a new actor, and
-    /// Down/F4 lists the whole cast. The value is written on Enter, on picking from the list or
+    /// Optional "Actor" drop-down under Show/Hide/Duration/Layer (#16797), for formats that carry
+    /// an actor. One editable combo box both picks and creates: the arrow (or Down/F4) lists the
+    /// actors in the file, typing completes inline ("Jo" + Enter = "John"), and a name that
+    /// matches nothing becomes a new actor. The value is written on Enter, on picking from the list or
     /// when focus leaves - not per keystroke - to every line that was selected when typing
     /// started, so changing the selection mid-edit cannot move the name to another line.
     /// </summary>
@@ -2577,39 +2578,60 @@ public static partial class InitListViewAndEditBox
             FontWeight = FontWeight.Bold,
         }.WithBindVisible(vm, nameof(vm.ShowUpDownLabels)));
 
-        var showAll = false;
-        var box = new AutoCompleteBox
+        var box = new ComboBox
         {
+            IsEditable = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            MinimumPrefixLength = 0,
-            MinimumPopulateDelay = TimeSpan.Zero,
-            IsTextCompletionEnabled = true,
+            HorizontalContentAlignment = HorizontalAlignment.Left,
             MaxDropDownHeight = 300,
-            FilterMode = AutoCompleteFilterMode.Custom,
-            // Down/F4 sets showAll so the list holds the whole cast, not just names starting
-            // with what is already in the box (normally the current line's own actor).
-            ItemFilter = (search, item) => showAll ||
-                (item is string s && s.StartsWith(search ?? string.Empty, StringComparison.CurrentCultureIgnoreCase)),
         }.WithAccessibleName(Se.Language.General.Actor);
         if (!vm.ShowUpDownLabels && Se.Settings.Appearance.ShowHints)
         {
             ToolTip.SetTip(box, Se.Language.General.Actor);
         }
 
+        // Replaced in place, never re-assigned: a new ItemsSource would reset the typed text.
+        var actors = new ObservableCollection<string>();
+        box.ItemsSource = actors;
+
         var syncing = false;
         List<SubtitleLineViewModel>? targets = null; // non-null while the user has uncommitted text
         SubtitleLineViewModel? watchedLine = null;
+        TextBox? textBox = null;
 
-        void ShowCurrentActor()
+        void SetText(string text)
         {
-            if (targets != null)
+            syncing = true;
+            box.Text = text;
+            syncing = false;
+        }
+
+        void RefreshActors()
+        {
+            var current = vm.GetActorsInSubtitle();
+            if (current.SequenceEqual(actors))
             {
                 return;
             }
 
+            var text = box.Text;
             syncing = true;
-            box.Text = vm.SelectedSubtitle?.Actor ?? string.Empty;
+            actors.Clear();
+            foreach (var actor in current)
+            {
+                actors.Add(actor);
+            }
+
+            box.Text = text;
             syncing = false;
+        }
+
+        void ShowCurrentActor()
+        {
+            if (targets == null)
+            {
+                SetText(vm.SelectedSubtitle?.Actor ?? string.Empty);
+            }
         }
 
         void Commit()
@@ -2685,9 +2707,9 @@ public static partial class InitListViewAndEditBox
             }
         };
 
-        box.TextChanged += (_, _) =>
+        box.PropertyChanged += (_, e) =>
         {
-            if (syncing || targets != null)
+            if (e.Property != ComboBox.TextProperty || syncing || targets != null)
             {
                 return;
             }
@@ -2701,15 +2723,40 @@ public static partial class InitListViewAndEditBox
             targets = selected;
         };
 
-        box.GotFocus += (_, _) => box.ItemsSource = vm.GetActorsInSubtitle();
+        box.GotFocus += (_, _) => RefreshActors();
+        box.DropDownOpened += (_, _) => RefreshActors();
+
+        // Inline completion: typing "Jo" fills in "John" with "hn" selected, so Enter picks
+        // John and typing on replaces the suggestion (a new actor).
+        box.TemplateApplied += (_, e) =>
+        {
+            textBox = e.NameScope.Find<TextBox>("PART_EditableTextBox");
+            textBox?.AddHandler(InputElement.TextInputEvent, (_, _) =>
+            {
+                var typed = textBox.Text ?? string.Empty;
+                if (typed.Length == 0 || textBox.CaretIndex != typed.Length || textBox.SelectionStart != textBox.SelectionEnd)
+                {
+                    return;
+                }
+
+                var match = actors.FirstOrDefault(actor =>
+                    actor.Length > typed.Length && actor.StartsWith(typed, StringComparison.CurrentCultureIgnoreCase));
+                if (match == null)
+                {
+                    return;
+                }
+
+                textBox.Text = typed + match.Substring(typed.Length);
+                textBox.SelectionStart = typed.Length;
+                textBox.SelectionEnd = textBox.Text.Length;
+            }, RoutingStrategies.Bubble, handledEventsToo: true);
+        };
 
         box.AddHandler(InputElement.KeyDownEvent, (_, e) =>
         {
+            // Down/F4 opens the list rather than stepping through actors one commit at a time.
             if ((e.Key == Key.Down || e.Key == Key.F4) && e.KeyModifiers == KeyModifiers.None && !box.IsDropDownOpen)
             {
-                showAll = true;
-                box.ItemsSource = vm.GetActorsInSubtitle();
-                box.PopulateComplete();
                 box.IsDropDownOpen = true;
                 e.Handled = true;
             }
@@ -2737,9 +2784,7 @@ public static partial class InitListViewAndEditBox
 
         box.DropDownClosed += (_, _) =>
         {
-            showAll = false;
-
-            // A pick from the list (mouse click) is final, like Enter.
+            // A pick from the list is final, like Enter.
             if (targets != null && box.SelectedItem is string picked && picked == box.Text)
             {
                 Commit();
@@ -2748,7 +2793,7 @@ public static partial class InitListViewAndEditBox
 
         box.LostFocus += (_, _) =>
         {
-            if (!box.IsKeyboardFocusWithin && targets != null)
+            if (!box.IsKeyboardFocusWithin && !box.IsDropDownOpen && targets != null)
             {
                 Commit();
             }
