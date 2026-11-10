@@ -559,17 +559,20 @@ public static partial class MergeAndSplitHelper
         Action<Action> applyRowUpdate)
     {
         var translatedLines = mergedTranslation.SplitToLines();
-        var separatorsOmitted = false;
-        if (translatedLines.Count != mergeResult.Text.CountLines())
+        if (mergeResult.NoSentenceEndingSource)
         {
             // Sources without sentence endings (Chinese/Japanese) are sent with "." separator lines.
-            // Models often drop them and reply with one line per row, so accept that reply too.
-            if (!mergeResult.NoSentenceEndingSource || translatedLines.Count != CountContentLines(mergeResult.Text))
+            // Models often drop some or all of them and reply with one line per row (#16386), so
+            // only the content lines are compared and dealt out - the separators carry nothing.
+            translatedLines = translatedLines.Where(line => line.Trim() != ".").ToList();
+            if (translatedLines.Count != CountContentLines(mergeResult.Text))
             {
                 return 0;
             }
-
-            separatorsOmitted = true;
+        }
+        else if (translatedLines.Count != mergeResult.Text.CountLines())
+        {
+            return 0;
         }
 
         var translatedLinesIdx = 0;
@@ -582,7 +585,7 @@ public static partial class MergeAndSplitHelper
         foreach (var mergeItem in mergeResult.MergeResultItems)
         {
             var numberOfParagraphs = mergeItem.EndIndex - mergeItem.StartIndex + 1;
-            var numberOfLines = separatorsOmitted ? CountContentLines(mergeItem.Text) : mergeItem.Text.CountLines();
+            var numberOfLines = mergeResult.NoSentenceEndingSource ? CountContentLines(mergeItem.Text) : mergeItem.Text.CountLines();
 
             var translatedText = BuildTranslatedText(translatedLines, ref translatedLinesIdx, numberOfLines);
             itemSources.Add(mergeItem.Text);
@@ -915,7 +918,6 @@ public static partial class MergeAndSplitHelper
 
         context.CurrentItem.TextIndexEnd = result.Text.Length;
         result.Text += Environment.NewLine + "." + Environment.NewLine + currentRow.Text;
-        context.CurrentItem.Text += Environment.NewLine + "." + Environment.NewLine + currentRow.Text;
         context.CurrentItem.Paragraphs.Add(currentRow);
         context.CurrentItem.TextIndexStart = result.Text.Length;
         context.CurrentItem.StartIndex = rowIndex - 1;
