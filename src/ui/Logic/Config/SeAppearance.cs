@@ -149,7 +149,7 @@ public class SeAppearance
         GridLinesAppearance = SeGridLinesVisibility.None.ToString();
         WindowsRenderingMode = nameof(WindowsRenderingModeType.Default);
         GridAlternatingRows = true;
-        GridAlternatingRowContrast = 6;
+        GridAlternatingRowContrast = 10;
         DarkModeBackgroundColor = new Color(255, 33, 33, 33).FromColorToHex();
         DarkModeForegroundColor = new Color(255, 220, 220, 220).FromColorToHex();
         UseFocusedButtonBackgroundColor = true;

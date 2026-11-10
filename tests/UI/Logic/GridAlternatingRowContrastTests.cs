@@ -44,10 +44,10 @@ public class GridAlternatingRowContrastTests
     [Fact]
     public void Default_Is_Visible_On_Light_Theme()
     {
-        Assert.Equal(6, new SeAppearance().GridAlternatingRowContrast);
-        var color = UiTheme.BlendGridAlternatingRowColor(Colors.White, Colors.Black, 6);
+        Assert.Equal(10, new SeAppearance().GridAlternatingRowContrast);
+        var color = UiTheme.BlendGridAlternatingRowColor(Colors.White, Colors.Black, 10);
 
         // The old default was #F5F5F5, too faint to notice on many screens.
-        Assert.True(color.R < 245);
+        Assert.Equal(Color.FromRgb(230, 230, 230), color);
     }
 }
