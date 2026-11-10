@@ -201,7 +201,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private string _nOcrBinaryOcrFallbackDatabase;
     [ObservableProperty] private string _binaryOcrNOcrFallbackDatabase;
     private const double DefaultImageMaxHeight = 100;
-    private const double DefaultImageMaxWidth = 200;
+    internal const double DefaultImageMaxWidth = 200;
     [ObservableProperty] private double _imageMaxHeight = DefaultImageMaxHeight;
     [ObservableProperty] private double _imageMaxWidth = DefaultImageMaxWidth;
     [ObservableProperty] private FontFamily _textBoxFontFamily;
