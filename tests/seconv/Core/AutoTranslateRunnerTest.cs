@@ -51,7 +51,7 @@ public class AutoTranslateRunnerTest : IDisposable
     }
 
     private static ConversionOptions MakeOptions(string engine = "llamacpp", string? url = null, string? model = null, string to = "de", string? prompt = null, string? apiKey = null,
-        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null)
+        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null, SeLlamaCppAdvanced? advanced = null)
     {
         return new ConversionOptions
         {
@@ -68,6 +68,7 @@ public class AutoTranslateRunnerTest : IDisposable
             TranslateSynopsis = synopsis,
             TranslateGlossary = glossary,
             TranslateFormality = formality,
+            TranslateAdvancedSettings = advanced,
             Quiet = true,
         };
     }
@@ -689,6 +690,65 @@ public class AutoTranslateRunnerTest : IDisposable
             () => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", history: -1)));
 
         Assert.Contains("--translate-history", ex.Message);
+    }
+
+    [Fact]
+    public void Create_Advanced_SettingsFileIsTheBase_CommandLineWins()
+    {
+        var fromFile = new SeLlamaCppAdvanced
+        {
+            BatchSize = 7,
+            HistoryPairs = 4,
+            Synopsis = "From the settings file.",
+            Formality = SeLlamaCppAdvanced.FormalityInformal,
+            Prompt = "Translate {0} to {1} tersely.",
+            ContextSize = 4096,
+            Temperature = 0.3,
+            ServerArguments = "-ngl 99",
+        };
+
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", batchSize: 3, advanced: fromFile));
+
+        var s = runner.AdvancedSettings!;
+        Assert.Equal(3, s.BatchSize); // the option wins
+        Assert.Equal(4, s.HistoryPairs); // everything else comes from the file
+        Assert.Equal("From the settings file.", s.Synopsis);
+        Assert.Equal(SeLlamaCppAdvanced.FormalityInformal, s.Formality);
+        Assert.Equal("Translate {0} to {1} tersely.", s.Prompt);
+        Assert.Equal(4096, s.ContextSize);
+        Assert.Equal(0.3, s.Temperature);
+        Assert.Equal("-ngl 99", s.ServerArguments);
+        Assert.Same(s, ((AdvancedTranslateEngine)runner.Translator).Settings);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(51)]
+    public void Create_Advanced_SettingsFileBatchSizeOutOfRange_Throws(int batchSize)
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", advanced: new SeLlamaCppAdvanced { BatchSize = batchSize })));
+
+        Assert.Contains("tools.llamaCppAdvanced.batchSize", ex.Message);
+        Assert.Contains("--translate-batch-size", ex.Message);
+    }
+
+    [Fact]
+    public void Create_Advanced_SettingsFilePromptWithTextPlaceholder_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", advanced: new SeLlamaCppAdvanced { Prompt = "Translate: {2}" })));
+
+        Assert.Contains("tools.llamaCppAdvanced.prompt", ex.Message);
+        Assert.Contains("{2}", ex.Message);
+    }
+
+    [Fact]
+    public void Create_RegularEngine_IgnoresTheSettingsFileAdvancedSection()
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio", advanced: new SeLlamaCppAdvanced { BatchSize = 99 }));
+
+        Assert.Null(runner.AdvancedSettings);
     }
 
     [Fact]

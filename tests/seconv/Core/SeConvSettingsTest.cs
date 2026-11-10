@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 using SeConv.Core;
 using Xunit;
 
@@ -134,6 +135,75 @@ public class SeConvSettingsTest : IDisposable
         {
             (tools.LlamaCppPrompt, tools.OllamaPrompt, tools.LmStudioPrompt) = saved;
         }
+    }
+
+    [Fact]
+    public void ApplyLlamaCppAdvanced_OverridesOnlySetKeys_AndReportsTypos()
+    {
+        var path = WriteSettings("""
+            {
+              "tools": {
+                "llamaCppAdvanced": {
+                  "batchSize": 8,
+                  "formality": "informal",
+                  "contextSize": 32768,
+                  "temperature": 0.2,
+                  "serverArguments": "-ngl 99",
+                  "bogus": 1
+                }
+              }
+            }
+            """);
+
+        var settings = SeConvSettings.Load(path);
+        var target = new SeLlamaCppAdvanced();
+        settings.ApplyLlamaCppAdvanced(target);
+
+        Assert.Equal(new[] { "tools.llamaCppAdvanced.bogus" }, settings.GetUnknownKeys());
+        Assert.Equal(8, target.BatchSize);
+        Assert.Equal(SeLlamaCppAdvanced.FormalityInformal, target.Formality);
+        Assert.Equal(32768, target.ContextSize);
+        Assert.Equal(0.2, target.Temperature);
+        Assert.Equal("-ngl 99", target.ServerArguments);
+        Assert.Equal(12, target.HistoryPairs); // left out: keeps the dialog's default
+        Assert.Equal(string.Empty, target.Synopsis);
+    }
+
+    [Fact]
+    public void ApplyLlamaCppAdvanced_ProfileOverlaysOnTopOfBase()
+    {
+        var path = WriteSettings("""
+            {
+              "tools": { "llamaCppAdvanced": { "batchSize": 5, "synopsis": "A crime drama." } },
+              "profiles": {
+                "casual": { "tools": { "llamaCppAdvanced": { "batchSize": 3, "formality": "informal" } } }
+              }
+            }
+            """);
+
+        var settings = SeConvSettings.Load(path);
+
+        var baseOnly = new SeLlamaCppAdvanced();
+        settings.ApplyLlamaCppAdvanced(baseOnly);
+        Assert.Equal(5, baseOnly.BatchSize);
+        Assert.Equal(SeLlamaCppAdvanced.FormalityDefault, baseOnly.Formality);
+
+        var withProfile = new SeLlamaCppAdvanced();
+        settings.ApplyLlamaCppAdvanced(withProfile, "casual");
+        Assert.Equal(3, withProfile.BatchSize);
+        Assert.Equal("A crime drama.", withProfile.Synopsis);
+        Assert.Equal(SeLlamaCppAdvanced.FormalityInformal, withProfile.Formality);
+    }
+
+    [Fact]
+    public void ApplyLlamaCppAdvanced_BadFormality_Throws()
+    {
+        var path = WriteSettings("""{ "tools": { "llamaCppAdvanced": { "formality": "polite" } } }""");
+
+        var ex = Assert.Throws<InvalidOperationException>(() => SeConvSettings.Load(path).ApplyLlamaCppAdvanced(new SeLlamaCppAdvanced()));
+
+        Assert.Contains("tools.llamaCppAdvanced.formality", ex.Message);
+        Assert.Contains("informal", ex.Message);
     }
 
     [Fact]

@@ -477,8 +477,29 @@ default context (16384 tokens) so history, synopsis and glossary fit. `--transla
 `.gguf` as for `llamacpp`; the default is the first installed chat model. `ollama-advanced` uses
 Ollama's OpenAI-compatible endpoint (default `http://localhost:11434/v1/chat/completions`) and needs
 `--translate-model`; `lmstudio-advanced` uses `http://localhost:1234/v1/chat/completions` and sends
-`--translate-model` when given. The dialog's remaining settings (sampling, server context size,
-extra server arguments) keep their defaults.
+`--translate-model` when given.
+
+Every setting of the GUI's "Advanced..." dialog can also be set in a `--settings` file under
+`tools.llamaCppAdvanced`, including the ones without an option (prompt, sampling, server context
+size, extra server arguments). An option given on the command line wins over the file, and the file
+over the dialog's defaults (`--translate-prompt` > `tools.llamaCppAdvanced.prompt` > built-in); a
+`profiles` entry can carry e.g. a per-film synopsis. The regular engines ignore the section, so one
+file serves both. The keys and defaults are listed under [Settings JSON](#settings-json).
+
+```json
+{
+  "tools": {
+    "llamaCppAdvanced": {
+      "batchSize": 8,
+      "historyPairs": 10,
+      "synopsis": "A Scandinavian crime drama. Erik is a police detective.",
+      "formality": "informal",
+      "contextSize": 32768,
+      "temperature": 0.2
+    }
+  }
+}
+```
 
 ```bash
 # Batches of 8 with 10 lines of history, a synopsis and a glossary file, local llama-server
@@ -500,7 +521,7 @@ seconv movie.srt subrip --translate-to:de --translate-engine:lmstudio-advanced -
 |---|---|
 | `--multiple-replace:<path>` | Multiple-replace rules applied per paragraph after operations. Accepts the legacy SE *MultipleSearchAndReplaceGroups* XML **and** the file the SE5 GUI exports from *Edit → Multiple replace → export* — either `.template` (JSON) or `.csv`. Supports case-insensitive, `CaseSensitive`, and `RegularExpression` rules; only active rules are applied. The format is chosen by extension, then by content |
 | `--custom-format:<path.xml>` | SE *CustomFormatItem* XML (use with `--format customtext`) |
-| `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired) plus image-output styling (exportImages). Optional `profiles` map for named overlays. The `tools` section also carries the auto-translate prompts (`llamaCppPrompt`, `ollamaPrompt`, `lmStudioPrompt`), so a `profiles` entry can hold a per-target-language prompt. `tools.ocrUseWordSplitList: true` lets *Fix common OCR errors* split run-together words via the word split list (off by default, as in the GUI, because it also splits valid words missing from the dictionary) |
+| `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired) plus image-output styling (exportImages). Optional `profiles` map for named overlays. The `tools` section also carries the auto-translate prompts (`llamaCppPrompt`, `ollamaPrompt`, `lmStudioPrompt`), so a `profiles` entry can hold a per-target-language prompt. `tools.llamaCppAdvanced` holds the advanced translate engines' settings (see [Advanced local engines](#advanced-local-engines)). `tools.ocrUseWordSplitList: true` lets *Fix common OCR errors* split run-together words via the word split list (off by default, as in the GUI, because it also splits valid words missing from the dictionary) |
 | `--profile:<name>` | Selects a named overlay from the settings file's `profiles` map. Requires `--settings` |
 
 #### Multiple-replace rule files
@@ -602,7 +623,24 @@ The keys and defaults below are exactly what `dump-settings` emits:
     "llamaCppPrompt": "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:",
     "ollamaPrompt": "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments or notes:",
     "lmStudioPrompt": "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:",
-    "ocrUseWordSplitList": false
+    "ocrUseWordSplitList": false,
+    "llamaCppAdvanced": {
+      "batchSize": 10,
+      "historyPairs": 12,
+      "synopsis": "",
+      "glossary": "",
+      "formality": "Default",
+      "keepLineBreaks": true,
+      "prompt": "",
+      "temperature": -1,
+      "topP": -1,
+      "topK": -1,
+      "repeatPenalty": -1,
+      "maxTokens": -1,
+      "contextSize": 16384,
+      "serverArguments": "",
+      "serverArgumentsOnly": false
+    }
   },
   "removeTextForHearingImpaired": {
     "removeTextBetweenBrackets": true,
@@ -650,7 +688,7 @@ The keys and defaults below are exactly what `dump-settings` emits:
 }
 ```
 
-The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. Colours are emitted as `#AARRGGBB` (so `backgroundColor` / `fullFrameBackgroundColor` default to fully transparent, `#00FFFFFF`, and `boxType` to `None`); `boxType`, `mode3D`, `alignment`, and `contentAlignment` are emitted as enum names but also accept the CLI spellings (`one-box`, `half-sbs`, `bottom-center`, …). Two optional `exportImages` keys are read but not emitted: `bottomTopMargin` and `leftRightMargin` (pixels; default 5% of the frame height / width). The `tools` section holds the merge-short-lines settings and the auto-translate prompts. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
+The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. Colours are emitted as `#AARRGGBB` (so `backgroundColor` / `fullFrameBackgroundColor` default to fully transparent, `#00FFFFFF`, and `boxType` to `None`); `boxType`, `mode3D`, `alignment`, and `contentAlignment` are emitted as enum names but also accept the CLI spellings (`one-box`, `half-sbs`, `bottom-center`, …). Two optional `exportImages` keys are read but not emitted: `bottomTopMargin` and `leftRightMargin` (pixels; default 5% of the frame height / width). The `tools` section holds the merge-short-lines settings, the auto-translate prompts and, under `llamaCppAdvanced`, the advanced translate engines' settings (see [Advanced local engines](#advanced-local-engines)): `formality` takes `default` | `formal` | `informal`, and a sampling value of `-1` means the server's default. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
 
 Keys that seconv does not recognize are ignored, so a settings file written for a newer version still applies everything this one understands — but they are listed in a warning, so a typo (or a key your seconv is too old to know) does not silently give you default output.
 

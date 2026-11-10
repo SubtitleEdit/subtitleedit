@@ -4,7 +4,7 @@ The **llama.cpp advanced (local LLM)**, **Ollama advanced (local LLM)** and **LM
 
 LM Studio advanced talks to LM Studio's OpenAI-compatible endpoint (default `http://localhost:1234/v1/chat/completions`). LM Studio can have several models loaded; leave the model empty to use the loaded one.
 
-The same engines are available headlessly in `seconv` as `--translate-engine:llamacpp-advanced`, `ollama-advanced` and `lmstudio-advanced`, with the context options below as command-line options — see [Advanced local engines](../reference/command-line.md#advanced-local-engines) in the command-line reference.
+The same engines are available headlessly in `seconv` as `--translate-engine:llamacpp-advanced`, `ollama-advanced` and `lmstudio-advanced`, with the context options below as command-line options or as `tools.llamaCppAdvanced` keys in its `--settings` file — see [Advanced local engines](../reference/command-line.md#advanced-local-engines) in the command-line reference.
 
 See [Auto Translate](auto-translate.md) for the translation window itself, and [Best local models for translating from English](auto-translate.md#best-local-models-for-translating-from-english) for which llama.cpp model to download.
 
