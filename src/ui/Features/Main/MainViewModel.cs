@@ -458,6 +458,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _hasMultipleLinesSelected;
     [ObservableProperty] private bool _showShotChangesListMenuItem;
     [ObservableProperty] private bool _showLayer;
+    [ObservableProperty] private bool _showActorBox;
     [ObservableProperty] private bool _showLayerFilterIcon;
     [ObservableProperty] private bool _showColumnLayerFlyoutMenuItem;
     [ObservableProperty] private bool _isVideoLoaded;
@@ -15740,6 +15741,7 @@ public partial class MainViewModel :
         ShowUpDownDuration = Se.Settings.Appearance.ShowUpDownDuration;
         ShowUpDownLabels = Se.Settings.Appearance.ShowUpDownLabels;
         ShowTimeCodeModeInStatusBar = Se.Settings.Appearance.ShowTimeCodeModeInStatusBar;
+        ShowActorBox = HasFormatActor && !IsFormatWebVtt && Se.Settings.Appearance.ShowActor;
 
         _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
         _errorBrush = new ImmutableSolidColorBrush(_errorColor);
@@ -24644,7 +24646,7 @@ public partial class MainViewModel :
     /// this list, so shortcut "1" sets the first actor, "2" the second, etc. - and keeps doing
     /// so when a new actor is added.
     /// </summary>
-    private List<string> GetActorsInSubtitle()
+    internal List<string> GetActorsInSubtitle()
     {
         return _actorOrder.GetOrdered(Subtitles.Select(p => p.Actor));
     }
@@ -38447,6 +38449,7 @@ public partial class MainViewModel :
             ? Se.Language.File.WebVtt.ShowVoiceColumn
             : Se.Language.General.ShowActorColumn;
         ShowLayer = IsFormatAssa && Se.Settings.Appearance.ShowLayer;
+        ShowActorBox = HasFormatActor && !IsFormatWebVtt && Se.Settings.Appearance.ShowActor;
         ShowLayerFilterIcon = IsFormatAssa && Se.Settings.Appearance.ShowLayer && _visibleLayers != null;
 
         if (!IsFormatAssa)

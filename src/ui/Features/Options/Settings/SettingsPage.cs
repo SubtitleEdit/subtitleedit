@@ -1150,6 +1150,7 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.BookmarkColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.BookmarkColor))),
             new SettingsItem(Se.Language.Options.Settings.SpellCheckHighlightColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.SpellCheckHighlightColor))),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowAssaLayer, nameof(_vm.ShowAssaLayer)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowActorBox, nameof(_vm.ShowActorBox)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowHorizontalLineAboveToolbar, nameof(_vm.ShowHorizontalLineAboveToolbar)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowPluginsMenu, nameof(_vm.ShowPluginsMenu)),
             new SettingsItem(!OperatingSystem.IsWindows(), Se.Language.Options.Settings.WindowsRenderingMode, () => new StackPanel

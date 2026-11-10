@@ -3922,6 +3922,7 @@
       "writeToolsLog": "Write tools log",
       "showSettingsFile": "Show settings file",
       "showAssaLayer": "Show ASSA layer box",
+      "showActorBox": "Show actor box",
       "waveformCursorColor": "Waveform cursor/head color",
       "waveformShotChangeColor": "Waveform shot change color",
       "waveformGridColor": "Waveform grid color",

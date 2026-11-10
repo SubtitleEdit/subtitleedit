@@ -448,6 +448,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _gridCompactMode;
     [ObservableProperty] private bool _gridAlternatingRows;
     [ObservableProperty] private bool _showAssaLayer;
+    [ObservableProperty] private bool _showActorBox;
     [ObservableProperty] private bool _showHorizontalLineAboveToolbar;
     [ObservableProperty] private ObservableCollection<GridLinesVisibilityDisplay> _gridLinesVisibilities;
     [ObservableProperty] private GridLinesVisibilityDisplay _selectedGridLinesVisibility;
@@ -1045,6 +1046,7 @@ public partial class SettingsViewModel : ObservableObject
         GridCompactMode = appearance.GridCompactMode;
         GridAlternatingRows = appearance.GridAlternatingRows;
         ShowAssaLayer = appearance.ShowLayer;
+        ShowActorBox = appearance.ShowActor;
         ShowHorizontalLineAboveToolbar = appearance.ShowHorizontalLineAboveToolbar;
         SelectedGridLinesVisibility = GridLinesVisibilities.FirstOrDefault(p => p.Type.ToString() == appearance.GridLinesAppearance) ?? GridLinesVisibilities[0];
         SelectedWindowsRenderingMode = WindowsRenderingModes.FirstOrDefault(p => p.Mode.ToString() == appearance.WindowsRenderingMode) ?? WindowsRenderingModes[0];
@@ -1983,6 +1985,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.WindowsRenderingMode = SelectedWindowsRenderingMode.Mode.ToString();
         appearance.SubtitleGridTextDisplay = SelectedSubtitleGridTextDisplayMode.Mode.ToString();
         appearance.ShowLayer = ShowAssaLayer;
+        appearance.ShowActor = ShowActorBox;
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
 
         Se.Settings.Waveform.DrawGridLines = WaveformDrawGridLines;

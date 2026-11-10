@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia;
@@ -1757,6 +1758,8 @@ public static partial class InitListViewAndEditBox
         panelLayer.Children.Add(upDownLayer);
         timeControlsPanel.Children.Add(panelLayer);
 
+        timeControlsPanel.Children.Add(MakeEditBoxActorPanel(vm));
+
         if (!Se.Settings.Appearance.ShowUpDownStartTime ||
             !Se.Settings.Appearance.ShowUpDownEndTime || 
             !Se.Settings.Appearance.ShowUpDownDuration)
@@ -2549,6 +2552,210 @@ public static partial class InitListViewAndEditBox
         }
 
         return new GridLength(oldHeight, GridUnitType.Pixel);
+    }
+
+    /// <summary>
+    /// Optional "Actor" box under Show/Hide/Duration/Layer (#16797), for formats that carry an
+    /// actor. One box both picks and creates: typing completes inline from the actors already
+    /// in the file ("Jo" + Enter = "John"), a name that matches nothing becomes a new actor, and
+    /// Down/F4 lists the whole cast. The value is written on Enter, on picking from the list or
+    /// when focus leaves - not per keystroke - to every line that was selected when typing
+    /// started, so changing the selection mid-edit cannot move the name to another line.
+    /// </summary>
+    private static StackPanel MakeEditBoxActorPanel(MainViewModel vm)
+    {
+        var panel = new StackPanel
+        {
+            Spacing = 0,
+            Orientation = Orientation.Vertical,
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowActorBox)),
+            Margin = new Thickness(0, 0, 10, 0),
+        };
+        panel.Children.Add(new TextBlock
+        {
+            Text = Se.Language.General.Actor,
+            FontWeight = FontWeight.Bold,
+        }.WithBindVisible(vm, nameof(vm.ShowUpDownLabels)));
+
+        var showAll = false;
+        var box = new AutoCompleteBox
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinimumPrefixLength = 0,
+            MinimumPopulateDelay = TimeSpan.Zero,
+            IsTextCompletionEnabled = true,
+            MaxDropDownHeight = 300,
+            FilterMode = AutoCompleteFilterMode.Custom,
+            // Down/F4 sets showAll so the list holds the whole cast, not just names starting
+            // with what is already in the box (normally the current line's own actor).
+            ItemFilter = (search, item) => showAll ||
+                (item is string s && s.StartsWith(search ?? string.Empty, StringComparison.CurrentCultureIgnoreCase)),
+        }.WithAccessibleName(Se.Language.General.Actor);
+        if (!vm.ShowUpDownLabels && Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(box, Se.Language.General.Actor);
+        }
+
+        var syncing = false;
+        List<SubtitleLineViewModel>? targets = null; // non-null while the user has uncommitted text
+        SubtitleLineViewModel? watchedLine = null;
+
+        void ShowCurrentActor()
+        {
+            if (targets != null)
+            {
+                return;
+            }
+
+            syncing = true;
+            box.Text = vm.SelectedSubtitle?.Actor ?? string.Empty;
+            syncing = false;
+        }
+
+        void Commit()
+        {
+            var lines = targets;
+            targets = null;
+            if (lines != null)
+            {
+                var actor = (box.Text ?? string.Empty).Trim();
+                foreach (var line in lines.Where(line => line.Actor != actor))
+                {
+                    line.Actor = actor;
+                }
+            }
+
+            ShowCurrentActor();
+        }
+
+        void OnLinePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SubtitleLineViewModel.Actor))
+            {
+                ShowCurrentActor();
+            }
+        }
+
+        void WatchSelectedLine()
+        {
+            if (watchedLine != null)
+            {
+                watchedLine.PropertyChanged -= OnLinePropertyChanged;
+            }
+
+            watchedLine = vm.SelectedSubtitle;
+            if (watchedLine != null)
+            {
+                watchedLine.PropertyChanged += OnLinePropertyChanged;
+            }
+        }
+
+        void OnVmPropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
+        {
+            if (e.PropertyName == nameof(vm.SelectedSubtitle) && targets != null)
+            {
+                Commit();
+            }
+        }
+
+        void OnVmPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(vm.SelectedSubtitle))
+            {
+                WatchSelectedLine();
+                ShowCurrentActor();
+            }
+        }
+
+        box.AttachedToVisualTree += (_, _) =>
+        {
+            vm.PropertyChanging += OnVmPropertyChanging;
+            vm.PropertyChanged += OnVmPropertyChanged;
+            WatchSelectedLine();
+            ShowCurrentActor();
+        };
+        box.DetachedFromVisualTree += (_, _) =>
+        {
+            vm.PropertyChanging -= OnVmPropertyChanging;
+            vm.PropertyChanged -= OnVmPropertyChanged;
+            if (watchedLine != null)
+            {
+                watchedLine.PropertyChanged -= OnLinePropertyChanged;
+                watchedLine = null;
+            }
+        };
+
+        box.TextChanged += (_, _) =>
+        {
+            if (syncing || targets != null)
+            {
+                return;
+            }
+
+            var selected = vm.SubtitleGridSelectedItems;
+            if (selected.Count == 0 && vm.SelectedSubtitle != null)
+            {
+                selected.Add(vm.SelectedSubtitle);
+            }
+
+            targets = selected;
+        };
+
+        box.GotFocus += (_, _) => box.ItemsSource = vm.GetActorsInSubtitle();
+
+        box.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if ((e.Key == Key.Down || e.Key == Key.F4) && e.KeyModifiers == KeyModifiers.None && !box.IsDropDownOpen)
+            {
+                showAll = true;
+                box.ItemsSource = vm.GetActorsInSubtitle();
+                box.PopulateComplete();
+                box.IsDropDownOpen = true;
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+
+        box.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if (box.IsDropDownOpen || e.KeyModifiers != KeyModifiers.None)
+            {
+                return;
+            }
+
+            if (e.Key == Key.Enter)
+            {
+                Commit();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape && targets != null)
+            {
+                targets = null; // revert to the line's actor
+                ShowCurrentActor();
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Bubble, handledEventsToo: true);
+
+        box.DropDownClosed += (_, _) =>
+        {
+            showAll = false;
+
+            // A pick from the list (mouse click) is final, like Enter.
+            if (targets != null && box.SelectedItem is string picked && picked == box.Text)
+            {
+                Commit();
+            }
+        };
+
+        box.LostFocus += (_, _) =>
+        {
+            if (!box.IsKeyboardFocusWithin && targets != null)
+            {
+                Commit();
+            }
+        };
+
+        panel.Children.Add(box);
+        return panel;
     }
 
     /// <summary>
