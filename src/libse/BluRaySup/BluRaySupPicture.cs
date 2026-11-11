@@ -282,10 +282,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         }
 
         /// <summary>
-        /// Hands out whole rows of pixels without a SkiaSharp interop call per pixel. Only color
-        /// types whose bytes <see cref="SKBitmap.GetPixel"/> returns unchanged are read directly:
-        /// premultiplied pixels get un-premultiplied on the way out of GetPixel, and other layouts
-        /// are not four plain BGRA/RGBA bytes, so both keep using GetPixel.
+        /// Hands out whole rows of pixels without a SkiaSharp interop call per pixel. Only the two
+        /// plain BGRA/RGBA layouts are read directly; other layouts keep using GetPixel.
+        /// Premultiplied pixels - what a plain new SKBitmap and so the image export renderer give -
+        /// are un-premultiplied here the way <see cref="SKBitmap.GetPixel"/> does it (Skia's
+        /// SkUnPreMultiply table), which matches it for every alpha and channel value.
         /// </summary>
         private sealed class BitmapRowReader
         {
@@ -293,12 +294,31 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             private readonly int _redOffset;
             private readonly int _blueOffset;
             private readonly bool _direct;
+            private readonly bool _premultiplied;
+
+            /// <summary>
+            /// SkUnPreMultiply::gTable: (255 &lt;&lt; 24) / alpha, rounded, so a channel is
+            /// un-premultiplied as (scale * value + (1 &lt;&lt; 23)) &gt;&gt; 24.
+            /// </summary>
+            private static readonly uint[] UnpremultiplyScale = MakeUnpremultiplyScale();
+
+            private static uint[] MakeUnpremultiplyScale()
+            {
+                var table = new uint[256];
+                for (var a = 1u; a < 256; a++)
+                {
+                    table[a] = ((255u << 24) + a / 2) / a;
+                }
+
+                return table;
+            }
 
             public BitmapRowReader(SKBitmap bitmap)
             {
                 _bitmap = bitmap;
+                _premultiplied = bitmap.AlphaType == SKAlphaType.Premul;
                 // Alpha is byte 3 and green byte 1 in both layouts; only red and blue swap.
-                if (bitmap.AlphaType != SKAlphaType.Premul && bitmap.GetPixels() != IntPtr.Zero)
+                if (bitmap.GetPixels() != IntPtr.Zero)
                 {
                     if (bitmap.ColorType == SKColorType.Bgra8888)
                     {
@@ -329,6 +349,36 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
                 var rowBytes = _bitmap.RowBytes;
                 var line = new ReadOnlySpan<byte>((byte*)_bitmap.GetPixels().ToPointer() + (long)y * rowBytes, rowBytes);
+                if (_premultiplied)
+                {
+                    for (var x = 0; x < row.Length; x++)
+                    {
+                        var i = x * 4;
+                        var alpha = line[i + 3];
+                        if (alpha == 0)
+                        {
+                            // the scale for alpha 0 is 0 - most of a caption's box is this
+                            row[x] = default;
+                            continue;
+                        }
+
+                        if (alpha == 255)
+                        {
+                            row[x] = new SKColor(line[i + _redOffset], line[i + 1], line[i + _blueOffset], 255);
+                            continue;
+                        }
+
+                        var scale = UnpremultiplyScale[alpha];
+                        row[x] = new SKColor(
+                            (byte)((scale * line[i + _redOffset] + (1u << 23)) >> 24),
+                            (byte)((scale * line[i + 1] + (1u << 23)) >> 24),
+                            (byte)((scale * line[i + _blueOffset] + (1u << 23)) >> 24),
+                            alpha);
+                    }
+
+                    return;
+                }
+
                 for (var x = 0; x < row.Length; x++)
                 {
                     var i = x * 4;
@@ -553,10 +603,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         }
 
         /// <summary>
-        /// The palette of a bitmap with more distinct colours than <paramref name="maxColors"/>:
-        /// <paramref name="fontColor"/> first, the median cut of the other colours, transparent last.
+        /// The colours of the bitmap other than <paramref name="fontColor"/> and fully transparent,
+        /// in the order they are first met, each weighted by its alpha per pixel. A run of equal
+        /// pixels counts as one look-up - the anti-aliased edges of a caption are mostly such runs.
         /// </summary>
-        private static List<SKColor> GetQuantizedPalette(SKBitmap bitmap, SKColor fontColor, int maxColors)
+        private static Dictionary<SKColor, long> GetColorHistogram(SKBitmap bitmap, SKColor fontColor)
         {
             var histogram = new Dictionary<SKColor, long>();
             var reader = new BitmapRowReader(bitmap);
@@ -564,17 +615,31 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             for (var y = 0; y < bitmap.Height; y++)
             {
                 reader.ReadRow(y, row);
-                for (var x = 0; x < bitmap.Width; x++)
+                int len;
+                for (var x = 0; x < row.Length; x += len)
                 {
                     var c = row[x];
+                    for (len = 1; x + len < row.Length && row[x + len] == c; len++)
+                    {
+                    }
+
                     if (c.Alpha > 0 && c != fontColor)
                     {
                         histogram.TryGetValue(c, out var weight);
-                        histogram[c] = weight + c.Alpha;
+                        histogram[c] = weight + (long)c.Alpha * len;
                     }
                 }
             }
 
+            return histogram;
+        }
+
+        /// <summary>
+        /// The palette of a bitmap with more distinct colours than <paramref name="maxColors"/>:
+        /// <paramref name="fontColor"/> first, the median cut of the other colours, transparent last.
+        /// </summary>
+        private static List<SKColor> GetQuantizedPalette(Dictionary<SKColor, long> histogram, SKColor fontColor, int maxColors)
+        {
             if (histogram.Count > MaxQuantizerColors)
             {
                 histogram = Coarsen(histogram);
@@ -599,58 +664,26 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// last, at most <paramref name="maxColors"/> of them before the transparent one. A
         /// bitmap with more distinct colours than that is reduced with a median cut.
         /// </summary>
+        /// <remarks>
+        /// One pass over the pixels serves both cases: the histogram keys in first-met order are
+        /// the exact palette, and the histogram is what the median cut needs. It used to be an
+        /// exact-colour pass and, for the usual anti-aliased caption past 255 colours, a second
+        /// full pass for the histogram.
+        /// </remarks>
         private static List<SKColor> GetBitmapPalette(SKBitmap bitmap, SKColor fontColor, int maxColors)
         {
-            var pal = new List<SKColor>(255);
-            var lookup = new HashSet<SKColor>(255);
-            var reader = new BitmapRowReader(bitmap);
-            var row = new SKColor[bitmap.Width];
-
-            // Add font color as first entry
-            pal.Add(fontColor);
-            lookup.Add(fontColor);
-
-            // first we try with exact colors
-            for (var y = 0; y < bitmap.Height; y++)
+            var histogram = GetColorHistogram(bitmap, fontColor);
+            if (histogram.Count + 1 < maxColors)
             {
-                reader.ReadRow(y, row);
-                for (var x = 0; x < bitmap.Width; x++)
-                {
-                    var c = row[x];
-                    if (c.Alpha > 0)
-                    {
-                        if (lookup.Contains(c))
-                        {
-                            // exact color already exists
-                        }
-                        else
-                        {
-                            pal.Add(c);
-                            lookup.Add(c);
-                        }
-
-                        if (pal.Count >= maxColors)
-                        {
-                            break;
-                        }
-                    }
-                }
-                if (pal.Count >= maxColors)
-                {
-                    break;
-                }
-            }
-
-            if (pal.Count < maxColors)
-            {
+                var pal = new List<SKColor>(histogram.Count + 2) { fontColor };
+                pal.AddRange(histogram.Keys);
                 pal.Add(SKColors.Transparent); // last entry must be transparent
                 return pal;
             }
 
-
             // Too many colours - anti-aliased gradients, glows, images. Reduce them over the
             // whole bitmap rather than keeping the first ones met.
-            return GetQuantizedPalette(bitmap, fontColor, maxColors);
+            return GetQuantizedPalette(histogram, fontColor, maxColors);
         }
 
         /// <summary>
