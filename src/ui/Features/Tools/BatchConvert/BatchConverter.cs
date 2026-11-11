@@ -26,6 +26,7 @@ using Nikse.SubtitleEdit.Features.Tools.ConvertActors;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
+using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
@@ -2348,6 +2349,18 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 ShadowWidth = profile.ShadowWidth,
                 BackgroundColor = profile.BackgroundColor.FromHexToColor().ToSKColor(),
                 BackgroundCornerRadius = profile.BackgroundCornerRadius,
+                // The dialog saves the box type and its padding, but batch never read them, so
+                // a "box per line"/"one box" profile rendered plain outlined text.
+                BoxType = profile.BoxType switch
+                {
+                    FontBoxType.OneBox => ExportBoxType.OneBox,
+                    FontBoxType.BoxPerLine => ExportBoxType.BoxPerLine,
+                    _ => ExportBoxType.None,
+                },
+                BoxPaddingLeft = profile.BoxPaddingLeft,
+                BoxPaddingRight = profile.BoxPaddingRight,
+                BoxPaddingTop = profile.BoxPaddingTop,
+                BoxPaddingBottom = profile.BoxPaddingBottom,
                 ScreenWidth = profile.ScreenWidth,
                 ScreenHeight = profile.ScreenHeight,
                 PixelAspectRatio = ExportPixelAspect.Parse(profile.PixelAspect),
