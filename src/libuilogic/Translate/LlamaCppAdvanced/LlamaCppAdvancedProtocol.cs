@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using Nikse.SubtitleEdit.Core.Common;
 
@@ -27,6 +28,17 @@ public static class LlamaCppAdvancedProtocol
         "never move words to another line - each translation holds only the meaning of its own line.\n" +
         "Answer with ONLY a JSON object mapping every line number to its translation, e.g. " +
         "{\"1\":\"<translation of line 1>\",\"2\":\"<translation of line 2>\"}. Include each line number exactly once and nothing else.";
+
+    /// <summary>
+    /// Writer options for everything the model reads. The default encoder turns every non-ASCII
+    /// character, and also quotes, apostrophes, angle brackets, ampersands and plus signs, into
+    /// \uXXXX escapes; the server decodes only the request's outer JSON layer, so
+    /// escapes inside the user message reach the model as literal backslash sequences and a
+    /// Chinese line arrives as "\u4F60\u6628...". Relaxed escaping keeps the text readable and the
+    /// JSON valid (quotes, backslashes and control characters are still escaped); "unsafe" only
+    /// matters for JSON embedded in HTML, which this never is.
+    /// </summary>
+    internal static readonly JsonWriterOptions WireOptions = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
     public record HistoryPair(string Source, string Target);
     public record BatchLine(int Number, string Text);
@@ -99,7 +111,7 @@ public static class LlamaCppAdvancedProtocol
     public static string BuildUserContent(List<HistoryPair> history, List<BatchLine> lines)
     {
         using var stream = new System.IO.MemoryStream();
-        using (var writer = new Utf8JsonWriter(stream))
+        using (var writer = new Utf8JsonWriter(stream, WireOptions))
         {
             writer.WriteStartObject();
 
@@ -137,7 +149,7 @@ public static class LlamaCppAdvancedProtocol
     public static string BuildResponseFormatJson(IReadOnlyList<BatchLine> lines)
     {
         using var stream = new System.IO.MemoryStream();
-        using (var writer = new Utf8JsonWriter(stream))
+        using (var writer = new Utf8JsonWriter(stream, WireOptions))
         {
             writer.WriteStartObject();
             writer.WriteString("type", "json_schema");

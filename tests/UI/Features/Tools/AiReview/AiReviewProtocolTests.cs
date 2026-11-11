@@ -18,6 +18,21 @@ public class AiReviewProtocolTests
         Assert.DoesNotContain("\"actor\":\"\"", json);
     }
 
+    // The chunk JSON is what the model reads (the server decodes only the request's outer layer),
+    // so non-ASCII text must stay readable instead of becoming \uXXXX escapes.
+    [Fact]
+    public void BuildUserContent_KeepsNonAsciiTextReadable()
+    {
+        var chunk = new ReviewChunk();
+        chunk.Lines.Add(new ReviewLine(1, "Åse sagde: \"nej\" – 你好", "Günther"));
+
+        var json = AiReviewProtocol.BuildUserContent(chunk);
+
+        Assert.Contains("Åse sagde: \\\"nej\\\" – 你好", json);
+        Assert.Contains("\"actor\":\"Günther\"", json);
+        Assert.DoesNotContain("\\u", json);
+    }
+
     [Fact]
     public void ParseChanges_StrippedText_EchoMatchesStrippedLine()
     {
