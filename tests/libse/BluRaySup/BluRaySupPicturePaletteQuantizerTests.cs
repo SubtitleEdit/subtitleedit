@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core.BluRaySup;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using SkiaSharp;
 using System.Text;
 
@@ -56,5 +56,80 @@ public class BluRaySupPicturePaletteQuantizerTests
         }
 
         Assert.InRange(worstBlue, 0, 16);
+    }
+
+    /// <summary>
+    /// A colour sweep fading out towards its edge, like a glow or a soft shadow: thousands of
+    /// colours, many of them faint.
+    /// </summary>
+    private static SKBitmap SoftColourSweep()
+    {
+        var bitmap = new SKBitmap(new SKImageInfo(300, 160, SKColorType.Rgba8888, SKAlphaType.Premul));
+        using var canvas = new SKCanvas(bitmap);
+        canvas.Clear(SKColors.Transparent);
+        using var sweep = new SKPaint
+        {
+            Shader = SKShader.CreateSweepGradient(new SKPoint(150, 80),
+                new[] { SKColors.Red, SKColors.Yellow, SKColors.Lime, SKColors.Cyan, SKColors.Blue, SKColors.Magenta, SKColors.Red }),
+        };
+        canvas.DrawOval(new SKRect(5, 5, 295, 155), sweep);
+        using var fade = new SKPaint
+        {
+            Shader = SKShader.CreateRadialGradient(new SKPoint(150, 80), 145,
+                new[] { SKColors.Black.WithAlpha(0), SKColors.Black.WithAlpha(0), SKColors.Black },
+                new[] { 0f, 0.6f, 1f }, SKShaderTileMode.Clamp),
+            BlendMode = SKBlendMode.DstOut,
+        };
+        canvas.DrawRect(0, 0, 300, 160, fade);
+        return bitmap;
+    }
+
+    /// <summary>
+    /// The median cut leaves palette entries off-centre for gradients and glows, and a plain
+    /// RGBA difference matched faint pixels by colours they barely show. With k-means passes
+    /// and matching on premultiplied colours the picture over the video comes out closer.
+    /// </summary>
+    [Fact]
+    public void SoftGradient_ComesOutCloseOverTheVideo()
+    {
+        using var bitmap = SoftColourSweep();
+        var picture = new BluRaySupPicture
+        {
+            StartTime = 1000,
+            EndTime = 2000,
+            Width = 1920,
+            Height = 1080,
+        };
+        var sup = BluRaySupPicture.CreateSupFrame(picture, bitmap, SKColors.White, 25, 10, 10, BluRayContentAlignment.BottomCenter);
+        using var stream = new MemoryStream(sup);
+        var pcs = BluRaySupParser.ParseBluRaySup(stream, new StringBuilder(), false, new Dictionary<int, List<PaletteInfo>>(), new Dictionary<int, List<BluRaySupParser.OdsData>>())[0];
+        using var decoded = pcs.GetBitmap();
+
+        // over black, what shows is each channel times alpha
+        double sum = 0;
+        var count = 0;
+        for (var y = 0; y < bitmap.Height; y++)
+        {
+            for (var x = 0; x < bitmap.Width; x++)
+            {
+                var expected = bitmap.GetPixel(x, y);
+                if (expected.Alpha == 0)
+                {
+                    continue;
+                }
+
+                var actual = decoded.GetPixel(x, y);
+                foreach (var (e, a) in new[] { (expected.Red, actual.Red), (expected.Green, actual.Green), (expected.Blue, actual.Blue) })
+                {
+                    var difference = (e * expected.Alpha - a * actual.Alpha) / 255.0;
+                    sum += difference * difference;
+                    count++;
+                }
+            }
+        }
+
+        var rmse = Math.Sqrt(sum / count);
+        // 6.0 before (median cut alone, RGBA matching), 3.9 with the k-means passes
+        Assert.InRange(rmse, 0, 4.8);
     }
 }
