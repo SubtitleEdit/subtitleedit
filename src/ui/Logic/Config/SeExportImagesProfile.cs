@@ -18,6 +18,12 @@ public class SeExportImagesProfile
     public string FontName { get; set; }
     public float FontSize { get; set; }
     public bool IsBold { get; set; }
+
+    /// <summary>
+    /// Right-to-left text (Arabic, Persian, Hebrew): numbers and Latin runs are kept in reading
+    /// order. Saved so batch convert, which renders from this profile, honors it (#16831).
+    /// </summary>
+    public bool IsRightToLeft { get; set; }
     public string OutlineColor { get; set; }
     public double OutlineWidth { get; set; }
     public string ShadowColor { get; set; }

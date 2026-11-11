@@ -2353,6 +2353,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 PixelAspectRatio = ExportPixelAspect.Parse(profile.PixelAspect),
                 BottomTopMargin = profile.BottomTopMargin,
                 LeftRightMargin = profile.LeftRightMargin,
+                // Without it numbers and Latin words in Persian/Arabic/Hebrew lines came out
+                // reversed, while the single-file export got them right (#16831).
+                IsRightToLeft = profile.IsRightToLeft,
                 // The export handlers read these off the parameters: FCP/BDN take their
                 // timecode frame rate from here (falling back to a 25/23.976 default), and
                 // FCP/Blu-ray render onto a frame-sized canvas when full frame is on.
