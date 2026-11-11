@@ -58,4 +58,24 @@ public class BatchConverterImageProfileTests
 
         Assert.Equal(isRightToLeft, ip.IsRightToLeft);
     }
+
+    /// <summary>The dialog's Alignment combo is saved in the profile; batch rendered every line bottom-center.</summary>
+    [Theory]
+    [InlineData(ExportAlignment.TopCenter)]
+    [InlineData(ExportAlignment.BottomLeft)]
+    public void Alignment_FollowsProfile(ExportAlignment alignment)
+    {
+        var ip = RenderFirstLine(new SeExportImagesProfile { Alignment = alignment }, "1\n00:00:01,000 --> 00:00:03,000\nHello\n");
+
+        Assert.Equal(alignment, ip.Alignment);
+    }
+
+    /// <summary>An "{\an8}" tag still wins over the profile.</summary>
+    [Fact]
+    public void Alignment_TagWinsOverProfile()
+    {
+        var ip = RenderFirstLine(new SeExportImagesProfile { Alignment = ExportAlignment.BottomLeft }, "1\n00:00:01,000 --> 00:00:03,000\n{\\an8}Hello\n");
+
+        Assert.Equal(ExportAlignment.TopCenter, ip.Alignment);
+    }
 }
