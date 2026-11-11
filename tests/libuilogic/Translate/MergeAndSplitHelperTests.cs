@@ -121,8 +121,6 @@ public class MergeAndSplitHelperTests
     }
 
     [Theory]
-    [InlineData("zh", "The weather is nice today.\n.\nLet's go to the park.\nWhat do you think?")]
-    [InlineData("ja", "The weather is nice today.\n.\nLet's go to the park.\nWhat do you think?")]
     [InlineData("zh", "The weather is nice today.\n.\nLet's go to the park.\n.\nWhat do you think?\n.\nExtra row.")]
     [InlineData("ja", "The weather is nice today.\n.\nLet's go to the park.\n.\nWhat do you think?\n.\nExtra row.")]
     [InlineData("zh", "The weather is nice today.\n.\n.\nWhat do you think?")]
@@ -144,6 +142,88 @@ public class MergeAndSplitHelperTests
 
         Assert.Equal(0, count);
         Assert.All(rows, r => Assert.Equal(string.Empty, r.TranslatedText));
+    }
+
+    // Issue #16386: models often drop some or all of the "." separator lines and reply with one
+    // line per row; the line-count fallback deals those lines back out to the rows.
+    [Theory]
+    [InlineData("zh", "The weather is nice today.\nLet's go to the park.\nWhat do you think?")]
+    [InlineData("ja", "The weather is nice today.\nLet's go to the park.\nWhat do you think?")]
+    [InlineData("zh", "The weather is nice today.\n.\nLet's go to the park.\nWhat do you think?")]
+    [InlineData("ja", "The weather is nice today.\nLet's go to the park.\n.\nWhat do you think?")]
+    public async Task MergeAndTranslateIfPossible_MissingPeriodMarkersFallBackToOneLinePerRow(string sourceCode, string reply)
+    {
+        var rows = sourceCode == "ja"
+            ? MakeRows("今日はいい天気です", "公園に行きましょう", "どう思いますか？")
+            : MakeRows("今天天气很好", "我们去公园吧", "你觉得怎么样？");
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("Source", sourceCode),
+            new TranslationPair("English", "en"),
+            0,
+            new FixedResultTranslator { Result = reply },
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(3, count);
+        Assert.Equal(["The weather is nice today.", "Let's go to the park.", "What do you think?"], rows.Select(r => r.TranslatedText));
+    }
+
+    // Without separators the line count is the only clue, so a reply that merged or split rows
+    // is still rejected.
+    [Theory]
+    [InlineData("The weather is nice today. Let's go to the park.\nWhat do you think?")]
+    [InlineData("The weather is nice today.\nLet's go\nto the park.\nWhat do you think?")]
+    public async Task MergeAndTranslateIfPossible_WrongLineCountWithoutMarkersIsRejected(string reply)
+    {
+        var rows = MakeRows("今天天气很好", "我们去公园吧", "你觉得怎么样？");
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("Source", "zh"),
+            new TranslationPair("English", "en"),
+            0,
+            new FixedResultTranslator { Result = reply },
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(0, count);
+        Assert.All(rows, r => Assert.Equal(string.Empty, r.TranslatedText));
+    }
+
+    // A row with an internal line break is sent as two lines, so one reply line per row cannot
+    // be mapped and is rejected rather than shifted.
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_RowWithLineBreakIsNotMappedByOneLinePerRow()
+    {
+        var rows = MakeRows("今天" + Environment.NewLine + "天气很好", "我们去公园吧", "你觉得怎么样？");
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("Source", "zh"),
+            new TranslationPair("English", "en"),
+            0,
+            new FixedResultTranslator { Result = "The weather is nice today.\nLet's go to the park.\nWhat do you think?" },
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(0, count);
+        Assert.All(rows, r => Assert.Equal(string.Empty, r.TranslatedText));
+    }
+
+    // The request carries the separators; each item holds its own row only (the item used to
+    // get the next row appended, which broke the line-count fallback for these sources).
+    [Fact]
+    public void MergeMultipleLines_NoSentenceEndingSource_ItemsHoldTheirOwnRow()
+    {
+        var rows = MakeRows("今天天气很好", "我们去公园吧", "你觉得怎么样？").ToArray();
+
+        var merge = MergeAndSplitHelper.MergeMultipleLines(rows, 0, 1500, noSentenceEndingSource: true, noSentenceEndingTarget: false, "zh");
+
+        Assert.Equal("今天天气很好" + Environment.NewLine + "." + Environment.NewLine + "我们去公园吧" + Environment.NewLine + "." + Environment.NewLine + "你觉得怎么样？", merge.Text);
+        Assert.Equal(3, merge.ParagraphCount);
+        Assert.Equal(["今天天气很好", "我们去公园吧", "你觉得怎么样？"], merge.MergeResultItems.Select(item => item.Text));
     }
 
     [Fact]
