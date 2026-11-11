@@ -1202,6 +1202,16 @@ public partial class CompareViewModel : ObservableObject
         }
     }
 
+    /// <summary>The reference's plain text inside the current line's wrapping tags, like {\i1}...{\i0} (#16823).</summary>
+    [RelayCommand]
+    private void TakeReferenceTextKeepFormatting(CompareRow? row)
+    {
+        if (row?.Right.Line is { } reference && row.CanTakeFromPair)
+        {
+            ApplyToLeftLine(row, line => line.Text = CompareFormattingKeeper.TakeText(line.Text, reference.Text), Se.Language.File.CompareChangeTextX);
+        }
+    }
+
     [RelayCommand]
     private void TakeReferenceTiming(CompareRow? row)
     {
@@ -1746,6 +1756,11 @@ public partial class CompareViewModel : ObservableObject
         {
             e.Handled = true;
             TakeReference(SelectedRow);
+        }
+        else if (e.Key == Key.Left && e.KeyModifiers == (KeyModifiers.Alt | KeyModifiers.Shift))
+        {
+            e.Handled = true;
+            TakeReferenceTextKeepFormatting(SelectedRow);
         }
         else if (e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None && SelectedRow is { CanEdit: true })
         {
