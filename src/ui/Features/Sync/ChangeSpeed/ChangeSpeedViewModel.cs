@@ -120,8 +120,8 @@ public partial class ChangeSpeedViewModel : ObservableObject
             }
 
             _subtitles[i].SetTimes(
-                TimeSpan.FromMilliseconds(_originalTimes[i].Start * factor),
-                TimeSpan.FromMilliseconds(_originalTimes[i].End * factor));
+                ScaleTime(_originalTimes[i].Start, factor),
+                ScaleTime(_originalTimes[i].End, factor));
         }
     }
 
@@ -193,8 +193,19 @@ public partial class ChangeSpeedViewModel : ObservableObject
         foreach (var subtitle in subtitles)
         {
             subtitle.SetTimes(
-                TimeSpan.FromMilliseconds(subtitle.StartTime.TotalMilliseconds * factor),
-                TimeSpan.FromMilliseconds(subtitle.EndTime.TotalMilliseconds * factor));
+                ScaleTime(subtitle.StartTime.TotalMilliseconds, factor),
+                ScaleTime(subtitle.EndTime.TotalMilliseconds, factor));
         }
+    }
+
+    /// <summary>
+    /// Rounded to a whole millisecond, like Change frame rate and binary edit's change speed
+    /// (#14056): the drop-frame presets give fractions such as 1498.50015 ms, which the format
+    /// writers truncate - saved a millisecond early. Start and end are rounded on their own,
+    /// so lines that touched before still touch.
+    /// </summary>
+    private static TimeSpan ScaleTime(double milliseconds, double factor)
+    {
+        return TimeSpanExtensions.FromMillisecondsWholeMilliseconds(milliseconds * factor);
     }
 }
