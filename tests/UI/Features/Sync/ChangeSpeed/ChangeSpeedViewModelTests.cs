@@ -199,4 +199,28 @@ public class ChangeSpeedViewModelTests
         Assert.Equal(1600, subtitles[0].Duration.TotalMilliseconds, 3);
         Assert.Equal(2400, subtitles[1].Duration.TotalMilliseconds, 3);
     }
+
+    /// <summary>
+    /// The drop-frame preset scales 1500 ms to 1498.50015 ms; the writers truncate, so an
+    /// unrounded time saved as ",498" instead of ",499" (#14056).
+    /// </summary>
+    [Fact]
+    public void Apply_FromDropFrame_RoundsToWholeMilliseconds()
+    {
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new() { StartTime = TimeSpan.FromMilliseconds(1500), EndTime = TimeSpan.FromMilliseconds(3500) },
+            new() { StartTime = TimeSpan.FromMilliseconds(3500), EndTime = TimeSpan.FromMilliseconds(5000) },
+        };
+        var vm = new ChangeSpeedViewModel();
+        vm.Initialize(subtitles, new List<int>());
+        vm.SetFromDropFrameValueCommand.Execute(null);
+
+        vm.ApplyCommand.Execute(null);
+
+        Assert.Equal(1499, subtitles[0].StartTime.TotalMilliseconds);
+        Assert.Equal(3497, subtitles[0].EndTime.TotalMilliseconds);
+        Assert.Equal(subtitles[0].EndTime, subtitles[1].StartTime);
+        Assert.Equal(4995, subtitles[1].EndTime.TotalMilliseconds);
+    }
 }
