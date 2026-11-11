@@ -191,6 +191,7 @@ public class VoiceManagerViewModelTests
             await vm.VoicesLoaded;
 
             vm.SelectedVoice = vm.Voices.Single(v => v.Name == "Bob");
+            await vm.DetailsLoaded; // the details load holds Bob.wav open; let it finish before the temp folder goes away
             vm.FilterText = "bo";
             Assert.Single(vm.Voices);
             Assert.Equal("Bob", vm.SelectedVoice?.Name);
