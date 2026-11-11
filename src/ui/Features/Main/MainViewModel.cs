@@ -27258,21 +27258,21 @@ public partial class MainViewModel :
             SetupLiveSpellCheck();
         }
 
-        if (rememberedRecentFile != null && selectedSubtitleIndex > 0)
+        if (rememberedRecentFile != null && selectedSubtitleIndex != null)
         {
             await SeekVideoToSelectedLineAsync();
         }
     }
 
     // Where the video should be opened when a session is restored: the start time of the line the
-    // user was last on. Mirrors the "index 0 is not a restored position" rule in
-    // SeekVideoToSelectedLineAsync, so a freshly opened file still comes up at 0:00.
+    // user was last on - the first line too (#16822). A file opened for the first time has no
+    // remembered line (null) and still comes up at 0:00 (#13191 / #12898).
     // videoOffsetToRestoreMs is the remembered video offset the caller takes off the rows once the
     // open is done (SetRecentFileProperties): the rows still hold the file's time codes here, which
     // carry that offset, so the video position is the start time minus it.
     private double GetRestoredVideoStartPositionSeconds(int? selectedSubtitleIndex, long videoOffsetToRestoreMs)
     {
-        if (selectedSubtitleIndex is not > 0 || selectedSubtitleIndex.Value >= Subtitles.Count)
+        if (selectedSubtitleIndex is not >= 0 || selectedSubtitleIndex.Value >= Subtitles.Count)
         {
             return 0;
         }
@@ -27296,14 +27296,9 @@ public partial class MainViewModel :
             return;
         }
 
-        // A remembered first-line selection is not a previously established position - it is
-        // just where the grid always lands on open. Leave the video at 0:00 instead of jumping
-        // to the first caption's start time (#13191 / #12898); only a mid-file line restores.
-        if ((SelectedSubtitleIndex ?? 0) == 0)
-        {
-            return;
-        }
-
+        // Only called when a remembered session is restored, so the first line restores like any
+        // other (#16822) - "start at 0:00" (#13191 / #12898) is for a file opened for the first
+        // time, which never gets here.
         await vp.WaitForPlayersReadyAsync();
         await Task.Delay(200);
         var s = SelectedSubtitle;
