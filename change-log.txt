@@ -3,6 +3,28 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta4 (11th of November 2026)
+
+* Add Qwen3-ForcedAligner-Ultra as a forced aligner option
+* Add Haas-ja v1.0 models to Crisp ASR Parakeet
+* Optional Actor box in the edit panel - thx yolanda123a
+* Export image-based: SD presets with pixel aspect (PAL/NTSC 4:3 and 16:9) - thx doom9
+* Track pickers: full-width preview text + auto-fit columns
+* OCR: PGS thumbnails scale with the window - thx tormento
+* seconv: advanced local-LLM translate engines, also configurable in the --settings file - thx Makar8000
+* seconv info: report Chinese script (zh-Hans / zh-Hant) - thx Makar8000
+* Auto-translate: accept Chinese/Japanese batch replies that drop the "." separators - thx Makar8000
+* Font picker preview: fall back per line for glyphs the font lacks - thx liubin1777
+* Fix light alternating row color default not being visible - thx GitGianluc
+* Fix common errors: label short-line fixes as "Remove line break" - thx AceFrahm
+* TTS Review: keep "Clone from video" in the voice list - thx yolanda123a
+* Fix Bulgarian translation errors
+* Update Danish translation - thx Manavagg2003
+* Update European Portuguese translation - thx Blackspirits/Manavagg2003
+* Update Japanese translation - thx hisui3393
+* Update Swedish translation - thx Manavagg2003
+
+-----------------------------------------------------------------------------------------------------
 v5.5.0-beta3 (10th of November 2026)
 
 * Option to preset the save encoding on open to a chosen UTF-8 variant now also works for UTF-8 files - thx darnn
