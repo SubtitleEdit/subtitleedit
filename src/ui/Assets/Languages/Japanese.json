@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "5.5.0-beta4",
+  "version": "5.5.0-beta5",
   "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
@@ -3922,6 +3922,7 @@
       "writeToolsLog": "ツールログを出力",
       "showSettingsFile": "設定ファイルを表示する",
       "showAssaLayer": "ASSAレイヤーボックスを表示する",
+      "showActorBox": "話者ボックスを表示",
       "waveformCursorColor": "波形カーソル/ヘッドの色",
       "waveformShotChangeColor": "波形のカット変更色",
       "waveformGridColor": "波形グリッドの色",
