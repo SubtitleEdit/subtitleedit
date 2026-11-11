@@ -86,12 +86,13 @@ public class PickTsTrackWindow : Window
             Binding = new Binding(nameof(TsTrackInfoDisplay.Codec)),
             Width = new GridLength(140),
         };
+        var booleanToCheckMarkConverter = new BooleanToCheckMarkConverter();
         var defaultColumn = new SeTableViewColumn
         {
             Header = Se.Language.General.Default,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(TsTrackInfoDisplay.IsDefault)),
+            Binding = new Binding(nameof(TsTrackInfoDisplay.IsDefault)) { Mode = BindingMode.OneWay, Converter = booleanToCheckMarkConverter },
             Width = new GridLength(80),
         };
         var forcedColumn = new SeTableViewColumn
@@ -99,7 +100,7 @@ public class PickTsTrackWindow : Window
             Header = Se.Language.General.Forced,
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Binding = new Binding(nameof(TsTrackInfoDisplay.IsForced)),
+            Binding = new Binding(nameof(TsTrackInfoDisplay.IsForced)) { Mode = BindingMode.OneWay, Converter = booleanToCheckMarkConverter },
             Width = new GridLength(80),
         };
 
@@ -130,8 +131,8 @@ public class PickTsTrackWindow : Window
             (numberColumn, x => x.TrackNumber.ToString(CultureInfo.CurrentCulture)),
             (languageColumn, x => x.Language),
             (codecColumn, x => x.Codec),
-            (defaultColumn, x => x.IsDefault.ToString()),
-            (forcedColumn, x => x.IsForced.ToString()));
+            (defaultColumn, x => x.IsDefault ? "✔" : string.Empty),
+            (forcedColumn, x => x.IsForced ? "✔" : string.Empty));
 
         return dataGridTracks;
     }
