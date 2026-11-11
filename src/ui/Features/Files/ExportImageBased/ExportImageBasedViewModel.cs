@@ -1199,6 +1199,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 ContentAlignments.FirstOrDefault(p => p.ContentAlignment == profile.ContentAlignment) ??
                 ContentAlignments[0];
             IsBold = profile.IsBold;
+            IsRightToLeft = profile.IsRightToLeft;
             SelectedFontFamily = profile.FontName;
 
             if (string.IsNullOrEmpty(SelectedFontFamily))
@@ -1261,6 +1262,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
             profile.Alignment = SelectedAlignment.Alignment;
             profile.ContentAlignment = SelectedContentAlignment.ContentAlignment;
             profile.IsBold = IsBold;
+            profile.IsRightToLeft = IsRightToLeft;
             profile.FontName = SelectedFontFamily ?? string.Empty;
             profile.FontColor = FontColor.FromColorToHex(true);
             profile.OutlineColor = OutlineColor.FromColorToHex(true);
