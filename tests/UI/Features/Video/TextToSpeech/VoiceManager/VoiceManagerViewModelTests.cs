@@ -202,6 +202,7 @@ public class VoiceManagerViewModelTests
 
             vm.FilterText = string.Empty;
             Assert.Equal(3, vm.Voices.Count);
+            await vm.DetailsLoaded; // clearing the filter re-selects the first row; don't race its load if that is a file voice
         }
         finally
         {
