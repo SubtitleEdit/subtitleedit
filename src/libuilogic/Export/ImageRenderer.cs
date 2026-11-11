@@ -178,13 +178,6 @@ public static class ImageRenderer
         var lineMetrics = MeasureLines(lines, fonts);
         var baselines = GetBaselineOffsets(lineMetrics, lineSpacing);
 
-        // Create oversized temporary bitmap for rendering (with fixed margin for effects)
-        var tempWidth = Math.Max(4000, ip.ScreenWidth);
-        var tempHeight = Math.Max(2000, ip.ScreenHeight);
-        using var tempBitmap = new SKBitmap(tempWidth, tempHeight);
-        using var tempCanvas = new SKCanvas(tempBitmap);
-        tempCanvas.Clear(SKColors.Transparent);
-
         // Render text to temporary bitmap to measure actual bounds.
         // textStartY must be at least as large as the ascent + effects so the top of
         // the first line is never above y=0 in the temp bitmap.
@@ -201,8 +194,64 @@ public static class ImageRenderer
         }
         var textStartX = (int)(Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin + effectMargin);
         var textStartY = (int)(lineMetrics[0].Ascent + Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin + effectMargin);
-        RenderTextToCanvas(tempCanvas, lines, ip, effects, fonts, textStartX, textStartY, baselines,
-            outlineColor, shadowColor, outlineWidth, shadowWidth);
+
+        // Oversized scratch canvas (with fixed margin for effects). At 4000x2000 it is 32 MB that
+        // has to be cleared and scanned for the drawn bounds on every line - most of the time an
+        // export spends per subtitle. The classic path first tries a canvas sized from the text
+        // with a wide safety margin: it has the same origin, so whatever lands inside it is the
+        // same pixels. Should the drawing reach its right or bottom edge (or draw nothing), the
+        // line is drawn again on the full-size canvas, so the result never depends on the guess.
+        var fullWidth = Math.Max(4000, ip.ScreenWidth);
+        var fullHeight = Math.Max(2000, ip.ScreenHeight);
+        var tempWidth = fullWidth;
+        var tempHeight = fullHeight;
+        if (effects == null)
+        {
+            var estimatedWidth = 0f;
+            foreach (var line in lines)
+            {
+                var lineWidth = 0f;
+                foreach (var segment in line)
+                {
+                    var font = fonts.Get(segment);
+                    lineWidth += font.MeasureText(segment.Text) + font.Size;
+                }
+
+                estimatedWidth = Math.Max(estimatedWidth, lineWidth);
+            }
+
+            var estimatedHeight = textStartY + baselines[^1] + lineMetrics[^1].Descent;
+            tempWidth = (int)Math.Min(fullWidth, 2 * textStartX + estimatedWidth * 1.5f + 256);
+            tempHeight = (int)Math.Min(fullHeight, 2 * textStartY + estimatedHeight + 256);
+        }
+
+        var tempBitmap = RenderScratch(tempWidth, tempHeight, out var drawnBounds);
+        if (tempWidth < fullWidth || tempHeight < fullHeight)
+        {
+            if (drawnBounds.IsEmpty ||
+                tempWidth < fullWidth && drawnBounds.Right >= tempWidth - 1 ||
+                tempHeight < fullHeight && drawnBounds.Bottom >= tempHeight - 1)
+            {
+                tempBitmap.Dispose();
+                tempBitmap = RenderScratch(fullWidth, fullHeight, out drawnBounds);
+            }
+        }
+
+        using var scratchBitmap = tempBitmap;
+
+        SKBitmap RenderScratch(int width, int height, out SkiaExt.NonTransparentBounds bounds)
+        {
+            var bitmap = new SKBitmap(width, height);
+            using (var canvas = new SKCanvas(bitmap))
+            {
+                canvas.Clear(SKColors.Transparent);
+                RenderTextToCanvas(canvas, lines, ip, effects, fonts, textStartX, textStartY, baselines,
+                    outlineColor, shadowColor, outlineWidth, shadowWidth);
+            }
+
+            bounds = bitmap.GetNonTransparentBounds();
+            return bitmap;
+        }
 
         //System.IO.File.WriteAllBytes(@"C:\temp\debug_raw.png", tempBitmap.ToPngArray());
 
@@ -217,7 +266,6 @@ public static class ImageRenderer
         // Measuring the drawn bounds and cropping to the union of them and the line box
         // is one copy of the scratch canvas; trimming tight and re-padding afterwards
         // was two.
-        var drawnBounds = tempBitmap.GetNonTransparentBounds();
         if (drawnBounds.IsEmpty)
         {
             // Text that draws nothing despite not being whitespace (an unsupported codepoint,
