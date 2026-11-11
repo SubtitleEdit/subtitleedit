@@ -219,7 +219,7 @@ public class AiReviewClient : IDisposable
     internal static string BuildRequestJson(string model, string systemPrompt, string userContent, bool jsonMode, bool includeTemperature, int? maxTokens = null)
     {
         using var stream = new System.IO.MemoryStream();
-        using (var writer = new Utf8JsonWriter(stream))
+        using (var writer = new Utf8JsonWriter(stream, AiReviewProtocol.WireOptions))
         {
             writer.WriteStartObject();
             if (!string.IsNullOrWhiteSpace(model))

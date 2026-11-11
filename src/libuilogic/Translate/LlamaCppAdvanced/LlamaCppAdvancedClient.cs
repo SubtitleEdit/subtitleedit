@@ -139,7 +139,7 @@ public class LlamaCppAdvancedClient : IDisposable
     internal static string BuildRequestJson(SeLlamaCppAdvanced settings, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump = 0, bool disableThinking = false)
     {
         using var stream = new System.IO.MemoryStream();
-        using (var writer = new Utf8JsonWriter(stream))
+        using (var writer = new Utf8JsonWriter(stream, LlamaCppAdvancedProtocol.WireOptions))
         {
             writer.WriteStartObject();
             if (!string.IsNullOrWhiteSpace(model))
