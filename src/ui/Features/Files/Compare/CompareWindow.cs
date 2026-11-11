@@ -614,6 +614,7 @@ public class CompareWindow : Window
         var take = MakeItem(string.Empty, vm.TakeReferenceCommand, RowPath(nameof(CompareRow.CanTakeReference)), IconNames.ArrowLeft);
         take.Bind(HeaderedSelectingItemsControl.HeaderProperty, new Binding(RowPath(nameof(CompareRow.TakeReferenceHint))));
         var takeText = MakeItem(Se.Language.File.CompareTakeText, vm.TakeReferenceTextCommand, RowPath(nameof(CompareRow.CanTakeText)));
+        var takeTextKeepFormatting = MakeItem(Se.Language.File.CompareTakeTextKeepFormatting, vm.TakeReferenceTextKeepFormattingCommand, RowPath(nameof(CompareRow.CanTakeTextKeepFormatting)));
         var takeTiming = MakeItem(Se.Language.File.CompareTakeTiming, vm.TakeReferenceTimingCommand, RowPath(nameof(CompareRow.CanTakeTiming)));
         var takeSeparator = new Separator { [!IsVisibleProperty] = new Binding(RowPath(nameof(CompareRow.HasTakeActions))) { FallbackValue = false } };
         takeSeparator.DataContext = vm;
@@ -631,6 +632,7 @@ public class CompareWindow : Window
             {
                 take,
                 takeText,
+                takeTextKeepFormatting,
                 takeTiming,
                 takeSeparator,
                 pickCurrent,
@@ -929,6 +931,9 @@ public class CompareWindow : Window
         var buttonTakeText = UiUtil.MakeButton(Se.Language.File.CompareTakeText, vm.TakeReferenceTextCommand).WithIconLeft(IconNames.ArrowLeft);
         buttonTakeText.Bind(Button.CommandParameterProperty, new Binding("."));
         buttonTakeText.Bind(IsVisibleProperty, new Binding(nameof(CompareRow.CanTakeFromPair)));
+        var buttonTakeTextKeepFormatting = UiUtil.MakeButton(Se.Language.File.CompareTakeTextKeepFormatting, vm.TakeReferenceTextKeepFormattingCommand).WithIconLeft(IconNames.ArrowLeft);
+        buttonTakeTextKeepFormatting.Bind(Button.CommandParameterProperty, new Binding("."));
+        buttonTakeTextKeepFormatting.Bind(IsVisibleProperty, new Binding(nameof(CompareRow.CanTakeTextKeepFormatting)));
         var buttonTakeTiming = UiUtil.MakeButton(Se.Language.File.CompareTakeTiming, vm.TakeReferenceTimingCommand).WithIconLeft(IconNames.ArrowLeft);
         buttonTakeTiming.Bind(Button.CommandParameterProperty, new Binding("."));
         buttonTakeTiming.Bind(IsVisibleProperty, new Binding(nameof(CompareRow.CanTakeFromPair)));
@@ -942,7 +947,7 @@ public class CompareWindow : Window
             Orientation = Orientation.Horizontal,
             ItemSpacing = 6,
             LineSpacing = 4,
-            Children = { buttonSave, buttonCancel, buttonTakeText, buttonTakeTiming, hint },
+            Children = { buttonSave, buttonCancel, buttonTakeText, buttonTakeTextKeepFormatting, buttonTakeTiming, hint },
         };
 
         var editor = new StackPanel

@@ -42,6 +42,7 @@ public class LanguageFile
     public string CompareInsertFromReference { get; set; }
     public string CompareDeleteFromCurrent { get; set; }
     public string CompareTakeText { get; set; }
+    public string CompareTakeTextKeepFormatting { get; set; }
     public string CompareTakeTiming { get; set; }
     public string CompareEditLine { get; set; }
     public string CompareEditHint { get; set; }
@@ -136,6 +137,7 @@ public class LanguageFile
         CompareInsertFromReference = "Insert this line into the current subtitle";
         CompareDeleteFromCurrent = "Delete this line from the current subtitle";
         CompareTakeText = "Take text";
+        CompareTakeTextKeepFormatting = "Take text, keep formatting";
         CompareTakeTiming = "Take timing";
         CompareEditLine = "Edit line";
         CompareEditHint = "Ctrl+Enter to save, Esc to cancel";
