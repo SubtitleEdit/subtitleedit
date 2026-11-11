@@ -12,8 +12,8 @@ namespace UITests.Features.Main;
 /// Restoring a session hands the remembered line's start time to the video player so the file
 /// opens where the user was, instead of opening at 0:00 and seeking a few hundred milliseconds
 /// later - which showed the start of the video and then a visible jump (issue #13329).
-/// A remembered row 0 is not a restored position though, it is just where the grid always lands
-/// on open, so that case must still open at the beginning (issues #13191 / #12898).
+/// The first line is restored like any other (issue #16822); only a file with no remembered line -
+/// opened for the first time - opens at the beginning (issues #13191 / #12898).
 /// </summary>
 public class RestoredVideoStartPositionTests : IDisposable
 {
@@ -108,11 +108,18 @@ public class RestoredVideoStartPositionTests : IDisposable
     }
 
     [AvaloniaFact]
-    public async Task FirstRowAndNoRememberedLineOpenTheVideoAtTheBeginning()
+    public async Task RememberedFirstRowOpensTheVideoAtTheFirstLine()
     {
         var vm = await OpenThreeLineFileAsync();
 
-        Assert.Equal(0, GetStartPosition(vm, 0));
+        Assert.Equal(1, GetStartPosition(vm, 0));
+    }
+
+    [AvaloniaFact]
+    public async Task NoRememberedLineOpensTheVideoAtTheBeginning()
+    {
+        var vm = await OpenThreeLineFileAsync();
+
         Assert.Equal(0, GetStartPosition(vm, null));
     }
 
