@@ -5,6 +5,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using System.Collections;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -26,7 +27,7 @@ public class BookmarksListWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.BookmarksList;
         CanResize = true;
-        Width = 600;
+        Width = 800;
         Height = 700;
         MinWidth = 600;
         MinHeight = 400;
@@ -62,9 +63,30 @@ public class BookmarksListWindow : Window
             Children = { labelCount, buttonClear, buttonImport, buttonExport },
         };
 
+        var textBoxFilter = new TextBox
+        {
+            PlaceholderText = Se.Language.General.BookmarksFilterHint,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(0, 0, 0, 10),
+        }.AsTextField(Se.Language.General.BookmarksFilterHint);
+        textBoxFilter.InnerLeftContent = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "fa-solid fa-magnifying-glass",
+            FontSize = 11,
+            Foreground = EditorChrome.FaintTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 0, 0, 0),
+        };
+        textBoxFilter.Bind(TextBox.TextProperty, new Binding(nameof(vm.FilterText)) { Mode = BindingMode.TwoWay });
+
+        var listPanel = new DockPanel();
+        DockPanel.SetDock(textBoxFilter, Dock.Top);
+        listPanel.Children.Add(textBoxFilter);
+        listPanel.Children.Add(MakeBookmarkGridView(vm));
+
         var list = new Border
         {
-            Child = MakeBookmarkGridView(vm),
+            Child = listPanel,
             Padding = new Thickness(14),
         };
 
@@ -84,7 +106,6 @@ public class BookmarksListWindow : Window
         dataGrid.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
-        var shortTimeConverter = new TimeSpanToDisplayShortConverter();
 
         // Columns
         dataGrid.Columns.Add(new SeTableViewColumn
@@ -97,11 +118,42 @@ public class BookmarksListWindow : Window
         });
         dataGrid.Columns.Add(new SeTableViewColumn
         {
-            Header = Se.Language.General.Text,
-            Binding = new Binding(nameof(SubtitleLineViewModel.Bookmark)),
+            Header = Se.Language.General.Show,
+            Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
+            Width = new GridLength(100),
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-            Width = new GridLength(1, GridUnitType.Star) // star sizing to take all available space
+        });
+
+        // The whole note, line breaks included - notes can span several lines.
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Bookmark,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) => new TextBlock
+            {
+                TextWrapping = TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Top,
+                [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Bookmark)),
+            }),
+            Width = new GridLength(3, GridUnitType.Star),
+        });
+
+        // The subtitle text, for context.
+        dataGrid.Columns.Add(new SeTableViewColumn
+        {
+            Header = Se.Language.General.Text,
+            CellTheme = UiUtil.TableViewCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) => new TextBlock
+            {
+                TextWrapping = TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Top,
+                Foreground = EditorChrome.DimTextBrush,
+                [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Text)),
+            }),
+            Width = new GridLength(2, GridUnitType.Star),
         });
         dataGrid.Columns.Add(new SeTableViewColumn
         {

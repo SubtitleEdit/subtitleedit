@@ -147,5 +147,5 @@ A shortcut can be assigned in **Options → Shortcuts** to cycle the five modes 
 You can bookmark subtitle lines for quick reference:
 - **Add/Edit bookmark** — Adds a bookmark with optional text
 - **Toggle bookmark** — Quickly toggle bookmark on/off
-- **List bookmarks** — View all bookmarks
+- **List bookmarks** — View all bookmarks with their time, whole note and subtitle text. Type in the filter box to show only bookmarks whose note or subtitle text contains it. **Clear** and **Export** always work on all bookmarks
 - **Go to next/previous bookmark** — Navigate between bookmarks

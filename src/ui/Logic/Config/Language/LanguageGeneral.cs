@@ -80,6 +80,7 @@ public class LanguageGeneral
     public string Beginning { get; set; }
     public string BluRaySup { get; set; }
     public string Bold { get; set; }
+    public string Bookmark { get; set; }
     public string BookmarkAdd { get; set; }
     public string BookmarkAddForSelectedLinesX { get; set; }
     public string BookmarkClearQuestion { get; set; }
@@ -88,6 +89,7 @@ public class LanguageGeneral
     public string BookmarkEdit { get; set; }
     public string BookmarkEditForSelectedLinesX { get; set; }
     public string BookmarksList { get; set; }
+    public string BookmarksFilterHint { get; set; }
     public string BorderStyle { get; set; }
     public string BottomCenter { get; set; }
     public string BottomLeft { get; set; }
@@ -1108,6 +1110,7 @@ public class LanguageGeneral
         Beginning = "Beginning";
         BluRaySup = "Blu-ray (sup)";
         Bold = "Bold";
+        Bookmark = "Bookmark";
         BookmarkAdd = "Add bookmark";
         BookmarkAddForSelectedLinesX = "Add bookmark for {0} selected lines";
         BookmarkClearQuestion = "Clear all bookmarks?";
@@ -1116,6 +1119,7 @@ public class LanguageGeneral
         BookmarkEdit = "Edit bookmark";
         BookmarkEditForSelectedLinesX = "Edit bookmark for {0} selected lines";
         BookmarksList = "List bookmarks";
+        BookmarksFilterHint = "Filter by note or subtitle text";
         BorderStyle = "Border style";
         BottomCenter = "Bottom-Center";
         BottomLeft = "Bottom-Left";
