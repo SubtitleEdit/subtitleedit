@@ -28,6 +28,8 @@ public class NOcrInspectWindow : Window
         _vm = vm;
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Ocr.NOcrInspectImageMatches;
         Width = 1200;
         Height = 700;

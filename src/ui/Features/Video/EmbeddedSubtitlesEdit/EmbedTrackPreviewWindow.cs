@@ -21,6 +21,8 @@ public class EmbedTrackPreviewWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = vm.WindowTitle;
         Width = 1024;
         Height = 600;

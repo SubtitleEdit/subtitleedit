@@ -19,6 +19,8 @@ public class SpeechToTextAdvancedWindow : Window
     public SpeechToTextAdvancedWindow(SpeechToText.SpeechToTextAdvancedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Video.AudioToText.AdvancedWhisperSettings;
         Width = 1050;
         Height = 660;

@@ -24,6 +24,8 @@ public class AssSetBackgroundWindow : Window
     public AssSetBackgroundWindow(AssSetBackgroundViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Assa.BackgroundBoxGenerator;
         CanResize = true;
         Width = 1200;

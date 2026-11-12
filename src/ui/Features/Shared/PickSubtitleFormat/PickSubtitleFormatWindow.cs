@@ -16,6 +16,8 @@ public class PickSubtitleFormatWindow : Window
     public PickSubtitleFormatWindow(PickSubtitleFormatViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Tools.PickSubtitleFormat;
         CanResize = true;
         Width = 900;

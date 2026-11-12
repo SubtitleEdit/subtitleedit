@@ -24,6 +24,8 @@ public class SpeechToTextQualityReportWindow : Window
     public SpeechToTextQualityReportWindow(SpeechToTextQualityReportViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Video.AudioToText.QualityReportTitle;
         Width = 960;
         Height = 640;

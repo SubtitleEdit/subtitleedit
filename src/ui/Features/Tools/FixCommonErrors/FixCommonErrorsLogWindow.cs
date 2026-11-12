@@ -18,6 +18,8 @@ public class FixCommonErrorsLogWindow : Window
     public FixCommonErrorsLogWindow(FixCommonErrorsLogViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Tools.FixCommonErrors.Log;
         CanResize = true;
         Width = 800;

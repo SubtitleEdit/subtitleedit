@@ -15,6 +15,8 @@ public class PickLanguageWindow : Window
     public PickLanguageWindow(PickLanguageViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = vm.Title ?? Se.Language.Options.Settings.FavoriteLanguages;
         CanResize = true;
         Width = 500;

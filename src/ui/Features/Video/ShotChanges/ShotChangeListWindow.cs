@@ -18,6 +18,8 @@ public class ShotChangeListWindow : Window
     public ShotChangeListWindow(ShotChangeListViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Video.ShotChanges.ShotChangesList;
         CanResize = true;
         Width = 600;

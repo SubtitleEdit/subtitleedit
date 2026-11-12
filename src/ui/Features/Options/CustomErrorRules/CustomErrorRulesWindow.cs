@@ -23,6 +23,8 @@ public class CustomErrorRulesWindow : Window
     {
         var l = Se.Language.Options.Settings;
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = l.CustomErrorRules;
         CanResize = true;
         Width = 760;

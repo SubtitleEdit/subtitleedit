@@ -19,6 +19,8 @@ public class ShotChangesWindow : Window
     public ShotChangesWindow(ShotChangesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.GenerateImportShotChanges;
         CanResize = true;
         Width = 900;

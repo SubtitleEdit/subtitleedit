@@ -18,6 +18,8 @@ public class AssaStylePickerWindow : Window
     public AssaStylePickerWindow(AssaStylePickerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Bind(Window.TitleProperty, new Binding(nameof(vm.Title))
         {
             Source = vm,

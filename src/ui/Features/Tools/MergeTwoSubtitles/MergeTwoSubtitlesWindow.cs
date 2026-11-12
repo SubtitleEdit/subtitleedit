@@ -24,6 +24,8 @@ public class MergeTwoSubtitlesWindow : Window
     public MergeTwoSubtitlesWindow(MergeTwoSubtitlesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Tools.MergeTwoSubtitles.Title;
         CanResize = true;
         Width = 1200;

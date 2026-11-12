@@ -22,6 +22,8 @@ public class BurnInLogoWindow : Window
     public BurnInLogoWindow(BurnInLogoViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.Logo;
         CanResize = true;
         MinWidth = 600;

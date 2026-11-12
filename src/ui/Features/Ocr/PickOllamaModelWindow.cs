@@ -12,6 +12,8 @@ public class PickOllamaModelWindow : Window
     public PickOllamaModelWindow(PickOllamaModelViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Bind(TitleProperty, new Binding(nameof(vm.Title)));
         CanResize = true;
         Width = 500;

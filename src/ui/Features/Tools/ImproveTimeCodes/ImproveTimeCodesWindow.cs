@@ -30,6 +30,8 @@ public class ImproveTimeCodesWindow : Window
     public ImproveTimeCodesWindow(ImproveTimeCodesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = UiUtil.MakeWindowTitle(Se.Language.Tools.ImproveTimeCodes.Title);
         CanResize = true;
         Width = 1150;

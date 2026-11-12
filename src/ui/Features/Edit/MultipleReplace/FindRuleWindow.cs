@@ -13,6 +13,8 @@ public class FindRuleWindow : Window
     public FindRuleWindow(FindRuleViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Edit.MultipleReplace.FindRule;
         Width = 800;
         Height = 500;
