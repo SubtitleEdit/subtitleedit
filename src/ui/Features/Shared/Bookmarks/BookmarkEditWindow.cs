@@ -34,11 +34,16 @@ public class BookmarkEditWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalContentAlignment = VerticalAlignment.Top,
             TextWrapping = TextWrapping.Wrap,
+            AcceptsReturn = true,
+            Watermark = Se.Language.General.BookmarkNewLineHint,
         };
         textBox.Classes.Add("text");
         textBox.Bind(TextBox.TextProperty, new Avalonia.Data.Binding(nameof(vm.BookmarkText)) { Mode = Avalonia.Data.BindingMode.TwoWay });
         Avalonia.Automation.AutomationProperties.SetName(textBox, Se.Language.General.Text);
-        textBox.KeyDown += (sender, args) => vm.OnTextBoxKeyDown(args);
+
+        // Tunnel: with AcceptsReturn the TextBox would insert the line break before a bubbling
+        // handler sees Enter. Plain Enter is OK, Shift+Enter is a new line in the note.
+        textBox.AddHandler(KeyDownEvent, (_, args) => vm.OnTextBoxKeyDown(args), Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
         var buttonList = EditorChrome.MakeTextToolButton("fa-solid fa-list", Se.Language.General.BookmarksList, vm.ListCommand).WithBindIsVisible(nameof(vm.ShowListButton));
         var buttonRemove = EditorChrome.MakeTextToolButton("fa-solid fa-trash-can", Se.Language.General.Remove, vm.DeleteCommand).WithBindIsVisible(nameof(vm.ShowRemoveButton));

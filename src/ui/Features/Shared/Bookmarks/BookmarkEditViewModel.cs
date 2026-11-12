@@ -94,7 +94,7 @@ public partial class BookmarkEditViewModel : ObservableObject
 
     internal void OnTextBoxKeyDown(KeyEventArgs args)
     {
-        if (args.Key == Key.Enter)
+        if (args.Key == Key.Enter && args.KeyModifiers == KeyModifiers.None)
         {
             args.Handled = true;
             Ok();
