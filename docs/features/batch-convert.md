@@ -87,7 +87,7 @@ Select **Merge translation with original** together with **Auto-translate** to m
 - **Advanced Sub Station Alpha** — the original text and the translation are separate lines, each in its own style. **Style 1 (original)** and **Style 2 (translation)** have the same settings as in Merge two subtitles: font, font size, bold, italic, text color, outline color, outline width, shadow width, and top/bottom position. By default the original is at the top and the translation at the bottom. The ASSA **Target format settings** (styles, properties and attachments) are not used, as they would replace the two styles; **Embed fonts** still works
 - **Other formats** — the translation is placed below the original text in the same subtitle
 
-The other functions apply to the original text as well (e.g. **Offset time codes** moves both). With several target languages, each output file gets the original text and its own translation. **Convert** shows an error if **Merge translation with original** is selected without **Auto-translate**. If the target format is not Advanced Sub Station Alpha, a question asks whether to switch to it or keep the chosen format - when the function is ticked and again when **Convert** is pressed.
+The other functions apply to the original text as well (e.g. **Offset time codes** moves both). With several target languages, each output file gets the original text and its own translation. **Convert** shows an error if **Merge translation with original** is selected without **Auto-translate**. If the target format is not Advanced Sub Station Alpha, a question asks to switch to it - when the function is ticked (**Cancel** unticks the function) and again when **Convert** is pressed (**Cancel** stops).
 
 ## OCR in Batch Convert
 
