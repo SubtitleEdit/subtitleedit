@@ -519,6 +519,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         MergeTranslationWithOriginalFontNames = new ObservableCollection<string>(FontHelper.GetSystemFonts());
 
         BatchFunctions = new ObservableCollection<BatchConvertFunction>(BatchConvertFunction.List(this));
+        BatchFunctions.Single(p => p.Type == BatchConvertFunctionType.MergeTranslationWithOriginal).PropertyChanged += (s, e) =>
+        {
+            // The two styles only exist in Advanced Sub Station Alpha - other formats just get both texts stacked
+            if (e.PropertyName == nameof(BatchConvertFunction.IsSelected) &&
+                s is BatchConvertFunction { IsSelected: true } &&
+                !_isApplyingPreset &&
+                SelectedTargetFormat != AdvancedSubStationAlpha.NameOfFormat &&
+                TargetFormats.Contains(AdvancedSubStationAlpha.NameOfFormat))
+            {
+                SelectedTargetFormat = AdvancedSubStationAlpha.NameOfFormat;
+            }
+        };
         ApplyFunctionFilter();
 
         _cancellationTokenSource = new CancellationTokenSource();

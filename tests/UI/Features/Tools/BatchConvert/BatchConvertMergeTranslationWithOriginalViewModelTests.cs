@@ -6,6 +6,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 using Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
@@ -146,6 +147,24 @@ public class BatchConvertMergeTranslationWithOriginalViewModelTests
         var result = await (Task<bool>)Invoke(vm, "EnsureMergeTranslationWithOriginalHasAutoTranslate", config)!;
 
         Assert.Equal(canConvert, result);
+    }
+
+    [AvaloniaFact]
+    public void SelectingTheFunction_SwitchesTheTargetFormatToAssa()
+    {
+        using var _ = new BatchConvertSettingsScope();
+        Se.Settings.Tools.BatchConvert.ActiveFunctions = [];
+        var vm = MakeViewModel();
+        vm.SelectedTargetFormat = "SubRip";
+        var function = vm.BatchFunctions.Single(p => p.Type == BatchConvertFunctionType.MergeTranslationWithOriginal);
+
+        function.IsSelected = true;
+
+        Assert.Equal(AdvancedSubStationAlpha.NameOfFormat, vm.SelectedTargetFormat);
+
+        // A format picked afterwards is respected
+        vm.SelectedTargetFormat = "SubRip";
+        Assert.Equal("SubRip", vm.SelectedTargetFormat);
     }
 
     [AvaloniaFact]
