@@ -90,6 +90,8 @@ public class LanguageFixCommonErrors
     public string UnableToFixStartTimeLaterThanEndTime { get; set; }
     public string XFixedToYZ { get; set; }
     public string UnableToFixTextXY { get; set; }
+    public string StillTooShortNoRoomXYZW { get; set; }
+    public string StillTooFastNoRoomXYZW { get; set; }
     public string UnneededSpace { get; set; }
     public string UnneededPeriod { get; set; }
     public string FixMissingSpace { get; set; }
@@ -222,6 +224,8 @@ public class LanguageFixCommonErrors
         UnableToFixStartTimeLaterThanEndTime = "Unable to fix text number {0}: Start time is later than end time: {1}";
         XFixedToYZ = "{0} fixed to: {1}{2}";
         UnableToFixTextXY = "Unable to fix text number {0}: {1}";
+        StillTooShortNoRoomXYZW = "Text number {0} is still too short - no more room before the next subtitle: {1} ms (min {2} ms): {3}";
+        StillTooFastNoRoomXYZW = "Text number {0} is still too fast - no more room before the next subtitle: {1} chars/sec (max {2}): {3}";
         UnneededSpace = "Unneeded space";
         UnneededPeriod = "Unneeded period";
         FixMissingSpace = "Fix missing space";
