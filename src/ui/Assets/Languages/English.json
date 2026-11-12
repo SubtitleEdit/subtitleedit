@@ -2426,7 +2426,7 @@
       "presetName": "Preset name",
       "deletePresetX": "Delete preset \"{0}\"?",
       "mergeTranslationWithOriginalTitle": "Merge translation with original",
-      "mergeTranslationWithOriginalInfo": "Original and translation in one bilingual subtitle. Their position (top/bottom) and style, set below, need Advanced Sub Station Alpha. Like in Tools → Merge two subtitles.",
+      "mergeTranslationWithOriginalInfo": "Original and translation in one bilingual subtitle. Their position (top/bottom) and style, set below, need Advanced Sub Station Alpha.\nLike in Tools → Merge two subtitles.",
       "mergeTranslationWithOriginalRequirements": "Requires \"{0}\" and {1} \"{2}\".",
       "mergeTranslationWithOriginalStyleOriginal": "Style 1 (original)",
       "mergeTranslationWithOriginalStyleTranslation": "Style 2 (translation)",
