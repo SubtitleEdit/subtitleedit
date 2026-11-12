@@ -21,6 +21,7 @@ public partial class BookmarksListViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
     [ObservableProperty] private bool _hasBookmarks;
+    [ObservableProperty] private string _filterText = string.Empty;
 
     public Window? Window { get; set; }
 
@@ -58,7 +59,7 @@ public partial class BookmarksListViewModel : ObservableObject
 
         try
         {
-            await File.WriteAllTextAsync(fileName, BookmarksFile.ToText(Subtitles));
+            await File.WriteAllTextAsync(fileName, BookmarksFile.ToText(_allSubtitles.Where(p => p.Bookmark != null)));
         }
         catch (Exception ex)
         {
@@ -98,12 +99,29 @@ public partial class BookmarksListViewModel : ObservableObject
             return;
         }
 
+        ApplyFilter();
+    }
+
+    partial void OnFilterTextChanged(string value) => ApplyFilter();
+
+    /// <summary>
+    /// Shows the bookmarked lines whose note or subtitle text contains the filter text (ignoring
+    /// case), keeping the selection when it is still shown.
+    /// </summary>
+    private void ApplyFilter()
+    {
+        var filter = (FilterText ?? string.Empty).Trim();
         var selected = SelectedSubtitle;
         Subtitles.Clear();
-        Subtitles.AddRange(_allSubtitles.Where(p => p.Bookmark != null));
+        Subtitles.AddRange(_allSubtitles.Where(p => p.Bookmark != null && Matches(p, filter)));
         SelectedSubtitle = selected != null && Subtitles.Contains(selected) ? selected : Subtitles.FirstOrDefault();
         HasBookmarks = SelectedSubtitle != null;
     }
+
+    private static bool Matches(SubtitleLineViewModel line, string filter) =>
+        filter.Length == 0 ||
+        (line.Bookmark ?? string.Empty).Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+        (line.Text ?? string.Empty).Contains(filter, StringComparison.OrdinalIgnoreCase);
 
     [RelayCommand]
     private async Task Clear()
@@ -125,7 +143,8 @@ public partial class BookmarksListViewModel : ObservableObject
             return;
         }
 
-        foreach (var subtitle in Subtitles)
+        // All bookmarks, also the ones the filter hides - the question says so.
+        foreach (var subtitle in _allSubtitles)
         {
             subtitle.Bookmark = null;
         }
