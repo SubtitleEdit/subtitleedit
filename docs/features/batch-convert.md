@@ -57,6 +57,7 @@ You can chain multiple conversion functions:
 - Embed fonts — embed the fonts an ASSA file uses as attachments, optionally [trimmed](assa-attachments.md) to the characters actually used
 - Adjust image brightness/alpha/color — for image-based subtitles
 - Auto translate
+- Merge translation with original — together with Auto-translate: one bilingual file with the original text and the translation, like [Merge two subtitles](merge-two-subtitles.md) (see [Bilingual output](#bilingual-output))
 - Delete lines
 
 ## Auto-translate in Batch Convert
@@ -78,6 +79,15 @@ Batch Convert can machine-translate files as part of the conversion. Supported e
 To translate into several languages in one run, click **Add** next to the **To** language and pick more target languages (**Remove** drops one). Every file is translated into each language and saved as its own output file, with the target language code as the language post fix (e.g. `movie.de.srt`, `movie.fr.srt`).
 
 The same feature is available headlessly in `seconv` via `--translate-to` — see the [command line documentation](../reference/command-line.md).
+
+### Bilingual output
+
+Select **Merge translation with original** together with **Auto-translate** to merge each translated file with its original text, like [Merge two subtitles](merge-two-subtitles.md) does for two files. The output format decides how:
+
+- **Advanced Sub Station Alpha** — the original text and the translation are separate lines, each in its own style. **Style 1 (original)** and **Style 2 (translation)** have the same settings as in Merge two subtitles: font, font size, bold, italic, text color, outline color, outline width, shadow width, and top/bottom position. By default the original is at the top and the translation at the bottom. The ASSA **Target format settings** (styles, properties and attachments) are not used, as they would replace the two styles; **Embed fonts** still works
+- **Other formats** — the translation is placed below the original text in the same subtitle
+
+The other functions apply to the original text as well (e.g. **Offset time codes** moves both). With several target languages, each output file gets the original text and its own translation. **Convert** shows an error if **Merge translation with original** is selected without **Auto-translate**.
 
 ## OCR in Batch Convert
 

@@ -2424,7 +2424,12 @@
       "savePresetDotDotDot": "Save preset...",
       "deletePreset": "Delete preset",
       "presetName": "Preset name",
-      "deletePresetX": "Delete preset \"{0}\"?"
+      "deletePresetX": "Delete preset \"{0}\"?",
+      "mergeTranslationWithOriginalTitle": "Merge translation with original",
+      "mergeTranslationWithOriginalInfo": "Merges each translated file with its original text into one bilingual subtitle, like Tools → Merge two subtitles. Works together with \"Auto-translate\". With Advanced Sub Station Alpha as target format the original and the translation get the styles below; other formats get the original text above the translation.",
+      "mergeTranslationWithOriginalStyleOriginal": "Style 1 (original)",
+      "mergeTranslationWithOriginalStyleTranslation": "Style 2 (translation)",
+      "mergeTranslationWithOriginalNeedsAutoTranslate": "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too."
     },
     "changeCasing": {
       "fixNames": "Fix names",

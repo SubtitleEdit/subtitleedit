@@ -194,6 +194,26 @@ public class SeBatchConvert
     public int ConvertActorsCasingType { get; set; }
     public bool ConvertActorsOnlyNames { get; set; }
 
+    // "Merge translation with original": 1 = style of the original text, 2 = style of the translation.
+    public string MergeTranslationWithOriginalFontName1 { get; set; }
+    public int MergeTranslationWithOriginalFontSize1 { get; set; }
+    public bool MergeTranslationWithOriginalBold1 { get; set; }
+    public bool MergeTranslationWithOriginalItalic1 { get; set; }
+    public string MergeTranslationWithOriginalPrimaryColor1 { get; set; }
+    public string MergeTranslationWithOriginalOutlineColor1 { get; set; }
+    public decimal MergeTranslationWithOriginalOutlineWidth1 { get; set; }
+    public decimal MergeTranslationWithOriginalShadowWidth1 { get; set; }
+    public bool MergeTranslationWithOriginalAlignTop1 { get; set; }
+    public string MergeTranslationWithOriginalFontName2 { get; set; }
+    public int MergeTranslationWithOriginalFontSize2 { get; set; }
+    public bool MergeTranslationWithOriginalBold2 { get; set; }
+    public bool MergeTranslationWithOriginalItalic2 { get; set; }
+    public string MergeTranslationWithOriginalPrimaryColor2 { get; set; }
+    public string MergeTranslationWithOriginalOutlineColor2 { get; set; }
+    public decimal MergeTranslationWithOriginalOutlineWidth2 { get; set; }
+    public decimal MergeTranslationWithOriginalShadowWidth2 { get; set; }
+    public bool MergeTranslationWithOriginalAlignTop2 { get; set; }
+
     /// <summary>Named function selections + settings. A preset's own stored copy has this list empty.</summary>
     public List<SeBatchConvertPreset> Presets { get; set; } = new();
 
@@ -343,5 +363,20 @@ public class SeBatchConvert
         ConvertActorsFromType = "InlineSquareBrackets";
         ConvertActorsToType = "Actor";
         ConvertActorsColor = Avalonia.Media.Colors.Yellow.FromColorToHex();
+
+        MergeTranslationWithOriginalFontName1 = "Arial";
+        MergeTranslationWithOriginalFontSize1 = 20;
+        MergeTranslationWithOriginalPrimaryColor1 = Avalonia.Media.Colors.White.FromColorToHex();
+        MergeTranslationWithOriginalOutlineColor1 = Avalonia.Media.Colors.Black.FromColorToHex();
+        MergeTranslationWithOriginalOutlineWidth1 = 2;
+        MergeTranslationWithOriginalShadowWidth1 = 1;
+        MergeTranslationWithOriginalAlignTop1 = true;
+        MergeTranslationWithOriginalFontName2 = "Arial";
+        MergeTranslationWithOriginalFontSize2 = 20;
+        MergeTranslationWithOriginalPrimaryColor2 = Avalonia.Media.Colors.White.FromColorToHex();
+        MergeTranslationWithOriginalOutlineColor2 = Avalonia.Media.Colors.Black.FromColorToHex();
+        MergeTranslationWithOriginalOutlineWidth2 = 2;
+        MergeTranslationWithOriginalShadowWidth2 = 1;
+        MergeTranslationWithOriginalAlignTop2 = false;
     }
 }

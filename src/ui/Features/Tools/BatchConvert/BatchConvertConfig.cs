@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Features.Tools.ConvertActors;
+using Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
@@ -75,6 +76,7 @@ public class BatchConvertConfig
     public MergeContinuationLinesSettings MergeContinuationLines { get; set; }
     public ConvertActorsSettings ConvertActors { get; set; }
     public RunPluginSettings RunPlugin { get; set; }
+    public MergeTranslationWithOriginalSettings MergeTranslationWithOriginal { get; set; }
 
     public BatchConvertConfig()
     {
@@ -124,6 +126,7 @@ public class BatchConvertConfig
         MergeContinuationLines = new MergeContinuationLinesSettings();
         ConvertActors = new ConvertActorsSettings();
         RunPlugin = new RunPluginSettings();
+        MergeTranslationWithOriginal = new MergeTranslationWithOriginalSettings();
     }
 
     public bool IsTargetFormatImageBased =>
@@ -501,6 +504,27 @@ public class BatchConvertConfig
 
         /// <summary>Resolved when the run starts; null when the plugin is missing, disabled or not batch-capable.</summary>
         public InstalledPlugin? Plugin { get; set; }
+    }
+
+    /// <summary>
+    /// Merges the translated subtitle with its original text into one bilingual subtitle, like
+    /// Tools → Merge two subtitles. Only runs together with <see cref="BatchConvertConfig.AutoTranslate"/>.
+    /// The styles are used when the target format is Advanced Sub Station Alpha; other formats get
+    /// the original text above the translation.
+    /// </summary>
+    public class MergeTranslationWithOriginalSettings
+    {
+        public bool IsActive { get; set; }
+        public SsaStyle StyleOriginal { get; set; }
+        public SsaStyle StyleTranslation { get; set; }
+
+        public MergeTranslationWithOriginalSettings()
+        {
+            StyleOriginal = MergeTwoSubtitlesHelper.BuildSsaStyle(MergeTwoSubtitlesHelper.StyleName1, "Arial", 20, false, false,
+                Colors.White, Colors.Black, 2, 1, alignTop: true);
+            StyleTranslation = MergeTwoSubtitlesHelper.BuildSsaStyle(MergeTwoSubtitlesHelper.StyleName2, "Arial", 20, false, false,
+                Colors.White, Colors.Black, 2, 1, alignTop: false);
+        }
     }
 
     public class RenumberSettings
