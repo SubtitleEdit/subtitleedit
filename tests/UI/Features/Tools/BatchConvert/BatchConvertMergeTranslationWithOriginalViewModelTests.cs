@@ -178,6 +178,23 @@ public class BatchConvertMergeTranslationWithOriginalViewModelTests
     }
 
     [AvaloniaFact]
+    public void View_RequirementsLine_IsBoldAndNamesTheRequiredSettings()
+    {
+        using var _ = new BatchConvertSettingsScope();
+
+        var vm = MakeViewModel();
+        var window = new Window { Content = ViewMergeTranslationWithOriginal.Make(vm) };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        var bold = window.GetLogicalDescendants().OfType<TextBlock>().Where(t => t.FontWeight == FontWeight.Bold && t.Text != null && t.Text.Contains(AdvancedSubStationAlpha.NameOfFormat)).ToList();
+        var requirements = Assert.Single(bold);
+        Assert.Contains(Se.Language.General.AutoTranslate, requirements.Text);
+        Assert.Contains(Se.Language.General.TargetFormat, requirements.Text);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void View_TopAndBottom_FollowAndSetEachStyle()
     {
         using var _ = new BatchConvertSettingsScope();

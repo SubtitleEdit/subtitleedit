@@ -96,6 +96,7 @@ public class LanguageBatchConvert
     public string DeletePresetX { get; set; }
     public string MergeTranslationWithOriginalTitle { get; set; }
     public string MergeTranslationWithOriginalInfo { get; set; }
+    public string MergeTranslationWithOriginalRequirements { get; set; }
     public string MergeTranslationWithOriginalStyleOriginal { get; set; }
     public string MergeTranslationWithOriginalStyleTranslation { get; set; }
     public string MergeTranslationWithOriginalNeedsAutoTranslate { get; set; }
@@ -199,7 +200,8 @@ public class LanguageBatchConvert
         PresetName = "Preset name";
         DeletePresetX = "Delete preset \"{0}\"?";
         MergeTranslationWithOriginalTitle = "Merge translation with original";
-        MergeTranslationWithOriginalInfo = "Saves one bilingual subtitle per file: the original text plus its translation. Requires \"Auto-translate\" to be selected too.\nAdvanced Sub Station Alpha: the original and the translation are separate lines, each with its own style (set below), like Tools → Merge two subtitles.\nOther formats: both texts are placed in the same subtitle, the one set to \"Top\" first.";
+        MergeTranslationWithOriginalInfo = "One bilingual subtitle per file: the original text plus its translation, like Tools → Merge two subtitles. Each text gets its own style (set below). Other target formats put both texts in the same subtitle.";
+        MergeTranslationWithOriginalRequirements = "Required: select \"{0}\" and set \"{1}\" to \"{2}\".";
         MergeTranslationWithOriginalStyleOriginal = "Style 1 (original)";
         MergeTranslationWithOriginalStyleTranslation = "Style 2 (translation)";
         MergeTranslationWithOriginalNeedsAutoTranslate = "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.";

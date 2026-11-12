@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -17,8 +19,17 @@ public static class ViewMergeTranslationWithOriginal
 {
     public static Control Make(BatchConvertViewModel vm)
     {
+        var requirements = EditorChrome.MakeHint(string.Format(
+            Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalRequirements,
+            Se.Language.General.AutoTranslate,
+            Se.Language.General.TargetFormat,
+            AdvancedSubStationAlpha.NameOfFormat));
+        requirements.ClearValue(TextBlock.ForegroundProperty);
+        requirements.FontWeight = FontWeight.Bold;
+
         var rows = new List<Control>
         {
+            requirements,
             EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalInfo),
         };
 
