@@ -370,13 +370,13 @@ public class SeBatchConvert
         MergeTranslationWithOriginalOutlineColor1 = Avalonia.Media.Colors.Black.FromColorToHex();
         MergeTranslationWithOriginalOutlineWidth1 = 2;
         MergeTranslationWithOriginalShadowWidth1 = 1;
-        MergeTranslationWithOriginalAlignTop1 = true;
+        MergeTranslationWithOriginalAlignTop1 = false;
         MergeTranslationWithOriginalFontName2 = "Arial";
         MergeTranslationWithOriginalFontSize2 = 20;
         MergeTranslationWithOriginalPrimaryColor2 = Avalonia.Media.Colors.White.FromColorToHex();
         MergeTranslationWithOriginalOutlineColor2 = Avalonia.Media.Colors.Black.FromColorToHex();
         MergeTranslationWithOriginalOutlineWidth2 = 2;
         MergeTranslationWithOriginalShadowWidth2 = 1;
-        MergeTranslationWithOriginalAlignTop2 = false;
+        MergeTranslationWithOriginalAlignTop2 = true;
     }
 }

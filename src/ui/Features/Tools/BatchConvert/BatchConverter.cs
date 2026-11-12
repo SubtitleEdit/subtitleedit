@@ -2590,7 +2590,11 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
         else
         {
-            merged = MergeTwoSubtitlesHelper.BuildSubRipMerge(original, translation);
+            // Stacked in the order the two styles would show them: the one set to "top" first
+            var c = _config.MergeTranslationWithOriginal;
+            merged = c.StyleOriginal.Alignment == "8"
+                ? MergeTwoSubtitlesHelper.BuildSubRipMerge(original, translation)
+                : MergeTwoSubtitlesHelper.BuildSubRipMerge(translation, original);
             merged.Header = translation.Header;
             merged.Footer = translation.Footer;
             merged.OriginalFormat = translation.OriginalFormat;
