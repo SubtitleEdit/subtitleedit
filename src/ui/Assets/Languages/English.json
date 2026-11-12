@@ -2431,7 +2431,6 @@
       "mergeTranslationWithOriginalStyleOriginal": "Style 1 (original)",
       "mergeTranslationWithOriginalStyleTranslation": "Style 2 (translation)",
       "mergeTranslationWithOriginalNeedsAutoTranslate": "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.",
-      "nOcrDatabaseNotFound": "The nOCR database \"{0}\" was not found, so image-based subtitles cannot be converted to text.\n\nPlease pick another OCR engine or database in the Batch convert settings.",
       "mergeTranslationWithOriginalTargetFormatTitle": "Advanced Sub Station Alpha required",
       "mergeTranslationWithOriginalTargetFormatMessage": "Positioning and styling the original and the translation requires the target format \"Advanced Sub Station Alpha\".\n\nSwitch from \"{0}\" to \"Advanced Sub Station Alpha\"?"
     },
@@ -4697,7 +4696,6 @@
     "crispEmbedNotDownloaded": "CrispEmbed engine/model not downloaded - download via batch convert settings",
     "crispEmbedReturnedNoText": "CrispEmbed returned no text - check the model",
     "appleVisionReturnedNoText": "Apple Vision returned no text - check the language",
-    "tesseractReturnedNoText": "Tesseract returned no text - check that Tesseract and the language model are installed",
     "crispEmbedSettingsTitle": "CrispEmbed settings",
     "crispEmbedDescription": "Local OCR engine with multiple model backends - download the engine and the models here.",
     "trainNOcrDatabase": "Train nOCR database...",

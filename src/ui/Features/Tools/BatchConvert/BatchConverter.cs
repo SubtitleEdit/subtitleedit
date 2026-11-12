@@ -455,10 +455,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
             else
             {
-                if (!await RunOcrTesseract(imageSubtitle, item, ocrSourceLanguage, cancellationToken))
-                {
-                    return;
-                }
+                await RunOcrTesseract(imageSubtitle, item, ocrSourceLanguage, cancellationToken);
             }
 
             // The OCR runners build paragraphs with "new Paragraph(text, start, end)", which leaves
@@ -929,15 +926,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         return true;
     }
 
-    /// <returns>False when every line came back blank, in which case a terminal status is left on the item.</returns>
-    private static async Task<bool> RunOcrTesseract(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage, CancellationToken cancellationToken)
+    private static async Task RunOcrTesseract(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage, CancellationToken cancellationToken)
     {
         var tesseractOcr = new TesseractOcr();
         var language = string.IsNullOrEmpty(Se.Settings.Tools.BatchConvert.TesseractLanguage) ? "eng" : Se.Settings.Tools.BatchConvert.TesseractLanguage;
         language = BatchOcrLanguage.ForTesseract(sourceLanguage, language, Se.TesseractModelFolder);
         var engineMode = Se.Settings.Tools.BatchConvert.TesseractEngineMode;
         item.Subtitle = new Subtitle();
-        var cancelled = false;
         for (var i = 0; i < imageSubtitles.Count; i++)
         {
             var pct = (i + 1) * 100 / imageSubtitles.Count;
@@ -950,21 +945,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             if (cancellationToken.IsCancellationRequested)
             {
                 item.Status = Se.Language.General.Cancelled;
-                cancelled = true;
                 break;
             }
         }
-
-        // Without Tesseract or its language model every line comes back blank - flag the file
-        // rather than saving (or translating) an empty subtitle.
-        if (!cancelled && item.Subtitle.Paragraphs.Count > 0 &&
-            item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
-        {
-            item.Status = Se.Language.Ocr.TesseractReturnedNoText;
-            return false;
-        }
-
-        return true;
     }
 
     /// <summary>
