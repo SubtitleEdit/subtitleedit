@@ -33,11 +33,12 @@
     </Style>
 
     <!-- SyntaxHighlightingTextBox: a copy of the Fluent TextBox template (Avalonia 12.1.0) with the
-         default TextPresenter replaced by SyntaxHighlightingTextPresenter. Part names are kept so the
+         default TextPresenter replaced by SyntaxHighlightingTextPresenter. Plain subtitle editors
+         share it for RTL line-end navigation and keep the default text layout. Part names are kept so the
          Fluent focus/pointerover/disabled styles still target this template. Compare with
          https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/TextBox.xaml
          when upgrading Avalonia. -->
-    <Style Selector=":is(TextBox):syntaxHighlighting">
+    <Style Selector=":is(TextBox):syntaxHighlighting, :is(TextBox).subtitleTextEditor">
         <Setter Property="Template">
             <ControlTemplate>
                 <DataValidationErrors>
