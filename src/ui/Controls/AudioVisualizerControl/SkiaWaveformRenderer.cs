@@ -839,7 +839,7 @@ internal sealed class SkiaWaveformRenderer
             DrawParagraphFooter(canvas, f, p, left, width);
             if (p.BookmarkLabel != null)
             {
-                DrawBookmarkTag(canvas, f, p.BookmarkLabel, left, width);
+                DrawBookmarkTag(canvas, f, p.BookmarkLabel, p.BookmarkColor, left, width);
             }
 
             canvas.Restore();
@@ -918,7 +918,7 @@ internal sealed class SkiaWaveformRenderer
     private readonly SKPath _bookmarkRibbon = new();
 
     /// <summary>See <see cref="WaveformBookmark"/>.</summary>
-    private void DrawBookmarkTag(SKCanvas canvas, SkiaWaveformFrame f, string label, float regionLeft, float regionWidth)
+    private void DrawBookmarkTag(SKCanvas canvas, SkiaWaveformFrame f, string label, SKColor color, float regionLeft, float regionWidth)
     {
         var text = label.Length > 0 ? _textCache.Get(label, f.FontSize) : null;
         var height = (float)Math.Max(WaveformBookmark.MinHeight, (text?.Height ?? 0) + 4);
@@ -932,10 +932,10 @@ internal sealed class SkiaWaveformRenderer
         var x = regionLeft + 2;
         var top = (float)WaveformBookmark.GetTop(0, f.WorkingTextHeight);
         var tag = SKRect.Create(x, top, width, height);
-        _roundFill.Color = f.BookmarkColor;
+        _roundFill.Color = color;
         canvas.DrawRoundRect(tag, (float)WaveformBookmark.CornerRadius, (float)WaveformBookmark.CornerRadius, _roundFill);
 
-        var dark = WaveformBookmark.UseDarkForeground(f.BookmarkColor.Red, f.BookmarkColor.Green, f.BookmarkColor.Blue);
+        var dark = WaveformBookmark.UseDarkForeground(color.Red, color.Green, color.Blue);
         var foreground = dark ? SKColors.Black : SKColors.White;
         _bookmarkRibbon.Reset();
         var points = WaveformBookmark.GetRibbon(x + WaveformBookmark.Padding, top + 3, height - 6);

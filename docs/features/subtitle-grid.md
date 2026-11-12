@@ -151,3 +151,5 @@ You can bookmark subtitle lines for quick reference:
 - **Go to next/previous bookmark** — Navigate between bookmarks
 
 A bookmarked line also shows a bookmark tag with the first line of its note in the waveform (turn it off in **Options → Settings → Waveform → Show bookmarks**).
+
+A bookmark has one of three colors, picked with the bookmark buttons above the note in **Add/Edit bookmark** - for example one color for your own notes and one for experts' comments. The grid, the text box header and the waveform show the bookmark in its color; set the colors in **Options → Settings → Appearance**.

@@ -462,6 +462,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _useFocusedButtonBackgroundColor;
     [ObservableProperty] private Color _focusedButtonBackgroundColor;
     [ObservableProperty] private Color _bookmarkColor;
+    [ObservableProperty] private Color _bookmarkColor2;
+    [ObservableProperty] private Color _bookmarkColor3;
     [ObservableProperty] private Color _spellCheckHighlightColor;
     [ObservableProperty] private Color _gridAlternatingRowColor;
     [ObservableProperty] private Color _gridAlternatingRowColorDark;
@@ -1057,6 +1059,8 @@ public partial class SettingsViewModel : ObservableObject
         UseFocusedButtonBackgroundColor = appearance.UseFocusedButtonBackgroundColor;
         FocusedButtonBackgroundColor = appearance.FocusedButtonBackgroundColor.FromHexToColor();
         BookmarkColor = appearance.BookmarkColor.FromHexToColor();
+        BookmarkColor2 = appearance.BookmarkColor2.FromHexToColor();
+        BookmarkColor3 = appearance.BookmarkColor3.FromHexToColor();
         SpellCheckHighlightColor = appearance.SpellCheckHighlightColor.FromHexToColor();
         GridAlternatingRowColor = appearance.GridAlternatingRowColor.FromHexToColor();
         GridAlternatingRowColorDark = appearance.GridAlternatingRowColorDark.FromHexToColor();
@@ -1973,6 +1977,8 @@ public partial class SettingsViewModel : ObservableObject
         appearance.UseFocusedButtonBackgroundColor = UseFocusedButtonBackgroundColor;
         appearance.FocusedButtonBackgroundColor = FocusedButtonBackgroundColor.FromColorToHex();
         appearance.BookmarkColor = BookmarkColor.FromColorToHex();
+        appearance.BookmarkColor2 = BookmarkColor2.FromColorToHex();
+        appearance.BookmarkColor3 = BookmarkColor3.FromColorToHex();
         appearance.SpellCheckHighlightColor = SpellCheckHighlightColor.FromColorToHex();
         appearance.GridAlternatingRowColor = GridAlternatingRowColor.FromColorToHex();
         appearance.GridAlternatingRowColorDark = GridAlternatingRowColorDark.FromColorToHex();
