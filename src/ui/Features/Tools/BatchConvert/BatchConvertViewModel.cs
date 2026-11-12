@@ -1532,6 +1532,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        if (!await EnsureOcrEngineAvailable(config))
+        {
+            return;
+        }
+
         if (!await EnsurePaddleOcrAvailable(config))
         {
             return;
@@ -1697,6 +1702,92 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 ProgressText = string.Empty;
             }
         }, _cancellationToken);
+    }
+
+    /// <summary>
+    /// nOCR needs its database file and Tesseract needs the program and a language model - without
+    /// them every line is OCR'd to blank text. Asks to download what can be downloaded.
+    /// </summary>
+    private async Task<bool> EnsureOcrEngineAvailable(BatchConvertConfig config)
+    {
+        if (Window == null || config.IsTargetFormatImageBased || !BatchItems.Any(IsImageBasedInput))
+        {
+            return true;
+        }
+
+        var engine = Se.Settings.Tools.BatchConvert.OcrEngine;
+        if (engine.Equals("nOcr", StringComparison.OrdinalIgnoreCase))
+        {
+            var database = Se.Settings.Ocr.NOcrDatabase;
+            if (File.Exists(Path.Combine(Se.OcrFolder, database + ".nocr")))
+            {
+                return true;
+            }
+
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(Se.Language.Tools.BatchConvert.NOcrDatabaseNotFound, database),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        if (!engine.Equals("Tesseract", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (!TesseractOcr.IsInstalled())
+        {
+            if (!OperatingSystem.IsWindows())
+            {
+                var example = OperatingSystem.IsMacOS() ? "´brew install tesseract´" : "´sudo apt install tesseract-ocr´ / ´sudo pacman -S tesseract´";
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.Ocr.PleaseInstallTesseract,
+                    Environment.NewLine + string.Format(Se.Language.Ocr.TesseractNotDetectedExampleX, example),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return false;
+            }
+
+            var answer = await MessageBox.Show(
+                Window,
+                string.Format(Se.Language.General.DownloadXQuestion, "Tesseract OCR"),
+                Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Tesseract", "Tesseract OCR", "Tesseract OCR"),
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            await _windowService.ShowDialogAsync<DownloadTesseractWindow, DownloadTesseractViewModel>(Window);
+            if (!TesseractOcr.IsInstalled())
+            {
+                return false;
+            }
+        }
+
+        if (!TesseractOcr.HasLanguageModel(Se.TesseractModelFolder))
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                string.Format(Se.Language.General.DownloadXQuestion, "Tesseract OCR language model"),
+                Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Tesseract", "a language model", "a language model"),
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            var result = await _windowService.ShowDialogAsync<DownloadTesseractModelWindow, DownloadTesseractModelViewModel>(Window);
+            return result.OkPressed && TesseractOcr.HasLanguageModel(Se.TesseractModelFolder);
+        }
+
+        return true;
     }
 
     private async Task<bool> EnsurePaddleOcrAvailable(BatchConvertConfig config)

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -57,6 +58,41 @@ public class TesseractOcr
         return "tesseract";
     }
 
+    /// <summary>
+    /// True when the Tesseract executable is where <see cref="GetExecutablePath"/> looks, or on the PATH.
+    /// </summary>
+    public static bool IsInstalled()
+    {
+        var path = GetExecutablePath();
+        if (Path.IsPathRooted(path))
+        {
+            return File.Exists(path);
+        }
+
+        var fileName = OperatingSystem.IsWindows() && !path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? path + ".exe" : path;
+        var folders = (Environment.GetEnvironmentVariable("PATH") ?? string.Empty).Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries);
+        return folders.Any(folder =>
+        {
+            try
+            {
+                return File.Exists(Path.Combine(folder.Trim('"'), fileName));
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        });
+    }
+
+    /// <summary>
+    /// True when at least one language model (not just "osd") is in <paramref name="modelFolder"/>.
+    /// </summary>
+    public static bool HasLanguageModel(string modelFolder)
+    {
+        return Directory.Exists(modelFolder) &&
+               Directory.EnumerateFiles(modelFolder, "*.traineddata")
+                   .Any(p => !Path.GetFileNameWithoutExtension(p).Equals("osd", StringComparison.OrdinalIgnoreCase));
+    }
     /// <summary>
     /// Margin of white added around the text before it is handed to Tesseract. SE4 added the same
     /// 10 px (VobSubOcr.GetSubtitleBitmap → AddMargin(10)); without it glyphs touch the image edge

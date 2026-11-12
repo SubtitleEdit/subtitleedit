@@ -99,6 +99,7 @@ public class LanguageBatchConvert
     public string MergeTranslationWithOriginalStyleOriginal { get; set; }
     public string MergeTranslationWithOriginalStyleTranslation { get; set; }
     public string MergeTranslationWithOriginalNeedsAutoTranslate { get; set; }
+    public string NOcrDatabaseNotFound { get; set; }
 
     public LanguageBatchConvert()
     {
@@ -199,5 +200,6 @@ public class LanguageBatchConvert
         MergeTranslationWithOriginalStyleOriginal = "Style 1 (original)";
         MergeTranslationWithOriginalStyleTranslation = "Style 2 (translation)";
         MergeTranslationWithOriginalNeedsAutoTranslate = "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.";
+        NOcrDatabaseNotFound = "The nOCR database \"{0}\" was not found, so image-based subtitles cannot be converted to text.\n\nPlease pick another OCR engine or database in the Batch convert settings.";
     }
 }

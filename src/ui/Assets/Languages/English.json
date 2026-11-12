@@ -2429,7 +2429,8 @@
       "mergeTranslationWithOriginalInfo": "Merges each translated file with its original text into one bilingual subtitle, like Tools → Merge two subtitles. Works together with \"Auto-translate\". With Advanced Sub Station Alpha as target format the original and the translation get the styles below; other formats get the original text above the translation.",
       "mergeTranslationWithOriginalStyleOriginal": "Style 1 (original)",
       "mergeTranslationWithOriginalStyleTranslation": "Style 2 (translation)",
-      "mergeTranslationWithOriginalNeedsAutoTranslate": "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too."
+      "mergeTranslationWithOriginalNeedsAutoTranslate": "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.",
+      "nOcrDatabaseNotFound": "The nOCR database \"{0}\" was not found, so image-based subtitles cannot be converted to text.\n\nPlease pick another OCR engine or database in the Batch convert settings."
     },
     "changeCasing": {
       "fixNames": "Fix names",
