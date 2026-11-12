@@ -6,6 +6,7 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -19,13 +20,19 @@ namespace Nikse.SubtitleEdit.Features.SpellCheck;
 /// </summary>
 public class SpellCheckWindow : Window
 {
+    private const double DefaultHeight = 464;
+
     public SpellCheckWindow(SpellCheckViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = UiUtil.MakeWindowTitle(Se.Language.SpellCheck.SpellCheck);
-        SizeToContent = SizeToContent.Height;
+        // Resizable: a taller window gives the suggestions more room, a wider one the line (the
+        // default is the size it had when it sized to its content).
         Width = 780;
-        CanResize = false;
+        Height = DefaultHeight;
+        MinWidth = 640;
+        MinHeight = 400;
+        CanResize = true;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
         vm.Window = this;
         DataContext = vm;
@@ -41,10 +48,28 @@ public class SpellCheckWindow : Window
             BorderThickness = new Thickness(1, 0, 0, 0),
         }, 0, 1);
 
-        var body = new StackPanel();
-        body.Children.Add(MakeLineSection(vm));
-        body.Children.Add(columns);
-        body.Children.Add(MakeSourceImageSection(vm));
+        var body = new Grid { RowDefinitions = new RowDefinitions("Auto,*,Auto") };
+        body.Add(MakeLineSection(vm), 0);
+        body.Add(columns, 1);
+        var sourceImageSection = MakeSourceImageSection(vm);
+        body.Add(sourceImageSection, 2);
+
+        // The source image is added under the lists - grow the window by its height, as it did when
+        // it sized to its content, instead of squeezing the suggestions.
+        sourceImageSection.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == Visual.IsVisibleProperty && sourceImageSection.IsVisible)
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    var wanted = DefaultHeight + sourceImageSection.Bounds.Height;
+                    if (Height < wanted)
+                    {
+                        Height = wanted;
+                    }
+                }, DispatcherPriority.Loaded);
+            }
+        };
 
         var root = new Grid
         {
@@ -65,8 +90,7 @@ public class SpellCheckWindow : Window
         UiUtil.FocusOnFirstActivation(this, textBoxWord); // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
 
-        // Remember where the user parked the window, e.g. off to the side of the text (#9762).
-        // The size is not restored: the window is not resizable and sizes to its content.
+        // Remember where the user parked the window, e.g. off to the side of the text (#9762), and its size.
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
@@ -262,7 +286,7 @@ public class SpellCheckWindow : Window
             [!ListBox.SelectedItemProperty] = new Binding(nameof(SpellCheckViewModel.SelectedSuggestion)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Stretch,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Height = 176,
+            MinHeight = 100,
             Background = Brushes.Transparent,
         }.WithAccessibleName(Se.Language.General.Suggestions);
         listBoxSuggestions.Styles.Add(new Style(x => x.OfType<ListBoxItem>())
@@ -291,10 +315,11 @@ public class SpellCheckWindow : Window
             }
         };
 
-        var panel = new StackPanel { Spacing = 8 };
-        panel.Children.Add(MakeFrame(listBoxSuggestions));
-        panel.Children.Add(panelButtons);
-        return EditorChrome.MakeEditorSection(Se.Language.General.Suggestions, panel);
+        // The list takes the height the window gives it
+        var panel = new Grid { RowDefinitions = new RowDefinitions("*,Auto"), RowSpacing = 8 };
+        panel.Add(MakeFrame(listBoxSuggestions), 0);
+        panel.Add(panelButtons, 1);
+        return EditorChrome.MakeEditorSection(Se.Language.General.Suggestions, panel, fill: true);
     }
 
     /// <summary>
