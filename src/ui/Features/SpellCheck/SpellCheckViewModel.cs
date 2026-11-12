@@ -1300,4 +1300,30 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
     {
         SuggestionUseOnce();
     }
+
+    /// <summary>
+    /// Enter in the word box changes the word - otherwise it reached Done, the window's default
+    /// button, and closed spell check right after a correction was typed.
+    /// </summary>
+    internal void WordTextBoxKeyDown(KeyEventArgs e)
+    {
+        if (IsPlainEnter(e))
+        {
+            e.Handled = true;
+            ChangeWord();
+        }
+    }
+
+    /// <summary>Enter in the suggestions uses the selected one once, like a double-click.</summary>
+    internal void SuggestionsKeyDown(KeyEventArgs e)
+    {
+        if (IsPlainEnter(e))
+        {
+            e.Handled = true;
+            SuggestionUseOnce();
+        }
+    }
+
+    private static bool IsPlainEnter(KeyEventArgs e) =>
+        e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None;
 }
