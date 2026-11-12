@@ -200,7 +200,7 @@ public class LanguageBatchConvert
         PresetName = "Preset name";
         DeletePresetX = "Delete preset \"{0}\"?";
         MergeTranslationWithOriginalTitle = "Merge translation with original";
-        MergeTranslationWithOriginalInfo = "Original and translation in one bilingual subtitle, each in its own style (below). Other formats: both texts in the same cue.";
+        MergeTranslationWithOriginalInfo = "Original and translation in one bilingual subtitle, each in its own style (below).";
         MergeTranslationWithOriginalRequirements = "Requires \"{0}\" and {1} \"{2}\".";
         MergeTranslationWithOriginalStyleOriginal = "Style 1 (original)";
         MergeTranslationWithOriginalStyleTranslation = "Style 2 (translation)";
