@@ -21,9 +21,12 @@ public class AssaTagHistoryWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Assa.OverrideTagsHistory;
-        CanResize = false;
+        // Resizable, so long tag strings can be read in full
+        CanResize = true;
         Width = 520;
-        SizeToContent = SizeToContent.Height;
+        Height = 412;
+        MinWidth = 400;
+        MinHeight = 300;
         Background = EditorChrome.WindowBrush;
         EditorChrome.AddEditorStyles(Styles);
 
@@ -34,7 +37,7 @@ public class AssaTagHistoryWindow : Window
         {
             [!ListBox.ItemsSourceProperty] = new Binding(nameof(vm.OverrideTags)) { Mode = BindingMode.OneWay },
             [!ListBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedOverrideTag)) { Mode = BindingMode.TwoWay },
-            Height = 300,
+            MinHeight = 120,
             Background = EditorChrome.FieldBrush,
             BorderBrush = EditorChrome.FieldBorderBrush,
             BorderThickness = new Thickness(1),
@@ -52,7 +55,7 @@ public class AssaTagHistoryWindow : Window
         listBox.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
 
         var delete = EditorChrome.CreateToolButton("fa-solid fa-trash", Se.Language.General.Delete, vm.DeleteItemCommand, 24);
-        var section = EditorChrome.MakeEditorSection(Se.Language.General.History, listBox, delete, first: true);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.History, listBox, delete, first: true, fill: true);
         section.Background = EditorChrome.PanelBrush;
 
         var root = new DockPanel();
@@ -65,6 +68,8 @@ public class AssaTagHistoryWindow : Window
         // initial focus on an input, not an action button - a focused button clicks on bare Space
         UiUtil.FocusOnFirstActivation(this, listBox);
         KeyDown += vm.KeyDown;
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private static Border MakeButtonBar(AssaTagHistoryViewModel vm)

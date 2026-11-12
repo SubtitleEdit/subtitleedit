@@ -475,8 +475,10 @@ internal static partial class EditorChrome
 
     /// <summary>
     /// A properties section like ASSA draw's: small caps header (with optional text on the right), line on top.
+    /// With <paramref name="fill"/> the content takes the height the section is given, e.g. a list in a
+    /// resizable window; otherwise the section is as tall as its content.
     /// </summary>
-    internal static Border MakeEditorSection(string title, Control content, Control? headerRight = null, bool first = false)
+    internal static Border MakeEditorSection(string title, Control content, Control? headerRight = null, bool first = false, bool fill = false)
     {
         var header = new DockPanel();
         if (headerRight != null)
@@ -486,9 +488,19 @@ internal static partial class EditorChrome
         }
 
         header.Children.Add(MakeSectionHeader(title));
-        var panel = new StackPanel { Spacing = 10 };
-        panel.Children.Add(header);
-        panel.Children.Add(content);
+        Panel panel;
+        if (fill)
+        {
+            var grid = new Grid { RowDefinitions = new RowDefinitions("Auto,*"), RowSpacing = 10 };
+            grid.Add(header, 0, 0);
+            grid.Add(content, 1, 0);
+            panel = grid;
+        }
+        else
+        {
+            panel = new StackPanel { Spacing = 10, Children = { header, content } };
+        }
+
         return new Border
         {
             Child = panel,

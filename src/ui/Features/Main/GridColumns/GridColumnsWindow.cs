@@ -20,16 +20,18 @@ public class GridColumnsWindow : Window
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.General.Columns;
-        SizeToContent = SizeToContent.WidthAndHeight;
-        CanResize = false;
+        Width = 350;
+        Height = 538;
+        MinWidth = 300;
+        MinHeight = 360;
+        CanResize = true;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
         vm.Window = this;
         DataContext = vm;
 
         var listBox = new ListBox
         {
-            Width = 320,
-            Height = 420,
+            MinHeight = 160,
         };
         AutomationProperties.SetName(listBox, Se.Language.General.Columns);
         listBox.Bind(ListBox.ItemsSourceProperty, new Binding(nameof(GridColumnsViewModel.Columns)));
@@ -65,7 +67,7 @@ public class GridColumnsWindow : Window
             Children = { buttonMoveUp, buttonMoveDown, EditorChrome.MakeToolbarSeparator(), buttonReset },
         };
 
-        var section = EditorChrome.MakeEditorSection(Se.Language.General.Columns, EditorChrome.MakeCompactListFrame(listBox), panelActions, first: true);
+        var section = EditorChrome.MakeEditorSection(Se.Language.General.Columns, EditorChrome.MakeCompactListFrame(listBox), panelActions, first: true, fill: true);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
@@ -75,5 +77,7 @@ public class GridColumnsWindow : Window
 
         UiUtil.FocusOnFirstActivation(this, listBox); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 }

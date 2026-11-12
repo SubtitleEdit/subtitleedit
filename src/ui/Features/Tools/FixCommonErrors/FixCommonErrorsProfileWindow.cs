@@ -22,7 +22,9 @@ public class FixCommonErrorsProfileWindow : Window
         Title = Se.Language.Tools.FixCommonErrors.FixCommonErrorsProfiles;
         Width = 680;
         Height = 420;
-        CanResize = false;
+        MinWidth = 520;
+        MinHeight = 320;
+        CanResize = true;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
         _vm = vm;
@@ -133,6 +135,8 @@ public class FixCommonErrorsProfileWindow : Window
         Content = EditorChrome.MakeRoot(columns, buttonBar);
 
         UiUtil.FocusOnFirstActivation(this, () => { Focus(); }); // hack to make OnKeyDown work
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
