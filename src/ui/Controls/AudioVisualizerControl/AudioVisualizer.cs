@@ -4239,37 +4239,38 @@ public class AudioVisualizer : Control
         {
             using (context.PushClip(new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, renderCtx.Height)))
             {
-                DrawBookmarkTag(context, paragraph.Bookmark, currentRegionLeft, currentRegionWidth, WaveformBookmark.GetTop(contentTop, contentHeight));
+                DrawBookmarkTag(context, paragraph.Bookmark, paragraph.BookmarkColor, currentRegionLeft, currentRegionWidth, WaveformBookmark.GetTop(contentTop, contentHeight));
             }
         }
 
         DrawParagraphAudioLength(context, paragraph, currentRegionLeft, currentRegionRight, contentTop, contentHeight, ref renderCtx);
     }
 
-    private string? _bookmarkColorHex;
-    private IBrush _bookmarkBrush = Brushes.Orange;
-    private IBrush _bookmarkForeground = Brushes.Black;
-    private bool _bookmarkDarkForeground = true;
+    private readonly string?[] _bookmarkColorHex = new string?[BookmarkColors.Count];
+    private readonly IBrush[] _bookmarkBrush = new IBrush[BookmarkColors.Count];
+    private readonly bool[] _bookmarkDarkForeground = new bool[BookmarkColors.Count];
     private readonly Dictionary<(string Text, bool Dark), FormattedText> _bookmarkTextCache = new(64);
 
     /// <summary>See <see cref="WaveformBookmark"/>.</summary>
-    private void DrawBookmarkTag(DrawingContext context, string bookmark, double regionLeft, double regionWidth, double top)
+    private void DrawBookmarkTag(DrawingContext context, string bookmark, int colorIndex, double regionLeft, double regionWidth, double top)
     {
-        var hex = Se.Settings.Appearance.BookmarkColor;
-        if (hex != _bookmarkColorHex)
+        colorIndex = Math.Clamp(colorIndex, 0, BookmarkColors.Count - 1);
+        var hex = BookmarkColors.GetHex(colorIndex);
+        if (hex != _bookmarkColorHex[colorIndex])
         {
             var color = hex.FromHexToColor();
-            _bookmarkColorHex = hex;
-            _bookmarkBrush = new ImmutableSolidColorBrush(color);
-            _bookmarkDarkForeground = WaveformBookmark.UseDarkForeground(color.R, color.G, color.B);
-            _bookmarkForeground = _bookmarkDarkForeground ? Brushes.Black : Brushes.White;
+            _bookmarkColorHex[colorIndex] = hex;
+            _bookmarkBrush[colorIndex] = new ImmutableSolidColorBrush(color);
+            _bookmarkDarkForeground[colorIndex] = WaveformBookmark.UseDarkForeground(color.R, color.G, color.B);
         }
 
+        var dark = _bookmarkDarkForeground[colorIndex];
+        var foreground = dark ? Brushes.Black : Brushes.White;
         var label = WaveformBookmark.GetLabel(bookmark);
         FormattedText? text = null;
         if (label.Length > 0)
         {
-            var key = (label, _bookmarkDarkForeground);
+            var key = (label, dark);
             if (!_bookmarkTextCache.TryGetValue(key, out text))
             {
                 if (_bookmarkTextCache.Count > 500)
@@ -4277,7 +4278,7 @@ public class AudioVisualizer : Control
                     _bookmarkTextCache.Clear();
                 }
 
-                text = new FormattedText(label, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeface, _fontSize, _bookmarkForeground);
+                text = new FormattedText(label, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeface, _fontSize, foreground);
                 _bookmarkTextCache[key] = text;
             }
         }
@@ -4292,7 +4293,7 @@ public class AudioVisualizer : Control
 
         var x = regionLeft + 2;
         var tag = new Rect(x, top, width, height);
-        context.DrawRectangle(_bookmarkBrush, null, tag, WaveformBookmark.CornerRadius, WaveformBookmark.CornerRadius);
+        context.DrawRectangle(_bookmarkBrush[colorIndex], null, tag, WaveformBookmark.CornerRadius, WaveformBookmark.CornerRadius);
 
         var ribbon = new StreamGeometry();
         using (var g = ribbon.Open())
@@ -4307,7 +4308,7 @@ public class AudioVisualizer : Control
             g.EndFigure(true);
         }
 
-        context.DrawGeometry(_bookmarkForeground, null, ribbon);
+        context.DrawGeometry(foreground, null, ribbon);
 
         if (text == null)
         {

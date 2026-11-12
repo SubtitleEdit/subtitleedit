@@ -1149,6 +1149,8 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.GridAlternatingRowColorDark, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.GridAlternatingRowColorDark))),
             new SettingsItem(Se.Language.Options.Settings.ShowGridLines, () => UiUtil.MakeComboBox(_vm.GridLinesVisibilities, _vm, nameof(_vm.SelectedGridLinesVisibility))),
             new SettingsItem(Se.Language.Options.Settings.BookmarkColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.BookmarkColor))),
+            new SettingsItem(Se.Language.Options.Settings.BookmarkColor2, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.BookmarkColor2))),
+            new SettingsItem(Se.Language.Options.Settings.BookmarkColor3, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.BookmarkColor3))),
             new SettingsItem(Se.Language.Options.Settings.SpellCheckHighlightColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.SpellCheckHighlightColor))),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowAssaLayer, nameof(_vm.ShowAssaLayer)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowActorBox, nameof(_vm.ShowActorBox)),

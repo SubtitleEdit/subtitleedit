@@ -134,7 +134,10 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.ParagraphBackgroundColor = ToSkColor(ParagraphBackground, SKColors.Transparent);
         f.ParagraphSelectedBackgroundColor = ToSkColor(ParagraphSelectedBackground, SKColors.Transparent);
         f.TextColor = GetTextColor(WaveformColors.CurrentTextHex);
-        f.BookmarkColor = ToSkColor(settings.Appearance.BookmarkColor.FromHexToColor(), SKColors.Orange);
+        for (var i = 0; i < f.BookmarkColors.Length; i++)
+        {
+            f.BookmarkColors[i] = ToSkColor(BookmarkColors.Get(i), SKColors.Orange);
+        }
 
         f.FontName = GetFontName(settings.Appearance.FontName);
         f.FontSize = (float)settings.Waveform.WaveformTextFontSize;
@@ -281,6 +284,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
             if (showBookmarks && p.Bookmark != null)
             {
                 item.BookmarkLabel = GetBookmarkLabel(p.Bookmark);
+                item.BookmarkColor = f.BookmarkColors[Math.Clamp(p.BookmarkColor, 0, f.BookmarkColors.Length - 1)];
             }
 
             if (showCps && n > 99 && p.Duration.TotalMilliseconds > 0)
@@ -552,7 +556,7 @@ internal sealed class SkiaWaveformFrame
     public SKColor ParagraphBackgroundColor;
     public SKColor ParagraphSelectedBackgroundColor;
     public SKColor TextColor;
-    public SKColor BookmarkColor;
+    public readonly SKColor[] BookmarkColors = new SKColor[Nikse.SubtitleEdit.Logic.BookmarkColors.Count];
 
     public string FontName = string.Empty;
     public float FontSize;
@@ -646,6 +650,7 @@ internal struct SkiaParagraph
 
     /// <summary>The first line of the bookmark note, empty for a bookmark without text; null when not bookmarked.</summary>
     public string? BookmarkLabel;
+    public SKColor BookmarkColor;
 }
 
 internal readonly record struct SkiaTimeLabel(double Seconds, string Text);

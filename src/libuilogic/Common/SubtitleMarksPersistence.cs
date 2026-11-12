@@ -30,6 +30,9 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
         /// </summary>
         private const double StartTimeToleranceMs = 100.0;
 
+        /// <summary>Bookmarks can use one of three colors, see Paragraph.BookmarkColor.</summary>
+        public const int BookmarkColorCount = 3;
+
         private readonly Subtitle _subtitle;
         private readonly string? _fileName;
 
@@ -96,7 +99,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
                         bookmarks.Append(',');
                     }
 
-                    bookmarks.Append("{" + key + ",\"txt\":\"" + Json.EncodeJsonText(p.Bookmark) + "\"}");
+                    // "clr" only for the second and third color, so files with the default
+                    // color stay exactly as earlier versions wrote them.
+                    var color = p.BookmarkColor > 0 ? ",\"clr\":" + p.BookmarkColor.ToString(CultureInfo.InvariantCulture) : string.Empty;
+                    bookmarks.Append("{" + key + ",\"txt\":\"" + Json.EncodeJsonText(p.Bookmark) + "\"" + color + "}");
                 }
 
                 if (p.Forced)
@@ -146,7 +152,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
             try
             {
                 var text = File.ReadAllText(fileName, Encoding.UTF8);
-                Apply(ReadMarks(text, "bookmarks"), (p, mark) => p.Bookmark = mark.Text);
+                Apply(ReadMarks(text, "bookmarks"), (p, mark) =>
+                {
+                    p.Bookmark = mark.Text;
+                    p.BookmarkColor = mark.Color;
+                });
                 Apply(ReadMarks(text, "forced"), (p, _) => p.Forced = true);
             }
             catch
@@ -309,6 +319,12 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
                     mark.Milliseconds = ms;
                 }
 
+                if (int.TryParse(Json.ReadTag(entry, "clr"), NumberStyles.Integer, CultureInfo.InvariantCulture, out var color) &&
+                    color >= 0 && color < BookmarkColorCount)
+                {
+                    mark.Color = color;
+                }
+
                 if (int.TryParse(Json.ReadTag(entry, "idx"), NumberStyles.Integer, CultureInfo.InvariantCulture, out var idx))
                 {
                     mark.Index = idx;
@@ -395,6 +411,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Common
             public int Index { get; set; } = -1;
 
             public string Text { get; set; } = string.Empty;
+
+            public int Color { get; set; }
         }
     }
 }

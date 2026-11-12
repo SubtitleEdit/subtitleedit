@@ -57,6 +57,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string Bookmark { get; set; }
 
+        /// <summary>Which of the three bookmark colors (0-2) the bookmark uses.</summary>
+        public int BookmarkColor { get; set; }
+
         public bool IsDefault => Math.Abs(StartTime.TotalMilliseconds) < 0.01 && Math.Abs(EndTime.TotalMilliseconds) < 0.01 && string.IsNullOrEmpty(Text);
 
         // Ids only have to be unique within this process - they are compared, never persisted - so
@@ -124,6 +127,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             Style = paragraph.Style;
             NewSection = paragraph.NewSection;
             Bookmark = paragraph.Bookmark;
+            BookmarkColor = paragraph.BookmarkColor;
         }
 
         public Paragraph(string text, double startTotalMilliseconds, double endTotalMilliseconds)

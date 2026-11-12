@@ -44,6 +44,37 @@ public class SubtitleMarksPersistenceTests : IDisposable
     }
 
     [Fact]
+    public void BookmarkColor_RoundTrips_AndDefaultColorIsNotWritten()
+    {
+        var subtitle = MakeSubtitle(1, 2, 3);
+        subtitle.Paragraphs[0].Bookmark = "default color";
+        subtitle.Paragraphs[1].Bookmark = "second";
+        subtitle.Paragraphs[1].BookmarkColor = 1;
+        subtitle.Paragraphs[2].Bookmark = "third";
+        subtitle.Paragraphs[2].BookmarkColor = 2;
+        new SubtitleMarksPersistence(subtitle, _fileName).Save();
+
+        var json = File.ReadAllText(_fileName + ".SE.bookmarks");
+        Assert.Contains("\"txt\":\"default color\"}", json);
+        Assert.Contains("\"clr\":1", json);
+
+        var loaded = MakeSubtitle(1, 2, 3);
+        new SubtitleMarksPersistence(loaded, _fileName).Load();
+        Assert.Equal(new[] { 0, 1, 2 }, loaded.Paragraphs.Select(p => p.BookmarkColor));
+        Assert.Equal("third", loaded.Paragraphs[2].Bookmark);
+    }
+
+    [Fact]
+    public void BookmarkColor_OutOfRange_IsIgnored()
+    {
+        File.WriteAllText(_fileName + ".SE.bookmarks", "{\"bookmarks\":[{\"ms\":1000,\"idx\":0,\"txt\":\"x\",\"clr\":7}],\"forced\":[]}");
+        var loaded = MakeSubtitle(1);
+        new SubtitleMarksPersistence(loaded, _fileName).Load();
+        Assert.Equal("x", loaded.Paragraphs[0].Bookmark);
+        Assert.Equal(0, loaded.Paragraphs[0].BookmarkColor);
+    }
+
+    [Fact]
     public void Save_ClearingMarks_DeletesTheSidecar()
     {
         var subtitle = MakeSubtitle(1, 2, 3);
