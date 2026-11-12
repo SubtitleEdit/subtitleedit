@@ -196,7 +196,7 @@ public class LanguageBatchConvert
         PresetName = "Preset name";
         DeletePresetX = "Delete preset \"{0}\"?";
         MergeTranslationWithOriginalTitle = "Merge translation with original";
-        MergeTranslationWithOriginalInfo = "Merges each translated file with its original text into one bilingual subtitle, like Tools → Merge two subtitles. Works together with \"Auto-translate\". With Advanced Sub Station Alpha as target format the original and the translation get the styles below; other formats get the original text above the translation.";
+        MergeTranslationWithOriginalInfo = "Saves one bilingual subtitle per file: the original text plus its translation. Requires \"Auto-translate\" to be selected too.\nAdvanced Sub Station Alpha: the original and the translation are separate lines, each with its own style (set below), like Tools → Merge two subtitles.\nOther formats: both texts are placed in the same subtitle, the one set to \"Top\" first.";
         MergeTranslationWithOriginalStyleOriginal = "Style 1 (original)";
         MergeTranslationWithOriginalStyleTranslation = "Style 2 (translation)";
         MergeTranslationWithOriginalNeedsAutoTranslate = "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.";
