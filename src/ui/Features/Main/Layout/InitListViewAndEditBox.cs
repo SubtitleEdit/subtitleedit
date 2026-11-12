@@ -1822,6 +1822,11 @@ public static partial class InitListViewAndEditBox
             [!Label.ContentProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Bookmark)) { Converter = textOneLineShortConverter },
             [!Label.IsVisibleProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Bookmark)) { Converter = notNullConverter },
         };
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            // The label is cut to one short line; the tooltip shows the whole (multi-line) note.
+            bookmarkLabel.Bind(ToolTip.TipProperty, new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Bookmark)));
+        }
         bookmarkLabel.PointerPressed += (_, __) =>
         {
             if (vm.AddOrEditBookmarkCommand.CanExecute(null))

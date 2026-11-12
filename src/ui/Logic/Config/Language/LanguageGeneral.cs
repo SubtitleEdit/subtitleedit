@@ -86,6 +86,7 @@ public class LanguageGeneral
     public string BookmarkDeleteSelectedQuestion { get; set; }
     public string BookmarkDotDotDot { get; set; }
     public string BookmarkEdit { get; set; }
+    public string BookmarkNewLineHint { get; set; }
     public string BookmarkEditForSelectedLinesX { get; set; }
     public string BookmarksList { get; set; }
     public string BorderStyle { get; set; }
@@ -1114,6 +1115,7 @@ public class LanguageGeneral
         BookmarkDeleteSelectedQuestion = "Delete selected bookmark?";
         BookmarkDotDotDot = "Bookmark...";
         BookmarkEdit = "Edit bookmark";
+        BookmarkNewLineHint = "Enter = OK, Shift+Enter = new line";
         BookmarkEditForSelectedLinesX = "Edit bookmark for {0} selected lines";
         BookmarksList = "List bookmarks";
         BorderStyle = "Border style";

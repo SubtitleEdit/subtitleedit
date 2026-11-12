@@ -145,7 +145,7 @@ A shortcut can be assigned in **Options → Shortcuts** to cycle the five modes 
 ## Bookmarks
 
 You can bookmark subtitle lines for quick reference:
-- **Add/Edit bookmark** — Adds a bookmark with optional text
+- **Add/Edit bookmark** — Adds a bookmark with optional text. The note can span several lines: **Shift+Enter** starts a new line, **Enter** is OK. Above the text box the note is cut to one short line; hover it to see the whole note
 - **Toggle bookmark** — Quickly toggle bookmark on/off
 - **List bookmarks** — View all bookmarks
 - **Go to next/previous bookmark** — Navigate between bookmarks
