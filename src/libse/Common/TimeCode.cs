@@ -366,7 +366,188 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public string ToHHMMSS() => ToFrameString(':', includeFrames: false);
 
+        /// <summary>
+        /// Only 29.97 and 59.94 have drop-frame numbering (ST 12-1). 23.976 is 1000/1001 too, but
+        /// the standard gives it none, so it counts every frame like 24, 25, 30, 50 and 60. The
+        /// tolerance matches GetFrameForCalculation - a wider one would number frames at one rate
+        /// and label them at another.
+        /// </summary>
+        public static bool IsDropFrameRate(double frameRate) =>
+            Math.Abs(frameRate - 29.97) < 0.001 || Math.Abs(frameRate - 59.94) < 0.001;
+
+        /// <summary>
+        /// Labels skipped at each minute that is not a tenth one - 2 at 29.97, 4 at 59.94, and 0
+        /// at a rate without a drop-frame mode so a caller that forgets the check gets plain labels.
+        /// </summary>
+        public static int DropFrameSkipCount(double frameRate) =>
+            Math.Abs(frameRate - 59.94) < 0.001 ? 4 :
+            Math.Abs(frameRate - 29.97) < 0.001 ? 2 : 0;
+
+        /// <summary>
+        /// The rate the formatters count with: 30000/1001 for 29.97, or the whole-number time code
+        /// clock in SMPTE timing, where the stored times are on that clock too.
+        /// </summary>
+        private static double FrameRateForCalculation(double frameRate) =>
+            SubtitleFormat.GetTimeCodeFrameRate(frameRate);
+
+        /// <summary>
+        /// Frame number on screen at this time, clamped to 0 .. 99:59:59.999. Past that the frame
+        /// count would keep growing while <see cref="TimeSpan"/> renders zero, and a negative time
+        /// has no frame of its own; the caller adds the sign.
+        /// </summary>
+        private static int RoundToFrame(double totalMilliseconds, double frameRate) =>
+            (int)Math.Round(
+                Math.Min(MaxTimeTotalMilliseconds, Math.Max(0, totalMilliseconds)) * FrameRateForCalculation(frameRate) / 1000.0,
+                MidpointRounding.AwayFromZero);
+
+        /// <summary>
+        /// Label number of the frame at this time - a count of labels, not of frames. The first
+        /// minute of every ten keeps all 1800 labels (3600 at 59.94) and the other nine skip 2 (4),
+        /// which keeps the label within 2 frames of the clock (4 at 59.94) instead of drifting
+        /// 3.6 s an hour. A ten-minute block is 17982 frames at 29.97 and 35964 at 59.94 - the
+        /// identity FFmpeg's av_timecode_adjust_ntsc_framenum2 uses.
+        /// </summary>
+        public static int DropFrameLabelNumber(double totalMilliseconds, double frameRate)
+        {
+            var frame = RoundToFrame(totalMilliseconds, frameRate);
+            var drop = DropFrameSkipCount(frameRate);
+            var firstMinute = (int)Math.Round(frameRate) * 60;
+            var otherMinute = firstMinute - drop;
+            var framesPer10Minutes = firstMinute + 9 * otherMinute;
+
+            var block = frame / framesPer10Minutes;
+            var rest = frame % framesPer10Minutes;
+            var minutes = block * 10 + (rest < firstMinute ? 0 : 1 + (rest - firstMinute) / otherMinute);
+
+            return frame + drop * (minutes - minutes / 10);
+        }
+
+        /// <summary>
+        /// The same label as <see cref="ToHHMMSSFF()"/> with a ';' before the frame field. It only
+        /// changes the separator - the numbers stay plain, so at 29.97 this reports the wall clock
+        /// rounded onto a 30 fps grid rather than the frame that is on screen. Use
+        /// <see cref="ToDropFrameString()"/> when the label is meant to be read as drop frame.
+        /// </summary>
         public string ToHHMMSSFFDropFrame() => ToFrameString(';');
+
+        /// <summary>
+        /// Time code of this time in drop-frame numbering, e.g. "00:01:00;02" - the label of the
+        /// frame on screen, which drop frame keeps in step with the clock by skipping numbers.
+        /// Falls back to a plain ":" time code at a rate without a drop-frame mode.
+        /// </summary>
+        public string ToDropFrameString()
+        {
+            var frameRate = Configuration.Settings.General.CurrentFrameRate;
+            if (!IsDropFrameRate(frameRate))
+            {
+                return ToFrameString(':');
+            }
+
+            // A negative time has no label either - format the absolute one, as the rest do.
+            var negative = TotalMilliseconds < 0;
+            var framesPerSecond = (int)Math.Round(frameRate);
+            var label = DropFrameLabelNumber(Math.Abs(TotalMilliseconds), frameRate);
+            var totalSeconds = label / framesPerSecond;
+            var s = $"{totalSeconds / 3600:00}:{totalSeconds / 60 % 60:00}:{totalSeconds % 60:00};{label % framesPerSecond:00}";
+            return negative ? "-" + s : s;
+        }
+
+        /// <summary>
+        /// The label one frame on, for the out point of a one-frame event. Counted from the label
+        /// rather than by adding a frame duration: a plain label is built from whole milliseconds,
+        /// so at 23.976 the 41.708 ms step truncates to 41 or 42 and can round back onto the label
+        /// it started from. At a rate without a drop-frame mode the result can be one away from
+        /// the next frame's label, but it is never the label it started from.
+        /// </summary>
+        public string ToNextFrameString()
+        {
+            var frameRate = Configuration.Settings.General.CurrentFrameRate;
+            var dropFrame = IsDropFrameRate(frameRate);
+            var drop = DropFrameSkipCount(frameRate);
+            var framesPerSecond = Math.Max(1, (int)Math.Round(frameRate));
+
+            var label = ToDropFrameString();
+            var negative = label.StartsWith("-", StringComparison.Ordinal);
+            if (negative)
+            {
+                label = label.Substring(1);
+            }
+
+            var parts = label.Split(':', ';');
+            var frames = int.Parse(parts[3], CultureInfo.InvariantCulture);
+            var seconds = int.Parse(parts[2], CultureInfo.InvariantCulture);
+            var minutes = int.Parse(parts[1], CultureInfo.InvariantCulture);
+            var hours = int.Parse(parts[0], CultureInfo.InvariantCulture);
+
+            // A negative time smaller than half a frame has no label before it - one frame on is
+            // zero itself, and counting back from it would underflow into a second sign.
+            if (negative && hours == 0 && minutes == 0 && seconds == 0 && frames == 0)
+            {
+                return label;
+            }
+
+            // A negative time runs toward zero, so its label comes back one rather than going on
+            // one - and coming back can land on a label drop frame skips, which borrows a second.
+            var step = negative ? -1 : 1;
+            frames += step;
+            if (frames >= framesPerSecond || frames < 0 ||
+                (frames < drop && seconds == 0 && minutes % 10 != 0))
+            {
+                frames = step > 0 ? 0 : framesPerSecond - 1;
+                seconds += step;
+                if (seconds >= 60 || seconds < 0)
+                {
+                    seconds = step > 0 ? 0 : 59;
+                    minutes += step;
+                    if (minutes >= 60 || minutes < 0)
+                    {
+                        minutes = step > 0 ? 0 : 59;
+                        hours += step;
+                    }
+
+                    // The first 'drop' labels of a minute that is not a tenth one do not exist.
+                    if (step > 0 && dropFrame && minutes % 10 != 0)
+                    {
+                        frames = drop;
+                    }
+                }
+            }
+
+            var separator = dropFrame ? ';' : ':';
+            var next = $"{hours:00}:{minutes:00}:{seconds:00}{separator}{frames:00}";
+
+            // Zero has one spelling: the "-" belongs to the label this started from.
+            var steppedToZero = hours == 0 && minutes == 0 && seconds == 0 && frames == 0;
+            return negative && !steppedToZero ? "-" + next : next;
+        }
+
+        /// <summary>
+        /// Inverse of <see cref="ToDropFrameString()"/>. The project rate decides whether the label
+        /// counts drop frame; at a rate without that mode it is read as a plain label, so labels
+        /// that skip numbers cannot be placed by a conversion done at such a rate.
+        /// </summary>
+        public static TimeCode FromDropFrameLabel(int hours, int minutes, int seconds, int frames)
+        {
+            var frameRate = Configuration.Settings.General.CurrentFrameRate;
+            var framesPerSecond = Math.Max(1, (int)Math.Round(frameRate));
+            var label = ((long)hours * 3600 + minutes * 60 + seconds) * framesPerSecond + frames;
+            if (!IsDropFrameRate(frameRate))
+            {
+                return new TimeCode(hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames));
+            }
+
+            var drop = DropFrameSkipCount(frameRate);
+            var firstMinute = framesPerSecond * 60;
+            var otherMinute = firstMinute - drop;
+            var framesPer10Minutes = firstMinute + 9 * otherMinute;
+            var labelsPer10Minutes = framesPerSecond * 600;
+            var block = label / labelsPer10Minutes;
+            var rest = label % labelsPer10Minutes;
+            // The frame number is long, not int: an "hh" field is only bounded by the caller's
+            // parser, and a 999999-hour one overflows an int many times over.
+            var frame = block * framesPer10Minutes + rest - drop * (rest / firstMinute);
+            return new TimeCode(frame * 1000.0 / FrameRateForCalculation(frameRate));
+        }
 
         public string ToSSFF() => ToFrameString(':', includeHoursAndMinutes: false);
 
