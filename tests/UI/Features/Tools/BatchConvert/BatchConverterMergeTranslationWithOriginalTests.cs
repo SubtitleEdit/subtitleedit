@@ -218,6 +218,40 @@ Style: Default,Trebuchet MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0
     }
 
     [Fact]
+    public async Task MergeContinuationLines_RunsBeforeTranslation_OriginalIsWhatWasTranslated()
+    {
+        const string input = @"1
+00:00:01,000 --> 00:00:02,000
+I will go to
+
+2
+00:00:02,100 --> 00:00:03,000
+the store today.
+
+3
+00:00:05,000 --> 00:00:06,000
+Bye.
+";
+
+        var files = await Convert(
+            new BatchConverter(null!, null!, null!),
+            outputFolder =>
+            {
+                var config = MakeConfig(AdvancedSubStationAlpha.NameOfFormat, outputFolder, "de");
+                config.MergeContinuationLines.IsActive = true;
+                return config;
+            },
+            input: input);
+
+        var subtitle = files["movie.de.ass"];
+        var original = TextsInStyle(subtitle, MergeTwoSubtitlesHelper.StyleName1);
+        var translation = TextsInStyle(subtitle, MergeTwoSubtitlesHelper.StyleName2);
+        Assert.Equal(2, original.Count);
+        Assert.Equal(original.Select(p => "[de] " + p), translation);
+        Assert.Contains(original, p => p.Replace(Environment.NewLine, " ") == "I will go to the store today.");
+    }
+
+    [Fact]
     public async Task WithoutAutoTranslate_NothingIsMerged()
     {
         var files = await Convert(new BatchConverter(null!, null!, null!), outputFolder =>
