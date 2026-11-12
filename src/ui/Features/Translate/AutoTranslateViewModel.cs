@@ -176,6 +176,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new OpenRouterTranslate(),
             new ApiRouteTranslate(),
             new OpperTranslate(),
+            new RuncrateTranslate(),
             new LaraTranslate(),
             new PerplexityTranslate(),
             new GeminiTranslate(),
@@ -256,6 +257,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.OpperUrl = Se.Settings.AutoTranslate.OpperUrl;
         Configuration.Settings.Tools.OpperModel = Se.Settings.AutoTranslate.OpperModel;
         Configuration.Settings.Tools.OpperPrompt = Se.Settings.AutoTranslate.OpperPrompt;
+
+        Configuration.Settings.Tools.RuncrateApiKey = Se.Settings.AutoTranslate.RuncrateApiKey;
+        Configuration.Settings.Tools.RuncrateUrl = Se.Settings.AutoTranslate.RuncrateUrl;
+        Configuration.Settings.Tools.RuncrateModel = Se.Settings.AutoTranslate.RuncrateModel;
+        Configuration.Settings.Tools.RuncratePrompt = Se.Settings.AutoTranslate.RuncratePrompt;
 
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
         Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
@@ -523,6 +529,14 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.OpperUrl = apiUrl.Trim();
         }
 
+        if (engineType == typeof(RuncrateTranslate))
+        {
+            Configuration.Settings.Tools.RuncrateApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.RuncrateModel = apiModel.Trim();
+            Configuration.Settings.Tools.RuncrateUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.RuncrateUrl = apiUrl.Trim();
+        }
+
         if (engineType == typeof(GeminiTranslate))
         {
             Configuration.Settings.Tools.GeminiProApiKey = apiKey.Trim();
@@ -588,6 +602,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.OpperUrl = Configuration.Settings.Tools.OpperUrl;
         Se.Settings.AutoTranslate.OpperModel = Configuration.Settings.Tools.OpperModel;
         Se.Settings.AutoTranslate.OpperPrompt = Configuration.Settings.Tools.OpperPrompt;
+
+        Se.Settings.AutoTranslate.RuncrateApiKey = Configuration.Settings.Tools.RuncrateApiKey;
+        Se.Settings.AutoTranslate.RuncrateUrl = Configuration.Settings.Tools.RuncrateUrl;
+        Se.Settings.AutoTranslate.RuncrateModel = Configuration.Settings.Tools.RuncrateModel;
+        Se.Settings.AutoTranslate.RuncratePrompt = Configuration.Settings.Tools.RuncratePrompt;
 
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
         Se.Settings.AutoTranslate.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
@@ -1945,6 +1964,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             OpenRouterTranslate => settings.OpenRouterUrl,
             ApiRouteTranslate => settings.ApiRouteUrl,
             OpperTranslate => settings.OpperUrl,
+            RuncrateTranslate => settings.RuncrateUrl,
             LaraTranslate => settings.LaraUrl,
             PerplexityTranslate => settings.PerplexityUrl,
             NvidiaTranslate => settings.NvidiaUrl,
@@ -2595,6 +2615,23 @@ public partial class AutoTranslateViewModel : ObservableObject
             _apiModels = OpperTranslate.Models.ToList();
             ModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.OpperModel) ? _apiModels[0] : Configuration.Settings.Tools.OpperModel;
+
+            return;
+        }
+
+        if (engineType == typeof(RuncrateTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.RuncrateUrl,
+            });
+
+            ApiKeyText = Configuration.Settings.Tools.RuncrateApiKey;
+            ApiKeyIsVisible = true;
+
+            _apiModels = RuncrateTranslate.Models.ToList();
+            ModelIsVisible = true;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.RuncrateModel) ? _apiModels[0] : Configuration.Settings.Tools.RuncrateModel;
 
             return;
         }
