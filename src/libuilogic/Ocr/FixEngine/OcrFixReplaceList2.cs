@@ -699,7 +699,12 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return _beginLineEntries;
         }
 
-        public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index, ISpellChecker spellCheckManager, List<string> wordsToIgnore, bool spelledOK)
+        /// <summary>
+        /// Applies the line fixes. <paramref name="isKnownWord"/> lets the caller widen "known" beyond
+        /// the Hunspell dictionary (names list, user dictionary); the spell-check-gated regexes used
+        /// to consult the dictionary only, so words the user had added were still "corrected" (#16378).
+        /// </summary>
+        public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index, ISpellChecker spellCheckManager, List<string> wordsToIgnore, bool spelledOK, Func<string, bool>? isKnownWord = null)
         {
             // Whole fromLine - the dictionary's default comparer is the same ordinal equality
             // the old linear key scan used.
@@ -835,13 +840,18 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
             if (!spelledOK)
             {
+                Func<string, bool> dictionaryWord = word => spellCheckManager.IsWordCorrect(word);
+                var knownWord = isKnownWord ?? dictionaryWord;
                 foreach (var spellCheckRegex in _regExSpellCheckList)
                 {
-                    var x = spellCheckRegex.Apply(newText, wordsToIgnore,
-                        (word) =>
-                        {
-                            return spellCheckManager.IsWordCorrect(word.TrimStart('[').TrimEnd(']'));
-                        });
+                    // Only the "leave the word alone" test is widened by the caller. What the rule
+                    // wants to write must still be a dictionary word, or a name or user word would
+                    // also be enough to let a rewrite through.
+                    var x = spellCheckRegex.Apply(
+                        newText,
+                        wordsToIgnore,
+                        word => knownWord(word.TrimStart('[').TrimEnd(']')),
+                        word => dictionaryWord(word.TrimStart('[').TrimEnd(']')));
                     if (x != newText)
                     {
                         newText = x;
