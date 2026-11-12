@@ -33,6 +33,7 @@ public static class ViewMergeTranslationWithOriginal
             EditorChrome.MakeHint(Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalInfo),
         };
 
+        rows.Add(MakeDivider());
         rows.AddRange(MakeStyleRows(vm, Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalStyleOriginal,
             nameof(vm.MergeTranslationWithOriginalFontName1), nameof(vm.MergeTranslationWithOriginalFontSize1),
             nameof(vm.MergeTranslationWithOriginalBold1), nameof(vm.MergeTranslationWithOriginalItalic1),
@@ -40,6 +41,7 @@ public static class ViewMergeTranslationWithOriginal
             nameof(vm.MergeTranslationWithOriginalOutlineWidth1), nameof(vm.MergeTranslationWithOriginalShadowWidth1),
             nameof(vm.MergeTranslationWithOriginalAlignTop1), "mergeTranslationWithOriginalAlign1"));
 
+        rows.Add(MakeDivider());
         rows.AddRange(MakeStyleRows(vm, Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalStyleTranslation,
             nameof(vm.MergeTranslationWithOriginalFontName2), nameof(vm.MergeTranslationWithOriginalFontSize2),
             nameof(vm.MergeTranslationWithOriginalBold2), nameof(vm.MergeTranslationWithOriginalItalic2),
@@ -49,6 +51,13 @@ public static class ViewMergeTranslationWithOriginal
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalTitle, rows.ToArray());
     }
+
+    private static Border MakeDivider() => new()
+    {
+        Height = 1,
+        Background = EditorChrome.LineBrush,
+        Margin = new Thickness(0, 8, 0, 2),
+    };
 
     private static Control[] MakeStyleRows(BatchConvertViewModel vm,
         string title,
