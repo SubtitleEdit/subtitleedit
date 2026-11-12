@@ -106,13 +106,34 @@ public class BookmarksListWindow : Window
         dataGrid.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
+        var bookmarkColorConverter = new BookmarkColorToBrushConverter();
 
         // Columns
         dataGrid.Columns.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.NumberSymbol,
-            Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-            Width = new GridLength(50), // was Auto; TableView treats Auto as star
+            // The bookmark icon in the bookmark's own color, then the number.
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 4,
+                VerticalAlignment = VerticalAlignment.Top,
+                Children =
+                {
+                    new Optris.Icons.Avalonia.Icon
+                    {
+                        Value = IconNames.Bookmark,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        [!Optris.Icons.Avalonia.Icon.ForegroundProperty] = new Binding(nameof(SubtitleLineViewModel.BookmarkColor)) { Converter = bookmarkColorConverter },
+                    },
+                    new TextBlock
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Number)),
+                    },
+                },
+            }),
+            Width = new GridLength(70), // was Auto; TableView treats Auto as star
             CellTheme = UiUtil.TableViewCellTheme,
             HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
         });

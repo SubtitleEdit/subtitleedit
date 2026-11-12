@@ -16,8 +16,8 @@ public class BookmarksListFilterTests
     {
         new() { Number = 1, Text = "Hello there", StartTime = TimeSpan.FromSeconds(1), EndTime = TimeSpan.FromSeconds(2), Bookmark = "Ask the EXPERT\nsecond line" },
         new() { Number = 2, Text = "Not bookmarked", StartTime = TimeSpan.FromSeconds(3), EndTime = TimeSpan.FromSeconds(4) },
-        new() { Number = 3, Text = "The expert says no", StartTime = TimeSpan.FromSeconds(5), EndTime = TimeSpan.FromSeconds(6), Bookmark = "" },
-        new() { Number = 4, Text = "Goodbye", StartTime = TimeSpan.FromSeconds(7), EndTime = TimeSpan.FromSeconds(8), Bookmark = "My own note" },
+        new() { Number = 3, Text = "The expert says no", StartTime = TimeSpan.FromSeconds(5), EndTime = TimeSpan.FromSeconds(6), Bookmark = "", BookmarkColor = 1 },
+        new() { Number = 4, Text = "Goodbye", StartTime = TimeSpan.FromSeconds(7), EndTime = TimeSpan.FromSeconds(8), Bookmark = "My own note", BookmarkColor = 2 },
     };
 
     [Fact]
