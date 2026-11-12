@@ -200,8 +200,8 @@ public class LanguageBatchConvert
         PresetName = "Preset name";
         DeletePresetX = "Delete preset \"{0}\"?";
         MergeTranslationWithOriginalTitle = "Merge translation with original";
-        MergeTranslationWithOriginalInfo = "One bilingual subtitle per file: the original text plus its translation, like Tools → Merge two subtitles. Each text gets its own style (set below). Other target formats put both texts in the same subtitle.";
-        MergeTranslationWithOriginalRequirements = "Required: select \"{0}\" and set \"{1}\" to \"{2}\".";
+        MergeTranslationWithOriginalInfo = "Original and translation in one bilingual subtitle, each in its own style (below). Other formats: both texts in the same cue.";
+        MergeTranslationWithOriginalRequirements = "Requires \"{0}\" and {1} \"{2}\".";
         MergeTranslationWithOriginalStyleOriginal = "Style 1 (original)";
         MergeTranslationWithOriginalStyleTranslation = "Style 2 (translation)";
         MergeTranslationWithOriginalNeedsAutoTranslate = "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.";
