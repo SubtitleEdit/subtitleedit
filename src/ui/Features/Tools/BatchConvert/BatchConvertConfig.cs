@@ -521,9 +521,9 @@ public class BatchConvertConfig
         public MergeTranslationWithOriginalSettings()
         {
             StyleOriginal = MergeTwoSubtitlesHelper.BuildSsaStyle(MergeTwoSubtitlesHelper.StyleName1, "Arial", 20, false, false,
-                Colors.White, Colors.Black, 2, 1, alignTop: false);
-            StyleTranslation = MergeTwoSubtitlesHelper.BuildSsaStyle(MergeTwoSubtitlesHelper.StyleName2, "Arial", 20, false, false,
                 Colors.White, Colors.Black, 2, 1, alignTop: true);
+            StyleTranslation = MergeTwoSubtitlesHelper.BuildSsaStyle(MergeTwoSubtitlesHelper.StyleName2, "Arial", 20, false, false,
+                Colors.White, Colors.Black, 2, 1, alignTop: false);
         }
     }
 

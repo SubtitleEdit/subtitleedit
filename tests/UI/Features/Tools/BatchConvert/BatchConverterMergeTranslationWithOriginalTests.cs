@@ -127,16 +127,16 @@ Style: Default,Trebuchet MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0
         var original = styles.Single(p => p.Name == MergeTwoSubtitlesHelper.StyleName1);
         var translation = styles.Single(p => p.Name == MergeTwoSubtitlesHelper.StyleName2);
         Assert.Equal("Verdana", original.FontName);
-        Assert.Equal("2", original.Alignment);
+        Assert.Equal("8", original.Alignment);
         Assert.Equal(30, translation.FontSize);
-        Assert.Equal("8", translation.Alignment);
+        Assert.Equal("2", translation.Alignment);
 
         Assert.Equal(new[] { "Hello world.", "How are you?" }, TextsInStyle(subtitle, MergeTwoSubtitlesHelper.StyleName1));
         Assert.Equal(new[] { "[de] Hello world.", "[de] How are you?" }, TextsInStyle(subtitle, MergeTwoSubtitlesHelper.StyleName2));
     }
 
     [Fact]
-    public async Task SubRip_TranslationAboveOriginalInSameLine()
+    public async Task SubRip_TranslationBelowOriginalInSameLine()
     {
         var converter = new BatchConverter(null!, null!, null!);
 
@@ -145,8 +145,8 @@ Style: Default,Trebuchet MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0
         var (fileName, subtitle) = Assert.Single(files);
         Assert.Equal("movie.de.srt", fileName);
         Assert.Equal(2, subtitle.Paragraphs.Count);
-        Assert.Equal(new[] { "[de] Hello world.", "Hello world." }, subtitle.Paragraphs[0].Text.SplitToLines());
-        Assert.Equal(new[] { "[de] How are you?", "How are you?" }, subtitle.Paragraphs[1].Text.SplitToLines());
+        Assert.Equal(new[] { "Hello world.", "[de] Hello world." }, subtitle.Paragraphs[0].Text.SplitToLines());
+        Assert.Equal(new[] { "How are you?", "[de] How are you?" }, subtitle.Paragraphs[1].Text.SplitToLines());
         Assert.Equal(1000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
 
         // The original text is processed with the source language's rules - the language must
@@ -155,28 +155,13 @@ Style: Default,Trebuchet MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0
     }
 
     [Fact]
-    public async Task SubRip_OriginalSetToTop_IsTheFirstLine()
-    {
-        var files = await Convert(new BatchConverter(null!, null!, null!), outputFolder =>
-        {
-            var config = MakeConfig(SubRip.NameOfFormat, outputFolder, "de");
-            config.MergeTranslationWithOriginal.StyleOriginal.Alignment = "8";
-            config.MergeTranslationWithOriginal.StyleTranslation.Alignment = "2";
-            return config;
-        });
-
-        var (_, subtitle) = Assert.Single(files);
-        Assert.Equal(new[] { "Hello world.", "[de] Hello world." }, subtitle.Paragraphs[0].Text.SplitToLines());
-    }
-
-    [Fact]
     public async Task SeveralTargetLanguages_EachFileHasOriginalAndItsTranslation()
     {
         var files = await Convert(new BatchConverter(null!, null!, null!), outputFolder => MakeConfig(SubRip.NameOfFormat, outputFolder, "de", "fr"));
 
         Assert.Equal(2, files.Count);
-        Assert.Equal(new[] { "[de] Hello world.", "Hello world." }, files["movie.de.srt"].Paragraphs[0].Text.SplitToLines());
-        Assert.Equal(new[] { "[fr] Hello world.", "Hello world." }, files["movie.fr.srt"].Paragraphs[0].Text.SplitToLines());
+        Assert.Equal(new[] { "Hello world.", "[de] Hello world." }, files["movie.de.srt"].Paragraphs[0].Text.SplitToLines());
+        Assert.Equal(new[] { "Hello world.", "[fr] Hello world." }, files["movie.fr.srt"].Paragraphs[0].Text.SplitToLines());
     }
 
     [Fact]
