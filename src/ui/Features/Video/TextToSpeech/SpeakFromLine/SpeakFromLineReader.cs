@@ -162,6 +162,7 @@ public sealed class SpeakFromLineReader
         // also ends the wait instead of hanging the reading forever.
         var stopwatch = Stopwatch.StartNew();
         var stallDetector = new PlaybackStallDetector(StallTimeoutMilliseconds);
+        var earlyPauseRetries = 0;
         while (true)
         {
             await Task.Delay(50, cancellationToken);
@@ -177,8 +178,32 @@ public sealed class SpeakFromLineReader
                 player.Speed = speed;
             }
 
+            // The end of the clip, whether or not mpv's end-of-file pause has been seen yet. The
+            // player's cached pause state can still hold the pause the previous clip ended with
+            // (the event arrives after this clip's un-pause), and the paused branch of Position
+            // then serves the cached position too - so neither moves while mpv plays on. Waiting
+            // for them cut clips off (the next one was loaded at once) or, once un-paused, sat
+            // out the stall timeout after every line. The clip's own length, timed here, does not
+            // depend on that cache.
+            if (stopwatch.ElapsedMilliseconds > 300 && IsClipOver(stopwatch.Elapsed.TotalSeconds, speed, player.Duration, player.Position))
+            {
+                return true;
+            }
+
             if (stopwatch.ElapsedMilliseconds > 300 && player.IsPaused)
             {
+                // A pause well before the clip's end is not the end - most likely the stale
+                // cached pause described above. Un-pause (harmless if mpv is playing) and keep
+                // waiting; the timed end above finishes the clip either way.
+                var duration = player.Duration;
+                var position = player.Position;
+                if (earlyPauseRetries < MaxEarlyPauseRetries && duration > 0 && position < duration - EndToleranceSeconds)
+                {
+                    earlyPauseRetries++;
+                    player.Play();
+                    continue;
+                }
+
                 return true;
             }
 
@@ -192,6 +217,32 @@ public sealed class SpeakFromLineReader
     }
 
     internal const int StallTimeoutMilliseconds = 5000;
+
+    /// <summary>How far before its end a paused clip still counts as finished (mpv stops a little short).</summary>
+    internal const double EndToleranceSeconds = 0.15;
+
+    /// <summary>A clip counts as finished this long after its length has played, whatever mpv reports.</summary>
+    internal const double EndSafetySeconds = 0.4;
+
+    /// <summary>
+    /// Whether a clip of <paramref name="duration"/> seconds is over: its position reached the end,
+    /// or its length (at <paramref name="speed"/>) plus <see cref="EndSafetySeconds"/> has passed
+    /// since it started, whatever the player's cached state says. False while the duration is not
+    /// known yet.
+    /// </summary>
+    internal static bool IsClipOver(double elapsedSeconds, double speed, double duration, double position)
+    {
+        if (duration <= 0 || double.IsNaN(duration) || double.IsInfinity(duration))
+        {
+            return false;
+        }
+
+        return position >= duration - EndToleranceSeconds ||
+               elapsedSeconds * Math.Max(0.1, speed) > duration + EndSafetySeconds;
+    }
+
+    /// <summary>How often a clip that pauses early is un-paused before it counts as finished anyway.</summary>
+    internal const int MaxEarlyPauseRetries = 5;
 
     /// <summary>
     /// Reports when the playback position has not moved for a while - mpv goes idle without

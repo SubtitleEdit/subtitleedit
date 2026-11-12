@@ -4,6 +4,7 @@ public class LanguageAssa
 {
     // ASSA Draw
     public string AssaDraw { get; set; }
+    public string LayoutRemoveTag { get; set; }
     public string DrawSelectTool { get; set; }
     public string DrawUseShapeForErase { get; set; }
     public string DrawLineTool { get; set; }
@@ -1106,5 +1107,8 @@ public class LanguageAssa
         MouseOverColor = "Mouse-over color";
         ClickedColor = "Clicked color";
         DeleteAttachmentQuestion = "Delete attachment?";
+
+        // Layout 14 (ASSA)
+        LayoutRemoveTag = "Remove tag";
     }
 }

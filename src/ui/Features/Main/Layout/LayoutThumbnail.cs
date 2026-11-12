@@ -1,4 +1,4 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
@@ -37,7 +37,7 @@ internal static class LayoutThumbnail
         "V 0 0 1 .27|W 0 .27 1 .25|L 0 .52 1 .33|T 0 .85 1 .15",
         "L 0 0 .5 .74|V .5 0 .5 .54|T .5 .54 .5 .2|W 0 .74 1 .26",
         "V 0 0 .5 .54|T 0 .54 .5 .2|L .5 0 .5 .74|W 0 .74 1 .26",
-        "L 0 0 .5 .4|T 0 .4 .5 .15|V .5 0 .5 .55|C 0 .55 1 .14|S 0 .69 1 .07|W 0 .76 1 .24",
+        "Q 0 0 .2 .62|L .2 0 .4 .45|T .2 .45 .4 .17|V .6 0 .4 .62|S 0 .62 1 .1|W 0 .72 1 .28",
         "L 0 0 1 .77|T 0 .77 1 .23",
     ];
 
@@ -94,6 +94,9 @@ internal static class LayoutThumbnail
                 break;
             case "S":
                 AddSegments(canvas, x, y, width, height);
+                break;
+            case "Q":
+                AddIssues(canvas, x, y, width, height);
                 break;
         }
     }
@@ -155,6 +158,22 @@ internal static class LayoutThumbnail
             var amplitude = 0.18 + 0.72 * Math.Abs(Math.Sin(i * 0.37) * Math.Cos(i * 0.11 + 1));
             var barHeight = Math.Max(1.5, (height - 8) * amplitude);
             Place(canvas, Bar(1.6, barHeight, EditorChrome.AccentBrush, 0.75), x + 4 + i * step, y + (height - barHeight) / 2);
+        }
+    }
+
+    /// <summary>
+    /// The QC panel of layout 14: issue rows with a colored dot and a fix button.
+    /// </summary>
+    private static void AddIssues(Canvas canvas, double x, double y, double width, double height)
+    {
+        IBrush[] dots = [EditorChrome.ErrorTextBrush, EditorChrome.WarningTextBrush, EditorChrome.ErrorTextBrush, EditorChrome.AccentBrush];
+        var rows = Math.Min(dots.Length, Math.Max(1, (int)((height - 6) / 9)));
+        for (var row = 0; row < rows; row++)
+        {
+            var rowY = y + 5 + row * 9;
+            Place(canvas, new Border { Width = 4, Height = 4, CornerRadius = new CornerRadius(2), Background = dots[row] }, x + 4, rowY);
+            Place(canvas, Bar(Math.Max(2, width - 20) * 0.7, 2, EditorChrome.FaintTextBrush), x + 10, rowY + 1);
+            Place(canvas, Bar(5, 4, EditorChrome.AccentSoftBrush), x + width - 9, rowY);
         }
     }
 

@@ -42,6 +42,10 @@ public class LanguageMain
     public string CopyTextFromOriginalToCurrent { get; set; }
     public string InsertedXTextsFromSubtitleY { get; set; }
     public string ItalicHint { get; set; }
+    public string QcBookmarks { get; set; }
+    public string QcIssues { get; set; }
+    public string QcNoBookmarks { get; set; }
+    public string QcRemoveBookmark { get; set; }
     public string RecordSpeechHint { get; set; }
     public string RecordingSpeechClickToStop { get; set; }
     public string RecordingFailedX { get; set; }
@@ -213,6 +217,10 @@ public class LanguageMain
         CopyTextFromOriginalToCurrent = "Copy text from original to current subtitle";
         InsertedXTextsFromSubtitleY = "Inserted {0} texts from subtitle file \"{1}\"";
         ItalicHint = "Italic selected lines/text";
+        QcBookmarks = "Bookmarks";
+        QcIssues = "Issues";
+        QcNoBookmarks = "No bookmarks yet - add one with the + button.";
+        QcRemoveBookmark = "Remove bookmark from selected lines";
         RecordSpeechHint = "Record speech from microphone into text box (click again to stop)";
         RecordingSpeechClickToStop = "Recording... click the microphone button again to stop";
         RecordingFailedX = "Recording failed: {0}";

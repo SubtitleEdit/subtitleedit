@@ -1,9 +1,12 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
@@ -1099,10 +1102,11 @@ public static partial class InitLayout
     }
 
     /// <summary>
-    /// Layout 14, the editor-style layout: the arrangement of a video editor. Subtitle grid
-    /// (with the edit box under it) and video player side by side across the top, and a timeline
-    /// across the bottom with a video row (filmstrip), a subtitle row and the waveform as the
-    /// audio row.
+    /// Layout 14, the quality control layout: a QC panel (the file's errors with Fix buttons, the
+    /// bookmarks, and buttons to play or speak the line), the subtitle grid with the edit box
+    /// (override tag chips on top) and the video player across the top, and the timeline with its
+    /// track rows across the bottom. The track rows alone are no longer special to this layout -
+    /// every layout can show them (#16354).
     /// </summary>
     private static int MakeLayout14(MainView mainPage, MainViewModel vm)
     {
@@ -1132,10 +1136,31 @@ public static partial class InitLayout
             }
         };
 
-        // Left part of nested grid
+        // Left part of nested grid: the QC panel beside the grid and edit box. It sits in its own
+        // grid, so the saved splitter positions of the outer grids keep their meaning.
+        var listViewAndEditBox = InitListViewAndEditBox.MakeLayoutListViewAndEditBox(mainPage, vm);
+        AddAssaTagChips(listViewAndEditBox, vm);
+        var qcGrid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(new GridLength(300, GridUnitType.Pixel)) { MinWidth = 160 },
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(GridLength.Star),
+            }
+        };
+        qcGrid.Add(QcLayoutPanel.Make(vm), 0, 0);
+        qcGrid.Add(new GridSplitter
+        {
+            Width = UiUtil.SplitterWidthOrHeight,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Stretch
+        }, 0, 1);
+        qcGrid.Add(listViewAndEditBox, 0, 2);
+
         var nestedLeft = new Border
         {
-            Child = InitListViewAndEditBox.MakeLayoutListViewAndEditBox(mainPage, vm)
+            Child = qcGrid,
         };
         Grid.SetColumn(nestedLeft, 0);
         nestedGrid.Children.Add(nestedLeft);
@@ -1202,6 +1227,35 @@ public static partial class InitLayout
         }
 
         return 14;
+    }
+
+    /// <summary>
+    /// Puts the override tag chips above the "Text" label of the text box.
+    /// </summary>
+    private static void AddAssaTagChips(Grid editArea, MainViewModel vm)
+    {
+        var textEditGrid = editArea.GetLogicalDescendants()
+            .OfType<Grid>()
+            .FirstOrDefault(p => p.Name == "SubtitleTextEditGrid");
+        if (textEditGrid == null)
+        {
+            return;
+        }
+
+        // The chips get a row of their own above the "Text" label, across the whole text area:
+        // next to the label they shared the row with the chars/sec label and had no room to wrap.
+        // The row is Auto, so it takes no space while there is nothing to show.
+        textEditGrid.RowDefinitions.Insert(0, new RowDefinition(GridLength.Auto));
+        foreach (var child in textEditGrid.Children)
+        {
+            Grid.SetRow(child, Grid.GetRow(child) + 1);
+        }
+
+        var chips = AssaTagChips.Make(vm);
+        chips.Margin = new Thickness(0, 0, 0, 3);
+        Grid.SetRow(chips, 0);
+        Grid.SetColumnSpan(chips, Math.Max(1, textEditGrid.ColumnDefinitions.Count));
+        textEditGrid.Children.Add(chips);
     }
 
     private static int MakeLayout15(MainView mainPage, MainViewModel vm)
