@@ -2833,8 +2833,9 @@ public static partial class InitListViewAndEditBox
                 return;
             }
 
-            var labelRows = textEditGrid.RowDefinitions[0].ActualHeight +
-                            textEditGrid.RowDefinitions[2].ActualHeight;
+            // Every row but the text box's own (the star row) holds labels; layout 14 adds a
+            // row for its tag chips on top, so the rows are not counted by index.
+            var labelRows = textEditGrid.RowDefinitions.Where(r => !r.Height.IsStar).Sum(r => r.ActualHeight);
             if (labelRows <= 0)
             {
                 return;

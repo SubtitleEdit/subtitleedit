@@ -89,7 +89,8 @@ internal static class RightToLeftHelper
         var last = definitions.Count - 1;
         foreach (var child in grid.Children)
         {
-            Grid.SetColumn(child, last - Grid.GetColumn(child));
+            // A child spanning columns (layout 14's tag chips) keeps its span: its last column becomes its first.
+            Grid.SetColumn(child, last - Grid.GetColumn(child) - (Grid.GetColumnSpan(child) - 1));
 
             // Keep horizontal margins (the gap between the two text boxes) on the inner side.
             var margin = child.Margin;

@@ -37,7 +37,7 @@ Subtitle Edit 5 is a rewrite of Subtitle Edit on Avalonia, so it runs on Windows
 
 ## Main Window and Layouts
 
-- **Layout 14** - an editor-style timeline with a video thumbnail row and subtitle rows (by layer, actor or style) above the waveform (see [Layouts](main-window.md#layouts)).
+- **Layout 14** - a quality control layout: the file's errors with Fix buttons, bookmarks, play and text-to-speech buttons, override tag chips above the text, and a timeline with a video thumbnail row and subtitle rows (by layer, actor or style) above the waveform (see [Layouts](main-window.md#layouts)).
 - **Layouts 12 and 13** put the text box below the video player.
 
 ## Video and Waveform
