@@ -1091,11 +1091,14 @@ internal class SubtitleConverter
         // Scale all times by 100/percent (matches Sync > Change Speed in the UI)
         if (options.ChangeSpeedPercent.HasValue && Math.Abs(options.ChangeSpeedPercent.Value - 100.0) > 0.0001)
         {
+            // Whole milliseconds, like the frame rate change above: SubRip & co. truncate, so a
+            // drop-frame speed saved 1500 ms (-> 1498.50015 ms) as ",498". Start and end are
+            // rounded on their own, so cues that touched still touch.
             var factor = 100.0 / options.ChangeSpeedPercent.Value;
             foreach (var p in subtitle.Paragraphs)
             {
-                p.StartTime.TotalMilliseconds *= factor;
-                p.EndTime.TotalMilliseconds *= factor;
+                p.StartTime.TotalMilliseconds = Math.Round(p.StartTime.TotalMilliseconds * factor, MidpointRounding.AwayFromZero);
+                p.EndTime.TotalMilliseconds = Math.Round(p.EndTime.TotalMilliseconds * factor, MidpointRounding.AwayFromZero);
             }
         }
 
