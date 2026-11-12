@@ -3336,10 +3336,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
+        // Whole milliseconds, like Change frame rate above (#14056): the format writers truncate,
+        // so the drop-frame preset saved 1500 ms (-> 1498.50015 ms) as ",498". Start and end are
+        // rounded on their own, so lines that touched still touch.
+        var factor = 100.0 / _config.ChangeSpeed.SpeedPercent;
         foreach (var p in subtitle.Paragraphs)
         {
-            p.StartTime.TotalMilliseconds = TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds * (100.0 / _config.ChangeSpeed.SpeedPercent)).TotalMilliseconds;
-            p.EndTime.TotalMilliseconds = TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds * (100.0 / _config.ChangeSpeed.SpeedPercent)).TotalMilliseconds;
+            p.StartTime.TotalMilliseconds = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(p.StartTime.TotalMilliseconds * factor).TotalMilliseconds;
+            p.EndTime.TotalMilliseconds = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(p.EndTime.TotalMilliseconds * factor).TotalMilliseconds;
         }
 
         return subtitle;
