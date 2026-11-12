@@ -38,7 +38,7 @@ public class DCinemaSmptePropertiesWindow : Window
         var comboBoxLanguage = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage)), Se.Language.General.Language, 140);
         var textBoxIssueDate = EditorChrome.AsTextField(UiUtil.MakeTextBox(200, vm, nameof(vm.IssueDate)), lang.IssueDate);
         var buttonToday = FormatPropertiesChrome.MakeAction("fa-solid fa-clock", lang.Now, vm.SetTodayIssueDateCommand);
-        var textBoxEditRate = EditorChrome.AsTextField(UiUtil.MakeTextBox(90, vm, nameof(vm.EditRate)), lang.EditRate);
+        var comboBoxEditRate = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.EditRates, vm, nameof(vm.EditRate)), lang.EditRate, 90);
         var comboBoxTimeCodeRate = FormatPropertiesChrome.Combo(UiUtil.MakeComboBox(vm.TimeCodeRates, vm, nameof(vm.SelectedTimeCodeRate)), lang.TimeCodeRate, 90);
         var textBoxStartTime = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.StartTime)), lang.StartTime);
         var textBoxReelDuration = EditorChrome.AsTextField(UiUtil.MakeTextBox(120, vm, nameof(vm.ReelDuration)), lang.ReelDuration);
@@ -56,7 +56,7 @@ public class DCinemaSmptePropertiesWindow : Window
             FormatPropertiesChrome.Row(lang.MovieTitle, textBoxMovieTitle),
             FormatPropertiesChrome.Row(lang.ReelNumber, numericUpDownReelNumber, FormatPropertiesChrome.InlineLabel(Se.Language.General.Language), comboBoxLanguage),
             FormatPropertiesChrome.Row(lang.IssueDate, textBoxIssueDate, buttonToday),
-            FormatPropertiesChrome.Row(lang.EditRate, textBoxEditRate, FormatPropertiesChrome.InlineLabel(lang.TimeCodeRate), comboBoxTimeCodeRate),
+            FormatPropertiesChrome.Row(lang.EditRate, comboBoxEditRate, FormatPropertiesChrome.InlineLabel(lang.TimeCodeRate), comboBoxTimeCodeRate),
             FormatPropertiesChrome.Row(lang.StartTime, textBoxStartTime),
             rowReelDuration);
 
