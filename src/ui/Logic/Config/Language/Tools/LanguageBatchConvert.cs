@@ -100,6 +100,9 @@ public class LanguageBatchConvert
     public string MergeTranslationWithOriginalStyleTranslation { get; set; }
     public string MergeTranslationWithOriginalNeedsAutoTranslate { get; set; }
     public string NOcrDatabaseNotFound { get; set; }
+    public string MergeTranslationWithOriginalTargetFormatTitle { get; set; }
+    public string MergeTranslationWithOriginalTargetFormatMessage { get; set; }
+    public string KeepX { get; set; }
 
     public LanguageBatchConvert()
     {
@@ -201,5 +204,8 @@ public class LanguageBatchConvert
         MergeTranslationWithOriginalStyleTranslation = "Style 2 (translation)";
         MergeTranslationWithOriginalNeedsAutoTranslate = "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.";
         NOcrDatabaseNotFound = "The nOCR database \"{0}\" was not found, so image-based subtitles cannot be converted to text.\n\nPlease pick another OCR engine or database in the Batch convert settings.";
+        MergeTranslationWithOriginalTargetFormatTitle = "Target format";
+        MergeTranslationWithOriginalTargetFormatMessage = "\"Merge translation with original\" can give the original and the translation their own styles only in \"Advanced Sub Station Alpha\".\n\nThe target format is \"{0}\", so both texts would be placed in the same subtitle.\n\nWhich target format do you want to use?";
+        KeepX = "Keep {0}";
     }
 }

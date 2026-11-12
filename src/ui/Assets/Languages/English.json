@@ -2430,7 +2430,10 @@
       "mergeTranslationWithOriginalStyleOriginal": "Style 1 (original)",
       "mergeTranslationWithOriginalStyleTranslation": "Style 2 (translation)",
       "mergeTranslationWithOriginalNeedsAutoTranslate": "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.",
-      "nOcrDatabaseNotFound": "The nOCR database \"{0}\" was not found, so image-based subtitles cannot be converted to text.\n\nPlease pick another OCR engine or database in the Batch convert settings."
+      "nOcrDatabaseNotFound": "The nOCR database \"{0}\" was not found, so image-based subtitles cannot be converted to text.\n\nPlease pick another OCR engine or database in the Batch convert settings.",
+      "mergeTranslationWithOriginalTargetFormatTitle": "Target format",
+      "mergeTranslationWithOriginalTargetFormatMessage": "\"Merge translation with original\" can give the original and the translation their own styles only in \"Advanced Sub Station Alpha\".\n\nThe target format is \"{0}\", so both texts would be placed in the same subtitle.\n\nWhich target format do you want to use?",
+      "keepX": "Keep {0}"
     },
     "changeCasing": {
       "fixNames": "Fix names",

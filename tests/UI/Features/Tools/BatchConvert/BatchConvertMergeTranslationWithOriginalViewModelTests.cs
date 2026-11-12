@@ -167,6 +167,16 @@ public class BatchConvertMergeTranslationWithOriginalViewModelTests
         Assert.Equal("SubRip", vm.SelectedTargetFormat);
     }
 
+    [AvaloniaTheory]
+    [InlineData(true, true, "Advanced Sub Station Alpha", false)]
+    [InlineData(true, true, "SubRip", true)]
+    [InlineData(true, false, "SubRip", false)]
+    [InlineData(false, true, "SubRip", false)]
+    public void TargetFormatQuestion_OnlyWhenMergeAndTranslateAreSelectedWithAnotherFormat(bool merge, bool autoTranslate, string target, bool asks)
+    {
+        Assert.Equal(asks, BatchConvertViewModel.NeedsTargetFormatQuestion(merge, autoTranslate, target));
+    }
+
     [AvaloniaFact]
     public void View_TopAndBottom_FollowAndSetEachStyle()
     {

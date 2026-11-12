@@ -1516,6 +1516,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         SaveSettings();
 
+        if (!await EnsureMergeTranslationWithOriginalTargetFormat())
+        {
+            return;
+        }
+
         var config = MakeBatchConvertConfig();
 
         // Set before the ensure-chain below: starting the server is itself the slow part a user
@@ -2019,6 +2024,44 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             MessageBoxButtons.OK,
             MessageBoxIcon.Error);
         return false;
+    }
+
+    /// <summary>
+    /// The two styles of "Merge translation with original" only exist in Advanced Sub Station
+    /// Alpha - with another target format the result looks like the function does nothing. So
+    /// when the function is selected with another format, ask which format to use.
+    /// </summary>
+    internal static bool NeedsTargetFormatQuestion(bool mergeSelected, bool autoTranslateSelected, string? targetFormat)
+    {
+        return mergeSelected && autoTranslateSelected && targetFormat != AdvancedSubStationAlpha.NameOfFormat;
+    }
+
+    private async Task<bool> EnsureMergeTranslationWithOriginalTargetFormat()
+    {
+        var mergeSelected = BatchFunctions.Any(p => p.Type == BatchConvertFunctionType.MergeTranslationWithOriginal && p.IsSelected);
+        var autoTranslateSelected = BatchFunctions.Any(p => p.Type == BatchConvertFunctionType.AutoTranslate && p.IsSelected);
+        if (Window == null || !NeedsTargetFormatQuestion(mergeSelected, autoTranslateSelected, SelectedTargetFormat))
+        {
+            return true;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalTargetFormatTitle,
+            string.Format(Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalTargetFormatMessage, SelectedTargetFormat),
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            AdvancedSubStationAlpha.NameOfFormat,
+            string.Format(Se.Language.Tools.BatchConvert.KeepX, SelectedTargetFormat));
+
+        if (answer == MessageBoxResult.Custom1)
+        {
+            SelectedTargetFormat = AdvancedSubStationAlpha.NameOfFormat;
+            SaveSettings();
+            return true;
+        }
+
+        return answer == MessageBoxResult.Custom2;
     }
 
     private async Task<bool> EnsureMergeTranslationWithOriginalHasAutoTranslate(BatchConvertConfig config)
