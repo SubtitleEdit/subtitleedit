@@ -22,6 +22,8 @@ public class BookmarksListWindow : Window
     public BookmarksListWindow(BookmarksListViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.BookmarksList;
         CanResize = true;
         Width = 600;

@@ -17,6 +17,8 @@ public class ShowHistoryWindow : Window
     public ShowHistoryWindow(ShowHistoryViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = UiUtil.MakeWindowTitle(Se.Language.Edit.ShowHistory);
         Width = 810;
         Height = 640;

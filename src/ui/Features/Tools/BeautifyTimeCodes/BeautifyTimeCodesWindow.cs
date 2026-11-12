@@ -20,6 +20,8 @@ public class BeautifyTimeCodesWindow : Window
     public BeautifyTimeCodesWindow(BeautifyTimeCodesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = UiUtil.MakeWindowTitle(Se.Language.Tools.BeautifyTimeCodes.Title);
         CanResize = true;
         Width = 1100;

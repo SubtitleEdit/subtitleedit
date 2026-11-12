@@ -26,6 +26,8 @@ public class AssaProgressBarWindow : Window
     public AssaProgressBarWindow(AssaProgressBarViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Assa.ProgressBarTitle;
         CanResize = true;
         Width = 1250;

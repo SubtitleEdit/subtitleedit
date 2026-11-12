@@ -19,6 +19,8 @@ public class NOcrCharacterHistoryWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = string.Empty;
         Width = 1200;
         Height = 700;

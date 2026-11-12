@@ -14,6 +14,8 @@ public class PickRuleProfileWindow : Window
     public PickRuleProfileWindow(PickRuleProfileViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.Profiles;
         CanResize = true;
         Width = 1100;

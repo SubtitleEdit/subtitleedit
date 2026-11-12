@@ -17,6 +17,8 @@ public class BinaryAdjustBrightnessWindow : Window
     public BinaryAdjustBrightnessWindow(BinaryAdjustBrightnessViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Tools.ImageBasedEdit.AdjustBrightness;
         Width = 800;
         Height = 600;

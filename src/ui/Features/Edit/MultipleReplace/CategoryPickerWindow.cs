@@ -13,6 +13,8 @@ public class CategoryPickerWindow : Window
     public CategoryPickerWindow(CategoryPickerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = vm.Title; // export or import - the view model is initialized before this runs
         CanResize = true;
         Width = 1100;

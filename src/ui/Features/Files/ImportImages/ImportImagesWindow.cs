@@ -24,6 +24,8 @@ public class ImportImagesWindow : Window
     public ImportImagesWindow(ImportImagesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.File.Import.TitleImportImages;
         CanResize = true;
         Width = 1100;

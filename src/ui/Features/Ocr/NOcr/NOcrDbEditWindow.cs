@@ -20,6 +20,8 @@ public class NOcrDbEditWindow : Window
         Title = Se.Language.Ocr.EditNOcrDatabase;
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         CanResize = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.TextToolToggles | EditorWindowStyles.CompactSplitButtons);

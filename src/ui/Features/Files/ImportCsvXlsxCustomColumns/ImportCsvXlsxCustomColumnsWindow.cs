@@ -19,6 +19,8 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
     public ImportCsvXlsxCustomColumnsWindow(ImportCsvXlsxCustomColumnsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.File.Import.TitleImportCsvXlsxCustomColumns;
         CanResize = true;
         Width = 1200;

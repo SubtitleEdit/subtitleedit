@@ -19,6 +19,8 @@ public class BinaryChangeResolutionWindow : Window
     public BinaryChangeResolutionWindow(BinaryChangeResolutionViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.VideoResolution;
         Width = 800;
         Height = 600;
