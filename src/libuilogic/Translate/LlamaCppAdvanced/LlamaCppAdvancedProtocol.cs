@@ -188,6 +188,59 @@ public static class LlamaCppAdvancedProtocol
     /// Parses the model reply into number → translation. Tolerates markdown fences and stray
     /// prose around the JSON object (the plain-text fallback path has no grammar guarantee).
     /// </summary>
+    /// <summary>
+    /// True when a reply value is the "&lt;translation of line N&gt;" example from
+    /// <see cref="ProtocolText"/> rather than a translation.
+    /// </summary>
+    public static bool IsExamplePlaceholder(string translation)
+    {
+        return ExamplePlaceholderRegex.IsMatch(translation ?? string.Empty);
+    }
+
+    /// <summary>
+    /// True when a reply value is not a translation of <paramref name="source"/>: the prompt's
+    /// example (<see cref="IsExamplePlaceholder"/>) or a value that swallowed protocol structure
+    /// (<see cref="IsStructureLeak"/>).
+    /// </summary>
+    public static bool IsBrokenValue(string source, string translation)
+    {
+        return IsExamplePlaceholder(translation) || IsStructureLeak(source, translation);
+    }
+
+    /// <summary>
+    /// True when a reply value holds more than its own line: the next lines' JSON
+    /// (<c>2":"...</c>, <c>"}]}</c>) written inside the string with escaped quotes, or a runaway
+    /// far longer than the source, e.g. the model's own notes ("Note: ... Let me correct that.").
+    /// Index-Nailong 9B put four later lines and a comment into the value for "Come on up." (#16856).
+    /// The schema only fixes the keys, so the parser accepts such a value as valid JSON.
+    /// </summary>
+    public static bool IsStructureLeak(string source, string translation)
+    {
+        if (string.IsNullOrEmpty(translation))
+        {
+            return false;
+        }
+
+        if (StructureLeakRegex.IsMatch(translation) && !StructureLeakRegex.IsMatch(source ?? string.Empty))
+        {
+            return true;
+        }
+
+        var sourceLength = (source ?? string.Empty).Trim().Length;
+        return translation.Trim().Length > Math.Max(MinRunawayLength, RunawayFactor * sourceLength);
+    }
+
+    private const int MinRunawayLength = 80;
+    private const int RunawayFactor = 4;
+
+    // A line-number key with its colon and opening quote ("2":" / 2":"), or a JSON object/array end
+    // right after a string ("}  "]}).
+    private static readonly System.Text.RegularExpressions.Regex StructureLeakRegex =
+        new(@"(?<![\d\p{L}])\d+""\s*:\s*""|""\s*\}|\}\s*\]\s*\}", System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+
+    private static readonly System.Text.RegularExpressions.Regex ExamplePlaceholderRegex =
+        new(@"^\s*<\s*translation of line\s*\d*\s*>\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+
     public static Dictionary<int, string> ParseTranslations(string responseText)
     {
         var result = new Dictionary<int, string>();

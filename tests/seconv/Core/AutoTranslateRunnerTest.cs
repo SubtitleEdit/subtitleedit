@@ -246,6 +246,9 @@ public class AutoTranslateRunnerTest : IDisposable
     // Index-Translate is a Qwen 3.5 fine-tune too, again without "qwen" in the file name.
     [InlineData("Index-Translate-2B.Q8_0.gguf", null, false, true)]             // curated
     [InlineData("Index-Translate-2B.Q4_K_M.gguf", null, false, true)]           // uncurated quant
+    // Index-Nailong (#16856) is from the same family.
+    [InlineData("Index-Nailong-9B.Q4_K_M.gguf", null, false, true)]             // curated
+    [InlineData("Index-Nailong-9B.Q8_0.gguf", null, false, true)]               // uncurated quant
     public void InferChatTemplate_PicksFlagsByFamily(string fileName, string? expectedTemplate, bool expectedNoJinja, bool expectedNoThinking)
     {
         var (chatTemplate, noJinja, noThinking) = LlamaCppServerManager.InferChatTemplate(fileName);
