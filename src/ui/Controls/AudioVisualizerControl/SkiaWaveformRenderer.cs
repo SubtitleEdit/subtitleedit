@@ -837,6 +837,11 @@ internal sealed class SkiaWaveformRenderer
             canvas.Save();
             canvas.ClipRect(SKRect.Create(left + 1, 0, width - 3, f.Height));
             DrawParagraphFooter(canvas, f, p, left, width);
+            if (p.BookmarkLabel != null)
+            {
+                DrawBookmarkTag(canvas, f, p.BookmarkLabel, p.BookmarkColor, left, width);
+            }
+
             canvas.Restore();
 
             DrawAudioLength(canvas, f, p, left, right);
@@ -907,6 +912,60 @@ internal sealed class SkiaWaveformRenderer
         {
             var cps = _textCache.Get(p.CpsLabel, f.FontSize);
             DrawText(canvas, cps, x, y - cps.Height, f.TextColor);
+        }
+    }
+
+    private readonly SKPath _bookmarkRibbon = new();
+
+    /// <summary>See <see cref="WaveformBookmark"/>.</summary>
+    private void DrawBookmarkTag(SKCanvas canvas, SkiaWaveformFrame f, string label, SKColor color, float regionLeft, float regionWidth)
+    {
+        var text = label.Length > 0 ? _textCache.Get(label, f.FontSize) : null;
+        var height = (float)Math.Max(WaveformBookmark.MinHeight, (text?.Height ?? 0) + 4);
+        var width = (float)(WaveformBookmark.Padding * 2 + WaveformBookmark.RibbonWidth) + (text != null ? (float)WaveformBookmark.Gap + text.Width : 0);
+        width = Math.Min(width, regionWidth - 4);
+        if (width < WaveformBookmark.RibbonWidth + 4)
+        {
+            return;
+        }
+
+        var x = regionLeft + 2;
+        var top = (float)WaveformBookmark.GetTop(0, f.WorkingTextHeight);
+        var tag = SKRect.Create(x, top, width, height);
+        _roundFill.Color = color;
+        canvas.DrawRoundRect(tag, (float)WaveformBookmark.CornerRadius, (float)WaveformBookmark.CornerRadius, _roundFill);
+
+        var dark = WaveformBookmark.UseDarkForeground(color.Red, color.Green, color.Blue);
+        var foreground = dark ? SKColors.Black : SKColors.White;
+        _bookmarkRibbon.Reset();
+        var points = WaveformBookmark.GetRibbon(x + WaveformBookmark.Padding, top + 3, height - 6);
+        _bookmarkRibbon.MoveTo((float)points[0].X, (float)points[0].Y);
+        for (var i = 1; i < points.Length; i++)
+        {
+            _bookmarkRibbon.LineTo((float)points[i].X, (float)points[i].Y);
+        }
+
+        _bookmarkRibbon.Close();
+        _roundFill.Color = foreground;
+        canvas.DrawPath(_bookmarkRibbon, _roundFill);
+
+        if (text == null)
+        {
+            return;
+        }
+
+        canvas.Save();
+        canvas.ClipRect(tag);
+        _text.ImageFilter = f.BlurText ? _textBlur : null;
+        try
+        {
+            var textX = x + (float)(WaveformBookmark.Padding + WaveformBookmark.RibbonWidth + WaveformBookmark.Gap);
+            DrawText(canvas, text, textX, top + (height - text.Height) / 2, foreground);
+        }
+        finally
+        {
+            _text.ImageFilter = null;
+            canvas.Restore();
         }
     }
 

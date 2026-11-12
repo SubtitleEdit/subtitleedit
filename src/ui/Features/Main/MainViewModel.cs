@@ -14675,6 +14675,7 @@ public partial class MainViewModel :
                     Region = line.Region,
                     Layer = line.Layer,
                     Bookmark = line.Bookmark,
+                    BookmarkColor = line.BookmarkColor,
                 };
                 sub.Paragraphs.Add(p);
             }
@@ -14829,6 +14830,7 @@ public partial class MainViewModel :
                     Region = line.Region,
                     Layer = line.Layer,
                     Bookmark = line.Bookmark,
+                    BookmarkColor = line.BookmarkColor,
                 };
                 sub.Paragraphs.Add(p);
             }
@@ -14883,6 +14885,7 @@ public partial class MainViewModel :
                     Region = line.Region,
                     Layer = line.Layer,
                     Bookmark = line.Bookmark,
+                    BookmarkColor = line.BookmarkColor,
                 };
                 sub.Paragraphs.Add(p);
             }
@@ -14953,6 +14956,7 @@ public partial class MainViewModel :
                     Region = line.Region,
                     Layer = line.Layer,
                     Bookmark = line.Bookmark,
+                    BookmarkColor = line.BookmarkColor,
                 };
                 sub.Paragraphs.Add(p);
             }
@@ -15160,6 +15164,7 @@ public partial class MainViewModel :
                     Region = line.Region,
                     Layer = line.Layer,
                     Bookmark = line.Bookmark,
+                    BookmarkColor = line.BookmarkColor,
                 };
                 sub.Paragraphs.Add(p);
                 if (p.Id.HasValue)
@@ -15911,6 +15916,13 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<WordListsWindow, WordListsViewModel>();
     }
 
+    /// <summary>Saves the bookmarks next to the subtitle and repaints the waveform, which draws them.</summary>
+    private void SaveBookmarks()
+    {
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        _updateAudioVisualizer = true;
+    }
+
     [RelayCommand]
     private async Task AddOrEditBookmark()
     {
@@ -15942,17 +15954,16 @@ public partial class MainViewModel :
             foreach (var item in selectedItems)
             {
                 item.Bookmark = result.BookmarkText;
+                item.BookmarkColor = result.BookmarkText != null ? result.ColorIndex : 0;
             }
         }
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         if (result.ListPressed)
         {
             await ListBookmarks();
         }
-
-        _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
@@ -15971,7 +15982,7 @@ public partial class MainViewModel :
             }
         }
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         _shortcutManager.ClearKeys();
     }
@@ -16061,7 +16072,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<BookmarksListWindow, BookmarksListViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         if (result.GoToPressed && result.SelectedSubtitle != null)
         {
@@ -16078,7 +16089,7 @@ public partial class MainViewModel :
             item.Bookmark = null;
         }
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         _shortcutManager.ClearKeys();
     }
@@ -16123,7 +16134,7 @@ public partial class MainViewModel :
             item.Bookmark = null;
         }
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         _shortcutManager.ClearKeys();
     }
@@ -27550,6 +27561,7 @@ public partial class MainViewModel :
         for (var i = 0; i < Subtitles.Count && i < sub.Paragraphs.Count; i++)
         {
             Subtitles[i].Bookmark = sub.Paragraphs[i].Bookmark;
+            Subtitles[i].BookmarkColor = sub.Paragraphs[i].BookmarkColor;
 
             // Union, not assignment: a format that carries the forced flag itself (BDN xml)
             // has already set it on the row, and the sidecar only ever adds marks.
@@ -32228,6 +32240,7 @@ public partial class MainViewModel :
                 // too - otherwise bookmarking alone records no snapshot and the bookmark gets
                 // baked into the next unrelated edit's entry, where one undo removes both.
                 hash = hash * 23 + (p.Bookmark?.GetHashCode() ?? 0);
+                hash = hash * 23 + p.BookmarkColor;
                 // Same reasoning for the forced-narrative mark (#14322).
                 hash = hash * 23 + (p.Forced ? 1 : 0);
             }

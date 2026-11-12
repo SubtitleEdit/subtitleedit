@@ -167,6 +167,7 @@ public static partial class InitListViewAndEditBox
         var gapConverter = new DoubleToDisplayShortConverter();
         var inverseBooleanConverter = InverseBooleanConverter.Instance;
         var textOneLineShortConverter = new TextOneLineShortConverter();
+        var bookmarkColorConverter = new BookmarkColorToBrushConverter();
         var booleanToGridLengthConverter = new BooleanToGridLengthConverter();
         var booleanAndConverter = BooleanAndConverter.Instance;
 
@@ -247,7 +248,7 @@ public static partial class InitListViewAndEditBox
                          new Icon
                          {
                             Value = IconNames.Bookmark,
-                            Foreground = new SolidColorBrush(Se.Settings.Appearance.BookmarkColor.FromHexToColor()),
+                            [!Icon.ForegroundProperty] = new Binding(nameof(SubtitleLineViewModel.BookmarkColor)) { Converter = bookmarkColorConverter },
                             VerticalAlignment = VerticalAlignment.Center,
                             IsHitTestVisible = false,
                             [!Visual.OpacityProperty] = new Binding(nameof(SubtitleLineViewModel.Bookmark)) { Converter = nullToOpacityConverter },
@@ -1800,7 +1801,7 @@ public static partial class InitListViewAndEditBox
         {
             DataContext = vm,
             Value = IconNames.Bookmark,
-            Foreground = new SolidColorBrush(Se.Settings.Appearance.BookmarkColor.FromHexToColor()),
+            [!Icon.ForegroundProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.BookmarkColor)) { Converter = new BookmarkColorToBrushConverter() },
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Bookmark)) { Converter = notNullConverter },
             Margin = new Thickness(6, 0, 0, 1),
             VerticalAlignment = VerticalAlignment.Center,
@@ -1818,10 +1819,15 @@ public static partial class InitListViewAndEditBox
             [UiUtil.DesignFontSizeProperty] = 10,
             VerticalAlignment = VerticalAlignment.Center,
             DataContext = vm,
-            Foreground = new SolidColorBrush(Se.Settings.Appearance.BookmarkColor.FromHexToColor()),
+            [!Label.ForegroundProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.BookmarkColor)) { Converter = new BookmarkColorToBrushConverter() },
             [!Label.ContentProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Bookmark)) { Converter = textOneLineShortConverter },
             [!Label.IsVisibleProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Bookmark)) { Converter = notNullConverter },
         };
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            // The label is cut to one short line; the tooltip shows the whole (multi-line) note.
+            bookmarkLabel.Bind(ToolTip.TipProperty, new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Bookmark)));
+        }
         bookmarkLabel.PointerPressed += (_, __) =>
         {
             if (vm.AddOrEditBookmarkCommand.CanExecute(null))

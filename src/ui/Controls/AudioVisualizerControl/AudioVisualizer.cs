@@ -4235,7 +4235,93 @@ public class AudioVisualizer : Control
             DrawParagraphFooter(context, paragraph, currentRegionLeft, currentRegionWidth, ref renderCtx);
         }
 
+        if (paragraph.Bookmark != null && Se.Settings.Waveform.WaveformShowBookmarks)
+        {
+            using (context.PushClip(new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, renderCtx.Height)))
+            {
+                DrawBookmarkTag(context, paragraph.Bookmark, paragraph.BookmarkColor, currentRegionLeft, currentRegionWidth, WaveformBookmark.GetTop(contentTop, contentHeight));
+            }
+        }
+
         DrawParagraphAudioLength(context, paragraph, currentRegionLeft, currentRegionRight, contentTop, contentHeight, ref renderCtx);
+    }
+
+    private readonly string?[] _bookmarkColorHex = new string?[BookmarkColors.Count];
+    private readonly IBrush[] _bookmarkBrush = new IBrush[BookmarkColors.Count];
+    private readonly bool[] _bookmarkDarkForeground = new bool[BookmarkColors.Count];
+    private readonly Dictionary<(string Text, bool Dark), FormattedText> _bookmarkTextCache = new(64);
+
+    /// <summary>See <see cref="WaveformBookmark"/>.</summary>
+    private void DrawBookmarkTag(DrawingContext context, string bookmark, int colorIndex, double regionLeft, double regionWidth, double top)
+    {
+        colorIndex = Math.Clamp(colorIndex, 0, BookmarkColors.Count - 1);
+        var hex = BookmarkColors.GetHex(colorIndex);
+        if (hex != _bookmarkColorHex[colorIndex])
+        {
+            var color = hex.FromHexToColor();
+            _bookmarkColorHex[colorIndex] = hex;
+            _bookmarkBrush[colorIndex] = new ImmutableSolidColorBrush(color);
+            _bookmarkDarkForeground[colorIndex] = WaveformBookmark.UseDarkForeground(color.R, color.G, color.B);
+        }
+
+        var dark = _bookmarkDarkForeground[colorIndex];
+        var foreground = dark ? Brushes.Black : Brushes.White;
+        var label = WaveformBookmark.GetLabel(bookmark);
+        FormattedText? text = null;
+        if (label.Length > 0)
+        {
+            var key = (label, dark);
+            if (!_bookmarkTextCache.TryGetValue(key, out text))
+            {
+                if (_bookmarkTextCache.Count > 500)
+                {
+                    _bookmarkTextCache.Clear();
+                }
+
+                text = new FormattedText(label, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeface, _fontSize, foreground);
+                _bookmarkTextCache[key] = text;
+            }
+        }
+
+        var height = Math.Max(WaveformBookmark.MinHeight, (text?.Height ?? 0) + 4);
+        var width = WaveformBookmark.Padding * 2 + WaveformBookmark.RibbonWidth + (text != null ? WaveformBookmark.Gap + text.Width : 0);
+        width = Math.Min(width, regionWidth - 4);
+        if (width < WaveformBookmark.RibbonWidth + 4)
+        {
+            return;
+        }
+
+        var x = regionLeft + 2;
+        var tag = new Rect(x, top, width, height);
+        context.DrawRectangle(_bookmarkBrush[colorIndex], null, tag, WaveformBookmark.CornerRadius, WaveformBookmark.CornerRadius);
+
+        var ribbon = new StreamGeometry();
+        using (var g = ribbon.Open())
+        {
+            var points = WaveformBookmark.GetRibbon(x + WaveformBookmark.Padding, top + 3, height - 6);
+            g.BeginFigure(new Point(points[0].X, points[0].Y), true);
+            for (var i = 1; i < points.Length; i++)
+            {
+                g.LineTo(new Point(points[i].X, points[i].Y));
+            }
+
+            g.EndFigure(true);
+        }
+
+        context.DrawGeometry(foreground, null, ribbon);
+
+        if (text == null)
+        {
+            return;
+        }
+
+        var textX = x + WaveformBookmark.Padding + WaveformBookmark.RibbonWidth + WaveformBookmark.Gap;
+        var textY = top + (height - text.Height) / 2;
+        using (context.PushClip(tag))
+        using (BlurText ? context.PushEffect(TextBlurEffect, new Rect(textX, textY, text.Width, text.Height)) : (IDisposable?)null)
+        {
+            context.DrawText(text, new Point(textX, textY));
+        }
     }
 
     private void DrawOriginalSubtitleParagraphs(DrawingContext context, ref RenderContext renderCtx, double top, double height)
@@ -5687,6 +5773,7 @@ public class AudioVisualizer : Control
         _paragraphFormattedTextCache.Clear();
         _paragraphTextCache.Clear();
         _chapterTextCache.Clear();
+        _bookmarkTextCache.Clear();
         _footerNumberDurationCache.Clear();
         _footerCpsCache.Clear();
         _waveformCacheValid = false;

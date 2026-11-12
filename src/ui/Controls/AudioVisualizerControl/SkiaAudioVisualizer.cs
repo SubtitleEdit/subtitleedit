@@ -134,6 +134,10 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.ParagraphBackgroundColor = ToSkColor(ParagraphBackground, SKColors.Transparent);
         f.ParagraphSelectedBackgroundColor = ToSkColor(ParagraphSelectedBackground, SKColors.Transparent);
         f.TextColor = GetTextColor(WaveformColors.CurrentTextHex);
+        for (var i = 0; i < f.BookmarkColors.Length; i++)
+        {
+            f.BookmarkColors[i] = ToSkColor(BookmarkColors.Get(i), SKColors.Orange);
+        }
 
         f.FontName = GetFontName(settings.Appearance.FontName);
         f.FontSize = (float)settings.Waveform.WaveformTextFontSize;
@@ -244,6 +248,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
         var paragraphs = DisplayableParagraphs;
         var showOriginal = ShowOriginalTextInWaveform;
         var audioLengthProvider = ParagraphAudioLengthProvider;
+        var showBookmarks = Se.Settings.Waveform.WaveformShowBookmarks;
         var n = f.PixelsPerSecond;
 
         f.WorkingTextHeight = IsOriginalSubtitleOverlayVisible ? f.Height / 2 : f.Height;
@@ -276,6 +281,12 @@ public class SkiaAudioVisualizer : AudioVisualizer
                 item.NumberAndDurationLabel = n > 51 ? GetCachedNumberAndDurationLabel(p) : null;
             }
 
+            if (showBookmarks && p.Bookmark != null)
+            {
+                item.BookmarkLabel = GetBookmarkLabel(p.Bookmark);
+                item.BookmarkColor = f.BookmarkColors[Math.Clamp(p.BookmarkColor, 0, f.BookmarkColors.Length - 1)];
+            }
+
             if (showCps && n > 99 && p.Duration.TotalMilliseconds > 0)
             {
                 item.CpsLabel = GetCachedCpsLabel(showOriginal ? p.OriginalCharactersPerSecond : p.CharactersPerSecond);
@@ -283,6 +294,24 @@ public class SkiaAudioVisualizer : AudioVisualizer
 
             f.Paragraphs.Add(item);
         }
+    }
+
+    private readonly Dictionary<string, string> _bookmarkLabelCache = new(64);
+
+    private string GetBookmarkLabel(string bookmark)
+    {
+        if (!_bookmarkLabelCache.TryGetValue(bookmark, out var label))
+        {
+            if (_bookmarkLabelCache.Count > 500)
+            {
+                _bookmarkLabelCache.Clear();
+            }
+
+            label = WaveformBookmark.GetLabel(bookmark);
+            _bookmarkLabelCache[bookmark] = label;
+        }
+
+        return label;
     }
 
     private void AddOriginalSubtitleCues(SkiaWaveformFrame f)
@@ -527,6 +556,7 @@ internal sealed class SkiaWaveformFrame
     public SKColor ParagraphBackgroundColor;
     public SKColor ParagraphSelectedBackgroundColor;
     public SKColor TextColor;
+    public readonly SKColor[] BookmarkColors = new SKColor[Nikse.SubtitleEdit.Logic.BookmarkColors.Count];
 
     public string FontName = string.Empty;
     public float FontSize;
@@ -617,6 +647,10 @@ internal struct SkiaParagraph
     public string? NumberAndDurationLabel;
     public string? CpsLabel;
     public double AudioSeconds;
+
+    /// <summary>The first line of the bookmark note, empty for a bookmark without text; null when not bookmarked.</summary>
+    public string? BookmarkLabel;
+    public SKColor BookmarkColor;
 }
 
 internal readonly record struct SkiaTimeLabel(double Seconds, string Text);

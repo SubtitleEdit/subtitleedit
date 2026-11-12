@@ -402,7 +402,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
                 Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5 ||
                 o.OriginalStartTime != n.OriginalStartTime ||
                 o.OriginalEndTime != n.OriginalEndTime;
-            var bookmarkChanged = o.Bookmark != n.Bookmark;
+            var bookmarkChanged = o.Bookmark != n.Bookmark || o.BookmarkColor != n.BookmarkColor;
 
             // Same rule as OriginalText above: every field the undo hash covers must be
             // compared here, or changing it (assigning a style/actor/layer) shifts the

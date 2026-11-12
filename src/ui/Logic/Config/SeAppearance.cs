@@ -56,6 +56,8 @@ public class SeAppearance
     public bool ShowHints { get; set; }
     public bool GridCompactMode { get; set; }
     public string BookmarkColor { get; set; }
+    public string BookmarkColor2 { get; set; }
+    public string BookmarkColor3 { get; set; }
     public string DarkModeBackgroundColor { get; set; }
     public string DarkModeForegroundColor { get; set; }
     public bool UseFocusedButtonBackgroundColor { get; set; }
@@ -163,6 +165,8 @@ public class SeAppearance
         UseFocusedButtonBackgroundColor = true;
         FocusedButtonBackgroundColor = new Color(99, 30, 144, 255).FromColorToHex();
         BookmarkColor = Color.Parse("#C07800").FromColorToHex();
+        BookmarkColor2 = Color.Parse("#2F7FD0").FromColorToHex();
+        BookmarkColor3 = Color.Parse("#2E9A48").FromColorToHex();
         SpellCheckHighlightColor = Colors.Red.FromColorToHex();
         GridCompactMode = true;
         ShowLayer = true;
