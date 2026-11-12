@@ -160,6 +160,12 @@ Copy the formatting — italic/bold/underline, font tags and ASSA override tags 
 
 Export subtitle text without time codes.
 
+### Export Excel dialogue list
+
+Save the lines as an `.xlsx` spreadsheet with the columns you choose. See [Export Excel Dialogue List](export-dialogue-list.md).
+
+- **Menu:** File → Export → Excel dialogue list (.xlsx)...
+
 ### Export forced lines only
 
 Save only the lines marked as forced (see **Toggle forced** in the [subtitle grid](subtitle-grid.md#context-menu)) to a file of their own.
