@@ -5,7 +5,9 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Features.Edit.ShowHistory;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.UndoRedo;
 
 namespace UITests.Features.Edit;
 
@@ -300,6 +302,48 @@ public class ShowHistoryTableViewTests
             var realized = tableView.GetVisualDescendants().OfType<TableViewRow>().Count();
 
             Assert.InRange(realized, 1, 200);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static bool IsEmptyMessageShown(Window window) =>
+        window.GetVisualDescendants().OfType<TextBlock>()
+            .Any(t => t.Text == Se.Language.Edit.ShowHistoryEmpty && t.IsEffectivelyVisible);
+
+    [AvaloniaFact]
+    public void ShowHistoryWindow_NoHistory_SaysThereIsNothingToUndo()
+    {
+        // A blank list gave no hint that it is empty because nothing has been changed yet.
+        var vm = new ShowHistoryViewModel();
+        vm.Initialize(new UndoRedoManager());
+        var window = ShowWindow(vm);
+        try
+        {
+            Assert.True(vm.IsEmpty);
+            Assert.True(IsEmptyMessageShown(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void ShowHistoryWindow_WithHistory_HidesTheEmptyMessage()
+    {
+        var manager = new UndoRedoManager();
+        manager.Do(new UndoRedoItem("Change", [new SubtitleLineViewModel { Text = "Hello" }], 1, null, [0], 0, 0));
+        var vm = new ShowHistoryViewModel();
+        vm.Initialize(manager);
+        var window = ShowWindow(vm);
+        try
+        {
+            Assert.False(vm.IsEmpty);
+            Assert.Single(vm.HistoryItems);
+            Assert.False(IsEmptyMessageShown(window));
         }
         finally
         {

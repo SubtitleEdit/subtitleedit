@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -74,9 +75,52 @@ public class ShowHistoryWindow : Window
         buttonRollback.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
+        // With no changes yet the list would be blank - say why instead
+        var emptyState = new StackPanel
+        {
+            Spacing = 8,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(24),
+            Children =
+            {
+                new Optris.Icons.Avalonia.Icon
+                {
+                    Value = IconNames.History,
+                    FontSize = 40,
+                    Foreground = EditorChrome.FaintTextBrush,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                },
+                new TextBlock
+                {
+                    Text = Se.Language.Edit.ShowHistoryEmpty,
+                    FontSize = EditorChrome.ScaledFont(14),
+                    FontWeight = FontWeight.SemiBold,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    TextAlignment = TextAlignment.Center,
+                    TextWrapping = TextWrapping.Wrap,
+                },
+                new TextBlock
+                {
+                    Text = Se.Language.Edit.ShowHistoryEmptyHint,
+                    FontSize = EditorChrome.FieldFontSize,
+                    Foreground = EditorChrome.DimTextBrush,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    TextAlignment = TextAlignment.Center,
+                    TextWrapping = TextWrapping.Wrap,
+                    MaxWidth = 360,
+                },
+            },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsEmpty)),
+        };
+
+        var listArea = new Grid();
+        listArea.Children.Add(EditorChrome.MakeListFrame(tableView, clearListBackground: true));
+        listArea.Children.Add(emptyState);
+
         var list = new Border
         {
-            Child = EditorChrome.MakeListFrame(tableView, clearListBackground: true),
+            Child = listArea,
             Padding = new Thickness(14),
         };
 

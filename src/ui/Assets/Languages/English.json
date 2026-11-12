@@ -1954,6 +1954,8 @@
       "notInCharacterGroup": "Not in character group ([^test])"
     },
     "showHistory": "History for undo",
+    "showHistoryEmpty": "Nothing to undo yet",
+    "showHistoryEmptyHint": "Each change you make to the subtitle is listed here, and you can go back to any of them.",
     "restoreSelected": "Restore selected",
     "noSubtitleSelected": "No subtitle selected",
     "pleaseSelectExactlyOneSubtitle": "Please select exactly one subtitle."
