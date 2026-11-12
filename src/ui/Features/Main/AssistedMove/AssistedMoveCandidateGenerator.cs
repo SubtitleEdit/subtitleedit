@@ -362,7 +362,9 @@ public static class AssistedMoveCandidateGenerator
         }
 
         var ratio = Math.Clamp((double)firstLength / totalLength, 0.15, 0.85);
-        var firstEnd = first.StartTime + TimeSpan.FromMilliseconds(availableMs * ratio);
+        // Whole milliseconds (#14056): a 3000 ms span split 1:2 gave 1000.333 ms, which the
+        // format writers truncate.
+        var firstEnd = TimeSpanExtensions.FromMillisecondsWholeMilliseconds(first.StartTime.TotalMilliseconds + availableMs * ratio);
         var secondStart = firstEnd + TimeSpan.FromMilliseconds(gapMs);
         return (firstEnd, secondStart);
     }
