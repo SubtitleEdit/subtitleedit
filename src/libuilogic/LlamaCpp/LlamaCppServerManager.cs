@@ -232,6 +232,17 @@ public static class LlamaCppServerManager
             "https://huggingface.co/IndexTeam/Index-Translate-9B-GGUF/resolve/main/Index-Translate-9B.Q4_K_M.gguf",
             Temperature: 0, NoThinking: true),
 
+        // Index-Nailong 9B v1.1 (IndexTeam/bilibili, #16856) - the same family, merged with their
+        // long-document model (256K context), official GGUFs, Apache-2.0; same flags as above.
+        // Tested 2026-11-12 (seconv, 150 dialog lines EN->DA/DE/JA, advanced engine at 10/50/100
+        // lines per batch): on par with Index-Translate 9B, and longer batches did not buy more
+        // consistent names or pronouns. At 50+ lines it twice filled a whole batch with the
+        // prompt's "<translation of line N>" example, and a user saw it pack later lines' JSON
+        // into one value - both are now rejected by IsBrokenValue.
+        new LlamaCppModel("Index-Nailong 9B (Q4_K_M) - 150 languages, long context", "Index-Nailong-9B.Q4_K_M.gguf", "5.6 GB",
+            "https://huggingface.co/IndexTeam/Index-Nailong-9B-GGUF/resolve/main/Index-Nailong-9B.Q4_K_M.gguf",
+            Temperature: 0, NoThinking: true),
+
         // Aya Expanse 8B (Cohere) - a dedicated multilingual model (23 languages), a good translation
         // alternative to the Gemma/Qwen families. Uses its own embedded (Cohere) chat template, so we
         // leave ChatTemplate/NoJinja at their defaults instead of forcing gemma/chatml. Kept to <= 8 GB.
@@ -626,12 +637,13 @@ public static class LlamaCppServerManager
             return ("gemma", true, false);
         }
 
-        // "afrislm" / "index-translate": TranslatePsy-AfriSLM and bilibili's Index-Translate are
-        // Qwen 3.5 fine-tunes that think by default just like their base, but no file of those
-        // families carries "qwen" in its name.
+        // "afrislm" / "index-translate" / "index-nailong": TranslatePsy-AfriSLM and bilibili's
+        // Index-Translate and Index-Nailong are Qwen 3.5 fine-tunes that think by default just like
+        // their base, but no file of those families carries "qwen" in its name.
         if (fileName.Contains("qwen", StringComparison.OrdinalIgnoreCase) ||
             fileName.Contains("afrislm", StringComparison.OrdinalIgnoreCase) ||
-            fileName.Contains("index-translate", StringComparison.OrdinalIgnoreCase))
+            fileName.Contains("index-translate", StringComparison.OrdinalIgnoreCase) ||
+            fileName.Contains("index-nailong", StringComparison.OrdinalIgnoreCase))
         {
             return (null, false, true);
         }
