@@ -913,6 +913,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         FixShortDisplayTimes.Language.FixShortDisplayTime = language.FixShortDisplayTime;
         FixShortDisplayTimes.Language.FixShortDisplayTimes = language.FixShortDisplayTimes;
         FixShortDisplayTimes.Language.UnableToFixTextXY = language.UnableToFixTextXY;
+        FixShortDisplayTimes.Language.StillTooShortNoRoomXYZW = language.StillTooShortNoRoomXYZW;
+        FixShortDisplayTimes.Language.StillTooFastNoRoomXYZW = language.StillTooFastNoRoomXYZW;
 
         FixLongDisplayTimes.Language.FixLongDisplayTime = language.FixLongDisplayTime;
 
