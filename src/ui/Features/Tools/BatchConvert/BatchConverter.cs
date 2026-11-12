@@ -929,8 +929,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         return true;
     }
 
-    /// <returns>False when the run was cancelled or every line came back blank, in which case a
-    /// terminal status is left on the item.</returns>
+    /// <returns>False when every line came back blank, in which case a terminal status is left on the item.</returns>
     private static async Task<bool> RunOcrTesseract(IOcrSubtitle imageSubtitles, BatchConvertItem item, Iso639Dash2LanguageCode? sourceLanguage, CancellationToken cancellationToken)
     {
         var tesseractOcr = new TesseractOcr();
@@ -965,7 +964,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return false;
         }
 
-        return !cancelled;
+        return true;
     }
 
     /// <summary>
@@ -2492,6 +2491,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             if (mergeActive)
             {
                 s = await RunTextAndTimeCodeFunctions(s, item);
+                s = BeautifyTimeCodes(s, item.FileName);
+                s = SnapTimeCodesToFrames(s, item.FileName);
             }
 
             var original = mergeActive ? new Subtitle(s, false) : null;
@@ -2511,6 +2512,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
             s = AssaChangeStyleProperties(s);
+            if (original == null)
+            {
+                s = BeautifyTimeCodes(s, item.FileName);
+                s = SnapTimeCodesToFrames(s, item.FileName);
+            }
+
             s = await RunPlugin(s, item, cancellationToken);
             s = SortBy(s);
             s = Renumber(s);
@@ -2543,8 +2550,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         s = RemoveTextForHearingImpaired(s, Language);
         s = RemoveUnicodeControlCharacters(s);
         s = FixRightToLeft(s);
-        s = BeautifyTimeCodes(s, item.FileName);
-        s = SnapTimeCodesToFrames(s, item.FileName);
         return s;
     }
 
