@@ -149,3 +149,5 @@ You can bookmark subtitle lines for quick reference:
 - **Toggle bookmark** — Quickly toggle bookmark on/off
 - **List bookmarks** — View all bookmarks
 - **Go to next/previous bookmark** — Navigate between bookmarks
+
+A bookmarked line also shows a bookmark tag with the first line of its note in the waveform (turn it off in **Options → Settings → Waveform → Show bookmarks**).

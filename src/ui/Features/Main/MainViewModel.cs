@@ -15911,6 +15911,13 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<WordListsWindow, WordListsViewModel>();
     }
 
+    /// <summary>Saves the bookmarks next to the subtitle and repaints the waveform, which draws them.</summary>
+    private void SaveBookmarks()
+    {
+        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        _updateAudioVisualizer = true;
+    }
+
     [RelayCommand]
     private async Task AddOrEditBookmark()
     {
@@ -15945,14 +15952,12 @@ public partial class MainViewModel :
             }
         }
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         if (result.ListPressed)
         {
             await ListBookmarks();
         }
-
-        _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
@@ -15971,7 +15976,7 @@ public partial class MainViewModel :
             }
         }
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         _shortcutManager.ClearKeys();
     }
@@ -16061,7 +16066,7 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<BookmarksListWindow, BookmarksListViewModel>(vm => { vm.Initialize(Subtitles.ToList()); });
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         if (result.GoToPressed && result.SelectedSubtitle != null)
         {
@@ -16078,7 +16083,7 @@ public partial class MainViewModel :
             item.Bookmark = null;
         }
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         _shortcutManager.ClearKeys();
     }
@@ -16123,7 +16128,7 @@ public partial class MainViewModel :
             item.Bookmark = null;
         }
 
-        new SubtitleMarksPersistence(GetSaveSubtitle(), _subtitleFileName).Save();
+        SaveBookmarks();
 
         _shortcutManager.ClearKeys();
     }

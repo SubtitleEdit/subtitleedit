@@ -146,6 +146,7 @@ public class LanguageSettings
     public string WaveformUseSkiaRenderer { get; set; }
     public string WaveformShowNumberAndDuration { get; set; }
     public string WaveformShowCps { get; set; }
+    public string WaveformShowBookmarks { get; set; }
     public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
     public string WaveformSelectCurrentSubtitleWhilePaused { get; set; }
     public string WaveformRememberZoom { get; set; }
@@ -544,6 +545,7 @@ public class LanguageSettings
         WaveformUseSkiaRenderer = "Use experimental fast renderer";
         WaveformShowNumberAndDuration = "Show # + duration";
         WaveformShowCps = "Show chars/sec";
+        WaveformShowBookmarks = "Show bookmarks";
         WaveformFocusOnMouseOver = "Focus on mouse over";
         WaveformCenterVideoPositionAlsoWhenPaused = "Center video position also while paused";
         WaveformSelectCurrentSubtitleWhilePaused = "Select current subtitle also while paused";

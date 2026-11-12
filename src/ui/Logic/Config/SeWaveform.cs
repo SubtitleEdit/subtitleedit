@@ -143,6 +143,9 @@ public class SeWaveform
     public bool WaveformShowNumberAndDuration { get; set; }
     public bool WaveformShowCps { get; set; }
 
+    // SE 4 parity: a bookmarked line shows a bookmark tag with the first line of its note.
+    public bool WaveformShowBookmarks { get; set; }
+
     public SeWaveform()
     {
         ShowToolbar = true;
@@ -213,6 +216,7 @@ public class SeWaveform
 
         WaveformShowNumberAndDuration = true;
         WaveformShowCps = true;
+        WaveformShowBookmarks = true;
 
         MouseWheelVideoPositionStepMs = 500;
         VideoSeekAmount = "2s";
