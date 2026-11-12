@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -107,6 +108,7 @@ public class SpellCheckWindow : Window
             Width = double.NaN,
         }.WithAccessibleName(Se.Language.SpellCheck.WordNotFound);
         textBoxWord.Classes.Add("text");
+        textBoxWord.AddHandler(KeyDownEvent, (_, e) => vm.WordTextBoxKeyDown(e), RoutingStrategies.Tunnel);
         vm.TextBoxWordNotFound = textBoxWord;
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
@@ -299,6 +301,7 @@ public class SpellCheckWindow : Window
             },
         });
         listBoxSuggestions.DoubleTapped += vm.ListBoxSuggestionsDoubleTapped;
+        listBoxSuggestions.AddHandler(KeyDownEvent, (_, e) => vm.SuggestionsKeyDown(e), RoutingStrategies.Tunnel);
 
         var buttonUseOnce = MakeActionButton(Se.Language.General.UseOnce, nameof(SpellCheckViewModel.SuggestionUseOnceCommand), IconNames.Check);
         var buttonUseAlways = MakeActionButton(Se.Language.General.UseAlways, nameof(SpellCheckViewModel.SuggestionUseAlwaysCommand), IconNames.CheckBold);
