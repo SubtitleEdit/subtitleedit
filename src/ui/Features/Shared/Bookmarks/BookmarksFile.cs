@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,9 @@ namespace Nikse.SubtitleEdit.Features.Shared.Bookmarks;
 /// The bookmarks export file: one tab-separated line per bookmark with the line number, the start
 /// time (always hh:mm:ss,fff - not the display format, so frame numbers or a video offset do not
 /// break the import), the bookmark text and the subtitle text. Line breaks are written as
-/// &lt;br /&gt;. The subtitle text is there for reading only - import ignores it.
+/// &lt;br /&gt;. The subtitle text is there for reading only - import ignores it. A bookmark in
+/// the second or third color has a fifth column with the color number (2 or 3), so files with
+/// only default-color bookmarks are unchanged and older versions still import every file.
 /// </summary>
 public static class BookmarksFile
 {
@@ -25,7 +28,13 @@ public static class BookmarksFile
             sb.Append('#').Append(line.Number).Append('\t')
                 .Append(new TimeCode(line.StartTime).ToString()).Append('\t')
                 .Append(Encode(line.Bookmark ?? string.Empty)).Append('\t')
-                .AppendLine(Encode(line.Text));
+                .Append(Encode(line.Text));
+            if (line.BookmarkColor > 0)
+            {
+                sb.Append('\t').Append(line.BookmarkColor + 1);
+            }
+
+            sb.AppendLine();
         }
 
         return sb.ToString();
@@ -57,6 +66,11 @@ public static class BookmarksFile
             }
 
             target.Bookmark = Decode(parts[2]);
+            target.BookmarkColor = parts.Length > 4 &&
+                                   int.TryParse(parts[4].Trim(), out var colorNumber) &&
+                                   colorNumber >= 1 && colorNumber <= BookmarkColors.Count
+                ? colorNumber - 1
+                : 0;
             count++;
         }
 

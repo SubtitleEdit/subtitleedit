@@ -35,6 +35,42 @@ public class BookmarksFileTests
     }
 
     [AvaloniaFact]
+    public void ExportThenImport_RestoresColors()
+    {
+        var source = MakeLines();
+        source[0].Bookmark = "Default";
+        source[1].Bookmark = "Second";
+        source[1].BookmarkColor = 1;
+        source[2].Bookmark = "Third";
+        source[2].BookmarkColor = 2;
+        var text = BookmarksFile.ToText(source);
+
+        var rows = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        Assert.Equal(4, rows[0].TrimEnd('\r').Split('\t').Length);
+        Assert.EndsWith("\t2", rows[1].TrimEnd('\r'));
+        Assert.EndsWith("\t3", rows[2].TrimEnd('\r'));
+
+        var target = MakeLines();
+        target[0].Bookmark = "Old";
+        target[0].BookmarkColor = 2;
+        BookmarksFile.Apply(text, target);
+
+        Assert.Equal(new[] { 0, 1, 2 }, target.Select(p => p.BookmarkColor));
+        Assert.Equal("Third", target[2].Bookmark);
+    }
+
+    [AvaloniaFact]
+    public void Import_BadColor_IsDefaultColor()
+    {
+        var target = MakeLines();
+
+        BookmarksFile.Apply("#1\t00:00:01,000\tNote\tOne\t9", target);
+
+        Assert.Equal("Note", target[0].Bookmark);
+        Assert.Equal(0, target[0].BookmarkColor);
+    }
+
+    [AvaloniaFact]
     public void Import_NoTimeMatch_FallsBackToNumber()
     {
         var target = MakeLines();
