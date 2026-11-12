@@ -120,6 +120,7 @@ Good to know:
 - **Remember zoom (horizontal and vertical)** — Off by default
 - **Use experimental fast renderer**
 - **Show # + Duration** and **Show Chars/sec** — The number/duration footer and chars/sec line drawn on each cue in the waveform
+- **Show bookmarks** — A bookmark tag with the first line of the note on each bookmarked cue in the waveform
 - **Waveform text font size**, **Waveform text font bold** and the full color set — text, waveform, subtitle background, background, selected subtitle background, selected, cursor/head, shot change, left/right border, fancy high color. Color themes can be imported and exported
 - **Auto-transcribe new waveform selection via speech-to-text**
 - **Download ffmpeg** and a **disk space** readout for the extracted audio

@@ -305,6 +305,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _waveformUseSkiaRenderer;
     [ObservableProperty] private bool _waveformShowNumberAndDuration;
     [ObservableProperty] private bool _waveformShowCps;
+    [ObservableProperty] private bool _waveformShowBookmarks;
     [ObservableProperty] private bool _waveformFocusOnMouseOver;
     [ObservableProperty] private bool _waveformCenterVideoPosition;
     [ObservableProperty] private bool _waveformCenterVideoPositionAlsoWhenPaused;
@@ -1069,6 +1070,7 @@ public partial class SettingsViewModel : ObservableObject
         WaveformUseSkiaRenderer = Se.Settings.Waveform.UseSkiaRenderer;
         WaveformShowNumberAndDuration = Se.Settings.Waveform.WaveformShowNumberAndDuration;
         WaveformShowCps = Se.Settings.Waveform.WaveformShowCps;
+        WaveformShowBookmarks = Se.Settings.Waveform.WaveformShowBookmarks;
         WaveformFocusOnMouseOver = Se.Settings.Waveform.FocusOnMouseOver;
         WaveformCenterVideoPosition = Se.Settings.Waveform.CenterVideoPosition;
         WaveformCenterVideoPositionAlsoWhenPaused = Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused;
@@ -1992,6 +1994,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.UseSkiaRenderer = WaveformUseSkiaRenderer;
         Se.Settings.Waveform.WaveformShowNumberAndDuration = WaveformShowNumberAndDuration;
         Se.Settings.Waveform.WaveformShowCps = WaveformShowCps;
+        Se.Settings.Waveform.WaveformShowBookmarks = WaveformShowBookmarks;
         Se.Settings.Waveform.FocusOnMouseOver = WaveformFocusOnMouseOver;
         Se.Settings.Waveform.CenterVideoPosition = WaveformCenterVideoPosition;
         Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused = WaveformCenterVideoPositionAlsoWhenPaused;

@@ -908,6 +908,7 @@ public class SettingsPage : UserControl
             // Own strings: General.Show is the start-time column header, not the verb (#16672).
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowNumberAndDuration, nameof(_vm.WaveformShowNumberAndDuration)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowCps, nameof(_vm.WaveformShowCps)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowBookmarks, nameof(_vm.WaveformShowBookmarks)),
             new SettingsItem(Se.Language.Options.Settings.WaveformTextFontSize, () => UiUtil.MakeNumericUpDownInt(
                 10 ,
                 100,
