@@ -2426,14 +2426,14 @@
       "presetName": "Preset name",
       "deletePresetX": "Delete preset \"{0}\"?",
       "mergeTranslationWithOriginalTitle": "Merge translation with original",
-      "mergeTranslationWithOriginalInfo": "Original and translation in one bilingual subtitle, each in its own style (below).",
+      "mergeTranslationWithOriginalInfo": "Original and translation in one bilingual subtitle. Their position (top/bottom) and style, set below, need Advanced Sub Station Alpha.",
       "mergeTranslationWithOriginalRequirements": "Requires \"{0}\" and {1} \"{2}\".",
       "mergeTranslationWithOriginalStyleOriginal": "Style 1 (original)",
       "mergeTranslationWithOriginalStyleTranslation": "Style 2 (translation)",
       "mergeTranslationWithOriginalNeedsAutoTranslate": "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.",
       "nOcrDatabaseNotFound": "The nOCR database \"{0}\" was not found, so image-based subtitles cannot be converted to text.\n\nPlease pick another OCR engine or database in the Batch convert settings.",
-      "mergeTranslationWithOriginalTargetFormatTitle": "Target format",
-      "mergeTranslationWithOriginalTargetFormatMessage": "\"Merge translation with original\" requires the target format \"Advanced Sub Station Alpha\" (now \"{0}\").\n\nSwitch the target format to \"Advanced Sub Station Alpha\"?"
+      "mergeTranslationWithOriginalTargetFormatTitle": "Advanced Sub Station Alpha required",
+      "mergeTranslationWithOriginalTargetFormatMessage": "Positioning and styling the original and the translation requires the target format \"Advanced Sub Station Alpha\".\n\nSwitch from \"{0}\" to \"Advanced Sub Station Alpha\"?"
     },
     "changeCasing": {
       "fixNames": "Fix names",

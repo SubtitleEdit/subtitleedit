@@ -199,13 +199,13 @@ public class LanguageBatchConvert
         PresetName = "Preset name";
         DeletePresetX = "Delete preset \"{0}\"?";
         MergeTranslationWithOriginalTitle = "Merge translation with original";
-        MergeTranslationWithOriginalInfo = "Original and translation in one bilingual subtitle, each in its own style (below).";
+        MergeTranslationWithOriginalInfo = "Original and translation in one bilingual subtitle. Their position (top/bottom) and style, set below, need Advanced Sub Station Alpha.";
         MergeTranslationWithOriginalRequirements = "Requires \"{0}\" and {1} \"{2}\".";
         MergeTranslationWithOriginalStyleOriginal = "Style 1 (original)";
         MergeTranslationWithOriginalStyleTranslation = "Style 2 (translation)";
         MergeTranslationWithOriginalNeedsAutoTranslate = "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.";
         NOcrDatabaseNotFound = "The nOCR database \"{0}\" was not found, so image-based subtitles cannot be converted to text.\n\nPlease pick another OCR engine or database in the Batch convert settings.";
-        MergeTranslationWithOriginalTargetFormatTitle = "Target format";
-        MergeTranslationWithOriginalTargetFormatMessage = "\"Merge translation with original\" requires the target format \"Advanced Sub Station Alpha\" (now \"{0}\").\n\nSwitch the target format to \"Advanced Sub Station Alpha\"?";
+        MergeTranslationWithOriginalTargetFormatTitle = "Advanced Sub Station Alpha required";
+        MergeTranslationWithOriginalTargetFormatMessage = "Positioning and styling the original and the translation requires the target format \"Advanced Sub Station Alpha\".\n\nSwitch from \"{0}\" to \"Advanced Sub Station Alpha\"?";
     }
 }
