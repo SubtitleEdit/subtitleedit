@@ -150,7 +150,7 @@ public class BatchConvertMergeTranslationWithOriginalViewModelTests
     }
 
     [AvaloniaFact]
-    public void SelectingTheFunction_SwitchesTheTargetFormatToAssa()
+    public void SelectingTheFunction_DoesNotChangeTheTargetFormat()
     {
         using var _ = new BatchConvertSettingsScope();
         Se.Settings.Tools.BatchConvert.ActiveFunctions = [];
@@ -159,11 +159,8 @@ public class BatchConvertMergeTranslationWithOriginalViewModelTests
         var function = vm.BatchFunctions.Single(p => p.Type == BatchConvertFunctionType.MergeTranslationWithOriginal);
 
         function.IsSelected = true;
+        Dispatcher.UIThread.RunJobs();
 
-        Assert.Equal(AdvancedSubStationAlpha.NameOfFormat, vm.SelectedTargetFormat);
-
-        // A format picked afterwards is respected
-        vm.SelectedTargetFormat = "SubRip";
         Assert.Equal("SubRip", vm.SelectedTargetFormat);
     }
 

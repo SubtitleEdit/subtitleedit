@@ -521,14 +521,14 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         BatchFunctions = new ObservableCollection<BatchConvertFunction>(BatchConvertFunction.List(this));
         BatchFunctions.Single(p => p.Type == BatchConvertFunctionType.MergeTranslationWithOriginal).PropertyChanged += (s, e) =>
         {
-            // The two styles only exist in Advanced Sub Station Alpha - other formats just get both texts stacked
+            // Asked, never switched silently: the target format may be a deliberate choice
             if (e.PropertyName == nameof(BatchConvertFunction.IsSelected) &&
                 s is BatchConvertFunction { IsSelected: true } &&
                 !_isApplyingPreset &&
-                SelectedTargetFormat != AdvancedSubStationAlpha.NameOfFormat &&
-                TargetFormats.Contains(AdvancedSubStationAlpha.NameOfFormat))
+                Window != null &&
+                NeedsTargetFormatQuestion(true, true, SelectedTargetFormat))
             {
-                SelectedTargetFormat = AdvancedSubStationAlpha.NameOfFormat;
+                Dispatcher.UIThread.Post(async () => await AskMergeTranslationWithOriginalTargetFormat());
             }
         };
         ApplyFunctionFilter();
@@ -2045,8 +2045,18 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return true;
         }
 
+        var answer = await AskMergeTranslationWithOriginalTargetFormat();
+        return answer is MessageBoxResult.Custom1 or MessageBoxResult.Custom2;
+    }
+
+    /// <summary>
+    /// Asks whether to switch to Advanced Sub Station Alpha or keep the chosen format. The target
+    /// format is only changed when the user picks Advanced Sub Station Alpha.
+    /// </summary>
+    private async Task<MessageBoxResult> AskMergeTranslationWithOriginalTargetFormat()
+    {
         var answer = await MessageBox.Show(
-            Window,
+            Window!,
             Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalTargetFormatTitle,
             string.Format(Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalTargetFormatMessage, SelectedTargetFormat),
             MessageBoxButtons.Cancel,
@@ -2058,10 +2068,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         {
             SelectedTargetFormat = AdvancedSubStationAlpha.NameOfFormat;
             SaveSettings();
-            return true;
         }
 
-        return answer == MessageBoxResult.Custom2;
+        return answer;
     }
 
     private async Task<bool> EnsureMergeTranslationWithOriginalHasAutoTranslate(BatchConvertConfig config)
