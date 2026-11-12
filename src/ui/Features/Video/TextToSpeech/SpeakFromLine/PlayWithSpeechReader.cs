@@ -85,6 +85,8 @@ public sealed class PlayWithSpeechReader
         var ducked = false;
         var volumeBeforeDuck = 0.0;
         long clipPlayStartedMs = 0;
+        var clipPlayedSeconds = 0.0; // clip (media) time played, holds left out
+        var earlyPauseRetries = 0;
         var playRequestedMs = long.MinValue / 2;
         var stopwatch = Stopwatch.StartNew();
         var stallDetector = new SpeakFromLineReader.PlaybackStallDetector(SpeakFromLineReader.StallTimeoutMilliseconds);
@@ -220,9 +222,8 @@ public sealed class PlayWithSpeechReader
                         appliedPlayerSpeed = playerSpeed;
                     }
 
-                    // mpv pauses itself at the clip's end ("keep-open"); the grace period skips the
-                    // moment right after loading or resuming, before it reports playing.
-                    var finished = nowMs - clipPlayStartedMs > 300 && player.IsPaused;
+                    clipPlayedSeconds += elapsedSeconds * Math.Max(0, appliedPlayerSpeed);
+                    var finished = IsClipFinished(player, nowMs - clipPlayStartedMs, clipPlayedSeconds, ref earlyPauseRetries);
                     if (!finished && stallDetector.IsStalled(player.Position, nowMs))
                     {
                         Se.LogError(new InvalidOperationException($"Playback did not progress for {SpeakFromLineReader.StallTimeoutMilliseconds} ms"),
@@ -303,6 +304,8 @@ public sealed class PlayWithSpeechReader
                 // carries over to the next file, so un-pause explicitly.
                 player.Play();
                 clipPlayStartedMs = stopwatch.ElapsedMilliseconds;
+                clipPlayedSeconds = 0;
+                earlyPauseRetries = 0;
                 stallDetector = new SpeakFromLineReader.PlaybackStallDetector(SpeakFromLineReader.StallTimeoutMilliseconds);
                 speaking = index;
                 Duck();
@@ -367,6 +370,44 @@ public sealed class PlayWithSpeechReader
         {
             gate.Release();
         }
+    }
+
+    /// <summary>
+    /// Whether the clip being spoken is over. mpv pauses itself at a clip's end ("keep-open"),
+    /// but the player's cached pause state can still hold the pause the previous clip ended with
+    /// while mpv plays this one (the position read through it freezes too), and trusting it cut
+    /// the clip off at once. So the end is the position reaching the clip's end or the clip's own
+    /// length having played (<paramref name="playedSeconds"/>, clip time with holds left out); a
+    /// pause well before the end gets an un-pause instead (a few at most, so a clip mpv really
+    /// stops can't hang). The grace period skips the moment right after loading or resuming.
+    /// </summary>
+    private static bool IsClipFinished(LibMpvDynamicPlayer player, long msSincePlayStarted, double playedSeconds, ref int earlyPauseRetries)
+    {
+        if (msSincePlayStarted <= 300)
+        {
+            return false;
+        }
+
+        var duration = player.Duration;
+        var position = player.Position;
+        if (SpeakFromLineReader.IsClipOver(playedSeconds, 1.0, duration, position))
+        {
+            return true;
+        }
+
+        if (!player.IsPaused)
+        {
+            return false;
+        }
+
+        if (earlyPauseRetries < SpeakFromLineReader.MaxEarlyPauseRetries && duration > 0 && position < duration - SpeakFromLineReader.EndToleranceSeconds)
+        {
+            earlyPauseRetries++;
+            player.Play();
+            return false;
+        }
+
+        return true;
     }
 
     /// <summary>The first line still to be spoken at <paramref name="position"/>.</summary>
