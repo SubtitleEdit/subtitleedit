@@ -2495,7 +2495,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
 
             var original = mergeActive ? new Subtitle(s, false) : null;
-            var sourceLanguage = Language;
             s = await AutoTranslate(s, item, cancellationToken);
             if (_config.AutoTranslate.IsActive)
             {
@@ -2505,23 +2504,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 Language = GetTwoLetterLanguageCode(CurrentTargetLanguage.Code) ?? Language;
             }
 
-            s = mergeActive ? RunTextAppearanceFunctions(s) : await RunTextAndTimeCodeFunctions(s, item);
             if (original != null)
             {
-                // The original text gets the same appearance functions - with the source language's rules.
-                var targetLanguage = Language;
-                Language = sourceLanguage;
-                try
-                {
-                    original = RunTextAppearanceFunctions(original);
-                }
-                finally
-                {
-                    Language = targetLanguage;
-                }
-
+                // Stored right before the translation, merged right after it
                 s = MergeTranslationWithOriginal(original, s);
             }
+
+            s = mergeActive ? RunTextAppearanceFunctions(s) : await RunTextAndTimeCodeFunctions(s, item);
 
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
@@ -2589,7 +2578,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     /// <summary>
     /// With "Merge translation with original": the functions that only change how a line's text
-    /// looks, run on the translation and on the original text (each with its own language's rules).
+    /// looks, run after the translation and the original were merged.
     /// </summary>
     private Subtitle RunTextAppearanceFunctions(Subtitle s)
     {
