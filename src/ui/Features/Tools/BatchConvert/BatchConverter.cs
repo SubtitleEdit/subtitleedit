@@ -2485,13 +2485,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = SplitBreakLongLines(s, Language);
             s = AdjustDisplayDuration(s);
 
-            // "Merge translation with original": the functions that merge, split or move lines run
-            // before the translation, so the input and the output of the translation have the
-            // same lines and the original is exactly what was translated.
+            // "Merge translation with original": every function runs on the source first, so the
+            // subtitle that is stored is exactly the input of the translation, and the merge with
+            // its output is the last step.
             var mergeActive = IsMergeTranslationWithOriginalActive;
             if (mergeActive)
             {
-                s = await RunStructureAndTimeCodeFunctions(s, item);
+                s = await RunTextAndTimeCodeFunctions(s, item);
             }
 
             var original = mergeActive ? new Subtitle(s, false) : null;
@@ -2504,13 +2504,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 Language = GetTwoLetterLanguageCode(CurrentTargetLanguage.Code) ?? Language;
             }
 
-            if (original != null)
-            {
-                // Stored right before the translation, merged right after it
-                s = MergeTranslationWithOriginal(original, s);
-            }
-
-            s = mergeActive ? RunTextAppearanceFunctions(s) : await RunTextAndTimeCodeFunctions(s, item);
+            s = original != null
+                ? MergeTranslationWithOriginal(original, s)
+                : await RunTextAndTimeCodeFunctions(s, item);
 
             s = AssaChangeResolution(s);
             s = AssaChangeStyle(s);
@@ -2524,7 +2520,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     }
 
     /// <summary>
-    /// The text and time code functions after auto-translate.
+    /// The text and time code functions - after auto-translate, or before it with "Merge translation with original".
     /// </summary>
     private async Task<Subtitle> RunTextAndTimeCodeFunctions(Subtitle s, BatchConvertItem item)
     {
@@ -2549,45 +2545,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         s = FixRightToLeft(s);
         s = BeautifyTimeCodes(s, item.FileName);
         s = SnapTimeCodesToFrames(s, item.FileName);
-        return s;
-    }
-
-    /// <summary>
-    /// With "Merge translation with original": the functions that merge, split, delete or move
-    /// lines, run once before the translation (with the source language's rules).
-    /// </summary>
-    private async Task<Subtitle> RunStructureAndTimeCodeFunctions(Subtitle s, BatchConvertItem item)
-    {
-        s = OffsetTimeCodes(s);
-        s = ChangeFrameRate(s);
-        s = ChangeSpeed(s);
-        s = BridgeGaps(s);
-        s = ApplyMinGap(s);
-        s = await FixCommonErrorsAsync(s);
-        s = MergeLinesWithSameText(s);
-        s = MergeLinesWithSameTimeCodes(s, Language);
-        s = ConvertColorsToDialog(s, Language);
-        s = MergeShortLines(s);
-        s = MergeContinuationLines(s, Language);
-        s = ApplyDurationLimits(s);
-        s = RemoveTextForHearingImpaired(s, Language);
-        s = BeautifyTimeCodes(s, item.FileName);
-        s = SnapTimeCodesToFrames(s, item.FileName);
-        return s;
-    }
-
-    /// <summary>
-    /// With "Merge translation with original": the functions that only change how a line's text
-    /// looks, run after the translation and the original were merged.
-    /// </summary>
-    private Subtitle RunTextAppearanceFunctions(Subtitle s)
-    {
-        s = ChangeCasing(s, Language);
-        s = MultipleReplace(s);
-        s = RemoveLineBreaks(s);
-        s = AutoBalanceLines(s, Language);
-        s = RemoveUnicodeControlCharacters(s);
-        s = FixRightToLeft(s);
         return s;
     }
 
