@@ -2052,10 +2052,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return true;
         }
 
-        // Either answer ends this Convert press: after the switch the user looks at the settings
-        // and presses Convert again.
-        await AskMergeTranslationWithOriginalTargetFormat();
-        return false;
+        return await AskMergeTranslationWithOriginalTargetFormat();
     }
 
     /// <summary>
