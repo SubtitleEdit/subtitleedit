@@ -213,6 +213,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedSubtitleDoubleClickActionType;
 
     [ObservableProperty] private bool _subtitleGridCenterSelectedRow;
+    [ObservableProperty] private bool _copyTextBlankLineBetweenSubtitles;
 
     [ObservableProperty] private ObservableCollection<string> _saveAsBehaviorTypes;
     [ObservableProperty] private ObservableCollection<string> _defaultSaveLocationTypes;
@@ -920,6 +921,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedSubtitleSingleClickActionType = MapFromSelectedSubtitleSingleClickAction(Se.Settings.General.SubtitleSingleClickAction);
         SelectedSubtitleDoubleClickActionType = MapFromSelectedSubtitleDoubleClickAction(Se.Settings.General.SubtitleDoubleClickAction);
         SubtitleGridCenterSelectedRow = Se.Settings.General.SubtitleGridCenterSelectedRow;
+        CopyTextBlankLineBetweenSubtitles = Se.Settings.General.CopyTextBlankLineBetweenSubtitles;
         SelectedSaveAsBehaviorType = MapFromSelectedSaveAsBehavior(Se.Settings.General.SaveAsBehavior);
         SelectedFileChangedOutsideAction = FileChangedOutsideActions.FirstOrDefault(p => p.Action.ToString() == general.FileChangedOutsideAction) ?? FileChangedOutsideActions[0];
         SelectedSaveAsAppendLanguageCode = MapFromSelectedSaveAsAppendLanguageCode(Se.Settings.General.SaveAsAppendLanguageCode);
@@ -1872,6 +1874,7 @@ public partial class SettingsViewModel : ObservableObject
         general.SubtitleSingleClickAction = MapToSelectedSubtitleSingleClickAction(SelectedSubtitleSingleClickActionType);
         general.SubtitleDoubleClickAction = MapToSelectedSubtitleDoubleClickAction(SelectedSubtitleDoubleClickActionType);
         general.SubtitleGridCenterSelectedRow = SubtitleGridCenterSelectedRow;
+        general.CopyTextBlankLineBetweenSubtitles = CopyTextBlankLineBetweenSubtitles;
         general.SaveAsBehavior = MapToSaveAsBehavior(SelectedSaveAsBehaviorType);
         general.FileChangedOutsideAction = SelectedFileChangedOutsideAction.Action.ToString();
         general.SaveAsAppendLanguageCode = MapToSaveAsAppendLanguageCode(SelectedSaveAsAppendLanguageCode);
