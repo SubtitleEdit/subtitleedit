@@ -60,8 +60,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         var map = await TranslateLinesAsync(lines, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken);
         // An echo that survived the warmer retry in TranslateLinesAsync is accepted: the line may
         // legitimately read the same in both languages, and failing it would abort the translation.
-        // A broken value (leaked JSON, the prompt's example) is never written into the subtitle.
-        if (map.TryGetValue(1, out var broken) && LlamaCppAdvancedProtocol.IsBrokenValue(stripped.Text, broken))
+        // A broken value (leaked JSON, the prompt's example) is never written into the subtitle;
+        // a value that is only long is accepted, as a lone line cannot be cut any further (#16885).
+        if (map.TryGetValue(1, out var broken) && LlamaCppAdvancedProtocol.IsMalformedValue(stripped.Text, broken))
         {
             throw new HttpRequestException("No usable translation in " + Name + " reply: " + broken);
         }
@@ -134,10 +135,11 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         // both languages, and throwing would abort the whole translation.
         // Same for a reply where rows moved up by one and the freed row repeats an earlier
         // translation (#16555) or holds a placeholder like "..." (#16585); a lone line has no
-        // neighbour to shift into.
+        // neighbour to shift into. A lone line that is only longer than the runaway budget is
+        // accepted too: correct Chinese-to-English translations are that long (#16885).
         var failure = IsComplete(map, lines)
             ? count == 1
-                ? LlamaCppAdvancedProtocol.IsBrokenValue(lines[0].Text, map[lines[0].Number]) ? new BatchFailure(1, IsShift: false) : BatchFailure.None
+                ? LlamaCppAdvancedProtocol.IsMalformedValue(lines[0].Text, map[lines[0].Number]) ? new BatchFailure(1, IsShift: false) : BatchFailure.None
                 : FindFirstFailure(map, lines, history, sourceLanguageCode, targetLanguageCode)
             : new BatchFailure(FindFirstMissingLine(map, lines), IsShift: false);
         if (failure.Line < 0)
@@ -198,7 +200,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                 continue; // the batch itself was fine - keep its answer for this line
             }
 
-            if (single.TryGetValue(1, out var translation) && translation.Length > 0 && !LlamaCppAdvancedProtocol.IsBrokenValue(line.Text, translation))
+            if (single.TryGetValue(1, out var translation) && translation.Length > 0 && !LlamaCppAdvancedProtocol.IsMalformedValue(line.Text, translation))
             {
                 map[number] = translation;
             }
@@ -254,7 +256,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                         // The same merge can also leave a placeholder like "..." in the freed row (#16585).
                         var duplicatedLine = FindDuplicatedTranslation(map, lines, history);
                         var placeholderLine = duplicatedLine < 0 ? FindPlaceholderTranslation(map, lines) : -1;
-                        if ((duplicatedLine < 0 && placeholderLine < 0) || (lines.Count == 1 && !LlamaCppAdvancedProtocol.IsBrokenValue(lines[0].Text, map[lines[0].Number])))
+                        if ((duplicatedLine < 0 && placeholderLine < 0) || (lines.Count == 1 && !LlamaCppAdvancedProtocol.IsMalformedValue(lines[0].Text, map[lines[0].Number])))
                         {
                             return map;
                         }

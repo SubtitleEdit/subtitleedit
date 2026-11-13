@@ -208,6 +208,17 @@ public static class LlamaCppAdvancedProtocol
     }
 
     /// <summary>
+    /// Like <see cref="IsBrokenValue"/>, but without the length test, which only guesses how much
+    /// a language pair expands: Chinese to English grows three to five times in characters, so
+    /// correct translations trip it (#16885). Used once a line is on its own, where a length-only
+    /// objection has nothing left to cut and would fail the whole file.
+    /// </summary>
+    public static bool IsMalformedValue(string source, string translation)
+    {
+        return IsExamplePlaceholder(translation) || IsLeakedStructure(source, translation);
+    }
+
+    /// <summary>
     /// True when a reply value holds more than its own line: the next lines' JSON
     /// (<c>2":"...</c>, <c>"}]}</c>) written inside the string with escaped quotes, or a runaway
     /// far longer than the source, e.g. the model's own notes ("Note: ... Let me correct that.").
@@ -221,13 +232,20 @@ public static class LlamaCppAdvancedProtocol
             return false;
         }
 
-        if (StructureLeakRegex.IsMatch(translation) && !StructureLeakRegex.IsMatch(source ?? string.Empty))
+        if (IsLeakedStructure(source, translation))
         {
             return true;
         }
 
         var sourceLength = (source ?? string.Empty).Trim().Length;
         return translation.Trim().Length > Math.Max(MinRunawayLength, RunawayFactor * sourceLength);
+    }
+
+    private static bool IsLeakedStructure(string source, string translation)
+    {
+        return !string.IsNullOrEmpty(translation) &&
+               StructureLeakRegex.IsMatch(translation) &&
+               !StructureLeakRegex.IsMatch(source ?? string.Empty);
     }
 
     private const int MinRunawayLength = 80;
