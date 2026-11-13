@@ -618,7 +618,22 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     private string ReplaceLineFixes(int index, string text, List<string> wordsToIgnore)
     {
         var spelledOK = IsSpelledCorrect(text);
-        var replacedLine = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(text, _subtitle, index, _spellCheckManager, wordsToIgnore, spelledOK);
+
+        // The gated regexes must not "correct" a word the user has declared, so every list the
+        // per-word path already trusts counts as known here too. Asking IsWordCorrect alone meant
+        // "add to names list" / "add to dictionary" could not stop a rewrite: the French "rue" in a
+        // Spanish subtitle became "rué", because "rué" is a -uar verb form in es_ES.dic and "rue" is
+        // not (#16378). HasNameExtended covers the multi-word and dash/period names that HasName
+        // does not reach; _wordSkipList is what "Skip all" in the fix window fills.
+        // IsWordOrName is not used here: its "longer than one character" filter would drop the
+        // dictionary protection for the rules that match a single letter, e.g. eng "\bl\b" -> "I".
+        var replacedLine = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(
+            text, _subtitle, index, _spellCheckManager, wordsToIgnore, spelledOK,
+            word => _wordSkipList.Contains(word) ||
+                    IsSpelledCorrect(word) ||
+                    _spellCheckWordLists.HasName(word) ||
+                    _spellCheckWordLists.HasUserWord(word) ||
+                    _spellCheckWordLists.HasNameExtended(word, text));
 
         // French typography wants a space before ! ? : ; — Tesseract often returns it glued to the
         // word ("Quoi?"). Apply the same normalization Fix-Common-Errors uses, so OCR output is

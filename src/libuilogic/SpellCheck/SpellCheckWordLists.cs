@@ -481,6 +481,13 @@ public class SpellCheckWordLists
 
     public bool HasUserWord(string word)
     {
+        // Most users keep no user dictionary, and the OCR fix engine asks this for every word of
+        // every line the gated regexes touch - skip the normalization when there is nothing to hit.
+        if (_userWordList.Count == 0)
+        {
+            return false;
+        }
+
         string s = Utilities.NormalizeUserDictionaryWord(word);
         return _userWordList.Contains(s) || (s.StartsWith('\'') || s.EndsWith('\'')) && _userWordList.Contains(s.Trim('\''));
     }
