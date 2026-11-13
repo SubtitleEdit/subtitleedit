@@ -4455,9 +4455,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // (local or remote llama-server) and Ollama.
         LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate or OllamaAdvancedTranslate or LmStudioAdvancedTranslate;
 
-        // The regular llama.cpp engine has no advanced window - its prompt (and the shared
-        // delay/max-bytes/merge settings) live in the translate settings dialog instead.
-        LlamaCppSettingsButtonIsVisible = engine is LlamaCppTranslate;
+        // The translate settings dialog holds the prompt and the shared delay/max-bytes/merge/
+        // keep-music-lines settings, so it is available for every engine like in the Auto-translate window.
+        LlamaCppSettingsButtonIsVisible = engine != null;
 
         if (engine is CrispAsrMadladTranslate)
         {
