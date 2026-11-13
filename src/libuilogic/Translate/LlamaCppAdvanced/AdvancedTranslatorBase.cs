@@ -55,7 +55,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
     public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
     {
-        var stripped = StrippedLine.Strip(text.Trim());
+        var stripped = StrippedLine.StripForTranslation(text.Trim());
         var lines = new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, stripped.Text) };
         var map = await TranslateLinesAsync(lines, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken);
         // An echo that survived the warmer retry in TranslateLinesAsync is accepted: the line may
@@ -112,11 +112,13 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         // they cost a lot of tokens, and small models "normalize" them into something that no
         // longer matches the source (#13927). A pure override/drawing line strips to empty, and
         // IsComplete then accepts the model's empty answer for it rather than failing the batch.
+        // Whole-line "<i>...</i>" and "♪ ... ♪" come off too and go back on afterwards - local
+        // models drop them often (#16869).
         var lines = new List<LlamaCppAdvancedProtocol.BatchLine>(count);
         var stripped = new StrippedLine[count];
         for (var i = 0; i < count; i++)
         {
-            stripped[i] = StrippedLine.Strip(rows[index + i].Text);
+            stripped[i] = StrippedLine.StripForTranslation(rows[index + i].Text);
             lines.Add(new LlamaCppAdvancedProtocol.BatchLine(i + 1, stripped[i].Text));
         }
 
@@ -328,8 +330,8 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
             // Same stripping as the batch itself: override blocks carry no context and would
             // otherwise fill the window twice per pair - once on each side (#13927).
-            var source = StrippedLine.Strip(rows[i].Text).Text;
-            var target = StrippedLine.Strip(rows[i].TranslatedText).Text;
+            var source = StrippedLine.StripForTranslation(rows[i].Text).Text;
+            var target = StrippedLine.StripForTranslation(rows[i].TranslatedText).Text;
             if (source.Length == 0 || target.Length == 0)
             {
                 continue; // a pure override/drawing line is no use as an example pair
