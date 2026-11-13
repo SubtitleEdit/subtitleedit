@@ -57,6 +57,7 @@ You can chain multiple conversion functions:
 - Embed fonts — embed the fonts an ASSA file uses as attachments, optionally [trimmed](assa-attachments.md) to the characters actually used
 - Adjust image brightness/alpha/color — for image-based subtitles
 - Auto translate
+- Merge translation with original — together with Auto-translate: one bilingual file with the original text and the translation, like [Merge two subtitles](merge-two-subtitles.md) (see [Bilingual output](#bilingual-output))
 - Delete lines
 
 ## Auto-translate in Batch Convert
@@ -78,6 +79,14 @@ Batch Convert can machine-translate files as part of the conversion. Supported e
 To translate into several languages in one run, click **Add** next to the **To** language and pick more target languages (**Remove** drops one). Every file is translated into each language and saved as its own output file, with the target language code as the language post fix (e.g. `movie.de.srt`, `movie.fr.srt`).
 
 The same feature is available headlessly in `seconv` via `--translate-to` — see the [command line documentation](../reference/command-line.md).
+
+### Bilingual output
+
+Select **Merge translation with original** together with **Auto-translate** and the target format **Advanced Sub Station Alpha** to merge each translated file with its original text, like [Merge two subtitles](merge-two-subtitles.md) does for two files.
+
+The original text and the translation are separate lines, each in its own style. **Style 1 (original)** and **Style 2 (translation)** have the same settings as in Merge two subtitles: font, font size, bold, italic, text color, outline color, outline width, shadow width, and top/bottom position. By default the original is at the top and the translation at the bottom. The ASSA **Target format settings** (styles, properties and attachments), **ASSA change style** and **ASSA change style properties** are not used, as they would replace or re-align the two styles; **ASSA change resolution** and **Embed fonts** still work. An ASSA source's own styles and script resolution are not carried over.
+
+All other selected functions, including **Run plugin**, run first, on the source text. The result is stored, translated, and the translation is merged with the stored text as the last step - so the original is exactly the text that was translated and the two always match line by line. Before the merge, the text-only functions **Change casing**, **Remove line breaks**, **Auto-balance lines**, **Remove Unicode control characters** and **Fix right-to-left** also run on the translation, with the target language's rules. With several target languages, each output file gets the original text and its own translation. **Convert** shows an error if **Merge translation with original** is selected without **Auto-translate**. The position and style need Advanced Sub Station Alpha, so if another target format is selected a question asks to switch to it - when the function is ticked (**Cancel** unticks the function) and again when **Convert** is pressed (**Cancel** stops).
 
 ## OCR in Batch Convert
 

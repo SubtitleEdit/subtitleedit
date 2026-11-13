@@ -24,3 +24,4 @@ Combine two subtitles into one bilingual subtitle — for example an original an
 
 - To create a bilingual subtitle from a translation you are working on, open the tool while in translation mode — the current text and the translation are loaded as subtitle 1 and 2 automatically
 - For two independent files, timing does not need to match exactly — lines are paired by overlap
+- To translate many files and merge each with its original text in one run, use **Auto-translate** with **Merge translation with original** in [Batch convert](batch-convert.md#bilingual-output) — it has the same style settings

@@ -60,6 +60,7 @@ public partial class BatchConvertFunction : ObservableObject
             MakeFunction(BatchConvertFunctionType.ConvertActors, Se.Language.Tools.ConvertActors.Title, ViewConvertActors.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.ConvertColorsToDialog, Se.Language.Tools.BatchConvert.ConvertColorsToDialogTitle, ViewConvertColorsToDialog.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AutoTranslate, Se.Language.General.AutoTranslate, ViewAutoTranslate.Make(vm), activeFunctions),
+            MakeFunction(BatchConvertFunctionType.MergeTranslationWithOriginal, Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalTitle, ViewMergeTranslationWithOriginal.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AssaChangeResolution, Se.Language.Assa.ResolutionResamplerTitle, ViewAssaChangeResolution.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AssaChangeStyle, Se.Language.Tools.BatchConvert.AssaChangeStyleTitle, ViewAssaChangeStyle.Make(vm), activeFunctions),
             MakeFunction(BatchConvertFunctionType.AssaChangeStyleProperties, Se.Language.Tools.BatchConvert.AssaChangeStylePropertiesTitle, ViewAssaChangeStyleProperties.Make(vm), activeFunctions),

@@ -94,6 +94,14 @@ public class LanguageBatchConvert
     public string DeletePreset { get; set; }
     public string PresetName { get; set; }
     public string DeletePresetX { get; set; }
+    public string MergeTranslationWithOriginalTitle { get; set; }
+    public string MergeTranslationWithOriginalInfo { get; set; }
+    public string MergeTranslationWithOriginalRequirements { get; set; }
+    public string MergeTranslationWithOriginalStyleOriginal { get; set; }
+    public string MergeTranslationWithOriginalStyleTranslation { get; set; }
+    public string MergeTranslationWithOriginalNeedsAutoTranslate { get; set; }
+    public string MergeTranslationWithOriginalTargetFormatTitle { get; set; }
+    public string MergeTranslationWithOriginalTargetFormatMessage { get; set; }
 
     public LanguageBatchConvert()
     {
@@ -189,5 +197,13 @@ public class LanguageBatchConvert
         DeletePreset = "Delete preset";
         PresetName = "Preset name";
         DeletePresetX = "Delete preset \"{0}\"?";
+        MergeTranslationWithOriginalTitle = "Merge translation with original";
+        MergeTranslationWithOriginalInfo = "Original and translation in one bilingual subtitle. Their position (top/bottom) and style, set below, need Advanced Sub Station Alpha.\nLike in Tools → Merge two subtitles.";
+        MergeTranslationWithOriginalRequirements = "Requires \"{0}\" and {1} \"{2}\".";
+        MergeTranslationWithOriginalStyleOriginal = "Style 1 (original)";
+        MergeTranslationWithOriginalStyleTranslation = "Style 2 (translation)";
+        MergeTranslationWithOriginalNeedsAutoTranslate = "\"Merge translation with original\" only works together with \"Auto-translate\" - please select \"Auto-translate\" too.";
+        MergeTranslationWithOriginalTargetFormatTitle = "Advanced Sub Station Alpha required";
+        MergeTranslationWithOriginalTargetFormatMessage = "Positioning and styling the original and the translation requires the target format \"Advanced Sub Station Alpha\".\n\nSwitch from \"{0}\" to \"Advanced Sub Station Alpha\"?";
     }
 }

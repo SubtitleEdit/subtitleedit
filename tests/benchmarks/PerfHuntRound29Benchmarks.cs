@@ -36,7 +36,7 @@ public class Round29MergeTwoSubtitlesBenchmarks
     }
 
     [Benchmark]
-    public int Merge() => MergeTwoSubtitlesViewModel.BuildSubRipMerge(_first, _second).Paragraphs.Count;
+    public int Merge() => MergeTwoSubtitlesHelper.BuildSubRipMerge(_first, _second).Paragraphs.Count;
 
     /// <summary>Drift control - untouched by this round.</summary>
     [Benchmark]

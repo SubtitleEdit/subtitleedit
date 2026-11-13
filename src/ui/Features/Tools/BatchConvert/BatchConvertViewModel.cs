@@ -36,6 +36,7 @@ using Nikse.SubtitleEdit.Features.Tools.AdjustDuration;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchErrorList;
 using Nikse.SubtitleEdit.Features.Tools.ConvertActors;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
+using Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
@@ -330,6 +331,27 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         "Proper case",
     };
 
+    // Merge translation with original - 1 = style of the original text, 2 = style of the translation
+    [ObservableProperty] private ObservableCollection<string> _mergeTranslationWithOriginalFontNames = new();
+    [ObservableProperty] private string _mergeTranslationWithOriginalFontName1 = "Arial";
+    [ObservableProperty] private int _mergeTranslationWithOriginalFontSize1 = 20;
+    [ObservableProperty] private bool _mergeTranslationWithOriginalBold1;
+    [ObservableProperty] private bool _mergeTranslationWithOriginalItalic1;
+    [ObservableProperty] private Color _mergeTranslationWithOriginalPrimaryColor1 = Colors.White;
+    [ObservableProperty] private Color _mergeTranslationWithOriginalOutlineColor1 = Colors.Black;
+    [ObservableProperty] private decimal _mergeTranslationWithOriginalOutlineWidth1 = 2;
+    [ObservableProperty] private decimal _mergeTranslationWithOriginalShadowWidth1 = 1;
+    [ObservableProperty] private bool _mergeTranslationWithOriginalAlignTop1 = true;
+    [ObservableProperty] private string _mergeTranslationWithOriginalFontName2 = "Arial";
+    [ObservableProperty] private int _mergeTranslationWithOriginalFontSize2 = 20;
+    [ObservableProperty] private bool _mergeTranslationWithOriginalBold2;
+    [ObservableProperty] private bool _mergeTranslationWithOriginalItalic2;
+    [ObservableProperty] private Color _mergeTranslationWithOriginalPrimaryColor2 = Colors.White;
+    [ObservableProperty] private Color _mergeTranslationWithOriginalOutlineColor2 = Colors.Black;
+    [ObservableProperty] private decimal _mergeTranslationWithOriginalOutlineWidth2 = 2;
+    [ObservableProperty] private decimal _mergeTranslationWithOriginalShadowWidth2 = 1;
+    [ObservableProperty] private bool _mergeTranslationWithOriginalAlignTop2;
+
     // Presets
     [ObservableProperty] private ObservableCollection<string> _presetNames = new();
     [ObservableProperty] private string? _selectedPresetName;
@@ -494,7 +516,28 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         };
         SelectedSortByOption = SortByOptions[0];
 
+        MergeTranslationWithOriginalFontNames = new ObservableCollection<string>(FontHelper.GetSystemFonts());
+
         BatchFunctions = new ObservableCollection<BatchConvertFunction>(BatchConvertFunction.List(this));
+        BatchFunctions.Single(p => p.Type == BatchConvertFunctionType.MergeTranslationWithOriginal).PropertyChanged += (s, e) =>
+        {
+            // Asked, never switched silently: the target format may be a deliberate choice
+            if (e.PropertyName == nameof(BatchConvertFunction.IsSelected) &&
+                s is BatchConvertFunction { IsSelected: true } function &&
+                !_isApplyingPreset &&
+                Window != null &&
+                NeedsTargetFormatQuestion(true, true, SelectedTargetFormat))
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    // Without Advanced Sub Station Alpha the function does nothing useful - cancel unticks it
+                    if (!await AskMergeTranslationWithOriginalTargetFormat())
+                    {
+                        function.IsSelected = false;
+                    }
+                });
+            }
+        };
         ApplyFunctionFilter();
 
         _cancellationTokenSource = new CancellationTokenSource();
@@ -947,6 +990,26 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.BatchConvert.ConvertActorsCasingType = ConvertActorsCasingIndex;
         Se.Settings.Tools.BatchConvert.ConvertActorsOnlyNames = ConvertActorsOnlyNames;
 
+        // Merge translation with original
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalFontName1 = MergeTranslationWithOriginalFontName1;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalFontSize1 = MergeTranslationWithOriginalFontSize1;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalBold1 = MergeTranslationWithOriginalBold1;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalItalic1 = MergeTranslationWithOriginalItalic1;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalPrimaryColor1 = MergeTranslationWithOriginalPrimaryColor1.FromColorToHex();
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalOutlineColor1 = MergeTranslationWithOriginalOutlineColor1.FromColorToHex();
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalOutlineWidth1 = MergeTranslationWithOriginalOutlineWidth1;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalShadowWidth1 = MergeTranslationWithOriginalShadowWidth1;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalAlignTop1 = MergeTranslationWithOriginalAlignTop1;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalFontName2 = MergeTranslationWithOriginalFontName2;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalFontSize2 = MergeTranslationWithOriginalFontSize2;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalBold2 = MergeTranslationWithOriginalBold2;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalItalic2 = MergeTranslationWithOriginalItalic2;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalPrimaryColor2 = MergeTranslationWithOriginalPrimaryColor2.FromColorToHex();
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalOutlineColor2 = MergeTranslationWithOriginalOutlineColor2.FromColorToHex();
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalOutlineWidth2 = MergeTranslationWithOriginalOutlineWidth2;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalShadowWidth2 = MergeTranslationWithOriginalShadowWidth2;
+        Se.Settings.Tools.BatchConvert.MergeTranslationWithOriginalAlignTop2 = MergeTranslationWithOriginalAlignTop2;
+
         // Adjust image brightness/alpha/color
         Se.Settings.Tools.BatchConvert.ImageAdjustBrightnessOn = ImageAdjustBrightnessOn;
         Se.Settings.Tools.BatchConvert.ImageAdjustBrightness = ImageAdjustBrightness;
@@ -987,6 +1050,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         Se.Settings.Tools.SplitRebalanceLongLinesUnbreakShorterThan = SplitBreakUnbreakLinesShorterThan;
 
         Se.SaveSettings();
+    }
+
+    // Like Merge two subtitles: a font that is not installed falls back to the first system font.
+    private string ResolveMergeTranslationWithOriginalFontName(string? name)
+    {
+        if (!string.IsNullOrEmpty(name) && MergeTranslationWithOriginalFontNames.Contains(name))
+        {
+            return name;
+        }
+
+        return MergeTranslationWithOriginalFontNames.FirstOrDefault() ?? "Arial";
     }
 
     private void LoadSettings()
@@ -1157,6 +1231,39 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         ConvertActorsChangeCasing = Se.Settings.Tools.BatchConvert.ConvertActorsChangeCasing;
         ConvertActorsCasingIndex = Math.Clamp(Se.Settings.Tools.BatchConvert.ConvertActorsCasingType, 0, ConvertActorsCasingOptions.Count - 1);
         ConvertActorsOnlyNames = Se.Settings.Tools.BatchConvert.ConvertActorsOnlyNames;
+
+        // Merge translation with original
+        var mergeSettings = Se.Settings.Tools.BatchConvert;
+        MergeTranslationWithOriginalFontName1 = ResolveMergeTranslationWithOriginalFontName(mergeSettings.MergeTranslationWithOriginalFontName1);
+        MergeTranslationWithOriginalFontSize1 = mergeSettings.MergeTranslationWithOriginalFontSize1;
+        MergeTranslationWithOriginalBold1 = mergeSettings.MergeTranslationWithOriginalBold1;
+        MergeTranslationWithOriginalItalic1 = mergeSettings.MergeTranslationWithOriginalItalic1;
+        if (!string.IsNullOrEmpty(mergeSettings.MergeTranslationWithOriginalPrimaryColor1))
+        {
+            MergeTranslationWithOriginalPrimaryColor1 = mergeSettings.MergeTranslationWithOriginalPrimaryColor1.FromHexToColor();
+        }
+        if (!string.IsNullOrEmpty(mergeSettings.MergeTranslationWithOriginalOutlineColor1))
+        {
+            MergeTranslationWithOriginalOutlineColor1 = mergeSettings.MergeTranslationWithOriginalOutlineColor1.FromHexToColor();
+        }
+        MergeTranslationWithOriginalOutlineWidth1 = mergeSettings.MergeTranslationWithOriginalOutlineWidth1;
+        MergeTranslationWithOriginalShadowWidth1 = mergeSettings.MergeTranslationWithOriginalShadowWidth1;
+        MergeTranslationWithOriginalAlignTop1 = mergeSettings.MergeTranslationWithOriginalAlignTop1;
+        MergeTranslationWithOriginalFontName2 = ResolveMergeTranslationWithOriginalFontName(mergeSettings.MergeTranslationWithOriginalFontName2);
+        MergeTranslationWithOriginalFontSize2 = mergeSettings.MergeTranslationWithOriginalFontSize2;
+        MergeTranslationWithOriginalBold2 = mergeSettings.MergeTranslationWithOriginalBold2;
+        MergeTranslationWithOriginalItalic2 = mergeSettings.MergeTranslationWithOriginalItalic2;
+        if (!string.IsNullOrEmpty(mergeSettings.MergeTranslationWithOriginalPrimaryColor2))
+        {
+            MergeTranslationWithOriginalPrimaryColor2 = mergeSettings.MergeTranslationWithOriginalPrimaryColor2.FromHexToColor();
+        }
+        if (!string.IsNullOrEmpty(mergeSettings.MergeTranslationWithOriginalOutlineColor2))
+        {
+            MergeTranslationWithOriginalOutlineColor2 = mergeSettings.MergeTranslationWithOriginalOutlineColor2.FromHexToColor();
+        }
+        MergeTranslationWithOriginalOutlineWidth2 = mergeSettings.MergeTranslationWithOriginalOutlineWidth2;
+        MergeTranslationWithOriginalShadowWidth2 = mergeSettings.MergeTranslationWithOriginalShadowWidth2;
+        MergeTranslationWithOriginalAlignTop2 = mergeSettings.MergeTranslationWithOriginalAlignTop2;
 
         // Prefer this tool's own saved values over the app-wide rules, exactly as the dedicated
         // split/break dialog does - otherwise the numbers typed here reset on every open (and
@@ -1416,11 +1523,21 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         SaveSettings();
 
+        if (!await EnsureMergeTranslationWithOriginalTargetFormat())
+        {
+            return;
+        }
+
         var config = MakeBatchConvertConfig();
 
         // Set before the ensure-chain below: starting the server is itself the slow part a user
         // cancels out of, and the shutdown has to know the run owns it by then. (#13865)
         _usesLocalLlamaCppServer |= UsesLocalLlamaCppServer(config);
+
+        if (!await EnsureMergeTranslationWithOriginalHasAutoTranslate(config))
+        {
+            return;
+        }
 
         if (!await EnsureTranslateApiKeyPresent(config))
         {
@@ -1820,6 +1937,73 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             config.RunPlugin.Plugin == null
                 ? string.Format(Se.Language.Plugins.PluginXNotAvailable, config.RunPlugin.PluginName)
                 : string.Format(Se.Language.Plugins.PluginXHasNoExecutable, config.RunPlugin.PluginName),
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error);
+        return false;
+    }
+
+    /// <summary>
+    /// The two styles of "Merge translation with original" only exist in Advanced Sub Station
+    /// Alpha - with another target format the result looks like the function does nothing. So
+    /// when the function is selected with another format, ask which format to use.
+    /// </summary>
+    internal static bool NeedsTargetFormatQuestion(bool mergeSelected, bool autoTranslateSelected, string? targetFormat)
+    {
+        return mergeSelected && autoTranslateSelected && targetFormat != AdvancedSubStationAlpha.NameOfFormat;
+    }
+
+    private async Task<bool> EnsureMergeTranslationWithOriginalTargetFormat()
+    {
+        var mergeSelected = BatchFunctions.Any(p => p.Type == BatchConvertFunctionType.MergeTranslationWithOriginal && p.IsSelected);
+        var autoTranslateSelected = BatchFunctions.Any(p => p.Type == BatchConvertFunctionType.AutoTranslate && p.IsSelected);
+        if (Window == null || !NeedsTargetFormatQuestion(mergeSelected, autoTranslateSelected, SelectedTargetFormat))
+        {
+            return true;
+        }
+
+        return await AskMergeTranslationWithOriginalTargetFormat();
+    }
+
+    /// <summary>
+    /// The function needs Advanced Sub Station Alpha: asks to switch to it. Returns false when the
+    /// user cancels - the target format is left unchanged then.
+    /// </summary>
+    private async Task<bool> AskMergeTranslationWithOriginalTargetFormat()
+    {
+        var answer = await MessageBox.Show(
+            Window!,
+            Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalTargetFormatTitle,
+            string.Format(Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalTargetFormatMessage, SelectedTargetFormat),
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            AdvancedSubStationAlpha.NameOfFormat);
+
+        if (answer != MessageBoxResult.Custom1)
+        {
+            return false;
+        }
+
+        SelectedTargetFormat = AdvancedSubStationAlpha.NameOfFormat;
+        SaveSettings();
+        return true;
+    }
+
+    private async Task<bool> EnsureMergeTranslationWithOriginalHasAutoTranslate(BatchConvertConfig config)
+    {
+        if (!config.MergeTranslationWithOriginal.IsActive || config.AutoTranslate.IsActive)
+        {
+            return true;
+        }
+
+        if (Window == null)
+        {
+            return false;
+        }
+
+        await MessageBox.Show(
+            Window,
+            Se.Language.General.Error,
+            Se.Language.Tools.BatchConvert.MergeTranslationWithOriginalNeedsAutoTranslate,
             MessageBoxButtons.OK,
             MessageBoxIcon.Error);
         return false;
@@ -3837,6 +4021,23 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 ChangeCasing = ConvertActorsChangeCasing,
                 CasingIndex = ConvertActorsCasingIndex,
                 OnlyNames = ConvertActorsOnlyNames,
+            },
+
+            MergeTranslationWithOriginal = new BatchConvertConfig.MergeTranslationWithOriginalSettings
+            {
+                IsActive = activeFunctions.Contains(BatchConvertFunctionType.MergeTranslationWithOriginal),
+                StyleOriginal = MergeTwoSubtitlesHelper.BuildSsaStyle(MergeTwoSubtitlesHelper.StyleName1,
+                    MergeTranslationWithOriginalFontName1, MergeTranslationWithOriginalFontSize1,
+                    MergeTranslationWithOriginalBold1, MergeTranslationWithOriginalItalic1,
+                    MergeTranslationWithOriginalPrimaryColor1, MergeTranslationWithOriginalOutlineColor1,
+                    MergeTranslationWithOriginalOutlineWidth1, MergeTranslationWithOriginalShadowWidth1,
+                    MergeTranslationWithOriginalAlignTop1),
+                StyleTranslation = MergeTwoSubtitlesHelper.BuildSsaStyle(MergeTwoSubtitlesHelper.StyleName2,
+                    MergeTranslationWithOriginalFontName2, MergeTranslationWithOriginalFontSize2,
+                    MergeTranslationWithOriginalBold2, MergeTranslationWithOriginalItalic2,
+                    MergeTranslationWithOriginalPrimaryColor2, MergeTranslationWithOriginalOutlineColor2,
+                    MergeTranslationWithOriginalOutlineWidth2, MergeTranslationWithOriginalShadowWidth2,
+                    MergeTranslationWithOriginalAlignTop2),
             },
 
             AdjustImageColors = new BatchConvertConfig.AdjustImageColorsSettings

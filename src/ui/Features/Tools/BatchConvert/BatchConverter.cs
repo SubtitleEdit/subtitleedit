@@ -25,6 +25,7 @@ using Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 using Nikse.SubtitleEdit.Features.Tools.ConvertActors;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
+using Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
@@ -2119,7 +2120,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
             if (targetFormat.Name == AdvancedSubStationAlpha.NameOfFormat)
             {
-                if (!_config.AssaUseSourceStylesIfPossible || s.OriginalFormat?.Name != AdvancedSubStationAlpha.NameOfFormat)
+                // "Merge translation with original" made its own two styles - the template would drop them
+                if (!IsMergeTranslationWithOriginalActive &&
+                    (!_config.AssaUseSourceStylesIfPossible || s.OriginalFormat?.Name != AdvancedSubStationAlpha.NameOfFormat))
                 {
                     if (!string.IsNullOrEmpty(_config.AssaHeader))
                     {
@@ -2463,6 +2466,21 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             s = AddFormatting(s);
             s = SplitBreakLongLines(s, Language);
             s = AdjustDisplayDuration(s);
+
+            // "Merge translation with original": every function runs on the source first, so the
+            // subtitle that is stored is exactly the input of the translation, and the merge with
+            // its output is the last step. The plugin runs here too - after the merge it would
+            // get both languages in one subtitle.
+            var mergeActive = IsMergeTranslationWithOriginalActive;
+            if (mergeActive)
+            {
+                s = await RunTextAndTimeCodeFunctions(s, item);
+                s = BeautifyTimeCodes(s, item.FileName);
+                s = SnapTimeCodesToFrames(s, item.FileName);
+                s = await RunPlugin(s, item, cancellationToken);
+            }
+
+            var original = mergeActive ? new Subtitle(s, false) : null;
             s = await AutoTranslate(s, item, cancellationToken);
             if (_config.AutoTranslate.IsActive)
             {
@@ -2472,36 +2490,120 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 Language = GetTwoLetterLanguageCode(CurrentTargetLanguage.Code) ?? Language;
             }
 
-            s = ChangeCasing(s, Language);
-            s = OffsetTimeCodes(s);
-            s = ChangeFrameRate(s);
-            s = ChangeSpeed(s);
-            s = BridgeGaps(s);
-            s = ApplyMinGap(s);
-            s = await FixCommonErrorsAsync(s);
-            s = MergeLinesWithSameText(s);
-            s = MergeLinesWithSameTimeCodes(s, Language);
-            s = ConvertColorsToDialog(s, Language);
-            s = MergeShortLines(s);
-            s = MergeContinuationLines(s, Language);
-            s = MultipleReplace(s);
-            s = RemoveLineBreaks(s);
-            s = AutoBalanceLines(s, Language);
-            s = ApplyDurationLimits(s);
-            s = RemoveTextForHearingImpaired(s, Language);
-            s = RemoveUnicodeControlCharacters(s);
-            s = FixRightToLeft(s);
-            s = AssaChangeResolution(s);
-            s = AssaChangeStyle(s);
-            s = AssaChangeStyleProperties(s);
-            s = BeautifyTimeCodes(s, item.FileName);
-            s = SnapTimeCodesToFrames(s, item.FileName);
-            s = await RunPlugin(s, item, cancellationToken);
+            if (original != null)
+            {
+                s = CleanUpTranslation(s);
+                s = MergeTranslationWithOriginal(original, s);
+
+                // Change style / Change style properties are left out: they would rename, replace
+                // or re-align the two styles, so original and translation could end up on top of
+                // each other. Resolution only scales the merged script as a whole.
+                s = AssaChangeResolution(s);
+            }
+            else
+            {
+                s = await RunTextAndTimeCodeFunctions(s, item);
+                s = AssaChangeResolution(s);
+                s = AssaChangeStyle(s);
+                s = AssaChangeStyleProperties(s);
+                s = BeautifyTimeCodes(s, item.FileName);
+                s = SnapTimeCodesToFrames(s, item.FileName);
+                s = await RunPlugin(s, item, cancellationToken);
+            }
+
             s = SortBy(s);
             s = Renumber(s);
         }
 
         return s;
+    }
+
+    /// <summary>
+    /// The text and time code functions - after auto-translate, or before it with "Merge translation with original".
+    /// </summary>
+    private async Task<Subtitle> RunTextAndTimeCodeFunctions(Subtitle s, BatchConvertItem item)
+    {
+        s = ChangeCasing(s, Language);
+        s = OffsetTimeCodes(s);
+        s = ChangeFrameRate(s);
+        s = ChangeSpeed(s);
+        s = BridgeGaps(s);
+        s = ApplyMinGap(s);
+        s = await FixCommonErrorsAsync(s);
+        s = MergeLinesWithSameText(s);
+        s = MergeLinesWithSameTimeCodes(s, Language);
+        s = ConvertColorsToDialog(s, Language);
+        s = MergeShortLines(s);
+        s = MergeContinuationLines(s, Language);
+        s = MultipleReplace(s);
+        s = RemoveLineBreaks(s);
+        s = AutoBalanceLines(s, Language);
+        s = ApplyDurationLimits(s);
+        s = RemoveTextForHearingImpaired(s, Language);
+        s = RemoveUnicodeControlCharacters(s);
+        s = FixRightToLeft(s);
+        return s;
+    }
+
+    /// <summary>
+    /// "Merge translation with original": the text functions ran on the source before the
+    /// translation, so the engine's output still needs the ones that shape a line in the target
+    /// language - otherwise e.g. an Arabic translation never gets its right-to-left fix (the source
+    /// has no right-to-left letters, so the fix skipped it) and long translated lines stay unbalanced.
+    /// Only text-only steps: anything that changes time codes or the number of lines would make
+    /// the translation drift from the original.
+    /// </summary>
+    private Subtitle CleanUpTranslation(Subtitle s)
+    {
+        s = ChangeCasing(s, Language);
+        s = RemoveLineBreaks(s);
+        s = AutoBalanceLines(s, Language);
+        s = RemoveUnicodeControlCharacters(s);
+        s = FixRightToLeft(s);
+        return s;
+    }
+
+    /// <summary>
+    /// Only together with auto-translate - without a translation there is nothing to merge.
+    /// </summary>
+    private bool IsMergeTranslationWithOriginalActive =>
+        _config.MergeTranslationWithOriginal.IsActive && _config.AutoTranslate.IsActive;
+
+    /// <summary>
+    /// "Merge translation with original": one bilingual subtitle, like Tools -> Merge two subtitles.
+    /// Advanced Sub Station Alpha gets the original text in one style and the translation in
+    /// another; other formats get the translation below the original text in the same line.
+    /// </summary>
+    private Subtitle MergeTranslationWithOriginal(Subtitle original, Subtitle translation)
+    {
+        Subtitle merged;
+        if (_config.TargetFormatName == AdvancedSubStationAlpha.NameOfFormat)
+        {
+            // The merged subtitle is ASSA already, so the save will not convert the source
+            // format's own formatting (e.g. WebVTT tags) - do it here, for both parts.
+            var assa = new AdvancedSubStationAlpha();
+            foreach (var part in new[] { original, translation })
+            {
+                if (part.OriginalFormat != null && part.OriginalFormat.Name != assa.Name)
+                {
+                    part.OriginalFormat.RemoveNativeFormatting(part, assa);
+                }
+            }
+
+            var c = _config.MergeTranslationWithOriginal;
+            merged = MergeTwoSubtitlesHelper.BuildAssaMerge(original, translation, c.StyleOriginal, c.StyleTranslation);
+            merged.OriginalFormat = assa;
+        }
+        else
+        {
+            merged = MergeTwoSubtitlesHelper.BuildSubRipMerge(original, translation);
+            merged.Header = translation.Header;
+            merged.Footer = translation.Footer;
+            merged.OriginalFormat = translation.OriginalFormat;
+        }
+
+        merged.Renumber();
+        return merged;
     }
 
     /// <summary>
