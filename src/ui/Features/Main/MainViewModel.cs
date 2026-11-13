@@ -9215,9 +9215,22 @@ public partial class MainViewModel :
     private async Task CopyLinesToClipboard(IEnumerable<string> lines)
     {
         var list = lines.ToList();
-        await ClipboardHelper.SetTextAsync(Window!, string.Join(Environment.NewLine + Environment.NewLine, list));
+        await ClipboardHelper.SetTextAsync(Window!, JoinCopiedText(list));
 
         ShowStatus(string.Format("{0} lines copied to clipboard", list.Count));
+    }
+
+    /// <summary>
+    /// Joins subtitle texts for the "Copy text" commands (grid and waveform): an empty line between
+    /// subtitles when <see cref="SeGeneral.CopyTextBlankLineBetweenSubtitles"/> is on (SE4 style),
+    /// otherwise one subtitle per line.
+    /// </summary>
+    private static string JoinCopiedText(IEnumerable<string> texts)
+    {
+        var separator = Se.Settings.General.CopyTextBlankLineBetweenSubtitles
+            ? Environment.NewLine + Environment.NewLine
+            : Environment.NewLine;
+        return string.Join(separator, texts);
     }
 
     /// <summary>
@@ -9249,7 +9262,7 @@ public partial class MainViewModel :
             return;
         }
 
-        await ClipboardHelper.SetTextAsync(Window, string.Join(Environment.NewLine, lines.Select(p => p.Text)));
+        await ClipboardHelper.SetTextAsync(Window, JoinCopiedText(lines.Select(p => p.Text)));
         _shortcutManager.ClearKeys();
     }
 

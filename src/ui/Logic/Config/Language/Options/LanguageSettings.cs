@@ -297,6 +297,7 @@ public class LanguageSettings
     public string SubtitleSingleClickAction { get; set; }
     public string SubtitleDoubleClickAction { get; set; }
     public string SubtitleGridCenterSelectedRow { get; set; }
+    public string CopyTextBlankLineBetweenSubtitles { get; set; }
     public string SaveAsBehavior { get; set; }
     public string FileChangedOutsideAction { get; set; }
     public string FileChangedOutsideReloadWhenUnmodified { get; set; }
@@ -697,6 +698,7 @@ public class LanguageSettings
         SubtitleSingleClickAction = "Subtitle grid single-click action";
         SubtitleDoubleClickAction = "Subtitle grid double-click action";
         SubtitleGridCenterSelectedRow = "Subtitle grid, center when selecting prev/next row";
+        CopyTextBlankLineBetweenSubtitles = "Copy text, empty line between subtitles";
         SaveAsBehavior = "\"Save as\" behavior";
         FileChangedOutsideAction = "Subtitle file changed by another program";
         FileChangedOutsideReloadWhenUnmodified = "Reload if nothing is unsaved, otherwise ask";

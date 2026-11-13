@@ -91,6 +91,12 @@ public class SeGeneral
     public string SubtitleSingleClickAction { get; set; }
     public string SubtitleDoubleClickAction { get; set; }
     public bool SubtitleGridCenterSelectedRow { get; set; }
+
+    /// <summary>
+    /// "Copy text" (grid and waveform) puts an empty line between copied subtitles, like SE4.
+    /// Off gives one subtitle per line.
+    /// </summary>
+    public bool CopyTextBlankLineBetweenSubtitles { get; set; } = true;
     public string SaveAsBehavior { get; set; }
     public string FileChangedOutsideAction { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
@@ -339,6 +345,7 @@ public class SeGeneral
         SubtitleSingleClickAction = nameof(SubtitleSingleClickActionType.None);
         SubtitleDoubleClickAction = nameof(SubtitleDoubleClickActionType.GoToSubtitleAndPause);
         SubtitleGridCenterSelectedRow = false;
+        CopyTextBlankLineBetweenSubtitles = true;
         SaveAsBehavior = nameof(SaveAsBehaviourType.UseVideoFileNameThenSubtitleFileName);
         FileChangedOutsideAction = nameof(FileChangedOutsideActionType.ReloadWhenUnmodified);
         DefaultSaveLocation = nameof(DefaultSaveLocationType.SourceFileFolder);

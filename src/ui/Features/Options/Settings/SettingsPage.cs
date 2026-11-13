@@ -586,6 +586,7 @@ public class SettingsPage : UserControl
                 }
             }),
             MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridCenterSelectedRow, nameof(_vm.SubtitleGridCenterSelectedRow)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.CopyTextBlankLineBetweenSubtitles, nameof(_vm.CopyTextBlankLineBetweenSubtitles)),
 
             new SettingsItem(Se.Language.Options.Settings.SaveAsBehavior, () => new ComboBox
             {
