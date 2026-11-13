@@ -8,9 +8,10 @@ using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 namespace LibUiLogicTests.Translate;
 
 /// <summary>
-/// The runaway length test guesses how much a language pair expands, so correct Chinese-to-English
-/// translations trip it. Once a line is on its own a length-only objection is accepted instead of
-/// failing the file; leaked JSON and the prompt's example still fail (#16885).
+/// A runaway length test that assumes one character of translation per character of source fails
+/// correct Chinese-to-English translations. Once a line is on its own there is nothing to measure
+/// the expansion against, and the line is accepted instead of failing the file; leaked JSON and
+/// the prompt's example still fail (#16885).
 /// </summary>
 public class AdvancedTranslatorLengthOnlyTests
 {
@@ -18,9 +19,12 @@ public class AdvancedTranslatorLengthOnlyTests
     private const string EnglishTranslation = "Bring him back. This time, I'll personally question him about every single minute of last night.";
 
     [Fact]
-    public void LongCorrectTranslation_TripsOnlyTheLengthTest()
+    public void LongCorrectTranslation_TripsOnlyAnAssumedLengthTest()
     {
-        Assert.True(LlamaCppAdvancedProtocol.IsBrokenValue(ChineseSource, EnglishTranslation));
+        // One character per character, the old assumption: far too long. The 3.3 a Chinese batch
+        // measures: a normal line. Alone, with nothing to measure against: not checked for length.
+        Assert.True(LlamaCppAdvancedProtocol.IsBrokenValue(ChineseSource, EnglishTranslation, expansion: 1));
+        Assert.False(LlamaCppAdvancedProtocol.IsBrokenValue(ChineseSource, EnglishTranslation, expansion: 3.3));
         Assert.False(LlamaCppAdvancedProtocol.IsMalformedValue(ChineseSource, EnglishTranslation));
     }
 
