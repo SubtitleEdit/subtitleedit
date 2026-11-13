@@ -96,6 +96,27 @@ public class EbuTest
         Assert.Contains("Second line", loaded.Paragraphs[1].Text);
     }
 
+    // ISO 6937 (code page 20269) has no euro sign, so "€" was written as "?". Teletext G2
+    // (EBU Tech 3232) has it at 0x56 = STL byte 0xd6, next to the music note at 0xd5.
+    [Theory]
+    [InlineData("Price 5 €", "Price 5 €")]
+    [InlineData("Old ECU ₠", "Old ECU €")]
+    [InlineData("½ ¾ ‰ α ♪ © ™", "½ ¾ ‰ α ♪ © ™")]
+    public void EbuStl_BinarySave_RoundTripsTeletextG2Characters(string text, string expected)
+    {
+        Ebu.EbuUiHelper = new TestEbuUiHelper();
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph(text, 1000, 3000));
+
+        using var ms = new MemoryStream();
+        ((IBinaryPersistableSubtitle)new Ebu()).Save("test.stl", ms, subtitle, batchMode: true);
+
+        var loaded = new Subtitle();
+        new Ebu().LoadSubtitle(loaded, ms.ToArray());
+
+        Assert.Equal(expected, loaded.Paragraphs[0].Text);
+    }
+
     [Fact]
     public void EbuStl_Load_ExposesHeaderFrameRateOnTheParsingInstance()
     {

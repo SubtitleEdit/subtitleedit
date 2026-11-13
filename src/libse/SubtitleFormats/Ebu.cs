@@ -33,9 +33,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Dictionary<int, string> SpecialAsciiCodes = new Dictionary<int, string>
         {
+            // ISO 6937 (code page 20269) has no glyph for 0xbe and 0xd6-0xd8, but teletext
+            // G2 does (ETSI EN 300 706 table 36): 0xd6 is the euro sign (EBU Tech 3232).
+            { 0xbe, "¾" },
+
             { 0xd3, "©" },
             { 0xd4, "™" },
             { 0xd5, "♪" },
+            { 0xd6, "€" },
+            { 0xd7, "‰" },
+            { 0xd8, "α" },
 
             { 0xe0, "Ω" },
             { 0xe1, "Æ" },
@@ -89,6 +96,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     result.Add(kvp.Value[0], kvp.Key);
                 }
             }
+
+            result['₠'] = 0xd6; // teletext G2 0x56 was the ECU sign before it became the euro sign
 
             return result;
         }
