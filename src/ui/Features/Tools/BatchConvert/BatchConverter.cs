@@ -2469,13 +2469,15 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
             // "Merge translation with original": every function runs on the source first, so the
             // subtitle that is stored is exactly the input of the translation, and the merge with
-            // its output is the last step.
+            // its output is the last step. The plugin runs here too - after the merge it would
+            // get both languages in one subtitle.
             var mergeActive = IsMergeTranslationWithOriginalActive;
             if (mergeActive)
             {
                 s = await RunTextAndTimeCodeFunctions(s, item);
                 s = BeautifyTimeCodes(s, item.FileName);
                 s = SnapTimeCodesToFrames(s, item.FileName);
+                s = await RunPlugin(s, item, cancellationToken);
             }
 
             var original = mergeActive ? new Subtitle(s, false) : null;
@@ -2488,20 +2490,27 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 Language = GetTwoLetterLanguageCode(CurrentTargetLanguage.Code) ?? Language;
             }
 
-            s = original != null
-                ? MergeTranslationWithOriginal(original, s)
-                : await RunTextAndTimeCodeFunctions(s, item);
-
-            s = AssaChangeResolution(s);
-            s = AssaChangeStyle(s);
-            s = AssaChangeStyleProperties(s);
-            if (original == null)
+            if (original != null)
             {
+                s = CleanUpTranslation(s);
+                s = MergeTranslationWithOriginal(original, s);
+
+                // Change style / Change style properties are left out: they would rename, replace
+                // or re-align the two styles, so original and translation could end up on top of
+                // each other. Resolution only scales the merged script as a whole.
+                s = AssaChangeResolution(s);
+            }
+            else
+            {
+                s = await RunTextAndTimeCodeFunctions(s, item);
+                s = AssaChangeResolution(s);
+                s = AssaChangeStyle(s);
+                s = AssaChangeStyleProperties(s);
                 s = BeautifyTimeCodes(s, item.FileName);
                 s = SnapTimeCodesToFrames(s, item.FileName);
+                s = await RunPlugin(s, item, cancellationToken);
             }
 
-            s = await RunPlugin(s, item, cancellationToken);
             s = SortBy(s);
             s = Renumber(s);
         }
@@ -2531,6 +2540,24 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         s = AutoBalanceLines(s, Language);
         s = ApplyDurationLimits(s);
         s = RemoveTextForHearingImpaired(s, Language);
+        s = RemoveUnicodeControlCharacters(s);
+        s = FixRightToLeft(s);
+        return s;
+    }
+
+    /// <summary>
+    /// "Merge translation with original": the text functions ran on the source before the
+    /// translation, so the engine's output still needs the ones that shape a line in the target
+    /// language - otherwise e.g. an Arabic translation never gets its right-to-left fix (the source
+    /// has no right-to-left letters, so the fix skipped it) and long translated lines stay unbalanced.
+    /// Only text-only steps: anything that changes time codes or the number of lines would make
+    /// the translation drift from the original.
+    /// </summary>
+    private Subtitle CleanUpTranslation(Subtitle s)
+    {
+        s = ChangeCasing(s, Language);
+        s = RemoveLineBreaks(s);
+        s = AutoBalanceLines(s, Language);
         s = RemoveUnicodeControlCharacters(s);
         s = FixRightToLeft(s);
         return s;

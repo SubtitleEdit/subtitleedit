@@ -52,6 +52,26 @@ Style: Default,Trebuchet MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0
         }
     }
 
+    /// <summary>Replaces every line with the result of <see cref="_translate"/>.</summary>
+    private sealed class FuncTranslator : IAutoTranslator
+    {
+        private readonly Func<string, string> _translate;
+        public FuncTranslator(Func<string, string> translate) => _translate = translate;
+        public string Name => "Func";
+        public string Url => string.Empty;
+        public string Error { get; set; } = string.Empty;
+        public int MaxCharacters => 1000;
+        public void Initialize() { }
+        public List<TranslationPair> GetSupportedSourceLanguages() => new() { new TranslationPair("English", "en") };
+        public List<TranslationPair> GetSupportedTargetLanguages() => new();
+
+        public Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+        {
+            var lines = text.SplitToLines().Select(line => line.Trim() is "" or "." ? line : _translate(line));
+            return Task.FromResult(string.Join(Environment.NewLine, lines));
+        }
+    }
+
     private static BatchConvertConfig MakeConfig(string targetFormatName, string outputFolder, params string[] targets)
     {
         var config = new BatchConvertConfig
@@ -263,5 +283,61 @@ Bye.
 
         var subtitle = Assert.Single(files).Value;
         Assert.Equal(new[] { "Hello world.", "How are you?" }, subtitle.Paragraphs.Select(p => p.Text));
+    }
+
+    [Fact]
+    public async Task FixRightToLeft_IsAppliedToTheTranslation()
+    {
+        // The English source has no right-to-left letters, so the fix skips it before the
+        // translation - it has to run on the Hebrew translation afterwards.
+        const string hebrew = "שלום עולם.";
+        var files = await Convert(new BatchConverter(null!, null!, null!), outputFolder =>
+        {
+            var config = MakeConfig(AdvancedSubStationAlpha.NameOfFormat, outputFolder, "he");
+            config.AutoTranslate.Translator = new FuncTranslator(_ => hebrew);
+            config.RightToLeft.IsActive = true;
+            config.RightToLeft.ReverseStartEnd = true;
+            return config;
+        });
+
+        var subtitle = files["movie.he.ass"];
+        Assert.Equal(new[] { "Hello world.", "How are you?" }, TextsInStyle(subtitle, MergeTwoSubtitlesHelper.StyleName1));
+        var expected = Utilities.ReverseStartAndEndingForRightToLeft(hebrew);
+        Assert.NotEqual(hebrew, expected);
+        Assert.Equal(new[] { expected, expected }, TextsInStyle(subtitle, MergeTwoSubtitlesHelper.StyleName2));
+    }
+
+    [Fact]
+    public async Task AutoBalanceLines_IsAppliedToTheTranslation()
+    {
+        const string longLine = "This translated line is much too long to fit on one single subtitle line";
+        var files = await Convert(new BatchConverter(null!, null!, null!), outputFolder =>
+        {
+            var config = MakeConfig(AdvancedSubStationAlpha.NameOfFormat, outputFolder, "de");
+            config.AutoTranslate.Translator = new FuncTranslator(_ => longLine);
+            config.AutoBalanceLines.IsActive = true;
+            return config;
+        });
+
+        var translation = TextsInStyle(files["movie.de.ass"], MergeTwoSubtitlesHelper.StyleName2);
+        Assert.Equal(2, translation.Count);
+        Assert.All(translation, p => Assert.Equal(2, p.SplitToLines().Count));
+    }
+
+    [Fact]
+    public async Task AssaChangeStyleProperties_DoesNotReAlignTheTwoStyles()
+    {
+        var files = await Convert(new BatchConverter(null!, null!, null!), outputFolder =>
+        {
+            var config = MakeConfig(AdvancedSubStationAlpha.NameOfFormat, outputFolder, "de");
+            config.AssaChangeStyleProperties.IsActive = true;
+            config.AssaChangeStyleProperties.SetAlignment = true;
+            config.AssaChangeStyleProperties.Alignment = "an2";
+            return config;
+        });
+
+        var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(files["movie.de.ass"].Header);
+        Assert.Equal("8", styles.Single(p => p.Name == MergeTwoSubtitlesHelper.StyleName1).Alignment);
+        Assert.Equal("2", styles.Single(p => p.Name == MergeTwoSubtitlesHelper.StyleName2).Alignment);
     }
 }
