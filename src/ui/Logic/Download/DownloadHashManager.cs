@@ -507,7 +507,7 @@ public static class DownloadHashManager
         {
             [Ffmpeg.Windows] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-2/ffmpeg902.zip",
             [Ffmpeg.MacOsX64] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffmpeg80intel.zip",
-            [Ffmpeg.MacOsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-1/ffmpeg90arm.zip",
+            [Ffmpeg.MacOsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-2/ffmpeg902arm.zip",
             [LibMpv.WindowsX64] = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win64.zip",
             [LibMpv.WindowsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win-arm64.zip",
             [LibVlc.WindowsX64] = "https://get.videolan.org/vlc/3.0.24/win64/vlc-3.0.24-win64.7z",
@@ -531,7 +531,7 @@ public static class DownloadHashManager
             },
             [Ffmpeg.MacOsArm64] = new[]
             {
-                "21721909d4a24544359aff1ac5ce0dded8a947a2abc4c939c8d525a7c6cc881b", // ffmpeg-v9-1/ffmpeg90arm.zip (current download URL)
+                "9156d4f630d532fa68b181e583b47ea308e5ac637417874bc42b6c9a70847faf", // ffmpeg-v9-2/ffmpeg902arm.zip (current download URL)
             },
 
             // libmpv - LibMpvDownloadService (SubtitleEdit/support-files releases)

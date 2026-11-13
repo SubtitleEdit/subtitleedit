@@ -21,7 +21,7 @@ public class FfmpegDownloadService : IFfmpegDownloadService
     // Intel is still 8.0: osxexperts.net, where both macOS builds come from, has not published an
     // Intel build past 8.0.
     private const string MacUrl = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffmpeg80intel.zip";
-    private const string MacUrlArm = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-1/ffmpeg90arm.zip";
+    private const string MacUrlArm = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-2/ffmpeg902arm.zip";
     
     public FfmpegDownloadService(HttpClient httpClient)
     {
