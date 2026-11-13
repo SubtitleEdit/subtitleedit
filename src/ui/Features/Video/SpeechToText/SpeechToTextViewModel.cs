@@ -1025,6 +1025,10 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// a cue at the seam. Granite otherwise runs in crispasr's fixed 30 s auto-chunks, which drop
     /// words at the cuts: on FLEURS (30 en / 25 de clips, crispasr 0.8.48) Silero took Granite 4.1
     /// from 11.8% to 9.2% WER in English and from 12.7% to 10.7% in German.
+    /// Qwen3 makes no timestamps of its own, so every time comes from the forced aligner, and
+    /// without VAD crispasr hands it pieces so long that it drifts: on a 13 min Japanese anime
+    /// episode (#16800) cues started up to 6.5 s early and several sentences were merged into
+    /// 10-18 s cues. With FireRedVAD the median start/end error was about 0.15 s.
     ///
     /// --chunk-seconds/-ck in the user's parameters means "no VAD, use fixed chunks" - that is
     /// crispasr's own documented way to switch its auto-VAD back off, and it is the only way to
@@ -1044,7 +1048,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             return false;
         }
 
-        var needsVad = engine is CrispAsrCohere or CrispAsrMega or CrispAsrIndexEcho or CrispAsrGranite;
+        var needsVad = engine is CrispAsrCohere or CrispAsrMega or CrispAsrIndexEcho or CrispAsrGranite or CrispAsrQwen3;
         if (!needsVad && CrispAsrVadModel.Get(vadChoice).Choice == CrispAsrVadModel.Automatic)
         {
             return false;

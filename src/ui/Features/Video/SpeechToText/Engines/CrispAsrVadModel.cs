@@ -85,15 +85,29 @@ public static class CrispAsrVadModel
     }
 
     /// <summary>
-    /// The detector a run with this engine actually uses: "Auto" means Silero, and Index-Echo
-    /// can only read a Silero model.
+    /// The detector a run with this engine actually uses: "Auto" means Silero (FireRedVAD for
+    /// Qwen3), and Index-Echo can only read a Silero model.
     /// </summary>
+    /// <remarks>
+    /// Qwen3 gets FireRedVAD because its timing comes from the forced aligner on each VAD piece:
+    /// on a 13 min Japanese anime episode (#16800) Silero dropped 444 of 1403 reference words
+    /// where FireRedVAD dropped 158, at about the same timing error. The model is only 2.4 MB, and
+    /// a run without it on disk falls back to Silero.
+    /// </remarks>
     public static CrispAsrVadOption GetEffective(string? choice, ISpeechToTextEngine engine)
     {
+        if (engine is CrispAsrIndexEcho)
+        {
+            return Get(Silero);
+        }
+
         var option = Get(choice);
-        return option.Choice == Automatic || engine is CrispAsrIndexEcho
-            ? Get(Silero)
-            : option;
+        if (option.Choice != Automatic)
+        {
+            return option;
+        }
+
+        return engine is CrispAsrQwen3 ? Get(FireRed) : Get(Silero);
     }
 
     /// <summary>

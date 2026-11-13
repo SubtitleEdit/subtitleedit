@@ -14,6 +14,19 @@ public class CrispAsrVadModelTests
         Assert.Equal(CrispAsrVadModel.Silero, CrispAsrVadModel.GetEffective(CrispAsrVadModel.Automatic, new CrispAsrParakeet()).Choice);
     }
 
+    /// <summary>FireRedVAD kept far more speech than Silero for Qwen3 on Japanese anime (#16800).</summary>
+    [Fact]
+    public void AutoMeansFireRedForQwen3()
+    {
+        Assert.Equal(CrispAsrVadModel.FireRed, CrispAsrVadModel.GetEffective(CrispAsrVadModel.Automatic, new CrispAsrQwen3()).Choice);
+    }
+
+    [Fact]
+    public void AChosenVadIsUsedAsIsForQwen3()
+    {
+        Assert.Equal(CrispAsrVadModel.Silero, CrispAsrVadModel.GetEffective(CrispAsrVadModel.Silero, new CrispAsrQwen3()).Choice);
+    }
+
     [Fact]
     public void AChosenVadIsUsedAsIs()
     {
