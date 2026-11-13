@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic.Initializers;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Readers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -18,6 +19,10 @@ public static class Unpacker
         {
             updateProgressText(Se.Language.General.Unpacking7ZipArchiveDotDotDot);
         });
+
+        // The first failure is the meaningful one: the managed fallback at the end can fail for
+        // an unrelated reason, and showing only its error hid why 7-zip itself failed (#16871).
+        Exception? firstException = null;
 
         if (OperatingSystem.IsLinux())
         {
@@ -36,6 +41,7 @@ public static class Unpacker
                 catch (Exception exception)
                 {
                     Se.LogError(exception, $"System 7-zip extraction of \"{tempFileName}\" failed, trying next extraction method");
+                    firstException ??= exception;
                 }
             }
         }
@@ -53,6 +59,7 @@ public static class Unpacker
                 // e.g. bundled 7zr/7za missing or not executable (seen in Flatpak) - fall
                 // back to the managed extractor instead of failing the whole install.
                 Se.LogError(exception, $"7-zip executable extraction of \"{tempFileName}\" failed, falling back to managed extraction");
+                firstException ??= exception;
             }
         }
 
@@ -69,11 +76,38 @@ public static class Unpacker
                 catch (Exception exception)
                 {
                     Se.LogError(exception, $"System 7zz extraction of \"{tempFileName}\" failed, falling back to managed extraction");
+                    firstException ??= exception;
                 }
             }
         }
 
-        Extract7ZipSlow(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+        try
+        {
+            Extract7ZipSlow(tempFileName, dir, skipFolderLevel, cancellationTokenSource, updateProgressText);
+        }
+        catch (Exception exception) when (firstException != null && exception is not OperationCanceledException)
+        {
+            Se.LogError(exception, $"Managed extraction of \"{tempFileName}\" failed");
+            throw new IOException($"{firstException.Message}{Environment.NewLine}{Environment.NewLine}{exception.Message}", firstException);
+        }
+    }
+
+    /// <summary>
+    /// Folder to extract into before stripping the archive's root folder. It sits next to the
+    /// destination instead of in the system temp folder: in a Flatpak /tmp is a small tmpfs
+    /// under $XDG_RUNTIME_DIR (10% of RAM by default), which a multi-GB archive such as the
+    /// Paddle OCR CUDA 12 engine overflows (#16871). Same file system also makes the final
+    /// move a cheap rename instead of a full copy.
+    /// </summary>
+    private static string GetExtractTempFolder(string dir)
+    {
+        var parent = Path.GetDirectoryName(Path.GetFullPath(dir).TrimEnd(Path.DirectorySeparatorChar));
+        if (string.IsNullOrEmpty(parent))
+        {
+            return Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        }
+
+        return Path.Combine(parent, "_unpack_" + Guid.NewGuid().ToString("N"));
     }
 
     private static string? GetLinuxSevenZipPath()
@@ -122,7 +156,7 @@ public static class Unpacker
     private static void Unpack7ZipViaSystemExecutable(string sevenZipPath, string tempFileName, string dir, string skipFolderLevel, CancellationTokenSource cancellationTokenSource, Action<string> updateProgressText)
     {
         // Extract to a temporary directory if we need to skip folder levels
-        var extractPath = string.IsNullOrEmpty(skipFolderLevel) ? dir : Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        var extractPath = string.IsNullOrEmpty(skipFolderLevel) ? dir : GetExtractTempFolder(dir);
 
         try
         {
@@ -236,7 +270,7 @@ public static class Unpacker
         }
 
         // Extract to a temporary directory if we need to skip folder levels
-        var extractPath = string.IsNullOrEmpty(skipFolderLevel) ? dir : Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        var extractPath = string.IsNullOrEmpty(skipFolderLevel) ? dir : GetExtractTempFolder(dir);
 
         try
         {
@@ -398,8 +432,7 @@ public static class Unpacker
 
     public static void Extract7ZipSlow(string tempFileName, string dir, string? skipFolderLevel, CancellationTokenSource cancellationTokenSource, Action<string> updateProgressText)
     {
-        using Stream stream = File.OpenRead(tempFileName);
-        using var archive = SevenZipArchive.OpenArchive(stream);
+        using var archive = OpenSevenZipArchive(tempFileName);
         double totalSize = archive.TotalUncompressedSize;
         double unpackedSize = 0;
 
@@ -492,5 +525,39 @@ public static class Unpacker
                 unpackedSize += reader.Entry.Size;
             }
         }
+    }
+
+    /// <summary>
+    /// Opens a .7z, or all volumes of a split archive when given the ".7z.001" part - opening
+    /// only the first volume fails with "nextHeaderOffset is invalid" (#16871).
+    /// </summary>
+    private static SevenZipArchive OpenSevenZipArchive(string fileName)
+    {
+        // FileInfo overloads: the archive opens and owns the file streams, so disposing it
+        // releases them (a caller-supplied stream is left open by default).
+        return (SevenZipArchive)SevenZipArchive.OpenArchive(GetSplitVolumes(fileName).ConvertAll(p => new FileInfo(p)));
+    }
+
+    private static List<string> GetSplitVolumes(string fileName)
+    {
+        var result = new List<string> { fileName };
+        if (!fileName.EndsWith(".001", StringComparison.Ordinal))
+        {
+            return result;
+        }
+
+        var baseName = fileName[..^4];
+        for (var i = 2; i < 1000; i++)
+        {
+            var volume = $"{baseName}.{i:000}";
+            if (!File.Exists(volume))
+            {
+                break;
+            }
+
+            result.Add(volume);
+        }
+
+        return result;
     }
 }
