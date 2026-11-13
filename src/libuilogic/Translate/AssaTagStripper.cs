@@ -10,8 +10,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate;
 /// whole correction. Blocks in the middle of the text are left in place - they are rare, and
 /// the guard still verifies them.
 /// </summary>
-public readonly record struct StrippedLine(string Prefix, string Text, string Suffix)
+public readonly record struct StrippedLine(string Prefix, string Text, string Suffix, bool HasWrappers = false)
 {
+    private static readonly Regex WholeLineTag = new Regex(@"^<([ibu])>(.*)</\1>$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
+    private static readonly Regex LeadingMusic = new Regex(@"^[♪♫]+\s*", RegexOptions.Compiled);
+    private static readonly Regex TrailingMusic = new Regex(@"\s*[♪♫]+$", RegexOptions.Compiled);
     private static readonly Regex LeadingBlocks = new Regex(@"^(\s*\{\\[^}]*\})+", RegexOptions.Compiled);
     private static readonly Regex TrailingBlocks = new Regex(@"(\{\\[^}]*\}\s*)+$", RegexOptions.Compiled);
     private static readonly Regex AnyBlock = new Regex(@"\{\\[^}]*\}", RegexOptions.Compiled);
@@ -52,9 +55,110 @@ public readonly record struct StrippedLine(string Prefix, string Text, string Su
         return new StrippedLine(prefix, trimmed, suffix);
     }
 
+    /// <summary>
+    /// <see cref="Strip"/> plus the markup that wraps the whole line: an italic/bold/underline
+    /// tag around all of it ("&lt;i&gt;...&lt;/i&gt;") and leading/trailing music symbols ("♪ ... ♪").
+    /// Local translation models drop such wrappers often (#16869: &lt;i&gt; lost in 11 of 20
+    /// italic lines), and since they apply to the whole line they can be put back around any
+    /// translation. Tags that cover only part of the line stay in the text for the model.
+    /// </summary>
+    public static StrippedLine StripForTranslation(string? input)
+    {
+        var stripped = Strip(input);
+        var peeled = PeelWrappers(stripped.Text);
+        if (peeled.Text.Length == 0 || peeled.Text.Length == stripped.Text.Length)
+        {
+            return stripped; // nothing wrapped, or only markup (nothing to translate without it)
+        }
+
+        return new StrippedLine(stripped.Prefix + peeled.Prefix, peeled.Text, peeled.Suffix + stripped.Suffix, HasWrappers: true);
+    }
+
     public string Restore(string newText)
     {
+        if (HasWrappers)
+        {
+            // The model kept (some of) the wrappers anyway - drop its copy so ours are not doubled.
+            var peeled = PeelWrappers(newText);
+            if (peeled.Text.Length > 0)
+            {
+                newText = peeled.Text;
+            }
+        }
+
         return Prefix + newText + Suffix;
+    }
+
+    /// <summary>Peels whole-line tags and music symbols (in any nesting order) off trimmed text.</summary>
+    private static StrippedLine PeelWrappers(string text)
+    {
+        var prefix = string.Empty;
+        var suffix = string.Empty;
+        text = text.Trim();
+        while (true)
+        {
+            var tag = WholeLineTag.Match(text);
+            if (tag.Success && IsSingleWrap(tag.Groups[2].Value, tag.Groups[1].Value))
+            {
+                prefix += text.Substring(0, tag.Groups[2].Index);
+                suffix = text.Substring(tag.Groups[2].Index + tag.Groups[2].Length) + suffix;
+                text = tag.Groups[2].Value;
+            }
+            else
+            {
+                var lead = LeadingMusic.Match(text);
+                var trail = TrailingMusic.Match(text);
+                if (!lead.Success && !trail.Success)
+                {
+                    break;
+                }
+
+                if (lead.Success)
+                {
+                    prefix += lead.Value;
+                    text = text.Substring(lead.Length);
+                }
+
+                trail = TrailingMusic.Match(text);
+                if (trail.Success)
+                {
+                    suffix = trail.Value + suffix;
+                    text = text.Substring(0, trail.Index);
+                }
+            }
+
+            // keep inner whitespace with the wrappers so an untouched line restores byte-identical
+            var trimmedStart = text.TrimStart();
+            prefix += text.Substring(0, text.Length - trimmedStart.Length);
+            var trimmed = trimmedStart.TrimEnd();
+            suffix = trimmedStart.Substring(trimmed.Length) + suffix;
+            text = trimmed;
+            if (text.Length == 0)
+            {
+                break;
+            }
+        }
+
+        return new StrippedLine(prefix, text, suffix);
+    }
+
+    /// <summary>
+    /// True when "&lt;i&gt;" + <paramref name="inner"/> + "&lt;/i&gt;" is one wrap, not
+    /// "&lt;i&gt;One&lt;/i&gt; and &lt;i&gt;two&lt;/i&gt;" (the same tag closes and reopens inside).
+    /// </summary>
+    private static bool IsSingleWrap(string inner, string tag)
+    {
+        var depth = 0;
+        foreach (Match m in Regex.Matches(inner, "<(/?)" + tag + ">", RegexOptions.IgnoreCase))
+        {
+            depth += m.Groups[1].Length == 0 ? 1 : -1;
+            if (depth < 0)
+            {
+                return false;
+            }
+        }
+
+        return depth == 0;
     }
 
     /// <summary>Removes every override block - for read-only context the model must not edit.</summary>
