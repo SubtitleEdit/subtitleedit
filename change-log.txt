@@ -3,6 +3,38 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta5 (13th of November 2026)
+
+* Layout 14: quality control layout with QC panel and tag chips
+* Bookmarks: multi-line notes, bookmark tags on the waveform, three colors, filter in the list (export/import keeps the color)
+* Batch convert: merge translation with original into one bilingual ASSA subtitle - thx svarga91
+* Compare: "Take text, keep formatting" - thx FunkyKnilch
+* Setting for an empty line between subtitles in Copy text - thx OmrSi
+* Remember size and position of 67 more resizable windows
+* Spell check and three list windows are now resizable
+* Spell check: Enter changes the word instead of closing the window
+* Show history: say there is nothing to undo instead of showing a blank list
+* Help pages and F1 for Sync to audio, Sync audio track and Dialogue list
+* TS track picker: show Default/Forced as check marks
+* llama.cpp advanced: reject broken replies, fewer wasted retries, add Index-Nailong 9B - thx marwanlhabti5-coder
+* Auto-translate: keep whole-line <i> and ♪ out of the model's hands - thx mmmsh-125
+* Auto-translate: send the advanced engines' batch JSON as raw UTF-8 - thx Makar8000
+* Image export and Blu-ray sup: faster export (up to 3.7x) and better sup palette quality
+* Spell check dictionaries: update Polish, Croatian, Khmer, Welsh; add Kazakh and Uzbek
+* Fix Batch convert ignoring "Right to left", box type/padding and alignment for image formats - thx mehdittttt
+* Fix Change speed/Assisted move producing times with fractions of a millisecond (also in Batch convert and seconv) - thx Davanix
+* Fix video position not restored on a remembered first line - thx bereld
+* Fix Speak from current line / Play with speech cutting off clips
+* Fix Netflix check shot-change fixes that could end before they start
+* Fix common errors: log "still too fast/short" instead of "Unable to fix"
+* D-Cinema SMPTE: only allow valid edit rates - thx accessallareas
+* Fix Paddle OCR CUDA 12 unpack on Flatpak - thx zjDrummond
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus/GitGianluc
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
 v5.5.0-beta4 (11th of November 2026)
 
 * Add Qwen3-ForcedAligner-Ultra as a forced aligner option
