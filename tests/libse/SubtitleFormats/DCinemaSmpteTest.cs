@@ -163,4 +163,87 @@ public class DCinemaSmpteTest
         var paragraph = Assert.Single(subtitle.Paragraphs);
         Assert.Equal("- How do you see" + Environment.NewLine + "empathy just on a whole,", paragraph.Text);
     }
+    // #16865: EditRate must be two space-separated positive integers - free text or a bare
+    // "24" used to be written to the file as it was.
+    [Theory]
+    [InlineData("24 1", true)]
+    [InlineData("48 1", true)]
+    [InlineData("25 1", true)]
+    [InlineData("30 1", true)]
+    [InlineData("50 1", true)]
+    [InlineData("60 1", true)]
+    [InlineData(" 24   1 ", true)]
+    [InlineData("24", false)]
+    [InlineData("twenty-four", false)]
+    [InlineData("23.976 1", false)]
+    [InlineData("24000 1001", false)]
+    [InlineData("30000 1001", false)]
+    [InlineData("0 1", false)]
+    [InlineData("", false)]
+    [InlineData(null, false)]
+    public void EditRate_IsStandard(string? editRate, bool expected)
+    {
+        Assert.Equal(expected, DCinemaEditRate.IsStandard(editRate!));
+    }
+
+    [Theory]
+    [InlineData("twenty-four", 24, "24 1")]
+    [InlineData("24", 24, "24 1")]
+    [InlineData("25", 25, "25 1")]
+    [InlineData("23.976 1", 25, "25 1")]
+    [InlineData("48  1", 25, "48 1")]
+    [InlineData("24000 1001", 25, "24000 1001")]
+    public void EditRate_ToValidOrDefault(string editRate, double frameRate, string expected)
+    {
+        Assert.Equal(expected, DCinemaEditRate.ToValidOrDefault(editRate, frameRate));
+    }
+
+    [Theory]
+    [MemberData(nameof(SmpteFormats))]
+    public void Smpte_ToText_InvalidEditRate_WritesRational(SubtitleFormat format, string dcstYear)
+    {
+        var ss = Configuration.Settings.SubtitleSettings;
+        var originalEditRate = ss.CurrentDCinemaEditRate;
+        var originalTimeCodeRate = ss.CurrentDCinemaTimeCodeRate;
+        var originalGlobal = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.CurrentFrameRate = 24;
+            ss.CurrentDCinemaEditRate = "twenty-four";
+            ss.CurrentDCinemaTimeCodeRate = string.Empty;
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Hello", 1000, 2000));
+
+            var text = format.ToText(subtitle, "title");
+
+            Assert.Contains("EditRate>24 1</", text);
+            Assert.Contains("TimeCodeRate>24</", text);
+            Assert.DoesNotContain("twenty-four", text);
+            Assert.Contains(dcstYear, text);
+        }
+        finally
+        {
+            ss.CurrentDCinemaEditRate = originalEditRate;
+            ss.CurrentDCinemaTimeCodeRate = originalTimeCodeRate;
+            Configuration.Settings.General.CurrentFrameRate = originalGlobal;
+        }
+    }
+
+    // The frame rate check compared EditRate with "24"/"25", which no valid file contains.
+    [Theory]
+    [MemberData(nameof(SmpteFormats))]
+    public void Smpte_Load_EditRate25_SetsCurrentFrameRate(SubtitleFormat format, string dcstYear)
+    {
+        var originalGlobal = Configuration.Settings.General.CurrentFrameRate;
+        try
+        {
+            Configuration.Settings.General.CurrentFrameRate = 30;
+            format.LoadSubtitle(new Subtitle(), SmpteReel(dcstYear, "Vposition", "Valign", "25").SplitToLines(), null);
+            Assert.Equal(25, Configuration.Settings.General.CurrentFrameRate);
+        }
+        finally
+        {
+            Configuration.Settings.General.CurrentFrameRate = originalGlobal;
+        }
+    }
 }

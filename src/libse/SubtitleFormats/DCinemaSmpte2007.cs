@@ -160,6 +160,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     ss.CurrentDCinemaTimeCodeRate = "25";
                 }
             }
+            // EditRate must be a rational of two positive integers ("24 1") - never "24" or free text (#16865)
+            ss.CurrentDCinemaEditRate = DCinemaEditRate.ToValidOrDefault(ss.CurrentDCinemaEditRate, Configuration.Settings.General.CurrentFrameRate);
+            if (string.IsNullOrWhiteSpace(ss.CurrentDCinemaTimeCodeRate) && DCinemaEditRate.TryParse(ss.CurrentDCinemaEditRate, out var editRateNumerator, out var editRateDenominator))
+            {
+                ss.CurrentDCinemaTimeCodeRate = ((int)Math.Round((double)editRateNumerator / editRateDenominator, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture);
+            }
+
             xml.DocumentElement.SelectSingleNode("dcst:EditRate", nsmgr).InnerText = ss.CurrentDCinemaEditRate;
             xml.DocumentElement.SelectSingleNode("dcst:TimeCodeRate", nsmgr).InnerText = ss.CurrentDCinemaTimeCodeRate;
             if (string.IsNullOrEmpty(ss.CurrentDCinemaStartTime))
@@ -638,11 +645,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _frameRate = timeCodeRate;
                     }
 
-                    if (ss.CurrentDCinemaEditRate == "24")
+                    if (DCinemaEditRate.TryParse(ss.CurrentDCinemaEditRate, out var loadedNumerator, out var loadedDenominator) && loadedNumerator == 24 * loadedDenominator)
                     {
                         Configuration.Settings.General.CurrentFrameRate = 24;
                     }
-                    else if (ss.CurrentDCinemaEditRate == "25")
+                    else if (loadedNumerator > 0 && loadedNumerator == 25 * loadedDenominator)
                     {
                         Configuration.Settings.General.CurrentFrameRate = 25;
                     }
