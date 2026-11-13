@@ -136,10 +136,9 @@
     "EnglishName": "Croatian",
     "NativeName": "Hrvatski",
     "Files": [
-      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/hr_HR/hr_HR.aff",
-      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/hr_HR/hr_HR.dic"
+      "https://extensions.libreoffice.org/assets/downloads/7898/1794259498/hunspell-hr_v2.1-20261109.oxt"
     ],
-    "Description": "Croatian spell checker (LibreOffice)"
+    "Description": "Croatian spell checker - hunspell-hr 2.1 (2026-11-09)"
   },
   {
     "EnglishName": "Czech",
@@ -418,12 +417,20 @@
     "Description": "Kannada spell checker (LibreOffice)"
   },
   {
+    "EnglishName": "Kazakh",
+    "NativeName": "Қазақ тілі",
+    "Files": [
+      "https://extensions.libreoffice.org/assets/downloads/7819/1786262934/kk_KZ.oxt"
+    ],
+    "Description": "Kazakh spell checker - hunspell-kk 0.2.6 (GPL-3)"
+  },
+  {
     "EnglishName": "Khmer",
     "NativeName": "ខ្មែរ",
     "Files": [
-      "https://downloads.sourceforge.net/project/aoo-extensions/5067/2/dict-km.oxt"
+      "https://extensions.libreoffice.org/assets/downloads/z/sbbic-khmer-spelling-checker-libreoffice-1-82.oxt"
     ],
-    "Description": "Khmer spelling dictionary 2011.05.11"
+    "Description": "Khmer spell checker - SBBIC 1.82"
   },
   {
     "EnglishName": "Korean",
@@ -475,7 +482,7 @@
     "Files": [
       "https://extensions.libreoffice.org/assets/downloads/z/lower-sorbian-spelling-dictionary-1-5-0.oxt"
     ],
-    "Description": "Lower Sorbian dictionary 1.4.6"
+    "Description": "Lower Sorbian dictionary 1.5.0"
   },
   {
     "EnglishName": "Luxembourgish",
@@ -585,9 +592,9 @@
     "EnglishName": "Polish",
     "NativeName": "polski",
     "Files": [
-      "https://github.com/SubtitleEdit/support-files/releases/download/hunspell/pl_PL_2026-04-01.zip"
+      "https://github.com/SubtitleEdit/support-files/releases/download/hunspell/pl_PL_2026-11-01.zip"
     ],
-    "Description": "Polish by https://sjp.pl - 2026-04-01"
+    "Description": "Polish by https://sjp.pl - 2026-11-01"
   },
   {
     "EnglishName": "Portuguese (Brazil)",
@@ -815,6 +822,14 @@
     "Description": "Ukrainian spell checker (LibreOffice)"
   },
   {
+    "EnglishName": "Uzbek",
+    "NativeName": "Oʻzbekcha",
+    "Files": [
+      "https://extensions.libreoffice.org/assets/downloads/7151/1758892687/uzbek-dictionary.oxt"
+    ],
+    "Description": "Uzbek spell checker (Latin script)"
+  },
+  {
     "EnglishName": "Vietnamese",
     "NativeName": "Tiếng Việt",
     "Files": [
@@ -835,9 +850,9 @@
     "EnglishName": "Welsh",
     "NativeName": "Cymraeg",
     "Files": [
-      "https://downloads.sourceforge.net/project/aoo-extensions/1583/1/geiriadur-cy.oxt"
+      "https://extensions.libreoffice.org/assets/downloads/4237/1734135777/libreoffice-geiriadur-v1.12.oxt"
     ],
-    "Description": "Welsh spell checker"
+    "Description": "Welsh spell checker - Geiriadur Cymraeg 1.12"
   },
   {
     "EnglishName": "Xhosa",
