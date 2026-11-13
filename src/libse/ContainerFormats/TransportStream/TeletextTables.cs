@@ -549,6 +549,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
+            // G2 0x56 was the ECU sign before it became the euro sign.
+            if (result.TryGetValue(0x20ac, out var euro) && !result.ContainsKey(0x20a0))
+            {
+                result.Add(0x20a0, euro);
+            }
+
             return result;
         }
     }

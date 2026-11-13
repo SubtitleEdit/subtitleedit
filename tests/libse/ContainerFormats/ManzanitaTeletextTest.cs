@@ -358,6 +358,16 @@ public class ManzanitaTeletextTest
     }
 
     [Fact]
+    public void EcuSignIsWrittenAsTheEuroSign()
+    {
+        var subtitle = MakeSubtitle(new Paragraph("5 ₠", 1000, 3000));
+
+        var paragraphs = WriteAndRead(subtitle)[888];
+
+        Assert.Equal("5 €", paragraphs[0].Text);
+    }
+
+    [Fact]
     public void EnhancedCharactersSurviveOnEveryRow()
     {
         var subtitle = MakeSubtitle(new Paragraph(
