@@ -14,6 +14,7 @@ public partial class ShowHistoryViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<ShowHistoryDisplayItem> _historyItems;
     [ObservableProperty] private ShowHistoryDisplayItem? _selectedHistoryItem;
     [ObservableProperty] private bool _isRollbackEnabled;
+    [ObservableProperty] private bool _isEmpty;
 
     private IUndoRedoManager? _undoRedoManager;
 
@@ -38,6 +39,8 @@ public partial class ShowHistoryViewModel : ObservableObject
                 Hash = item.Hash,
             });
         }
+
+        IsEmpty = HistoryItems.Count == 0;
     }
 
     [RelayCommand]

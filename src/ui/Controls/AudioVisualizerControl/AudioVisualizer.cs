@@ -306,7 +306,119 @@ public class AudioVisualizer : Control
     /// </summary>
     private readonly List<double> _originalSubtitleCueMaxEnds = new();
     private protected const double OriginalSubtitleOpacity = 0.5;
-    private protected bool IsOriginalSubtitleOverlayVisible => ShowOriginalSubtitleOverlay && _originalSubtitleCues.Count > 0;
+    private protected bool IsOriginalSubtitleOverlayVisible => (ShowOriginalSubtitleOverlay || EditOriginalTimeCodes) && _originalSubtitleCues.Count > 0;
+
+    /// <summary>
+    /// The A/B switch of the waveform (#16354): false edits the working subtitle as always; true
+    /// makes the original the layer being edited. The original's blocks are then drawn in full
+    /// (the working subtitle's at half strength, the other way round from normal) and a drag on
+    /// one moves or resizes the original line's own time codes, while the working subtitle's
+    /// blocks cannot be grabbed - so one waveform, in any layout, edits either file's timing. The
+    /// original strip shows in this mode even with "Show original subtitle" off. Call
+    /// InvalidateVisual after changing it.
+    /// </summary>
+    public bool EditOriginalTimeCodes { get; set; }
+
+    /// <summary>The rows whose original lines <see cref="EditOriginalTimeCodes"/> drags.</summary>
+    internal Func<IReadOnlyList<SubtitleLineViewModel>>? GetOriginalRows { get; set; }
+
+    /// <summary>Whether a row stands for an original line (one with no counterpart does not).</summary>
+    internal Func<SubtitleLineViewModel, bool>? HasOriginalLine { get; set; }
+
+    /// <summary>Writes the new time codes of the original line a row stands for.</summary>
+    internal Action<SubtitleLineViewModel, TimeSpan, TimeSpan>? SetOriginalTimeCodes { get; set; }
+
+    /// <summary>Selects the row whose original block was grabbed.</summary>
+    internal Action<SubtitleLineViewModel>? SelectOriginalRow { get; set; }
+
+    private SubtitleLineViewModel? _originalDragRow;
+    private OriginalDragEdge _originalDragEdge;
+    private double _originalDragPressX;
+    private TimeSpan _originalDragStart;
+    private TimeSpan _originalDragEnd;
+    private bool _originalDragMoved;
+
+    private SubtitleLineViewModel? HitTestOriginalBlock(Point point, out OriginalDragEdge edge)
+    {
+        edge = OriginalDragEdge.Move;
+        var rows = GetOriginalRows?.Invoke();
+        var hasOriginalLine = HasOriginalLine;
+        var peaks = WavePeaks;
+        if (rows == null || hasOriginalLine == null || peaks == null || peaks.SampleRate == 0 || ZoomFactor <= 0)
+        {
+            return null;
+        }
+
+        var tolerance = OriginalTimeCodeDrag.EdgeGrabPixels / (peaks.SampleRate * ZoomFactor);
+        return OriginalTimeCodeDrag.HitTest(rows, hasOriginalLine, RelativeXPositionToSeconds(point.X), tolerance, out edge);
+    }
+
+    /// <summary>
+    /// A left press while editing the original: grabs the original block under the pointer, or,
+    /// off every block, is a plain click (it seeks on tap) - no new selection is started, as that
+    /// would add a line to the working subtitle.
+    /// </summary>
+    private void PressWhileEditingOriginal(Point point)
+    {
+        NewSelectionParagraph = null;
+        _interactionMode = InteractionMode.None;
+        _activeParagraph = null;
+        _dragStack = null;
+
+        var row = HitTestOriginalBlock(point, out var edge);
+        if (row == null)
+        {
+            return;
+        }
+
+        _originalDragRow = row;
+        _originalDragEdge = edge;
+        _originalDragPressX = point.X;
+        _originalDragStart = row.EffectiveOriginalStartTime;
+        _originalDragEnd = row.EffectiveOriginalEndTime;
+        _originalDragMoved = false;
+        _pointerDragActive = true;
+        SelectOriginalRow?.Invoke(row);
+    }
+
+    private void DragOriginal(double x)
+    {
+        var row = _originalDragRow;
+        var peaks = WavePeaks;
+        if (row == null || peaks == null || peaks.SampleRate == 0 || ZoomFactor <= 0)
+        {
+            return;
+        }
+
+        if (!_originalDragMoved && Math.Abs(x - _originalDragPressX) < ClickDragSlopPixels)
+        {
+            return;
+        }
+
+        _originalDragMoved = true;
+        var delta = TimeSpan.FromSeconds((x - _originalDragPressX) / (peaks.SampleRate * ZoomFactor));
+        var (start, end) = OriginalTimeCodeDrag.Apply(_originalDragStart, _originalDragEnd, delta, _originalDragEdge);
+        SetOriginalTimeCodes?.Invoke(row, start, end);
+        _lastPointerEditMs = Environment.TickCount64;
+        InvalidateVisual();
+    }
+
+    /// <summary>Ends an original drag; false when none was going on.</summary>
+    private bool EndOriginalDrag()
+    {
+        if (_originalDragRow == null)
+        {
+            return false;
+        }
+
+        // A real drag must not also seek/select on the Tapped that follows; a click still does.
+        _preventNextTap = _originalDragMoved;
+        _originalDragRow = null;
+        _originalDragMoved = false;
+        _pointerDragActive = false;
+        OnDragEnded?.Invoke(this, EventArgs.Empty);
+        return true;
+    }
     private protected bool ShowOriginalTextInWaveform => ShowOriginalText && !IsOriginalSubtitleOverlayVisible;
     private protected IReadOnlyList<WaveformOriginalSubtitleCue> OriginalSubtitleCues => _originalSubtitleCues;
     private protected IReadOnlyList<double> OriginalSubtitleCueMaxEnds => _originalSubtitleCueMaxEnds;
@@ -490,6 +602,11 @@ public class AudioVisualizer : Control
     /// </summary>
     public static WavePeakData2 ToSmpteDropFrameTime(WavePeakData2 wavePeaks)
     {
+        if (wavePeaks.IsPlaceholder)
+        {
+            return wavePeaks; // silent, nothing to move - and it must stay a placeholder
+        }
+
         var list = new List<WavePeak2>(wavePeaks.Peaks.Count);
         for (var i = 0; i < wavePeaks.Peaks.Count; i++)
         {
@@ -749,16 +866,112 @@ public class AudioVisualizer : Control
     public event ParagraphEventHandler? OnDragStarted;
     public event EventHandler? OnDragEnded;
 
-    /// <summary>Raised when the user clicks the empty waveform to generate it on demand
-    /// (shown only when auto-generate is off and there are no cached peaks).</summary>
+    /// <summary>Raised when the user clicks "Generate waveform" on the timeline (shown when
+    /// auto-generate is off and there are no cached peaks).</summary>
     public event EventHandler? OnGenerateWaveformRequested;
 
-    /// <summary>When true and there are no <see cref="WavePeaks"/>, a "click to generate"
-    /// hint is drawn and a click raises <see cref="OnGenerateWaveformRequested"/>.</summary>
+    /// <summary>Raised when the user clicks "Use empty waveform": show the subtitles on a silent
+    /// placeholder time line instead of extracting the audio (#16710).</summary>
+    public event EventHandler? OnUseEmptyWaveformRequested;
+
+    /// <summary>When true and there are no real <see cref="WavePeaks"/>, buttons are drawn on the
+    /// timeline: with no peaks at all "Generate waveform" and "Use empty waveform" in the middle;
+    /// over placeholder peaks (<see cref="WavePeakData2.IsPlaceholder"/>) a small "Generate
+    /// waveform" in the top right corner, so the rest of the timeline stays free for editing the
+    /// subtitles.</summary>
     public bool ShowClickToGenerateHint { get; set; }
 
-    /// <summary>Localized hint text drawn over the empty waveform (see <see cref="ShowClickToGenerateHint"/>).</summary>
+    /// <summary>Localized text of the "Generate waveform" button (see <see cref="ShowClickToGenerateHint"/>).</summary>
     public string ClickToGenerateText { get; set; } = string.Empty;
+
+    /// <summary>Localized text of the "Use empty waveform" button; no button when empty.</summary>
+    public string UseEmptyWaveformText { get; set; } = string.Empty;
+
+    /// <summary>True when <see cref="WavePeaks"/> is the silent stand-in that only gives the
+    /// timeline a time scale - there is no audio to draw or analyze.</summary>
+    public bool HasPlaceholderPeaks => WavePeaks?.IsPlaceholder == true;
+
+    public enum HintButtonKind
+    {
+        None,
+        GenerateWaveform,
+        UseEmptyWaveform,
+    }
+
+    protected readonly record struct HintButton(HintButtonKind Kind, string Text, Rect Rect, bool IsHovered);
+
+    private const double HintButtonPaddingX = 14;
+    private const double HintButtonPaddingY = 6;
+    private const double HintButtonGap = 12;
+    private const double HintButtonMargin = 6;
+    private const double HintButtonFontSize = 13;
+    private readonly List<HintButton> _hintButtons = new(2);
+    private HintButtonKind _hoveredHintButton;
+
+    /// <summary>The timeline buttons to draw now - empty when there are none. Reuses one list.</summary>
+    protected List<HintButton> GetHintButtons()
+    {
+        _hintButtons.Clear();
+        var peaks = WavePeaks;
+        if (!ShowClickToGenerateHint || string.IsNullOrEmpty(ClickToGenerateText) ||
+            peaks is { IsPlaceholder: false } || Bounds.Width <= 0)
+        {
+            return _hintButtons;
+        }
+
+        var generate = GetHintButtonText(ClickToGenerateText);
+        var generateSize = new Size(Math.Ceiling(generate.Width + HintButtonPaddingX * 2), Math.Ceiling(generate.Height + HintButtonPaddingY * 2));
+        if (peaks != null)
+        {
+            // Over the placeholder: out of the way in the top right corner.
+            var rect = new Rect(new Point(Math.Round(Bounds.Width - generateSize.Width - HintButtonMargin), HintButtonMargin), generateSize);
+            _hintButtons.Add(new HintButton(HintButtonKind.GenerateWaveform, ClickToGenerateText, rect, _hoveredHintButton == HintButtonKind.GenerateWaveform));
+            return _hintButtons;
+        }
+
+        var hasUseEmpty = !string.IsNullOrEmpty(UseEmptyWaveformText);
+        var useEmptySize = new Size();
+        if (hasUseEmpty)
+        {
+            var useEmpty = GetHintButtonText(UseEmptyWaveformText);
+            useEmptySize = new Size(Math.Ceiling(useEmpty.Width + HintButtonPaddingX * 2), generateSize.Height);
+        }
+
+        var total = generateSize.Width + (hasUseEmpty ? HintButtonGap + useEmptySize.Width : 0);
+        var x = Math.Round((Bounds.Width - total) / 2);
+        var y = Math.Round((Bounds.Height - generateSize.Height) / 2);
+        _hintButtons.Add(new HintButton(HintButtonKind.GenerateWaveform, ClickToGenerateText,
+            new Rect(new Point(x, y), generateSize), _hoveredHintButton == HintButtonKind.GenerateWaveform));
+        if (hasUseEmpty)
+        {
+            _hintButtons.Add(new HintButton(HintButtonKind.UseEmptyWaveform, UseEmptyWaveformText,
+                new Rect(new Point(x + generateSize.Width + HintButtonGap, y), useEmptySize), _hoveredHintButton == HintButtonKind.UseEmptyWaveform));
+        }
+
+        return _hintButtons;
+    }
+
+    private HintButtonKind HitTestHintButton(Point point)
+    {
+        foreach (var button in GetHintButtons())
+        {
+            if (button.Rect.Contains(point))
+            {
+                return button.Kind;
+            }
+        }
+
+        return HintButtonKind.None;
+    }
+
+    private void SetHoveredHintButton(HintButtonKind kind)
+    {
+        if (_hoveredHintButton != kind)
+        {
+            _hoveredHintButton = kind;
+            InvalidateVisual();
+        }
+    }
 
     public AudioVisualizer()
     {
@@ -1131,6 +1344,12 @@ public class AudioVisualizer : Control
 
     private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
+        if (EndOriginalDrag())
+        {
+            InvalidateVisual();
+            return;
+        }
+
         var wasDragging = _pointerDragActive;
         _pointerDragActive = false;
         if (wasDragging)
@@ -1146,7 +1365,12 @@ public class AudioVisualizer : Control
         var nsp = NewSelectionParagraph;
         if (nsp is { Duration.TotalMilliseconds: <= 1 })
         {
+            // A plain click leaves an empty selection at the click point. Kept, it is invisible
+            // but still wins the hit test, so a later drag starting within ResizeMargin of it
+            // resized its left edge instead of starting a new selection - only a right-to-left
+            // drag then worked (#15716).
             nsp = null;
+            NewSelectionParagraph = null;
         }
 
         var pos = e.GetPosition(this);
@@ -1330,16 +1554,36 @@ public class AudioVisualizer : Control
         // the paths that bail out before that are plain clicks and must not hold the flag.
         _pointerDragActive = false;
 
-        // No waveform yet and auto-generate is off: a click generates it on demand.
-        if (WavePeaks == null && ShowClickToGenerateHint &&
-            e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        // No waveform yet and auto-generate is off: the timeline buttons generate it on demand or
+        // switch to an empty waveform (#16710). Without peaks there is nothing to edit, so the
+        // rest of the press is ignored.
+        var hintButton = e.GetCurrentPoint(this).Properties.IsLeftButtonPressed ? HitTestHintButton(point) : HintButtonKind.None;
+        if (hintButton == HintButtonKind.GenerateWaveform)
         {
             OnGenerateWaveformRequested?.Invoke(this, EventArgs.Empty);
             return;
         }
 
+        if (hintButton == HintButtonKind.UseEmptyWaveform)
+        {
+            OnUseEmptyWaveformRequested?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
+        if (WavePeaks == null && ShowClickToGenerateHint)
+        {
+            return;
+        }
+
         if (IsReadOnly)
         {
+            InvalidateVisual();
+            return;
+        }
+
+        if (EditOriginalTimeCodes && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            PressWhileEditingOriginal(point);
             InvalidateVisual();
             return;
         }
@@ -1581,6 +1825,11 @@ public class AudioVisualizer : Control
     /// </summary>
     private void OnPointerCaptureLost(object? sender, PointerCaptureLostEventArgs e)
     {
+        if (EndOriginalDrag())
+        {
+            return;
+        }
+
         var wasDragging = _pointerDragActive;
         _pointerDragActive = false;
         if (wasDragging)
@@ -1592,6 +1841,7 @@ public class AudioVisualizer : Control
     private void OnPointerExited(object? sender, PointerEventArgs e)
     {
         base.OnPointerExited(e);
+        _hoveredHintButton = HintButtonKind.None;
         InvalidateVisual();
     }
 
@@ -1631,9 +1881,37 @@ public class AudioVisualizer : Control
 
     private void OnPointerMoved(object? sender, PointerEventArgs e)
     {
+        if (ShowClickToGenerateHint && _interactionMode == InteractionMode.None)
+        {
+            var hovered = HitTestHintButton(e.GetPosition(this));
+            SetHoveredHintButton(hovered);
+            if (hovered != HintButtonKind.None || WavePeaks == null)
+            {
+                Cursor = hovered != HintButtonKind.None ? _cursorHand : _cursorArrow;
+                return;
+            }
+        }
+        else
+        {
+            SetHoveredHintButton(HintButtonKind.None);
+        }
+
         if (IsReadOnly)
         {
             return;
+        }
+
+        if (_originalDragRow != null)
+        {
+            if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                EndOriginalDrag();
+            }
+            else
+            {
+                DragOriginal(e.GetPosition(this).X);
+                return;
+            }
         }
 
         // Self-heal: a move with no button down means the drag is over, whatever happened to the
@@ -2264,6 +2542,26 @@ public class AudioVisualizer : Control
 
     private void UpdateCursor(Point point)
     {
+        if (HitTestHintButton(point) != HintButtonKind.None)
+        {
+            _cachedHitParagraph = null;
+            _cachedIsNearLeftEdge = false;
+            _cachedIsNearRightEdge = false;
+            Cursor = _cursorHand;
+            return;
+        }
+
+        if (EditOriginalTimeCodes)
+        {
+            _cachedHitParagraph = null;
+            _cachedIsNearLeftEdge = false;
+            _cachedIsNearRightEdge = false;
+            Cursor = HitTestOriginalBlock(point, out var edge) == null
+                ? _cursorArrow
+                : edge == OriginalDragEdge.Move ? _cursorHand : _cursorSizeWestEast;
+            return;
+        }
+
         var p = HitTestParagraph(point);
         _cachedHitParagraph = p;
         _cachedIsNearLeftEdge = false;
@@ -2324,8 +2622,9 @@ public class AudioVisualizer : Control
             }
         }
 
-        // Early exit if no displayable paragraphs
-        if (_displayableParagraphs.Count == 0)
+        // While the original is being edited the working subtitle cannot be grabbed: no drag, and
+        // a click or right-click seeks instead of selecting.
+        if (EditOriginalTimeCodes || _displayableParagraphs.Count == 0)
         {
             return null;
         }
@@ -2577,10 +2876,13 @@ public class AudioVisualizer : Control
             DrawCurrentVideoPosition(context, ref renderCtx);
             DrawNewParagraph(context, ref renderCtx);
 
-            if (WavePeaks == null && ShowClickToGenerateHint && !string.IsNullOrEmpty(ClickToGenerateText))
+            foreach (var button in GetHintButtons())
             {
-                var hint = GetClickToGenerateHintText();
-                context.DrawText(hint, new Point((width - hint.Width) / 2, (height - hint.Height) / 2));
+                var text = GetHintButtonText(button.Text);
+                context.DrawRectangle(button.IsHovered ? _hintButtonHoverBackground : _hintButtonBackground,
+                    button.IsHovered ? _hintButtonHoverBorder : _hintButtonBorder, button.Rect, 5, 5);
+                context.DrawText(text, new Point(button.Rect.X + (button.Rect.Width - text.Width) / 2,
+                    button.Rect.Y + (button.Rect.Height - text.Height) / 2));
             }
 
             if (IsFocused)
@@ -2592,29 +2894,36 @@ public class AudioVisualizer : Control
         RaiseRendered();
     }
 
-    // The "click to generate" hint is drawn while a video is loaded but its waveform has not been
+    // The timeline buttons are drawn while a video is loaded but its waveform has not been
     // generated yet - and CurrentVideoPositionSeconds is an AffectsRender property the ~60 fps
     // cursor timer writes on every tick, so that state renders at full frame rate. Shaping the
-    // hint per frame was a FormattedText (and a full text layout) 60 times a second for a string
-    // that only changes with the UI language.
-    private FormattedText? _clickToGenerateHintText;
-    private string? _clickToGenerateHintSource;
+    // texts per frame was a FormattedText (and a full text layout) 60 times a second for strings
+    // that only change with the UI language.
+    private readonly Dictionary<string, FormattedText> _hintButtonTexts = new(2);
+    internal static readonly Color HintButtonBackgroundColor = Color.FromArgb(200, 30, 30, 30);
+    internal static readonly Color HintButtonHoverBackgroundColor = Color.FromArgb(230, 60, 60, 60);
+    internal static readonly Color HintButtonBorderColor = Color.FromArgb(120, 220, 220, 220);
+    internal static readonly Color HintButtonHoverBorderColor = Color.FromArgb(220, 240, 240, 240);
+    private static readonly IBrush _hintButtonBackground = new ImmutableSolidColorBrush(HintButtonBackgroundColor);
+    private static readonly IBrush _hintButtonHoverBackground = new ImmutableSolidColorBrush(HintButtonHoverBackgroundColor);
+    private static readonly IPen _hintButtonBorder = new ImmutablePen(new ImmutableSolidColorBrush(HintButtonBorderColor), 1);
+    private static readonly IPen _hintButtonHoverBorder = new ImmutablePen(new ImmutableSolidColorBrush(HintButtonHoverBorderColor), 1);
 
-    private FormattedText GetClickToGenerateHintText()
+    private FormattedText GetHintButtonText(string text)
     {
-        if (_clickToGenerateHintText == null || !ReferenceEquals(_clickToGenerateHintSource, ClickToGenerateText))
+        if (!_hintButtonTexts.TryGetValue(text, out var formatted))
         {
-            _clickToGenerateHintSource = ClickToGenerateText;
-            _clickToGenerateHintText = new FormattedText(
-                ClickToGenerateText,
-                CultureInfo.CurrentCulture,
-                FlowDirection.LeftToRight,
-                Typeface.Default,
-                14,
-                Brushes.Gainsboro);
+            if (_hintButtonTexts.Count > 8)
+            {
+                _hintButtonTexts.Clear(); // UI language changed a few times
+            }
+
+            formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                Typeface.Default, HintButtonFontSize, Brushes.Gainsboro);
+            _hintButtonTexts[text] = formatted;
         }
 
-        return _clickToGenerateHintText;
+        return formatted;
     }
 
     private void DrawSpectrogram(DrawingContext context, ref RenderContext renderCtx)
@@ -3068,7 +3377,7 @@ public class AudioVisualizer : Control
 
     private void DrawWaveForm(DrawingContext context, ref RenderContext renderCtx)
     {
-        if (WavePeaks == null || _displayMode == WaveformDisplayMode.OnlySpectrogram)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || _displayMode == WaveformDisplayMode.OnlySpectrogram)
         {
             return;
         }
@@ -3733,11 +4042,15 @@ public class AudioVisualizer : Control
         var showOriginalSubtitle = IsOriginalSubtitleOverlayVisible;
         var workingTextHeight = showOriginalSubtitle ? renderCtx.Height / 2.0 : renderCtx.Height;
 
-        foreach (var p in paragraphs)
+        // Editing the original swaps which layer is drawn at half strength.
+        using (EditOriginalTimeCodes ? context.PushOpacity(OriginalSubtitleOpacity) : (IDisposable?)null)
         {
-            if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
+            foreach (var p in paragraphs)
             {
-                DrawParagraph(p, context, ref renderCtx, 0, workingTextHeight);
+                if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
+                {
+                    DrawParagraph(p, context, ref renderCtx, 0, workingTextHeight);
+                }
             }
         }
 
@@ -3922,7 +4235,93 @@ public class AudioVisualizer : Control
             DrawParagraphFooter(context, paragraph, currentRegionLeft, currentRegionWidth, ref renderCtx);
         }
 
+        if (paragraph.Bookmark != null && Se.Settings.Waveform.WaveformShowBookmarks)
+        {
+            using (context.PushClip(new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, renderCtx.Height)))
+            {
+                DrawBookmarkTag(context, paragraph.Bookmark, paragraph.BookmarkColor, currentRegionLeft, currentRegionWidth, WaveformBookmark.GetTop(contentTop, contentHeight));
+            }
+        }
+
         DrawParagraphAudioLength(context, paragraph, currentRegionLeft, currentRegionRight, contentTop, contentHeight, ref renderCtx);
+    }
+
+    private readonly string?[] _bookmarkColorHex = new string?[BookmarkColors.Count];
+    private readonly IBrush[] _bookmarkBrush = new IBrush[BookmarkColors.Count];
+    private readonly bool[] _bookmarkDarkForeground = new bool[BookmarkColors.Count];
+    private readonly Dictionary<(string Text, bool Dark), FormattedText> _bookmarkTextCache = new(64);
+
+    /// <summary>See <see cref="WaveformBookmark"/>.</summary>
+    private void DrawBookmarkTag(DrawingContext context, string bookmark, int colorIndex, double regionLeft, double regionWidth, double top)
+    {
+        colorIndex = Math.Clamp(colorIndex, 0, BookmarkColors.Count - 1);
+        var hex = BookmarkColors.GetHex(colorIndex);
+        if (hex != _bookmarkColorHex[colorIndex])
+        {
+            var color = hex.FromHexToColor();
+            _bookmarkColorHex[colorIndex] = hex;
+            _bookmarkBrush[colorIndex] = new ImmutableSolidColorBrush(color);
+            _bookmarkDarkForeground[colorIndex] = WaveformBookmark.UseDarkForeground(color.R, color.G, color.B);
+        }
+
+        var dark = _bookmarkDarkForeground[colorIndex];
+        var foreground = dark ? Brushes.Black : Brushes.White;
+        var label = WaveformBookmark.GetLabel(bookmark);
+        FormattedText? text = null;
+        if (label.Length > 0)
+        {
+            var key = (label, dark);
+            if (!_bookmarkTextCache.TryGetValue(key, out text))
+            {
+                if (_bookmarkTextCache.Count > 500)
+                {
+                    _bookmarkTextCache.Clear();
+                }
+
+                text = new FormattedText(label, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeface, _fontSize, foreground);
+                _bookmarkTextCache[key] = text;
+            }
+        }
+
+        var height = Math.Max(WaveformBookmark.MinHeight, (text?.Height ?? 0) + 4);
+        var width = WaveformBookmark.Padding * 2 + WaveformBookmark.RibbonWidth + (text != null ? WaveformBookmark.Gap + text.Width : 0);
+        width = Math.Min(width, regionWidth - 4);
+        if (width < WaveformBookmark.RibbonWidth + 4)
+        {
+            return;
+        }
+
+        var x = regionLeft + 2;
+        var tag = new Rect(x, top, width, height);
+        context.DrawRectangle(_bookmarkBrush[colorIndex], null, tag, WaveformBookmark.CornerRadius, WaveformBookmark.CornerRadius);
+
+        var ribbon = new StreamGeometry();
+        using (var g = ribbon.Open())
+        {
+            var points = WaveformBookmark.GetRibbon(x + WaveformBookmark.Padding, top + 3, height - 6);
+            g.BeginFigure(new Point(points[0].X, points[0].Y), true);
+            for (var i = 1; i < points.Length; i++)
+            {
+                g.LineTo(new Point(points[i].X, points[i].Y));
+            }
+
+            g.EndFigure(true);
+        }
+
+        context.DrawGeometry(foreground, null, ribbon);
+
+        if (text == null)
+        {
+            return;
+        }
+
+        var textX = x + WaveformBookmark.Padding + WaveformBookmark.RibbonWidth + WaveformBookmark.Gap;
+        var textY = top + (height - text.Height) / 2;
+        using (context.PushClip(tag))
+        using (BlurText ? context.PushEffect(TextBlurEffect, new Rect(textX, textY, text.Width, text.Height)) : (IDisposable?)null)
+        {
+            context.DrawText(text, new Point(textX, textY));
+        }
     }
 
     private void DrawOriginalSubtitleParagraphs(DrawingContext context, ref RenderContext renderCtx, double top, double height)
@@ -3985,7 +4384,7 @@ public class AudioVisualizer : Control
             }
 
             // Draw original subtitle cues with the waveform theme at half opacity.
-            using (context.PushOpacity(OriginalSubtitleOpacity))
+            using (context.PushOpacity(EditOriginalTimeCodes ? 1.0 : OriginalSubtitleOpacity))
             {
                 context.FillRectangle(_paintParagraphBackground, new Rect(left, top, right - left, height));
                 context.DrawLine(_paintLeft, new Point(left, top), new Point(left, top + height));
@@ -4849,7 +5248,7 @@ public class AudioVisualizer : Control
 
     public double FindDataBelowThreshold(double thresholdPercent, double durationInSeconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return -1;
         }
@@ -4891,7 +5290,7 @@ public class AudioVisualizer : Control
     /// <returns>video position in seconds, -1 if not found</returns>
     public double FindDataBelowThresholdBack(double thresholdPercent, double durationInSeconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return -1;
         }
@@ -4944,7 +5343,7 @@ public class AudioVisualizer : Control
     /// <returns>video position in seconds, -1 if not found</returns>
     public double FindDataBelowThresholdBackForStart(double thresholdPercent, double durationInSeconds, double startSeconds, double maxForwardSeconds = 0.8)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return -1;
         }
@@ -5034,7 +5433,7 @@ public class AudioVisualizer : Control
     /// <returns>video position in seconds, -1 if not found</returns>
     public double FindDataBelowThresholdForwardForEnd(double thresholdPercent, double durationInSeconds, double endSeconds, double maxBackSeconds = 1)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return -1;
         }
@@ -5141,7 +5540,7 @@ public class AudioVisualizer : Control
     /// </summary>
     public double FindLowPercentage(double startSeconds, double endSeconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
         {
             return 0;
         }
@@ -5162,7 +5561,7 @@ public class AudioVisualizer : Control
     /// </summary>
     public double FindHighPercentage(double startSeconds, double endSeconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0 || WavePeaks.HighestPeak == 0)
         {
             return 0;
         }
@@ -5180,7 +5579,7 @@ public class AudioVisualizer : Control
 
     private MinMax GetMinAndMax(int startIndex, int endIndex)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return new MinMax { Min = 0, Max = 0, Avg = 0 };
         }
@@ -5219,7 +5618,7 @@ public class AudioVisualizer : Control
     internal void GenerateTimeCodes(Subtitle subtitle, double startFromSeconds, int blockSizeMilliseconds, int minimumVolumePercent, int maximumVolumePercent,
         int defaultMilliseconds)
     {
-        if (WavePeaks == null || WavePeaks.Peaks.Count == 0)
+        if (WavePeaks == null || WavePeaks.IsPlaceholder || WavePeaks.Peaks.Count == 0)
         {
             return;
         }
@@ -5374,6 +5773,7 @@ public class AudioVisualizer : Control
         _paragraphFormattedTextCache.Clear();
         _paragraphTextCache.Clear();
         _chapterTextCache.Clear();
+        _bookmarkTextCache.Clear();
         _footerNumberDurationCache.Clear();
         _footerCpsCache.Clear();
         _waveformCacheValid = false;

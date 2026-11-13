@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 namespace UITests.Features.Tools.BatchConvert;
 
@@ -25,6 +26,28 @@ public class BatchConvertAutoTranslateEngineTests
         var viewModel = MakeViewModel();
 
         Assert.Contains(viewModel.AutoTranslators, t => t is LlamaCppAdvancedTranslate);
+    }
+
+    /// <summary>
+    /// A settings reset or import replaces the settings object; an engine created before that
+    /// must translate with the new values, not the ones it saw at construction.
+    /// </summary>
+    [AvaloniaFact]
+    public void AdvancedEngines_ReadReplacedSettingsLive()
+    {
+        var original = Se.Settings.AutoTranslate.LlamaCppAdvanced;
+        try
+        {
+            var engines = new AdvancedTranslatorBase[] { new LlamaCppAdvancedTranslate(), new OllamaAdvancedTranslate(), new LmStudioAdvancedTranslate() };
+            var replaced = new SeLlamaCppAdvanced { BatchSize = 7 };
+            Se.Settings.AutoTranslate.LlamaCppAdvanced = replaced;
+
+            Assert.All(engines, e => Assert.Same(replaced, e.Settings));
+        }
+        finally
+        {
+            Se.Settings.AutoTranslate.LlamaCppAdvanced = original;
+        }
     }
 
     [AvaloniaFact]

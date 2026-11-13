@@ -16,16 +16,6 @@ public class WhisperEngineWhisperXTests
     }
 
     [Fact]
-    public void WhisperXDownloadsItsOwnModels_SoSeMustNeverOfferItsDownloader()
-    {
-        // SE's model downloader lands in Purfview's folder, which whisperx never reads; the
-        // transcribe path checks this flag before IsModelInstalled so the prompt never shows.
-        ISpeechToTextEngine engine = new WhisperEngineWhisperX();
-
-        Assert.True(engine.DownloadsOwnModels);
-    }
-
-    [Fact]
     public void RepoIdComesFromTheModelUrl()
     {
         var model = new WhisperModel
@@ -52,17 +42,18 @@ public class WhisperEngineWhisperXTests
     {
         // faster-whisper rejects "anime.ja" ("Invalid model size") but accepts a repo id.
         var engine = new WhisperEngineWhisperX();
+        var emptyModelsFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "se-whisperx-no-models-" + Guid.NewGuid());
 
-        Assert.Equal("large-v3", engine.GetModelForCmdLine("large-v3"));
-        Assert.Equal("distil-large-v3.5", engine.GetModelForCmdLine("distil-large-v3.5"));
-        Assert.Equal("quantumcookie/anime-whisper-ct2-int8", engine.GetModelForCmdLine("anime.ja"));
-        Assert.Equal("my-custom-model", engine.GetModelForCmdLine("my-custom-model"));
+        Assert.Equal("large-v3", engine.GetModelForCmdLine("large-v3", emptyModelsFolder));
+        Assert.Equal("distil-large-v3.5", engine.GetModelForCmdLine("distil-large-v3.5", emptyModelsFolder));
+        Assert.Equal("quantumcookie/anime-whisper-ct2-int8", engine.GetModelForCmdLine("anime.ja", emptyModelsFolder));
+        Assert.Equal("my-custom-model", engine.GetModelForCmdLine("my-custom-model", emptyModelsFolder));
 
         // Guards the next model added to the shared list: every entry must reach faster-whisper
         // as a name it knows or as a repo id.
         Assert.All(engine.Models, m =>
         {
-            var arg = engine.GetModelForCmdLine(m.Name);
+            var arg = engine.GetModelForCmdLine(m.Name, emptyModelsFolder);
             Assert.True(WhisperEngineWhisperX.FasterWhisperModelNames.Contains(arg) || arg.Contains('/'), m.Name);
         });
     }
@@ -188,5 +179,68 @@ public class WhisperEngineWhisperXTests
         var folder = engine.GetAndCreateWhisperFolder();
 
         Assert.Equal(folder, System.IO.Path.GetDirectoryName(executable));
+    }
+
+    [Fact]
+    public void ModelSeDownloadedGoesOnTheCommandLineAsItsFolder()
+    {
+        // SE's downloader fills the shared faster-whisper "_models" folder; whisperx must get
+        // that folder, not the bare name, or it downloads a second copy into the hub cache.
+        var engine = new WhisperEngineWhisperX();
+        var modelsFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "se-whisperx-models-" + Guid.NewGuid());
+        try
+        {
+            var small = engine.Models.Single(m => m.Name == "small");
+            var smallFolder = System.IO.Path.Combine(modelsFolder, "faster-whisper-small");
+            System.IO.Directory.CreateDirectory(smallFolder);
+            System.IO.File.WriteAllText(System.IO.Path.Combine(smallFolder, "config.json"), "{}");
+
+            // Still downloading: only the partial file is there.
+            using (var partial = System.IO.File.Create(System.IO.Path.Combine(smallFolder, "model.bin.$$$")))
+            {
+                partial.SetLength(20_000_000);
+            }
+
+            Assert.Null(WhisperEngineWhisperX.GetLocalModelFolder(small, modelsFolder));
+            Assert.Equal("small", engine.GetModelForCmdLine("small", modelsFolder));
+
+            System.IO.File.Move(System.IO.Path.Combine(smallFolder, "model.bin.$$$"), System.IO.Path.Combine(smallFolder, "model.bin"));
+
+            Assert.Equal(smallFolder, WhisperEngineWhisperX.GetLocalModelFolder(small, modelsFolder));
+            Assert.Equal(smallFolder, engine.GetModelForCmdLine("small", modelsFolder));
+            Assert.Equal("base", engine.GetModelForCmdLine("base", modelsFolder));
+        }
+        finally
+        {
+            if (System.IO.Directory.Exists(modelsFolder))
+            {
+                System.IO.Directory.Delete(modelsFolder, true);
+            }
+        }
+    }
+
+    [Fact]
+    public void TruncatedModelBinIsNotALocalModel()
+    {
+        var engine = new WhisperEngineWhisperX();
+        var modelsFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "se-whisperx-models-" + Guid.NewGuid());
+        try
+        {
+            var tiny = engine.Models.Single(m => m.Name == "tiny");
+            var tinyFolder = System.IO.Path.Combine(modelsFolder, "faster-whisper-tiny");
+            System.IO.Directory.CreateDirectory(tinyFolder);
+            System.IO.File.WriteAllText(System.IO.Path.Combine(tinyFolder, "config.json"), "{}");
+            System.IO.File.WriteAllBytes(System.IO.Path.Combine(tinyFolder, "model.bin"), new byte[1000]);
+
+            Assert.Null(WhisperEngineWhisperX.GetLocalModelFolder(tiny, modelsFolder));
+            Assert.Equal("tiny", engine.GetModelForCmdLine("tiny", modelsFolder));
+        }
+        finally
+        {
+            if (System.IO.Directory.Exists(modelsFolder))
+            {
+                System.IO.Directory.Delete(modelsFolder, true);
+            }
+        }
     }
 }

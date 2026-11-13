@@ -327,6 +327,11 @@ public class BinaryEditWindow : Window
                     Header = Se.Language.Tools.ImageBasedEdit.BottomAlignLines,
                     Command = vm.BottomAlignCommand,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.ImageBasedEdit.BottomAlignLinesBaseline,
+                    Command = vm.BottomAlignBaselineCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
@@ -595,6 +600,15 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemBottomAlign);
         menuItemBottomAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
+
+        var menuItemBottomAlignBaseline = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.BottomAlignLinesBaseline,
+            DataContext = vm,
+            Command = vm.BottomAlignBaselineSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemBottomAlignBaseline);
+        menuItemBottomAlignBaseline.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var separatorForced = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorForced);

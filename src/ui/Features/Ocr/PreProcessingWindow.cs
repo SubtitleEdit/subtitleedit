@@ -19,6 +19,8 @@ public class PreProcessingWindow : Window
     public PreProcessingWindow(PreProcessingViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Ocr.PreProcessingTitle;
         CanResize = true;
         Width = 800;

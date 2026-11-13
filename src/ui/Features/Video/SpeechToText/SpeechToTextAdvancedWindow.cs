@@ -19,6 +19,8 @@ public class SpeechToTextAdvancedWindow : Window
     public SpeechToTextAdvancedWindow(SpeechToText.SpeechToTextAdvancedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Video.AudioToText.AdvancedWhisperSettings;
         Width = 1050;
         Height = 660;
@@ -227,7 +229,7 @@ public class SpeechToTextAdvancedWindow : Window
             },
         };
 
-        var buttonBar = EditorChrome.MakeFlushButtonBar(presets, UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand)));
+        var buttonBar = EditorChrome.MakeButtonBar(presets, UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand), EditorChrome.AsPrimary(UiUtil.MakeButton(Se.Language.General.Ok, vm.OkCommand)));
 
         var parameters = new Border
         {

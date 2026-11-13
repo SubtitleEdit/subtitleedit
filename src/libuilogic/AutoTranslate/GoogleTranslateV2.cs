@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 new TranslationPair("PERSIAN", "fa"),
                 new TranslationPair("POLISH", "pl"),
                 new TranslationPair("PORTUGUESE", "pt-PT"),
-                new TranslationPair("PORTUGUESE (BRAZIL)", "pt"),
+                new TranslationPair("PORTUGUESE (BRAZIL)", "pt-BR"),
                 new TranslationPair("PUNJABI", "pa"),
                 new TranslationPair("PUNJABI (Shahmukhi)", "pa-Arab"),
                 new TranslationPair("QUECHUABI", "qu"),

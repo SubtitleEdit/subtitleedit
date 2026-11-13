@@ -22,7 +22,7 @@ public class Se
     internal const int CurrentShortcutsMigrationVersion = 6;
     internal const int CurrentLayoutMigrationVersion = 2;
 
-    public static string Version { get; set; } = "v5.4.0-beta11";
+    public static string Version { get; set; } = "v5.5.0-beta5";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
@@ -881,6 +881,7 @@ public class Se
     {
         MigrateMacOsFontSettings(Settings.Appearance, OperatingSystem.IsMacOS(), settingsFileExists);
         MigrateLayoutNumber(Settings.General);
+        MigrateGridAlternatingRowColor(Settings.Appearance);
 
         UpdateLibSeSettings();
 
@@ -906,6 +907,26 @@ public class Se
 
         // Once marked, a later explicit System Font selection must remain untouched.
         appearance.MacOsFontMigrationVersion = CurrentMacOsFontMigrationVersion;
+    }
+
+    /// <summary>
+    /// Version 1: the light alternating row color default went from #F5F5F5 to #E6E6E6
+    /// (#16779). A saved #F5F5F5 is the untouched old default, so it moves along once; any
+    /// other color was picked by the user and stays.
+    /// </summary>
+    internal static void MigrateGridAlternatingRowColor(SeAppearance appearance)
+    {
+        if (appearance.GridAlternatingRowColorMigrationVersion.GetValueOrDefault() >= SeAppearance.CurrentGridAlternatingRowColorMigrationVersion)
+        {
+            return;
+        }
+
+        if (string.Equals(appearance.GridAlternatingRowColor, SeAppearance.OldDefaultGridAlternatingRowColor.FromColorToHex(), StringComparison.OrdinalIgnoreCase))
+        {
+            appearance.GridAlternatingRowColor = SeAppearance.DefaultGridAlternatingRowColor.FromColorToHex();
+        }
+
+        appearance.GridAlternatingRowColorMigrationVersion = SeAppearance.CurrentGridAlternatingRowColorMigrationVersion;
     }
 
     /// <summary>

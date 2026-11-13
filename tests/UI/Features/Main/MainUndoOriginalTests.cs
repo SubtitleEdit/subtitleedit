@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using System.Reflection;
 
@@ -169,6 +170,37 @@ public class MainUndoOriginalTests : IDisposable
         Assert.Equal(originalFileName, GetOriginalFileName(vm));
     }
 
+    /// <summary>
+    /// A mismatching original was answered for this pair before: reopening applies that answer
+    /// instead of showing the dialog again (#16752). The dialog would never close in a headless
+    /// test, so finishing at all shows it was skipped.
+    /// </summary>
+    [AvaloniaFact]
+    public async Task ReopeningAMismatchingOriginal_UsesTheRememberedChoice()
+    {
+        var (window, vm) = CreateMainViewModel();
+        var translationFileName = WriteSrt("translation.srt", "Translated one", "Translated two");
+        var originalFileName = WriteSrt("original.srt", "Original one", "Original two", "Original three");
+
+        await vm.SubtitleOpen(translationFileName, skipLoadVideo: true);
+        await SettleAsync(window);
+
+        var recentFile = new RecentFile
+        {
+            SubtitleFileName = translationFileName,
+            SubtitleFileNameOriginal = originalFileName,
+            OriginalShowAllLines = true,
+            OriginalAllowEdit = false,
+        };
+        await (Task)GetMethod("RestoreRememberedOriginal").Invoke(vm, new object?[] { 0, recentFile })!;
+        await SettleAsync(window);
+
+        Assert.True(vm.ShowColumnOriginalText);
+        Assert.True(vm.IsShowingOriginalNonMatchingLines);
+        Assert.True(vm.IsOriginalReadOnly);
+        Assert.Equal(originalFileName, GetOriginalFileName(vm));
+    }
+
     private string WriteSrt(string name, params string[] lines)
     {
         Directory.CreateDirectory(_tempDirectory);
@@ -249,7 +281,8 @@ public class MainUndoOriginalTests : IDisposable
     private static async Task InvokeRestoreRememberedOriginal(
         MainViewModel vm, int selectedIndex, string originalFileName, string subtitleFileName)
     {
-        await (Task)GetMethod("RestoreRememberedOriginal").Invoke(vm, new object?[] { selectedIndex, originalFileName, subtitleFileName })!;
+        var recentFile = new RecentFile { SubtitleFileName = subtitleFileName, SubtitleFileNameOriginal = originalFileName };
+        await (Task)GetMethod("RestoreRememberedOriginal").Invoke(vm, new object?[] { selectedIndex, recentFile })!;
     }
 
     private static void SetPrivateField(MainViewModel vm, string name, object value) =>

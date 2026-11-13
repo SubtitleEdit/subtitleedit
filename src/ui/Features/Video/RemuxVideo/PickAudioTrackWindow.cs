@@ -81,5 +81,8 @@ public class PickAudioTrackWindow : Window
         grid.Add(buttonBar, 1);
 
         Content = grid;
+
+        UiUtil.FocusOnFirstActivation(this, comboBox);
+        KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

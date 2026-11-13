@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System.Globalization;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
@@ -314,6 +315,21 @@ public class StringExtensionsTest
 
         Assert.Equal(2, calc.CountCharacters(input, true));
         Assert.Equal(4, calc.CountCharacters(input, false));
+    }
+
+    [Fact]
+    public void ToUpperWithCapitalSharpS()
+    {
+        Assert.Equal("HEI\u1E9E", "hei\u00DF".ToUpperWithCapitalSharpS(CultureInfo.GetCultureInfo("de-DE")));
+        Assert.Equal("HEI\u1E9E", "hei\u00DF".ToUpperWithCapitalSharpS(CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public void ToggleCasingSharpS()
+    {
+        var res = "Hei\u00DF".ToggleCasing(new SubRip());
+        Assert.Equal("HEI\u1E9E", res);
+        Assert.Equal("hei\u00DF", res.ToggleCasing(new SubRip()));
     }
 
     [Fact]

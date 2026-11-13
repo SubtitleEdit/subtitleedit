@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string MicrosoftTranslatorApiKey { get; set; }
         public string MicrosoftTranslatorTokenEndpoint { get; set; }
         public string MicrosoftTranslatorCategory { get; set; }
+        public string MicrosoftTranslatorRegion { get; set; }
         public string GoogleApiV2Key { get; set; }
         public string AutoTranslateNllbApiUrl { get; set; }
         public string AutoTranslateNllbServeUrl { get; set; }

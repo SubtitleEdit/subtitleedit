@@ -18,7 +18,7 @@ The menu bar provides access to all features organized into categories:
 
 | Menu | Description |
 |------|-------------|
-| **File** | New, New (keep video), New window, Open, Open (keep video), Open original, Edit original subtitle, Close original, Close translation, Reopen, Restore auto-backup, Save, Save as, Save forced lines as, format properties, Open containing folder, Compare, Statistics, Import, Export, Exit |
+| **File** | New, New (keep video), New window, Open, Open (keep video), Open original, Edit original subtitle, Close original, Close translation, Reopen, Restore auto-backup, Save, Save as, format properties, Open containing folder, Compare, Statistics, Import, Export, Exit |
 | **Edit** | Undo, Redo, Show history for undo, Find, Find next, Replace, Multiple replace, Go to line number, [Command palette](command-palette.md), Right-to-left mode and the RTL tools (fix RTL via Unicode control chars, remove Unicode control chars, reverse RTL start/end), Modify selection, Invert selection, Select all |
 | **Tools** | Adjust durations, AI review, Apply duration limits, Apply min. gap between subtitles, Batch convert, Beautify time codes, [Improve time codes (forced alignment)](improve-time-codes.md), Bridge gaps, Change casing, Change formatting, Check and fix Netflix errors, Convert actors, Fix common errors, List errors, Make new empty translation from current subtitle, Merge continuation lines, Merge lines with same text, Merge lines with same time codes, Merge short lines, Merge two subtitles, Remove text for hearing impaired, Remove/replace Unicode characters, Renumber, Snap all times to frames, Sort subtitles, Split/rebalance long lines, and below a separator Join subtitles and Split subtitle |
 | **Plugins** | Run installed plugins; manage installed plugins (only shown when **Options → Settings → Appearance → Show Plugins menu** is on) |
@@ -336,10 +336,17 @@ Subtitle Edit offers **15 predefined layouts** for arranging the main window are
 | 11 | Video top, waveform middle, grid and text editor bottom |
 | 12 | Grid left, video right with the text editor under it, waveform bottom |
 | 13 | Video left with the text editor under it, grid right, waveform bottom |
-| 14 | Editor style: grid and text editor left, video right; a timeline across the bottom with a video row (filmstrip), a subtitle row, and the waveform |
+| 14 | Quality control: QC panel (errors with Fix buttons, bookmarks, play and speak buttons) and grid with text editor left, video right; a timeline across the bottom with a video row (filmstrip), subtitle rows, and the waveform |
 | 15 | Grid and text editor only; no video, no waveform |
 
-In layout 14 the rows above the waveform follow its zoom, scroll position and play-head:
+Layout 14 is made for quality control:
+
+- **Issues** — every error in the file (the same checks as the red grid cells and **List errors**: reading speed, duration, line length, number of lines, overlaps, gaps), updated as you edit. Click an issue to go to its line. **Fix** applies the matching fix to that line: auto break for text that is too long or has too many lines, the duration from the maximum reading speed for timing that is too short, too long or too fast, and "extend to next" (end at the next start minus the minimum gap) for overlaps and short gaps.
+- **Bookmarks** — every bookmarked line with its note. Click one to go to it; **+** adds or edits the bookmark of the selected line, **−** removes it.
+- **Play bar** — play the selected line once or in a loop, play the previous or next line, slow down or speed up playback, and **Speak from current line...** to hear the text read aloud with text-to-speech.
+- **Override tag chips** — for ASSA/SSA, the tags of the block a line starts with (`{\an8\pos(640,80)}`) are shown as chips above the text. Click × on a chip to remove that tag; **+** opens **Apply override tags**.
+
+The rows above the waveform (in layout 14, and in the other layouts with **Show subtitle tracks above waveform** on) follow its zoom, scroll position and play-head:
 
 - **Video row** — frames from the video (extracted with FFmpeg as they scroll into view), with shot changes marked. Switch it off with **Show video thumbnails** in the waveform's right-click menu; the subtitle rows then move up into its place.
 - **Subtitle rows** — one block per line. Drag a block to move the line, drag its edge to change the start or end time; clicks, snapping, minimum gap, multi-selection and undo all work exactly as on the waveform. The layers button on the waveform toolbar (a regular toolbar item: show, hide or move it with **⋮ → Configure toolbar items...**; also **Group subtitle tracks by** in the waveform's right-click menu) splits the subtitles over several rows, by **layer**, **actor** or **style**, so overlapping lines (two speakers, signs over dialogue) get a row each instead of piling up.
@@ -375,7 +382,7 @@ If the original file does not have the same number of lines as the subtitle you 
 - **Show only the matching original lines** — the classic side-by-side view. Lines are paired by time codes; original lines with no counterpart are not shown.
 - **Show all original lines** — original lines with no counterpart appear as extra, dimmed rows (without a line number), placed in time order, so you can see exactly what your subtitle is missing.
 
-The dialog also offers an **Allow edit of original subtitle** check box. Left off (the default), the original is a read-only reference: it is never written to, and closing it leaves the file on disk exactly as it was. Both choices are remembered for the next time.
+The dialog also offers an **Allow edit of original subtitle** check box. Left off (the default), the original is a read-only reference: it is never written to, and closing it leaves the file on disk exactly as it was. Both choices are remembered for the next time. Reopening the same pair from **File → Reopen...** or the recent files list (or at startup) uses the answer you gave for it without asking again; to choose differently, open the original again with **File → Open original...**.
 
 The dimmed rows belong to the original, so they are not saved with your subtitle, and editing commands (delete, merge, export, …) skip them. To adopt a missing line into your subtitle, select it and simply type or paste the translation — the row immediately becomes a normal line, keeping its timings. **Column → Copy text from original to current** in the grid's context menu does the same while also copying the original text over. You can nudge a dimmed row's start/end/duration first (it stays a dimmed reference row until you type text into it), so an adopted line lands with exactly the timing you want.
 

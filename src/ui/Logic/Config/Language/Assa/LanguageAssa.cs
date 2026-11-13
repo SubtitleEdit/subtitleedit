@@ -4,6 +4,7 @@ public class LanguageAssa
 {
     // ASSA Draw
     public string AssaDraw { get; set; }
+    public string LayoutRemoveTag { get; set; }
     public string DrawSelectTool { get; set; }
     public string DrawUseShapeForErase { get; set; }
     public string DrawLineTool { get; set; }
@@ -564,17 +565,17 @@ public class LanguageAssa
         DrawBezierTool = "Bezier curve";
         DrawRectangleTool = "Rectangle";
         DrawCircleTool = "Circle";
-        DrawCloseShape = "Close Shape (F8/Enter)";
-        DrawDeleteShape = "Delete Shape (Del)";
-        DrawChangeLayer = "Change Layer";
-        DrawClearAll = "Clear All (Ctrl+N)";
-        DrawZoomIn = "Zoom In (Ctrl++)";
-        DrawZoomOut = "Zoom Out (Ctrl+-)";
-        DrawResetView = "Reset View (Ctrl+0)";
-        DrawToggleGrid = "Toggle Grid (Ctrl+')";
+        DrawCloseShape = "Close shape (F8/Enter)";
+        DrawDeleteShape = "Delete shape (Del)";
+        DrawChangeLayer = "Change layer";
+        DrawClearAll = "Clear all (Ctrl+N)";
+        DrawZoomIn = "Zoom in (Ctrl++)";
+        DrawZoomOut = "Zoom out (Ctrl+-)";
+        DrawResetView = "Reset view (Ctrl+0)";
+        DrawToggleGrid = "Toggle grid (Ctrl+')";
         DrawTogglePreview = "Toggle preview (F9)";
         DrawPreviewFailed = "Preview failed - ffmpeg with libass (subtitles filter) is required";
-        DrawCopyToClipboard = "Copy to Clipboard (Ctrl+C)";
+        DrawCopyToClipboard = "Copy to clipboard (Ctrl+C)";
         DrawShapes = "Shapes";
         DrawSelectedPoint = "Selected point";
         DrawSelectedShape = "Selected shape";
@@ -1106,5 +1107,8 @@ public class LanguageAssa
         MouseOverColor = "Mouse-over color";
         ClickedColor = "Clicked color";
         DeleteAttachmentQuestion = "Delete attachment?";
+
+        // Layout 14 (ASSA)
+        LayoutRemoveTag = "Remove tag";
     }
 }

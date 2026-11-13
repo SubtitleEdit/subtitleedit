@@ -21,8 +21,32 @@ public class AdvancedEffectWordByWord : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        foreach (var subtitle in subtitles)
+        var plan = MarkedReveal.Plan(subtitles);
+        for (var n = 0; n < subtitles.Count; n++)
         {
+            var subtitle = subtitles[n];
+            if (plan != null)
+            {
+                // a line per word with the active word marked: the words up to the marked one
+                var reveal = plan[n];
+                if (reveal == null)
+                {
+                    result.Add(AdvancedEffectUtil.PassThrough(subtitle));
+                    continue;
+                }
+
+                var shown = reveal.ShownWords + (reveal.IsPause ? 0 : 1);
+                if (shown > 0)
+                {
+                    var markedLine = new SubtitleLineViewModel(subtitle, generateNewId: true);
+                    var plainWords = reveal.Text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
+                    markedLine.Text = string.Join(" ", plainWords, 0, Math.Min(shown, plainWords.Length));
+                    result.Add(markedLine);
+                }
+
+                continue;
+            }
+
             var cleanText = Utilities.RemoveSsaTags(subtitle.Text)
                 .Replace("\r\n", " ")
                 .Replace("\r", " ")

@@ -54,7 +54,11 @@ public class ExportHandlerBluRaySup : IExportHandler
     {
         _width = imageParameter.ScreenWidth;
         _height = imageParameter.ScreenHeight;
-        _pictures.Clear();
+
+        // Not _pictures: the export window makes every display set (CreateParagraph, in
+        // parallel) before it opens the file, so clearing them here dropped them all - every
+        // subtitle was then written on its own and overlapping ones were never composed
+        // (issue #16714). WriteFooter lets them go.
         _pending.Clear();
         _fileStream = new FileStream(fileOrFolderName, FileMode.Create);
     }
@@ -109,6 +113,7 @@ public class ExportHandlerBluRaySup : IExportHandler
     public void WriteFooter()
     {
         FlushPending();
+        _pictures.Clear();
         _fileStream!.Close();
     }
 
@@ -287,6 +292,7 @@ public class ExportHandlerBluRaySup : IExportHandler
                         Height = _height,
                         IsForced = objects.Any(o => o.IsForced),
                         CompositionNumber = compositionNumber,
+                        HdrWhiteNits = pictures[0].HdrWhiteNits,
                     };
 
                     var buffer = BluRaySupPicture.CreateSupFrame(picture, objects, fps, writeClear: !showsMore);
@@ -451,6 +457,7 @@ public class ExportHandlerBluRaySup : IExportHandler
             Height = param.ScreenHeight,
             IsForced = param.IsForced,
             CompositionNumber = (param.Index + 1) * CompositionNumbersPerParagraph,
+            HdrWhiteNits = param.HdrWhiteNits,
 
             // "{\fad(..)}" - Blu-ray fades by re-sending the palette with the alpha scaled, so
             // the subtitle is encoded once and each step costs a palette, not a bitmap.

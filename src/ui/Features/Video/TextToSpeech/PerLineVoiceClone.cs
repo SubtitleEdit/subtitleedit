@@ -70,6 +70,19 @@ public static class PerLineVoiceClone
         engine?.SupportsPerLineVoiceCloning == true && !string.IsNullOrEmpty(videoFileName);
 
     /// <summary>
+    /// Puts the pseudo-voice first in <paramref name="voices"/> when it can be offered and is not
+    /// there yet. Every place that rebuilds a voice list from <c>engine.GetVoices</c> has to call
+    /// this, or "Clone from video" silently drops out of the combo (#16812).
+    /// </summary>
+    public static void InsertIfSupported(IList<Voice> voices, ITtsEngine? engine, string? videoFileName)
+    {
+        if (CanBeOffered(engine, videoFileName) && !voices.Any(IsSelected))
+        {
+            voices.Insert(0, CreateVoice());
+        }
+    }
+
+    /// <summary>
     /// Cuts one reference clip per paragraph, in parallel, and writes each clip's spoken text
     /// beside it as the sidecar the cloning engines read as ref-text.
     /// </summary>

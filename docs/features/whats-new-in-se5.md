@@ -1,330 +1,149 @@
 # What's New in Subtitle Edit 5
 
-Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. It keeps the familiar subtitle editing workflow from the Windows Forms version, but many features were expanded.
+Subtitle Edit 5 is a rewrite of Subtitle Edit on Avalonia, so it runs on Windows, Linux and macOS. The editing workflow from Subtitle Edit 4 is still there; this page lists only what Subtitle Edit 5 adds on top of it. Features carried over from Subtitle Edit 4 are not repeated here.
 
-### Editing
+## Platform and Look
 
-- **Command palette** - **Edit → Command palette...** (Ctrl+Shift+K) finds any command by name (with its shortcut) and runs it (see [Command palette](command-palette.md)).
-- **Custom shortcut slots** built from steps (run commands, insert text, find and replace), and **Surround with** slots with toggle/add/remove behavior, like SE 4 (see [Custom shortcuts](shortcuts.md#custom-shortcuts)).
-- **AltGr** as a shortcut modifier on Windows, and new shortcuts: *Toggle break/unbreak*, *Save original*, *Remove all formatting*, *Delete selection (everywhere)*, *Set style 1-10*, *Cycle screen privacy* and more.
-- **Tools → Merge continuation lines...** merges lines unless a line ends a sentence (see [Merge continuation lines](merge-continuation-lines.md)).
-- **Find/Replace** shows the replace count and a search history whose entries can be deleted one by one; **Multiple replace** rules get a *Whole word* option.
-- **Actor picker**, *Rename...* in the grid's Actors menu, and *Remove/replace Unicode characters* and *Convert actors* for selected lines.
-- Tools report "*N lines changed*" and get their own named undo step; optional *go to changed line* on undo/redo.
-- Built-in interjection lists for 11 languages, a spell check editor for the *Use always* list, and the British English word list.
-- *Merge lines without auto-break* setting, and *Lock time codes* is respected by ripple delete, recalculate duration and the shot-change commands.
+- **macOS** is a supported platform, next to Windows and Linux (with a Flatpak build).
+- **Themes** - several light and dark themes and icon sets, chosen from preview cards, or follow the system theme (see [Settings → Appearance](settings.md#appearance)).
+- **High-DPI aware** UI with separate **UI scale** and **Font scale** settings.
+- **Search in Settings** finds any option, and Settings.json gets automatic backups.
+- **In-app updates** - pick the stable or beta channel, and get a quiet notice at startup when a newer build is out (see [Settings → Updates](settings.md#updates)).
+- On macOS: help topics in the **Help** menu search, macOS-standard default shortcuts, Apple Vision OCR and VideoToolbox encoders.
 
-### Main window and layout
+## Editing
 
-- **Layout 14** - an editor-style layout with a timeline: a video thumbnail row and subtitle rows (by layer, actor or style) above the waveform (see [Layouts](main-window.md#layouts)).
-- **Layouts 12 and 13** put the text box below the video player, and a **Font scale (%)** setting sits next to UI scale.
-- **Time code mode "Frame numbers"** shows absolute frame numbers, switchable in Settings or from the status bar (see [Settings → General](settings.md#general)).
-- **Reload the subtitle** when the file is changed outside Subtitle Edit.
-- Optional **Shot in / Shot out** grid columns, a *Show recent files* option, the full file path in the title bar, and a text selection opacity setting.
-- Settings show one category at a time (Ctrl+PageUp/Down, Alt+Left/Right), and Settings.json gets automatic backups.
-- Taskbar/Dock progress for speech to text, text to speech, AI review, auto-translate, burn-in and shot-change generation.
-- Screen reader names for lists, grids, combo boxes and buttons across the tool windows.
+- **Command palette** - **Edit → Command palette...** (Ctrl+Shift+K) finds any command by name and runs it (see [Command palette](command-palette.md)).
+- **Custom shortcuts** built from steps: run commands, insert text, find and replace (see [Custom shortcuts](shortcuts.md#custom-shortcuts)).
+- **AI assistant for the current line** - ask a local or online AI model about the selected line, or to fix errors, fit the reading speed or change the tone (see [AI assistant](ai-assistant.md)).
+- **Assisted split** and **Assisted move** - ranked suggestions for where to split a line, or which words to move to the neighbor line, each with a preview (see [Assisted split](assisted-split.md)).
+- **Error list** - **Tools → List errors...** collects everything the grid flags into one window and exports it (see [Error list](list-errors.md)).
+- **Tools → Change formatting** adds or removes italic, bold, underline and more on the selected lines (see [Change formatting](change-formatting.md)).
+- **Tools → Merge two subtitles** makes one bilingual subtitle, as SubRip or as ASSA with two styles (see [Merge two subtitles](merge-two-subtitles.md)).
+- **Tools → Merge continuation lines** merges lines unless a line ends a sentence (see [Merge continuation lines](merge-continuation-lines.md)).
+- **Tools → Remove/replace Unicode characters** - the Subtitle Edit 4 plugin, now built in (see [Remove/replace Unicode characters](remove-unicode-characters.md)).
+- **Forced narrative lines** - a *Forced* column, *Toggle forced*, and **File → Export → Forced lines only...** to write only those lines.
+- **Edit original** in place, with the original's unmatched lines shown as reference rows.
 
-### Video and waveform
+## Subtitle Grid and Text Box
 
-- **FFmpeg video player** - plays video through FFmpeg with hardware decoding, real frame stepping (also variable frame rate), sound on Linux and an audio track picker (see [Supported video players](video-player.md#supported-video-players)).
-- **Remember waveform zoom** across restarts (Options → Settings → Waveform), a waveform grid color, and a **Show speech only** waveform (see [Speech-only waveform](audio-visualizer.md#speech-only-waveform)).
-- Customizable order and visibility of the video player controls, a deinterlace setting, and an experimental mpv **Metal** player on macOS.
-- New video shortcuts: *move X ms back/forward*, *custom milliseconds back/forward and pause*, and *Guess start and end time from waveform*.
-- The waveform toolbar wraps to a second row, and can show the selected line's initial text and *move lines* buttons.
-- **Video → More → Generate background music...** makes local ACE-Step music looped to the video's length (see [Background music](background-music.md)).
-- **Video → More → Remux video...** puts video, several audio tracks and subtitles in one container, can mix audio files and embed CEA-608 captions (see [Remux video](remux-video.md)).
-- **Cut video** opens and generates much faster, with [transitions and fade from/to black](cut-video.md#transitions).
-- **Burn-in** of selected lines from the grid context menu, and burn-in into half side-by-side / top-bottom [3D video](burn-in.md#3d-video).
+- **Show formatting in the grid** - italic, bold and colors are drawn in the grid, or **Hide tags** shows tag-heavy ASSA lines as plain text (see [Formatting display](subtitle-grid.md#formatting-display)).
+- **Tag coloring** in the text box - HTML and ASSA tags are colored as you type, with live spell check, IME and right-to-left text still working.
+- **Live spell check in the grid** - misspelled words are underlined, with suggestions in the context menu (see [Spell Check](spell-check.md)).
+- **Columns...** to reorder and hide grid columns, plus optional *Shot in/out* columns.
+- **Statistics dashboard** with KPI tiles, checks and a CPS histogram (see [Statistics](statistics.md)).
+- **Time code mode "Frame numbers"** shows absolute frame numbers (see [Settings → General](settings.md#general)).
+- Drag and drop text between the text boxes, and **Search via** shortcuts that look up the selected text on the web.
 
-### Speech to text
+## Main Window and Layouts
 
-- **Detect speakers** (Sortformer diarization), a choice of VAD (Silero, FireRedVAD, Whisper-VAD, WebRTC) and **Isolate speech** for Crisp ASR (see [Isolate speech](speech-to-text.md#isolate-speech-crisp-asr)).
-- New Crisp ASR models: Index-Echo (Chinese speech to English/Japanese/Spanish text), Parakeet Ultra, Phonon-2, ReazonSpeech and Voxtral F16.
-- A *Multilingual* option for Purfview Faster-Whisper XXL, a new standalone WhisperX build with live output, and vLLM support in the OpenAI-compatible engine.
-- Transcribing selected lines keeps the lines that worked and offers to retry the failed ones; the computer no longer sleeps while it runs.
+- **Layout 14** - a quality control layout: the file's errors with Fix buttons, bookmarks, play and text-to-speech buttons, override tag chips above the text, and a timeline with a video thumbnail row and subtitle rows (by layer, actor or style) above the waveform (see [Layouts](main-window.md#layouts)).
+- **Layouts 12 and 13** put the text box below the video player.
 
-### Text to speech
+## Video and Waveform
 
-- **Play with speech** speaks the lines in sync while the video plays, and **Speak from current line** reads aloud from the selected line (see [Play with speech](text-to-speech.md#play-with-speech) and [Speak from current line](text-to-speech.md#speak-from-current-line)).
-- **KugelAudio** (23 European languages), **Supertonic-3** and an **OpenAI-compatible** engine (OpenAI, OpenRouter, custom server) (see [Supported engines](text-to-speech.md#supported-engines)).
-- **ElevenLabs Eleven v4** and **v4 Turbo** (the new default), with `<break>` tags turned into audio pause tags (see [ElevenLabs pauses](text-to-speech.md#elevenlabs-pauses-and-pacing)).
-- **Remove original speech** keeps the music and effects under the new voices, now with a **Fast (HTDemucs)** model option (see [Remove the original speech](text-to-speech.md#remove-the-original-speech-from-the-video)).
-- Optional **Sidon cleaning** of voice-clone reference audio, and a **Voice manager** to copy voices between engines and share voice packs (see [Voice manager](text-to-speech.md#voice-manager)).
+- **FFmpeg video player** - hardware decoding, exact frame stepping (also variable frame rate), and an audio track picker (see [Supported video players](video-player.md#supported-video-players)).
+- **Show speech only** waveform (see [Speech-only waveform](audio-visualizer.md#speech-only-waveform)), customizable waveform toolbar, and importable waveform themes.
+- **Guess start / Guess end** move a line's edge to where the speech starts or stops on the waveform.
+- **Video → More** has new tools:
+  - **Cut video**, with transitions and fade from/to black (see [Cut video](cut-video.md)).
+  - **Re-encode video for better subtitling** (see [Re-encode video](re-encode-video.md)).
+  - **Remux video** - video, several audio tracks and subtitles into one container (see [Remux video](remux-video.md)).
+  - **Chapters** editor for Matroska, MP4 and OGM (see [Chapters](chapters.md)).
+  - **Generate background music** with local ACE-Step, looped to the video's length (see [Background music](background-music.md)).
+- **Burn-in** adds a logo/watermark, [3D video](burn-in.md#3d-video) (half side-by-side / top-bottom), burn-in of selected lines, and hardware encoders for the current OS (see [Effect and logo](burn-in.md#effect-and-logo)).
+- **PGS position monitor** in the image subtitle editor shows where every subtitle sits on the video canvas.
 
-### Auto-translate
+## Sync and Timing
 
-- New engines: **LM Studio advanced**, **API Route**, and a *Browse models* button for OpenAI-compatible and LM Studio.
-- **Translate in place**, a model drop-down, 22 more languages for the AI engines, and an option to leave music lines untranslated.
-- A shortcut to translate the selected lines without the prompt, and MyMemory works without an API key.
-- More llama.cpp models (Index-Translate, TranslatePsy-AfriSLM), and lines that come back untranslated are retried.
-
-### OCR
-
-- **nOCR** is more accurate (scale-aware matching, automatic spaces, shadow threshold, a better Latin database), and glyphs can carry their own italic (see [nOCR](ocr.md#nocr-nikse-ocr)).
-- The **Train nOCR** window has a preview, can start from an existing database, trains several font sizes, and a database can be optimized.
-- **Find and Replace** in the OCR window, remembered [pre-processing](ocr.md#pre-processing) settings, and the spell check dictionary remembered per language (see [Find and Replace](ocr.md#find-and-replace)).
-
-### Sync and timing
-
-- **Tools → Improve time codes (forced alignment)...** re-times a roughly synced subtitle with a Crisp ASR aligner and can check large moves with speech to text (see [Improve time codes](improve-time-codes.md)).
-- **Point sync via other subtitle** loads subtitles from mkv/mp4/.sup, shows gap badges and a *Gap after* column (see [Point sync via other subtitle](point-sync-via-other.md)).
-- *Move start/end X ms* shortcuts, also in Visual sync, and *Extend to next/previous shot change* resolves overlaps.
-- Custom **Beautify time codes** profiles can be saved, loaded and deleted, and a frame rate can be typed in *Change frame rate*.
-
-### Formats and import
-
-- **File → Import → Subtitles from DVD (IFO/VOB)...** with a title picker, fast rip and exact cell timing (see [Import subtitles from DVD](file.md#import-subtitles-from-dvd)).
-- CEA-608/708 closed captions from `.ts`, `.mkv`, `.mp4`, `.mxf`, `.vob`/`.mpg` and `.m2v`, with a channel/service picker.
-- New readers: EZTitles `.ezt`, PSP UMD Video, HD-DVD sup, Cheetah Caption ASC, ELR Studio and more SE 4 formats that open again.
-- PAC code page detection and a secondary code page, and transport streams saved with a video extension open.
-- The format drop-down shows full format names, and Source view colors WebVTT, LRC and SCC.
-
-### ASSA
-
-- **ASSA draw** has a new layout with menus, undo/redo, scale/rotate, a shape library (also text and animated), backgrounds and SVG import (see [ASSA draw](assa-draw.md)).
-- Styles: overwrite or keep both on import, *Replace style with*, move up/down, and a *Set style...* quick-pick shortcut.
-
-### Batch convert
-
-- **Translate into several languages** in one run, **named presets**, and new filters (format, extension, error status, forced tracks).
-- New functions: *Remove Unicode control characters*, *Renumber*, *Merge continuation lines* and *Convert actors* (see [Available functions](batch-convert.md#available-functions)).
-- Asks before adding video files from a folder, adds many files faster, and shows converted/failed/not processed counts.
-
-### Compare
-
-- **Time tolerance** option and how far the times are off, a merge view to edit while comparing, and right-click on the gutter arrow to take only text or timing (see [Compare](compare.md#comparison-options)).
-
-### macOS and Linux
-
-- Search help topics from the macOS **Help** menu, macOS-standard default shortcuts, and a new rounded app icon.
-- Flatpak runtime moved to freedesktop 26.08, and Finnish spell checking with Voikko in the Flatpak and macOS builds.
-
-## Application Platform
-
-- Cross-platform Avalonia UI for Windows, Linux, and **macOS** — macOS is a new supported platform in SE 5.
-- Cleaner, High-DPI-aware UI that scales correctly on modern displays.
-- Follow system theme (light, dark, etc.) automatically, or pick a theme manually.
-- New Flatpak packaging work for Linux.
-- Many new settings, and the settings dialog has a built-in search to quickly find any option.
-- Native pick-folder dialog wherever a folder is needed (was missing in the WinForms 4.x line).
-- **Update check settings** — pick the stable or beta channel, and get a passive notification at startup when a newer build is out.
-- **Proxy settings** — domain, system credentials and a bypass list, used by every download and online engine.
-- **Type-to-search in every combo box**, a default save location setting, and the subtitle file name in dialog title bars.
-- **New UI languages** - Central Kurdish and Azerbaijani joined in 5.2 (on top of the Arabic, Turkish, Persian, Traditional Chinese, Indonesian, Vietnamese, Greek and Thai added in 5.1), and every language file is synced with English.
-- **Toolbar settings redesigned** as a grid of icon toggles, so you see the button you are showing or hiding instead of a list of checkboxes.
-
-## Editing and Grid
-
-- **Show formatting in grid** — formatting tags (italic, bold, color, etc.) can now be rendered visually in the subtitle grid.
-- **Tag coloring in the subtitle text box** — HTML and ASSA tags are syntax-highlighted while you type, using a native text box so centering, IME/CJK input, right-to-left text, live spell check (red underlines, suggestions, add to dictionary, ignore all) and the full context menu all keep working with color tags enabled.
-- Edit controls Show/Hide/Duration are now optional and can be toggled on/off.
-- Deleting many lines at once in the subtitle grid / list view is dramatically faster.
-- New **Tools → Change formatting** dialog for adding or removing italic, bold, underline, and other formatting across selected lines.
-- New **Tools → Merge two subtitles** tool that combines two subtitles (or the loaded subtitle's text + translation) into one bilingual subtitle. Output as SubRip (overlapping pairs stacked as line 1 / line 2) or ASSA with two configurable styles (font, color, outline, shadow, top/bottom alignment) and a live preview.
-- **AI assistant for the current line** — ask a local AI model about the selected line or ask it for a change (fix errors, fit reading speed, more formal/casual, or a free-form request), from the text box context menu or the edit-box toolbar. Runs via llama.cpp, Ollama, or any OpenAI-compatible endpoint.
-- **Edit original** — the original/reference column can be edited in place, and its non-matching lines are shown as reference rows in the grid.
-- **Hide tags** — a third grid formatting mode that hides override tags so tag-heavy ASSA lines read as plain text; *show formatting* now shows the text of tag-heavy lines too.
-- **Layout 10** puts the edit box under the waveform, like SE 4 and Aegisub.
-- New [**Tools → Remove/replace Unicode characters**](remove-unicode-characters.md) (the SE 4 plugin, built in), **Sentence case** in the casing options, and the SE 4 **Minimum gap frame rate calculator**.
-- **Assisted split** and **Assisted move** - ranked one-click suggestions for where to split a line, or which words to move to the previous/next subtitle, each with a full preview of the result; click an option or press its number (see [Assisted split](assisted-split.md)).
-- **Error list** - **Tools → List errors...** collects every error the grid flags into one window with summary cards per category, and exports the list to the clipboard, a text file, Excel or a web page; Batch convert has the same list for a whole run (see [Error list](list-errors.md)).
-- **Forced narrative lines** - a *Forced* grid column, *Toggle forced* for the selected lines, and **Save forced lines as...** to write only those lines to their own file.
-- **Columns... dialog** to reorder and hide the grid columns, and a **Statistics dashboard** with KPI tiles, meters, checks and a CPS histogram (see [Statistics](statistics.md)).
-- **Text boxes** - drag and drop text between them (e.g. from the original into the working text), configurable **Search via** shortcuts (the selected text takes the place of `{0}` in the URL), **Google it**, macOS **Look up**, and more **Surround with** slots.
-- **Multiple replace** grew up — import/export of selected rule categories, move rules up/down/to top/bottom, select all/none/invert in the preview, the whole rule shown while editing, remembered expanded categories, and a toolbar button.
-- **Merge lines: keep end time** (allow overlap with the next subtitle) as an option, and *Show selected lines earlier/later* in the grid context menu.
-- Auto-break settings under Settings → Tools, with a **do-not-break-after** list editor and a bottom-heavy percentage.
-- Keyboard parity with SE 4: *Go to first/last line* with video sync, *Go to next empty line*, *toggle custom tags*, recalculate duration, Ctrl+Shift+Home/End selection, Shift+Backspace as forward delete, and *Copy/Paste (alternative)* text box shortcuts for clipboard managers.
-
-## Spell Check
-
-- **Live spell check in the subtitle grid** — misspelled words are underlined in the grid, and the grid context menu offers suggestions, *Add to user dictionary* and *Ignore all* (when a single line is selected).
-
-See [Spell Check](spell-check.md) for details.
-
-## Video
-
-- New **Video → More → Re-encode video for better subtitling...** tool that re-encodes a video into a format better suited for subtitling work (see [Re-encode video](re-encode-video.md)).
-- New **Video → More → Cut video...** tool for trimming video segments directly from Subtitle Edit (see [Cut video](cut-video.md)).
-- **Logo in burn-in** — **Video → Generate video with burned-in subtitles...** can include a logo/watermark image (see [Effect and logo](burn-in.md#effect-and-logo)).
-- Many new speech-to-text engines (see [Speech to Text](#speech-to-text) below).
-- New **Video → OCR burned-in subtitle** tool that extracts hardcoded subtitles from video via OCR (see [Video OCR](video-ocr.md)).
-- Improved reading of subtitles embedded in MP4 files.
-- **PGS position monitor** — the binary/image-based edit window has a BDSup2Sub-style position map for image-based subtitles (`.sup`/`.sub`/BDN): every subtitle's real rectangle on the video canvas, color coded by zone (active picture / letterbox bars), with configurable content aspect ratio, custom bar height, and title-safe margin.
-- New **Video → More → Chapters** editor with Matroska, MP4 and OGM chapter formats (see [Chapters](chapters.md)).
-- **Margin is part of the subtitle area** — the preview subtitle may use the letterbox bars, keeping a translation clear of burned-in forced narrative.
-- **Burn-in** gains Apple VideoToolbox hardware encoders on macOS, `.webm`/`.ts` output, letter spacing, and lists only the encoders and containers the OS and codec actually support.
-- **Matroska track chooser** shows an image-subtitle preview, the number of forced cues, and can export VobSub directly.
-- *Go to sub position and pause* and *Go to video position…* shortcuts, and a toggle-subtitles shortcut for the video player.
-- **Video → More → Remux video...** puts a video and a separate audio (and subtitle) file into one container without re-encoding, picking the audio track when the source has several (see [Remux video](remux-video.md)).
-- **Guess start / Guess end** move the selected line's edge to where the speech actually starts or stops on the waveform, and the status bar tells you how far it moved.
-- **Per-track audio picker** - the video menu lists the file's audio tracks so the waveform and playback can follow a different one.
-- The **video position box** is editable, as in SE 4: type a time to jump there instead of scrubbing.
-- **Video offset** remembers the recently used offsets, and the Video menu gained **Open recent video** and **Go to video position...**.
-
-## Sync
-
-- **Visual Sync** now includes a waveform, making it easier to pick precise sync points.
-- **Visual sync** and **Set sync point** show the subtitle on the video, and Visual sync finds or opens a video when only a subtitle is loaded.
-
-## Waveform and Spectrogram
-
-- Waveform toolbar buttons can be customized, sorted, imported, and exported.
-- Waveform themes can be imported and exported.
-- **Spectrogram style** can be changed at runtime — no re-generation needed.
-- More customization options for the waveform and spectrogram, including colors, shot-change colors, and visual style.
-- **Snap to shot changes** is consistent across every way of doing it — dragging an edge, dragging a whole subtitle, and the snap shortcuts all land the cue the *Beautify time codes* profile's in/out cues gap away from the cut. Dragging snaps when the cue *looks* close (a pixel distance, so it feels the same at any zoom), and the snap distances are now in Options → Settings → Waveform. **Shift** while dragging temporarily disables the snap.
-
-## Beautify Time Codes
-
-- New **Tools → Beautify time codes…** brings the SE 4 beautifier across, but as a live tool: two stacked waveform visualizers (original / beautified) show the result before you accept it, with prev/next navigation, frame and millisecond deltas, and a per-cue reason line (*snapped to shot change* · *min. gap enforced* · *min. duration enforced*, etc.).
-- The full **profile editor** (zones, chaining, connected-subtitle handling, per-cue gap, presets for Netflix and SDI) is available from the tool window and from Options → Settings → Waveform. Profile edits persist into `Settings.json`.
-- **Beautify time codes** is also a batch convert step, so a whole folder can be snapped to shot changes and frames in one run.
-
-## OCR
-
-Beyond the classic engines, image-to-text now includes AI-based local and online options:
-
-- **CrispEmbed** — a new local ggml-based OCR engine (same family as CrispASR) with GLM-OCR, GOT-OCR2 and Qwen3-VL backends, downloaded and managed by Subtitle Edit.
-- **llama.cpp vision models** — OCR through a server-managed llama.cpp instance, also available in Batch Convert and `seconv`.
-- More engines overall: Tesseract, nOCR, Binary OCR, Google Lens, Google Vision, Ollama, Mistral OCR, and Paddle OCR (standalone or Python).
-- **Show only forced subtitles** — a filter plus a *Forced* column, so only the forced lines are OCR'ed and returned (SE 4 parity).
-- **Histogram-based color isolation** for VobSub/DVD subtitles, making it easier to separate text from borders and background.
-- The spell-check dictionary is auto-selected from the OCR language, and the OCR fix replace lists are applied even when no Hunspell dictionary is installed.
-- **Train nOCR** from SE 4 is back, and nOCR matching is faster thanks to a result cache.
-- **HunyuanOCR 1.5** joins the llama.cpp OCR model list, with install-status dots for engines and models and an engine download/update button in the settings.
-- **Save all images with HTML index** from the OCR window, and CrispEmbed's hardware build can be re-picked after the first install.
-- **Apple Vision OCR** on macOS - the system's built-in OCR, no download needed.
-- **Paddle OCR 3.7** with the PP-OCRv6 models, and **PP-OCRv6** and **DeepSeek-OCR-2** as CrispEmbed backends.
-- **LFM2.5-VL 3B** in the llama.cpp OCR model list, and custom vision models: drop a `.gguf` with its `mmproj` file into the llama.cpp models folder.
-- The OCR language is **auto-detected** from the file or track, and the matching video is opened after OCR.
-- **Video OCR** reads far more of the burned-in subtitles with better text and start times, can use the CrispEmbed engine, runs the OCR fix engine on the result, and colors spelling errors.
-
-See [OCR](ocr.md) and [Video OCR](video-ocr.md) for details.
+- **Tools → Improve time codes (forced alignment)** re-times a roughly synced subtitle with a speech aligner (see [Improve time codes](improve-time-codes.md)).
+- **Beautify time codes** is a live tool with before/after waveforms and a reason per changed line, and is also a batch convert step (see [Beautify time codes](beautify-time-codes.md)).
+- **Visual sync** shows the waveform and the subtitle on the video.
+- **Point sync via other subtitle** loads subtitles from mkv/mp4/.sup and shows gap badges (see [Point sync via other subtitle](point-sync-via-other.md)).
 
 ## Speech to Text
 
-Speech recognition is no longer limited to classic Whisper workflows. Subtitle Edit 5 includes a broader set of local and downloadable engines:
+- **Crisp ASR** - one engine with many backends (Parakeet, Canary, Qwen3, Voxtral, GigaAM, SenseVoice, ReazonSpeech and more), downloaded and managed by Subtitle Edit.
+- **Qwen3 ASR**, **Google Cloud Speech-to-Text v2**, and an **OpenAI-compatible** engine (also vLLM).
+- **WhisperX** as a standalone build - no Python install needed.
+- **Detect speakers** (diarization), a choice of VAD, and **Isolate speech** before transcribing (see [Isolate speech](speech-to-text.md#isolate-speech-crisp-asr)).
+- **Forced-aligner picker** for word-level time codes, and **auto-detect language**.
+- A **quality report** after each run (too short, too long, overlapping, non-speech and repeated lines).
 
-- Purfview Faster-Whisper XXL, CTranslate2, Whisper.cpp (with cuBLAS and Vulkan backends on Windows), OpenAI Whisper, OpenAI-compatible STT, and Const-me's Whisper.
-- **WhisperX** as a standalone build - Faster-Whisper with wav2vec2 word-level alignment, no Python install needed, and live progress while it runs.
-- **Google Cloud Speech-to-Text v2** (Chirp models, word timings) as an online engine; it takes a service account key file rather than an API key.
-- Qwen3 ASR with multiple GGUF model sizes.
-- Crisp ASR as one engine with 16 backends: Parakeet, Canary, Cohere, Fire Red, Fun-ASR Nano, GigaAM, GLM, Granite, Qwen3, Mega, MOSS Diarize, Omni, Kyutai, SenseVoice, ARK and Voxtral.
-- Forced-aligner picker (built-in / Canary CTC / Qwen3 / 12 language-specific wav2vec2 aligners) for word-level timestamps.
-- Per-engine advanced parameters and batch transcription improvements.
-- **Auto detect** language on the Whisper engines and on every Crisp ASR backend that covers more than one language.
-- **Voxtral** backend for Crisp ASR, a way to switch VAD off, and an automatic retry without VAD when a clip comes back empty.
-- **anime-whisper** (`anime.ja`), a Japanese fine-tune for anime and visual novel dialogue, in the Whisper CPP, Purfview, CTranslate2 and WhisperX model lists.
-- A **transcription quality report** after each run - too short, too long, overlapping, non-speech and repeated lines - with optional removal of non-speech and repeated lines in post-processing.
-- The MLX Whisper engine was removed.
-- Batch speech to text can include the language code in the output file names.
-
-See [Speech to Text](speech-to-text.md) for the current engine list and workflow.
+See [Speech to Text](speech-to-text.md).
 
 ## Text to Speech
 
-Text to speech now includes more local and cloud engines:
+- **New local engines** - Qwen3 TTS, Kokoro, OmniVoice, IndexTTS 2.5, Chatterbox, CosyVoice3, KugelAudio, Supertonic, Higgs Audio, Fish Audio S2 Pro, VibeVoice, VoxCPM2 and more, downloaded and managed by Subtitle Edit.
+- **New online engines** - Edge-TTS, Mistral TTS and an OpenAI-compatible engine (see [Supported engines](text-to-speech.md#supported-engines)).
+- **Voice cloning from the video** - find every speaker and clone them all, or clone the voice of each line.
+- **Remove original speech** - keeps the music and effects under the new voices (see [Remove the original speech](text-to-speech.md#remove-the-original-speech-from-the-video)).
+- **Play with speech** and **Speak from current line** read the subtitle aloud in sync with the video (see [Play with speech](text-to-speech.md#play-with-speech)).
+- **Voice manager** to copy voices between engines and share voice packs (see [Voice manager](text-to-speech.md#voice-manager)).
+- Speaker names from SDH text go to the actor field, sound and music lines can be left silent, and custom Piper voices can be imported.
 
-- Edge-TTS.
-- Mistral TTS.
-- Qwen3 TTS with downloadable local server builds and models.
-- Kokoro TTS with downloadable local server builds and models.
-- OmniVoice TTS - a local CPU engine (many languages, voice cloning) with downloadable models.
-- Review audio clips, regenerate individual lines, keep regeneration history, and export generated clips with metadata.
-- **IndexTTS 2.5** — a local engine with emotion and speaking-rate control.
-- **Find voices in video and clone them all** — auto-cast every speaker from the video, or clone the voice of a single line from the video.
-- Chatterbox V3 in 23 languages (plus F16 and Q4_K model variants), and the CosyVoice3 RL talker models.
-- More engines on the **audio.cpp** runtime: **Higgs Audio v3**, **Fish Audio S2 Pro** and **FireRedTTS3**, sharing one install with IndexTTS 2.5.
-- More engines on the CrispASR runtime: **dots.tts**, **Confucius4-TTS**, **Pocket TTS**, **VibeVoice**, **VoxCPM2**, **MOSS-TTS**, **Zonos** (with a language picker) and **Supertonic** (very fast, 31 languages, ten preset voices).
-- **Per-line cloning** - *Clone from video (voice of each line)* on Qwen3 TTS, the audio.cpp engines, VibeVoice, MOSS-TTS, CosyVoice3 and VoxCPM2 - with a one-time consent prompt before the first clone.
-- **Speaker-name detection** moves `NAME:` style speakers from an SDH text into the actor field, sound and music lines can be **left silent**, and **custom Piper voices** (an `.onnx` + `.onnx.json` pair) can be imported.
-
-See [Text to Speech](text-to-speech.md) for details.
+See [Text to Speech](text-to-speech.md).
 
 ## Auto-translate
 
-Subtitle Edit 5 adds local, downloadable auto-translate engines that run entirely on your own machine:
+- **Server-managed llama.cpp** - Subtitle Edit downloads llama.cpp and the models and runs the server, so translation works offline with no setup.
+- **CrispASR MADLAD**, a local translation engine with downloadable models.
+- **OpenAI-compatible API** for any `chat/completions` endpoint, plus **LM Studio** model browsing and **API Route**.
+- **Advanced engines** (llama.cpp, Ollama, LM Studio) translate in batches with surrounding context, a synopsis and a glossary (see [Advanced auto-translate](auto-translate-advanced.md)).
+- **Translate in place**, retry of lines that come back untranslated, and lines re-broken for the target language.
 
-- **Server-managed llama.cpp** — Subtitle Edit downloads llama.cpp, manages a local `llama-server` process, and offers a curated TranslateGemma model picker, so no manual server setup is required. CPU, Vulkan, and CUDA builds are available, and the server can be started and stopped from the Auto-translate window.
-- **CrispASR MADLAD** — a local MADLAD-based translation engine with downloadable models (shown with size and install status), available in both the Auto-translate window and Batch Convert.
-- **OpenAI Compatible API** — a generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...).
-- **MiLMMT-46** translation models in the llama.cpp engine, and the **llama.cpp advanced** and **Ollama advanced** engines that translate in batches with surrounding context, a synopsis, a glossary and schema-forced output - also in Batch convert and `seconv`.
-- Completion-format prompts for LM Studio, KoboldCpp, Ollama and the other local engines, a reset-to-default button for the prompt, and the chosen languages are kept when the engine changes.
-- **DeepL** offers every language its API supports, and the free **Google Translate** retries through a fallback endpoint when Google blocks the usual one.
-- Translated rows that break the line profile (too many lines, or a line over the single-line limit) are **re-broken** for the target language, and the original text is no longer lost after translating.
-
-See [Auto-translate](auto-translate.md) for the full engine list and workflow.
+See [Auto-translate](auto-translate.md).
 
 ## AI Review
 
-- New **Tools → AI review** — an AI proofreading pass that catches typos, spelling, grammar, punctuation, and casing errors without rephrasing or changing meaning, tone, or style.
-- **Runs locally by default** — uses a server-managed llama.cpp engine with a downloadable model picker, so no cloud service or API key is required. Ollama and any OpenAI-compatible endpoint are also supported.
-- **Review before you apply** — suggestions are listed as before/after pairs with a per-line reason, grouped by category (Spelling, Grammar, Punctuation, Casing, Other) with filter chips. Tick the ones you want and apply only those.
-- **Safe by design** — formatting tags (`<i>`, `{\an8}`, etc.) and line breaks are preserved; suggestions that touch tags are dropped, and large rewrites are flagged for a closer look and left unselected.
-- **Editable prompt** — the instructions sent to the model can be customized (with the subtitle language auto-detected and substituted in).
-- **Play current**, **Select none**, and a **Start/Stop server** button so the local model's VRAM can be released without leaving the window; the server is also stopped when a review is cancelled. AI review is in the grid's *Selected lines* context menu too.
-- Apply suggestions **in passes** (Apply keeps the window open, each pass is one undo step), a **delay between requests** for rate-limited cloud endpoints, and new models: Gemma 4 E2B, EuroLLM and Granite 4.1.
+- **Tools → AI review** - an AI proofreading pass for typos, spelling, grammar, punctuation and casing that does not rephrase.
+- Runs locally by default (llama.cpp), or via Ollama or any OpenAI-compatible endpoint.
+- Suggestions are listed before/after with a reason and a category; tick the ones to apply. Formatting tags and line breaks are kept.
 
-See [AI Review](ai-review.md) for details.
+See [AI Review](ai-review.md).
 
-## Batch conversion
+## OCR
 
-- **OCR while converting** — Batch Convert can turn image-based subtitles into text-based formats in bulk, using nOCR, Binary OCR, Tesseract, Ollama, llama.cpp vision models, or PaddleOCR. Language and pixels-are-space settings can be auto-detected for nOCR/Binary OCR, so converting many files with similar fonts needs far less manual setup.
-- **Local auto-translate in the queue** — the new local engines (server-managed llama.cpp / TranslateGemma and CrispASR MADLAD) can be applied directly as a batch conversion step, fully offline.
-- **More chainable functions** — including the new *Change formatting* (add/remove italic, bold, underline, etc.) alongside the existing fixes, replacements, casing, time-code, gap, merge, and split operations.
-- **Speech-to-text batch mode** — transcribe many media files at once and save the results next to the source files.
-- **Optimized MKV parsing** — reading subtitle tracks from Matroska (`.mkv`) files is significantly faster, speeding up batch jobs that extract subtitles from many video containers.
-- **Beautify time codes**, **Convert colors to dialog**, **Snap time codes to frames**, and the **CrispEmbed** OCR and **llama.cpp advanced** translate engines as batch steps; the llama.cpp launch flags are yours to set.
-- **Add folder…**, a filtered file count, translation progress, and an option to **keep the source file's date/time** on converted files (also in `seconv`).
-- Every **teletext page per PID** is written as its own result from transport streams, and **Transport Stream** output settings for the batch queue.
+- **New engines** - **CrispEmbed** (local GLM-OCR, Qwen3-VL, PP-OCRv6, DeepSeek-OCR-2 and more), **llama.cpp vision models** (including your own `.gguf`), **Apple Vision** on macOS and **Mistral OCR**.
+- **Video OCR** - **Video → OCR burned-in subtitle** reads hardcoded subtitles from a video (see [Video OCR](video-ocr.md)).
+- **nOCR** is more accurate (scale-aware matching, automatic spaces, a better Latin database) and glyphs can carry their own italic (see [nOCR](ocr.md#nocr-nikse-ocr)).
+- **Auto-detected OCR language**, histogram-based color isolation for DVD subtitles, and **Find and Replace** in the OCR window (see [Find and Replace](ocr.md#find-and-replace)).
 
-See [Batch Convert](batch-convert.md), [OCR](ocr.md), and [Command Line (seconv)](../reference/command-line.md).
+See [OCR](ocr.md).
 
-## ASSA Tools
+## Subtitle Formats and Import
 
-- New **Apply advanced effects** tool that generates cinematic and creative ASSA override-tag animations (typewriter, karaoke, bounce-in, neon, glitch, rainbow, starfield, rain, snow, fireflies, and more) with real-time video preview.
-- **Hide layer** — individual ASSA layers can now be hidden in the preview to focus on the lines you are working on.
-- **ASSA filtering** — filter and search lines in the ASSA grid by style, actor, layer, or tag content.
-- **Font collector** — shows the fonts a script uses and whether they are available, copies them to a folder, and can embed them in the subtitle with unused glyphs trimmed (see [Styles](assa-styles.md) and [Attachments](assa-attachments.md)).
-- More advanced effects: **Word flip 3D**, **Lower third** and **Cinematic title**.
+- **New formats** - EBU-TT-D, EBU-TT, IMSC Rosetta, YouTube timed text srv3 (`.ytt`), Manzanita DVB teletext, CANVASs SSTG1, Wistia json, DVD Junior SPC and Sonic DVD Producer.
+- **New image exports** - IMSC 1.1 image profile and DVD sup (MuxMan/Scenarist).
+- **New exports** - Final Cut Pro XML Captions and DaVinci Resolve marker EDL.
+- **CEA-608/708 closed captions** from `.ts`, `.mkv`, `.mp4`, `.mxf`, `.vob`/`.mpg` and `.m2v`.
+- Read subtitles from **fragmented MP4**, **ARIB STD-B24** captions, **SMPTE-TT bitmap** captions and **XSUB** in `.avi`.
+- **Import CSV/XLSX/ODS** with custom column mapping (see [Import spreadsheets](import-csv-xlsx.md)), a **generic XML importer**, and Premiere Pro marker CSV.
+- **EBU STL** and teletext preview positions and boxes as a decoder would, and **SCC** writes colors as mid-row codes.
 
-## Subtitle Formats
+## ASSA
 
-- Added **EBU-TT-D** (read and write) — the TTML distribution profile used by European broadcasters (BBC iPlayer, ARD/ZDF, NPO) and HbbTV.
-- Added **IMSC-Rosetta Timed Text** subtitle format support.
-- New **IMSC 1.1 image profile** export — a TTML file plus one PNG per subtitle, for streaming and broadcast image-subtitle delivery, from File → Export and from the image/binary subtitle editor. IMSC image profile files (and SMPTE-TT with base64 images) also open for OCR.
-- New **DVD sup (MuxMan/Scenarist)** image-based export — the classic DVD-Video subpicture `.sup` that DVD authoring tools import.
-- New **Import CSV/XLSX with custom columns** window for spreadsheets that don't fit the standard layout — pick which columns map to start, end, text, etc.
-- **Teletext / EBU STL** — an alignment dialog, a *TT* grid column, a teletext color picker with a *No color* option, and the position the file carries is used when previewing on the video (also for TTML and PAC).
-- New exports: **Final Cut Pro XML Captions**, **DaVinci Resolve marker EDL** (import too), **Audacity/Tenacity labels**, **BDN/xml 8-bit** with palette-indexed PNGs, and the **Full frame image** option is back.
-- New imports: Adobe Premiere Pro *Markers* panel CSV, and **XSUB** subtitles inside `.avi` files.
-- **D-Cinema interop** properties dialog, and the option to remove blank lines when opening a subtitle is back from SE 4.
-- Abbreviation lists for 30 more languages.
-- New formats: **EBU-TT** (Tech 3350), **Manzanita DVB teletext** (`.dvbttx`), **Csv Excel**, **CANVASs SSTG1** (`.sdb`), **Wistia json**, **DVD Junior SPC**, **Sonic DVD Producer** and **YouTube timed text srv3** (`.ytt`).
-- Read subtitles from **fragmented MP4** (DASH/CMAF), **ARIB STD-B24** captions from transport streams, and **SMPTE-TT bitmap** captions.
-- A **generic XML importer** for unknown formats, and **Import plain text** straight from the unknown-format prompt.
-- **EBU STL**: the video preview shows box, justification and double height as a teletext decoder would, and time codes are shown frame-based while the format is active.
-- **SCC**: colors are written as CEA-608 mid-row codes, a warning on save when a line exceeds 32 characters, and import timing applies each control code at its frame within the line.
-- **Ruby and emphasis** in Lambda Cap and Netflix IMSC 1.1 Japanese, and font colors in EBU-TT-D and IMSC Rosetta.
-- **Image export**: text effects (gradient, neon glow, 3D extrude), per-line ASSA colors and outlines, and inline font face and size.
+- **ASSA draw** is built in, with a shape library, scale/rotate, backgrounds and SVG import (see [ASSA draw](assa-draw.md)).
+- **Apply advanced effects** - typewriter, karaoke, neon, glitch, snow, lower third and many more, with a live preview (see [Advanced effects](assa-apply-advanced-effects.md)).
+- **Font collector** - checks the script's fonts, copies them, or embeds them with unused glyphs trimmed (see [Attachments](assa-attachments.md)).
+- **Hide layer** in the preview, and filter the grid by style, actor, layer or tag.
+
+## Batch Convert
+
+- **Translate into several languages** in one run, with the local translate engines.
+- **Named presets** and filters by format, extension, error status and forced tracks.
+- AI OCR engines (CrispEmbed, llama.cpp, Ollama, Paddle) and new steps such as *Change formatting*, *Beautify time codes* and *Snap time codes to frames* (see [Available functions](batch-convert.md#available-functions)).
 
 ## Command Line (seconv)
 
-The `seconv` headless converter now lives in the main Subtitle Edit repository — it builds, ships, and updates in lockstep with the desktop app. 
+- `seconv` is part of the main repository and ships with every release.
+- Colored progress and summary tables, and `--json` output for scripts and CI.
+- `info` and `lint` subcommands, AI OCR and translate engines, custom output templates, and POSIX-style flags (the Subtitle Edit 4 flags still work).
 
-- **Polished terminal UI** — colored output with progress per file, summary tables, and a `--json` mode for CI pipelines and scripting.
-- **Cross-platform** — runs on Windows, Linux, and macOS with only the .NET runtime; no display or GUI required, suitable for servers and Docker.
-- **Broader feature set** — additional time and cleanup operations, OCR engine selection (Tesseract / nOCR / Binary OCR / Ollama / llama.cpp / PaddleOCR), container input from `.mkv` / `.mp4` / `.mcc`, `info` and `lint` subcommands for inspection, custom output templates, and POSIX-style flag names (legacy SE 4.x flags still work).
-- `.avi`/XSUB input, rule selection for `--remove-formatting`, and keeping the source file's date/time on output.
-- `--help-json` for a machine-readable option list, `--ocr-prompt` and `--translate-prompt` for the LLM engines, `--override-position`, `--output-filename-append`, and batched Paddle OCR.
-
-See [Command Line (seconv)](../reference/command-line.md) for usage and examples.
+See [Command Line (seconv)](../reference/command-line.md).
 
 ## Where to Look Next
 
-- [Main Window](main-window.md) - updated application layout.
-- [Audio Visualizer / Waveform](audio-visualizer.md) - waveform, spectrogram, and shot change tools.
-- [Third-Party Components](../third-party-components.md) - component setup and data folder locations.
-- [Command Line (seconv)](../reference/command-line.md) - headless conversion and OCR.
+- [Main Window](main-window.md) - the application layout.
+- [Audio Visualizer / Waveform](audio-visualizer.md) - waveform, spectrogram and shot changes.
+- [Third-Party Components](../third-party-components.md) - component setup and data folders.

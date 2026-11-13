@@ -46,6 +46,16 @@ public class CrispAsrVadGateTests
         Assert.True(SpeechToTextViewModel.ShouldForceCrispAsrVad(new CrispAsrGranite(), defaultArgs, vadSuppressed: false));
     }
 
+    /// <summary>
+    /// Qwen3's timing comes from the forced aligner; without VAD the pieces are so long that
+    /// cues started seconds early and merged several sentences (#16800).
+    /// </summary>
+    [Fact]
+    public void Qwen3GetsVadOnAuto()
+    {
+        Assert.True(SpeechToTextViewModel.ShouldForceCrispAsrVad(new CrispAsrQwen3(), "--max-len 50 --split-on-punct", vadSuppressed: false));
+    }
+
     [Fact]
     public void OtherBackendsAreLeftAlone()
     {

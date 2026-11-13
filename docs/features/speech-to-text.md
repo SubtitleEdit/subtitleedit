@@ -61,7 +61,7 @@ The languages column counts what the backend dropdown offers (an *auto* entry is
 | **Fun-ASR Nano** | 5 (en, zh, yue, ja, ko) | Needs aligner | 0.90 - 1.98 GB | CJK-focused Fun-ASR |
 | **Index-Echo** | 3 target languages (Chinese → en, ja, es) | Native timings | 2.7 - 5.1 GB (model + decoder pair) | Speech *translation*: Chinese audio in, English, Japanese or Spanish subtitles out. The language dropdown picks the target language. Needs Crisp ASR v0.8.41 or newer |
 | **Mega** | 2 (en, zh) | Needs aligner | 1.3 - 4.4 GB | Mega-ASR 1.7B. VAD is on by default (see the VAD section below) |
-| **Granite** | 6 (en, fr, de, es, pt, ja) | Needs aligner | 1.54 - 5.58 GB | IBM Granite Speech 4.1 2B. The `plus` models are the newer revision; `mini` and `f16enc` trade encoder precision for size |
+| **Granite** | 6 (en, fr, de, es, pt, ja) | Needs aligner | 1.54 - 5.58 GB | IBM Granite Speech 5.0 2B (`granite-speech-5.0-2b-*`, q4_k and f16) and 4.1 2B. For 4.1 the `plus` models are the newer revision; `mini` and `f16enc` trade encoder precision for size |
 | **ARK** | 19 (European + zh, ja, ko) | Needs aligner | 3.52 - 7.51 GB | A 3B model - the heaviest backend here, so only worth it when the smaller ones fall short |
 | **Kyutai** | 2 (en, fr) | Needs aligner | 0.67 - 5.01 GB | Kyutai STT in 1B and 2.6B |
 | **Voxtral** | 8 | Needs aligner | 2.65 - 9.36 GB | Mistral Voxtral Mini 3B. The backend has no built-in aligner entry at all, so a CTC aligner is always used |

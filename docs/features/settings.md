@@ -43,7 +43,7 @@ The subtitle rules that drive error checking, the grid's warning colors, and too
 - **Store times on video frames (not frames within each second)** — Only for *Frames (hh:mm:ss:ff)*, off by default. Stores each time at the exact time of a real video frame, so the milliseconds in a saved `.srt` match the video and a Blu-ray sup export. See [Frames and video frames](#frames-and-video-frames) below.
 - **Limit number of lines in subtitle text box**
 - **Open last recent file on start**
-- **Auto-convert encoding to UTF-8 on open**, **Force CR+LF on save (text subtitle files)** (also used by [Batch convert](batch-convert.md)), **Auto-trim white-space**
+- **Target encoding auto-selected on open** (presets the encoding the file will be saved with, to **UTF-8 with BOM**, **UTF-8 without BOM**, or **As is**; the file itself keeps its own encoding until it is saved), **Force CR+LF on save (text subtitle files)** (also used by [Batch convert](batch-convert.md)), **Auto-trim white-space**
 - **Warn on save when lines exceed the format's limits (e.g. SCC 32 chars/line)**
 - **Remove blank lines when opening a subtitle** — Off by default
 - **Copy text via xclip/wl-copy (keeps accented characters)** — Linux only
@@ -120,6 +120,7 @@ Good to know:
 - **Remember zoom (horizontal and vertical)** — Off by default
 - **Use experimental fast renderer**
 - **Show # + Duration** and **Show Chars/sec** — The number/duration footer and chars/sec line drawn on each cue in the waveform
+- **Show bookmarks** — A bookmark tag with the first line of the note on each bookmarked cue in the waveform
 - **Waveform text font size**, **Waveform text font bold** and the full color set — text, waveform, subtitle background, background, selected subtitle background, selected, cursor/head, shot change, left/right border, fancy high color. Color themes can be imported and exported
 - **Auto-transcribe new waveform selection via speech-to-text**
 - **Download ffmpeg** and a **disk space** readout for the extracted audio
@@ -146,11 +147,11 @@ Good to know:
 
 ## Appearance
 
-- **Theme**, **icon theme**, **match icon color to dark theme foreground color**, **UI scale (%)**, **Font scale (%)**
+- **Theme**, **icon theme**, **match icon color to theme foreground color**, **UI scale (%)**, **Font scale (%)**
 - **Text selection opacity (%)** — How strong the selection highlight in text boxes is. 100 (default) is the theme's solid highlight with white text; lower values make it see-through and keep the text in its own color
 - **Dark theme foreground / background color**, **focused button background color**
 - **UI font**, and a separate font for the subtitle text box and grid, with **Font size in subtitle grid** and **Font size in subtitle text box**
-- **Grid** — Show subtitle text as single line (with the separator to use), text fit, [show formatted text](subtitle-grid.md#formatting-display), live spell check, **Center text in subtitle grid** (centers the text column, as Subtitle Edit 4 could), compact mode, alternating row colors (light and dark), grid lines, bookmark color
+- **Grid** — Show subtitle text as single line (with the separator to use), text fit, [show formatted text](subtitle-grid.md#formatting-display), live spell check, **Center text in subtitle grid** (centers the text column, as Subtitle Edit 4 could), compact mode, alternating row colors (light and dark), grid lines, bookmark colors (three: **Bookmark color**, **Bookmark color 2** and **Bookmark color 3**)
 - **Spell check highlight color** - The color of the unknown word highlighted in the spell check and OCR unknown-word windows (red by default; pick a lighter color for the dark theme)
 - **Subtitle text box** — Bold text, color tags, live spell check, centered text, and which buttons are shown (auto-break, unbreak, italic, color, remove formatting, AI assistant), the up/down start/end/duration controls and their labels
 - **Show button hints** — Turns the tooltips on and off
@@ -168,6 +169,8 @@ Proxy settings for every download and online engine: **address**, **username**, 
 
 - **Check for updates when the app starts** — Hidden for store-managed installs (e.g. Flatpak), which update through the store
 - **Notify about** — **Stable versions only**, or **Stable and beta versions**
+
+See [Check for Updates](check-for-updates.md) for in-app updating and which installs support it.
 
 ## File Type Associations
 

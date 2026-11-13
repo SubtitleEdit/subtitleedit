@@ -145,15 +145,114 @@ public class OcrTableViewTests
         Assert.Equal(3, tableView.ItemsSource!.Cast<object>().Count());
 
         // TableView has no content-based sizing (Auto acts as 1*), so the narrow columns
-        // are pixel-sized from their widest content and only Text is star-sized.
-        Assert.All(tableView.Columns.Take(4), c => Assert.True(c.Width.IsAbsolute && c.Width.Value > 0));
+        // are pixel-sized from their widest content; Image and Text share the rest (#10533).
+        Assert.All(tableView.Columns.Take(3), c => Assert.True(c.Width.IsAbsolute && c.Width.Value > 0));
+        Assert.True(tableView.Columns[3].Width.IsStar);
         Assert.True(tableView.Columns[^1].Width.IsStar);
 
-        // The image column tracks the Ctrl+plus/minus zoom via ImageMaxWidth.
-        var imageWidthBefore = tableView.Columns[3].Width.Value;
+        // Ctrl+zoom scales the image column's star weight (window resize scales the shares).
+        var imageWeightBefore = tableView.Columns[3].Width.Value;
         vm.ImageMaxWidth *= 1.1;
         Dispatcher.UIThread.RunJobs();
-        Assert.True(tableView.Columns[3].Width.Value > imageWidthBefore);
+        Assert.True(tableView.Columns[3].Width.Value > imageWeightBefore);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void OcrWindow_ResizeGrowsTheThumbnailsAndKeepsRowHeightBounded()
+    {
+        // #10533 with a width-bound bitmap (24:1 never reaches the ImageMaxHeight cap): the
+        // star-sized image column must follow the window, the row height must follow the
+        // bitmap's own aspect (not a fixed-ratio box), and Ctrl+zoom must grow the thumbnail.
+        var vm = MakeViewModel(3, new SKSizeI(1920, 80)); // a wide PGS-like bar, aspect 24
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+        var imageColumn = tableView.Columns[3];
+
+        window.Width = 1200;
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        var columnWidthBefore = imageColumn.ActualWidth;
+        var firstRowImage = tableView.GetRealizedContainers().OfType<TableViewRow>().First()
+            .GetVisualDescendants().OfType<Image>().First(i => i.Source != null);
+        var imageWidthBefore = firstRowImage.Bounds.Width;
+
+        window.Width = 1600;
+        // Twice: the first pass re-measures with the new width, the second settles the rows.
+        for (var i = 0; i < 2; i++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+
+        // The column and the thumbnails follow the window...
+        Assert.True(imageColumn.ActualWidth > columnWidthBefore + 100,
+            $"image column should follow the resize: {columnWidthBefore} -> {imageColumn.ActualWidth}");
+        Assert.True(firstRowImage.Bounds.Width > imageWidthBefore + 100,
+            $"thumbnail should follow the resize: {imageWidthBefore} -> {firstRowImage.Bounds.Width}");
+
+        // ...the height stays on the bitmap's own aspect (24:1), independent of the cell chrome...
+        var expectedHeight = firstRowImage.Bounds.Width / 24;
+        Assert.InRange(firstRowImage.Bounds.Height, expectedHeight - 2, expectedHeight + 2);
+
+        // ...and Ctrl+zoom grows the rendered thumbnail (the star weight is 1.1 now), not just
+        // the column's declared width. The column-to-image slack is carried over from before
+        // the zoom instead of hard-coding the cell chrome, so this survives layout tweaks.
+        var imageWidthBeforeZoom = firstRowImage.Bounds.Width;
+        var slackBeforeZoom = imageColumn.ActualWidth - imageWidthBeforeZoom;
+        vm.ImageMaxWidth *= 1.1;
+        vm.ImageMaxHeight *= 1.1;
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        Assert.True(firstRowImage.Bounds.Width > imageWidthBeforeZoom + 10,
+            $"thumbnail should grow with the zoom: {imageWidthBeforeZoom} -> {firstRowImage.Bounds.Width}");
+        var expectedZoomedWidth = imageColumn.ActualWidth - slackBeforeZoom;
+        Assert.InRange(firstRowImage.Bounds.Width, expectedZoomedWidth - 2, expectedZoomedWidth + 2);
+
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void OcrWindow_HeightCappedThumbnailsStayBoundedAndZoomRaisesTheCap()
+    {
+        // The other side of #10533: a stock-aspect bitmap (3:2) hits the ImageMaxHeight cap, so
+        // widening the window cannot inflate the row past it - and Ctrl+zoom enlarges the
+        // thumbnail by raising the cap instead.
+        var vm = MakeViewModel(3, new SKSizeI(600, 400)); // aspect 1.5, natural height over the cap
+        var window = ShowWindow(vm);
+        var tableView = GetTableView(window);
+        var firstRowImage = tableView.GetRealizedContainers().OfType<TableViewRow>().First()
+            .GetVisualDescendants().OfType<Image>().First(i => i.Source != null);
+
+        window.Width = 1200;
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        Assert.Equal(vm.ImageMaxHeight, firstRowImage.Bounds.Height, 1);
+
+        window.Width = 1600;
+        for (var i = 0; i < 2; i++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+
+        // Resizing keeps the thumbnail pinned at the cap (the ceiling the old pixel column had)...
+        Assert.Equal(vm.ImageMaxHeight, firstRowImage.Bounds.Height, 1);
+        // ...and the backdrop hugs the fitted bitmap (600x400 at a 100px cap => 150px wide),
+        // instead of drawing it centred inside a full-cell dark box.
+        Assert.InRange(firstRowImage.Bounds.Width, vm.ImageMaxHeight * 1.5 - 2, vm.ImageMaxHeight * 1.5 + 2);
+
+        // ...but Ctrl+zoom raises the cap and the thumbnail follows it.
+        vm.ImageMaxHeight *= 1.1;
+        vm.ImageMaxWidth *= 1.1;
+        for (var i = 0; i < 2; i++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+
+        Assert.Equal(vm.ImageMaxHeight, firstRowImage.Bounds.Height, 1);
 
         window.Close();
     }

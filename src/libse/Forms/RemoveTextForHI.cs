@@ -1027,6 +1027,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             // change unicode symbol U2010 with normal dash
             var input = inputWithoutUnicodeReplace.Replace("\u2010", "-");
+
+            // dialogs marked with en/em dashes: all the dialog logic below only knows "-", so
+            // swap the leading dashes for "- " and restore the original style at the end (#16726)
+            input = ReplaceLeadingDialogDashes(input, out var dialogDash, out var dialogDashSpace);
             var originalAfterU2010Replace = input;
 
             var text = RemoveColon(input);
@@ -1370,12 +1374,167 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return inputWithoutUnicodeReplace;
             }
 
+            if (dialogDash != '\0')
+            {
+                text = RestoreLeadingDialogDashes(text, dialogDash, dialogDashSpace);
+            }
+
             if (inputWithoutUnicodeReplace.Contains("\u2010") && !inputWithoutUnicodeReplace.Contains("-"))
             {
                 text = text.Replace("-", "\u2010"); // try to keep original dashes
             }
 
             return text.Trim();
+        }
+
+        private const char EnDash = '\u2013';
+        private const char EmDash = '\u2014';
+
+        /// <summary>
+        /// Index of the first char of a line after leading white space, html tags and ASSA tags.
+        /// </summary>
+        private static int IndexOfLineContentStart(string line)
+        {
+            var i = 0;
+            while (i < line.Length)
+            {
+                var c = line[i];
+                if (c == ' ' || c == '\t')
+                {
+                    i++;
+                }
+                else if (c == '<' || c == '{')
+                {
+                    var end = line.IndexOf(c == '<' ? '>' : '}', i + 1);
+                    if (end < 0)
+                    {
+                        break;
+                    }
+
+                    i = end + 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return i;
+        }
+
+        /// <summary>
+        /// When the lines of a text use en or em dashes (and no hyphens) as dialog dashes,
+        /// replace those leading dashes with "- ". The dash used and whether it was followed
+        /// by a space are returned so <see cref="RestoreLeadingDialogDashes"/> can undo it.
+        /// </summary>
+        public static string ReplaceLeadingDialogDashes(string text, out char dash, out bool spaceAfter)
+        {
+            dash = '\0';
+            spaceAfter = true;
+            if (text.IndexOf(EnDash) < 0 && text.IndexOf(EmDash) < 0)
+            {
+                return text;
+            }
+
+            var lines = text.SplitToLines();
+            if (lines.Count < 2)
+            {
+                return text; // a single line dash is not a dialog
+            }
+
+            var dashIndices = new int[lines.Count];
+            for (var i = 0; i < lines.Count; i++)
+            {
+                var line = lines[i];
+                var idx = IndexOfLineContentStart(line);
+                dashIndices[i] = -1;
+                if (idx >= line.Length)
+                {
+                    continue;
+                }
+
+                var c = line[idx];
+                if (c == '-')
+                {
+                    return text; // hyphen dialog dashes, leave everything as is
+                }
+
+                if (c != EnDash && c != EmDash)
+                {
+                    continue;
+                }
+
+                var next = idx + 1 < line.Length ? line[idx + 1] : '\0';
+                if (next == c || next == '-')
+                {
+                    continue; // "––" or "—-" is not a dialog dash
+                }
+
+                if (dash == '\0')
+                {
+                    dash = c;
+                    spaceAfter = next == ' ';
+                }
+                else if (dash != c)
+                {
+                    dash = '\0';
+                    return text; // mixed dash types
+                }
+
+                dashIndices[i] = idx;
+            }
+
+            if (dash == '\0')
+            {
+                return text;
+            }
+
+            var sb = new StringBuilder(text.Length + lines.Count);
+            for (var i = 0; i < lines.Count; i++)
+            {
+                if (i > 0)
+                {
+                    sb.Append(Environment.NewLine);
+                }
+
+                var line = lines[i];
+                var idx = dashIndices[i];
+                if (idx < 0)
+                {
+                    sb.Append(line);
+                    continue;
+                }
+
+                var rest = line.Substring(idx + 1).TrimStart(' ');
+                sb.Append(line, 0, idx).Append("- ").Append(rest);
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Turn leading "-" dialog dashes back into the dash style found by
+        /// <see cref="ReplaceLeadingDialogDashes"/>.
+        /// </summary>
+        public static string RestoreLeadingDialogDashes(string text, char dash, bool spaceAfter)
+        {
+            var lines = text.SplitToLines();
+            var changed = false;
+            for (var i = 0; i < lines.Count; i++)
+            {
+                var line = lines[i];
+                var idx = IndexOfLineContentStart(line);
+                if (idx >= line.Length || line[idx] != '-' || (idx + 1 < line.Length && line[idx + 1] == '-'))
+                {
+                    continue;
+                }
+
+                var rest = line.Substring(idx + 1).TrimStart(' ');
+                lines[i] = line.Substring(0, idx) + dash + (spaceAfter && rest.Length > 0 ? " " : string.Empty) + rest;
+                changed = true;
+            }
+
+            return changed ? string.Join(Environment.NewLine, lines) : text;
         }
 
         /// <summary>

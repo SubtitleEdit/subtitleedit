@@ -53,6 +53,16 @@ public class OcrFixRegexRulesTests : IDisposable
     }
 
     [Fact]
+    public void UserRule_BackslashNInReplacementIsLineBreak()
+    {
+        var list = new OcrFixReplaceList2(_fileName);
+        Assert.True(list.AddRegexRule(" -", "\\n-"));
+
+        Assert.Equal("- hi\n- hey", Fix(new OcrFixReplaceList2(_fileName), "- hi - hey"));
+        Assert.Equal("\\n-", new OcrFixReplaceList2(_fileName).GetRegexRules().Single(r => r.IsUserRule).ReplaceWith);
+    }
+
+    [Fact]
     public void DisabledRule_IsNotAppliedAndSurvivesReload()
     {
         var list = new OcrFixReplaceList2(_fileName);

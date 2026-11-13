@@ -209,7 +209,6 @@ public static class InitNativeMacMenu
         fileItems.Items.Add(new NativeMenuItemSeparator());
         fileItems.Items.Add(Item(Clean(l.Save), v => v.CommandFileSaveCommand));
         fileItems.Items.Add(Item(Clean(l.SaveAs), v => v.CommandFileSaveAsCommand));
-        fileItems.Items.Add(Item(Clean(Se.Language.General.SaveForcedLinesAs), v => v.SaveForcedLinesAsCommand));
         fileItems.Items.Add(new NativeMenuItemSeparator());
 
         var filePropsItem = new NativeMenuItem(string.Empty);
@@ -266,6 +265,7 @@ public static class InitNativeMacMenu
         exportItems.Items.Add(Item(Clean(lExport.CustomTextFormatsDotDotDot), v => v.ShowExportCustomTextFormatCommand));
         exportItems.Items.Add(Item(Clean(lExport.PlainTextDotDotDot), v => v.ShowExportPlainTextCommand));
         exportItems.Items.Add(Item(Clean(lExport.DialogueListDotDotDot), v => v.ShowExportDialogueListCommand));
+        exportItems.Items.Add(Item(Clean(lExport.ForcedLinesOnlyDotDotDot), v => v.SaveForcedLinesAsCommand));
         fileItems.Items.Add(new NativeMenuItem(Clean(l.Export)) { Menu = exportItems });
 
         // ── Edit ──────────────────────────────────────────────────────────────

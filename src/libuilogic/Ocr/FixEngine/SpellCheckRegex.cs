@@ -25,9 +25,20 @@ public class SpellCheckRegex
     /// Applies the regex rule to the input text.
     /// </summary>
     /// <param name="input">The line of text to fix.</param>
-    /// <param name="isWordSpelledCorrectly">A function that returns true if the word is in the dictionary.</param>
-    public string Apply(string input, List<string> wordsToIgnore, Func<string, bool> isWordSpelledCorrectly)
+    /// <param name="isWordSpelledCorrectly">
+    /// A function that returns true if the word is known. The engine widens this beyond the
+    /// dictionary - to the names list and the user dictionary - so a word the user declared is not
+    /// "corrected" (#16378).
+    /// </param>
+    /// <param name="isReplacementWordCorrectly">
+    /// The narrower test for the text the rule wants to write: a replacement is only applied when
+    /// the dictionary itself knows the result. Defaults to <paramref name="isWordSpelledCorrectly"/>,
+    /// so the two stay the same unless the caller asks for a difference.
+    /// </param>
+    public string Apply(string input, List<string> wordsToIgnore, Func<string, bool> isWordSpelledCorrectly, Func<string, bool>? isReplacementWordCorrectly = null)
     {
+        var isReplacementWordCorrect = isReplacementWordCorrectly ?? isWordSpelledCorrectly;
+
         return FindRegEx.Replace(input, match =>
         {
             // A token that is already a correctly spelled word is not an OCR error - leave it
@@ -47,7 +58,7 @@ public class SpellCheckRegex
             }
 
             // If the fixed version is a real word, apply the replacement
-            if (isWordSpelledCorrectly(wordToCheck.TrimStart('[').TrimEnd(']')))
+            if (isReplacementWordCorrect(wordToCheck.TrimStart('[').TrimEnd(']')))
             {
                 wordsToIgnore.Add(match.Value);
                 if (!string.IsNullOrEmpty(ReplaceAllFrom))

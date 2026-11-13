@@ -12,6 +12,8 @@ public class ProfilesExportWindow : Window
     public ProfilesExportWindow(ProfilesExportViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Options.Settings.ExportProfiles;
         CanResize = true;
         Width = 700;

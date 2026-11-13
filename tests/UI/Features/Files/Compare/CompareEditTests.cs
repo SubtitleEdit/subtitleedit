@@ -83,6 +83,22 @@ public class CompareEditTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void TakeReferenceTextKeepFormatting_KeepsTheCurrentItalics()
+    {
+        var vm = Open(MakeLines(("One", 0), ("{\\i1}von derUniversityofSouthern California.{\\i0}", 2000)),
+                      MakeLines(("One", 0), ("von der University of Southern California.", 2500)));
+        var row = vm.Rows.Single(p => p.Kind == CompareRowKind.Changed);
+        Assert.True(row.CanTakeTextKeepFormatting);
+
+        vm.TakeReferenceTextKeepFormattingCommand.Execute(row);
+        Settle();
+
+        var edited = vm.GetEditedLines();
+        Assert.Equal("{\\i1}von der University of Southern California.{\\i0}", edited[1].Text);
+        Assert.Equal(2000, edited[1].StartTime.TotalMilliseconds);
+    }
+
+    [AvaloniaFact]
     public void TakeReference_OnAReferenceOnlyLine_InsertsItInTimeOrderAndRenumbers()
     {
         var vm = Open(

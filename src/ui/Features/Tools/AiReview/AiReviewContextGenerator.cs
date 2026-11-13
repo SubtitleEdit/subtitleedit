@@ -22,6 +22,13 @@ public static class AiReviewContextGenerator
 {
     // llama.cpp is started with an 8192-token context - leave room for the prompt and the answer.
     public const int MaxTokensPerPart = 3000;
+
+    /// <summary>Output cap for one request when the server's context size is known (#16701).</summary>
+    public const int MaxAnswerTokens = 1024;
+
+    // System prompt (~200 tokens) plus chat-template overhead.
+    private const int PromptReserveTokens = 300;
+    private const int MinTokensPerPart = 256;
     private const int MaxNames = 60;
     private const int MaxTerms = 60;
 
@@ -31,13 +38,27 @@ public static class AiReviewContextGenerator
         "\"names\": people, characters, places and organizations, spelled as they most often appear in the text.\n" +
         "\"terms\": unusual words, jargon, invented words and foreign words a proofreader must not \"correct\". Leave out ordinary words.\n" +
         "\"summary\": two or three sentences in {language} about what happens in this part.\n" +
-        "Only include what actually appears in the text.";
+        "Only include what actually appears in the text. " +
+        "The text may contain violence, sex or crude language - describe it neutrally, do not refuse or censor.";
 
     public const string SynopsisPrompt =
         "The user message holds summaries of consecutive parts of one film or TV episode. " +
-        "Combine them into one synopsis of at most five sentences in {language}. Answer with the synopsis only, as plain text.";
+        "Combine them into one synopsis of at most five sentences in {language}. Answer with the synopsis only, as plain text. " +
+        "Describe mature content neutrally, do not refuse or censor.";
 
     public record PartResult(List<string> Names, List<string> Terms, string Summary);
+
+    /// <summary>
+    /// Part size that fits a server started with <paramref name="contextSize"/> tokens, leaving room
+    /// for the prompt and a <see cref="MaxAnswerTokens"/> answer (#16701: a 4096 context could not hold
+    /// a 3000-token part plus the reply). <see cref="EstimateTokens"/> often runs low on subtitle text,
+    /// so the budget is shrunk by a quarter. Never more than <see cref="MaxTokensPerPart"/>.
+    /// </summary>
+    public static int TokensPerPartForContextSize(int contextSize)
+    {
+        var budget = (contextSize - MaxAnswerTokens - PromptReserveTokens) * 4 / 5;
+        return Math.Clamp(budget, MinTokensPerPart, MaxTokensPerPart);
+    }
 
     /// <summary>Joins the lines into parts of at most <paramref name="maxTokens"/> estimated tokens, never splitting a line.</summary>
     public static List<string> BuildParts(IEnumerable<string> lines, int maxTokens = MaxTokensPerPart)
@@ -210,6 +231,9 @@ public static class AiReviewContextGenerator
     /// Runs the whole generation. <paramref name="progress"/> gets (part number, part count), and
     /// (0, part count) while the synopsis is written. Returns an empty string when the engine gave
     /// nothing usable. Engine errors (HttpRequestException) and cancellation propagate.
+    /// <paramref name="log"/> gets (message, force): force is true for the lines that explain a
+    /// failure (unusable reply, engine error, nothing generated), which belong in a bug report even
+    /// when the tools log setting is off (#16701); the rest is detail for an opted-in tools log.
     /// </summary>
     public static async Task<string> GenerateAsync(
         IReadOnlyList<string> lines,
@@ -217,7 +241,7 @@ public static class AiReviewContextGenerator
         AiChatFunc chat,
         Action<int, int>? progress,
         CancellationToken cancellationToken,
-        Action<string>? log = null,
+        Action<string, bool>? log = null,
         int maxTokensPerPart = MaxTokensPerPart)
     {
         var parts = BuildParts(lines, maxTokensPerPart);
@@ -225,6 +249,10 @@ public static class AiReviewContextGenerator
         {
             return string.Empty;
         }
+
+        var partTokens = parts.Select(EstimateTokens).ToList();
+        log?.Invoke($"AI review context: {lines.Count} lines in {parts.Count} part(s) of at most {maxTokensPerPart} estimated tokens " +
+                    $"({string.Join(", ", partTokens)}), language: {languageName}", false);
 
         var extractPrompt = ExtractPrompt.Replace("{language}", languageName);
         var names = new List<string>();
@@ -234,8 +262,18 @@ public static class AiReviewContextGenerator
         {
             cancellationToken.ThrowIfCancellationRequested();
             progress?.Invoke(i + 1, parts.Count);
-            var reply = await chat(extractPrompt, parts[i], true, cancellationToken);
-            log?.Invoke($"AI review context: reply for part {i + 1}/{parts.Count}: {reply}");
+            string reply;
+            try
+            {
+                reply = await chat(extractPrompt, parts[i], true, cancellationToken);
+            }
+            catch (HttpRequestException e)
+            {
+                log?.Invoke($"AI review context: part {i + 1}/{parts.Count} (~{partTokens[i]} estimated tokens) failed: {e.Message}", true);
+                throw;
+            }
+
+            log?.Invoke($"AI review context: reply for part {i + 1}/{parts.Count}: {reply}", false);
             PartResult? result = null;
             try
             {
@@ -248,7 +286,7 @@ public static class AiReviewContextGenerator
 
             if (result == null)
             {
-                log?.Invoke($"AI review context: part {i + 1}/{parts.Count} gave no usable JSON - skipped");
+                log?.Invoke($"AI review context: part {i + 1}/{parts.Count} (~{partTokens[i]} estimated tokens) gave no usable JSON - skipped. Reply: {Excerpt(reply)}", true);
                 continue;
             }
 
@@ -278,11 +316,27 @@ public static class AiReviewContextGenerator
             catch (HttpRequestException e)
             {
                 // the names/terms are the valuable part - keep them even when the last call fails
-                log?.Invoke("AI review context: synopsis request failed: " + e.Message);
+                log?.Invoke("AI review context: synopsis request failed: " + e.Message, true);
                 synopsis = string.Empty;
             }
         }
 
-        return Format(mergedNames, mergedTerms, synopsis);
+        var formatted = Format(mergedNames, mergedTerms, synopsis);
+        log?.Invoke(formatted.Length == 0
+                ? $"AI review context: nothing generated - {parts.Count} part(s), summaries: {summaries.Count}, names: {names.Count}, terms: {terms.Count} before the in-text check"
+                : $"AI review context: {mergedNames.Count} name(s), {mergedTerms.Count} term(s), synopsis {synopsis.Length} chars",
+            formatted.Length == 0);
+        return formatted;
+    }
+
+    private static string Excerpt(string reply)
+    {
+        var s = (reply ?? string.Empty).Trim();
+        if (s.Length == 0)
+        {
+            return "(empty)";
+        }
+
+        return s.Length > 500 ? s.Substring(0, 500) + "..." : s;
     }
 }

@@ -8,7 +8,7 @@
       desc: "What is Subtitle Edit and how to get started"
     - title: "What's New in Subtitle Edit 5"
       url: features/whats-new-in-se5.html
-      desc: "Major changes from the Windows Forms version to the Avalonia-based version"
+      desc: "What Subtitle Edit 5 adds compared to Subtitle Edit 4"
     - title: "Main Window"
       url: features/main-window.html
       desc: "Main window layout, areas, and interaction guide"
@@ -26,6 +26,9 @@
     - title: "Import Spreadsheets"
       url: features/import-csv-xlsx.html
       desc: "Import CSV, XLSX and ODS files, with custom column mapping"
+    - title: "Export Excel Dialogue List"
+      url: features/export-dialogue-list.html
+      desc: "Save the lines as an .xlsx spreadsheet with the columns you choose"
     - title: "Edit Image-based Subtitle"
       url: features/binary-edit.html
       desc: "Edit Blu-ray SUP/VobSub/DVB subtitles without OCR"
@@ -161,6 +164,9 @@
     - title: "Change Speed"
       url: features/change-speed.html
       desc: "Adjust playback speed"
+    - title: "Sync Subtitle to Audio"
+      url: features/sync-to-audio.html
+      desc: "One offset (and frame rate) for the whole subtitle, found from the speech in the audio"
 - name: "Video"
   items:
     - title: "Video Player"
@@ -184,6 +190,9 @@
     - title: "Embedded Subtitles"
       url: features/embedded-subtitles.html
       desc: "Add, remove, preview, and edit subtitle tracks in Matroska/WebM files"
+    - title: "Sync Audio Track"
+      url: features/sync-audio-track.html
+      desc: "Move one audio track earlier or later and save the video without re-encoding"
     - title: "Transparent Subtitles"
       url: features/transparent-subtitles.html
       desc: "Generate transparent subtitle video"
@@ -289,6 +298,9 @@
     - title: "Word Lists"
       url: features/word-lists.html
       desc: "Custom word lists and dictionaries"
+    - title: "Check for Updates"
+      url: features/check-for-updates.html
+      desc: "In-app updates and stable/beta channel"
 - name: "Other"
   items:
     - title: "Compare"

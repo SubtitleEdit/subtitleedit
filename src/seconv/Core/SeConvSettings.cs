@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 using SkiaSharp;
 
 namespace SeConv.Core;
@@ -68,6 +69,7 @@ internal sealed class SeConvSettings
         var g = s.General;
         var hi = s.RemoveTextForHearingImpaired;
         var style = new ImageExportStyle();
+        var advanced = new SeLlamaCppAdvanced(); // the GUI dialog's defaults
 
         var defaults = new SeConvSettings
         {
@@ -95,6 +97,24 @@ internal sealed class SeConvSettings
                 OllamaPrompt = s.Tools.OllamaPrompt,
                 LmStudioPrompt = s.Tools.LmStudioPrompt,
                 OcrUseWordSplitList = s.Tools.OcrUseWordSplitList,
+                LlamaCppAdvanced = new LlamaCppAdvancedSection
+                {
+                    BatchSize = advanced.BatchSize,
+                    HistoryPairs = advanced.HistoryPairs,
+                    Synopsis = advanced.Synopsis,
+                    Glossary = advanced.Glossary,
+                    Formality = advanced.Formality,
+                    KeepLineBreaks = advanced.KeepLineBreaks,
+                    Prompt = advanced.Prompt,
+                    Temperature = advanced.Temperature,
+                    TopP = advanced.TopP,
+                    TopK = advanced.TopK,
+                    RepeatPenalty = advanced.RepeatPenalty,
+                    MaxTokens = advanced.MaxTokens,
+                    ContextSize = advanced.ContextSize,
+                    ServerArguments = advanced.ServerArguments,
+                    ServerArgumentsOnly = advanced.ServerArgumentsOnly,
+                },
             },
             RemoveTextForHearingImpaired = new RemoveHiSection
             {
@@ -137,6 +157,7 @@ internal sealed class SeConvSettings
                 BoxPaddingBottom = style.BoxPaddingBottom,
                 LineSpacingPercent = style.LineSpacingPercent,
                 IsFullFrame = style.IsFullFrame,
+                UseAssaStyles = style.UseAssaStyles,
                 FullFrameBackgroundColor = ToHex(style.FullFrameBackgroundColor),
                 Mode3D = style.Mode3D.ToString(),
                 Depth3D = style.Depth3D,
@@ -187,6 +208,11 @@ internal sealed class SeConvSettings
         }
 
         foreach (var key in Prefixed(Tools?.UnknownMembers, prefix + "tools."))
+        {
+            yield return key;
+        }
+
+        foreach (var key in Prefixed(Tools?.LlamaCppAdvanced?.UnknownMembers, prefix + "tools.llamaCppAdvanced."))
         {
             yield return key;
         }
@@ -258,6 +284,25 @@ internal sealed class SeConvSettings
             Profiles.TryGetValue(profileName, out var profile))
         {
             profile.ExportImages?.ApplyTo(style);
+        }
+    }
+
+    /// <summary>
+    /// Overlays the <c>tools.llamaCppAdvanced</c> section (base first, then the named profile's,
+    /// if any) onto <paramref name="target"/>, the advanced translate engines' settings. Like
+    /// <see cref="ApplyExportImages"/> this does not go through libse's Configuration: the object
+    /// travels on <c>ConversionOptions</c>, and the command-line options are applied on top of it
+    /// later (<c>AutoTranslateRunner.CreateAdvancedSettings</c>). A bad formality value throws.
+    /// </summary>
+    public void ApplyLlamaCppAdvanced(SeLlamaCppAdvanced target, string? profileName = null)
+    {
+        Tools?.LlamaCppAdvanced?.ApplyTo(target);
+
+        if (!string.IsNullOrWhiteSpace(profileName) &&
+            Profiles is not null &&
+            Profiles.TryGetValue(profileName, out var profile))
+        {
+            profile.Tools?.LlamaCppAdvanced?.ApplyTo(target);
         }
     }
 
@@ -388,8 +433,71 @@ internal sealed class SeConvSettings
         /// <summary>"Fix common OCR errors": split run-together words via the word split list (default off).</summary>
         public bool? OcrUseWordSplitList { get; set; }
 
+        /// <summary>The advanced translate engines' settings; see <see cref="LlamaCppAdvancedSection"/>.</summary>
+        public LlamaCppAdvancedSection? LlamaCppAdvanced { get; set; }
+
         [JsonExtensionData]
         public Dictionary<string, JsonElement>? UnknownMembers { get; set; }
+    }
+
+    /// <summary>
+    /// The advanced local-LLM translate engines' settings (<c>tools.llamaCppAdvanced</c>): what
+    /// the GUI's "Advanced..." dialog edits. The keys with a command-line option (batch size,
+    /// history pairs, synopsis, glossary, formality) are the defaults for those options; the rest
+    /// (prompt, sampling, server context size, extra server arguments) can only be set here. A key
+    /// left out keeps the dialog's default. The regular engines ignore the section.
+    /// </summary>
+    internal sealed class LlamaCppAdvancedSection
+    {
+        public int? BatchSize { get; set; }
+        public int? HistoryPairs { get; set; }
+        public string? Synopsis { get; set; }
+        public string? Glossary { get; set; }
+
+        /// <summary>default | formal | informal (case-insensitive).</summary>
+        public string? Formality { get; set; }
+
+        public bool? KeepLineBreaks { get; set; }
+
+        /// <summary>System prompt ({0}=source language, {1}=target language); empty = the built-in one.</summary>
+        public string? Prompt { get; set; }
+
+        /// <summary>Sampling overrides; -1 = the server's default.</summary>
+        public double? Temperature { get; set; }
+        public double? TopP { get; set; }
+        public int? TopK { get; set; }
+        public double? RepeatPenalty { get; set; }
+        public int? MaxTokens { get; set; }
+
+        /// <summary>llama-server context size (tokens) when llamacpp-advanced starts the server itself.</summary>
+        public int? ContextSize { get; set; }
+
+        /// <summary>Extra llama-server arguments; serverArgumentsOnly = true replaces the built-in ones.</summary>
+        public string? ServerArguments { get; set; }
+        public bool? ServerArgumentsOnly { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, JsonElement>? UnknownMembers { get; set; }
+
+        /// <summary>Overlays every key that is set onto <paramref name="target"/>.</summary>
+        public void ApplyTo(SeLlamaCppAdvanced target)
+        {
+            if (BatchSize.HasValue) target.BatchSize = BatchSize.Value;
+            if (HistoryPairs.HasValue) target.HistoryPairs = HistoryPairs.Value;
+            if (Synopsis != null) target.Synopsis = Synopsis;
+            if (Glossary != null) target.Glossary = Glossary;
+            if (Formality != null) target.Formality = AutoTranslateRunner.ParseFormality(Formality, "tools.llamaCppAdvanced.formality");
+            if (KeepLineBreaks.HasValue) target.KeepLineBreaks = KeepLineBreaks.Value;
+            if (Prompt != null) target.Prompt = Prompt;
+            if (Temperature.HasValue) target.Temperature = Temperature.Value;
+            if (TopP.HasValue) target.TopP = TopP.Value;
+            if (TopK.HasValue) target.TopK = TopK.Value;
+            if (RepeatPenalty.HasValue) target.RepeatPenalty = RepeatPenalty.Value;
+            if (MaxTokens.HasValue) target.MaxTokens = MaxTokens.Value;
+            if (ContextSize.HasValue) target.ContextSize = ContextSize.Value;
+            if (ServerArguments != null) target.ServerArguments = ServerArguments;
+            if (ServerArgumentsOnly.HasValue) target.ServerArgumentsOnly = ServerArgumentsOnly.Value;
+        }
     }
 
     /// <summary>
@@ -418,6 +526,7 @@ internal sealed class SeConvSettings
         public int? BoxPaddingBottom { get; set; }
         public int? LineSpacingPercent { get; set; }
         public bool? IsFullFrame { get; set; }
+        public bool? UseAssaStyles { get; set; }
         public string? FullFrameBackgroundColor { get; set; }
         public string? Mode3D { get; set; }
         public int? Depth3D { get; set; }
@@ -465,6 +574,8 @@ internal sealed class SeConvSettings
                 style.LineSpacingPercent = LineSpacingPercent.Value;
             if (IsFullFrame.HasValue)
                 style.IsFullFrame = IsFullFrame.Value;
+            if (UseAssaStyles.HasValue)
+                style.UseAssaStyles = UseAssaStyles.Value;
             if (!string.IsNullOrWhiteSpace(FullFrameBackgroundColor) && ImageExportStyle.TryParseColor(FullFrameBackgroundColor, out var fullFrameBackgroundColor))
                 style.FullFrameBackgroundColor = fullFrameBackgroundColor;
             if (!string.IsNullOrWhiteSpace(Mode3D) && ImageExportStyle.TryParseMode3D(Mode3D, out var mode3D))

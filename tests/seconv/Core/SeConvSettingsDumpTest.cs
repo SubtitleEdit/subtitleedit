@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 using SeConv.Core;
 using Xunit;
 
@@ -26,6 +27,20 @@ public class SeConvSettingsDumpTest
         Assert.True(root.TryGetProperty("tools", out _));
         Assert.True(root.TryGetProperty("removeTextForHearingImpaired", out _));
         Assert.True(root.TryGetProperty("exportImages", out _));
+    }
+
+    [Fact]
+    public void DumpDefaults_EmitsTheAdvancedTranslateSectionWithTheDialogDefaults()
+    {
+        using var doc = JsonDocument.Parse(SeConvSettings.DumpDefaults());
+        var advanced = doc.RootElement.GetProperty("tools").GetProperty("llamaCppAdvanced");
+
+        var defaults = new SeLlamaCppAdvanced();
+        Assert.Equal(defaults.BatchSize, advanced.GetProperty("batchSize").GetInt32());
+        Assert.Equal(defaults.HistoryPairs, advanced.GetProperty("historyPairs").GetInt32());
+        Assert.Equal(defaults.Formality, advanced.GetProperty("formality").GetString());
+        Assert.Equal(defaults.ContextSize, advanced.GetProperty("contextSize").GetInt32());
+        Assert.Equal(15, advanced.EnumerateObject().Count()); // every dialog setting, no more
     }
 
     [Fact]

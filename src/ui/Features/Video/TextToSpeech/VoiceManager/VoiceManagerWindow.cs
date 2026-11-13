@@ -383,7 +383,7 @@ public class VoiceManagerWindow : Window
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = new SolidColorBrush(Color.FromRgb(0x2E, 0x8B, 0x57)),
+                Foreground = EditorChrome.SuccessTextBrush,
                 [!TextBlock.TextProperty] = new Binding(nameof(VoiceManagerRow.TranscriptText)),
             }, true),
         });
@@ -588,7 +588,7 @@ public class VoiceManagerWindow : Window
         };
         left.Add(status, 0, 0);
         left.Add(count, 0, 1);
-        return EditorChrome.MakeFlushButtonBar(left, buttonClose);
+        return EditorChrome.MakeButtonBar(left, buttonClose);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

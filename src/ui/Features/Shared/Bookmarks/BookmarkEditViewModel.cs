@@ -15,6 +15,7 @@ public partial class BookmarkEditViewModel : ObservableObject
     [ObservableProperty] private string? _bookmarkText;
     [ObservableProperty] private bool _showRemoveButton;
     [ObservableProperty] private bool _showListButton;
+    [ObservableProperty] private int _colorIndex;
 
     public Window? Window { get; set; }
 
@@ -68,6 +69,7 @@ public partial class BookmarkEditViewModel : ObservableObject
     {
         Title = selectedItems.All(p => p.Bookmark == null) ? GetAddLabel(selectedItems) : GetEditLabel(selectedItems);
         BookmarkText = selectedItems.First().Bookmark ?? string.Empty;
+        ColorIndex = selectedItems.First().BookmarkColor;
         ShowRemoveButton = !selectedItems.All(p => p.Bookmark == null);
         ShowListButton = allBookmarks.Count > 1;
     }
@@ -94,7 +96,7 @@ public partial class BookmarkEditViewModel : ObservableObject
 
     internal void OnTextBoxKeyDown(KeyEventArgs args)
     {
-        if (args.Key == Key.Enter)
+        if (args.Key == Key.Enter && args.KeyModifiers == KeyModifiers.None)
         {
             args.Handled = true;
             Ok();

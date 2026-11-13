@@ -94,4 +94,64 @@ public class DCinemaSmptePropertiesMxfTests
             }
         }
     }
+    /// <summary>
+    /// #16865: Edit rate is picked from the D-Cinema rates. A non-standard value from old settings
+    /// is shown as it is (not silently replaced) and OK refuses it.
+    /// </summary>
+    [AvaloniaFact]
+    public void Properties_NonStandardEditRate_IsListedAndOkRefusesIt()
+    {
+        Se.Settings.File.DCinemaSmpte = new SeDCinemaSmpte { CurrentDCinemaEditRate = "24000 1001", CurrentDCinemaTimeCodeRate = "23" };
+        var vm = MakeViewModel();
+        vm.Initialize(MakeSubtitle(), new DCinemaSmpte2014());
+        var window = new DCinemaSmptePropertiesWindow(vm);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("24000 1001", vm.EditRate);
+            Assert.Contains("24000 1001", vm.EditRates);
+            Assert.Equal("23", vm.SelectedTimeCodeRate);
+            Assert.Contains("50 1", vm.EditRates);
+            Assert.Contains("60", vm.TimeCodeRates);
+
+            vm.OkCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(vm.OkPressed);
+            Assert.Equal("24000 1001", Se.Settings.File.DCinemaSmpte.CurrentDCinemaEditRate);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Properties_StandardEditRate_OkStoresIt()
+    {
+        Se.Settings.File.DCinemaSmpte = new SeDCinemaSmpte { CurrentDCinemaEditRate = "25 1", CurrentDCinemaTimeCodeRate = "25" };
+        var vm = MakeViewModel();
+        vm.Initialize(MakeSubtitle(), new DCinemaSmpte2014());
+        var window = new DCinemaSmptePropertiesWindow(vm);
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(6, vm.EditRates.Count);
+
+            vm.EditRate = "48 1";
+            vm.OkCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+
+            Assert.True(vm.OkPressed);
+            Assert.Equal("48 1", Se.Settings.File.DCinemaSmpte.CurrentDCinemaEditRate);
+        }
+        finally
+        {
+            if (!vm.OkPressed)
+            {
+                window.Close();
+            }
+        }
+    }
 }

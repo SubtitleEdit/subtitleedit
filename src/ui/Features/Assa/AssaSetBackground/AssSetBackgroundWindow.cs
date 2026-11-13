@@ -24,6 +24,8 @@ public class AssSetBackgroundWindow : Window
     public AssSetBackgroundWindow(AssSetBackgroundViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Assa.BackgroundBoxGenerator;
         CanResize = true;
         Width = 1200;
@@ -341,8 +343,8 @@ public class AssSetBackgroundWindow : Window
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         var grid = new Grid
         {

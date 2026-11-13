@@ -107,7 +107,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
 
         f.Width = (float)width;
         f.Height = (float)height;
-        f.Peaks = peaks;
+        f.Peaks = peaks is { IsPlaceholder: true } ? null : peaks; // a placeholder only sets the time scale
         f.SampleRate = peaks?.SampleRate ?? 0;
         f.HighestPeak = Math.Max(1, peaks?.HighestPeak ?? 1);
         f.StartSeconds = StartPositionSeconds;
@@ -134,21 +134,29 @@ public class SkiaAudioVisualizer : AudioVisualizer
         f.ParagraphBackgroundColor = ToSkColor(ParagraphBackground, SKColors.Transparent);
         f.ParagraphSelectedBackgroundColor = ToSkColor(ParagraphSelectedBackground, SKColors.Transparent);
         f.TextColor = GetTextColor(WaveformColors.CurrentTextHex);
+        for (var i = 0; i < f.BookmarkColors.Length; i++)
+        {
+            f.BookmarkColors[i] = ToSkColor(BookmarkColors.Get(i), SKColors.Orange);
+        }
 
         f.FontName = GetFontName(settings.Appearance.FontName);
         f.FontSize = (float)settings.Waveform.WaveformTextFontSize;
         f.FontBold = settings.Waveform.WaveformTextFontBold;
         f.UnwrapText = settings.Waveform.WaveformUnwrapText;
         f.BlurText = BlurText;
+        f.EditOriginal = EditOriginalTimeCodes;
 
         f.DrawGridLines = DrawGridLines;
         f.FrameMode = settings.General.UseFrameMode;
         f.FrameRate = settings.General.CurrentFrameRate;
 
         f.IsFocused = IsFocused;
-        f.HintText = peaks == null && ShowClickToGenerateHint && !string.IsNullOrEmpty(ClickToGenerateText)
-            ? ClickToGenerateText
-            : null;
+        f.HintButtons.Clear();
+        foreach (var button in GetHintButtons())
+        {
+            var r = button.Rect;
+            f.HintButtons.Add(new SkiaHintButton(button.Text, new SKRect((float)r.Left, (float)r.Top, (float)r.Right, (float)r.Bottom), button.IsHovered));
+        }
 
         if (f.SampleRate == 0)
         {
@@ -240,6 +248,7 @@ public class SkiaAudioVisualizer : AudioVisualizer
         var paragraphs = DisplayableParagraphs;
         var showOriginal = ShowOriginalTextInWaveform;
         var audioLengthProvider = ParagraphAudioLengthProvider;
+        var showBookmarks = Se.Settings.Waveform.WaveformShowBookmarks;
         var n = f.PixelsPerSecond;
 
         f.WorkingTextHeight = IsOriginalSubtitleOverlayVisible ? f.Height / 2 : f.Height;
@@ -272,6 +281,12 @@ public class SkiaAudioVisualizer : AudioVisualizer
                 item.NumberAndDurationLabel = n > 51 ? GetCachedNumberAndDurationLabel(p) : null;
             }
 
+            if (showBookmarks && p.Bookmark != null)
+            {
+                item.BookmarkLabel = GetBookmarkLabel(p.Bookmark);
+                item.BookmarkColor = f.BookmarkColors[Math.Clamp(p.BookmarkColor, 0, f.BookmarkColors.Length - 1)];
+            }
+
             if (showCps && n > 99 && p.Duration.TotalMilliseconds > 0)
             {
                 item.CpsLabel = GetCachedCpsLabel(showOriginal ? p.OriginalCharactersPerSecond : p.CharactersPerSecond);
@@ -279,6 +294,24 @@ public class SkiaAudioVisualizer : AudioVisualizer
 
             f.Paragraphs.Add(item);
         }
+    }
+
+    private readonly Dictionary<string, string> _bookmarkLabelCache = new(64);
+
+    private string GetBookmarkLabel(string bookmark)
+    {
+        if (!_bookmarkLabelCache.TryGetValue(bookmark, out var label))
+        {
+            if (_bookmarkLabelCache.Count > 500)
+            {
+                _bookmarkLabelCache.Clear();
+            }
+
+            label = WaveformBookmark.GetLabel(bookmark);
+            _bookmarkLabelCache[bookmark] = label;
+        }
+
+        return label;
     }
 
     private void AddOriginalSubtitleCues(SkiaWaveformFrame f)
@@ -494,6 +527,8 @@ public class SkiaAudioVisualizer : AudioVisualizer
 /// </summary>
 internal sealed class SkiaWaveformFrame
 {
+    /// <summary>The original is the layer being edited (AudioVisualizer.EditOriginalTimeCodes).</summary>
+    public bool EditOriginal;
     public float Width;
     public float Height;
     public WavePeakData2? Peaks;
@@ -521,6 +556,7 @@ internal sealed class SkiaWaveformFrame
     public SKColor ParagraphBackgroundColor;
     public SKColor ParagraphSelectedBackgroundColor;
     public SKColor TextColor;
+    public readonly SKColor[] BookmarkColors = new SKColor[Nikse.SubtitleEdit.Logic.BookmarkColors.Count];
 
     public string FontName = string.Empty;
     public float FontSize;
@@ -532,7 +568,7 @@ internal sealed class SkiaWaveformFrame
     public bool FrameMode;
     public double FrameRate;
     public bool IsFocused;
-    public string? HintText;
+    public readonly List<SkiaHintButton> HintButtons = new(2);
 
     public double CursorSeconds = -1;
     public bool CursorOnShotChange;
@@ -584,7 +620,7 @@ internal sealed class SkiaWaveformFrame
     {
         Peaks = null;
         SampleRate = 0;
-        HintText = null;
+        HintButtons.Clear();
         CursorSeconds = -1;
         CursorOnShotChange = false;
         HasNewSelection = false;
@@ -611,6 +647,10 @@ internal struct SkiaParagraph
     public string? NumberAndDurationLabel;
     public string? CpsLabel;
     public double AudioSeconds;
+
+    /// <summary>The first line of the bookmark note, empty for a bookmark without text; null when not bookmarked.</summary>
+    public string? BookmarkLabel;
+    public SKColor BookmarkColor;
 }
 
 internal readonly record struct SkiaTimeLabel(double Seconds, string Text);
@@ -686,3 +726,6 @@ internal sealed class SkiaWaveformDrawOperation : ICustomDrawOperation
         }
     }
 }
+
+/// <summary>A "Generate waveform" / "Use empty waveform" button on a timeline without a waveform.</summary>
+public readonly record struct SkiaHintButton(string Text, SKRect Rect, bool IsHovered);

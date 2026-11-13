@@ -3867,7 +3867,7 @@
       "waveformUseSkiaRenderer": "実験的な高速レンダラーを使用",
       "waveformShowNumberAndDuration": "番号＋表示時間を表示",
       "waveformShowCps": "文字数/秒を表示",
-      "waveformShowBookmarks": "ブックマークを表示",
+      "waveformShowBookmarks": "波形にブックマークを表示",
       "waveformCenterVideoPositionAlsoWhenPaused": "一時停止中も再生位置を中央に保つ",
       "waveformSelectCurrentSubtitleWhilePaused": "一時停止中も現在の字幕行を選択",
       "waveformRememberZoom": "ズームを記憶（水平・垂直）",

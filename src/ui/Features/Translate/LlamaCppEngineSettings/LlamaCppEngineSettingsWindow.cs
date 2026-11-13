@@ -93,7 +93,7 @@ public class LlamaCppEngineSettingsWindow : Window
             Children = { redownload, openFolder },
         };
 
-        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeFlushButtonBar(leftPanel, close), stretch: false);
+        Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(leftPanel, close), stretch: false);
     }
 
     private static TextBlock MakeValue(string bindingPath) => new()

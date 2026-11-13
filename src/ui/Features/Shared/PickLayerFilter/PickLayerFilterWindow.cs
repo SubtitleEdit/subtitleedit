@@ -14,6 +14,8 @@ public class PickLayerFilterWindow : Window
     public PickLayerFilterWindow(PickLayerFilterViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Tools.FilterLayersTitle;
         CanResize = true;
         Width = 800;
@@ -49,11 +51,8 @@ public class PickLayerFilterWindow : Window
 
         Content = EditorChrome.MakeRoot(sections, EditorChrome.MakeButtonBar(buttonRemoveFilter, buttonCancel, buttonOk));
 
-        Loaded += delegate
-        {
-            buttonOk.Focus();
-            vm.Loaded();
-        }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => TableViewExtras.FocusRow(vm.LayerGrid));
+        Loaded += delegate { vm.Loaded(); };
         KeyDown += vm.KeyDown;
     }
 

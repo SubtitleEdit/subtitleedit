@@ -26,6 +26,7 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
     [ObservableProperty] private string _windowTitle = string.Empty;
 
     [ObservableProperty] private ObservableCollection<string> _languages = null!;
+    [ObservableProperty] private ObservableCollection<string> _editRates = null!;
     [ObservableProperty] private ObservableCollection<string> _timeCodeRates = null!;
     [ObservableProperty] private ObservableCollection<string> _fontEffects = null!;
 
@@ -76,7 +77,8 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
         var sortedLanguages = _languages.OrderBy(l => l).ToList();
         _languages = new ObservableCollection<string>(sortedLanguages);
 
-        _timeCodeRates = new ObservableCollection<string> { "24", "25", "30", "48" };
+        _editRates = new ObservableCollection<string>(DCinemaEditRate.StandardValues);
+        _timeCodeRates = new ObservableCollection<string>(DCinemaEditRate.StandardTimeCodeRates);
         _fontEffects = new ObservableCollection<string> { "None", "Border", "Shadow" };
     }
 
@@ -109,13 +111,13 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
                 ? ss.CurrentDCinemaFontId
                 : "theFontId";
 
-            EditRate = !string.IsNullOrEmpty(ss.CurrentDCinemaEditRate)
+            SetEditRate(!string.IsNullOrEmpty(ss.CurrentDCinemaEditRate)
                 ? ss.CurrentDCinemaEditRate
-                : "24 1";
+                : "24 1");
 
-            SelectedTimeCodeRate = !string.IsNullOrEmpty(ss.CurrentDCinemaTimeCodeRate)
+            SetTimeCodeRate(!string.IsNullOrEmpty(ss.CurrentDCinemaTimeCodeRate)
                 ? ss.CurrentDCinemaTimeCodeRate
-                : "24";
+                : "24");
 
             StartTime = !string.IsNullOrEmpty(ss.CurrentDCinemaStartTime)
                 ? ss.CurrentDCinemaStartTime
@@ -162,8 +164,8 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
             MovieTitle = string.Empty;
             SelectedLanguage = "en";
             FontId = "theFontId";
-            EditRate = "24 1";
-            SelectedTimeCodeRate = "24";
+            SetEditRate("24 1");
+            SetTimeCodeRate("24");
             StartTime = "00:00:00:00";
             FontUri = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
             IssueDate = DateTime.Now.ToString("s");
@@ -350,8 +352,8 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
                 }
 
                 SelectedLanguage = importer.Language ?? "en";
-                EditRate = importer.EditRate ?? "24 1";
-                SelectedTimeCodeRate = importer.TimeCodeRate ?? "24";
+                SetEditRate(importer.EditRate ?? "24 1");
+                SetTimeCodeRate(importer.TimeCodeRate ?? "24");
 
                 if (double.TryParse(importer.StartTime, NumberStyles.Float, CultureInfo.InvariantCulture, out var startTimeMs))
                 {
@@ -454,9 +456,48 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Selects the edit rate. A non-standard value read from a file or old settings is listed
+    /// too, so it shows as it is - OK then refuses it instead of silently replacing it.
+    /// </summary>
+    private void SetEditRate(string editRate)
+    {
+        var value = DCinemaEditRate.TryParse(editRate, out var numerator, out var denominator)
+            ? numerator.ToString(CultureInfo.InvariantCulture) + " " + denominator.ToString(CultureInfo.InvariantCulture)
+            : (editRate ?? string.Empty).Trim();
+        if (value.Length == 0)
+        {
+            value = "24 1";
+        }
+
+        if (!EditRates.Contains(value))
+        {
+            EditRates.Insert(0, value);
+        }
+
+        EditRate = value;
+    }
+
+    private void SetTimeCodeRate(string timeCodeRate)
+    {
+        var value = string.IsNullOrWhiteSpace(timeCodeRate) ? "24" : timeCodeRate.Trim();
+        if (!TimeCodeRates.Contains(value))
+        {
+            TimeCodeRates.Insert(0, value);
+        }
+
+        SelectedTimeCodeRate = value;
+    }
+
     [RelayCommand]
     private async Task Ok()
     {
+        if (!DCinemaEditRate.IsStandard(EditRate))
+        {
+            await MessageBox.Show(Window!, Se.Language.General.Error, string.Format(Se.Language.File.PropertiesDCinema.EditRateInvalid, EditRate, string.Join(", ", DCinemaEditRate.StandardValues)), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
         if (IsMxfExport)
         {
             if (string.IsNullOrWhiteSpace(MxfFontFile) || !File.Exists(MxfFontFile))

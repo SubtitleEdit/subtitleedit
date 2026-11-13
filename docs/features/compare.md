@@ -38,7 +38,7 @@ The two lines are now always shown as a pair, marked with a link icon between th
 
 The current subtitle can be edited right in the compare window. The reference is read-only.
 
-- **Take from reference:** The arrow button between the two sides copies the reference line's text and timing to the current line. For a line that exists only in the reference, it inserts the line into the current subtitle. Right-click the arrow (or the row; Ctrl+Click on macOS) and choose **Take text** or **Take timing** to copy only one part.
+- **Take from reference:** The arrow button between the two sides copies the reference line's text and timing to the current line. For a line that exists only in the reference, it inserts the line into the current subtitle. Right-click the arrow (or the row; Ctrl+Click on macOS) and choose **Take text** or **Take timing** to copy only one part. **Take text, keep formatting** copies the reference's plain text but keeps the tags that wrap the current line, like italics (`<i>...</i>`, `{\i1}...{\i0}`) or `{\an8}`. That helps when one OCR got the italics right and another got the letters right. Tags in the middle of the line are not kept.
 - **Delete:** For a line that exists only in the current subtitle, the trash button deletes it.
 - **Edit a line:** Double-click a row, press F2, or click the pencil to edit the text and timing inline. **Take text** and **Take timing** copy just one part from the reference.
 - **Undo:** Every change can be undone, one step at a time.
@@ -73,6 +73,7 @@ Editing is only available while the left side is the loaded subtitle. If you loa
 | F2 | Edit the selected line |
 | Ctrl+Enter | Save the line being edited |
 | Alt+Left | Take the selected line from the reference |
+| Alt+Shift+Left | Take the selected line's text, keep formatting |
 | Delete | Delete the selected current line |
 | Ctrl+Z | Undo the last change |
 | Escape | Cancel editing or a half-picked sync point, or close the dialog |

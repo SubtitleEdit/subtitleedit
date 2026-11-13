@@ -13,6 +13,7 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
@@ -39,6 +40,11 @@ public class SettingsPage : UserControl
     private readonly Border _sidePanel;
     private readonly Border _contentBorder;
     private readonly Border _buttonBar;
+
+    // The app theme the chrome brushes and the sections were built for. Attaching the page to
+    // its window also raises ActualThemeVariantChanged (the default variant resolves to the
+    // window's), which must not rebuild everything a second time on every open.
+    private ThemeVariant? _builtThemeVariant = Application.Current?.ActualThemeVariant;
 
     public SettingsPage(SettingsViewModel vm)
     {
@@ -158,6 +164,14 @@ public class SettingsPage : UserControl
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
         ActualThemeVariantChanged += (_, _) => Dispatcher.UIThread.Post(() =>
         {
+            var themeVariant = Application.Current?.ActualThemeVariant;
+            if (themeVariant == _builtThemeVariant)
+            {
+                return;
+            }
+
+            _builtThemeVariant = themeVariant;
+
             // The editor brushes are picked when used - follow a theme changed with Apply.
             if (TopLevel.GetTopLevel(this) is Window window)
             {
@@ -487,7 +501,32 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowRecentFiles, nameof(_vm.ShowRecentFiles)),
             MakeCheckboxSetting(Se.Language.Options.Settings.OpenLastFileOnStart, nameof(_vm.OpenLastFileOnStart),
                 new Binding(nameof(_vm.ShowRecentFiles)) { Source = _vm }),
-            MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
+            // (#9382) One row, three values: leave the save encoding alone, or preset it to one of
+            // the two UTF-8 variants. A switch plus a second control would be the only mixed row in
+            // the window - every other row is either a switch with a button or a named value, and so
+            // the label has to read as one or the other. "auto-selected" names the action outright:
+            // the past participle of "set" is spelled like the imperative, so "encoding set on open"
+            // also parses as an instruction.
+            new SettingsItem(Se.Language.Options.Settings.TargetEncodingOnOpen, () => new ComboBox
+            {
+                MinWidth = 170,
+                DataContext = _vm,
+                [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.TargetEncodingOptions)),
+                [!SelectingItemsControl.SelectedItemProperty] =
+                    new Binding(nameof(_vm.SelectedTargetEncoding)) { Mode = BindingMode.TwoWay },
+            })
+            {
+                // Search text only (#15945). EnglishLabel replaces the automatic English lookup, so
+                // it has to carry everything this row is known by: the label the docs use, both
+                // variant names, and the wording from before the row was renamed - otherwise a
+                // translated UI cannot find the row by its documented name.
+                EnglishLabel = string.Join(
+                    " ",
+                    EnglishLabelLookup.English.Options.Settings.TargetEncodingOnOpen,
+                    TextEncoding.Utf8WithBom,
+                    TextEncoding.Utf8WithoutBom,
+                    "Auto-convert encoding to UTF-8 with or without BOM on open"),
+            },
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
             new SettingsItem(Se.Language.Options.Settings.FileChangedOutsideAction, () => new ComboBox
             {
@@ -547,6 +586,7 @@ public class SettingsPage : UserControl
                 }
             }),
             MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridCenterSelectedRow, nameof(_vm.SubtitleGridCenterSelectedRow)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.CopyTextBlankLineBetweenSubtitles, nameof(_vm.CopyTextBlankLineBetweenSubtitles)),
 
             new SettingsItem(Se.Language.Options.Settings.SaveAsBehavior, () => new ComboBox
             {
@@ -695,6 +735,7 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeButton(Se.Language.Options.Settings.VideoControlsEdit, _vm.EditVideoControlsCommand)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FullscreenHideControls, nameof(_vm.FullscreenHideControls)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.AutoDetectSmpteTiming, nameof(_vm.AutoDetectSmpteTiming)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowSecondarySubtitleDialog, nameof(_vm.ShowSecondarySubtitleDialog)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RememberSecondarySubtitleFile, nameof(_vm.RememberSecondarySubtitleFile)),
             new SettingsItem(Se.Language.Options.Settings.Deinterlace,
@@ -795,6 +836,8 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.WaveformShowToolbarEditLabel,
                 () => UiUtil.MakeButton(Se.Language.Options.Settings.WaveformShowToolbarEdit, _vm.EditWaveformToolbarPropertiesCommand)),
             MakeCheckboxSetting(Se.Language.Waveform.ShowOriginalSubtitle, nameof(_vm.WaveformShowOriginalSubtitle)),
+            MakeCheckboxSetting(Se.Language.Waveform.ShowTimelineTracks, nameof(_vm.WaveformShowTimelineTracks)),
+            MakeCheckboxSetting(Se.Language.Waveform.TimelineShowThumbnails, nameof(_vm.WaveformTimelineShowThumbnails)),
 
             new SettingsItem(Se.Language.Options.Settings.WaveformSingleClickAction, () => new ComboBox
             {
@@ -863,9 +906,10 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformUseSkiaRenderer, nameof(_vm.WaveformUseSkiaRenderer)),
             // SE 4 parity: the per-paragraph footer in the waveform ("#43  01:10" and the
             // chars/sec line above it) can be turned off - some users find it noisy (#14707).
-            // Composed from existing strings so no new translatable text is needed.
-            MakeCheckboxSetting($"{Se.Language.General.Show} {Se.Language.General.NumberSymbol} + {Se.Language.General.Duration}", nameof(_vm.WaveformShowNumberAndDuration)),
-            MakeCheckboxSetting($"{Se.Language.General.Show} {Se.Language.General.CharsPerSec}", nameof(_vm.WaveformShowCps)),
+            // Own strings: General.Show is the start-time column header, not the verb (#16672).
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowNumberAndDuration, nameof(_vm.WaveformShowNumberAndDuration)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowCps, nameof(_vm.WaveformShowCps)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowBookmarks, nameof(_vm.WaveformShowBookmarks)),
             new SettingsItem(Se.Language.Options.Settings.WaveformTextFontSize, () => UiUtil.MakeNumericUpDownInt(
                 10 ,
                 100,
@@ -1019,7 +1063,7 @@ public class SettingsPage : UserControl
         [
             new SettingsItem(Se.Language.General.Theme, () => ThemePicker.Make(_vm)),
             new SettingsItem(Se.Language.Options.Settings.IconTheme, () => UiUtil.MakeComboBox(_vm.IconThemes, _vm, nameof(_vm.SelectedIconTheme))),
-            MakeCheckboxSetting(Se.Language.Options.Settings.MatchIconColorToDarkTheme, nameof(_vm.MatchIconColorToDarkTheme)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.MatchIconColorToTheme, nameof(_vm.MatchIconColorToTheme)),
             new SettingsItem(Se.Language.Options.Settings.UiScale, () => UiUtil.MakeNumericUpDownInt(
                 (int)Math.Round(UiTheme.MinScale * 100.0, MidpointRounding.AwayFromZero) ,
                 (int)Math.Round(UiTheme.MaxScale * 100.0, MidpointRounding.AwayFromZero),
@@ -1099,14 +1143,18 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowUpDownDuration, nameof(_vm.ShowUpDownDuration)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowUpDownLabels, nameof(_vm.ShowUpDownLabels)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowButtonHints, nameof(_vm.ShowButtonHints)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowTimeCodeModeInStatusBar, nameof(_vm.ShowTimeCodeModeInStatusBar)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GridCompactMode, nameof(_vm.GridCompactMode)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GridAlternatingRows, nameof(_vm.GridAlternatingRows)),
             new SettingsItem(Se.Language.Options.Settings.GridAlternatingRowColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.GridAlternatingRowColor))),
             new SettingsItem(Se.Language.Options.Settings.GridAlternatingRowColorDark, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.GridAlternatingRowColorDark))),
             new SettingsItem(Se.Language.Options.Settings.ShowGridLines, () => UiUtil.MakeComboBox(_vm.GridLinesVisibilities, _vm, nameof(_vm.SelectedGridLinesVisibility))),
             new SettingsItem(Se.Language.Options.Settings.BookmarkColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.BookmarkColor))),
+            new SettingsItem(Se.Language.Options.Settings.BookmarkColor2, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.BookmarkColor2))),
+            new SettingsItem(Se.Language.Options.Settings.BookmarkColor3, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.BookmarkColor3))),
             new SettingsItem(Se.Language.Options.Settings.SpellCheckHighlightColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.SpellCheckHighlightColor))),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowAssaLayer, nameof(_vm.ShowAssaLayer)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ShowActorBox, nameof(_vm.ShowActorBox)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowHorizontalLineAboveToolbar, nameof(_vm.ShowHorizontalLineAboveToolbar)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowPluginsMenu, nameof(_vm.ShowPluginsMenu)),
             new SettingsItem(!OperatingSystem.IsWindows(), Se.Language.Options.Settings.WindowsRenderingMode, () => new StackPanel

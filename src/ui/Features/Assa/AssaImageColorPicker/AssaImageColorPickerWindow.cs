@@ -20,6 +20,8 @@ public class AssaImageColorPickerWindow : Window
     public AssaImageColorPickerWindow(AssaImageColorPickerViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Assa.ImageColorPicker;
         CanResize = true;
         MinWidth = 700;

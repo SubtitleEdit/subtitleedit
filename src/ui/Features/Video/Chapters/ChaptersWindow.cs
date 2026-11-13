@@ -24,6 +24,8 @@ public class ChaptersWindow : Window
     public ChaptersWindow(ChaptersViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.Chapters;
         CanResize = true;
         Width = 980;
@@ -216,8 +218,8 @@ public class ChaptersWindow : Window
         };
 
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-        buttons.Children.Add(buttonCancel);
-        buttons.Children.Add(buttonOk);
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonCancel));
+        buttons.Children.Add(EditorChrome.WithoutMargin(buttonOk));
 
         var grid = new Grid
         {

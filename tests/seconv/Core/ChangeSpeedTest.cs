@@ -117,4 +117,30 @@ public class ChangeSpeedTest : IDisposable
         Assert.Contains("00:00:10,000 --> 00:00:11,000", outText);
         Assert.Contains("00:00:20,000 --> 00:00:22,500", outText);
     }
+
+    /// <summary>
+    /// 100.1001% scales 1500 ms to 1498.50015 ms; written unrounded, SubRip truncated it to ",498" (#14056).
+    /// </summary>
+    [Fact]
+    public async Task ConvertAsync_ChangeSpeedFromDropFrame_RoundsToWholeMilliseconds()
+    {
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, "1\n00:00:01,500 --> 00:00:03,500\nFirst.\n\n2\n00:00:03,500 --> 00:00:05,000\nSecond.\n", TestContext.Current.CancellationToken);
+        var outDir = Path.Combine(_tempRoot, "out");
+        Directory.CreateDirectory(outDir);
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = outDir,
+            Overwrite = true,
+            ChangeSpeedPercent = 100.1001,
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var outText = await File.ReadAllTextAsync(Path.Combine(outDir, "in.srt"), TestContext.Current.CancellationToken);
+        Assert.Contains("00:00:01,499 --> 00:00:03,497", outText);
+        Assert.Contains("00:00:03,497 --> 00:00:04,995", outText);
+    }
 }

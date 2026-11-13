@@ -27,6 +27,7 @@ public class LanguageFilePropertiesDCinema
     public string ReelDuration { get; internal set; }
     public string ReelDurationHint { get; internal set; }
     public string ReelDurationInvalid { get; internal set; }
+    public string EditRateInvalid { get; internal set; }
 
     public LanguageFilePropertiesDCinema()
     {
@@ -55,6 +56,7 @@ public class LanguageFilePropertiesDCinema
         ReelDuration = "Reel duration";
         ReelDurationHint = "HH:MM:SS:FF - the picture length, which every asset of a DCP reel must have. Empty = until the last subtitle.";
         ReelDurationInvalid = "Reel duration must be empty or HH:MM:SS:FF.";
+        EditRateInvalid = "Edit rate \"{0}\" is not a D-Cinema composition edit rate. Use one of: {1}.";
     }
 
 }

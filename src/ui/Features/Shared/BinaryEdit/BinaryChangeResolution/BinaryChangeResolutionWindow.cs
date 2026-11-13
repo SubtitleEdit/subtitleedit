@@ -19,9 +19,13 @@ public class BinaryChangeResolutionWindow : Window
     public BinaryChangeResolutionWindow(BinaryChangeResolutionViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.VideoResolution;
         Width = 800;
         Height = 600;
+        MinWidth = 600;
+        MinHeight = 400;
         CanResize = true;
         BinaryEditChrome.Apply(this);
         vm.Window = this;

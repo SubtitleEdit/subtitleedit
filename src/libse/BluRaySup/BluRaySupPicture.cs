@@ -138,6 +138,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         public List<List<PaletteInfo>> Palettes { get; set; } = new List<List<PaletteInfo>>();
 
         /// <summary>
+        /// The luminance white gets in an HDR palette (BT.2020 + ST 2084 PQ), 0 for the usual
+        /// BT.709 palette. For a disc with HDR video, which keeps its subtitles in a stream of their own.
+        /// </summary>
+        public int HdrWhiteNits { get; set; }
+
+        /// <summary>
         /// Alpha levels for a fade in/out, in presentation order. A step at <see cref="StartTime"/>
         /// sets the alpha the caption appears with; every later step becomes a palette update
         /// display set. Empty (the default) writes the caption fully opaque, as before.
@@ -171,6 +177,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // Transparent pixels use the one index no palette defines, whatever range of the
             // palette this bitmap has.
             const byte transparentColor = TransparentIndex;
+            PremultipliedPalette matcher = null;
             var bytes = new List<byte>(bm.Width * 2);
             var reader = new BitmapRowReader(bm);
             var row = new SKColor[bm.Width];
@@ -194,11 +201,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     }
                     else
                     {
-                        // FindBestMatch is a linear scan over the (up to 255 entry) palette and
+                        // The nearest entry is a scan over the (up to 255 entry) palette and
                         // the palette does not change while encoding, so the answer for a color
                         // is fixed. Anti-aliased edges hit this for the same handful of colors
                         // on every row of the caption; remember them in the same lookup.
-                        var best = FindBestMatch(c, palette);
+                        matcher ??= new PremultipliedPalette(palette);
+                        var best = matcher.Nearest(c);
                         if (lookup.Count < maxCachedColors)
                         {
                             lookup[c] = best;
@@ -276,10 +284,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         }
 
         /// <summary>
-        /// Hands out whole rows of pixels without a SkiaSharp interop call per pixel. Only color
-        /// types whose bytes <see cref="SKBitmap.GetPixel"/> returns unchanged are read directly:
-        /// premultiplied pixels get un-premultiplied on the way out of GetPixel, and other layouts
-        /// are not four plain BGRA/RGBA bytes, so both keep using GetPixel.
+        /// Hands out whole rows of pixels without a SkiaSharp interop call per pixel. Only the two
+        /// plain BGRA/RGBA layouts are read directly; other layouts keep using GetPixel.
+        /// Premultiplied pixels - what a plain new SKBitmap and so the image export renderer give -
+        /// are un-premultiplied here the way <see cref="SKBitmap.GetPixel"/> does it (Skia's
+        /// SkUnPreMultiply table), which matches it for every alpha and channel value.
         /// </summary>
         private sealed class BitmapRowReader
         {
@@ -287,12 +296,31 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             private readonly int _redOffset;
             private readonly int _blueOffset;
             private readonly bool _direct;
+            private readonly bool _premultiplied;
+
+            /// <summary>
+            /// SkUnPreMultiply::gTable: (255 &lt;&lt; 24) / alpha, rounded, so a channel is
+            /// un-premultiplied as (scale * value + (1 &lt;&lt; 23)) &gt;&gt; 24.
+            /// </summary>
+            private static readonly uint[] UnpremultiplyScale = MakeUnpremultiplyScale();
+
+            private static uint[] MakeUnpremultiplyScale()
+            {
+                var table = new uint[256];
+                for (var a = 1u; a < 256; a++)
+                {
+                    table[a] = ((255u << 24) + a / 2) / a;
+                }
+
+                return table;
+            }
 
             public BitmapRowReader(SKBitmap bitmap)
             {
                 _bitmap = bitmap;
+                _premultiplied = bitmap.AlphaType == SKAlphaType.Premul;
                 // Alpha is byte 3 and green byte 1 in both layouts; only red and blue swap.
-                if (bitmap.AlphaType != SKAlphaType.Premul && bitmap.GetPixels() != IntPtr.Zero)
+                if (bitmap.GetPixels() != IntPtr.Zero)
                 {
                     if (bitmap.ColorType == SKColorType.Bgra8888)
                     {
@@ -323,6 +351,36 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
                 var rowBytes = _bitmap.RowBytes;
                 var line = new ReadOnlySpan<byte>((byte*)_bitmap.GetPixels().ToPointer() + (long)y * rowBytes, rowBytes);
+                if (_premultiplied)
+                {
+                    for (var x = 0; x < row.Length; x++)
+                    {
+                        var i = x * 4;
+                        var alpha = line[i + 3];
+                        if (alpha == 0)
+                        {
+                            // the scale for alpha 0 is 0 - most of a caption's box is this
+                            row[x] = default;
+                            continue;
+                        }
+
+                        if (alpha == 255)
+                        {
+                            row[x] = new SKColor(line[i + _redOffset], line[i + 1], line[i + _blueOffset], 255);
+                            continue;
+                        }
+
+                        var scale = UnpremultiplyScale[alpha];
+                        row[x] = new SKColor(
+                            (byte)((scale * line[i + _redOffset] + (1u << 23)) >> 24),
+                            (byte)((scale * line[i + 1] + (1u << 23)) >> 24),
+                            (byte)((scale * line[i + _blueOffset] + (1u << 23)) >> 24),
+                            alpha);
+                    }
+
+                    return;
+                }
+
                 for (var x = 0; x < row.Length; x++)
                 {
                     var i = x * 4;
@@ -331,178 +389,528 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
         }
 
-        private static byte FindBestMatch(SKColor color, List<SKColor> palette)
+        /// <summary>
+        /// Finds the palette entry that looks most like a colour: the smallest squared distance
+        /// between the premultiplied colours, which is what shows over the video. A faint edge
+        /// pixel adds little of its colour to the picture, so its colour counts for as little -
+        /// a plain RGBA difference matched such pixels to a solid entry instead. Channels are
+        /// kept as value x alpha and alpha as alpha x 255, so it all stays in integers.
+        /// </summary>
+        private sealed class PremultipliedPalette
         {
-            var smallestDiff = 1000;
-            var smallestDiffIndex = -1;
-            var max = palette.Count;
-            for (var i = 0; i < max; i++)
+            private readonly int[] _red;
+            private readonly int[] _green;
+            private readonly int[] _blue;
+            private readonly int[] _alpha;
+
+            // Entries by alpha: the alpha term alone rules out every entry whose alpha is
+            // further off than the best distance so far, so the search walks out from the
+            // colour's own alpha and stops on both sides once that happens.
+            private readonly int[] _order;
+            private readonly int[] _sortedAlpha;
+            private bool _sorted;
+
+            public PremultipliedPalette(IList<SKColor> palette)
             {
-                var c = palette[i];
-                var diff = Math.Abs(c.Alpha - color.Alpha) + Math.Abs(c.Red - color.Red) + Math.Abs(c.Green - color.Green) + Math.Abs(c.Blue - color.Blue);
-                if (diff < smallestDiff)
+                _red = new int[palette.Count];
+                _green = new int[palette.Count];
+                _blue = new int[palette.Count];
+                _alpha = new int[palette.Count];
+                _order = new int[palette.Count];
+                _sortedAlpha = new int[palette.Count];
+                for (var i = 0; i < palette.Count; i++)
                 {
-                    smallestDiff = diff;
-                    smallestDiffIndex = i;
+                    Set(i, palette[i]);
                 }
             }
 
-            return (byte)smallestDiffIndex;
-        }
-
-        private static bool HasCloseColor(SKColor color, List<SKColor> palette, int maxDifference)
-        {
-            var max = palette.Count;
-            for (var i = 0; i < max; i++)
+            public void Set(int index, SKColor c)
             {
-                var c = palette[i];
-                var difference = Math.Abs(c.Alpha - color.Alpha) + Math.Abs(c.Red - color.Red) + Math.Abs(c.Green - color.Green) + Math.Abs(c.Blue - color.Blue);
-                if (difference < maxDifference)
+                _red[index] = c.Red * c.Alpha;
+                _green[index] = c.Green * c.Alpha;
+                _blue[index] = c.Blue * c.Alpha;
+                _alpha[index] = c.Alpha * 255;
+                _sorted = false;
+            }
+
+            private void Sort()
+            {
+                for (var i = 0; i < _order.Length; i++)
                 {
-                    return true;
+                    _order[i] = i;
+                    _sortedAlpha[i] = _alpha[i];
+                }
+
+                Array.Sort(_sortedAlpha, _order);
+                _sorted = true;
+            }
+
+            /// <param name="color">The colour to match</param>
+            /// <param name="hint">An entry likely to be close (the last answer), or -1 - a good
+            /// first guess narrows the search from the start. Ties go to the lowest index
+            /// whatever the hint.</param>
+            public int Nearest(SKColor color, int hint = -1)
+            {
+                if (!_sorted)
+                {
+                    Sort();
+                }
+
+                var r = color.Red * color.Alpha;
+                var g = color.Green * color.Alpha;
+                var b = color.Blue * color.Alpha;
+                var a = color.Alpha * 255;
+
+                var best = -1;
+                var smallest = long.MaxValue;
+                if (hint >= 0)
+                {
+                    best = hint;
+                    smallest = Distance(hint, r, g, b, a);
+                }
+
+                var start = Array.BinarySearch(_sortedAlpha, a);
+                if (start < 0)
+                {
+                    start = ~start;
+                }
+
+                for (var j = start; j < _order.Length; j++)
+                {
+                    long d = _sortedAlpha[j] - a;
+                    if (d * d > smallest)
+                    {
+                        break;
+                    }
+
+                    Consider(_order[j], r, g, b, a, ref best, ref smallest);
+                }
+
+                for (var j = start - 1; j >= 0; j--)
+                {
+                    long d = a - _sortedAlpha[j];
+                    if (d * d > smallest)
+                    {
+                        break;
+                    }
+
+                    Consider(_order[j], r, g, b, a, ref best, ref smallest);
+                }
+
+                return best < 0 ? 0 : best;
+            }
+
+            private void Consider(int i, int r, int g, int b, int a, ref int best, ref long smallest)
+            {
+                long d = _alpha[i] - a;
+                var distance = d * d;
+                d = _red[i] - r;
+                distance += d * d;
+                if (distance > smallest)
+                {
+                    return;
+                }
+
+                d = _green[i] - g;
+                distance += d * d;
+                if (distance > smallest)
+                {
+                    return;
+                }
+
+                d = _blue[i] - b;
+                distance += d * d;
+                if (distance < smallest || distance == smallest && i < best)
+                {
+                    smallest = distance;
+                    best = i;
                 }
             }
 
-            return false;
+            private long Distance(int i, int r, int g, int b, int a)
+            {
+                long dr = _red[i] - r;
+                long dg = _green[i] - g;
+                long db = _blue[i] - b;
+                long da = _alpha[i] - a;
+                return dr * dr + dg * dg + db * db + da * da;
+            }
         }
 
         /// <summary>
-        /// The colours of the bitmap, <paramref name="fontColor"/> first and a transparent entry
-        /// last, at most <paramref name="maxColors"/> of them before the transparent one. A
-        /// bitmap with more distinct colours than that is reduced by merging close ones.
+        /// One distinct colour of a bitmap and how much it counts: its pixels, weighted by alpha
+        /// so faint edge pixels do not outvote the solid body of the text.
         /// </summary>
-        private static List<SKColor> GetBitmapPalette(SKBitmap bitmap, SKColor fontColor, int maxColors)
+        private struct WeightedColor
         {
-            var pal = new List<SKColor>(255);
-            var lookup = new HashSet<SKColor>(255);
+            public SKColor Color;
+            public long Weight;
+        }
+
+        /// <summary>
+        /// A box of the median cut: a run of <see cref="WeightedColor"/>s in the shared array.
+        /// </summary>
+        private sealed class ColorBox
+        {
+            public int Start;
+            public int Count;
+            public long Weight;
+            public int WidestChannel;
+            public int WidestRange;
+        }
+
+        private static int Channel(SKColor c, int channel)
+        {
+            switch (channel)
+            {
+                case 0: return c.Red;
+                case 1: return c.Green;
+                case 2: return c.Blue;
+                default: return c.Alpha;
+            }
+        }
+
+        private static ColorBox MakeBox(WeightedColor[] colors, int start, int count)
+        {
+            var box = new ColorBox { Start = start, Count = count };
+            var min = new[] { 255, 255, 255, 255 };
+            var max = new[] { 0, 0, 0, 0 };
+            for (var i = start; i < start + count; i++)
+            {
+                box.Weight += colors[i].Weight;
+                for (var ch = 0; ch < 4; ch++)
+                {
+                    var v = Channel(colors[i].Color, ch);
+                    if (v < min[ch])
+                    {
+                        min[ch] = v;
+                    }
+
+                    if (v > max[ch])
+                    {
+                        max[ch] = v;
+                    }
+                }
+            }
+
+            for (var ch = 0; ch < 4; ch++)
+            {
+                if (max[ch] - min[ch] > box.WidestRange)
+                {
+                    box.WidestRange = max[ch] - min[ch];
+                    box.WidestChannel = ch;
+                }
+            }
+
+            return box;
+        }
+
+        /// <summary>
+        /// Reduces <paramref name="histogram"/> to at most <paramref name="maxColors"/> colours
+        /// with a weighted median cut: the box that is widest and heaviest is split at the
+        /// weighted median of its widest channel until there are enough boxes, and every box
+        /// becomes the weighted mean of its colours. Unlike taking the first colours met in the
+        /// bitmap, every part of the image gets its share of the palette.
+        /// </summary>
+        private static List<SKColor> MedianCut(Dictionary<SKColor, long> histogram, int maxColors)
+        {
+            var colors = new WeightedColor[histogram.Count];
+            var n = 0;
+            foreach (var kv in histogram)
+            {
+                colors[n++] = new WeightedColor { Color = kv.Key, Weight = kv.Value };
+            }
+
+            var boxes = new List<ColorBox> { MakeBox(colors, 0, colors.Length) };
+            while (boxes.Count < maxColors)
+            {
+                ColorBox best = null;
+                double bestScore = 0;
+                foreach (var box in boxes)
+                {
+                    if (box.Count < 2 || box.WidestRange == 0)
+                    {
+                        continue;
+                    }
+
+                    var score = (double)box.WidestRange * box.Weight;
+                    if (score > bestScore)
+                    {
+                        bestScore = score;
+                        best = box;
+                    }
+                }
+
+                if (best == null)
+                {
+                    break;
+                }
+
+                var channel = best.WidestChannel;
+                Array.Sort(colors, best.Start, best.Count, Comparer<WeightedColor>.Create((a, b) => Channel(a.Color, channel).CompareTo(Channel(b.Color, channel))));
+
+                // split after the weighted median, leaving at least one colour on each side
+                var half = best.Weight / 2;
+                long sum = 0;
+                var split = best.Start + 1;
+                for (var i = best.Start; i < best.Start + best.Count - 1; i++)
+                {
+                    sum += colors[i].Weight;
+                    split = i + 1;
+                    if (sum >= half)
+                    {
+                        break;
+                    }
+                }
+
+                boxes.Remove(best);
+                boxes.Add(MakeBox(colors, best.Start, split - best.Start));
+                boxes.Add(MakeBox(colors, split, best.Start + best.Count - split));
+            }
+
+            var result = new List<SKColor>(boxes.Count);
+            foreach (var box in boxes)
+            {
+                double r = 0, g = 0, b = 0, a = 0, w = 0;
+                for (var i = box.Start; i < box.Start + box.Count; i++)
+                {
+                    var c = colors[i].Color;
+                    var weight = (double)colors[i].Weight;
+                    r += c.Red * weight;
+                    g += c.Green * weight;
+                    b += c.Blue * weight;
+                    a += c.Alpha * weight;
+                    w += weight;
+                }
+
+                result.Add(new SKColor((byte)Math.Round(r / w), (byte)Math.Round(g / w), (byte)Math.Round(b / w), (byte)Math.Round(a / w)));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Passes of <see cref="RefinePalette"/>. Four gave nearly all of what ten did on glow,
+        /// gradient and texture captions, at less than half the time.
+        /// </summary>
+        private const int PaletteRefinePasses = 4;
+
+        /// <summary>
+        /// K-means passes over the median cut: every colour of the histogram goes to the entry
+        /// it would be drawn with (<see cref="PremultipliedPalette"/>), and each entry moves to the
+        /// mean of its colours, in premultiplied terms and weighted by pixel count. The median
+        /// cut splits boxes by their widest channel, which leaves entries off-centre for glows,
+        /// gradients and soft shadows; this pulls them onto the colours actually used. The font
+        /// colour keeps its exact entry.
+        /// </summary>
+        private static List<SKColor> RefinePalette(Dictionary<SKColor, long> histogram, SKColor fontColor, List<SKColor> palette)
+        {
+            // entry 0 is the fixed font colour, the rest are moved
+            var entries = new List<SKColor>(palette.Count + 1) { fontColor };
+            entries.AddRange(palette);
+
+            var colors = new SKColor[histogram.Count];
+            var counts = new double[histogram.Count];
+            var n = 0;
+            foreach (var kv in histogram)
+            {
+                colors[n] = kv.Key;
+                counts[n] = (double)kv.Value / kv.Key.Alpha; // the histogram weighs by alpha
+                n++;
+            }
+
+            var assigned = new int[colors.Length];
+            for (var i = 0; i < assigned.Length; i++)
+            {
+                assigned[i] = -1;
+            }
+
+            var matcher = new PremultipliedPalette(entries);
+            var sums = new double[entries.Count, 5];
+            for (var pass = 0; pass < PaletteRefinePasses; pass++)
+            {
+                var changed = false;
+                for (var i = 0; i < colors.Length; i++)
+                {
+                    var best = matcher.Nearest(colors[i], assigned[i]);
+                    if (best != assigned[i])
+                    {
+                        assigned[i] = best;
+                        changed = true;
+                    }
+                }
+
+                if (!changed)
+                {
+                    break;
+                }
+
+                Array.Clear(sums, 0, sums.Length);
+                for (var i = 0; i < colors.Length; i++)
+                {
+                    var c = colors[i];
+                    var weight = counts[i];
+                    var k = assigned[i];
+                    sums[k, 0] += c.Red * c.Alpha * weight;
+                    sums[k, 1] += c.Green * c.Alpha * weight;
+                    sums[k, 2] += c.Blue * c.Alpha * weight;
+                    sums[k, 3] += c.Alpha * weight;
+                    sums[k, 4] += weight;
+                }
+
+                for (var k = 1; k < entries.Count; k++)
+                {
+                    var alphaSum = sums[k, 3];
+                    if (sums[k, 4] <= 0 || alphaSum <= 0)
+                    {
+                        continue; // no colour went here - keep the entry as it is
+                    }
+
+                    // premultiplied mean back to a plain colour: channel sum / alpha sum
+                    entries[k] = new SKColor(
+                        ToByte(sums[k, 0] / alphaSum),
+                        ToByte(sums[k, 1] / alphaSum),
+                        ToByte(sums[k, 2] / alphaSum),
+                        ToByte(alphaSum / sums[k, 4]));
+                    matcher.Set(k, entries[k]);
+                }
+            }
+
+            entries.RemoveAt(0);
+            return entries;
+        }
+
+        private static byte ToByte(double value)
+        {
+            return (byte)Math.Max(0, Math.Min(255, Math.Round(value)));
+        }
+
+        /// <summary>
+        /// Distinct colours past which <see cref="GetQuantizedPalette"/> first groups them, see
+        /// <see cref="Coarsen"/>. Text with effects stays far below; a full-frame photo can hold
+        /// millions, and the median cut over all of them takes seconds.
+        /// </summary>
+        private const int MaxQuantizerColors = 1 << 16;
+
+        /// <summary>
+        /// Groups colours that agree in the top 5 bits of every channel, each group standing in
+        /// as the weighted mean of its colours - at most 2^20 groups, and in practice far fewer.
+        /// </summary>
+        private static Dictionary<SKColor, long> Coarsen(Dictionary<SKColor, long> histogram)
+        {
+            var groups = new Dictionary<uint, double[]>();
+            foreach (var kv in histogram)
+            {
+                var c = kv.Key;
+                var key = (uint)c & 0xF8F8F8F8;
+                if (!groups.TryGetValue(key, out var sums))
+                {
+                    sums = new double[5];
+                    groups.Add(key, sums);
+                }
+
+                var weight = (double)kv.Value;
+                sums[0] += c.Red * weight;
+                sums[1] += c.Green * weight;
+                sums[2] += c.Blue * weight;
+                sums[3] += c.Alpha * weight;
+                sums[4] += weight;
+            }
+
+            var coarse = new Dictionary<SKColor, long>(groups.Count);
+            foreach (var sums in groups.Values)
+            {
+                var w = sums[4];
+                var mean = new SKColor((byte)Math.Round(sums[0] / w), (byte)Math.Round(sums[1] / w), (byte)Math.Round(sums[2] / w), (byte)Math.Round(sums[3] / w));
+                coarse.TryGetValue(mean, out var existing);
+                coarse[mean] = existing + (long)w;
+            }
+
+            return coarse;
+        }
+
+        /// <summary>
+        /// The colours of the bitmap other than <paramref name="fontColor"/> and fully transparent,
+        /// in the order they are first met, each weighted by its alpha per pixel. A run of equal
+        /// pixels counts as one look-up - the anti-aliased edges of a caption are mostly such runs.
+        /// </summary>
+        private static Dictionary<SKColor, long> GetColorHistogram(SKBitmap bitmap, SKColor fontColor)
+        {
+            var histogram = new Dictionary<SKColor, long>();
             var reader = new BitmapRowReader(bitmap);
             var row = new SKColor[bitmap.Width];
-
-            // Add font color as first entry
-            pal.Add(fontColor);
-            lookup.Add(fontColor);
-
-            // first we try with exact colors
             for (var y = 0; y < bitmap.Height; y++)
             {
                 reader.ReadRow(y, row);
-                for (var x = 0; x < bitmap.Width; x++)
+                int len;
+                for (var x = 0; x < row.Length; x += len)
                 {
                     var c = row[x];
-                    if (c.Alpha > 0)
+                    for (len = 1; x + len < row.Length && row[x + len] == c; len++)
                     {
-                        if (lookup.Contains(c))
-                        {
-                            // exact color already exists
-                        }
-                        else
-                        {
-                            pal.Add(c);
-                            lookup.Add(c);
-                        }
-
-                        if (pal.Count >= maxColors)
-                        {
-                            break;
-                        }
                     }
-                }
-                if (pal.Count >= maxColors)
-                {
-                    break;
+
+                    if (c.Alpha > 0 && c != fontColor)
+                    {
+                        histogram.TryGetValue(c, out var weight);
+                        histogram[c] = weight + (long)c.Alpha * len;
+                    }
                 }
             }
 
-            if (pal.Count < maxColors)
+            return histogram;
+        }
+
+        /// <summary>
+        /// The palette of a bitmap with more distinct colours than <paramref name="maxColors"/>:
+        /// <paramref name="fontColor"/> first, the median cut of the other colours, transparent last.
+        /// </summary>
+        private static List<SKColor> GetQuantizedPalette(Dictionary<SKColor, long> histogram, SKColor fontColor, int maxColors)
+        {
+            if (histogram.Count > MaxQuantizerColors)
             {
-                pal.Add(SKColors.Transparent); // last entry must be transparent
-                return pal;
+                histogram = Coarsen(histogram);
             }
 
-
-            // get close colors (image has probably been processed in SE)
-            // The tolerance widens as the palette fills: 1 for the first part, 5 for the next,
-            // 25 for the rest.
-            var exactLimit = maxColors * 100 / MaxPaletteColors;
-            var closeLimit = maxColors * 240 / MaxPaletteColors;
-            pal = new List<SKColor>();
-            lookup = new HashSet<SKColor>();
-            pal.Add(fontColor);
-            lookup.Add(fontColor);
-
-            // Colors already known to have a close palette entry. HasCloseColor is a linear scan
-            // over the palette, and this pass reached it for every pixel of every anti-aliased
-            // edge - a 1920x200 caption ran it hundreds of thousands of times over a palette
-            // growing towards 254 entries. A rejection can never be undone: the palette only
-            // grows, and the tolerance only widens as it does (1 -> 5 -> 25), so a color that
-            // had a close entry once still has one later. Rejections take no palette slot, so
-            // caching one can never skip an insertion.
-            var rejected = new HashSet<SKColor>();
-            for (var y = 0; y < bitmap.Height; y++)
+            var pal = new List<SKColor>(maxColors + 1) { fontColor };
+            var lookup = new HashSet<SKColor> { fontColor };
+            foreach (var c in RefinePalette(histogram, fontColor, MedianCut(histogram, maxColors - 1)))
             {
-                reader.ReadRow(y, row);
-                for (var x = 0; x < bitmap.Width; x++)
+                if (lookup.Add(c))
                 {
-                    var c = row[x];
-                    if (c.Alpha > 0)
-                    {
-                        if (lookup.Contains(c))
-                        {
-                            // exact color already exists
-                        }
-                        else if (rejected.Contains(c))
-                        {
-                            // a close enough color already exists
-                        }
-                        else if (pal.Count < exactLimit)
-                        {
-                            if (!HasCloseColor(c, pal, 1))
-                            {
-                                pal.Add(c);
-                                lookup.Add(c);
-                            }
-                            else
-                            {
-                                rejected.Add(c);
-                            }
-                        }
-                        else if (pal.Count < closeLimit)
-                        {
-                            if (!HasCloseColor(c, pal, 5))
-                            {
-                                pal.Add(c);
-                                lookup.Add(c);
-                            }
-                            else
-                            {
-                                rejected.Add(c);
-                            }
-                        }
-                        else if (pal.Count < maxColors)
-                        {
-                            if (!HasCloseColor(c, pal, 25))
-                            {
-                                pal.Add(c);
-                                lookup.Add(c);
-                            }
-                            else
-                            {
-                                rejected.Add(c);
-                            }
-                        }
-                    }
-                }
-
-                // Every branch above requires pal.Count < maxColors, so a full palette freezes the
-                // result - the rest of the image only cost scans that could not change it.
-                if (pal.Count >= maxColors)
-                {
-                    break;
+                    pal.Add(c);
                 }
             }
 
             pal.Add(SKColors.Transparent); // last entry must be transparent
             return pal;
+        }
+
+        /// <summary>
+        /// The colours of the bitmap, <paramref name="fontColor"/> first and a transparent entry
+        /// last, at most <paramref name="maxColors"/> of them before the transparent one. A
+        /// bitmap with more distinct colours than that is reduced with a median cut.
+        /// </summary>
+        /// <remarks>
+        /// One pass over the pixels serves both cases: the histogram keys in first-met order are
+        /// the exact palette, and the histogram is what the median cut needs. It used to be an
+        /// exact-colour pass and, for the usual anti-aliased caption past 255 colours, a second
+        /// full pass for the histogram.
+        /// </remarks>
+        private static List<SKColor> GetBitmapPalette(SKBitmap bitmap, SKColor fontColor, int maxColors)
+        {
+            var histogram = GetColorHistogram(bitmap, fontColor);
+            if (histogram.Count + 1 < maxColors)
+            {
+                var pal = new List<SKColor>(histogram.Count + 2) { fontColor };
+                pal.AddRange(histogram.Keys);
+                pal.Add(SKColors.Transparent); // last entry must be transparent
+                return pal;
+            }
+
+            // Too many colours - anti-aliased gradients, glows, images. Reduce them over the
+            // whole bitmap rather than keeping the first ones met.
+            return GetQuantizedPalette(histogram, fontColor, maxColors);
         }
 
         /// <summary>
@@ -537,9 +945,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 return 0x60;
             }
 
-            if (Math.Abs(fps - Core.FpsNtscI) < 0.1) // 59.94
+            if (Math.Abs(fps - Core.FpsNtscI) < 0.03) // 59.94
             {
                 return 0x70;
+            }
+
+            if (Math.Abs(fps - 60.0) < 0.01) // 60 - UHD Blu-ray high frame rate only
+            {
+                return 0x80;
             }
 
             return 0x10; // 23.976
@@ -560,6 +973,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 case 0x50: return 30.0;
                 case 0x60: return Core.FpsPalI;
                 case 0x70: return Core.FpsNtscI;
+                case 0x80: return 60.0;
                 default: return 0;
             }
         }
@@ -626,6 +1040,15 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             // floor(frame * 90000 * denominator / numerator)
             return frame * 90000 * denominator / numerator;
+        }
+
+        /// <summary>
+        /// Whether a stream of video <paramref name="height"/> has its palette in BT.601: the SD
+        /// formats (480 and 576 lines) use BT.601, 720 and up BT.709 - as SD video does.
+        /// </summary>
+        public static bool UsesBt601(double height)
+        {
+            return height > 0 && height < 720;
         }
 
         private static long _lastEndTimeForWrite = -1000;
@@ -772,16 +1195,51 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return updates;
         }
 
-        private static int ClampY(BluRaySupPicture pic, int y)
+        /// <summary>
+        /// Smallest object (and window) a PG decoder takes, in both directions.
+        /// </summary>
+        private const int MinObjectSize = 8;
+
+        /// <summary>
+        /// Keeps an object of <paramref name="size"/> inside the frame: windows and objects may
+        /// not reach past its edge. An object larger than the frame starts at 0.
+        /// </summary>
+        private static int ClampPosition(int position, int size, int frameSize)
         {
-            var yOfs = y - Core.CropOfsY;
-            if (yOfs < 0)
+            var max = frameSize - size;
+            if (position > max)
             {
-                return 0;
+                position = max;
             }
 
-            var yMax = pic.Height - pic.WindowHeight - 2 * Core.CropOfsY;
-            return yOfs > yMax ? yMax : yOfs;
+            return position < 0 ? 0 : position;
+        }
+
+        private static int ClampY(BluRaySupPicture pic, int y, int height)
+        {
+            return ClampPosition(y - Core.CropOfsY, height, pic.Height - 2 * Core.CropOfsY);
+        }
+
+        /// <summary>
+        /// <paramref name="bitmap"/> padded with transparency to the minimum object size, or null
+        /// when it is large enough. A tiny caption - a dot, a short dash - would otherwise give an
+        /// object a decoder rejects.
+        /// </summary>
+        private static SKBitmap PadToMinimumSize(SKBitmap bitmap)
+        {
+            if (bitmap.Width >= MinObjectSize && bitmap.Height >= MinObjectSize)
+            {
+                return null;
+            }
+
+            var padded = new SKBitmap(Math.Max(MinObjectSize, bitmap.Width), Math.Max(MinObjectSize, bitmap.Height), SKColorType.Rgba8888, SKAlphaType.Unpremul);
+            using (var canvas = new SKCanvas(padded))
+            {
+                canvas.Clear(SKColors.Transparent);
+                canvas.DrawBitmap(bitmap, 0, 0);
+            }
+
+            return padded;
         }
 
         /// <summary>
@@ -793,48 +1251,84 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// </summary>
         private static List<EncodedObject> EncodeObjects(BluRaySupPicture pic, IList<BluRaySupCompositionObject> objects)
         {
-            var palettes = new List<List<SKColor>>(objects.Count);
-            var total = 0;
-            foreach (var obj in objects)
-            {
-                var palette = GetBitmapPalette(obj.Bitmap, obj.FontColor, MaxPaletteColors);
-                palettes.Add(palette);
-                total += palette.Count;
-            }
-
-            if (total > MaxPaletteEntries)
-            {
-                // Together they do not fit; give every object an equal share instead.
-                var maxColors = MaxPaletteEntries / objects.Count - 1;
-                for (var k = 0; k < objects.Count; k++)
-                {
-                    palettes[k] = GetBitmapPalette(objects[k].Bitmap, objects[k].FontColor, maxColors);
-                }
-            }
-
-            var encoded = new List<EncodedObject>(objects.Count);
-            var offset = 0;
+            var padded = new SKBitmap[objects.Count];
+            var bitmaps = new SKBitmap[objects.Count];
             for (var k = 0; k < objects.Count; k++)
             {
-                var obj = objects[k];
-                var updates = GetFadeSteps(obj.FadeSteps, pic.StartTime, pic.EndTime, out var startAlphaPercent);
-                encoded.Add(new EncodedObject
-                {
-                    Palette = palettes[k],
-                    PaletteOffset = offset,
-                    Rle = EncodeImage(obj.Bitmap, palettes[k], offset),
-                    Width = obj.Bitmap.Width,
-                    Height = obj.Bitmap.Height,
-                    X = obj.X,
-                    Y = ClampY(pic, obj.Y),
-                    IsForced = obj.IsForced,
-                    StartAlphaPercent = startAlphaPercent,
-                    Updates = updates,
-                });
-                offset += palettes[k].Count;
+                padded[k] = PadToMinimumSize(objects[k].Bitmap);
+                bitmaps[k] = padded[k] ?? objects[k].Bitmap;
             }
 
-            return encoded;
+            try
+            {
+                var palettes = new List<List<SKColor>>(objects.Count);
+                var total = 0;
+                for (var k = 0; k < objects.Count; k++)
+                {
+                    var palette = GetBitmapPalette(bitmaps[k], objects[k].FontColor, MaxPaletteColors);
+                    palettes.Add(palette);
+                    total += palette.Count;
+                }
+
+                if (total > MaxPaletteEntries)
+                {
+                    // Together they do not fit. An object that needs no more than an equal share
+                    // keeps all its colours, and what it leaves goes to the others - a plain white
+                    // line next to an anti-aliased sign should not halve the sign's palette.
+                    var order = new List<int>(objects.Count);
+                    for (var k = 0; k < objects.Count; k++)
+                    {
+                        order.Add(k);
+                    }
+
+                    order.Sort((a, b) => palettes[a].Count.CompareTo(palettes[b].Count));
+                    var budget = MaxPaletteEntries;
+                    for (var i = 0; i < order.Count; i++)
+                    {
+                        var k = order[i];
+                        var share = budget / (order.Count - i);
+                        if (palettes[k].Count > share)
+                        {
+                            // GetBitmapPalette adds the transparent entry on top of maxColors
+                            palettes[k] = GetBitmapPalette(bitmaps[k], objects[k].FontColor, share - 1);
+                        }
+
+                        budget -= palettes[k].Count;
+                    }
+                }
+
+                var encoded = new List<EncodedObject>(objects.Count);
+                var offset = 0;
+                for (var k = 0; k < objects.Count; k++)
+                {
+                    var obj = objects[k];
+                    var bitmap = bitmaps[k];
+                    var updates = GetFadeSteps(obj.FadeSteps, pic.StartTime, pic.EndTime, out var startAlphaPercent);
+                    encoded.Add(new EncodedObject
+                    {
+                        Palette = palettes[k],
+                        PaletteOffset = offset,
+                        Rle = EncodeImage(bitmap, palettes[k], offset),
+                        Width = bitmap.Width,
+                        Height = bitmap.Height,
+                        X = ClampPosition(obj.X, bitmap.Width, pic.Width),
+                        Y = ClampY(pic, obj.Y, bitmap.Height),
+                        IsForced = obj.IsForced,
+                        StartAlphaPercent = startAlphaPercent,
+                        Updates = updates,
+                    });
+                    offset += palettes[k].Count;
+                }
+
+                return encoded;
+            }
+            finally
+            {
+                foreach (var bitmap in padded)
+                {
+                    bitmap?.Dispose();
+                }
+            }
         }
 
         /// <summary>
@@ -1128,12 +1622,19 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 palSize += obj.Palette.Count;
             }
 
-            var pal = new BluRaySupPalette(palSize);
+            var pal = new BluRaySupPalette(palSize, UsesBt601(pic.Height));
             foreach (var obj in encoded)
             {
                 for (var i = 0; i < obj.Palette.Count; i++)
                 {
-                    pal.SetColor(obj.PaletteOffset + i, obj.Palette[i]);
+                    if (pic.HdrWhiteNits > 0)
+                    {
+                        pal.SetHdrColor(obj.PaletteOffset + i, obj.Palette[i], pic.HdrWhiteNits);
+                    }
+                    else
+                    {
+                        pal.SetColor(obj.PaletteOffset + i, obj.Palette[i]);
+                    }
                 }
             }
 

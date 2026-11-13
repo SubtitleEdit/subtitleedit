@@ -32,7 +32,7 @@ correction applied automatically from now on use **Change all**.
 
 When a misspelled word is found, the spell checker provides a list of suggested corrections.
 
-- **Double-click** a suggestion to use it once
+- **Double-click** a suggestion, or press **Enter** on it, to use it once
 - **Use once** — Replace with the selected suggestion for this occurrence
 - **Use always** — Replace all occurrences with the selected suggestion
 
@@ -78,5 +78,7 @@ Spell check requires a dictionary to be installed. If no dictionary is found, yo
 
 | Key | Action |
 |-----|--------|
+| Enter (in the word box) | Change the word to what you typed |
+| Enter (in the suggestions) | Use the selected suggestion once |
 | Escape | Close spell check |
 | F1 | Show help (default key, [changeable](shortcuts.md#worth-knowing)) |

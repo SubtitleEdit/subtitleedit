@@ -15,6 +15,8 @@ public class PickOnlineSubtitleWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Video.PickOnlineSubtitleTitle;
         Width = 1024;
         Height = 600;

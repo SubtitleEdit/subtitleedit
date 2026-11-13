@@ -16,8 +16,9 @@ public class FixShortDisplayTimesTest
             => FixesAdded.Add((p.Number, before, after));
         public void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked)
             => FixesAdded.Add((p.Number, before, after));
-        public void LogStatus(string sender, string message) { }
-        public void LogStatus(string sender, string message, bool isImportant) { }
+        public List<string> Logged { get; } = new();
+        public void LogStatus(string sender, string message) => Logged.Add(message);
+        public void LogStatus(string sender, string message, bool isImportant) => Logged.Add(message);
         public void UpdateFixStatus(int fixes, string message) { }
         public bool IsName(string candidate) => false;
         public HashSet<string> GetAbbreviations() => new();
@@ -141,6 +142,54 @@ public class FixShortDisplayTimesTest
         }
         finally
         {
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = oldMin;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = oldGap;
+            Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = oldMove;
+        }
+    }
+
+    // Mail from Jan 11-11 (King Arthur cue 141): too fast, and the next line is too close to reach
+    // 25 cps. The line is stretched up to the gap and logged - the log must say it is still too
+    // fast at the extended time, not "Unable to fix", which read as if the applied fix had failed.
+    [Fact]
+    public void TooFast_ExtendedToGap_LogsStillTooFastNotUnableToFix()
+    {
+        var oldMax = Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
+        var oldMin = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var oldGap = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+        var oldMove = Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime;
+        try
+        {
+            Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = 25.0;
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = 1000;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = 24;
+            Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = false;
+
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph(
+                "'cause he keeps slipping out" + Environment.NewLine + "from the bars you keep putting him behind.",
+                TimeCode.ParseToMilliseconds("00:21:16,301"),
+                TimeCode.ParseToMilliseconds("00:21:18,929")) { Number = 141 });
+            subtitle.Paragraphs.Add(new Paragraph(
+                "He was found in this establishment," + Environment.NewLine + "and that doesn't look good for you.",
+                TimeCode.ParseToMilliseconds("00:21:19,096"),
+                TimeCode.ParseToMilliseconds("00:21:21,473")) { Number = 142 });
+            subtitle.Paragraphs.Add(new Paragraph("What's going on?",
+                TimeCode.ParseToMilliseconds("00:21:21,640"),
+                TimeCode.ParseToMilliseconds("00:21:22,683")) { Number = 143 });
+
+            var cb = new RecordingCallback();
+            new FixShortDisplayTimes().Fix(subtitle, cb);
+
+            Assert.Equal(TimeCode.ParseToMilliseconds("00:21:19,072"), subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+            var log = Assert.Single(cb.Logged, m => m.StartsWith("Text number 1 "));
+            Assert.Contains("still too fast", log);
+            Assert.Contains(25.3.ToString("0.0") + " chars/sec", log);
+            Assert.DoesNotContain(cb.Logged, m => m.Contains("Unable to fix"));
+        }
+        finally
+        {
+            Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = oldMax;
             Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = oldMin;
             Configuration.Settings.General.MinimumMillisecondsBetweenLines = oldGap;
             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime = oldMove;

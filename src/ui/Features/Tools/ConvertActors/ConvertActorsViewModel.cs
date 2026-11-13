@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,6 +33,8 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _onlyNames;
     [ObservableProperty] private ObservableCollection<string> _casingOptions;
     [ObservableProperty] private bool _isCasingVisible;
+    [ObservableProperty] private ObservableCollection<ConvertActorsActorItem> _actors;
+    [ObservableProperty] private ConvertActorsActorItem? _selectedActor;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -45,6 +48,7 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
     public ConvertActorsViewModel()
     {
         Subtitles = new ObservableCollection<ConvertActorsDisplayItem>();
+        Actors = new ObservableCollection<ConvertActorsActorItem>();
         var types = ConvertActorTypeDisplay.GetTypes();
         FromTypes = new ObservableCollection<ConvertActorTypeDisplay>(types);
         ToTypes = new ObservableCollection<ConvertActorTypeDisplay>(ConvertActorTypeDisplay.GetTypes());
@@ -148,6 +152,7 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
             }
 
             StatusText = statusText;
+            UpdateActors();
         }
 
         // Apply inline when already on the UI thread so Ok() can refresh synchronously; posting
@@ -194,11 +199,18 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
         updatedVm.Text = newText;
         updatedVm.Actor = newActor;
 
+        // Converting to the actor column splits a two-speaker paragraph, so each row gets its own
+        // name; otherwise the row holds every speaker of the paragraph.
+        var rowActors = converter.ToActor
+            ? new List<string> { newActor }
+            : result.Actors;
+
         items.Add(new ConvertActorsDisplayItem(vm)
         {
             NewText = newText,
             IsChecked = isChecked,
             UpdatedViewModel = updatedVm,
+            Actors = rowActors,
         });
         count++;
 
@@ -215,6 +227,7 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
                 IsChecked = isChecked,
                 IsNextParagraph = true,
                 UpdatedViewModel = nextVm,
+                Actors = new List<string> { nextVm.Actor },
             });
         }
     }
@@ -309,6 +322,108 @@ public partial class ConvertActorsViewModel : ObservableObject, IClosingCleanup
         SaveSettings();
         OkPressed = true;
         Window?.Close();
+    }
+
+    /// <summary>
+    /// Fills the actor picker from the preview rows, keeping the picked actor when it is still there.
+    /// </summary>
+    private void UpdateActors()
+    {
+        var previous = SelectedActor?.Name;
+        var counts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var names = new List<string>();
+        foreach (var item in Subtitles)
+        {
+            foreach (var actor in item.Actors.Select(NormalizeActor).Where(a => a.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                if (counts.TryGetValue(actor, out var count))
+                {
+                    counts[actor] = count + 1;
+                }
+                else
+                {
+                    counts[actor] = 1;
+                    names.Add(actor);
+                }
+            }
+        }
+
+        Actors.Clear();
+        foreach (var name in names.OrderBy(n => n, StringComparer.CurrentCultureIgnoreCase))
+        {
+            Actors.Add(new ConvertActorsActorItem(name, counts[name]));
+        }
+
+        SelectedActor = Actors.FirstOrDefault(a => string.Equals(a.Name, previous, StringComparison.OrdinalIgnoreCase))
+                        ?? Actors.FirstOrDefault();
+    }
+
+    private static string NormalizeActor(string? actor)
+    {
+        return string.IsNullOrWhiteSpace(actor)
+            ? string.Empty
+            : HtmlUtil.RemoveHtmlTags(actor, true).Trim();
+    }
+
+    private static bool HasActor(ConvertActorsDisplayItem item, string actor)
+    {
+        return item.Actors.Any(a => string.Equals(NormalizeActor(a), actor, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [RelayCommand]
+    private void SelectAll()
+    {
+        foreach (var item in Subtitles)
+        {
+            item.IsChecked = true;
+        }
+    }
+
+    [RelayCommand]
+    private void SelectNone()
+    {
+        foreach (var item in Subtitles)
+        {
+            item.IsChecked = false;
+        }
+    }
+
+    [RelayCommand]
+    private void InvertSelection()
+    {
+        foreach (var item in Subtitles)
+        {
+            item.IsChecked = !item.IsChecked;
+        }
+    }
+
+    /// <summary>
+    /// Ticks every line of the picked actor - SE 4 let you pick a name and convert all of its
+    /// lines, while "Only names" leaves labels like NARRATOR or MAN unticked.
+    /// </summary>
+    [RelayCommand]
+    private void SelectActor()
+    {
+        SetActorChecked(true);
+    }
+
+    [RelayCommand]
+    private void UnselectActor()
+    {
+        SetActorChecked(false);
+    }
+
+    private void SetActorChecked(bool isChecked)
+    {
+        if (SelectedActor == null)
+        {
+            return;
+        }
+
+        foreach (var item in Subtitles.Where(s => HasActor(s, SelectedActor.Name)))
+        {
+            item.IsChecked = isChecked;
+        }
     }
 
     [RelayCommand]

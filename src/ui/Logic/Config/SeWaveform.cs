@@ -88,6 +88,13 @@ public class SeWaveform
 
     /// <summary>Whether the editor-style layout shows its row of video thumbnails.</summary>
     public bool TimelineShowThumbnails { get; set; }
+
+    /// <summary>
+    /// Layout 14's video and subtitle track rows above the waveform in every layout (#16354), so
+    /// they can be had with the panels arranged any way - grid on one monitor, video and
+    /// waveform on another. Layout 14 always has them.
+    /// </summary>
+    public bool ShowTimelineTracks { get; set; }
     public bool GuessTimeCodeStartFromBeginning { get; set; }
     public int GuessTimeCodeScanBlockSize { get; set; }
     public int GuessTimeCodeScanBlockAverageMin { get; set; }
@@ -136,12 +143,15 @@ public class SeWaveform
     public bool WaveformShowNumberAndDuration { get; set; }
     public bool WaveformShowCps { get; set; }
 
+    // SE 4 parity: a bookmarked line shows a bookmark tag with the first line of its note.
+    public bool WaveformShowBookmarks { get; set; }
+
     public SeWaveform()
     {
         ShowToolbar = true;
         ShowOriginalSubtitle = false;
         TimelineTrackGrouping = "None";
-        TimelineShowThumbnails = true;
+        TimelineShowThumbnails = false;
         DrawGridLines = false;
         RememberZoom = false;
         ZoomFactor = 1.0;
@@ -206,6 +216,7 @@ public class SeWaveform
 
         WaveformShowNumberAndDuration = true;
         WaveformShowCps = true;
+        WaveformShowBookmarks = true;
 
         MouseWheelVideoPositionStepMs = 500;
         VideoSeekAmount = "2s";
@@ -240,6 +251,7 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.AutoSelectOnPlay, IsVisible = true, SortOrder = 140 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Center, IsVisible = true, SortOrder = 150 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.TimelineTrackGrouping, IsVisible = true, SortOrder = 155 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.EditOriginalTiming, IsVisible = true, SortOrder = 156 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.RuleProfile, IsVisible = false, SortOrder = 157 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.More, IsVisible = true, SortOrder = 160 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.LineBreak1, IsVisible = false, SortOrder = 170 },

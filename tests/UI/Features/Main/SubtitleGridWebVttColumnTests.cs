@@ -111,11 +111,11 @@ public class SubtitleGridWebVttColumnTests : IDisposable
     }
 
     /// <summary>
-    /// SubRip and friends have no styles at all - the Style column stays away, the Actor column
-    /// stays (it is what "Convert actors" and the ASSA import fill in).
+    /// SubRip and friends have no styles or actors - the Style and Actor columns stay away, as
+    /// SubRip drops actors on save (#16596).
     /// </summary>
     [AvaloniaFact]
-    public void SubRip_HasNoStyleColumnButKeepsActor()
+    public void SubRip_HasNoStyleOrActorColumn()
     {
         var (window, vm) = ShowMainWindow();
 
@@ -125,7 +125,10 @@ public class SubtitleGridWebVttColumnTests : IDisposable
         Assert.DoesNotContain(InitListViewAndEditBox.SubtitleGridColumnKeys.Style, keys);
         Assert.DoesNotContain(InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttStyle, keys);
         Assert.DoesNotContain(InitListViewAndEditBox.SubtitleGridColumnKeys.WebVttVoice, keys);
-        Assert.Contains(InitListViewAndEditBox.SubtitleGridColumnKeys.Actor, keys);
+        Assert.DoesNotContain(InitListViewAndEditBox.SubtitleGridColumnKeys.Actor, keys);
+
+        SetFormat(window, vm, new AdvancedSubStationAlpha().Name);
+        Assert.Contains(InitListViewAndEditBox.SubtitleGridColumnKeys.Actor, VisibleColumnKeys(vm));
 
         window.Close();
     }

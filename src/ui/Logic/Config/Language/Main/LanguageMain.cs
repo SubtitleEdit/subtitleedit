@@ -42,6 +42,10 @@ public class LanguageMain
     public string CopyTextFromOriginalToCurrent { get; set; }
     public string InsertedXTextsFromSubtitleY { get; set; }
     public string ItalicHint { get; set; }
+    public string QcBookmarks { get; set; }
+    public string QcIssues { get; set; }
+    public string QcNoBookmarks { get; set; }
+    public string QcRemoveBookmark { get; set; }
     public string RecordSpeechHint { get; set; }
     public string RecordingSpeechClickToStop { get; set; }
     public string RecordingFailedX { get; set; }
@@ -52,7 +56,8 @@ public class LanguageMain
     public string LineXTextChangedFromYToZ { get; set; }
     public string LineXTimingChanged { get; set; }
     public string LoadingWaveInfoFromCache { get; set; }
-    public string ClickToGenerateWaveform { get; set; }
+    public string GenerateWaveform { get; set; }
+    public string UseEmptyWaveform { get; set; }
     public string WaveformFfmpegNotFoundClickToSetUp { get; set; }
     public string NumberOfLinesEvenlyDistributedX { get; set; }
     public string OneLineCopiedFromOriginal { get; set; }
@@ -212,6 +217,10 @@ public class LanguageMain
         CopyTextFromOriginalToCurrent = "Copy text from original to current subtitle";
         InsertedXTextsFromSubtitleY = "Inserted {0} texts from subtitle file \"{1}\"";
         ItalicHint = "Italic selected lines/text";
+        QcBookmarks = "Bookmarks";
+        QcIssues = "Issues";
+        QcNoBookmarks = "No bookmarks yet - add one with the + button.";
+        QcRemoveBookmark = "Remove bookmark from selected lines";
         RecordSpeechHint = "Record speech from microphone into text box (click again to stop)";
         RecordingSpeechClickToStop = "Recording... click the microphone button again to stop";
         RecordingFailedX = "Recording failed: {0}";
@@ -222,8 +231,9 @@ public class LanguageMain
         LineXTextChangedFromYToZ = "Line {0}: Text changed from \"{1}\" to \"{2}\"";
         LineXTimingChanged = "Line {0}: Timing changed";
         LoadingWaveInfoFromCache = "Loading wave info from cache...";
-        ClickToGenerateWaveform = "Click to generate waveform";
-        WaveformFfmpegNotFoundClickToSetUp = "FFmpeg not found - click the waveform to set up FFmpeg and generate the waveform";
+        GenerateWaveform = "Generate waveform";
+        UseEmptyWaveform = "Use empty waveform";
+        WaveformFfmpegNotFoundClickToSetUp = "FFmpeg not found - click \"Generate waveform\" to set up FFmpeg and generate the waveform";
         NumberOfLinesEvenlyDistributedX = "Evenly distributed {0} lines";
         OneLineCopiedFromOriginal = "One line copied from original subtitle";
         OneLineCopiedToOriginal = "One line copied to original subtitle";

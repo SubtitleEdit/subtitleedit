@@ -19,9 +19,13 @@ public class SelectVideoPositionWindow : Window
     public SelectVideoPositionWindow(SelectVideoPositionViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.PickVideoPosition;
         Width = 1280;
         Height = 800;
+        MinWidth = 800;
+        MinHeight = 500;
         CanResize = true;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Video);
 

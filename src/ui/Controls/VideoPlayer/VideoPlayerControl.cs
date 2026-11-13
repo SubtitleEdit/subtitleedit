@@ -117,10 +117,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _emptyBackground.IsVisible = showArt;
 
             // A native player window (mpv "wid" - the Windows default - and VLC) is drawn on top
-            // of everything Avalonia draws, so it is hidden while the art shows. Hiding only hides
-            // the native window: the window and the player in it live until the control is
-            // detached. The presenter is hidden rather than the control itself, as mpv's Linux
-            // resize workaround toggles the control's own IsVisible.
+            // of everything Avalonia draws, so it is hidden while the art shows. A presenter hidden
+            // before its first measure never creates its child, so the native window and the mpv
+            // core in it only come up when a video opens (#16513); hiding one that already exists
+            // just hides the window. The presenter is hidden rather than the control itself, as
+            // mpv's Linux resize workaround toggles the control's own IsVisible.
             if (_contentPresenter != null && PlayerContent is NativeControlHost)
             {
                 _contentPresenter.IsVisible = !showArt;
@@ -475,7 +476,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             }
 
             if (_pendingRestorePositionSeconds is { } pending &&
-                Math.Abs(_videoPlayerInstance.Position - pending) < PositionRestoreArrivedToleranceSeconds)
+                HasPlayerArrivedAtUiPosition(pending))
             {
                 EndPositionRestore();
             }
@@ -534,6 +535,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private double UiToPlayerSeconds(double seconds)
         {
             return IsSmpteTimingEnabled ? seconds * 1001.0 / 1000.0 : seconds;
+        }
+
+        private bool HasPlayerArrivedAtUiPosition(double seconds)
+        {
+            return Math.Abs(_videoPlayerInstance.Position - UiToPlayerSeconds(seconds)) < PositionRestoreArrivedToleranceSeconds;
         }
 
         public void SetPosition(double seconds)
@@ -1184,7 +1190,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Duration = 0;
             StartDurationProbe(videoFileName);
 
-            await _videoPlayerInstance.LoadFile(videoFileName, startPositionSeconds);
+            await _videoPlayerInstance.LoadFile(videoFileName, UiToPlayerSeconds(startPositionSeconds));
 
             // The control may have been torn down while LoadFile was awaiting (fullscreen
             // closed mid-open, a second layout rebuild). Starting the position timer then
@@ -1643,7 +1649,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     return;
                 }
 
-                if (Math.Abs(_videoPlayerInstance.Position - seconds) < PositionRestoreArrivedToleranceSeconds)
+                if (HasPlayerArrivedAtUiPosition(seconds))
                 {
                     EndPositionRestore();
                     return;

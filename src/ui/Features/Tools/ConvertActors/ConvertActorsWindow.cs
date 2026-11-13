@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
@@ -199,6 +200,36 @@ public class ConvertActorsWindow : Window
         TableViewExtras.AddSpaceToggle<ConvertActorsDisplayItem>(dataGrid,
             item => item.IsChecked, (item, v) => item.IsChecked = v);
 
-        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid);
+        return EditorChrome.MakeListSection(Se.Language.General.Preview, dataGrid, MakeSelectionActions(vm));
+    }
+
+    /// <summary>
+    /// Tick or untick lines in bulk: all, none, invert - and every line of one actor, as
+    /// "Only names" leaves labels like NARRATOR unticked and ticking them one by one is slow.
+    /// </summary>
+    private static StackPanel MakeSelectionActions(ConvertActorsViewModel vm)
+    {
+        var comboBoxActor = UiUtil.MakeComboBox(vm.Actors, vm, nameof(vm.SelectedActor))
+            .WithAccessibleName(Se.Language.General.Actor);
+        comboBoxActor.MinWidth = 160;
+        comboBoxActor.MaxWidth = 260;
+        comboBoxActor.Height = EditorChrome.FieldHeight;
+        comboBoxActor.FontSize = EditorChrome.FieldFontSize;
+
+        var buttonSelectActor = EditorChrome.MakeTextToolButton("fa-solid fa-user-check", Se.Language.Tools.ConvertActors.SelectActor, vm.SelectActorCommand);
+        var buttonUnselectActor = EditorChrome.MakeTextToolButton("fa-solid fa-user-xmark", Se.Language.Tools.ConvertActors.UnselectActor, vm.UnselectActorCommand);
+        foreach (var control in new Control[] { comboBoxActor, buttonSelectActor, buttonUnselectActor })
+        {
+            control.Bind(Control.IsEnabledProperty, new Binding(nameof(vm.Actors) + ".Count") { Source = vm, Converter = new FuncValueConverter<int, bool>(count => count > 0) });
+        }
+
+        return EditorChrome.MakeListActions(
+            comboBoxActor,
+            buttonSelectActor,
+            buttonUnselectActor,
+            EditorChrome.MakeToolbarSeparator(),
+            EditorChrome.MakeSelectAllButton(vm.SelectAllCommand),
+            EditorChrome.MakeSelectNoneButton(vm.SelectNoneCommand),
+            EditorChrome.MakeInvertSelectionButton(vm.InvertSelectionCommand));
     }
 }

@@ -36,7 +36,77 @@ public class InitWaveform
 
     public static Grid MakeWaveform(MainViewModel vm)
     {
-        return MakeWaveform(vm, withTimelineTracks: false, out _);
+        // Every layout but the editor-style one (which always has them) gets the track rows on
+        // request; the room for them comes from the waveform's own row, which grows to match.
+        var grid = MakeWaveform(vm, Se.Settings.Waveform.ShowTimelineTracks, out var timelineTracks, offerTimelineTracksToggle: true);
+        if (timelineTracks != null)
+        {
+            GrowContainingRowWithTracks(vm, grid, timelineTracks);
+        }
+
+        return grid;
+    }
+
+    /// <summary>
+    /// The layouts give the waveform a fixed-height row sized for the waveform alone. With the
+    /// track rows on top that row grows by their height, and keeps following them when they are
+    /// regrouped or the thumbnails are switched off, so the waveform keeps its height - like the
+    /// timeline row of layout 14. A waveform in a star-sized row (or an undocked window) has no
+    /// fixed row to grow and simply shares its space.
+    /// </summary>
+    private static void GrowContainingRowWithTracks(MainViewModel vm, Grid waveformGrid, TimelineTracks tracks)
+    {
+        RowDefinition? row = null;
+        var grown = false;
+
+        void OnAttached(object? sender, VisualTreeAttachmentEventArgs e)
+        {
+            waveformGrid.AttachedToVisualTree -= OnAttached;
+
+            // The layouts set the row height right after adding the waveform, so wait for that.
+            Dispatcher.UIThread.Post(() =>
+            {
+                row = FindFixedHeightRow(vm, waveformGrid);
+                if (row != null && !grown)
+                {
+                    grown = true;
+                    row.Height = new GridLength(row.Height.Value + tracks.Height, GridUnitType.Pixel);
+                }
+            });
+        }
+
+        waveformGrid.AttachedToVisualTree += OnAttached;
+        tracks.HeightChangedByUser += delta =>
+        {
+            if (row is { Height.IsAbsolute: true })
+            {
+                row.Height = new GridLength(Math.Max(TimelineTracks.TotalHeight, row.Height.Value + delta), GridUnitType.Pixel);
+            }
+        };
+    }
+
+    /// <summary>
+    /// The nearest fixed-height grid row holding <paramref name="control"/>, looking no further
+    /// out than the main window's content grid.
+    /// </summary>
+    private static RowDefinition? FindFixedHeightRow(MainViewModel vm, Control control)
+    {
+        var child = control;
+        while (child.Parent is Control parent && child != vm.ContentGrid)
+        {
+            if (parent is Grid grid && grid.RowDefinitions.Count > 0)
+            {
+                var row = grid.RowDefinitions[Math.Clamp(Grid.GetRow(child), 0, grid.RowDefinitions.Count - 1)];
+                if (row.Height.IsAbsolute)
+                {
+                    return row;
+                }
+            }
+
+            child = parent;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -44,7 +114,7 @@ public class InitWaveform
     /// subtitle rows of the editor-style layout (<see cref="TimelineTracks"/>) sit directly on
     /// top of the waveform, inside the same margins so the three rows share one time axis.
     /// </summary>
-    internal static Grid MakeWaveform(MainViewModel vm, bool withTimelineTracks, out TimelineTracks? timelineTracks)
+    internal static Grid MakeWaveform(MainViewModel vm, bool withTimelineTracks, out TimelineTracks? timelineTracks, bool offerTimelineTracksToggle = false)
     {
         timelineTracks = null;
         var languageHints = Se.Language.Main.Waveform;
@@ -99,6 +169,11 @@ public class InitWaveform
             // two previews show different texts (see SetOriginalTextInPreview).
             vm.AudioVisualizer.ShowOriginalText = vm.ShowOriginalTextInPreview;
             vm.AudioVisualizer.ShowOriginalSubtitleOverlay = settings.ShowOriginalSubtitle;
+            vm.AudioVisualizer.EditOriginalTimeCodes = vm.IsWaveformEditingOriginal;
+            vm.AudioVisualizer.GetOriginalRows = () => vm.Subtitles;
+            vm.AudioVisualizer.HasOriginalLine = vm.HasOriginalLine;
+            vm.AudioVisualizer.SetOriginalTimeCodes = vm.SetRowOriginalTimeCodes;
+            vm.AudioVisualizer.SelectOriginalRow = vm.SelectAndScrollToSubtitle;
 
             vm.AudioVisualizer.GetIsVideoPlaying = () => vm.GetVideoPlayerControl()?.IsPlaying == true;
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
@@ -113,6 +188,7 @@ public class InitWaveform
             vm.AudioVisualizer.OnSelectRequested += vm.AudioVisualizerSelectRequested;
             vm.AudioVisualizer.OnSetStartAndOffsetTheRest += vm.AudioVisualizerSetStartAndOffsetTheRest;
             vm.AudioVisualizer.OnGenerateWaveformRequested += vm.AudioVisualizerOnGenerateWaveformRequested;
+            vm.AudioVisualizer.OnUseEmptyWaveformRequested += vm.AudioVisualizerOnUseEmptyWaveformRequested;
 
             vm.AudioVisualizer.FlyoutMenuOpening += vm.AudioVisualizerFlyoutMenuOpening;
 
@@ -142,6 +218,19 @@ public class InitWaveform
         {
             // Rebuild the menu whenever the layout is rebuilt so a language change refreshes its text.
             var flyout = new MenuFlyout();
+
+            // Shown only over the placeholder time line (no waveform generated yet, #16710).
+            var generateWaveformMenuItem = new MenuItem
+            {
+                Header = Se.Language.Main.GenerateWaveform,
+            };
+            generateWaveformMenuItem.Click += (_, _) => vm.AudioVisualizerOnGenerateWaveformRequested(vm.AudioVisualizer, EventArgs.Empty);
+            flyout.Items.Add(generateWaveformMenuItem);
+            vm.MenuItemAudioVisualizerGenerateWaveform = generateWaveformMenuItem;
+            var generateWaveformSeparator = new Separator();
+            flyout.Items.Add(generateWaveformSeparator);
+            vm.MenuItemAudioVisualizerGenerateWaveformSeparator = generateWaveformSeparator;
+
             var insertSelectionMenuItem = new MenuItem
             {
                 Header = Se.Language.General.InsertNewSelection,
@@ -290,6 +379,7 @@ public class InitWaveform
                 Command = vm.ShowWaveformGuessTimeCodesCommand,
             };
             flyout.Items.Add(menuItemGuessTimeCodes);
+            vm.MenuItemAudioVisualizerGuessTimeCodes = menuItemGuessTimeCodes;
 
             var menuItemAddShotChange = new MenuItem
             {
@@ -311,6 +401,7 @@ public class InitWaveform
                 Command = vm.ShowWaveformSeekSilenceCommand,
             };
             flyout.Items.Add(menuItemSeekSilence);
+            vm.MenuItemAudioVisualizerSeekSilence = menuItemSeekSilence;
 
             var menuItemExtractAudio = new MenuItem
             {
@@ -364,6 +455,29 @@ public class InitWaveform
             };
             flyout.Items.Add(showOriginalSubtitleMenuItem);
 
+            var editOriginalTimingMenuItem = new MenuItem
+            {
+                Header = Se.Language.Waveform.EditOriginalTiming,
+                ToggleType = MenuItemToggleType.CheckBox,
+                DataContext = vm,
+                [!MenuItem.IsCheckedProperty] = new Binding(nameof(vm.IsWaveformEditingOriginal)) { Mode = BindingMode.TwoWay },
+            }.BindIsVisible(vm, nameof(vm.ShowColumnOriginalText));
+            flyout.Items.Add(editOriginalTimingMenuItem);
+
+            // Outside the editor-style layout the track rows are optional; switching them
+            // rebuilds the layout, as the Settings check box does.
+            if (offerTimelineTracksToggle)
+            {
+                var showTimelineTracksMenuItem = new MenuItem
+                {
+                    Header = Se.Language.Waveform.ShowTimelineTracks,
+                    ToggleType = MenuItemToggleType.CheckBox,
+                    IsChecked = settings.ShowTimelineTracks,
+                };
+                showTimelineTracksMenuItem.Click += (_, _) => vm.ToggleWaveformTimelineTracks();
+                flyout.Items.Add(showTimelineTracksMenuItem);
+            }
+
             var lockOriginalToTranslationMenuItem = new MenuItem
             {
                 Header = Se.Language.Waveform.LockOriginalToTranslation,
@@ -387,6 +501,7 @@ public class InitWaveform
                 showSpeechOnlyMenuItem.IsChecked = settings.ShowSpeechOnly;
             };
             flyout.Items.Add(showSpeechOnlyMenuItem);
+            vm.MenuItemAudioVisualizerShowSpeechOnly = showSpeechOnlyMenuItem;
 
             var separatorDisplayMode = new Separator();
             separatorDisplayMode.DataContext = vm;
@@ -1045,6 +1160,22 @@ public class InitWaveform
         Attached.SetIcon(toggleButtonAutoSelectOnPlay, IconNames.AnimationPlay);
         toggleButtonAutoSelectOnPlay.IsCheckedChanged += (s, e) => vm.AutoSelectOnPlayCheckedChanged();
 
+        // The A/B switch (#16354): which subtitle's timing the waveform edits. Only shown with an
+        // original open, like the audio-track picker only shows for a multi-track video.
+        var settingEditOriginal = GetToolbarSettingFor(SeWaveformToolbarItemType.EditOriginalTiming);
+        var toggleButtonEditOriginal = new ToggleButton
+        {
+            DataContext = vm,
+            [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.IsWaveformEditingOriginal)) { Mode = BindingMode.TwoWay },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOriginalText)),
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(settingEditOriginal.LeftMargin, 0, settingEditOriginal.RightMargin, 0),
+            FontSize = settingEditOriginal.FontSize,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(Se.Language.Waveform.EditOriginalTiming, shortcuts, nameof(vm.ToggleWaveformEditOriginalCommand)),
+        };
+        Attached.SetIcon(toggleButtonEditOriginal, IconNames.SwapVertical);
+        AutomationProperties.SetName(toggleButtonEditOriginal, Se.Language.Waveform.EditOriginalTiming);
+
         var settingCenter = GetToolbarSettingFor(SeWaveformToolbarItemType.Center);
         var toggleButtonCenter = new ToggleButton
         {
@@ -1323,6 +1454,7 @@ public class InitWaveform
             panelSpeed,
             toggleButtonAutoSelectOnPlay,
             toggleButtonCenter,
+            toggleButtonEditOriginal,
             panelVideoSeek,
             textBoxInitialText,
             panelRuleProfile,
@@ -1512,7 +1644,10 @@ public class InitWaveform
 
         button.Content = (back ? "-" : "+") + ms.ToString(CultureInfo.InvariantCulture);
         button.Command = ShortcutsMain.GetMoveLinesCommand(vm, scope, slot, back);
-        ToolTip.SetTip(button, UiUtil.MakeToolTip(hint, shortcuts, ShortcutsMain.GetMoveLinesCommandName(scope, slot, back)));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(button, UiUtil.MakeToolTip(hint, shortcuts, ShortcutsMain.GetMoveLinesCommandName(scope, slot, back)));
+        }
 
         // The content is just "-100", so give screen readers the full action.
         AutomationProperties.SetName(button, string.Format(hint, string.Empty).TrimEnd());
@@ -1548,6 +1683,7 @@ public class InitWaveform
         StackPanel panelSpeed,
         ToggleButton toggleButtonAutoSelectOnPlay,
         ToggleButton toggleButtonCenter,
+        ToggleButton toggleButtonEditOriginal,
         StackPanel panelVideoSeek,
         TextBox textBoxInitialText,
         StackPanel panelRuleProfile,
@@ -1645,6 +1781,9 @@ public class InitWaveform
                 case SeWaveformToolbarItemType.Center:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = toggleButtonCenter });
                     break;
+                case SeWaveformToolbarItemType.EditOriginalTiming:
+                    toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = toggleButtonEditOriginal });
+                    break;
                 case SeWaveformToolbarItemType.VideoSeek:
                     toolbarButtonForSort.Add(new SortedControl { Sort = item.SortOrder, Control = panelVideoSeek });
                     break;
@@ -1693,10 +1832,11 @@ public class InitWaveform
         to.StartPositionSeconds = from.StartPositionSeconds;
         to.CurrentVideoPositionSeconds = from.CurrentVideoPositionSeconds;
 
-        // A video without a waveform yet shows "click to generate" and turns a click into the
-        // generation; both live on the control, so the new one has to keep offering them.
+        // A video without a waveform yet shows the "Generate waveform" / "Use empty waveform"
+        // buttons; they live on the control, so the new one has to keep offering them.
         to.ShowClickToGenerateHint = from.ShowClickToGenerateHint;
         to.ClickToGenerateText = from.ClickToGenerateText;
+        to.UseEmptyWaveformText = from.UseEmptyWaveformText;
     }
 
     public static WaveformDrawStyle GetWaveformDrawStyle(string waveformDrawStyle)

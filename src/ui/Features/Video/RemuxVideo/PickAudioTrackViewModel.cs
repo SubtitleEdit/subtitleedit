@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
@@ -43,5 +44,14 @@ public partial class PickAudioTrackViewModel : ObservableObject
     {
         OkPressed = false;
         Window?.Close();
+    }
+
+    internal void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            e.Handled = true;
+            Cancel();
+        }
     }
 }

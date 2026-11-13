@@ -61,7 +61,7 @@ public class DownloadTesseractModelWindow : Window
         buttonDownload.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = InverseBooleanConverter.Instance });
 
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonBar = EditorChrome.MakeFlushButtonBar(null, buttonCancel, buttonDownload);
+        var buttonBar = EditorChrome.MakeButtonBar(null, buttonCancel, buttonDownload);
 
         Content = EditorChrome.MakeRoot(EditorChrome.MakeDownloadBody(titleText, panelPickDictionary, progressBar, statusText, errorText), buttonBar, stretch: false);
 

@@ -206,7 +206,16 @@ public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
         {
             if (!string.IsNullOrEmpty(line))
             {
-                canvas.DrawText(line, 12, y, SKTextAlign.Left, font, paint);
+                using var fallbackTypeface = FindFallbackTypeface(font, line, fontName);
+                if (fallbackTypeface != null)
+                {
+                    using var fallbackFont = new SKFont(fallbackTypeface, font.Size) { Embolden = font.Embolden };
+                    canvas.DrawText(line, 12, y, SKTextAlign.Left, fallbackFont, paint);
+                }
+                else
+                {
+                    canvas.DrawText(line, 12, y, SKTextAlign.Left, font, paint);
+                }
             }
             y += font.Size + 5; // Line spacing using font.Size instead of paint.TextSize
         }
@@ -215,6 +224,48 @@ public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
         using var skImage = surface.Snapshot();
         var skBitmap = SKBitmap.FromImage(skImage);
         SetPreview(skBitmap.ToAvaloniaBitmap());
+    }
+
+    /// <summary>
+    /// DrawText has no per-glyph fallback, so a line the typeface cannot draw renders as boxes.
+    /// That happens for localized family names such as "苹方-简" (PingFang SC): macOS lists them,
+    /// but SKTypeface.FromFamilyName does not resolve them and returns Helvetica (#16406).
+    /// Returns a typeface that has the line's first missing character, or null when the primary
+    /// font covers the line (or no better typeface exists).
+    /// </summary>
+    private static SKTypeface? FindFallbackTypeface(SKFont font, string line, string familyName)
+    {
+        if (font.ContainsGlyphs(line))
+        {
+            return null;
+        }
+
+        var codePoint = FirstMissingCodePoint(font, line);
+        if (codePoint < 0)
+        {
+            return null;
+        }
+
+        return SKFontManager.Default.MatchCharacter(familyName, font.Typeface.FontStyle, null, codePoint);
+    }
+
+    private static int FirstMissingCodePoint(SKFont font, string line)
+    {
+        for (var i = 0; i < line.Length; i += char.IsSurrogatePair(line, i) ? 2 : 1)
+        {
+            if (char.IsSurrogate(line, i) && !char.IsSurrogatePair(line, i))
+            {
+                continue; // lone surrogate - nothing to look up
+            }
+
+            var codePoint = char.ConvertToUtf32(line, i);
+            if (!char.IsWhiteSpace(line, i) && !font.ContainsGlyph(codePoint))
+            {
+                return codePoint;
+            }
+        }
+
+        return -1;
     }
 
     /// <summary>

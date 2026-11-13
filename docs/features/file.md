@@ -57,10 +57,6 @@ Save the current subtitle to a new file or format.
 
 Formats new in 5.2 in the format list include EBU-TT (Tech 3350), Csv Excel, Wistia json, DVD Junior SPC, Sonic DVD Producer, YouTube timed text srv3, DaVinci Resolve Marker EDL, Adobe Premiere Markers, Audacity labels and Final Cut Pro Xml Captions - see [Supported Formats](../reference/supported-formats.md).
 
-## Save Forced Lines As
-
-Save only the lines marked as forced (see **Toggle forced** in the [subtitle grid](subtitle-grid.md#context-menu)) to a file.
-
 ## Close Original
 
 Close the secondary (original) subtitle file in translation mode.
@@ -164,6 +160,18 @@ Copy the formatting — italic/bold/underline, font tags and ASSA override tags 
 
 Export subtitle text without time codes.
 
+### Export Excel dialogue list
+
+Save the lines as an `.xlsx` spreadsheet with the columns you choose. See [Export Excel Dialogue List](export-dialogue-list.md).
+
+- **Menu:** File → Export → Excel dialogue list (.xlsx)...
+
+### Export forced lines only
+
+Save only the lines marked as forced (see **Toggle forced** in the [subtitle grid](subtitle-grid.md#context-menu)) to a file of their own.
+
+- **Menu:** File → Export → Forced lines only...
+
 ### Export custom text format
 
 Export using a customizable text template. A template has a header, a per-subtitle text part, and a footer.
@@ -193,6 +201,8 @@ Export subtitles as Blu-ray SUP image format.
 Start and end times are written on the video's frame grid, using the window's **Frame rate**, which is also stored in the file. When a video is open, the frame rate is taken from it for this export (the profile keeps its own frame rate unless you change it in the window). Without a video, the profile's frame rate is used - make sure it matches the video, or every subtitle may be moved by up to half a frame. A subtitle shorter than half a frame that would overlap the next one on the frame grid is left out.
 
 The image export window is shared by all image-based formats. For 3D video, set **3D** to *Half side-by-side* or *Half top/bottom*. Each image then holds a squeezed copy of the subtitle for each eye, placed by the alignment and margins. **Depth** moves the two copies apart: positive values bring the subtitle out of the screen, negative values push it back. For D-Cinema only **Z-position** is shown, which is written to each image in the XML.
+
+**HDR (BT.2020 PQ)** writes the palette a UHD Blu-ray uses for subtitles on HDR video, shown only for Blu-ray SUP. With the normal SDR palette, colors look wrong on HDR10 and Dolby Vision video: a beige turns orange, while white and gray stay right. The value next to it is how bright white is, in nits; 203 is the graphics white of BT.2408 and a good start. PGS has no field for the color space, so a disc keeps one stream for SDR and one for HDR: export the subtitle once for each. An HDR file looks dim in anything that doesn't read it as HDR, including Subtitle Edit when you open the `.sup` again. The preview in the export window keeps showing the normal colors. Batch convert uses this setting from the export profile.
 
 A 3D Blu-ray stores the depth of its subtitles for every frame, in "3D-Planes". To give each subtitle the depth the disc gives it, click the folder button next to **3D-Plane** and open the `.ofs` file for the track's 3D-Plane. BD3D2MK3D and OFSExtractor make these files, and tsMuxeR shows which 3D-Plane a subtitle track uses. Each subtitle then gets the depth nearest to the viewer during the frames it is shown on. **Depth** is used for subtitles whose frames have no depth in the 3D-Plane. The 3D-Plane is not saved in the profile, because it belongs to one movie. Batch convert uses a 3D-Plane saved next to each input file with the same name (`movie.sup` + `movie.ofs`), when a 3D mode is set in the export profile.
 
@@ -229,6 +239,10 @@ Tick **Text effect** (next to the bold and right-to-left check boxes) and press 
 
 The same setting is used by Batch convert's image-based output, so the two cannot drift apart.
 
+#### ASSA styles
+
+For an ASSA/SSA subtitle, **Use ASSA styles** (on by default) draws each line with its own style from the file: font, size, bold/italic/underline/strikeout, the text, outline and shadow colours with their transparency, outline and shadow width, an opaque box (BorderStyle 3, or 4 for one box around all lines), alignment, margins (a line's own margins win), scale, spacing and angle. Sizes are scaled from the script's PlayResX/PlayResY to the export resolution - 384x288 when the file has none, as in libass. The window's font, colour, outline, box, alignment and margin settings are then not used; resolution, line spacing, frame rate and the other image settings still are. Turn the option off to draw every line with the window's settings.
+
 #### ASSA override tags
 
 Tags in the text are read rather than drawn as literal characters:
@@ -238,12 +252,21 @@ Tags in the text are read rather than drawn as literal characters:
 | `{\an1}` - `{\an9}` | Places the subtitle, overriding the alignment chosen in the window |
 | `{\pos(x,y)}` | Positions the subtitle (coordinates are in the script's own resolution) |
 | `{\i1}`, `{\b1}`, `{\c&H..&}`, `{\fn..}`, `{\fs..}` | Italic, bold, colour, font and size |
+| `{\u1}`, `{\s1}` | Underline and strikeout - the bars get the text's outline and shadow |
 | `{\alpha&H80&}`, `{\1a}`, `{\3a}`, `{\4a}` | Transparency — all parts at once, or text, outline and shadow separately |
 | `{\3c&H..&}`, `{\4c&H..&}` | Outline and shadow colour, overriding the colours chosen in the window |
 | `{\bord2}`, `{\shad0}` | Outline and shadow width (in the script's own resolution) — `{\bord0}` turns the outline off |
+| `{\fsp4}` | Letter spacing (in the script's own resolution) |
+| `{\blur2}`, `{\be1}` | Soft edges - the outline, or the text when it has none, and the shadow |
+| `{\fscx150}`, `{\fscy80}` | Stretches the text wider or taller, in percent - `\fscy` makes the line taller too |
+| `{\frz10}`, `{\fr10}` | Rotates the subtitle counter-clockwise, box included |
+| `{\r}`, `{\rSign}` | Reset to the line's own formatting, or switch to the font, size, colour, bold/italic/underline/strikeout of another style (with **Use ASSA styles**) |
 | `{\fad(in,out)}`, `{\fade(..)}` | Fade in/out — **Blu-ray SUP only** (see below) |
+| `<u>`, `<s>` | Underline and strikeout in HTML-style text (SRT and others) |
 
-Anything else is removed before rendering.
+Anything else - `\k`, `\move`, `\t(..)`, `\clip`, `\frx`/`\fry`, ... - is removed before rendering, and the rest of the line keeps its formatting: `{\i1\k40}Hello` is still italic. Drawings (`{\p1}`) are left out rather than drawn as letters.
+
+Tags that change the whole subtitle (`\bord`, `\shad`, `\3c`, `\4c`, `\fsp`, `\blur`, `\fscx`, `\fscy`, `\frz`) apply to the whole line; when one is given twice, the last one wins. Inside a `\t(..)` transition they are an animation target, so they are not applied. `\frz` turns the subtitle around its centre - a player turns it around the `\org` point, so a large angle can sit slightly differently on screen.
 
 **Fading (Blu-ray SUP).** A subtitle with `{\fad(400,400)}` is written the way a Blu-ray disc does it: the image is encoded once and the fade follows as palette updates, one per video frame, which cost about a kilobyte each instead of a whole new image. Long fades are sampled coarser so a single subtitle never adds more than 60 of them. The other image formats have no way to animate a subtitle and ignore the tag - the image is written fully opaque.
 

@@ -15,6 +15,7 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -55,6 +56,8 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     [ObservableProperty] private string _changePositionLabel;
     [ObservableProperty] private bool _canGoPrevious;
     [ObservableProperty] private bool _canGoNext;
+    [ObservableProperty] private bool _canGoPreviousToCheck;
+    [ObservableProperty] private bool _canGoNextToCheck;
     [ObservableProperty] private bool _hasResult;
     [ObservableProperty] private AudioVisualizer? _audioVisualizerOriginal;
     [ObservableProperty] private AudioVisualizer? _audioVisualizerAligned;
@@ -203,6 +206,14 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     private async Task OpenVideoPlayerAsync(VideoPlayerControl player)
     {
         await player.Open(_videoFileName);
+        if (_audioTrackNumber < 0)
+        {
+            return;
+        }
+
+        // The track list is empty until the player has parsed the file, so switching right
+        // after Open found no match and left the container's default track playing.
+        await player.WaitForPlayersReadyAsync();
 
         if (_disposed || !ReferenceEquals(VideoPlayer, player) || _audioTrackNumber < 0)
         {
@@ -328,32 +339,70 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         RefreshEngineStatus();
     }
 
-    private async Task<string?> EnsureAlignerModelAsync(ForcedAlignerOption aligner)
+    /// <summary>
+    /// Makes sure every model this run needs is on disk: the aligner model, plus the speech
+    /// isolation and speech-to-text models when those options are on. All missing ones go in one
+    /// prompt, then download one after the other - not a download that starts unasked followed by
+    /// a second prompt for the next model. (#16598)
+    /// </summary>
+    /// <returns>False when the user declined or a download was cancelled or failed.</returns>
+    private async Task<bool> EnsureModelsAsync(ForcedAlignerOption aligner, WhisperModel? speechToTextModel)
     {
-        var modelPath = _engine.GetModelForCmdLine(aligner.FileName);
-        if (File.Exists(modelPath))
+        var missing = new List<(WhisperModel Model, string DisplayName)>();
+        var alignerModel = aligner.ToWhisperModel();
+        if (!File.Exists(_engine.GetModelForCmdLine(alignerModel.Name)))
         {
-            return modelPath;
+            missing.Add((alignerModel, aligner.BaseDisplay));
         }
 
-        var display = new SpeechToTextModelDisplay
+        if (IsolateSpeech && !File.Exists(_engine.GetModelForCmdLine(SpeechIsolationModel.FileName)))
         {
-            Model = aligner.ToWhisperModel(),
-            Engine = _engine,
-        };
+            missing.Add((SpeechIsolationModel.ToWhisperModel(), SpeechIsolationModel.DisplayName));
+        }
 
-        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-            Window!, viewModel =>
+        if (speechToTextModel != null && !File.Exists(_engine.GetModelForCmdLine(speechToTextModel.Name)))
+        {
+            missing.Add((speechToTextModel, speechToTextModel.Name));
+        }
+
+        if (missing.Count == 0)
+        {
+            return true;
+        }
+
+        var title = missing.Count == 1
+            ? string.Format(Se.Language.General.DownloadXQuestion, missing[0].DisplayName)
+            : string.Format(Se.Language.Video.TextToSpeech.DownloadXModelsQuestion, missing.Count);
+        var list = string.Join(Environment.NewLine, missing.Select(m => $"\u2022 {m.DisplayName} ({m.Model.Size})"));
+        var answer = await MessageBox.Show(
+            Window!,
+            title,
+            list,
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+
+        foreach (var (model, displayName) in missing)
+        {
+            if (!await SpeechIsolationModelDownload.DownloadModelAsync(Window!, _windowService, _engine, model, displayName))
             {
-                viewModel.SetModels(new ObservableCollection<SpeechToTextModelDisplay> { display }, _engine, display);
-                viewModel.StartDownload();
-            });
+                return false;
+            }
 
-        if (!vm.OkPressed || !File.Exists(modelPath))
-        {
-            return null;
+            if (model.Name == alignerModel.Name)
+            {
+                OnAlignerModelDownloaded(aligner);
+            }
         }
 
+        return true;
+    }
+
+    private void OnAlignerModelDownloaded(ForcedAlignerOption aligner)
+    {
         aligner.IsInstalled = true;
         RefreshAlignerDisplay();
 
@@ -365,30 +414,6 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             Aligners.Insert(index, aligner);
             SelectedAligner = aligner;
         }
-
-        return modelPath;
-    }
-
-    /// <summary>The path of the speech-to-text model to check with, downloading it first if need be; null when that was cancelled.</summary>
-    private async Task<string?> EnsureSpeechToTextModelAsync()
-    {
-        var model = ImproveTimeCodesAligners.PickSpeechToTextModel(
-            _engine, _languageCode, m => File.Exists(_engine.GetModelForCmdLine(m.Name)));
-        var modelPath = _engine.GetModelForCmdLine(model.Name);
-        if (File.Exists(modelPath))
-        {
-            return modelPath;
-        }
-
-        var display = new SpeechToTextModelDisplay { Model = model, Engine = _engine };
-        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-            Window!, viewModel =>
-            {
-                viewModel.SetModels(new ObservableCollection<SpeechToTextModelDisplay> { display }, _engine, display);
-                viewModel.StartDownload();
-            });
-
-        return vm.OkPressed && File.Exists(modelPath) ? modelPath : null;
     }
 
     /// <summary>
@@ -444,27 +469,16 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         }
 
         var aligner = SelectedAligner;
-        var modelPath = await EnsureAlignerModelAsync(aligner);
-        if (modelPath == null)
+        var speechToTextModel = CheckWithSpeechToText && _isSpeechToTextLanguage
+            ? ImproveTimeCodesAligners.PickSpeechToTextModel(_engine, _languageCode, m => File.Exists(_engine.GetModelForCmdLine(m.Name)))
+            : null;
+        if (!await EnsureModelsAsync(aligner, speechToTextModel))
         {
             return;
         }
 
-        if (IsolateSpeech &&
-            !await SpeechIsolationModelDownload.EnsureDownloadedAsync(Window, _windowService, _engine, l.IsolateSpeech))
-        {
-            return;
-        }
-
-        string? speechToTextModelPath = null;
-        if (CheckWithSpeechToText && _isSpeechToTextLanguage)
-        {
-            speechToTextModelPath = await EnsureSpeechToTextModelAsync();
-            if (speechToTextModelPath == null)
-            {
-                return;
-            }
-        }
+        var modelPath = _engine.GetModelForCmdLine(aligner.FileName);
+        var speechToTextModelPath = speechToTextModel == null ? null : _engine.GetModelForCmdLine(speechToTextModel.Name);
 
         SaveSettings();
 
@@ -635,7 +649,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
         var l = Se.Language.Tools.ImproveTimeCodes;
         var retimed = Rows.Where(r => r.IsChanged && r.Apply).ToList();
-        var toCheck = Rows.Count(r => r.Status is { } status && SubtitleRetimer.IsUnconfirmed(status));
+        var toCheck = Rows.Count(r => r.NeedsCheck);
         var noSpeech = Rows.Count(r => r.Status == SubtitleRetimer.LineStatus.NoSpeech);
         var meanShiftMs = retimed.Count == 0
             ? 0
@@ -681,6 +695,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         if (SelectedRow == null)
         {
             UpdateChangeNavigation();
+            UpdateToCheckNavigation();
         }
     }
 
@@ -828,6 +843,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     partial void OnSelectedRowChanged(ImproveTimeCodesRow? value)
     {
         UpdateChangeNavigation();
+        UpdateToCheckNavigation();
         if (value == null)
         {
             PushParagraphsToVisualizers();
@@ -852,10 +868,27 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         CanGoPrevious = changed.Any(r => r.Index < index);
         CanGoNext = changed.Any(r => r.Index > index);
 
+        // While sitting on a line flagged to check, the label shows the position in those lines,
+        // the set Shift+F7/Shift+F8 steps through.
+        if (SelectedRow is { NeedsCheck: true })
+        {
+            var toCheck = Rows.Where(r => r.NeedsCheck).ToList();
+            ChangePositionLabel = string.Format(Se.Language.General.ToCheckXOfY, toCheck.IndexOf(SelectedRow) + 1, toCheck.Count);
+            return;
+        }
+
         var position = SelectedRow != null ? changed.IndexOf(SelectedRow) : -1;
         ChangePositionLabel = position >= 0
             ? string.Format(Se.Language.General.ChangeXOfY, position + 1, changed.Count)
             : string.Empty;
+    }
+
+    private void UpdateToCheckNavigation()
+    {
+        var toCheck = Rows.Where(r => r.NeedsCheck).ToList();
+        var index = SelectedRow == null ? -1 : SelectedRow.Index;
+        CanGoPreviousToCheck = toCheck.Any(r => r.Index < index);
+        CanGoNextToCheck = toCheck.Any(r => r.Index > index);
     }
 
     [RelayCommand]
@@ -870,6 +903,20 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     {
         var index = SelectedRow?.Index ?? -1;
         SelectAndScroll(Rows.FirstOrDefault(r => r.IsChanged && r.Index > index));
+    }
+
+    [RelayCommand]
+    private void PreviousToCheck()
+    {
+        var index = SelectedRow?.Index ?? Rows.Count;
+        SelectAndScroll(Rows.LastOrDefault(r => r.NeedsCheck && r.Index < index));
+    }
+
+    [RelayCommand]
+    private void NextToCheck()
+    {
+        var index = SelectedRow?.Index ?? -1;
+        SelectAndScroll(Rows.FirstOrDefault(r => r.NeedsCheck && r.Index > index));
     }
 
     private void SelectAndScroll(ImproveTimeCodesRow? row)
@@ -1316,6 +1363,16 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             {
                 PlaySelectedAligned();
             }
+        }
+        else if ((e.Key == Key.F8 && e.KeyModifiers == KeyModifiers.Shift) || (e.Key == Key.Down && e.KeyModifiers == (KeyModifiers.Alt | KeyModifiers.Shift)))
+        {
+            e.Handled = true;
+            NextToCheck();
+        }
+        else if ((e.Key == Key.F7 && e.KeyModifiers == KeyModifiers.Shift) || (e.Key == Key.Up && e.KeyModifiers == (KeyModifiers.Alt | KeyModifiers.Shift)))
+        {
+            e.Handled = true;
+            PreviousToCheck();
         }
         else if (e.Key == Key.F8 || (e.Key == Key.Down && e.KeyModifiers == KeyModifiers.Alt))
         {

@@ -91,12 +91,25 @@ public class SeGeneral
     public string SubtitleSingleClickAction { get; set; }
     public string SubtitleDoubleClickAction { get; set; }
     public bool SubtitleGridCenterSelectedRow { get; set; }
+
+    /// <summary>
+    /// "Copy text" (grid and waveform) puts an empty line between copied subtitles, like SE4.
+    /// Off gives one subtitle per line.
+    /// </summary>
+    public bool CopyTextBlankLineBetweenSubtitles { get; set; } = true;
     public string SaveAsBehavior { get; set; }
     public string FileChangedOutsideAction { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
     public string DefaultSaveLocation { get; set; }
     public string DefaultSaveLocationCustomFolder { get; set; }
     public bool AutoConvertToUtf8 { get; set; }
+
+    /// <summary>
+    /// Only read while <see cref="AutoConvertToUtf8"/> is on: it selects the BOM variant, so
+    /// "UTF-8 without BOM" stores true here and true in that switch too. Not a switch of its own
+    /// (#9382).
+    /// </summary>
+    public bool AutoConvertToUtf8WithoutBom { get; set; }
     public bool AutoGuessAnsiEncoding { get; set; }
     public int MaxNumberOfLinesPlusAbort { get; set; }
     public int SubtitleMinimumDisplayMilliseconds { get; set; }
@@ -332,12 +345,14 @@ public class SeGeneral
         SubtitleSingleClickAction = nameof(SubtitleSingleClickActionType.None);
         SubtitleDoubleClickAction = nameof(SubtitleDoubleClickActionType.GoToSubtitleAndPause);
         SubtitleGridCenterSelectedRow = false;
+        CopyTextBlankLineBetweenSubtitles = true;
         SaveAsBehavior = nameof(SaveAsBehaviourType.UseVideoFileNameThenSubtitleFileName);
         FileChangedOutsideAction = nameof(FileChangedOutsideActionType.ReloadWhenUnmodified);
         DefaultSaveLocation = nameof(DefaultSaveLocationType.SourceFileFolder);
         DefaultSaveLocationCustomFolder = string.Empty;
         SaveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None);
         AutoConvertToUtf8 = false;
+        AutoConvertToUtf8WithoutBom = false;
         AutoGuessAnsiEncoding = true;
         NewEmptyDefaultMs = 2000;
         TimeCodeUpDownStepMs = 100;

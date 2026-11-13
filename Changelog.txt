@@ -1,5 +1,70 @@
 Subtitle Edit Changelog
 
+5.4.0 (6th of November 2026)
+
+  Subtitle Edit 5.4 collects the work of 12 betas and 4 release candidates.
+  A summary of the changes since 5.3.0:
+
+Look and feel:
+* A more compact and polished UI - almost all windows redesigned in one modern editor look, with live theme switching
+* New SVG icons in all themes and the About window, sharp at any display scale
+* New themes: Nord, Midnight Cinema and Sakura - Pastel and Nord also get their own icon sets
+* Visual theme picker with preview cards (Settings > Appearance) and a "Cycle theme" shortcut
+* Background art for the video player and waveform (new art for the Classic theme too)
+* One field look for text boxes, combo boxes and lists; UI font size in px, followed by dialog text
+* More consistent dialogs: Escape, button order (Cancel left, OK right), error icons; layout thumbnails in theme colors
+* Full screen video controls fade in over the video and are bigger, also on native players
+
+New features:
+* Sync subtitle to audio (ffsubsync-style offset and frame rate detection) and Sync audio track with live preview
+* YouTube timed text (.ytt/srv3): pens, positions, preview and a styles window
+* Export D-Cinema SMPTE 2014 as MXF track file, and Excel dialogue list (.xlsx) with chosen columns
+* Check for updates: install and restart (Windows installer, Linux tarball, macOS)
+* Custom error rules (regex), auto-wrap while typing, and reload/ask when the file is changed by another program
+* Record speech to the text box via microphone (off by default)
+* Bookmarks list: import and export
+* Many new shortcuts: split line and play, move lines one frame, push-neighbour "Move start/end X ms", copy plain text
+
+Video player and waveform:
+* Optional playback speed, previous/next subtitle and toggle subtitles buttons
+* FFmpeg player subtitle overlay closer to the mpv preview; faster layout 14 timeline
+* Waveform: ASSA lines with the same times move and resize together; pause when stepping one frame
+
+Auto-translate and AI:
+* Source and translation side by side, translate selected rows together with context, find and replace in the translation column
+* New Opper engine, Bing Region field, llama.cpp CPU/Vulkan builds on Linux, and Generate with AI for the synopsis
+
+OCR:
+* Optional video preview in the OCR window, Video OCR of chosen time ranges, keep existing lines in video OCR
+* New llama.cpp OCR models: LightOnOCR-3 (4B/0.8B), LFM3-VL 2B and QARI-OCR (Arabic)
+* nOCR: many recognition improvements for Latin and Cyrillic; fixed OCR replace list rules in 10 languages
+
+Subtitle formats and export:
+* SubRip reader rewritten: tolerant of damaged files, 2.6-12x faster; parser crashes found by fuzzing fixed
+* Image-based export draws ASSA lines with their own style and many more ASSA tags (also in Batch convert and seconv)
+* Blu-ray sup: HDR (BT.2020 PQ) palette option and smarter palette split
+* Remux video: CEA-608/708 as SEI captions in .mp4, caption time offset for .scc/.mcc
+* iTunes Timed Text export presets and header template
+
+ASSA:
+* ASSA draw: text and shapes, groups, in/out and loop animations, many new (also animated) clip arts
+* CapCut-style "Apply advanced effect" gallery with six new caption effects
+* Styles, properties, attachments, Set position and Set background redesigned; fonts from [Fonts] previewed
+
+Tools and editing:
+* Multiple replace works like SE4: categories, flat rule list with type-in row, "Add rules" window, edit in place
+* Spell check: remove words from the dictionary; editable word list regex
+* Batch convert: run batch-capable plugins, search box for functions, plain text options
+* Get plugins: search box and a bigger window
+
+Translations and engines:
+* All language files synced with English; new Romanian and Croatian UI translations
+* Updated engines: Crisp ASR v0.8.50, llama.cpp b12110, CrispEmbed v0.17.14, audio.cpp v0.9.4, Qwen3 ASR v0.1.11, yt-dlp 2026.10.26 and Avalonia 12.1.5
+
+  A big thank you to everyone who tested the pre-releases, reported issues and
+  contributed code and translations :)
+
+
 5.3.0 (14th of October 2026)
 
   Subtitle Edit 5.3 collects the work of 26 betas and 4 release candidates.

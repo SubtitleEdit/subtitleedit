@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         /// Enough text that an identical reply cannot be a legitimate translation: at least three
         /// words and ten letters - or, for scripts written without spaces (CJK, Thai), six letters.
         /// </summary>
-        private static bool NeedsTranslation(string normalized)
+        internal static bool NeedsTranslation(string normalized)
         {
             var letters = 0;
             var words = 0;

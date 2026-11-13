@@ -117,6 +117,25 @@ Second line.
         Assert.Equal(1000, result.Paragraphs[0].EndTime.TotalMilliseconds);
     }
 
+    /// <summary>
+    /// 100.1001% scales 1500 ms to 1498.50015 ms; the writers truncate, so unrounded times
+    /// saved a millisecond early (#14056).
+    /// </summary>
+    [Fact]
+    public async Task ChangeSpeed_FromDropFrame_RoundsToWholeMilliseconds()
+    {
+        var result = await RunAsync("1\n00:00:01,500 --> 00:00:03,500\nFirst.\n\n2\n00:00:03,500 --> 00:00:05,000\nSecond.\n", config =>
+        {
+            config.ChangeSpeed.IsActive = true;
+            config.ChangeSpeed.SpeedPercent = 100.1001;
+        });
+
+        Assert.Equal(1499, result.Paragraphs[0].StartTime.TotalMilliseconds);
+        Assert.Equal(3497, result.Paragraphs[0].EndTime.TotalMilliseconds);
+        Assert.Equal(3497, result.Paragraphs[1].StartTime.TotalMilliseconds);
+        Assert.Equal(4995, result.Paragraphs[1].EndTime.TotalMilliseconds);
+    }
+
     [Fact]
     public void FixNamesLogic_FindsNamesWithWrongCasing()
     {

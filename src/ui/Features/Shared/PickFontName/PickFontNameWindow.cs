@@ -17,6 +17,8 @@ public class PickFontNameWindow : Window
     public PickFontNameWindow(PickFontNameViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Tools.PickFontNameTitle;
         CanResize = true;
         Width = 800;

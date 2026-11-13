@@ -145,7 +145,11 @@ A shortcut can be assigned in **Options → Shortcuts** to cycle the five modes 
 ## Bookmarks
 
 You can bookmark subtitle lines for quick reference:
-- **Add/Edit bookmark** — Adds a bookmark with optional text
+- **Add/Edit bookmark** — Adds a bookmark with optional text. The note can span several lines: **Shift+Enter** starts a new line, **Enter** is OK. Above the text box the note is cut to one short line; hover it to see the whole note
 - **Toggle bookmark** — Quickly toggle bookmark on/off
-- **List bookmarks** — View all bookmarks
+- **List bookmarks** — View all bookmarks with their time, whole note and subtitle text. Type in the filter box to show only bookmarks whose note or subtitle text contains it. **Clear** and **Export** always work on all bookmarks. **Export** writes a tab-separated text file that **Import** reads back, notes and colors included
 - **Go to next/previous bookmark** — Navigate between bookmarks
+
+A bookmarked line also shows a bookmark tag with the first line of its note in the waveform (turn it off in **Options → Settings → Waveform → Show bookmarks**).
+
+A bookmark has one of three colors, picked with the bookmark buttons above the note in **Add/Edit bookmark** - for example one color for your own notes and one for experts' comments. The grid, the text box header and the waveform show the bookmark in its color; set the colors in **Options → Settings → Appearance**.

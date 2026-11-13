@@ -28,6 +28,7 @@ public partial class GetAudioClipsViewModel : ObservableObject
 
     private string _videoFileName;
     private int _audioTrackFfIndex;
+    private double _videoTimeFactor = 1.0;
     private bool _useCenterChannelOnly;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private List<SubtitleLineViewModel> _lines;
@@ -46,13 +47,17 @@ public partial class GetAudioClipsViewModel : ObservableObject
         _videoFileName = string.Empty;
         _audioTrackFfIndex = -1;
         _lines = new List<SubtitleLineViewModel>();
+        _videoTimeFactor = 1.0;
     }
 
-    public void Initialize(string videoFileName, List<SubtitleLineViewModel> lines, int audioTrackFfIndex = -1)
+    /// <param name="isSmpteTiming">SMPTE timing (main window): a row time t is t * 1.001 in the
+    /// video file, so the clips are cut on the video's clock or they start 0.1 % early.</param>
+    public void Initialize(string videoFileName, List<SubtitleLineViewModel> lines, int audioTrackFfIndex = -1, bool isSmpteTiming = false)
     {
         _videoFileName = videoFileName;
         _lines = lines;
         _audioTrackFfIndex = audioTrackFfIndex;
+        _videoTimeFactor = isSmpteTiming ? SmptePreviewStretch.Factor : 1.0;
     }
 
     private void ExtractLines()
@@ -69,6 +74,7 @@ public partial class GetAudioClipsViewModel : ObservableObject
         {
             if (_cancellationTokenSource.Token.IsCancellationRequested)
             {
+                DeleteAudioClips();
                 return;
             }
 
@@ -85,8 +91,8 @@ public partial class GetAudioClipsViewModel : ObservableObject
             var outputFileName = Path.Combine(Path.GetTempPath(), $"se_audioclip_{Guid.NewGuid()}.wav");
             var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
                 _videoFileName,
-                line.StartTime.TotalSeconds,
-                line.Duration.TotalSeconds,
+                line.StartTime.TotalSeconds * _videoTimeFactor,
+                line.Duration.TotalSeconds * _videoTimeFactor,
                 _useCenterChannelOnly,
                 outputFileName,
                 _audioTrackFfIndex);
@@ -110,6 +116,10 @@ public partial class GetAudioClipsViewModel : ObservableObject
                 {
                     // Process may have already exited
                 }
+
+                // Nobody takes the clips of a cancelled run, so they would stay in the temp folder (#16760).
+                TryDelete(outputFileName);
+                DeleteAudioClips();
                 return;
             }
 
@@ -137,7 +147,7 @@ public partial class GetAudioClipsViewModel : ObservableObject
             {
                 await MessageBox.Show(Window!,
                     Se.Language.General.Error,
-                    "Could not extract audio clip from video.");
+                    "Could not extract audio clip from video.", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             });
             return;
@@ -160,6 +170,27 @@ public partial class GetAudioClipsViewModel : ObservableObject
             await MessageBox.Show(Window!, Se.Language.General.Information, message);
             Close();
         });
+    }
+
+    /// <summary>
+    /// Deletes the clip files of <paramref name="audioClips"/> - they are temp files cut for one
+    /// speech-to-text run, and nothing else ever removes them (#16760).
+    /// </summary>
+    public static void DeleteAudioClipFiles(IEnumerable<AudioClip> audioClips)
+    {
+        foreach (var clip in audioClips)
+        {
+            if (!string.IsNullOrEmpty(clip.AudioFileName))
+            {
+                TryDelete(clip.AudioFileName);
+            }
+        }
+    }
+
+    private void DeleteAudioClips()
+    {
+        DeleteAudioClipFiles(AudioClips);
+        AudioClips.Clear();
     }
 
     private static void TryDelete(string fileName)

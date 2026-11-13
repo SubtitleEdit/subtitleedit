@@ -16,6 +16,8 @@ public class BatchConvertAssaWindow : Window
     public BatchConvertAssaWindow(BatchConvertAssaViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Tools.BatchConvert.BatchConvertSettings;
         CanResize = true;
         Width = 900;
@@ -69,7 +71,7 @@ public class BatchConvertAssaWindow : Window
         Loaded += (_, _) =>
         {
             vm.Loaded();
-            buttonOk.Focus();
+            vm.SourceViewTextBox.Focus();
         };
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }

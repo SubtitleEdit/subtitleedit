@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
@@ -11,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixShortDisplayTime { get; set; } = "Fix short display time";
             public static string FixShortDisplayTimes { get; set; } = "Fix short display times";
             public static string UnableToFixTextXY { get; set; } = "Unable to fix text number {0}: {1}";
+            public static string StillTooShortNoRoomXYZW { get; set; } = "Text number {0} is still too short - no more room before the next subtitle: {1} ms (min {2} ms): {3}";
+            public static string StillTooFastNoRoomXYZW { get; set; } = "Text number {0} is still too fast - no more room before the next subtitle: {1} chars/sec (max {2}): {3}";
         }
 
         private IFixCallbacks _callbacks;
@@ -72,7 +75,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
 
-                        callbacks.LogStatus(Language.FixShortDisplayTimes, string.Format(Language.UnableToFixTextXY, i + 1, p));
+                        // The line may have been extended above - say what is still wrong, with the
+                        // current (possibly extended) times, so the log does not read as "nothing was
+                        // done" next to a fix that was applied.
+                        callbacks.LogStatus(Language.FixShortDisplayTimes, string.Format(Language.StillTooShortNoRoomXYZW, i + 1,
+                            Math.Round(p.DurationTotalMilliseconds).ToString(CultureInfo.CurrentCulture),
+                            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.CurrentCulture), p));
                         callbacks.AddToTotalErrors(1);
                         skip = true;
                     }
@@ -183,7 +191,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
 
-                        callbacks.LogStatus(Language.FixShortDisplayTimes, string.Format(Language.UnableToFixTextXY, i + 1, p));
+                        // As above: "move some" may have extended the line, so report the chars/sec it
+                        // still has rather than "Unable to fix".
+                        callbacks.LogStatus(Language.FixShortDisplayTimes, string.Format(Language.StillTooFastNoRoomXYZW, i + 1,
+                            p.GetCharactersPerSecond().ToString("0.0", CultureInfo.CurrentCulture),
+                            Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds.ToString("0.##", CultureInfo.CurrentCulture), p));
                         callbacks.AddToTotalErrors(1);
                     }
                 }

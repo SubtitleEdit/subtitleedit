@@ -16,6 +16,8 @@ public class MediaInfoViewWindow : Window
     public MediaInfoViewWindow(MediaInfoViewViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.General.MediaInformation;
         Width = 900;
         Height = 500;

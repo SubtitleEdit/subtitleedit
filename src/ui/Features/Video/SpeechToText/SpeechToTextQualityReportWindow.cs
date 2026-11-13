@@ -24,6 +24,8 @@ public class SpeechToTextQualityReportWindow : Window
     public SpeechToTextQualityReportWindow(SpeechToTextQualityReportViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Video.AudioToText.QualityReportTitle;
         Width = 960;
         Height = 640;
@@ -155,7 +157,7 @@ public class SpeechToTextQualityReportWindow : Window
         rowDoNotShowAgain.VerticalAlignment = VerticalAlignment.Center;
         var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonExport = MakeExportButton(vm);
-        var buttonBar = EditorChrome.MakeFlushButtonBar(rowDoNotShowAgain, MakeExportStatusLabel(vm), buttonExport, buttonOk);
+        var buttonBar = EditorChrome.MakeButtonBar(rowDoNotShowAgain, MakeExportStatusLabel(vm), buttonExport, buttonOk);
 
         var grid = new Grid
         {

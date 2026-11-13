@@ -14,17 +14,20 @@ namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
 /// <summary>
 /// The online plugin catalog in the editor look (see <see cref="EditorChrome"/>): one row per
-/// plugin with its install/update button, the status and Refresh + Close in the button bar.
+/// plugin with its install/update button, a search box filtering the list by name, author and
+/// description, the status and Refresh + Close in the button bar.
 /// </summary>
 public class GetPluginsWindow : Window
 {
     public GetPluginsWindow(GetPluginsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Plugins.GetPluginsTitle;
         CanResize = true;
-        Width = 720;
-        Height = 540;
+        Width = 860;
+        Height = 660;
         MinWidth = 500;
         MinHeight = 300;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog | EditorWindowStyles.CompactListRows);
@@ -196,7 +199,8 @@ public class GetPluginsWindow : Window
             RowSpacing = 10,
             Margin = new Thickness(14, 12, 14, 14),
         };
-        listSection.Add(EditorChrome.MakeSectionHeader(Se.Language.Plugins.GetPluginsTitle), 0);
+        var searchBox = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.Search);
+        listSection.Add(EditorChrome.MakeSectionHeaderRow(Se.Language.Plugins.GetPluginsTitle, searchBox), 0);
         listSection.Add(EditorChrome.MakeCompactListFrame(listBox, compact: false), 1);
 
         var statusMessage = new TextBlock

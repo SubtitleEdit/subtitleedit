@@ -48,6 +48,8 @@ public class BeautifyTimeCodesProfileWindow : Window
         _l = Se.Language.Tools.BeautifyTimeCodesProfile;
 
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = _l.Title;
         CanResize = true;
         Width = 1080;

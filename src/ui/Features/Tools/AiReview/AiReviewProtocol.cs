@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -56,10 +57,18 @@ public static class AiReviewProtocol
         return prompt + ProtocolText;
     }
 
+    /// <summary>
+    /// Writer options for everything the model reads: the default encoder would turn every
+    /// non-ASCII character into a \uXXXX escape, and the server decodes only the request's outer
+    /// JSON layer, so escapes inside the user message reach the model as literal text (same fix
+    /// as the advanced translate engines' protocol).
+    /// </summary>
+    internal static readonly JsonWriterOptions WireOptions = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+
     public static string BuildUserContent(ReviewChunk chunk)
     {
         using var stream = new System.IO.MemoryStream();
-        using (var writer = new Utf8JsonWriter(stream))
+        using (var writer = new Utf8JsonWriter(stream, WireOptions))
         {
             writer.WriteStartObject();
             WriteLines(writer, "context_before", chunk.ContextBefore);

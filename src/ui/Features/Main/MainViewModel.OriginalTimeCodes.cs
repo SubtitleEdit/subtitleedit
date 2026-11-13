@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -17,6 +19,59 @@ public partial class MainViewModel
     public bool CanEditOriginalTimeCodes => CanEditOriginal && _subtitleOriginal is { Paragraphs.Count: > 0 };
 
     public bool IsOriginalLockedToTranslation => Se.Settings.General.LockOriginalToTranslation;
+
+    /// <summary>
+    /// The waveform's A/B switch (#16354): true while the waveform edits the original's own time
+    /// codes instead of the working subtitle's (see AudioVisualizer.EditOriginalTimeCodes). Only
+    /// ever true with an editable original open; closing the original or making it read-only
+    /// switches back.
+    /// </summary>
+    [ObservableProperty]
+    private bool _isWaveformEditingOriginal;
+
+    partial void OnIsWaveformEditingOriginalChanged(bool value)
+    {
+        if (value && !CanEditOriginalTimeCodes)
+        {
+            // Turned on (toolbar button, menu or shortcut) with no editable original: say how to
+            // get one, and switch back - after this change notification has run its course, so
+            // the toggle button that set it sees the reset.
+            if (ShowColumnOriginalText && _subtitleOriginal is { Paragraphs.Count: > 0 })
+            {
+                ShowStatus(Se.Language.Waveform.EditOriginalTimingReadOnly, 6000);
+            }
+
+            Dispatcher.UIThread.Post(() => IsWaveformEditingOriginal = false);
+            return;
+        }
+
+        var av = AudioVisualizer;
+        if (av != null)
+        {
+            av.EditOriginalTimeCodes = value;
+            UpdateWaveformOriginalSubtitleCues(av);
+            av.InvalidateVisual();
+        }
+    }
+
+    partial void OnIsOriginalReadOnlyChanged(bool value)
+    {
+        if (value)
+        {
+            IsWaveformEditingOriginal = false;
+        }
+    }
+
+    /// <summary>
+    /// Flips the waveform between editing the working subtitle and editing the original (the
+    /// shortcut; the toolbar button and the context menu item bind the property directly).
+    /// </summary>
+    [RelayCommand]
+    private void ToggleWaveformEditOriginal()
+    {
+        _shortcutManager.ClearKeys();
+        IsWaveformEditingOriginal = !IsWaveformEditingOriginal;
+    }
 
     [RelayCommand]
     private void ToggleLockOriginalToTranslation()

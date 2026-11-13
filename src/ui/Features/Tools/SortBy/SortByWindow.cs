@@ -19,6 +19,8 @@ namespace Nikse.SubtitleEdit.Features.Tools.SortBy;
 /// </summary>
 public class SortByWindow : Window
 {
+    private ComboBox? _comboBoxProperty;
+
     public SortByWindow(SortByViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -37,7 +39,7 @@ public class SortByWindow : Window
 
         Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(MakeSortControls(vm), MakeSubtitleView(vm)), null, buttonCancel, buttonOk);
 
-        Loaded += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => _comboBoxProperty?.Focus());
         KeyDown += (_, e) => vm.OnKeyDown(e);
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
@@ -53,6 +55,7 @@ public class SortByWindow : Window
             ItemsSource = vm.AvailableProperties,
             VerticalAlignment = VerticalAlignment.Center,
         }.WithAccessibleName(Se.Language.General.Property);
+        _comboBoxProperty = comboBoxProperty;
         comboBoxProperty.Bind(ComboBox.SelectedItemProperty, new Binding(nameof(SortByViewModel.SelectedAvailableProperty)) { Mode = BindingMode.TwoWay });
 
         var rowAscending = EditorChrome.MakeToggleRow(nameof(SortByViewModel.NewCriterionAscending), Se.Language.General.Ascending, out _);

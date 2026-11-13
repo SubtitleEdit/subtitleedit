@@ -584,6 +584,7 @@ This draws a square.
 - Not all players support all tags
 - Advanced features like `\blur`, `\xbord`, `\ybord` may not work in all players
 - Always test with your target player to ensure compatibility
+- Image-based exports (Blu-ray SUP, VobSub, BDN-XML, ...) draw their own images and support a subset of the tags - see [the export tag table](../features/file.md#assa-override-tags)
 
 ### Best Practices
 1. Use `\r` to reset styles rather than manually reversing each tag

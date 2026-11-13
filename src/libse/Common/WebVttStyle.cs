@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             FontSize = style.FontSize;
             Color = style.Color;
             BackgroundColor = style.BackgroundColor;
+            Italic = style.Italic;
             Bold = style.Bold;
             Underline = style.Underline;
             StrikeThrough = style.StrikeThrough;

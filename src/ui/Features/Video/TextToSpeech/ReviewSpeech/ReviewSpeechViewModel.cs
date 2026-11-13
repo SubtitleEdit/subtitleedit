@@ -455,13 +455,16 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         SelectedEngine = engine;
 
+        _videoFileName = videoFileName;
+
+        // The TTS window's list already carries "Clone from video" when it had a video; an
+        // imported session can bring the video only now, so offer it here too.
         Voices.AddRange(voices);
+        PerLineVoiceClone.InsertIfSupported(Voices, engine, _videoFileName);
         SelectedVoice = voice;
 
         Languages.AddRange(languages);
         SelectedLanguage = language;
-
-        _videoFileName = videoFileName;
         _waveFolder = waveFolder;
 
         if (Lines.Count > 0)
@@ -1969,6 +1972,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
             Voices.Add(vo);
         }
 
+        // Rebuilt from GetVoices alone, the list lost "Clone from video" on every engine switch
+        // or row select, leaving only the imported voices to pick from (#16812).
+        PerLineVoiceClone.InsertIfSupported(Voices, engine, _videoFileName);
+
         var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
         if (lastVoice == null)
         {
@@ -1976,7 +1983,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
                                                   p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
         }
 
-        SelectedVoice = lastVoice ?? Voices.FirstOrDefault();
+        // Never fall into cloning by default - it is only picked on purpose.
+        SelectedVoice = lastVoice ?? Voices.FirstOrDefault(v => !PerLineVoiceClone.IsSelected(v)) ?? Voices.FirstOrDefault();
 
         if (engine.HasRegion)
         {

@@ -51,6 +51,40 @@ common OCR mistakes are corrected from the language's replace list, and the word
 spell checked. In the list, words the dictionary knows are shown green and unknown words
 red — so the lines that need a human eye stand out while the OCR is still running.
 
+## Remove burned-in subtitles
+
+After an OCR run, **Remove burned-in subtitles...** uses the OCR lines to find the text in each
+frame and remove it from the video. Only the area around each line is changed, and only while
+the line is shown.
+
+**Methods:**
+
+- **Remove - AI inpainting** — fills the text with a CrispEmbed inpainting model (downloaded on
+  first use). The cleanest result, but slow. **Temporal consistency** reuses the real background
+  from nearby frames to reduce flicker.
+- **Cover with black boxes (ASSA subtitle)** — no video is written: the boxes are loaded into
+  the main window as an Advanced Sub Station Alpha subtitle, replacing the OCR text.
+- **Blur (ffmpeg)** / **Delogo (ffmpeg)** — fast filters over each line's box.
+
+**Review before removing:** the preview shows the mask over the frame (press **R** or turn on
+**Show result** to see the result instead). Use **Left/Right** to step one frame and
+**Page Up/Page Down** to jump between lines. Drag a box on the timeline to fix a line's timing,
+and clear a line's check box to leave it out.
+
+**Rectangles:** for a logo, a sign or a line OCR missed, click **Insert rectangle** (or press
+**Insert**). It is added for two seconds around the current position — or drag on an empty
+spot of the timeline and press **Enter** (or right-click → **Insert rectangle**) to add it for
+exactly that span. Drag on the preview to draw the box, and drag it on the timeline to time it.
+Everything inside the box is removed on every frame it is shown (no text detection), with any
+method.
+
+**Delete** (the key, the button, or right-click in the lines list or on the timeline) removes
+the selected lines — OCR lines or rectangles — from the review; the OCR result is not changed.
+
+**Text mask settings:** *Text brightness minimum*, *Text has a dark outline*, *Grow mask* and
+*Extra width* control which pixels are removed — check the preview after each change.
+The video methods re-encode the video with x264 at the chosen **Quality (CRF)** and copy the audio.
+
 ## Settings
 
 - **Frames per second** — how many frames per second to sample (higher = more precise grouping, slower)

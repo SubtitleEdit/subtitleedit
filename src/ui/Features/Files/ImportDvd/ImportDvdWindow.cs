@@ -27,6 +27,8 @@ public class ImportDvdWindow : Window
     public ImportDvdWindow(ImportDvdViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.File.Import.TitleImportDvd;
         CanResize = true;
         Width = 820;
@@ -163,7 +165,7 @@ public class ImportDvdWindow : Window
         var chapters = new TextBlock { Opacity = 0.7, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 0, 0) };
         chapters.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Chapters)) { StringFormat = "{0} " + Se.Language.General.Chapters.ToLowerInvariant() });
 
-        var status = new TextBlock { Foreground = Brushes.OrangeRed, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 0, 0) };
+        var status = new TextBlock { Foreground = EditorChrome.ErrorTextBrush, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(12, 0, 0, 0) };
         status.Bind(TextBlock.TextProperty, new Binding(nameof(DvdTitleDisplay.Status)));
 
         return new StackPanel

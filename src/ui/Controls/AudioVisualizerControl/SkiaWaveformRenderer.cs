@@ -101,6 +101,11 @@ internal sealed class SkiaWaveformRenderer
     private readonly HashSet<int> _paragraphStartXs = new();
     private readonly HashSet<int> _paragraphEndXs = new();
 
+    private readonly SKPaint _hintPaint = new() { IsAntialias = true };
+    private readonly SKPaint _halfLayerPaint = new() { Color = SKColors.White.WithAlpha(128) };
+
+    private static SKColor ToSk(Avalonia.Media.Color c) => new(c.R, c.G, c.B, c.A);
+
     public void Render(SKCanvas canvas, SkiaWaveformFrame f)
     {
         lock (_lock)
@@ -127,10 +132,18 @@ internal sealed class SkiaWaveformRenderer
                     DrawNewSelection(canvas, f);
                 }
 
-                if (f.HintText != null)
+                foreach (var button in f.HintButtons)
                 {
-                    var hint = _textCache.Get(f.HintText, 14);
-                    DrawText(canvas, hint, (f.Width - hint.Width) / 2, (f.Height - hint.Height) / 2, new SKColor(220, 220, 220));
+                    var text = _textCache.Get(button.Text, 13);
+                    var box = button.Rect;
+                    _hintPaint.Style = SKPaintStyle.Fill;
+                    _hintPaint.Color = ToSk(button.IsHovered ? AudioVisualizer.HintButtonHoverBackgroundColor : AudioVisualizer.HintButtonBackgroundColor);
+                    canvas.DrawRoundRect(box, 5, 5, _hintPaint);
+                    _hintPaint.Style = SKPaintStyle.Stroke;
+                    _hintPaint.StrokeWidth = 1 / _scale;
+                    _hintPaint.Color = ToSk(button.IsHovered ? AudioVisualizer.HintButtonHoverBorderColor : AudioVisualizer.HintButtonBorderColor);
+                    canvas.DrawRoundRect(box, 5, 5, _hintPaint);
+                    DrawText(canvas, text, box.MidX - text.Width / 2, box.MidY - text.Height / 2, new SKColor(220, 220, 220));
                 }
 
                 if (f.IsFocused)
@@ -786,6 +799,22 @@ internal sealed class SkiaWaveformRenderer
 
     private void DrawParagraphs(SKCanvas canvas, SkiaWaveformFrame f)
     {
+        // Editing the original swaps which layer is drawn at half strength.
+        if (f.EditOriginal)
+        {
+            canvas.SaveLayer(_halfLayerPaint);
+        }
+
+        DrawParagraphsInner(canvas, f);
+
+        if (f.EditOriginal)
+        {
+            canvas.Restore();
+        }
+    }
+
+    private void DrawParagraphsInner(SKCanvas canvas, SkiaWaveformFrame f)
+    {
         foreach (var p in f.Paragraphs)
         {
             var left = X(f, p.StartSeconds);
@@ -808,6 +837,11 @@ internal sealed class SkiaWaveformRenderer
             canvas.Save();
             canvas.ClipRect(SKRect.Create(left + 1, 0, width - 3, f.Height));
             DrawParagraphFooter(canvas, f, p, left, width);
+            if (p.BookmarkLabel != null)
+            {
+                DrawBookmarkTag(canvas, f, p.BookmarkLabel, p.BookmarkColor, left, width);
+            }
+
             canvas.Restore();
 
             DrawAudioLength(canvas, f, p, left, right);
@@ -881,6 +915,60 @@ internal sealed class SkiaWaveformRenderer
         }
     }
 
+    private readonly SKPath _bookmarkRibbon = new();
+
+    /// <summary>See <see cref="WaveformBookmark"/>.</summary>
+    private void DrawBookmarkTag(SKCanvas canvas, SkiaWaveformFrame f, string label, SKColor color, float regionLeft, float regionWidth)
+    {
+        var text = label.Length > 0 ? _textCache.Get(label, f.FontSize) : null;
+        var height = (float)Math.Max(WaveformBookmark.MinHeight, (text?.Height ?? 0) + 4);
+        var width = (float)(WaveformBookmark.Padding * 2 + WaveformBookmark.RibbonWidth) + (text != null ? (float)WaveformBookmark.Gap + text.Width : 0);
+        width = Math.Min(width, regionWidth - 4);
+        if (width < WaveformBookmark.RibbonWidth + 4)
+        {
+            return;
+        }
+
+        var x = regionLeft + 2;
+        var top = (float)WaveformBookmark.GetTop(0, f.WorkingTextHeight);
+        var tag = SKRect.Create(x, top, width, height);
+        _roundFill.Color = color;
+        canvas.DrawRoundRect(tag, (float)WaveformBookmark.CornerRadius, (float)WaveformBookmark.CornerRadius, _roundFill);
+
+        var dark = WaveformBookmark.UseDarkForeground(color.Red, color.Green, color.Blue);
+        var foreground = dark ? SKColors.Black : SKColors.White;
+        _bookmarkRibbon.Reset();
+        var points = WaveformBookmark.GetRibbon(x + WaveformBookmark.Padding, top + 3, height - 6);
+        _bookmarkRibbon.MoveTo((float)points[0].X, (float)points[0].Y);
+        for (var i = 1; i < points.Length; i++)
+        {
+            _bookmarkRibbon.LineTo((float)points[i].X, (float)points[i].Y);
+        }
+
+        _bookmarkRibbon.Close();
+        _roundFill.Color = foreground;
+        canvas.DrawPath(_bookmarkRibbon, _roundFill);
+
+        if (text == null)
+        {
+            return;
+        }
+
+        canvas.Save();
+        canvas.ClipRect(tag);
+        _text.ImageFilter = f.BlurText ? _textBlur : null;
+        try
+        {
+            var textX = x + (float)(WaveformBookmark.Padding + WaveformBookmark.RibbonWidth + WaveformBookmark.Gap);
+            DrawText(canvas, text, textX, top + (height - text.Height) / 2, foreground);
+        }
+        finally
+        {
+            _text.ImageFilter = null;
+            canvas.Restore();
+        }
+    }
+
     private void DrawAudioLength(SKCanvas canvas, SkiaWaveformFrame f, SkiaParagraph p, float left, float right)
     {
         if (p.AudioSeconds <= 0)
@@ -912,7 +1000,9 @@ internal sealed class SkiaWaveformRenderer
 
         var top = f.Height / 2;
         var height = f.Height - top;
-        static SKColor Half(SKColor c) => c.WithAlpha((byte)(c.Alpha / 2));
+        // Half strength as a reference, full while the original is the layer being edited.
+        var full = f.EditOriginal;
+        SKColor Half(SKColor c) => full ? c : c.WithAlpha((byte)(c.Alpha / 2));
         foreach (var cue in f.OriginalCues)
         {
             var left = X(f, cue.StartSeconds);
@@ -927,7 +1017,7 @@ internal sealed class SkiaWaveformRenderer
             VerticalLine(canvas, right - 0.5, top, f.Height, 1, Half(f.ParagraphRightColor));
             canvas.Save();
             canvas.ClipRect(SKRect.Create(left + 1, top, right - left - 3, height));
-            DrawParagraphText(canvas, f, cue, left + 3, top + TimeLineTextOffset, 128);
+            DrawParagraphText(canvas, f, cue, left + 3, top + TimeLineTextOffset, full ? (byte)255 : (byte)128);
             canvas.Restore();
         }
     }

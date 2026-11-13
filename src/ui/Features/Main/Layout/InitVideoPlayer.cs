@@ -108,6 +108,7 @@ public static class InitVideoPlayer
         control.PlaybackSpeeds = vm.Speeds;
         control.PlaybackSpeedText = vm.SelectedSpeed;
         control.PlaybackSpeedIsVisible = true;
+        control.IsSmpteTimingEnabled = vm.IsSmpteTimingEnabled;
         videoPlayerControl = control;
         vm.VideoPlayerControl = control;
         control.VideoPlayerDisplayTimeLeft = Se.Settings.Video.VideoPlayerDisplayTimeLeft;

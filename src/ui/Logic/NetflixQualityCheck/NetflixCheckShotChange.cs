@@ -93,7 +93,9 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                     var fixedParagraph = new Paragraph(p, false);
                     string comment;
                     var canBeFixed = false;
-                    if (gapToShotChange < threshold)
+                    // Snapping forward onto a shot change at or after the end would put the
+                    // start past the end - a short line that is over before the cut.
+                    if (gapToShotChange < threshold && shotChangeFrames[startUpper] < endFrame)
                     {
                         fixedParagraph.StartTime.TotalMilliseconds = nearestStartNextShotChange * 1000;
                         comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.ShotChangeInCue1ToXFramesBeforeSnap, threshold - 1);
@@ -109,7 +111,10 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                 }
             }
 
-            if (endLower > 0)
+            // Only a shot change inside the subtitle: for one at or before the start, "two frames
+            // before the shot change" is before the start too, and applying the fix gave the line
+            // an end time before its start time.
+            if (endLower > 0 && shotChangeFrames[endLower - 1] > startFrame)
             {
                 double nearestEndPrevShotChange = sortedShotChanges[endLower - 1];
                 if (SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds - nearestEndPrevShotChange * 1000, controller.FrameRate) < halfSecGapInFrames)

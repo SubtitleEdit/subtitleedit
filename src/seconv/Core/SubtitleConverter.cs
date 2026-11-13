@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.UiLogic.SpellCheck;
+using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 using Spectre.Console;
 
 namespace SeConv.Core;
@@ -1090,11 +1091,14 @@ internal class SubtitleConverter
         // Scale all times by 100/percent (matches Sync > Change Speed in the UI)
         if (options.ChangeSpeedPercent.HasValue && Math.Abs(options.ChangeSpeedPercent.Value - 100.0) > 0.0001)
         {
+            // Whole milliseconds, like the frame rate change above: SubRip & co. truncate, so a
+            // drop-frame speed saved 1500 ms (-> 1498.50015 ms) as ",498". Start and end are
+            // rounded on their own, so cues that touched still touch.
             var factor = 100.0 / options.ChangeSpeedPercent.Value;
             foreach (var p in subtitle.Paragraphs)
             {
-                p.StartTime.TotalMilliseconds *= factor;
-                p.EndTime.TotalMilliseconds *= factor;
+                p.StartTime.TotalMilliseconds = Math.Round(p.StartTime.TotalMilliseconds * factor, MidpointRounding.AwayFromZero);
+                p.EndTime.TotalMilliseconds = Math.Round(p.EndTime.TotalMilliseconds * factor, MidpointRounding.AwayFromZero);
             }
         }
 
@@ -1548,6 +1552,28 @@ internal record class ConversionOptions
     /// <see cref="AutoTranslateRunner.ReadPromptOption"/>.
     /// </summary>
     public string? TranslatePrompt { get; init; }
+
+    /// <summary>Advanced engines (<see cref="AutoTranslateRunner.AdvancedEngines"/>): subtitle lines per request, 1-50. Null = 10.</summary>
+    public int? TranslateBatchSize { get; init; }
+
+    /// <summary>Advanced engines: already-translated lines sent as context before each batch, 0-50. Null = 12.</summary>
+    public int? TranslateHistory { get; init; }
+
+    /// <summary>Advanced engines: what the content is about; inline text or the path to a text file (see <see cref="AutoTranslateRunner.ReadPromptOption"/>).</summary>
+    public string? TranslateSynopsis { get; init; }
+
+    /// <summary>Advanced engines: glossary, one "source term = translation" per line; inline text (<c>\n</c> for a line break) or the path to a text file.</summary>
+    public string? TranslateGlossary { get; init; }
+
+    /// <summary>Advanced engines: default | formal | informal (see <see cref="AutoTranslateRunner.FormalityValues"/>).</summary>
+    public string? TranslateFormality { get; init; }
+
+    /// <summary>
+    /// Advanced engines: the <c>tools.llamaCppAdvanced</c> section of a <c>--settings</c> file
+    /// (what the GUI's "Advanced..." dialog edits), the base the five options above and the
+    /// prompt are applied onto. Null = the dialog's defaults.
+    /// </summary>
+    public SeLlamaCppAdvanced? TranslateAdvancedSettings { get; init; }
 
     public bool TeletextOnly { get; init; }
     public bool SkipTeletext { get; init; }

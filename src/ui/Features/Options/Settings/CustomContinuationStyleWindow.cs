@@ -22,6 +22,8 @@ public class CustomContinuationStyleWindow : Window
     public CustomContinuationStyleWindow(CustomContinuationStyleViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
         Title = Se.Language.Options.Settings.EditContinuationStyleCustom;
         CanResize = true;
         Width = 960;

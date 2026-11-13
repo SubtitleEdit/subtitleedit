@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
     {
         public static class Language
         {
-            public static string MergeShortLineAll { get; set; } = "Merge short line (all except dialogs)";
+            public static string MergeShortLineAll { get; set; } = "Remove line break (all except dialogs)";
             public static string RemoveLineBreaks { get; set; } = "Remove line breaks in short texts with only one sentence";
         }
 

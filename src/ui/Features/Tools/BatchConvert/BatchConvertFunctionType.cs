@@ -38,4 +38,5 @@ public enum BatchConvertFunctionType
     MergeContinuationLines,
     ConvertActors,
     RunPlugin,
+    MergeTranslationWithOriginal,
 }

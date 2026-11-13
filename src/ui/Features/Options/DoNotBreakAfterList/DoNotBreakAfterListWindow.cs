@@ -39,11 +39,13 @@ public class DoNotBreakAfterListWindow : Window
         comboLanguages.VerticalAlignment = VerticalAlignment.Center;
         AutomationProperties.SetName(comboLanguages, Se.Language.General.Language);
         var buttonNewLanguage = EditorChrome.MakeTextToolButton(IconNames.Plus, Se.Language.General.New, vm.NewLanguageCommand);
+        // One list per language, shared by its regions - pt-BR uses the Portuguese list (#16698).
+        var hintRegion = UiUtil.MakeHintIcon(Se.Language.Options.Settings.DoNotBreakAfterListRegionHint, comboLanguages);
         var panelLanguage = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 10,
-            Children = { EditorChrome.MakeDimLabel(Se.Language.General.Language, new Thickness(0)), comboLanguages, buttonNewLanguage },
+            Children = { EditorChrome.MakeDimLabel(Se.Language.General.Language, new Thickness(0)), comboLanguages, hintRegion, buttonNewLanguage },
         };
 
         var listBoxItems = new ListBox
