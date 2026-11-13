@@ -18,10 +18,19 @@ public class AdvancedTranslatorLengthOnlyTests
     private const string EnglishTranslation = "Bring him back. This time, I'll personally question him about every single minute of last night.";
 
     [Fact]
-    public void LongCorrectTranslation_TripsOnlyTheLengthTest()
+    public void LengthOnlyObjection_IsBrokenButNotMalformed()
     {
-        Assert.True(LlamaCppAdvancedProtocol.IsBrokenValue(ChineseSource, EnglishTranslation));
-        Assert.False(LlamaCppAdvancedProtocol.IsMalformedValue(ChineseSource, EnglishTranslation));
+        var value = "Komm hoch. Und dann reden wir darüber, was gestern passiert ist, und warum niemand mir etwas gesagt hat, obwohl alle es wussten.";
+
+        Assert.True(LlamaCppAdvancedProtocol.IsBrokenValue("Come on up.", value));
+        Assert.False(LlamaCppAdvancedProtocol.IsMalformedValue("Come on up.", value));
+    }
+
+    // With the budget counting a CJK source character as three, the issue's row is inside it.
+    [Fact]
+    public void LongCorrectTranslation_IsNotBrokenAtAll()
+    {
+        Assert.False(LlamaCppAdvancedProtocol.IsBrokenValue(ChineseSource, EnglishTranslation));
     }
 
     [Theory]

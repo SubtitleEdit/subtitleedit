@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 
 namespace Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
@@ -209,8 +210,8 @@ public static class LlamaCppAdvancedProtocol
 
     /// <summary>
     /// Like <see cref="IsBrokenValue"/>, but without the length test, which only guesses how much
-    /// a language pair expands: Chinese to English grows three to five times in characters, so
-    /// correct translations trip it (#16885). Used once a line is on its own, where a length-only
+    /// a language pair expands: Chinese to English grows three to five times in characters, so a
+    /// correct translation can trip it (#16885). Used once a line is on its own, where a length-only
     /// objection has nothing left to cut and would fail the whole file.
     /// </summary>
     public static bool IsMalformedValue(string source, string translation)
@@ -223,7 +224,14 @@ public static class LlamaCppAdvancedProtocol
     /// (<c>2":"...</c>, <c>"}]}</c>) written inside the string with escaped quotes, or a runaway
     /// far longer than the source, e.g. the model's own notes ("Note: ... Let me correct that.").
     /// Index-Nailong 9B put four later lines and a comment into the value for "Come on up." (#16856).
-    /// The schema only fixes the keys, so the parser accepts such a value as valid JSON.
+    /// The schema only fixes the keys, so the parser accepts such a value as valid JSON. The quotes
+    /// may be typographic: with the JSON grammar on, an unescaped ASCII quote cannot appear inside
+    /// the value, so a model that closes the string early writes a curly one (Hy-MT2 7B:
+    /// <c>...get it out?”} No, line 8 is in history as well. Let me fix the JSON properly. {</c>, #16885).
+    /// The length budget counts a CJK character of the source as three Latin ones: Chinese to
+    /// English grew three to five times per line in characters, the odd line six, on the files
+    /// behind #16885, where Latin pairs stay near one. Towards a CJK target the budget is as loose
+    /// as before (a Chinese line is a third of its English source).
     /// </summary>
     public static bool IsStructureLeak(string source, string translation)
     {
@@ -237,8 +245,18 @@ public static class LlamaCppAdvancedProtocol
             return true;
         }
 
-        var sourceLength = (source ?? string.Empty).Trim().Length;
-        return translation.Trim().Length > Math.Max(MinRunawayLength, RunawayFactor * sourceLength);
+        return translation.Trim().Length > Math.Max(MinRunawayLength, RunawayFactor * WeightedLength(source));
+    }
+
+    private static int WeightedLength(string? text)
+    {
+        var length = 0;
+        foreach (var ch in (text ?? string.Empty).Trim())
+        {
+            length += CalcCjk.IsCjk(ch) ? CjkWeight : 1;
+        }
+
+        return length;
     }
 
     private static bool IsLeakedStructure(string source, string translation)
@@ -250,11 +268,12 @@ public static class LlamaCppAdvancedProtocol
 
     private const int MinRunawayLength = 80;
     private const int RunawayFactor = 4;
+    private const int CjkWeight = 3;
 
     // A line-number key with its colon and opening quote ("2":" / 2":"), or a JSON object/array end
-    // right after a string ("}  "]}).
+    // right after a string ("}  "]}); the quotes ASCII or typographic (“ ” U+201C/U+201D).
     private static readonly System.Text.RegularExpressions.Regex StructureLeakRegex =
-        new(@"(?<![\d\p{L}])\d+""\s*:\s*""|""\s*\}|\}\s*\]\s*\}", System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+        new(@"(?<![\d\p{L}])\d+[""\u201D]\s*:\s*[""\u201C\u201D]|[""\u201D]\s*\}|\}\s*\]\s*\}", System.Text.RegularExpressions.RegexOptions.CultureInvariant);
 
     private static readonly System.Text.RegularExpressions.Regex ExamplePlaceholderRegex =
         new(@"^\s*<\s*translation of line\s*\d*\s*>\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.CultureInvariant);

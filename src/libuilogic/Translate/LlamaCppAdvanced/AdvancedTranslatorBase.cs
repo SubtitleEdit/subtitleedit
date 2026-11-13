@@ -263,7 +263,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
                         Error = duplicatedLine >= 0
                             ? "line " + duplicatedLine + " repeats an earlier translation (lines shifted): " + map[duplicatedLine]
-                            : "line " + placeholderLine + " has no text, only \"" + map[placeholderLine] + "\" (lines shifted)";
+                            : DescribePlaceholderLine(lines.First(l => l.Number == placeholderLine).Text, placeholderLine, map[placeholderLine]);
                         continue;
                     }
 
@@ -443,6 +443,26 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
         var index = TranslationShiftGuard.FindPlaceholderTranslation(sources, translations);
         return index < 0 ? -1 : lines[index].Number;
+    }
+
+    /// <summary>
+    /// What <see cref="FindPlaceholderTranslation"/> objected to on a line: a value that is no
+    /// translation, one far longer than its source, or the "..." of a shifted batch - three
+    /// different things, which the single "has no text ... (lines shifted)" message hid (#16885).
+    /// </summary>
+    private static string DescribePlaceholderLine(string source, int number, string value)
+    {
+        if (LlamaCppAdvancedProtocol.IsMalformedValue(source, value))
+        {
+            return "line " + number + " is not a translation (the prompt's example or the next lines' JSON): " + value;
+        }
+
+        if (LlamaCppAdvancedProtocol.IsBrokenValue(source, value))
+        {
+            return "line " + number + " is far longer than its source: " + value;
+        }
+
+        return "line " + number + " has no text, only \"" + value + "\" (lines shifted)";
     }
 
     /// <summary>

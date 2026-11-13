@@ -205,6 +205,11 @@ public class AdvancedTranslatorBatchCutTests
     [InlineData("Come on up.", "2\":\"What's up?")]
     [InlineData("Come on up.", "Komm hoch.\"}")]
     [InlineData("Come on up.", "Komm hoch.\"}]}")]
+    // With the JSON grammar on, a model that closes the string early can only write a typographic
+    // quote; Hy-MT2 7B did, with its notes behind it (#16885).
+    [InlineData("Come on up.", "Komm hoch.”} No, line 8 is in history as well. Let me fix the JSON properly. {")]
+    [InlineData("Come on up.", "Komm hoch.”} Wait, line 8 appears twice in the history. Let me correct that. {")]
+    [InlineData("Come on up.", "2”:“What's up?")]
     public void LeakedKeyOrObjectEnd_IsStructureLeak(string source, string value)
     {
         Assert.True(LlamaCppAdvancedProtocol.IsStructureLeak(source, value));
@@ -216,9 +221,28 @@ public class AdvancedTranslatorBatchCutTests
     [InlineData("He was 6\" tall.", "Er war 6\" groß.")]
     [InlineData("No.", "Nein.")]
     [InlineData("Where were you last night? I was at the office until late.", "Wo warst du letzte Nacht? Ich war bis spät im Büro.")]
+    [InlineData("\"No,\" she said.", "“Nein”, sagte sie.")]
+    [InlineData("He said “no” and left at 5:30.", "Er sagte „nein“ und ging um 5:30.")]
+    // #16885: Chinese to English grows three to five times in characters. Hy-MT2 7B's correct
+    // translations of these 21-23 character lines were over the old budget of 4 x characters.
+    [InlineData("把他带回来 这次我要亲自问他昨天晚上的每一分钟", "Bring him back. This time, I'll personally question him about every single minute of last night.")]
+    [InlineData("明天早上八点 所有人都到会议室来 一个都不能少", "Everyone, meet in the conference room at eight o'clock tomorrow morning. Not a single person is allowed to be absent.")]
+    [InlineData("她说她整晚都在家 可是邻居听见她半夜出门了", "She said she was at home the whole night, but the neighbours heard her leaving in the middle of the night.")]
     public void NormalTranslation_IsNotStructureLeak(string source, string value)
     {
         Assert.False(LlamaCppAdvancedProtocol.IsStructureLeak(source, value));
+        Assert.False(LlamaCppAdvancedProtocol.IsBrokenValue(source, value));
+    }
+
+    [Fact]
+    public void NotesAfterCjkTranslation_AreStillStructureLeak()
+    {
+        var value = "Bring him back. This time, I'll personally question him about every single minute of last night. " +
+                    "(Note: the speaker is a police officer, so I kept the tone formal and direct. " +
+                    "The phrase about every minute is an idiom for a thorough interrogation; a literal rendering would read oddly in English. " +
+                    "Let me know if you would prefer a shorter version for the subtitle.)";
+
+        Assert.True(LlamaCppAdvancedProtocol.IsStructureLeak("把他带回来 这次我要亲自问他昨天晚上的每一分钟", value));
     }
 
     [Fact]
