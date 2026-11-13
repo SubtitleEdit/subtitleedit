@@ -8,22 +8,23 @@ using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 namespace LibUiLogicTests.Translate;
 
 /// <summary>
-/// The runaway length test guesses how much a language pair expands, so correct Chinese-to-English
-/// translations trip it. Once a line is on its own a length-only objection is accepted instead of
-/// failing the file; leaked JSON and the prompt's example still fail (#16885).
+/// The runaway length test guesses how much a language pair expands, so a correct translation can
+/// trip it. Once a line is on its own a length-only objection is accepted instead of failing the
+/// file; leaked JSON and the prompt's example still fail (#16885).
 /// </summary>
 public class AdvancedTranslatorLengthOnlyTests
 {
     private const string ChineseSource = "把他带回来 这次我要亲自问他昨天晚上的每一分钟";
     private const string EnglishTranslation = "Bring him back. This time, I'll personally question him about every single minute of last night.";
 
+    // 130 characters for an 11-character source: over the budget, but no leak and no example.
+    private const string LongValue = "Komm hoch. Und dann reden wir darüber, was gestern passiert ist, und warum niemand mir etwas gesagt hat, obwohl alle es wussten.";
+
     [Fact]
     public void LengthOnlyObjection_IsBrokenButNotMalformed()
     {
-        var value = "Komm hoch. Und dann reden wir darüber, was gestern passiert ist, und warum niemand mir etwas gesagt hat, obwohl alle es wussten.";
-
-        Assert.True(LlamaCppAdvancedProtocol.IsBrokenValue("Come on up.", value));
-        Assert.False(LlamaCppAdvancedProtocol.IsMalformedValue("Come on up.", value));
+        Assert.True(LlamaCppAdvancedProtocol.IsBrokenValue("Come on up.", LongValue));
+        Assert.False(LlamaCppAdvancedProtocol.IsMalformedValue("Come on up.", LongValue));
     }
 
     // With the budget counting a CJK source character as three, the issue's row is inside it.
@@ -43,15 +44,15 @@ public class AdvancedTranslatorLengthOnlyTests
     }
 
     [Fact]
-    public async Task LoneLine_LongCorrectTranslation_IsAcceptedWithoutRetry()
+    public async Task LoneLine_LengthOnlyObjection_IsAcceptedWithoutRetry()
     {
-        var rows = new ObservableCollection<TranslateRow> { new() { Text = ChineseSource } };
+        var rows = new ObservableCollection<TranslateRow> { new() { Text = "Come on up." } };
 
-        var (translated, requests) = await TranslateWithReplyAsync(rows, "{\"1\":" + System.Text.Json.JsonSerializer.Serialize(EnglishTranslation) + "}");
+        var (translated, requests) = await TranslateWithReplyAsync(rows, "{\"1\":" + System.Text.Json.JsonSerializer.Serialize(LongValue) + "}");
 
         Assert.Equal(1, translated);
         Assert.Equal(1, requests);
-        Assert.Equal(EnglishTranslation, rows[0].TranslatedText);
+        Assert.Equal(LongValue, rows[0].TranslatedText);
     }
 
     [Fact]

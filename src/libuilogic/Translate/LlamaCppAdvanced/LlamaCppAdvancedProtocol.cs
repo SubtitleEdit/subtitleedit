@@ -228,10 +228,6 @@ public static class LlamaCppAdvancedProtocol
     /// may be typographic: with the JSON grammar on, an unescaped ASCII quote cannot appear inside
     /// the value, so a model that closes the string early writes a curly one (Hy-MT2 7B:
     /// <c>...get it out?”} No, line 8 is in history as well. Let me fix the JSON properly. {</c>, #16885).
-    /// The length budget counts a CJK character of the source as three Latin ones: Chinese to
-    /// English grew three to five times per line in characters, the odd line six, on the files
-    /// behind #16885, where Latin pairs stay near one. Towards a CJK target the budget is as loose
-    /// as before (a Chinese line is a third of its English source).
     /// </summary>
     public static bool IsStructureLeak(string source, string translation)
     {
@@ -248,6 +244,12 @@ public static class LlamaCppAdvancedProtocol
         return translation.Trim().Length > Math.Max(MinRunawayLength, RunawayFactor * WeightedLength(source));
     }
 
+    /// <summary>
+    /// The source length the runaway budget is based on: a CJK character counts as three Latin
+    /// ones, since Chinese to English grew three to five times per line in characters, the odd
+    /// line six, on the files behind #16885, where Latin pairs stay near one. Towards a CJK target
+    /// the budget is as loose as before (a Chinese line is a third of its English source).
+    /// </summary>
     private static int WeightedLength(string? text)
     {
         var length = 0;
