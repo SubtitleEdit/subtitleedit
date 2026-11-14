@@ -947,7 +947,8 @@ public class NikseBitmap2
     public SKColor GetPixel(int x, int y)
     {
         _pixelAddress = x * 4 + y * _widthX4;
-        return new SKColor(_bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
+        // BGRA in memory; SKColor takes red, green, blue, alpha.
+        return new SKColor(_bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress], _bitmapData[_pixelAddress + 3]);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
