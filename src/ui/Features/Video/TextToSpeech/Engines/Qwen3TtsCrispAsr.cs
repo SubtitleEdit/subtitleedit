@@ -183,15 +183,10 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
     {
         Timeout = TimeSpan.FromMinutes(5),
     };
+    private static readonly CrispAsrTtsServer Server = new("crispasr (qwen3-tts)", "Qwen3 TTS (CrispASR)", HttpClient);
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
-    private static Process? _serverProcess;
-    private static int _serverPort;
     private static string? _serverModelKey;
-    private static string? _serverLaunchCommand;
-    private static bool _processExitHooked;
-    private static readonly StringBuilder _serverLog = new();
 
-    private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -1043,21 +1038,21 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"Qwen3 TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={qwen3Voice}, model={modelKey}, textLen={text.Length}, instructionLen={instruction.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
+        Se.WriteToolsLog($"Qwen3 TTS (CrispASR): POST {Server.BaseUrl}/v1/audio/speech (voice={qwen3Voice}, model={modelKey}, textLen={text.Length}, instructionLen={instruction.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
 
         HttpResponseMessage response;
         try
         {
-            response = await HttpClient.PostAsync($"{ServerBaseUrl}/v1/audio/speech", content, cancellationToken);
+            response = await HttpClient.PostAsync($"{Server.BaseUrl}/v1/audio/speech", content, cancellationToken);
         }
         catch (HttpRequestException ex)
         {
-            var serverLog = SnapshotServerLog();
-            var launchCommand = _serverLaunchCommand;
-            var died = _serverProcess?.HasExited == true;
+            var serverLog = Server.SnapshotLog();
+            var launchCommand = Server.LaunchCommand;
+            var died = Server.HasExited;
             if (died)
             {
-                StopServerInternal();
+                Server.Stop();
             }
 
             var failMsg = $"Qwen3 TTS (CrispASR) request failed — Voice: {qwen3Voice}, Text: {text}, "
@@ -1080,8 +1075,8 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
-                var serverLog = SnapshotServerLog();
-                var launchCommand = _serverLaunchCommand;
+                var serverLog = Server.SnapshotLog();
+                var launchCommand = Server.LaunchCommand;
                 var errMsg = $"Qwen3 TTS (CrispASR) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {qwen3Voice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
@@ -1104,7 +1099,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
 
     private static async Task EnsureServerRunningAsync(string modelKey, CancellationToken ct)
     {
-        if (_serverProcess is { HasExited: false } && _serverPort != 0 && _serverModelKey == modelKey)
+        if (Server.IsAlive && _serverModelKey == modelKey)
         {
             return;
         }
@@ -1112,15 +1107,12 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0 && _serverModelKey == modelKey)
+            if (Server.IsAlive && _serverModelKey == modelKey)
             {
                 return;
             }
 
-            if (_serverProcess != null)
-            {
-                StopServerInternal();
-            }
+            Server.Stop();
 
             var exe = GetCrispAsrExecutable();
             if (!File.Exists(exe))
@@ -1178,63 +1170,12 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
             psi.ArgumentList.Add(GetSetVoicesFolder());
             CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
-            var process = Process.Start(psi)
-                ?? throw new InvalidOperationException("Failed to start crispasr (qwen3-tts)");
+            Server.Start(psi, port);
 
-            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
-            _serverLaunchCommand = launchCommand;
-            Se.WriteToolsLog("Qwen3 TTS (CrispASR) server starting — "
-                + $"PID: {process.Id}, "
-                + $"Cmd: {launchCommand}");
-
-            lock (_serverLog) _serverLog.Clear();
-            process.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.BeginErrorReadLine();
-            process.BeginOutputReadLine();
-
-            _serverProcess = process;
-            _serverPort = port;
             _serverModelKey = modelKey;
-            HookProcessExitOnce();
 
             // First-run auto-download (~2 GB talker + ~986 MB codec) needs a generous timeout.
-            var deadline = DateTime.UtcNow.AddMinutes(hasLocalTalker && hasLocalCodec ? 5 : 30);
-            while (DateTime.UtcNow < deadline)
-            {
-                ct.ThrowIfCancellationRequested();
-                if (process.HasExited)
-                {
-                    var tail = SnapshotServerLog();
-                    var exitCode = process.ExitCode;
-                    var exitedLaunchCommand = _serverLaunchCommand;
-                    _serverProcess = null;
-                    _serverPort = 0;
-                    _serverModelKey = null;
-                    _serverLaunchCommand = null;
-                    throw new InvalidOperationException(
-                        $"crispasr (qwen3-tts) exited during startup (code {exitCode}). Output: {tail}"
-                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
-                }
-                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
-                {
-                    return;
-                }
-                await Task.Delay(TimeSpan.FromSeconds(1), ct);
-            }
-
-            var lastOutput = SnapshotServerLog();
-            var timeoutLaunchCommand = _serverLaunchCommand;
-            StopServerInternal();
-            throw new TimeoutException(
-                $"crispasr (qwen3-tts) did not report healthy within {(hasLocalTalker && hasLocalCodec ? 5 : 30)} minutes. Last output: {lastOutput}"
-                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
+            await Server.WaitUntilHealthyAsync(hasLocalTalker && hasLocalCodec ? 5 : 30, ct);
         }
         finally
         {
@@ -1242,60 +1183,12 @@ public class Qwen3TtsCrispAsr : ITtsEngine, IPerLineCloneEngine
         }
     }
 
-    private static string SnapshotServerLog()
-    {
-        lock (_serverLog)
-        {
-            var s = _serverLog.ToString().TrimEnd();
-            return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static void HookProcessExitOnce()
-    {
-        if (_processExitHooked)
-        {
-            return;
-        }
-        _processExitHooked = true;
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
-    }
-
     /// <summary>
     /// Stop the running crispasr (qwen3-tts) server if any, releasing GPU memory. Called by
     /// <c>TextToSpeechViewModel</c> when starting synthesis on a different engine or when the
     /// TTS window closes, so the four CrispASR-based TTS engines don't pile up in VRAM.
     /// </summary>
-    public static void StopServer() => StopServerInternal();
-
-    private static void StopServerInternal()
-    {
-        var p = _serverProcess;
-        _serverProcess = null;
-        _serverPort = 0;
-        _serverModelKey = null;
-        _serverLaunchCommand = null;
-        if (p == null)
-        {
-            return;
-        }
-        try
-        {
-            if (!p.HasExited)
-            {
-                p.Kill(entireProcessTree: true);
-                p.WaitForExit(2000);
-            }
-        }
-        catch
-        {
-            // best effort
-        }
-        finally
-        {
-            p.Dispose();
-        }
-    }
+    public static void StopServer() => Server.Stop();
 
     public bool ImportVoice(string fileName) => ImportVoiceInternal(fileName, null);
 

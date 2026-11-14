@@ -114,17 +114,12 @@ public class VibeVoiceCrispAsr : ITtsEngine, IPerLineCloneEngine
     {
         Timeout = TimeSpan.FromMinutes(5),
     };
+    private static readonly CrispAsrTtsServer Server = new("crispasr (vibevoice)", "VibeVoice (CrispASR)", HttpClient);
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
-    private static Process? _serverProcess;
-    private static int _serverPort;
-    private static string? _serverLaunchCommand;
     // Tracks the quant the running server was started with. A switch from Q8_0 to Q4_K
     // means a different GGUF, so EnsureServerRunningAsync tears down and restarts.
     private static string? _serverModelKey;
-    private static bool _processExitHooked;
-    private static readonly StringBuilder _serverLog = new();
 
-    private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -431,21 +426,21 @@ public class VibeVoiceCrispAsr : ITtsEngine, IPerLineCloneEngine
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"VibeVoice (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={vibeVoice}, textLen={text.Length})");
+        Se.WriteToolsLog($"VibeVoice (CrispASR): POST {Server.BaseUrl}/v1/audio/speech (voice={vibeVoice}, textLen={text.Length})");
 
         HttpResponseMessage response;
         try
         {
-            response = await HttpClient.PostAsync($"{ServerBaseUrl}/v1/audio/speech", content, cancellationToken);
+            response = await HttpClient.PostAsync($"{Server.BaseUrl}/v1/audio/speech", content, cancellationToken);
         }
         catch (HttpRequestException ex)
         {
-            var serverLog = SnapshotServerLog();
-            var launchCommand = _serverLaunchCommand;
-            var died = _serverProcess?.HasExited == true;
+            var serverLog = Server.SnapshotLog();
+            var launchCommand = Server.LaunchCommand;
+            var died = Server.HasExited;
             if (died)
             {
-                StopServerInternal();
+                Server.Stop();
             }
 
             var failMsg = $"VibeVoice (CrispASR) request failed — Voice: {vibeVoice}, Text: {text}, "
@@ -468,8 +463,8 @@ public class VibeVoiceCrispAsr : ITtsEngine, IPerLineCloneEngine
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
-                var serverLog = SnapshotServerLog();
-                var launchCommand = _serverLaunchCommand;
+                var serverLog = Server.SnapshotLog();
+                var launchCommand = Server.LaunchCommand;
                 var errMsg = $"VibeVoice (CrispASR) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {vibeVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
@@ -494,7 +489,7 @@ public class VibeVoiceCrispAsr : ITtsEngine, IPerLineCloneEngine
     {
         // A running server stays valid only while the quant matches — switching from Q8_0
         // to Q4_K means a different GGUF, so tear down and restart.
-        if (_serverProcess is { HasExited: false } && _serverPort != 0
+        if (Server.IsAlive
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase))
         {
             return;
@@ -503,16 +498,13 @@ public class VibeVoiceCrispAsr : ITtsEngine, IPerLineCloneEngine
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0
+            if (Server.IsAlive
                 && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
-            if (_serverProcess != null)
-            {
-                StopServerInternal();
-            }
+            Server.Stop();
 
             var exe = GetCrispAsrExecutable();
             if (!File.Exists(exe))
@@ -561,63 +553,12 @@ public class VibeVoiceCrispAsr : ITtsEngine, IPerLineCloneEngine
             psi.ArgumentList.Add(GetSetVoicesFolder());
             CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
-            var process = Process.Start(psi)
-                ?? throw new InvalidOperationException("Failed to start crispasr (vibevoice)");
+            Server.Start(psi, port);
 
-            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
-            _serverLaunchCommand = launchCommand;
-            Se.WriteToolsLog("VibeVoice (CrispASR) server starting — "
-                + $"PID: {process.Id}, "
-                + $"Cmd: {launchCommand}");
-
-            lock (_serverLog) _serverLog.Clear();
-            process.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.BeginErrorReadLine();
-            process.BeginOutputReadLine();
-
-            _serverProcess = process;
-            _serverPort = port;
             _serverModelKey = modelKey;
-            HookProcessExitOnce();
 
             // First-run auto-download (~2.8 GB talker) needs a generous timeout.
-            var deadline = DateTime.UtcNow.AddMinutes(hasLocalTalker ? 5 : 30);
-            while (DateTime.UtcNow < deadline)
-            {
-                ct.ThrowIfCancellationRequested();
-                if (process.HasExited)
-                {
-                    var tail = SnapshotServerLog();
-                    var exitCode = process.ExitCode;
-                    var exitedLaunchCommand = _serverLaunchCommand;
-                    _serverProcess = null;
-                    _serverPort = 0;
-                    _serverLaunchCommand = null;
-                    _serverModelKey = null;
-                    throw new InvalidOperationException(
-                        $"crispasr (vibevoice) exited during startup (code {exitCode}). Output: {tail}"
-                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
-                }
-                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
-                {
-                    return;
-                }
-                await Task.Delay(TimeSpan.FromSeconds(1), ct);
-            }
-
-            var lastOutput = SnapshotServerLog();
-            var timeoutLaunchCommand = _serverLaunchCommand;
-            StopServerInternal();
-            throw new TimeoutException(
-                $"crispasr (vibevoice) did not report healthy within {(hasLocalTalker ? 5 : 30)} minutes. Last output: {lastOutput}"
-                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
+            await Server.WaitUntilHealthyAsync(hasLocalTalker ? 5 : 30, ct);
         }
         finally
         {
@@ -625,60 +566,12 @@ public class VibeVoiceCrispAsr : ITtsEngine, IPerLineCloneEngine
         }
     }
 
-    private static string SnapshotServerLog()
-    {
-        lock (_serverLog)
-        {
-            var s = _serverLog.ToString().TrimEnd();
-            return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static void HookProcessExitOnce()
-    {
-        if (_processExitHooked)
-        {
-            return;
-        }
-        _processExitHooked = true;
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
-    }
-
     /// <summary>
     /// Stop the running crispasr (vibevoice) server if any, releasing GPU memory. Called by
     /// <c>TextToSpeechViewModel</c> when starting synthesis on a different engine or when the
     /// TTS window closes, so the four CrispASR-based TTS engines don't pile up in VRAM.
     /// </summary>
-    public static void StopServer() => StopServerInternal();
-
-    private static void StopServerInternal()
-    {
-        var p = _serverProcess;
-        _serverProcess = null;
-        _serverPort = 0;
-        _serverLaunchCommand = null;
-        _serverModelKey = null;
-        if (p == null)
-        {
-            return;
-        }
-        try
-        {
-            if (!p.HasExited)
-            {
-                p.Kill(entireProcessTree: true);
-                p.WaitForExit(2000);
-            }
-        }
-        catch
-        {
-            // best effort
-        }
-        finally
-        {
-            p.Dispose();
-        }
-    }
+    public static void StopServer() => Server.Stop();
 
     public bool ImportVoice(string fileName)
     {

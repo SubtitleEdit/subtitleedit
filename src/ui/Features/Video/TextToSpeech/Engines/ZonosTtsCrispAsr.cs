@@ -100,17 +100,12 @@ public class ZonosTtsCrispAsr : ITtsEngine
     {
         Timeout = TimeSpan.FromMinutes(5),
     };
+    private static readonly CrispAsrTtsServer Server = new("crispasr (zonos-tts)", "Zonos TTS (CrispASR)", HttpClient);
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
-    private static Process? _serverProcess;
-    private static int _serverPort;
-    private static string? _serverLaunchCommand;
     // The -l language the running server was started with (empty = backend default en-us).
     // zonos reads it at init only, so a change restarts the server.
     private static string _serverLanguage = string.Empty;
-    private static bool _processExitHooked;
-    private static readonly StringBuilder _serverLog = new();
 
-    private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -297,21 +292,21 @@ public class ZonosTtsCrispAsr : ITtsEngine
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"Zonos TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={zonosVoice}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(default en-us)" : languageArg)})");
+        Se.WriteToolsLog($"Zonos TTS (CrispASR): POST {Server.BaseUrl}/v1/audio/speech (voice={zonosVoice}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(default en-us)" : languageArg)})");
 
         HttpResponseMessage response;
         try
         {
-            response = await HttpClient.PostAsync($"{ServerBaseUrl}/v1/audio/speech", content, cancellationToken);
+            response = await HttpClient.PostAsync($"{Server.BaseUrl}/v1/audio/speech", content, cancellationToken);
         }
         catch (HttpRequestException ex)
         {
-            var serverLog = SnapshotServerLog();
-            var launchCommand = _serverLaunchCommand;
-            var died = _serverProcess?.HasExited == true;
+            var serverLog = Server.SnapshotLog();
+            var launchCommand = Server.LaunchCommand;
+            var died = Server.HasExited;
             if (died)
             {
-                StopServerInternal();
+                Server.Stop();
             }
 
             var failMsg = $"Zonos TTS (CrispASR) request failed — Voice: {zonosVoice}, Text: {text}, "
@@ -334,8 +329,8 @@ public class ZonosTtsCrispAsr : ITtsEngine
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
-                var serverLog = SnapshotServerLog();
-                var launchCommand = _serverLaunchCommand;
+                var serverLog = Server.SnapshotLog();
+                var launchCommand = Server.LaunchCommand;
                 var errMsg = $"Zonos TTS (CrispASR) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {zonosVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
@@ -357,13 +352,13 @@ public class ZonosTtsCrispAsr : ITtsEngine
     }
 
     private static bool IsServerRunningWith(string languageArg) =>
-        _serverProcess is { HasExited: false } && _serverPort != 0
+        Server.IsAlive
         && string.Equals(_serverLanguage, languageArg, StringComparison.OrdinalIgnoreCase);
 
     private static async Task EnsureServerRunningAsync(string languageArg, CancellationToken ct)
     {
         // The zonos backend reads its language (-l) at init, so the server is restarted when
-        // the selected language changes. Tracked next to _serverProcess so an already-running
+        // the selected language changes. Tracked next to the server process so an already-running
         // server with the matching language is reused.
         if (IsServerRunningWith(languageArg))
         {
@@ -378,10 +373,7 @@ public class ZonosTtsCrispAsr : ITtsEngine
                 return;
             }
 
-            if (_serverProcess != null)
-            {
-                StopServerInternal();
-            }
+            Server.Stop();
 
             var exe = GetCrispAsrExecutable();
             if (!File.Exists(exe))
@@ -441,63 +433,12 @@ public class ZonosTtsCrispAsr : ITtsEngine
             }
             CrispAsrTtsProvenance.AddServerMarkingArgs(psi.ArgumentList, exe);
 
-            var process = Process.Start(psi)
-                ?? throw new InvalidOperationException("Failed to start crispasr (zonos-tts)");
+            Server.Start(psi, port);
 
-            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
-            _serverLaunchCommand = launchCommand;
-            Se.WriteToolsLog("Zonos TTS (CrispASR) server starting — "
-                + $"PID: {process.Id}, "
-                + $"Cmd: {launchCommand}");
-
-            lock (_serverLog) _serverLog.Clear();
-            process.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.BeginErrorReadLine();
-            process.BeginOutputReadLine();
-
-            _serverProcess = process;
-            _serverPort = port;
             _serverLanguage = languageArg;
-            HookProcessExitOnce();
 
             // First-run auto-download (~1.8 GB total) needs a generous timeout.
-            var deadline = DateTime.UtcNow.AddMinutes(hasLocalTalker && hasLocalCodec ? 5 : 30);
-            while (DateTime.UtcNow < deadline)
-            {
-                ct.ThrowIfCancellationRequested();
-                if (process.HasExited)
-                {
-                    var tail = SnapshotServerLog();
-                    var exitCode = process.ExitCode;
-                    var exitedLaunchCommand = _serverLaunchCommand;
-                    _serverProcess = null;
-                    _serverPort = 0;
-                    _serverLaunchCommand = null;
-                    _serverLanguage = string.Empty;
-                    throw new InvalidOperationException(
-                        $"crispasr (zonos-tts) exited during startup (code {exitCode}). Output: {tail}"
-                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
-                }
-                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
-                {
-                    return;
-                }
-                await Task.Delay(TimeSpan.FromSeconds(1), ct);
-            }
-
-            var lastOutput = SnapshotServerLog();
-            var timeoutLaunchCommand = _serverLaunchCommand;
-            StopServerInternal();
-            throw new TimeoutException(
-                $"crispasr (zonos-tts) did not report healthy within {(hasLocalTalker && hasLocalCodec ? 5 : 30)} minutes. Last output: {lastOutput}"
-                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
+            await Server.WaitUntilHealthyAsync(hasLocalTalker && hasLocalCodec ? 5 : 30, ct);
         }
         finally
         {
@@ -505,60 +446,12 @@ public class ZonosTtsCrispAsr : ITtsEngine
         }
     }
 
-    private static string SnapshotServerLog()
-    {
-        lock (_serverLog)
-        {
-            var s = _serverLog.ToString().TrimEnd();
-            return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static void HookProcessExitOnce()
-    {
-        if (_processExitHooked)
-        {
-            return;
-        }
-        _processExitHooked = true;
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
-    }
-
     /// <summary>
     /// Stop the running crispasr (zonos-tts) server if any, releasing GPU memory. Called by
     /// <c>TextToSpeechViewModel</c> when starting synthesis on a different engine or when the
     /// TTS window closes, so the CrispASR-based TTS engines don't pile up in VRAM.
     /// </summary>
-    public static void StopServer() => StopServerInternal();
-
-    private static void StopServerInternal()
-    {
-        var p = _serverProcess;
-        _serverProcess = null;
-        _serverPort = 0;
-        _serverLaunchCommand = null;
-        _serverLanguage = string.Empty;
-        if (p == null)
-        {
-            return;
-        }
-        try
-        {
-            if (!p.HasExited)
-            {
-                p.Kill(entireProcessTree: true);
-                p.WaitForExit(2000);
-            }
-        }
-        catch
-        {
-            // best effort
-        }
-        finally
-        {
-            p.Dispose();
-        }
-    }
+    public static void StopServer() => Server.Stop();
 
     /// <summary>
     /// Nothing to import: the backend has no speaker encoder, so a reference recording cannot

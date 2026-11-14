@@ -171,19 +171,14 @@ public class OmniVoiceCrispAsr : ITtsEngine
     {
         Timeout = TimeSpan.FromMinutes(30),
     };
+    private static readonly CrispAsrTtsServer Server = new("crispasr (omnivoice)", "OmniVoice (CrispASR)", HttpClient);
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
-    private static Process? _serverProcess;
-    private static int _serverPort;
-    private static string? _serverLaunchCommand;
     private static string? _serverModelKey;
     // The reference is a startup flag, so changing the voice or its transcript means tear-down
     // and restart.
     private static string? _serverVoicePath;
     private static string? _serverRefText;
-    private static bool _processExitHooked;
-    private static readonly StringBuilder _serverLog = new();
 
-    private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -443,21 +438,21 @@ public class OmniVoiceCrispAsr : ITtsEngine
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"OmniVoice (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={omniVoice}, refTextLen={refText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
+        Se.WriteToolsLog($"OmniVoice (CrispASR): POST {Server.BaseUrl}/v1/audio/speech (voice={omniVoice}, refTextLen={refText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
 
         HttpResponseMessage response;
         try
         {
-            response = await HttpClient.PostAsync($"{ServerBaseUrl}/v1/audio/speech", content, cancellationToken);
+            response = await HttpClient.PostAsync($"{Server.BaseUrl}/v1/audio/speech", content, cancellationToken);
         }
         catch (HttpRequestException ex)
         {
-            var serverLog = SnapshotServerLog();
-            var launchCommand = _serverLaunchCommand;
-            var died = _serverProcess?.HasExited == true;
+            var serverLog = Server.SnapshotLog();
+            var launchCommand = Server.LaunchCommand;
+            var died = Server.HasExited;
             if (died)
             {
-                StopServerInternal();
+                Server.Stop();
             }
 
             var failMsg = $"OmniVoice (CrispASR) request failed — Voice: {omniVoice}, Text: {text}, "
@@ -480,8 +475,8 @@ public class OmniVoiceCrispAsr : ITtsEngine
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
-                var serverLog = SnapshotServerLog();
-                var launchCommand = _serverLaunchCommand;
+                var serverLog = Server.SnapshotLog();
+                var launchCommand = Server.LaunchCommand;
                 var errMsg = $"OmniVoice (CrispASR) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {omniVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
@@ -524,7 +519,7 @@ public class OmniVoiceCrispAsr : ITtsEngine
     private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, string refText, CancellationToken ct)
     {
         bool MatchesCurrent() =>
-            _serverProcess is { HasExited: false } && _serverPort != 0
+            Server.IsAlive
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
             && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
             && string.Equals(_serverRefText, refText, StringComparison.Ordinal);
@@ -542,10 +537,7 @@ public class OmniVoiceCrispAsr : ITtsEngine
                 return;
             }
 
-            if (_serverProcess != null)
-            {
-                StopServerInternal();
-            }
+            Server.Stop();
 
             var exe = GetCrispAsrExecutable();
             if (!File.Exists(exe))
@@ -608,67 +600,14 @@ public class OmniVoiceCrispAsr : ITtsEngine
                 }
             }
 
-            var process = Process.Start(psi)
-                ?? throw new InvalidOperationException("Failed to start crispasr (omnivoice)");
+            Server.Start(psi, port);
 
-            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
-            _serverLaunchCommand = launchCommand;
-            Se.WriteToolsLog("OmniVoice (CrispASR) server starting — "
-                + $"PID: {process.Id}, "
-                + $"Cmd: {launchCommand}");
-
-            lock (_serverLog) _serverLog.Clear();
-            process.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.BeginErrorReadLine();
-            process.BeginOutputReadLine();
-
-            _serverProcess = process;
-            _serverPort = port;
             _serverModelKey = modelKey;
             _serverVoicePath = voicePath;
             _serverRefText = refText;
-            HookProcessExitOnce();
 
             // First-run auto-download pulls up to ~1.6 GB, so it gets a generous deadline.
-            var deadline = DateTime.UtcNow.AddMinutes(hasLocalModel ? 5 : 30);
-            while (DateTime.UtcNow < deadline)
-            {
-                ct.ThrowIfCancellationRequested();
-                if (process.HasExited)
-                {
-                    var tail = SnapshotServerLog();
-                    var exitCode = process.ExitCode;
-                    var exitedLaunchCommand = _serverLaunchCommand;
-                    _serverProcess = null;
-                    _serverPort = 0;
-                    _serverLaunchCommand = null;
-                    _serverModelKey = null;
-                    _serverVoicePath = null;
-                    _serverRefText = null;
-                    throw new InvalidOperationException(
-                        $"crispasr (omnivoice) exited during startup (code {exitCode}). Output: {tail}"
-                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
-                }
-                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
-                {
-                    return;
-                }
-                await Task.Delay(TimeSpan.FromSeconds(1), ct);
-            }
-
-            var lastOutput = SnapshotServerLog();
-            var timeoutLaunchCommand = _serverLaunchCommand;
-            StopServerInternal();
-            throw new TimeoutException(
-                $"crispasr (omnivoice) did not report healthy within {(hasLocalModel ? 5 : 30)} minutes. Last output: {lastOutput}"
-                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
+            await Server.WaitUntilHealthyAsync(hasLocalModel ? 5 : 30, ct);
         }
         finally
         {
@@ -676,57 +615,7 @@ public class OmniVoiceCrispAsr : ITtsEngine
         }
     }
 
-    private static string SnapshotServerLog()
-    {
-        lock (_serverLog)
-        {
-            var s = _serverLog.ToString().TrimEnd();
-            return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static void HookProcessExitOnce()
-    {
-        if (_processExitHooked)
-        {
-            return;
-        }
-        _processExitHooked = true;
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
-    }
-
-    public static void StopServer() => StopServerInternal();
-
-    private static void StopServerInternal()
-    {
-        var p = _serverProcess;
-        _serverProcess = null;
-        _serverPort = 0;
-        _serverLaunchCommand = null;
-        _serverModelKey = null;
-        _serverVoicePath = null;
-        _serverRefText = null;
-        if (p == null)
-        {
-            return;
-        }
-        try
-        {
-            if (!p.HasExited)
-            {
-                p.Kill(entireProcessTree: true);
-                p.WaitForExit(2000);
-            }
-        }
-        catch
-        {
-            // best effort
-        }
-        finally
-        {
-            p.Dispose();
-        }
-    }
+    public static void StopServer() => Server.Stop();
 
     public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
 
