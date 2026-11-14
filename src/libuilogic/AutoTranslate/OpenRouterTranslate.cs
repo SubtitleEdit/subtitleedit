@@ -28,17 +28,22 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "openai/gpt-5.6-sol",                       // OpenAI flagship for complex professional work
             "openai/gpt-6.1-sol",                       // Newest OpenAI flagship
             "openai/gpt-6-sol",                         // GPT-6 flagship
+            "openai/gpt-6.1-terra",                     // Newest OpenAI mid-tier, balanced cost
             "openai/gpt-5.5",                           // Previous-gen flagship general-purpose translator
             "anthropic/claude-opus-5.5",                // Current Anthropic flagship for nuanced translation
             "anthropic/claude-sonnet-5.5",              // Strong balance of quality and cost
+            "anthropic/claude-fable-5.2",               // Anthropic Fable, newest
             "anthropic/claude-opus-5",                  // Previous Anthropic flagship
             "anthropic/claude-opus-4.8",                // Exceptional nuance and formal tone preservation
             "anthropic/claude-sonnet-5",                // Previous-gen Sonnet
+            "google/gemini-4-carbon",                   // Google frontier flagship
             "google/gemini-4-argon",                    // Google's newest frontier model
+            "google/gemini-4-hydrogen",                 // Fast, low-cost Gemini 4
             "google/gemini-3.1-pro-preview",            // Massive context for translating whole books
             "deepseek/deepseek-v4-pro",                 // The most cost-effective reasoning translator
             "z-ai/glm-5.3",                             // Strong open-weight generalist
             "z-ai/glm-5.2",                             // Previous GLM generalist
+            "moonshotai/kimi-k3.1-pro",                 // Newest Kimi, strong for Asian languages
             "moonshotai/kimi-k3",                       // Strong for Asian languages
             "moonshotai/kimi-k2.6",                     // Previous Kimi
             "x-ai/grok-4.7",                            // xAI flagship
@@ -56,12 +61,16 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             // Specialized & Open-Weight (High Translation Performance)
             "qwen/qwen3.8-max-0902",                    // Dominant for Asian & Middle Eastern languages
+            "tencent/hy4",                              // Tencent flagship, strong for Chinese
+            "minimax/minimax-m3.1-flash",               // Cheap, fast MiniMax generalist
             "meta-llama/llama-4-maverick",              // MoE architecture, strong multilingual coverage
+            "meta/muse-ember",                          // Meta small, very low cost
             "mistralai/mistral-large-4-0",              // Superior for European romance languages (preview)
             "mistralai/mistral-large-2512",             // Mistral Large 3
             "mistralai/mistral-medium-3-5",             // Solid mid-tier European-language model
 
             // Free tier
+            "baidu/ernie-5.5-flash-preview:free",       // Free-tier ERNIE, good for Chinese
             "google/gemma-4-31b-it:free",               // High-quality free-tier model
             "google/gemma-4-26b-a4b-it:free",           // Free-tier MoE alternative
         };
