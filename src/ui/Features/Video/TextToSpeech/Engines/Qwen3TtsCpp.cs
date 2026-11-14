@@ -3,14 +3,13 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -267,7 +266,7 @@ public class Qwen3TtsCpp : ITtsEngine
         {
             if (!response.IsSuccessStatusCode)
             {
-                var errorBody = await SafeReadErrorAsync(response, cancellationToken);
+                var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
                 var serverOutput = SnapshotServerStderr();
                 var errMsg = $"Qwen3 TTS server error {(int)response.StatusCode} {response.StatusCode} - "
                     + $"Voice: {qwen3Voice}, Text: {text}, Body: {errorBody}"
@@ -311,18 +310,6 @@ public class Qwen3TtsCpp : ITtsEngine
         return await HttpClient.PostAsync($"{ServerBaseUrl}/v1/synthesize_with_voice", form, ct);
     }
 
-    private static async Task<string> SafeReadErrorAsync(HttpResponseMessage response, CancellationToken ct)
-    {
-        try
-        {
-            return await response.Content.ReadAsStringAsync(ct);
-        }
-        catch (Exception ex)
-        {
-            return $"<failed to read error body: {ex.Message}>";
-        }
-    }
-
     private static async Task EnsureServerRunningAsync(string modelFileName, CancellationToken ct)
     {
         if (_serverProcess is { HasExited: false } && _serverPort != 0 && _serverModelFileName == modelFileName)
@@ -350,7 +337,7 @@ public class Qwen3TtsCpp : ITtsEngine
                 throw new FileNotFoundException("Qwen3 TTS server executable not found.", exe);
             }
 
-            var port = FindFreeLoopbackPort();
+            var port = LocalServerHelper.FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
                 WorkingDirectory = GetSetFolder(),
@@ -430,7 +417,7 @@ public class Qwen3TtsCpp : ITtsEngine
                         + (hint == null ? string.Empty : " " + hint)
                         + $" Output: {tail}");
                 }
-                if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(1), ct))
+                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(1), ct))
                 {
                     return;
                 }
@@ -463,35 +450,6 @@ public class Qwen3TtsCpp : ITtsEngine
     {
         var buffer = _serverStderr;
         return buffer == null ? string.Empty : SnapshotStderr(buffer);
-    }
-
-    private static async Task<bool> ProbeHealthAsync(int port, TimeSpan timeout, CancellationToken ct)
-    {
-        try
-        {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            cts.CancelAfter(timeout);
-            using var resp = await HttpClient.GetAsync($"http://127.0.0.1:{port}/health", cts.Token);
-            return resp.IsSuccessStatusCode;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private static int FindFreeLoopbackPort()
-    {
-        var listener = new TcpListener(IPAddress.Loopback, 0);
-        listener.Start();
-        try
-        {
-            return ((IPEndPoint)listener.LocalEndpoint).Port;
-        }
-        finally
-        {
-            listener.Stop();
-        }
     }
 
     private static void HookProcessExitOnce()
@@ -533,24 +491,6 @@ public class Qwen3TtsCpp : ITtsEngine
         }
     }
 
-    private static string GetUniqueDestinationFileName(string folder, string baseName)
-    {
-        var candidate = Path.Combine(folder, baseName + ".wav");
-        if (!File.Exists(candidate))
-        {
-            return candidate;
-        }
-
-        var number = 1;
-        do
-        {
-            candidate = Path.Combine(folder, $"{baseName}_{number}.wav");
-            number++;
-        } while (File.Exists(candidate));
-
-        return candidate;
-    }
-
     public bool ImportVoice(string fileName)
     {
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
@@ -560,7 +500,7 @@ public class Qwen3TtsCpp : ITtsEngine
 
         var voicesFolder = GetSetVoicesFolder();
         var baseName = Path.GetFileNameWithoutExtension(fileName);
-        var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
+        var destinationFileName = VoiceCloneImporter.GetUniqueDestinationFileName(voicesFolder, baseName);
 
         if (Path.GetExtension(fileName).Equals(".wav", StringComparison.OrdinalIgnoreCase))
         {

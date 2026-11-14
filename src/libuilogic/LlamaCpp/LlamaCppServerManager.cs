@@ -1,9 +1,8 @@
 using System.Diagnostics;
 using System.Globalization;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.UiLogic.Common;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace Nikse.SubtitleEdit.UiLogic.LlamaCpp;
@@ -956,7 +955,7 @@ public static class LlamaCppServerManager
                 }
             }
 
-            var port = FindFreeLoopbackPort();
+            var port = LocalServerHelper.FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
                 WorkingDirectory = Path.GetDirectoryName(exe) ?? GetAndCreateFolder(),
@@ -974,7 +973,7 @@ public static class LlamaCppServerManager
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start llama-server");
 
-            LogAction?.Invoke($"llama-server starting - PID: {process.Id}, Cmd: {FormatLaunchCommand(exe, psi.ArgumentList)}");
+            LogAction?.Invoke($"llama-server starting - PID: {process.Id}, Cmd: {LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList)}");
 
             lock (_serverLog)
             {
@@ -1247,20 +1246,6 @@ public static class LlamaCppServerManager
         return result;
     }
 
-    private static int FindFreeLoopbackPort()
-    {
-        var listener = new TcpListener(IPAddress.Loopback, 0);
-        listener.Start();
-        try
-        {
-            return ((IPEndPoint)listener.LocalEndpoint).Port;
-        }
-        finally
-        {
-            listener.Stop();
-        }
-    }
-
     private static void HookProcessExitOnce()
     {
         if (_processExitHooked)
@@ -1270,21 +1255,5 @@ public static class LlamaCppServerManager
 
         _processExitHooked = true;
         AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
-    }
-
-    private static string FormatLaunchCommand(string exe, System.Collections.ObjectModel.Collection<string> args)
-    {
-        static string Quote(string s) =>
-            !string.IsNullOrEmpty(s) && s.IndexOfAny(new[] { ' ', '\t' }) >= 0
-                ? "\"" + s.Replace("\"", "\\\"") + "\""
-                : s;
-
-        var sb = new StringBuilder(Quote(exe));
-        foreach (var a in args)
-        {
-            sb.Append(' ').Append(Quote(a));
-        }
-
-        return sb.ToString();
     }
 }

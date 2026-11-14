@@ -3,15 +3,14 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 using Nikse.SubtitleEdit.UiLogic;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -419,7 +418,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             }
             var failMsg = $"Chatterbox TTS request failed - Voice: {chatterboxVoice}, Text: {text}, "
                 + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}"
-                + LaunchCmdSuffix(launchCommand);
+                + LocalServerHelper.LaunchCmdSuffix(launchCommand);
             Se.LogError(ex, failMsg);
             Se.WriteToolsLog(failMsg);
 
@@ -448,7 +447,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             throw new InvalidOperationException(
                 prefix
                     + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
-                    + LaunchCmdSuffix(launchCommand),
+                    + LocalServerHelper.LaunchCmdSuffix(launchCommand),
                 ex);
         }
 
@@ -456,13 +455,13 @@ public class ChatterboxTtsCpp : ITtsEngine
         {
             if (!response.IsSuccessStatusCode)
             {
-                var errorBody = await SafeReadErrorAsync(response, cancellationToken);
+                var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
                 var serverLog = SnapshotServerLog();
                 var launchCommand = _serverLaunchCommand;
                 var errMsg = $"Chatterbox TTS server error {(int)response.StatusCode} {response.StatusCode} - "
                     + $"Voice: {chatterboxVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
-                    + LaunchCmdSuffix(launchCommand);
+                    + LocalServerHelper.LaunchCmdSuffix(launchCommand);
                 Se.LogError(errMsg);
                 Se.WriteToolsLog(errMsg);
 
@@ -479,7 +478,7 @@ public class ChatterboxTtsCpp : ITtsEngine
                     prefix
                     + $"Chatterbox TTS synthesis failed ({(int)response.StatusCode}): {errorBody}"
                     + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
-                    + LaunchCmdSuffix(launchCommand));
+                    + LocalServerHelper.LaunchCmdSuffix(launchCommand));
             }
 
             await using var fileStream = File.Create(outputFileName);
@@ -583,42 +582,6 @@ public class ChatterboxTtsCpp : ITtsEngine
     }
 
     /// <summary>
-    /// Renders the server launch as a shell-quotable string (file path + each arg quoted only
-    /// when it contains whitespace). Goes into the tools log so failures can be reproduced.
-    /// </summary>
-    private static string FormatLaunchCommand(string exe, System.Collections.ObjectModel.Collection<string> args)
-    {
-        static string Quote(string s) =>
-            !string.IsNullOrEmpty(s) && s.IndexOfAny(new[] { ' ', '\t' }) >= 0
-                ? "\"" + s.Replace("\"", "\\\"") + "\""
-                : s;
-
-        var sb = new StringBuilder(Quote(exe));
-        foreach (var a in args)
-        {
-            sb.Append(' ').Append(Quote(a));
-        }
-        return sb.ToString();
-    }
-
-    private static string LaunchCmdSuffix(string? launchCommand) =>
-        string.IsNullOrEmpty(launchCommand)
-            ? string.Empty
-            : $"{Environment.NewLine}Launch command: {launchCommand}";
-
-    private static async Task<string> SafeReadErrorAsync(HttpResponseMessage response, CancellationToken ct)
-    {
-        try
-        {
-            return await response.Content.ReadAsStringAsync(ct);
-        }
-        catch (Exception ex)
-        {
-            return $"<failed to read error body: {ex.Message}>";
-        }
-    }
-
-    /// <summary>
     /// True when the running server has already served a cloned voice and a different one is now
     /// asked for.
     /// </summary>
@@ -698,7 +661,7 @@ public class ChatterboxTtsCpp : ITtsEngine
                     "CrispASR executable not found. Install CrispASR via Video → Audio to text first.", exe);
             }
 
-            var port = FindFreeLoopbackPort();
+            var port = LocalServerHelper.FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
                 // Run in the voices folder: the chatterbox backend opens the `voice` of a
@@ -749,7 +712,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             // Record the exact launch command in the tools log so failures later in this
             // session can be reproduced from a shell. Also cache it on the static so the
             // runtime/startup error paths can surface it inline with the error dialog.
-            var launchCommand = FormatLaunchCommand(exe, psi.ArgumentList);
+            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
             _serverLaunchCommand = launchCommand;
             Se.WriteToolsLog("Chatterbox TTS server starting - "
                 + $"PID: {process.Id}, "
@@ -793,7 +756,7 @@ public class ChatterboxTtsCpp : ITtsEngine
                         throw new InvalidOperationException(
                             "Chatterbox requires CrispASR v0.6.0 or newer. Re-download CrispASR via "
                             + "Video → Audio to text → Engine settings → Re-download, then try again."
-                            + LaunchCmdSuffix(exitedLaunchCommand));
+                            + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
                     }
                     if (LooksLikeStaleModelCache(tail))
                     {
@@ -801,7 +764,7 @@ public class ChatterboxTtsCpp : ITtsEngine
                             "Chatterbox failed to load its model — the GGUFs in "
                             + GetSetModelsFolder() + " are likely stale or partially downloaded. "
                             + "Delete them and try again so they re-download. Original output: " + tail
-                            + LaunchCmdSuffix(exitedLaunchCommand));
+                            + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
                     }
                     if (LooksLikeChatterboxTurboTokenizerMismatch(tail))
                     {
@@ -813,7 +776,7 @@ public class ChatterboxTtsCpp : ITtsEngine
                             + "Turbo normally, with no re-download. Until then, switch to the \"Base\" "
                             + "Chatterbox model, which works."
                             + Environment.NewLine + Environment.NewLine + tail
-                            + LaunchCmdSuffix(exitedLaunchCommand));
+                            + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
                     }
                     if (LooksLikeChatterboxTurboStartupCrash(modelKey, tail))
                     {
@@ -823,13 +786,13 @@ public class ChatterboxTtsCpp : ITtsEngine
                             + "Try the \"Base\" model instead, or file an issue at "
                             + "https://github.com/CrispStrobe/CrispASR/issues with the log below."
                             + Environment.NewLine + Environment.NewLine + tail
-                            + LaunchCmdSuffix(exitedLaunchCommand));
+                            + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
                     }
                     throw new InvalidOperationException(
                         $"crispasr (chatterbox) exited during startup (code {exitCode}). Output: {tail}"
-                        + LaunchCmdSuffix(exitedLaunchCommand));
+                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
                 }
-                if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(2), ct))
+                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
                 {
                     return;
                 }
@@ -841,7 +804,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             StopServerInternal();
             throw new TimeoutException(
                 $"crispasr (chatterbox) did not report healthy within 15 minutes. Last output: {lastOutput}"
-                + LaunchCmdSuffix(timeoutLaunchCommand));
+                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
         }
         finally
         {
@@ -960,35 +923,6 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
     }
 
-    private static async Task<bool> ProbeHealthAsync(int port, TimeSpan timeout, CancellationToken ct)
-    {
-        try
-        {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            cts.CancelAfter(timeout);
-            using var resp = await HttpClient.GetAsync($"http://127.0.0.1:{port}/health", cts.Token);
-            return resp.IsSuccessStatusCode;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private static int FindFreeLoopbackPort()
-    {
-        var listener = new TcpListener(IPAddress.Loopback, 0);
-        listener.Start();
-        try
-        {
-            return ((IPEndPoint)listener.LocalEndpoint).Port;
-        }
-        finally
-        {
-            listener.Stop();
-        }
-    }
-
     private static void HookProcessExitOnce()
     {
         if (_processExitHooked)
@@ -1086,24 +1020,6 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
     }
 
-    private static string GetUniqueDestinationFileName(string folder, string baseName)
-    {
-        var candidate = Path.Combine(folder, baseName + ".wav");
-        if (!File.Exists(candidate))
-        {
-            return candidate;
-        }
-
-        var number = 1;
-        do
-        {
-            candidate = Path.Combine(folder, $"{baseName}_{number}.wav");
-            number++;
-        } while (File.Exists(candidate));
-
-        return candidate;
-    }
-
     public bool ImportVoice(string fileName)
     {
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
@@ -1113,7 +1029,7 @@ public class ChatterboxTtsCpp : ITtsEngine
 
         var voicesFolder = GetSetVoicesFolder();
         var baseName = Path.GetFileNameWithoutExtension(fileName);
-        var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
+        var destinationFileName = VoiceCloneImporter.GetUniqueDestinationFileName(voicesFolder, baseName);
 
         // CrispASR's chatterbox backend only does "atomic" voice cloning when the
         // reference WAV is 24 kHz mono PCM16/F32 — anything else used to silently fall
