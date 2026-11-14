@@ -61,12 +61,16 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             // Specialized & Open-Weight (High Translation Performance)
             "qwen/qwen3.8-max-0902",                    // Dominant for Asian & Middle Eastern languages
+            "tencent/hy4",                              // Tencent flagship, strong for Chinese
+            "minimax/minimax-m3.1-flash",               // Cheap, fast MiniMax generalist
             "meta-llama/llama-4-maverick",              // MoE architecture, strong multilingual coverage
+            "meta/muse-ember",                          // Meta small, very low cost
             "mistralai/mistral-large-4-0",              // Superior for European romance languages (preview)
             "mistralai/mistral-large-2512",             // Mistral Large 3
             "mistralai/mistral-medium-3-5",             // Solid mid-tier European-language model
 
             // Free tier
+            "baidu/ernie-5.5-flash-preview:free",       // Free-tier ERNIE, good for Chinese
             "google/gemma-4-31b-it:free",               // High-quality free-tier model
             "google/gemma-4-26b-a4b-it:free",           // Free-tier MoE alternative
         };
