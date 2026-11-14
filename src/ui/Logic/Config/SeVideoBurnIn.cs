@@ -48,6 +48,12 @@ public class SeVideoBurnIn
     public string OutputExtension { get; set; }
     public string Effects { get; set; }
 
+    /// <summary>
+    /// Folder of the last logo picked in the burn-in logo window, so the picker opens where the
+    /// logos are kept instead of in the last video's folder (#16609).
+    /// </summary>
+    public string LogoFolder { get; set; }
+
     // On macOS the hardware encoder is always present, so default to it there.
     public static string DefaultEncoding => Configuration.IsRunningOnMac ? "h264_videotoolbox" : "libx264";
 
@@ -88,5 +94,6 @@ public class SeVideoBurnIn
         OutputExtension = ".mkv";
         NonAssaAlignment = "2";
         Effects = string.Empty;
+        LogoFolder = string.Empty;
     }
 }

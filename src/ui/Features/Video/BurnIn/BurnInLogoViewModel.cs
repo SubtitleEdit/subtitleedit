@@ -71,14 +71,41 @@ public partial class BurnInLogoViewModel : ObservableObject
         }
 
         var fileHelper = new FileHelper();
-        var fileName = await fileHelper.PickOpenFile(Window, Se.Language.General.OpenImageFile, "PNG files", "*.png", Se.Language.General.AllFiles, "*.*");
+        var startFolder = GetLogoStartFolder(LogoFileName, Se.Settings.Video.BurnIn.LogoFolder);
+        var fileName = await fileHelper.PickOpenFile(Window, Se.Language.General.OpenImageFile, "PNG files", "*.png", Se.Language.General.AllFiles, "*.*", startFolder);
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
         {
             return;
         }
 
+        RememberLogoFolder(fileName);
         LogoFileName = fileName;
         await LoadLogo();
+    }
+
+    /// <summary>
+    /// Where the logo picker opens: the current logo's folder, else the folder of the last logo
+    /// picked. Null (the picker's own default) when neither exists any more. Logos are often kept
+    /// apart from the videos, so the last video's folder is the wrong place to start (#16609).
+    /// </summary>
+    internal static string? GetLogoStartFolder(string? currentLogoFileName, string? lastLogoFolder)
+    {
+        var currentFolder = string.IsNullOrEmpty(currentLogoFileName) ? null : Path.GetDirectoryName(currentLogoFileName);
+        if (!string.IsNullOrEmpty(currentFolder) && Directory.Exists(currentFolder))
+        {
+            return currentFolder;
+        }
+
+        return !string.IsNullOrEmpty(lastLogoFolder) && Directory.Exists(lastLogoFolder) ? lastLogoFolder : null;
+    }
+
+    internal static void RememberLogoFolder(string logoFileName)
+    {
+        var folder = Path.GetDirectoryName(logoFileName);
+        if (!string.IsNullOrEmpty(folder))
+        {
+            Se.Settings.Video.BurnIn.LogoFolder = folder;
+        }
     }
 
     private async Task LoadLogo()
