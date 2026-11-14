@@ -185,7 +185,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private SpeechToTextModelDisplay? _selectedCrispAsrModel;
     [ObservableProperty] private bool _crispAsrModelComboIsVisible;
     [ObservableProperty] private bool _llamaCppAdvancedButtonIsVisible;
-    [ObservableProperty] private bool _llamaCppSettingsButtonIsVisible;
+    [ObservableProperty] private bool _translateSettingsButtonIsVisible;
     [ObservableProperty] private bool _llamaCppEngineSettingsButtonIsVisible;
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels = new();
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
@@ -3355,12 +3355,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         RefreshAutoTranslateEngineDots?.Invoke(); // the engine binary just changed - amber -> green
     }
 
-    // Prompt (plus request delay, max bytes and the merge strategy) for the regular llama.cpp
-    // engine - the same window the Auto-translate window's settings button opens, editing the same
-    // shared settings. Its OK writes both Se.Settings.AutoTranslate and Configuration.Settings.Tools,
+    // Prompt (plus request delay, max bytes, keep music lines and the merge strategy) for the
+    // selected engine - the same window the Auto-translate window's settings button opens, editing
+    // the same shared settings. Its OK writes both Se.Settings.AutoTranslate and Configuration.Settings.Tools,
     // so a prompt edited here reaches the batch run too.
     [RelayCommand]
-    private async Task ShowLlamaCppTranslateSettings()
+    private async Task ShowTranslateSettings()
     {
         if (Window == null || SelectedAutoTranslator == null)
         {
@@ -4442,9 +4442,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // (local or remote llama-server) and Ollama.
         LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate or OllamaAdvancedTranslate or LmStudioAdvancedTranslate;
 
-        // The regular llama.cpp engine has no advanced window - its prompt (and the shared
-        // delay/max-bytes/merge settings) live in the translate settings dialog instead.
-        LlamaCppSettingsButtonIsVisible = engine is LlamaCppTranslate;
+        // The translate settings dialog holds the prompt and the shared delay/max-bytes/merge/
+        // keep-music-lines settings, like in the Auto-translate window. The advanced engines run
+        // their own batch loop that bypasses all of these (their settings live in the Advanced
+        // window), so the dialog would only show options without effect there.
+        TranslateSettingsButtonIsVisible = engine != null && !LlamaCppAdvancedButtonIsVisible;
 
         if (engine is CrispAsrMadladTranslate)
         {
