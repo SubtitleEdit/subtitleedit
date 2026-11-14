@@ -3,6 +3,25 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta6 (14th of November 2026)
+
+* Fix common errors: sort the fixes by line number - thx radektuma
+* Keep the format (e.g. ASSA) on Save as after joining/merging subtitles or importing a Matroska text track - thx z3us
+* OCR fix: spell-check-gated regexes now work from the _User replace list - thx fraternl
+* OCR fix: spell-check-gated regexes respect the names list and the user dictionary - thx fraternl/k6G52m4Dz75W
+* EBU STL: support €, ¾, ‰ and α
+* Add .hevc as a video file extension - thx Klojum
+* Speech to text: turn on VAD for Crisp ASR Qwen3 (FireRedVAD on Auto) for better timing - thx gojetablade
+* Speech to text: ask for CrispASR v0.8.50 before running Haas-ja (older versions crashed) - thx Xtiger909
+* Speech to text: use a macOS 12 compatible whisper.cpp build on Mac - thx cmwyer1961
+* Update CrispASR to v0.8.53
+* Update llama.cpp to b12360
+* Update macOS Apple Silicon FFmpeg download to 9.0.2
+* Fix llama.cpp advanced translate failing correct translations that grow a lot (e.g. Chinese to English) - thx Makar8000/caioocesar
+* Update German translation - thx FunkyKnilch
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
 v5.5.0-beta5 (13th of November 2026)
 
 * Layout 14: quality control layout with QC panel and tag chips
