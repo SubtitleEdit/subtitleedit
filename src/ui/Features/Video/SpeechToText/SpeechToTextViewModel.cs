@@ -4093,7 +4093,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 RefreshEngineCombo?.Invoke();
             }
 
-            if (!await EnsureIndexEchoCrispAsrVersionAsync(engine))
+            if (!await EnsureCrispAsrVersionForModelAsync(engine, model.Model))
             {
                 return;
             }
@@ -5778,18 +5778,21 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Index-Echo only exists in CrispASR v0.8.41+; an older binary rejects the backend after the
-    /// user has sat through a 2.7 GB model download. Offers the update before that.
+    /// Some backends/models need a newer CrispASR than the user may have installed: Index-Echo only
+    /// exists in v0.8.41+ (an older binary rejects the backend after a 2.7 GB model download), and
+    /// Haas-ja needs v0.8.50+ (an older binary loads it and crashes with an access violation, #16900).
+    /// Offers the update before running.
     /// </summary>
-    private async Task<bool> EnsureIndexEchoCrispAsrVersionAsync(ISpeechToTextEngine engine)
+    private async Task<bool> EnsureCrispAsrVersionForModelAsync(ISpeechToTextEngine engine, WhisperModel model)
     {
-        if (engine is not CrispAsrIndexEcho)
+        if (engine is not ICrispAsrEngine crispAsrEngine ||
+            crispAsrEngine.GetMinimumCrispAsrVersion(model) is not { } minimumVersion)
         {
             return true;
         }
 
         var installedVersion = CrispAsrVersion.TryGet(engine.GetExecutable());
-        if (CrispAsrVersion.IsAtLeast(installedVersion, CrispAsrIndexEcho.MinimumCrispAsrVersion))
+        if (CrispAsrVersion.IsAtLeast(installedVersion, minimumVersion))
         {
             return true;
         }
@@ -5797,7 +5800,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var answer = await MessageBox.Show(
             Window!,
             string.Format(Se.Language.Video.AudioToText.UpdateXTitle, engine.Name),
-            string.Format(Se.Language.Video.AudioToText.XNeedsNewerCrispAsr, engine.Name, CrispAsrIndexEcho.MinimumCrispAsrVersion, installedVersion),
+            string.Format(Se.Language.Video.AudioToText.XNeedsNewerCrispAsr, engine.Name, minimumVersion, installedVersion),
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 
@@ -5813,7 +5816,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             return false;
         }
 
-        return CrispAsrVersion.IsAtLeast(CrispAsrVersion.TryGet(engine.GetExecutable()), CrispAsrIndexEcho.MinimumCrispAsrVersion);
+        return CrispAsrVersion.IsAtLeast(CrispAsrVersion.TryGet(engine.GetExecutable()), minimumVersion);
     }
 
     private async Task CheckQwen3AsrCppForUpdateAsync()

@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
@@ -71,5 +72,34 @@ public class CrispAsrParakeetModelTests
         var model = Assert.Single(new CrispAsrParakeet().Models, m => m.Name == name);
 
         Assert.Equal(expected, SpeechToTextViewModel.ShouldWarnEnglishOnlyModel(model, language));
+    }
+
+    [Fact]
+    public void MinimumCrispAsrVersion_HaasModelsNeed0850()
+    {
+        // An older parakeet runtime loads Haas-ja with null LSTM tensors and crashes (#16900).
+        var engine = new CrispAsrParakeet();
+        var haas = engine.Models.Where(m => m.Name.StartsWith("haas-")).ToList();
+
+        Assert.Equal(3, haas.Count);
+        Assert.All(haas, m => Assert.Equal(new Version(0, 8, 50), engine.GetMinimumCrispAsrVersion(m)));
+    }
+
+    [Fact]
+    public void MinimumCrispAsrVersion_OtherParakeetModelsHaveNone()
+    {
+        var engine = new CrispAsrParakeet();
+
+        Assert.All(engine.Models.Where(m => !m.Name.StartsWith("haas-")), m => Assert.Null(engine.GetMinimumCrispAsrVersion(m)));
+    }
+
+    [Fact]
+    public void MinimumCrispAsrVersion_WrapperForwardsToSelectedBackend()
+    {
+        var wrapper = new CrispAsrEngine();
+        Assert.True(wrapper.TrySelectBackendChoice(WhisperChoice.CrispAsrParakeet));
+        var haas = Assert.Single(wrapper.Models, m => m.Name == "haas-ja-v1.0-f16.gguf");
+
+        Assert.Equal(new Version(0, 8, 50), wrapper.GetMinimumCrispAsrVersion(haas));
     }
 }

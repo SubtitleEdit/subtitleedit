@@ -33,6 +33,7 @@ public class CrispAsrIndexEcho : CrispAsrEngineBase
     public override string DefaultLanguage => "en";
     public override bool IncludeLanguage => false;
     public override bool HasNativeTimestamps => true;
+    public override Version? GetMinimumCrispAsrVersion(WhisperModel model) => MinimumCrispAsrVersion;
 
     public override List<WhisperLanguage> Languages =>
         new()
