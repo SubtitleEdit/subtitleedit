@@ -50,19 +50,7 @@ public partial class InterjectionsViewModel : ObservableObject
         Window?.Close();
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/remove-text-hi", "interjections");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/remove-text-hi", "interjections");
 
     public void Initialize(RemoveTextForHearingImpairedViewModel.LanguageItem? selectedLanguage)
     {

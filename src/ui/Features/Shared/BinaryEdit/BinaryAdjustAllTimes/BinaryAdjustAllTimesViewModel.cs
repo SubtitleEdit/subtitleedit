@@ -140,17 +140,5 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
         Window?.Close();
     }
 
-    public void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/binary-edit", "tools");
-        }
-    }
+    public void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/binary-edit", "tools");
 }

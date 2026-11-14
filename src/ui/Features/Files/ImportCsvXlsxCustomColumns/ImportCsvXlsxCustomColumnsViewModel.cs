@@ -111,19 +111,7 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
         Window?.Close();
     }
 
-    public void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/import-csv-xlsx");
-        }
-    }
+    public void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/import-csv-xlsx");
 
     private void LoadFile(string fileName)
     {

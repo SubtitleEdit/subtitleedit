@@ -173,19 +173,7 @@ public partial class ChangeSpeedViewModel : ObservableObject
         }
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/change-speed");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/change-speed");
 
     internal static void ChangeSpeed(IEnumerable<SubtitleLineViewModel> subtitles, double speedPercent)
     {

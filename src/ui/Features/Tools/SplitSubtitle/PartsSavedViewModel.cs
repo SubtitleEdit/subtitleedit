@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitSubtitle;
 
@@ -45,14 +46,7 @@ public partial class PartsSavedViewModel : ObservableObject
         _folderHelper.OpenFolder(Window, FolderName);
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscape(e, Window);
 
     internal void Initialize(string outputFolder, int count, Core.SubtitleFormats.SubtitleFormat subtitleFormat)
     {

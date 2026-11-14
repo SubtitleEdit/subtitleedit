@@ -378,19 +378,7 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
         LoadSettingsBackups();
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/file", "restore-auto-backup");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/file", "restore-auto-backup");
 
     /// <summary>
     /// Follows the selection itself instead of only the grid's SelectionChanged event: the

@@ -312,19 +312,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         return null;
     }
 
-    public void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/auto-translate", "engine-configuration");
-        }
-    }
+    public void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/auto-translate", "engine-configuration");
 
     internal void Onloaded(object? sender, RoutedEventArgs e)
     {

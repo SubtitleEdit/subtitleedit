@@ -406,19 +406,7 @@ public partial class SortByViewModel : ObservableObject, IClosingCleanup
         Window?.Close();
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/sort-by");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/sort-by");
 
     internal void ValueChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {

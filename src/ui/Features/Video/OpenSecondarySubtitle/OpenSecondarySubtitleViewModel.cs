@@ -285,19 +285,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         UiUtil.SaveWindowPosition(Window);
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/video-player", "secondary-subtitles");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/video-player", "secondary-subtitles");
 
     [RelayCommand]
     private async Task PlayAndBack()

@@ -182,19 +182,7 @@ public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable
         return string.Empty;
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/binary-edit", "tools");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/binary-edit", "tools");
 
     /// <summary>
     /// Nothing called <see cref="Dispose"/>: the central close hook in

@@ -3417,6 +3417,36 @@ public static class UiUtil
         }
     }
 
+    /// <summary>
+    /// The key handling most dialogs share: Escape closes <paramref name="window"/>.
+    /// </summary>
+    internal static void CloseOnEscape(KeyEventArgs e, Window? window)
+    {
+        if (e.Key == Key.Escape)
+        {
+            e.Handled = true;
+            window?.Close();
+        }
+    }
+
+    /// <summary>
+    /// The key handling most dialogs share: Escape closes <paramref name="window"/> and the help
+    /// shortcut opens the help page <paramref name="helpName"/> (at <paramref name="section"/>).
+    /// </summary>
+    internal static void CloseOnEscapeOrShowHelp(KeyEventArgs e, Window? window, string helpName, string section = "")
+    {
+        if (e.Key == Key.Escape)
+        {
+            e.Handled = true;
+            window?.Close();
+        }
+        else if (IsHelp(e))
+        {
+            e.Handled = true;
+            ShowHelp(helpName, section);
+        }
+    }
+
     internal static bool IsHelp(KeyEventArgs e)
     {
         var shortcut = Se.Settings.Shortcuts.FirstOrDefault(s =>

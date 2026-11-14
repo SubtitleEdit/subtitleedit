@@ -311,14 +311,7 @@ public partial class PickFontNameViewModel : ObservableObject, IClosingCleanup
         Window?.Close();
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscape(e, Window);
 
     internal void FontNameGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
