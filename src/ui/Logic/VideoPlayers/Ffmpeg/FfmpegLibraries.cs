@@ -38,9 +38,6 @@ public static class FfmpegLibraries
     private static bool _available;
     private static string _resolvedPath = string.Empty;
 
-    /// <summary>The folder the libraries were loaded from, or empty when the system loader found them.</summary>
-    public static string ResolvedPath => _resolvedPath;
-
     /// <summary>
     /// The file name of the avcodec library on this platform, e.g. <c>avcodec-63.dll</c>.
     /// Used both to probe candidate folders and to tell the user what is expected.

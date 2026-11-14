@@ -703,13 +703,6 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         WriteToImageBasedFormat(item, imageSubtitle, cancellationToken);
     }
 
-    public class TransportStreamResult
-    {
-        public bool IsImage { get; set; }
-        public IOcrSubtitle? OcrSubtitle { get; set; }
-        public Subtitle? Subtitle { get; set; }
-    }
-
     public static List<IBinaryParagraphWithPosition> LoadDvbFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, ref Subtitle subtitle)
     {
         var sub = matroska.GetSubtitle(track.TrackNumber, null);

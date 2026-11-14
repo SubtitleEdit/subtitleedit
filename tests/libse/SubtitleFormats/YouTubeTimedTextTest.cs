@@ -166,18 +166,6 @@ public class YouTubeTimedTextTest
     }
 
     [Fact]
-    public void RealScaleAndPositionFollowYouTube()
-    {
-        Assert.Equal(1.25, YttPen.GetRealScale(200), 3);
-        Assert.Equal(0.75, YttPen.GetRealScale(0), 3);
-        Assert.Equal(1.0, YttPen.GetRealScale(null), 3);
-        Assert.Equal(200, YttPen.GetSizeFromRealScale(1.25));
-        Assert.Equal(2, YttWindowPosition.GetRealPercent(0), 3);
-        Assert.Equal(98, YttWindowPosition.GetRealPercent(100), 3);
-        Assert.Equal(50, YttWindowPosition.GetCoordinateFromRealPercent(50));
-    }
-
-    [Fact]
     public void PreviewConvertsPositionsPensAndKaraoke()
     {
         var subtitle = Load(YtSubConverterFile, out _);

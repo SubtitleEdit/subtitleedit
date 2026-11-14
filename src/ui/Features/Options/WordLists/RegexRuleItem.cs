@@ -22,8 +22,6 @@ public partial class RegexRuleItem : ObservableObject
     public bool IsSpellChecked => SpellCheck.Length > 0;
 
     public bool IsUserRule { get; }
-    public string SourceDisplay => IsUserRule ? Se.Language.Options.WordLists.MyRule : Se.Language.Options.WordLists.BuiltInRule;
-
     // Called when the check box is toggled; returns false to put the old value back.
     public Func<RegexRuleItem, bool, bool>? EnabledChanging { get; set; }
 

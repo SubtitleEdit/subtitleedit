@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -582,8 +581,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public abstract void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName);
 
-        public bool IsVobSubIndexFile => Extension.Equals(".idx", StringComparison.Ordinal);
-
         public virtual void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
         }
@@ -832,58 +829,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected static TimeCode DecodeTimeCodeFrames(string timestamp, char[] splitChars)
         {
             return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
-        }
-
-        /// <summary>
-        /// Load subtitle type of 'formats' from file.
-        /// </summary>
-        /// <param name="formats">List of possible formats</param>
-        /// <param name="fileName">Name of subtitle file</param>
-        /// <param name="subtitle">Subtitle to load file into</param>
-        /// <returns>The format of the file, null of not format match found</returns>
-        public static SubtitleFormat LoadSubtitleFromFile(SubtitleFormat[] formats, string fileName, Subtitle subtitle)
-        {
-            if (formats == null || formats.Length == 0 || string.IsNullOrEmpty(fileName))
-            {
-                return null;
-            }
-
-            var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-            foreach (var subtitleFormat in formats)
-            {
-                if (subtitleFormat.IsMine(list, fileName))
-                {
-                    subtitleFormat.LoadSubtitle(subtitle, list, fileName);
-                    return subtitleFormat;
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Load subtitle from a list of lines and a file name (the last can be null).
-        /// </summary>
-        /// <param name="lines">Text lines from subtitle file</param>
-        /// <param name="fileName">Optional file name</param>
-        /// <returns>Subtitle, null if format not recognized</returns>
-        public static Subtitle LoadSubtitleFromLines(List<string> lines, string fileName)
-        {
-            if (lines == null || lines.Count == 0)
-            {
-                return null;
-            }
-
-            var subtitle = new Subtitle();
-            foreach (var subtitleFormat in AllSubtitleFormats)
-            {
-                if (subtitleFormat.IsMine(lines, fileName))
-                {
-                    subtitleFormat.LoadSubtitle(subtitle, lines, fileName);
-                    return subtitle;
-                }
-            }
-
-            return null;
         }
 
         public static SubtitleFormat[] GetBinaryFormats(bool batchMode)

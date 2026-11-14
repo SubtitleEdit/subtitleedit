@@ -78,8 +78,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public string Reserve { get; set; } // 32 bytes
             public string PageCompletedMark { get; set; } // 3 bytes
             public string UserAreaIdentification { get; set; } // 1 bytes
-            public string UserArea { get; set; } // ? bytes
-
 
             public PageManagement(byte[] buffer, int index)
             {
@@ -152,16 +150,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public byte LastDataGroupLinkNumber { get; set; }
             public int DataGroupSize { get; set; }
             public byte TimeControlMode { get; set; }
-            public string OffsetTimeMode { get; set; }
             public byte NumberOfLanguages { get; set; }
             public byte LanguageTag { get; set; }
             public string DisplayMode { get; set; }
             public byte DisplayModeControl { get; set; }
             public string Iso639LanguageCode { get; set; }
             public byte Format { get; set; }
-            public string CharacterEncoding { get; set; }
-            public string RollupMode { get; set; }
-
             public CaptionTextPageManagement(byte[] buffer, int index)
             {
                 DataGroupId = (byte)(buffer[index] >> 2);

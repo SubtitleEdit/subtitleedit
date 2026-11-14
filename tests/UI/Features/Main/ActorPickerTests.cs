@@ -11,7 +11,6 @@ using Nikse.SubtitleEdit.Features.Main.ActorPicker;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Media;
 
 namespace UITests.Features.Main;
 
@@ -279,24 +278,6 @@ public class ActorPickerTests
     private static KeyEventArgs Press(Key key, KeyModifiers modifiers = KeyModifiers.None)
     {
         return new KeyEventArgs { RoutedEvent = InputElement.KeyDownEvent, Key = key, KeyModifiers = modifiers };
-    }
-
-    private static void FocusWaveform(Window window, MainViewModel vm)
-    {
-        var av = vm.AudioVisualizer!;
-        var peaks = new WavePeak2[126 * 60];
-        for (var i = 0; i < peaks.Length; i++)
-        {
-            peaks[i] = new WavePeak2(8000, -8000);
-        }
-
-        av.WavePeaks = new WavePeakData2(126, peaks);
-        av.SetPosition(0, vm.Subtitles, 0, 0, new List<SubtitleLineViewModel> { vm.Subtitles[0] });
-        Settle(window);
-
-        av.Focus();
-        Settle(window);
-        Assert.True(av.IsFocused);
     }
 
     /// <summary>

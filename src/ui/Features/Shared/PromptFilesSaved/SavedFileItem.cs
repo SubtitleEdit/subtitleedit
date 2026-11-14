@@ -13,7 +13,6 @@ public partial class SavedFileItem : ObservableObject
     public string FileNameDisplay { get; }
     public string FolderDisplay { get; }
     public bool IsSuccess { get; }
-    public bool IsFailed => !IsSuccess;
     public string StatusText { get; }
     public string ExtensionChip { get; }
     public bool HasExtensionChip => IsSuccess && !string.IsNullOrEmpty(ExtensionChip);

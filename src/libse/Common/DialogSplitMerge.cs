@@ -411,24 +411,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return sb.ToString().TrimEnd();
         }
 
-        public string InsertStartDash(string input, int lineIndex)
-        {
-            var pre = GetStartTags(input);
-            var s = input.Remove(0, pre.Length);
-
-            if (string.IsNullOrEmpty(s))
-            {
-                return input;
-            }
-
-            if (s.StartsWith(GetDashChar()))
-            {
-                s = s.TrimStart(GetDashChar());
-            }
-
-            return pre + GetLineStartFromDashStyle(lineIndex) + s.TrimStart();
-        }
-
         public static string RemoveStartDash(string input)
         {
             var pre = GetStartTags(input);
@@ -440,39 +422,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return pre + s.TrimStart().TrimStart(GetDashChar(), GetAlternateDashChar()).TrimStart();
-        }
-
-        public static string GetDialogStylePreview(DialogType dialogType)
-        {
-            var line1 = "Lorem ipsum dolor sit amet.";
-            var line2 = "Donec eget turpis consequat.";
-
-            switch (dialogType)
-            {
-                case DialogType.DashBothLinesWithoutSpace: 
-                    return "-" + line1 + "\n" + "-" + line2;
-                case DialogType.DashSecondLineWithSpace:
-                    return line1 + "\n" + "- " + line2;
-                case DialogType.DashSecondLineWithoutSpace:
-                    return line1 + "\n" + "-" + line2;
-                default:
-                    return "- " + line1 + "\n" + "- " + line2;
-            }
-        }
-
-        public static DialogType GetDialogStyleFromIndex(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    return DialogType.DashBothLinesWithoutSpace;
-                case 2:
-                    return DialogType.DashSecondLineWithSpace;
-                case 3:
-                    return DialogType.DashSecondLineWithoutSpace;
-                default:
-                    return DialogType.DashBothLinesWithSpace;
-            }
         }
 
         public static string GetStartTags(string input)

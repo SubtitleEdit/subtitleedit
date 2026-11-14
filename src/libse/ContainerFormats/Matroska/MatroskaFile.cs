@@ -15,9 +15,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         private readonly Stream _stream;
         private readonly byte[] _buffer = new byte[8];
-        private int _pixelWidth, _pixelHeight;
-        private double _frameRate;
-        private string _videoCodecId;
 
         private readonly Dictionary<int, List<MatroskaSubtitle>> _subtitleRipByTrackNumber = new Dictionary<int, List<MatroskaSubtitle>>();
         private HashSet<int> _subtitleTrackNumbers;
@@ -257,29 +254,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             return (long)Math.Round(GetTimeScaledToMilliseconds(clusterTimeCode + trackStartTime));
         }
 
-        private void ReadVideoElement(Element videoElement)
-        {
-            Element element;
-            while (_stream.Position < videoElement.EndPosition && (element = ReadElement()) != null)
-            {
-                switch (element.Id)
-                {
-                    case ElementId.PixelWidth:
-                        _pixelWidth = ReadUIntAsInt(element.DataSize);
-                        break;
-                    case ElementId.PixelHeight:
-                        _pixelHeight = ReadUIntAsInt(element.DataSize);
-                        break;
-                    default:
-                        _stream.Seek(element.DataSize, SeekOrigin.Current);
-                        break;
-                }
-            }
-        }
-
         private void ReadTrackEntryElement(Element trackEntryElement)
         {
-            long defaultDuration = 0;
             bool isVideo = false;
             bool isAudio = false;
             bool isSubtitle = false;
@@ -300,11 +276,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             {
                 switch (element.Id)
                 {
-                    case ElementId.DefaultDuration:
-                        defaultDuration = ReadUIntAsLong(element.DataSize);
-                        break;
                     case ElementId.Video:
-                        ReadVideoElement(element);
+                        _stream.Seek(element.DataSize, SeekOrigin.Current);
                         isVideo = true;
                         break;
                     case ElementId.Audio:
@@ -377,15 +350,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 IsDefault = isDefault,
                 IsForced = isForced,
             });
-
-            if (isVideo)
-            {
-                if (defaultDuration > 0)
-                {
-                    _frameRate = 1.0 / (defaultDuration / 1000000000.0);
-                }
-                _videoCodecId = codecId;
-            }
         }
 
         private void ReadContentEncodingElement(Element contentEncodingElement, ref int contentCompressionAlgorithm, ref byte[] contentCompSettings, ref int contentEncodingType, ref uint contentEncodingScope)
@@ -507,16 +471,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 : 0;
 
             return _chapterEditions[index];
-        }
-
-        /// <summary>
-        /// Every chapter edition in the file, in file order.
-        /// </summary>
-        public List<List<MatroskaChapter>> GetChapterEditions()
-        {
-            ReadChapters();
-
-            return _chapterEditions ?? new List<List<MatroskaChapter>>();
         }
 
         private void ReadChapters()
@@ -664,26 +618,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
 
             return null;
-        }
-
-
-        /// <summary>
-        /// Get info about matroska file
-        /// </summary>
-        /// <param name="frameRate">Frame rate</param>
-        /// <param name="pixelWidth">Width in pixels</param>
-        /// <param name="pixelHeight">Height in pixels</param>
-        /// <param name="duration">Duration in milliseconds</param>
-        /// <param name="videoCodec">Codec</param>
-        public void GetInfo(out double frameRate, out int pixelWidth, out int pixelHeight, out double duration, out string videoCodec)
-        {
-            ReadSegmentInfoAndTracks();
-
-            pixelWidth = _pixelWidth;
-            pixelHeight = _pixelHeight;
-            frameRate = _frameRate;
-            duration = _duration;
-            videoCodec = _videoCodecId;
         }
 
         /// <summary>

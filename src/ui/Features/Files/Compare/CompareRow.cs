@@ -68,7 +68,6 @@ public partial class CompareRow : ObservableObject
 
     public bool CanTakeReference => IsLeftEditable && (Kind == CompareRowKind.Changed || Kind == CompareRowKind.OnlyRight);
     public bool CanDeleteCurrent => IsLeftEditable && Kind == CompareRowKind.OnlyLeft;
-    public bool HasGutterAction => CanTakeReference || CanDeleteCurrent;
     public bool CanEdit => IsLeftEditable && HasLeft && Left.Line != null;
     public bool CanTakeFromPair => CanEdit && HasRight && Right.Line != null;
 

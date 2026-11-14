@@ -1257,31 +1257,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
         }
 
-        public static bool IsDvbSup(string fileName)
-        {
-            try
-            {
-                var pesData = File.ReadAllBytes(fileName);
-                if (pesData.Length < 3)
-                {
-                    return false;
-                }
-
-                var header = pesData.AsSpan(0, 3);
-                if (header[0] != 0x20 || header[1] != 0 || header[2] != 0x0F)
-                {
-                    return false;
-                }
-
-                var pes = new DvbSubPes(0, pesData);
-                return pes.SubtitleSegments.Count > 0;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public static List<TransportStreamSubtitle> GetDvbSup(string fileName)
         {
             byte[] pesData = File.ReadAllBytes(fileName);

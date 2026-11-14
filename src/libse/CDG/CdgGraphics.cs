@@ -15,8 +15,6 @@ namespace Nikse.SubtitleEdit.Core.CDG
         public static int FullWidth => 300;
         public static int FullHeight => 216;
 
-        public static double TimeMsFactor => 10.0 / 3.0; // each CD+G frame is 3.33 ms
-
         private const int ColorTableSize = 16;
         private const int TileHeight = 12;
         private const int TileWidth = 6;
@@ -30,14 +28,10 @@ namespace Nikse.SubtitleEdit.Core.CDG
         private int _startPosition;
         private int _verticalOffset;
 
-        public int NumberOfPackets => _packets.Length;
-
         public CdgGraphics(List<Packet> packets)
         {
             _packets = packets.ToArray();
         }
-
-        public long DurationInMilliseconds => _packets.Length * 10 / 3;
 
         private void Reset()
         {

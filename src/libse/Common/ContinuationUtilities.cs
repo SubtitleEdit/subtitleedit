@@ -1354,24 +1354,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Math.Max(Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5, Configuration.Settings.General.ContinuationPause);
         }
 
-        public static int GetIndexFromContinuationStyle(ContinuationStyle continuationStyle)
-        {
-            var index = ContinuationStyles.IndexOf(continuationStyle);
-            return index >= 0 ? index : ContinuationStyles.IndexOf(ContinuationStyle.NoneLeadingTrailingDots);
-        }
-
-        public static ContinuationStyle GetContinuationStyleFromIndex(int index)
-        {
-            try
-            {
-                return ContinuationStyles[index];
-            }
-            catch
-            {
-                return ContinuationStyle.NoneLeadingTrailingDots;
-            }
-        }
-
 
         public static string GetContinuationStylePreview(ContinuationStyle continuationStyle)
         {

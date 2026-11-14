@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -1367,144 +1366,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Determines if the specified tag is present in the input HTML or SSA/ASS string.
-        /// </summary>
-        /// <param name="input">The input string to search for the specified tag.</param>
-        /// <param name="tag">The HTML or SSA/ASS tag to check for.</param>
-        /// <param name="wholeLine">Specifies whether the search should consider the whole line.</param>
-        /// <param name="assa">Indicates if the input string is in SSA/ASS format.</param>
-        /// <returns>True if the tag is present in the input; otherwise, false.</returns>
-        public static bool IsTagOn(string input, string tag, bool wholeLine, bool assa)
-        {
-            var text = input;
-
-            if (assa)
-            {
-                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
-                if (onOffTags.Contains(tag))
-                {
-                    return text.Contains($"\\{tag}1");
-                }
-
-                return text.Contains($"\\{tag}");
-            }
-
-            return text.Contains("<" + tag + ">", StringComparison.OrdinalIgnoreCase) ||
-                   text.Contains("</" + tag + ">", StringComparison.OrdinalIgnoreCase);
-        }
-
-        /// <summary>
-        /// Applies the specified HTML or ASSA tag to the input string.
-        /// </summary>
-        /// <param name="input">The input string to which the tag will be applied.</param>
-        /// <param name="tag">The tag to apply to the input string.</param>
-        /// <param name="wholeLine">If true, the tag is applied to the entire line; otherwise, the tag is applied to a portion of the line.</param>
-        /// <param name="assa">If true, the tag is treated as an ASSA tag; otherwise, it is treated as an HTML tag.</param>
-        /// <returns>A new string with the specified tag applied.</returns>
-        public static string TagOn(string input, string tag, bool wholeLine, bool assa)
-        {
-            var text = input;
-
-            if (assa)
-            {
-                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
-                if (onOffTags.Contains(tag))
-                {
-                    text = text.Replace($"{{\\{tag}1}}", string.Empty);
-                    text = text.Replace($"{{\\{tag}0}}", string.Empty);
-                    text = text.Replace($"\\{tag}1", string.Empty);
-                    text = text.Replace($"\\{tag}0", string.Empty);
-
-                    text = wholeLine ? $"{{\\{tag}1}}{text}" : $"{{\\{tag}1}}{text}{{\\{tag}0}}";
-                }
-                else
-                {
-                    if (text.Contains($"\\{tag}"))
-                    {
-                        text = text.Replace($"{{\\{tag}}}", string.Empty);
-                        text = text.Replace($"\\{tag}", string.Empty);
-                    }
-                    text = $"{{\\{tag}}}{text}";
-                }
-
-                return text;
-            }
-
-            text = text.Replace("<" + tag + ">", string.Empty);
-            text = text.Replace("</" + tag + ">", string.Empty);
-            text = text.Replace("<" + tag.ToUpperInvariant() + ">", string.Empty);
-            text = text.Replace("</" + tag.ToUpperInvariant() + ">", string.Empty);
-            var indexOfEndBracket = text.IndexOf('}');
-            if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-            {
-                text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
-            }
-            else
-            {
-                text = $"<{tag}>{text}</{tag}>";
-            }
-
-            return text;
-        }
-
-        /// <summary>
-        /// Remove the specified HTML tag from the input string.
-        /// </summary>
-        /// <param name="input">The input string containing HTML tags.</param>
-        /// <param name="tag">The HTML tag to be removed.</param>
-        /// <param name="wholeLine">Indicates whether the operation applies to the whole line.</param>
-        /// <param name="assa">Indicates whether ASSA (Advanced SubStation Alpha) tags are used.</param>
-        /// <returns>A new string with the specified tag removed.</returns>
-        public static string TagOff(string input, string tag, bool wholeLine, bool assa)
-        {
-            var text = input;
-
-            if (assa)
-            {
-                var onOffTags = new List<string> { "i", "b", "u", "s", "be" };
-                if (onOffTags.Contains(tag))
-                {
-                    if (text.Contains($"\\{tag}1"))
-                    {
-                        text = text.Replace($"{{\\{tag}1}}", string.Empty);
-                        text = text.Replace($"{{\\{tag}0}}", string.Empty);
-                        text = text.Replace($"\\{tag}1", string.Empty);
-                        text = text.Replace($"\\{tag}0", string.Empty);
-                    }
-                }
-                else
-                {
-                    if (text.Contains($"\\{tag}"))
-                    {
-                        text = text.Replace($"{{\\{tag}}}", string.Empty);
-                        text = text.Replace($"\\{tag}", string.Empty);
-                    }
-                }
-
-                return text;
-            }
-
-            if (text.Contains("<" + tag + ">", StringComparison.OrdinalIgnoreCase) ||
-                text.Contains("</" + tag + ">", StringComparison.OrdinalIgnoreCase))
-            {
-                text = text.Replace("<" + tag + ">", string.Empty);
-                text = text.Replace("</" + tag + ">", string.Empty);
-                text = text.Replace("<" + tag.ToUpperInvariant() + ">", string.Empty);
-                text = text.Replace("</" + tag.ToUpperInvariant() + ">", string.Empty);
-            }
-            else
-            {
-                var indexOfEndBracket = text.IndexOf('}');
-                if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                {
-                    text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
-                }
-            }
-
-            return text;
-        }
-
-        /// <summary>
         /// Converts a string representation of a color to a Color object. The string can be in various formats such as
         /// "rgb(r, g, b)", "rgba(r, g, b, a)", or a hex color string like "#RRGGBB" or "#RRGGBBAA".
         /// </summary>
@@ -1878,19 +1739,5 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <param name="ch">The opening character to find the closing pair for.</param>
         /// <returns>The corresponding closing character.</returns>
         public static char GetClosingPair(char ch) => ch == '<' ? '>' : '}';
-
-        /// <summary>
-        /// Determines if the provided HTML tag is an opening tag.
-        /// </summary>
-        /// <param name="tag">The HTML tag to check.</param>
-        /// <returns>True if the tag is an opening tag, otherwise false.</returns>
-        public static bool IsOpenTag(string tag) => tag.Length > 1 && tag[1] != '/';
-
-        /// <summary>
-        /// Determines whether the specified character is a start tag symbol for HTML or similar markup.
-        /// </summary>
-        /// <param name="ch">The character to check.</param>
-        /// <returns>True if the character is a start tag symbol; otherwise, false.</returns>
-        public static bool IsStartTagSymbol(char ch) => ch == '<' || ch == '{';
     }
 }

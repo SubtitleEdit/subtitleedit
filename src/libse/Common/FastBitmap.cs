@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Core.Common
@@ -169,44 +168,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             _pixelsPtr = IntPtr.Zero;
             _pBase = null;
             _isLocked = false;
-        }
-
-        public static PixelData[] ConvertByteArrayToPixelData(byte[] byteArray)
-        {
-            if (byteArray == null || byteArray.Length == 0)
-            {
-                throw new ArgumentNullException(nameof(byteArray), "Byte array cannot be null or empty.");
-            }
-
-            try
-            {
-                using (var ms = new MemoryStream(byteArray))
-                {
-                    using (var bitmap = SKBitmap.Decode(ms))
-                    {
-                        var sampleCount = 256;
-                        var pixelData = new PixelData[sampleCount];
-
-                        var imageWidth = bitmap.Width;
-
-                        for (var i = 0; i < sampleCount; i++)
-                        {
-                            var pixelX = (int)((double)i / (sampleCount - 1) * (imageWidth - 1));
-                            pixelX = Math.Max(0, Math.Min(pixelX, imageWidth - 1));
-
-                            var sampledColor = bitmap.GetPixel(pixelX, 0); // Sample from the first row.
-                            pixelData[i] = new PixelData(sampledColor);
-                        }
-
-                        return pixelData;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error converting byte array to PixelData: {ex.Message}");
-                return null; // Handle the error as needed.
-            }
         }
     }
 }

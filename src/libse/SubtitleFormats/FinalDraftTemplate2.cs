@@ -15,11 +15,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private List<string> _paragraphTypes;
 
-        public List<string> GetParagraphTypes(List<string> lines)
-        {
-            LoadSubtitle(new Subtitle(), lines, null);
-            return _paragraphTypes;
-        }
         public List<string> ActiveParagraphTypes { get; set; } = new List<string> { "Dialogue", "Parenthetical" };
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

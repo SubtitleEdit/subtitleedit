@@ -3492,20 +3492,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         private static readonly SearchValues<char> RightToLeftLetterSearchValues = SearchValues.Create(RightToLeftLetters);
 #endif
 
-        public static bool CouldBeRightToLeftLanguage(Subtitle subtitle)
-        {
-            const int maxNumberOfLinesToCheck = 20;
-            var max = Math.Min(maxNumberOfLinesToCheck, subtitle.Paragraphs.Count);
-            for (int i = 0; i < max; i++)
-            {
-                if (ContainsRightToLeftLetter(subtitle.Paragraphs[i].Text))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public static bool ContainsRightToLeftLetter(string text)
         {
 #if NET8_0_OR_GREATER

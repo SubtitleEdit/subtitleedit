@@ -1,7 +1,6 @@
 ﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -102,45 +101,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return MemoryMarshal.Read<uint>(bytes);
         }
 
-        public void ReplaceYellowWithWhite()
-        {
-            var keepAlpha = PackBgra(0, 0, 0, 255);
-            var white = PackBgra(255, 255, 255, 0);
-            var data = _bitmapData.AsSpan();
-            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
-            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
-            {
-                if (data[i + 3] > 200 && // Alpha
-                    data[i + 2] > 199 && // Red
-                    data[i + 1] > 190 && // Green
-                    data[i] < 40) // Blue
-                {
-                    pixels[p] = (pixels[p] & keepAlpha) | white;
-                }
-            }
-        }
-
-        public void ReplaceColor(int alpha, int red, int green, int blue,
-            int alphaTo, int redTo, int greenTo, int blueTo)
-        {
-            if ((uint)alpha > 255 || (uint)red > 255 || (uint)green > 255 || (uint)blue > 255)
-            {
-                // A channel outside 0-255 can never equal a pixel byte, so nothing would match.
-                return;
-            }
-
-            var from = PackBgra((byte)blue, (byte)green, (byte)red, (byte)alpha);
-            var to = PackBgra((byte)blueTo, (byte)greenTo, (byte)redTo, (byte)alphaTo);
-            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
-            for (var p = 0; p < pixels.Length; p++)
-            {
-                if (pixels[p] == from)
-                {
-                    pixels[p] = to;
-                }
-            }
-        }
-
         public void InvertColors()
         {
             var rgb = PackBgra(255, 255, 255, 0);
@@ -148,19 +108,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             for (var p = 0; p < pixels.Length; p++)
             {
                 pixels[p] ^= rgb;
-            }
-        }
-
-        public void ReplaceNonWhiteWithTransparent()
-        {
-            var data = _bitmapData.AsSpan();
-            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
-            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
-            {
-                if (data[i + 2] + data[i + 1] + data[i] < 300)
-                {
-                    pixels[p] = 0;
-                }
             }
         }
 
@@ -655,237 +602,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return 0;
         }
 
-        public int CropTransparentSidesAndBottom(int maximumCropping, bool bottom)
-        {
-            var leftStart = 0;
-            var done = false;
-            var x = 0;
-            int y;
-            while (!done && x < Width)
-            {
-                y = 0;
-                while (!done && y < Height)
-                {
-                    int alpha = GetAlpha(x, y);
-                    if (alpha != 0)
-                    {
-                        done = true;
-                        leftStart = x;
-                        if (leftStart > maximumCropping)
-                        {
-                            leftStart -= maximumCropping;
-                        }
-
-                        if (leftStart < 0)
-                        {
-                            leftStart = 0;
-                        }
-                    }
-
-                    y++;
-                }
-
-                x++;
-            }
-
-            var rightEnd = Width - 1;
-            done = false;
-            x = Width - 1;
-            while (!done && x >= 0)
-            {
-                y = 0;
-                while (!done && y < Height)
-                {
-                    int alpha = GetAlpha(x, y);
-                    if (alpha != 0)
-                    {
-                        done = true;
-                        rightEnd = x;
-                        if (Width - rightEnd > maximumCropping)
-                        {
-                            rightEnd += maximumCropping;
-                        }
-
-                        if (rightEnd >= Width)
-                        {
-                            rightEnd = Width - 1;
-                        }
-                    }
-
-                    y++;
-                }
-
-                x--;
-            }
-
-            //crop bottom
-            done = false;
-            var newHeight = Height;
-            if (bottom)
-            {
-                y = Height - 1;
-                while (!done && y > 0)
-                {
-                    x = 0;
-                    while (!done && x < Width)
-                    {
-                        int alpha = GetAlpha(x, y);
-                        if (alpha != 0)
-                        {
-                            done = true;
-                            newHeight = y + maximumCropping + 1;
-                            if (newHeight > Height)
-                            {
-                                newHeight = Height;
-                            }
-                        }
-
-                        x++;
-                    }
-
-                    y--;
-                }
-            }
-
-            if (leftStart < 2 && rightEnd >= Width - 3)
-            {
-                return 0;
-            }
-
-            int newWidth = rightEnd - leftStart + 1;
-            if (newWidth <= 0)
-            {
-                return 0;
-            }
-
-            var newBitmapData = new byte[newWidth * newHeight * 4];
-            var index = 0;
-            var newWidthX4 = 4 * newWidth;
-            for (y = 0; y < newHeight; y++)
-            {
-                int pixelAddress = (leftStart * 4) + (y * _widthX4);
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, newWidthX4);
-                index += newWidthX4;
-            }
-
-            Width = newWidth;
-            Height = newHeight;
-            _bitmapData = newBitmapData;
-            return leftStart;
-        }
-
-        /// <returns>Pixels cropped left</returns>
-        public int CropSidesAndBottom(int maximumCropping, SKColor transparentColor, bool bottom)
-        {
-            int leftStart = 0;
-            bool done = false;
-            int x = 0;
-            int y;
-            while (!done && x < Width)
-            {
-                y = 0;
-                while (!done && y < Height)
-                {
-                    var c = GetPixel(x, y);
-                    if (!c.Equals(transparentColor))
-                    {
-                        done = true;
-                        leftStart = x;
-                        leftStart -= maximumCropping;
-                        if (leftStart < 0)
-                        {
-                            leftStart = 0;
-                        }
-                    }
-
-                    y++;
-                }
-
-                x++;
-            }
-
-            int rightEnd = Width - 1;
-            done = false;
-            x = Width - 1;
-            while (!done && x >= 0)
-            {
-                y = 0;
-                while (!done && y < Height)
-                {
-                    var c = GetPixel(x, y);
-                    if (!c.Equals(transparentColor))
-                    {
-                        done = true;
-                        rightEnd = x;
-                        rightEnd += maximumCropping;
-                        if (rightEnd >= Width)
-                        {
-                            rightEnd = Width - 1;
-                        }
-                    }
-
-                    y++;
-                }
-
-                x--;
-            }
-
-            //crop bottom
-            done = false;
-            int newHeight = Height;
-            if (bottom)
-            {
-                y = Height - 1;
-                while (!done && y > 0)
-                {
-                    x = 0;
-                    while (!done && x < Width)
-                    {
-                        var c = GetPixel(x, y);
-                        if (!c.Equals(transparentColor))
-                        {
-                            done = true;
-                            newHeight = y + maximumCropping;
-                            if (newHeight > Height)
-                            {
-                                newHeight = Height;
-                            }
-                        }
-
-                        x++;
-                    }
-
-                    y--;
-                }
-            }
-
-            if (leftStart < 2 && rightEnd >= Width - 3)
-            {
-                return 0;
-            }
-
-            int newWidth = rightEnd - leftStart + 1;
-            if (newWidth <= 0)
-            {
-                return 0;
-            }
-
-            var newBitmapData = new byte[newWidth * newHeight * 4];
-            int index = 0;
-            var newWidthX4 = 4 * newWidth;
-            for (y = 0; y < newHeight; y++)
-            {
-                int pixelAddress = (leftStart * 4) + (y * _widthX4);
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, newWidthX4);
-                index += newWidthX4;
-            }
-
-            Width = newWidth;
-            Height = newHeight;
-            _bitmapData = newBitmapData;
-            return leftStart;
-        }
-
         public void CropTop(int maximumCropping, SKColor transparentColor)
         {
             bool done = false;
@@ -979,34 +695,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return newTop;
         }
 
-        public int CalcTopCropping(SKColor color)
-        {
-            var y = 0;
-            for (; y < Height; y++)
-            {
-                if (!IsHorizontalLineColor(y, color))
-                {
-                    break;
-                }
-            }
-
-            return y;
-        }
-
-        public int CalcBottomCropping(SKColor color)
-        {
-            var y = Height - 1;
-            for (; y > 0; y--)
-            {
-                if (!IsHorizontalLineColor(y, color))
-                {
-                    break;
-                }
-            }
-
-            return Height - y;
-        }
-
         public int CalcBottomTransparent()
         {
             var y = Height - 1;
@@ -1021,20 +709,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Height - y;
         }
 
-        public int CalcLeftCropping(SKColor color)
-        {
-            var x = 0;
-            for (; x < Width; x++)
-            {
-                if (!IsVerticalLineColor(x, color))
-                {
-                    break;
-                }
-            }
-
-            return x;
-        }
-
         public int CalcLeftCroppingTransparent()
         {
             var x = 0;
@@ -1047,46 +721,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return x;
-        }
-
-        public int CalcRightCropping(SKColor color)
-        {
-            var x = Width - 1;
-            for (; x > 0; x--)
-            {
-                if (!IsVerticalLineColor(x, color))
-                {
-                    break;
-                }
-            }
-
-            return Width - x;
-        }
-
-        public bool IsVerticalLineColor(int x, SKColor color)
-        {
-            for (var y = 0; y < Height; y++)
-            {
-                if (!IsColorClose(GetPixel(x, y), color, 9))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public bool IsHorizontalLineColor(int y, SKColor color)
-        {
-            for (var x = 0; x < Width; x++)
-            {
-                if (!IsColorClose(GetPixel(x, y), color, 9))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         public bool IsHorizontalLineTransparent(int y)
@@ -1133,12 +767,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 _bitmapData[_pixelAddress],     // blue
                 _bitmapData[_pixelAddress + 3]  // alpha
             );
-        }
-
-        public byte[] GetPixelColors(int x, int y)
-        {
-            _pixelAddress = (x * 4) + (y * _widthX4);
-            return new[] { _bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress] };
         }
 
         public SKColor GetPixelNext()
@@ -1304,56 +932,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new NikseBitmap(section.Width, section.Height, newBitmapData);
         }
 
-        /// <summary>
-        /// Returns brightest color (not white though)
-        /// </summary>
-        /// <returns>Brightest color, if not found or if brightes color is white, then transparent color is returned</returns>
-        public SKColor GetBrightestColorWhiteIsTransparent()
-        {
-            int max = Width * Height - 4;
-            var brightest = SKColors.Black;
-            for (int i = 0; i < max; i++)
-            {
-                var c = GetPixelNext();
-                if (c.Alpha > 220 && c.Red + c.Green + c.Blue > 200 && c.Red + c.Green + c.Blue > brightest.Red + brightest.Green + brightest.Blue)
-                {
-                    brightest = c;
-                }
-            }
-
-            if (IsColorClose(SKColors.White, brightest, 40))
-            {
-                return SKColors.Transparent;
-            }
-
-            if (IsColorClose(SKColors.Black, brightest, 10))
-            {
-                return SKColors.Transparent;
-            }
-
-            return brightest;
-        }
-
-        /// <summary>
-        /// Returns brightest color
-        /// </summary>
-        /// <returns>Brightest color</returns>
-        public SKColor GetBrightestColor()
-        {
-            int max = Width * Height - 4;
-            var brightest = SKColors.Black;
-            for (int i = 0; i < max; i++)
-            {
-                var c = GetPixelNext();
-                if (c.Alpha > 220 && c.Red + c.Green + c.Blue > 200 && c.Red + c.Green + c.Blue > brightest.Red + brightest.Green + brightest.Blue)
-                {
-                    brightest = c;
-                }
-            }
-
-            return brightest;
-        }
-
         private static bool IsColorClose(SKColor color1, SKColor color2, int maxDiff)
         {
             if (Math.Abs(color1.Red - color2.Red) < maxDiff &&
@@ -1364,38 +942,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return false;
-        }
-
-        public void GrayScale()
-        {
-            var data = _bitmapData.AsSpan();
-            for (int i = 0; i < data.Length; i += 4)
-            {
-                int medium = Convert.ToInt32((data[i + 2] + data[i + 1] + data[i]) * 1.5 / 3.0 + 2);
-                if (medium > byte.MaxValue)
-                {
-                    medium = byte.MaxValue;
-                }
-
-                data[i + 2] = data[i + 1] = data[i] = (byte)medium;
-            }
-        }
-
-        /// <summary>
-        /// Make pixels with some transparency completely transparent
-        /// </summary>
-        /// <param name="minAlpha">Min alpha value, 0=transparent, 255=fully visible</param>
-        public void MakeBackgroundTransparent(int minAlpha)
-        {
-            var data = _bitmapData.AsSpan();
-            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
-            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
-            {
-                if (data[i + 3] < minAlpha)
-                {
-                    pixels[p] = 0;
-                }
-            }
         }
 
         public void MakeTwoColor(int minRgb)
@@ -1521,48 +1067,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             _bitmapData = newBitmapData;
         }
 
-        public void SaveAsTarga(string fileName)
-        {
-            // TGA header (18-byte fixed header)
-            byte[] header =
-            {
-                0, // ID length (1 bytes)
-                0, // no color map (1 bytes)
-                2, // uncompressed, true color (1 bytes)
-                0, 0, // Color map First Entry Index
-                0, 0, // Color map Length
-                0, // Color map Entry Size
-                0, 0, 0, 0, // x and y origin
-                (byte)(Width & 0x00FF),
-                (byte)((Width & 0xFF00) >> 8),
-                (byte)(Height & 0x00FF),
-                (byte)((Height & 0xFF00) >> 8),
-                32, // pixel depth - 32=32 bit bitmap
-                0 // Image Descriptor
-            };
-
-            var pixels = new byte[_bitmapData.Length];
-            int offsetDest = 0;
-            for (int y = Height - 1; y >= 0; y--) // takes lines from bottom lines to top (mirrored horizontally)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    var c = GetPixel(x, y);
-                    pixels[offsetDest] = c.Blue;
-                    pixels[offsetDest + 1] = c.Green;
-                    pixels[offsetDest + 2] = c.Red;
-                    pixels[offsetDest + 3] = c.Alpha;
-                    offsetDest += 4;
-                }
-            }
-
-            using (var fileStream = File.Create(fileName))
-            {
-                fileStream.Write(header, 0, header.Length);
-                fileStream.Write(pixels, 0, pixels.Length);
-            }
-        }
-
         /// <summary>
         /// Horizontal line.
         /// </summary>
@@ -1658,59 +1162,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Width - startX - transparentPixelsRight;
         }
 
-        public void EnsureEvenLines(SKColor fillColor)
-        {
-            if (Width % 2 == 0 && Height % 2 == 0)
-            {
-                return;
-            }
-
-            int newWidth = Width;
-            bool widthChanged = false;
-            if (Width % 2 != 0)
-            {
-                newWidth++;
-                widthChanged = true;
-            }
-
-            int newHeight = Height;
-            bool heightChanged = false;
-            if (Height % 2 != 0)
-            {
-                newHeight++;
-                heightChanged = true;
-            }
-
-            var newBitmapData = new byte[newWidth * newHeight * 4];
-            var newWidthX4 = 4 * newWidth;
-            int index = 0;
-            for (int y = 0; y < Height; y++)
-            {
-                int pixelAddress = y * _widthX4;
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, _widthX4);
-                index += newWidthX4;
-            }
-            Width = newWidth;
-            Height = newHeight;
-            _bitmapData = newBitmapData;
-
-            if (widthChanged)
-            {
-                for (var y = 0; y < Height; y++)
-                {
-                    SetPixel(Width - 1, y, fillColor);
-                }
-            }
-
-            if (heightChanged)
-            {
-                for (var x = 0; x < Width; x++)
-                {
-                    SetPixel(x, Height - 1, fillColor);
-                }
-            }
-        }
-
         public bool IsEqualTo(NikseBitmap bitmap)
         {
             if (Width != bitmap.Width || Height != bitmap.Height)
@@ -1732,20 +1183,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return _bitmapData.AsSpan().SequenceEqual(bitmap._bitmapData);
-        }
-
-        public void SetTransparentTo(SKColor transparent)
-        {
-            var replacement = PackBgra(transparent.Blue, transparent.Green, transparent.Red, transparent.Alpha);
-            var data = _bitmapData.AsSpan();
-            var pixels = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
-            for (int i = 0, p = 0; p < pixels.Length; i += 4, p++)
-            {
-                if (data[i + 3] == 0)
-                {
-                    pixels[p] = replacement;
-                }
-            }
         }
 
         /// <summary>
@@ -1777,28 +1214,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return table;
-        }
-
-        public void ChangeBrightness(decimal factor)
-        {
-            var scale = BuildScaleTable(factor);
-            var data = _bitmapData.AsSpan();
-            for (int i = 0; i < data.Length; i += 4)
-            {
-                data[i + 2] = scale[data[i + 2]];
-                data[i + 1] = scale[data[i + 1]];
-                data[i] = scale[data[i]];
-            }
-        }
-
-        public void ChangeAlpha(decimal factor)
-        {
-            var scale = BuildScaleTable(factor);
-            var data = _bitmapData.AsSpan();
-            for (int i = 0; i < data.Length; i += 4)
-            {
-                data[i + 3] = scale[data[i + 3]];
-            }
         }
     }
 }

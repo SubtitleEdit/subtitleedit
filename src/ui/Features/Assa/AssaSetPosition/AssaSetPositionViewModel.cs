@@ -106,8 +106,6 @@ public partial class AssaSetPositionViewModel : ObservableObject
     private static readonly Regex PosRegex = new(@"\\pos\(\s*-?\d+(\.\d+)?\s*,\s*-?\d+(\.\d+)?\s*\)", RegexOptions.Compiled);
     private static readonly Regex InlineAlignmentRegex = new(@"\\an([1-9])", RegexOptions.Compiled);
 
-    public decimal ResultRotation => Rotation;
-
     /// <summary>
     /// The override tags OK writes in front of the line: \pos plus, when the text is rotated, \frz.
     /// </summary>

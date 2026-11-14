@@ -6,16 +6,8 @@
 
         public int LineIndex { get; set; }
 
-        public const int JustifyLeft = 0;
-        public const int JustifyRight = 1;
         public const int JustifyCenter = 2;
-        public const int JustifyFull = 3;
-
         public const int PrintDirectionTop = 0;
-        public const int PrintDirectionBottom = 1;
-        public const int PrintDirectionCenter = 2;
-        public const int PrintDirectionFull = 3;
-
         public int FillColorRed { get; set; }
         public int FillColorGreen { get; set; }
         public int FillColorBlue { get; set; }

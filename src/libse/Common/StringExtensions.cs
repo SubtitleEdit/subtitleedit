@@ -54,23 +54,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return false;
         }
 
-        public static bool LineBreakStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
-        {
-            if (text == null || (!threeLengthTag && !includeFont))
-            {
-                return false;
-            }
-
-            var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-            if (newLineIdx < 0 || text.Length < newLineIdx + Environment.NewLine.Length + 3)
-            {
-                return false;
-            }
-
-            text = text.Substring(newLineIdx + Environment.NewLine.Length);
-            return StartsWithHtmlTag(text, threeLengthTag, includeFont);
-        }
-
         private static bool StartsWithHtmlTag(string text, bool threeLengthTag, bool includeFont)
         {
             if (threeLengthTag && text.Length >= 3 && text[0] == '<' && text[2] == '>' && (text[1] == 'i' || text[1] == 'I' || text[1] == 'u' || text[1] == 'U' || text[1] == 'b' || text[1] == 'B'))

@@ -19,8 +19,6 @@
         public int EdgeColorBlue { get; set; }
         public int EdgeColorGreen { get; set; }
         public int EdgeColorRed { get; set; }
-        public int EdgeOpacity => ForegroundOpacity;
-
         public SetPenColor()
         {
             ForegroundColorRed = 2;

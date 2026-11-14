@@ -38,8 +38,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         private readonly ulong _lengthMask;
         private readonly bool _requiresLines;
 
-        public int ListCount => _listIds.Count;
-
         /// <summary>
         /// Each list entry is a (very small) regex fragment. It is expanded into literal
         /// alternatives up front; the only syntax accepted is what the word lists actually

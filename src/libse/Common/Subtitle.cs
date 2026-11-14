@@ -10,8 +10,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class Subtitle
     {
-        public const int MaxFileSize = 1024 * 1024 * 20; // 20 MB
-
         public List<Paragraph> Paragraphs { get; private set; }
 
         public string Header { get; set; } = string.Empty;
@@ -73,11 +71,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return Paragraphs[index];
-        }
-
-        public Paragraph GetParagraphOrDefaultById(Guid? id)
-        {
-            return Paragraphs.Find(p => p.Id == id);
         }
 
         public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName, SubtitleFormat format, SubtitleFormat format2 = null, SubtitleFormat format3 = null)
@@ -814,45 +807,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return -1;
         }
 
-        public Paragraph GetFirstAlike(Paragraph p)
-        {
-            foreach (var item in Paragraphs)
-            {
-                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
-                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1 &&
-                    p.Text == item.Text)
-                {
-                    return item;
-                }
-            }
-
-            return null;
-        }
-
-        public Paragraph GetNearestAlike(Paragraph p)
-        {
-            foreach (var item in Paragraphs)
-            {
-                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
-                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1 &&
-                    p.Text == item.Text)
-                {
-                    return item;
-                }
-            }
-
-            foreach (var item in Paragraphs)
-            {
-                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
-                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1)
-                {
-                    return item;
-                }
-            }
-
-            return Paragraphs.OrderBy(s => Math.Abs(s.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds)).FirstOrDefault();
-        }
-
         public int RemoveEmptyLines()
         {
             var count = Paragraphs.Count;
@@ -906,19 +860,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             var i = 0;
             Paragraphs.RemoveAll(p => indexSet.Contains(i++));
             return count - Paragraphs.Count;
-        }
-
-        /// <summary>
-        /// Removes paragraphs by a list of IDs
-        /// </summary>
-        /// <param name="ids">IDs of paragraphs/lines to delete</param>
-        /// <returns>Number of lines deleted</returns>
-        public int RemoveParagraphsByIds(IEnumerable<Guid?> ids)
-        {
-            var beforeCount = Paragraphs.Count;
-            var idSet = new HashSet<Guid?>(ids);
-            Paragraphs = Paragraphs.Where(p => !idSet.Contains(p.Id)).ToList();
-            return beforeCount - Paragraphs.Count;
         }
 
         /// <summary>
@@ -1002,19 +943,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return Paragraphs.Count - 1;
         }
 
-        public Paragraph GetFirstParagraphOrDefaultByTime(double milliseconds)
-        {
-            foreach (var p in Paragraphs)
-            {
-                if (p.StartTime.TotalMilliseconds < milliseconds && milliseconds < p.EndTime.TotalMilliseconds)
-                {
-                    return p;
-                }
-            }
-
-            return null;
-        }
-
         /// <summary>
         /// Fast hash code for subtitle - includes pre (encoding atm) + header + number + start + end + text + style + actor + extra.
         /// </summary>
@@ -1062,26 +990,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return hash.ToHashCode();
-        }
-
-        /// <summary>
-        /// Fast hash code for subtitle text.
-        /// </summary>
-        /// <returns>Hash value that can be used for quick text compare</returns>
-        public int GetFastHashCodeTextOnly()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                var hash = 17;
-                var max = Paragraphs.Count;
-                for (var i = 0; i < max; i++)
-                {
-                    var p = Paragraphs[i];
-                    hash = hash * 23 + p.Text.GetHashCode();
-                }
-
-                return hash;
-            }
         }
 
         /// <summary>
