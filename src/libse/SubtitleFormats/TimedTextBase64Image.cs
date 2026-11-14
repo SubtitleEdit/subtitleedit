@@ -4,7 +4,6 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats

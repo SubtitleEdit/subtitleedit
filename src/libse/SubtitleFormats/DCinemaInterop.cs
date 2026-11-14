@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {

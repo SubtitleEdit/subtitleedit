@@ -4,7 +4,6 @@ using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
-using Nikse.SubtitleEdit.Logic;
 
 namespace UITests.Features.Tools.ChangeCasing;
 

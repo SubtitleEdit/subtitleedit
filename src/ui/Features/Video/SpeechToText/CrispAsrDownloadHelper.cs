@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
-using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;

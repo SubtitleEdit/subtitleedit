@@ -17,7 +17,6 @@ using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Features.Video.VideoOcr.EngineSettings;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
