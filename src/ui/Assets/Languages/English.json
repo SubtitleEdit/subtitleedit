@@ -5132,6 +5132,8 @@
     "fontsAndGraphics": "Fonts and graphics",
     "wrapStyle": "Wrap style",
     "borderAndShadowScaling": "Border and shadow scaling",
+    "yCbCrMatrix": "YCbCr matrix",
+    "yCbCrMatrixHint": "Must match the video's colorspace and range: TV.709 for HD SDR video, TV.601 for SD; None for anything other than 601/709 (e.g. HDR/BT.2020). If omitted, renderers will assume TV.601 (for VSFilter compatibility).",
     "collisions": "Collisions",
     "playDepth": "Play depth",
     "timer": "Timer",

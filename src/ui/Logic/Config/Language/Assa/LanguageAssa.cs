@@ -369,6 +369,8 @@ public class LanguageAssa
     public string FontsAndGraphics { get; set; }
     public string WrapStyle { get; set; }
     public string BorderAndShadowScaling { get; set; }
+    public string YCbCrMatrix { get; set; }
+    public string YCbCrMatrixHint { get; set; }
     public string Collisions { get; set; }
     public string PlayDepth { get; set; }
     public string Timer { get; set; }
@@ -920,6 +922,8 @@ public class LanguageAssa
         FontsAndGraphics = "Fonts and graphics";
         WrapStyle = "Wrap style";
         BorderAndShadowScaling = "Border and shadow scaling";
+        YCbCrMatrix = "YCbCr matrix";
+        YCbCrMatrixHint = "Must match the video's colorspace and range: TV.709 for HD SDR video, TV.601 for SD; None for anything other than 601/709 (e.g. HDR/BT.2020). If omitted, renderers will assume TV.601 (for VSFilter compatibility).";
         Collisions = "Collisions";
         PlayDepth = "Play depth";
         Timer = "Timer";
