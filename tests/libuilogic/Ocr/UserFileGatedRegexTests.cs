@@ -53,6 +53,29 @@ public class UserFileGatedRegexTests : IDisposable
         Assert.Equal("Vengo de Madrid, iFuera!", Fix("Vengo deMadrid, iFuera!"));
     }
 
+    // A user file saved as ANSI by a text editor (often still declaring encoding="utf-8") used to
+    // fail to load on "¡"/"Á" and was silently dropped, so none of its rules ran.
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void GatedRuleInAnsiUserFile_IsApplied(bool withUtf8Declaration)
+    {
+        var xml = (withUtf8Declaration ? "<?xml version=\"1.0\" encoding=\"utf-8\"?>" : string.Empty) +
+                  "<OCRFixReplaceList><RegularExpressionsIfSpelledCorrectly>" + UserRule +
+                  "</RegularExpressionsIfSpelledCorrectly></OCRFixReplaceList>";
+        File.WriteAllBytes(Path.Combine(_folder, "spa_OCRFixReplaceList_User.xml"), System.Text.Encoding.Latin1.GetBytes(xml));
+
+        Assert.Equal("No irás a... - ¡Fuera!", Fix("No irás a... - iFuera!"));
+    }
+
+    [Fact]
+    public void BrokenUserFile_IsIgnoredAndShippedRulesStillRun()
+    {
+        WriteUserList("<RegularExpressionsIfSpelledCorrectly>" + UserRule); // not closed
+
+        Assert.Equal("Vengo de Madrid, iFuera!", Fix("Vengo deMadrid, iFuera!"));
+    }
+
     private void WriteUserList(string sections)
     {
         File.WriteAllText(
