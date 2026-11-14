@@ -124,7 +124,7 @@ public class AdvancedTranslatorEchoTests
             [3] = "...",
         };
 
-        Assert.Equal(3, AdvancedTranslatorBase.FindPlaceholderTranslation(map, Lines));
+        Assert.Equal(3, AdvancedTranslatorBase.FindPlaceholderTranslation(map, Lines, new List<LlamaCppAdvancedProtocol.HistoryPair>()));
     }
 
     [Fact]
@@ -137,6 +137,6 @@ public class AdvancedTranslatorEchoTests
             [3] = "Ich war bis spät im Büro.",
         };
 
-        Assert.Equal(-1, AdvancedTranslatorBase.FindPlaceholderTranslation(map, Lines));
+        Assert.Equal(-1, AdvancedTranslatorBase.FindPlaceholderTranslation(map, Lines, new List<LlamaCppAdvancedProtocol.HistoryPair>()));
     }
 }

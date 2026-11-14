@@ -200,43 +200,122 @@ public static class LlamaCppAdvancedProtocol
     /// <summary>
     /// True when a reply value is not a translation of <paramref name="source"/>: the prompt's
     /// example (<see cref="IsExamplePlaceholder"/>) or a value that swallowed protocol structure
-    /// (<see cref="IsStructureLeak"/>).
+    /// (<see cref="IsStructureLeak"/>). <paramref name="expansion"/> is the translation length per
+    /// source character measured on the batch (<see cref="MeasureExpansion"/>), or null to skip
+    /// the length test.
     /// </summary>
-    public static bool IsBrokenValue(string source, string translation)
+    public static bool IsBrokenValue(string source, string translation, double? expansion)
     {
-        return IsExamplePlaceholder(translation) || IsStructureLeak(source, translation);
+        return IsExamplePlaceholder(translation) || IsStructureLeak(source, translation, expansion);
+    }
+
+    /// <summary>
+    /// <see cref="IsBrokenValue"/> without the length test. Used once a line is on its own: there
+    /// is nothing to measure the expansion against, nothing left to cut, and a length-only
+    /// objection would fail the whole file (#16885).
+    /// </summary>
+    public static bool IsMalformedValue(string source, string translation)
+    {
+        return IsBrokenValue(source, translation, expansion: null);
     }
 
     /// <summary>
     /// True when a reply value holds more than its own line: the next lines' JSON
-    /// (<c>2":"...</c>, <c>"}]}</c>) written inside the string with escaped quotes, or a runaway
-    /// far longer than the source, e.g. the model's own notes ("Note: ... Let me correct that.").
-    /// Index-Nailong 9B put four later lines and a comment into the value for "Come on up." (#16856).
-    /// The schema only fixes the keys, so the parser accepts such a value as valid JSON.
+    /// (<c>2":"...</c>, <c>"}]}</c>, with ASCII or typographic quotes) written inside the string,
+    /// or a runaway far longer than a translation of the source would be, e.g. the model's own
+    /// notes ("Note: ... Let me correct that."). Index-Nailong 9B put four later lines and a
+    /// comment into the value for "Come on up." (#16856); the schema only fixes the keys, so the
+    /// parser accepts such a value as valid JSON.
+    /// How long a translation would be depends on the language pair - Chinese to English grows
+    /// three to five times in characters, English to Chinese shrinks to a third - so the length
+    /// test takes <paramref name="expansion"/>, the translation length per source character
+    /// measured on the batch (<see cref="MeasureExpansion"/>), and allows four times that with a
+    /// floor of 80 characters. A fixed four times the source length failed correct Chinese files
+    /// (#16885). With nothing to measure against (null) there is no length test.
     /// </summary>
-    public static bool IsStructureLeak(string source, string translation)
+    public static bool IsStructureLeak(string source, string translation, double? expansion)
     {
         if (string.IsNullOrEmpty(translation))
         {
             return false;
         }
 
-        if (StructureLeakRegex.IsMatch(translation) && !StructureLeakRegex.IsMatch(source ?? string.Empty))
+        if (IsLeakedStructure(source, translation))
         {
             return true;
         }
 
-        var sourceLength = (source ?? string.Empty).Trim().Length;
-        return translation.Trim().Length > Math.Max(MinRunawayLength, RunawayFactor * sourceLength);
+        if (expansion is null)
+        {
+            return false;
+        }
+
+        var expectedLength = (source ?? string.Empty).Trim().Length * expansion.Value;
+        return translation.Trim().Length > Math.Max(MinRunawayLength, RunawayFactor * expectedLength);
+    }
+
+    /// <summary>
+    /// Translation characters per source character over <paramref name="pairs"/>: the history
+    /// pairs and the other lines of the reply being checked, never the line itself, so a runaway
+    /// cannot calibrate itself. Null below <see cref="MinCalibrationChars"/> source characters,
+    /// where the ratio would be noise.
+    /// The value is the lower median of the per-pair ratios, weighted by source length, not the
+    /// overall ratio: a second runaway in the same reply would otherwise lift the budget of the
+    /// first, and in a short batch two of them let each other through.
+    /// </summary>
+    public static double? MeasureExpansion(IEnumerable<(string Source, string Translation)> pairs)
+    {
+        var ratios = new List<(double Ratio, int SourceChars)>();
+        long sourceChars = 0;
+        foreach (var (source, translation) in pairs)
+        {
+            var sourceLength = (source ?? string.Empty).Trim().Length;
+            if (sourceLength == 0)
+            {
+                continue;
+            }
+
+            ratios.Add(((double)(translation ?? string.Empty).Trim().Length / sourceLength, sourceLength));
+            sourceChars += sourceLength;
+        }
+
+        if (sourceChars < MinCalibrationChars)
+        {
+            return null;
+        }
+
+        ratios.Sort((a, b) => a.Ratio.CompareTo(b.Ratio));
+        long cumulative = 0;
+        foreach (var (ratio, length) in ratios)
+        {
+            cumulative += length;
+            if (cumulative * 2 >= sourceChars)
+            {
+                return ratio;
+            }
+        }
+
+        return ratios[ratios.Count - 1].Ratio;
+    }
+
+    private static bool IsLeakedStructure(string source, string translation)
+    {
+        return !string.IsNullOrEmpty(translation) &&
+               StructureLeakRegex.IsMatch(translation) &&
+               !StructureLeakRegex.IsMatch(source ?? string.Empty);
     }
 
     private const int MinRunawayLength = 80;
     private const int RunawayFactor = 4;
+    private const int MinCalibrationChars = 20;
 
     // A line-number key with its colon and opening quote ("2":" / 2":"), or a JSON object/array end
-    // right after a string ("}  "]}).
+    // right after a string ("}  "]}). The quotes may be typographic (“ ” U+201C/U+201D): with the
+    // JSON grammar on, an unescaped ASCII quote cannot appear inside the value, so a model that
+    // closes the string early writes a curly one (Hy-MT2 7B: ...get it out?”} No, line 8 is in
+    // history as well. Let me fix the JSON properly. { - #16885).
     private static readonly System.Text.RegularExpressions.Regex StructureLeakRegex =
-        new(@"(?<![\d\p{L}])\d+""\s*:\s*""|""\s*\}|\}\s*\]\s*\}", System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+        new(@"(?<![\d\p{L}])\d+[""\u201D]\s*:\s*[""\u201C\u201D]|[""\u201D]\s*\}|\}\s*\]\s*\}", System.Text.RegularExpressions.RegexOptions.CultureInvariant);
 
     private static readonly System.Text.RegularExpressions.Regex ExamplePlaceholderRegex =
         new(@"^\s*<\s*translation of line\s*\d*\s*>\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.CultureInvariant);
