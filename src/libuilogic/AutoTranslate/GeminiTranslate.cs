@@ -31,7 +31,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "gemini-flash-lite-latest",
 
             // Gemini 4
+            "gemini-4-carbon",
             "gemini-4-argon",
+            "gemini-4-hydrogen",
 
             // Gemini 3.x
             "gemini-3.8-flash",

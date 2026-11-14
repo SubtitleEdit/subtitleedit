@@ -28,17 +28,22 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "openai/gpt-5.6-sol",                       // OpenAI flagship for complex professional work
             "openai/gpt-6.1-sol",                       // Newest OpenAI flagship
             "openai/gpt-6-sol",                         // GPT-6 flagship
+            "openai/gpt-6.1-terra",                     // Newest OpenAI mid-tier, balanced cost
             "openai/gpt-5.5",                           // Previous-gen flagship general-purpose translator
             "anthropic/claude-opus-5.5",                // Current Anthropic flagship for nuanced translation
             "anthropic/claude-sonnet-5.5",              // Strong balance of quality and cost
+            "anthropic/claude-fable-5.2",               // Anthropic Fable, newest
             "anthropic/claude-opus-5",                  // Previous Anthropic flagship
             "anthropic/claude-opus-4.8",                // Exceptional nuance and formal tone preservation
             "anthropic/claude-sonnet-5",                // Previous-gen Sonnet
+            "google/gemini-4-carbon",                   // Google frontier flagship
             "google/gemini-4-argon",                    // Google's newest frontier model
+            "google/gemini-4-hydrogen",                 // Fast, low-cost Gemini 4
             "google/gemini-3.1-pro-preview",            // Massive context for translating whole books
             "deepseek/deepseek-v4-pro",                 // The most cost-effective reasoning translator
             "z-ai/glm-5.3",                             // Strong open-weight generalist
             "z-ai/glm-5.2",                             // Previous GLM generalist
+            "moonshotai/kimi-k3.1-pro",                 // Newest Kimi, strong for Asian languages
             "moonshotai/kimi-k3",                       // Strong for Asian languages
             "moonshotai/kimi-k2.6",                     // Previous Kimi
             "x-ai/grok-4.7",                            // xAI flagship
