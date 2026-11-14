@@ -36,6 +36,9 @@ public partial class AssaPropertiesViewModel : ObservableObject
     [ObservableProperty] private WrapStyleItem _selectedWrapStyle;
     [ObservableProperty] private ObservableCollection<BorderAndShadowScalingItem> _borderAndShadowScalingStyles;
     [ObservableProperty] private BorderAndShadowScalingItem _selectedBorderAndShadowScalingStyle;
+    [ObservableProperty] private ObservableCollection<YCbCrMatrixItem> _yCbCrMatrixItems;
+    [ObservableProperty] private YCbCrMatrixItem _selectedYCbCrMatrix;
+    private string? _unrecognizedYCbCrMatrixValue;
 
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
@@ -65,6 +68,8 @@ public partial class AssaPropertiesViewModel : ObservableObject
         SelectedWrapStyle = WrapStyles[2];
         BorderAndShadowScalingStyles = new ObservableCollection<BorderAndShadowScalingItem>(BorderAndShadowScalingItem.List());
         SelectedBorderAndShadowScalingStyle = BorderAndShadowScalingStyles[2];
+        YCbCrMatrixItems = new ObservableCollection<YCbCrMatrixItem>(YCbCrMatrixItem.List());
+        SelectedYCbCrMatrix = YCbCrMatrixItems[0];
 
         _videoFileName = string.Empty;
         Header = string.Empty;
@@ -103,6 +108,19 @@ public partial class AssaPropertiesViewModel : ObservableObject
         else
         {
             UpdateTag("ScaledBorderAndShadow", "Hide", true);
+        }
+
+        if (SelectedYCbCrMatrix.Style == YCbCrMatrixType.NotSet)
+        {
+            // The header had a value this dialog does not offer (e.g. SMPTE240M/FCC); leave it untouched.
+            if (_unrecognizedYCbCrMatrixValue == null)
+            {
+                UpdateTag("YCbCr Matrix", string.Empty, true);
+            }
+        }
+        else
+        {
+            UpdateTag("YCbCr Matrix", SelectedYCbCrMatrix.Name, false);
         }
     }
 
@@ -145,7 +163,6 @@ public partial class AssaPropertiesViewModel : ObservableObject
                 sb.AppendLine(line);
             }
         }
-
         Header = sb.ToString().Trim();
     }
 
@@ -239,6 +256,7 @@ public partial class AssaPropertiesViewModel : ObservableObject
 
     private void LoadFromHeader()
     {
+        _unrecognizedYCbCrMatrixValue = null;
         foreach (var line in Header.SplitToLines())
         {
             var s = line.ToLowerInvariant().Trim();
@@ -302,6 +320,24 @@ public partial class AssaPropertiesViewModel : ObservableObject
                 else
                 {
                     SelectedBorderAndShadowScalingStyle = BorderAndShadowScalingStyles.First(p => p.Style == BorderAndShadowScalingType.NotSet);
+                }
+            }
+            else if (s.StartsWith("ycbcr matrix:", StringComparison.Ordinal))
+            {
+                var value = line.Trim().Remove(0, 13).Trim();
+
+                // libass parses the value case-insensitively, so match the same way.
+                foreach (var item in YCbCrMatrixItems)
+                {
+                    if (item.Name.Equals(value, StringComparison.OrdinalIgnoreCase))
+                    {
+                        SelectedYCbCrMatrix = item;
+                    }
+                }
+
+                if (SelectedYCbCrMatrix.Style == YCbCrMatrixType.NotSet && value.Length > 0)
+                {
+                    _unrecognizedYCbCrMatrixValue = value;
                 }
             }
             else if (s.StartsWith("wrapstyle:", StringComparison.Ordinal))
