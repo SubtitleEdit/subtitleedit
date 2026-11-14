@@ -22,6 +22,8 @@ public class CliSchemaTest
         Assert.Contains(options, o => o.Name == "--fps" && o.Type == "number");
         Assert.Contains(options, o => o.Name == "--renumber" && o.Type == "integer");
         Assert.Contains(options, o => o.Name == "--overwrite" && o.Type == "flag");
+        // bool? binds as a flag, so the pre-parser never demands a value for a bare --translate-keep-line-breaks.
+        Assert.Contains(options, o => o.Name == "--translate-keep-line-breaks" && o.Type == "flag");
     }
 
     [Fact]

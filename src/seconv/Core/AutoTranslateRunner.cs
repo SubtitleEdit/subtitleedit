@@ -44,7 +44,7 @@ internal sealed class AutoTranslateRunner
     public static readonly string[] FormalityValues = { "default", "formal", "informal" };
 
     /// <summary>The options that only the <see cref="AdvancedEngines"/> understand, for error messages.</summary>
-    public const string AdvancedOptionNames = "--translate-batch-size/--translate-history/--translate-synopsis/--translate-glossary/--translate-formality";
+    public const string AdvancedOptionNames = "--translate-batch-size/--translate-history/--translate-synopsis/--translate-glossary/--translate-formality/--translate-keep-line-breaks";
 
     /// <summary>
     /// The Ollama advanced engine talks to Ollama's OpenAI-compatible endpoint, not the native
@@ -144,7 +144,7 @@ internal sealed class AutoTranslateRunner
         }
 
         var advancedSettings = AdvancedEngines.Contains(engine)
-            ? CreateAdvancedSettings(options.TranslateBatchSize, options.TranslateHistory, options.TranslateSynopsis, options.TranslateGlossary, options.TranslateFormality, prompt, options.TranslateAdvancedSettings)
+            ? CreateAdvancedSettings(options.TranslateBatchSize, options.TranslateHistory, options.TranslateSynopsis, options.TranslateGlossary, options.TranslateFormality, options.TranslateKeepLineBreaks, prompt, options.TranslateAdvancedSettings)
             : null;
         if (advancedSettings == null && HasAdvancedOptions(options))
         {
@@ -338,20 +338,21 @@ internal sealed class AutoTranslateRunner
                options.TranslateHistory.HasValue ||
                !string.IsNullOrWhiteSpace(options.TranslateSynopsis) ||
                !string.IsNullOrWhiteSpace(options.TranslateGlossary) ||
-               !string.IsNullOrWhiteSpace(options.TranslateFormality);
+               !string.IsNullOrWhiteSpace(options.TranslateFormality) ||
+               options.TranslateKeepLineBreaks.HasValue;
     }
 
     /// <summary>
     /// The batch/context settings of an advanced engine: what the GUI's "Advanced..." dialog
     /// edits. The command-line options are applied onto <paramref name="baseSettings"/>, the
     /// <c>tools.llamaCppAdvanced</c> section of a <c>--settings</c> file (null = the dialog's
-    /// defaults: 10 lines per batch, 12 history pairs, no synopsis/glossary, default formality),
-    /// so an option given wins over the file and the file over the defaults. The synopsis and
-    /// glossary are read like <c>--translate-prompt</c> (inline text or a file). The merged result
-    /// is validated once, so a bad value from either source throws
+    /// defaults: 10 lines per batch, 12 history pairs, no synopsis/glossary, default formality,
+    /// keep line breaks on), so an option given wins over the file and the file over the defaults.
+    /// The synopsis and glossary are read like <c>--translate-prompt</c> (inline text or a file).
+    /// The merged result is validated once, so a bad value from either source throws
     /// <see cref="InvalidOperationException"/> with an actionable message.
     /// </summary>
-    internal static SeLlamaCppAdvanced CreateAdvancedSettings(int? batchSize, int? history, string? synopsis, string? glossary, string? formality, string? prompt, SeLlamaCppAdvanced? baseSettings = null)
+    internal static SeLlamaCppAdvanced CreateAdvancedSettings(int? batchSize, int? history, string? synopsis, string? glossary, string? formality, bool? keepLineBreaks, string? prompt, SeLlamaCppAdvanced? baseSettings = null)
     {
         var settings = baseSettings ?? new SeLlamaCppAdvanced();
         if (prompt != null)
@@ -384,6 +385,11 @@ internal sealed class AutoTranslateRunner
         if (!string.IsNullOrWhiteSpace(formality))
         {
             settings.Formality = ParseFormality(formality);
+        }
+
+        if (keepLineBreaks.HasValue)
+        {
+            settings.KeepLineBreaks = keepLineBreaks.Value;
         }
 
         // The protocol sends the lines as JSON in the user message and the prompt is the system

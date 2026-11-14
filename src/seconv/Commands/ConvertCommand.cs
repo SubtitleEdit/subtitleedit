@@ -217,6 +217,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Advanced engines: default | formal | informal (adds an instruction to use e.g. German Sie or du)")]
         public string? TranslateFormality { get; init; }
 
+        [CommandOption("--translate-keep-line-breaks|--translatekeeplinebreaks")]
+        [Description("Advanced engines: ask the model to keep each line's number of line breaks, the GUI's \"Keep line breaks\" switch (default: on; --translate-keep-line-breaks:false turns it off)")]
+        public bool? TranslateKeepLineBreaks { get; init; }
+
         [CommandOption("--offset")]
         [Description("Offset time (hh:mm:ss:ms)")]
         public string? Offset { get; init; }
@@ -597,7 +601,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                  settings.TranslateHistory.HasValue ||
                  !string.IsNullOrWhiteSpace(settings.TranslateSynopsis) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateGlossary) ||
-                 !string.IsNullOrWhiteSpace(settings.TranslateFormality)))
+                 !string.IsNullOrWhiteSpace(settings.TranslateFormality) ||
+                 settings.TranslateKeepLineBreaks.HasValue))
             {
                 return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model/--translate-api-key/--translate-prompt/" +
                                       AutoTranslateRunner.AdvancedOptionNames + " require --translate-to:<language>.");
@@ -641,7 +646,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if ((settings.TranslateBatchSize.HasValue || settings.TranslateHistory.HasValue ||
                  !string.IsNullOrWhiteSpace(settings.TranslateSynopsis) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateGlossary) ||
-                 !string.IsNullOrWhiteSpace(settings.TranslateFormality)) &&
+                 !string.IsNullOrWhiteSpace(settings.TranslateFormality) ||
+                 settings.TranslateKeepLineBreaks.HasValue) &&
                 !AutoTranslateRunner.IsAdvancedEngine(settings.TranslateEngine))
             {
                 return Fail(
@@ -728,7 +734,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 {
                     AutoTranslateRunner.CreateAdvancedSettings(
                         settings.TranslateBatchSize, settings.TranslateHistory, settings.TranslateSynopsis,
-                        settings.TranslateGlossary, settings.TranslateFormality,
+                        settings.TranslateGlossary, settings.TranslateFormality, settings.TranslateKeepLineBreaks,
                         AutoTranslateRunner.ReadPromptOption(settings.TranslatePrompt), advancedSettings);
                 }
                 catch (Exception ex)
@@ -1043,6 +1049,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 TranslateSynopsis = settings.TranslateSynopsis,
                 TranslateGlossary = settings.TranslateGlossary,
                 TranslateFormality = settings.TranslateFormality,
+                TranslateKeepLineBreaks = settings.TranslateKeepLineBreaks,
                 TranslateAdvancedSettings = advancedSettings,
                 TeletextOnly = settings.TeletextOnly,
                 TeletextOnlyPage = settings.TeletextOnlyPage,

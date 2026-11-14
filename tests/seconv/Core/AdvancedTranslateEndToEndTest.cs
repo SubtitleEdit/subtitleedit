@@ -145,6 +145,38 @@ public class AdvancedTranslateEndToEndTest : IDisposable
             Assert.Contains("A Scandinavian crime drama.", r.System);
             Assert.Contains("the Chief = der Chef", r.System);
             Assert.Contains("informal address", r.System);
+            Assert.Contains("Keep the same number of line breaks", r.System); // the dialog's default: on
         });
+    }
+
+    [Fact]
+    public async Task LmStudioAdvanced_KeepLineBreaksOff_LeavesTheSentenceOutOfTheSystemPrompt()
+    {
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = _tempRoot,
+            Overwrite = true,
+            TranslateTo = "de",
+            TranslateFrom = "en",
+            TranslateEngine = "lmstudio-advanced",
+            TranslateUrl = _url,
+            TranslateKeepLineBreaks = false,
+            Quiet = true,
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        List<(string System, int HistoryCount, int LineCount)> requests;
+        lock (_requests)
+        {
+            requests = _requests.ToList();
+        }
+
+        Assert.NotEmpty(requests);
+        Assert.All(requests, r => Assert.DoesNotContain("Keep the same number of line breaks", r.System));
     }
 }
