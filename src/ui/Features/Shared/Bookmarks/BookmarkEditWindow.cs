@@ -36,7 +36,7 @@ public class BookmarkEditWindow : Window
             VerticalContentAlignment = VerticalAlignment.Top,
             TextWrapping = TextWrapping.Wrap,
             AcceptsReturn = true,
-            Watermark = Se.Language.General.BookmarkNewLineHint,
+            PlaceholderText = Se.Language.General.BookmarkNewLineHint,
         };
         textBox.Classes.Add("text");
         textBox.Bind(TextBox.TextProperty, new Avalonia.Data.Binding(nameof(vm.BookmarkText)) { Mode = Avalonia.Data.BindingMode.TwoWay });
