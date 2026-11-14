@@ -81,6 +81,7 @@ public class CrispAsrEngine : CrispAsrEngineBase
     public override string DefaultLanguage => SelectedBackend.DefaultLanguage;
     public override bool IncludeLanguage => SelectedBackend.IncludeLanguage;
     public override bool HasNativeTimestamps => SelectedBackend.HasNativeTimestamps;
+    public override Version? GetMinimumCrispAsrVersion(WhisperModel model) => SelectedBackend.GetMinimumCrispAsrVersion(model);
     public override List<WhisperLanguage> Languages => SelectedBackend.Languages;
     public override List<WhisperModel> Models => SelectedBackend.Models;
     public override string Extension => SelectedBackend.Extension;

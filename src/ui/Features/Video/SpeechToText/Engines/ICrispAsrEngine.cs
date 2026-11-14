@@ -1,3 +1,6 @@
+using Nikse.SubtitleEdit.UiLogic.AudioToText;
+using System;
+
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
 public interface ICrispAsrEngine : ISpeechToTextEngine
@@ -13,5 +16,11 @@ public interface ICrispAsrEngine : ISpeechToTextEngine
 
     /// <summary>Whether the backend produces native word/segment timestamps without an external CTC aligner.</summary>
     bool HasNativeTimestamps { get; }
+
+    /// <summary>
+    /// The oldest CrispASR that can run <paramref name="model"/> with this backend, or null when any
+    /// supported runtime will do. An older binary can load a newer model and crash mid-run (#16900).
+    /// </summary>
+    Version? GetMinimumCrispAsrVersion(WhisperModel model);
 }
 

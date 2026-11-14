@@ -17,6 +17,7 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
     public abstract string DefaultLanguage { get; }
     public abstract bool IncludeLanguage { get; }
     public virtual bool HasNativeTimestamps => false;
+    public virtual Version? GetMinimumCrispAsrVersion(WhisperModel model) => null;
     public abstract List<WhisperLanguage> Languages { get; }
     public abstract List<WhisperModel> Models { get; }
     public abstract string Extension { get; }

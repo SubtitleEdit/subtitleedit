@@ -17,6 +17,18 @@ public class CrispAsrParakeet : CrispAsrEngineBase
     public override bool IncludeLanguage => true;
     public override bool HasNativeTimestamps => true;
 
+    /// <summary>
+    /// The first CrispASR whose parakeet runtime has the Haas-ja KDA predictor. Older binaries load
+    /// the model with null LSTM tensors and crash with an access violation on the first slice (#16900).
+    /// </summary>
+    public static readonly Version HaasMinimumCrispAsrVersion = new(0, 8, 50);
+
+    public override Version? GetMinimumCrispAsrVersion(WhisperModel model) =>
+        IsHaasModel(model.Name) ? HaasMinimumCrispAsrVersion : null;
+
+    internal static bool IsHaasModel(string? modelName) =>
+        modelName != null && modelName.StartsWith("haas-", StringComparison.OrdinalIgnoreCase);
+
     // The 25 European languages of parakeet-tdt-0.6b-v3 (also Parakeet Ultra), plus
     // Japanese for the ja TDT, ja CTC, ReazonSpeech and Haas-ja models (#15991).
     public override List<WhisperLanguage> Languages =>
