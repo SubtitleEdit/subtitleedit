@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -151,4 +152,58 @@ public static class AudioCppRuntime
         127 => $"The {backend} build could not load a shared library it needs.",
         _ => string.Empty,
     };
+
+    /// <summary>
+    /// Version status of the shared audio.cpp binaries, from the hash sidecar beside the server.
+    /// </summary>
+    public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus()
+    {
+        var exe = GetServerExecutable();
+        if (!File.Exists(exe))
+        {
+            return DownloadHashManager.UpdateStatus.Unknown;
+        }
+
+        var folder = Path.GetDirectoryName(exe);
+        return string.IsNullOrEmpty(folder)
+            ? DownloadHashManager.UpdateStatus.Unknown
+            : DownloadHashManager.GetSidecarStatus(folder);
+    }
+
+    /// <summary>
+    /// True when the model file exists and, when its exact byte sizes on the HuggingFace repo are
+    /// known, has one of them. A download that dies partway leaves a file the loader rejects with
+    /// "GGUF tensor data range is out of bounds", so the size is checked before a server starts.
+    /// </summary>
+    public static bool IsValidModelFile(string path, long[]? expectedSizes)
+    {
+        if (!File.Exists(path))
+        {
+            return false;
+        }
+
+        if (expectedSizes == null)
+        {
+            return true;
+        }
+
+        try
+        {
+            var info = new FileInfo(path);
+
+            // FileInfo.Length reports the size of the *link* for a symlink, not of its target,
+            // so a symlinked GGUF (a reasonable way to share a multi-GB model between apps or
+            // put it on another disk) would look truncated — and the caller deletes files it
+            // considers truncated. Resolve to the final target before measuring.
+            var length = info.ResolveLinkTarget(returnFinalTarget: true) is FileInfo target
+                ? target.Length
+                : info.Length;
+
+            return Array.IndexOf(expectedSizes, length) >= 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

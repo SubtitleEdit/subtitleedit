@@ -6,7 +6,6 @@ using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.UiLogic.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -144,18 +143,7 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
         Timeout = TimeSpan.FromMinutes(10),
     };
 
-    private static readonly SemaphoreSlim ServerLock = new(1, 1);
-    private static Process? _serverProcess;
-    private static int _serverPort;
-    private static string? _serverLaunchCommand;
-    // Only the model and the backend are baked into the running server — voice is per request.
-    private static string? _serverModelKey;
-    private static string? _serverBackend;
-    private static string? _serverExeStamp;
-    private static bool _processExitHooked;
-    private static readonly StringBuilder _serverLog = new();
-
-    private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
+    private static readonly AudioCppServer Server = new("Breeze TTS 2", "Breeze TTS 2", "breeze_tts", HttpClient);
 
     public Task<bool> IsInstalled(string? region) => Task.FromResult(File.Exists(AudioCppRuntime.GetServerExecutable()));
 
@@ -283,54 +271,13 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
     public static string GetModelPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), GetModelFileName(modelKey));
 
-    public static bool IsValidLocalModelFile(string path, string fileName)
-    {
-        if (!File.Exists(path))
-        {
-            return false;
-        }
-
-        if (!ExpectedFileSizes.TryGetValue(fileName, out var expected))
-        {
-            return true;
-        }
-
-        try
-        {
-            var info = new FileInfo(path);
-
-            // FileInfo.Length reports the size of the *link* for a symlink, not of its target,
-            // so a symlinked GGUF (a reasonable way to share a 5 GB model between apps or
-            // put it on another disk) would look truncated — and the caller deletes files it
-            // considers truncated. Resolve to the final target before measuring.
-            var length = info.ResolveLinkTarget(returnFinalTarget: true) is FileInfo target
-                ? target.Length
-                : info.Length;
-
-            return Array.IndexOf(expected, length) >= 0;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+    public static bool IsValidLocalModelFile(string path, string fileName) =>
+        AudioCppRuntime.IsValidModelFile(path, ExpectedFileSizes.GetValueOrDefault(fileName));
 
     public static bool AreModelsInstalled(string? modelKey = null) =>
         IsValidLocalModelFile(GetModelPath(modelKey), GetModelFileName(modelKey));
 
-    public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus()
-    {
-        var exe = AudioCppRuntime.GetServerExecutable();
-        if (!File.Exists(exe))
-        {
-            return DownloadHashManager.UpdateStatus.Unknown;
-        }
-
-        var folder = Path.GetDirectoryName(exe);
-        return string.IsNullOrEmpty(folder)
-            ? DownloadHashManager.UpdateStatus.Unknown
-            : DownloadHashManager.GetSidecarStatus(folder);
-    }
+    public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus() => AudioCppRuntime.GetEngineUpdateStatus();
 
     public async Task<Voice[]> GetVoices(string language)
     {
@@ -434,21 +381,21 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
         var payload = BuildSpeechPayload(text, indexVoice.FilePath, referenceText, instruction);
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"Breeze TTS 2 (audio.cpp): POST {ServerBaseUrl}/v1/audio/speech (voice={indexVoice}, textLen={text.Length})");
+        Se.WriteToolsLog($"Breeze TTS 2 (audio.cpp): POST {Server.BaseUrl}/v1/audio/speech (voice={indexVoice}, textLen={text.Length})");
 
         HttpResponseMessage response;
         try
         {
-            response = await HttpClient.PostAsync($"{ServerBaseUrl}/v1/audio/speech", content, cancellationToken);
+            response = await HttpClient.PostAsync($"{Server.BaseUrl}/v1/audio/speech", content, cancellationToken);
         }
         catch (HttpRequestException ex)
         {
-            var serverLog = SnapshotServerLog();
-            var launchCommand = _serverLaunchCommand;
-            var died = _serverProcess?.HasExited == true;
+            var serverLog = Server.SnapshotLog();
+            var launchCommand = Server.LaunchCommand;
+            var died = Server.HasExited;
             if (died)
             {
-                StopServerInternal();
+                Server.Stop();
             }
 
             var failMsg = $"Breeze TTS 2 (audio.cpp) request failed — Voice: {indexVoice}, Text: {text}, "
@@ -471,8 +418,8 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
-                var serverLog = SnapshotServerLog();
-                var launchCommand = _serverLaunchCommand;
+                var serverLog = Server.SnapshotLog();
+                var launchCommand = Server.LaunchCommand;
                 var errMsg = $"Breeze TTS 2 (audio.cpp) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {indexVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
@@ -545,145 +492,12 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
         return payload;
     }
 
-    private static async Task EnsureServerRunningAsync(string modelKey, CancellationToken ct)
-    {
-        var backend = AudioCppRuntime.GetBackend();
-        var exeStamp = AudioCppRuntime.GetServerExecutableStamp();
-
-        if (_serverProcess is { HasExited: false } && _serverPort != 0
-            && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(_serverExeStamp, exeStamp, StringComparison.Ordinal))
-        {
-            return;
-        }
-
-        await ServerLock.WaitAsync(ct);
-        try
-        {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0
-                && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(_serverBackend, backend, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(_serverExeStamp, exeStamp, StringComparison.Ordinal))
-            {
-                return;
-            }
-
-            if (_serverProcess != null)
-            {
-                StopServerInternal();
-            }
-
-            var exe = AudioCppRuntime.GetServerExecutable();
-            if (!File.Exists(exe))
-            {
-                throw new FileNotFoundException(
-                    "audio.cpp server not found. Download the Breeze TTS 2 engine first.", exe);
-            }
-
-            var modelFileName = GetModelFileName(modelKey);
-            var modelPath = GetModelPath(modelKey);
-            if (!IsValidLocalModelFile(modelPath, modelFileName))
-            {
-                throw new FileNotFoundException(
-                    File.Exists(modelPath)
-                        ? $"The Breeze TTS 2 model file is incomplete: {modelPath}. Delete it and download again."
-                        : $"The Breeze TTS 2 model file is missing: {modelPath}",
-                    modelPath);
-            }
-
-            var port = LocalServerHelper.FindFreeLoopbackPort();
-            var configPath = WriteServerConfig(port, backend, modelKey);
-
-            var psi = new ProcessStartInfo
-            {
-                WorkingDirectory = Path.GetDirectoryName(exe) ?? AudioCppRuntime.GetSetEngineFolder(),
-                FileName = exe,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                // The server writes UTF-8. Without these the reader decodes it in the OS default
-                // codepage, and non-ASCII text in the captured log - the line being synthesised,
-                // upstream's em dashes - reaches bug reports as mojibake (#13572).
-                StandardOutputEncoding = Encoding.UTF8,
-                StandardErrorEncoding = Encoding.UTF8,
-            };
-            psi.ArgumentList.Add("--config");
-            psi.ArgumentList.Add(configPath);
-
-            var process = Process.Start(psi)
-                ?? throw new InvalidOperationException("Failed to start audiocpp_server (breeze_tts)");
-
-            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
-            _serverLaunchCommand = launchCommand;
-            Se.WriteToolsLog($"Breeze TTS 2 (audio.cpp) server starting — PID: {process.Id}, Cmd: {launchCommand}");
-
-            lock (_serverLog) _serverLog.Clear();
-            process.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.BeginErrorReadLine();
-            process.BeginOutputReadLine();
-
-            _serverProcess = process;
-            _serverPort = port;
-            _serverModelKey = modelKey;
-            _serverBackend = backend;
-            _serverExeStamp = AudioCppRuntime.GetServerExecutableStamp();
-            HookProcessExitOnce();
-
-            // The config uses lazy_load, so /health answers within a second or two — the 5 GB
-            // model is only read on the first synthesis request. A long deadline here would just
-            // hide a crash-at-startup (e.g. a Vulkan build on a box with no Vulkan driver, which
-            // dies in the loader with 0xC0000135 before printing anything).
-            var deadline = DateTime.UtcNow.AddMinutes(2);
-            while (DateTime.UtcNow < deadline)
-            {
-                ct.ThrowIfCancellationRequested();
-                if (process.HasExited)
-                {
-                    var tail = SnapshotServerLog();
-                    var exitCode = process.ExitCode;
-                    var exitedLaunchCommand = _serverLaunchCommand;
-                    _serverProcess = null;
-                    _serverPort = 0;
-                    _serverLaunchCommand = null;
-                    _serverModelKey = null;
-                    _serverBackend = null;
-                    _serverExeStamp = null;
-                    throw new InvalidOperationException(
-                        $"audiocpp_server exited during startup (code {exitCode}). "
-                        + AudioCppRuntime.DescribeStartupExit(exitCode, backend)
-                        + $" Output: {tail}"
-                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
-                }
-
-                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
-                {
-                    return;
-                }
-
-                await Task.Delay(TimeSpan.FromSeconds(1), ct);
-            }
-
-            var lastOutput = SnapshotServerLog();
-            var timeoutLaunchCommand = _serverLaunchCommand;
-            StopServerInternal();
-            throw new TimeoutException(
-                $"audiocpp_server did not report healthy within 2 minutes. Last output: {lastOutput}"
-                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
-        }
-        finally
-        {
-            ServerLock.Release();
-        }
-    }
+    private static Task EnsureServerRunningAsync(string modelKey, CancellationToken ct) =>
+        Server.EnsureRunningAsync(
+            modelKey,
+            () => (GetModelPath(modelKey), IsValidLocalModelFile(GetModelPath(modelKey), GetModelFileName(modelKey))),
+            (port, backend) => WriteServerConfig(port, backend, modelKey),
+            ct);
 
     /// <summary>
     /// Writes the audio.cpp server config next to the binary. lazy_load keeps startup instant;
@@ -728,64 +542,12 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
         return configPath;
     }
 
-    private static string SnapshotServerLog()
-    {
-        lock (_serverLog)
-        {
-            var s = _serverLog.ToString().TrimEnd();
-            return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static void HookProcessExitOnce()
-    {
-        if (_processExitHooked)
-        {
-            return;
-        }
-
-        _processExitHooked = true;
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
-    }
-
     /// <summary>
     /// Stop the audio.cpp server if running, releasing the loaded model's working set.
     /// audio.cpp never unloads a model on its own once loaded, so this is the only way the
     /// memory comes back.
     /// </summary>
-    public static void StopServer() => StopServerInternal();
-
-    private static void StopServerInternal()
-    {
-        var p = _serverProcess;
-        _serverProcess = null;
-        _serverPort = 0;
-        _serverLaunchCommand = null;
-        _serverModelKey = null;
-        _serverBackend = null;
-        _serverExeStamp = null;
-        if (p == null)
-        {
-            return;
-        }
-
-        try
-        {
-            if (!p.HasExited)
-            {
-                p.Kill(entireProcessTree: true);
-                p.WaitForExit(2000);
-            }
-        }
-        catch
-        {
-            // best effort
-        }
-        finally
-        {
-            p.Dispose();
-        }
-    }
+    public static void StopServer() => Server.Stop();
 
     public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
 
