@@ -43,6 +43,12 @@ public class SettingsItem
     /// </summary>
     public string? EnglishLabel { get; init; }
 
+    /// <summary>
+    /// Labels of the settings grouped inside this item (e.g. "Alignment" in the subtitle preview
+    /// properties), which the search also matches, translated or in English (#16614).
+    /// </summary>
+    public string[]? SearchTerms { get; init; }
+
     public SettingsItem(string label, Func<Control> controlFactory, string? isVisibleBinding = null, bool isHidden = false)
     {
         _label = label;
@@ -82,6 +88,14 @@ public class SettingsItem
         }
 
         if (_label != null && _label.Contains(filter, StringComparison.OrdinalIgnoreCase))
+        {
+            IsVisible = true;
+            return;
+        }
+
+        if (SearchTerms != null && SearchTerms.Any(term =>
+                term.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                EnglishLabelLookup.GetEnglish(term)?.Contains(filter, StringComparison.OrdinalIgnoreCase) == true))
         {
             IsVisible = true;
             return;

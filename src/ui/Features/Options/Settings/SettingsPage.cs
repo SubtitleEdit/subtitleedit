@@ -740,7 +740,26 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.RememberSecondarySubtitleFile, nameof(_vm.RememberSecondarySubtitleFile)),
             new SettingsItem(Se.Language.Options.Settings.Deinterlace,
                 () => UiUtil.MakeComboBox(_vm.MpvDeinterlaceItems, _vm, nameof(_vm.MpvSelectedDeinterlace))),
-            new SettingsItem(Se.Language.Options.Settings.SubtitlePreviewProperties, () => MakeMpvPreviewSettings(_vm)),
+            new SettingsItem(Se.Language.Options.Settings.SubtitlePreviewProperties, () => MakeMpvPreviewSettings(_vm))
+            {
+                SearchTerms =
+                [
+                    Se.Language.General.FontName,
+                    Se.Language.General.FontSize,
+                    Se.Language.General.Bold,
+                    Se.Language.General.Alignment,
+                    Se.Language.Options.Settings.TextJustify,
+                    Se.Language.Options.Settings.UsePositionFromSubtitleFile,
+                    Se.Language.General.Margin,
+                    Se.Language.Options.Settings.MarginIsPartOfSubtitleArea,
+                    Se.Language.Assa.Primary,
+                    Se.Language.General.Outline,
+                    Se.Language.General.Shadow,
+                    Se.Language.General.BorderStyle,
+                    Se.Language.General.OutlineWidth,
+                    Se.Language.General.ShadowWidth,
+                ],
+            },
             new SettingsItem(!_vm.IsLibMpvDownloadVisible, Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
             {
                 Children =
