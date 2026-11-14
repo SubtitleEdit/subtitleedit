@@ -42,7 +42,9 @@ Edit the script info header properties of an Advanced SubStation Alpha (ASS/SSA)
 ### YCbCr Matrix
 - Tells renderers which YCbCr color matrix the subtitle colors were authored for; recommended by the [libass wiki](https://github.com/libass/libass/wiki/ASS-File-Format-Guide) to always be set.
 - Must match the video's colorspace and range: **TV.709** for HD SDR video, **TV.601** for SD; **None** for anything other than 601/709 (e.g. HDR/BT.2020).
-- **N/A** (not set): selecting it and pressing OK removes an existing value the dialog offers; a value the dialog does not offer (e.g. SMPTE240M/FCC) is left untouched, and no line is added to files that never had one.
+- Offers the same values libass and Aegisub use: **None**, **TV.601**, **PC.601**, **TV.709**, **PC.709**, **TV.FCC**, **PC.FCC**, **TV.240M** and **PC.240M**.
+- Files without the header default to **None** (no color conversion, the libass-recommended value), which is written when you click **OK**.
+- **N/A** (not set) leaves the header out, or removes an existing one. A value libass does not recognize is shown as-is and kept unless you pick another value.
 
 ## Keyboard Shortcuts
 

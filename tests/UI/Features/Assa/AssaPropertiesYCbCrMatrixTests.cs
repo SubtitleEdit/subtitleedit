@@ -12,10 +12,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 namespace UITests.Features.Assa;
 
 /// <summary>
-/// The YCbCr Matrix combo in the ASSA properties dialog (issue #13391) must round-trip the
-/// header without surprises: no silent insertion for files that never had the header, no
-/// silent removal of values the dialog does not offer (libass also parses SMPTE240M/FCC),
-/// and an explicit NotSet selection must still be able to remove a managed value.
+/// The YCbCr Matrix combo in the ASSA properties dialog (issue #13391): files without the
+/// header default to "None" (the libass-recommended value), known values round-trip, values
+/// libass does not recognize are kept as-is, and an explicit N/A removes the header.
 /// </summary>
 public class AssaPropertiesYCbCrMatrixTests
 {
@@ -55,16 +54,56 @@ public class AssaPropertiesYCbCrMatrixTests
     }
 
     [AvaloniaFact]
-    public void Ok_WithoutYCbCrMatrixHeader_DoesNotAddOne()
+    public void Ok_WithoutYCbCrMatrixHeader_DefaultsToNone()
     {
         var vm = MakeViewModel(MakeSubtitle());
+
+        Assert.Equal(YCbCrMatrixType.None, vm.SelectedYCbCrMatrix.Style);
 
         vm.OkCommand.Execute(null);
         Dispatcher.UIThread.RunJobs();
 
         Assert.True(vm.OkPressed);
-        Assert.True(vm.YCbCrMatrixItems.First(p => p.Style == YCbCrMatrixType.NotSet) == vm.SelectedYCbCrMatrix);
+        Assert.True(HeaderContainsYCbCrMatrix(vm.Header, "None"));
+    }
+
+    [AvaloniaFact]
+    public void Ok_WithNotSet_DoesNotAddHeader()
+    {
+        var vm = MakeViewModel(MakeSubtitle());
+
+        vm.SelectedYCbCrMatrix = vm.YCbCrMatrixItems.First(p => p.Style == YCbCrMatrixType.NotSet);
+        vm.OkCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
         Assert.DoesNotContain("YCbCr Matrix", vm.Header, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [AvaloniaTheory]
+    [InlineData("TV.FCC", YCbCrMatrixType.TvFcc)]
+    [InlineData("pc.fcc", YCbCrMatrixType.PcFcc)]
+    [InlineData("TV.240M", YCbCrMatrixType.Tv240M)]
+    [InlineData("PC.240M", YCbCrMatrixType.Pc240M)]
+    public void Load_AllLibassValues_AreRecognized(string value, YCbCrMatrixType expected)
+    {
+        var vm = new AssaPropertiesViewModel(new StubFileHelper(), new StubWindowService());
+        vm.Initialize(MakeSubtitle(value), new AdvancedSubStationAlpha(), "test.ass", string.Empty);
+
+        Assert.Equal(expected, vm.SelectedYCbCrMatrix.Style);
+    }
+
+    [AvaloniaFact]
+    public void Ok_LowercaseKey_IsWrittenCanonically()
+    {
+        var subtitle = MakeSubtitle();
+        subtitle.Header = subtitle.Header.Replace("[V4+ Styles]", $"ycbcr matrix: tv.709{Environment.NewLine}{Environment.NewLine}[V4+ Styles]");
+        var vm = MakeViewModel(subtitle);
+
+        vm.OkCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Contains("YCbCr Matrix: TV.709", vm.Header, StringComparison.Ordinal);
+        Assert.DoesNotContain("ycbcr matrix", vm.Header, StringComparison.Ordinal);
     }
 
     [AvaloniaFact]
@@ -83,14 +122,27 @@ public class AssaPropertiesYCbCrMatrixTests
     [AvaloniaFact]
     public void Ok_WithUnrecognizedValue_PreservesIt()
     {
-        var vm = MakeViewModel(MakeSubtitle("TV.FCC"));
+        var vm = MakeViewModel(MakeSubtitle("TV.2020"));
 
-        Assert.Equal(YCbCrMatrixType.NotSet, vm.SelectedYCbCrMatrix.Style);
+        Assert.Equal(YCbCrMatrixType.Custom, vm.SelectedYCbCrMatrix.Style);
+        Assert.Equal("TV.2020", vm.SelectedYCbCrMatrix.Name);
 
         vm.OkCommand.Execute(null);
         Dispatcher.UIThread.RunJobs();
 
-        Assert.True(HeaderContainsYCbCrMatrix(vm.Header, "TV.FCC"));
+        Assert.True(HeaderContainsYCbCrMatrix(vm.Header, "TV.2020"));
+    }
+
+    [AvaloniaFact]
+    public void Ok_UnrecognizedValueThenNotSet_RemovesIt()
+    {
+        var vm = MakeViewModel(MakeSubtitle("TV.2020"));
+
+        vm.SelectedYCbCrMatrix = vm.YCbCrMatrixItems.First(p => p.Style == YCbCrMatrixType.NotSet);
+        vm.OkCommand.Execute(null);
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.DoesNotContain("YCbCr Matrix", vm.Header, StringComparison.OrdinalIgnoreCase);
     }
 
     [AvaloniaFact]
