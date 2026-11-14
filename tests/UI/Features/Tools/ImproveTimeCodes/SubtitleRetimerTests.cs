@@ -455,6 +455,59 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
+    public void SnapToShotChanges_StartJustAfterACut_MovesBackOntoIt()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12) };
+        var placements = new[] { new SubtitleRetimer.Placement(10.15, 12.1, true) };
+
+        SubtitleRetimer.SnapToShotChanges(original, placements, new List<double> { 10.0 }, 0.024);
+
+        Assert.Equal(10.0, placements[0].StartSeconds, 3);
+        Assert.Equal(12.1, placements[0].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void SnapToShotChanges_StartBeforeACut_MovesOnOnlyWhenVeryClose()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 20, 22) };
+        var placements = new[] { new SubtitleRetimer.Placement(10.05, 12.1, true), new SubtitleRetimer.Placement(19.95, 22.1, true) };
+
+        // 10.2 is 0.15 s after the start - too far to start that late; 20.0 is only 0.05 s.
+        SubtitleRetimer.SnapToShotChanges(original, placements, new List<double> { 10.2, 20.0 }, 0.024);
+
+        Assert.Equal(10.05, placements[0].StartSeconds, 3);
+        Assert.Equal(20.0, placements[1].StartSeconds, 3);
+    }
+
+    [Fact]
+    public void SnapToShotChanges_EndNearACut_StopsJustBeforeIt()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 20, 22) };
+        var placements = new[] { new SubtitleRetimer.Placement(10.1, 12.1, true), new SubtitleRetimer.Placement(20.1, 21.9, true) };
+
+        SubtitleRetimer.SnapToShotChanges(original, placements, new List<double> { 12.25, 22.0 }, 0.024);
+
+        Assert.Equal(12.226, placements[0].EndSeconds, 3);
+        Assert.Equal(21.976, placements[1].EndSeconds, 3);
+    }
+
+    [Fact]
+    public void SnapToShotChanges_LeavesLinesThatStayOrWerePlacedByHand()
+    {
+        var original = new List<SubtitleRetimer.Line> { new("a", 10.1, 12), new("b", 20.1, 22) };
+        var placements = new[]
+        {
+            new SubtitleRetimer.Placement(10.1, 12, true), // not moved
+            new SubtitleRetimer.Placement(20.15, 22.1, false), // placed by hand
+        };
+
+        SubtitleRetimer.SnapToShotChanges(original, placements, new List<double> { 10.0, 20.0 }, 0.024);
+
+        Assert.Equal(10.1, placements[0].StartSeconds, 3);
+        Assert.Equal(20.15, placements[1].StartSeconds, 3);
+    }
+
+    [Fact]
     public void Settle_AnAppliedLine_GivesWayToALineThatStaysPut()
     {
         var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14), new("c", 14.5, 16) };

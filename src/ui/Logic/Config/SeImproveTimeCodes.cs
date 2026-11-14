@@ -9,6 +9,7 @@ public class SeImproveTimeCodes
     public bool AdjustEnd { get; set; }
     public bool IsolateSpeech { get; set; }
     public bool CheckWithSpeechToText { get; set; }
+    public bool SnapToShotChanges { get; set; }
 
     public SeImproveTimeCodes()
     {
@@ -16,5 +17,7 @@ public class SeImproveTimeCodes
         MaxShiftSeconds = 0.5;
         AdjustStart = true;
         AdjustEnd = true;
+        CheckWithSpeechToText = true;
+        SnapToShotChanges = true;
     }
 }

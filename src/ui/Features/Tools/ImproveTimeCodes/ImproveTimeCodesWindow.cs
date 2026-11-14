@@ -139,6 +139,8 @@ public class ImproveTimeCodesWindow : Window
         checkIsolate.Bind(IsEnabledProperty, new Binding(nameof(vm.IsIdle)) { Source = vm });
         var checkSpeechToText = SwitchRow(vm, nameof(vm.CheckWithSpeechToText), l.CheckWithSpeechToText);
         checkSpeechToText.Bind(IsEnabledProperty, new Binding(nameof(vm.CanCheckWithSpeechToText)) { Source = vm });
+        var checkShotChanges = SwitchRow(vm, nameof(vm.SnapToShotChanges), l.SnapToShotChanges);
+        checkShotChanges.Bind(IsEnabledProperty, new Binding(nameof(vm.HasShotChanges)) { Source = vm });
 
         if (Se.Settings.Appearance.ShowHints)
         {
@@ -147,6 +149,8 @@ public class ImproveTimeCodesWindow : Window
             ToolTip.SetTip(checkIsolate, l.IsolateSpeechHint);
             checkSpeechToText.Bind(ToolTip.TipProperty, new Binding(nameof(vm.CheckWithSpeechToTextHint)) { Source = vm });
             ToolTip.SetShowOnDisabled(checkSpeechToText, true); // says why, for a language it cannot hear
+            checkShotChanges.Bind(ToolTip.TipProperty, new Binding(nameof(vm.SnapToShotChangesHint)) { Source = vm });
+            ToolTip.SetShowOnDisabled(checkShotChanges, true); // says how to get shot changes
         }
 
         // Engine and aligner settings on the first line, the on/off options on the second - the
@@ -170,8 +174,9 @@ public class ImproveTimeCodesWindow : Window
             {
                 Group(checkStart),
                 Group(checkEnd),
-                Group(checkIsolate),
                 Group(checkSpeechToText),
+                Group(checkShotChanges),
+                Group(checkIsolate), // last: slow, and seldom needed
             },
         };
 
