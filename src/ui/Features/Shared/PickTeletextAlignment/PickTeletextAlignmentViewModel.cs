@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickTeletextAlignment;
 
@@ -83,12 +84,5 @@ public partial class PickTeletextAlignmentViewModel : ObservableObject
         }
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscape(e, Window);
 }

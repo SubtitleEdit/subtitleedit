@@ -136,17 +136,5 @@ public partial class ElevenLabsSettingsViewModel : ObservableObject
         await MessageBox.Show(window, "Info", "Determines the style exaggeration of the voice. This setting attempts to amplify the style of the original speaker. It does consume additional computational resources and might increase latency if set to anything other than 0. Values from 0 to 1 are allowed.", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/text-to-speech", "elevenlabs-pauses-and-pacing");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/text-to-speech", "elevenlabs-pauses-and-pacing");
 }

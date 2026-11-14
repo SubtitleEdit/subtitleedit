@@ -3,6 +3,7 @@ using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickLayer;
@@ -40,12 +41,5 @@ public partial class PickLayerViewModel : ObservableObject
         Window?.Close();
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-    }   
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscape(e, Window);   
 }

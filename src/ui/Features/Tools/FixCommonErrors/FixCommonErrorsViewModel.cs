@@ -1064,19 +1064,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         return Se.Language.Options.Settings.DialogStyleDashBothLinesWithSpace;
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/fix-common-errors");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/fix-common-errors");
 
     partial void OnSearchTextChanged(string value)
     {

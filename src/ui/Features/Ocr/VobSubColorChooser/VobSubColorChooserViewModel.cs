@@ -203,17 +203,5 @@ public partial class VobSubColorChooserViewModel : ObservableObject
         Window?.Close();
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/ocr", "options");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/ocr", "options");
 }

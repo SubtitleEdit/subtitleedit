@@ -65,14 +65,7 @@ public partial class ImageBasedPreviewViewModel : ObservableObject, IClosingClea
         });
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscape(e, Window);
 
     private void UpdateTitle()
     {

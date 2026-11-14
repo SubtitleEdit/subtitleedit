@@ -41,14 +41,7 @@ public partial class PickAlignmentViewModel : ObservableObject
         Window?.Close();
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscape(e, Window);
 
     /// <summary>
     /// Marks the alignment of the selected line. Without a tag a line is at the bottom center, and

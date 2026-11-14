@@ -219,19 +219,7 @@ public partial class MediaInfoViewViewModel : ObservableObject
         await _folderHelper.OpenFolderWithFileSelected(Window, _videoFileName);
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/video-player", "video-info");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/video-player", "video-info");
 
     internal void OnKeyDownHandler(object? sender, KeyEventArgs e)
     {

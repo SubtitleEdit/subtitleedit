@@ -470,19 +470,7 @@ public partial class WordListsViewModel : ObservableObject
         return list.RemoveWordOrPartial(find);
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/word-lists");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/word-lists");
 
     // Arrowing through the language combo must not reload the lists on every key press: the
     // synchronous load (file parsing + ~11k one-by-one Adds for English) kept the UI thread

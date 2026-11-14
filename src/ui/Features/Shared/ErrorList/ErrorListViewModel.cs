@@ -151,19 +151,7 @@ public partial class ErrorListViewModel : ObservableObject
         ApplyFilter(card);
     }
 
-    internal void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            e.Handled = true;
-            Window?.Close();
-        }
-        else if (UiUtil.IsHelp(e))
-        {
-            e.Handled = true;
-            UiUtil.ShowHelp("features/list-errors");
-        }
-    }
+    internal void OnKeyDown(KeyEventArgs e) => UiUtil.CloseOnEscapeOrShowHelp(e, Window, "features/list-errors");
 
     /// <summary>
     /// The items come ready-made from the caller: it is the only place that still knows each
