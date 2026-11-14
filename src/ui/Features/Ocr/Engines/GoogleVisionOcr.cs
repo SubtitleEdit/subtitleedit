@@ -29,21 +29,6 @@ public class GoogleVisionOcr
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    public string GetName()
-    {
-        return "Google Cloud Vision API";
-    }
-
-    public int GetMaxImageSize()
-    {
-        return 20_000_000;
-    }
-
-    public int GetMaximumRequestArraySize()
-    {
-        return 16;
-    }
-
     public static List<OcrLanguage> GetLanguages()
     {
         // Currently (Sep 1, 2022) supported and experimental languages from https://cloud.google.com/vision/docs/languages
@@ -155,11 +140,6 @@ public class GoogleVisionOcr
         }
 
         return list;
-    }
-
-    public string GetUrl()
-    {
-        return "https://cloud.google.com/vision/docs/ocr";
     }
 
     public async Task<string> Ocr(SKBitmap bitmap, string apiKey, string language, CancellationToken cancellationToken)
