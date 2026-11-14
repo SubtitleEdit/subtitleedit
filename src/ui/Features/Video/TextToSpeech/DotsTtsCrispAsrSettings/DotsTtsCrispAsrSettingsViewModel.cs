@@ -18,35 +18,28 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.DotsTtsCrispAsrSettings
 
 public partial class DotsTtsCrispAsrSettingsViewModel : ObservableObject
 {
-    // A SolidColorBrush set as Shape.Fill is parented into that shape's visual tree, so the same
-    // instance can't be shared across bound Ellipses (only one dot would render). Fresh brush per
-    // assignment instead.
-    private static IBrush Green() => new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
-    private static IBrush Amber() => new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00));
-    private static IBrush Red() => new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));
-    private static IBrush Grey() => new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
 
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
 
     [ObservableProperty] private string _engineLabel = string.Empty;
-    [ObservableProperty] private IBrush _engineBrush = Grey();
+    [ObservableProperty] private IBrush _engineBrush = TtsSettingsStatus.Grey();
     [ObservableProperty] private string _engineDownloadButtonText = string.Empty;
 
     [ObservableProperty] private string _coreQ4KLabel = string.Empty;
-    [ObservableProperty] private IBrush _coreQ4KBrush = Grey();
+    [ObservableProperty] private IBrush _coreQ4KBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _coreQ8_0Label = string.Empty;
-    [ObservableProperty] private IBrush _coreQ8_0Brush = Grey();
+    [ObservableProperty] private IBrush _coreQ8_0Brush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _coreF16Label = string.Empty;
-    [ObservableProperty] private IBrush _coreF16Brush = Grey();
+    [ObservableProperty] private IBrush _coreF16Brush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _vocoderLabel = string.Empty;
-    [ObservableProperty] private IBrush _vocoderBrush = Grey();
+    [ObservableProperty] private IBrush _vocoderBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _speakerEncoderLabel = string.Empty;
-    [ObservableProperty] private IBrush _speakerEncoderBrush = Grey();
+    [ObservableProperty] private IBrush _speakerEncoderBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _voicesLabel = string.Empty;
 
@@ -90,19 +83,19 @@ public partial class DotsTtsCrispAsrSettingsViewModel : ObservableObject
         if (!IsEngineInstalled)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineNotInstalled, "CrispASR");
-            EngineBrush = Red();
+            EngineBrush = TtsSettingsStatus.Red();
             EngineDownloadButtonText = string.Format(Se.Language.General.DownloadX, "CrispASR");
         }
         else if (DotsTtsCrispAsr.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
-            EngineBrush = Amber();
+            EngineBrush = TtsSettingsStatus.Amber();
             EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "CrispASR");
         }
         else
         {
             EngineLabel = "CrispASR";
-            EngineBrush = Green();
+            EngineBrush = TtsSettingsStatus.Green();
             EngineDownloadButtonText = string.Format(Se.Language.General.ReDownloadX, "CrispASR");
         }
 
@@ -136,31 +129,31 @@ public partial class DotsTtsCrispAsrSettingsViewModel : ObservableObject
         }
 
         var coreQ4K = DotsTtsCrispAsr.GetCorePath(DotsTtsCrispAsr.ModelKeyQ4K);
-        ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(coreQ4K, DotsTtsCrispAsr.CoreQ4KFileName),
+        TtsSettingsStatus.ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(coreQ4K, DotsTtsCrispAsr.CoreQ4KFileName),
             IsEngineInstalled,
             label => CoreQ4KLabel = label,
             brush => CoreQ4KBrush = brush);
 
         var coreQ8_0 = DotsTtsCrispAsr.GetCorePath(DotsTtsCrispAsr.ModelKeyQ8_0);
-        ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(coreQ8_0, DotsTtsCrispAsr.CoreQ8_0FileName),
+        TtsSettingsStatus.ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(coreQ8_0, DotsTtsCrispAsr.CoreQ8_0FileName),
             IsEngineInstalled,
             label => CoreQ8_0Label = label,
             brush => CoreQ8_0Brush = brush);
 
         var coreF16 = DotsTtsCrispAsr.GetCorePath(DotsTtsCrispAsr.ModelKeyF16);
-        ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(coreF16, DotsTtsCrispAsr.CoreF16FileName),
+        TtsSettingsStatus.ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(coreF16, DotsTtsCrispAsr.CoreF16FileName),
             IsEngineInstalled,
             label => CoreF16Label = label,
             brush => CoreF16Brush = brush);
 
         var vocoderPath = DotsTtsCrispAsr.GetVocoderPath();
-        ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(vocoderPath, DotsTtsCrispAsr.VocoderFileName),
+        TtsSettingsStatus.ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(vocoderPath, DotsTtsCrispAsr.VocoderFileName),
             IsEngineInstalled,
             label => VocoderLabel = label,
             brush => VocoderBrush = brush);
 
         var speakerPath = DotsTtsCrispAsr.GetSpeakerEncoderPath();
-        ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(speakerPath, DotsTtsCrispAsr.SpeakerEncoderFileName),
+        TtsSettingsStatus.ApplyModelStatus(DotsTtsCrispAsr.IsValidLocalModelFile(speakerPath, DotsTtsCrispAsr.SpeakerEncoderFileName),
             IsEngineInstalled,
             label => SpeakerEncoderLabel = label,
             brush => SpeakerEncoderBrush = brush);
@@ -178,28 +171,6 @@ public partial class DotsTtsCrispAsrSettingsViewModel : ObservableObject
         {
             VoicesLabel = string.Empty;
         }
-    }
-
-    private static void ApplyModelStatus(bool fileInstalled, bool engineInstalled, Action<string> setLabel, Action<IBrush> setBrush)
-    {
-        if (fileInstalled)
-        {
-            setLabel("Installed");
-            setBrush(Green());
-            return;
-        }
-
-        if (!engineInstalled)
-        {
-            // No CrispASR runtime means there is nothing to auto-download into, so don't promise
-            // a download that can't happen until the user installs CrispASR.
-            setLabel("CrispASR required");
-            setBrush(Grey());
-            return;
-        }
-
-        setLabel("Auto-download on first use");
-        setBrush(Grey());
     }
 
     [RelayCommand]

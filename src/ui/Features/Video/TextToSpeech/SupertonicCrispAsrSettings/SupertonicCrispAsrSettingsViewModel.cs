@@ -18,23 +18,16 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.SupertonicCrispAsrSetti
 
 public partial class SupertonicCrispAsrSettingsViewModel : ObservableObject
 {
-    // A SolidColorBrush set as Shape.Fill is parented into that shape's visual tree, so the
-    // same instance can't be shared across multiple bound Ellipses (only one dot would render).
-    // Construct a fresh brush per assignment instead.
-    private static IBrush Green() => new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
-    private static IBrush Amber() => new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00));
-    private static IBrush Red() => new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));
-    private static IBrush Grey() => new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
 
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
 
     [ObservableProperty] private string _engineLabel = string.Empty;
-    [ObservableProperty] private IBrush _engineBrush = Grey();
+    [ObservableProperty] private IBrush _engineBrush = TtsSettingsStatus.Grey();
     [ObservableProperty] private string _engineDownloadButtonText = string.Empty;
 
     [ObservableProperty] private string _modelLabel = string.Empty;
-    [ObservableProperty] private IBrush _modelBrush = Grey();
+    [ObservableProperty] private IBrush _modelBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private double _speed = 1.0;
 
@@ -73,19 +66,19 @@ public partial class SupertonicCrispAsrSettingsViewModel : ObservableObject
         if (!IsEngineInstalled)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineNotInstalled, "CrispASR");
-            EngineBrush = Red();
+            EngineBrush = TtsSettingsStatus.Red();
             EngineDownloadButtonText = string.Format(Se.Language.General.DownloadX, "CrispASR");
         }
         else if (SupertonicCrispAsr.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
-            EngineBrush = Amber();
+            EngineBrush = TtsSettingsStatus.Amber();
             EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "CrispASR");
         }
         else
         {
             EngineLabel = "CrispASR";
-            EngineBrush = Green();
+            EngineBrush = TtsSettingsStatus.Green();
             EngineDownloadButtonText = string.Format(Se.Language.General.ReDownloadX, "CrispASR");
         }
 
@@ -126,12 +119,12 @@ public partial class SupertonicCrispAsrSettingsViewModel : ObservableObject
         if (SupertonicCrispAsr.IsModelInstalled())
         {
             ModelLabel = "Installed";
-            ModelBrush = Green();
+            ModelBrush = TtsSettingsStatus.Green();
         }
         else
         {
             ModelLabel = IsEngineInstalled ? "Auto-download on first use" : "CrispASR required";
-            ModelBrush = Grey();
+            ModelBrush = TtsSettingsStatus.Grey();
         }
     }
 
