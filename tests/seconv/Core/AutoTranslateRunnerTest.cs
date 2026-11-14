@@ -834,4 +834,70 @@ public class AutoTranslateRunnerTest : IDisposable
 
         Assert.Contains("No llama.cpp chat translate model", ex.Message);
     }
+
+    // --- --verbose prints the prompt the engine sends, which the prompt field never shows in full ---
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void DescribePrompt_Advanced_IsTheCompleteSystemPrompt(bool keepLineBreaks)
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", synopsis: "A crime drama.",
+            glossary: "the Chief = der Chef", formality: "informal", advanced: new SeLlamaCppAdvanced { KeepLineBreaks = keepLineBreaks }));
+
+        var prompt = runner.DescribePrompt("English", "German")!;
+
+        Assert.StartsWith("You are a professional subtitle translator. Translate each subtitle line from English to German.", prompt);
+        Assert.Equal(keepLineBreaks, prompt.Contains("Keep the same number of line breaks"));
+        Assert.Contains("informal address", prompt);
+        Assert.Contains("A crime drama.", prompt);
+        Assert.Contains("the Chief = der Chef", prompt);
+        Assert.Contains("The user message is a JSON object.", prompt);
+        Assert.Equal(LlamaCppAdvancedProtocol.BuildSystemPrompt("English", "German", runner.AdvancedSettings!), prompt);
+    }
+
+    [Fact]
+    public void DescribePrompt_RegularEngines_FillTheTemplateWithATextPlaceholder()
+    {
+        // A completion template keeps the text at {2}; a chat prompt gets it after a blank line.
+        var completion = AutoTranslateRunner.Create(MakeOptions(engine: "llamacpp", url: "http://myhost:8080", prompt: "Translate this from {0} to {1}:\\n{0}: {2}\\n{1}:"));
+        Assert.Equal("Translate this from English to German:\nEnglish: <text>\nGerman:", completion.DescribePrompt("English", "German"));
+
+        var chat = AutoTranslateRunner.Create(MakeOptions(engine: "ollama", prompt: "Translate from {0} to {1}, output only the translation:"));
+        Assert.Equal("Translate from English to German, output only the translation:\n\n<text>", chat.DescribePrompt("English", "German"));
+
+        // llamacpp without --translate-prompt: the curated model's template when one is active.
+        Configuration.Settings.Tools.LlamaCppModelPrompt = "Model template {0}>{1}: {2}";
+        var curated = AutoTranslateRunner.Create(MakeOptions(engine: "llamacpp", url: "http://myhost:8080"));
+        Assert.Equal("Model template English>German: <text>", curated.DescribePrompt("English", "German"));
+
+        // The translation services have no prompt to show.
+        Assert.Null(AutoTranslateRunner.Create(MakeOptions(engine: "libretranslate")).DescribePrompt("English", "German"));
+    }
+
+    [Fact]
+    public void WritePromptIfVerbose_PrintsOncePerLanguagePair_OnlyWhenVerboseAndNotQuiet()
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced") with { Verbose = true, Quiet = false });
+        var output = new StringWriter();
+        runner.WritePromptIfVerbose(output, "English", "German");
+        runner.WritePromptIfVerbose(output, "English", "German"); // the same pair again: nothing new
+        runner.WritePromptIfVerbose(output, "Danish", "German"); // the next file's source language differs: printed again
+
+        var text = output.ToString();
+        Assert.Contains("  System prompt sent to the model:", text);
+        Assert.Equal(1, Occurrences(text, "from English to German"));
+        Assert.Equal(1, Occurrences(text, "from Danish to German"));
+
+        // --quiet (and --json, which implies it) keeps stdout clean whatever --verbose says.
+        var silent = new StringWriter();
+        AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced") with { Verbose = false, Quiet = false }).WritePromptIfVerbose(silent, "English", "German");
+        AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced") with { Verbose = true, Quiet = true }).WritePromptIfVerbose(silent, "English", "German");
+        Assert.Equal(string.Empty, silent.ToString());
+    }
+
+    private static int Occurrences(string text, string needle)
+    {
+        return text.Split(needle).Length - 1;
+    }
 }

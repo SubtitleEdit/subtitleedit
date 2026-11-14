@@ -447,6 +447,12 @@ deliberately overrides the curated template too: an option given on the command 
 a no-op. `ollama` and `lmstudio` have no per-model template, so it is simply
 `--translate-prompt` > `--settings` > built-in default.
 
+`--verbose` prints the prompt as the engine sends it, once per language pair (the source language is
+detected per file): for the advanced engines the complete system prompt, which is the instructions
+plus the keep-line-breaks sentence, formality, synopsis, glossary and protocol paragraph that the
+prompt field never shows; for the other LLM engines the filled template with `<text>` where the
+subtitle text goes. Nothing is printed under `--quiet` or `--json`.
+
 #### Advanced local engines
 
 `llamacpp-advanced`, `ollama-advanced` and `lmstudio-advanced` are the command-line form of the GUI's
@@ -717,7 +723,7 @@ seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
 | Option | Description |
 |---|---|
 | `--quiet` / `-q` | Suppress per-file progress, the parameters table, and the OCR/translate progress lines; only print the final summary |
-| `--verbose` / `-v` | Print extra diagnostic information, including full exception details (stack traces) on errors |
+| `--verbose` / `-v` | Print extra diagnostic information, including full exception details (stack traces) on errors and, with `--translate-to`, the prompt the translate engine sends (see [Custom prompt](#custom-prompt)) |
 | `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output). Also accepted by every subcommand. Failures use the same envelope, so stdout is always one JSON document |
 
 ## Operations
