@@ -26,8 +26,8 @@ public class WhisperDownloadService : IWhisperDownloadService
     // Upstream now tags nightly builds llama.cpp style (b5454) and only attaches binaries to
     // those; the semantic v1.9.5 tag points at the same commit.
     private const string WindowsUrl = "https://github.com/ggml-org/whisper.cpp/releases/download/b5454/whisper-blas-bin-x64.zip";
-    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-195/whisper-mac.zip";
-    private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-195/whisper-mac.zip";
+    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-195b/whisper-mac.zip";
+    private const string MacX64Url = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-195b/whisper-mac.zip";
     // The Linux archives are SE rebuilds (upstream ships no Linux binaries). They must carry
     // libwhisper.so.1 / libggml.so.0 next to whisper-cli, staged under their SONAMEs with
     // $ORIGIN RPATHs - whispercpp-184 through -191 shipped without them and the engine died on
