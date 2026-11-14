@@ -44,8 +44,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         public Subtitle TrunCea608Subtitle { get; private set; }
         public Subtitle TrunCea708Subtitle { get; private set; }
         private List<Cea608.CcData> _trunCcData = new List<Cea608.CcData>();
-        public string DebugInfo { get; private set; }
-
         public List<Trak> GetSubtitleTracks()
         {
             var list = new List<Trak>();

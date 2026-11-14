@@ -14,11 +14,6 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             return value.ToString("X").PadLeft(digits, '0');
         }
 
-        public static string IntToBin(long value, int digits)
-        {
-            return Convert.ToString(value, 2).PadLeft(digits, '0');
-        }
-
         public static UInt32 GetEndian(byte[] buffer, int index, int count)
         {
             UInt32 result = 0;

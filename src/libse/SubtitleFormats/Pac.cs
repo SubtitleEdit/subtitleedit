@@ -23,14 +23,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static IGetPacEncoding GetPacEncodingImplementation;
 
-        public static readonly TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
-
         public static bool ThrowOnError = false;
 
-        public static bool IsValidCodePage(int codePage)
-        {
-            return 0 <= codePage && codePage <= 12;
-        }
         public const int CodePageLatin = 0;
         public const int CodePageGreek = 1;
         public const int CodePageLatinCzech = 2;
@@ -3345,12 +3339,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return string.Empty;
-        }
-
-        public static string GetPortugueseString(byte[] buffer, ref int index)
-        {
-            var encoding = GetEncoding(CodePageLatinPortuguese);
-            return GetLatinString(encoding, buffer, ref index, LatinPortugueseOverrides);
         }
 
         internal static TimeCode GetTimeCode(int timeCodeIndex, byte[] buffer)

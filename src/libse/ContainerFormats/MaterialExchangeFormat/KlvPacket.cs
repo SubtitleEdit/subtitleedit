@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
 {
@@ -135,19 +134,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                 }
             }
             return true;
-        }
-
-        public string DisplayKey
-        {
-            get
-            {
-                var sb = new StringBuilder();
-                for (int i = 0; i < KeySize; i++)
-                {
-                    sb.Append(Key[i].ToString("X2") + "-");
-                }
-                return sb.ToString().TrimEnd('-');
-            }
         }
 
     }

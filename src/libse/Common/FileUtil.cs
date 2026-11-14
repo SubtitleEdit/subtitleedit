@@ -1,6 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.ContainerFormats;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
@@ -625,51 +623,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        //Header Partition PackId
-        private static readonly byte[] MxfHeaderPartitionPackId = { 0x06, 0x0E, 0x2B, 0x34, 0x02, 0x05, 0x01, 0x01, 0x0D, 0x01, 0x02 };
-
-        /// <summary>
-        /// Checks if file is an MXF file
-        /// </summary>
-        /// <param name="fileName">Input file</param>
-        /// <returns>true if file is an MXF file, otherwise false</returns>
-        public static bool IsMaterialExchangeFormat(string fileName)
-        {
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                var buffer = new byte[65536];
-                var count = fs.Read(buffer, 0, buffer.Length);
-                if (count < 100)
-                {
-                    return false;
-                }
-
-                return buffer.AsSpan(0, count).IndexOf(MxfHeaderPartitionPackId) >= 0;
-            }
-        }
-
-        /// <summary>
-        /// Determines whether a file is in Rich Text Format (RTF).
-        /// </summary>
-        /// <param name="fileName">The path to the file to check.</param>
-        /// <returns>true if the file is in RTF format; otherwise, false.</returns>
-        public static bool IsRtf(string fileName)
-        {
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                var buffer = new byte[10];
-                if (fs.Read(buffer, 0, buffer.Length) != buffer.Length)
-                {
-                    return false;
-                }
-
-                var text = Encoding.ASCII.GetString(buffer);
-                var textUtf8 = Encoding.ASCII.GetString(buffer, 3, 7);
-                return text.Trim().StartsWith("{\\rtf1\\", StringComparison.Ordinal) ||
-                       textUtf8.Trim().StartsWith("{\\rtf1\\", StringComparison.Ordinal);
-            }
-        }
-
         /// <summary>
         /// Checks if a file contains a UTF-8 byte order mark (BOM).
         /// </summary>
@@ -715,21 +668,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Determines whether the specified path represents a file.
-        /// </summary>
-        /// <param name="path">The path to check.</param>
-        /// <returns>True if the specified path is a file; otherwise, false.</returns>
-        public static bool IsFile(string path)
-        {
-            if (!Path.IsPathRooted(path))
-            {
-                return false;
-            }
-
-            return (File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory;
         }
 
         /// <summary>
@@ -919,103 +857,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Attempts to read video information from the Matroska header of a specified file.
-        /// </summary>
-        /// <param name="fileName">The path to the Matroska file.</param>
-        /// <returns>A VideoInfo object containing video properties if successful; otherwise, an object with Success set to false.</returns>
-        public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
-        {
-            var info = new VideoInfo { Success = false };
-            using (var matroska = new MatroskaFile(fileName))
-            {
-                if (matroska.IsValid)
-                {
-                    matroska.GetInfo(out var frameRate, out var width, out var height, out var milliseconds, out var videoCodec);
-
-                    info.Width = width;
-                    info.Height = height;
-                    info.FramesPerSecond = frameRate;
-                    info.Success = true;
-                    info.TotalMilliseconds = milliseconds;
-                    info.TotalSeconds = milliseconds / TimeCode.BaseUnit;
-                    info.TotalFrames = info.TotalSeconds * frameRate;
-                    info.VideoCodec = videoCodec;
-                }
-            }
-
-            return info;
-        }
-
-        /// <summary>
-        /// Attempts to read video information from an AVI file header.
-        /// </summary>
-        /// <param name="fileName">The path to the AVI file to be read.</param>
-        /// <returns>A <see cref="VideoInfo"/> object containing details about the video. If reading the information fails, the <c>Success</c> property of the returned object will be <c>false</c>.</returns>
-        public static VideoInfo TryReadVideoInfoViaAviHeader(string fileName)
-        {
-            var info = new VideoInfo { Success = false };
-
-            try
-            {
-                using (var rp = new RiffParser())
-                {
-                    if (rp.TryOpenFile(fileName) && rp.FileType == RiffParser.CkidAvi)
-                    {
-                        var dh = new RiffDecodeHeader(rp);
-                        dh.ProcessMainAvi();
-                        info.FileType = RiffParser.FromFourCc(rp.FileType);
-                        info.Width = dh.Width;
-                        info.Height = dh.Height;
-                        info.FramesPerSecond = dh.FrameRate;
-                        info.TotalFrames = dh.TotalFrames;
-                        info.TotalMilliseconds = dh.TotalMilliseconds;
-                        info.TotalSeconds = info.TotalMilliseconds / TimeCode.BaseUnit;
-                        info.VideoCodec = dh.VideoHandler;
-                        info.Success = true;
-                    }
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-
-            return info;
-        }
-
-        /// <summary>
-        /// Attempts to read video information from an MP4 file.
-        /// </summary>
-        /// <param name="fileName">The path to the MP4 file.</param>
-        /// <returns>A VideoInfo object containing the video information, with the Success property indicating whether reading was successful.</returns>
-        public static VideoInfo TryReadVideoInfoViaMp4(string fileName)
-        {
-            var info = new VideoInfo { Success = false };
-
-            try
-            {
-                var mp4Parser = new MP4Parser(fileName, readClosedCaptions: false);
-                if (mp4Parser.Moov != null && mp4Parser.VideoResolution.X > 0)
-                {
-                    info.Width = mp4Parser.VideoResolution.X;
-                    info.Height = mp4Parser.VideoResolution.Y;
-                    info.TotalMilliseconds = mp4Parser.Duration.TotalSeconds * 1000;
-                    info.TotalSeconds = info.TotalMilliseconds / 1000.0;
-                    info.TotalFrames = mp4Parser.FrameRate * info.TotalSeconds;
-                    info.VideoCodec = "MP4";
-                    info.FramesPerSecond = mp4Parser.FrameRate;
-                    info.Success = true;
-                }
-            }
-            catch
-            {
-                // ignored
-            }
-
-            return info;
-        }
-
-        /// <summary>
         /// Generates a unique temporary file name with the specified extension.
         /// </summary>
         /// <param name="extension">The extension for the temporary file name.</param>
@@ -1092,83 +933,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                 // 1a 45 df a3
                 return buffer[0] == 0x1a && buffer[1] == 0x45 && buffer[2] == 0xdf && buffer[3] == 0xa3;
             }
-        }
-
-        /// <summary>
-        /// Checks if a file is locked by attempting to open it with exclusive read access.
-        /// </summary>
-        /// <param name="fileName">The name of the file to check.</param>
-        /// <returns>True if the file is locked, otherwise false.</returns>
-        public static bool IsFileLocked(string fileName)
-        {
-            try
-            {
-                using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    stream.Close();
-                }
-            }
-            catch (IOException exception)
-            {
-                SeLogger.Error(exception);
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Searches for a subtitle file that matches the given video file in specified directories.
-        /// </summary>
-        /// <param name="path">The base path to search for subtitle files.</param>
-        /// <param name="videoFileName">The video file name for which a matching subtitle is being sought.</param>
-        /// <returns>The full path of the found subtitle file, or an empty string if no matching subtitle is found.</returns>
-        public static string TryLocateSubtitleFile(string path, string videoFileName)
-        {
-            // search in these subdirectories: \Subs;\Sub;\Subtitles;
-            var knownSubtitleDirectories = new[]
-            {
-                path, Path.Combine(path, "Subs"), Path.Combine(path, "Sub"), Path.Combine(path, "Subtitles")
-            };
-
-            // handles if video file was sent with full path
-            if (Path.IsPathRooted(videoFileName))
-            {
-                videoFileName = Path.GetFileName(videoFileName);
-            }
-
-            foreach (var knownSubtitleDirectory in knownSubtitleDirectories)
-            {
-                if (!Directory.Exists(knownSubtitleDirectory))
-                {
-                    continue;
-                }
-
-                // try to locate subtitle file that has the same name as the video file
-                var defaultSubtitles = new[]
-                {
-                    Path.Combine(knownSubtitleDirectory, Path.ChangeExtension(videoFileName, ".ass")),
-                    Path.Combine(knownSubtitleDirectory, Path.ChangeExtension(videoFileName, ".srt"))
-                };
-                foreach (var defaultSubtitle in defaultSubtitles)
-                {
-                    if (File.Exists(defaultSubtitle))
-                    {
-                        return defaultSubtitle;
-                    }
-                }
-
-                // get first subtitle in path with extension .ass or .srt
-                var assEnumerable = Directory.EnumerateFiles(knownSubtitleDirectory, "*.ass", SearchOption.TopDirectoryOnly);
-                var subRipEnumerable = Directory.EnumerateFiles(knownSubtitleDirectory, "*.srt", SearchOption.TopDirectoryOnly);
-                var subtitleFile = assEnumerable.Concat(subRipEnumerable).FirstOrDefault();
-                if (!string.IsNullOrEmpty(subtitleFile))
-                {
-                    return subtitleFile;
-                }
-            }
-
-            return string.Empty;
         }
 
         /// <summary>

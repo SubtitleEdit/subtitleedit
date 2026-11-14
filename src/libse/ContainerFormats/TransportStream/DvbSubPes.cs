@@ -381,19 +381,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
         }
 
-        public int SubtitleStreamId
-        {
-            get
-            {
-                if (_dataBuffer == null || _dataBuffer.Length < 2)
-                {
-                    return 0;
-                }
-
-                return _dataBuffer[1];
-            }
-        }
-
         public List<SubtitleSegment> SubtitleSegments { get; set; }
         public List<ClutDefinitionSegment> ClutDefinitions { get; set; }
         public List<RegionCompositionSegment> RegionCompositions { get; set; }
@@ -713,44 +700,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
 
             return new SKSize(width, height);
-        }
-
-        public static string GetStreamIdDescription(int streamId)
-        {
-            if (0xC0 <= streamId && streamId < 0xE0)
-            {
-                return "ISO/IEC 13818-3 or ISO/IEC 11172-3 or ISO/IEC 13818-7 or ISO/IEC 14496-3 audio stream number " + (streamId & 0x1F).ToString("X4");
-            }
-
-            if (0xE0 <= streamId && streamId < 0xF0)
-            {
-                return "ITU-T Rec. H.262 | ISO/IEC 13818-2 or ISO/IEC 11172-2 or ISO/IEC 14496-2 video stream number " + (streamId & 0x0F).ToString("X4");
-            }
-
-            switch (streamId)
-            {
-                case 0xBC: return "program_stream_map";
-                case 0xBD: return "private_stream_1";
-                case 0xBE: return "padding_stream";
-                case 0xBF: return "private_stream_2";
-                case 0xF0: return "ECM_stream";
-                case 0xF1: return "EMM_stream";
-                case 0xF2: return "DSMCC_stream";
-                case 0xF3: return "ISO/IEC_13522_stream";
-                case 0xF4: return "ITU-T Rec. H.222.1 type A";
-                case 0xF5: return "ITU-T Rec. H.222.1 type B";
-                case 0xF6: return "ITU-T Rec. H.222.1 type C";
-                case 0xF7: return "ITU-T Rec. H.222.1 type D";
-                case 0xF8: return "ITU-T Rec. H.222.1 type E";
-                case 0xF9: return "ancillary_stream";
-                case 0xFA: return "ISO/IEC14496-1_SL-packetized_stream";
-                case 0xFB: return "ISO/IEC14496-1_FlexMux_stream";
-                case 0xFC: return "metadata stream";
-                case 0xFD: return "extended_stream_id";
-                case 0xFE: return "reserved data stream";
-                case 0xFF: return "program_stream_directory";
-                default: return "?";
-            }
         }
 
         public ulong PresentationTimestampToMilliseconds()

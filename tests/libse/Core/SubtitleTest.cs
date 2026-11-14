@@ -24,41 +24,6 @@ public class SubtitleTest
     }
 
     [Fact]
-    public void TestRemoveParagraphsByIds1()
-    {
-        var sub = new Subtitle();
-        var p1 = new Paragraph("1", 0, 1000);
-        var p2 = new Paragraph("2", 1000, 2000);
-        var p3 = new Paragraph("3", 2000, 3000);
-        sub.Paragraphs.Add(p1);
-        sub.Paragraphs.Add(p2);
-        sub.Paragraphs.Add(p3);
-
-        int removedCount = sub.RemoveParagraphsByIds(new List<Guid?> { p2.Id });
-        Assert.Equal(1, removedCount);
-        Assert.Equal(2, sub.Paragraphs.Count);
-        Assert.Equal(sub.Paragraphs[0], p1);
-        Assert.Equal(sub.Paragraphs[1], p3);
-    }
-
-    [Fact]
-    public void TestRemoveParagraphsByIds2()
-    {
-        var sub = new Subtitle();
-        var p1 = new Paragraph("1", 0, 1000);
-        var p2 = new Paragraph("2", 1000, 2000);
-        var p3 = new Paragraph("3", 2000, 3000);
-        sub.Paragraphs.Add(p1);
-        sub.Paragraphs.Add(p2);
-        sub.Paragraphs.Add(p3);
-
-        int removedCount = sub.RemoveParagraphsByIds(new List<Guid?> { p2.Id, p3.Id });
-        Assert.Equal(2, removedCount);
-        Assert.Single(sub.Paragraphs);
-        Assert.Equal(sub.Paragraphs[0], p1);
-    }
-
-    [Fact]
     public void TestRemoveParagraphsByIdices1()
     {
         var sub = new Subtitle();

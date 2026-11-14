@@ -14,8 +14,6 @@ public class CrispAsrEngine : CrispAsrEngineBase
     public static string StaticName => "Crisp ASR";
     public IReadOnlyList<CrispAsrEngineBase> Backends => _backends;
     public CrispAsrEngineBase SelectedBackend { get; private set; }
-    public string SelectedBackendDisplay => GetBackendDisplayName(SelectedBackend);
-
     public CrispAsrEngine()
     {
         _backends = new List<CrispAsrEngineBase>

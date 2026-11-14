@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using Nikse.SubtitleEdit.UiLogic.Http;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -50,53 +48,6 @@ public class Core
         }
 
         ParseCookies();
-    }
-    
-    public async Task<List<string>> ScanByFileAsync(string path)
-    {
-        var file = await File.ReadAllBytesAsync(path);
-        return await ScanByBufferAsync(file);
-    }
-
-    public async Task<List<string>> ScanByBufferAsync(byte[] buffer)
-    {
-        SKEncodedImageFormat? format = null;
-        
-        try
-        {
-            using var stream = new MemoryStream(buffer);
-            using var codec = SKCodec.Create(stream);
-            if (codec != null)
-            {
-                format = codec.EncodedFormat;
-            }
-        }
-        catch
-        {
-            throw new Exception("File type not supported");
-        }
-
-        var (Width, Height) = Helper.ImageDimensionsFromData(buffer);
-        if (Width == 0 && Height == 0)
-        {
-            throw new Exception("Could not determine image dimensions");
-        }
-
-        // Google Lens does not accept images larger than 1000x1000
-        if (Width > 1000 || Height > 1000)
-        {
-            buffer = await Helper.ResizeImageAsync(buffer, 1000, 1000);
-        }
-
-        string mimeType = format switch
-        {
-            SKEncodedImageFormat.Png => "image/png",
-            SKEncodedImageFormat.Jpeg => "image/jpeg",
-            SKEncodedImageFormat.Webp => "image/webp",
-            _ => "image/png"
-        };
-
-        return await ScanByData(buffer, mimeType, [Width, Height]);
     }
      
     public async Task<List<string>> FetchAsync(HttpContent formdata, int[] originalDimensions, bool secondTry = false)

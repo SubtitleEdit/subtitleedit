@@ -240,8 +240,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static DvdSubtitleLanguage English => CompliantLanguagesByCode["en"];
 
-        public static IEnumerable<DvdSubtitleLanguage> CompliantLanguages => CompliantLanguagesByCode;
-
         private static LanguagesByCode CompliantLanguagesByCode
         {
             get

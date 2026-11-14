@@ -207,43 +207,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return $"{(float)fileSize / (1024 * 1024 * 1024):0.0} gb";
         }
 
-        public static long DisplayFileSizeToBytes(string displayFileSize)
-        {
-            if (displayFileSize.Contains("bytes"))
-            {
-                if (double.TryParse(displayFileSize.Replace("bytes", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
-                {
-                    return (long)Math.Round(n);
-                }
-            }
-
-            if (displayFileSize.Contains("kb"))
-            {
-                if (double.TryParse(displayFileSize.Replace("kb", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
-                {
-                    return (long)Math.Round(n * 1024);
-                }
-            }
-
-            if (displayFileSize.Contains("mb"))
-            {
-                if (double.TryParse(displayFileSize.Replace("mb", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
-                {
-                    return (long)Math.Round(n * 1024 * 1024);
-                }
-            }
-
-            if (displayFileSize.Contains("gb"))
-            {
-                if (double.TryParse(displayFileSize.Replace("gb", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
-                {
-                    return (long)Math.Round(n * 1024.0 * 1024.0 * 1024.0);
-                }
-            }
-
-            return 0;
-        }
-
         public static bool IsBetweenNumbers(string s, int position)
         {
             if (string.IsNullOrEmpty(s) || position < 1 || position + 2 > s.Length)
@@ -1384,8 +1347,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static readonly string UppercaseLetters = Configuration.Settings.General.UppercaseLetters.ToUpperInvariant() + "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ";
         public static readonly string LowercaseLetters = Configuration.Settings.General.UppercaseLetters.ToLowerInvariant() + "αβγδεζηθικλμνξοπρσςτυφχψωήάόέ";
         public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
-        public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
-
         // Other chars that continue a line; letters and digits are checked with char.IsLetter/IsDigit, as the
         // configured alphabet misses e.g. "ß", "Š", Hebrew, Arabic and Thai.
         private static readonly string LineContinuationEndChars = "…,-$%";
@@ -1759,86 +1720,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return text.Replace("\"\"", "\"");
-        }
-
-        public static SKColor GetColorFromFontString(string text, SKColor defaultColor)
-        {
-            var s = text.TrimEnd();
-            var start = s.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-            if (start < 0 || !s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
-            {
-                return defaultColor;
-            }
-            var end = s.IndexOf('>', start);
-            if (end <= 0)
-            {
-                return defaultColor;
-            }
-            var f = s.Substring(start, end - start);
-            if (!f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
-            {
-                return defaultColor;
-            }
-            // f starts at 'start' within s, so offset f-relative index back into s
-            var colorStart = start + f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-            var quoteIndex = s.IndexOf('"', colorStart + " color=".Length + 1);
-            if (quoteIndex > 0 && quoteIndex < end)
-            {
-                // only a quote inside the font tag itself ends the value - a quotation mark
-                // in the dialogue text must not hijack an unquoted color attribute
-                end = quoteIndex;
-            }
-            s = s.Substring(colorStart, end - colorStart);
-            s = s.Replace(" color=", string.Empty);
-            s = s.Trim('\'').Trim('"').Trim('\'');
-            try
-            {
-                if (s.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
-                {
-                    var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    return new SKColor(
-                        (byte)int.Parse(arr[0].Trim()),
-                        (byte)int.Parse(arr[1].Trim()),
-                        (byte)int.Parse(arr[2].Trim()),
-                        255); // Full opacity
-                }
-                if (s.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase))
-                {
-                    var arr = s
-                        .Replace(" ", "")
-                        .Remove(0, 5)
-                        .TrimEnd(')')
-                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    var alpha = byte.MaxValue;
-                    if (arr.Length == 4 && float.TryParse(arr[3], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f2))
-                    {
-                        if (f2 >= 0 && f2 < 1)
-                        {
-                            alpha = (byte)(f2 * byte.MaxValue);
-                        }
-                    }
-                    return new SKColor(
-                        (byte)int.Parse(arr[0]),
-                        (byte)int.Parse(arr[1]),
-                        (byte)int.Parse(arr[2]),
-                        alpha);
-                }
-                if (s.Length == 9 && s.StartsWith("#"))
-                {
-                    if (!int.TryParse(s.Substring(7, 2), NumberStyles.HexNumber, null, out var alpha))
-                    {
-                        alpha = 255; // full solid color
-                    }
-                    s = s.Substring(1, 6);
-                    var color = SKColor.Parse("#" + s);
-                    return new SKColor(color.Red, color.Green, color.Blue, (byte)alpha);
-                }
-                return SKColor.Parse(s);
-            }
-            catch
-            {
-                return defaultColor;
-            }
         }
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
@@ -3067,49 +2948,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return fileName;
         }
-
-        private static readonly HashSet<string> CopyWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "copy",      // en
-            "نسخة",      // ar-EG - Arabic
-            "копие",     // bg-BG - Bulgarian
-            "còpia",     // br-FR - Breton
-            "còpia",     // ca-ES - Catalan
-            "kopie",     // cs-CZ - Czech
-            "kopi",      // da-DK - Danish
-            "kopie",     // de-DE - German
-            "αντίγραφο", // el-GR - Greek
-            "copia",     // es-AR, es-ES, es-MX - Spanish
-            "kopia",     // eu-ES - Basque
-            "کپی",       // fa-IR - Persian
-            "kopio",     // fi-FI - Finnish
-            "copie",     // fr-FR - French
-            "עותק",      // he-IL - Hebrew
-            "kopija",    // hr-HR - Croatian
-            "másolat",   // hu-HU - Hungarian
-            "salinan",   // id-ID - Indonesian
-            "copia",     // it-IT - Italian
-            "コピー",     // ja-JP - Japanese
-            "복사본",     // ko-KR - Korean
-            "копија",    // mk-MK - Macedonian
-            "kopi",      // nb-NO - Norwegian Bokmål
-            "kopie",     // nl-NL - Dutch
-            "kopia",     // pl-PL - Polish
-            "cópia",     // pt-BR, pt-PT - Portuguese
-            "copie",     // ro-RO - Romanian
-            "копия",     // ru-RU - Russian
-            "kopija",    // sl-SI - Slovenian
-            "копија",    // sr-Cyrl-RS - Serbian (Cyrillic)
-            "kopija",    // sr-Latn-RS - Serbian (Latin)
-            "kopia",     // sv-SE - Swedish
-            "สำเนา",     // th-TH - Thai
-            "kopya",     // tr-TR - Turkish
-            "нөсхә",     // tt-RU - Tatar
-            "копія",     // uk-UA - Ukrainian
-            "bản sao",   // vi-VN - Vietnamese
-            "复制",       // zh-Hans - Simplified Chinese
-            "複製",       // zh-TW - Traditional Chinese
-        };
 
         public static string ReSplit(string text, int selectionStart)
         {

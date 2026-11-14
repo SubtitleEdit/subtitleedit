@@ -19,7 +19,6 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 /// </summary>
 internal static class TtsSettingsChrome
 {
-    internal const double DefaultLabelWidth = 150;
     internal const double SliderWidth = 200;
 
     /// <summary>

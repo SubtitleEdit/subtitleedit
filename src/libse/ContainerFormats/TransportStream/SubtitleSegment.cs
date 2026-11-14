@@ -70,24 +70,6 @@
                     break;
             }
         }
-
-        public string SegmentTypeDescription
-        {
-            get
-            {
-                switch (SegmentType)
-                {
-                    case PageCompositionSegment: return "Page composition segment";
-                    case RegionCompositionSegment: return "Region composition segment";
-                    case ClutDefinitionSegment: return "CLUT definition segment";
-                    case ObjectDataSegment: return "Object data segment";
-                    case DisplayDefinitionSegment: return "Display definition segment";
-                    case EndOfDisplaySetSegment: return "End of display set segment";
-                    case StuffingSegment: return "Stuffing segment";
-                    default: return "Unknown";
-                }
-            }
-        }
     }
 
 }

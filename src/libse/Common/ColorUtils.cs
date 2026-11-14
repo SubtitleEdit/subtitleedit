@@ -30,29 +30,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double Luminance(this SKColor color) => (color.Red * 0.299 + color.Green * 0.587 + color.Blue * 0.114) / 255;
 
-        public static SKColor OpposingLuminanceColor(this SKColor baseColor)
-        {
-            var luminance = baseColor.Luminance();
-            var opposingLuminance = Math.Abs(0.5 - luminance) * 2;
-
-            var opposingRed = (byte)Math.Round(opposingLuminance * baseColor.Red);
-            var opposingGreen = (byte)Math.Round(opposingLuminance * baseColor.Green);
-            var opposingBlue = (byte)Math.Round(opposingLuminance * baseColor.Blue);
-
-            return new SKColor(opposingRed, opposingGreen, opposingBlue);
-        }
-
         public static uint ToArgb(this SKColor color)
         {
             var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | color.Blue;
             return number;
         }
-        public static string ToArgbString(this SKColor color)
-        {
-            var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | color.Blue;
-            return number.ToString(CultureInfo.InvariantCulture);
-        }
-
         public static SKColor FromArgb(string text)
         {
             return new SKColor((uint)Convert.ToInt32(text, CultureInfo.InvariantCulture));

@@ -13,10 +13,6 @@ public class DrawCoordinate
     public float Y { get; set; }
     public Color PointColor { get; set; }
 
-    public bool IsBeizer => DrawType == DrawCoordinateType.BezierCurve ||
-                            DrawType == DrawCoordinateType.BezierCurveSupport1 ||
-                            DrawType == DrawCoordinateType.BezierCurveSupport2;
-
     public DrawCoordinate(DrawShape? drawShape, DrawCoordinateType drawType, float x, float y, Color pointColor)
     {
         DrawShape = drawShape;

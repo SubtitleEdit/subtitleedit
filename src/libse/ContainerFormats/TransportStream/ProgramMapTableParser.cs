@@ -283,16 +283,5 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
             return string.Empty;
         }
-
-        public string GetSubtitleLanguageTwoLetter(int packetId)
-        {
-            var language = GetSubtitleLanguage(packetId);
-            var uppercaseLanguage = language.ToUpperInvariant();
-            if (IsoCountryCodes.ThreeToTwoLetterLookup.ContainsKey(uppercaseLanguage))
-            {
-                return IsoCountryCodes.ThreeToTwoLetterLookup[uppercaseLanguage].ToLowerInvariant();
-            }
-            return language;
-        }
     }
 }

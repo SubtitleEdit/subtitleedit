@@ -22,7 +22,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public int NumberOfCodes { get; set; }
 
-        public List<string> FirstDataTypes = new List<string>();
         public SKBitmap Image { get; set; }
         private FastBitmap _fastImage;
 

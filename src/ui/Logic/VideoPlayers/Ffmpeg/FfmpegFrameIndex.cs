@@ -31,8 +31,6 @@ public sealed class FfmpegFrameIndex
     private double RoundingSlack => Math.Min(0.001, MatchTolerance);
 
     public int Count => _seconds.Length;
-    public int KeyFrameCount => _keyFrames.Length;
-
     private FfmpegFrameIndex(double[] seconds, long[] ticks, int[] keyFrames)
     {
         _seconds = seconds;

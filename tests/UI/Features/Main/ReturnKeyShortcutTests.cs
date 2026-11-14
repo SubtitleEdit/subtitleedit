@@ -5,10 +5,8 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
-using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Features.Main;
 
@@ -112,48 +110,6 @@ public class ReturnKeyShortcutTests
         var window = new GetKeyWindow(vm);
         window.Show();
         Settle(window);
-        return (window, vm);
-    }
-
-    private static void WithShortcut(string actionName, string[] keys, Action test)
-    {
-        var original = Se.Settings.Shortcuts.Where(s => s.ActionName == actionName).ToList();
-        Se.Settings.Shortcuts.RemoveAll(s => s.ActionName == actionName);
-        Se.Settings.Shortcuts.Add(new SeShortCut(actionName, [.. keys]));
-        try
-        {
-            test();
-        }
-        finally
-        {
-            Se.Settings.Shortcuts.RemoveAll(s => s.ActionName == actionName);
-            Se.Settings.Shortcuts.AddRange(original);
-        }
-    }
-
-    private static (Window Window, MainViewModel Vm) ShowMainWindowWithOneLine(string text)
-    {
-        var services = new ServiceCollection();
-        services.AddSubtitleEditServices();
-        Locator.Services = services.BuildServiceProvider();
-
-        var window = new Window { Width = 1400, Height = 900 };
-        MainView.NextHostWindow = window;
-        var view = new MainView();
-        window.Content = view;
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-
-        var vm = (MainViewModel)view.DataContext!;
-        window.SuppressSaveChangesPromptOnClose(vm);
-        vm.Subtitles.Add(new SubtitleLineViewModel(new Paragraph(text, 0, 2000), null!) { Number = 1 });
-        Settle(window);
-
-        vm.SelectedSubtitleIndex = 0;
-        vm.SubtitleGrid.SelectedItem = vm.Subtitles[0];
-        Settle(window);
-
         return (window, vm);
     }
 

@@ -26,7 +26,6 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public readonly int SubPictureDateSize;
         public TimeSpan Delay;
-        public int BufferSize => _data.Length;
         private readonly byte[] _data;
         public SKRectI ImageDisplayArea;
 

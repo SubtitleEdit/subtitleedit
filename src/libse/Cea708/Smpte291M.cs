@@ -35,23 +35,6 @@ namespace Nikse.SubtitleEdit.Core.Cea708
         public const byte TimeCodeSectionId = 0x71;
         public const byte CcDataSectionId = 0x72;
 
-        public string GetFrameRateDisplay()
-        {
-            switch (CaptionDistributionPacketFramingRate)
-            {
-                case 1: return "24000 / 1001 (23.976)";
-                case 2: return "24";
-                case 3: return "25";
-                case 4: return "30000 / 1001 (29.97)";
-                case 5: return "30";
-                case 6: return "50";
-                case 7: return "60000 / 1001 (59.94)";
-                case 8: return "60";
-                default:
-                    return "unknown";
-            }
-        }
-
         public Smpte291M(int sequenceCount, int ccDataCount, byte[] bytes)
         {
             DataId = 0x61;

@@ -5,7 +5,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public class ReplaceExpression
     {
-        public const int SearchNormal = 0;
         public const int SearchRegEx = 1;
         public const int SearchCaseSensitive = 2;
 
