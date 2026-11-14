@@ -3,14 +3,13 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -418,7 +417,7 @@ public class F5TtsCrispAsr : ITtsEngine
 
             var failMsg = $"F5-TTS (CrispASR) request failed — Voice: {f5Voice}, Text: {text}, "
                 + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}"
-                + LaunchCmdSuffix(launchCommand);
+                + LocalServerHelper.LaunchCmdSuffix(launchCommand);
             Se.LogError(ex, failMsg);
             Se.WriteToolsLog(failMsg);
 
@@ -427,7 +426,7 @@ public class F5TtsCrispAsr : ITtsEngine
                     ? "F5-TTS (CrispASR) — the crispasr server crashed during synthesis."
                     : "F5-TTS (CrispASR) request failed — the connection to the crispasr server was dropped.")
                 + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
-                + LaunchCmdSuffix(launchCommand),
+                + LocalServerHelper.LaunchCmdSuffix(launchCommand),
                 ex);
         }
 
@@ -435,19 +434,19 @@ public class F5TtsCrispAsr : ITtsEngine
         {
             if (!response.IsSuccessStatusCode)
             {
-                var errorBody = await SafeReadErrorAsync(response, cancellationToken);
+                var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
                 var serverLog = SnapshotServerLog();
                 var launchCommand = _serverLaunchCommand;
                 var errMsg = $"F5-TTS (CrispASR) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {f5Voice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
-                    + LaunchCmdSuffix(launchCommand);
+                    + LocalServerHelper.LaunchCmdSuffix(launchCommand);
                 Se.LogError(errMsg);
                 Se.WriteToolsLog(errMsg);
                 throw new InvalidOperationException(
                     $"F5-TTS (CrispASR) synthesis failed ({(int)response.StatusCode}): {errorBody}"
                     + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
-                    + LaunchCmdSuffix(launchCommand));
+                    + LocalServerHelper.LaunchCmdSuffix(launchCommand));
             }
 
             await using var fileStream = File.Create(outputFileName);
@@ -477,38 +476,6 @@ public class F5TtsCrispAsr : ITtsEngine
         catch
         {
             return string.Empty;
-        }
-    }
-
-    private static string FormatLaunchCommand(string exe, System.Collections.ObjectModel.Collection<string> args)
-    {
-        static string Quote(string s) =>
-            !string.IsNullOrEmpty(s) && s.IndexOfAny(new[] { ' ', '\t' }) >= 0
-                ? "\"" + s.Replace("\"", "\\\"") + "\""
-                : s;
-
-        var sb = new StringBuilder(Quote(exe));
-        foreach (var a in args)
-        {
-            sb.Append(' ').Append(Quote(a));
-        }
-        return sb.ToString();
-    }
-
-    private static string LaunchCmdSuffix(string? launchCommand) =>
-        string.IsNullOrEmpty(launchCommand)
-            ? string.Empty
-            : $"{Environment.NewLine}Launch command: {launchCommand}";
-
-    private static async Task<string> SafeReadErrorAsync(HttpResponseMessage response, CancellationToken ct)
-    {
-        try
-        {
-            return await response.Content.ReadAsStringAsync(ct);
-        }
-        catch (Exception ex)
-        {
-            return $"<failed to read error body: {ex.Message}>";
         }
     }
 
@@ -553,7 +520,7 @@ public class F5TtsCrispAsr : ITtsEngine
             var talker = GetTalkerPath(modelKey);
             var hasLocalTalker = IsValidLocalModelFile(talker, talkerFileName);
 
-            var port = FindFreeLoopbackPort();
+            var port = LocalServerHelper.FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
                 WorkingDirectory = Path.GetDirectoryName(exe) ?? GetSetFolder(),
@@ -599,7 +566,7 @@ public class F5TtsCrispAsr : ITtsEngine
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (f5-tts)");
 
-            var launchCommand = FormatLaunchCommand(exe, psi.ArgumentList);
+            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
             _serverLaunchCommand = launchCommand;
             Se.WriteToolsLog("F5-TTS (CrispASR) server starting — "
                 + $"PID: {process.Id}, "
@@ -642,9 +609,9 @@ public class F5TtsCrispAsr : ITtsEngine
                     _serverRefText = null;
                     throw new InvalidOperationException(
                         $"crispasr (f5-tts) exited during startup (code {exitCode}). Output: {tail}"
-                        + LaunchCmdSuffix(exitedLaunchCommand));
+                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
                 }
-                if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(2), ct))
+                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
                 {
                     return;
                 }
@@ -656,7 +623,7 @@ public class F5TtsCrispAsr : ITtsEngine
             StopServerInternal();
             throw new TimeoutException(
                 $"crispasr (f5-tts) did not report healthy within {(hasLocalTalker ? 5 : 20)} minutes. Last output: {lastOutput}"
-                + LaunchCmdSuffix(timeoutLaunchCommand));
+                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
         }
         finally
         {
@@ -670,35 +637,6 @@ public class F5TtsCrispAsr : ITtsEngine
         {
             var s = _serverLog.ToString().TrimEnd();
             return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static async Task<bool> ProbeHealthAsync(int port, TimeSpan timeout, CancellationToken ct)
-    {
-        try
-        {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            cts.CancelAfter(timeout);
-            using var resp = await HttpClient.GetAsync($"http://127.0.0.1:{port}/health", cts.Token);
-            return resp.IsSuccessStatusCode;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private static int FindFreeLoopbackPort()
-    {
-        var listener = new TcpListener(IPAddress.Loopback, 0);
-        listener.Start();
-        try
-        {
-            return ((IPEndPoint)listener.LocalEndpoint).Port;
-        }
-        finally
-        {
-            listener.Stop();
         }
     }
 
@@ -745,24 +683,6 @@ public class F5TtsCrispAsr : ITtsEngine
         }
     }
 
-    private static string GetUniqueDestinationFileName(string folder, string baseName)
-    {
-        var candidate = Path.Combine(folder, baseName + ".wav");
-        if (!File.Exists(candidate))
-        {
-            return candidate;
-        }
-
-        var number = 1;
-        do
-        {
-            candidate = Path.Combine(folder, $"{baseName}_{number}.wav");
-            number++;
-        } while (File.Exists(candidate));
-
-        return candidate;
-    }
-
     public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
 
     /// <summary>
@@ -780,7 +700,7 @@ public class F5TtsCrispAsr : ITtsEngine
 
         var voicesFolder = GetSetVoicesFolder();
         var baseName = Path.GetFileNameWithoutExtension(fileName);
-        var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
+        var destinationFileName = VoiceCloneImporter.GetUniqueDestinationFileName(voicesFolder, baseName);
 
         // F5-TTS expects 24 kHz mono. Resample on import via ffmpeg regardless of source format.
         try

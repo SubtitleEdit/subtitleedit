@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
 /// <summary>
@@ -45,5 +47,27 @@ public static class VoiceCloneImporter
             VoxCPM2CrispAsr e => e.ImportVoice(fileName, text),
             _ => engine.ImportVoice(fileName),
         };
+    }
+
+    /// <summary>
+    /// <c>baseName.wav</c> in <paramref name="folder"/>, or <c>baseName_1.wav</c>, <c>baseName_2.wav</c>...
+    /// when that file already exists.
+    /// </summary>
+    public static string GetUniqueDestinationFileName(string folder, string baseName)
+    {
+        var candidate = Path.Combine(folder, baseName + ".wav");
+        if (!File.Exists(candidate))
+        {
+            return candidate;
+        }
+
+        var number = 1;
+        do
+        {
+            candidate = Path.Combine(folder, $"{baseName}_{number}.wav");
+            number++;
+        } while (File.Exists(candidate));
+
+        return candidate;
     }
 }

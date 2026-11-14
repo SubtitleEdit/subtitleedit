@@ -3,14 +3,13 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -660,7 +659,7 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
 
             var failMsg = $"CosyVoice3 (CrispASR) request failed — Voice: {cosyVoice}, Text: {text}, "
                 + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}"
-                + LaunchCmdSuffix(launchCommand);
+                + LocalServerHelper.LaunchCmdSuffix(launchCommand);
             Se.LogError(ex, failMsg);
             Se.WriteToolsLog(failMsg);
 
@@ -669,7 +668,7 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
                     ? "CosyVoice3 (CrispASR) — the crispasr server crashed during synthesis."
                     : "CosyVoice3 (CrispASR) request failed — the connection to the crispasr server was dropped.")
                 + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
-                + LaunchCmdSuffix(launchCommand),
+                + LocalServerHelper.LaunchCmdSuffix(launchCommand),
                 ex);
         }
 
@@ -677,19 +676,19 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
         {
             if (!response.IsSuccessStatusCode)
             {
-                var errorBody = await SafeReadErrorAsync(response, cancellationToken);
+                var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
                 var serverLog = SnapshotServerLog();
                 var launchCommand = _serverLaunchCommand;
                 var errMsg = $"CosyVoice3 (CrispASR) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {cosyVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
-                    + LaunchCmdSuffix(launchCommand);
+                    + LocalServerHelper.LaunchCmdSuffix(launchCommand);
                 Se.LogError(errMsg);
                 Se.WriteToolsLog(errMsg);
                 throw new InvalidOperationException(
                     $"CosyVoice3 (CrispASR) synthesis failed ({(int)response.StatusCode}): {errorBody}"
                     + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
-                    + LaunchCmdSuffix(launchCommand));
+                    + LocalServerHelper.LaunchCmdSuffix(launchCommand));
             }
 
             await using var fileStream = File.Create(outputFileName);
@@ -698,38 +697,6 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
         }
 
         return new TtsResult(outputFileName, text);
-    }
-
-    private static string FormatLaunchCommand(string exe, System.Collections.ObjectModel.Collection<string> args)
-    {
-        static string Quote(string s) =>
-            !string.IsNullOrEmpty(s) && s.IndexOfAny(new[] { ' ', '\t' }) >= 0
-                ? "\"" + s.Replace("\"", "\\\"") + "\""
-                : s;
-
-        var sb = new StringBuilder(Quote(exe));
-        foreach (var a in args)
-        {
-            sb.Append(' ').Append(Quote(a));
-        }
-        return sb.ToString();
-    }
-
-    private static string LaunchCmdSuffix(string? launchCommand) =>
-        string.IsNullOrEmpty(launchCommand)
-            ? string.Empty
-            : $"{Environment.NewLine}Launch command: {launchCommand}";
-
-    private static async Task<string> SafeReadErrorAsync(HttpResponseMessage response, CancellationToken ct)
-    {
-        try
-        {
-            return await response.Content.ReadAsStringAsync(ct);
-        }
-        catch (Exception ex)
-        {
-            return $"<failed to read error body: {ex.Message}>";
-        }
     }
 
     /// <summary>
@@ -827,7 +794,7 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
             var llmPath = GetLlmPath(modelKey);
             var allLocal = AreModelsInstalled(modelKey);
 
-            var port = FindFreeLoopbackPort();
+            var port = LocalServerHelper.FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
                 // Run in the voices folder: the backend opens a per-request `voice` as a literal
@@ -883,7 +850,7 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (cosyvoice3-tts)");
 
-            var launchCommand = FormatLaunchCommand(exe, psi.ArgumentList);
+            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
             _serverLaunchCommand = launchCommand;
             Se.WriteToolsLog("CosyVoice3 (CrispASR) server starting — "
                 + $"PID: {process.Id}, "
@@ -929,9 +896,9 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
                     _serverPerLine = false;
                     throw new InvalidOperationException(
                         $"crispasr (cosyvoice3-tts) exited during startup (code {exitCode}). Output: {tail}"
-                        + LaunchCmdSuffix(exitedLaunchCommand));
+                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
                 }
-                if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(2), ct))
+                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
                 {
                     return;
                 }
@@ -943,7 +910,7 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
             StopServerInternal();
             throw new TimeoutException(
                 $"crispasr (cosyvoice3-tts) did not report healthy within {(allLocal ? 5 : 30)} minutes. Last output: {lastOutput}"
-                + LaunchCmdSuffix(timeoutLaunchCommand));
+                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
         }
         finally
         {
@@ -957,35 +924,6 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
         {
             var s = _serverLog.ToString().TrimEnd();
             return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static async Task<bool> ProbeHealthAsync(int port, TimeSpan timeout, CancellationToken ct)
-    {
-        try
-        {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            cts.CancelAfter(timeout);
-            using var resp = await HttpClient.GetAsync($"http://127.0.0.1:{port}/health", cts.Token);
-            return resp.IsSuccessStatusCode;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private static int FindFreeLoopbackPort()
-    {
-        var listener = new TcpListener(IPAddress.Loopback, 0);
-        listener.Start();
-        try
-        {
-            return ((IPEndPoint)listener.LocalEndpoint).Port;
-        }
-        finally
-        {
-            listener.Stop();
         }
     }
 
@@ -1033,24 +971,6 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
         }
     }
 
-    private static string GetUniqueDestinationFileName(string folder, string baseName)
-    {
-        var candidate = Path.Combine(folder, baseName + ".wav");
-        if (!File.Exists(candidate))
-        {
-            return candidate;
-        }
-
-        var number = 1;
-        do
-        {
-            candidate = Path.Combine(folder, $"{baseName}_{number}.wav");
-            number++;
-        } while (File.Exists(candidate));
-
-        return candidate;
-    }
-
     public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
 
     /// <summary>
@@ -1068,7 +988,7 @@ public class CosyVoice3CrispAsr : ITtsEngine, IPerLineCloneEngine
 
         var voicesFolder = GetSetVoicesFolder();
         var baseName = Path.GetFileNameWithoutExtension(fileName);
-        var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
+        var destinationFileName = VoiceCloneImporter.GetUniqueDestinationFileName(voicesFolder, baseName);
 
         // CosyVoice3's s3tok speech tokenizer expects 16 kHz mono — resample on import so the
         // server doesn't have to upsample / convert on every synth call.

@@ -2,13 +2,12 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.UiLogic.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -247,7 +246,7 @@ public class KokoroTtsCpp : ITtsEngine
 
         if (!response.IsSuccessStatusCode)
         {
-            var errorBody = await SafeReadErrorAsync(response, cancellationToken);
+            var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
             var errMsg = $"Kokoro TTS server error {(int)response.StatusCode} {response.StatusCode} - "
                 + $"Voice: {voiceName}, Text: {text}, Body: {errorBody}";
             Se.LogError(errMsg);
@@ -263,18 +262,6 @@ public class KokoroTtsCpp : ITtsEngine
         }
 
         return new TtsResult(outputFileName, text);
-    }
-
-    private static async Task<string> SafeReadErrorAsync(HttpResponseMessage response, CancellationToken ct)
-    {
-        try
-        {
-            return await response.Content.ReadAsStringAsync(ct);
-        }
-        catch (Exception ex)
-        {
-            return $"<failed to read error body: {ex.Message}>";
-        }
     }
 
     private static async Task EnsureServerRunningAsync(CancellationToken ct)
@@ -307,7 +294,7 @@ public class KokoroTtsCpp : ITtsEngine
                     File.Exists(modelPath) ? voicesPath : modelPath);
             }
 
-            var port = FindFreeLoopbackPort();
+            var port = LocalServerHelper.FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
                 // Working directory must be GetSetFolder() so the server can find dict/vocab.txt
@@ -372,7 +359,7 @@ public class KokoroTtsCpp : ITtsEngine
                         + (hint == null ? string.Empty : " " + hint)
                         + $" Output: {tail}");
                 }
-                if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(1), ct))
+                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(1), ct))
                 {
                     return;
                 }
@@ -396,35 +383,6 @@ public class KokoroTtsCpp : ITtsEngine
         {
             var s = buffer.ToString().TrimEnd();
             return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static async Task<bool> ProbeHealthAsync(int port, TimeSpan timeout, CancellationToken ct)
-    {
-        try
-        {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            cts.CancelAfter(timeout);
-            using var resp = await HttpClient.GetAsync($"http://127.0.0.1:{port}/health", cts.Token);
-            return resp.IsSuccessStatusCode;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private static int FindFreeLoopbackPort()
-    {
-        var listener = new TcpListener(IPAddress.Loopback, 0);
-        listener.Start();
-        try
-        {
-            return ((IPEndPoint)listener.LocalEndpoint).Port;
-        }
-        finally
-        {
-            listener.Stop();
         }
     }
 

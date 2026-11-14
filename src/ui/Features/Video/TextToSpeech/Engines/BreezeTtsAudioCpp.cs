@@ -3,14 +3,13 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -454,7 +453,7 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
 
             var failMsg = $"Breeze TTS 2 (audio.cpp) request failed — Voice: {indexVoice}, Text: {text}, "
                 + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}"
-                + LaunchCmdSuffix(launchCommand);
+                + LocalServerHelper.LaunchCmdSuffix(launchCommand);
             Se.LogError(ex, failMsg);
             Se.WriteToolsLog(failMsg);
 
@@ -463,7 +462,7 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
                     ? "Breeze TTS 2 (audio.cpp) — the audiocpp_server process crashed during synthesis."
                     : "Breeze TTS 2 (audio.cpp) request failed — the connection to audiocpp_server was dropped.")
                 + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
-                + LaunchCmdSuffix(launchCommand),
+                + LocalServerHelper.LaunchCmdSuffix(launchCommand),
                 ex);
         }
 
@@ -471,19 +470,19 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
         {
             if (!response.IsSuccessStatusCode)
             {
-                var errorBody = await SafeReadErrorAsync(response, cancellationToken);
+                var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
                 var serverLog = SnapshotServerLog();
                 var launchCommand = _serverLaunchCommand;
                 var errMsg = $"Breeze TTS 2 (audio.cpp) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {indexVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
-                    + LaunchCmdSuffix(launchCommand);
+                    + LocalServerHelper.LaunchCmdSuffix(launchCommand);
                 Se.LogError(errMsg);
                 Se.WriteToolsLog(errMsg);
                 throw new InvalidOperationException(
                     $"Breeze TTS 2 (audio.cpp) synthesis failed ({(int)response.StatusCode}): {errorBody}"
                     + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
-                    + LaunchCmdSuffix(launchCommand));
+                    + LocalServerHelper.LaunchCmdSuffix(launchCommand));
             }
 
             await using var fileStream = File.Create(outputFileName);
@@ -593,7 +592,7 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
                     modelPath);
             }
 
-            var port = FindFreeLoopbackPort();
+            var port = LocalServerHelper.FindFreeLoopbackPort();
             var configPath = WriteServerConfig(port, backend, modelKey);
 
             var psi = new ProcessStartInfo
@@ -616,7 +615,7 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start audiocpp_server (breeze_tts)");
 
-            var launchCommand = FormatLaunchCommand(exe, psi.ArgumentList);
+            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
             _serverLaunchCommand = launchCommand;
             Se.WriteToolsLog($"Breeze TTS 2 (audio.cpp) server starting — PID: {process.Id}, Cmd: {launchCommand}");
 
@@ -662,10 +661,10 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
                         $"audiocpp_server exited during startup (code {exitCode}). "
                         + AudioCppRuntime.DescribeStartupExit(exitCode, backend)
                         + $" Output: {tail}"
-                        + LaunchCmdSuffix(exitedLaunchCommand));
+                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
                 }
 
-                if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(2), ct))
+                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
                 {
                     return;
                 }
@@ -678,7 +677,7 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
             StopServerInternal();
             throw new TimeoutException(
                 $"audiocpp_server did not report healthy within 2 minutes. Last output: {lastOutput}"
-                + LaunchCmdSuffix(timeoutLaunchCommand));
+                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
         }
         finally
         {
@@ -729,74 +728,12 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
         return configPath;
     }
 
-    private static string FormatLaunchCommand(string exe, System.Collections.ObjectModel.Collection<string> args)
-    {
-        static string Quote(string s) =>
-            !string.IsNullOrEmpty(s) && s.IndexOfAny(new[] { ' ', '\t' }) >= 0
-                ? "\"" + s.Replace("\"", "\\\"") + "\""
-                : s;
-
-        var sb = new StringBuilder(Quote(exe));
-        foreach (var a in args)
-        {
-            sb.Append(' ').Append(Quote(a));
-        }
-
-        return sb.ToString();
-    }
-
-    private static string LaunchCmdSuffix(string? launchCommand) =>
-        string.IsNullOrEmpty(launchCommand)
-            ? string.Empty
-            : $"{Environment.NewLine}Launch command: {launchCommand}";
-
-    private static async Task<string> SafeReadErrorAsync(HttpResponseMessage response, CancellationToken ct)
-    {
-        try
-        {
-            return await response.Content.ReadAsStringAsync(ct);
-        }
-        catch (Exception ex)
-        {
-            return $"<failed to read error body: {ex.Message}>";
-        }
-    }
-
     private static string SnapshotServerLog()
     {
         lock (_serverLog)
         {
             var s = _serverLog.ToString().TrimEnd();
             return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static async Task<bool> ProbeHealthAsync(int port, TimeSpan timeout, CancellationToken ct)
-    {
-        try
-        {
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            cts.CancelAfter(timeout);
-            using var resp = await HttpClient.GetAsync($"http://127.0.0.1:{port}/health", cts.Token);
-            return resp.IsSuccessStatusCode;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private static int FindFreeLoopbackPort()
-    {
-        var listener = new TcpListener(IPAddress.Loopback, 0);
-        listener.Start();
-        try
-        {
-            return ((IPEndPoint)listener.LocalEndpoint).Port;
-        }
-        finally
-        {
-            listener.Stop();
         }
     }
 
@@ -850,24 +787,6 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
         }
     }
 
-    private static string GetUniqueDestinationFileName(string folder, string baseName)
-    {
-        var candidate = Path.Combine(folder, baseName + ".wav");
-        if (!File.Exists(candidate))
-        {
-            return candidate;
-        }
-
-        var number = 1;
-        do
-        {
-            candidate = Path.Combine(folder, $"{baseName}_{number}.wav");
-            number++;
-        } while (File.Exists(candidate));
-
-        return candidate;
-    }
-
     public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
 
     /// <summary>
@@ -884,7 +803,7 @@ public class BreezeTtsAudioCpp : ITtsEngine, IPerLineCloneEngine
 
         var voicesFolder = GetSetVoicesFolder();
         var baseName = Path.GetFileNameWithoutExtension(fileName);
-        var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
+        var destinationFileName = VoiceCloneImporter.GetUniqueDestinationFileName(voicesFolder, baseName);
 
         // audio.cpp resamples the reference itself, but importing at 24 kHz mono matches the
         // Breeze codec's native rate, so the reference is only resampled once, here.
