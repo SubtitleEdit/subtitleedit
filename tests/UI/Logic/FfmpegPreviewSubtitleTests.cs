@@ -1,6 +1,5 @@
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
 

@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
