@@ -168,10 +168,8 @@ public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
     {
         Timeout = TimeSpan.FromMinutes(30),
     };
+    private static readonly CrispAsrTtsServer Server = new("crispasr (moss-tts)", "MOSS-TTS (CrispASR)", HttpClient);
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
-    private static Process? _serverProcess;
-    private static int _serverPort;
-    private static string? _serverLaunchCommand;
     private static string? _serverModelKey;
     // Only used when UseStartupVoiceFlags is true. Changing the reference WAV means tear-down +
     // restart so the new --voice path takes effect.
@@ -182,10 +180,7 @@ public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
     private static bool _serverPerLine;
     // Value of the startup -l flag (empty = Auto / no flag); part of the server key.
     private static string? _serverLanguageArg;
-    private static bool _processExitHooked;
-    private static readonly StringBuilder _serverLog = new();
 
-    private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -505,21 +500,21 @@ public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"MOSS-TTS (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={mossVoice}, refTextLen={refText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
+        Se.WriteToolsLog($"MOSS-TTS (CrispASR): POST {Server.BaseUrl}/v1/audio/speech (voice={mossVoice}, refTextLen={refText.Length}, textLen={text.Length}, language={(string.IsNullOrEmpty(languageArg) ? "(auto)" : languageArg)})");
 
         HttpResponseMessage response;
         try
         {
-            response = await HttpClient.PostAsync($"{ServerBaseUrl}/v1/audio/speech", content, cancellationToken);
+            response = await HttpClient.PostAsync($"{Server.BaseUrl}/v1/audio/speech", content, cancellationToken);
         }
         catch (HttpRequestException ex)
         {
-            var serverLog = SnapshotServerLog();
-            var launchCommand = _serverLaunchCommand;
-            var died = _serverProcess?.HasExited == true;
+            var serverLog = Server.SnapshotLog();
+            var launchCommand = Server.LaunchCommand;
+            var died = Server.HasExited;
             if (died)
             {
-                StopServerInternal();
+                Server.Stop();
             }
 
             var failMsg = $"MOSS-TTS (CrispASR) request failed — Voice: {mossVoice}, Text: {text}, "
@@ -542,8 +537,8 @@ public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
-                var serverLog = SnapshotServerLog();
-                var launchCommand = _serverLaunchCommand;
+                var serverLog = Server.SnapshotLog();
+                var launchCommand = Server.LaunchCommand;
                 var errMsg = $"MOSS-TTS (CrispASR) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {mossVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
@@ -648,7 +643,7 @@ public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
         // reference in the request, so within such a run the server is keyed on (model,
         // language) alone. The first clip still goes on the startup flag, which is harmless.
         bool MatchesCurrent() =>
-            _serverProcess is { HasExited: false } && _serverPort != 0
+            Server.IsAlive
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
             && string.Equals(_serverLanguageArg, languageArg, StringComparison.OrdinalIgnoreCase)
             && (!UseStartupVoiceFlags
@@ -669,10 +664,7 @@ public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
                 return;
             }
 
-            if (_serverProcess != null)
-            {
-                StopServerInternal();
-            }
+            Server.Stop();
 
             var exe = GetCrispAsrExecutable();
             if (!File.Exists(exe))
@@ -742,72 +734,17 @@ public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
                 }
             }
 
-            var process = Process.Start(psi)
-                ?? throw new InvalidOperationException("Failed to start crispasr (moss-tts)");
+            Server.Start(psi, port);
 
-            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
-            _serverLaunchCommand = launchCommand;
-            Se.WriteToolsLog("MOSS-TTS (CrispASR) server starting — "
-                + $"PID: {process.Id}, "
-                + $"Cmd: {launchCommand}");
-
-            lock (_serverLog) _serverLog.Clear();
-            process.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.BeginErrorReadLine();
-            process.BeginOutputReadLine();
-
-            _serverProcess = process;
-            _serverPort = port;
             _serverModelKey = modelKey;
             _serverVoicePath = voicePath;
             _serverRefText = refText;
             _serverPerLine = perLine;
             _serverLanguageArg = languageArg;
-            HookProcessExitOnce();
 
             // First-run auto-download (backbone + codec is up to ~20.5 GB) needs a generous
             // timeout; the 8B backbone also takes a while to load from disk.
-            var deadline = DateTime.UtcNow.AddMinutes(hasLocalModel ? 10 : 60);
-            while (DateTime.UtcNow < deadline)
-            {
-                ct.ThrowIfCancellationRequested();
-                if (process.HasExited)
-                {
-                    var tail = SnapshotServerLog();
-                    var exitCode = process.ExitCode;
-                    var exitedLaunchCommand = _serverLaunchCommand;
-                    _serverProcess = null;
-                    _serverPort = 0;
-                    _serverLaunchCommand = null;
-                    _serverModelKey = null;
-                    _serverVoicePath = null;
-                    _serverRefText = null;
-                    _serverPerLine = false;
-                    _serverLanguageArg = null;
-                    throw new InvalidOperationException(
-                        $"crispasr (moss-tts) exited during startup (code {exitCode}). Output: {tail}"
-                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
-                }
-                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
-                {
-                    return;
-                }
-                await Task.Delay(TimeSpan.FromSeconds(1), ct);
-            }
-
-            var lastOutput = SnapshotServerLog();
-            var timeoutLaunchCommand = _serverLaunchCommand;
-            StopServerInternal();
-            throw new TimeoutException(
-                $"crispasr (moss-tts) did not report healthy within {(hasLocalModel ? 10 : 60)} minutes. Last output: {lastOutput}"
-                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
+            await Server.WaitUntilHealthyAsync(hasLocalModel ? 10 : 60, ct);
         }
         finally
         {
@@ -815,59 +752,7 @@ public class MossTtsCrispAsr : ITtsEngine, IPerLineCloneEngine
         }
     }
 
-    private static string SnapshotServerLog()
-    {
-        lock (_serverLog)
-        {
-            var s = _serverLog.ToString().TrimEnd();
-            return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static void HookProcessExitOnce()
-    {
-        if (_processExitHooked)
-        {
-            return;
-        }
-        _processExitHooked = true;
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
-    }
-
-    public static void StopServer() => StopServerInternal();
-
-    private static void StopServerInternal()
-    {
-        var p = _serverProcess;
-        _serverProcess = null;
-        _serverPort = 0;
-        _serverLaunchCommand = null;
-        _serverModelKey = null;
-        _serverVoicePath = null;
-        _serverRefText = null;
-        _serverPerLine = false;
-        _serverLanguageArg = null;
-        if (p == null)
-        {
-            return;
-        }
-        try
-        {
-            if (!p.HasExited)
-            {
-                p.Kill(entireProcessTree: true);
-                p.WaitForExit(2000);
-            }
-        }
-        catch
-        {
-            // best effort
-        }
-        finally
-        {
-            p.Dispose();
-        }
-    }
+    public static void StopServer() => Server.Stop();
 
     public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
 

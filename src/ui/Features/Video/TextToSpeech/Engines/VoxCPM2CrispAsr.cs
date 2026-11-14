@@ -147,10 +147,8 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
     {
         Timeout = TimeSpan.FromMinutes(30),
     };
+    private static readonly CrispAsrTtsServer Server = new("crispasr (voxcpm2-tts)", "VoxCPM2 (CrispASR)", HttpClient);
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
-    private static Process? _serverProcess;
-    private static int _serverPort;
-    private static string? _serverLaunchCommand;
     private static string? _serverModelKey;
     // Only used when UseStartupVoiceFlags is true. Changing the reference WAV means tear-down +
     // restart so the new --voice path takes effect.
@@ -159,10 +157,7 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
     // True when the running server was started for a per-line clone run: every line then sends
     // its own reference in the request, so a new staged clip is not a restart.
     private static bool _serverPerLine;
-    private static bool _processExitHooked;
-    private static readonly StringBuilder _serverLog = new();
 
-    private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -478,21 +473,21 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"VoxCPM2 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={voxVoice}, refTextLen={refText.Length}, textLen={text.Length})");
+        Se.WriteToolsLog($"VoxCPM2 (CrispASR): POST {Server.BaseUrl}/v1/audio/speech (voice={voxVoice}, refTextLen={refText.Length}, textLen={text.Length})");
 
         HttpResponseMessage response;
         try
         {
-            response = await HttpClient.PostAsync($"{ServerBaseUrl}/v1/audio/speech", content, cancellationToken);
+            response = await HttpClient.PostAsync($"{Server.BaseUrl}/v1/audio/speech", content, cancellationToken);
         }
         catch (HttpRequestException ex)
         {
-            var serverLog = SnapshotServerLog();
-            var launchCommand = _serverLaunchCommand;
-            var died = _serverProcess?.HasExited == true;
+            var serverLog = Server.SnapshotLog();
+            var launchCommand = Server.LaunchCommand;
+            var died = Server.HasExited;
             if (died)
             {
-                StopServerInternal();
+                Server.Stop();
             }
 
             var failMsg = $"VoxCPM2 (CrispASR) request failed — Voice: {voxVoice}, Text: {text}, "
@@ -515,8 +510,8 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await LocalServerHelper.SafeReadErrorAsync(response, cancellationToken);
-                var serverLog = SnapshotServerLog();
-                var launchCommand = _serverLaunchCommand;
+                var serverLog = Server.SnapshotLog();
+                var launchCommand = Server.LaunchCommand;
                 var errMsg = $"VoxCPM2 (CrispASR) server error {(int)response.StatusCode} {response.StatusCode} — "
                     + $"Voice: {voxVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
@@ -600,7 +595,7 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
         // A per-line clone run carries its reference in every request, so within such a run the
         // server is keyed on the model alone; the first clip still goes on the startup flag.
         bool MatchesCurrent() =>
-            _serverProcess is { HasExited: false } && _serverPort != 0
+            Server.IsAlive
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
             && (!UseStartupVoiceFlags
                 || (perLine && _serverPerLine)
@@ -620,10 +615,7 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
                 return;
             }
 
-            if (_serverProcess != null)
-            {
-                StopServerInternal();
-            }
+            Server.Stop();
 
             var exe = GetCrispAsrExecutable();
             if (!File.Exists(exe))
@@ -684,69 +676,15 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
                 }
             }
 
-            var process = Process.Start(psi)
-                ?? throw new InvalidOperationException("Failed to start crispasr (voxcpm2-tts)");
+            Server.Start(psi, port);
 
-            var launchCommand = LocalServerHelper.FormatLaunchCommand(exe, psi.ArgumentList);
-            _serverLaunchCommand = launchCommand;
-            Se.WriteToolsLog("VoxCPM2 (CrispASR) server starting — "
-                + $"PID: {process.Id}, "
-                + $"Cmd: {launchCommand}");
-
-            lock (_serverLog) _serverLog.Clear();
-            process.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data != null) lock (_serverLog) _serverLog.AppendLine(e.Data);
-            };
-            process.BeginErrorReadLine();
-            process.BeginOutputReadLine();
-
-            _serverProcess = process;
-            _serverPort = port;
             _serverModelKey = modelKey;
             _serverVoicePath = voicePath;
             _serverRefText = refText;
             _serverPerLine = perLine;
-            HookProcessExitOnce();
 
             // First-run auto-download (the main GGUF is up to ~5 GB) needs a generous timeout.
-            var deadline = DateTime.UtcNow.AddMinutes(hasLocalModel ? 5 : 30);
-            while (DateTime.UtcNow < deadline)
-            {
-                ct.ThrowIfCancellationRequested();
-                if (process.HasExited)
-                {
-                    var tail = SnapshotServerLog();
-                    var exitCode = process.ExitCode;
-                    var exitedLaunchCommand = _serverLaunchCommand;
-                    _serverProcess = null;
-                    _serverPort = 0;
-                    _serverLaunchCommand = null;
-                    _serverModelKey = null;
-                    _serverVoicePath = null;
-                    _serverRefText = null;
-                    _serverPerLine = false;
-                    throw new InvalidOperationException(
-                        $"crispasr (voxcpm2-tts) exited during startup (code {exitCode}). Output: {tail}"
-                        + LocalServerHelper.LaunchCmdSuffix(exitedLaunchCommand));
-                }
-                if (await LocalServerHelper.ProbeHealthAsync(HttpClient, port, TimeSpan.FromSeconds(2), ct))
-                {
-                    return;
-                }
-                await Task.Delay(TimeSpan.FromSeconds(1), ct);
-            }
-
-            var lastOutput = SnapshotServerLog();
-            var timeoutLaunchCommand = _serverLaunchCommand;
-            StopServerInternal();
-            throw new TimeoutException(
-                $"crispasr (voxcpm2-tts) did not report healthy within {(hasLocalModel ? 5 : 30)} minutes. Last output: {lastOutput}"
-                + LocalServerHelper.LaunchCmdSuffix(timeoutLaunchCommand));
+            await Server.WaitUntilHealthyAsync(hasLocalModel ? 5 : 30, ct);
         }
         finally
         {
@@ -754,58 +692,7 @@ public class VoxCPM2CrispAsr : ITtsEngine, IPerLineCloneEngine
         }
     }
 
-    private static string SnapshotServerLog()
-    {
-        lock (_serverLog)
-        {
-            var s = _serverLog.ToString().TrimEnd();
-            return s.Length > 2000 ? s[^2000..] : s;
-        }
-    }
-
-    private static void HookProcessExitOnce()
-    {
-        if (_processExitHooked)
-        {
-            return;
-        }
-        _processExitHooked = true;
-        AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
-    }
-
-    public static void StopServer() => StopServerInternal();
-
-    private static void StopServerInternal()
-    {
-        var p = _serverProcess;
-        _serverProcess = null;
-        _serverPort = 0;
-        _serverLaunchCommand = null;
-        _serverModelKey = null;
-        _serverVoicePath = null;
-        _serverRefText = null;
-        _serverPerLine = false;
-        if (p == null)
-        {
-            return;
-        }
-        try
-        {
-            if (!p.HasExited)
-            {
-                p.Kill(entireProcessTree: true);
-                p.WaitForExit(2000);
-            }
-        }
-        catch
-        {
-            // best effort
-        }
-        finally
-        {
-            p.Dispose();
-        }
-    }
+    public static void StopServer() => Server.Stop();
 
     public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
 
