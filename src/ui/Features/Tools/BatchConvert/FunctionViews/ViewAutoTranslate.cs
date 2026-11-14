@@ -89,13 +89,13 @@ public static class ViewAutoTranslate
             ToolTip.SetTip(buttonAdvanced, Se.Language.General.AdvancedSettings);
         }
 
-        // Prompt and the shared request settings for the regular llama.cpp engine (the advanced
-        // engine has its own window instead). Right-aligned and away from the engine gear, the same
+        // Prompt and the shared request settings for the selected engine (the advanced engines
+        // have their own window instead). Right-aligned and away from the engine gear, the same
         // way the Auto-translate window separates the two.
-        var buttonSettings = EditorChrome.CreateToolButton("fa-solid fa-sliders", Se.Language.General.Settings, vm.ShowLlamaCppTranslateSettingsCommand, 28);
+        var buttonSettings = EditorChrome.CreateToolButton("fa-solid fa-sliders", Se.Language.General.Settings, vm.ShowTranslateSettingsCommand, 28);
         buttonSettings.HorizontalAlignment = HorizontalAlignment.Right;
         buttonSettings.VerticalAlignment = VerticalAlignment.Center;
-        buttonSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppSettingsButtonIsVisible)));
+        buttonSettings.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.TranslateSettingsButtonIsVisible)));
 
         var panelEngineControls = new StackPanel
         {
