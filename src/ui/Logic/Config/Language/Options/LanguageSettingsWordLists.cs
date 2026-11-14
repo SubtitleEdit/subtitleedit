@@ -19,6 +19,12 @@ public class LanguageSettingsWordLists
     public string ShowEnabledRules { get; set; }
     public string ShowDisabledRules { get; set; }
     public string ShowMyRules { get; set; }
+    public string ShowSpellCheckedRules { get; set; }
+    public string SpellCheckWord { get; set; }
+    public string SpellCheckWordHint { get; set; }
+    public string SpellCheckBadge { get; set; }
+    public string SpellCheckWordsX { get; set; }
+    public string ApplyAllSkipsSpellChecked { get; set; }
     public string EnableShown { get; set; }
     public string DisableShown { get; set; }
     public string XOfYEnabled { get; set; }
@@ -76,6 +82,12 @@ public class LanguageSettingsWordLists
         ShowEnabledRules = "Enabled";
         ShowDisabledRules = "Disabled";
         ShowMyRules = "My rules";
+        ShowSpellCheckedRules = "Spell-checked";
+        SpellCheckWord = "Only if this word is spelled correctly (optional)";
+        SpellCheckWordHint = "Leave empty to always replace. With a word such as $1, the replacement is only made when the dictionary knows that word.";
+        SpellCheckBadge = "Spell check";
+        SpellCheckWordsX = "Spell check: {0}";
+        ApplyAllSkipsSpellChecked = "Spell-checked rules are not run here, as they need the dictionary.";
         EnableShown = "Enable shown";
         DisableShown = "Disable shown";
         XOfYEnabled = "{0:#,##0} of {1:#,##0} enabled";

@@ -33,6 +33,7 @@ public partial class RegexRulesViewModel : ObservableObject
 
     [ObservableProperty] private string _editFind;
     [ObservableProperty] private string _editReplace;
+    [ObservableProperty] private string _editSpellCheck;
     [ObservableProperty] private bool _isPatternValid;
     [ObservableProperty] private string _patternStatus;
     [ObservableProperty] private string _editorHint;
@@ -62,13 +63,14 @@ public partial class RegexRulesViewModel : ObservableObject
         _title = string.Empty;
         _editFind = string.Empty;
         _editReplace = string.Empty;
+        _editSpellCheck = string.Empty;
         _patternStatus = string.Empty;
         _editorHint = string.Empty;
         _testText = string.Empty;
         _matchInfo = string.Empty;
         _inputSegments = Array.Empty<RegexTestSegment>();
         _outputSegments = Array.Empty<RegexTestSegment>();
-        ShowOptions = new[] { l.ShowAllRules, l.ShowEnabledRules, l.ShowDisabledRules, l.ShowMyRules };
+        ShowOptions = new[] { l.ShowAllRules, l.ShowEnabledRules, l.ShowDisabledRules, l.ShowMyRules, l.ShowSpellCheckedRules };
     }
 
     public void Initialize(string replaceListFileName, string languageName)
@@ -78,7 +80,8 @@ public partial class RegexRulesViewModel : ObservableObject
         _allRules.Clear();
         foreach (var rule in _replaceList.GetRegexRules())
         {
-            _allRules.Add(MakeItem(rule.Find, rule.ReplaceWith, rule.IsUserRule, rule.IsEnabled));
+            _allRules.Add(MakeItem(new RegexRuleItem(rule.Find, rule.ReplaceWith, rule.IsUserRule, rule.IsEnabled,
+                rule.SpellCheck, rule.ReplaceAllFrom, rule.ReplaceAllTo)));
         }
 
         ApplyFilter();
@@ -87,14 +90,19 @@ public partial class RegexRulesViewModel : ObservableObject
         UpdateTest();
     }
 
-    private RegexRuleItem MakeItem(string find, string replaceWith, bool isUserRule, bool isEnabled)
+    private RegexRuleItem MakeItem(RegexRuleItem item)
     {
-        return new RegexRuleItem(find, replaceWith, isUserRule, isEnabled) { EnabledChanging = OnRuleEnabledChanging };
+        item.EnabledChanging = OnRuleEnabledChanging;
+        return item;
     }
+
+    private string EditSpellCheckTrimmed => EditSpellCheck.Trim();
+
+    private bool EditIsSpellChecked => EditSpellCheckTrimmed.Length > 0;
 
     private bool OnRuleEnabledChanging(RegexRuleItem item, bool enabled)
     {
-        if (_replaceList == null || !_replaceList.SetRegexRuleEnabled(item.Find, item.ReplaceWith, enabled))
+        if (_replaceList == null || !_replaceList.SetRegexRulesEnabled(new[] { item.ToRule() }, enabled))
         {
             return false;
         }
@@ -118,6 +126,7 @@ public partial class RegexRulesViewModel : ObservableObject
         {
             EditFind = value.Find;
             EditReplace = value.ReplaceWith;
+            EditSpellCheck = value.SpellCheck;
         }
 
         UpdateEditorState();
@@ -135,6 +144,12 @@ public partial class RegexRulesViewModel : ObservableObject
         UpdateTest();
     }
 
+    partial void OnEditSpellCheckChanged(string value)
+    {
+        UpdateEditorState();
+        UpdateTest();
+    }
+
     partial void OnTestTextChanged(string value) => UpdateTest();
     partial void OnApplyAllEnabledChanged(bool value) => UpdateTest();
 
@@ -147,13 +162,15 @@ public partial class RegexRulesViewModel : ObservableObject
             1 => r.IsEnabled,
             2 => !r.IsEnabled,
             3 => r.IsUserRule,
+            4 => r.IsSpellChecked,
             _ => true,
         });
 
         if (search.Length > 0)
         {
             shown = shown.Where(r => r.Find.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                     r.ReplaceWith.Contains(search, StringComparison.OrdinalIgnoreCase));
+                                     r.ReplaceWith.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                     r.SpellCheck.Contains(search, StringComparison.OrdinalIgnoreCase));
         }
 
         Rules = new ObservableCollection<RegexRuleItem>(shown);
@@ -176,11 +193,14 @@ public partial class RegexRulesViewModel : ObservableObject
         IsPatternValid = EditFind.Length > 0 && error == null;
         PatternStatus = EditFind.Length == 0 ? string.Empty : error == null ? l.ValidPattern : string.Format(l.InvalidPatternX, error);
 
-        var exists = _allRules.Any(r => r.Find == EditFind);
+        // A plain and a spell-checked rule may share a pattern - they live in different sections.
+        var isSpellChecked = EditIsSpellChecked;
+        var exists = _allRules.Any(r => r.Find == EditFind && r.IsSpellChecked == isSpellChecked);
         var selected = SelectedRule;
-        var isChanged = selected != null && (selected.Find != EditFind || selected.ReplaceWith != EditReplace);
+        var isChanged = selected != null && (selected.Find != EditFind || selected.ReplaceWith != EditReplace || selected.SpellCheck != EditSpellCheckTrimmed);
+        var isSameRule = selected != null && selected.Find == EditFind && selected.IsSpellChecked == isSpellChecked;
         CanAdd = IsPatternValid && !exists;
-        CanUpdate = IsPatternValid && selected is { IsUserRule: true } && isChanged && (selected.Find == EditFind || !exists);
+        CanUpdate = IsPatternValid && selected is { IsUserRule: true } && isChanged && (isSameRule || !exists);
         CanDelete = selected is { IsUserRule: true };
         CanToggle = selected != null;
 
@@ -232,7 +252,8 @@ public partial class RegexRulesViewModel : ObservableObject
         {
             var changedBy = 0;
             var result = text;
-            foreach (var rule in _allRules.Where(r => r.IsEnabled))
+            // Spell-checked rules are left out: without the dictionary they would fire on every match.
+            foreach (var rule in _allRules.Where(r => r.IsEnabled && !r.IsSpellChecked))
             {
                 try
                 {
@@ -268,6 +289,11 @@ public partial class RegexRulesViewModel : ObservableObject
             var regex = new Regex(EditFind, RegexOptions.Multiline, TestTimeout);
             var matches = regex.Matches(text);
             var replaceWith = RegexUtils.FixNewLine(EditReplace);
+            var spellCheck = EditSpellCheckTrimmed;
+            var replaceAll = SelectedRule is { } current && current.Find == EditFind && current.IsSpellChecked && spellCheck.Length > 0
+                ? current
+                : null;
+            var spellCheckWords = new List<string>();
             var input = new List<RegexTestSegment>();
             var output = new List<RegexTestSegment>();
             var position = 0;
@@ -281,7 +307,27 @@ public partial class RegexRulesViewModel : ObservableObject
                 }
 
                 input.Add(new RegexTestSegment(match.Value, true));
-                output.Add(new RegexTestSegment(match.Result(replaceWith), true));
+                if (replaceAll is { ReplaceAllFrom.Length: > 0 })
+                {
+                    output.Add(new RegexTestSegment(match.Value.Replace(replaceAll.ReplaceAllFrom, replaceAll.ReplaceAllTo), true));
+                }
+                else
+                {
+                    output.Add(new RegexTestSegment(match.Result(replaceWith), true));
+                }
+
+                if (spellCheck.Length > 0)
+                {
+                    // The result shows the replacement as if the word passed the spell check.
+                    var word = match.Result(spellCheck);
+                    if (replaceAll is { ReplaceAllFrom.Length: > 0 })
+                    {
+                        word = word.Replace(replaceAll.ReplaceAllFrom, replaceAll.ReplaceAllTo);
+                    }
+
+                    spellCheckWords.Add(word.TrimStart('[').TrimEnd(']'));
+                }
+
                 position = match.Index + match.Length;
             }
 
@@ -300,6 +346,10 @@ public partial class RegexRulesViewModel : ObservableObject
                 1 => l.OneMatch,
                 _ => string.Format(CultureInfo.CurrentCulture, l.XMatches, matches.Count),
             };
+            if (spellCheckWords.Count > 0)
+            {
+                MatchInfo += " - " + string.Format(CultureInfo.CurrentCulture, l.SpellCheckWordsX, string.Join(", ", spellCheckWords.Distinct()));
+            }
         }
         catch (Exception exception) when (exception is ArgumentException or RegexMatchTimeoutException)
         {
@@ -317,8 +367,7 @@ public partial class RegexRulesViewModel : ObservableObject
             return true;
         }
 
-        var pairs = changing.Select(r => new KeyValuePair<string, string>(r.Find, r.ReplaceWith)).ToList();
-        if (!_replaceList.SetRegexRulesEnabled(pairs, enabled))
+        if (!_replaceList.SetRegexRulesEnabled(changing.Select(r => r.ToRule()).ToList(), enabled))
         {
             await ShowError(_replaceList.ErrorMessage);
             return false;
@@ -356,6 +405,7 @@ public partial class RegexRulesViewModel : ObservableObject
         SelectedRule = null;
         EditFind = string.Empty;
         EditReplace = string.Empty;
+        EditSpellCheck = string.Empty;
     }
 
     [RelayCommand]
@@ -367,13 +417,14 @@ public partial class RegexRulesViewModel : ObservableObject
             return;
         }
 
-        if (!_replaceList.AddRegexRule(EditFind, EditReplace))
+        var spellCheck = EditSpellCheckTrimmed;
+        if (!_replaceList.AddRegexRule(EditFind, EditReplace, spellCheck))
         {
             await ShowError(Se.Language.Options.WordLists.UnableToAddItem);
             return;
         }
 
-        var item = MakeItem(EditFind, EditReplace, true, true);
+        var item = MakeItem(new RegexRuleItem(EditFind, EditReplace, true, true, spellCheck));
         _allRules.Add(item);
         if (SelectedShowIndex == 2)
         {
@@ -396,7 +447,8 @@ public partial class RegexRulesViewModel : ObservableObject
             return;
         }
 
-        if (!_replaceList.UpdateUserRegexRule(selected.Find, EditFind, EditReplace))
+        var spellCheck = EditSpellCheckTrimmed;
+        if (!_replaceList.UpdateUserRegexRule(selected.Find, selected.IsSpellChecked, EditFind, EditReplace, spellCheck))
         {
             await ShowError(Se.Language.Options.WordLists.UnableToAddItem);
             return;
@@ -404,6 +456,7 @@ public partial class RegexRulesViewModel : ObservableObject
 
         selected.Find = EditFind;
         selected.ReplaceWith = EditReplace;
+        selected.SpellCheck = spellCheck;
         UpdateEditorState();
         UpdateTest();
     }
@@ -417,7 +470,7 @@ public partial class RegexRulesViewModel : ObservableObject
             return;
         }
 
-        if (!_replaceList.RemoveUserRegexRule(selected.Find))
+        if (!_replaceList.RemoveUserRegexRule(selected.Find, selected.IsSpellChecked))
         {
             await ShowError(Se.Language.Options.WordLists.UnableToRemoveItem);
             return;
