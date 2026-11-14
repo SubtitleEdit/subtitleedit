@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         // to try them all - each guess is only accepted after a dictionary/names check anyway.
         private readonly List<KeyValuePair<string, string>> _partialWordReplaceList;
         private readonly Dictionary<string, string> _regExList;
-        private readonly List<SpellCheckRegex> _regExSpellCheckList;
+        private List<SpellCheckRegex> _regExSpellCheckList;
         private RegexEntry[]? _regexEntries;
         private readonly string _replaceListXmlFileName;
 
@@ -44,6 +44,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         private const string ReplaceListFileNamePostFix = "_OCRFixReplaceList.xml";
         private const string RegularExpressionsName = "RegularExpressions";
         private const string RemovedRegularExpressionsName = "RemovedRegularExpressions";
+        private const string SpellCheckRegexName = "RegularExpressionsIfSpelledCorrectly";
+        private const string RemovedSpellCheckRegexName = "RemovedRegularExpressionsIfSpelledCorrectly";
         private const string RegexElementName = "RegEx";
 
         // These are probed once per OCR'd word, so keep them off the per-call path:
@@ -85,7 +87,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             _endLineReplaceList = LoadReplaceList(doc, "EndLines");
             _wholeLineReplaceList = LoadReplaceList(doc, "WholeLines");
             _regExList = LoadRegExList(doc, "RegularExpressions");
-            _regExSpellCheckList = SpellCheckRegex.LoadRegExList(doc, "RegularExpressionsIfSpelledCorrectly");
+            _regExSpellCheckList = LoadSpellCheckRegexes(doc, userDoc);
 
             foreach (var kp in LoadReplaceList(userDoc, "RemovedWholeWords"))
             {
@@ -216,18 +218,51 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             {
                 _regExList.Remove(kp.Key);
             }
+        }
 
-            // The spell-checked expressions were only read from the shipped list, so a gated rule
-            // added to the _User file never ran, while a plain one next to it did (#16377). The
-            // user's rules run after the shipped ones; one the shipped list already has is skipped.
-            var shippedSpellCheckFinds = new HashSet<string>(_regExSpellCheckList.Select(p => p.Find), StringComparer.Ordinal);
-            foreach (var spellCheckRegex in SpellCheckRegex.LoadRegExList(userDoc, "RegularExpressionsIfSpelledCorrectly"))
+        /// <summary>
+        /// The spell-checked expressions: the shipped ones, then the user's own (#16377: these were
+        /// only read from the shipped list), minus the ones turned off in the user file.
+        /// </summary>
+        private static List<SpellCheckRegex> LoadSpellCheckRegexes(XmlDocument doc, XmlDocument userDoc)
+        {
+            var list = SpellCheckRegex.LoadRegExList(doc, SpellCheckRegexName);
+            var finds = new HashSet<string>(list.Select(p => p.Find), StringComparer.Ordinal);
+            foreach (var spellCheckRegex in SpellCheckRegex.LoadRegExList(userDoc, SpellCheckRegexName))
             {
-                if (shippedSpellCheckFinds.Add(spellCheckRegex.Find))
+                if (finds.Add(spellCheckRegex.Find))
                 {
-                    _regExSpellCheckList.Add(spellCheckRegex);
+                    list.Add(spellCheckRegex);
                 }
             }
+
+            var removed = LoadFindAttributes(userDoc, RemovedSpellCheckRegexName);
+            list.RemoveAll(p => removed.Contains(p.Find));
+            return list;
+        }
+
+        private static HashSet<string> LoadFindAttributes(XmlDocument doc, string sectionName)
+        {
+            var finds = new HashSet<string>(StringComparer.Ordinal);
+            var sections = doc.DocumentElement?.SelectNodes(sectionName);
+            if (sections == null)
+            {
+                return finds;
+            }
+
+            foreach (XmlNode section in sections)
+            {
+                foreach (XmlNode item in section.ChildNodes)
+                {
+                    var find = item.Attributes?["find"]?.Value;
+                    if (!string.IsNullOrEmpty(find))
+                    {
+                        finds.Add(find);
+                    }
+                }
+            }
+
+            return finds;
         }
 
         public static OcrFixReplaceList2 FromLanguageId(string languageId)
@@ -1649,13 +1684,15 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
         }
 
         /// <summary>
-        /// The shipped and the user's own regular expressions, in file order (shipped first). A rule
-        /// is disabled when its pattern is listed under "RemovedRegularExpressions" in the user file.
+        /// The shipped and the user's own regular expressions, in file order (shipped first): the plain
+        /// ones, then the spell-checked ones. A rule is disabled when its pattern is listed under
+        /// "RemovedRegularExpressions" (or "RemovedRegularExpressionsIfSpelledCorrectly") in the user file.
         /// </summary>
         public List<OcrFixRegexRule> GetRegexRules()
         {
-            var builtIn = LoadRegExList(LoadXmlReplaceListDocument(), RegularExpressionsName);
+            var doc = LoadXmlReplaceListDocument();
             var userDoc = LoadXmlReplaceListUserDocument();
+            var builtIn = LoadRegExList(doc, RegularExpressionsName);
             var user = LoadRegExList(userDoc, RegularExpressionsName);
             var removed = LoadRegExList(userDoc, RemovedRegularExpressionsName);
 
@@ -1673,29 +1710,57 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 }
             }
 
+            var removedSpellCheck = LoadFindAttributes(userDoc, RemovedSpellCheckRegexName);
+            var spellCheckFinds = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var (sourceDoc, isUser) in new[] { (doc, false), (userDoc, true) })
+            {
+                foreach (var r in SpellCheckRegex.LoadRegExList(sourceDoc, SpellCheckRegexName))
+                {
+                    if (spellCheckFinds.Add(r.Find))
+                    {
+                        rules.Add(new OcrFixRegexRule(r.Find, r.ReplaceWith, isUser, !removedSpellCheck.Contains(r.Find),
+                            r.SpellCheckWord, r.ReplaceAllFrom, r.ReplaceAllTo));
+                    }
+                }
+            }
+
             return rules;
         }
+
+        private static string SectionName(bool isSpellChecked) => isSpellChecked ? SpellCheckRegexName : RegularExpressionsName;
+
+        private static string RemovedSectionName(bool isSpellChecked) => isSpellChecked ? RemovedSpellCheckRegexName : RemovedRegularExpressionsName;
+
+        private bool Exists(string find, bool isSpellChecked) =>
+            GetRegexRules().Exists(r => r.Find == find && r.IsSpellChecked == isSpellChecked);
 
         public bool SetRegexRuleEnabled(string find, string replaceWith, bool enabled)
         {
             return SetRegexRulesEnabled(new[] { new KeyValuePair<string, string>(find, replaceWith) }, enabled);
         }
 
-        /// <summary>Enables or disables several rules (find -> replace with) with one write of the user file.</summary>
+        /// <summary>Enables or disables several plain rules (find -> replace with) with one write of the user file.</summary>
         public bool SetRegexRulesEnabled(IReadOnlyCollection<KeyValuePair<string, string>> rules, bool enabled)
+        {
+            return SetRegexRulesEnabled(rules.Select(p => new OcrFixRegexRule(p.Key, p.Value, false, !enabled)).ToList(), enabled);
+        }
+
+        /// <summary>Enables or disables several rules, plain or spell-checked, with one write of the user file.</summary>
+        public bool SetRegexRulesEnabled(IReadOnlyCollection<OcrFixRegexRule> rules, bool enabled)
         {
             var userDoc = LoadXmlReplaceListUserDocument();
             foreach (var rule in rules)
             {
-                if (string.IsNullOrEmpty(rule.Key))
+                if (string.IsNullOrEmpty(rule.Find))
                 {
                     continue;
                 }
 
-                RemoveRegexNodes(userDoc, RemovedRegularExpressionsName, rule.Key);
+                var removedSection = RemovedSectionName(rule.IsSpellChecked);
+                RemoveRegexNodes(userDoc, removedSection, rule.Find);
                 if (!enabled)
                 {
-                    AppendRegexNode(userDoc, RemovedRegularExpressionsName, rule.Key, rule.Value);
+                    AppendRegexNode(userDoc, removedSection, rule.Find, rule.ReplaceWith, rule.SpellCheck);
                 }
             }
 
@@ -1704,72 +1769,119 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return false;
             }
 
-            foreach (var rule in rules)
+            foreach (var rule in rules.Where(r => !r.IsSpellChecked))
             {
                 if (enabled)
                 {
-                    _regExList[rule.Key] = rule.Value;
+                    _regExList[rule.Find] = rule.ReplaceWith;
                 }
                 else
                 {
-                    _regExList.Remove(rule.Key);
+                    _regExList.Remove(rule.Find);
                 }
             }
 
             _regexEntries = null;
+            ReloadSpellCheckRegexes(userDoc);
             return true;
         }
 
-        /// <summary>Adds a user regular expression; false if the pattern is invalid or already listed.</summary>
-        public bool AddRegexRule(string find, string replaceWith)
+        private void ReloadSpellCheckRegexes(XmlDocument userDoc)
         {
-            if (!RegexUtils.IsValidRegex(find) || GetRegexRules().Exists(r => r.Find == find))
+            _regExSpellCheckList = LoadSpellCheckRegexes(LoadXmlReplaceListDocument(), userDoc);
+        }
+
+        /// <summary>
+        /// Adds a user regular expression; false if the pattern is invalid or already listed. With a
+        /// <paramref name="spellCheck"/> word (e.g. "$1") it is a spell-checked rule.
+        /// </summary>
+        public bool AddRegexRule(string find, string replaceWith, string spellCheck = "")
+        {
+            spellCheck ??= string.Empty;
+            var isSpellChecked = spellCheck.Length > 0;
+            if (!RegexUtils.IsValidRegex(find) || Exists(find, isSpellChecked))
             {
                 return false;
             }
 
             var userDoc = LoadXmlReplaceListUserDocument();
-            RemoveRegexNodes(userDoc, RemovedRegularExpressionsName, find);
-            AppendRegexNode(userDoc, RegularExpressionsName, find, replaceWith);
+            RemoveRegexNodes(userDoc, RemovedSectionName(isSpellChecked), find);
+            AppendRegexNode(userDoc, SectionName(isSpellChecked), find, replaceWith, spellCheck);
             if (!SaveUserDocument(userDoc))
             {
                 return false;
             }
 
-            _regExList[find] = replaceWith;
-            _regexEntries = null;
+            if (isSpellChecked)
+            {
+                ReloadSpellCheckRegexes(userDoc);
+            }
+            else
+            {
+                _regExList[find] = replaceWith;
+                _regexEntries = null;
+            }
+
             return true;
         }
 
-        /// <summary>Changes a user regular expression in place, keeping its position and enabled state.</summary>
+        /// <summary>Changes a plain user regular expression in place, keeping its position and enabled state.</summary>
         public bool UpdateUserRegexRule(string oldFind, string newFind, string replaceWith)
         {
+            return UpdateUserRegexRule(oldFind, false, newFind, replaceWith, string.Empty);
+        }
+
+        /// <summary>
+        /// Changes a user regular expression in place, keeping its position and enabled state. When the
+        /// spell check word is added or cleared, the rule moves to the other section (at its end).
+        /// </summary>
+        public bool UpdateUserRegexRule(string oldFind, bool oldIsSpellChecked, string newFind, string replaceWith, string spellCheck)
+        {
+            spellCheck ??= string.Empty;
+            var isSpellChecked = spellCheck.Length > 0;
             if (!RegexUtils.IsValidRegex(newFind) ||
-                (newFind != oldFind && GetRegexRules().Exists(r => r.Find == newFind)))
+                ((newFind != oldFind || isSpellChecked != oldIsSpellChecked) && Exists(newFind, isSpellChecked)))
             {
                 return false;
             }
 
             var userDoc = LoadXmlReplaceListUserDocument();
+            var wasEnabled = true;
             var updated = false;
-            foreach (var sectionName in new[] { RegularExpressionsName, RemovedRegularExpressionsName })
+            if (isSpellChecked == oldIsSpellChecked)
             {
-                var sections = userDoc.DocumentElement?.SelectNodes(sectionName);
-                if (sections == null)
+                foreach (var sectionName in new[] { SectionName(isSpellChecked), RemovedSectionName(isSpellChecked) })
                 {
-                    continue;
-                }
-
-                foreach (XmlNode section in sections)
-                {
-                    foreach (XmlNode item in section.ChildNodes)
+                    foreach (var element in FindRegexElements(userDoc, sectionName, oldFind))
                     {
-                        if (item is XmlElement element && element.GetAttribute("find") == oldFind)
+                        element.SetAttribute("find", newFind);
+                        element.SetAttribute("replaceWith", replaceWith);
+                        if (isSpellChecked)
                         {
-                            element.SetAttribute("find", newFind);
-                            element.SetAttribute("replaceWith", replaceWith);
-                            updated |= sectionName == RegularExpressionsName;
+                            element.SetAttribute("spellCheck", spellCheck);
                         }
+
+                        if (sectionName == SectionName(isSpellChecked))
+                        {
+                            updated = true;
+                        }
+                        else
+                        {
+                            wasEnabled = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                updated = RemoveRegexNodes(userDoc, SectionName(oldIsSpellChecked), oldFind);
+                wasEnabled = !RemoveRegexNodes(userDoc, RemovedSectionName(oldIsSpellChecked), oldFind);
+                if (updated)
+                {
+                    AppendRegexNode(userDoc, SectionName(isSpellChecked), newFind, replaceWith, spellCheck);
+                    if (!wasEnabled)
+                    {
+                        AppendRegexNode(userDoc, RemovedSectionName(isSpellChecked), newFind, replaceWith, spellCheck);
                     }
                 }
             }
@@ -1779,32 +1891,41 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
                 return false;
             }
 
-            var wasEnabled = _regExList.Remove(oldFind);
-            if (wasEnabled)
+            if (!oldIsSpellChecked)
+            {
+                _regExList.Remove(oldFind);
+            }
+
+            if (!isSpellChecked && wasEnabled)
             {
                 _regExList[newFind] = replaceWith;
             }
 
             _regexEntries = null;
+            ReloadSpellCheckRegexes(userDoc);
             return true;
         }
 
         /// <summary>Deletes a user regular expression - shipped ones can only be disabled.</summary>
-        public bool RemoveUserRegexRule(string find)
+        public bool RemoveUserRegexRule(string find, bool isSpellChecked = false)
         {
             var userDoc = LoadXmlReplaceListUserDocument();
-            if (!RemoveRegexNodes(userDoc, RegularExpressionsName, find))
+            if (!RemoveRegexNodes(userDoc, SectionName(isSpellChecked), find))
             {
                 return false;
             }
 
-            RemoveRegexNodes(userDoc, RemovedRegularExpressionsName, find);
+            RemoveRegexNodes(userDoc, RemovedSectionName(isSpellChecked), find);
             if (!SaveUserDocument(userDoc))
             {
                 return false;
             }
 
-            if (!LoadRegExList(LoadXmlReplaceListDocument(), RegularExpressionsName).ContainsKey(find))
+            if (isSpellChecked)
+            {
+                ReloadSpellCheckRegexes(userDoc);
+            }
+            else if (!LoadRegExList(LoadXmlReplaceListDocument(), RegularExpressionsName).ContainsKey(find))
             {
                 _regExList.Remove(find);
                 _regexEntries = null;
@@ -1813,37 +1934,41 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return true;
         }
 
-        private static bool RemoveRegexNodes(XmlDocument doc, string sectionName, string find)
+        private static List<XmlElement> FindRegexElements(XmlDocument doc, string sectionName, string find)
         {
-            var removed = false;
+            var result = new List<XmlElement>();
             var sections = doc.DocumentElement?.SelectNodes(sectionName);
             if (sections == null)
             {
-                return false;
+                return result;
             }
 
             foreach (XmlNode section in sections)
             {
-                var matches = new List<XmlNode>();
                 foreach (XmlNode item in section.ChildNodes)
                 {
-                    if (item.Attributes?["find"]?.Value == find)
+                    if (item is XmlElement element && element.GetAttribute("find") == find)
                     {
-                        matches.Add(item);
+                        result.Add(element);
                     }
-                }
-
-                foreach (var item in matches)
-                {
-                    section.RemoveChild(item);
-                    removed = true;
                 }
             }
 
-            return removed;
+            return result;
         }
 
-        private static void AppendRegexNode(XmlDocument doc, string sectionName, string find, string replaceWith)
+        private static bool RemoveRegexNodes(XmlDocument doc, string sectionName, string find)
+        {
+            var matches = FindRegexElements(doc, sectionName, find);
+            foreach (var item in matches)
+            {
+                item.ParentNode?.RemoveChild(item);
+            }
+
+            return matches.Count > 0;
+        }
+
+        private static void AppendRegexNode(XmlDocument doc, string sectionName, string find, string replaceWith, string spellCheck = "")
         {
             var root = doc.DocumentElement;
             if (root == null)
@@ -1860,6 +1985,11 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
 
             var node = doc.CreateElement(RegexElementName);
             node.SetAttribute("find", find);
+            if (!string.IsNullOrEmpty(spellCheck))
+            {
+                node.SetAttribute("spellCheck", spellCheck);
+            }
+
             node.SetAttribute("replaceWith", replaceWith);
             section.AppendChild(node);
         }
