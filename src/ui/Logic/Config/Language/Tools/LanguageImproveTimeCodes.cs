@@ -16,6 +16,9 @@ public class LanguageImproveTimeCodes
     public string CheckWithSpeechToText { get; set; }
     public string CheckWithSpeechToTextHint { get; set; }
     public string CheckWithSpeechToTextNotAvailableX { get; set; }
+    public string SnapToShotChanges { get; set; }
+    public string SnapToShotChangesHint { get; set; }
+    public string SnapToShotChangesNoneHint { get; set; }
     public string TranscribingToCheck { get; set; }
     public string SpeechToTextFailed { get; set; }
     public string SpeechToTextX { get; set; }
@@ -74,6 +77,9 @@ public class LanguageImproveTimeCodes
         CheckWithSpeechToText = "Check with speech-to-text";
         CheckWithSpeechToTextHint = "Transcribes the audio as well, and checks every move against where the words were actually heard. Large moves the speech confirms are ticked for you, and moves away from where a line is heard are left unticked for you to check. Also shows how much of each line was heard - a low share means the text differs from what is said. A subtitle that is further out of sync than the max shift - a constant offset, a drift from a frame rate mismatch, or jumps where scenes were cut - is synced by the heard words first. Uses Crisp ASR Parakeet, which takes a few minutes for a feature film with a GPU.";
         CheckWithSpeechToTextNotAvailableX = "Speech-to-text check is not available for {0}";
+        SnapToShotChanges = "Snap to shot changes";
+        SnapToShotChangesHint = "A re-timed start or end that lands very close to a shot change is moved onto it, so the subtitle does not flicker across the cut: a start up to 0.2 seconds after a cut moves back to it, or up to 0.1 seconds before one moves on to it, and an end within 0.2 seconds stops just before it.";
+        SnapToShotChangesNoneHint = "No shot changes - generate or import them first (Video > Generate/import shot changes).";
         TranscribingToCheck = "Transcribing to check the alignment...";
         SpeechToTextFailed = "Speech-to-text failed - the time codes were not checked against it.";
         SpeechToTextX = "Speech-to-text: {0}";

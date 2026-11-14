@@ -40,6 +40,9 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     [ObservableProperty] private bool _adjustEnd;
     [ObservableProperty] private bool _isolateSpeech;
     [ObservableProperty] private bool _checkWithSpeechToText;
+    [ObservableProperty] private bool _snapToShotChanges;
+    [ObservableProperty] private bool _hasShotChanges;
+    [ObservableProperty] private string _snapToShotChangesHint;
     [ObservableProperty] private bool _canCheckWithSpeechToText;
     [ObservableProperty] private string _checkWithSpeechToTextHint;
     [ObservableProperty] private bool _hasHeard;
@@ -77,6 +80,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
     private int _audioTrackNumber = -1;
     private string? _languageCode;
     private bool _isSpeechToTextLanguage;
+    private List<double> _shotChanges = new();
     private CancellationTokenSource? _cancellation;
     private UiTickPump? _positionTimer;
 
@@ -101,6 +105,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         _summaryLine = string.Empty;
         _changePositionLabel = string.Empty;
         _checkWithSpeechToTextHint = string.Empty;
+        _snapToShotChangesHint = string.Empty;
         _isIdle = true;
 
         var settings = Se.Settings.Tools.ImproveTimeCodes;
@@ -109,6 +114,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         _adjustEnd = settings.AdjustEnd;
         _isolateSpeech = settings.IsolateSpeech;
         _checkWithSpeechToText = settings.CheckWithSpeechToText;
+        _snapToShotChanges = settings.SnapToShotChanges;
     }
 
     /// <param name="subtitles">The lines to re-time, sorted by start time.</param>
@@ -130,6 +136,10 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         CheckWithSpeechToTextHint = _isSpeechToTextLanguage
             ? l.CheckWithSpeechToTextHint
             : string.Format(l.CheckWithSpeechToTextNotAvailableX, languageCode);
+
+        _shotChanges = new List<double>(audioVisualizer.ShotChanges ?? new List<double>());
+        HasShotChanges = _shotChanges.Count > 0;
+        SnapToShotChangesHint = HasShotChanges ? l.SnapToShotChangesHint : l.SnapToShotChangesNoneHint;
 
         _originalSubtitles.Clear();
         _originalSubtitles.AddRange(subtitles.Select(p => new SubtitleLineViewModel(p)));
@@ -259,6 +269,15 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
 
         IsSpeechOnlyAvailable = _speechPeaks != null;
         ShowSpeechOnly = IsSpeechOnlyAvailable && mainShowsSpeechOnly;
+    }
+
+    // Applied to the result as it stands - no need to align again.
+    partial void OnSnapToShotChangesChanged(bool value)
+    {
+        if (HasShotChanges && Rows.Count > 0)
+        {
+            RebuildAligned();
+        }
     }
 
     partial void OnIsIdleChanged(bool value) => CanCheckWithSpeechToText = value && _isSpeechToTextLanguage;
@@ -724,6 +743,11 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
             placements[i] = row.IsChanged && row.Apply
                 ? new SubtitleRetimer.Placement(row.NewStartSeconds, row.NewEndSeconds, !row.IsAdjustedByHand)
                 : new SubtitleRetimer.Placement(row.FallbackStartSeconds, row.FallbackEndSeconds, false);
+        }
+
+        if (SnapToShotChanges)
+        {
+            SubtitleRetimer.SnapToShotChanges(original, placements, _shotChanges, MinGapSeconds);
         }
 
         SubtitleRetimer.Settle(original, placements, MinGapSeconds);
@@ -1300,6 +1324,7 @@ public partial class ImproveTimeCodesViewModel : ObservableObject, IDisposable
         settings.AdjustEnd = AdjustEnd;
         settings.IsolateSpeech = IsolateSpeech;
         settings.CheckWithSpeechToText = CheckWithSpeechToText;
+        settings.SnapToShotChanges = SnapToShotChanges;
     }
 
     /// <summary>The input lines, in input order, carrying the accepted new times.</summary>

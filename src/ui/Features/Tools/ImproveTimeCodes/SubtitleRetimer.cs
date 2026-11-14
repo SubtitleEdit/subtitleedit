@@ -98,6 +98,13 @@ public sealed partial class SubtitleRetimer
 
         /// <summary>The neighbours only count as agreeing when their shifts lie this close together.</summary>
         public double NeighbourSpreadSeconds { get; init; } = 0.25;
+
+        /// <summary>
+        /// Moves each start the aligner gave to where the sound of the speech rises out of the
+        /// quiet before it (see <see cref="SpeechOnset"/>) - far more precise than the aligner's
+        /// frame grid, and than wav2vec2's starts, which tend to come late.
+        /// </summary>
+        public bool RefineStartsWithAudioLevel { get; init; } = true;
     }
 
     public enum LineStatus
@@ -358,6 +365,9 @@ public sealed partial class SubtitleRetimer
 
         const double edgeSeconds = 0.25;
         var windowLength = windowEnd - windowStart;
+        var levels = _options.RefineStartsWithAudioLevel && _options.AdjustStart
+            ? SpeechOnset.FromWaveFile(audioFileName)
+            : null;
 
         for (var k = batch.First; k <= batch.Last; k++)
         {
@@ -384,6 +394,18 @@ public sealed partial class SubtitleRetimer
                 }
 
                 start = newStart;
+
+                // The aligner found the line; the audio level says more exactly where it starts.
+                // Never back past where the aligner put the end of the speech before.
+                if (levels != null)
+                {
+                    var earliest = k > firstFed ? cues[k - firstFed - 1].EndSeconds : 0;
+                    if (SpeechOnset.Find(levels, cue.StartSeconds, earliest) is { } onset &&
+                        Math.Abs(windowStart + onset - line.StartSeconds) <= _options.MaxShiftSeconds)
+                    {
+                        start = windowStart + onset;
+                    }
+                }
             }
 
             // An end is different. Subtitles are held after the last word so they can be read, so
@@ -784,6 +806,78 @@ public sealed partial class SubtitleRetimer
             {
                 placements[i - 1] = previous with { EndSeconds = end };
             }
+        }
+    }
+
+    /// <summary>A start this close before a shot change is moved on to it.</summary>
+    public const double ShotChangeSnapLaterSeconds = 0.1;
+
+    /// <summary>A start or end this close to a shot change is moved onto it (an end to just before it).</summary>
+    public const double ShotChangeSnapSeconds = 0.2;
+
+    /// <summary>
+    /// Puts the starts and ends of the lines that were moved on a shot change when they land very
+    /// close to one: a subtitle that appears or goes a few frames off a cut flickers across it.
+    /// A start moves back onto a cut up to <see cref="ShotChangeSnapSeconds"/> before it, but on
+    /// to one only <see cref="ShotChangeSnapLaterSeconds"/> - a late start is worse than an early
+    /// one. An end goes to <paramref name="minGapSeconds"/> before the cut, so the next line can
+    /// start on it. Lines left where they were, and lines placed by hand, are not touched; run
+    /// <see cref="Settle"/> afterwards.
+    /// </summary>
+    public static void SnapToShotChanges(IReadOnlyList<Line> original, Placement[] placements, IReadOnlyList<double> shotChanges, double minGapSeconds)
+    {
+        if (shotChanges.Count == 0)
+        {
+            return;
+        }
+
+        var cuts = shotChanges.OrderBy(c => c).ToArray();
+        for (var i = 0; i < placements.Length; i++)
+        {
+            var p = placements[i];
+            var moved = Math.Abs(p.StartSeconds - original[i].StartSeconds) >= 0.0005 ||
+                        Math.Abs(p.EndSeconds - original[i].EndSeconds) >= 0.0005;
+            if (!p.CanMove || !moved)
+            {
+                continue;
+            }
+
+            var start = p.StartSeconds;
+            var end = p.EndSeconds;
+
+            // The cut the start is closest to, preferring one it may reach.
+            double? startCut = null;
+            foreach (var cut in cuts)
+            {
+                var later = cut - start; // > 0: the cut comes after the start
+                var allowed = later >= 0 ? later <= ShotChangeSnapLaterSeconds : -later <= ShotChangeSnapSeconds;
+                if (allowed && (startCut == null || Math.Abs(cut - start) < Math.Abs(startCut.Value - start)))
+                {
+                    startCut = cut;
+                }
+            }
+
+            if (startCut is { } s && s < end - 0.5)
+            {
+                start = s;
+            }
+
+            double? endCut = null;
+            foreach (var cut in cuts)
+            {
+                if (Math.Abs(cut - minGapSeconds - end) <= ShotChangeSnapSeconds &&
+                    (endCut == null || Math.Abs(cut - end) < Math.Abs(endCut.Value - end)))
+                {
+                    endCut = cut;
+                }
+            }
+
+            if (endCut is { } e && e - minGapSeconds > start + 0.5)
+            {
+                end = e - minGapSeconds;
+            }
+
+            placements[i] = p with { StartSeconds = start, EndSeconds = end };
         }
     }
 
