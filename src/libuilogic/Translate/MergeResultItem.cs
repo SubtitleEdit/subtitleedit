@@ -7,8 +7,6 @@ public static partial class MergeAndSplitHelper
         public string Text { get; set; } = string.Empty;
         public int StartIndex { get; set; }
         public int EndIndex { get; set; }
-        public bool AllItalic { get; set; }
-        public bool AllBold { get; set; }
         public bool Continuous { get; set; }
         public char EndChar { get; set; }
         public int EndCharOccurrences { get; set; }

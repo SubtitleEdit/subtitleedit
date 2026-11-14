@@ -4,15 +4,6 @@ namespace LibSETests.Cea608;
 
 public class GetCcDataHelperTest
 {
-    // endPos <= startPos used to underflow in ulong arithmetic and attempt a huge allocation.
-    [Theory]
-    [InlineData(10ul, 10ul)]
-    [InlineData(10ul, 2ul)]
-    public void GetSeiDataWithNonPositiveRangeReturnsEmpty(ulong startPos, ulong endPos)
-    {
-        using var ms = new MemoryStream(new byte[16]);
-        Assert.Empty(GetCcDataHelper.GetSeiData(ms, startPos, endPos));
-    }
 
     [Fact]
     public void ParseCcDataFromSeiAllPayloadTypeContinuationsDoesNotThrow()

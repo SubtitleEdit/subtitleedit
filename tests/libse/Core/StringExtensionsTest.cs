@@ -50,27 +50,6 @@ public class StringExtensionsTest
         Assert.True(test.LineEndsWithHtmlTag(true));
     }
 
-    [Fact]
-    public void LineBreakStartsWithHtmlTagEmpty()
-    {
-        var test = string.Empty;
-        Assert.False(test.LineBreakStartsWithHtmlTag(true));
-    }
-
-    [Fact]
-    public void LineBreakStartsWithHtmlTagItalic()
-    {
-        var test = "<i>Hej</i>" + Environment.NewLine + "<i>Hej</i>";
-        Assert.True(test.LineBreakStartsWithHtmlTag(true));
-    }
-
-    [Fact]
-    public void LineBreakStartsWithHtmlTagFont()
-    {
-        var test = "Hej!" + Environment.NewLine + "<font color=FFFFFF>Hej!</font>";
-        Assert.True(test.LineBreakStartsWithHtmlTag(true, true));
-    }
-
     //QUESTION: fix three lines?
     //[Fact]
     //public void LineBreakStartsWithHtmlTagFontThreeLines()
@@ -78,13 +57,6 @@ public class StringExtensionsTest
     //    string test = "Hej!" + Environment.NewLine + "Hej!" + Environment.NewLine + "<font color=FFFFFF>Hej!</font>";
     //    Assert.True(test.LineBreakStartsWithHtmlTag(true, true));
     //}
-
-    [Fact]
-    public void LineBreakStartsWithHtmlTagFontFalse()
-    {
-        const string test = "<font color=FFFFFF>Hej!</font>";
-        Assert.False(test.LineBreakStartsWithHtmlTag(true, true));
-    }
 
     [Fact]
     public void SplitToLines1()

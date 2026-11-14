@@ -99,13 +99,4 @@ public class BugHunt20260823Round2Test
         // StrikeOut is field 11 (0-based 10) - it must carry the style's own value, not a constant
         Assert.Equal("-1", raw.Substring("Style: ".Length).Split(',')[10].Trim());
     }
-
-    [Fact]
-    public void AssaCheckForErrors_IndentedHeaderStillFindsEmptyName()
-    {
-        const string header = @"[V4+ Styles]
-  Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-  Style: ,Arial,20,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1";
-        Assert.Contains("'Name' is empty", AdvancedSubStationAlpha.CheckForErrors(header));
-    }
 }

@@ -1397,12 +1397,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return _styleLookup.TryGetValue(code, out var style) ? style : null;
         }
 
-        public static string GetCodeFromPositionAndColor(int x, int y, SccFontStyle fontStyle, SKColor color)
-        {
-            var match = SccPositionAndStyleTable.SccPositionAndStyles.FirstOrDefault(p => p.X == x && p.Y == y && p.Style == fontStyle && p.ForeColor == color);
-            return match == null ? string.Empty : match.Code;
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;

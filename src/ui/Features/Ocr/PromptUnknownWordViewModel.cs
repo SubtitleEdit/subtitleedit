@@ -56,7 +56,6 @@ public partial class PromptUnknownWordViewModel : ObservableObject
     public bool ChangeOncePressed { get; private set; }
     public bool SkipAllPressed { get; private set; }
     public bool SkipOncePressed { get; private set; }
-    public bool GoogleItPressed { get; private set; }
     public bool AddToNamesListPressed { get; private set; }
     public bool AddToUserDictionaryPressed { get; private set; }
     public bool ChangeWholeTextPressed { get; private set; }

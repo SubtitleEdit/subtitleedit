@@ -69,23 +69,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
         }
 
-        public bool IsVideoStream
-        {
-            get
-            {
-                if (Payload == null || Payload.Length < 4)
-                {
-                    return false;
-                }
-
-                return Payload[0] == 0 &&
-                       Payload[1] == 0 &&
-                       Payload[2] == 1 &&
-                       Payload[3] >= 0xE0 &&
-                       Payload[3] < 0xF0;
-            }
-        }
-
         /// <summary>
         /// Program Identifier, read straight from the packet header - the same value
         /// <see cref="PacketId"/> ends up with, without constructing a <see cref="Packet"/>.

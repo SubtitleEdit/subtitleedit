@@ -256,20 +256,6 @@ namespace Nikse.SubtitleEdit.Core.Cea608
             }
         }
 
-        public static byte[] GetSeiData(Stream fs, ulong startPos, ulong endPos)
-        {
-            if (endPos <= startPos || endPos - startPos > int.MaxValue)
-            {
-                return Array.Empty<byte>();
-            }
-
-            var buffer = new byte[endPos - startPos];
-            fs.Seek((long)startPos, SeekOrigin.Begin);
-            var read = fs.ReadFully(buffer, 0, buffer.Length);
-
-            return UnescapeSeiData(buffer.AsSpan(0, read));
-        }
-
         /// <summary>
         /// Strips H.264 emulation prevention bytes: the 0x03 in any 00 00 03 sequence.
         /// </summary>

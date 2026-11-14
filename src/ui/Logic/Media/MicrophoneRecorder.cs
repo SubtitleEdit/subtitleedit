@@ -31,8 +31,6 @@ public sealed class MicrophoneRecorder : IDisposable
 
     public string OutputFileName { get; } = Path.Combine(Path.GetTempPath(), $"se_microphone_{Guid.NewGuid()}.wav");
 
-    public bool IsRecording => _process is { HasExited: false };
-
     /// <summary>The last lines ffmpeg wrote, for the error status/log when a recording fails.</summary>
     public string FfmpegOutput => _output.ToString();
 

@@ -419,11 +419,5 @@ namespace Nikse.SubtitleEdit.Core.Common
                 .Replace("</u><u>", string.Empty)
                 .Replace("\n", Environment.NewLine);
         }
-
-        /// <summary>Text without any tags - what is shown.</summary>
-        public static string GetPlainText(string text)
-        {
-            return string.Concat(Parse(text, out _).Select(r => r.Text)).Replace("\n", Environment.NewLine);
-        }
     }
 }

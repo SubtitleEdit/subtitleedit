@@ -11,8 +11,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         private Settings.Settings _settings = new Settings.Settings();
         public static Settings.Settings Settings => Instance._settings;
         public static string DictionariesDirectory => Path.Combine(DataDirectory, "Dictionaries") + Path.DirectorySeparatorChar;
-        public static readonly string DefaultLinuxFontName = "DejaVu Serif";
-
         private Configuration()
         {
         }

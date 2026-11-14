@@ -6,12 +6,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 {
     public class MatroskaTrackInfo
     {
-        public const int ContentEncodingTypeCompression = 0;
-        internal const int ContentEncodingScopeTracks = 1;
-        internal const int ContentEncodingScopePrivateDate = 2;
-
         public int TrackNumber { get; set; }
-        public string Uid { get; set; }
         public bool IsVideo { get; set; }
         public bool IsAudio { get; set; }
         public bool IsSubtitle { get; set; }

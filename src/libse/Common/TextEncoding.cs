@@ -30,8 +30,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         public bool IsUtf8 => DisplayName == Utf8WithBom || DisplayName == Utf8WithoutBom;
-        public bool UseSourceEncoding => DisplayName == Source;
-
         public override string ToString()
         {
             return DisplayName;

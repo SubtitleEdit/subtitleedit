@@ -100,8 +100,6 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public int FcpFontSize { get; set; }
         public string FcpFontName { get; set; }
 
-        public string NuendoCharacterListFile { get; set; }
-
         public bool WebVttUseXTimestampMap { get; set; }
         public bool WebVttUseMultipleXTimestampMap { get; set; }
         public bool WebVttMergeLinesWithSameText { get; set; }

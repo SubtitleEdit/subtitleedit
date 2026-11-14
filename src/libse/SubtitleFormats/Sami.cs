@@ -235,15 +235,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
-        public static List<string> GetStylesFromSubtitle(Subtitle subtitle)
-        {
-            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            var ci = CultureInfo.GetCultureInfo(language);
-            language = CultureInfo.CreateSpecificCulture(ci.Name).Name;
-            string languageTag = $"{language.Replace("-", string.Empty).ToUpperInvariant()}CC";
-            return new List<string> { languageTag };
-        }
-
         /// <summary>
         /// Whether a line holds "&lt;sync " in any casing - LoadSubtitle returns without a
         /// paragraph otherwise. Checking the lines first skips rebuilding, patching and

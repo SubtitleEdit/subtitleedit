@@ -25,8 +25,6 @@ public class SyntaxTextEditorWrapper : ITextBoxWrapper
         _editor = editor;
     }
 
-    public bool HasFocus { get; set; }
-
     public string Text
     {
         get => _editor.Text;

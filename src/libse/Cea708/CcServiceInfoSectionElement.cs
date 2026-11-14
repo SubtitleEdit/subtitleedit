@@ -2,7 +2,6 @@
 {
     public class CcServiceInfoSectionElement
     {
-        public bool CsnSize { get; set; }
         public int CaptionServiceNumber { get; set; }
         public byte[] ServiceDataByte { get; set; }
 

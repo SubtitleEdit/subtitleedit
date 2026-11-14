@@ -7,7 +7,5 @@
         public int ObjectProviderFlag { get; set; }
         public int ObjectHorizontalPosition { get; set; }
         public int ObjectVerticalPosition { get; set; }
-        public int? ObjectForegroundPixelCode { get; set; }
-        public int? ObjectBackgroundPixelCode { get; set; }
     }
 }

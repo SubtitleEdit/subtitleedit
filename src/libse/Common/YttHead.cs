@@ -106,11 +106,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return 1 + (sz / 100.0 - 1) / 4;
         }
 
-        public static int GetSizeFromRealScale(double realScale)
-        {
-            return (int)Math.Round(Math.Max(1 + (realScale - 1) * 4, 0) * 100);
-        }
-
         public YttPen Clone()
         {
             var pen = (YttPen)MemberwiseClone();
@@ -250,12 +245,6 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static double GetRealPercent(int coordinate)
         {
             return Math.Max(0, Math.Min(100, coordinate)) * 0.96 + 2;
-        }
-
-        /// <summary>Inverse of <see cref="GetRealPercent"/>, rounded to what the upload accepts.</summary>
-        public static int GetCoordinateFromRealPercent(double percent)
-        {
-            return (int)Math.Round(Math.Max(0, Math.Min(100, (percent - 2) / 0.96)));
         }
 
         /// <summary>ASSA \an value for an ap value.</summary>

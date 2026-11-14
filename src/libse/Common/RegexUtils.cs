@@ -222,24 +222,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static bool IsWordChar(char c) => char.IsLetterOrDigit(c) || c == '_';
 
-        public static string GetRegExGroup(string pattern)
-        {
-            var start = pattern.IndexOf("(?<", StringComparison.Ordinal);
-            if (start < 0)
-            {
-                return null;
-            }
-
-            start += 3;
-            var end = pattern.IndexOf('>', start);
-            if (end <= start)
-            {
-                return null;
-            }
-
-            return pattern.Substring(start, end - start);
-        }
-
         /// <summary>
         /// Normalizes the new-line escapes a user typed in a regular expression (<c>\r\n</c>, <c>\n</c>
         /// or <c>\r</c>) to a single line-feed, so a rule matches regardless of which escape was typed

@@ -49,11 +49,6 @@ public class ChatterboxTtsCppDownloadService : IChatterboxTtsCppDownloadService
     private const string BaseRepoUrl = "https://huggingface.co/cstr/chatterbox-GGUF/resolve/main";
     private const string TurboRepoUrl = "https://huggingface.co/cstr/chatterbox-turbo-GGUF/resolve/main";
 
-    // Back-compat aliases for callers that still want the Base file names without
-    // resolving via ResolveModelKey.
-    public const string T3ModelFileName = BaseT3FileName;
-    public const string S3GenModelFileName = BaseS3GenFileName;
-
     public static string ResolveModelKey(string? modelKey)
     {
         foreach (var key in GetAllModelKeys())

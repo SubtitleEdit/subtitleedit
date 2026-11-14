@@ -291,30 +291,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         }
 
         /**
-         * Set palette index "index" to color "c" in ARGB format
-         * @param index Palette index
-         * @param c Color in ARGB format
-         */
-        public void SetArgb(int index, int c)
-        {
-            var a1 = (c >> 24) & 0xff;
-            var r1 = (c >> 16) & 0xff;
-            var g1 = (c >> 8) & 0xff;
-            var b1 = c & 0xff;
-            SetRgb(index, r1, g1, b1);
-            SetAlpha(index, a1);
-        }
-
-        /**
          * Return palette entry at index as Integer in ARGB format
          * @param index Palette index
          * @return Palette entry at index as Integer in ARGB format
          */
-        public int GetArgb(int index)
-        {
-            return ((_a[index] & 0xff) << 24) | ((_r[index] & 0xff) << 16) | ((_g[index] & 0xff) << 8) | (_b[index] & 0xff);
-        }
-
         public SKColor GetColor(int index)
         {
             return new SKColor((byte)(_r[index] & 0xff), (byte)(_g[index] & 0xff), (byte)(_b[index] & 0xff), (byte)(_a[index] & 0xff));
@@ -407,61 +387,6 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         }
 
         /**
-         * Get Integer array containing 8bit red, green, blue components (in this order)
-         * @param index Palette index
-         * @return Integer array containing 8bit red, green, blue components (in this order)
-         */
-        public int[] GetRgb(int index)
-        {
-            var rgb = new int[3];
-            rgb[0] = _r[index] & 0xff;
-            rgb[1] = _g[index] & 0xff;
-            rgb[2] = _b[index] & 0xff;
-            return rgb;
-        }
-
-        /**
-         * Get Integer array containing 8bit Y, Cb, Cr components (in this order)
-         * @param index Palette index
-         * @return Integer array containing 8bit Y, Cb, Cr components (in this order)
-         */
-        public int[] GetYCbCr(int index)
-        {
-            var yCbCr = new int[3];
-            yCbCr[0] = _y[index] & 0xff;
-            yCbCr[1] = _cb[index] & 0xff;
-            yCbCr[2] = _cr[index] & 0xff;
-            return yCbCr;
-        }
-
-        /**
-         * Return byte array of red components
-         * @return Byte array of red components (don't modify!)
-         */
-        public byte[] GetR()
-        {
-            return _r;
-        }
-
-        /**
-         * Return byte array of green components
-         * @return Byte array of green components (don't modify!)
-         */
-        public byte[] GetG()
-        {
-            return _g;
-        }
-
-        /**
-         * Return byte array of blue components
-         * @return Byte array of blue components (don't modify!)
-         */
-        public byte[] GetB()
-        {
-            return _b;
-        }
-
-        /**
          * Return byte array of Y components
          * @return Byte array of Y components (don't modify!)
          */
@@ -495,30 +420,6 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         public int GetSize()
         {
             return _size;
-        }
-
-        /**
-         * Return index of most transparent palette entry or the index of the first completely transparent color
-         * @return Index of most transparent palette entry or the index of the first completely transparent color
-         */
-        public int GetTransparentIndex()
-        {
-            // find (most) transparent index in palette
-            var transpIdx = 0;
-            var minAlpha = 0x100;
-            for (var i = 0; i < _size; i++)
-            {
-                if ((_a[i] & 0xff) < minAlpha)
-                {
-                    minAlpha = _a[i] & 0xff;
-                    transpIdx = i;
-                    if (minAlpha == 0)
-                    {
-                        break;
-                    }
-                }
-            }
-            return transpIdx;
         }
 
         /**

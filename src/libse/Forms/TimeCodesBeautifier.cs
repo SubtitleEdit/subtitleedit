@@ -1213,43 +1213,5 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             return GetFrameDurationMs(frameRate) * Configuration.Settings.BeautifyTimeCodes.Profile.OutCuesGap;
         }
-
-        public static int GetSmallestMaxGapFrames(double? frameRate = null)
-        {
-            var frameDurationMs = GetFrameDurationMs(frameRate);
-            int smallestMaxGapFrames = int.MaxValue;
-
-            if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralUseZones)
-            {
-                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralLeftGreenZone);
-            }
-            else
-            {
-                var maxGap = Configuration.Settings.BeautifyTimeCodes.Profile.ChainingGeneralMaxGap / frameDurationMs;
-                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Convert.ToInt32(Math.Round(maxGap)));
-            }
-
-            if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotUseZones)
-            {
-                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotLeftGreenZone);
-            }
-            else
-            {
-                var maxGap = Configuration.Settings.BeautifyTimeCodes.Profile.ChainingInCueOnShotMaxGap / frameDurationMs;
-                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Convert.ToInt32(Math.Round(maxGap)));
-            }
-
-            if (Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotUseZones)
-            {
-                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotRightGreenZone);
-            }
-            else
-            {
-                var maxGap = Configuration.Settings.BeautifyTimeCodes.Profile.ChainingOutCueOnShotMaxGap / frameDurationMs;
-                smallestMaxGapFrames = Math.Min(smallestMaxGapFrames, Convert.ToInt32(Math.Round(maxGap)));
-            }
-
-            return smallestMaxGapFrames;
-        }
     }
 }

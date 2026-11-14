@@ -59,7 +59,6 @@ public class Round28MccLoadBenchmarks
 public class Round28FormatLoadBenchmarks
 {
     private List<string> _cheetah = null!;
-    private List<string> _timeCodesOnly3 = null!;
     private List<string> _nci = null!;
 
     [Params(5000)]
@@ -74,15 +73,11 @@ public class Round28FormatLoadBenchmarks
         // pop-on captions without end codes - every end time comes from the next caption
         _cheetah = new CheetahCaptionAsc().ToText(subtitle, string.Empty).SplitToLines()
             .Where(line => !line.StartsWith("*E ", StringComparison.Ordinal)).ToList();
-        _timeCodesOnly3 = new TimeCodesOnly3().ToText(subtitle, string.Empty).SplitToLines();
         _nci = new NciTimedRollUpCaptions().ToText(subtitle, string.Empty).SplitToLines();
     }
 
     [Benchmark]
     public int LoadCheetahCaptionAsc() => Load(new CheetahCaptionAsc(), _cheetah);
-
-    [Benchmark]
-    public int LoadTimeCodesOnly3() => Load(new TimeCodesOnly3(), _timeCodesOnly3);
 
     [Benchmark]
     public int LoadNciTimedRollUpCaptions() => Load(new NciTimedRollUpCaptions(), _nci);

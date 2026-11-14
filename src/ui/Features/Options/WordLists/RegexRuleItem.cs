@@ -1,6 +1,5 @@
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
 namespace Nikse.SubtitleEdit.Features.Options.WordLists;
@@ -12,8 +11,6 @@ public partial class RegexRuleItem : ObservableObject
     [ObservableProperty] private bool _isEnabled;
 
     public bool IsUserRule { get; }
-    public string SourceDisplay => IsUserRule ? Se.Language.Options.WordLists.MyRule : Se.Language.Options.WordLists.BuiltInRule;
-
     // Called when the check box is toggled; returns false to put the old value back.
     public Func<RegexRuleItem, bool, bool>? EnabledChanging { get; set; }
 

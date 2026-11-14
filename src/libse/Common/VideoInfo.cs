@@ -9,7 +9,6 @@
         public double FramesPerSecond { get; set; }
         public double TotalFrames { get; set; }
         public string VideoCodec { get; set; }
-        public string FileType { get; set; }
         public bool Success { get; set; }
     }
 }
