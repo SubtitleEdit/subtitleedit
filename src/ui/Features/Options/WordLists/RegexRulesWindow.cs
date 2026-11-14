@@ -205,6 +205,24 @@ public class RegexRulesWindow : Window
             var replace = MakeMonoText(nameof(RegexRuleItem.ReplaceWith));
             replace.Foreground = EditorChrome.DimTextBrush;
 
+            var spellCheckBadge = new Border
+            {
+                CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(6, 1),
+                Background = EditorChrome.FieldBrush,
+                BorderBrush = EditorChrome.FieldBorderBrush,
+                BorderThickness = new Thickness(1),
+                VerticalAlignment = VerticalAlignment.Center,
+                [!IsVisibleProperty] = new Binding(nameof(RegexRuleItem.IsSpellChecked)),
+                Child = new TextBlock
+                {
+                    Text = Se.Language.Options.WordLists.SpellCheckBadge,
+                    FontSize = UiUtil.ScaledFontSize(10.5),
+                    FontWeight = FontWeight.SemiBold,
+                    Foreground = EditorChrome.DimTextBrush,
+                },
+            };
+
             var badge = new Border
             {
                 CornerRadius = new CornerRadius(8),
@@ -231,6 +249,7 @@ public class RegexRulesWindow : Window
                     new ColumnDefinition(GridLength.Auto),
                     new ColumnDefinition(new GridLength(2, GridUnitType.Star)),
                     new ColumnDefinition(GridLength.Auto),
+                    new ColumnDefinition(GridLength.Auto),
                 },
                 [!Visual.OpacityProperty] = new Binding(nameof(RegexRuleItem.IsEnabled)) { Converter = EnabledToOpacity },
             };
@@ -238,7 +257,8 @@ public class RegexRulesWindow : Window
             row.Add(find, 0, 1);
             row.Add(arrow, 0, 2);
             row.Add(replace, 0, 3);
-            row.Add(badge, 0, 4);
+            row.Add(spellCheckBadge, 0, 4);
+            row.Add(badge, 0, 5);
             ToolTip.SetTip(row, item?.ToString());
             return row;
         }, supportsRecycling: false);
@@ -264,6 +284,7 @@ public class RegexRulesWindow : Window
         var textBoxFind = MakeMonoTextBox(nameof(vm.EditFind), l.Pattern, 56);
         RegexContextFlyout.Attach(textBoxFind, vm, () => true);
         var textBoxReplace = MakeMonoTextBox(nameof(vm.EditReplace), Se.Language.General.ReplaceWith, 34);
+        var textBoxSpellCheck = MakeMonoTextBox(nameof(vm.EditSpellCheck), l.SpellCheckWord, 34);
 
         var findHelpers = MakeHelperChips(textBoxFind, new[]
         {
@@ -291,6 +312,13 @@ public class RegexRulesWindow : Window
             new InsertHelper("$2", "$2", string.Empty, l.CaptureGroupReference.Replace("1", "2")),
             new InsertHelper("$&", "$&", string.Empty, l.WholeMatch),
         });
+
+        var spellCheckHelpers = MakeHelperChips(textBoxSpellCheck, new[]
+        {
+            new InsertHelper("$1", "$1", string.Empty, l.CaptureGroupReference),
+            new InsertHelper("$2", "$2", string.Empty, l.CaptureGroupReference.Replace("1", "2")),
+        });
+        var spellCheckHint = EditorChrome.MakeHint(l.SpellCheckWordHint);
 
         var statusIcon = new Optris.Icons.Avalonia.Icon { FontSize = 12, VerticalAlignment = VerticalAlignment.Center };
         var statusText = new TextBlock
@@ -345,6 +373,10 @@ public class RegexRulesWindow : Window
                 EditorChrome.MakeDimLabel(Se.Language.General.ReplaceWith, new Thickness(0, 4, 0, 0)),
                 textBoxReplace,
                 replaceHelpers,
+                EditorChrome.MakeDimLabel(l.SpellCheckWord, new Thickness(0, 4, 0, 0)),
+                textBoxSpellCheck,
+                spellCheckHelpers,
+                spellCheckHint,
                 hint,
                 buttonRow,
             },
@@ -364,6 +396,8 @@ public class RegexRulesWindow : Window
         AutomationProperties.SetName(textBoxTest, l.TestText);
 
         var switchAll = EditorChrome.MakeSwitchRow(nameof(vm.ApplyAllEnabled), l.ApplyAllEnabledRules);
+        var applyAllHint = EditorChrome.MakeHint(l.ApplyAllSkipsSpellChecked);
+        applyAllHint.Bind(IsVisibleProperty, new Binding(nameof(vm.ApplyAllEnabled)));
 
         var matchesView = MakePreviewBlock();
         var resultView = MakePreviewBlock();
@@ -403,6 +437,7 @@ public class RegexRulesWindow : Window
             {
                 textBoxTest,
                 switchAll,
+                applyAllHint,
                 matchesLabel,
                 matchesFrame,
                 EditorChrome.MakeDimLabel(l.Result, new Thickness(0, 2, 0, 0)),
