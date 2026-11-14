@@ -12,7 +12,7 @@ Edit the script info header properties of an Advanced SubStation Alpha (ASS/SSA)
 2. Go to **ASSA tools** → **Properties...** to open the properties dialog.
 3. Edit the script info fields as needed.
 4. Set the video resolution (PlayResX / PlayResY) — the **...** button picks a standard resolution, and **Pick resolution from current video** is shown when a video is loaded.
-5. Choose a wrap style and border/shadow scaling mode.
+5. Choose a wrap style, border/shadow scaling mode and YCbCr matrix.
 6. Click **OK** to save changes.
 
 ## Features
@@ -38,6 +38,13 @@ Edit the script info header properties of an Advanced SubStation Alpha (ASS/SSA)
 ### Border and Shadow Scaling
 - Choose whether border and shadow sizes scale with the script resolution or the video resolution.
 - The dropdown offers **Yes**, **No** and **N/A** (not set).
+
+### YCbCr Matrix
+- Tells renderers which YCbCr color matrix the subtitle colors were authored for; recommended by the [libass wiki](https://github.com/libass/libass/wiki/ASS-File-Format-Guide) to always be set.
+- Must match the video's colorspace and range: **TV.709** for HD SDR video, **TV.601** for SD; **None** for anything other than 601/709 (e.g. HDR/BT.2020).
+- Offers the same values libass and Aegisub use: **None**, **TV.601**, **PC.601**, **TV.709**, **PC.709**, **TV.FCC**, **PC.FCC**, **TV.240M** and **PC.240M**.
+- Files without the header default to **None** (no color conversion, the libass-recommended value), which is written when you click **OK**.
+- **N/A** (not set) leaves the header out, or removes an existing one. A value libass does not recognize is shown as-is and kept unless you pick another value.
 
 ## Keyboard Shortcuts
 

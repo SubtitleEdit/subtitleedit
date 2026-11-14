@@ -5088,6 +5088,8 @@
     "fontsAndGraphics": "字型和圖顯",
     "wrapStyle": "換行樣式",
     "borderAndShadowScaling": "邊界和陰影縮放",
+    "yCbCrMatrix": "YCbCr 矩陣",
+    "yCbCrMatrixHint": "必須與影片的色彩空間和範圍一致：HD SDR 影片用 TV.709，SD 影片用 TV.601；601/709 以外的任何影片（如 HDR/BT.2020）一律用 None。若不設定，渲染器將預設按 TV.601 處理（以相容 VSFilter）。",
     "collisions": "碰撞處理",
     "playDepth": "播放深度",
     "timer": "定時器",

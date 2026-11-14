@@ -36,6 +36,8 @@ public partial class AssaPropertiesViewModel : ObservableObject
     [ObservableProperty] private WrapStyleItem _selectedWrapStyle;
     [ObservableProperty] private ObservableCollection<BorderAndShadowScalingItem> _borderAndShadowScalingStyles;
     [ObservableProperty] private BorderAndShadowScalingItem _selectedBorderAndShadowScalingStyle;
+    [ObservableProperty] private ObservableCollection<YCbCrMatrixItem> _yCbCrMatrixItems;
+    [ObservableProperty] private YCbCrMatrixItem _selectedYCbCrMatrix;
 
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
@@ -65,6 +67,8 @@ public partial class AssaPropertiesViewModel : ObservableObject
         SelectedWrapStyle = WrapStyles[2];
         BorderAndShadowScalingStyles = new ObservableCollection<BorderAndShadowScalingItem>(BorderAndShadowScalingItem.List());
         SelectedBorderAndShadowScalingStyle = BorderAndShadowScalingStyles[2];
+        YCbCrMatrixItems = new ObservableCollection<YCbCrMatrixItem>(YCbCrMatrixItem.List());
+        SelectedYCbCrMatrix = YCbCrMatrixItems.First(p => p.Style == YCbCrMatrixType.None);
 
         _videoFileName = string.Empty;
         Header = string.Empty;
@@ -104,6 +108,8 @@ public partial class AssaPropertiesViewModel : ObservableObject
         {
             UpdateTag("ScaledBorderAndShadow", "Hide", true);
         }
+
+        UpdateTag("YCbCr Matrix", SelectedYCbCrMatrix.Name, SelectedYCbCrMatrix.Style == YCbCrMatrixType.NotSet);
     }
 
     private void UpdateTag(string tag, string text, bool remove)
@@ -135,7 +141,7 @@ public partial class AssaPropertiesViewModel : ObservableObject
             {
                 if (!remove)
                 {
-                    sb.AppendLine(line.Substring(0, tag.Length) + ": " + text);
+                    sb.AppendLine(tag + ": " + text);
                 }
 
                 found = true;
@@ -239,6 +245,15 @@ public partial class AssaPropertiesViewModel : ObservableObject
 
     private void LoadFromHeader()
     {
+        foreach (var custom in YCbCrMatrixItems.Where(p => p.Style == YCbCrMatrixType.Custom).ToList())
+        {
+            YCbCrMatrixItems.Remove(custom);
+        }
+
+        // "None" (no color mangling) is the libass-recommended value, so it is the default for
+        // files without the header; N/A stays available to leave the header out.
+        SelectedYCbCrMatrix = YCbCrMatrixItems.First(p => p.Style == YCbCrMatrixType.None);
+
         foreach (var line in Header.SplitToLines())
         {
             var s = line.ToLowerInvariant().Trim();
@@ -302,6 +317,30 @@ public partial class AssaPropertiesViewModel : ObservableObject
                 else
                 {
                     SelectedBorderAndShadowScalingStyle = BorderAndShadowScalingStyles.First(p => p.Style == BorderAndShadowScalingType.NotSet);
+                }
+            }
+            else if (s.StartsWith("ycbcr matrix:", StringComparison.Ordinal))
+            {
+                var value = line.Trim().Remove(0, 13).Trim();
+
+                // libass parses the value case-insensitively, so match the same way.
+                var match = YCbCrMatrixItems.FirstOrDefault(p => p.Style != YCbCrMatrixType.NotSet &&
+                                                                 p.Name.Equals(value, StringComparison.OrdinalIgnoreCase));
+                if (value.Length == 0)
+                {
+                    SelectedYCbCrMatrix = YCbCrMatrixItems.First(p => p.Style == YCbCrMatrixType.NotSet);
+                }
+                else if (match != null)
+                {
+                    SelectedYCbCrMatrix = match;
+                }
+                else
+                {
+                    // Not a value libass knows - show and keep it as-is, so OK does not change it
+                    // and N/A can still remove it.
+                    var custom = new YCbCrMatrixItem(value, YCbCrMatrixType.Custom);
+                    YCbCrMatrixItems.Add(custom);
+                    SelectedYCbCrMatrix = custom;
                 }
             }
             else if (s.StartsWith("wrapstyle:", StringComparison.Ordinal))

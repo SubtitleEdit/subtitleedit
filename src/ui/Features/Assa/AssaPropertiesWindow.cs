@@ -162,11 +162,31 @@ public class AssaPropertiesWindow : Window
         var grid = new Grid
         {
             ColumnSpacing = 12,
+            RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto) },
             ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)), new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
         };
         grid.Add(Labeled(Se.Language.Assa.WrapStyle, wrapStyle), 0, 0);
         grid.Add(Labeled(Se.Language.Assa.BorderAndShadowScaling, scaling), 0, 1);
+
+        var ycbCrMatrix = UiUtil.MakeComboBox(vm.YCbCrMatrixItems, vm, nameof(vm.SelectedYCbCrMatrix));
+        ycbCrMatrix.HorizontalAlignment = HorizontalAlignment.Stretch;
+        AutomationProperties.SetName(ycbCrMatrix, Se.Language.Assa.YCbCrMatrix);
+        grid.Add(LabeledWithHint(Se.Language.Assa.YCbCrMatrix, ycbCrMatrix, Se.Language.Assa.YCbCrMatrixHint), 1, 0);
+
         return EditorChrome.MakeEditorSection(Se.Language.General.Options, grid);
+    }
+
+    private static StackPanel LabeledWithHint(string label, Control control, string hint)
+    {
+        // Mirrors Labeled, with the hint icon beside the label text instead of the control.
+        var labelRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        labelRow.Children.Add(new TextBlock { Text = label, FontSize = EditorChrome.FieldFontSize, Foreground = EditorChrome.DimTextBrush, TextTrimming = TextTrimming.CharacterEllipsis });
+        labelRow.Children.Add(UiUtil.MakeHintIcon(hint, control));
+
+        var panel = new StackPanel { Spacing = 4 };
+        panel.Children.Add(labelRow);
+        panel.Children.Add(control);
+        return panel;
     }
 
     private static StackPanel Labeled(string label, Control control)

@@ -5028,6 +5028,8 @@
     "fontsAndGraphics": "字体和图形",
     "wrapStyle": "换行样式",
     "borderAndShadowScaling": "边框和阴影缩放",
+    "yCbCrMatrix": "YCbCr 矩阵",
+    "yCbCrMatrixHint": "必须与视频的色彩空间和范围一致：高清 SDR 视频用 TV.709，标清视频用 TV.601；601/709 以外的任何视频（如 HDR/BT.2020）一律用 None。若不设置，渲染器将默认按 TV.601 处理（以兼容 VSFilter）。",
     "collisions": "时间重叠冲突",
     "playDepth": "播放层级",
     "timer": "计时器",
