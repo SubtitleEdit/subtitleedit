@@ -62,7 +62,7 @@ public static class BatchStatics
 
             var subtitle = batchItem.Subtitle;
 
-            // By position: GetIndex(p) is an IndexOf scan, which made this O(lines * lines) per file.
+            // By position: an IndexOf per paragraph made this O(lines * lines) per file.
             for (var paragraphIndex = 0; paragraphIndex < subtitle.Paragraphs.Count; paragraphIndex++)
             {
                 var p = subtitle.Paragraphs[paragraphIndex];

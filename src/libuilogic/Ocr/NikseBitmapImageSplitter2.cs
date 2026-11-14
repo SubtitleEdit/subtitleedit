@@ -24,54 +24,6 @@ public readonly struct NiksePoint
 
 public class NikseBitmapImageSplitter2
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsColorClose(SKColor a, SKColor b, int tolerance)
-    {
-        // Both transparent
-        if (a.Alpha < 120 && b.Alpha < 120)
-        {
-            return true;
-        }
-
-        // Different alpha levels
-        if (Math.Abs(a.Alpha - b.Alpha) > 50)
-        {
-            return false;
-        }
-
-        // Both dark and non-transparent
-        if (a.Alpha > 250 && b.Alpha > 250 &&
-            a.Red > 90 && a.Green > 90 && a.Blue > 90 &&
-            b.Red > 90 && b.Green > 90 && b.Blue > 90)
-        {
-            return true;
-        }
-
-        var diff = a.Red + a.Green + a.Blue - (b.Red + b.Green + b.Blue);
-        return (uint)(diff + tolerance) <= (uint)(tolerance * 2);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsColorClose(byte aa, byte ar, byte ag, byte ab, SKColor b, int tolerance)
-    {
-        // Both transparent
-        if (aa < 120 && b.Alpha < 120)
-        {
-            return true;
-        }
-
-        // Both dark and non-transparent
-        if (aa > 250 && b.Alpha > 250 &&
-            ar > 90 && ag > 90 && ab > 90 &&
-            b.Red > 90 && b.Green > 90 && b.Blue > 90)
-        {
-            return true;
-        }
-
-        var diff = ar + ag + ab - (b.Red + b.Green + b.Blue);
-        return (uint)(diff + tolerance) <= (uint)(tolerance * 2);
-    }
-
     public static NikseBitmap2 CropTopAndBottom(NikseBitmap2 bmp, out int topCropping)
     {
         var startTop = 0;

@@ -13,10 +13,6 @@ public partial class AudioVisualizerUndockedViewModel : ObservableObject
     [ObservableProperty] private string _error = string.Empty;
 
     public Window? Window { get; set; }
-    public Grid? OriginalParent { get; set; }
-    public int OriginalRow { get; set; }
-    public int OriginalColumn { get; set; }
-    public int OriginalIndex { get; set; }
     public Grid? AudioVisualizer { get; set; }
     public Main.MainViewModel? MainViewModel { get; set; }
     public bool AllowClose { get; set; }

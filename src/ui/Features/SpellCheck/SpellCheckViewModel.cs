@@ -351,7 +351,7 @@ public partial class SpellCheckViewModel : ObservableObject, IClosingCleanup
                 var bdnSubtitle = new Subtitle();
                 bdn.LoadSubtitle(bdnSubtitle, bdnLines, fileName);
                 return bdnSubtitle.Paragraphs.Count > 0
-                    ? new OcrSubtitleBdn(bdnSubtitle, fileName, isSon: false)
+                    ? new OcrSubtitleBdn(bdnSubtitle, fileName)
                     : null;
 
             case ".ts":

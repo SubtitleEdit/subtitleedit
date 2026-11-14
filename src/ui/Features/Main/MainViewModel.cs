@@ -27598,7 +27598,7 @@ public partial class MainViewModel :
     {
         Dispatcher.UIThread.Post(async () =>
         {
-            var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeBdn(subtitle, fileName, false); });
+            var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeBdn(subtitle, fileName); });
 
             if (result.OkPressed)
             {
@@ -38905,20 +38905,6 @@ public partial class MainViewModel :
         if (s != null)
         {
             SubtitleGrid.SelectedItem = s;
-        }
-    }
-
-    internal void OnWaveformDoubleTapped(object sender, ParagraphEventArgs e)
-    {
-        var vp = GetVideoPlayerControl();
-        if (!string.IsNullOrEmpty(_videoFileName) && vp != null)
-        {
-            vp.Position = e.Seconds;
-            var p = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
-            if (p != null)
-            {
-                SelectAndScrollToSubtitle(p);
-            }
         }
     }
 

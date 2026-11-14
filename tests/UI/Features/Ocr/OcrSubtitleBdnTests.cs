@@ -79,7 +79,7 @@ public class OcrSubtitleBdnTests : IDisposable
 
         var subtitle = new Subtitle();
         bdnXml.LoadSubtitle(subtitle, lines, path);
-        return (subtitle, new OcrSubtitleBdn(subtitle, path, isSon: false));
+        return (subtitle, new OcrSubtitleBdn(subtitle, path));
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public class OcrSubtitleBdnTests : IDisposable
         Assert.True(format.IsMine(lines, path));
         var subtitle = new Subtitle();
         format.LoadSubtitle(subtitle, lines, path);
-        var ocr = new OcrSubtitleBdn(subtitle, path, isSon: false);
+        var ocr = new OcrSubtitleBdn(subtitle, path);
 
         Assert.Equal(2, ocr.Count);
         Assert.Equal(TimeSpan.FromMilliseconds(600), ocr.GetStartTime(0));

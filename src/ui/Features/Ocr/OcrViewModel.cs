@@ -5505,11 +5505,11 @@ public partial class OcrViewModel : ObservableObject
         AutoDetectSourceLanguage();
     }
 
-    public void InitializeBdn(Subtitle subtitle, string fileName, bool isSon)
+    public void InitializeBdn(Subtitle subtitle, string fileName)
     {
         _sourceFileName = fileName;
         Title = UiUtil.FormatTitleWithFileName(Se.Language.Ocr.OcrX, fileName);
-        _ocrSubtitle = new OcrSubtitleBdn(subtitle, fileName, isSon);
+        _ocrSubtitle = new OcrSubtitleBdn(subtitle, fileName);
         SetOcrSubtitleItems();
         AutoDetectSourceLanguage();
     }

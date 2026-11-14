@@ -48,9 +48,8 @@ namespace Nikse.SubtitleEdit.UiLogic.Http
 
             if (!proxySettings.UseDefaultCredentials && !string.IsNullOrEmpty(proxySettings.UserName))
             {
-                // Credentials go on the proxy itself - a CredentialCache would need
-                // ProxySettings.AuthType, which nothing ever sets, and
-                // CredentialCache.Add throws on a null auth type.
+                // Credentials go on the proxy itself - a CredentialCache would need an
+                // auth type, and CredentialCache.Add throws on a null one.
                 proxy.Credentials = string.IsNullOrWhiteSpace(proxySettings.Domain)
                     ? new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword())
                     : new NetworkCredential(proxySettings.UserName, proxySettings.DecodePassword(), proxySettings.Domain);

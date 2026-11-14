@@ -139,8 +139,6 @@ internal static partial class NativeMethods
     // LoadLibraryEx flags
     internal const uint LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008;
 
-    // POSIX constants
-    internal const int LC_NUMERIC = 1;
     internal const int RTLD_LAZY = 0x0001;
     internal const int RTLD_NOW = 0x0002;
     internal const int RTLD_GLOBAL = 0x0100;

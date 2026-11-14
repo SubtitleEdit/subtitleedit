@@ -296,11 +296,6 @@ public partial class NOcrDbEditViewModel : ObservableObject
         ZoomFactorInfo = string.Format(Se.Language.Ocr.ZoomFactorX, NOcrDrawingCanvas.ZoomFactor);
     }
 
-    internal void DrawModeChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        NOcrDrawingCanvas.NewLinesAreHits = IsNewLinesForegroundActive;
-    }
-
     internal void DrawModeForegroundChanged(object? sender, RoutedEventArgs e)
     {
         Dispatcher.UIThread.Post(() =>

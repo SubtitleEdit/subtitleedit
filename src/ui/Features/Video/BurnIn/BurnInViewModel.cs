@@ -2737,11 +2737,6 @@ public partial class BurnInViewModel : ObservableObject
         UpdateNonAssaPreview();
     }
 
-    internal void TextBoxChanged(object? sender, TextChangedEventArgs e)
-    {
-        UpdateNonAssaPreview();
-    }
-
     private int GetVideoBitRate()
     {
         // In "match source" mode the preview uses the loaded file's own size; otherwise the fixed MB.

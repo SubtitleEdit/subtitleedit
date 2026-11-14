@@ -79,12 +79,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new SKColor(_pixelData->Red, _pixelData->Green, _pixelData->Blue, _pixelData->Alpha);
         }
 
-        public SKColor GetPixelNext()
-        {
-            _pixelData++;
-            return new SKColor(_pixelData->Red, _pixelData->Green, _pixelData->Blue, _pixelData->Alpha);
-        }
-
         public void SetPixel(int x, int y, SKColor color)
         {
             var data = (PixelData*)(_pBase + y * _width + x * sizeof(PixelData));

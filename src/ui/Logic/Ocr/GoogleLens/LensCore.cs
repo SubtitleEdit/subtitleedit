@@ -82,19 +82,10 @@ public class LensCore
         ParseCookies();
     }
 
-    public void UpdateOptions(Dictionary<string, object> options)
-    {
-        foreach (var kvp in options)
-        {
-            _config[kvp.Key] = kvp.Value;
-        }
-        ParseCookies();
-    }
-
     protected byte[] CreateLensProtoRequest(byte[] imageBytes, int width, int height, string? twoLetterLanguageCode = null)
     {
-        // Prefer the language the caller was given. Nothing ever calls UpdateOptions and the Lens
-        // instance is constructed with no config, so the config value is always the "en" default -
+        // Prefer the language the caller was given. The Lens instance is constructed with no
+        // config, so the config value is always the "en" default -
         // the request's LocaleContext.Language was pinned to English whatever OCR language the
         // user picked, even though ScanByData already threads the code into the Accept-Language
         // header.

@@ -180,7 +180,6 @@ public class InitWaveform
             vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerOnVideoPositionChanged;
             vm.AudioVisualizer.OnDragEnded += vm.AudioVisualizerOnDragEnded;
             vm.AudioVisualizer.OnToggleSelection += vm.AudioVisualizerOnToggleSelection;
-            //vm.AudioVisualizer.OnParagraphDoubleTapped += vm.OnWaveformDoubleTapped;
             vm.AudioVisualizer.OnPrimarySingleClicked += vm.AudioVisualizerOnPrimarySingleClicked;
             vm.AudioVisualizer.OnPrimaryDoubleClicked += vm.AudioVisualizerOnPrimaryDoubleClicked;
             vm.AudioVisualizer.OnDeletePressed += vm.AudioVisualizerOnDeletePressed;
