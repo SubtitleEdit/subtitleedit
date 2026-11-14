@@ -13,8 +13,6 @@ namespace SeConv.Core;
 /// </summary>
 internal static class ImageOutputWriter
 {
-    public sealed record FormatTarget(string Name, IExportHandler Handler);
-
     public const string DCinemaSmpte2014PngMxfName = "D-Cinema SMPTE 2014/png MXF";
 
     public static IExportHandler? TryCreateHandler(string normalizedFormat)

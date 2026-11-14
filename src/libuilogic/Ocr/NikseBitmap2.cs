@@ -950,12 +950,6 @@ public class NikseBitmap2
         return new SKColor(_bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
     }
 
-    public SKColor GetPixelNext()
-    {
-        _pixelAddress += 4;
-        return new SKColor(_bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
-    }
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetPixel(int x, int y, SKColor color)
     {
@@ -1012,69 +1006,6 @@ public class NikseBitmap2
         maxDiff = smallestDiff;
         return smallestDiffIndex;
     }
-
-    //public SKBitmap ConvertTo8BitsPerPixel()
-    //{
-    //    var newBitmap = new SKBitmap(Width, Height, PixelFormat.Format8bppIndexed);
-    //    var palette = new List<Color> { Color.Transparent };
-    //    var bPalette = newBitmap.Palette;
-    //    var entries = bPalette.Entries;
-    //    for (int i = 0; i < newBitmap.Palette.Entries.Length; i++)
-    //    {
-    //        entries[i] = Color.Transparent;
-    //    }
-
-    //    var data = newBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
-    //    var bytes = new byte[data.Height * data.Stride];
-    //    Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
-
-    //    for (int y = 0; y < Height; y++)
-    //    {
-    //        for (int x = 0; x < Width; x++)
-    //        {
-    //            var c = GetPixel(x, y);
-    //            if (c.Alpha < 5)
-    //            {
-    //                bytes[y * data.Stride + x] = 0;
-    //            }
-    //            else
-    //            {
-    //                int index = FindBestMatch(c, palette, out var maxDiff);
-
-    //                if (index == -1 && palette.Count < 255)
-    //                {
-    //                    index = palette.Count;
-    //                    entries[index] = c;
-    //                    palette.Add(c);
-    //                    bytes[y * data.Stride + x] = (byte)index;
-    //                }
-    //                else if (palette.Count < 200 && maxDiff > 5)
-    //                {
-    //                    index = palette.Count;
-    //                    entries[index] = c;
-    //                    palette.Add(c);
-    //                    bytes[y * data.Stride + x] = (byte)index;
-    //                }
-    //                else if (palette.Count < 255 && maxDiff > 15)
-    //                {
-    //                    index = palette.Count;
-    //                    entries[index] = c;
-    //                    palette.Add(c);
-    //                    bytes[y * data.Stride + x] = (byte)index;
-    //                }
-    //                else if (index >= 0)
-    //                {
-    //                    bytes[y * data.Stride + x] = (byte)index;
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    Marshal.Copy(bytes, 0, data.Scan0, bytes.Length);
-    //    newBitmap.UnlockBits(data);
-    //    newBitmap.Palette = bPalette;
-    //    return newBitmap;
-    //}
 
     public NikseBitmap2 CopyRectangle(NikseRectangle section)
     {

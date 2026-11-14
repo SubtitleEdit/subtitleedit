@@ -665,11 +665,6 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         });
     }
 
-    internal void DrawModeChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        NOcrDrawingCanvas.NewLinesAreHits = IsNewLinesForegroundActive;
-    }
-
     internal void DrawModeForegroundChanged(object? sender, RoutedEventArgs e)
     {
         Dispatcher.UIThread.Post(() =>

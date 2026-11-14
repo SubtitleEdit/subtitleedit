@@ -54,7 +54,6 @@ public partial class NOcrInspectViewModel : ObservableObject
     public StackPanel PanelLines { get; set; }
     public TextBox TextBoxNew { get; set; }
     public bool OkPressed { get; set; }
-    public bool AddBetterMatchPressed { get; set; }
     public int LetterIndex { get; internal set; }
 
     private SKBitmap _sentenceBitmapOriginal;

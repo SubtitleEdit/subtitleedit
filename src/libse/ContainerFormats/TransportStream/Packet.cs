@@ -47,8 +47,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public AdaptationField AdaptationField { get; }
 
-        public bool IsNullPacket => PacketId == NullPacketId;
-
         public bool IsProgramAssociationTable => PacketId == ProgramAssociationTablePacketId;
 
         public byte[] Payload { get; }

@@ -962,7 +962,7 @@ public partial class BinaryEditViewModel : ObservableObject
         bdnXml.LoadSubtitle(bdnSubtitle, lines, fileName);
         if (bdnSubtitle.Paragraphs.Count > 0)
         {
-            return new OcrSubtitleBdn(bdnSubtitle, fileName, false);
+            return new OcrSubtitleBdn(bdnSubtitle, fileName);
         }
 
         // Final Cut Pro image xmeml (SE's own "export image based" FCP output) - cheap content

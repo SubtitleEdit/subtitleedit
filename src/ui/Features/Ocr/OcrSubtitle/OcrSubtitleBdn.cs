@@ -16,16 +16,14 @@ public class OcrSubtitleBdn : IOcrSubtitle
     public int Count { get; private set; }
     private readonly Subtitle _bdnXmlSubtitle;
     private readonly string _bdnFileName;
-    private readonly bool _isSon;
     private readonly bool _makeTransparent;
     private readonly bool _autoTransparentBackground;
     private SKSizeI? _screenSize;
 
-    public OcrSubtitleBdn(Subtitle subtitle, string bdnFileName, bool isSon, bool makeTransparent = false, bool autoTransparentBackground = false)
+    public OcrSubtitleBdn(Subtitle subtitle, string bdnFileName, bool makeTransparent = false, bool autoTransparentBackground = false)
     {
         _bdnXmlSubtitle = subtitle;
         _bdnFileName = bdnFileName;
-        _isSon = isSon;
         _makeTransparent = makeTransparent;
         _autoTransparentBackground = autoTransparentBackground;
 
@@ -172,13 +170,6 @@ public class OcrSubtitleBdn : IOcrSubtitle
 
                 if (b != null)
                 {
-                    //TODO:
-                    //if (_isSon && checkBoxCustomFourColors.Checked)
-                    //{
-                    //    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
-                    //    b = ApplyCustomColors(b, background, pattern, emphasis1, emphasis2);
-                    //}
-
                     if (_makeTransparent && _autoTransparentBackground)
                     {
                         b = MakeTransparent(b);
@@ -237,80 +228,6 @@ public class OcrSubtitleBdn : IOcrSubtitle
 
             transparent.NotifyPixelsChanged();
             return transparent;
-        }
-        finally
-        {
-            if (ownsSource)
-            {
-                source.Dispose();
-            }
-        }
-    }
-
-    // Helper method to apply custom colors (replaces the FastBitmap logic) - same raw-word
-    // rewrite as MakeTransparent (this one runs twice per image part in the merge branch).
-    internal static SKBitmap ApplyCustomColors(SKBitmap original, SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2)
-    {
-        var source = EnsureReadable32Bit(original, out var ownsSource);
-        try
-        {
-            var result = new SKBitmap(new SKImageInfo(source.Width, source.Height, source.ColorType, source.AlphaType));
-
-            unsafe
-            {
-                var width = source.Width;
-                var height = source.Height;
-                var srcBase = (byte*)source.GetPixels();
-                var dstBase = (byte*)result.GetPixels();
-                var srcStride = source.RowBytes;
-                var dstStride = result.RowBytes;
-
-                const uint rgbMask = 0x00FFFFFF;
-                var swapRedBlue = source.ColorType == SKColorType.Bgra8888;
-                var red = PackRgb(SKColors.Red, swapRedBlue);
-                var blue = PackRgb(SKColors.Blue, swapRedBlue);
-                var white = PackRgb(SKColors.White, swapRedBlue);
-                var black = PackRgb(SKColors.Black, swapRedBlue);
-                var emphasis2Packed = Pack(emphasis2, swapRedBlue);
-                var patternPacked = Pack(pattern, swapRedBlue);
-                var backgroundPacked = Pack(background, swapRedBlue);
-                var emphasis1Packed = Pack(emphasis1, swapRedBlue);
-
-                for (var y = 0; y < height; y++)
-                {
-                    var srcRow = (uint*)(srcBase + y * srcStride);
-                    var dstRow = (uint*)(dstBase + y * dstStride);
-                    for (var x = 0; x < width; x++)
-                    {
-                        var pixel = srcRow[x];
-                        var rgb = pixel & rgbMask;
-
-                        if (rgb == red) // normally anti-alias
-                        {
-                            dstRow[x] = emphasis2Packed;
-                        }
-                        else if (rgb == blue) // normally text?
-                        {
-                            dstRow[x] = patternPacked;
-                        }
-                        else if (rgb == white) // normally background
-                        {
-                            dstRow[x] = backgroundPacked;
-                        }
-                        else if (rgb == black) // outline/border
-                        {
-                            dstRow[x] = emphasis1Packed;
-                        }
-                        else
-                        {
-                            dstRow[x] = pixel;
-                        }
-                    }
-                }
-            }
-
-            result.NotifyPixelsChanged();
-            return result;
         }
         finally
         {

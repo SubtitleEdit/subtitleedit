@@ -1779,12 +1779,6 @@ public static class UiUtil
         return control;
     }
 
-    public static Label WithBold(this Label control)
-    {
-        control.FontWeight = FontWeight.Bold;
-        return control;
-    }
-
     public static Label WithOpacity(this Label control, double opacity)
     {
         control.Opacity = opacity;
@@ -1814,12 +1808,6 @@ public static class UiUtil
     public static Button WithPadding(this Button control, int padding)
     {
         control.Padding = new Thickness(padding);
-        return control;
-    }
-
-    public static Button WithBold(this Button control)
-    {
-        control.FontWeight = FontWeight.Bold;
         return control;
     }
 

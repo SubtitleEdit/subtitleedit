@@ -65,7 +65,6 @@ internal class IconNames
     public const string FormatFont = "mdi-format-font";
     public const string FormatListChecks = "mdi-format-list-checks";
     public const string FormTextBox = "mdi-form-textbox";
-    public const string Fullscreen = "mdi-fullscreen";
     public const string Help = "mdi-help";
     public const string History = "mdi-history";
     public const string Image = "mdi-image";

@@ -769,17 +769,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             );
         }
 
-        public SKColor GetPixelNext()
-        {
-            _pixelAddress += 4;
-            return new SKColor(
-                _bitmapData[_pixelAddress + 2], // red
-                _bitmapData[_pixelAddress + 1], // green
-                _bitmapData[_pixelAddress],     // blue
-                _bitmapData[_pixelAddress + 3]  // alpha
-            );
-        }
-
         public void SetPixel(int x, int y, SKColor color)
         {
             _pixelAddress = (x * 4) + (y * _widthX4);
@@ -821,83 +810,6 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             maxDiff = smallestDiff;
             return smallestDiffIndex;
-        }
-
-        public SKBitmap ConvertTo8BitsPerPixel()
-        {
-            var newBitmap = new SKBitmap(Width, Height, SKColorType.Gray8, SKAlphaType.Opaque);
-            var palette = new List<SKColor> { SKColors.Transparent };
-            var pixels = new byte[Width * Height];
-
-            // Exact-colour shortcut past the linear palette scan. Only outcomes a later scan is
-            // bound to repeat are cached: FindBestMatch stops at the first entry closer than 4 and
-            // the palette only ever grows at the end, so such a hit can never be overtaken; a
-            // colour that was just appended is found by that same early stop from then on; and once
-            // the palette is full at 255 entries nothing more is added, so every result is frozen.
-            // None of those outcomes appends to the palette, so a hit cannot skip an insertion.
-            // The cache is capped because a photographic source can hold millions of distinct
-            // colours: past the cap the linear scan simply runs again, so the only thing lost is
-            // the shortcut. Subtitle bitmaps stay far below it.
-            const int maxCachedColors = 1 << 16;
-            var seen = new Dictionary<uint, byte>();
-            var data = _bitmapData.AsSpan();
-            var packed = MemoryMarshal.Cast<byte, uint>(_bitmapData.AsSpan());
-
-            for (int p = 0, i = 0; p < pixels.Length; p++, i += 4)
-            {
-                var alpha = data[i + 3];
-                if (alpha < 5)
-                {
-                    pixels[p] = 0;
-                    continue;
-                }
-
-                if (seen.TryGetValue(packed[p], out var known))
-                {
-                    pixels[p] = known;
-                    continue;
-                }
-
-                var c = new SKColor(data[i + 2], data[i + 1], data[i], alpha);
-                var index = FindBestMatch(c, palette, out var maxDiff);
-                byte value;
-                bool repeatable;
-                if (index == -1 && palette.Count < 255)
-                {
-                    value = (byte)palette.Count;
-                    palette.Add(c);
-                    repeatable = true;
-                }
-                else if (palette.Count < 200 && maxDiff > 5)
-                {
-                    value = (byte)palette.Count;
-                    palette.Add(c);
-                    repeatable = true;
-                }
-                else if (palette.Count < 255 && maxDiff > 15)
-                {
-                    value = (byte)palette.Count;
-                    palette.Add(c);
-                    repeatable = true;
-                }
-                else
-                {
-                    value = index >= 0 ? (byte)index : (byte)0;
-                    repeatable = maxDiff < 4 || palette.Count >= 255;
-                }
-
-                pixels[p] = value;
-                if (repeatable && seen.Count < maxCachedColors)
-                {
-                    seen[packed[p]] = value;
-                }
-            }
-
-            // Copy pixels to the new bitmap
-            IntPtr destPtr = newBitmap.GetPixels();
-            Marshal.Copy(pixels, 0, destPtr, pixels.Length);
-
-            return newBitmap;
         }
 
         public NikseBitmap CopyRectangle(SKRect section)

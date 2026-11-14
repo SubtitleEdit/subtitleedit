@@ -1707,9 +1707,4 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         UpdateNonAssaPreview();
     }
-
-    internal void TextBoxChanged(object? sender, TextChangedEventArgs e)
-    {
-        UpdateNonAssaPreview();
-    }
 }

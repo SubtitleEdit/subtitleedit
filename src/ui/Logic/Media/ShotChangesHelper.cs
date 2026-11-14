@@ -199,45 +199,6 @@ public class ShotChangesHelper
 
     // Util functions
 
-    public static double? GetPreviousShotChange(List<double> shotChanges, TimeCode currentTime)
-    {
-        if (shotChanges == null || shotChanges.Count == 0)
-        {
-            return null;
-        }
-
-        var maxDifference = (TimeCodesBeautifierUtils.GetFrameDurationMs() - 1) / 1000;
-        var previousShotChange = shotChanges.FirstOnOrBefore(currentTime.TotalSeconds, maxDifference, -1);
-        if (previousShotChange >= 0)
-        {
-            return previousShotChange;
-        }
-
-        return null;
-    }
-
-    public static double? GetPreviousShotChangeInMs(List<double> shotChanges, TimeCode currentTime)
-    {
-        var previousShotChange = GetPreviousShotChange(shotChanges, currentTime);
-        if (previousShotChange != null)
-        {
-            return previousShotChange * 1000;
-        }
-
-        return null;
-    }
-
-    public static double? GetPreviousShotChangePlusGapInMs(List<double> shotChanges, TimeCode currentTime)
-    {
-        var previousShotChangeInMs = GetPreviousShotChangeInMs(shotChanges, currentTime);
-        if (previousShotChangeInMs != null)
-        {
-            return previousShotChangeInMs + TimeCodesBeautifierUtils.GetInCuesGapMs();
-        }
-
-        return null;
-    }
-
     public static double? GetNextShotChange(List<double> shotChanges, TimeCode currentTime)
     {
         if (shotChanges == null || shotChanges.Count == 0)
