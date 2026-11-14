@@ -258,7 +258,7 @@ public class AdvancedTranslatorBatchCutTests
     }
 
     [Fact]
-    public void MeasureExpansion_IsTranslationCharactersPerSourceCharacter()
+    public void MeasureExpansion_IsWeightedMedianOfTranslationCharactersPerSourceCharacter()
     {
         var pairs = new List<(string Source, string Translation)>
         {
@@ -268,7 +268,8 @@ public class AdvancedTranslatorBatchCutTests
             ("Nobody. Just me.", "Niemand. Nur ich."),
         };
 
-        Assert.Equal(89.0 / 92, LlamaCppAdvancedProtocol.MeasureExpansion(pairs)!.Value, 3);
+        // Ratios 25/31, 25/26, 17/16, 22/19 over 92 source characters: the median falls in 25/26.
+        Assert.Equal(25.0 / 26, LlamaCppAdvancedProtocol.MeasureExpansion(pairs)!.Value, 3);
     }
 
     [Fact]
@@ -291,9 +292,10 @@ public class AdvancedTranslatorBatchCutTests
         };
         var history = new List<LlamaCppAdvancedProtocol.HistoryPair> { new("Erik.", "Erik.") };
 
-        // Line 1 left out: (25 + 22 + 17) / (31 + 19 + 16); with the history pair: (64 + 5) / (66 + 5).
-        Assert.Equal(64.0 / 66, AdvancedTranslatorBase.MeasureExpansion(map, Lines, NoHistory, 1)!.Value, 3);
-        Assert.Equal(69.0 / 71, AdvancedTranslatorBase.MeasureExpansion(map, Lines, history, 1)!.Value, 3);
+        // Line 1 left out: ratios 25/31, 17/16, 22/19 - the median is 17/16; the history pair
+        // (5/5) moves it to 1.
+        Assert.Equal(17.0 / 16, AdvancedTranslatorBase.MeasureExpansion(map, Lines, NoHistory, 1)!.Value, 3);
+        Assert.Equal(1.0, AdvancedTranslatorBase.MeasureExpansion(map, Lines, history, 1)!.Value, 3);
     }
 
     [Fact]
@@ -308,6 +310,28 @@ public class AdvancedTranslatorBatchCutTests
         };
 
         Assert.Equal(3, AdvancedTranslatorBase.FindPlaceholderTranslation(map, Lines, NoHistory));
+    }
+
+    // Two runaways in a short batch must not lift each other's budget: with the overall ratio,
+    // each saw the other's 130 characters and measured 4.2, a budget of 184.
+    [Fact]
+    public void TwoRunawaysInShortBatch_AreReported()
+    {
+        const string runaway = "Komm hoch. Und dann reden wir darüber, was gestern passiert ist, und warum niemand mir etwas gesagt hat, obwohl alle es wussten.";
+        var lines = new List<LlamaCppAdvancedProtocol.BatchLine>
+        {
+            new(1, "Where were you last night?"),
+            new(2, "Come on up."),
+            new(3, "Come on up."),
+        };
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Wo warst du letzte Nacht?",
+            [2] = runaway,
+            [3] = runaway,
+        };
+
+        Assert.Equal(2, AdvancedTranslatorBase.FindPlaceholderTranslation(map, lines, NoHistory));
     }
 
     // #16885: Hy-MT2 7B's reply to the issue's rows 16-20. Row 17 is 4.8 times its source in

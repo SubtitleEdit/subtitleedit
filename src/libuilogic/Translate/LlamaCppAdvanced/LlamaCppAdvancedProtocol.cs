@@ -259,17 +259,43 @@ public static class LlamaCppAdvancedProtocol
     /// pairs and the other lines of the reply being checked, never the line itself, so a runaway
     /// cannot calibrate itself. Null below <see cref="MinCalibrationChars"/> source characters,
     /// where the ratio would be noise.
+    /// The value is the lower median of the per-pair ratios, weighted by source length, not the
+    /// overall ratio: a second runaway in the same reply would otherwise lift the budget of the
+    /// first, and in a short batch two of them let each other through.
     /// </summary>
     public static double? MeasureExpansion(IEnumerable<(string Source, string Translation)> pairs)
     {
-        long sourceChars = 0, translationChars = 0;
+        var ratios = new List<(double Ratio, int SourceChars)>();
+        long sourceChars = 0;
         foreach (var (source, translation) in pairs)
         {
-            sourceChars += (source ?? string.Empty).Trim().Length;
-            translationChars += (translation ?? string.Empty).Trim().Length;
+            var sourceLength = (source ?? string.Empty).Trim().Length;
+            if (sourceLength == 0)
+            {
+                continue;
+            }
+
+            ratios.Add(((double)(translation ?? string.Empty).Trim().Length / sourceLength, sourceLength));
+            sourceChars += sourceLength;
         }
 
-        return sourceChars >= MinCalibrationChars ? (double)translationChars / sourceChars : null;
+        if (sourceChars < MinCalibrationChars)
+        {
+            return null;
+        }
+
+        ratios.Sort((a, b) => a.Ratio.CompareTo(b.Ratio));
+        long cumulative = 0;
+        foreach (var (ratio, length) in ratios)
+        {
+            cumulative += length;
+            if (cumulative * 2 >= sourceChars)
+            {
+                return ratio;
+            }
+        }
+
+        return ratios[ratios.Count - 1].Ratio;
     }
 
     private static bool IsLeakedStructure(string source, string translation)
