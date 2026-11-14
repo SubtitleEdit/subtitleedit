@@ -216,6 +216,18 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             {
                 _regExList.Remove(kp.Key);
             }
+
+            // The spell-checked expressions were only read from the shipped list, so a gated rule
+            // added to the _User file never ran, while a plain one next to it did (#16377). The
+            // user's rules run after the shipped ones; one the shipped list already has is skipped.
+            var shippedSpellCheckFinds = new HashSet<string>(_regExSpellCheckList.Select(p => p.Find), StringComparer.Ordinal);
+            foreach (var spellCheckRegex in SpellCheckRegex.LoadRegExList(userDoc, "RegularExpressionsIfSpelledCorrectly"))
+            {
+                if (shippedSpellCheckFinds.Add(spellCheckRegex.Find))
+                {
+                    _regExSpellCheckList.Add(spellCheckRegex);
+                }
+            }
         }
 
         public static OcrFixReplaceList2 FromLanguageId(string languageId)
