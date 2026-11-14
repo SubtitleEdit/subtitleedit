@@ -8861,6 +8861,9 @@ public partial class MainViewModel :
         // Carry over the header that SortAndLoad spent its merge building, or the joined file is
         // written with no style table at all.
         _subtitle.Header = result.JoinedSubtitle.Header;
+        // The format comes from the joined files, so Save as must offer it instead of the
+        // "Default Save as format" setting, or joined ASSA files are suggested as .srt (#16899).
+        _formatChangedByUser = SelectedSubtitleFormat is not SubRip;
         SelectAndScrollToRow(0);
         ShowStatus(Se.Language.Main.JoinedSubtitleLoaded);
     }
@@ -8898,6 +8901,8 @@ public partial class MainViewModel :
         SetSubtitles(result.ResultSubtitle);
         // Carry over the header so the merged styles (Style1/Style2) are kept
         _subtitle.Header = result.ResultSubtitle.Header;
+        // Keep the merged format (and its styles) on Save as - see ShowToolsJoin (#16899).
+        _formatChangedByUser = SelectedSubtitleFormat is not SubRip;
         SelectAndScrollToRow(0);
     }
 
