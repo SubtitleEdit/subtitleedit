@@ -132,25 +132,19 @@ public static class AudioCppTtsSettingsAdapters
 
 public partial class AudioCppTtsSettingsViewModel : ObservableObject
 {
-    // A SolidColorBrush set as Shape.Fill is parented into that shape's visual tree, so the
-    // same instance can't be shared across bound Ellipses. Fresh brush per assignment.
-    private static IBrush Green() => new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
-    private static IBrush Amber() => new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00));
-    private static IBrush Red() => new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));
-    private static IBrush Grey() => new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
 
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
 
     [ObservableProperty] private string _engineLabel = string.Empty;
-    [ObservableProperty] private IBrush _engineBrush = Grey();
+    [ObservableProperty] private IBrush _engineBrush = TtsSettingsStatus.Grey();
     [ObservableProperty] private string _engineDownloadButtonText = string.Empty;
     [ObservableProperty] private bool _isEngineInstalled;
 
     [ObservableProperty] private string _modelDefaultLabel = string.Empty;
-    [ObservableProperty] private IBrush _modelDefaultBrush = Grey();
+    [ObservableProperty] private IBrush _modelDefaultBrush = TtsSettingsStatus.Grey();
     [ObservableProperty] private string _modelAltLabel = string.Empty;
-    [ObservableProperty] private IBrush _modelAltBrush = Grey();
+    [ObservableProperty] private IBrush _modelAltBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _voicesLabel = string.Empty;
     [ObservableProperty] private string _modelsFolder = string.Empty;
@@ -188,7 +182,7 @@ public partial class AudioCppTtsSettingsViewModel : ObservableObject
         if (!IsEngineInstalled)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineNotInstalled, "audio.cpp");
-            EngineBrush = Red();
+            EngineBrush = TtsSettingsStatus.Red();
             EngineDownloadButtonText = string.Format(Se.Language.General.DownloadX, "audio.cpp");
         }
         else if (!AudioCppRuntime.SupportsFamily(Adapter.FamilyName)
@@ -196,22 +190,22 @@ public partial class AudioCppTtsSettingsViewModel : ObservableObject
         {
             // A build that predates this engine's family is flagged too, even without a sidecar.
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "audio.cpp" + backendSuffix);
-            EngineBrush = Amber();
+            EngineBrush = TtsSettingsStatus.Amber();
             EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "audio.cpp");
         }
         else
         {
             EngineLabel = "audio.cpp" + backendSuffix;
-            EngineBrush = Green();
+            EngineBrush = TtsSettingsStatus.Green();
             EngineDownloadButtonText = string.Format(Se.Language.General.ReDownloadX, "audio.cpp");
         }
 
-        ApplyModelStatus(
+        TtsSettingsStatus.ApplyModelStatus(
             Adapter.AreModelsInstalled(Adapter.ModelKeyDefault),
             label => ModelDefaultLabel = label,
             brush => ModelDefaultBrush = brush);
 
-        ApplyModelStatus(
+        TtsSettingsStatus.ApplyModelStatus(
             Adapter.AreModelsInstalled(Adapter.ModelKeyAlt),
             label => ModelAltLabel = label,
             brush => ModelAltBrush = brush);
@@ -235,24 +229,6 @@ public partial class AudioCppTtsSettingsViewModel : ObservableObject
         {
             VoicesLabel = string.Empty;
         }
-    }
-
-    /// <summary>
-    /// Unlike the CrispASR engines there is no auto-download fallback: audio.cpp is pointed at
-    /// a model directory and fails if the GGUF is not there, so a missing model is simply
-    /// "Not downloaded" rather than "Auto-download on first use".
-    /// </summary>
-    private static void ApplyModelStatus(bool installed, Action<string> setLabel, Action<IBrush> setBrush)
-    {
-        if (installed)
-        {
-            setLabel("Installed");
-            setBrush(Green());
-            return;
-        }
-
-        setLabel("Not downloaded");
-        setBrush(Grey());
     }
 
     [RelayCommand]

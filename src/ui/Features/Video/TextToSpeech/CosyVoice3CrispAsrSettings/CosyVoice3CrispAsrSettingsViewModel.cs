@@ -20,29 +20,25 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSetti
 
 public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
 {
-    private static IBrush Green() => new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
-    private static IBrush Amber() => new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00));
-    private static IBrush Red() => new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));
-    private static IBrush Grey() => new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
 
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
 
     [ObservableProperty] private string _engineLabel = string.Empty;
-    [ObservableProperty] private IBrush _engineBrush = Grey();
+    [ObservableProperty] private IBrush _engineBrush = TtsSettingsStatus.Grey();
     [ObservableProperty] private string _engineDownloadButtonText = string.Empty;
 
     [ObservableProperty] private string _q4KBundleLabel = string.Empty;
-    [ObservableProperty] private IBrush _q4KBundleBrush = Grey();
+    [ObservableProperty] private IBrush _q4KBundleBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _f16BundleLabel = string.Empty;
-    [ObservableProperty] private IBrush _f16BundleBrush = Grey();
+    [ObservableProperty] private IBrush _f16BundleBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _rlQ4KBundleLabel = string.Empty;
-    [ObservableProperty] private IBrush _rlQ4KBundleBrush = Grey();
+    [ObservableProperty] private IBrush _rlQ4KBundleBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _rlF16BundleLabel = string.Empty;
-    [ObservableProperty] private IBrush _rlF16BundleBrush = Grey();
+    [ObservableProperty] private IBrush _rlF16BundleBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _presetsLabel = string.Empty;
     [ObservableProperty] private string _voicesLabel = string.Empty;
@@ -104,19 +100,19 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
         if (!IsEngineInstalled)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineNotInstalled, "CrispASR");
-            EngineBrush = Red();
+            EngineBrush = TtsSettingsStatus.Red();
             EngineDownloadButtonText = string.Format(Se.Language.General.DownloadX, "CrispASR");
         }
         else if (CosyVoice3CrispAsr.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
-            EngineBrush = Amber();
+            EngineBrush = TtsSettingsStatus.Amber();
             EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "CrispASR");
         }
         else
         {
             EngineLabel = "CrispASR";
-            EngineBrush = Green();
+            EngineBrush = TtsSettingsStatus.Green();
             EngineDownloadButtonText = string.Format(Se.Language.General.ReDownloadX, "CrispASR");
         }
 
@@ -149,25 +145,25 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
 
         // CosyVoice3 needs 6 files per quant — the status row reports the bundle as a whole
         // (green only when every file is present + correct-sized).
-        ApplyModelStatus(
+        TtsSettingsStatus.ApplyModelStatus(
             CosyVoice3CrispAsr.AreModelsInstalled(CosyVoice3CrispAsr.ModelKeyQ4K),
             IsEngineInstalled,
             label => Q4KBundleLabel = label,
             brush => Q4KBundleBrush = brush);
 
-        ApplyModelStatus(
+        TtsSettingsStatus.ApplyModelStatus(
             CosyVoice3CrispAsr.AreModelsInstalled(CosyVoice3CrispAsr.ModelKeyF16),
             IsEngineInstalled,
             label => F16BundleLabel = label,
             brush => F16BundleBrush = brush);
 
-        ApplyModelStatus(
+        TtsSettingsStatus.ApplyModelStatus(
             CosyVoice3CrispAsr.AreModelsInstalled(CosyVoice3CrispAsr.ModelKeyRlQ4K),
             IsEngineInstalled,
             label => RlQ4KBundleLabel = label,
             brush => RlQ4KBundleBrush = brush);
 
-        ApplyModelStatus(
+        TtsSettingsStatus.ApplyModelStatus(
             CosyVoice3CrispAsr.AreModelsInstalled(CosyVoice3CrispAsr.ModelKeyRlF16),
             IsEngineInstalled,
             label => RlF16BundleLabel = label,
@@ -186,26 +182,6 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
         {
             VoicesLabel = string.Empty;
         }
-    }
-
-    private static void ApplyModelStatus(bool fileInstalled, bool engineInstalled, Action<string> setLabel, Action<IBrush> setBrush)
-    {
-        if (fileInstalled)
-        {
-            setLabel("Installed");
-            setBrush(Green());
-            return;
-        }
-
-        if (!engineInstalled)
-        {
-            setLabel("CrispASR required");
-            setBrush(Grey());
-            return;
-        }
-
-        setLabel("Auto-download on first use");
-        setBrush(Grey());
     }
 
     [RelayCommand]

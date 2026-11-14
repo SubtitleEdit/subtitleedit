@@ -18,41 +18,34 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.PocketTtsCrispAsrSettin
 
 public partial class PocketTtsCrispAsrSettingsViewModel : ObservableObject
 {
-    // A SolidColorBrush set as Shape.Fill is parented into that shape's visual tree, so the
-    // same instance can't be shared across multiple bound Ellipses (only one dot would render).
-    // Construct a fresh brush per assignment instead.
-    private static IBrush Green() => new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
-    private static IBrush Amber() => new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00));
-    private static IBrush Red() => new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));
-    private static IBrush Grey() => new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
 
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
 
     [ObservableProperty] private string _engineLabel = string.Empty;
-    [ObservableProperty] private IBrush _engineBrush = Grey();
+    [ObservableProperty] private IBrush _engineBrush = TtsSettingsStatus.Grey();
     [ObservableProperty] private string _engineDownloadButtonText = string.Empty;
 
     [ObservableProperty] private string _englishF16Label = string.Empty;
-    [ObservableProperty] private IBrush _englishF16Brush = Grey();
+    [ObservableProperty] private IBrush _englishF16Brush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _englishQ8_0Label = string.Empty;
-    [ObservableProperty] private IBrush _englishQ8_0Brush = Grey();
+    [ObservableProperty] private IBrush _englishQ8_0Brush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _germanLabel = string.Empty;
-    [ObservableProperty] private IBrush _germanBrush = Grey();
+    [ObservableProperty] private IBrush _germanBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _spanishLabel = string.Empty;
-    [ObservableProperty] private IBrush _spanishBrush = Grey();
+    [ObservableProperty] private IBrush _spanishBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _italianLabel = string.Empty;
-    [ObservableProperty] private IBrush _italianBrush = Grey();
+    [ObservableProperty] private IBrush _italianBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _portugueseLabel = string.Empty;
-    [ObservableProperty] private IBrush _portugueseBrush = Grey();
+    [ObservableProperty] private IBrush _portugueseBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _frenchLabel = string.Empty;
-    [ObservableProperty] private IBrush _frenchBrush = Grey();
+    [ObservableProperty] private IBrush _frenchBrush = TtsSettingsStatus.Grey();
 
     [ObservableProperty] private string _voicesLabel = string.Empty;
 
@@ -95,19 +88,19 @@ public partial class PocketTtsCrispAsrSettingsViewModel : ObservableObject
         if (!IsEngineInstalled)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineNotInstalled, "CrispASR");
-            EngineBrush = Red();
+            EngineBrush = TtsSettingsStatus.Red();
             EngineDownloadButtonText = string.Format(Se.Language.General.DownloadX, "CrispASR");
         }
         else if (PocketTtsCrispAsr.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
             EngineLabel = string.Format(Se.Language.Video.TtsEngineUpdateAvailable, "CrispASR");
-            EngineBrush = Amber();
+            EngineBrush = TtsSettingsStatus.Amber();
             EngineDownloadButtonText = string.Format(Se.Language.General.UpdateX, "CrispASR");
         }
         else
         {
             EngineLabel = "CrispASR";
-            EngineBrush = Green();
+            EngineBrush = TtsSettingsStatus.Green();
             EngineDownloadButtonText = string.Format(Se.Language.General.ReDownloadX, "CrispASR");
         }
 
@@ -181,7 +174,7 @@ public partial class PocketTtsCrispAsrSettingsViewModel : ObservableObject
         if (PocketTtsCrispAsr.IsValidLocalModelFile(path, fileName))
         {
             setLabel("Installed");
-            setBrush(Green());
+            setBrush(TtsSettingsStatus.Green());
             return;
         }
 
@@ -190,12 +183,12 @@ public partial class PocketTtsCrispAsrSettingsViewModel : ObservableObject
             // No CrispASR runtime means there's nothing to auto-download into, so don't
             // promise a download that can't happen until the user installs CrispASR.
             setLabel("CrispASR required");
-            setBrush(Grey());
+            setBrush(TtsSettingsStatus.Grey());
             return;
         }
 
         setLabel("Auto-download on first use");
-        setBrush(Grey());
+        setBrush(TtsSettingsStatus.Grey());
     }
 
     [RelayCommand]
