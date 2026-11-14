@@ -1,5 +1,6 @@
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared.Bookmarks;
@@ -63,7 +64,7 @@ public class BookmarksListFilterTests
                     AvaloniaHeadlessPlatform.ForceRenderTimerTick();
                 }
 
-                window.CaptureRenderedFrame()!.Save(Path.Combine(dir, "bookmarks-list.png"));
+                window.CaptureRenderedFrame()!.Save(Path.Combine(dir, "bookmarks-list.png"), PngBitmapEncoderOptions.Default);
             }
         }
         finally
