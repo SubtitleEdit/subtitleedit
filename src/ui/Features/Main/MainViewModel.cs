@@ -28550,6 +28550,10 @@ public partial class MainViewModel :
         _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
         _converted = true;
 
+        // The format comes from the track (ASSA, SSA, WebVTT, ...), so Save as must offer it instead
+        // of the "Default Save as format" setting, which suggested .srt for an ASSA track (#16899).
+        _formatChangedByUser = SelectedSubtitleFormat is not SubRip;
+
         return true;
     }
 
