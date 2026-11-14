@@ -1472,7 +1472,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             {
                 try
                 {
-                    doc.Load(_replaceListXmlFileName);
+                    LoadXmlFile(doc, _replaceListXmlFileName);
                 }
                 catch (Exception exception)
                 {
@@ -1487,6 +1487,57 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             return doc;
         }
 
+        /// <summary>
+        /// Loads a replace list, also when a text editor saved it as ANSI instead of UTF-8 (#16377).
+        /// A hand-made "_User" file with "¡" or "Á" in it then failed with "Invalid character in the
+        /// given encoding" and was silently replaced by an empty list, so none of its rules ran.
+        /// </summary>
+        internal static void LoadXmlFile(XmlDocument doc, string fileName)
+        {
+            try
+            {
+                doc.Load(fileName);
+                return;
+            }
+            catch (XmlException)
+            {
+                var bytes = File.ReadAllBytes(fileName);
+                if (IsValidUtf8(bytes))
+                {
+                    throw; // A real XML error, not an encoding one.
+                }
+
+                // The declaration may still say encoding="utf-8" - LoadXml reads the already
+                // decoded text and ignores it.
+                doc.LoadXml(GetAnsiEncoding().GetString(bytes));
+            }
+        }
+
+        private static bool IsValidUtf8(byte[] bytes)
+        {
+            try
+            {
+                _ = new UTF8Encoding(false, true).GetString(bytes);
+                return true;
+            }
+            catch (DecoderFallbackException)
+            {
+                return false;
+            }
+        }
+
+        private static Encoding GetAnsiEncoding()
+        {
+            try
+            {
+                return Encoding.GetEncoding(1252); // Needs the code pages provider (registered by the app).
+            }
+            catch
+            {
+                return Encoding.Latin1;
+            }
+        }
+
         private string ReplaceListXmlFileNameUser => GetUserFileName(_replaceListXmlFileName);
 
         private XmlDocument LoadXmlReplaceListUserDocument()
@@ -1497,7 +1548,7 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr.FixEngine
             {
                 try
                 {
-                    doc.Load(ReplaceListXmlFileNameUser);
+                    LoadXmlFile(doc, ReplaceListXmlFileNameUser);
                 }
                 catch (Exception exception)
                 {
