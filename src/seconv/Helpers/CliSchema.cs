@@ -90,6 +90,8 @@ internal static class CliSchema
         ],
     };
 
+    private static readonly string[] BoolValues = ["true", "false"];
+
     /// <summary>
     /// Value-carrying options that belong to the operations pipeline rather than to output
     /// configuration. The boolean operations are taken from
@@ -162,7 +164,11 @@ internal static class CliSchema
                 Type: DescribeType(property.PropertyType),
                 Group: isOperation ? "operation" : "option",
                 Description: ReadDescription(property),
-                Choices: Choices.TryGetValue(name, out var choices) ? choices : null,
+                // A bool? option is a flag that also takes an explicit value
+                // (--translate-keep-line-breaks:false), so list the two it accepts.
+                Choices: Choices.TryGetValue(name, out var choices)
+                    ? choices
+                    : Nullable.GetUnderlyingType(property.PropertyType) == typeof(bool) ? BoolValues : null,
                 Discover: DiscoveryCommands.TryGetValue(name, out var discover) ? discover : null,
                 // A bracketed placeholder ("--apply-min-gap [MS]") marks a Spectre
                 // FlagValue option whose value may be omitted entirely.
