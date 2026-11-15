@@ -22,6 +22,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
+        public override double MaxTimeCodeTotalMilliseconds => TimeCode.MaxSupportedTotalMilliseconds; // 3+ digit hours (#16937)
+
         // Carries the region of every paragraph, and the regions themselves in the header.
         public override bool HasPositionSupport => true;
 

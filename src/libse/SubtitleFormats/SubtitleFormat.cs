@@ -749,6 +749,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </remarks>
         public virtual SubtitleFormatLimits FormatLimits => null;
 
+        /// <summary>
+        /// Largest time code the format can write. Defaults to 99:59:59,999; text formats whose
+        /// readers take 3+ digit hours (SubRip, WebVTT, TTML, ASSA/SSA) allow up to
+        /// <see cref="TimeCode.MaxSupportedTotalMilliseconds"/> (#16937).
+        /// </summary>
+        public virtual double MaxTimeCodeTotalMilliseconds => TimeCode.MaxTimeTotalMilliseconds;
+
         public bool BatchMode { get; set; }
         public double? BatchSourceFrameRate { get; set; }
 

@@ -265,6 +265,13 @@ public partial class MainViewModel :
     [ObservableProperty] private ObservableCollection<SubtitleFormat> _subtitleFormats;
     [ObservableProperty] private SubtitleFormat _selectedSubtitleFormat;
 
+    // Typed/pasted time codes follow the format's limit: 99:59:59,999 by default, 9999 hours for
+    // SubRip, WebVTT, TTML and ASSA/SSA (#16937).
+    partial void OnSelectedSubtitleFormatChanged(SubtitleFormat value)
+    {
+        TimeCodeUpDown.MaxInputTotalMilliseconds = value?.MaxTimeCodeTotalMilliseconds ?? TimeCode.MaxTimeTotalMilliseconds;
+    }
+
     [ObservableProperty] private ObservableCollection<TextEncoding> _encodings;
     [ObservableProperty] private TextEncoding _selectedEncoding;
 
@@ -29898,7 +29905,7 @@ public partial class MainViewModel :
             return true;
         }
 
-        var limits = format.FormatLimits;
+        var limits = SubtitleFormatLimits.ForFormat(format);
         if (limits == null)
         {
             return true;
@@ -29911,7 +29918,7 @@ public partial class MainViewModel :
         }
 
         var vm = await ShowDialogAsync<FormatLimitWarningWindow, FormatLimitWarningViewModel>(
-            vm => vm.Initialize(format, limits, violating));
+            vm => vm.Initialize(format, limits, violating, subtitle));
         return vm.SaveAnywayPressed;
     }
 

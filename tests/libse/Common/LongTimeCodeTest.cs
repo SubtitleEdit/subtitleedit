@@ -108,6 +108,52 @@ public class LongTimeCodeTest
     }
 
     [Fact]
+    public void FormatsDefaultToTheOldLimit()
+    {
+        Assert.Equal(TimeCode.MaxTimeTotalMilliseconds, new Ebu().MaxTimeCodeTotalMilliseconds);
+        Assert.Equal(TimeCode.MaxTimeTotalMilliseconds, new MicroDvd().MaxTimeCodeTotalMilliseconds);
+        Assert.Equal(TimeCode.MaxTimeTotalMilliseconds, new ScenaristClosedCaptions().MaxTimeCodeTotalMilliseconds);
+    }
+
+    [Fact]
+    public void LongTimeCodeFormatsAllow9999Hours()
+    {
+        SubtitleFormat[] formats =
+        {
+            new SubRip(), new WebVTT(), new TimedText10(), new AdvancedSubStationAlpha(), new SubStationAlpha(),
+        };
+        foreach (var format in formats)
+        {
+            Assert.Equal(TimeCode.MaxSupportedTotalMilliseconds, format.MaxTimeCodeTotalMilliseconds);
+            Assert.Null(SubtitleFormatLimits.ForFormat(format)); // nothing to warn about
+        }
+    }
+
+    [Fact]
+    public void FormatLimitsListLinesPastTheTimeCodeLimit()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("Fine", 1000, 2000));
+        subtitle.Paragraphs.Add(new Paragraph("No time", TimeCode.MaxTimeTotalMilliseconds, TimeCode.MaxTimeTotalMilliseconds));
+        subtitle.Paragraphs.Add(new Paragraph("Too late", LongStart, LongEnd));
+
+        var limits = SubtitleFormatLimits.ForFormat(new MicroDvd());
+        Assert.NotNull(limits);
+        Assert.Equal(TimeCode.MaxTimeTotalMilliseconds, limits!.MaxTimeTotalMilliseconds);
+        Assert.True(limits.HasTimeCodeTooLarge(subtitle));
+        Assert.Equal(new List<int> { 3 }, limits.GetViolatingParagraphNumbers(subtitle));
+    }
+
+    [Fact]
+    public void FormatLimitsKeepTextLimitsAndAddTheTimeCodeLimit()
+    {
+        var limits = SubtitleFormatLimits.ForFormat(new ScenaristClosedCaptions());
+        Assert.NotNull(limits);
+        Assert.Equal(32, limits!.MaxCharactersPerLine);
+        Assert.Equal(TimeCode.MaxTimeTotalMilliseconds, limits.MaxTimeTotalMilliseconds);
+    }
+
+    [Fact]
     public void TimedTextReadsHoursPast99()
     {
         var xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
