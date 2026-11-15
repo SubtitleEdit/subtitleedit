@@ -51,7 +51,7 @@ public class AutoTranslateRunnerTest : IDisposable
     }
 
     private static ConversionOptions MakeOptions(string engine = "llamacpp", string? url = null, string? model = null, string to = "de", string? prompt = null, string? apiKey = null,
-        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null, bool? keepLineBreaks = null, SeLlamaCppAdvanced? advanced = null)
+        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null, bool? keepLineBreaks = null, string? requestJson = null, SeLlamaCppAdvanced? advanced = null)
     {
         return new ConversionOptions
         {
@@ -69,6 +69,7 @@ public class AutoTranslateRunnerTest : IDisposable
             TranslateGlossary = glossary,
             TranslateFormality = formality,
             TranslateKeepLineBreaks = keepLineBreaks,
+            TranslateRequestJson = requestJson,
             TranslateAdvancedSettings = advanced,
             Quiet = true,
         };
@@ -718,6 +719,73 @@ public class AutoTranslateRunnerTest : IDisposable
             () => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", history: -1)));
 
         Assert.Contains("--translate-history", ex.Message);
+    }
+
+    // --- --translate-request-json: provider fields merged into every request, checked up front ---
+
+    [Fact]
+    public void Create_Advanced_RequestJsonInline_IsKeptExactly()
+    {
+        // Nothing is unescaped: the \n inside the JSON string stays a JSON escape.
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: "{\"reasoning\": {\"enabled\": false}, \"stop\": [\"\\n\"]}"));
+
+        Assert.Equal("{\"reasoning\": {\"enabled\": false}, \"stop\": [\"\\n\"]}", runner.AdvancedSettings!.RequestJson);
+    }
+
+    [Fact]
+    public void Create_Advanced_RequestJsonFromFile_IsRead()
+    {
+        var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".json");
+        File.WriteAllText(path, "{ \"top_k\": 40 }\n");
+        try
+        {
+            var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: path));
+
+            Assert.Equal("{ \"top_k\": 40 }", runner.AdvancedSettings!.RequestJson);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Theory]
+    [InlineData("{\"top_k\": ", "not valid JSON")]
+    [InlineData("{\"messages\": []}", "\"messages\"")]
+    [InlineData("{\"response_format\": {\"type\": \"text\"}}", "\"response_format\"")]
+    public void Create_Advanced_RequestJsonUnusable_Throws(string requestJson, string expectedInMessage)
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: requestJson)));
+
+        Assert.Contains("--translate-request-json", ex.Message);
+        Assert.Contains(expectedInMessage, ex.Message);
+    }
+
+    [Fact]
+    public void Create_Advanced_RequestJsonMissingFile_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: "no-such-file.json")));
+
+        Assert.Contains("file not found", ex.Message);
+    }
+
+    [Fact]
+    public void Create_Advanced_SettingsFileRequestJson_IsCheckedToo()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", advanced: new SeLlamaCppAdvanced { RequestJson = "[1, 2]" })));
+
+        Assert.Contains("tools.llamaCppAdvanced.requestJson", ex.Message);
+        Assert.Contains("must be a JSON object", ex.Message);
+    }
+
+    [Fact]
+    public void Create_RequestJsonWithRegularEngine_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "ollama", requestJson: "{\"top_k\": 40}")));
+
+        Assert.Contains("--translate-request-json", ex.Message);
+        Assert.Contains("llamacpp-advanced", ex.Message);
     }
 
     [Fact]

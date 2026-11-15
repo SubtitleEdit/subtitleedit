@@ -21,6 +21,12 @@ public class SeLlamaCppAdvanced
     public int MaxTokens { get; set; } = -1;
     public int ContextSize { get; set; } = 16384;
 
+    // Extra request body fields as one JSON object, merged into every request last so they win
+    // over the fields above: provider switches the settings do not know (a reasoning on/off
+    // field, penalties). A null value removes the engine's field; "messages" and
+    // "response_format" are refused (LlamaCppAdvancedClient.ParseRequestJson).
+    public string RequestJson { get; set; } = string.Empty;
+
     // Extra llama-server command-line arguments, appended after SE's own so a repeated flag
     // (e.g. -ngl) overrides SE's value. Local server mode only (#13830).
     public string ServerArguments { get; set; } = string.Empty;

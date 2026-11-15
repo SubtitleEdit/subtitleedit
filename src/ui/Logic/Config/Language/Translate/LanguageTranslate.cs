@@ -54,6 +54,8 @@ public class LanguageTranslate
     public string ExtraServerParametersHint { get; set; }
     public string UseOnlyExtraServerParameters { get; set; }
     public string UseOnlyExtraServerParametersHint { get; set; }
+    public string ExtraRequestJson { get; set; }
+    public string ExtraRequestJsonHint { get; set; }
     public string ServerRunningAtX { get; set; }
     public string CustomPromptHint { get; set; }
     public string EditTranslationHint { get; set; }
@@ -115,6 +117,8 @@ public class LanguageTranslate
         ExtraServerParametersHint = "Additional llama-server command-line arguments, e.g. \"-ngl 30 --no-mmap\" - applied when the local server starts";
         UseOnlyExtraServerParameters = "Use only these parameters";
         UseOnlyExtraServerParametersHint = "Start llama-server with the parameters above instead of Subtitle Edit's own tuning - only the model, host and port are still set";
+        ExtraRequestJson = "Extra request JSON";
+        ExtraRequestJsonHint = "A JSON object merged into every request last, so its fields win over the ones above - e.g. {\"top_k\": 40} or a provider's reasoning switch; a null value removes a field. \"messages\" and \"response_format\" cannot be set";
         ServerRunningAtX = "Server running at {0}";
         CustomPromptHint = "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt";
         EditTranslationHint = "Click the selected row's translation to edit it (Enter saves, Escape cancels)";

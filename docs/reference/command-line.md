@@ -369,6 +369,7 @@ Translated output is named with the target language code — `way.srt --translat
 | `--translate-glossary:<text\|file>` | Advanced engines: terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
 | `--translate-formality:<value>` | Advanced engines: `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
 | `--translate-keep-line-breaks[:false]` | Advanced engines: ask the model to keep each line's number of line breaks, the GUI's "Keep line breaks" switch. On by default; `:false` turns the instruction off. |
+| `--translate-request-json:<json\|file>` | Advanced engines: extra request body fields as one JSON object, inline (starting with `{`) or the path to a `.json` file, merged into every request last so they win over seconv's own fields; a `null` value removes a field. `messages` and `response_format` cannot be set. See [Advanced local engines](#advanced-local-engines). |
 
 **llama.cpp (default engine).** With no `--translate-url`, seconv runs a local `llama-server` for you: it looks for the binary in Subtitle Edit's data folder (`llama.cpp` next to `seconv`, then `%AppData%\Subtitle Edit\llama.cpp` / `~/Library/Application Support/Subtitle Edit/llama.cpp` / `~/.config/Subtitle Edit/llama.cpp`) and falls back to `llama-server` on `PATH`. The server is started on a free localhost port with the model's correct chat-template flags and stopped again when seconv exits. Models resolve against the data folder's `models` subfolder.
 
@@ -474,6 +475,25 @@ completion-only MiLMMT models are refused (use them with `llamacpp`).
 | `--translate-glossary:<text\|file>` | Terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
 | `--translate-formality:<value>` | `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
 | `--translate-keep-line-breaks[:false]` | Ask the model to keep each line's number of line breaks (the GUI's "Keep line breaks" switch). On by default, also when the `--settings` file leaves `keepLineBreaks` out; `:false` turns the instruction off. |
+| `--translate-request-json:<json\|file>` | Extra request body fields as one JSON object (inline, or a `.json` file), merged into every request last so they win: provider switches the options above do not know, e.g. a reasoning on/off field. A `null` value removes seconv's field. `messages` and `response_format` cannot be set. |
+
+`--translate-request-json` carries the fields a provider needs that no option covers. The object is written into
+every request last, so its fields win over seconv's own (`temperature`, `max_tokens`, `cache_prompt`, ...), and a
+`null` removes a field a server rejects. Two fields are refused: `messages`, which the prompt options build, and
+`response_format`, which the engine steps down from json_schema to json_object to none itself when a server
+rejects one. Nothing is unescaped in the value: pass it as JSON, or point at a file. The same object can be set as
+`tools.llamaCppAdvanced.requestJson` in a `--settings` file.
+
+```bash
+# llama.cpp sampling fields the options do not cover
+seconv movie.srt subrip --translate-to:en --translate-engine:llamacpp-advanced --translate-request-json:"{\"top_k\": 40, \"min_p\": 0.05}"
+
+# drop seconv's token cap for a server that sets its own
+seconv movie.srt subrip --translate-to:en --translate-engine:lmstudio-advanced --translate-request-json:"{\"max_tokens\": null}"
+
+# from a file; a value that does not start with { is a path
+seconv movie.srt subrip --translate-to:en --translate-engine:llamacpp-advanced --translate-request-json:extra.json
+```
 
 `--translate-prompt` replaces the built-in system prompt for these engines (`{0}` = source language,
 `{1}` = target language; no `{2}`, the lines travel in the request as JSON). The options are read
@@ -640,6 +660,7 @@ The keys and defaults below are exactly what `dump-settings` emits:
       "glossary": "",
       "formality": "Default",
       "keepLineBreaks": true,
+      "requestJson": "",
       "prompt": "",
       "temperature": -1,
       "topP": -1,
