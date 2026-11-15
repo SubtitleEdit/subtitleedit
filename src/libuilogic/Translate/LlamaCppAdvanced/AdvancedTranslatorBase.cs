@@ -193,7 +193,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
             Dictionary<int, string> single;
             try
             {
-                single = await TranslateLinesAsync(new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, line.Text) }, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken);
+                // One request: the batch already had its warmer retry, and a line that comes back
+                // unchanged again is kept anyway - a second try only costs time (#16910).
+                single = await TranslateLinesAsync(new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, line.Text) }, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken, maxAttempts: 1);
             }
             catch (HttpRequestException)
             {
@@ -207,7 +209,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         }
     }
 
-    private async Task<Dictionary<int, string>> TranslateLinesAsync(List<LlamaCppAdvancedProtocol.BatchLine> lines, List<LlamaCppAdvancedProtocol.HistoryPair> history, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+    private async Task<Dictionary<int, string>> TranslateLinesAsync(List<LlamaCppAdvancedProtocol.BatchLine> lines, List<LlamaCppAdvancedProtocol.HistoryPair> history, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken, int maxAttempts = 2)
     {
         var client = _client ?? throw new InvalidOperationException("Initialize() not called");
         var url = GetApiUrl();
@@ -231,7 +233,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
         var map = new Dictionary<int, string>();
         Dictionary<int, string>? echoedMap = null;
-        for (var attempt = 0; attempt < 2 && !cancellationToken.IsCancellationRequested; attempt++)
+        for (var attempt = 0; attempt < maxAttempts && !cancellationToken.IsCancellationRequested; attempt++)
         {
             try
             {
@@ -279,7 +281,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
             catch (HttpRequestException)
             {
                 Error = client.Error;
-                if (attempt == 1)
+                if (attempt == maxAttempts - 1)
                 {
                     throw;
                 }

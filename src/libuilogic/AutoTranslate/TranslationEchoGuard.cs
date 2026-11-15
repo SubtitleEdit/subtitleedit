@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
                 for (var i = 0; i < sourceLines.Count; i++)
                 {
                     var normalizedLine = Normalize(sourceLines[i]);
-                    if (!NeedsTranslation(normalizedLine))
+                    if (!NeedsTranslation(normalizedLine) || !HasEnoughOrdinaryWords(sourceLines[i]))
                     {
                         continue;
                     }
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             }
 
             var normalizedSource = Normalize(source);
-            if (!NeedsTranslation(normalizedSource))
+            if (!NeedsTranslation(normalizedSource) || !HasEnoughOrdinaryWords(source))
             {
                 return false;
             }
@@ -169,6 +169,87 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             return noSpaceScript
                 ? letters >= MinLettersNoSpaceScript
                 : letters >= MinLetters && words >= MinWords;
+        }
+
+        /// <summary>
+        /// At least three different words that are not names: lines made of names and repeated
+        /// interjections ("Francis John Bricatino!", "Oh, no, no, no, no.", "No. Tamara Dobson.")
+        /// are often the same in both languages, so an unchanged reply for them is no echo (#16910).
+        /// A word counts when it is the first word of the text, starts with a lower-case letter, is
+        /// all capitals ("I WAS AT THE OFFICE"), or is in a script without letter case. Scripts
+        /// written without spaces are judged on letters alone (see <see cref="NeedsTranslation"/>).
+        /// </summary>
+        internal static bool HasEnoughOrdinaryWords(string text)
+        {
+            var s = text.Replace("<br />", " ").Replace("<br/>", " ").Replace("<br>", " ")
+                        .Replace("\\N", " ").Replace("\\n", " ");
+            s = HtmlUtil.RemoveHtmlTags(s, true);
+
+            var words = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var isFirstWord = true;
+            foreach (var token in s.Split(new[] { ' ', '\t', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                var word = TrimToLetters(token);
+                if (word.Length == 0)
+                {
+                    continue;
+                }
+
+                if (word.Any(IsNoSpaceScript))
+                {
+                    return true;
+                }
+
+                var isName = char.IsUpper(word[0]) && !IsAllUpper(word);
+                if (isFirstWord || !isName)
+                {
+                    words.Add(word);
+                    if (words.Count >= MinWords)
+                    {
+                        return true;
+                    }
+                }
+
+                isFirstWord = false;
+            }
+
+            return false;
+        }
+
+        private static string TrimToLetters(string token)
+        {
+            var start = 0;
+            var end = token.Length - 1;
+            while (start <= end && !char.IsLetter(token[start]))
+            {
+                start++;
+            }
+
+            while (end >= start && !char.IsLetter(token[end]))
+            {
+                end--;
+            }
+
+            return start <= end ? token.Substring(start, end - start + 1) : string.Empty;
+        }
+
+        private static bool IsAllUpper(string word)
+        {
+            var letters = 0;
+            foreach (var c in word)
+            {
+                if (char.IsLetter(c))
+                {
+                    if (!char.IsUpper(c))
+                    {
+                        return false;
+                    }
+
+                    letters++;
+                }
+            }
+
+            return letters > 1;
         }
 
         private static bool IsNoSpaceScript(char c)
