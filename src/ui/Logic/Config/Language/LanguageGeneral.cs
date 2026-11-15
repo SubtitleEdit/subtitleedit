@@ -582,6 +582,7 @@ public class LanguageGeneral
     public string SetStartAndGoToNext { get; set; }
     public string SetStartAndKeepDuration { get; set; }
     public string SetStartAndOffsetTheRest { get; set; }
+    public string SetStartAndOffsetTheWholeSubtitle { get; set; }
     public string SetUpLikeSubtitleEdit4 { get; set; }
     public string ImageBackgroundColorDotDotDot { get; set; }
     public string SetVideoOffset { get; set; }
@@ -1613,6 +1614,7 @@ public class LanguageGeneral
         SetStartAndGoToNext = "Set start and go to next";
         SetStartAndKeepDuration = "Set start and keep duration";
         SetStartAndOffsetTheRest = "Set start and offset the rest";
+        SetStartAndOffsetTheWholeSubtitle = "Set start and offset the whole subtitle";
         SetUpLikeSubtitleEdit4 = "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)";
         ImageBackgroundColorDotDotDot = "Image background color...";
         SetVideoOffset = "Set video offset";

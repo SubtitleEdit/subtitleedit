@@ -22442,6 +22442,35 @@ public partial class MainViewModel :
         });
     }
 
+    // #16934: SE 4's "Set start, offset the whole subtitle" - like "offset the rest", but the
+    // lines before the selected one move by the same amount too.
+    [RelayCommand]
+    private void WaveformSetStartAndOffsetTheWholeSubtitle()
+    {
+        var s = SelectedSubtitle;
+        var vp = GetVideoPlayerControl();
+        if (s == null || vp == null || AreTimeCodesLocked || !Subtitles.Contains(s))
+        {
+            return;
+        }
+
+        var difference = TimeSpan.FromSeconds(vp.Position) - s.StartTime;
+        if (Math.Abs(difference.TotalMilliseconds) < 0.01)
+        {
+            return;
+        }
+
+        RunWithoutChangeDetection(() =>
+        {
+            foreach (var subtitle in Subtitles)
+            {
+                subtitle.SetStartTimeKeepDuration(subtitle.StartTime + difference);
+            }
+
+            _updateAudioVisualizer = true;
+        });
+    }
+
     [RelayCommand]
     private void WaveformSetEndAndOffsetTheRest()
     {

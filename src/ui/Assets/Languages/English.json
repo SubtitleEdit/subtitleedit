@@ -582,6 +582,7 @@
     "setStartAndGoToNext": "Set start and go to next",
     "setStartAndKeepDuration": "Set start and keep duration",
     "setStartAndOffsetTheRest": "Set start and offset the rest",
+    "setStartAndOffsetTheWholeSubtitle": "Set start and offset the whole subtitle",
     "setUpLikeSubtitleEdit4": "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)",
     "imageBackgroundColorDotDotDot": "Image background color...",
     "setVideoOffset": "Set video offset",

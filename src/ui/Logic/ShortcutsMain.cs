@@ -478,6 +478,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.VideoMoveCustom4ForwardAndPauseCommand),  string.Format(Se.Language.General.VideoCustom4ForwardAndPauseX, Se.Settings.Video.MoveVideoPositionCustom4Forward) },
 
         { nameof(MainViewModel.WaveformSetStartAndOffsetTheRestCommand),  Se.Language.General.SetStartAndOffsetTheRest },
+        { nameof(MainViewModel.WaveformSetStartAndOffsetTheWholeSubtitleCommand),  Se.Language.General.SetStartAndOffsetTheWholeSubtitle },
         { nameof(MainViewModel.WaveformSetEndAndOffsetTheRestCommand),  Se.Language.General.SetEndAndOffsetTheRest },
         { nameof(MainViewModel.WaveformSetStartCommand),  Se.Language.General.SetStart },
         { nameof(MainViewModel.WaveformSetStartAndGoToNextCommand),  Se.Language.General.SetStartAndGoToNext },
@@ -1057,6 +1058,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.VideoMoveCustom4ForwardAndPauseCommand, nameof(vm.VideoMoveCustom4ForwardAndPauseCommand), ShortcutCategory.General, ShortcutGroup.Video);
 
         AddShortcut(shortcuts, vm.WaveformSetStartAndOffsetTheRestCommand, nameof(vm.WaveformSetStartAndOffsetTheRestCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.WaveformSetStartAndOffsetTheWholeSubtitleCommand, nameof(vm.WaveformSetStartAndOffsetTheWholeSubtitleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetEndAndOffsetTheRestCommand, nameof(vm.WaveformSetEndAndOffsetTheRestCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetStartCommand, nameof(vm.WaveformSetStartCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetStartAndGoToNextCommand, nameof(vm.WaveformSetStartAndGoToNextCommand), ShortcutCategory.General);
