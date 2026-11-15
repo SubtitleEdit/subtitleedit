@@ -347,6 +347,11 @@ public static class DownloadHashManager
         // The engine binaries are the shared audio.cpp archives keyed under IndexTts25AudioCpp.
         public const string ModelQ4_K = "KugelAudioAudioCpp.ModelQ4_K";
         public const string ModelQ8_0 = "KugelAudioAudioCpp.ModelQ8_0";
+
+        // The acoustic encoder (reference-audio cloning) and the clone-aware model spec, which
+        // the preset-only GGUFs above lack; both from SubtitleEdit/support-files.
+        public const string ReferenceEncoder = "KugelAudioAudioCpp.ReferenceEncoder";
+        public const string ModelSpec = "KugelAudioAudioCpp.ModelSpec";
     }
 
     public static class VoxtralTtsAudioCpp
@@ -2791,6 +2796,14 @@ public static class DownloadHashManager
             [KugelAudioAudioCpp.ModelQ8_0] = new[]
             {
                 "9cff404eeafed33ac419f855002fa5fc6f6ef719f160b6fe333095b9cfb5be52", // kugelaudio-0-open-q8_0.gguf
+            },
+            [KugelAudioAudioCpp.ReferenceEncoder] = new[]
+            {
+                "aec3494983e18c1de073696275e5e6f400d479d05940a17888e57c8aae49baef", // kugelaudio-0-open-acoustic-encoder.safetensors (support-files kugelaudio-encoder-2026-11-15)
+            },
+            [KugelAudioAudioCpp.ModelSpec] = new[]
+            {
+                "91179f778880d9364c580fade64814c1e9a65272af15358ee87c84124cc5c923", // kugelaudio-model-spec.json (audio.cpp v0.9.5 model_specs/kugelaudio.json)
             },
 
             // Voxtral-4B-TTS-2603 weights, from audio-cpp/audio.cpp-gguf (HF LFS oid).

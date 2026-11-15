@@ -1748,8 +1748,8 @@ public partial class DownloadTtsViewModel : ObservableObject
                 _timer.Stop();
                 _downloadTaskKugelAudioAudioCppModels = null;
 
-                // Model-only: the four preset voices are inside the GGUF and the engine does not
-                // clone, so there is no reference-voice pack to fetch afterwards.
+                // No reference-voice pack to fetch: the four presets are inside the GGUF, and the
+                // clone voices are seeded from the shared Qwen3 pack on first use.
                 OkPressed = true;
                 Close();
                 return;

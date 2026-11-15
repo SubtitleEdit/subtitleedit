@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.AudioCppTtsSettings;
 /// <see cref="LicenseDefinition"/> is null for weights that need no acceptance (FireRedTTS3
 /// is Apache-2.0); <see cref="IsLicenseAccepted"/> then always returns true.
 /// <see cref="GetVoicesFolder"/> is null for an engine with built-in preset voices only
-/// (KugelAudio), which hides the voices folder shortcut.
+/// (Voxtral TTS), which hides the voices folder shortcut.
 /// </summary>
 public sealed record AudioCppTtsSettingsAdapter(
     string EngineName,
@@ -110,7 +110,7 @@ public static class AudioCppTtsSettingsAdapters
         ResolveModelKey: KugelAudioAudioCpp.ResolveModelKey,
         AreModelsInstalled: KugelAudioAudioCpp.AreModelsInstalled,
         GetModelsFolder: KugelAudioAudioCpp.GetSetModelsFolder,
-        GetVoicesFolder: null,
+        GetVoicesFolder: KugelAudioAudioCpp.GetSetVoicesFolder,
         IsLicenseAccepted: () => true,
         LicenseDefinition: null,
         StartDownloadModels: (vm, modelKey) => vm.StartDownloadKugelAudioAudioCppModels(modelKey));

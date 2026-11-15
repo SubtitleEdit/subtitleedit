@@ -1437,6 +1437,26 @@ public class FfmpegGenerator
     }
 
     /// <summary>
+    /// <see cref="ConvertToMono24kHzWav"/>, keeping only the first <paramref name="maxSeconds"/>
+    /// seconds - for engines that reject a longer voice reference outright.
+    /// </summary>
+    public static Process ConvertToMono24kHzWav(string inputFileName, string outputFileName, int maxSeconds)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-y -i \"{inputFileName}\" -t {maxSeconds.ToString(CultureInfo.InvariantCulture)} -ar 24000 -ac 1 -c:a pcm_s16le \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+
+        return process;
+    }
+
+    /// <summary>
     /// Resamples / mixes the input to mono PCM16 WAV at 22.05 kHz. Used by Confucius4-TTS
     /// (CrispASR) for its voice-cloning reference WAV — the S2A/vocoder chain works at 22.05 kHz
     /// (the reference-mel path reads the file at that rate) while the w2v-BERT/CAM++ encoders
