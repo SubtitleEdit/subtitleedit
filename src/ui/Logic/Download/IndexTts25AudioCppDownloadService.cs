@@ -37,12 +37,12 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-11-05: upstream v0.9.4 @ f7ac446f with the same nine families as 2026-10-28
+    // 2026-11-15: upstream v0.9.5 @ 61c7838b with the same nine families as 2026-11-05
     // (index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon
-    // + breeze_tts + voxtral_tts). The bump brings the Vulkan RMSNorm fix for long voice
-    // references (#1120), the Vulkan oversized-buffer pipeline fix (#1183) and HTTP 400 instead
-    // of 500 for malformed option values (#1123).
-    private const string ReleaseTag = "audiocpp-indextts25-2026-11-05";
+    // + breeze_tts + voxtral_tts). The bump brings the shared DiT runtime for the denoiser models
+    // (#1254), KugelAudio reference-audio cloning (#1275), IndexTTS segment streaming and text
+    // controls (#1206) and inline voice_ref in server requests (#1252).
+    private const string ReleaseTag = "audiocpp-indextts25-2026-11-15";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 
