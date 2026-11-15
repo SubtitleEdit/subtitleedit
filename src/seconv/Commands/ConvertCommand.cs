@@ -273,6 +273,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Resolution (widthxheight)")]
         public string? Resolution { get; init; }
 
+        [CommandOption("--layout-resolution")]
+        [Description("ASSA LayoutResX/LayoutResY (widthxheight): the video's display size")]
+        public string? LayoutResolution { get; init; }
+
         [CommandOption("--target-fps|--targetfps")]
         [Description("Target frame rate")]
         public double? TargetFps { get; init; }
@@ -877,6 +881,19 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
 
+            (int Width, int Height)? layoutResolution = null;
+            if (!string.IsNullOrWhiteSpace(settings.LayoutResolution))
+            {
+                try
+                {
+                    layoutResolution = ResolutionParser.Parse(settings.LayoutResolution);
+                }
+                catch (FormatException ex)
+                {
+                    return Fail(settings, "--layout-resolution: " + ex.Message);
+                }
+            }
+
             if (!string.IsNullOrWhiteSpace(settings.BurnInVideo))
             {
                 if (!File.Exists(settings.BurnInVideo))
@@ -993,6 +1010,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 BridgeGapsMaxMs = settings.BridgeGaps,
                 ApplyMinGapMs = applyMinGapMs,
                 Resolution = resolution,
+                LayoutResolution = layoutResolution,
                 ImageStyle = imageStyle,
                 AssaStyleFile = settings.AssaStyleFile,
                 BurnInVideo = settings.BurnInVideo,

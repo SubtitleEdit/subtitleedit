@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,31 @@ public class FfmpegMediaInfo2
 {
     public List<FfmpegTrackInfo> Tracks { get; set; }
     public Dimension Dimension { get; set; }
+
+    /// <summary>
+    /// The frame size as displayed: <see cref="Dimension"/> widened to the stream's display aspect
+    /// ratio ("[SAR 64:45 DAR 16:9]"), so an anamorphic 720x576 PAL DVD gives 1024x576. Equal to
+    /// <see cref="Dimension"/> for square pixels. This is the size ASSA LayoutResX/LayoutResY want.
+    /// </summary>
+    public Dimension DisplayDimension
+    {
+        get
+        {
+            var (w, h) = AdvancedSubStationAlpha.GetDisplayResolution(Dimension.Width, Dimension.Height, DisplayAspectRatio);
+            return new Dimension(w, h);
+        }
+    }
+
+    /// <summary>
+    /// Display aspect ratio from ffmpeg's "DAR a:b" (after rotation), or 0 when not reported.
+    /// </summary>
+    public double DisplayAspectRatio { get; set; }
     public TimeCode? Duration { get; set; }
     public decimal FramesRate { get; set; }
     public decimal FramesRateNonNormalized { get; set; }
 
     private static readonly Regex ResolutionRegex = new Regex(@"\d\d+x\d\d+", RegexOptions.Compiled);
+    private static readonly Regex DisplayAspectRatioRegex = new Regex(@"\bDAR (?<num>\d+):(?<den>\d+)", RegexOptions.Compiled);
     private static readonly Regex DurationRegex = new Regex(@"Duration: \d+[:\.,]\d+[:\.,]\d+[:\.,]\d+", RegexOptions.Compiled);
     private static readonly Regex Fps1Regex = new Regex(@" \d+\.\d+ fps", RegexOptions.Compiled);
     private static readonly Regex Fps2Regex = new Regex(@" \d+ fps", RegexOptions.Compiled);
@@ -181,6 +202,15 @@ public class FfmpegMediaInfo2
                     {
                         info.Dimension = new Dimension(w, h);
                         inDimensionStreamBlock = true;
+
+                        var darMatch = DisplayAspectRatioRegex.Match(s);
+                        if (darMatch.Success &&
+                            int.TryParse(darMatch.Groups["num"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var darNum) &&
+                            int.TryParse(darMatch.Groups["den"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var darDen) &&
+                            darNum > 0 && darDen > 0)
+                        {
+                            info.DisplayAspectRatio = (double)darNum / darDen;
+                        }
                     }
                 }
 
@@ -239,6 +269,10 @@ public class FfmpegMediaInfo2
                     if (Math.Abs(normalized - 90) < 1 || Math.Abs(normalized - 270) < 1)
                     {
                         info.Dimension = new Dimension(info.Dimension.Height, info.Dimension.Width);
+                        if (info.DisplayAspectRatio > 0)
+                        {
+                            info.DisplayAspectRatio = 1.0 / info.DisplayAspectRatio;
+                        }
                     }
                 }
             }

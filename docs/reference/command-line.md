@@ -158,6 +158,7 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 | Option | Applies to | Description |
 |---|---|---|
 | `--resolution:<WxH>` | ASSA, image-based | Sets `PlayResX`/`PlayResY` for ASSA; sets canvas for image outputs (default `1920x1080`) |
+| `--layout-resolution:<WxH>` | ASSA | Sets `LayoutResX`/`LayoutResY` (libass 0.17+): the display size of the video the script is for, e.g. `1024x576` for an anamorphic PAL DVD. Keeps the script rendering the same on other resolutions of that video |
 | `--assa-style-file:<file>` | ASSA | Apply `[V4+ Styles]` block from another ASSA file |
 | `--burn-in-video:<file>` | ASSA | After writing the `.ass`, burn it into this video with ffmpeg's `ass` filter (needs ffmpeg on PATH). Output: `<subtitle name>_burn-in.<video ext>` next to the `.ass`; every converted subtitle (each input file, each container track) gets its own burned video. Without `--resolution` the video's size is used. An existing output is kept unless `--overwrite` is given; Ctrl+C stops ffmpeg and removes the partial video. Example: `seconv movie.srt ass --assa-style-file:style.ass --burn-in-video:movie.mp4` |
 | `--burn-in-ffmpeg-args:<args>` | ASSA + `--burn-in-video` | ffmpeg encoder arguments (default: `-c:v libx264 -preset medium -crf 23 -pix_fmt yuv420p -c:a copy`); for a `.webm` video, which cannot hold H.264, the default is `-c:v libvpx-vp9 -crf 32 -b:v 0 -pix_fmt yuv420p -c:a libopus`, e.g. `"-c:v h264_nvenc -cq 23 -c:a copy"` |

@@ -65,6 +65,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--reel-duration:<hh:mm:ss:ff>", "D-Cinema MXF output: reel (picture) length, which every asset of a DCP reel must have (default: until the last subtitle)");
         ShowParameter(console, "--renumber:<starting number>", "Renumber subtitles from this number");
         ShowParameter(console, "--resolution:<width>x<height>", "Video resolution (e.g., 1920x1080)");
+        ShowParameter(console, "--layout-resolution:<width>x<height>", "ASSA LayoutResX/LayoutResY: the video's display size (e.g., 1024x576 for anamorphic PAL)");
         ShowParameter(console, "--target-fps:<frame rate>", "Target frame rate");
         ShowParameter(console, "--teletext-only", "Process teletext only");
         ShowParameter(console, "--teletext-only-page:<page number>", "Teletext page number");
