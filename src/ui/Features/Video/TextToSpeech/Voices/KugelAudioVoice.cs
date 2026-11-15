@@ -3,8 +3,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 public class KugelAudioVoice
 {
     // KugelAudio-0-Open preset id ("default", "clear", "english_female", "english_male"). The
-    // four voices' acoustic features are embedded in the GGUF; the open model cannot clone, so
-    // this is the only voice handle.
+    // four voices' acoustic features are embedded in the GGUF. Cloned voices are IndexTtsVoice
+    // (a reference WAV path), like the other audio.cpp cloning engines.
     public string Voice { get; set; }
 
     public override string ToString()
