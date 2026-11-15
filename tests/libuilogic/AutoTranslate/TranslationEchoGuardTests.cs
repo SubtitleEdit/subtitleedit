@@ -109,6 +109,28 @@ public class TranslationEchoGuardTests
         Assert.False(TranslationEchoGuard.IsUntranslatedEcho(text, text, "English", "German"));
     }
 
+    // Issue #16910: names and repeated interjections are often the same in Italian - an unchanged
+    // reply made the advanced llama.cpp engine retry and cut the batch for nothing.
+    [Theory]
+    [InlineData("Oh, no, no, no, no.")]
+    [InlineData("Francis John Bricatino!")]
+    [InlineData("No. Tamara Dobson.")]
+    [InlineData("- No!\n- Elijah! Elijah!")]
+    [InlineData("<i>Francis John Bricatino!</i>")]
+    public void NamesAndRepeatedInterjections_AreNeverEcho(string text)
+    {
+        Assert.False(TranslationEchoGuard.IsUntranslatedEcho(text, text, "English", "Italian"));
+    }
+
+    [Theory]
+    [InlineData("I WAS AT THE OFFICE UNTIL LATE.")]
+    [InlineData("Tamara said she was at the office.")]
+    [InlineData("- Where were you?\n- Elijah! Elijah!")]
+    public void SentencesWithNamesOrCapitals_AreStillEcho(string text)
+    {
+        Assert.True(TranslationEchoGuard.IsUntranslatedEcho(text, text, "English", "Italian"));
+    }
+
     [Fact]
     public void EmptyReply_IsNotEcho()
     {
