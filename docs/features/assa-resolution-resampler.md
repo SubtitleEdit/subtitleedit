@@ -27,6 +27,9 @@ Resample ASSA subtitle styles and positions from one video resolution to another
 - **Change positions:** Scale \pos, \move, and \org coordinates.
 - **Change drawing:** Scale \p drawing coordinates.
 
+### Layout resolution
+A script with `LayoutResX` / `LayoutResY` keeps its layout resolution when resampled to the same aspect ratio. When the aspect ratio changes (stretching), `LayoutResX` follows the change and `LayoutResY` stays, the same rule Aegisub uses.
+
 ### Automatic Detection
 - Source resolution is automatically read from the subtitle's Script Info header.
 - Target resolution defaults to the currently loaded video's dimensions.
@@ -46,5 +49,7 @@ Both behaviours can be changed under *Options → Settings → Subtitle formats*
 
 - **ASSA: set resolution (PlayResX/PlayResY) from the video when a video is opened** - turn off to never touch the resolution on video load.
 - **ASSA: ask before changing the resolution to match the video** - turn off to resample automatically instead of showing the dialog.
+
+A subtitle with a layout resolution (`LayoutResX` / `LayoutResY`) is never resampled or asked about on video open: renderers lay it out against its own layout resolution, so it already fits any video with the same aspect ratio. A subtitle without any resolution gets the video's display size written as its layout resolution, next to PlayResX / PlayResY.
 
 The resampling only applies to a subtitle whose header already names a resolution - a file authored for another picture size. A header without PlayResX / PlayResY is the built-in one, or your default style storage written into it (an OCR result takes that route): there the video's dimensions are written into the header silently, only the small built-in font sizes (25 and below) are lifted to the video height, and your font size, margins, outline and shadow are kept exactly as configured.

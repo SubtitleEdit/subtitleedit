@@ -1166,7 +1166,7 @@ internal class SubtitleConverter
         var normalizedFormat = LibSEIntegration.NormalizeFormatName(options.Format);
 
         // ASSA-only post-processing: resolution + style-file overlay
-        LibSEIntegration.ApplyAssaPostProcess(subtitle, normalizedFormat, options.Resolution, options.AssaStyleFile);
+        LibSEIntegration.ApplyAssaPostProcess(subtitle, normalizedFormat, options.Resolution, options.AssaStyleFile, options.LayoutResolution);
 
         if (options.BurnInEffects.Count > 0)
         {
@@ -1422,6 +1422,9 @@ internal record class ConversionOptions
     /// <summary>Enforce a minimum gap of this many ms between consecutive paragraphs. Null disables.</summary>
     public int? ApplyMinGapMs { get; init; }
     public (int Width, int Height)? Resolution { get; init; }
+
+    /// <summary>ASSA LayoutResX/LayoutResY to write (the video's display size). Null leaves them as they are.</summary>
+    public (int Width, int Height)? LayoutResolution { get; init; }
 
     /// <summary>
     /// Styling for text → image output (font, outline, shadow, background box, ...).

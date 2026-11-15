@@ -30,7 +30,12 @@ Edit the script info header properties of an Advanced SubStation Alpha (ASS/SSA)
 ### Video Resolution
 - **Video Width / Height:** Sets the PlayResX and PlayResY values used for style positioning.
 - **...** button: Pick from a list of standard resolutions (4K DCI, 4K UHD, Full HD 1080p, HD 720p, SD PAL, ...).
-- **Pick resolution from current video:** Fills width and height from the currently loaded video; only shown when a video is loaded.
+- **Pick resolution from current video:** Fills width and height from the currently loaded video; only shown when a video is loaded. A script without a layout resolution also gets the video's display size as its layout resolution.
+
+### Layout Resolution
+- **Layout width / height:** The `LayoutResX` / `LayoutResY` headers (libass 0.17+, xy-VSFilter, Aegisub): the display size of the video the script was made for. Renderers use it instead of the video's own size for aspect-ratio correction and for borders, shadows and blur when border and shadow scaling is off, so the script looks the same on every video with the same display aspect ratio. Positions and font sizes are still in script resolution (PlayRes) units.
+- **Set layout resolution from current video:** Fills in the video's *display* size - for an anamorphic 720×576 PAL DVD with a 16:9 picture that is 1024×576, not the stored 720×576.
+- **Clear** (or 0 × 0) leaves the headers out. Keep an existing layout resolution when moving a script to another resolution of the same video.
 
 ### Wrap Style
 - Controls how long lines are word-wrapped (smart wrapping, end-of-line wrapping, no wrapping, or smart wrapping with wider lower line).

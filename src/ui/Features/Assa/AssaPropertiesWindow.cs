@@ -147,7 +147,32 @@ public class AssaPropertiesWindow : Window
         var content = new StackPanel { Spacing = 8 };
         content.Children.Add(size);
         content.Children.Add(presets);
+        content.Children.Add(MakeLayoutResolutionRow(vm));
         return EditorChrome.MakeEditorSection(Se.Language.General.VideoResolution, content);
+    }
+
+    /// <summary>
+    /// LayoutResX/LayoutResY - independent of PlayRes, so its own row; 0 × 0 leaves it out (#16933).
+    /// </summary>
+    private static StackPanel MakeLayoutResolutionRow(AssaPropertiesViewModel vm)
+    {
+        var width = EditorChrome.MakeField(nameof(vm.LayoutWidth), 0, 10000, 90, "W");
+        var height = EditorChrome.MakeField(nameof(vm.LayoutHeight), 0, 10000, 90, "H");
+        AutomationProperties.SetName(width, Se.Language.Assa.LayoutResolution + " - " + Se.Language.General.Width);
+        AutomationProperties.SetName(height, Se.Language.Assa.LayoutResolution + " - " + Se.Language.General.Height);
+
+        var fromVideo = EditorChrome.CreateToolButton("fa-solid fa-film", Se.Language.Assa.LayoutResolutionFromVideo, vm.GetLayoutResolutionFromCurrentVideoCommand, 28);
+        fromVideo.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ShowGetResolutionFromCurrentVideo)) { Source = vm });
+        var clear = EditorChrome.CreateToolButton("fa-solid fa-xmark", Se.Language.General.Clear, vm.ClearLayoutResolutionCommand, 28);
+
+        var size = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
+        size.Children.Add(width);
+        size.Children.Add(new TextBlock { Text = "×", Foreground = EditorChrome.DimTextBrush, VerticalAlignment = VerticalAlignment.Center });
+        size.Children.Add(height);
+        size.Children.Add(fromVideo);
+        size.Children.Add(clear);
+
+        return LabeledWithHint(Se.Language.Assa.LayoutResolution, size, Se.Language.Assa.LayoutResolutionHint);
     }
 
     private static Border MakeOptionsSection(AssaPropertiesViewModel vm)

@@ -2742,7 +2742,8 @@ public partial class MainViewModel :
         var result = await ShowDialogAsync<AssaPropertiesWindow, AssaPropertiesViewModel>(vm =>
         {
             vm.Initialize(_subtitle, SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
-                _videoFileName ?? string.Empty, _mediaInfo?.Dimension.Width ?? 0, _mediaInfo?.Dimension.Height ?? 0);
+                _videoFileName ?? string.Empty, _mediaInfo?.Dimension.Width ?? 0, _mediaInfo?.Dimension.Height ?? 0,
+                _mediaInfo?.DisplayDimension.Width ?? 0, _mediaInfo?.DisplayDimension.Height ?? 0);
         });
 
         if (result.OkPressed)
@@ -2982,7 +2983,8 @@ public partial class MainViewModel :
     /// One authored for another picture size - PlayResX/PlayResY present and different from the
     /// video - gets the resampler dialog pre-filled with both resolutions, the way SE 4 and
     /// Aegisub ask, so the user sees what is about to change and can decline (#14367). With the
-    /// prompt setting off the file is resampled automatically, as before.
+    /// prompt setting off the file is resampled automatically, as before. A script with
+    /// LayoutResX/LayoutResY is left alone: it is laid out against its own LayoutRes (#16933).
     /// </para>
     /// </summary>
     private async Task SetAssaResolutionFromVideoAsync()
@@ -3010,6 +3012,14 @@ public partial class MainViewModel :
         }
 
         if (scriptWidth == videoWidth && scriptHeight == videoHeight)
+        {
+            return;
+        }
+
+        // A script with LayoutResX/LayoutResY is self-contained: libass lays it out against its
+        // own LayoutRes, not this video's size, so it renders the same on any video with the same
+        // display aspect ratio. Resampling it would only rewrite values for nothing (#16933).
+        if (AdvancedSubStationAlpha.TryGetLayoutResolution(header, out _, out _))
         {
             return;
         }
@@ -31383,6 +31393,19 @@ public partial class MainViewModel :
 
         var oldHeader = _subtitle.Header;
         _subtitle.Header = AdvancedSubStationAlpha.SetResolution(_subtitle.Header, _mediaInfo.Dimension.Width, _mediaInfo.Dimension.Height);
+
+        // A script that named no resolution is being authored for this video now: also give it
+        // LayoutRes = the video's display size, as the libass format guide asks for new files, so
+        // it keeps rendering the same on other resolutions of the same video (#16933).
+        var hadPlayRes = !string.IsNullOrEmpty(oldHeader) &&
+                         oldHeader.Contains("[V4+ Styles]", StringComparison.OrdinalIgnoreCase) &&
+                         TryGetPlayRes(oldHeader, "PlayResX", out _) &&
+                         TryGetPlayRes(oldHeader, "PlayResY", out _);
+        if (!hadPlayRes && !AdvancedSubStationAlpha.TryGetLayoutResolution(_subtitle.Header, out _, out _))
+        {
+            var display = _mediaInfo.DisplayDimension;
+            _subtitle.Header = AdvancedSubStationAlpha.SetLayoutResolution(_subtitle.Header, display.Width, display.Height);
+        }
 
         if (!Se.Settings.Assa.AutoSetResolutionConvert || oldHeader == _subtitle.Header)
         {
