@@ -17,6 +17,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
+        public override double MaxTimeCodeTotalMilliseconds => TimeCode.MaxSupportedTotalMilliseconds; // 3+ digit hours (#16937)
+
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (!HasEvents(lines))

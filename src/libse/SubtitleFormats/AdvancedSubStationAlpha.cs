@@ -77,6 +77,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const string NameOfFormat = "Advanced Sub Station Alpha";
         public override string Name => NameOfFormat;
 
+        public override double MaxTimeCodeTotalMilliseconds => TimeCode.MaxSupportedTotalMilliseconds; // 3+ digit hours (#16937)
+
         public const int DefaultWidth = 384;
         public const int DefaultHeight = 288;
 
