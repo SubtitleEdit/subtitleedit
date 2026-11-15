@@ -554,9 +554,9 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (long.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var milliseconds))
             {
-                if (milliseconds > TimeCode.MaxTimeTotalMilliseconds)
+                if (milliseconds > TimeCode.MaxSupportedTotalMilliseconds)
                 {
-                    return false; // beyond the control's range (max 99:59:59,999) - reject rather than overflow
+                    return false; // beyond the control's range (max 9999:59:59,999) - reject rather than overflow
                 }
 
                 value = RemoveVideoOffset(TimeSpan.FromMilliseconds(isNegative ? -milliseconds : milliseconds));
@@ -583,7 +583,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return false; // int-parseable but out-of-range parts (e.g. "999999999:0:0,0") overflow the TimeSpan ctor
             }
 
-            if (ms > TimeCode.MaxTimeTotalMilliseconds)
+            if (ms > TimeCode.MaxSupportedTotalMilliseconds)
             {
                 return false;
             }
@@ -833,18 +833,21 @@ namespace Nikse.SubtitleEdit.Controls
 
             // A negative time span has negative parts throughout, which TimeCode renders as a single
             // leading minus.
+            // Hours include whole days: TimeSpan.Hours alone wraps at 24 (#16937).
+            const int maxHours = 9999;
+            var hours = time.Days * 24 + time.Hours;
             TimeCode tc;
-            if (time.TotalHours > 99)
+            if (hours > maxHours)
             {
-                tc = new TimeCode(99, time.Minutes, time.Seconds, time.Milliseconds);
+                tc = new TimeCode(maxHours, time.Minutes, time.Seconds, time.Milliseconds);
             }
-            else if (time.TotalHours < -99)
+            else if (hours < -maxHours)
             {
-                tc = new TimeCode(-99, time.Minutes, time.Seconds, time.Milliseconds);
+                tc = new TimeCode(-maxHours, time.Minutes, time.Seconds, time.Milliseconds);
             }
             else
             {
-                tc = new TimeCode(time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                tc = new TimeCode(hours, time.Minutes, time.Seconds, time.Milliseconds);
             }
 
 
@@ -879,8 +882,8 @@ namespace Nikse.SubtitleEdit.Controls
         // into range.
         private TimeSpan Clamp(TimeSpan time)
         {
-            return time.TotalMilliseconds < -TimeCode.MaxTimeTotalMilliseconds
-                ? TimeSpan.FromMilliseconds(-TimeCode.MaxTimeTotalMilliseconds)
+            return time.TotalMilliseconds < -TimeCode.MaxSupportedTotalMilliseconds
+                ? TimeSpan.FromMilliseconds(-TimeCode.MaxSupportedTotalMilliseconds)
                 : time;
         }
     }

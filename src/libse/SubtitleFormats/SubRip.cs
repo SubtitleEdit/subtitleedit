@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static void AppendTimeCode(StringBuilder sb, TimeCode timeCode)
         {
             var totalMilliseconds = timeCode.TotalMilliseconds;
-            if (totalMilliseconds < 0 || totalMilliseconds > TimeCode.MaxTimeTotalMilliseconds)
+            if (totalMilliseconds < 0 || totalMilliseconds > TimeCode.MaxSupportedTotalMilliseconds)
             {
                 sb.Append(timeCode.ToString());
                 return;

@@ -1563,7 +1563,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var hours = int.Parse(parts[0]);
-            if (hours > 99)
+            if (hours > 9999) // TTML allows 2+ hour digits; beyond SE's 9999 hours is junk
             {
                 hours = 0;
             }

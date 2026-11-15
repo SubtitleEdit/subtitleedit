@@ -29,14 +29,15 @@ public class TimeCodeUpDownPasteTests
     [InlineData("00:00:05:500", 5500)]
     [InlineData("01:02,300", 62300)]      // mm:ss,fff
     [InlineData("01:00:00,000", 3600000)]
-    [InlineData("359999999", 359999999)]  // max in-range milliseconds (99:59:59,999)
+    [InlineData("35999999999", 35999999999)]  // max in-range milliseconds (9999:59:59,999) - #16937
+    [InlineData("123:04:05,678", 443045678)]  // 3+ digit hours - #16937
     [InlineData("-5", -5)]                // negative time codes are legal - see #13695
     [InlineData("-00:00:05,500", -5500)]
-    public void ParsesAcceptedInput(string input, int expectedMs)
+    public void ParsesAcceptedInput(string input, long expectedMs)
     {
         var (ok, value) = Parse(input);
         Assert.True(ok, $"expected '{input}' to parse");
-        Assert.Equal(expectedMs, (int)value.TotalMilliseconds);
+        Assert.Equal(expectedMs, (long)value.TotalMilliseconds);
     }
 
     [AvaloniaTheory]
@@ -45,7 +46,8 @@ public class TimeCodeUpDownPasteTests
     [InlineData("abc")]
     [InlineData("-")]            // a sign on its own is not a time code
     [InlineData("5:5")]          // too few parts to be a time code
-    [InlineData("360000000")]    // one ms past the max range
+    [InlineData("36000000000")]  // one ms past the max range (9999:59:59,999)
+    [InlineData("10000:00:00,000")] // past 9999 hours
     [InlineData("99999999999999999")] // huge bare number: would overflow TimeSpan.FromMilliseconds
     [InlineData("999999999:0:0,0")]   // int-parseable but overflows the TimeSpan ctor
     [InlineData(null)]

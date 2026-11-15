@@ -10,7 +10,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         public const double BaseUnit = 1000.0; // Base unit of time
 
         public bool IsMaxTime => Math.Abs(TotalMilliseconds - MaxTimeTotalMilliseconds) < 0.01;
+        // 99:59:59,999 - the "no time" marker (e.g. "--:--:--:--" in EBU STL, a new line after
+        // the last one). Not a limit: real time codes may go past it, see MaxSupportedTotalMilliseconds.
         public const double MaxTimeTotalMilliseconds = 359999999; // new TimeCode(99, 59, 59, 999).TotalMilliseconds
+
+        // 9999:59:59,999 (~416 days) - the largest time code SE holds (#16937). Players read SubRip,
+        // WebVTT, TTML and ASSA hours with 3+ digits, e.g. for videos with huge start timestamps.
+        public const double MaxSupportedTotalMilliseconds = 35999999999; // new TimeCode(9999, 59, 59, 999).TotalMilliseconds
 
         public static TimeCode FromSeconds(double seconds)
         {
@@ -230,7 +236,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             get
             {
-                if (TotalMilliseconds > MaxTimeTotalMilliseconds || TotalMilliseconds < -MaxTimeTotalMilliseconds)
+                if (TotalMilliseconds > MaxSupportedTotalMilliseconds || TotalMilliseconds < -MaxSupportedTotalMilliseconds)
                 {
                     return new TimeSpan();
                 }
