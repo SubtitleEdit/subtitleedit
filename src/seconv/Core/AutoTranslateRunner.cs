@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.UiLogic.LlamaCpp;
@@ -78,6 +79,9 @@ internal sealed class AutoTranslateRunner
     internal SeLlamaCppAdvanced? AdvancedSettings => _advancedSettings;
 
     private string? _targetLanguageCode;
+
+    /// <summary>The prompt --verbose printed last: the same language pair prints it once (see <see cref="WritePromptIfVerbose"/>).</summary>
+    private string? _lastPrintedPrompt;
 
     /// <summary>
     /// The target language code as the engine knows it ("de", "zh-CN") - --translate-to
@@ -627,6 +631,10 @@ internal sealed class AutoTranslateRunner
             Console.WriteLine($"  Translating {source.Name} -> {target.Name} via {_translator.Name}...");
         }
 
+        // The LLM engines get the English names as "codes" (ListLanguages puts the name in Code),
+        // so the prompt is built from the same values here.
+        WritePromptIfVerbose(Console.Out, source.Code, target.Code);
+
         var doTranslate = new DoAutoTranslate();
         if (!_options.Quiet)
         {
@@ -646,6 +654,75 @@ internal sealed class AutoTranslateRunner
                 subtitle.Paragraphs[i].Text = rows[i].TranslatedText;
             }
         }
+    }
+
+    /// <summary>
+    /// The prompt as the engine sends it for this language pair: the advanced engines' complete
+    /// system prompt - the instructions plus the keep-line-breaks sentence, formality, synopsis,
+    /// glossary and protocol paragraph, which the prompt field never shows - or the regular LLM
+    /// engines' filled template with &lt;text&gt; where the subtitle text goes. Null for the
+    /// translation services, which have no prompt. Call after <see cref="ApplyPromptSettings"/>:
+    /// for llamacpp the curated model's template is only applied there. Internal for tests.
+    /// </summary>
+    internal string? DescribePrompt(string sourceName, string targetName)
+    {
+        if (_advancedSettings != null)
+        {
+            return LlamaCppAdvancedProtocol.BuildSystemPrompt(sourceName, targetName, _advancedSettings);
+        }
+
+        // The same fields and fallbacks as the engines themselves read.
+        var tools = Configuration.Settings.Tools;
+        var defaults = new ToolsSettings();
+        var template = _engine switch
+        {
+            "llamacpp" => FirstNonBlank(tools.LlamaCppModelPrompt, tools.LlamaCppPrompt, defaults.LlamaCppPrompt),
+            "ollama" => FirstNonBlank(tools.OllamaPrompt, defaults.OllamaPrompt),
+            "lmstudio" => FirstNonBlank(tools.LmStudioPrompt, defaults.LmStudioPrompt),
+            "openai-compatible" => FirstNonBlank(tools.OpenAiCompatibleTranslatePrompt, defaults.OpenAiCompatibleTranslatePrompt),
+            _ => null,
+        };
+
+        return template == null ? null : LlmTranslatePrompt.DescribeUserMessage(template, sourceName, targetName);
+    }
+
+    private static string FirstNonBlank(params string?[] values)
+    {
+        return values.First(v => !string.IsNullOrWhiteSpace(v))!;
+    }
+
+    /// <summary>
+    /// --verbose: writes <see cref="DescribePrompt"/> once per language pair. Neither the GUI nor
+    /// dump-settings shows the assembled prompt, so odd output could not be told apart from a
+    /// model problem without a capture proxy. The source language is detected per file, so the
+    /// prompt can change between files; the same pair again writes nothing. Quiet (which --json
+    /// implies) wins over verbose: stdout stays one JSON document.
+    /// </summary>
+    internal void WritePromptIfVerbose(TextWriter writer, string sourceName, string targetName)
+    {
+        if (!_options.Verbose || _options.Quiet)
+        {
+            return;
+        }
+
+        var prompt = DescribePrompt(sourceName, targetName);
+        if (prompt == null || prompt == _lastPrintedPrompt)
+        {
+            return;
+        }
+
+        _lastPrintedPrompt = prompt;
+        var rule = "  " + new string('-', 40);
+        writer.WriteLine(_advancedSettings != null
+            ? "  System prompt sent to the model:"
+            : "  Prompt sent to the model (<text> = the subtitle text of the request):");
+        writer.WriteLine(rule);
+        foreach (var line in prompt.SplitToLines())
+        {
+            writer.WriteLine("  " + line);
+        }
+
+        writer.WriteLine(rule);
     }
 
     /// <summary>
