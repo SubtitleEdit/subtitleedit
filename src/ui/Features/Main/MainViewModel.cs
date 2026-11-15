@@ -11198,6 +11198,23 @@ public partial class MainViewModel :
         ShowStatus(string.Format(Se.Language.Main.RuleProfileIsX, profile.Name));
     }
 
+    /// <summary>
+    /// Toolbar "Speech to text": with more than one line selected only those lines are
+    /// transcribed, otherwise the whole video (#16928). Menus and shortcuts keep their own scope.
+    /// </summary>
+    [RelayCommand]
+    private async Task ToolbarSpeechToText()
+    {
+        if (SubtitleGridSelectedItems.Count > 1 && !string.IsNullOrEmpty(_videoFileName))
+        {
+            await SpeechToTextSelectedLines();
+        }
+        else
+        {
+            await ShowSpeechToTextWhisper();
+        }
+    }
+
     [RelayCommand]
     private async Task ShowSpeechToTextWhisper()
     {
@@ -14502,6 +14519,23 @@ public partial class MainViewModel :
         if (string.IsNullOrEmpty(_videoFileName) && File.Exists(result.VideoFileName))
         {
             await VideoOpenFile(result.VideoFileName);
+        }
+    }
+
+    /// <summary>
+    /// Toolbar "Auto-translate": with more than one line selected only those lines are translated,
+    /// otherwise the whole subtitle (#16928). Menus and shortcuts keep their own fixed scope.
+    /// </summary>
+    [RelayCommand]
+    private async Task ToolbarAutoTranslate()
+    {
+        if (SubtitleGridSelectedItems.Count > 1)
+        {
+            await AutoTranslateSelectedLines(autoStart: false);
+        }
+        else
+        {
+            await ShowAutoTranslate();
         }
     }
 
