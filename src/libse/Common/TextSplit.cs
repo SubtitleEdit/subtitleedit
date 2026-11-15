@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -153,13 +154,37 @@ namespace Nikse.SubtitleEdit.Core.Common
             return line1.Length > 0 && chars.Contains(line1[^1]);
         }
 
+        /// <summary>
+        /// A break that reads as a change of speaker: the first line ends a sentence and the second
+        /// starts with a dialog dash or a speaker tag (<see cref="StartsWithSpeakerTag"/>). Such a
+        /// break wins over the balanced one and may leave a line over the maximum - the lines belong
+        /// to different speakers, as with dashes today.
+        /// </summary>
         private static bool IsDialog(TextSplitResult textSplitResult)
         {
             var line1 = textSplitResult.Lines[0].TrimEnd(QuoteChars).Span;
             var line2 = textSplitResult.Lines[1].TrimStart(QuoteChars).Span;
             return line2.Length > 0 && line1.Length > 0 &&
-                   line2[0] == '-' && EndLineChars.Contains(line1[^1]);
+                   EndLineChars.Contains(line1[^1]) &&
+                   (line2[0] == '-' || StartsWithSpeakerTag(line2));
         }
+
+        /// <summary>
+        /// A speaker tag at the start of a line: a short capitalised name and a colon ("Erik: ...",
+        /// also the full-width colon) or a bracketed name ("[Anna] ...", "【安娜】..."). Translation
+        /// models often hand a two-speaker cue back on one line with both tags kept, and a break by
+        /// length then lands the second tag mid-line; before the tag is where it belongs, as before a
+        /// dialog dash. No digit in the name, so a time ("10:30") never counts, and a space must
+        /// follow the colon, so "http://" does not either.
+        /// </summary>
+        private static bool StartsWithSpeakerTag(ReadOnlySpan<char> line)
+        {
+            return (line[0] == '[' || line[0] == '\u3010' || char.IsUpper(line[0])) && SpeakerTagRegex.IsMatch(line.ToString());
+        }
+
+        private static readonly Regex SpeakerTagRegex = new Regex(
+            @"^(?:\p{Lu}[\p{L}'\u2019.\- ]{0,14}[:\uFF1A](?:\s|$)|[\[\u3010][^\]\u3011\d]{1,16}[\]\u3011])",
+            RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
         public static List<string> SplitMulti(string input, int numberOfParts, string language)
         {

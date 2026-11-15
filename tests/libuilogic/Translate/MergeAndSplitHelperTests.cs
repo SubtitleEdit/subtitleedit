@@ -1014,5 +1014,36 @@ public class MergeAndSplitHelperTests
         Assert.Equal("Yo-yo's sleeping.", rows[1].TranslatedText);
         Assert.Equal("I think that's where Bianchi was born.", rows[2].TranslatedText);
     }
+
+    // Translation models often merge a two-speaker cue into one line with both tags kept. The
+    // re-break by length put the second tag mid-line; it now lands before the tag, as before a dash.
+    [Fact]
+    public void RebalanceLines_BreaksAMergedTwoSpeakerLineBeforeTheSecondTag()
+    {
+        var merged = "Inspector: I can hear it quite clearly, the wall is thin. Erik: Don't open that door.";
+
+        var rebalanced = MergeAndSplitHelper.RebalanceLines(merged, new TranslationPair("English", "en"));
+
+        Assert.Equal("Inspector: I can hear it quite clearly, the wall is thin." + Environment.NewLine + "Erik: Don't open that door.", rebalanced);
+    }
+
+    [Fact]
+    public async Task MergeAndTranslateIfPossible_MergedTwoSpeakerCueIsSplitAtTheSecondTag()
+    {
+        var rows = MakeRows("探长：我听得很清楚，墙很薄。" + Environment.NewLine + "埃里克：别开那扇门。");
+        var translator = new FixedResultTranslator { Result = "Inspector: I can hear it quite clearly, the wall is thin. Erik: Don't open that door." };
+
+        var count = await MergeAndSplitHelper.MergeAndTranslateIfPossible(
+            rows,
+            new TranslationPair("Chinese", "zh"),
+            new TranslationPair("English", "en"),
+            0,
+            translator,
+            forceSingleLineMode: false,
+            CancellationToken.None);
+
+        Assert.Equal(1, count);
+        Assert.Equal("Inspector: I can hear it quite clearly, the wall is thin." + Environment.NewLine + "Erik: Don't open that door.", rows[0].TranslatedText);
+    }
 }
 
