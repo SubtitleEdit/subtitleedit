@@ -61,6 +61,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string OpperPrompt { get; set; }
         public string OpperApiKey { get; set; }
         public string OpperModel { get; set; }
+        public string TrustedRouterUrl { get; set; }
+        public string TrustedRouterPrompt { get; set; }
+        public string TrustedRouterApiKey { get; set; }
+        public string TrustedRouterModel { get; set; }
         
         public string PerplexityUrl { get; set; }
         public string PerplexityPrompt { get; set; }
@@ -168,6 +172,9 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OpperUrl = "https://api.opper.ai/v3/compat/chat/completions";
             OpperPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             OpperModel = "claude-sonnet-4-6"; // OpperTranslate.Models[0] in LibUiLogic
+            TrustedRouterUrl = "https://api.trustedrouter.com/v1/chat/completions";
+            TrustedRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
+            TrustedRouterModel = "deepseek/deepseek-v4-flash"; // TrustedRouterTranslate.Models[0] in LibUiLogic
             OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             OpenRouterModel = "openai/gpt-5.6-sol"; // OpenRouterTranslate.Models[0] in LibUiLogic
