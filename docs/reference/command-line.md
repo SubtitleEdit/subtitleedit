@@ -367,6 +367,7 @@ Translated output is named with the target language code — `way.srt --translat
 | `--translate-synopsis:<text\|file>` | Advanced engines: what the content is about (genre, setting, tone), included in every request. Inline text or a path to a text file. |
 | `--translate-glossary:<text\|file>` | Advanced engines: terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
 | `--translate-formality:<value>` | Advanced engines: `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
+| `--translate-keep-line-breaks[:false]` | Advanced engines: ask the model to keep each line's number of line breaks, the GUI's "Keep line breaks" switch. On by default; `:false` turns the instruction off. |
 
 **llama.cpp (default engine).** With no `--translate-url`, seconv runs a local `llama-server` for you: it looks for the binary in Subtitle Edit's data folder (`llama.cpp` next to `seconv`, then `%AppData%\Subtitle Edit\llama.cpp` / `~/Library/Application Support/Subtitle Edit/llama.cpp` / `~/.config/Subtitle Edit/llama.cpp`) and falls back to `llama-server` on `PATH`. The server is started on a free localhost port with the model's correct chat-template flags and stopped again when seconv exits. Models resolve against the data folder's `models` subfolder.
 
@@ -471,6 +472,7 @@ completion-only MiLMMT models are refused (use them with `llamacpp`).
 | `--translate-synopsis:<text\|file>` | What the content is about (genre, setting, tone), included in every request. Inline text or a path to a text file. |
 | `--translate-glossary:<text\|file>` | Terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
 | `--translate-formality:<value>` | `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
+| `--translate-keep-line-breaks[:false]` | Ask the model to keep each line's number of line breaks (the GUI's "Keep line breaks" switch). On by default, also when the `--settings` file leaves `keepLineBreaks` out; `:false` turns the instruction off. |
 
 `--translate-prompt` replaces the built-in system prompt for these engines (`{0}` = source language,
 `{1}` = target language; no `{2}`, the lines travel in the request as JSON). The options are read

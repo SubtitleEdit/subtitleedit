@@ -93,6 +93,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--translate-synopsis:<text|file>", "Advanced engines: what the content is about (genre, setting, tone); inline text or a text file");
         ShowParameter(console, "--translate-glossary:<text|file>", "Advanced engines: one \"source term = translation\" per line; inline text (\\n = line break) or a text file");
         ShowParameter(console, "--translate-formality:<value>", "Advanced engines: default | formal | informal");
+        ShowParameter(console, "--translate-keep-line-breaks[:false]", "Advanced engines: ask the model to keep the same number of line breaks per line (default: on)");
         ShowParameter(console, "--multiple-replace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");
         ShowParameter(console, "--custom-format:<path.xml>", "SE CustomFormatItem XML (use with --format customtext)");
         ShowParameter(console, "--settings:<path.json>", "JSON settings file overriding libse defaults");

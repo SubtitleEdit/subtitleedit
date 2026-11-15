@@ -51,7 +51,7 @@ public class AutoTranslateRunnerTest : IDisposable
     }
 
     private static ConversionOptions MakeOptions(string engine = "llamacpp", string? url = null, string? model = null, string to = "de", string? prompt = null, string? apiKey = null,
-        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null, SeLlamaCppAdvanced? advanced = null)
+        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null, bool? keepLineBreaks = null, SeLlamaCppAdvanced? advanced = null)
     {
         return new ConversionOptions
         {
@@ -68,6 +68,7 @@ public class AutoTranslateRunnerTest : IDisposable
             TranslateSynopsis = synopsis,
             TranslateGlossary = glossary,
             TranslateFormality = formality,
+            TranslateKeepLineBreaks = keepLineBreaks,
             TranslateAdvancedSettings = advanced,
             Quiet = true,
         };
@@ -649,6 +650,30 @@ public class AutoTranslateRunnerTest : IDisposable
 
         Assert.Contains("--translate-batch-size", ex.Message);
         Assert.Contains("llamacpp-advanced", ex.Message);
+    }
+
+    [Fact]
+    public void Create_KeepLineBreaksWithRegularEngine_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => AutoTranslateRunner.Create(MakeOptions(engine: "ollama", keepLineBreaks: false)));
+
+        Assert.Contains("--translate-keep-line-breaks", ex.Message);
+        Assert.Contains("llamacpp-advanced", ex.Message);
+    }
+
+    // The GUI's "Keep line breaks" switch from the command line: the option wins over the settings
+    // file in both directions, and leaving it out keeps the file's value.
+    [Theory]
+    [InlineData(true, false, false)]
+    [InlineData(false, true, true)]
+    [InlineData(false, null, false)]
+    public void Create_Advanced_KeepLineBreaks_OptionWinsOverSettingsFile(bool fromFile, bool? option, bool expected)
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", keepLineBreaks: option,
+            advanced: new SeLlamaCppAdvanced { KeepLineBreaks = fromFile }));
+
+        Assert.Equal(expected, runner.AdvancedSettings!.KeepLineBreaks);
     }
 
     // The protocol sends the lines as JSON in the user message, so a completion template with

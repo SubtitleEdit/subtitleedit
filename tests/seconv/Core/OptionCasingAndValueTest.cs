@@ -82,5 +82,7 @@ public class OptionCasingAndValueTest
         // from the settings. Plain flags carry no value at all.
         Assert.Null(SeConv.Program.FindMissingOptionValue(["a.srt", "--format", "subrip", "--apply-min-gap"]));
         Assert.Null(SeConv.Program.FindMissingOptionValue(["a.srt", "--format", "subrip", "--overwrite"]));
+        // A bool? option (--translate-keep-line-breaks) is a flag to the schema too: bare use means true.
+        Assert.Null(SeConv.Program.FindMissingOptionValue(["a.srt", "--format", "subrip", "--translate-keep-line-breaks"]));
     }
 }
