@@ -49,10 +49,10 @@ public class AudioCppRuntimeBuildInfoTests
         "models      : index_tts2,higgs_audio_tts,fish_audio,fireredtts3,ace_step,kugelaudio,sidon,breeze_tts\n" +
         "backend     : metal (arm64)\n";
 
-    private const string BuildInfo2026_11_05 =
+    private const string BuildInfo2026_11_15 =
         "audio.cpp build for SubtitleEdit's IndexTTS-2.5 engine\n" +
         "source      : https://github.com/0xShug0/audio.cpp\n" +
-        "ref         : f7ac446fb75e594a6913c846bea6c85b637f6ac0\n" +
+        "ref         : 61c7838baf1f7f34769b5b7bd369c0d78edf9535\n" +
         "models      : index_tts2,higgs_audio_tts,fish_audio,fireredtts3,ace_step,kugelaudio,sidon,breeze_tts,voxtral_tts\n" +
         "backend     : metal (arm64)\n";
 
@@ -87,7 +87,7 @@ public class AudioCppRuntimeBuildInfoTests
     [Fact]
     public void EveryAudioCppEngineFamily_IsInThePinnedBuild()
     {
-        var families = AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_11_05)!;
+        var families = AudioCppRuntime.ParseBuiltModelFamilies(BuildInfo2026_11_15)!;
 
         Assert.Contains(IndexTts25AudioCpp.FamilyName, families);
         Assert.Contains(HiggsTtsAudioCpp.FamilyName, families);

@@ -2804,10 +2804,11 @@ public static class DownloadHashManager
             },
 
             // audio.cpp engine archives we build in SubtitleEdit/support-files
-            // (audiocpp-indextts25-2026-11-05). Newest first — index 0 is the pinned release,
+            // (audiocpp-indextts25-2026-11-15). Newest first — index 0 is the pinned release,
             // so anything older prompts an update instead of being treated as current.
             [IndexTts25AudioCpp.EngineMacArm64] = new[]
             {
+                "d4f13c80334c32181fc5b49965de1c1b67e854d99a61d0c65328071ce043ea84", // audiocpp-indextts25-macos-arm64.tar.gz (2026-11-15, upstream v0.9.5 61c7838b + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "1073af10aeedad3c3251e6ed74869ec4678b05acb669f607016ffb1921873e65", // audiocpp-indextts25-macos-arm64.tar.gz (2026-11-05, upstream v0.9.4 f7ac446f + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "91285cb27a42a67f152d1c52097e7a2b0c5bbf0e654ac94193ace5bf2dac680b", // audiocpp-indextts25-macos-arm64.tar.gz (2026-10-28, upstream v0.9.3 41c1f8ff + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "6148393da7d35fbc30762f382357a00e132e98dbbf7e197886f6cb0e15274a6c", // audiocpp-indextts25-macos-arm64.tar.gz (2026-10-19, upstream v0.9.2-drama3-base-small 50749561 + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
@@ -2830,6 +2831,7 @@ public static class DownloadHashManager
             },
             [IndexTts25AudioCpp.EngineWindowsCpu] = new[]
             {
+                "c47d0d360697ce204c64239af8f764f3388ed11ba6ee151d41ad24bc4c66e96d", // audiocpp-indextts25-windows-x86_64-cpu.zip (2026-11-15, upstream v0.9.5 61c7838b + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "0eb04e64b47b2b40b720ca3e7d48b2096000a931ee737d23cf0df737477e0720", // audiocpp-indextts25-windows-x86_64-cpu.zip (2026-11-05, upstream v0.9.4 f7ac446f + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "880983098de1a2fad3032571e554fb41d2b540d1f630b4d423db1ee22030f531", // audiocpp-indextts25-windows-x86_64-cpu.zip (2026-10-28, upstream v0.9.3 41c1f8ff + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "115ade8db6e215245b0e6eafbc977acd132c3b1d93cca04467203d4480ad6957", // audiocpp-indextts25-windows-x86_64-cpu.zip (2026-10-19, upstream v0.9.2-drama3-base-small 50749561 + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
@@ -2852,6 +2854,7 @@ public static class DownloadHashManager
             },
             [IndexTts25AudioCpp.EngineWindowsVulkan] = new[]
             {
+                "4be74aeb06df28404a8539b000759d87630eb9ed331cc6b2a4f8c6d67555eb58", // audiocpp-indextts25-windows-x86_64-vulkan.zip (2026-11-15, upstream v0.9.5 61c7838b + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "b291e630839759545e20ee077a6b01926db549fdbaa3cf83e65ece68ad520df0", // audiocpp-indextts25-windows-x86_64-vulkan.zip (2026-11-05, upstream v0.9.4 f7ac446f + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "d1cdda73de332092e37c77277aee18e4a06e92cd845f07c8134ed3d0cac64f3e", // audiocpp-indextts25-windows-x86_64-vulkan.zip (2026-10-28, upstream v0.9.3 41c1f8ff + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "54a7a09a64d311586efe292803493f54850825a2534c0f009c52092fae938da6", // audiocpp-indextts25-windows-x86_64-vulkan.zip (2026-10-19, upstream v0.9.2-drama3-base-small 50749561 + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
@@ -2874,6 +2877,7 @@ public static class DownloadHashManager
             },
             [IndexTts25AudioCpp.EngineWindowsCuda] = new[]
             {
+                "b19246bb6562a9e2f3d21ccfe74cfbca4f32d28ef9d20b1f368b88346214afba", // audiocpp-indextts25-windows-x86_64-cuda.zip (2026-11-15, upstream v0.9.5 61c7838b + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "113b97aee3702bb8bf7584967bb8cc1fc48ba700274dff33292d1cf6ad9fe7d7", // audiocpp-indextts25-windows-x86_64-cuda.zip (2026-11-05, upstream v0.9.4 f7ac446f + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "ca10b7073c2818b53feb5a47fa956ada89ee88dab1553111a52655209a319ed5", // audiocpp-indextts25-windows-x86_64-cuda.zip (2026-10-28, upstream v0.9.3 41c1f8ff + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "b29730bd79a176453cf72d571411892fa05bc5ce531c4830fb78fd31fed7e80b", // audiocpp-indextts25-windows-x86_64-cuda.zip (2026-10-19, upstream v0.9.2-drama3-base-small 50749561 + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
@@ -2896,6 +2900,7 @@ public static class DownloadHashManager
             },
             [IndexTts25AudioCpp.EngineLinuxCpu] = new[]
             {
+                "ab4f5d664e098ee6399caef762ec5683d98598cc82b27b22a9dc92884c4eafe0", // audiocpp-indextts25-linux-x86_64.tar.gz (2026-11-15, upstream v0.9.5 61c7838b + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "bcfc213bad96729106c2a3f6908cef51d13ac42d29a25aa6bfb9dc5da5e84951", // audiocpp-indextts25-linux-x86_64.tar.gz (2026-11-05, upstream v0.9.4 f7ac446f + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "5d0e09bbe27b7939df508c403279503540ce4ff46d95f9f886c05427792ac4a9", // audiocpp-indextts25-linux-x86_64.tar.gz (2026-10-28, upstream v0.9.3 41c1f8ff + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "de2b836a420db137a79a4fc48dda3d5a436cdb8e755b306ffeab7aac738a63e7", // audiocpp-indextts25-linux-x86_64.tar.gz (2026-10-19, upstream v0.9.2-drama3-base-small 50749561 + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
@@ -2918,6 +2923,7 @@ public static class DownloadHashManager
             },
             [IndexTts25AudioCpp.EngineLinuxVulkan] = new[]
             {
+                "566dc666b414f9ffeb8f5e1c42461692571373fdcb58881e6577e7a10ee94468", // audiocpp-indextts25-linux-x86_64-vulkan.tar.gz (2026-11-15, upstream v0.9.5 61c7838b + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "90594df691e94605d34031257284f75bb55e252bf8b89865e1a816db145b28f2", // audiocpp-indextts25-linux-x86_64-vulkan.tar.gz (2026-11-05, upstream v0.9.4 f7ac446f + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "4757086e0c16c929f1022b137b6c02396c1c4d23a34dddc379abc87ef86b6834", // audiocpp-indextts25-linux-x86_64-vulkan.tar.gz (2026-10-28, upstream v0.9.3 41c1f8ff + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "5cb6b602e895374958872ea03bb7c7c08f715b4a293f2fcddfa79d641c8b83eb", // audiocpp-indextts25-linux-x86_64-vulkan.tar.gz (2026-10-19, upstream v0.9.2-drama3-base-small 50749561 + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
@@ -2940,6 +2946,7 @@ public static class DownloadHashManager
             },
             [IndexTts25AudioCpp.EngineLinuxCuda] = new[]
             {
+                "926e379be1bc32e427c9662ef5a0d18baa18eb8b1b3d36fd4c0723e808b80144", // audiocpp-indextts25-linux-x86_64-cuda.tar.gz (2026-11-15, upstream v0.9.5 61c7838b + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "9ac213952eb0fdae2ea2bde2878b8625c85f82a426b07a6065573d88affd2576", // audiocpp-indextts25-linux-x86_64-cuda.tar.gz (2026-11-05, upstream v0.9.4 f7ac446f + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "40032c0ece6a1ec7b697319dd8ad749bedc525986d473443fb981cc163017e4d", // audiocpp-indextts25-linux-x86_64-cuda.tar.gz (2026-10-28, upstream v0.9.3 41c1f8ff + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
                 "2353a96166b52a41efff0327b7a384b71bdd4b0a28448517de241a7131477d26", // audiocpp-indextts25-linux-x86_64-cuda.tar.gz (2026-10-19, upstream v0.9.2-drama3-base-small 50749561 + index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon + breeze_tts + voxtral_tts)
