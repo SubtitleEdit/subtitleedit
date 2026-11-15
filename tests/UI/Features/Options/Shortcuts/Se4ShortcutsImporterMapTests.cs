@@ -47,7 +47,7 @@ public class Se4ShortcutsImporterMapTests
     [InlineData("MainVideo5000MsRight", "VideoMoveCustom4ForwardCommand")]
     [InlineData("MainVideoGoToPrevChapter", "GoToPreviousChapterCommand")]
     [InlineData("MainVideoGoToNextChapter", "GoToNextChapterCommand")]
-    [InlineData("MainAdjustSetStartAndOffsetTheWholeSubtitle", "WaveformSetStartAndKeepDurationCommand")]
+    [InlineData("MainAdjustSetStartAndOffsetTheWholeSubtitle", "WaveformSetStartAndOffsetTheWholeSubtitleCommand")]
     [InlineData("GeneralGoToNextSubtitleAndPlay", "PlayNextCommand")]
     [InlineData("GeneralGoToNextSubtitlePlayTranslate", "GoToNextSubtitlePlayTranslateCommand")]
     [InlineData("GeneralGoToPrevSubtitlePlayTranslate", "GoToPrevSubtitlePlayTranslateCommand")]
