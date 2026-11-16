@@ -46,12 +46,15 @@ public class AutoTranslateRunnerTest : IDisposable
         Configuration.Settings.Tools.OpenAiCompatibleTranslateModel = _defaultOpenAiCompatibleModel;
         Configuration.Settings.Tools.AutoTranslateDeepLUrl = _defaultDeepLUrl;
         Configuration.Settings.Tools.AutoTranslateDeepLApiKey = _defaultDeepLApiKey;
+        Configuration.Settings.Tools.LlamaCppApiKey = string.Empty;
+        Configuration.Settings.Tools.OllamaApiKey = string.Empty;
+        Configuration.Settings.Tools.LmStudioApiKey = string.Empty;
         if (Directory.Exists(_fakeLlamaFolder))
             Directory.Delete(_fakeLlamaFolder, recursive: true);
     }
 
     private static ConversionOptions MakeOptions(string engine = "llamacpp", string? url = null, string? model = null, string to = "de", string? prompt = null, string? apiKey = null,
-        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null, SeLlamaCppAdvanced? advanced = null)
+        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null, bool? keepLineBreaks = null, string? requestJson = null, SeLlamaCppAdvanced? advanced = null)
     {
         return new ConversionOptions
         {
@@ -68,6 +71,8 @@ public class AutoTranslateRunnerTest : IDisposable
             TranslateSynopsis = synopsis,
             TranslateGlossary = glossary,
             TranslateFormality = formality,
+            TranslateKeepLineBreaks = keepLineBreaks,
+            TranslateRequestJson = requestJson,
             TranslateAdvancedSettings = advanced,
             Quiet = true,
         };
@@ -464,9 +469,46 @@ public class AutoTranslateRunnerTest : IDisposable
     public void Create_ApiKeyWithEngineThatHasNone_Throws()
     {
         var ex = Assert.Throws<InvalidOperationException>(
-            () => AutoTranslateRunner.Create(MakeOptions(engine: "ollama", apiKey: "abc")));
+            () => AutoTranslateRunner.Create(MakeOptions(engine: "libretranslate", apiKey: "abc")));
 
         Assert.Contains("--translate-api-key is not supported", ex.Message);
+    }
+
+    [Fact]
+    public void Create_LocalEngines_ApplyApiKey()
+    {
+        AutoTranslateRunner.Create(MakeOptions(engine: "llamacpp", url: "http://myhost:8080", apiKey: " llama-key "));
+        AutoTranslateRunner.Create(MakeOptions(engine: "ollama", apiKey: "ollama-key"));
+        AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio", apiKey: "lm-key"));
+
+        Assert.Equal("llama-key", Configuration.Settings.Tools.LlamaCppApiKey);
+        Assert.Equal("ollama-key", Configuration.Settings.Tools.OllamaApiKey);
+        Assert.Equal("lm-key", Configuration.Settings.Tools.LmStudioApiKey);
+    }
+
+    [Theory]
+    [InlineData("llamacpp-advanced", "http://myhost:8080", null)]
+    [InlineData("ollama-advanced", null, "gemma4")]
+    [InlineData("lmstudio-advanced", null, null)]
+    public void Create_AdvancedEngines_PassApiKeyToTheEngine(string engineName, string? url, string? model)
+    {
+        var withKey = AutoTranslateRunner.Create(MakeOptions(engine: engineName, url: url, model: model, apiKey: "abc"));
+        var withoutKey = AutoTranslateRunner.Create(MakeOptions(engine: engineName, url: url, model: model));
+
+        Assert.Equal("abc", Assert.IsType<AdvancedTranslateEngine>(withKey.Translator).ApiKey);
+        Assert.Null(Assert.IsType<AdvancedTranslateEngine>(withoutKey.Translator).ApiKey);
+    }
+
+    [Theory]
+    [InlineData("llamacpp")]
+    [InlineData("llamacpp-advanced")]
+    public void Create_LlamaCppLocal_ApiKeyWithoutUrl_Throws(string engineName)
+    {
+        // seconv would start the llama-server itself, and that server takes no key.
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => AutoTranslateRunner.Create(MakeOptions(engine: engineName, apiKey: "abc")));
+
+        Assert.Contains("--translate-api-key needs --translate-url", ex.Message);
     }
 
     [Fact]
@@ -651,6 +693,30 @@ public class AutoTranslateRunnerTest : IDisposable
         Assert.Contains("llamacpp-advanced", ex.Message);
     }
 
+    [Fact]
+    public void Create_KeepLineBreaksWithRegularEngine_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => AutoTranslateRunner.Create(MakeOptions(engine: "ollama", keepLineBreaks: false)));
+
+        Assert.Contains("--translate-keep-line-breaks", ex.Message);
+        Assert.Contains("llamacpp-advanced", ex.Message);
+    }
+
+    // The GUI's "Keep line breaks" switch from the command line: the option wins over the settings
+    // file in both directions, and leaving it out keeps the file's value.
+    [Theory]
+    [InlineData(true, false, false)]
+    [InlineData(false, true, true)]
+    [InlineData(false, null, false)]
+    public void Create_Advanced_KeepLineBreaks_OptionWinsOverSettingsFile(bool fromFile, bool? option, bool expected)
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", keepLineBreaks: option,
+            advanced: new SeLlamaCppAdvanced { KeepLineBreaks = fromFile }));
+
+        Assert.Equal(expected, runner.AdvancedSettings!.KeepLineBreaks);
+    }
+
     // The protocol sends the lines as JSON in the user message, so a completion template with
     // the text at {2} (MiLMMT style) has nowhere to put it.
     [Fact]
@@ -693,6 +759,73 @@ public class AutoTranslateRunnerTest : IDisposable
             () => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", history: -1)));
 
         Assert.Contains("--translate-history", ex.Message);
+    }
+
+    // --- --translate-request-json: provider fields merged into every request, checked up front ---
+
+    [Fact]
+    public void Create_Advanced_RequestJsonInline_IsKeptExactly()
+    {
+        // Nothing is unescaped: the \n inside the JSON string stays a JSON escape.
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: "{\"reasoning\": {\"enabled\": false}, \"stop\": [\"\\n\"]}"));
+
+        Assert.Equal("{\"reasoning\": {\"enabled\": false}, \"stop\": [\"\\n\"]}", runner.AdvancedSettings!.RequestJson);
+    }
+
+    [Fact]
+    public void Create_Advanced_RequestJsonFromFile_IsRead()
+    {
+        var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".json");
+        File.WriteAllText(path, "{ \"top_k\": 40 }\n");
+        try
+        {
+            var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: path));
+
+            Assert.Equal("{ \"top_k\": 40 }", runner.AdvancedSettings!.RequestJson);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Theory]
+    [InlineData("{\"top_k\": ", "not valid JSON")]
+    [InlineData("{\"messages\": []}", "\"messages\"")]
+    [InlineData("{\"response_format\": {\"type\": \"text\"}}", "\"response_format\"")]
+    public void Create_Advanced_RequestJsonUnusable_Throws(string requestJson, string expectedInMessage)
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: requestJson)));
+
+        Assert.Contains("--translate-request-json", ex.Message);
+        Assert.Contains(expectedInMessage, ex.Message);
+    }
+
+    [Fact]
+    public void Create_Advanced_RequestJsonMissingFile_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: "no-such-file.json")));
+
+        Assert.Contains("file not found", ex.Message);
+    }
+
+    [Fact]
+    public void Create_Advanced_SettingsFileRequestJson_IsCheckedToo()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", advanced: new SeLlamaCppAdvanced { RequestJson = "[1, 2]" })));
+
+        Assert.Contains("tools.llamaCppAdvanced.requestJson", ex.Message);
+        Assert.Contains("must be a JSON object", ex.Message);
+    }
+
+    [Fact]
+    public void Create_RequestJsonWithRegularEngine_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "ollama", requestJson: "{\"top_k\": 40}")));
+
+        Assert.Contains("--translate-request-json", ex.Message);
+        Assert.Contains("llamacpp-advanced", ex.Message);
     }
 
     [Fact]
@@ -833,5 +966,71 @@ public class AutoTranslateRunnerTest : IDisposable
         var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "llamacpp-advanced")));
 
         Assert.Contains("No llama.cpp chat translate model", ex.Message);
+    }
+
+    // --- --verbose prints the prompt the engine sends, which the prompt field never shows in full ---
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void DescribePrompt_Advanced_IsTheCompleteSystemPrompt(bool keepLineBreaks)
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", synopsis: "A crime drama.",
+            glossary: "the Chief = der Chef", formality: "informal", advanced: new SeLlamaCppAdvanced { KeepLineBreaks = keepLineBreaks }));
+
+        var prompt = runner.DescribePrompt("English", "German")!;
+
+        Assert.StartsWith("You are a professional subtitle translator. Translate each subtitle line from English to German.", prompt);
+        Assert.Equal(keepLineBreaks, prompt.Contains("Keep the same number of line breaks"));
+        Assert.Contains("informal address", prompt);
+        Assert.Contains("A crime drama.", prompt);
+        Assert.Contains("the Chief = der Chef", prompt);
+        Assert.Contains("The user message is a JSON object.", prompt);
+        Assert.Equal(LlamaCppAdvancedProtocol.BuildSystemPrompt("English", "German", runner.AdvancedSettings!), prompt);
+    }
+
+    [Fact]
+    public void DescribePrompt_RegularEngines_FillTheTemplateWithATextPlaceholder()
+    {
+        // A completion template keeps the text at {2}; a chat prompt gets it after a blank line.
+        var completion = AutoTranslateRunner.Create(MakeOptions(engine: "llamacpp", url: "http://myhost:8080", prompt: "Translate this from {0} to {1}:\\n{0}: {2}\\n{1}:"));
+        Assert.Equal("Translate this from English to German:\nEnglish: <text>\nGerman:", completion.DescribePrompt("English", "German"));
+
+        var chat = AutoTranslateRunner.Create(MakeOptions(engine: "ollama", prompt: "Translate from {0} to {1}, output only the translation:"));
+        Assert.Equal("Translate from English to German, output only the translation:\n\n<text>", chat.DescribePrompt("English", "German"));
+
+        // llamacpp without --translate-prompt: the curated model's template when one is active.
+        Configuration.Settings.Tools.LlamaCppModelPrompt = "Model template {0}>{1}: {2}";
+        var curated = AutoTranslateRunner.Create(MakeOptions(engine: "llamacpp", url: "http://myhost:8080"));
+        Assert.Equal("Model template English>German: <text>", curated.DescribePrompt("English", "German"));
+
+        // The translation services have no prompt to show.
+        Assert.Null(AutoTranslateRunner.Create(MakeOptions(engine: "libretranslate")).DescribePrompt("English", "German"));
+    }
+
+    [Fact]
+    public void WritePromptIfVerbose_PrintsOncePerLanguagePair_OnlyWhenVerboseAndNotQuiet()
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced") with { Verbose = true, Quiet = false });
+        var output = new StringWriter();
+        runner.WritePromptIfVerbose(output, "English", "German");
+        runner.WritePromptIfVerbose(output, "English", "German"); // the same pair again: nothing new
+        runner.WritePromptIfVerbose(output, "Danish", "German"); // the next file's source language differs: printed again
+
+        var text = output.ToString();
+        Assert.Contains("  System prompt sent to the model:", text);
+        Assert.Equal(1, Occurrences(text, "from English to German"));
+        Assert.Equal(1, Occurrences(text, "from Danish to German"));
+
+        // --quiet (and --json, which implies it) keeps stdout clean whatever --verbose says.
+        var silent = new StringWriter();
+        AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced") with { Verbose = false, Quiet = false }).WritePromptIfVerbose(silent, "English", "German");
+        AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced") with { Verbose = true, Quiet = true }).WritePromptIfVerbose(silent, "English", "German");
+        Assert.Equal(string.Empty, silent.ToString());
+    }
+
+    private static int Occurrences(string text, string needle)
+    {
+        return text.Split(needle).Length - 1;
     }
 }

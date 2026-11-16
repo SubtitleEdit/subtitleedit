@@ -399,9 +399,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is KugelAudioAudioCpp)
         {
             Se.Settings.Video.TextToSpeech.KugelAudioAudioCppModel = SelectedModel ?? KugelAudioAudioCpp.DefaultModelKey;
+            // A preset id, or the name of a reference WAV to clone from.
             if (SelectedVoice?.EngineVoice is KugelAudioVoice kugelVoice && !string.IsNullOrEmpty(kugelVoice.Voice))
             {
                 Se.Settings.Video.TextToSpeech.KugelAudioAudioCppVoice = kugelVoice.Voice;
+            }
+            else if (SelectedVoice?.EngineVoice is IndexTtsVoice kugelCloneVoice && !string.IsNullOrEmpty(kugelCloneVoice.Voice))
+            {
+                Se.Settings.Video.TextToSpeech.KugelAudioAudioCppVoice = kugelCloneVoice.Voice;
             }
         }
         else if (SelectedEngine is VoxtralTtsAudioCpp)
@@ -5245,7 +5250,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                 }
 
                 var savedVoice = Se.Settings.Video.TextToSpeech.KugelAudioAudioCppVoice;
-                var match = Voices.FirstOrDefault(v => v.EngineVoice is KugelAudioVoice kv && kv.Voice == savedVoice);
+                var match = Voices.FirstOrDefault(v => v.EngineVoice is KugelAudioVoice kv && kv.Voice == savedVoice)
+                            ?? Voices.FirstOrDefault(v => v.EngineVoice is IndexTtsVoice iv && iv.Voice == savedVoice);
                 if (match != null)
                 {
                     SelectedVoice = match;

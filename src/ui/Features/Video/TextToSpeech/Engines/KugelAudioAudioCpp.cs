@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.UiLogic.Common;
 using System;
 using System.Collections.Generic;
@@ -20,9 +21,13 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// and shared. A 7B VibeVoice-based model trained for European languages (23, including Danish,
 /// Swedish, Norwegian, Finnish and Polish), 24 kHz output.
 ///
-/// No cloning: the open release ships four preset voices embedded in the GGUF (two German female,
-/// one British female, one British male), picked per request with the <c>voice_id</c> option, so
-/// switching voice does not restart the server. There is no language option either — the model
+/// Two kinds of voice. The open release ships four preset voices embedded in the GGUF (two German
+/// female, one British female, one British male), picked per request with the <c>voice_id</c>
+/// option. Since audio.cpp v0.9.5 (#1275) it also clones from a reference WAV (up to 30 s, no
+/// transcript needed), sent per request as <c>voice_ref</c> - so neither kind of voice switch
+/// restarts the server, and per-line cloning ("Clone from video") is free. Cloning needs the
+/// checkpoint's acoustic encoder, which the published GGUFs omit; SE downloads it beside the GGUF
+/// (see <see cref="KugelAudioAudioCppDownloadService"/>). There is no language option — the model
 /// reads the language from the text. A preset speaks every language, but the voices keep their
 /// native accent; on Danish the British female preset came out anglicised to the point of being
 /// unintelligible, while the other three round-tripped through speech-to-text almost word for word.
@@ -32,17 +37,17 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// Licence note: the audio.cpp binaries are Apache-2.0 and the KugelAudio weights MIT, so there is
 /// no first-run licence gate.
 /// </summary>
-public class KugelAudioAudioCpp : ITtsEngine
+public class KugelAudioAudioCpp : ITtsEngine, IPerLineCloneEngine
 {
     public string Name => "KugelAudio (audio.cpp)";
-    public string Description => "KugelAudio preset voices in 23 European languages, via audio.cpp";
+    public string Description => "KugelAudio preset voices and voice cloning in 23 European languages, via audio.cpp";
     public bool HasLanguageParameter => false;
     public bool HasApiKey => false;
     public bool HasRegion => false;
     public bool HasModel => true;
     public bool HasKeyFile => false;
-    public bool SupportsVoiceCloning => false;
-    public bool SupportsPerLineVoiceCloning => false;
+    public bool SupportsVoiceCloning => true;
+    public bool SupportsPerLineVoiceCloning => true;
 
     // Q4_K is the default: on Danish it round-tripped through speech-to-text as well as Q8_0 is
     // expected to, at 3.8 GB less to download and hold in memory.
@@ -65,6 +70,23 @@ public class KugelAudioAudioCpp : ITtsEngine
     public const string DefaultVoice = "default";
 
     /// <summary>
+    /// The checkpoint's acoustic encoder, which turns a reference WAV into voice features. The
+    /// published GGUFs leave it out, so it is a file of its own, passed to the server as the
+    /// <c>kugelaudio.reference_encoder_path</c> session option.
+    /// </summary>
+    public const string ReferenceEncoderFileName = "kugelaudio-0-open-acoustic-encoder.safetensors";
+
+    /// <summary>
+    /// audio.cpp's clone-aware KugelAudio model spec. The published GGUFs embed the older
+    /// preset-only contract, which refuses a voice reference, so the server is pointed at this one
+    /// with <c>model_spec_override</c>. Preset output is byte-identical either way.
+    /// </summary>
+    public const string ModelSpecFileName = "kugelaudio-model-spec.json";
+
+    /// <summary>audio.cpp rejects a longer reference rather than truncating it, so imports are cut to this.</summary>
+    public const int MaxReferenceSeconds = 30;
+
+    /// <summary>
     /// Exact byte sizes on the audio-cpp/audio.cpp-gguf HuggingFace repo. A truncated GGUF is
     /// the single most common failure here — a download that dies partway leaves a file the
     /// loader rejects with "GGUF tensor data range is out of bounds", so size is checked
@@ -74,6 +96,8 @@ public class KugelAudioAudioCpp : ITtsEngine
     {
         [ModelQ4_KFileName] = [5732997442L],
         [ModelQ8_0FileName] = [9752398658L],
+        [ReferenceEncoderFileName] = [687428480L],
+        [ModelSpecFileName] = [6274L],
     };
 
     public static string ResolveModelKey(string? modelKey)
@@ -142,15 +166,93 @@ public class KugelAudioAudioCpp : ITtsEngine
     public static bool IsValidLocalModelFile(string path, string fileName) =>
         AudioCppRuntime.IsValidModelFile(path, ExpectedFileSizes.GetValueOrDefault(fileName));
 
+    public static string GetReferenceEncoderPath() => Path.Combine(GetSetModelsFolder(), ReferenceEncoderFileName);
+
+    public static string GetModelSpecPath() => Path.Combine(GetSetModelsFolder(), ModelSpecFileName);
+
+    /// <summary>
+    /// The GGUF plus the two cloning files. An install from before cloning has only the GGUF, so
+    /// it reads as not installed and the download dialog fetches just the missing encoder.
+    /// </summary>
     public static bool AreModelsInstalled(string? modelKey = null) =>
-        IsValidLocalModelFile(GetModelPath(modelKey), GetModelFileName(modelKey));
+        IsValidLocalModelFile(GetModelPath(modelKey), GetModelFileName(modelKey))
+        && IsCloningInstalled();
+
+    public static bool IsCloningInstalled() =>
+        IsValidLocalModelFile(GetReferenceEncoderPath(), ReferenceEncoderFileName)
+        && IsValidLocalModelFile(GetModelSpecPath(), ModelSpecFileName);
+
+    public static string GetSetVoicesFolder()
+    {
+        var folder = Path.Combine(GetSetFolder(), "voices");
+        if (!Directory.Exists(folder))
+        {
+            Directory.CreateDirectory(folder);
+        }
+
+        SeedVoicesFromQwen3TtsCppIfEmpty(folder);
+        return folder;
+    }
+
+    private static bool _voiceSeedAttempted;
+
+    /// <summary>
+    /// One-time best-effort seed of reference WAVs from the shared Qwen3 voice pack, so cloning
+    /// has something to show beside the presets on first run. Resampled to 24 kHz, the model's
+    /// own rate, on seed. No transcripts: KugelAudio clones from the audio alone.
+    /// </summary>
+    private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
+    {
+        if (_voiceSeedAttempted)
+        {
+            return;
+        }
+
+        _voiceSeedAttempted = true;
+
+        try
+        {
+            if (Directory.EnumerateFiles(voicesFolder, "*.wav").Any())
+            {
+                return;
+            }
+
+            var sourceFolder = Qwen3TtsCpp.GetSetVoicesFolder();
+            if (!Directory.Exists(sourceFolder))
+            {
+                return;
+            }
+
+            foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
+            {
+                VoiceSeedHelper.CopyOrResample(src, Path.Combine(voicesFolder, Path.GetFileName(src)), 24000, "KugelAudio (audio.cpp)");
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "KugelAudio (audio.cpp): voice seeding from the shared voice pack failed");
+        }
+    }
 
     public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus() => AudioCppRuntime.GetEngineUpdateStatus();
 
-    public Task<Voice[]> GetVoices(string language)
+    public async Task<Voice[]> GetVoices(string language)
     {
-        // Every preset speaks every language, so the list does not depend on the language.
-        return Task.FromResult(PresetVoices.Select(v => new Voice(new KugelAudioVoice(v))).ToArray());
+        // Every voice speaks every language, so the list does not depend on the language:
+        // the four presets first, then the reference WAVs to clone from.
+        var result = PresetVoices.Select(v => new Voice(new KugelAudioVoice(v))).ToList();
+
+        var voicesFolder = await Task.Run(GetSetVoicesFolder);
+        if (Directory.Exists(voicesFolder))
+        {
+            foreach (var file in Directory.GetFiles(voicesFolder, "*.wav").OrderBy(f => f, StringComparer.OrdinalIgnoreCase))
+            {
+                var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
+                result.Add(new Voice(new IndexTtsVoice(name, file)));
+            }
+        }
+
+        return result.ToArray();
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;
@@ -178,6 +280,27 @@ public class KugelAudioAudioCpp : ITtsEngine
                ?? DefaultVoice;
     }
 
+    /// <summary>
+    /// <see cref="IPerLineCloneEngine"/>: the server takes <c>voice_ref</c> as a path per request,
+    /// so the voice simply points at the cut clip - nothing is staged.
+    /// </summary>
+    public Voice? MakePerLineCloneVoice(string clipFileName, string voiceName) =>
+        new Voice(new IndexTtsVoice(voiceName, clipFileName));
+
+    /// <summary>The clip's own path, which is exactly what the voice carries.</summary>
+    public string? GetPerLineReferenceClip(Voice voice) => GetReferencePath(voice);
+
+    /// <summary>Nothing is ever staged, so there is nothing to clear between runs.</summary>
+    public void ResetStagedPerLineReferences()
+    {
+    }
+
+    /// <summary>The reference WAV a clone voice points at; null for a preset (or foreign) voice.</summary>
+    internal static string? GetReferencePath(Voice? voice) =>
+        voice?.EngineVoice is IndexTtsVoice indexVoice && !string.IsNullOrEmpty(indexVoice.FilePath)
+            ? indexVoice.FilePath
+            : null;
+
     /// <summary>audio.cpp's OpenAI-style speech payload; the preset goes in as <c>voice_id</c>.</summary>
     internal static Dictionary<string, object> BuildSpeechPayload(string text, string voiceId) => new()
     {
@@ -190,6 +313,22 @@ public class KugelAudioAudioCpp : ITtsEngine
         },
     };
 
+    /// <summary>
+    /// The cloning payload: the reference goes in as <c>voice_ref</c> (which takes precedence over
+    /// any <c>voice_id</c>, so none is sent).
+    /// </summary>
+    internal static Dictionary<string, object> BuildCloneSpeechPayload(string text, string referencePath) => new()
+    {
+        ["model"] = ServerModelId,
+        ["input"] = text,
+        ["response_format"] = "wav",
+        ["voice_ref"] = new Dictionary<string, object>
+        {
+            ["type"] = "path",
+            ["path"] = referencePath,
+        },
+    };
+
     public async Task<TtsResult> Speak(
         string text,
         string outputFolder,
@@ -199,13 +338,22 @@ public class KugelAudioAudioCpp : ITtsEngine
         string? model,
         CancellationToken cancellationToken)
     {
-        var voiceId = ResolveVoiceId(voice);
+        var referencePath = GetReferencePath(voice);
+        if (referencePath != null && !File.Exists(referencePath))
+        {
+            throw new InvalidOperationException($"KugelAudio (audio.cpp): reference voice WAV not found: {referencePath}");
+        }
+
+        // For the logs and error messages: the preset id, or the reference file cloned from.
+        var voiceId = referencePath == null ? ResolveVoiceId(voice) : Path.GetFileName(referencePath);
         var modelKey = ResolveModelKey(model);
         await EnsureServerRunningAsync(modelKey, cancellationToken);
 
         var outputFileName = Path.Combine(TtsOutputFolder.Resolve(outputFolder, GetSetFolder), Guid.NewGuid() + ".wav");
 
-        var body = JsonSerializer.Serialize(BuildSpeechPayload(text, voiceId));
+        var body = JsonSerializer.Serialize(referencePath == null
+            ? BuildSpeechPayload(text, voiceId)
+            : BuildCloneSpeechPayload(text, referencePath));
         Se.WriteToolsLog($"KugelAudio (audio.cpp): POST {Server.BaseUrl}/v1/audio/speech (voice={voiceId}, textLen={text.Length})");
 
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
@@ -285,26 +433,7 @@ public class KugelAudioAudioCpp : ITtsEngine
     /// </remarks>
     private static string WriteServerConfig(int port, string backend, string modelKey)
     {
-        var config = new Dictionary<string, object>
-        {
-            ["host"] = "127.0.0.1",
-            ["port"] = port,
-            ["backend"] = backend,
-            ["threads"] = Math.Max(1, Math.Min(8, Environment.ProcessorCount / 2)),
-            ["lazy_load"] = true,
-            ["models"] = new[]
-            {
-                new Dictionary<string, object>
-                {
-                    ["id"] = ServerModelId,
-                    ["family"] = FamilyName,
-                    ["path"] = GetModelPath(modelKey),
-                    // Preset voices only: the open model has no clone task.
-                    ["task"] = "tts",
-                    ["mode"] = "offline",
-                },
-            },
-        };
+        var config = BuildServerConfig(port, backend, GetModelPath(modelKey), GetReferenceEncoderPath(), GetModelSpecPath(), IsCloningInstalled());
 
         var configPath = Path.Combine(AudioCppRuntime.GetSetEngineFolder(), "kugelaudio-server.json");
         File.WriteAllText(
@@ -312,8 +441,45 @@ public class KugelAudioAudioCpp : ITtsEngine
             JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }),
             Encoding.UTF8);
 
-        Se.WriteToolsLog($"KugelAudio (audio.cpp): server config written to {configPath} (model={modelKey}, backend={backend})");
+        Se.WriteToolsLog($"KugelAudio (audio.cpp): server config written to {configPath} (model={modelKey}, backend={backend}, cloning={IsCloningInstalled()})");
         return configPath;
+    }
+
+    /// <summary>
+    /// The server config. With the cloning files present the model entry also gets the encoder
+    /// (session option) and the clone-aware spec (override); without them it stays the plain
+    /// preset-only entry, so presets keep working on an install that has not fetched them yet.
+    /// </summary>
+    internal static Dictionary<string, object> BuildServerConfig(int port, string backend, string modelPath, string encoderPath, string specPath, bool cloning)
+    {
+        var model = new Dictionary<string, object>
+        {
+            ["id"] = ServerModelId,
+            ["family"] = FamilyName,
+            ["path"] = modelPath,
+            // "tts" serves both: a request with voice_ref clones, one without uses the preset.
+            ["task"] = "tts",
+            ["mode"] = "offline",
+        };
+
+        if (cloning)
+        {
+            model["model_spec_override"] = specPath;
+            model["session_options"] = new Dictionary<string, object>
+            {
+                [FamilyName + ".reference_encoder_path"] = encoderPath,
+            };
+        }
+
+        return new Dictionary<string, object>
+        {
+            ["host"] = "127.0.0.1",
+            ["port"] = port,
+            ["backend"] = backend,
+            ["threads"] = Math.Max(1, Math.Min(8, Environment.ProcessorCount / 2)),
+            ["lazy_load"] = true,
+            ["models"] = new[] { model },
+        };
     }
 
     /// <summary>
@@ -323,5 +489,36 @@ public class KugelAudioAudioCpp : ITtsEngine
     /// </summary>
     public static void StopServer() => Server.Stop();
 
-    public bool ImportVoice(string fileName) => false;
+    /// <summary>
+    /// Copies a reference into the voices folder as 24 kHz mono, cut to
+    /// <see cref="MaxReferenceSeconds"/> (the server refuses a longer one). No transcript needed.
+    /// </summary>
+    public bool ImportVoice(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+        {
+            return false;
+        }
+
+        var voicesFolder = GetSetVoicesFolder();
+        var destinationFileName = VoiceCloneImporter.GetUniqueDestinationFileName(voicesFolder, Path.GetFileNameWithoutExtension(fileName));
+
+        try
+        {
+            using var process = FfmpegGenerator.ConvertToMono24kHzWav(fileName, destinationFileName, MaxReferenceSeconds);
+            if (!process.Start())
+            {
+                return false;
+            }
+
+            process.WaitForExit();
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "KugelAudio (audio.cpp) voice import failed (ffmpeg conversion).");
+            return false;
+        }
+
+        return File.Exists(destinationFileName);
+    }
 }

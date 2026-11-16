@@ -190,7 +190,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateModel { get; init; }
 
         [CommandOption("--translate-api-key|--translateapikey")]
-        [Description("API key for the openai-compatible and deepl translate engines (required for deepl)")]
+        [Description("API key: sent as a Bearer token by llamacpp/ollama/lmstudio, their advanced variants and openai-compatible when the server asks for one (llamacpp needs --translate-url); required for deepl")]
         public string? TranslateApiKey { get; init; }
 
         [CommandOption("--translate-prompt|--translateprompt")]
@@ -216,6 +216,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--translate-formality|--translateformality")]
         [Description("Advanced engines: default | formal | informal (adds an instruction to use e.g. German Sie or du)")]
         public string? TranslateFormality { get; init; }
+
+        [CommandOption("--translate-keep-line-breaks|--translatekeeplinebreaks")]
+        [Description("Advanced engines: ask the model to keep each line's number of line breaks, the GUI's \"Keep line breaks\" switch (default: on; --translate-keep-line-breaks:false turns it off)")]
+        public bool? TranslateKeepLineBreaks { get; init; }
+
+        [CommandOption("--translate-request-json|--translaterequestjson")]
+        [Description("Advanced engines: extra request body fields as one JSON object (inline, starting with {, or the path to a .json file), merged into every request last so they win; a null value removes a field; messages and response_format cannot be set")]
+        public string? TranslateRequestJson { get; init; }
 
         [CommandOption("--offset")]
         [Description("Offset time (hh:mm:ss:ms)")]
@@ -268,6 +276,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--resolution")]
         [Description("Resolution (widthxheight)")]
         public string? Resolution { get; init; }
+
+        [CommandOption("--layout-resolution")]
+        [Description("ASSA LayoutResX/LayoutResY (widthxheight): the video's display size")]
+        public string? LayoutResolution { get; init; }
 
         [CommandOption("--target-fps|--targetfps")]
         [Description("Target frame rate")]
@@ -597,7 +609,9 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                  settings.TranslateHistory.HasValue ||
                  !string.IsNullOrWhiteSpace(settings.TranslateSynopsis) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateGlossary) ||
-                 !string.IsNullOrWhiteSpace(settings.TranslateFormality)))
+                 !string.IsNullOrWhiteSpace(settings.TranslateFormality) ||
+                 settings.TranslateKeepLineBreaks.HasValue ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateRequestJson)))
             {
                 return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model/--translate-api-key/--translate-prompt/" +
                                       AutoTranslateRunner.AdvancedOptionNames + " require --translate-to:<language>.");
@@ -641,7 +655,9 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if ((settings.TranslateBatchSize.HasValue || settings.TranslateHistory.HasValue ||
                  !string.IsNullOrWhiteSpace(settings.TranslateSynopsis) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateGlossary) ||
-                 !string.IsNullOrWhiteSpace(settings.TranslateFormality)) &&
+                 !string.IsNullOrWhiteSpace(settings.TranslateFormality) ||
+                 settings.TranslateKeepLineBreaks.HasValue ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateRequestJson)) &&
                 !AutoTranslateRunner.IsAdvancedEngine(settings.TranslateEngine))
             {
                 return Fail(
@@ -728,7 +744,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 {
                     AutoTranslateRunner.CreateAdvancedSettings(
                         settings.TranslateBatchSize, settings.TranslateHistory, settings.TranslateSynopsis,
-                        settings.TranslateGlossary, settings.TranslateFormality,
+                        settings.TranslateGlossary, settings.TranslateFormality, settings.TranslateKeepLineBreaks, settings.TranslateRequestJson,
                         AutoTranslateRunner.ReadPromptOption(settings.TranslatePrompt), advancedSettings);
                 }
                 catch (Exception ex)
@@ -871,6 +887,19 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
 
+            (int Width, int Height)? layoutResolution = null;
+            if (!string.IsNullOrWhiteSpace(settings.LayoutResolution))
+            {
+                try
+                {
+                    layoutResolution = ResolutionParser.Parse(settings.LayoutResolution);
+                }
+                catch (FormatException ex)
+                {
+                    return Fail(settings, "--layout-resolution: " + ex.Message);
+                }
+            }
+
             if (!string.IsNullOrWhiteSpace(settings.BurnInVideo))
             {
                 if (!File.Exists(settings.BurnInVideo))
@@ -987,6 +1016,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 BridgeGapsMaxMs = settings.BridgeGaps,
                 ApplyMinGapMs = applyMinGapMs,
                 Resolution = resolution,
+                LayoutResolution = layoutResolution,
                 ImageStyle = imageStyle,
                 AssaStyleFile = settings.AssaStyleFile,
                 BurnInVideo = settings.BurnInVideo,
@@ -1043,6 +1073,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 TranslateSynopsis = settings.TranslateSynopsis,
                 TranslateGlossary = settings.TranslateGlossary,
                 TranslateFormality = settings.TranslateFormality,
+                TranslateKeepLineBreaks = settings.TranslateKeepLineBreaks,
+                TranslateRequestJson = settings.TranslateRequestJson,
                 TranslateAdvancedSettings = advancedSettings,
                 TeletextOnly = settings.TeletextOnly,
                 TeletextOnlyPage = settings.TeletextOnlyPage,

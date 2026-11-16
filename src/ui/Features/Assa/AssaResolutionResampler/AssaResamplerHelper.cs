@@ -96,6 +96,18 @@ public static class AssaResamplerHelper
         subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX", "PlayResX: " + targetWidth.ToString(CultureInfo.InvariantCulture), "[Script Info]", subtitle.Header);
         subtitle.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + targetHeight.ToString(CultureInfo.InvariantCulture), "[Script Info]", subtitle.Header);
 
+        // LayoutRes is independent of PlayRes: unchanged by a proportional resample, LayoutResX
+        // follows the aspect-ratio change of a stretch (#16933).
+        if (AdvancedSubStationAlpha.TryGetLayoutResolution(subtitle.Header, out var layoutWidth, out var layoutHeight))
+        {
+            var (newLayoutWidth, newLayoutHeight) = AdvancedSubStationAlpha.GetLayoutResolutionAfterResample(
+                layoutWidth, layoutHeight, sourceWidth, sourceHeight, targetWidth, targetHeight);
+            if (newLayoutWidth != layoutWidth || newLayoutHeight != layoutHeight)
+            {
+                subtitle.Header = AdvancedSubStationAlpha.SetLayoutResolution(subtitle.Header, newLayoutWidth, newLayoutHeight);
+            }
+        }
+
         // Resample paragraphs
         foreach (var p in subtitle.Paragraphs)
         {

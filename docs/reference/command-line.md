@@ -158,6 +158,7 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 | Option | Applies to | Description |
 |---|---|---|
 | `--resolution:<WxH>` | ASSA, image-based | Sets `PlayResX`/`PlayResY` for ASSA; sets canvas for image outputs (default `1920x1080`) |
+| `--layout-resolution:<WxH>` | ASSA | Sets `LayoutResX`/`LayoutResY` (libass 0.17+): the display size of the video the script is for, e.g. `1024x576` for an anamorphic PAL DVD. Keeps the script rendering the same on other resolutions of that video |
 | `--assa-style-file:<file>` | ASSA | Apply `[V4+ Styles]` block from another ASSA file |
 | `--burn-in-video:<file>` | ASSA | After writing the `.ass`, burn it into this video with ffmpeg's `ass` filter (needs ffmpeg on PATH). Output: `<subtitle name>_burn-in.<video ext>` next to the `.ass`; every converted subtitle (each input file, each container track) gets its own burned video. Without `--resolution` the video's size is used. An existing output is kept unless `--overwrite` is given; Ctrl+C stops ffmpeg and removes the partial video. Example: `seconv movie.srt ass --assa-style-file:style.ass --burn-in-video:movie.mp4` |
 | `--burn-in-ffmpeg-args:<args>` | ASSA + `--burn-in-video` | ffmpeg encoder arguments (default: `-c:v libx264 -preset medium -crf 23 -pix_fmt yuv420p -c:a copy`); for a `.webm` video, which cannot hold H.264, the default is `-c:v libvpx-vp9 -crf 32 -b:v 0 -pix_fmt yuv420p -c:a libopus`, e.g. `"-c:v h264_nvenc -cq 23 -c:a copy"` |
@@ -360,13 +361,15 @@ Translated output is named with the target language code — `way.srt --translat
 | `--translate-engine:<engine>` | `llamacpp` (default) \| `llamacpp-advanced` \| `ollama` \| `ollama-advanced` \| `lmstudio` \| `lmstudio-advanced` \| `openai-compatible` \| `libretranslate` \| `nllb-serve` \| `nllb-api` \| `deepl`. The `-advanced` engines translate in batches with context, see [Advanced local engines](#advanced-local-engines). |
 | `--translate-url:<url>` | Endpoint of an already-running translate server. For `llamacpp` this skips the local server auto-start; a bare `host:port` is completed to `/v1/chat/completions`. |
 | `--translate-model:<model>` | `ollama`/`lmstudio`/`openai-compatible` and their `-advanced` variants: model name (required for `ollama-advanced`). `llamacpp`/`llamacpp-advanced`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model; the advanced engine skips completion-only models). |
-| `--translate-api-key:<key>` | API key for `openai-compatible` (sent as a Bearer token, optional) and `deepl` (required; a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
+| `--translate-api-key:<key>` | API key. Optional for `llamacpp` / `ollama` / `lmstudio`, their `-advanced` variants and `openai-compatible`: sent as a Bearer token, for a server that asks for one (`llama-server --api-key`, an LM Studio API token, Ollama's hosted models, a reverse proxy). `llamacpp` and `llamacpp-advanced` take it only together with `--translate-url`, since the server seconv starts itself has no key. Required for `deepl` (a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
 | `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` / `openai-compatible`, and the system prompt of the advanced engines — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
 | `--translate-batch-size:<n>` | Advanced engines: subtitle lines per request, 1-50 (default 10). See [Advanced local engines](#advanced-local-engines). |
 | `--translate-history:<n>` | Advanced engines: already-translated lines sent as context before each batch, 0-50 (default 12). |
 | `--translate-synopsis:<text\|file>` | Advanced engines: what the content is about (genre, setting, tone), included in every request. Inline text or a path to a text file. |
 | `--translate-glossary:<text\|file>` | Advanced engines: terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
 | `--translate-formality:<value>` | Advanced engines: `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
+| `--translate-keep-line-breaks[:false]` | Advanced engines: ask the model to keep each line's number of line breaks, the GUI's "Keep line breaks" switch. On by default; `:false` turns the instruction off. |
+| `--translate-request-json:<json\|file>` | Advanced engines: extra request body fields as one JSON object, inline (starting with `{`) or the path to a `.json` file, merged into every request last so they win over seconv's own fields; a `null` value removes a field. `messages` and `response_format` cannot be set. See [Advanced local engines](#advanced-local-engines). |
 
 **llama.cpp (default engine).** With no `--translate-url`, seconv runs a local `llama-server` for you: it looks for the binary in Subtitle Edit's data folder (`llama.cpp` next to `seconv`, then `%AppData%\Subtitle Edit\llama.cpp` / `~/Library/Application Support/Subtitle Edit/llama.cpp` / `~/.config/Subtitle Edit/llama.cpp`) and falls back to `llama-server` on `PATH`. The server is started on a free localhost port with the model's correct chat-template flags and stopped again when seconv exits. Models resolve against the data folder's `models` subfolder.
 
@@ -385,6 +388,9 @@ seconv movie.srt subrip --translate-from:en --translate-to:da --translate-model:
 
 # Already-running llama-server (local or remote)
 seconv movie.srt subrip --translate-to:de --translate-url:http://192.168.1.10:8080
+
+# The same, for a llama-server started with --api-key
+seconv movie.srt subrip --translate-to:de --translate-url:http://192.168.1.10:8080 --translate-api-key:<key>
 
 # Ollama
 seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2
@@ -447,6 +453,12 @@ deliberately overrides the curated template too: an option given on the command 
 a no-op. `ollama` and `lmstudio` have no per-model template, so it is simply
 `--translate-prompt` > `--settings` > built-in default.
 
+`--verbose` prints the prompt as the engine sends it, once per language pair (the source language is
+detected per file): for the advanced engines the complete system prompt, which is the instructions
+plus the keep-line-breaks sentence, formality, synopsis, glossary and protocol paragraph that the
+prompt field never shows; for the other LLM engines the filled template with `<text>` where the
+subtitle text goes. Nothing is printed under `--quiet` or `--json`.
+
 #### Advanced local engines
 
 `llamacpp-advanced`, `ollama-advanced` and `lmstudio-advanced` are the command-line form of the GUI's
@@ -465,6 +477,26 @@ completion-only MiLMMT models are refused (use them with `llamacpp`).
 | `--translate-synopsis:<text\|file>` | What the content is about (genre, setting, tone), included in every request. Inline text or a path to a text file. |
 | `--translate-glossary:<text\|file>` | Terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
 | `--translate-formality:<value>` | `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
+| `--translate-keep-line-breaks[:false]` | Ask the model to keep each line's number of line breaks (the GUI's "Keep line breaks" switch). On by default, also when the `--settings` file leaves `keepLineBreaks` out; `:false` turns the instruction off. |
+| `--translate-request-json:<json\|file>` | Extra request body fields as one JSON object (inline, or a `.json` file), merged into every request last so they win: provider switches the options above do not know, e.g. a reasoning on/off field. A `null` value removes seconv's field. `messages` and `response_format` cannot be set. |
+
+`--translate-request-json` carries the fields a provider needs that no option covers. The object is written into
+every request last, so its fields win over seconv's own (`temperature`, `max_tokens`, `cache_prompt`, ...), and a
+`null` removes a field a server rejects. Two fields are refused: `messages`, which the prompt options build, and
+`response_format`, which the engine steps down from json_schema to json_object to none itself when a server
+rejects one. Nothing is unescaped in the value: pass it as JSON, or point at a file. The same object can be set as
+`tools.llamaCppAdvanced.requestJson` in a `--settings` file.
+
+```bash
+# llama.cpp sampling fields the options do not cover
+seconv movie.srt subrip --translate-to:en --translate-engine:llamacpp-advanced --translate-request-json:"{\"top_k\": 40, \"min_p\": 0.05}"
+
+# drop seconv's token cap for a server that sets its own
+seconv movie.srt subrip --translate-to:en --translate-engine:lmstudio-advanced --translate-request-json:"{\"max_tokens\": null}"
+
+# from a file; a value that does not start with { is a path
+seconv movie.srt subrip --translate-to:en --translate-engine:llamacpp-advanced --translate-request-json:extra.json
+```
 
 `--translate-prompt` replaces the built-in system prompt for these engines (`{0}` = source language,
 `{1}` = target language; no `{2}`, the lines travel in the request as JSON). The options are read
@@ -631,6 +663,7 @@ The keys and defaults below are exactly what `dump-settings` emits:
       "glossary": "",
       "formality": "Default",
       "keepLineBreaks": true,
+      "requestJson": "",
       "prompt": "",
       "temperature": -1,
       "topP": -1,
@@ -717,7 +750,7 @@ seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
 | Option | Description |
 |---|---|
 | `--quiet` / `-q` | Suppress per-file progress, the parameters table, and the OCR/translate progress lines; only print the final summary |
-| `--verbose` / `-v` | Print extra diagnostic information, including full exception details (stack traces) on errors |
+| `--verbose` / `-v` | Print extra diagnostic information, including full exception details (stack traces) on errors and, with `--translate-to`, the prompt the translate engine sends (see [Custom prompt](#custom-prompt)) |
 | `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output). Also accepted by every subcommand. Failures use the same envelope, so stdout is always one JSON document |
 
 ## Operations

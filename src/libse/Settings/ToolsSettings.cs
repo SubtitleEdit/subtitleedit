@@ -79,9 +79,11 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string OpenRouterApiKey { get; set; }
         public string OpenRouterModel { get; set; }
         public string LmStudioApiUrl { get; set; }
+        public string LmStudioApiKey { get; set; }
         public string LmStudioModel { get; set; }
         public string LmStudioPrompt { get; set; }
         public string LlamaCppApiUrl { get; set; }
+        public string LlamaCppApiKey { get; set; }
         public string LlamaCppPrompt { get; set; }
         public string LlamaCppModelPrompt { get; set; }
         public double LlamaCppModelTemperature { get; set; }
@@ -90,6 +92,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public double LlamaCppModelRepeatPenalty { get; set; }
 
         public string OllamaApiUrl { get; set; }
+        public string OllamaApiKey { get; set; }
         public string OllamaModel { get; set; }
         public string OllamaPrompt { get; set; }
         public string AnthropicApiUrl { get; set; }

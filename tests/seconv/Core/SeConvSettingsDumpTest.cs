@@ -40,7 +40,8 @@ public class SeConvSettingsDumpTest
         Assert.Equal(defaults.HistoryPairs, advanced.GetProperty("historyPairs").GetInt32());
         Assert.Equal(defaults.Formality, advanced.GetProperty("formality").GetString());
         Assert.Equal(defaults.ContextSize, advanced.GetProperty("contextSize").GetInt32());
-        Assert.Equal(15, advanced.EnumerateObject().Count()); // every dialog setting, no more
+        Assert.Equal(string.Empty, advanced.GetProperty("requestJson").GetString());
+        Assert.Equal(16, advanced.EnumerateObject().Count()); // every dialog setting, no more
     }
 
     [Fact]

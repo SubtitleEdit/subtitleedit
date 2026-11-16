@@ -56,6 +56,13 @@ public class LlamaCppAdvancedClient : IDisposable
     /// </summary>
     public bool LastRequestDisabledThinking { get; private set; }
 
+    /// <summary>
+    /// Sent as "Authorization: Bearer ..." with every request when set. A property and not a
+    /// constructor argument, so a key changed in the settings applies to the next request of a
+    /// client that already exists.
+    /// </summary>
+    public string? ApiKey { get; set; }
+
     /// <param name="settings">The sampling overrides sent with every request.</param>
     public LlamaCppAdvancedClient(SeLlamaCppAdvanced settings)
     {
@@ -134,25 +141,37 @@ public class LlamaCppAdvancedClient : IDisposable
     /// llama-server serves the single model it was started with, and sending one would only
     /// risk a mismatch). cache_prompt is llama.cpp-specific; other servers ignore it.
     /// chat_template_kwargs.enable_thinking=false is read by llama-server (Jinja templates) and
-    /// vLLM - the Qwen 3 / Qwen 3.5 family and their fine-tunes honour it.
+    /// vLLM - the Qwen 3 / Qwen 3.5 family and their fine-tunes honour it. The user's extra
+    /// request JSON (<see cref="SeLlamaCppAdvanced.RequestJson"/>) is written last and wins: a
+    /// field it names is left out of the engine's part, a null value removes the field, and
+    /// "messages" and "response_format" are refused by <see cref="ParseRequestJson"/>.
     /// </summary>
     internal static string BuildRequestJson(SeLlamaCppAdvanced settings, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump = 0, bool disableThinking = false)
     {
+        using var extra = ParseRequestJson(settings.RequestJson);
+        var overrides = extra?.RootElement;
         using var stream = new System.IO.MemoryStream();
         using (var writer = new Utf8JsonWriter(stream, LlamaCppAdvancedProtocol.WireOptions))
         {
             writer.WriteStartObject();
-            if (!string.IsNullOrWhiteSpace(model))
+            if (!string.IsNullOrWhiteSpace(model) && !Overrides(overrides, "model"))
             {
                 writer.WriteString("model", model);
             }
 
-            writer.WriteBoolean("stream", true);
-            writer.WriteBoolean("cache_prompt", true);
+            if (!Overrides(overrides, "stream"))
+            {
+                writer.WriteBoolean("stream", true);
+            }
 
-            WriteSampling(writer, settings, defaultMaxTokens, temperatureBump);
+            if (!Overrides(overrides, "cache_prompt"))
+            {
+                writer.WriteBoolean("cache_prompt", true);
+            }
 
-            if (disableThinking)
+            WriteSampling(writer, settings, defaultMaxTokens, temperatureBump, overrides);
+
+            if (disableThinking && !Overrides(overrides, "chat_template_kwargs"))
             {
                 writer.WriteStartObject("chat_template_kwargs");
                 writer.WriteBoolean("enable_thinking", false);
@@ -176,11 +195,94 @@ public class LlamaCppAdvancedClient : IDisposable
             writer.WriteEndObject();
             writer.WriteEndArray();
 
+            // The user's fields last, so they win; a null only removes the engine's field.
+            if (overrides.HasValue)
+            {
+                foreach (var property in overrides.Value.EnumerateObject())
+                {
+                    if (property.Value.ValueKind != JsonValueKind.Null)
+                    {
+                        property.WriteTo(writer);
+                    }
+                }
+            }
+
             writer.WriteEndObject();
         }
 
         return Encoding.UTF8.GetString(stream.ToArray());
     }
+
+    private static bool Overrides(JsonElement? extra, string name)
+    {
+        return extra.HasValue && extra.Value.TryGetProperty(name, out _);
+    }
+
+    /// <summary>
+    /// The user's extra request fields (<see cref="SeLlamaCppAdvanced.RequestJson"/>) as a parsed
+    /// object, or null for an empty setting. Throws <see cref="InvalidOperationException"/> with a
+    /// message for the user when the text is not a JSON object or names a field the protocol owns:
+    /// "messages", which the prompt options build, and "response_format", which the client steps
+    /// down from json_schema to json_object to none when a server rejects one - a fixed value would
+    /// defeat that. The caller disposes the document.
+    /// </summary>
+    internal static JsonDocument? ParseRequestJson(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return null;
+        }
+
+        JsonDocument document;
+        try
+        {
+            document = JsonDocument.Parse(json);
+        }
+        catch (JsonException e)
+        {
+            throw new InvalidOperationException("The extra request JSON is not valid JSON: " + e.Message);
+        }
+
+        var kind = document.RootElement.ValueKind;
+        if (kind != JsonValueKind.Object)
+        {
+            document.Dispose();
+            throw new InvalidOperationException("The extra request JSON must be a JSON object ({\"field\": value, ...}), not " + kind.ToString().ToLowerInvariant() + ".");
+        }
+
+        foreach (var name in ProtectedRequestFields)
+        {
+            if (document.RootElement.TryGetProperty(name, out _))
+            {
+                document.Dispose();
+                throw new InvalidOperationException("The extra request JSON cannot set \"" + name + "\": " +
+                                                    (name == "messages"
+                                                        ? "the prompt options build the messages."
+                                                        : "the engine falls back from json_schema to json_object to none itself when a server rejects one."));
+            }
+        }
+
+        return document;
+    }
+
+    /// <summary>
+    /// The message <see cref="ParseRequestJson"/> would fail with for <paramref name="json"/>, or
+    /// null when it is usable - for checking an option or a settings value up front.
+    /// </summary>
+    public static string? ValidateRequestJson(string? json)
+    {
+        try
+        {
+            using var document = ParseRequestJson(json);
+            return null;
+        }
+        catch (InvalidOperationException e)
+        {
+            return e.Message;
+        }
+    }
+
+    private static readonly string[] ProtectedRequestFields = { "messages", "response_format" };
 
     /// <summary>
     /// Advanced-settings sampling overrides first, then the curated model's recommended values
@@ -191,9 +293,10 @@ public class LlamaCppAdvancedClient : IDisposable
     /// cap so a looping model runs out of tokens (a retryable failed batch) instead of
     /// generating until the context fills (#13830). <paramref name="temperatureBump"/> raises the
     /// temperature for a retry after the model echoed the source untranslated - the same request
-    /// at the same low temperature tends to echo again.
+    /// at the same low temperature tends to echo again. A field the user's extra request JSON
+    /// names is skipped here and written from there.
     /// </summary>
-    private static void WriteSampling(Utf8JsonWriter writer, SeLlamaCppAdvanced advanced, int defaultMaxTokens, double temperatureBump = 0)
+    private static void WriteSampling(Utf8JsonWriter writer, SeLlamaCppAdvanced advanced, int defaultMaxTokens, double temperatureBump, JsonElement? overrides)
     {
         var tools = Configuration.Settings.Tools;
 
@@ -205,13 +308,28 @@ public class LlamaCppAdvancedClient : IDisposable
             temperature = Math.Min(1.0, temperature + temperatureBump);
         }
 
-        WriteNumberIfSet(writer, "temperature", temperature);
-        WriteNumberIfSet(writer, "top_p", advanced.TopP >= 0 ? advanced.TopP : tools.LlamaCppModelTopP);
-        WriteNumberIfSet(writer, "top_k", advanced.TopK >= 0 ? advanced.TopK : tools.LlamaCppModelTopK);
-        WriteNumberIfSet(writer, "repeat_penalty", advanced.RepeatPenalty >= 0 ? advanced.RepeatPenalty : tools.LlamaCppModelRepeatPenalty);
+        if (!Overrides(overrides, "temperature"))
+        {
+            WriteNumberIfSet(writer, "temperature", temperature);
+        }
+
+        if (!Overrides(overrides, "top_p"))
+        {
+            WriteNumberIfSet(writer, "top_p", advanced.TopP >= 0 ? advanced.TopP : tools.LlamaCppModelTopP);
+        }
+
+        if (!Overrides(overrides, "top_k"))
+        {
+            WriteNumberIfSet(writer, "top_k", advanced.TopK >= 0 ? advanced.TopK : tools.LlamaCppModelTopK);
+        }
+
+        if (!Overrides(overrides, "repeat_penalty"))
+        {
+            WriteNumberIfSet(writer, "repeat_penalty", advanced.RepeatPenalty >= 0 ? advanced.RepeatPenalty : tools.LlamaCppModelRepeatPenalty);
+        }
 
         var maxTokens = advanced.MaxTokens > 0 ? advanced.MaxTokens : defaultMaxTokens;
-        if (maxTokens > 0)
+        if (maxTokens > 0 && !Overrides(overrides, "max_tokens"))
         {
             writer.WriteNumber("max_tokens", maxTokens);
         }
@@ -248,6 +366,11 @@ public class LlamaCppAdvancedClient : IDisposable
             var content = new StringContent(json, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             using var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
+            if (!string.IsNullOrWhiteSpace(ApiKey))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", ApiKey.Trim());
+            }
+
             using var result = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, idle.Token).ConfigureAwait(false);
             if (!result.IsSuccessStatusCode)
             {

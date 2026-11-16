@@ -10,7 +10,10 @@ namespace Nikse.SubtitleEdit.Logic.Download;
 
 public interface IKugelAudioAudioCppDownloadService
 {
-    /// <summary>Downloads the selected KugelAudio GGUF into audio.cpp's models folder.</summary>
+    /// <summary>
+    /// Downloads the selected KugelAudio GGUF into audio.cpp's models folder, plus the acoustic
+    /// encoder and model spec that voice cloning needs (skipping whatever is already there).
+    /// </summary>
     Task DownloadModels(string modelKey, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken);
 }
 
@@ -19,6 +22,12 @@ public interface IKugelAudioAudioCppDownloadService
 /// engines and downloaded through <see cref="IndexTts25AudioCppDownloadService"/>. The GGUF
 /// comes straight from HuggingFace (audio.cpp's own conversion of the MIT-licensed
 /// KugelAudio-0-Open checkpoint), so there is no licence gate in front of it.
+///
+/// The published GGUFs are preset-only, so the two files reference-audio cloning needs come from
+/// our own support-files release: the checkpoint's original acoustic encoder (the MIT weights,
+/// extracted unchanged) and audio.cpp's clone-aware model spec, which the server takes as a
+/// model_spec_override because the GGUFs embed the older preset-only one. Both are model-key
+/// independent - one encoder serves Q4_K and Q8_0.
 /// </summary>
 public class KugelAudioAudioCppDownloadService : IKugelAudioAudioCppDownloadService
 {
@@ -26,6 +35,9 @@ public class KugelAudioAudioCppDownloadService : IKugelAudioAudioCppDownloadServ
 
     private const string ModelUrlBase =
         AudioCppRuntime.ModelRepoBaseUrl + "KugelAudio-0-Open-GGUF/";
+
+    private const string CloneFilesUrlBase =
+        "https://github.com/SubtitleEdit/support-files/releases/download/kugelaudio-encoder-2026-11-15/";
 
     public KugelAudioAudioCppDownloadService(HttpClient httpClient)
     {
@@ -40,21 +52,54 @@ public class KugelAudioAudioCppDownloadService : IKugelAudioAudioCppDownloadServ
         // A partial GGUF is worse than none: audio.cpp rejects it with "GGUF tensor data range
         // is out of bounds", which reads like a corrupt model rather than a short download.
         // Size-check on the threadpool — this runs from the download dialog's init callback.
-        await Task.Run(() => EnsureRemovedIfInvalid(finalPath, fileName), cancellationToken);
-
-        if (KugelAudioAudioCpp.IsValidLocalModelFile(finalPath, fileName))
+        await Task.Run(() =>
         {
-            return;
+            EnsureRemovedIfInvalid(finalPath, fileName);
+            EnsureRemovedIfInvalid(KugelAudioAudioCpp.GetReferenceEncoderPath(), KugelAudioAudioCpp.ReferenceEncoderFileName);
+            EnsureRemovedIfInvalid(KugelAudioAudioCpp.GetModelSpecPath(), KugelAudioAudioCpp.ModelSpecFileName);
+        }, cancellationToken);
+
+        if (!KugelAudioAudioCpp.IsValidLocalModelFile(finalPath, fileName))
+        {
+            titleProgress?.Invoke($"Downloading KugelAudio model: {fileName}");
+            await DownloadVerified(ModelUrlBase + fileName, finalPath, GetHashKey(fileName), fileName, progress, cancellationToken);
         }
 
-        titleProgress?.Invoke($"Downloading KugelAudio model: {fileName}");
+        // Small, so first: a spec without its encoder is harmless, and the encoder is what the
+        // install check waits for.
+        if (!KugelAudioAudioCpp.IsValidLocalModelFile(KugelAudioAudioCpp.GetModelSpecPath(), KugelAudioAudioCpp.ModelSpecFileName))
+        {
+            await DownloadVerified(
+                CloneFilesUrlBase + KugelAudioAudioCpp.ModelSpecFileName,
+                KugelAudioAudioCpp.GetModelSpecPath(),
+                DownloadHashManager.KugelAudioAudioCpp.ModelSpec,
+                KugelAudioAudioCpp.ModelSpecFileName,
+                null,
+                cancellationToken);
+        }
 
+        if (!KugelAudioAudioCpp.IsValidLocalModelFile(KugelAudioAudioCpp.GetReferenceEncoderPath(), KugelAudioAudioCpp.ReferenceEncoderFileName))
+        {
+            titleProgress?.Invoke($"Downloading KugelAudio voice cloning encoder: {KugelAudioAudioCpp.ReferenceEncoderFileName}");
+            progress?.Report(0);
+            await DownloadVerified(
+                CloneFilesUrlBase + KugelAudioAudioCpp.ReferenceEncoderFileName,
+                KugelAudioAudioCpp.GetReferenceEncoderPath(),
+                DownloadHashManager.KugelAudioAudioCpp.ReferenceEncoder,
+                KugelAudioAudioCpp.ReferenceEncoderFileName,
+                progress,
+                cancellationToken);
+        }
+    }
+
+    private async Task DownloadVerified(string url, string finalPath, string? hashKey, string fileName, IProgress<float>? progress, CancellationToken cancellationToken)
+    {
         var partPath = finalPath + ".part";
         try
         {
-            await DownloadHelper.DownloadFileAsync(_httpClient, ModelUrlBase + fileName, partPath, progress, cancellationToken);
-            await VerifyFile(partPath, GetHashKey(fileName), fileName, cancellationToken);
-            File.Move(partPath, finalPath);
+            await DownloadHelper.DownloadFileAsync(_httpClient, url, partPath, progress, cancellationToken);
+            await VerifyFile(partPath, hashKey, fileName, cancellationToken);
+            File.Move(partPath, finalPath, overwrite: true);
         }
         catch
         {

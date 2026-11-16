@@ -1734,10 +1734,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
         {
+            var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Cuda11, GpuBuild.Cuda12);
             var answer = await MessageBox.Show(
                 Window,
                 "Download Paddle OCR?",
                 $"{Environment.NewLine}\"Paddle OCR\" requires downloading Paddle OCR.{Environment.NewLine}{Environment.NewLine}Download and use Paddle OCR?",
+                gpuHint,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -1776,10 +1778,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
         else if (Configuration.IsRunningOnLinux && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin")))
         {
+            var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Cuda11, GpuBuild.Cuda12);
             var answer = await MessageBox.Show(
                 Window,
                 "Download Paddle OCR?",
                 $"{Environment.NewLine}\"Paddle OCR\" requires downloading Paddle OCR.{Environment.NewLine}{Environment.NewLine}Download and use Paddle OCR?",
+                gpuHint,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -1899,12 +1903,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
 
         // Same guard as the interactive Auto-translate window: an engine whose API key box is
-        // shown (except LibreTranslate, where the key is optional) cannot run with an empty key -
+        // shown (except those where the key is optional) cannot run with an empty key -
         // the engine's Initialize() skips creating its HTTP client, and every file would fail
         // with a NullReferenceException instead of a readable message (#12288).
         if (AutoTranslateApiKeyIsVisible &&
             string.IsNullOrWhiteSpace(AutoTranslateApiKey) &&
-            config.AutoTranslate.Translator is not LibreTranslate)
+            !AutoTranslateViewModel.ApiKeyIsOptional(config.AutoTranslate.Translator))
         {
             await MessageBox.Show(
                 Window,

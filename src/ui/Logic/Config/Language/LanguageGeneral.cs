@@ -582,6 +582,7 @@ public class LanguageGeneral
     public string SetStartAndGoToNext { get; set; }
     public string SetStartAndKeepDuration { get; set; }
     public string SetStartAndOffsetTheRest { get; set; }
+    public string SetStartAndOffsetTheWholeSubtitle { get; set; }
     public string SetUpLikeSubtitleEdit4 { get; set; }
     public string ImageBackgroundColorDotDotDot { get; set; }
     public string SetVideoOffset { get; set; }
@@ -965,6 +966,12 @@ public class LanguageGeneral
     public string VulkanDriverRequiredContinue { get; set; }
     public string CrispAsrCudaBuild { get; set; }
     public string CrispAsrCudaBuildInfo { get; set; }
+    public string GpuDetectedX { get; set; }
+    public string GpuNoneDetected { get; set; }
+    public string GpuRecommendedBuildX { get; set; }
+    public string GpuCuda13NeedsNewerDriver { get; set; }
+    public string GpuCuda13NotForComputeX { get; set; }
+    public string GpuCudaTooOld { get; set; }
     public string CrispAsrCpuBuild { get; set; }
     public string CrispAsrCpuBuildInfo { get; set; }
 
@@ -1025,6 +1032,12 @@ public class LanguageGeneral
         VulkanDriverRequiredContinue = "The Vulkan build needs a Vulkan-capable GPU driver.\n\nWithout it audio.cpp cannot start at all. Pick the CPU build instead if you are unsure.\n\nContinue with Vulkan download?";
         CrispAsrCudaBuild = "CrispASR CUDA build";
         CrispAsrCudaBuildInfo = "CUDA 12 works with most current NVIDIA drivers.\n\nPick CUDA 13 only if your driver stack is built for CUDA 13.";
+        GpuDetectedX = "Detected: {0}";
+        GpuNoneDetected = "No GPU with a usable driver was detected.";
+        GpuRecommendedBuildX = "Recommended for this computer: {0}";
+        GpuCuda13NeedsNewerDriver = "CUDA 13 needs NVIDIA driver 580 or newer.";
+        GpuCuda13NotForComputeX = "CUDA 13 does not support this card (compute capability {0}).";
+        GpuCudaTooOld = "The NVIDIA card or driver is too old for the CUDA build.";
         CrispAsrCpuBuild = "CrispASR CPU build";
         CrispAsrCpuBuildInfo = "Standard is recommended for most machines.\n\nLegacy is a fallback for older CPUs without AVX2 support.";
         Abort = "Abort";
@@ -1613,6 +1626,7 @@ public class LanguageGeneral
         SetStartAndGoToNext = "Set start and go to next";
         SetStartAndKeepDuration = "Set start and keep duration";
         SetStartAndOffsetTheRest = "Set start and offset the rest";
+        SetStartAndOffsetTheWholeSubtitle = "Set start and offset the whole subtitle";
         SetUpLikeSubtitleEdit4 = "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)";
         ImageBackgroundColorDotDotDot = "Image background color...";
         SetVideoOffset = "Set video offset";

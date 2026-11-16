@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.UiLogic.AudioToText;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,30 @@ public class WhisperCppEngine : ISpeechToTextEngine
 
         SelectBackend(backend);
         return true;
+    }
+
+    /// <summary>
+    /// Selects the backend that fits this computer - cuBLAS for an NVIDIA adapter with a CUDA
+    /// driver, Vulkan for another GPU, else CPU - but only while no Whisper CPP backend has been
+    /// downloaded, so a choice the user has acted on is never changed (#16944). Returns true when
+    /// the selection changed. A no-op where there is only one backend (macOS, Linux).
+    /// </summary>
+    public bool SelectRecommendedBackendIfNoneInstalled(GpuCapability capability)
+    {
+        if (_backends.Count < 2 || _backends.Any(p => p.IsEngineInstalled()))
+        {
+            return false;
+        }
+
+        var choice = GpuCapabilityHelper.RecommendVariant(capability) switch
+        {
+            GpuCapabilityHelper.VariantCuda => WhisperChoice.CppCuBlas,
+            GpuCapabilityHelper.VariantVulkan => WhisperChoice.CppVulkan,
+            _ => WhisperChoice.Cpp,
+        };
+
+        var before = SelectedBackend;
+        return TrySelectBackendChoice(choice) && !ReferenceEquals(before, SelectedBackend);
     }
 
     public void SelectBackend(ISpeechToTextEngine backend)

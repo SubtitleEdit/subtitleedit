@@ -15,8 +15,62 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public int? MaxLines { get; set; }
 
         /// <summary>
+        /// Largest time code the format can write, or null for no limit - see
+        /// <see cref="SubtitleFormat.MaxTimeCodeTotalMilliseconds"/>.
+        /// </summary>
+        public double? MaxTimeTotalMilliseconds { get; set; }
+
+        /// <summary>
+        /// The format's <see cref="SubtitleFormat.FormatLimits"/> plus its time code limit, or null
+        /// when the format has neither.
+        /// </summary>
+        public static SubtitleFormatLimits ForFormat(SubtitleFormat format)
+        {
+            var limits = format.FormatLimits;
+            var maxTime = format.MaxTimeCodeTotalMilliseconds;
+            if (maxTime >= TimeCode.MaxSupportedTotalMilliseconds)
+            {
+                return limits;
+            }
+
+            limits = limits ?? new SubtitleFormatLimits();
+            limits.MaxTimeTotalMilliseconds = maxTime;
+            return limits;
+        }
+
+        /// <summary>
+        /// True if the paragraph has a time code past <see cref="MaxTimeTotalMilliseconds"/>.
+        /// </summary>
+        public bool IsTimeCodeTooLarge(Paragraph paragraph)
+        {
+            if (!MaxTimeTotalMilliseconds.HasValue)
+            {
+                return false;
+            }
+
+            var max = MaxTimeTotalMilliseconds.Value + 0.01;
+            return paragraph.StartTime.TotalMilliseconds > max || paragraph.EndTime.TotalMilliseconds > max;
+        }
+
+        /// <summary>
+        /// True if any paragraph has a time code past <see cref="MaxTimeTotalMilliseconds"/>.
+        /// </summary>
+        public bool HasTimeCodeTooLarge(Subtitle subtitle)
+        {
+            foreach (var p in subtitle.Paragraphs)
+            {
+                if (IsTimeCodeTooLarge(p))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Returns the 1-based numbers of the paragraphs that break these limits - the ones the
-        /// writer will re-wrap or truncate.
+        /// writer will re-wrap or truncate, or whose time codes it cannot write.
         /// </summary>
         public List<int> GetViolatingParagraphNumbers(Subtitle subtitle)
         {
@@ -38,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                if (tooManyLines || tooLong)
+                if (tooManyLines || tooLong || IsTimeCodeTooLarge(subtitle.Paragraphs[i]))
                 {
                     result.Add(i + 1);
                 }

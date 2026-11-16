@@ -170,10 +170,12 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
         var variant = OmniVoiceDownloadService.WindowsVariantVulkan;
         if (Configuration.IsRunningOnWindows)
         {
+            var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan, GpuBuild.Cuda);
             var variantAnswer = await MessageBox.Show(
                 Window,
                 Se.Language.Video.TextToSpeech.ReDownloadOmniVoiceTts,
                 Se.Language.Video.TextToSpeech.SelectTheBuildToDownload,
+                gpuHint,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
