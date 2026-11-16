@@ -45,7 +45,7 @@ internal sealed class AutoTranslateRunner
     public static readonly string[] FormalityValues = { "default", "formal", "informal" };
 
     /// <summary>The options that only the <see cref="AdvancedEngines"/> understand, for error messages.</summary>
-    public const string AdvancedOptionNames = "--translate-batch-size/--translate-history/--translate-synopsis/--translate-glossary/--translate-formality/--translate-keep-line-breaks";
+    public const string AdvancedOptionNames = "--translate-batch-size/--translate-history/--translate-synopsis/--translate-glossary/--translate-formality/--translate-keep-line-breaks/--translate-request-json";
 
     /// <summary>
     /// The Ollama advanced engine talks to Ollama's OpenAI-compatible endpoint, not the native
@@ -159,7 +159,7 @@ internal sealed class AutoTranslateRunner
         }
 
         var advancedSettings = AdvancedEngines.Contains(engine)
-            ? CreateAdvancedSettings(options.TranslateBatchSize, options.TranslateHistory, options.TranslateSynopsis, options.TranslateGlossary, options.TranslateFormality, options.TranslateKeepLineBreaks, prompt, options.TranslateAdvancedSettings)
+            ? CreateAdvancedSettings(options.TranslateBatchSize, options.TranslateHistory, options.TranslateSynopsis, options.TranslateGlossary, options.TranslateFormality, options.TranslateKeepLineBreaks, options.TranslateRequestJson, prompt, options.TranslateAdvancedSettings)
             : null;
         if (advancedSettings == null && HasAdvancedOptions(options))
         {
@@ -366,7 +366,8 @@ internal sealed class AutoTranslateRunner
                !string.IsNullOrWhiteSpace(options.TranslateSynopsis) ||
                !string.IsNullOrWhiteSpace(options.TranslateGlossary) ||
                !string.IsNullOrWhiteSpace(options.TranslateFormality) ||
-               options.TranslateKeepLineBreaks.HasValue;
+               options.TranslateKeepLineBreaks.HasValue ||
+               !string.IsNullOrWhiteSpace(options.TranslateRequestJson);
     }
 
     /// <summary>
@@ -375,11 +376,12 @@ internal sealed class AutoTranslateRunner
     /// <c>tools.llamaCppAdvanced</c> section of a <c>--settings</c> file (null = the dialog's
     /// defaults: 10 lines per batch, 12 history pairs, no synopsis/glossary, default formality,
     /// keep line breaks on), so an option given wins over the file and the file over the defaults.
-    /// The synopsis and glossary are read like <c>--translate-prompt</c> (inline text or a file).
+    /// The synopsis and glossary are read like <c>--translate-prompt</c> (inline text or a file), the
+    /// request JSON inline when it starts with a brace and from a file otherwise.
     /// The merged result is validated once, so a bad value from either source throws
     /// <see cref="InvalidOperationException"/> with an actionable message.
     /// </summary>
-    internal static SeLlamaCppAdvanced CreateAdvancedSettings(int? batchSize, int? history, string? synopsis, string? glossary, string? formality, bool? keepLineBreaks, string? prompt, SeLlamaCppAdvanced? baseSettings = null)
+    internal static SeLlamaCppAdvanced CreateAdvancedSettings(int? batchSize, int? history, string? synopsis, string? glossary, string? formality, bool? keepLineBreaks, string? requestJson, string? prompt, SeLlamaCppAdvanced? baseSettings = null)
     {
         var settings = baseSettings ?? new SeLlamaCppAdvanced();
         if (prompt != null)
@@ -419,6 +421,12 @@ internal sealed class AutoTranslateRunner
             settings.KeepLineBreaks = keepLineBreaks.Value;
         }
 
+        var requestJsonText = ReadRequestJsonOption(requestJson);
+        if (requestJsonText != null)
+        {
+            settings.RequestJson = requestJsonText;
+        }
+
         // The protocol sends the lines as JSON in the user message and the prompt is the system
         // prompt, so a completion template with the text at {2} has nowhere to put it.
         if (settings.Prompt.Contains("{2}"))
@@ -426,6 +434,12 @@ internal sealed class AutoTranslateRunner
             throw new InvalidOperationException(
                 "--translate-prompt (or tools.llamaCppAdvanced.prompt in --settings) is the system prompt for an advanced engine ({0}=source language, {1}=target language) and cannot contain {2}; " +
                 "use --translate-engine:llamacpp for completion-format models.");
+        }
+
+        var requestJsonError = LlamaCppAdvancedClient.ValidateRequestJson(settings.RequestJson);
+        if (requestJsonError != null)
+        {
+            throw new InvalidOperationException("--translate-request-json (or tools.llamaCppAdvanced.requestJson in --settings): " + requestJsonError);
         }
 
         if (settings.BatchSize is < 1 or > 50)
@@ -456,6 +470,43 @@ internal sealed class AutoTranslateRunner
             "informal" => SeLlamaCppAdvanced.FormalityInformal,
             _ => throw new InvalidOperationException($"{optionName} '{value}' is not valid. Use one of: {string.Join(", ", FormalityValues)}."),
         };
+    }
+
+    /// <summary>
+    /// Resolves <c>--translate-request-json</c>: the text itself when it starts with a brace, else
+    /// the path of a file to read. Unlike <see cref="ReadPromptOption"/> nothing is unescaped - a
+    /// JSON string keeps its own escapes. Null when the option was not given.
+    /// </summary>
+    internal static string? ReadRequestJsonOption(string? value)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        var trimmed = value.Trim();
+        if (trimmed.Length == 0)
+        {
+            throw new InvalidOperationException("--translate-request-json is empty. Pass a JSON object ({...}) or the path to a .json file.");
+        }
+
+        if (trimmed.StartsWith('{'))
+        {
+            return trimmed;
+        }
+
+        if (!FileExistsSafe(trimmed))
+        {
+            throw new InvalidOperationException($"--translate-request-json: file not found: {trimmed}. A value that does not start with {{ is read as a file path.");
+        }
+
+        var size = new FileInfo(trimmed).Length;
+        if (size > MaxPromptFileBytes)
+        {
+            throw new InvalidOperationException($"--translate-request-json: file is too large ({size / 1024} KB, max {MaxPromptFileBytes / 1024} KB): {trimmed}");
+        }
+
+        return File.ReadAllText(trimmed).Trim();
     }
 
     /// <summary>

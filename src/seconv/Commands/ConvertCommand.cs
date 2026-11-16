@@ -221,6 +221,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Advanced engines: ask the model to keep each line's number of line breaks, the GUI's \"Keep line breaks\" switch (default: on; --translate-keep-line-breaks:false turns it off)")]
         public bool? TranslateKeepLineBreaks { get; init; }
 
+        [CommandOption("--translate-request-json|--translaterequestjson")]
+        [Description("Advanced engines: extra request body fields as one JSON object (inline, starting with {, or the path to a .json file), merged into every request last so they win; a null value removes a field; messages and response_format cannot be set")]
+        public string? TranslateRequestJson { get; init; }
+
         [CommandOption("--offset")]
         [Description("Offset time (hh:mm:ss:ms)")]
         public string? Offset { get; init; }
@@ -606,7 +610,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                  !string.IsNullOrWhiteSpace(settings.TranslateSynopsis) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateGlossary) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateFormality) ||
-                 settings.TranslateKeepLineBreaks.HasValue))
+                 settings.TranslateKeepLineBreaks.HasValue ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateRequestJson)))
             {
                 return Fail(settings, "--translate-from/--translate-engine/--translate-url/--translate-model/--translate-api-key/--translate-prompt/" +
                                       AutoTranslateRunner.AdvancedOptionNames + " require --translate-to:<language>.");
@@ -651,7 +656,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                  !string.IsNullOrWhiteSpace(settings.TranslateSynopsis) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateGlossary) ||
                  !string.IsNullOrWhiteSpace(settings.TranslateFormality) ||
-                 settings.TranslateKeepLineBreaks.HasValue) &&
+                 settings.TranslateKeepLineBreaks.HasValue ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateRequestJson)) &&
                 !AutoTranslateRunner.IsAdvancedEngine(settings.TranslateEngine))
             {
                 return Fail(
@@ -738,7 +744,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 {
                     AutoTranslateRunner.CreateAdvancedSettings(
                         settings.TranslateBatchSize, settings.TranslateHistory, settings.TranslateSynopsis,
-                        settings.TranslateGlossary, settings.TranslateFormality, settings.TranslateKeepLineBreaks,
+                        settings.TranslateGlossary, settings.TranslateFormality, settings.TranslateKeepLineBreaks, settings.TranslateRequestJson,
                         AutoTranslateRunner.ReadPromptOption(settings.TranslatePrompt), advancedSettings);
                 }
                 catch (Exception ex)
@@ -1068,6 +1074,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 TranslateGlossary = settings.TranslateGlossary,
                 TranslateFormality = settings.TranslateFormality,
                 TranslateKeepLineBreaks = settings.TranslateKeepLineBreaks,
+                TranslateRequestJson = settings.TranslateRequestJson,
                 TranslateAdvancedSettings = advancedSettings,
                 TeletextOnly = settings.TeletextOnly,
                 TeletextOnlyPage = settings.TeletextOnlyPage,

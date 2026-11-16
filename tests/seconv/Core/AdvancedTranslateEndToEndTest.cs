@@ -29,7 +29,7 @@ public class AdvancedTranslateEndToEndTest : IDisposable
     private readonly List<string?> _authorizations = new(); // the Authorization header of every request
     private readonly HttpListener _listener = new();
     private readonly string _url;
-    private readonly List<(string System, int HistoryCount, int LineCount)> _requests = new();
+    private readonly List<(string System, int HistoryCount, int LineCount, bool HasReasoning)> _requests = new();
 
     public AdvancedTranslateEndToEndTest()
     {
@@ -78,7 +78,7 @@ public class AdvancedTranslateEndToEndTest : IDisposable
             var lines = user.RootElement.GetProperty("lines");
             lock (_requests)
             {
-                _requests.Add((system, history.GetArrayLength(), lines.GetArrayLength()));
+                _requests.Add((system, history.GetArrayLength(), lines.GetArrayLength(), request.RootElement.TryGetProperty("reasoning", out _)));
             }
 
             var translations = new Dictionary<string, string>();
@@ -137,7 +137,7 @@ public class AdvancedTranslateEndToEndTest : IDisposable
 
         // 8 lines in batches of 3: 3 + 3 + 2, each later batch with the 2 previous pairs as
         // history (a batch of one line would go context-free by design, hence 8 lines).
-        List<(string System, int HistoryCount, int LineCount)> requests;
+        List<(string System, int HistoryCount, int LineCount, bool HasReasoning)> requests;
         lock (_requests)
         {
             requests = _requests.ToList();
@@ -210,7 +210,7 @@ public class AdvancedTranslateEndToEndTest : IDisposable
         });
 
         Assert.True(result.Success, string.Join("; ", result.Errors));
-        List<(string System, int HistoryCount, int LineCount)> requests;
+        List<(string System, int HistoryCount, int LineCount, bool HasReasoning)> requests;
         lock (_requests)
         {
             requests = _requests.ToList();
@@ -218,5 +218,38 @@ public class AdvancedTranslateEndToEndTest : IDisposable
 
         Assert.NotEmpty(requests);
         Assert.All(requests, r => Assert.DoesNotContain("Keep the same number of line breaks", r.System));
+    }
+
+    /// <summary>The extra request JSON reaches the server in every request of the run, and the merged body is still one valid JSON object (the fake server parses it).</summary>
+    [Fact]
+    public async Task LmStudioAdvanced_RequestJson_IsMergedIntoEveryRequest()
+    {
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = _tempRoot,
+            Overwrite = true,
+            TranslateTo = "de",
+            TranslateFrom = "en",
+            TranslateEngine = "lmstudio-advanced",
+            TranslateUrl = _url,
+            TranslateBatchSize = 3,
+            TranslateRequestJson = "{\"reasoning\": {\"enabled\": false}}",
+            Quiet = true,
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        List<(string System, int HistoryCount, int LineCount, bool HasReasoning)> requests;
+        lock (_requests)
+        {
+            requests = _requests.ToList();
+        }
+
+        Assert.Equal(3, requests.Count);
+        Assert.All(requests, r => Assert.True(r.HasReasoning));
     }
 }
