@@ -4592,12 +4592,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         UpdateTargetLanguages(engine);
     }
 
-    private void UpdateSourceLanguages(IAutoTranslator autoTranslator)
+    private void UpdateSourceLanguages(IAutoTranslator? autoTranslator)
     {
         UpdateSourceLanguages(autoTranslator, SourceLanguages);
     }
 
-    private void UpdateSourceLanguages(IAutoTranslator autoTranslator, ObservableCollection<TranslationPair> sourceLanguages)
+    private void UpdateSourceLanguages(IAutoTranslator? autoTranslator, ObservableCollection<TranslationPair> sourceLanguages)
     {
         SourceLanguages.Clear();
         if (autoTranslator == null)
@@ -4638,7 +4638,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
     }
 
-    private void UpdateTargetLanguages(IAutoTranslator autoTranslator)
+    private void UpdateTargetLanguages(IAutoTranslator? autoTranslator)
     {
         // Read before clearing: emptying the list the combo boxes show resets their selection
         var extraCodes = ExtraTargetLanguages.Select(p => p.SelectedLanguage?.Code).ToList();
