@@ -508,6 +508,22 @@ public class SubtitleRetimerTests : IDisposable
     }
 
     [Fact]
+    public void SnapToShotChanges_OnlySnapsTheSideThatWasRetimed()
+    {
+        // a: only the end moved ("Adjust start" off) - its start stays off the cut at 9.85.
+        // b: only the start moved ("Adjust end" off) - its end stays off the cut at 22.1.
+        var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 20, 22) };
+        var placements = new[] { new SubtitleRetimer.Placement(10, 12.1, true), new SubtitleRetimer.Placement(20.1, 22, true) };
+
+        SubtitleRetimer.SnapToShotChanges(original, placements, new List<double> { 9.85, 12.25, 20.0, 22.1 }, 0.024);
+
+        Assert.Equal(10.0, placements[0].StartSeconds, 3);
+        Assert.Equal(12.226, placements[0].EndSeconds, 3);
+        Assert.Equal(20.0, placements[1].StartSeconds, 3);
+        Assert.Equal(22.0, placements[1].EndSeconds, 3);
+    }
+
+    [Fact]
     public void Settle_AnAppliedLine_GivesWayToALineThatStaysPut()
     {
         var original = new List<SubtitleRetimer.Line> { new("a", 10, 12), new("b", 12.5, 14), new("c", 14.5, 16) };
