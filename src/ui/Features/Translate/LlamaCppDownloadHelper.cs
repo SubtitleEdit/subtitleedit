@@ -195,10 +195,14 @@ public static class LlamaCppDownloadHelper
         var engineWillDownload = forceEngineDownload || !LlamaCppServerManager.IsEngineInstalled();
         if (forceVariant == null && engineWillDownload && (OperatingSystem.IsWindows() || OperatingSystem.IsLinux()))
         {
+            var gpuHint = OperatingSystem.IsWindows()
+                ? await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan, GpuBuild.Cuda)
+                : await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan);
             var buildAnswer = await MessageBox.Show(
                 owner,
                 "Download llama.cpp?",
                 "Select which llama.cpp build to download:",
+                gpuHint,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -244,10 +248,12 @@ public static class LlamaCppDownloadHelper
     /// </summary>
     private static async Task<string?> PromptCudaVersionAsync(Window owner)
     {
+        var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cuda12, GpuBuild.Cuda13);
         var answer = await MessageBox.Show(
             owner,
             "llama.cpp CUDA build",
             $"{Environment.NewLine}CUDA 12 works with most current NVIDIA drivers.{Environment.NewLine}{Environment.NewLine}Pick CUDA 13 only if your driver stack is built for CUDA 13.",
+            gpuHint,
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CUDA 12",

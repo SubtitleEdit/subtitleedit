@@ -2756,10 +2756,12 @@ public partial class OcrViewModel : ObservableObject
         {
             if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
             {
+                var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Cuda11, GpuBuild.Cuda12);
                 var answer = await MessageBox.Show(
                     Window!,
                     string.Format(Se.Language.General.DownloadXQuestion, "Paddle OCR"),
                     Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Paddle OCR", "Paddle OCR", "Paddle OCR"),
+                    gpuHint,
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU",
@@ -2800,10 +2802,12 @@ public partial class OcrViewModel : ObservableObject
             }
             else if (Configuration.IsRunningOnLinux && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin")))
             {
+                var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Cuda11, GpuBuild.Cuda12);
                 var answer = await MessageBox.Show(
                     Window!,
                     string.Format(Se.Language.General.DownloadXQuestion, "Paddle OCR"),
                     Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Paddle OCR", "Paddle OCR", "Paddle OCR"),
+                    gpuHint,
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU",

@@ -109,7 +109,7 @@ public class MessageBox : Window
         }
     }
 
-    private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null, string? doNotAskAgainText = null)
+    private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null, string? doNotAskAgainText = null, MessageBoxResult? defaultResult = null, string? hint = null)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = title;
@@ -122,7 +122,7 @@ public class MessageBox : Window
         MaxHeight = 700;
         EditorChrome.ApplyWindow(this, EditorWindowStyles.Dialog);
 
-        var message1 = message;
+        var message1 = string.IsNullOrEmpty(hint) ? message : message.TrimEnd() + Environment.NewLine + Environment.NewLine + hint;
 
         // The message on the panel, the buttons in the button bar below it - the editor look
         var grid = new Grid
@@ -178,9 +178,10 @@ public class MessageBox : Window
             MaxWidth = 700, // wrap long messages instead of growing the window unbounded
         };
 
+        Control messageControl = textBlock;
         if (message.Length > 1000)
         {
-            var scrollView = new ScrollViewer
+            messageControl = new ScrollViewer
             {
                 Width = double.NaN,
                 Height = double.NaN,
@@ -188,17 +189,26 @@ public class MessageBox : Window
                 Margin = new Thickness(10),
                 Content = textBlock
             };
+        }
 
-            grid.Children.Add(scrollView);
-            Grid.SetRow(scrollView, 0);
-            Grid.SetColumn(scrollView, 1);
-        }
-        else
+        if (!string.IsNullOrEmpty(hint))
         {
-            grid.Children.Add(textBlock);
-            Grid.SetRow(textBlock, 0);
-            Grid.SetColumn(textBlock, 1);
+            // A dim hint under the message - e.g. the GPU that was detected and the build that
+            // fits it, above the build buttons (#16944).
+            var hintBlock = EditorChrome.MakeHint(hint, 12);
+            hintBlock.Margin = new Thickness(10, 0, 10, 10);
+            hintBlock.MaxWidth = 700;
+            textBlock.Margin = new Thickness(10, 10, 10, 8);
+            messageControl = new StackPanel
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                Children = { messageControl, hintBlock },
+            };
         }
+
+        grid.Children.Add(messageControl);
+        Grid.SetRow(messageControl, 0);
+        Grid.SetColumn(messageControl, 1);
 
         if (!string.IsNullOrEmpty(doNotAskAgainText))
         {
@@ -228,7 +238,7 @@ public class MessageBox : Window
         _buttonPanel = buttonPanel;
 
         Button? defaultButton = null;
-        foreach (var (result, isDefault) in GetButtonLayout(buttons, custom1, custom2, custom3, custom4))
+        foreach (var (result, isDefault) in GetButtonLayout(buttons, custom1, custom2, custom3, custom4, defaultResult))
         {
             var btn = UiUtil.MakeButton(GetButtonText(result, custom1, custom2, custom3, custom4));
             btn.Margin = new Thickness(0);
@@ -347,14 +357,17 @@ public class MessageBox : Window
     /// buttons (Cancel, No) on the left, the custom choices in the order given, and the positive
     /// answer (Yes/OK) on the far right. The default (primary, initially focused) button is the
     /// first custom choice when there is one, else Yes/OK, else Cancel - unchanged from when the
-    /// default was simply the leftmost button.
+    /// default was simply the leftmost button. A caller that knows which choice fits (the build a
+    /// GPU check recommends, #16944) passes it as <paramref name="preferredDefault"/>; it is used
+    /// when it is one of the buttons shown, and ignored otherwise.
     /// </summary>
     internal static IReadOnlyList<(MessageBoxResult Result, bool IsDefault)> GetButtonLayout(
         MessageBoxButtons buttons,
         string? custom1 = null,
         string? custom2 = null,
         string? custom3 = null,
-        string? custom4 = null)
+        string? custom4 = null,
+        MessageBoxResult? preferredDefault = null)
     {
         var results = new List<MessageBoxResult>();
         if (buttons is MessageBoxButtons.OKCancel or MessageBoxButtons.YesNoCancel or MessageBoxButtons.Cancel)
@@ -390,7 +403,9 @@ public class MessageBox : Window
             results.Add(positive.Value);
         }
 
-        var defaultResult = customs.Count > 0 ? customs[0] : positive ?? results.FirstOrDefault();
+        var defaultResult = preferredDefault != null && results.Contains(preferredDefault.Value)
+            ? preferredDefault.Value
+            : customs.Count > 0 ? customs[0] : positive ?? results.FirstOrDefault();
         return results.Select(r => (r, r == defaultResult)).ToList();
     }
 
@@ -416,15 +431,36 @@ public class MessageBox : Window
         string? custom1 = null,
         string? custom2 = null,
         string? custom3 = null,
-        string? custom4 = null)
+        string? custom4 = null,
+        MessageBoxResult? defaultResult = null,
+        string? hint = null)
     {
-        var msgBox = new MessageBox(title, message, buttons, icon, custom1, custom2, custom3, custom4);
+        var msgBox = new MessageBox(title, message, buttons, icon, custom1, custom2, custom3, custom4, defaultResult: defaultResult, hint: hint);
 
         // The shared modal plumbing: kept above the undocked tool windows (#12268), undocked
         // topmost suspended, and OS activation enforced while open - without the latter the box
         // was drawn on top but never activated on Windows in undocked mode: gray buttons, no
         // keyboard focus (#13325/#13405).
         return await WindowService.ShowModalAsync<MessageBoxResult>(owner, msgBox);
+    }
+
+    /// <summary>
+    /// A build-choice prompt: <see cref="Show"/> with the GPU hint under the message and the
+    /// recommended build's button as the default (#16944).
+    /// </summary>
+    public static Task<MessageBoxResult> Show(
+        Window owner,
+        string title,
+        string message,
+        GpuBuildPrompt gpuHint,
+        MessageBoxButtons buttons,
+        MessageBoxIcon icon,
+        string? custom1,
+        string? custom2 = null,
+        string? custom3 = null,
+        string? custom4 = null)
+    {
+        return Show(owner, title, message, buttons, icon, custom1, custom2, custom3, custom4, gpuHint.DefaultButton, gpuHint.Hint);
     }
 
     /// <summary>

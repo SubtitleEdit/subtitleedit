@@ -966,6 +966,12 @@
     "vulkanDriverRequiredContinue": "The Vulkan build needs a Vulkan-capable GPU driver.\n\nWithout it audio.cpp cannot start at all. Pick the CPU build instead if you are unsure.\n\nContinue with Vulkan download?",
     "crispAsrCudaBuild": "CrispASR CUDA build",
     "crispAsrCudaBuildInfo": "CUDA 12 works with most current NVIDIA drivers.\n\nPick CUDA 13 only if your driver stack is built for CUDA 13.",
+    "gpuDetectedX": "Detected: {0}",
+    "gpuNoneDetected": "No GPU with a usable driver was detected.",
+    "gpuRecommendedBuildX": "Recommended for this computer: {0}",
+    "gpuCuda13NeedsNewerDriver": "CUDA 13 needs NVIDIA driver 580 or newer.",
+    "gpuCuda13NotForComputeX": "CUDA 13 does not support this card (compute capability {0}).",
+    "gpuCudaTooOld": "The NVIDIA card or driver is too old for the CUDA build.",
     "crispAsrCpuBuild": "CrispASR CPU build",
     "crispAsrCpuBuildInfo": "Standard is recommended for most machines.\n\nLegacy is a fallback for older CPUs without AVX2 support."
   },

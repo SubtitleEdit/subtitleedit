@@ -50,10 +50,12 @@ public static class TtsEngineInstaller
                 var qwen3Variant = Qwen3TtsCppDownloadService.WindowsVariantVulkan;
                 if (Configuration.IsRunningOnWindows)
                 {
+                    var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan, GpuBuild.Cuda);
                     var variantAnswer = await MessageBox.Show(
                         window,
                         string.Format(Se.Language.General.DownloadXQuestion, "Qwen3 TTS"),
                         Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.RequiresXSelectBuild, "Qwen3 TTS"),
+                        gpuHint,
                         MessageBoxButtons.Cancel,
                         MessageBoxIcon.Question,
                         "CPU",
@@ -871,10 +873,12 @@ public static class TtsEngineInstaller
                 var omniVariant = OmniVoiceDownloadService.WindowsVariantVulkan;
                 if (Configuration.IsRunningOnWindows)
                 {
+                    var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan, GpuBuild.Cuda);
                     var variantAnswer = await MessageBox.Show(
                         window,
                         string.Format(Se.Language.General.DownloadXQuestion, "OmniVoice TTS"),
                         Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.RequiresXSelectBuild, "OmniVoice TTS"),
+                        gpuHint,
                         MessageBoxButtons.Cancel,
                         MessageBoxIcon.Question,
                         "CPU",
