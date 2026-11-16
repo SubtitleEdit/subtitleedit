@@ -95,10 +95,12 @@ public static class CrispEmbedDownloadHelper
         string variant;
         if (Configuration.IsRunningOnWindows)
         {
+            var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan, GpuBuild.Cuda);
             var answer = await MessageBox.Show(
                 owner,
                 title,
                 pickMessage,
+                gpuHint,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -119,10 +121,12 @@ public static class CrispEmbedDownloadHelper
         }
         else if (Configuration.IsRunningOnLinux && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
         {
+            var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Cuda);
             var answer = await MessageBox.Show(
                 owner,
                 title,
                 pickMessage,
+                gpuHint,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU (~10 MB)",

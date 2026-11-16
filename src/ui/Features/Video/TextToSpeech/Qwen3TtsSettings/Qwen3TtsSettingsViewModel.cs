@@ -162,10 +162,12 @@ public partial class Qwen3TtsSettingsViewModel : ObservableObject
         var variant = Qwen3TtsCppDownloadService.WindowsVariantVulkan;
         if (Configuration.IsRunningOnWindows)
         {
+            var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan, GpuBuild.Cuda);
             var variantAnswer = await MessageBox.Show(
                 Window,
                 "Re-download Qwen3 TTS",
                 $"{Environment.NewLine}Select the build to download:",
+                gpuHint,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",

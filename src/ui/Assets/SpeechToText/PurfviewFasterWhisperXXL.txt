@@ -79,13 +79,12 @@ optional arguments:
   --model MODEL, -m MODEL
                         name of the Whisper model to use (default: medium)
   --model_dir MODEL_DIR
-                        the path to save model files; uses C:\git\subtitleedit
-                        \src\ui\bin\Debug\net48\Whisper\Purfview-Whisper-
-                        Faster\_models by default (default: None)
+                        the path to save model files; uses the _models folder
+                        next to the program by default (default: None)
   --device DEVICE, -d DEVICE
                         Device to use. Default is 'cuda' if CUDA device is
                         detected, else is 'cpu'. If CUDA GPU is a second
-                        device then set 'cuda:1'. (default: cpu)
+                        device then set 'cuda:1'.
   --verbose VERBOSE, -v VERBOSE
                         whether to print out debug messages (default: False)
   --task {transcribe,translate}
@@ -394,12 +393,12 @@ optional arguments:
   --mdx_device MDX_DEVICE
                         Device to use for MDX-Net filter. Default is 'cuda' if
                         CUDA device is detected, else is 'cpu'. If CUDA GPU is
-                        a second device then set 'cuda:1'. (default: cpu)
+                        a second device then set 'cuda:1'.
   --diarize             Enable diarization. (default: False)
   --diarize_device DIARIZE_DEVICE
                         Device to use for '--diarize'. Default is 'cuda' if
                         CUDA device is detected, else is 'cpu'. If CUDA GPU is
-                        a second device then set 'cuda:1'. (default: cpu)
+                        a second device then set 'cuda:1'.
   --diarize_threads DIARIZE_THREADS
   --speaker SPEAKER     To replace 'SPEAKER' string with your own word.
                         (default: SPEAKER)

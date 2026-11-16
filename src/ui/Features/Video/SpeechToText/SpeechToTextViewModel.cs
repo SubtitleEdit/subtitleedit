@@ -441,6 +441,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
 
+        // "CPP" is also the value of a never-touched setting, so while no Whisper CPP backend has
+        // been downloaded the CPU backend is not a choice the user made: start on the backend
+        // that fits this computer's GPU instead (#16944). A saved cuBLAS/Vulkan choice is kept.
+        if (whisperCppEngine != null &&
+            savedChoice is not (WhisperChoice.CppCuBlas or WhisperChoice.CppVulkan or WhisperChoice.CppCuBlasLib))
+        {
+            whisperCppEngine.SelectRecommendedBackendIfNoneInstalled(GpuCapabilityHelper.Detect());
+        }
+
         Parameters = GetEffectiveSelectedEngine().CommandLineParameter;
 
         EngineChanged();
@@ -3598,10 +3607,12 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// </summary>
     private async Task<bool?> PromptQwen3AsrGpuAsync(string engineName)
     {
+        var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan);
         var answer = await MessageBox.Show(
             Window!,
             string.Format(Se.Language.General.DownloadXQuestion, engineName),
             Environment.NewLine + string.Format(Se.Language.Video.AudioToText.XRequiresEngineSelectVersion, engineName),
+            gpuHint,
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CPU",
