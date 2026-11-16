@@ -168,11 +168,12 @@ jobs:
         # The image installs the SDK into /var/lib/flatpak in a Docker image layer. When
         # Flathub has a newer SDK build than the image, flatpak-builder updates it, renames
         # directories inside that overlayfs lower layer and fails with "Invalid cross-device
-        # link" (then xvfb-run segfaults). A bind mount from the runner disk avoids overlayfs.
+        # link" (then xvfb-run segfaults). Copying the tree and swapping it in puts every
+        # directory in the writable upper layer, where renames work (the image has no mount).
         run: |
-          mkdir -p "$RUNNER_TEMP/flatpak-system"
-          cp -a /var/lib/flatpak/. "$RUNNER_TEMP/flatpak-system/"
-          mount --bind "$RUNNER_TEMP/flatpak-system" /var/lib/flatpak
+          cp -a /var/lib/flatpak /var/lib/flatpak.copy
+          rm -rf /var/lib/flatpak
+          mv /var/lib/flatpak.copy /var/lib/flatpak
 
       - name: Build flatpak bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
@@ -336,11 +337,12 @@ jobs:
         # The image installs the SDK into /var/lib/flatpak in a Docker image layer. When
         # Flathub has a newer SDK build than the image, flatpak-builder updates it, renames
         # directories inside that overlayfs lower layer and fails with "Invalid cross-device
-        # link" (then xvfb-run segfaults). A bind mount from the runner disk avoids overlayfs.
+        # link" (then xvfb-run segfaults). Copying the tree and swapping it in puts every
+        # directory in the writable upper layer, where renames work (the image has no mount).
         run: |
-          mkdir -p "$RUNNER_TEMP/flatpak-system"
-          cp -a /var/lib/flatpak/. "$RUNNER_TEMP/flatpak-system/"
-          mount --bind "$RUNNER_TEMP/flatpak-system" /var/lib/flatpak
+          cp -a /var/lib/flatpak /var/lib/flatpak.copy
+          rm -rf /var/lib/flatpak
+          mv /var/lib/flatpak.copy /var/lib/flatpak
 
       - name: Build flathub flatpak bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
