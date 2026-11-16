@@ -56,6 +56,13 @@ public class LlamaCppAdvancedClient : IDisposable
     /// </summary>
     public bool LastRequestDisabledThinking { get; private set; }
 
+    /// <summary>
+    /// Sent as "Authorization: Bearer ..." with every request when set. A property and not a
+    /// constructor argument, so a key changed in the settings applies to the next request of a
+    /// client that already exists.
+    /// </summary>
+    public string? ApiKey { get; set; }
+
     /// <param name="settings">The sampling overrides sent with every request.</param>
     public LlamaCppAdvancedClient(SeLlamaCppAdvanced settings)
     {
@@ -248,6 +255,11 @@ public class LlamaCppAdvancedClient : IDisposable
             var content = new StringContent(json, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             using var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
+            if (!string.IsNullOrWhiteSpace(ApiKey))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", ApiKey.Trim());
+            }
+
             using var result = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, idle.Token).ConfigureAwait(false);
             if (!result.IsSuccessStatusCode)
             {

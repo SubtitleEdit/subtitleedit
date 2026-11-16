@@ -361,7 +361,7 @@ Translated output is named with the target language code — `way.srt --translat
 | `--translate-engine:<engine>` | `llamacpp` (default) \| `llamacpp-advanced` \| `ollama` \| `ollama-advanced` \| `lmstudio` \| `lmstudio-advanced` \| `openai-compatible` \| `libretranslate` \| `nllb-serve` \| `nllb-api` \| `deepl`. The `-advanced` engines translate in batches with context, see [Advanced local engines](#advanced-local-engines). |
 | `--translate-url:<url>` | Endpoint of an already-running translate server. For `llamacpp` this skips the local server auto-start; a bare `host:port` is completed to `/v1/chat/completions`. |
 | `--translate-model:<model>` | `ollama`/`lmstudio`/`openai-compatible` and their `-advanced` variants: model name (required for `ollama-advanced`). `llamacpp`/`llamacpp-advanced`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model; the advanced engine skips completion-only models). |
-| `--translate-api-key:<key>` | API key for `openai-compatible` (sent as a Bearer token, optional) and `deepl` (required; a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
+| `--translate-api-key:<key>` | API key. Optional for `llamacpp` / `ollama` / `lmstudio`, their `-advanced` variants and `openai-compatible`: sent as a Bearer token, for a server that asks for one (`llama-server --api-key`, an LM Studio API token, Ollama's hosted models, a reverse proxy). `llamacpp` and `llamacpp-advanced` take it only together with `--translate-url`, since the server seconv starts itself has no key. Required for `deepl` (a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
 | `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` / `openai-compatible`, and the system prompt of the advanced engines — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
 | `--translate-batch-size:<n>` | Advanced engines: subtitle lines per request, 1-50 (default 10). See [Advanced local engines](#advanced-local-engines). |
 | `--translate-history:<n>` | Advanced engines: already-translated lines sent as context before each batch, 0-50 (default 12). |
@@ -387,6 +387,9 @@ seconv movie.srt subrip --translate-from:en --translate-to:da --translate-model:
 
 # Already-running llama-server (local or remote)
 seconv movie.srt subrip --translate-to:de --translate-url:http://192.168.1.10:8080
+
+# The same, for a llama-server started with --api-key
+seconv movie.srt subrip --translate-to:de --translate-url:http://192.168.1.10:8080 --translate-api-key:<key>
 
 # Ollama
 seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2

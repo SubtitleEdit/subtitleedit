@@ -1546,7 +1546,7 @@ internal record class ConversionOptions
     /// <summary>Model: ollama/lmstudio/openai-compatible model name, or llamacpp .gguf file name/path.</summary>
     public string? TranslateModel { get; init; }
 
-    /// <summary>API key for the engines in <see cref="AutoTranslateRunner.ApiKeyEngines"/> (openai-compatible, deepl).</summary>
+    /// <summary>API key for the engines in <see cref="AutoTranslateRunner.ApiKeyEngines"/>.</summary>
     public string? TranslateApiKey { get; init; }
 
     /// <summary>

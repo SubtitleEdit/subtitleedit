@@ -36,6 +36,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// <summary>The "model" request field; null for single-model servers like llama-server.</summary>
     protected virtual string? GetModel() => null;
 
+    /// <summary>The key sent as a Bearer token (read per request); null or empty for a server that asks for none.</summary>
+    protected virtual string? GetApiKey() => null;
+
     public void Initialize()
     {
         _client?.Dispose();
@@ -213,6 +216,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     {
         var client = _client ?? throw new InvalidOperationException("Initialize() not called");
         var url = GetApiUrl();
+        client.ApiKey = GetApiKey();
 
         // The "codes" this engine receives are English language names (ListLanguages puts the
         // name in TranslationPair.Code), which is what the prompt expects.

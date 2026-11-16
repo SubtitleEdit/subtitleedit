@@ -46,6 +46,9 @@ public class AutoTranslateRunnerTest : IDisposable
         Configuration.Settings.Tools.OpenAiCompatibleTranslateModel = _defaultOpenAiCompatibleModel;
         Configuration.Settings.Tools.AutoTranslateDeepLUrl = _defaultDeepLUrl;
         Configuration.Settings.Tools.AutoTranslateDeepLApiKey = _defaultDeepLApiKey;
+        Configuration.Settings.Tools.LlamaCppApiKey = string.Empty;
+        Configuration.Settings.Tools.OllamaApiKey = string.Empty;
+        Configuration.Settings.Tools.LmStudioApiKey = string.Empty;
         if (Directory.Exists(_fakeLlamaFolder))
             Directory.Delete(_fakeLlamaFolder, recursive: true);
     }
@@ -465,9 +468,46 @@ public class AutoTranslateRunnerTest : IDisposable
     public void Create_ApiKeyWithEngineThatHasNone_Throws()
     {
         var ex = Assert.Throws<InvalidOperationException>(
-            () => AutoTranslateRunner.Create(MakeOptions(engine: "ollama", apiKey: "abc")));
+            () => AutoTranslateRunner.Create(MakeOptions(engine: "libretranslate", apiKey: "abc")));
 
         Assert.Contains("--translate-api-key is not supported", ex.Message);
+    }
+
+    [Fact]
+    public void Create_LocalEngines_ApplyApiKey()
+    {
+        AutoTranslateRunner.Create(MakeOptions(engine: "llamacpp", url: "http://myhost:8080", apiKey: " llama-key "));
+        AutoTranslateRunner.Create(MakeOptions(engine: "ollama", apiKey: "ollama-key"));
+        AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio", apiKey: "lm-key"));
+
+        Assert.Equal("llama-key", Configuration.Settings.Tools.LlamaCppApiKey);
+        Assert.Equal("ollama-key", Configuration.Settings.Tools.OllamaApiKey);
+        Assert.Equal("lm-key", Configuration.Settings.Tools.LmStudioApiKey);
+    }
+
+    [Theory]
+    [InlineData("llamacpp-advanced", "http://myhost:8080", null)]
+    [InlineData("ollama-advanced", null, "gemma4")]
+    [InlineData("lmstudio-advanced", null, null)]
+    public void Create_AdvancedEngines_PassApiKeyToTheEngine(string engineName, string? url, string? model)
+    {
+        var withKey = AutoTranslateRunner.Create(MakeOptions(engine: engineName, url: url, model: model, apiKey: "abc"));
+        var withoutKey = AutoTranslateRunner.Create(MakeOptions(engine: engineName, url: url, model: model));
+
+        Assert.Equal("abc", Assert.IsType<AdvancedTranslateEngine>(withKey.Translator).ApiKey);
+        Assert.Null(Assert.IsType<AdvancedTranslateEngine>(withoutKey.Translator).ApiKey);
+    }
+
+    [Theory]
+    [InlineData("llamacpp")]
+    [InlineData("llamacpp-advanced")]
+    public void Create_LlamaCppLocal_ApiKeyWithoutUrl_Throws(string engineName)
+    {
+        // seconv would start the llama-server itself, and that server takes no key.
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => AutoTranslateRunner.Create(MakeOptions(engine: engineName, apiKey: "abc")));
+
+        Assert.Contains("--translate-api-key needs --translate-url", ex.Message);
     }
 
     [Fact]

@@ -53,8 +53,12 @@ internal sealed class AutoTranslateRunner
     /// </summary>
     private const string OllamaAdvancedDefaultUrl = "http://localhost:11434/v1/chat/completions";
 
-    /// <summary>Engines that send <c>--translate-api-key</c>; the local/self-hosted rest have no key.</summary>
-    public static readonly string[] ApiKeyEngines = { "openai-compatible", "deepl" };
+    /// <summary>
+    /// Engines that send <c>--translate-api-key</c>. For the LLM engines it is an optional Bearer
+    /// token: a local server can ask for one (llama-server --api-key, LM Studio) or sit behind a
+    /// reverse proxy, and Ollama's hosted models need one.
+    /// </summary>
+    public static readonly string[] ApiKeyEngines = { "llamacpp", "llamacpp-advanced", "ollama", "ollama-advanced", "lmstudio", "lmstudio-advanced", "openai-compatible", "deepl" };
 
     /// <summary>File extensions that make <c>--translate-prompt</c> a file path rather than inline text.</summary>
     private static readonly string[] PromptFileExtensions = { ".txt", ".prompt", ".md" };
@@ -147,6 +151,13 @@ internal sealed class AutoTranslateRunner
                 $"--translate-api-key is not supported by translate engine '{engine}'. Use one of: {string.Join(", ", ApiKeyEngines)}.");
         }
 
+        if (!string.IsNullOrEmpty(apiKey) && string.IsNullOrEmpty(url) && engine is "llamacpp" or "llamacpp-advanced")
+        {
+            // Without a url seconv starts the llama-server itself, and that server takes no key.
+            throw new InvalidOperationException(
+                $"--translate-api-key needs --translate-url with translate engine '{engine}': it is the key of a llama-server that is already running.");
+        }
+
         var advancedSettings = AdvancedEngines.Contains(engine)
             ? CreateAdvancedSettings(options.TranslateBatchSize, options.TranslateHistory, options.TranslateSynopsis, options.TranslateGlossary, options.TranslateFormality, options.TranslateKeepLineBreaks, prompt, options.TranslateAdvancedSettings)
             : null;
@@ -172,6 +183,10 @@ internal sealed class AutoTranslateRunner
                     // bare host:port or an OpenAI-style ".../v1" base and complete either to the
                     // chat/completions endpoint (without doubling an already-present /v1).
                     tools.LlamaCppApiUrl = CompleteChatCompletionsUrl(url);
+                    if (!string.IsNullOrEmpty(apiKey))
+                    {
+                        tools.LlamaCppApiKey = apiKey;
+                    }
                 }
                 else
                 {
@@ -197,6 +212,10 @@ internal sealed class AutoTranslateRunner
                 {
                     tools.OllamaApiUrl = url;
                 }
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    tools.OllamaApiKey = apiKey;
+                }
                 if (!string.IsNullOrWhiteSpace(options.TranslateModel))
                 {
                     tools.OllamaModel = options.TranslateModel.Trim();
@@ -218,6 +237,10 @@ internal sealed class AutoTranslateRunner
             case "lmstudio":
                 translator = new LmStudioTranslate();
                 tools.LmStudioApiUrl = string.IsNullOrEmpty(url) ? "http://localhost:1234/v1/chat/completions" : url;
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    tools.LmStudioApiKey = apiKey;
+                }
                 if (!string.IsNullOrWhiteSpace(options.TranslateModel))
                 {
                     tools.LmStudioModel = options.TranslateModel.Trim();
@@ -299,7 +322,7 @@ internal sealed class AutoTranslateRunner
 
         AdvancedTranslateEngine MakeAdvanced(string name, string homepage, Func<string> apiUrl, string? model)
         {
-            return new AdvancedTranslateEngine(name, homepage, apiUrl, model) { Settings = advancedSettings! };
+            return new AdvancedTranslateEngine(name, homepage, apiUrl, model) { Settings = advancedSettings!, ApiKey = apiKey };
         }
     }
 

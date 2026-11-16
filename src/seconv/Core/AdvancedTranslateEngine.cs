@@ -31,7 +31,12 @@ internal sealed class AdvancedTranslateEngine : AdvancedTranslatorBase
     /// <summary>The "model" request field (null for llama-server, which serves one model), exposed for tests.</summary>
     internal string? Model => _model;
 
+    /// <summary>--translate-api-key, sent as a Bearer token; null when none was given.</summary>
+    internal string? ApiKey { get; init; }
+
     protected override string GetApiUrl() => _apiUrl();
 
     protected override string? GetModel() => _model;
+
+    protected override string? GetApiKey() => ApiKey;
 }
