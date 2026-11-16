@@ -1488,6 +1488,17 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Engines that show the API key box but also run with it empty: a LibreTranslate or
+    /// OpenAI-compatible server may ask for no key, and MyMemory works without one (anonymous
+    /// daily quota, the key only raises the limit). These engines leave the key out of the
+    /// request when it is empty. Batch convert uses the same list for its start guard.
+    /// </summary>
+    internal static bool ApiKeyIsOptional(IAutoTranslator translator)
+    {
+        return translator is LibreTranslate or MyMemoryApi or OpenAiCompatibleTranslate;
+    }
+
     private async Task<bool> StartTranslation(IAutoTranslator translator)
     {
         _abort = false;
@@ -1495,10 +1506,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         IsProgressEnabled = true;
         var engineType = translator.GetType();
 
-        // LibreTranslate and MyMemory keys are optional: MyMemory works without one (anonymous
-        // daily quota), the key only raises the limit, and MakeUrl leaves it out when empty.
-        if (ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) &&
-            engineType != typeof(LibreTranslate) && engineType != typeof(MyMemoryApi))
+        if (ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) && !ApiKeyIsOptional(translator))
         {
             IsProgressEnabled = false;
             await MessageBox.Show(
