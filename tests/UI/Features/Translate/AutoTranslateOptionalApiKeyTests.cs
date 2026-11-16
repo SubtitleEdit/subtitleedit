@@ -2,6 +2,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Translate;
+using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -30,6 +31,20 @@ public class AutoTranslateOptionalApiKeyTests
         Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new OpenAiCompatibleTranslate()));
         Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new LibreTranslate()));
         Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new MyMemoryApi()));
+    }
+
+    /// <summary>
+    /// A llama.cpp, Ollama or LM Studio server asks for a key only when it was set up to; most do not.
+    /// </summary>
+    [Fact]
+    public void LocalServerEngines_MayLeaveTheBoxEmpty()
+    {
+        Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new LlamaCppTranslate()));
+        Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new OllamaTranslate()));
+        Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new LmStudioTranslate()));
+        Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new LlamaCppAdvancedTranslate()));
+        Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new OllamaAdvancedTranslate()));
+        Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new LmStudioAdvancedTranslate()));
     }
 
     [Fact]

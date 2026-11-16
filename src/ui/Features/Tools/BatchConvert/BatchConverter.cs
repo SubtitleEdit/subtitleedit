@@ -3903,6 +3903,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         Configuration.Settings.Tools.OllamaPrompt = Se.Settings.AutoTranslate.OllamaPrompt;
         Configuration.Settings.Tools.OllamaApiUrl = Se.Settings.AutoTranslate.OllamaUrl;
+        Configuration.Settings.Tools.OllamaApiKey = Se.Settings.AutoTranslate.OllamaApiKey;
         Configuration.Settings.Tools.OllamaModel = Se.Settings.AutoTranslate.OllamaModel;
 
         // The LM Studio prompt is edited in the translate settings dialog but only lives in
