@@ -218,7 +218,7 @@ public class SeBatchConvert
     public List<SeBatchConvertPreset> Presets { get; set; } = new();
 
     /// <summary>
-    /// "Add folder" (and dropping a folder on the file list) also picks up files in subfolders.
+    /// "Add folder" also picks up files in subfolders (a folder dropped on the file list always does).
     /// Off by default - a recursive scan of a big tree or a network share can take a while.
     /// </summary>
     public bool ScanFolderRecursive { get; set; }

@@ -10,7 +10,7 @@ Convert multiple subtitle files between formats and apply various transformation
 ## How to Use
 
 1. Open **Tools → Batch convert...**
-2. Add subtitle files (drag and drop, or use the Add button). The folder button adds every subtitle file in a folder — drag and drop works with folders too. Turn on **Include subfolders when adding a folder** in the settings (gear button) to scan the whole tree; a scan of a large tree or a network share can be cancelled while it runs.
+2. Add subtitle files (drag and drop, or use the Add button). The folder button adds every subtitle file in a folder; turn on **Include subfolders when adding a folder** in the settings (gear button) to scan the whole tree. Drag and drop works with folders too and always includes their subfolders. A scan of a large tree or a network share can be cancelled while it runs.
 3. Select the output format
 4. Optionally add conversion functions (fixes, adjustments)
 5. Choose an output folder

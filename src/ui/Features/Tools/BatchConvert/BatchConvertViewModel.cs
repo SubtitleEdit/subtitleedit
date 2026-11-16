@@ -2604,13 +2604,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         _addFilesCancellationTokenSource.Cancel();
     }
 
-    private async Task AddFilesAndFoldersAsync(IReadOnlyList<string> fileNames, IReadOnlyList<string> folders, bool? recursive = null)
+    private async Task AddFilesAndFoldersAsync(IReadOnlyList<string> fileNames, IReadOnlyList<string> folders, bool recursive)
     {
         var allFileNames = new List<string>(fileNames);
 
         if (folders.Count > 0)
         {
-            var scanned = await ScanFoldersAsync(folders, recursive ?? Se.Settings.Tools.BatchConvert.ScanFolderRecursive);
+            var scanned = await ScanFoldersAsync(folders, recursive);
             if (scanned == null)
             {
                 return; // cancelled during the scan - add nothing
@@ -4347,7 +4347,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
-        _ = AddFilesAndFoldersAsync(droppedFiles, droppedFolders);
+        // Dropped folders always include their subfolders (as in SE 4): a drop can't ask, and an
+        // incomplete set is easy to miss - dropping the files themselves adds just those.
+        _ = AddFilesAndFoldersAsync(droppedFiles, droppedFolders, recursive: true);
     }
 
     partial void OnSelectedCrispAsrModelChanged(SpeechToTextModelDisplay? value)
