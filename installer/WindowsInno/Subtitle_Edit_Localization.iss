@@ -171,7 +171,7 @@ fa.types_default=نصب پیشفرض
 
 ; Finnish
 [CustomMessages]
-fi.sm_com_Changelog=Subtitle Edit:n muutosloki
+fi.sm_com_Changelog=Subtitle Editin muutosloki
 fi.run_ViewChangelog=Näytä muutosloki
 fi.msg_DeleteSettings=Haluatko poistaa Subtitle Editin henkilökohtaiset asetukset?
 fi.tsk_AllUsers=Kaikille käyttäjille
@@ -361,7 +361,7 @@ ptBR.types_default=Instalação padrão
 
 ; Russian
 [CustomMessages]
-ru.sm_com_Changelog=Журнал изменений "Subtitle Edit"
+ru.sm_com_Changelog=Журнал изменений Subtitle Edit
 ru.run_ViewChangelog=Показать журнал изменений
 ru.msg_DeleteSettings=Вы хотите удалить личные настройки Subtitle Edit?
 ru.tsk_AllUsers=Для всех пользователей
