@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.5.0-beta6",
+  "version": "v5.5.0-beta7",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -3730,6 +3730,8 @@
     "extraServerParametersHint": "Additional llama-server command-line arguments, e.g. \"-ngl 30 --no-mmap\" - applied when the local server starts",
     "useOnlyExtraServerParameters": "Use only these parameters",
     "useOnlyExtraServerParametersHint": "Start llama-server with the parameters above instead of Subtitle Edit's own tuning - only the model, host and port are still set",
+    "extraRequestJson": "Extra request JSON",
+    "extraRequestJsonHint": "A JSON object merged into every request last, so its fields win over the ones above - e.g. {\"top_k\": 40} or a provider's reasoning switch; a null value removes a field. \"messages\" and \"response_format\" cannot be set",
     "serverRunningAtX": "Server running at {0}",
     "customPromptHint": "Custom instructions ({0} = source language, {1} = target language); empty = built-in prompt",
     "editTranslationHint": "Click the selected row's translation to edit it (Enter saves, Escape cancels)",

@@ -3,6 +3,33 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta7 (16th of November 2026)
+
+* Text to speech: KugelAudio voice cloning from a reference clip
+* ASSA: support LayoutResX/LayoutResY headers - thx k6G52m4Dz75W
+* ASSA properties: support setting the YCbCr Matrix header - thx Khaoklong51/k6G52m4Dz75W
+* Allow time codes past 99:59:59,999 (per-format limit) - thx claudiu-mn
+* Add "Set start and offset the whole subtitle" shortcut - thx club706
+* Toolbar auto-translate/speech to text: use the selected lines when more than one line is selected - thx hisui3393
+* Improve time codes: refine starts from the audio level and snap to shot changes
+* Auto-translate: names and repeated interjections no longer count as untranslated echoes - thx Giorgio800
+* Auto-translate: extra request body JSON for the advanced engines - thx Makar8000
+* Auto-translate: refresh model lists
+* Batch convert: show the translate settings button for every auto-translate engine - thx svarga91
+* seconv: --translate-keep-line-breaks for the advanced translate engines - thx Makar8000
+* seconv: --verbose prints the prompt the translate engine sends - thx Makar8000
+* seconv: --translate-api-key for llama.cpp, Ollama and LM Studio (incl. advanced) - thx Makar8000
+* Speech to text: show the detected GPU and recommended build in CPU/Vulkan/CUDA prompts - thx Uer9-create
+* Settings search: also find settings grouped inside an item, e.g. Alignment - thx routineCode/caioocesar
+* Burn-in: logo picker opens in the logo's folder - thx bichitoxxx/caioocesar
+* OCR fix: read replace lists saved as ANSI - thx fraternl
+* Word lists: edit spell-checked OCR regex rules in Regex rules - thx fraternl
+* nOCR: fix pixel color reading used for match points and italic space fixing
+* Update audio.cpp to v0.9.5
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
 v5.5.0-beta6 (14th of November 2026)
 
 * Fix common errors: sort the fixes by line number - thx radektuma
