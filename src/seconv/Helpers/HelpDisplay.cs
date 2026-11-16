@@ -87,7 +87,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | llamacpp-advanced | ollama | ollama-advanced | lmstudio | lmstudio-advanced | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl; the advanced engines translate in batches with context");
         ShowParameter(console, "--translate-url:<url>", "Endpoint of an already-running translate server (llamacpp: skips the auto-start)");
         ShowParameter(console, "--translate-model:<model>", "Ollama/LM Studio/OpenAI-compatible model name (required for ollama-advanced), or llamacpp .gguf file name/path");
-        ShowParameter(console, "--translate-api-key:<key>", "API key for openai-compatible and deepl (required for deepl)");
+        ShowParameter(console, "--translate-api-key:<key>", "API key for a server that asks for one (the LLM engines send it as a Bearer token); required for deepl");
         ShowParameter(console, "--translate-prompt:<text|file>", "Prompt for llamacpp/ollama/lmstudio/openai-compatible and the advanced engines' system prompt: inline text (\\n = line break) or a text file; {0}=source, {1}=target, {2}=text (completion-format models, regular llamacpp only)");
         ShowParameter(console, "--translate-batch-size:<n>", "Advanced engines: subtitle lines per request, 1-50 (default: 10)");
         ShowParameter(console, "--translate-history:<n>", "Advanced engines: already-translated lines sent as context before each batch, 0-50 (default: 12)");

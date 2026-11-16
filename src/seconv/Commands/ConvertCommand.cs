@@ -190,7 +190,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateModel { get; init; }
 
         [CommandOption("--translate-api-key|--translateapikey")]
-        [Description("API key for the openai-compatible and deepl translate engines (required for deepl)")]
+        [Description("API key: sent as a Bearer token by llamacpp/ollama/lmstudio, their advanced variants and openai-compatible when the server asks for one (llamacpp needs --translate-url); required for deepl")]
         public string? TranslateApiKey { get; init; }
 
         [CommandOption("--translate-prompt|--translateprompt")]

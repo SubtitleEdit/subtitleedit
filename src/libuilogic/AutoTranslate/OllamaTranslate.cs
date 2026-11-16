@@ -34,6 +34,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.BaseAddress = new Uri(AutoTranslateUrl.Complete(Configuration.Settings.Tools.OllamaApiUrl, DefaultUrl));
             _httpClient.Timeout = TimeSpan.FromMinutes(25);
+
+            // Optional: Ollama's hosted models need a key, and a local server may sit behind a reverse proxy.
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.OllamaApiKey))
+            {
+                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.OllamaApiKey);
+            }
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()

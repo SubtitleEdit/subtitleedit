@@ -26,6 +26,7 @@ public class AdvancedTranslateEndToEndTest : IDisposable
         "8\n00:00:15,000 --> 00:00:16,000\nI will not.\n";
 
     private readonly string _tempRoot;
+    private readonly List<string?> _authorizations = new(); // the Authorization header of every request
     private readonly HttpListener _listener = new();
     private readonly string _url;
     private readonly List<(string System, int HistoryCount, int LineCount)> _requests = new();
@@ -61,6 +62,11 @@ public class AdvancedTranslateEndToEndTest : IDisposable
             catch
             {
                 return;
+            }
+
+            lock (_authorizations)
+            {
+                _authorizations.Add(context.Request.Headers["Authorization"]);
             }
 
             using var reader = new StreamReader(context.Request.InputStream, Encoding.UTF8);
@@ -147,6 +153,40 @@ public class AdvancedTranslateEndToEndTest : IDisposable
             Assert.Contains("informal address", r.System);
             Assert.Contains("Keep the same number of line breaks", r.System); // the dialog's default: on
         });
+    }
+
+    [Theory]
+    [InlineData("lm-abc123", "Bearer lm-abc123")]
+    [InlineData(null, null)]
+    public async Task LmStudioAdvanced_ApiKey_IsSentAsBearerTokenWithEveryRequest(string? apiKey, string? expectedHeader)
+    {
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = _tempRoot,
+            Overwrite = true,
+            TranslateTo = "de",
+            TranslateFrom = "en",
+            TranslateEngine = "lmstudio-advanced",
+            TranslateUrl = _url,
+            TranslateApiKey = apiKey,
+            TranslateBatchSize = 3,
+            Quiet = true,
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        List<string?> authorizations;
+        lock (_authorizations)
+        {
+            authorizations = _authorizations.ToList();
+        }
+
+        Assert.Equal(3, authorizations.Count); // 8 lines in batches of 3
+        Assert.All(authorizations, a => Assert.Equal(expectedHeader, a));
     }
 
     [Fact]
