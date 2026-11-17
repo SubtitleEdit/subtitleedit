@@ -184,7 +184,8 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 var effect = string.Empty;
                 if (!string.IsNullOrEmpty(p.Effect))
                 {
-                    effect = p.Effect;
+                    // a comma would end the Effect field early (#16989)
+                    effect = p.Effect.IndexOf(',') >= 0 ? p.Effect.Replace(',', ';') : p.Effect;
                 }
 
                 if (!string.IsNullOrEmpty(p.Extra) && isValidSsaHeader && styleSet.Contains(p.Extra))
