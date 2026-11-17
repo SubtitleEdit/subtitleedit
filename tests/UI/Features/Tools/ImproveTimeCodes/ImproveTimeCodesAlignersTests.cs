@@ -47,8 +47,8 @@ public class ImproveTimeCodesAlignersTests
     [Theory]
     [InlineData("en", "phonon2-q8_0.gguf")]
     [InlineData("EN", "phonon2-q8_0.gguf")]
-    [InlineData("de", "parakeet-tdt-0.6b-v3-q4_k.gguf")]
-    [InlineData("", "parakeet-tdt-0.6b-v3-q4_k.gguf")]
+    [InlineData("de", "parakeet-ultra-q4_k.gguf")]
+    [InlineData("", "parakeet-ultra-q4_k.gguf")]
     public void PickSpeechToTextModel_UsesInstalledPhonon2OnlyForEnglish(string language, string expected)
     {
         var model = ImproveTimeCodesAligners.PickSpeechToTextModel(new CrispAsrParakeet(), language, m => m.Name == "phonon2-q8_0.gguf");
