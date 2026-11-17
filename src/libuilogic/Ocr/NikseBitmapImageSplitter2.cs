@@ -1016,7 +1016,172 @@ public class NikseBitmapImageSplitter2
         }
 
         RemoveCrumbs(parts);
+        MergeSplitDiaeresis(parts);
         return parts;
+    }
+
+    /// <summary>
+    /// The dots of a bold "ï" are wider than the stem, and the vertical path slides between the
+    /// left dot and the stem: the dot came out on its own (read as an apostrophe) and the stem
+    /// with the other dot was read as "í" - "chouïa" became "chou'ía" (#16993). A small part whose
+    /// box touches a neighbour whose top is a mark of about the same size, at the same height,
+    /// over the rest of the glyph, is the other half of that mark and goes back into the glyph.
+    /// An apostrophe next to a letter doesn't qualify: it is taller than a dot, or the letter
+    /// has no mark of its own at that height.
+    /// </summary>
+    private static void MergeSplitDiaeresis(List<ImageSplitterItem2> parts)
+    {
+        for (var i = parts.Count - 1; i >= 0; i--)
+        {
+            if (parts[i].NikseBitmap == null)
+            {
+                continue;
+            }
+
+            var glyphIndex = FindDiaeresisHalfOwner(parts, i, -1);
+            if (glyphIndex < 0)
+            {
+                glyphIndex = FindDiaeresisHalfOwner(parts, i, 1);
+            }
+
+            if (glyphIndex < 0)
+            {
+                continue;
+            }
+
+            var mark = parts[i];
+            var glyph = parts[glyphIndex];
+            var a = mark.NikseBitmap!;
+            var b = glyph.NikseBitmap!;
+            var left = Math.Min(mark.X, glyph.X);
+            var top = Math.Min(mark.Y, glyph.Y);
+            var merged = new NikseBitmap2(Math.Max(mark.X + a.Width, glyph.X + b.Width) - left, Math.Max(mark.Y + a.Height, glyph.Y + b.Height) - top);
+            CopyInk(b, merged, glyph.X - left, glyph.Y - top);
+            CopyInk(a, merged, mark.X - left, mark.Y - top);
+            glyph.X = left;
+            glyph.Y = top;
+            glyph.NikseBitmap = merged;
+
+            // Drop the mark and any space items between it and the glyph.
+            var from = Math.Min(i, glyphIndex + 1);
+            var to = Math.Max(i, glyphIndex - 1);
+            parts.RemoveRange(from, to - from + 1);
+            i = Math.Min(i, from);
+        }
+    }
+
+    private static void CopyInk(NikseBitmap2 source, NikseBitmap2 target, int offsetX, int offsetY)
+    {
+        for (var y = 0; y < source.Height; y++)
+        {
+            for (var x = 0; x < source.Width; x++)
+            {
+                if (source.GetAlpha(x, y) > 0)
+                {
+                    target.SetPixel(x + offsetX, y + offsetY, source.GetPixel(x, y));
+                }
+            }
+        }
+    }
+
+    /// <returns>The index of the glyph that <paramref name="markIndex"/> is the cut-off half of a mark of, or -1.</returns>
+    private static int FindDiaeresisHalfOwner(List<ImageSplitterItem2> parts, int markIndex, int direction)
+    {
+        var index = markIndex + direction;
+        while (index >= 0 && index < parts.Count && parts[index].NikseBitmap == null)
+        {
+            index += direction;
+        }
+
+        if (index < 0 || index >= parts.Count)
+        {
+            return -1;
+        }
+
+        var mark = parts[markIndex];
+        var glyph = parts[index];
+        var a = mark.NikseBitmap!;
+        var b = glyph.NikseBitmap!;
+
+        // A dot: well under half the glyph's height, and the boxes touch.
+        if (a.Height * 3 > b.Height || a.Width * 3 > b.Height)
+        {
+            return -1;
+        }
+
+        var gap = direction < 0 ? mark.X - (glyph.X + b.Width) : glyph.X - (mark.X + a.Width);
+        if (gap > 0)
+        {
+            return -1;
+        }
+
+        // The glyph's top band: its rows down to the first empty one, which must leave a body below.
+        var bandHeight = 0;
+        while (bandHeight < b.Height && !IsRowEmpty(b, bandHeight))
+        {
+            bandHeight++;
+        }
+
+        var bodyStart = bandHeight;
+        while (bodyStart < b.Height && IsRowEmpty(b, bodyStart))
+        {
+            bodyStart++;
+        }
+
+        if (bandHeight == 0 || bodyStart >= b.Height || bodyStart == bandHeight)
+        {
+            return -1;
+        }
+
+        // The band is the other dot: about the mark's size and at its height, and the mark ends
+        // above the body.
+        var bandTop = glyph.Y;
+        var markTop = mark.Y;
+        var tolerance = Math.Max(2, a.Height / 2);
+        if (Math.Abs(bandHeight - a.Height) > tolerance || Math.Abs(bandTop - markTop) > tolerance ||
+            markTop + a.Height > glyph.Y + bodyStart)
+        {
+            return -1;
+        }
+
+        GetInkColumns(b, 0, bandHeight, out var bandMinX, out var bandMaxX);
+        var bandWidth = bandMaxX - bandMinX + 1;
+        if (bandWidth > a.Width * 2 + 2 || a.Width > bandWidth * 2 + 2)
+        {
+            return -1;
+        }
+
+        return index;
+    }
+
+    private static bool IsRowEmpty(NikseBitmap2 bmp, int y)
+    {
+        for (var x = 0; x < bmp.Width; x++)
+        {
+            if (bmp.GetAlpha(x, y) > 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static void GetInkColumns(NikseBitmap2 bmp, int fromY, int toY, out int minX, out int maxX)
+    {
+        minX = bmp.Width;
+        maxX = -1;
+        for (var y = fromY; y < toY; y++)
+        {
+            for (var x = 0; x < bmp.Width; x++)
+            {
+                if (bmp.GetAlpha(x, y) > 0)
+                {
+                    minX = Math.Min(minX, x);
+                    maxX = Math.Max(maxX, x);
+                }
+            }
+        }
     }
 
     /// <summary>
