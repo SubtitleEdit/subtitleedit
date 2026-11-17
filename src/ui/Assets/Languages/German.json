@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.5.0-beta7",
+  "version": "v5.5.0-beta8",
   "translatedBy": "Übersetzt von Christoph Kitsche. Überarbeitet von Netspark, Stephan Lenhart und FunkyKnilch.",
   "cultureName": "de-DE",
   "general": {
@@ -552,6 +552,8 @@
     "searchDirection": "Suchrichtung",
     "searchFontNames": "Schriftart suchen...",
     "searchSubtitleFormats": "Untertitelformate durchsuchen",
+    "searchLanguages": "Sprachen suchen",
+    "noMatches": "Keine Treffer",
     "seconds": "Sekunden",
     "selectAll": "Alles auswählen",
     "selectFilesToConvert": "Wählen Sie die zu konvertierenden Dateien aus",
@@ -3099,6 +3101,8 @@
       "qwen3TtsSettings": "Qwen3 TTS-Einstellungen",
       "kokoroTtsSettings": "Kokoro TTS-Einstellungen",
       "chatterboxTtsSettings": "Chatterbox TTS-Einstellungen",
+      "referenceLanguage": "Referenzsprache",
+      "referenceLanguageHint": "Gesprochene Sprache in importierten Referenz-WAV-Dateien (für sprachübergreifendes Klonen).",
       "piperSettings": "Piper-Einstellungen",
       "voiceInstruction": "Stimmgestaltung",
       "voiceInstructionHint": "Optional - z. B. \"Sprechen Sie in einem ruhigen und freundlichen Ton\"",
@@ -4712,6 +4716,7 @@
     "vobSubIsolateColorsHint": "Baut jedes VobSub-Bild vor der OCR als klares Schwarz-auf-Weiß neu auf, indem die häufigste Farbe (Text) behalten und die Umrandungs-/Antialiasing-Farben entfernt werden. Verbessert die Erkennung bei Discs, auf denen graue Umrandungen Zeichen verschmelzen lassen.",
     "llamaCppOcrSettingsTitle": "llama.cpp OCR-Einstellungen",
     "selectTesseractDictionary": "Tesseract-Wörterbuch auswählen:",
+    "pleaseSelectTesseractDictionaryToDownload": "Bitte wählen Sie ein Tesseract-Wörterbuch zum Herunterladen aus.",
     "inspectBinaryOcrAdditionsTitle": "Binäre OCR-Ergänzungen prüfen",
     "llamaCppOcr": "llama.cpp OCR",
     "llamaCppOcrDescription": "Lokaler llama.cpp-Server (multimodales Modell) für OCR.",
