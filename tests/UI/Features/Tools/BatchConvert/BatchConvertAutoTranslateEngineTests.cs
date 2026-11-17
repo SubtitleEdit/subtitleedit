@@ -206,45 +206,36 @@ public class BatchConvertAutoTranslateEngineTests
     [AvaloniaFact]
     public void TypedUrl_IsUsedForTheRunAndSaved()
     {
+        using var _ = new TranslateSettingsSnapshot();
         var se = Se.Settings.AutoTranslate;
         var tools = Configuration.Settings.Tools;
-        var saved = (se.LibreTranslateUrl, se.NllbServeUrl, se.NllbApiUrl, se.DeepLUrl, se.LmStudioApiUrl, se.OllamaUrl,
-            tools.AutoTranslateLibreUrl, tools.AutoTranslateNllbServeUrl, tools.AutoTranslateNllbApiUrl, tools.AutoTranslateDeepLUrl, tools.LmStudioApiUrl, tools.OllamaApiUrl);
-        try
+        var viewModel = MakeViewModel();
+        var engines = new (Type Engine, Func<string> Saved, Func<string> Used)[]
         {
-            var viewModel = MakeViewModel();
-            var engines = new (Type Engine, Func<string> Saved, Func<string> Used)[]
-            {
-                (typeof(LibreTranslate), () => se.LibreTranslateUrl, () => tools.AutoTranslateLibreUrl),
-                (typeof(NoLanguageLeftBehindServe), () => se.NllbServeUrl, () => tools.AutoTranslateNllbServeUrl),
-                (typeof(NoLanguageLeftBehindApi), () => se.NllbApiUrl, () => tools.AutoTranslateNllbApiUrl),
-                (typeof(DeepLTranslate), () => se.DeepLUrl, () => tools.AutoTranslateDeepLUrl),
-                (typeof(LmStudioTranslate), () => se.LmStudioApiUrl, () => tools.LmStudioApiUrl),
-                (typeof(OllamaTranslate), () => se.OllamaUrl, () => tools.OllamaApiUrl),
-            };
+            (typeof(LibreTranslate), () => se.LibreTranslateUrl, () => tools.AutoTranslateLibreUrl),
+            (typeof(NoLanguageLeftBehindServe), () => se.NllbServeUrl, () => tools.AutoTranslateNllbServeUrl),
+            (typeof(NoLanguageLeftBehindApi), () => se.NllbApiUrl, () => tools.AutoTranslateNllbApiUrl),
+            (typeof(DeepLTranslate), () => se.DeepLUrl, () => tools.AutoTranslateDeepLUrl),
+            (typeof(LmStudioTranslate), () => se.LmStudioApiUrl, () => tools.LmStudioApiUrl),
+            (typeof(OllamaTranslate), () => se.OllamaUrl, () => tools.OllamaApiUrl),
+        };
 
-            foreach (var (engine, savedUrl, usedUrl) in engines)
-            {
-                viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t.GetType() == engine);
-                viewModel.OnAutoTranslatorChanged();
-                Assert.True(viewModel.AutoTranslateUrlIsVisible, engine.Name);
-
-                var typed = "http://typed.example/" + engine.Name + "/";
-                viewModel.AutoTranslateUrl = " " + typed + " ";
-                viewModel.UpdateAutoTranslateSettings();
-                Assert.Equal(typed, usedUrl());
-                Assert.Equal(typed, savedUrl());
-
-                viewModel.AutoTranslateUrl = string.Empty;
-                viewModel.UpdateAutoTranslateSettings();
-                Assert.Equal(typed, usedUrl());
-                Assert.Equal(typed, savedUrl());
-            }
-        }
-        finally
+        foreach (var (engine, savedUrl, usedUrl) in engines)
         {
-            (se.LibreTranslateUrl, se.NllbServeUrl, se.NllbApiUrl, se.DeepLUrl, se.LmStudioApiUrl, se.OllamaUrl,
-                tools.AutoTranslateLibreUrl, tools.AutoTranslateNllbServeUrl, tools.AutoTranslateNllbApiUrl, tools.AutoTranslateDeepLUrl, tools.LmStudioApiUrl, tools.OllamaApiUrl) = saved;
+            viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t.GetType() == engine);
+            viewModel.OnAutoTranslatorChanged();
+            Assert.True(viewModel.AutoTranslateUrlIsVisible, engine.Name);
+
+            var typed = "http://typed.example/" + engine.Name + "/";
+            viewModel.AutoTranslateUrl = " " + typed + " ";
+            viewModel.UpdateAutoTranslateSettings();
+            Assert.Equal(typed, usedUrl());
+            Assert.Equal(typed, savedUrl());
+
+            viewModel.AutoTranslateUrl = string.Empty;
+            viewModel.UpdateAutoTranslateSettings();
+            Assert.Equal(typed, usedUrl());
+            Assert.Equal(typed, savedUrl());
         }
     }
 
@@ -255,39 +246,30 @@ public class BatchConvertAutoTranslateEngineTests
     [AvaloniaFact]
     public void OllamaAndLmStudio_TypedKeyIsUsedForTheRunAndSaved()
     {
+        using var _ = new TranslateSettingsSnapshot();
         var se = Se.Settings.AutoTranslate;
         var tools = Configuration.Settings.Tools;
-        var saved = (se.OllamaApiKey, se.LmStudioApiKey, se.OllamaUrl, se.LmStudioApiUrl, se.OllamaModel,
-            tools.OllamaApiKey, tools.LmStudioApiKey, tools.OllamaApiUrl, tools.LmStudioApiUrl, tools.OllamaModel, tools.LmStudioModel);
-        try
+        var viewModel = MakeViewModel();
+        var engines = new (Type Engine, Func<string> Saved, Func<string> Used)[]
         {
-            var viewModel = MakeViewModel();
-            var engines = new (Type Engine, Func<string> Saved, Func<string> Used)[]
-            {
-                (typeof(OllamaTranslate), () => se.OllamaApiKey, () => tools.OllamaApiKey),
-                (typeof(LmStudioTranslate), () => se.LmStudioApiKey, () => tools.LmStudioApiKey),
-            };
+            (typeof(OllamaTranslate), () => se.OllamaApiKey, () => tools.OllamaApiKey),
+            (typeof(LmStudioTranslate), () => se.LmStudioApiKey, () => tools.LmStudioApiKey),
+        };
 
-            foreach (var (engine, savedKey, usedKey) in engines)
-            {
-                viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t.GetType() == engine);
-                viewModel.OnAutoTranslatorChanged();
-
-                viewModel.AutoTranslateApiKey = " typed-key ";
-                viewModel.UpdateAutoTranslateSettings();
-                Assert.Equal("typed-key", usedKey());
-                Assert.Equal("typed-key", savedKey());
-
-                viewModel.AutoTranslateApiKey = string.Empty;
-                viewModel.UpdateAutoTranslateSettings();
-                Assert.Equal(string.Empty, usedKey());
-                Assert.Equal(string.Empty, savedKey());
-            }
-        }
-        finally
+        foreach (var (engine, savedKey, usedKey) in engines)
         {
-            (se.OllamaApiKey, se.LmStudioApiKey, se.OllamaUrl, se.LmStudioApiUrl, se.OllamaModel,
-                tools.OllamaApiKey, tools.LmStudioApiKey, tools.OllamaApiUrl, tools.LmStudioApiUrl, tools.OllamaModel, tools.LmStudioModel) = saved;
+            viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t.GetType() == engine);
+            viewModel.OnAutoTranslatorChanged();
+
+            viewModel.AutoTranslateApiKey = " typed-key ";
+            viewModel.UpdateAutoTranslateSettings();
+            Assert.Equal("typed-key", usedKey());
+            Assert.Equal("typed-key", savedKey());
+
+            viewModel.AutoTranslateApiKey = string.Empty;
+            viewModel.UpdateAutoTranslateSettings();
+            Assert.Equal(string.Empty, usedKey());
+            Assert.Equal(string.Empty, savedKey());
         }
     }
 
@@ -314,6 +296,59 @@ public class BatchConvertAutoTranslateEngineTests
         Assert.Equal("http://example.local:8000/v1/chat/completions", viewModel.AutoTranslateUrl);
         Assert.Equal("sk-test", viewModel.AutoTranslateApiKey);
         Assert.Equal("gemma-3-12b", viewModel.AutoTranslateModel);
+    }
+
+    /// <summary>
+    /// LM Studio has no model box in Batch convert, so a run uses the model saved in the
+    /// Auto-translate window instead of clearing it.
+    /// </summary>
+    [AvaloniaFact]
+    public void LmStudio_RunUsesTheSavedModel()
+    {
+        using var _ = new TranslateSettingsSnapshot();
+        Se.Settings.AutoTranslate.LmStudioModel = "saved-model";
+        Configuration.Settings.Tools.LmStudioModel = string.Empty;
+        var viewModel = MakeViewModel();
+        viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is LmStudioTranslate);
+        viewModel.OnAutoTranslatorChanged();
+        Assert.False(viewModel.AutoTranslateModelIsVisible);
+
+        viewModel.UpdateAutoTranslateSettings();
+
+        Assert.Equal("saved-model", Configuration.Settings.Tools.LmStudioModel);
+        Assert.Equal("saved-model", Se.Settings.AutoTranslate.LmStudioModel);
+    }
+
+    /// <summary>
+    /// UpdateAutoTranslateSettings writes URLs, keys, models and more to both static settings
+    /// objects; this puts every string and bool property of both back afterwards.
+    /// </summary>
+    private sealed class TranslateSettingsSnapshot : IDisposable
+    {
+        private readonly List<(object Target, System.Reflection.PropertyInfo Property, object? Value)> _values = new();
+
+        public TranslateSettingsSnapshot()
+        {
+            foreach (var target in new object[] { Se.Settings.AutoTranslate, Configuration.Settings.Tools })
+            {
+                foreach (var property in target.GetType().GetProperties())
+                {
+                    if ((property.PropertyType == typeof(string) || property.PropertyType == typeof(bool)) &&
+                        property.CanRead && property.CanWrite && property.GetIndexParameters().Length == 0)
+                    {
+                        _values.Add((target, property, property.GetValue(target)));
+                    }
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var (target, property, value) in _values)
+            {
+                property.SetValue(target, value);
+            }
+        }
     }
 
     private static BatchConvertViewModel MakeViewModel()

@@ -4136,7 +4136,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             // Optional, so an emptied box clears the stored key.
             Configuration.Settings.Tools.LmStudioApiKey = AutoTranslateApiKey.Trim();
             Se.Settings.AutoTranslate.LmStudioApiKey = AutoTranslateApiKey.Trim();
-            Configuration.Settings.Tools.LmStudioModel = AutoTranslateModel.Trim();
+
+            // No model box for this engine here: use the model saved in the Auto-translate window
+            // (empty = whatever model LM Studio has loaded).
+            Configuration.Settings.Tools.LmStudioModel = Se.Settings.AutoTranslate.LmStudioModel ?? string.Empty;
         }
 
         if (engineType == typeof(LlamaCppTranslate) || engineType == typeof(LlamaCppAdvancedTranslate))
