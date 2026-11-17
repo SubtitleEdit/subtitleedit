@@ -312,6 +312,7 @@ public class AutoTranslateRunnerTest : IDisposable
     [InlineData("llamacpp-advanced", true)]
     [InlineData("ollama-advanced", true)]
     [InlineData("lmstudio-advanced", true)]
+    [InlineData("openai-compatible-advanced", true)]
     public void SupportsPrompt_OnlyForLlmEngines(string? engine, bool expected)
     {
         Assert.Equal(expected, AutoTranslateRunner.SupportsPrompt(engine));
@@ -490,6 +491,7 @@ public class AutoTranslateRunnerTest : IDisposable
     [InlineData("llamacpp-advanced", "http://myhost:8080", null)]
     [InlineData("ollama-advanced", null, "gemma4")]
     [InlineData("lmstudio-advanced", null, null)]
+    [InlineData("openai-compatible-advanced", null, null)]
     public void Create_AdvancedEngines_PassApiKeyToTheEngine(string engineName, string? url, string? model)
     {
         var withKey = AutoTranslateRunner.Create(MakeOptions(engine: engineName, url: url, model: model, apiKey: "abc"));
@@ -681,6 +683,47 @@ public class AutoTranslateRunnerTest : IDisposable
         var engine = Assert.IsType<AdvancedTranslateEngine>(runner.Translator);
         Assert.Equal("http://localhost:1234/v1/chat/completions", engine.ApiUrl);
         Assert.Null(engine.Model);
+    }
+
+    /// <summary>As for openai-compatible: a hosted provider requires the model, a single-model server ignores it.</summary>
+    [Fact]
+    public void Create_OpenAiCompatibleAdvanced_ModelOptional()
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "openai-compatible-advanced", url: "http://myhost:8080"));
+
+        Assert.Null(Assert.IsType<AdvancedTranslateEngine>(runner.Translator).Model);
+    }
+
+    /// <summary>The url is taken like the regular openai-compatible engine's: same default, a base is completed, a full endpoint is kept.</summary>
+    [Theory]
+    [InlineData(null, "http://localhost:8000/v1/chat/completions")]
+    [InlineData("myhost:8000", "http://myhost:8000/v1/chat/completions")]
+    [InlineData("https://api.example.com/v1", "https://api.example.com/v1/chat/completions")]
+    [InlineData("https://openrouter.ai/api/v1/chat/completions", "https://openrouter.ai/api/v1/chat/completions")]
+    public void Create_OpenAiCompatibleAdvanced_CompletesTheUrl(string? url, string expected)
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "openai-compatible-advanced", url: url, model: " some/model "));
+
+        var engine = Assert.IsType<AdvancedTranslateEngine>(runner.Translator);
+        Assert.Equal(expected, engine.ApiUrl);
+        Assert.Equal("some/model", engine.Model);
+        Assert.NotNull(runner.AdvancedSettings); // the batch/context loop, with the advanced options
+    }
+
+    /// <summary>
+    /// Only the engine for any OpenAI-style endpoint leaves the llama.cpp request fields out; the
+    /// three engines for local servers keep sending them.
+    /// </summary>
+    [Theory]
+    [InlineData("openai-compatible-advanced", null, null, false)]
+    [InlineData("lmstudio-advanced", null, null, true)]
+    [InlineData("ollama-advanced", null, "gemma4", true)]
+    [InlineData("llamacpp-advanced", "http://myhost:8080", null, true)]
+    public void Create_AdvancedEngines_LlamaCppExtensions(string engineName, string? url, string? model, bool expected)
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: engineName, url: url, model: model));
+
+        Assert.Equal(expected, Assert.IsType<AdvancedTranslateEngine>(runner.Translator).LlamaCppExtensions);
     }
 
     [Fact]

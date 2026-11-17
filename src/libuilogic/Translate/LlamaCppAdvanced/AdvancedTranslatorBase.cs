@@ -39,6 +39,12 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// <summary>The key sent as a Bearer token (read per request); null or empty for a server that asks for none.</summary>
     protected virtual string? GetApiKey() => null;
 
+    /// <summary>
+    /// False for an engine whose endpoint is only known to speak the OpenAI chat-completions API,
+    /// such as a hosted provider (read per request; see <see cref="LlamaCppAdvancedClient.LlamaCppExtensions"/>).
+    /// </summary>
+    protected virtual bool UsesLlamaCppExtensions => true;
+
     public void Initialize()
     {
         _client?.Dispose();
@@ -217,6 +223,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         var client = _client ?? throw new InvalidOperationException("Initialize() not called");
         var url = GetApiUrl();
         client.ApiKey = GetApiKey();
+        client.LlamaCppExtensions = UsesLlamaCppExtensions;
 
         // The "codes" this engine receives are English language names (ListLanguages puts the
         // name in TranslationPair.Code), which is what the prompt expects.
@@ -280,7 +287,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                     continue;
                 }
 
-                Error = DescribeUnusableReply(reply, client.ReplyFromReasoning, client.LastRequestDisabledThinking);
+                Error = DescribeUnusableReply(reply, client.ReplyFromReasoning, client.LastRequestDisabledThinking, client.ReplyRanOutWhileReasoning && !client.LlamaCppExtensions);
             }
             catch (HttpRequestException)
             {
@@ -303,8 +310,17 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// none - an empty reply used to leave the message bare, which made a server that streams
     /// the answer somewhere else impossible to tell from a model that answered badly (#15009).
     /// </summary>
-    internal static string DescribeUnusableReply(string reply, bool fromReasoning, bool requestDisabledThinking = true)
+    internal static string DescribeUnusableReply(string reply, bool fromReasoning, bool requestDisabledThinking = true, bool ranOutWhileReasoning = false)
     {
+        // An endpoint without a thinking switch: the larger reply budget was not enough either,
+        // or the user's own token cap is in the way. What switches reasoning off is the provider's.
+        if (ranOutWhileReasoning)
+        {
+            return "the reply ran out of tokens, which the model spent on reasoning - switch reasoning off or lower it with the extra request JSON " +
+                   "(the field is the provider's, e.g. {\"reasoning\": {\"enabled\": false}}), or raise max tokens" +
+                   (string.IsNullOrWhiteSpace(reply) || fromReasoning ? string.Empty : ": " + reply);
+        }
+
         if (string.IsNullOrWhiteSpace(reply))
         {
             return "the server returned an empty reply (no \"content\" and no \"reasoning_content\")";

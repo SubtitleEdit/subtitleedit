@@ -178,7 +178,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateFrom { get; init; }
 
         [CommandOption("--translate-engine|--translateengine")]
-        [Description("Translate engine: llamacpp (default) | llamacpp-advanced | ollama | ollama-advanced | lmstudio | lmstudio-advanced | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl (the advanced engines translate in batches with context)")]
+        [Description("Translate engine: llamacpp (default) | llamacpp-advanced | ollama | ollama-advanced | lmstudio | lmstudio-advanced | openai-compatible | openai-compatible-advanced | libretranslate | nllb-serve | nllb-api | deepl (the advanced engines translate in batches with context)")]
         public string? TranslateEngine { get; init; }
 
         [CommandOption("--translate-url|--translateurl")]
@@ -190,7 +190,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateModel { get; init; }
 
         [CommandOption("--translate-api-key|--translateapikey")]
-        [Description("API key: sent as a Bearer token by llamacpp/ollama/lmstudio, their advanced variants and openai-compatible when the server asks for one (llamacpp needs --translate-url); required for deepl")]
+        [Description("API key: sent as a Bearer token by llamacpp/ollama/lmstudio/openai-compatible and their advanced variants when the server asks for one (llamacpp needs --translate-url); required for deepl")]
         public string? TranslateApiKey { get; init; }
 
         [CommandOption("--translate-prompt|--translateprompt")]
@@ -198,7 +198,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslatePrompt { get; init; }
 
         [CommandOption("--translate-batch-size|--translatebatchsize")]
-        [Description("Advanced engines (llamacpp-advanced/ollama-advanced/lmstudio-advanced): subtitle lines per request, 1-50 (default: 10)")]
+        [Description("Advanced engines (llamacpp-advanced/ollama-advanced/lmstudio-advanced/openai-compatible-advanced): subtitle lines per request, 1-50 (default: 10)")]
         public int? TranslateBatchSize { get; init; }
 
         [CommandOption("--translate-history|--translatehistory")]

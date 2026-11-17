@@ -358,10 +358,10 @@ Translated output is named with the target language code — `way.srt --translat
 |---|---|
 | `--translate-to:<lang>` | Target language — enables translation |
 | `--translate-from:<lang>` | Source language (default: auto-detect per file) |
-| `--translate-engine:<engine>` | `llamacpp` (default) \| `llamacpp-advanced` \| `ollama` \| `ollama-advanced` \| `lmstudio` \| `lmstudio-advanced` \| `openai-compatible` \| `libretranslate` \| `nllb-serve` \| `nllb-api` \| `deepl`. The `-advanced` engines translate in batches with context, see [Advanced local engines](#advanced-local-engines). |
+| `--translate-engine:<engine>` | `llamacpp` (default) \| `llamacpp-advanced` \| `ollama` \| `ollama-advanced` \| `lmstudio` \| `lmstudio-advanced` \| `openai-compatible` \| `openai-compatible-advanced` \| `libretranslate` \| `nllb-serve` \| `nllb-api` \| `deepl`. The `-advanced` engines translate in batches with context, see [Advanced local engines](#advanced-local-engines). |
 | `--translate-url:<url>` | Endpoint of an already-running translate server. For `llamacpp` this skips the local server auto-start; a bare `host:port` is completed to `/v1/chat/completions`. |
 | `--translate-model:<model>` | `ollama`/`lmstudio`/`openai-compatible` and their `-advanced` variants: model name (required for `ollama-advanced`). `llamacpp`/`llamacpp-advanced`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model; the advanced engine skips completion-only models). |
-| `--translate-api-key:<key>` | API key. Optional for `llamacpp` / `ollama` / `lmstudio`, their `-advanced` variants and `openai-compatible`: sent as a Bearer token, for a server that asks for one (`llama-server --api-key`, an LM Studio API token, Ollama's hosted models, a reverse proxy). `llamacpp` and `llamacpp-advanced` take it only together with `--translate-url`, since the server seconv starts itself has no key. Required for `deepl` (a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
+| `--translate-api-key:<key>` | API key. Optional for `llamacpp` / `ollama` / `lmstudio` / `openai-compatible` and their `-advanced` variants: sent as a Bearer token, for a server that asks for one (`llama-server --api-key`, an LM Studio API token, Ollama's hosted models, a reverse proxy). `llamacpp` and `llamacpp-advanced` take it only together with `--translate-url`, since the server seconv starts itself has no key. Required for `deepl` (a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
 | `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` / `openai-compatible`, and the system prompt of the advanced engines — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
 | `--translate-batch-size:<n>` | Advanced engines: subtitle lines per request, 1-50 (default 10). See [Advanced local engines](#advanced-local-engines). |
 | `--translate-history:<n>` | Advanced engines: already-translated lines sent as context before each batch, 0-50 (default 12). |
@@ -511,6 +511,20 @@ Ollama's OpenAI-compatible endpoint (default `http://localhost:11434/v1/chat/com
 `--translate-model`; `lmstudio-advanced` uses `http://localhost:1234/v1/chat/completions` and sends
 `--translate-model` when given.
 
+`openai-compatible-advanced` runs the same loop against any OpenAI-style chat-completions endpoint,
+for example a hosted provider. It takes its URL, model and key like `openai-compatible`: the default
+URL is `http://localhost:8000/v1/chat/completions`, and `--translate-model` and `--translate-api-key`
+are sent when given (a hosted provider requires the model, a single-model server ignores it). It
+leaves out the request fields only llama.cpp knows (`cache_prompt`, the thinking switch), which a
+strict server rejects. It is a seconv engine without a GUI counterpart.
+
+A model that reasons before it answers spends the reply budget on its thoughts, as reasoning tokens
+count against `max_tokens`. When a reply runs out of tokens that way, `openai-compatible-advanced`
+asks once more with a larger budget (four times the usual one, at least 2048 tokens) and keeps it for
+the rest of the file. A `max_tokens` you set yourself is not raised. To switch reasoning off or lower
+it, pass the provider's own field with `--translate-request-json`, for example
+`{"reasoning": {"enabled": false}}` on OpenRouter.
+
 Every setting of the GUI's "Advanced..." dialog can also be set in a `--settings` file under
 `tools.llamaCppAdvanced`, including the ones without an option (prompt, sampling, server context
 size, extra server arguments). An option given on the command line wins over the file, and the file
@@ -545,6 +559,11 @@ seconv movie.srt subrip --translate-to:de --translate-engine:ollama-advanced --t
 
 # LM Studio on another machine
 seconv movie.srt subrip --translate-to:de --translate-engine:lmstudio-advanced --translate-url:http://192.168.1.10:1234
+
+# A hosted OpenAI-style endpoint, reasoning switched off with the provider's field
+seconv movie.srt subrip --translate-to:de --translate-engine:openai-compatible-advanced \
+  --translate-url:https://openrouter.ai/api/v1/chat/completions --translate-api-key:<key> --translate-model:<model> \
+  --translate-request-json:"{\"reasoning\": {\"enabled\": false}}"
 ```
 
 ### Templates / replacements

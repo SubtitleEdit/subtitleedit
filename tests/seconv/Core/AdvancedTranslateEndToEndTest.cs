@@ -30,6 +30,17 @@ public class AdvancedTranslateEndToEndTest : IDisposable
     private readonly HttpListener _listener = new();
     private readonly string _url;
     private readonly List<(string System, int HistoryCount, int LineCount, bool HasReasoning)> _requests = new();
+    private readonly List<string> _bodies = new(); // every request body as sent
+    private int _starvedReplies; // how many of the next requests get StarvedReply
+
+    /// <summary>
+    /// A reasoning model that spent the whole reply budget on thoughts: no content, the reply ends
+    /// on the token limit, and the usage counts the reasoning tokens.
+    /// </summary>
+    private const string StarvedReply =
+        "data: {\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning\":\"We need to translate line 1...\"},\"finish_reason\":null}]}\n\n" +
+        "data: {\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"length\"}],\"usage\":{\"prompt_tokens\":474,\"completion_tokens\":562,\"completion_tokens_details\":{\"reasoning_tokens\":562}}}\n\n" +
+        "data: [DONE]\n\n";
 
     public AdvancedTranslateEndToEndTest()
     {
@@ -70,7 +81,13 @@ public class AdvancedTranslateEndToEndTest : IDisposable
             }
 
             using var reader = new StreamReader(context.Request.InputStream, Encoding.UTF8);
-            using var request = JsonDocument.Parse(await reader.ReadToEndAsync());
+            var requestJson = await reader.ReadToEndAsync();
+            lock (_bodies)
+            {
+                _bodies.Add(requestJson);
+            }
+
+            using var request = JsonDocument.Parse(requestJson);
             var messages = request.RootElement.GetProperty("messages");
             var system = messages[0].GetProperty("content").GetString() ?? string.Empty;
             using var user = JsonDocument.Parse(messages[1].GetProperty("content").GetString() ?? "{}");
@@ -88,7 +105,7 @@ public class AdvancedTranslateEndToEndTest : IDisposable
             }
 
             var chunk = JsonSerializer.Serialize(new { choices = new[] { new { delta = new { content = JsonSerializer.Serialize(translations) } } } });
-            var body = Encoding.UTF8.GetBytes("data: " + chunk + "\n\ndata: [DONE]\n\n");
+            var body = Encoding.UTF8.GetBytes(Interlocked.Decrement(ref _starvedReplies) >= 0 ? StarvedReply : "data: " + chunk + "\n\ndata: [DONE]\n\n");
             context.Response.ContentType = "text/event-stream";
             await context.Response.OutputStream.WriteAsync(body);
             context.Response.Close();
@@ -251,5 +268,108 @@ public class AdvancedTranslateEndToEndTest : IDisposable
 
         Assert.Equal(3, requests.Count);
         Assert.All(requests, r => Assert.True(r.HasReasoning));
+    }
+
+    /// <summary>
+    /// openai-compatible-advanced is the same loop for any chat-completions endpoint, such as a
+    /// hosted provider: the model and the key travel with every request, and cache_prompt, which
+    /// only llama.cpp knows and a strict server rejects, does not. The engines for local servers
+    /// keep sending it.
+    /// </summary>
+    [Theory]
+    [InlineData("openai-compatible-advanced", false)]
+    [InlineData("lmstudio-advanced", true)]
+    public async Task AdvancedEngines_SendModelAndKey_AndCachePromptToLocalServersOnly(string engine, bool expectCachePrompt)
+    {
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = _tempRoot,
+            Overwrite = true,
+            TranslateTo = "de",
+            TranslateFrom = "en",
+            TranslateEngine = engine,
+            TranslateUrl = _url, // base only; completed to /v1/chat/completions
+            TranslateModel = "some/model",
+            TranslateApiKey = "sk-abc123",
+            TranslateBatchSize = 3,
+            Quiet = true,
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var output = await File.ReadAllTextAsync(Path.Combine(_tempRoot, "in.de.srt"), TestContext.Current.CancellationToken);
+        Assert.Contains("[de] Where were you last night?", output);
+        Assert.Contains("[de] I will not.", output);
+
+        var bodies = RequestBodies();
+        Assert.Equal(3, bodies.Count); // 8 lines in batches of 3
+        Assert.All(bodies, body =>
+        {
+            Assert.Equal("some/model", body.GetProperty("model").GetString());
+            Assert.Equal(expectCachePrompt, body.TryGetProperty("cache_prompt", out _));
+        });
+        lock (_authorizations)
+        {
+            Assert.All(_authorizations, a => Assert.Equal("Bearer sk-abc123", a));
+        }
+    }
+
+    /// <summary>
+    /// A reasoning model spends the reply budget on its thoughts. The first reply runs out of
+    /// tokens with no content; the engine asks again with a larger budget and keeps it, so the
+    /// file takes one request more than its three batches - not a failed batch that is retried
+    /// at the same budget and then cut down line by line.
+    /// </summary>
+    [Fact]
+    public async Task OpenAiCompatibleAdvanced_ReasoningModel_GetsALargerReplyBudget()
+    {
+        var input = Path.Combine(_tempRoot, "in.srt");
+        await File.WriteAllTextAsync(input, SrtContent, TestContext.Current.CancellationToken);
+        _starvedReplies = 1;
+
+        var result = await new SubtitleConverter().ConvertAsync(new ConversionOptions
+        {
+            Patterns = [input],
+            Format = "SubRip",
+            OutputFolder = _tempRoot,
+            Overwrite = true,
+            TranslateTo = "de",
+            TranslateFrom = "en",
+            TranslateEngine = "openai-compatible-advanced",
+            TranslateUrl = _url,
+            TranslateModel = "some/model",
+            TranslateBatchSize = 3,
+            Quiet = true,
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var output = await File.ReadAllTextAsync(Path.Combine(_tempRoot, "in.de.srt"), TestContext.Current.CancellationToken);
+        Assert.Contains("[de] Where were you last night?", output);
+        Assert.Contains("[de] I will not.", output);
+
+        List<(string System, int HistoryCount, int LineCount, bool HasReasoning)> requests;
+        lock (_requests)
+        {
+            requests = _requests.ToList();
+        }
+
+        // The first batch twice, then the other two: no batch was cut.
+        Assert.Equal(new[] { 3, 3, 3, 2 }, requests.Select(r => r.LineCount));
+        var maxTokens = RequestBodies().Select(body => body.GetProperty("max_tokens").GetInt32()).ToList();
+        Assert.True(maxTokens[0] < 2048, "the budget for three short lines is small");
+        Assert.Equal(Math.Max(2048, maxTokens[0] * 4), maxTokens[1]);
+        Assert.All(maxTokens.Skip(1), m => Assert.True(m >= 2048));
+    }
+
+    private List<JsonElement> RequestBodies()
+    {
+        lock (_bodies)
+        {
+            return _bodies.Select(body => JsonDocument.Parse(body).RootElement.Clone()).ToList();
+        }
     }
 }

@@ -28,9 +28,9 @@ public class LlamaCppAdvancedClientReasoningTests
         var content = new StringBuilder();
         var reasoning = new StringBuilder();
 
-        Assert.True(LlamaCppAdvancedClient.TryAppendDelta(Chunk("reasoning_content", "Let me think. "), content, reasoning, out _));
-        Assert.True(LlamaCppAdvancedClient.TryAppendDelta(Chunk("content", "{\"1\":"), content, reasoning, out _));
-        Assert.True(LlamaCppAdvancedClient.TryAppendDelta(Chunk("content", "\"Hej\"}"), content, reasoning, out _));
+        Assert.True(LlamaCppAdvancedClient.TryAppendDelta(Chunk("reasoning_content", "Let me think. "), content, reasoning, out _, out _, out _));
+        Assert.True(LlamaCppAdvancedClient.TryAppendDelta(Chunk("content", "{\"1\":"), content, reasoning, out _, out _, out _));
+        Assert.True(LlamaCppAdvancedClient.TryAppendDelta(Chunk("content", "\"Hej\"}"), content, reasoning, out _, out _, out _));
 
         Assert.Equal("{\"1\":\"Hej\"}", content.ToString());
         Assert.Equal("Let me think. ", reasoning.ToString());
@@ -42,7 +42,7 @@ public class LlamaCppAdvancedClientReasoningTests
         var content = new StringBuilder();
         var reasoning = new StringBuilder();
 
-        Assert.True(LlamaCppAdvancedClient.TryAppendDelta("{\"object\":\"chat.completion.chunk\",\"choices\":[],\"usage\":{\"total_tokens\":9}}", content, reasoning, out _));
+        Assert.True(LlamaCppAdvancedClient.TryAppendDelta("{\"object\":\"chat.completion.chunk\",\"choices\":[],\"usage\":{\"total_tokens\":9}}", content, reasoning, out _, out _, out _));
 
         Assert.Equal(0, content.Length);
         Assert.Equal(0, reasoning.Length);
@@ -51,7 +51,7 @@ public class LlamaCppAdvancedClientReasoningTests
     [Fact]
     public void InStreamErrorStillFailsTheRequest()
     {
-        var ok = LlamaCppAdvancedClient.TryAppendDelta("{\"error\":{\"message\":\"context full\"}}", new StringBuilder(), new StringBuilder(), out var error);
+        var ok = LlamaCppAdvancedClient.TryAppendDelta("{\"error\":{\"message\":\"context full\"}}", new StringBuilder(), new StringBuilder(), out var error, out _, out _);
 
         Assert.False(ok);
         Assert.Contains("context full", error);

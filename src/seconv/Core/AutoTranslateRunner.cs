@@ -18,14 +18,15 @@ namespace SeConv.Core;
 /// seconv never downloads engines or models (consistent with its Tesseract/Paddle policy) —
 /// missing pieces fail fast with instructions instead.
 ///
-/// The advanced engines (llamacpp-advanced, ollama-advanced, lmstudio-advanced) run libuilogic's
+/// The advanced engines (llamacpp-advanced, ollama-advanced, lmstudio-advanced,
+/// openai-compatible-advanced) run libuilogic's
 /// batch/context loop - numbered batches with a rolling history of translated lines plus an
 /// optional synopsis, glossary and formality - with those settings taken from the command line
 /// (<see cref="CreateAdvancedSettings"/>) instead of the GUI's "Advanced..." dialog.
 /// </summary>
 internal sealed class AutoTranslateRunner
 {
-    public static readonly string[] SupportedEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible", "libretranslate", "nllb-serve", "nllb-api", "deepl", "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced" };
+    public static readonly string[] SupportedEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible", "libretranslate", "nllb-serve", "nllb-api", "deepl", "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced", "openai-compatible-advanced" };
 
     /// <summary>
     /// Engines that build their request from an editable prompt, i.e. the ones
@@ -33,13 +34,13 @@ internal sealed class AutoTranslateRunner
     /// services with no prompt at all. For the advanced engines the prompt is the system prompt
     /// of the batch protocol (see <see cref="CreateAdvancedSettings"/>).
     /// </summary>
-    public static readonly string[] PromptEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible", "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced" };
+    public static readonly string[] PromptEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible", "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced", "openai-compatible-advanced" };
 
     /// <summary>
     /// Engines that run libuilogic's advanced batch/context loop, i.e. the ones the options in
     /// <see cref="AdvancedOptionNames"/> apply to.
     /// </summary>
-    public static readonly string[] AdvancedEngines = { "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced" };
+    public static readonly string[] AdvancedEngines = { "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced", "openai-compatible-advanced" };
 
     /// <summary>Accepted <c>--translate-formality</c> values (case-insensitive).</summary>
     public static readonly string[] FormalityValues = { "default", "formal", "informal" };
@@ -58,7 +59,7 @@ internal sealed class AutoTranslateRunner
     /// token: a local server can ask for one (llama-server --api-key, LM Studio) or sit behind a
     /// reverse proxy, and Ollama's hosted models need one.
     /// </summary>
-    public static readonly string[] ApiKeyEngines = { "llamacpp", "llamacpp-advanced", "ollama", "ollama-advanced", "lmstudio", "lmstudio-advanced", "openai-compatible", "deepl" };
+    public static readonly string[] ApiKeyEngines = { "llamacpp", "llamacpp-advanced", "ollama", "ollama-advanced", "lmstudio", "lmstudio-advanced", "openai-compatible", "openai-compatible-advanced", "deepl" };
 
     /// <summary>File extensions that make <c>--translate-prompt</c> a file path rather than inline text.</summary>
     private static readonly string[] PromptFileExtensions = { ".txt", ".prompt", ".md" };
@@ -274,6 +275,14 @@ internal sealed class AutoTranslateRunner
                     tools.OpenAiCompatibleTranslatePrompt = prompt;
                 }
                 break;
+            case "openai-compatible-advanced":
+                // Url and model as for openai-compatible: the same default, and the model stays optional
+                // (a hosted provider requires it, a single-model server ignores it). The endpoint may be
+                // a hosted provider, so no llama.cpp request fields.
+                var openAiCompatibleAdvancedUrl = AutoTranslateUrl.Complete(url, OpenAiCompatibleTranslate.DefaultUrl);
+                translator = MakeAdvanced("OpenAI Compatible API advanced", "https://platform.openai.com/docs/api-reference/chat", () => openAiCompatibleAdvancedUrl,
+                    string.IsNullOrWhiteSpace(options.TranslateModel) ? null : options.TranslateModel.Trim(), llamaCppExtensions: false);
+                break;
             case "libretranslate":
                 translator = new LibreTranslate();
                 if (!string.IsNullOrEmpty(url))
@@ -320,9 +329,9 @@ internal sealed class AutoTranslateRunner
         runner.ApplyPromptOverride();
         return runner;
 
-        AdvancedTranslateEngine MakeAdvanced(string name, string homepage, Func<string> apiUrl, string? model)
+        AdvancedTranslateEngine MakeAdvanced(string name, string homepage, Func<string> apiUrl, string? model, bool llamaCppExtensions = true)
         {
-            return new AdvancedTranslateEngine(name, homepage, apiUrl, model) { Settings = advancedSettings!, ApiKey = apiKey };
+            return new AdvancedTranslateEngine(name, homepage, apiUrl, model) { Settings = advancedSettings!, ApiKey = apiKey, LlamaCppExtensions = llamaCppExtensions };
         }
     }
 
