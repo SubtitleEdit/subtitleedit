@@ -84,7 +84,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter(console, "--translate-to:<lang>", "Auto-translate to this language (code or English name, e.g. de or German)");
         ShowParameter(console, "--translate-from:<lang>", "Auto-translate source language (default: auto-detect per file)");
-        ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | llamacpp-advanced | ollama | ollama-advanced | lmstudio | lmstudio-advanced | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl; the advanced engines translate in batches with context");
+        ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | llamacpp-advanced | ollama | ollama-advanced | lmstudio | lmstudio-advanced | openai-compatible | openai-compatible-advanced | libretranslate | nllb-serve | nllb-api | deepl; the advanced engines translate in batches with context");
         ShowParameter(console, "--translate-url:<url>", "Endpoint of an already-running translate server (llamacpp: skips the auto-start)");
         ShowParameter(console, "--translate-model:<model>", "Ollama/LM Studio/OpenAI-compatible model name (required for ollama-advanced), or llamacpp .gguf file name/path");
         ShowParameter(console, "--translate-api-key:<key>", "API key for a server that asks for one (the LLM engines send it as a Bearer token); required for deepl");
