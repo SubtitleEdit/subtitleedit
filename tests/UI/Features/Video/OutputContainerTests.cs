@@ -120,4 +120,40 @@ public class OutputContainerTests
         // or "-f mkv" are not ffmpeg format names and abort the pass.
         Assert.Equal(expected, OutputContainer.GetMuxerName(extension));
     }
+
+    [Theory]
+    [InlineData(".mp4", "opus", "aac")]
+    [InlineData(".mp4", "vorbis", "aac")]
+    [InlineData(".mp4", "flac", "aac")]
+    [InlineData(".mov", "opus", "aac")]
+    [InlineData(".ts", "vorbis", "aac")]
+    [InlineData(".mp4", "aac", "copy")]
+    [InlineData(".mp4", "ac3", "copy")]
+    [InlineData(".mov", "pcm_s16le", "copy")]
+    [InlineData(".ts", "opus", "copy")]
+    [InlineData(".mkv", "opus", "copy")]
+    [InlineData(".mp4", "", "copy")]
+    [InlineData(".mp4", null, "copy")]
+    public void Copy_FallsBackToAac_WhenContainerCannotPlaySourceCodec(string extension, string? sourceCodec, string expected)
+    {
+        // #16980: an Opus track copied into .mp4 muxes fine but plays silently in Windows' players.
+        Assert.Equal(expected, OutputContainer.GetAudioEncodingFor(extension, "copy", sourceCodec));
+    }
+
+    [Fact]
+    public void ExplicitEncoder_IsKept_RegardlessOfSourceCodec()
+    {
+        Assert.Equal("mp3", OutputContainer.GetAudioEncodingFor(".mp4", "mp3", "opus"));
+    }
+
+    [Theory]
+    [InlineData("opus, 48000 Hz, stereo, fltp (default)", "opus")]
+    [InlineData("aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp", "aac")]
+    [InlineData("pcm_s16le ([1][0][0][0] / 0x0001), 44100 Hz", "pcm_s16le")]
+    [InlineData("", "")]
+    [InlineData(null, "")]
+    public void CodecName_IsFirstWordOfStreamDescription(string? trackInfo, string expected)
+    {
+        Assert.Equal(expected, OutputContainer.GetCodecName(trackInfo));
+    }
 }
