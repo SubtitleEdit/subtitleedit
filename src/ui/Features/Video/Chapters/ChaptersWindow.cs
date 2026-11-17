@@ -64,7 +64,7 @@ public class ChaptersWindow : Window
                 new ColumnDefinition(new GridLength(370)),
             },
         };
-        content.Add(MakeChapterListPanel(vm), 0, 0);
+        content.Add(MakeChapterListPanel(vm, out var chapterGrid), 0, 0);
         content.Add(side, 0, 1);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
@@ -86,7 +86,7 @@ public class ChaptersWindow : Window
 
         Content = grid;
 
-        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => TableViewExtras.FocusRow(chapterGrid)); // initial focus on the list, not an action button - a focused button clicks on bare Space
     }
 
     /// <summary>
@@ -279,7 +279,7 @@ public class ChaptersWindow : Window
     /// <summary>
     /// The chapter list: a header with the count and the add/delete/clear actions, the grid under it.
     /// </summary>
-    private static Grid MakeChapterListPanel(ChaptersViewModel vm)
+    private static Grid MakeChapterListPanel(ChaptersViewModel vm, out TableView grid)
     {
         var language = Se.Language.Video.Chapters;
 
@@ -315,15 +315,16 @@ public class ChaptersWindow : Window
             Margin = new Thickness(14, 12, 14, 14),
         };
         panel.Add(header, 0);
-        panel.Add(MakeChapterGrid(vm), 1);
+        panel.Add(MakeChapterGrid(vm, out grid), 1);
         return panel;
     }
 
-    private static Border MakeChapterGrid(ChaptersViewModel vm)
+    private static Border MakeChapterGrid(ChaptersViewModel vm, out TableView grid)
     {
         var language = Se.Language.Video.Chapters;
 
         var tableView = TableViewExtras.MakeTableView(multiSelect: false);
+        grid = tableView;
         tableView.Height = double.NaN; // auto size inside scroll viewer
         tableView.Margin = new Thickness(2);
         tableView.ItemsSource = vm.Chapters;

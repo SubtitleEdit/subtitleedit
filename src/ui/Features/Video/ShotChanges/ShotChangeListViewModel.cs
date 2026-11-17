@@ -193,6 +193,14 @@ public partial class ShotChangeListViewModel : ObservableObject
 
     internal void GridKeyDown(KeyEventArgs e)
     {
+        // Enter on a row goes to it, as double-click does - unhandled it would click Done and just close
+        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && SelectedShotChange != null)
+        {
+            e.Handled = true;
+            GoTo();
+            return;
+        }
+
         if (e.Key == Key.Delete)
         {
             e.Handled = true;

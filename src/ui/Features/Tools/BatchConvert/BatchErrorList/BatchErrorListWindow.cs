@@ -93,20 +93,21 @@ public class BatchErrorListWindow : Window
             BorderThickness = new Thickness(0, 0, 0, 1),
             Padding = new Thickness(16, 14, 16, 14),
         }, 0, 0);
-        grid.Add(new Border { Child = MakeErrorsGridView(vm), Padding = new Thickness(14, 12, 14, 14) }, 1, 0);
+        grid.Add(new Border { Child = MakeErrorsGridView(vm, out var errorGrid), Padding = new Thickness(14, 12, 14, 14) }, 1, 0);
         grid.Add(EditorChrome.MakeButtonBar(buttonExport, buttonCancel), 2, 0);
 
         Content = grid;
 
-        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => TableViewExtras.FocusRow(errorGrid)); // initial focus on the list, not an action button - a focused button clicks on bare Space
 
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 
-    private static Border MakeErrorsGridView(BatchErrorListViewModel vm)
+    private static Border MakeErrorsGridView(BatchErrorListViewModel vm, out TableView grid)
     {
         var l = Se.Language.ErrorList;
         var dataGrid = TableViewExtras.MakeTableView(alwaysSelected: false, multiSelect: false);
+        grid = dataGrid;
         dataGrid.Height = double.NaN; // auto size inside scroll viewer
         dataGrid[!TableView.ItemsSourceProperty] = new Binding(nameof(vm.Subtitles));
 

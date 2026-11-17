@@ -92,7 +92,7 @@ public class StylePickerWindow : Window
             {
                 panelInfo,
                 textBoxFilter,
-                EditorChrome.MakeCompactListFrame(listBox, compact: false),
+                EditorChrome.MakeCompactListFrame(listBox, compact: false, EditorChrome.MakeNoMatchesNote(vm.VisibleItems, textBoxFilter)),
                 labelKeysHint,
             },
         };

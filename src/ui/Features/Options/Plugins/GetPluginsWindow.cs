@@ -201,7 +201,7 @@ public class GetPluginsWindow : Window
         };
         var searchBox = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.Search);
         listSection.Add(EditorChrome.MakeSectionHeaderRow(Se.Language.Plugins.GetPluginsTitle, searchBox), 0);
-        listSection.Add(EditorChrome.MakeCompactListFrame(listBox, compact: false), 1);
+        listSection.Add(EditorChrome.MakeCompactListFrame(listBox, compact: false, EditorChrome.MakeNoMatchesNote(vm.Plugins, searchBox)), 1);
 
         var statusMessage = new TextBlock
         {
