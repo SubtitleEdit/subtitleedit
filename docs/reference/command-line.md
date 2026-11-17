@@ -521,9 +521,16 @@ strict server rejects. It is a seconv engine without a GUI counterpart.
 A model that reasons before it answers spends the reply budget on its thoughts, as reasoning tokens
 count against `max_tokens`. When a reply runs out of tokens that way, `openai-compatible-advanced`
 asks once more with a larger budget (four times the usual one, at least 2048 tokens) and keeps it for
-the rest of the file. A `max_tokens` you set yourself is not raised. To switch reasoning off or lower
-it, pass the provider's own field with `--translate-request-json`, for example
+the rest of the file. If the endpoint turns the larger budget down, because it is more than the model
+may write, the usual one stays. A `max_tokens` you set yourself is not raised. To switch reasoning off
+or lower it, pass the provider's own field with `--translate-request-json`, for example
 `{"reasoning": {"enabled": false}}` on OpenRouter.
+
+Some endpoints take the reply budget under another name or refuse a sampling field: OpenAI's own
+reasoning models (the o-series, gpt-5) want `max_completion_tokens` in place of `max_tokens` and accept
+only their default `temperature`. Swap the fields with
+`--translate-request-json:"{\"max_tokens\": null, \"temperature\": null, \"max_completion_tokens\": 8000}"`.
+A budget set this way is yours, so it is not raised either.
 
 Every setting of the GUI's "Advanced..." dialog can also be set in a `--settings` file under
 `tools.llamaCppAdvanced`, including the ones without an option (prompt, sampling, server context

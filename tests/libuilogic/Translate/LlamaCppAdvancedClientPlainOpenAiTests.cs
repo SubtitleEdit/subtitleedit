@@ -171,6 +171,45 @@ public class LlamaCppAdvancedClientPlainOpenAiTests
         Assert.Contains("extra request JSON", description);
     }
 
+    /// <summary>
+    /// The larger budget can be more than the model may write, and a server answers a max_tokens
+    /// above that cap with a 400. The first reply then stands, with no response-format fallbacks
+    /// on the refusal, and the next request is back on the usual budget - with the larger one
+    /// kept, every later request of the file would be refused as well.
+    /// </summary>
+    [Fact]
+    public async Task LargerBudgetTheServerRefusesIsDroppedAndTheFirstReplyStands()
+    {
+        const string refusal = "{\"error\":{\"message\":\"max_tokens is too large: 2248. This model supports at most 2000 completion tokens.\",\"type\":\"invalid_request_error\"}}";
+        using var server = new FakeServer(StarvedSse, refusal, GoodSse);
+        using var client = new LlamaCppAdvancedClient(new SeLlamaCppAdvanced()) { LlamaCppExtensions = false };
+
+        var reply = await server.ChatAsync(client, defaultMaxTokens: 562, responseFormatJson: "{\"type\":\"json_object\"}");
+
+        Assert.Equal(string.Empty, reply);
+        Assert.True(client.ReplyRanOutWhileReasoning);
+        Assert.Equal(new[] { 562, 2248 }, server.MaxTokens);
+
+        Assert.Equal(TranslationJson, await server.ChatAsync(client, defaultMaxTokens: 562));
+        Assert.Equal(new[] { 562, 2248, 562 }, server.MaxTokens);
+    }
+
+    /// <summary>
+    /// An answer under "reasoning_content" only, with the extensions off: no "enable_thinking" is
+    /// sent to such an endpoint, so the advice names the provider's field and not that switch.
+    /// </summary>
+    [Fact]
+    public void ReasoningOnlyReplyWithoutAThinkingSwitchPointsAtTheProvidersField()
+    {
+        var description = AdvancedTranslatorBase.DescribeUnusableReply("thoughts only", true, requestDisabledThinking: false, hasThinkingSwitch: false);
+
+        Assert.Contains("\"reasoning_content\" only", description);
+        Assert.Contains("extra request JSON", description);
+        Assert.DoesNotContain("enable_thinking", description);
+        Assert.DoesNotContain("--reasoning off", description);
+        Assert.EndsWith(": thoughts only", description);
+    }
+
     /// <summary>More tokens would only make a runaway longer (#13830): without a sign of reasoning the limit is left to the batch retry.</summary>
     [Fact]
     public async Task RunawayWithoutReasoningIsNotAskedForAgain()
@@ -204,7 +243,10 @@ public class LlamaCppAdvancedClientPlainOpenAiTests
         Assert.Equal(new[] { 562, 2248 }, server.MaxTokens);
     }
 
-    /// <summary>Answers the requests it gets with the given SSE bodies, in order, and keeps each request's max_tokens.</summary>
+    /// <summary>
+    /// Answers the requests it gets with the given SSE bodies, in order, and keeps each request's
+    /// max_tokens. A body that is not SSE is an error body and goes out with a 400.
+    /// </summary>
     private sealed class FakeServer : IDisposable
     {
         private readonly HttpListener _listener;
@@ -238,6 +280,7 @@ public class LlamaCppAdvancedClientPlainOpenAiTests
                     }
 
                     var bytes = Encoding.UTF8.GetBytes(sse);
+                    context.Response.StatusCode = sse.StartsWith("data:", StringComparison.Ordinal) ? 200 : 400;
                     context.Response.ContentType = "text/event-stream";
                     await context.Response.OutputStream.WriteAsync(bytes);
                     context.Response.Close();
@@ -256,10 +299,10 @@ public class LlamaCppAdvancedClientPlainOpenAiTests
             }
         }
 
-        public async Task<string> ChatAsync(LlamaCppAdvancedClient client, int defaultMaxTokens)
+        public async Task<string> ChatAsync(LlamaCppAdvancedClient client, int defaultMaxTokens, string? responseFormatJson = null)
         {
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            return await client.ChatAsync(_url + "v1/chat/completions", "system", "{\"history\":[],\"lines\":[]}", null, timeout.Token, "some/model", defaultMaxTokens);
+            return await client.ChatAsync(_url + "v1/chat/completions", "system", "{\"history\":[],\"lines\":[]}", responseFormatJson, timeout.Token, "some/model", defaultMaxTokens);
         }
 
         public void Dispose()

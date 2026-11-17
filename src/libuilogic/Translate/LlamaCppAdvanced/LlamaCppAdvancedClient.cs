@@ -166,7 +166,9 @@ public class LlamaCppAdvancedClient : IDisposable
     /// thinking switch to send, so a reply that hit the limit while reasoning is asked for once
     /// more with a larger budget, and the following requests keep it. Only the engine's own
     /// budget grows: a cap the user set (the max tokens setting, max_tokens in the extra request
-    /// JSON) is sent again unchanged, so there is no second request then.
+    /// JSON) is sent again unchanged, so there is no second request then. The larger budget can
+    /// be more than the model may write, which a server answers with an error: the first reply
+    /// then stands, and the following requests are back on the usual budget.
     /// </summary>
     private async Task<(bool ok, bool stalled, bool isAssembledContent, string body, string reasoning, int status)> PostWithReasoningRoomAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump, bool disableThinking, CancellationToken cancellationToken)
     {
@@ -181,7 +183,22 @@ public class LlamaCppAdvancedClient : IDisposable
 
         _reasoningNeedsRoom = true;
         var roomier = Build();
-        return roomier == json ? response : await PostAsync(url, roomier, cancellationToken);
+        if (roomier == json)
+        {
+            return response;
+        }
+
+        var roomierResponse = await PostAsync(url, roomier, cancellationToken);
+        if (roomierResponse.ok)
+        {
+            return roomierResponse;
+        }
+
+        // Kept, the flag would send every later request with a budget the server turns down.
+        SeLogger.Error("llama.cpp advanced translate: the larger reply budget for a reasoning model was not accepted, keeping the usual one: " + roomierResponse.body);
+        _reasoningNeedsRoom = false;
+        ReplyRanOutWhileReasoning = true; // the first reply's, the failed request reset it
+        return response;
     }
 
     /// <summary>
