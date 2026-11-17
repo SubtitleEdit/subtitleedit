@@ -323,8 +323,8 @@ public class BatchConvertAutoTranslateEngineTests
     }
 
     /// <summary>
-    /// LM Studio has no model box in Batch convert, so a run uses the model saved in the
-    /// Auto-translate window instead of clearing it.
+    /// LM Studio's model box opens with the model saved in the Auto-translate window, so a run
+    /// uses that model instead of clearing it.
     /// </summary>
     [AvaloniaFact]
     public void LmStudio_RunUsesTheSavedModel()
@@ -335,12 +335,38 @@ public class BatchConvertAutoTranslateEngineTests
         var viewModel = MakeViewModel();
         viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is LmStudioTranslate);
         viewModel.OnAutoTranslatorChanged();
-        Assert.False(viewModel.AutoTranslateModelIsVisible);
+        Assert.True(viewModel.AutoTranslateModelIsVisible);
+        Assert.Equal("saved-model", viewModel.AutoTranslateModel);
 
         viewModel.UpdateAutoTranslateSettings();
 
         Assert.Equal("saved-model", Configuration.Settings.Tools.LmStudioModel);
         Assert.Equal("saved-model", Se.Settings.AutoTranslate.LmStudioModel);
+    }
+
+    /// <summary>
+    /// A model typed for LM Studio is used for the run and saved, and an emptied box clears it:
+    /// LM Studio then uses the model it has loaded, as in the Auto-translate window.
+    /// </summary>
+    [AvaloniaFact]
+    public void LmStudio_TypedModelIsUsedAndSaved_EmptiedBoxClearsIt()
+    {
+        using var _ = new TranslateSettingsSnapshot();
+        Se.Settings.AutoTranslate.LmStudioModel = "saved-model";
+        var viewModel = MakeViewModel();
+        viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is LmStudioTranslate);
+        viewModel.OnAutoTranslatorChanged();
+        Assert.True(viewModel.AutoTranslateModelBrowseIsVisible);
+
+        viewModel.AutoTranslateModel = " typed-model ";
+        viewModel.UpdateAutoTranslateSettings();
+        Assert.Equal("typed-model", Configuration.Settings.Tools.LmStudioModel);
+        Assert.Equal("typed-model", Se.Settings.AutoTranslate.LmStudioModel);
+
+        viewModel.AutoTranslateModel = string.Empty;
+        viewModel.UpdateAutoTranslateSettings();
+        Assert.Equal(string.Empty, Configuration.Settings.Tools.LmStudioModel);
+        Assert.Equal(string.Empty, Se.Settings.AutoTranslate.LmStudioModel);
     }
 
     /// <summary>
