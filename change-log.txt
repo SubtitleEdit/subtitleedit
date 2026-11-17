@@ -3,6 +3,20 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta8 (17th of November 2026)
+
+* UI consistency: sentence case, initial focus off OK buttons, clear buttons in filter boxes, delete prompts honor "Prompt before delete"
+* Auto-translate: API key field for llama.cpp, Ollama and LM Studio (incl. advanced) - thx Makar8000
+* Auto-translate: OpenAI Compatible API works without an API key - thx Makar8000
+* Improve time codes: snap only the re-timed side to shot changes
+* Improve time codes: mention Shift+F7 / Shift+F8 in the to-check hint - thx Uer9-create
+* Installer: fix invalid chars in Russian/Finnish changelog shortcut name - thx Diaskhan
+* Update Tesseract (Windows) to 5.5.4
+* Update CrispASR to v0.8.54
+* Update CrispEmbed to v0.17.19
+* Update German translation - thx FunkyKnilch
+* Update Japanese translation - thx hisui3393
+
 v5.5.0-beta7 (16th of November 2026)
 
 * Text to speech: KugelAudio voice cloning from a reference clip
