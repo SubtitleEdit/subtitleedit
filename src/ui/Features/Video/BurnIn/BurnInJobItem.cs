@@ -37,6 +37,12 @@ public partial class BurnInJobItem : ObservableObject
     /// </summary>
     public bool SubtitleIsImage { get; set; }
 
+    /// <summary>
+    /// ffmpeg codec name of the input's first audio track (e.g. "opus"), empty when unknown - so
+    /// audio "copy" can fall back to AAC for a container that cannot play it (#16980).
+    /// </summary>
+    public string SourceAudioCodec { get; set; } = string.Empty;
+
     [ObservableProperty] private string _size;
 
     [ObservableProperty] private string _status;
