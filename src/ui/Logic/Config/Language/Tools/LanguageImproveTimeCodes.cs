@@ -103,8 +103,8 @@ public class LanguageImproveTimeCodes
         SummaryXRetimedYKeptZSkipped = "Re-timed: {0}   ·   Kept: {1}   ·   No speech: {2}";
         MeanShiftX = "Mean shift: {0} ms";
         ToCheckX = "To check: {0}";
-        LargeMovesToCheckX = "{0} line(s) would move a long way on their own and are left unticked - listen to them (F5 plays the aligned line, Shift+F5 the original) and tick the ones that are right.";
-        LinesToCheckX = "{0} line(s) are left unticked to check - listen to them (F5 plays the aligned line, Shift+F5 the original) and tick the ones that are right.";
+        LargeMovesToCheckX = "{0} line(s) would move a long way on their own and are left unticked - step through them with Shift+F7 / Shift+F8, listen (F5 plays the aligned line, Shift+F5 the original) and tick the ones that are right.";
+        LinesToCheckX = "{0} line(s) are left unticked to check - step through them with Shift+F7 / Shift+F8, listen (F5 plays the aligned line, Shift+F5 the original) and tick the ones that are right.";
         StartShift = "Start";
         EndShift = "End";
         StatusRetimed = "Re-timed";
