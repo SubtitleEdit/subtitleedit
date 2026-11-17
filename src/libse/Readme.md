@@ -18,26 +18,73 @@ a general-purpose .NET library for reading, writing, converting, and fixing subt
 dotnet add package libse
 ```
 
+## Namespaces
+
+```csharp
+using Nikse.SubtitleEdit.Core.Common;          // Subtitle, Paragraph, Utilities, HtmlUtil, ...
+using Nikse.SubtitleEdit.Core.SubtitleFormats; // SubRip, WebVTT, Ebu, ... and SubtitleFormat
+```
+
 ## Load a subtitle file
 
 The format and text encoding are detected automatically:
 
 ```csharp
-var subtitle = Subtitle.Parse(fileName); // null if not a known subtitle format
+var subtitle = Subtitle.Parse(fileName);
+if (subtitle == null)
+{
+    return; // not a known subtitle format
+}
+
 var numberOfLines = subtitle.Paragraphs.Count;
 var firstText = subtitle.Paragraphs.First().Text;
 var firstStartMs = subtitle.Paragraphs.First().StartTime.TotalMilliseconds;
 var formatName = subtitle.OriginalFormat.FriendlyName; // e.g. "SubRip (.srt)"
+var encoding = subtitle.OriginalEncoding;
+```
+
+`Subtitle.Parse` handles text formats and the binary formats in `SubtitleFormat.AllSubtitleFormats`
+(e.g. EBU STL, PAC, Cavena 890). Image-based and container formats have their own parsers:
+
+| Format | Parser |
+| --- | --- |
+| Blu-ray SUP | `BluRaySup.BluRaySupParser.ParseBluRaySup` |
+| VobSub (.sub/.idx) | `VobSub.VobSubParser` |
+| Matroska (.mkv) | `ContainerFormats.Matroska.MatroskaFile` |
+| MP4 | `ContainerFormats.Mp4.Mp4Parser` |
+| MXF | `ContainerFormats.MaterialExchangeFormat.MxfParser` |
+| Transport stream (DVB) | `ContainerFormats.TransportStream.TransportStreamParser` |
+
+```csharp
+using Nikse.SubtitleEdit.Core.BluRaySup;
+
+var log = new StringBuilder();
+foreach (var image in BluRaySupParser.ParseBluRaySup("movie.sup", log))
+{
+    var start = image.StartTimeCode;
+    var end = image.EndTimeCode;
+    using (var bitmap = image.GetBitmap()) // SkiaSharp SKBitmap
+    {
+        // OCR or save the bitmap
+    }
+}
 ```
 
 ## Save / convert a subtitle file
 
-Every format can serialize a `Subtitle` via `ToText`, so converting is just loading with one
+Text formats serialize a `Subtitle` via `ToText`, so converting is just loading with one
 format and saving with another:
 
 ```csharp
 File.WriteAllText("new.srt", new SubRip().ToText(subtitle, "untitled"));
 File.WriteAllText("new.vtt", new WebVTT().ToText(subtitle, "untitled"));
+```
+
+Binary formats (EBU STL, PAC, Cavena 890, ...) do not support `ToText`. They implement
+`IBinaryPersistableSubtitle` and are written with `Save`:
+
+```csharp
+new Ebu().Save("new.stl", subtitle);
 ```
 
 All formats are available via `SubtitleFormat.AllSubtitleFormats`.
@@ -48,7 +95,7 @@ All formats are available via `SubtitleFormat.AllSubtitleFormats`.
 // Shift all cues 1.5 seconds later
 subtitle.AddTimeToAllParagraphs(TimeSpan.FromSeconds(1.5));
 
-// Re-time frame-based cues after a frame rate change
+// Convert from 25 fps to 23.976 fps (scales all times by 25 / 23.976)
 subtitle.ChangeFrameRate(25.0, 23.976);
 
 // Auto-break a long line into two balanced lines
