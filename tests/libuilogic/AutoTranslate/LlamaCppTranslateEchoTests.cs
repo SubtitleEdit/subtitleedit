@@ -175,7 +175,7 @@ public class LlamaCppTranslateEchoTests : IDisposable
         }
     }
 
-    private static (HttpListener listener, string url) StartListener()
+    internal static (HttpListener listener, string url) StartListener()
     {
         for (var attempt = 0; ; attempt++)
         {

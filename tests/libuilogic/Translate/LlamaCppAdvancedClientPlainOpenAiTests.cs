@@ -1,7 +1,7 @@
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using LibUiLogicTests.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 namespace LibUiLogicTests.Translate;
@@ -213,7 +213,7 @@ public class LlamaCppAdvancedClientPlainOpenAiTests
 
         public FakeServer(params string[] sseReplies)
         {
-            (_listener, _url) = StartListener();
+            (_listener, _url) = LlamaCppTranslateEchoTests.StartListener();
             _ = Task.Run(async () =>
             {
                 foreach (var sse in sseReplies)
@@ -266,30 +266,6 @@ public class LlamaCppAdvancedClientPlainOpenAiTests
         {
             _listener.Stop();
             _listener.Close();
-        }
-
-        private static (HttpListener listener, string url) StartListener()
-        {
-            for (var attempt = 0; ; attempt++)
-            {
-                var probe = new TcpListener(IPAddress.Loopback, 0);
-                probe.Start();
-                var port = ((IPEndPoint)probe.LocalEndpoint).Port;
-                probe.Stop();
-
-                var url = "http://127.0.0.1:" + port + "/";
-                var listener = new HttpListener();
-                listener.Prefixes.Add(url);
-                try
-                {
-                    listener.Start();
-                    return (listener, url);
-                }
-                catch (HttpListenerException) when (attempt < 5)
-                {
-                    listener.Close(); // port taken between probe and start - try another
-                }
-            }
         }
     }
 }
