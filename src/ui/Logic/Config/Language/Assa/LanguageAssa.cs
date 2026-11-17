@@ -563,7 +563,7 @@ public class LanguageAssa
     public LanguageAssa()
     {
         // ASSA Draw
-        AssaDraw = "ASSA Draw";
+        AssaDraw = "ASSA draw";
         DrawSelectTool = "Select and move shapes";
         DrawUseShapeForErase = "Use shape for erase (iclip)";
         DrawLineTool = "Line tool";

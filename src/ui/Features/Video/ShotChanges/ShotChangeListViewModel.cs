@@ -121,16 +121,19 @@ public partial class ShotChangeListViewModel : ObservableObject
             return;
         }
 
-        var result = await MessageBox.Show(
-            Window,
-            Se.Language.General.DeleteCurrentLine,
-            Se.Language.Video.ShotChanges.DeleteSelectedShotChangeQuestion,
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
-
-        if (result != MessageBoxResult.Yes)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
-            return;
+            var result = await MessageBox.Show(
+                Window,
+                Se.Language.General.Delete,
+                Se.Language.Video.ShotChanges.DeleteSelectedShotChangeQuestion,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         ShotChanges.Remove(shotChange);
@@ -186,14 +189,6 @@ public partial class ShotChangeListViewModel : ObservableObject
     partial void OnSelectedShotChangeChanged(ShotChangeItem? value)
     {
         HasShotChanges = value != null;
-    }
-
-    internal void OnShotChangeGridDoubleTapped(object? sender, TappedEventArgs e)
-    {
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            GoTo();
-        });
     }
 
     internal void GridKeyDown(KeyEventArgs e)

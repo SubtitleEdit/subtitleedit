@@ -183,16 +183,19 @@ public partial class ChaptersViewModel : ObservableObject
             return;
         }
 
-        var result = await MessageBox.Show(
-            Window,
-            Se.Language.General.DeleteCurrentLine,
-            Se.Language.Video.Chapters.DeleteSelectedChapterQuestion,
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
-
-        if (result != MessageBoxResult.Yes)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
-            return;
+            var result = await MessageBox.Show(
+                Window,
+                Se.Language.General.Delete,
+                Se.Language.Video.Chapters.DeleteSelectedChapterQuestion,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         var index = Chapters.IndexOf(SelectedChapter);

@@ -76,8 +76,6 @@ public class ShotChangeListWindow : Window
         tableView.ItemsSource = vm.ShotChanges;
         tableView.DataContext = vm;
 
-        tableView.DoubleTapped += vm.OnShotChangeGridDoubleTapped;
-
         // Columns
         tableView.Columns.Add(new SeTableViewColumn
         {

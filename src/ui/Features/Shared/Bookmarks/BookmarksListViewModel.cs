@@ -171,7 +171,7 @@ public partial class BookmarksListViewModel : ObservableObject
         {
             var result = await MessageBox.Show(
                 Window,
-                Se.Language.General.DeleteCurrentLine,
+                Se.Language.General.Delete,
                 Se.Language.General.BookmarkDeleteSelectedQuestion,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -219,11 +219,6 @@ public partial class BookmarksListViewModel : ObservableObject
     internal void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         HasBookmarks = SelectedSubtitle != null;
-    }
-
-    internal void OnBookmarksGridDoubleTapped(object? sender, TappedEventArgs e)
-    {
-        Dispatcher.UIThread.Invoke(() => { GoTo(); });
     }
 
     internal void GridKeyDown(KeyEventArgs e)

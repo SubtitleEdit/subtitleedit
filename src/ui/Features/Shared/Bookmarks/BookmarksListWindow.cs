@@ -68,15 +68,7 @@ public class BookmarksListWindow : Window
             PlaceholderText = Se.Language.General.BookmarksFilterHint,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Margin = new Thickness(0, 0, 0, 10),
-        }.AsTextField(Se.Language.General.BookmarksFilterHint);
-        textBoxFilter.InnerLeftContent = new Optris.Icons.Avalonia.Icon
-        {
-            Value = "fa-solid fa-magnifying-glass",
-            FontSize = 11,
-            Foreground = EditorChrome.FaintTextBrush,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(8, 0, 0, 0),
-        };
+        }.AsTextField(Se.Language.General.BookmarksFilterHint).WithSearchAndClearIcons();
         textBoxFilter.Bind(TextBox.TextProperty, new Binding(nameof(vm.FilterText)) { Mode = BindingMode.TwoWay });
 
         var listPanel = new DockPanel();
@@ -102,8 +94,6 @@ public class BookmarksListWindow : Window
         dataGrid.Height = double.NaN; // auto size inside scroll viewer
         dataGrid.ItemsSource = vm.Subtitles;
         dataGrid.DataContext = vm.Subtitles;
-
-        dataGrid.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var bookmarkColorConverter = new BookmarkColorToBrushConverter();

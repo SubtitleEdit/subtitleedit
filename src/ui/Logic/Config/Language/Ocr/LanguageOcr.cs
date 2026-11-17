@@ -220,7 +220,7 @@ public class LanguageOcr
         StartOcr = "_Start OCR";
         PauseOcr = "_Pause OCR";
         InspectLine = "Inspect line...";
-        OcrEngine = "OCR Engine";
+        OcrEngine = "OCR engine";
         TesseractEngineMode = "Engine mode";
         TesseractEngineModeLegacy = "Original Tesseract only (can detect italic)";
         TesseractEngineModeNeural = "Neural nets LSTM only";
@@ -330,7 +330,7 @@ public class LanguageOcr
 
         LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
         SelectTesseractDictionary = "Select Tesseract dictionary:";
-        InspectBinaryOcrAdditionsTitle = "Inspect Binary OCR Additions";
+        InspectBinaryOcrAdditionsTitle = "Inspect binary OCR additions";
         LlamaCppOcr = "llama.cpp OCR";
         LlamaCppOcrDescription = "Local llama.cpp server (multimodal model) used for OCR.";
         LlamaCppOcrPromptHint = "Use {language} to insert the selected OCR language.";

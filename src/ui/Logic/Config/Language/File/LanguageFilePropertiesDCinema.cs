@@ -31,7 +31,7 @@ public class LanguageFilePropertiesDCinema
 
     public LanguageFilePropertiesDCinema()
     {
-        Title = "D-Cinema SMPTE Properties";
+        Title = "D-Cinema SMPTE properties";
         GenerateIdAuto = "Generate new ID on save";
         SubtitleId = "Subtitle ID";
         GenerateId = "Generate ID";

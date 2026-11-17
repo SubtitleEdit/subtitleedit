@@ -37,7 +37,7 @@ public class VideoOcrEngineSettingsWindow : Window
 
         var sections = new StackPanel { Background = EditorChrome.PanelBrush };
         sections.Children.Add(new Border { Child = BuildHeader(vm), Padding = new Thickness(14, 14, 14, 12) });
-        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Information, BuildDetails(vm)));
+        sections.Children.Add(EditorChrome.MakeEditorSection(Se.Language.General.Information, BuildDetails(vm, out var timeout)));
 
         var root = new Grid
         {
@@ -47,7 +47,18 @@ public class VideoOcrEngineSettingsWindow : Window
         root.Add(EditorChrome.MakeButtonBar(BuildActions(vm), buttonCancel, buttonOk), 1, 0);
         Content = root;
 
-        UiUtil.FocusOnFirstActivation(this, buttonOk);
+        // initial focus on an input, not OK - a focused button clicks on bare Space
+        UiUtil.FocusOnFirstActivation(this, () =>
+        {
+            if (vm.HasTimeout)
+            {
+                timeout.Focus();
+            }
+            else
+            {
+                buttonCancel.Focus();
+            }
+        });
     }
 
     private static StackPanel BuildHeader(VideoOcrEngineSettingsViewModel vm)
@@ -76,7 +87,7 @@ public class VideoOcrEngineSettingsWindow : Window
         };
     }
 
-    private static Grid BuildDetails(VideoOcrEngineSettingsViewModel vm)
+    private static Grid BuildDetails(VideoOcrEngineSettingsViewModel vm, out NumericUpDown timeout)
     {
         var grid = new Grid
         {
@@ -133,7 +144,7 @@ public class VideoOcrEngineSettingsWindow : Window
 
         // Request timeout - only for the server engines that have one
         grid.Add(MakeLabel(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes).WithBindIsVisible(nameof(vm.HasTimeout)), 3, 0);
-        var timeout = UiUtil.MakeNumericUpDownInt(1, 120, 5, 90, vm, nameof(vm.TimeoutMinutes));
+        timeout = UiUtil.MakeNumericUpDownInt(1, 120, 5, 90, vm, nameof(vm.TimeoutMinutes));
         timeout.Classes.Add("field");
         AutomationProperties.SetName(timeout, Se.Language.Ocr.LlamaCppOcrTimeoutMinutes);
         grid.Add(timeout.WithBindIsVisible(nameof(vm.HasTimeout)), 3, 1);
