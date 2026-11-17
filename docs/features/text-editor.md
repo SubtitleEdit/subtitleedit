@@ -9,6 +9,27 @@ The text editor allows you to edit the text content of the currently selected su
 
 Type directly in the text editor to modify the subtitle text. Changes are reflected immediately in the subtitle grid.
 
+## Time Code Boxes
+
+Next to the text box are up/down boxes for the timing of the selected line. Type a value or use the arrows.
+
+| Box | Shown by default | What it does |
+|-----|------------------|--------------|
+| **Show** | ✓ | Start time. With the **Hide** box hidden, changing it moves the whole line and keeps the duration. With the **Hide** box shown, it moves only the start and the end stays where it is |
+| **Hide** | | End time - when the subtitle disappears |
+| **Duration** | ✓ | Display duration; changing it moves the end time |
+
+To type the end time directly, turn on the **Hide** box in **Options → Settings → Appearance**:
+
+- **Show up/down control for "Show"**
+- **Show up/down control for "Hide"**
+- **Show up/down control for "Duration"**
+- **Show labels for up/down controls (Show/Hide/Duration)** - the bold captions above the boxes; without them, the names are shown as tooltips
+
+The arrow step is **Time up/down increment (ms)** in **Options → Settings → General** (100 ms by default, in millisecond mode). The boxes follow the [time code mode](settings.md#general) (milliseconds, frames or frame numbers).
+
+To see start and end times for all lines at once, use the **Show** / **Hide** / **Duration** columns of the [subtitle grid](subtitle-grid.md) or [Source view](source-view.md).
+
 ## Formatting
 
 | Shortcut | Action |

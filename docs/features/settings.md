@@ -153,7 +153,9 @@ Good to know:
 - **UI font**, and a separate font for the subtitle text box and grid, with **Font size in subtitle grid** and **Font size in subtitle text box**
 - **Grid** — Show subtitle text as single line (with the separator to use), text fit, [show formatted text](subtitle-grid.md#formatting-display), live spell check, **Center text in subtitle grid** (centers the text column, as Subtitle Edit 4 could), compact mode, alternating row colors (light and dark), grid lines, bookmark colors (three: **Bookmark color**, **Bookmark color 2** and **Bookmark color 3**)
 - **Spell check highlight color** - The color of the unknown word highlighted in the spell check and OCR unknown-word windows (red by default; pick a lighter color for the dark theme)
-- **Subtitle text box** — Bold text, color tags, live spell check, centered text, and which buttons are shown (auto-break, unbreak, italic, color, remove formatting, AI assistant), the up/down start/end/duration controls and their labels
+- **Subtitle text box** — Bold text, color tags, live spell check, centered text, and which buttons are shown (auto-break, unbreak, italic, color, remove formatting, AI assistant)
+- **Show up/down control for "Show"** / **"Hide"** / **"Duration"** — Which [time code boxes](text-editor.md#time-code-boxes) are shown next to the subtitle text box. Show and Duration are on by default; turn on **Hide** to type the end time directly
+- **Show labels for up/down controls (Show/Hide/Duration)** — The captions above those boxes
 - **Show button hints** — Turns the tooltips on and off
 - **Show ASSA layer box**, **show horizontal line above toolbar**, **show Plugins menu**
 
