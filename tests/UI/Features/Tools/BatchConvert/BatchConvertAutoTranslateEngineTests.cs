@@ -4,6 +4,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.LogicalTree;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert.FunctionViews;
 using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
@@ -82,7 +83,7 @@ public class BatchConvertAutoTranslateEngineTests
     /// <summary>
     /// The advanced Ollama engine talks to the OpenAI-compatible endpoint, which is a different URL
     /// and a separately stored model from the classic Ollama engine - so both fields must be shown
-    /// and filled from its own settings, not the classic engine's.
+    /// and filled from its own settings, not the classic engine's. The same goes for its API key.
     /// </summary>
     [AvaloniaFact]
     public void OllamaAdvanced_ShowsItsOwnUrlAndModel()
@@ -90,6 +91,8 @@ public class BatchConvertAutoTranslateEngineTests
         var viewModel = MakeViewModel();
         Se.Settings.AutoTranslate.OllamaAdvancedUrl = "http://example.local:11434/v1/chat/completions";
         Se.Settings.AutoTranslate.OllamaAdvancedModel = "qwen3:8b";
+        Se.Settings.AutoTranslate.OllamaApiKey = "classic-key";
+        Se.Settings.AutoTranslate.OllamaAdvancedApiKey = "advanced-key";
 
         viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is OllamaAdvancedTranslate);
         viewModel.OnAutoTranslatorChanged();
@@ -97,9 +100,100 @@ public class BatchConvertAutoTranslateEngineTests
         Assert.True(viewModel.AutoTranslateUrlIsVisible);
         Assert.True(viewModel.AutoTranslateModelIsVisible);
         Assert.True(viewModel.AutoTranslateModelBrowseIsVisible);
-        Assert.False(viewModel.AutoTranslateApiKeyIsVisible);
+        Assert.True(viewModel.AutoTranslateApiKeyIsVisible);
         Assert.Equal("http://example.local:11434/v1/chat/completions", viewModel.AutoTranslateUrl);
         Assert.Equal("qwen3:8b", viewModel.AutoTranslateModel);
+        Assert.Equal("advanced-key", viewModel.AutoTranslateApiKey);
+    }
+
+    /// <summary>
+    /// A llama.cpp, Ollama or LM Studio server can ask for an API key. The key box goes with the URL
+    /// box: shown with each engine's own saved key where the URL is editable, hidden for the server
+    /// Subtitle Edit starts itself and for the classic Ollama engine, whose address (and key) come
+    /// from the Auto-translate window.
+    /// </summary>
+    [AvaloniaFact]
+    public void LocalServerEngines_ShowTheKeyBoxNextToTheUrlBox()
+    {
+        var keys = Se.Settings.AutoTranslate;
+        var saved = (keys.LlamaCppApiKey, keys.OllamaApiKey, keys.LmStudioApiKey, keys.OllamaAdvancedApiKey, keys.LmStudioAdvancedApiKey,
+            Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer);
+        try
+        {
+            (keys.LlamaCppApiKey, keys.OllamaApiKey, keys.LmStudioApiKey, keys.OllamaAdvancedApiKey, keys.LmStudioAdvancedApiKey) =
+                ("llamacpp-key", "ollama-key", "lmstudio-key", "ollama-advanced-key", "lmstudio-advanced-key");
+            Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer = true;
+            var viewModel = MakeViewModel();
+
+            void Select(Type engine)
+            {
+                viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t.GetType() == engine);
+                viewModel.OnAutoTranslatorChanged();
+            }
+
+            Select(typeof(LmStudioTranslate));
+            Assert.True(viewModel.AutoTranslateApiKeyIsVisible);
+            Assert.Equal("lmstudio-key", viewModel.AutoTranslateApiKey);
+
+            Select(typeof(LmStudioAdvancedTranslate));
+            Assert.True(viewModel.AutoTranslateApiKeyIsVisible);
+            Assert.Equal("lmstudio-advanced-key", viewModel.AutoTranslateApiKey);
+
+            Select(typeof(OllamaTranslate));
+            Assert.False(viewModel.AutoTranslateUrlIsVisible);
+            Assert.False(viewModel.AutoTranslateApiKeyIsVisible);
+
+            foreach (var llamaCpp in new[] { typeof(LlamaCppTranslate), typeof(LlamaCppAdvancedTranslate) })
+            {
+                Select(llamaCpp);
+                Assert.True(viewModel.AutoTranslateApiKeyIsVisible, llamaCpp.Name);
+                Assert.Equal("llamacpp-key", viewModel.AutoTranslateApiKey);
+            }
+
+            // The "use external server" switch off: no URL box, no key box.
+            viewModel.LlamaCppUseRemoteServer = false;
+            Assert.False(viewModel.AutoTranslateUrlIsVisible);
+            Assert.False(viewModel.AutoTranslateApiKeyIsVisible);
+        }
+        finally
+        {
+            (keys.LlamaCppApiKey, keys.OllamaApiKey, keys.LmStudioApiKey, keys.OllamaAdvancedApiKey, keys.LmStudioAdvancedApiKey,
+                Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer) = saved;
+        }
+    }
+
+    /// <summary>
+    /// What a run is started with: the key typed for an external llama.cpp server reaches both
+    /// llama.cpp engines and is saved; with the switch off the engines get no key, and the saved
+    /// one stays for the external server.
+    /// </summary>
+    [AvaloniaFact]
+    public void LlamaCpp_RunGetsTheKeyForAnExternalServerOnly()
+    {
+        var keys = Se.Settings.AutoTranslate;
+        var tools = Configuration.Settings.Tools;
+        var saved = (keys.LlamaCppApiKey, keys.LlamaCppApiUrl, tools.LlamaCppApiKey, tools.LlamaCppApiUrl, Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer);
+        try
+        {
+            Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer = true;
+            var viewModel = MakeViewModel();
+            viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is LlamaCppTranslate);
+            viewModel.OnAutoTranslatorChanged();
+
+            viewModel.AutoTranslateApiKey = " external-key ";
+            viewModel.UpdateAutoTranslateSettings();
+            Assert.Equal("external-key", tools.LlamaCppApiKey);
+            Assert.Equal("external-key", keys.LlamaCppApiKey);
+
+            viewModel.LlamaCppUseRemoteServer = false;
+            viewModel.UpdateAutoTranslateSettings();
+            Assert.Equal(string.Empty, tools.LlamaCppApiKey);
+            Assert.Equal("external-key", keys.LlamaCppApiKey);
+        }
+        finally
+        {
+            (keys.LlamaCppApiKey, keys.LlamaCppApiUrl, tools.LlamaCppApiKey, tools.LlamaCppApiUrl, Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer) = saved;
+        }
     }
 
     /// <summary>

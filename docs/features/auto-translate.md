@@ -110,7 +110,8 @@ Two ways to use one:
    self-downloaded TranslateGemma or Qwen quant behaves like the curated ones.
 2. **Run your own server.** Tick **Use remote server** and point Subtitle Edit at any
    `llama-server` you started yourself (the default is `http://localhost:8080/v1/chat/completions`).
-   Subtitle Edit then does no model management at all.
+   Subtitle Edit then does no model management at all. If the server was started with `--api-key`,
+   enter that key in **API key**.
 
 Be aware of what a bigger model costs. TranslateGemma 27B at Q4_K_M is roughly a 16 GB download and
 needs about 20 GB of VRAM to run fully on the GPU — a 24 GB card in practice. Google's own figures
@@ -150,7 +151,7 @@ Headless runs take the same prompt via `seconv --translate-prompt:<text|file>` �
 
 Depending on the selected engine, you may need to provide:
 
-- **API Key** — Authentication key for cloud services
+- **API Key** — Authentication key for cloud services. Optional for LM Studio, Ollama, llama.cpp with your own server, their advanced variants and OpenAI Compatible API: fill it in only when the server asks for a key. It is sent as a Bearer token. Each engine keeps its own key together with its URL; the two llama.cpp engines share both.
 - **API URL** — Custom endpoint URL (for self-hosted services)
 - **Model** — Specific model to use (for AI engines)
 

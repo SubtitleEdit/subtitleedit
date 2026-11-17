@@ -28,4 +28,14 @@ public class LlamaCppAdvancedTranslate : AdvancedTranslatorBase
     {
         return AutoTranslateUrl.Complete(Configuration.Settings.Tools.LlamaCppApiUrl, LlamaCppTranslate.DefaultUrl);
     }
+
+    /// <summary>
+    /// Read from the same place as the endpoint and as the regular llama.cpp engine does: the
+    /// window starting the run writes the key there for an external server and clears it for the
+    /// server Subtitle Edit starts itself.
+    /// </summary>
+    protected override string? GetApiKey()
+    {
+        return Configuration.Settings.Tools.LlamaCppApiKey;
+    }
 }

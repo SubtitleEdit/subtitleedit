@@ -3239,7 +3239,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             var openAiUrl = !string.IsNullOrWhiteSpace(AutoTranslateUrl)
                 ? AutoTranslateUrl.Trim()
                 : isOpenAiCompatible ? OpenAiCompatibleTranslate.DefaultUrl : LmStudioAdvancedTranslate.DefaultUrl;
-            var apiKey = isOpenAiCompatible ? AutoTranslateApiKey : null;
+            var apiKey = AutoTranslateApiKey; // a server that asks for a key asks for it on the model list too
             var openAiResult = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!,
                 vm => { vm.InitializeOpenAiCompatible(Se.Language.General.PickModel, AutoTranslateModel, openAiUrl, apiKey); });
 
@@ -3266,9 +3266,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         var isAdvanced = SelectedAutoTranslator is OllamaAdvancedTranslate;
         var model = isAdvanced ? Se.Settings.AutoTranslate.OllamaAdvancedModel : Se.Settings.AutoTranslate.OllamaModel;
         var url = isAdvanced ? Se.Settings.AutoTranslate.OllamaAdvancedUrl : Se.Settings.AutoTranslate.OllamaUrl;
+        var ollamaApiKey = isAdvanced ? AutoTranslateApiKey : Se.Settings.AutoTranslate.OllamaApiKey;
 
         var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!,
-            vm => { vm.Initialize(Se.Language.General.PickOllamaModel, model, url); });
+            vm => { vm.Initialize(Se.Language.General.PickOllamaModel, model, url, apiKey: ollamaApiKey); });
 
         if (result is { OkPressed: true, SelectedModel: not null })
         {
@@ -4047,7 +4048,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         };
     }
 
-    private void UpdateAutoTranslateSettings()
+    internal void UpdateAutoTranslateSettings()
     {
         var translator = SelectedAutoTranslator;
         if (translator == null)
@@ -4112,6 +4113,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 Configuration.Settings.Tools.LmStudioApiUrl = Se.Settings.AutoTranslate.LmStudioApiUrl;
             }
 
+            // Optional, so an emptied box means no key. Like the URL it is only applied to the
+            // run: the Auto-translate window owns the saved pair.
+            Configuration.Settings.Tools.LmStudioApiKey = AutoTranslateApiKey.Trim();
             Configuration.Settings.Tools.LmStudioModel = AutoTranslateModel.Trim();
         }
 
@@ -4129,7 +4133,12 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
                 Configuration.Settings.Tools.LlamaCppApiUrl = apiUrl;
                 Se.Settings.AutoTranslate.LlamaCppApiUrl = apiUrl;
+                Se.Settings.AutoTranslate.LlamaCppApiKey = AutoTranslateApiKey.Trim();
             }
+
+            // Both llama.cpp engines read the key from here. It belongs to the external server:
+            // the one Subtitle Edit starts itself asks for none and must not be sent the saved key.
+            Configuration.Settings.Tools.LlamaCppApiKey = LlamaCppUseRemoteServer ? AutoTranslateApiKey.Trim() : string.Empty;
         }
 
         if (engineType == typeof(OllamaTranslate))
@@ -4159,6 +4168,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             {
                 Se.Settings.AutoTranslate.OllamaAdvancedModel = AutoTranslateModel.Trim();
             }
+
+            // Optional, so an emptied box clears the stored key.
+            Se.Settings.AutoTranslate.OllamaAdvancedApiKey = AutoTranslateApiKey.Trim();
         }
 
         if (engineType == typeof(LmStudioAdvancedTranslate))
@@ -4170,6 +4182,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             }
 
             Se.Settings.AutoTranslate.LmStudioAdvancedModel = AutoTranslateModel.Trim();
+            Se.Settings.AutoTranslate.LmStudioAdvancedApiKey = AutoTranslateApiKey.Trim();
         }
 
         if (engineType == typeof(NoLanguageLeftBehindServe))
@@ -4402,6 +4415,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             LlamaCppModelComboIsVisible = false;
             LlamaCppEngineSettingsButtonIsVisible = false;
             AutoTranslateUrlIsVisible = true;
+            AutoTranslateApiKeyIsVisible = true;
             LlamaCppModels.Clear();
             SelectedLlamaCppModel = null;
             return;
@@ -4410,6 +4424,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         LlamaCppModelComboIsVisible = true;
         LlamaCppEngineSettingsButtonIsVisible = true;
         AutoTranslateUrlIsVisible = false;
+        AutoTranslateApiKeyIsVisible = false;
         var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
         SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, GetLlamaCppModelsForEngine(), savedModelName);
     }
@@ -4472,6 +4487,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateModelIsVisible = true;
             AutoTranslateUrl = string.Empty;
             AutoTranslateUrlIsVisible = false;
+
+            // No key box without the URL box: this engine runs against the address saved in the
+            // Auto-translate window, and with the key saved there.
             AutoTranslateApiKey = string.Empty;
             AutoTranslateApiKeyIsVisible = false;
         }
@@ -4484,8 +4502,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateModelIsVisible = true;
             AutoTranslateUrl = Se.Settings.AutoTranslate.OllamaAdvancedUrl;
             AutoTranslateUrlIsVisible = true;
-            AutoTranslateApiKey = string.Empty;
-            AutoTranslateApiKeyIsVisible = false;
+            AutoTranslateApiKey = Se.Settings.AutoTranslate.OllamaAdvancedApiKey;
+            AutoTranslateApiKeyIsVisible = true;
         }
         else if (engine is LmStudioAdvancedTranslate)
         {
@@ -4495,8 +4513,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateModelIsVisible = true;
             AutoTranslateUrl = Se.Settings.AutoTranslate.LmStudioAdvancedUrl;
             AutoTranslateUrlIsVisible = true;
-            AutoTranslateApiKey = string.Empty;
-            AutoTranslateApiKeyIsVisible = false;
+            AutoTranslateApiKey = Se.Settings.AutoTranslate.LmStudioAdvancedApiKey;
+            AutoTranslateApiKeyIsVisible = true;
         }
         else if (engine is LibreTranslate)
         {
@@ -4528,8 +4546,8 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateModelIsVisible = false;
             AutoTranslateUrl = Se.Settings.AutoTranslate.LmStudioApiUrl;
             AutoTranslateUrlIsVisible = true;
-            AutoTranslateApiKey = string.Empty;
-            AutoTranslateApiKeyIsVisible = false;
+            AutoTranslateApiKey = Se.Settings.AutoTranslate.LmStudioApiKey;
+            AutoTranslateApiKeyIsVisible = true;
         }
         else if (engine is LlamaCppTranslate or LlamaCppAdvancedTranslate)
         {
@@ -4537,11 +4555,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateModelBrowseIsVisible = false;
             AutoTranslateModelIsVisible = false;
             AutoTranslateUrl = Se.Settings.AutoTranslate.LlamaCppApiUrl;
-            AutoTranslateApiKey = string.Empty;
-            AutoTranslateApiKeyIsVisible = false;
+            AutoTranslateApiKey = Se.Settings.AutoTranslate.LlamaCppApiKey;
 
-            // Local vs. external server: the URL field is only shown for an external server, and a
-            // remote server serves whatever model it was started with, so the model combo hides.
+            // Local vs. external server: the URL and API key fields are only shown for an external
+            // server, and a remote server serves whatever model it was started with, so the model
+            // combo hides.
             _suppressLlamaCppRemoteToggle = true;
             LlamaCppUseRemoteServer = Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer;
             _suppressLlamaCppRemoteToggle = false;
