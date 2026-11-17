@@ -110,7 +110,7 @@ See [Subtitle Grid](subtitle-grid.md) for full details.
 
 ### 4. Text Editor
 
-Below (or beside) the subtitle grid is the text editor, where you edit the text of the currently selected subtitle line. Start time, end time, and duration controls are also shown here.
+Below (or beside) the subtitle grid is the text editor, where you edit the text of the currently selected subtitle line. Next to it are the time code boxes: **Show** (start time) and **Duration** by default; the **Hide** (end time) box is off by default and is turned on in **Options → Settings → Appearance**. See [Time code boxes](text-editor.md#time-code-boxes).
 
 **Formatting shortcuts:**
 - **Ctrl+I** — Toggle italic

@@ -98,6 +98,9 @@ See [Speech to Text](features/speech-to-text.md) for details.
 
 ## Synchronization
 
+### How do I type the start and end time of a line?
+Select the line and use the time code boxes next to the text box. **Show** (start) and **Duration** are shown by default. To edit the end time directly, turn on **Options → Settings → Appearance → Show up/down control for "Hide"**. See [Time code boxes](features/text-editor.md#time-code-boxes). You can also drag the edges of the line in the waveform, or edit the times in [Source view](features/source-view.md).
+
 ### How do I fix subtitle timing that is off by a constant amount?
 Use **Synchronization → Adjust all times...** and enter the offset in milliseconds.
 
