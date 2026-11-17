@@ -323,6 +323,26 @@ public class BatchConvertAutoTranslateEngineTests
     /// UpdateAutoTranslateSettings writes URLs, keys, models and more to both static settings
     /// objects; this puts every string and bool property of both back afterwards.
     /// </summary>
+    /// <summary>
+    /// Closing Auto-translate copies libse's LmStudioApiKey (null by default) into the saved
+    /// settings; a Batch convert run with LM Studio then crashed trimming the null key.
+    /// </summary>
+    [AvaloniaFact]
+    public void LmStudio_NullSavedApiKey_DoesNotCrash()
+    {
+        using var _ = new TranslateSettingsSnapshot();
+        Se.Settings.AutoTranslate.LmStudioApiKey = null!;
+        Se.Settings.AutoTranslate.LmStudioApiUrl = null!;
+        var viewModel = MakeViewModel();
+        viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is LmStudioTranslate);
+        viewModel.OnAutoTranslatorChanged();
+
+        viewModel.UpdateAutoTranslateSettings();
+
+        Assert.Equal(string.Empty, Configuration.Settings.Tools.LmStudioApiKey);
+        Assert.Equal(string.Empty, Se.Settings.AutoTranslate.LmStudioApiKey);
+    }
+
     private sealed class TranslateSettingsSnapshot : IDisposable
     {
         private readonly List<(object Target, System.Reflection.PropertyInfo Property, object? Value)> _values = new();

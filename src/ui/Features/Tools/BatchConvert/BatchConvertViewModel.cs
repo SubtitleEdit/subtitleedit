@@ -4074,6 +4074,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             return;
         }
 
+        // The boxes are filled straight from the saved settings, and a saved value can be null
+        // (closing Auto-translate copies libse's LmStudioApiKey, which defaults to null), so
+        // every engine below would crash trimming it.
+        AutoTranslateUrl ??= string.Empty;
+        AutoTranslateApiKey ??= string.Empty;
+        AutoTranslateModel ??= string.Empty;
+
         var engineType = translator.GetType();
 
         if (engineType == typeof(LibreTranslate))
