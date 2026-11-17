@@ -553,6 +553,7 @@ public class LanguageGeneral
     public string SearchFontNames { get; set; }
     public string SearchSubtitleFormats { get; set; }
     public string SearchLanguages { get; set; }
+    public string NoMatches { get; set; }
     public string Seconds { get; set; }
     public string SelectAll { get; set; }
     public string SelectFilesToConvert { get; set; }
@@ -1598,6 +1599,7 @@ public class LanguageGeneral
         SearchFontNames = "Search font names...";
         SearchSubtitleFormats = "Search subtitle formats";
         SearchLanguages = "Search languages";
+        NoMatches = "No matches";
         Seconds = "Seconds";
         SelectAll = "Select all";
         SelectFilesToConvert = "Select files to convert";

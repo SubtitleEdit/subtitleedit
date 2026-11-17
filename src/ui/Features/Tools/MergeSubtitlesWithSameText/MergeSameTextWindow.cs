@@ -32,18 +32,18 @@ public class MergeSameTextWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsOkEnabled));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
 
-        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(EditorChrome.MakeEditorSection(Se.Language.General.Options, MakeControlsView(vm), first: true), EditorChrome.MakeListSection(Se.Language.General.MergeLines, MakeMergesView(vm)), EditorChrome.MakeListSection(Se.Language.General.Preview, MakeSubtitlesView(vm))), null, buttonCancel, buttonOk);
+        Content = EditorChrome.MakeCancelOkRoot(EditorChrome.MakeOptionsAndLists(EditorChrome.MakeEditorSection(Se.Language.General.Options, MakeControlsView(vm, out var numericUpDownGap), first: true), EditorChrome.MakeListSection(Se.Language.General.MergeLines, MakeMergesView(vm)), EditorChrome.MakeListSection(Se.Language.General.Preview, MakeSubtitlesView(vm))), null, buttonCancel, buttonOk);
 
-        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, numericUpDownGap); // initial focus on an input, not an action button - a focused button clicks on bare Space
         KeyDown += vm.OnKeyDown;
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private static Grid MakeControlsView(MergeSameTextViewModel vm)
+    private static Grid MakeControlsView(MergeSameTextViewModel vm, out NumericUpDown numericUpDownGap)
     {
-        var numericUpDownGap = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesBetweenLines, 130, vm, nameof(vm.MaxMsOrFramesBetweenLines)), vm.MaxBetweenLinesLabel.TrimEnd(':'), 100, alignLeft: true, center: true);
+        numericUpDownGap = EditorChrome.AsField(UiUtil.MakeNumericUpDownInt(0, 10000, vm.MaxMsOrFramesBetweenLines, 130, vm, nameof(vm.MaxMsOrFramesBetweenLines)), vm.MaxBetweenLinesLabel.TrimEnd(':'), 100, alignLeft: true, center: true);
         numericUpDownGap.ValueChanged += (s, e) => { vm.SetDirty(); };
         var rowIncludeIncrementText = EditorChrome.MakeToggleRow(nameof(vm.IncludeIncrementingLines), Se.Language.Tools.MergeLinesWithSameText.IncludeIncrementingLines, out var checkBoxIncludeIncrementText);
         checkBoxIncludeIncrementText.IsCheckedChanged += (s, e) => { vm.SetDirty(); };

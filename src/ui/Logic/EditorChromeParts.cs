@@ -896,7 +896,7 @@ internal static partial class EditorChrome
     /// <paramref name="clearListBackground"/> the list's own background is cleared so the frame
     /// shows through.
     /// </summary>
-    internal static Border MakeListFrame(Control list, bool clearListBackground = false)
+    internal static Border MakeListFrame(Control list, bool clearListBackground = false, Control? overlay = null)
     {
         if (list is TemplatedControl templated)
         {
@@ -910,7 +910,7 @@ internal static partial class EditorChrome
 
         return new Border
         {
-            Child = list,
+            Child = overlay == null ? list : new Panel { Children = { list, overlay } },
             Background = FieldBrush,
             BorderBrush = FieldBorderBrush,
             BorderThickness = new Thickness(ListFrameBorderThickness),
@@ -1267,6 +1267,38 @@ internal static partial class EditorChrome
         textBox.Classes.Add(TextClass);
         AutomationProperties.SetName(textBox, Config.Se.Language.General.Search);
         return textBox;
+    }
+
+    /// <summary>
+    /// A dim "No matches" note to lay over a filtered list (the overlay of
+    /// <see cref="MakeListFrame"/>). It shows while the search box has text and
+    /// <paramref name="items"/> is empty, so a search that finds nothing no longer looks like an
+    /// empty or broken list. <paramref name="items"/> must be the collection the list shows,
+    /// filtered in place (Clear/Add) rather than replaced.
+    /// </summary>
+    internal static TextBlock MakeNoMatchesNote(System.Collections.ICollection items, TextBox search)
+    {
+        var note = new TextBlock
+        {
+            Text = Config.Se.Language.General.NoMatches,
+            FontSize = FieldFontSize,
+            Foreground = DimTextBrush,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            IsHitTestVisible = false,
+            IsVisible = false,
+        };
+
+        void Update() => note.IsVisible = items.Count == 0 && !string.IsNullOrWhiteSpace(search.Text);
+        void Post() => Avalonia.Threading.Dispatcher.UIThread.Post(Update);
+
+        if (items is System.Collections.Specialized.INotifyCollectionChanged observable)
+        {
+            observable.CollectionChanged += (_, _) => Post();
+        }
+
+        search.TextChanged += (_, _) => Post();
+        return note;
     }
 
     /// <summary>
@@ -1709,7 +1741,7 @@ internal static partial class EditorChrome
     /// The list section of the pickers: the small caps header (with optional controls on its
     /// right) over the list in a rounded field frame that fills the rest, optional controls below.
     /// </summary>
-    internal static Border MakePickerListSection(string title, Control list, Control? headerRight = null, bool lineOnTop = false, Control? below = null)
+    internal static Border MakePickerListSection(string title, Control list, Control? headerRight = null, bool lineOnTop = false, Control? below = null, Control? overlay = null)
     {
         var header = MakeSectionHeaderRow(title, headerRight, 28);
         header.Margin = new Thickness(0, 0, 0, 8);
@@ -1724,7 +1756,7 @@ internal static partial class EditorChrome
             },
         };
         grid.Add(header, 0, 0);
-        grid.Add(MakeListFrame(list, clearListBackground: true), 1, 0);
+        grid.Add(MakeListFrame(list, clearListBackground: true, overlay), 1, 0);
         if (below != null)
         {
             below.Margin = new Thickness(0, 10, 0, 0);
@@ -1744,14 +1776,14 @@ internal static partial class EditorChrome
     /// A list box with compact rounded rows (see <see cref="EditorWindowStyles.CompactListRows"/>)
     /// in a rounded frame on the field color.
     /// </summary>
-    internal static Border MakeCompactListFrame(ListBox listBox, bool compact = true)
+    internal static Border MakeCompactListFrame(ListBox listBox, bool compact = true, Control? overlay = null)
     {
         if (compact)
         {
             listBox.Classes.Add("compact");
         }
 
-        return MakeListFrame(listBox, clearListBackground: true);
+        return MakeListFrame(listBox, clearListBackground: true, overlay);
     }
 
     /// <summary>

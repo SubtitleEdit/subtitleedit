@@ -553,6 +553,7 @@
     "searchFontNames": "Search font names...",
     "searchSubtitleFormats": "Search subtitle formats",
     "searchLanguages": "Search languages",
+    "noMatches": "No matches",
     "seconds": "Seconds",
     "selectAll": "Select all",
     "selectFilesToConvert": "Select files to convert",

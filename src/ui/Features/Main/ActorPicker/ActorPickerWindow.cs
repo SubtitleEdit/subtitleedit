@@ -79,7 +79,7 @@ public class ActorPickerWindow : Window
             {
                 labelSelectionInfo,
                 textBoxFilter,
-                EditorChrome.MakeCompactListFrame(listBox),
+                EditorChrome.MakeCompactListFrame(listBox, overlay: EditorChrome.MakeNoMatchesNote(vm.VisibleItems, textBoxFilter)),
                 labelKeysHint,
             },
         };
