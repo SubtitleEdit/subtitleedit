@@ -50,15 +50,7 @@ public class StylePickerWindow : Window
         {
             PlaceholderText = Se.Language.General.StylePickerFilterHint,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-        }.AsTextField(Se.Language.General.StylePickerFilterHint);
-        textBoxFilter.InnerLeftContent = new Optris.Icons.Avalonia.Icon
-        {
-            Value = "fa-solid fa-magnifying-glass",
-            FontSize = 11,
-            Foreground = EditorChrome.FaintTextBrush,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(8, 0, 0, 0),
-        };
+        }.AsTextField(Se.Language.General.StylePickerFilterHint).WithSearchAndClearIcons();
         textBoxFilter.Bind(TextBox.TextProperty, new Binding(nameof(vm.FilterText)) { Mode = BindingMode.TwoWay });
 
         var listBox = new ListBox

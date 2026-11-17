@@ -27,7 +27,7 @@ public class PickLanguageWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var textBoxSearch = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), null, 220);
+        var textBoxSearch = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.SearchLanguages, 220);
         textBoxSearch.TextChanged += (_, _) => vm.SearchTextChanged();
 
         var listBoxLanguages = new ListBox

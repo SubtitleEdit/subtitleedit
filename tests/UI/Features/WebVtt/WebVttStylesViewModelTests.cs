@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.WebVtt;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace UITests.Features.WebVtt;
 
@@ -113,7 +114,19 @@ public class WebVttStylesViewModelTests : IDisposable
     {
         var vm = ShowWindow(MakeSubtitle());
 
-        vm.RemoveAllCommand.Execute(null);
+        // "Remove all" asks first when PromptBeforeDelete is on - turn it off so no dialog blocks the test
+        var oldPrompt = Se.Settings.General.PromptBeforeDelete;
+        Se.Settings.General.PromptBeforeDelete = false;
+        try
+        {
+            vm.RemoveAllCommand.Execute(null);
+            Dispatcher.UIThread.RunJobs();
+        }
+        finally
+        {
+            Se.Settings.General.PromptBeforeDelete = oldPrompt;
+        }
+
         vm.OkCommand.Execute(null);
         Dispatcher.UIThread.RunJobs();
 

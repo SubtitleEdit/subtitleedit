@@ -38,7 +38,7 @@ public class LanguageSync
 
     public LanguageSync()
     {
-        VisualSync = "Visual Sync";
+        VisualSync = "Visual sync";
         StartScene = "Start scene";
         EndScene = "End scene";
         PlayTwoSecondsAndBack = "Play 2 secs & back";

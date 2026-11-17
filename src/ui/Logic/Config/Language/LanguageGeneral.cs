@@ -552,6 +552,7 @@ public class LanguageGeneral
     public string SearchDirection { get; set; }
     public string SearchFontNames { get; set; }
     public string SearchSubtitleFormats { get; set; }
+    public string SearchLanguages { get; set; }
     public string Seconds { get; set; }
     public string SelectAll { get; set; }
     public string SelectFilesToConvert { get; set; }
@@ -1196,7 +1197,7 @@ public class LanguageGeneral
         ColumnsDotDotDot = "Columns...";
         ConsoleLog = "Console log";
         ContentAlignment = "Content alignment";
-        ContinueFindTitle = "Continue Find?";
+        ContinueFindTitle = "Continue find?";
         SearchItemNotFoundContinueFromTop = "The search item was not found.\nWould you like to start from the top of the document and search one more time?";
         SearchItemNotFoundContinueFromBottom = "The search item was not found.\nWould you like to start from the end of the document and search one more time?";
         ContinueReplaceTitle = "Continue replace?";
@@ -1596,6 +1597,7 @@ public class LanguageGeneral
         SearchDirection = "Search direction";
         SearchFontNames = "Search font names...";
         SearchSubtitleFormats = "Search subtitle formats";
+        SearchLanguages = "Search languages";
         Seconds = "Seconds";
         SelectAll = "Select all";
         SelectFilesToConvert = "Select files to convert";
@@ -1871,11 +1873,11 @@ public class LanguageGeneral
         PlaybackSpeed = "Playback speed";
         HoursMinutesSecondsMilliseconds = "HH:MM:SS.FFF";
         ImageFiles = "Image files";
-        OpenAiCompatibleSttEndpoint = "STT Endpoint URL";
-        OpenAiCompatibleSttApiKey = "API Key";
-        OpenAiCompatibleSttExtraHeaders = "Extra Headers";
+        OpenAiCompatibleSttEndpoint = "STT endpoint URL";
+        OpenAiCompatibleSttApiKey = "API key";
+        OpenAiCompatibleSttExtraHeaders = "Extra headers";
         OpenAiCompatibleSttTimeout = "Timeout (seconds)";
-        OpenAiCompatibleSttLanguage = "Language Hint";
+        OpenAiCompatibleSttLanguage = "Language hint";
         OpenAiCompatibleSttModelRejectedHint = "The server rejected the model name. Not every OpenAI compatible endpoint takes a model - xAI's https://api.x.ai/v1/stt, for one, has no 'model' parameter at all. Try clearing the Model field.";
         DashScopeSttRegion = "Region";
         DashScopeSttEnableWords = "Word-level timestamps";
@@ -1889,8 +1891,8 @@ public class LanguageGeneral
         OpenAiCompatibleSttStreamHint = "Send 'stream=true' to receive live text deltas (SSE). Disable for servers that reject the 'stream' parameter (e.g. Groq).";
         OpenAiCompatibleSttAudioFormat = "Audio upload format";
         OpenAiCompatibleSttAudioFormatHint = "Audio format sent to the STT server. OpenAI caps uploads at 25 MB, so MP3/M4A/WebM (Opus) are recommended for long videos. WAV is lossless but ~5x larger.";
-        ConfigurationRequired = "Configuration Required";
-        TranscriptionError = "Transcription Error";
+        ConfigurationRequired = "Configuration required";
+        TranscriptionError = "Transcription error";
         TranscriptionComplete = "Transcription complete";
         ProcessingResponse = "Processing response...";
         UnauthorizedApiKey = "Unauthorized: Invalid API key or insufficient permissions.";
@@ -1900,7 +1902,7 @@ public class LanguageGeneral
         TranscriptionFailed = "Transcription failed";
         TranscriptionProgressServerFormat = "Server: {0}";
         TranscriptionProgressModelFormat = "Model: {0}";
-        TranscriptionProgressReceivedSegmentsFormat = "Received Segments ({0})";
+        TranscriptionProgressReceivedSegmentsFormat = "Received segments ({0})";
         TranscriptionProgressModelAuto = "(auto)";
         Prompt = "Prompt";
         Temperature = "Temperature";

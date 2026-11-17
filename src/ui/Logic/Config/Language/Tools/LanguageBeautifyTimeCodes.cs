@@ -32,8 +32,8 @@ public class LanguageBeautifyTimeCodes
     public LanguageBeautifyTimeCodes()
     {
         Title = "Beautify time codes";
-        SnapToFrames = "Snap to Frames";
-        MinDuration = "Min Duration (ms)";
+        SnapToFrames = "Snap to frames";
+        MinDuration = "Min duration (ms)";
         Beautified = "Beautified";
         SubtitlesCount = "Subtitles";
         ChangedCount = "Changed";
