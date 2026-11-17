@@ -42,7 +42,7 @@ public class LongTimeCodeTest
     {
         var tc = new TimeCode(TimeCode.MaxSupportedTotalMilliseconds);
         Assert.Equal("9999:59:59,999", tc.ToString());
-        Assert.Equal(new TimeCode(9999, 59, 59, 999).TotalMilliseconds, TimeCode.MaxSupportedTotalMilliseconds);
+        Assert.Equal(TimeCode.MaxSupportedTotalMilliseconds, new TimeCode(9999, 59, 59, 999).TotalMilliseconds);
     }
 
     [Fact]
