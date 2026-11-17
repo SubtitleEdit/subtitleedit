@@ -21,15 +21,32 @@ public static class AssaCentisecondTiming
     /// <summary>
     /// A paragraph whose times change is replaced by a copy rather than edited: the merged
     /// secondary subtitle puts the caller's own paragraphs into the preview subtitle.
+    /// <para>
+    /// No line is written with zero length (issue #16967): a 6.611-6.619 line floored to
+    /// 6.61-6.61, and with that zero-length Dialogue in the file SE's libmpv preview never drew
+    /// the first line. A line that has a length keeps at least one centisecond; a line with no
+    /// length at all could never be drawn anyway and is left out.
+    /// </para>
     /// </summary>
     public static void FloorToCentiseconds(Subtitle subtitle)
     {
         var paragraphs = subtitle.Paragraphs;
-        for (var i = 0; i < paragraphs.Count; i++)
+        for (var i = paragraphs.Count - 1; i >= 0; i--)
         {
             var paragraph = paragraphs[i];
+            if (!paragraph.EndTime.IsMaxTime && paragraph.EndTime.TotalMilliseconds <= paragraph.StartTime.TotalMilliseconds)
+            {
+                paragraphs.RemoveAt(i);
+                continue;
+            }
+
             var start = FloorToCentiseconds(paragraph.StartTime);
             var end = FloorToCentiseconds(paragraph.EndTime);
+            if (end <= start)
+            {
+                end = start + 10;
+            }
+
             if (start == paragraph.StartTime.TotalMilliseconds && end == paragraph.EndTime.TotalMilliseconds)
             {
                 continue;
