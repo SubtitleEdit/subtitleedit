@@ -11,7 +11,6 @@ using Nikse.SubtitleEdit.Features.Translate.LlamaCppAdvanced;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
-using System.Reflection;
 
 namespace UITests.Features.Tools.BatchConvert;
 
@@ -180,15 +179,14 @@ public class BatchConvertAutoTranslateEngineTests
             var viewModel = MakeViewModel();
             viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is LlamaCppTranslate);
             viewModel.OnAutoTranslatorChanged();
-            var updateSettings = typeof(BatchConvertViewModel).GetMethod("UpdateAutoTranslateSettings", BindingFlags.NonPublic | BindingFlags.Instance)!;
 
             viewModel.AutoTranslateApiKey = " external-key ";
-            updateSettings.Invoke(viewModel, null);
+            viewModel.UpdateAutoTranslateSettings();
             Assert.Equal("external-key", tools.LlamaCppApiKey);
             Assert.Equal("external-key", keys.LlamaCppApiKey);
 
             viewModel.LlamaCppUseRemoteServer = false;
-            updateSettings.Invoke(viewModel, null);
+            viewModel.UpdateAutoTranslateSettings();
             Assert.Equal(string.Empty, tools.LlamaCppApiKey);
             Assert.Equal("external-key", keys.LlamaCppApiKey);
         }

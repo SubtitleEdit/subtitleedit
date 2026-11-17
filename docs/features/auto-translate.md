@@ -151,7 +151,7 @@ Headless runs take the same prompt via `seconv --translate-prompt:<text|file>` �
 
 Depending on the selected engine, you may need to provide:
 
-- **API Key** — Authentication key for cloud services. Optional for LM Studio, Ollama, llama.cpp with your own server, their advanced variants and OpenAI Compatible API: fill it in only when the server asks for a key. It is sent as a Bearer token. Each engine keeps its own key together with its URL; the two llama.cpp engines share both
+- **API Key** — Authentication key for cloud services. Optional for LM Studio, Ollama, llama.cpp with your own server, their advanced variants and OpenAI Compatible API: fill it in only when the server asks for a key. It is sent as a Bearer token. Each engine keeps its own key together with its URL; the two llama.cpp engines share both.
 - **API URL** — Custom endpoint URL (for self-hosted services)
 - **Model** — Specific model to use (for AI engines)
 

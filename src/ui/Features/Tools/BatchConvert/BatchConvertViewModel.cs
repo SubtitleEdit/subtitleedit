@@ -4048,7 +4048,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         };
     }
 
-    private void UpdateAutoTranslateSettings()
+    internal void UpdateAutoTranslateSettings()
     {
         var translator = SelectedAutoTranslator;
         if (translator == null)
