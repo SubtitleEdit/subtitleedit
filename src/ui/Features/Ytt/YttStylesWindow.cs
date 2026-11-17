@@ -157,6 +157,7 @@ public class YttStylesWindow : Window
         table.Columns.Add(Column(Se.Language.General.Usages, nameof(YttPenDisplay.UsageCount), new GridLength(70)));
         table.Bind(TableView.SelectedItemProperty, new Binding(selectedProperty) { Source = vm, Mode = BindingMode.TwoWay });
         TableViewExtras.AttachListNavigation(table);
+        ListInput.RunOnDeleteKey(table, vm.DeleteCommand);
         return table;
     }
 

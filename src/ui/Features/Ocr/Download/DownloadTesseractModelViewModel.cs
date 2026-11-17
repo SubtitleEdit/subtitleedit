@@ -151,7 +151,7 @@ public partial class DownloadTesseractModelViewModel : ObservableObject, IClosin
     {
         if (SelectedTesseractDictionaryItem == null)
         {
-            StatusText = "Please select a Tesseract dictionary to download.";
+            StatusText = Se.Language.Ocr.PleaseSelectTesseractDictionaryToDownload;
             return;
         }
 

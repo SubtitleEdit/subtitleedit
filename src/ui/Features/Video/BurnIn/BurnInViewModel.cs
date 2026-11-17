@@ -1645,6 +1645,19 @@ public partial class BurnInViewModel : ObservableObject
             return;
         }
 
+        await AddFiles(fileNames);
+    }
+
+    /// <summary>
+    /// Adds video files to the batch list - from Add... and from files dropped on the list.
+    /// </summary>
+    internal async Task AddFiles(string[] fileNames)
+    {
+        if (IsGenerating)
+        {
+            return;
+        }
+
         var error = false;
 
         foreach (var fileName in fileNames)

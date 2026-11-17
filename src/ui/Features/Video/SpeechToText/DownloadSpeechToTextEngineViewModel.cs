@@ -147,7 +147,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject, ICl
                 // Flatpak build (#12127).
                 StopIndeterminateProgress();
                 Se.LogError(exception, "Speech-to-text engine download/unpack failed");
-                ProgressText = "Unpacking failed";
+                ProgressText = Se.Language.General.UnpackingFailed;
                 Error = exception.Message;
             }
         }

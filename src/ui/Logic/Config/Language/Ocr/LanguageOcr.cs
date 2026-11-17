@@ -117,6 +117,7 @@ public class LanguageOcr
     public string VobSubIsolateColorsHint { get; set; }
     public string LlamaCppOcrSettingsTitle { get; set; }
     public string SelectTesseractDictionary { get; set; }
+    public string PleaseSelectTesseractDictionaryToDownload { get; set; }
     public string InspectBinaryOcrAdditionsTitle { get; set; }
     public string LlamaCppOcr { get; set; }
     public string LlamaCppOcrDescription { get; set; }
@@ -330,6 +331,7 @@ public class LanguageOcr
 
         LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
         SelectTesseractDictionary = "Select Tesseract dictionary:";
+        PleaseSelectTesseractDictionaryToDownload = "Please select a Tesseract dictionary to download.";
         InspectBinaryOcrAdditionsTitle = "Inspect binary OCR additions";
         LlamaCppOcr = "llama.cpp OCR";
         LlamaCppOcrDescription = "Local llama.cpp server (multimodal model) used for OCR.";

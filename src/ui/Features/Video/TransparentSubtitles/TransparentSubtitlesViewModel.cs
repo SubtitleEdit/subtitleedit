@@ -895,6 +895,14 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             return;
         }
 
+        await AddFiles(fileNames);
+    }
+
+    /// <summary>
+    /// Adds subtitle files to the batch list - from Add... and from files dropped on the list.
+    /// </summary>
+    internal Task AddFiles(string[] fileNames)
+    {
         foreach (var fileName in fileNames)
         {
             var videoFileName = string.Empty;
@@ -902,6 +910,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
             jobItem.AddSubtitleFileName(fileName);
             Dispatcher.UIThread.Invoke(() => { JobItems.Add(jobItem); });
         }
+
+        return Task.CompletedTask;
     }
 
     [RelayCommand]

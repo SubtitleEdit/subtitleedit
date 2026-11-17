@@ -623,6 +623,7 @@ public class SpeechToTextWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
         AutomationProperties.SetName(dataGrid, Se.Language.General.BatchMode);
         vm.BatchGrid = dataGrid;
+        ListInput.RunOnDeleteKey(dataGrid, vm.RemoveCommand, () => vm.IsTranscribeEnabled);
 
         Button Action(string icon, string name, System.Windows.Input.ICommand command)
         {
