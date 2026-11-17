@@ -76,7 +76,7 @@ Batch Convert can machine-translate files as part of the conversion. Supported e
 - DeepL (API key required)
 - CrispASR MADLAD
 
-LM Studio, LM Studio advanced, Ollama advanced and llama.cpp with your own server also show an **API key** box. It is optional: fill it in only when the server asks for a key. The Ollama engine has no URL or key box here and uses the URL and key saved in [Auto-translate](auto-translate.md).
+Ollama, Ollama advanced, LM Studio, LM Studio advanced and llama.cpp with your own server also show an **API key** box. It is optional: fill it in only when the server asks for a key. A URL or key typed here is used for the run and saved; these are the same settings as in [Auto-translate](auto-translate.md).
 
 To translate into several languages in one run, click **Add** next to the **To** language and pick more target languages (**Remove** drops one). Every file is translated into each language and saved as its own output file, with the target language code as the language post fix (e.g. `movie.de.srt`, `movie.fr.srt`).
 

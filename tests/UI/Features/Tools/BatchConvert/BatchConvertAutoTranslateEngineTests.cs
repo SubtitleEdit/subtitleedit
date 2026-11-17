@@ -109,8 +109,7 @@ public class BatchConvertAutoTranslateEngineTests
     /// <summary>
     /// A llama.cpp, Ollama or LM Studio server can ask for an API key. The key box goes with the URL
     /// box: shown with each engine's own saved key where the URL is editable, hidden for the server
-    /// Subtitle Edit starts itself and for the classic Ollama engine, whose address (and key) come
-    /// from the Auto-translate window.
+    /// Subtitle Edit starts itself.
     /// </summary>
     [AvaloniaFact]
     public void LocalServerEngines_ShowTheKeyBoxNextToTheUrlBox()
@@ -140,8 +139,10 @@ public class BatchConvertAutoTranslateEngineTests
             Assert.Equal("lmstudio-advanced-key", viewModel.AutoTranslateApiKey);
 
             Select(typeof(OllamaTranslate));
-            Assert.False(viewModel.AutoTranslateUrlIsVisible);
-            Assert.False(viewModel.AutoTranslateApiKeyIsVisible);
+            Assert.True(viewModel.AutoTranslateUrlIsVisible);
+            Assert.Equal(keys.OllamaUrl, viewModel.AutoTranslateUrl);
+            Assert.True(viewModel.AutoTranslateApiKeyIsVisible);
+            Assert.Equal("ollama-key", viewModel.AutoTranslateApiKey);
 
             foreach (var llamaCpp in new[] { typeof(LlamaCppTranslate), typeof(LlamaCppAdvancedTranslate) })
             {
@@ -193,6 +194,100 @@ public class BatchConvertAutoTranslateEngineTests
         finally
         {
             (keys.LlamaCppApiKey, keys.LlamaCppApiUrl, tools.LlamaCppApiKey, tools.LlamaCppApiUrl, Se.Settings.Tools.BatchConvert.LlamaCppUseRemoteServer) = saved;
+        }
+    }
+
+    /// <summary>
+    /// The engines read their URL from Configuration.Settings.Tools, which is not persisted, and a
+    /// run copies several of the saved URLs over it. So a URL typed in the box has to land in both
+    /// places, or it is ignored (LibreTranslate, NLLB, DeepL) or gone after a restart (LM Studio).
+    /// An emptied box keeps the saved URL.
+    /// </summary>
+    [AvaloniaFact]
+    public void TypedUrl_IsUsedForTheRunAndSaved()
+    {
+        var se = Se.Settings.AutoTranslate;
+        var tools = Configuration.Settings.Tools;
+        var saved = (se.LibreTranslateUrl, se.NllbServeUrl, se.NllbApiUrl, se.DeepLUrl, se.LmStudioApiUrl, se.OllamaUrl,
+            tools.AutoTranslateLibreUrl, tools.AutoTranslateNllbServeUrl, tools.AutoTranslateNllbApiUrl, tools.AutoTranslateDeepLUrl, tools.LmStudioApiUrl, tools.OllamaApiUrl);
+        try
+        {
+            var viewModel = MakeViewModel();
+            var engines = new (Type Engine, Func<string> Saved, Func<string> Used)[]
+            {
+                (typeof(LibreTranslate), () => se.LibreTranslateUrl, () => tools.AutoTranslateLibreUrl),
+                (typeof(NoLanguageLeftBehindServe), () => se.NllbServeUrl, () => tools.AutoTranslateNllbServeUrl),
+                (typeof(NoLanguageLeftBehindApi), () => se.NllbApiUrl, () => tools.AutoTranslateNllbApiUrl),
+                (typeof(DeepLTranslate), () => se.DeepLUrl, () => tools.AutoTranslateDeepLUrl),
+                (typeof(LmStudioTranslate), () => se.LmStudioApiUrl, () => tools.LmStudioApiUrl),
+                (typeof(OllamaTranslate), () => se.OllamaUrl, () => tools.OllamaApiUrl),
+            };
+
+            foreach (var (engine, savedUrl, usedUrl) in engines)
+            {
+                viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t.GetType() == engine);
+                viewModel.OnAutoTranslatorChanged();
+                Assert.True(viewModel.AutoTranslateUrlIsVisible, engine.Name);
+
+                var typed = "http://typed.example/" + engine.Name + "/";
+                viewModel.AutoTranslateUrl = " " + typed + " ";
+                viewModel.UpdateAutoTranslateSettings();
+                Assert.Equal(typed, usedUrl());
+                Assert.Equal(typed, savedUrl());
+
+                viewModel.AutoTranslateUrl = string.Empty;
+                viewModel.UpdateAutoTranslateSettings();
+                Assert.Equal(typed, usedUrl());
+                Assert.Equal(typed, savedUrl());
+            }
+        }
+        finally
+        {
+            (se.LibreTranslateUrl, se.NllbServeUrl, se.NllbApiUrl, se.DeepLUrl, se.LmStudioApiUrl, se.OllamaUrl,
+                tools.AutoTranslateLibreUrl, tools.AutoTranslateNllbServeUrl, tools.AutoTranslateNllbApiUrl, tools.AutoTranslateDeepLUrl, tools.LmStudioApiUrl, tools.OllamaApiUrl) = saved;
+        }
+    }
+
+    /// <summary>
+    /// The key goes with the URL: what is typed for Ollama or LM Studio reaches the run and is
+    /// saved, and an emptied box clears it.
+    /// </summary>
+    [AvaloniaFact]
+    public void OllamaAndLmStudio_TypedKeyIsUsedForTheRunAndSaved()
+    {
+        var se = Se.Settings.AutoTranslate;
+        var tools = Configuration.Settings.Tools;
+        var saved = (se.OllamaApiKey, se.LmStudioApiKey, se.OllamaUrl, se.LmStudioApiUrl, se.OllamaModel,
+            tools.OllamaApiKey, tools.LmStudioApiKey, tools.OllamaApiUrl, tools.LmStudioApiUrl, tools.OllamaModel, tools.LmStudioModel);
+        try
+        {
+            var viewModel = MakeViewModel();
+            var engines = new (Type Engine, Func<string> Saved, Func<string> Used)[]
+            {
+                (typeof(OllamaTranslate), () => se.OllamaApiKey, () => tools.OllamaApiKey),
+                (typeof(LmStudioTranslate), () => se.LmStudioApiKey, () => tools.LmStudioApiKey),
+            };
+
+            foreach (var (engine, savedKey, usedKey) in engines)
+            {
+                viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t.GetType() == engine);
+                viewModel.OnAutoTranslatorChanged();
+
+                viewModel.AutoTranslateApiKey = " typed-key ";
+                viewModel.UpdateAutoTranslateSettings();
+                Assert.Equal("typed-key", usedKey());
+                Assert.Equal("typed-key", savedKey());
+
+                viewModel.AutoTranslateApiKey = string.Empty;
+                viewModel.UpdateAutoTranslateSettings();
+                Assert.Equal(string.Empty, usedKey());
+                Assert.Equal(string.Empty, savedKey());
+            }
+        }
+        finally
+        {
+            (se.OllamaApiKey, se.LmStudioApiKey, se.OllamaUrl, se.LmStudioApiUrl, se.OllamaModel,
+                tools.OllamaApiKey, tools.LmStudioApiKey, tools.OllamaApiUrl, tools.LmStudioApiUrl, tools.OllamaModel, tools.LmStudioModel) = saved;
         }
     }
 
