@@ -274,6 +274,30 @@ public class BatchConvertAutoTranslateEngineTests
     }
 
     /// <summary>
+    /// LibreTranslate's key is optional too (a self-hosted server asks for none), so an emptied box
+    /// clears the saved key, as the Auto-translate window does. The run used to send it anyway.
+    /// </summary>
+    [AvaloniaFact]
+    public void LibreTranslate_EmptiedKeyBoxClearsTheSavedKey()
+    {
+        using var _ = new TranslateSettingsSnapshot();
+        Se.Settings.AutoTranslate.LibreTranslateApiKey = "saved-key";
+        var viewModel = MakeViewModel();
+        viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is LibreTranslate);
+        viewModel.OnAutoTranslatorChanged();
+
+        // The box shows the saved key, and left as it is, the run uses it.
+        Assert.Equal("saved-key", viewModel.AutoTranslateApiKey);
+        viewModel.UpdateAutoTranslateSettings();
+        Assert.Equal("saved-key", Configuration.Settings.Tools.AutoTranslateLibreApiKey);
+
+        viewModel.AutoTranslateApiKey = string.Empty;
+        viewModel.UpdateAutoTranslateSettings();
+        Assert.Equal(string.Empty, Configuration.Settings.Tools.AutoTranslateLibreApiKey);
+        Assert.Equal(string.Empty, Se.Settings.AutoTranslate.LibreTranslateApiKey);
+    }
+
+    /// <summary>
     /// The generic OpenAI-compatible engine (vLLM, a hand-started llama-server, hosted providers)
     /// has no model list to browse, so all three of URL, API key and model are free-text and come
     /// from its own settings.

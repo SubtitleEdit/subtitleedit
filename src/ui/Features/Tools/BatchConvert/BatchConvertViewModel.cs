@@ -4095,15 +4095,9 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 Configuration.Settings.Tools.AutoTranslateLibreUrl = Se.Settings.AutoTranslate.LibreTranslateUrl;
             }
 
-            if (!string.IsNullOrEmpty(AutoTranslateApiKey.Trim()))
-            {
-                Configuration.Settings.Tools.AutoTranslateLibreApiKey = AutoTranslateApiKey.Trim();
-                Se.Settings.AutoTranslate.LibreTranslateApiKey = AutoTranslateApiKey.Trim();
-            }
-            else if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.LibreTranslateApiKey))
-            {
-                Configuration.Settings.Tools.AutoTranslateLibreApiKey = Se.Settings.AutoTranslate.LibreTranslateApiKey;
-            }
+            // Optional, so an emptied box clears the stored key.
+            Configuration.Settings.Tools.AutoTranslateLibreApiKey = AutoTranslateApiKey.Trim();
+            Se.Settings.AutoTranslate.LibreTranslateApiKey = AutoTranslateApiKey.Trim();
         }
 
         if (engineType == typeof(OpenAiCompatibleTranslate))
