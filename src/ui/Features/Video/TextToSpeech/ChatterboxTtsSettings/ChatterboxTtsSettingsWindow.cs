@@ -184,10 +184,10 @@ public class ChatterboxTtsSettingsWindow : Window
         // and never asks for a transcript, so there is normally nothing to detect this from.
         sourceLanguageCombo = UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage));
         sourceLanguageCombo.MinWidth = 160;
-        AutomationProperties.SetName(sourceLanguageCombo, "Reference language");
+        AutomationProperties.SetName(sourceLanguageCombo, Se.Language.Video.TextToSpeech.ReferenceLanguage);
         var sourceLanguageHint = new TextBlock
         {
-            Text = "Language spoken in imported reference WAVs (for cross-lingual cloning).",
+            Text = Se.Language.Video.TextToSpeech.ReferenceLanguageHint,
             FontSize = EditorChrome.ScaledFont(11.5),
             Foreground = EditorChrome.DimTextBrush,
             TextWrapping = TextWrapping.Wrap,
@@ -196,7 +196,7 @@ public class ChatterboxTtsSettingsWindow : Window
         };
 
         var rows = new StackPanel { Spacing = 6 };
-        rows.Children.Add(Row("Reference language", sourceLanguageCombo));
+        rows.Children.Add(Row(Se.Language.Video.TextToSpeech.ReferenceLanguage, sourceLanguageCombo));
         rows.Children.Add(Row(string.Empty, sourceLanguageHint));
         return EditorChrome.MakeEditorSection(Se.Language.Video.TextToSpeech.AdvancedTtsVoiceCloning, rows);
     }

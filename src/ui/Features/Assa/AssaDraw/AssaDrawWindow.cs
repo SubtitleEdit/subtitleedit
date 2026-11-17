@@ -19,6 +19,7 @@ using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using static Nikse.SubtitleEdit.Logic.EditorChrome;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 
@@ -1089,7 +1090,7 @@ public class AssaDrawWindow : Window
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.TextFontName)) { Mode = BindingMode.TwoWay },
         };
         AutomationProperties.SetName(fontCombo, Se.Language.General.FontName);
-        rows.Children.Add(MakePropertyRow(Se.Language.General.FontName, fontCombo));
+        rows.Children.Add(MakePropertyRow(Se.Language.General.FontName, FontPickerRow.Make(fontCombo)));
 
         var bold = new ToggleButton
         {

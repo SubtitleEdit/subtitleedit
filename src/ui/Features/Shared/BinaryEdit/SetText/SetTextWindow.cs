@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.SetText;
 
@@ -151,7 +152,7 @@ public class SetTextWindow : Window
 
         // Row 0: Font name and size
         grid.Add(Label(Se.Language.General.FontName), 0, 0);
-        grid.Add(comboBoxFontName, 0, 1);
+        grid.Add(FontPickerRow.Make(comboBoxFontName), 0, 1);
         grid.Add(Label(Se.Language.General.Size), 0, 2);
         grid.Add(numericUpDownFontSize, 0, 3);
 

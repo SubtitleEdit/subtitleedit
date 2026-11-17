@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Windows.Input;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 
 namespace Nikse.SubtitleEdit.Features.WebVtt;
 
@@ -130,6 +131,7 @@ public class WebVttStylesWindow : Window
         dataGrid.AddHandler(InputElement.KeyDownEvent, vm.StylesMoveKeyDown, RoutingStrategies.Tunnel);
         TableViewExtras.AttachListNavigation(dataGrid);
         vm.StyleGrid = dataGrid;
+        ListInput.RunOnDeleteKey(dataGrid, vm.RemoveCommand);
 
         var flyout = new MenuFlyout();
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.Delete, DataContext = vm, Command = vm.RemoveCommand });
@@ -294,7 +296,7 @@ public class WebVttStylesWindow : Window
         styleRow.Children.Add(Toggle("S", nameof(WebVttStyleDisplay.Strikeout), Se.Language.General.Strikeout, decorations: TextDecorations.Strikethrough));
 
         var content = new StackPanel { Spacing = 8 };
-        content.Children.Add(fontName);
+        content.Children.Add(FontPickerRow.Make(fontName));
         content.Children.Add(styleRow);
         return EditorChrome.MakeEditorSection(Se.Language.General.Font, content);
     }

@@ -6,6 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using System.Collections;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -350,7 +351,7 @@ public class MergeTwoSubtitlesWindow : Window
             Spacing = 6,
             Children =
             {
-                EditorChrome.MakeLabeledRow(Se.Language.General.FontName, comboFontName, labelWidth),
+                EditorChrome.MakeLabeledRow(Se.Language.General.FontName, FontPickerRow.Make(comboFontName), labelWidth),
                 EditorChrome.MakeLabeledRow(Se.Language.General.FontSize, numFontSize, labelWidth),
                 EditorChrome.MakeLabeledRow(string.Empty, stylePanel, labelWidth),
                 EditorChrome.MakeLabeledRow(Se.Language.General.TextColor, primaryPicker, labelWidth),

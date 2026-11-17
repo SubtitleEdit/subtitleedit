@@ -10,6 +10,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
@@ -336,7 +337,7 @@ public class TransparentSubtitlesWindow : Window
         boxType.SelectionChanged += vm.BoxTypeChanged;
 
         var rows = new StackPanel { Spacing = 7 };
-        rows.Children.Add(fontName);
+        rows.Children.Add(FontPickerRow.Make(fontName));
         rows.Children.Add(sizeRow);
         rows.Children.Add(Row(Se.Language.Video.BurnIn.BoxType, boxType));
         rows.Children.Add(Row(Se.Language.General.TextColor, EditorChrome.MakeInlineRow(textColor)));
@@ -643,8 +644,9 @@ public class TransparentSubtitlesWindow : Window
             },
         };
         grid.Add(header, 0, 0);
-        grid.Add(dataGrid, 1, 0);
+        grid.Add(ListInput.MakeFileDropHost(dataGrid, vm.AddFiles), 1, 0);
         grid.Add(output, 2, 0);
+        ListInput.RunOnDeleteKey(dataGrid, vm.RemoveCommand, () => !vm.IsGenerating);
         grid.Add(EditorChrome.MakeSectionHeader(Se.Language.General.Preview), 3, 0);
         grid.Add(preview, 4, 0);
 
