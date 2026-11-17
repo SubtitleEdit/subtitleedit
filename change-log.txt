@@ -3,6 +3,50 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta8 (17th of November 2026)
+
+* UI consistency: sentence case, initial focus off OK buttons, clear buttons in filter boxes, delete prompts honor "Prompt before delete"
+* Auto-translate: API key field for llama.cpp, Ollama and LM Studio (incl. advanced) - thx Makar8000
+* Auto-translate: OpenAI Compatible API works without an API key - thx Makar8000
+* Improve time codes: snap only the re-timed side to shot changes
+* Improve time codes: mention Shift+F7 / Shift+F8 in the to-check hint - thx Uer9-create
+* Installer: fix invalid chars in Russian/Finnish changelog shortcut name - thx Diaskhan
+* Update Tesseract (Windows) to 5.5.4
+* Update CrispASR to v0.8.54
+* Update CrispEmbed to v0.17.19
+* Update German translation - thx FunkyKnilch
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
+v5.5.0-beta7 (16th of November 2026)
+
+* Text to speech: KugelAudio voice cloning from a reference clip
+* ASSA: support LayoutResX/LayoutResY headers - thx k6G52m4Dz75W
+* ASSA properties: support setting the YCbCr Matrix header - thx Khaoklong51/k6G52m4Dz75W
+* Allow time codes past 99:59:59,999 (per-format limit) - thx claudiu-mn
+* Add "Set start and offset the whole subtitle" shortcut - thx club706
+* Toolbar auto-translate/speech to text: use the selected lines when more than one line is selected - thx hisui3393
+* Improve time codes: refine starts from the audio level and snap to shot changes
+* Auto-translate: names and repeated interjections no longer count as untranslated echoes - thx Giorgio800
+* Auto-translate: extra request body JSON for the advanced engines - thx Makar8000
+* Auto-translate: refresh model lists
+* Batch convert: show the translate settings button for every auto-translate engine - thx svarga91
+* seconv: --translate-keep-line-breaks for the advanced translate engines - thx Makar8000
+* seconv: --verbose prints the prompt the translate engine sends - thx Makar8000
+* seconv: --translate-api-key for llama.cpp, Ollama and LM Studio (incl. advanced) - thx Makar8000
+* Speech to text: show the detected GPU and recommended build in CPU/Vulkan/CUDA prompts - thx Uer9-create
+* Settings search: also find settings grouped inside an item, e.g. Alignment - thx routineCode/caioocesar
+* Burn-in: logo picker opens in the logo's folder - thx bichitoxxx/caioocesar
+* OCR fix: read replace lists saved as ANSI - thx fraternl
+* Word lists: edit spell-checked OCR regex rules in Regex rules - thx fraternl
+* nOCR: fix pixel color reading used for match points and italic space fixing
+* Update audio.cpp to v0.9.5
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta6 (14th of November 2026)
 
 * Fix common errors: sort the fixes by line number - thx radektuma
@@ -22,6 +66,7 @@ v5.5.0-beta6 (14th of November 2026)
 * Update Japanese translation - thx hisui3393
 
 -----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta5 (13th of November 2026)
 
 * Layout 14: quality control layout with QC panel and tag chips
@@ -54,6 +99,7 @@ v5.5.0-beta5 (13th of November 2026)
 * Update Korean translation - thx 12si27
 
 -----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta4 (11th of November 2026)
 
 * Add Qwen3-ForcedAligner-Ultra as a forced aligner option
@@ -76,6 +122,7 @@ v5.5.0-beta4 (11th of November 2026)
 * Update Swedish translation - thx Manavagg2003
 
 -----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta3 (10th of November 2026)
 
 * Option to preset the save encoding on open to a chosen UTF-8 variant now also works for UTF-8 files - thx darnn
@@ -95,6 +142,7 @@ v5.5.0-beta3 (10th of November 2026)
 * Update Russian translation - thx Manavagg2003
 
 -----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta2 (9th of November 2026)
 
 * Waveform: "Edit original subtitle timing" toggle edits the original subtitle's timing in any layout - thx hisui3393

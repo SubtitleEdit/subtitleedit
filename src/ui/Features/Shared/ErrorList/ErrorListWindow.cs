@@ -96,7 +96,7 @@ public class ErrorListWindow : Window
             RowSpacing = 10,
             Margin = new Thickness(14, 12, 14, 12),
         };
-        listArea.Add(MakeErrorsGridView(vm), 0, 0);
+        listArea.Add(MakeErrorsGridView(vm, out var errorGrid), 0, 0);
         listArea.Add(labelTip, 1, 0);
 
         var grid = new Grid
@@ -126,7 +126,7 @@ public class ErrorListWindow : Window
 
         Content = grid;
 
-        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => TableViewExtras.FocusRow(errorGrid)); // initial focus on the list, not an action button - a focused button clicks on bare Space
 
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
@@ -182,10 +182,11 @@ public class ErrorListWindow : Window
         };
     }
 
-    private static Border MakeErrorsGridView(ErrorListViewModel vm)
+    private static Border MakeErrorsGridView(ErrorListViewModel vm, out TableView grid)
     {
         var l = Se.Language.ErrorList;
         var dataGrid = TableViewExtras.MakeTableView(alwaysSelected: false, multiSelect: false);
+        grid = dataGrid;
         dataGrid.Height = double.NaN; // auto size inside scroll viewer
         dataGrid[!TableView.ItemsSourceProperty] = new Binding(nameof(vm.Subtitles));
 

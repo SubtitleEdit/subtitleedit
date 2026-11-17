@@ -105,6 +105,7 @@ internal sealed class SeConvSettings
                     Glossary = advanced.Glossary,
                     Formality = advanced.Formality,
                     KeepLineBreaks = advanced.KeepLineBreaks,
+                    RequestJson = advanced.RequestJson,
                     Prompt = advanced.Prompt,
                     Temperature = advanced.Temperature,
                     TopP = advanced.TopP,
@@ -443,9 +444,9 @@ internal sealed class SeConvSettings
     /// <summary>
     /// The advanced local-LLM translate engines' settings (<c>tools.llamaCppAdvanced</c>): what
     /// the GUI's "Advanced..." dialog edits. The keys with a command-line option (batch size,
-    /// history pairs, synopsis, glossary, formality) are the defaults for those options; the rest
-    /// (prompt, sampling, server context size, extra server arguments) can only be set here. A key
-    /// left out keeps the dialog's default. The regular engines ignore the section.
+    /// history pairs, synopsis, glossary, formality, keep line breaks) are the defaults for those
+    /// options; the rest (prompt, sampling, server context size, extra server arguments) can only be
+    /// set here. A key left out keeps the dialog's default. The regular engines ignore the section.
     /// </summary>
     internal sealed class LlamaCppAdvancedSection
     {
@@ -458,6 +459,9 @@ internal sealed class SeConvSettings
         public string? Formality { get; set; }
 
         public bool? KeepLineBreaks { get; set; }
+
+        /// <summary>Extra request body fields as one JSON object, merged into every request last (the --translate-request-json option); empty = none.</summary>
+        public string? RequestJson { get; set; }
 
         /// <summary>System prompt ({0}=source language, {1}=target language); empty = the built-in one.</summary>
         public string? Prompt { get; set; }
@@ -488,6 +492,7 @@ internal sealed class SeConvSettings
             if (Glossary != null) target.Glossary = Glossary;
             if (Formality != null) target.Formality = AutoTranslateRunner.ParseFormality(Formality, "tools.llamaCppAdvanced.formality");
             if (KeepLineBreaks.HasValue) target.KeepLineBreaks = KeepLineBreaks.Value;
+            if (RequestJson != null) target.RequestJson = RequestJson;
             if (Prompt != null) target.Prompt = Prompt;
             if (Temperature.HasValue) target.Temperature = Temperature.Value;
             if (TopP.HasValue) target.TopP = TopP.Value;

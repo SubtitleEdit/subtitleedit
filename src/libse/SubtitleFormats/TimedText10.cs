@@ -22,6 +22,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
+        public override double MaxTimeCodeTotalMilliseconds => TimeCode.MaxSupportedTotalMilliseconds; // 3+ digit hours (#16937)
+
         // Carries the region of every paragraph, and the regions themselves in the header.
         public override bool HasPositionSupport => true;
 
@@ -934,7 +936,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         "tts:fontSize",
                         "tts:fontFamily",
                         "tts:backgroundColor",
-                        "tts:color",
                         "tts:origin",
                         "tts:extent",
                         "tts:textAlign"
@@ -1130,7 +1131,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 if (!found)
                 {
-                    sb.Append("|" + tag + "=" + value);
+                    sb.Append(tag + "=" + value);
                 }
                 paragraph.Effect = sb.ToString().TrimEnd('|');
             }
@@ -1334,11 +1335,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var paragraphStyle = inherited.Clone();
             ApplyTtmlTextStyle(paragraphStyle, node, styles, headIndex);
 
-            // italic/bold/underline in effect on the <p> (own or from body/div) become tags;
-            // its color/font are kept as paragraph effects
+            // italic/bold/underline in effect on the <p> (own or from body/div) become tags.
+            // A tts:color set on the <p> itself becomes a font tag too - Final Cut Pro writes a
+            // line that starts with a color as <p tts:color="x">colored<span tts:color="white">rest</span></p>,
+            // which otherwise loaded as plain "colored" + a white font tag (#16989).
+            string fontTag = null;
+            if (node.Attributes?["tts:color"] != null &&
+                !string.IsNullOrEmpty(paragraphStyle.Color) &&
+                !IsSameTtmlColor(paragraphStyle.Color, inherited.Color))
+            {
+                fontTag = $"<font color=\"{paragraphStyle.Color}\">";
+            }
+
             var openTags = new List<string>();
             var start = pText.Length;
-            SetTtmlTextTags(pText, openTags, paragraphStyle.Italic, paragraphStyle.Bold, paragraphStyle.Underline, null);
+            SetTtmlTextTags(pText, openTags, paragraphStyle.Italic, paragraphStyle.Bold, paragraphStyle.Underline, fontTag);
             ReadParagraphChildren(pText, node, styles, headIndex, paragraphStyle, openTags);
             CloseTtmlTags(pText, openTags, 0);
             RemoveEmptyTtmlTags(pText, start);
@@ -1563,7 +1574,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var hours = int.Parse(parts[0]);
-            if (hours > 99)
+            if (hours > 9999) // TTML allows 2+ hour digits; beyond SE's 9999 hours is junk
             {
                 hours = 0;
             }

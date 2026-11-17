@@ -441,6 +441,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
 
+        // "CPP" is also the value of a never-touched setting, so while no Whisper CPP backend has
+        // been downloaded the CPU backend is not a choice the user made: start on the backend
+        // that fits this computer's GPU instead (#16944). A saved cuBLAS/Vulkan choice is kept.
+        if (whisperCppEngine != null &&
+            savedChoice is not (WhisperChoice.CppCuBlas or WhisperChoice.CppVulkan or WhisperChoice.CppCuBlasLib))
+        {
+            whisperCppEngine.SelectRecommendedBackendIfNoneInstalled(GpuCapabilityHelper.Detect());
+        }
+
         Parameters = GetEffectiveSelectedEngine().CommandLineParameter;
 
         EngineChanged();
@@ -1077,7 +1086,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// was the crispasr v0.8.29 GPU packages, built with AVX-512 against a CI runner that had it
     /// (CrispASR #374) - every CPU without AVX-512 got this on the CUDA/Vulkan build while the CPU
     /// build ran fine, so naming the installed package is most of the answer. That build flaw is
-    /// fixed from v0.8.30 (SE now pins v0.8.53), but the message still earns its keep: a pre-AVX2 CPU
+    /// fixed from v0.8.30 (SE now pins v0.8.54), but the message still earns its keep: a pre-AVX2 CPU
     /// hits the same silent death on the AVX2 CPU package, and an install predating the pin bump
     /// keeps the broken GPU binary until the user downloads the engine again.
     /// </summary>
@@ -3598,10 +3607,12 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// </summary>
     private async Task<bool?> PromptQwen3AsrGpuAsync(string engineName)
     {
+        var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan);
         var answer = await MessageBox.Show(
             Window!,
             string.Format(Se.Language.General.DownloadXQuestion, engineName),
             Environment.NewLine + string.Format(Se.Language.Video.AudioToText.XRequiresEngineSelectVersion, engineName),
+            gpuHint,
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CPU",

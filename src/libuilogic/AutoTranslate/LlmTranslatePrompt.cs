@@ -61,5 +61,23 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
             return Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim());
         }
+
+        /// <summary>
+        /// The user message as readable text with <c>&lt;text&gt;</c> where the subtitle text goes:
+        /// what <see cref="BuildEncodedUserMessage"/> sends, before the JSON encoding. For seconv's
+        /// --verbose output.
+        /// </summary>
+        public static string DescribeUserMessage(string template, string sourceLanguage, string targetLanguage)
+        {
+            const string placeholder = "<text>";
+            if (IsCompletionTemplate(template))
+            {
+                return FillCompletionTemplate(template, sourceLanguage, targetLanguage, placeholder);
+            }
+
+            return template
+                .Replace("{0}", sourceLanguage)
+                .Replace("{1}", targetLanguage) + "\n\n" + placeholder;
+        }
     }
 }

@@ -43,7 +43,7 @@ public class PickSubtitleFormatWindow : Window
         listBoxFormats.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
         AutomationProperties.SetName(listBoxFormats, Se.Language.General.SubtitleFormats);
 
-        var formatsSection = EditorChrome.MakePickerListSection(Se.Language.General.SubtitleFormats, listBoxFormats, textBoxSearch);
+        var formatsSection = EditorChrome.MakePickerListSection(Se.Language.General.SubtitleFormats, listBoxFormats, textBoxSearch, overlay: EditorChrome.MakeNoMatchesNote(vm.SubtitleFormatNames, textBoxSearch));
 
         // Use the PreviewContainer from ViewModel (the section's frame is its border)
         vm.PreviewContainer.VerticalAlignment = VerticalAlignment.Stretch;

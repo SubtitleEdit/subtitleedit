@@ -59,24 +59,23 @@ public class ShotChangeListWindow : Window
         grid.Add(new Border
         {
             Background = EditorChrome.PanelBrush,
-            Child = EditorChrome.MakeListPane(Se.Language.Video.ShotChanges.ShotChangesList, MakeBookmarkGridView(vm), actions),
+            Child = EditorChrome.MakeListPane(Se.Language.Video.ShotChanges.ShotChangesList, MakeBookmarkGridView(vm, out var shotChangeGrid), actions),
         }, 0);
         grid.Add(EditorChrome.MakeButtonBar(null, buttonCancel), 1);
 
         Content = grid;
 
-        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => TableViewExtras.FocusRow(shotChangeGrid)); // initial focus on the list, not an action button - a focused button clicks on bare Space
     }
 
-    private static Border MakeBookmarkGridView(ShotChangeListViewModel vm)
+    private static Border MakeBookmarkGridView(ShotChangeListViewModel vm, out TableView grid)
     {
         var tableView = TableViewExtras.MakeTableView();
+        grid = tableView;
         tableView.Height = double.NaN; // auto size inside scroll viewer
         tableView.Margin = new Thickness(2);
         tableView.ItemsSource = vm.ShotChanges;
         tableView.DataContext = vm;
-
-        tableView.DoubleTapped += vm.OnShotChangeGridDoubleTapped;
 
         // Columns
         tableView.Columns.Add(new SeTableViewColumn

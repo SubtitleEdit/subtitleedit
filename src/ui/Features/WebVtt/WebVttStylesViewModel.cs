@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -317,9 +318,15 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void Remove()
+    private async Task Remove()
     {
         if (SelectedStyle == null)
+        {
+            return;
+        }
+
+        // Asks first, as the ASSA and SSA styles windows do
+        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, string.Format(Se.Language.Assa.DeleteStyleXFromFileQuestion, SelectedStyle.Name)))
         {
             return;
         }
@@ -332,8 +339,19 @@ public partial class WebVttStylesViewModel : ObservableObject, IClosingCleanup
     }
 
     [RelayCommand]
-    private void RemoveAll()
+    private async Task RemoveAll()
     {
+        if (Styles.Count == 0)
+        {
+            return;
+        }
+
+        // Asks first, as the ASSA and SSA styles windows do - "Clear" used to wipe the list silently
+        if (!await StylesDialogHelper.ConfirmDeleteStyles(Window, string.Format(Se.Language.Assa.DeleteXStylesQuestion, Styles.Count)))
+        {
+            return;
+        }
+
         foreach (var style in Styles)
         {
             style.PropertyChanged -= StyleChanged;

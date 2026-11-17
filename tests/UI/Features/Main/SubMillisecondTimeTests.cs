@@ -95,15 +95,15 @@ public class SubMillisecondTimeTests : IDisposable
         Assert.Equal(expectedMs, TimeSpanExtensions.FromSecondsWholeMilliseconds(seconds).TotalMilliseconds);
     }
 
-    // Out-of-range input is clamped to the time-code domain (±99:59:59,999) - still a whole
+    // Out-of-range input is clamped to the time-code domain (±9999:59:59,999) - still a whole
     // millisecond a TimeCode can hold - and NaN throws like TimeSpan.FromSeconds always has:
     // a NaN time is a bug at the call site and must not silently become 00:00:00,000.
     [Fact]
     public void OutOfRangeIsClampedToTheTimeCodeDomainAndNaNThrows()
     {
-        Assert.Equal(TimeCode.MaxTimeTotalMilliseconds,
+        Assert.Equal(TimeCode.MaxSupportedTotalMilliseconds,
             TimeSpanExtensions.FromSecondsWholeMilliseconds(1e30).TotalMilliseconds);
-        Assert.Equal(-TimeCode.MaxTimeTotalMilliseconds,
+        Assert.Equal(-TimeCode.MaxSupportedTotalMilliseconds,
             TimeSpanExtensions.FromSecondsWholeMilliseconds(-1e30).TotalMilliseconds);
         Assert.Throws<ArgumentException>(() => TimeSpanExtensions.FromSecondsWholeMilliseconds(double.NaN));
     }
@@ -130,7 +130,7 @@ public class SubMillisecondTimeTests : IDisposable
         textBox.Text = "1e30";
         window.KeyPress(Key.Enter, RawInputModifiers.None, PhysicalKey.Enter, null);
 
-        Assert.Equal(TimeCode.MaxTimeTotalMilliseconds, line.Duration.TotalMilliseconds);
+        Assert.Equal(TimeCode.MaxSupportedTotalMilliseconds, line.Duration.TotalMilliseconds);
         Assert.Equal(0, line.EndTime.Ticks % TimeSpan.TicksPerMillisecond);
     }
 

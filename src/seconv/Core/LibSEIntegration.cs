@@ -1070,9 +1070,10 @@ internal static class LibSEIntegration
     /// subtitle's header before save. Emits a stderr warning when the target format is
     /// not ASSA-compatible and either option is set.
     /// </summary>
-    public static void ApplyAssaPostProcess(Subtitle subtitle, string normalizedFormat, (int Width, int Height)? resolution, string? assaStyleFile)
+    public static void ApplyAssaPostProcess(Subtitle subtitle, string normalizedFormat, (int Width, int Height)? resolution, string? assaStyleFile,
+        (int Width, int Height)? layoutResolution = null)
     {
-        if (resolution is null && string.IsNullOrEmpty(assaStyleFile))
+        if (resolution is null && string.IsNullOrEmpty(assaStyleFile) && layoutResolution is null)
         {
             return;
         }
@@ -1090,10 +1091,14 @@ internal static class LibSEIntegration
                 {
                     AnsiConsole.MarkupLine("[yellow]Warning: --assa-style-file only applies to ASSA/SSA targets; ignored.[/]");
                 }
+                if (layoutResolution is not null)
+                {
+                    AnsiConsole.MarkupLine("[yellow]Warning: --layout-resolution only applies to ASSA/SSA targets; ignored.[/]");
+                }
             }
             else
             {
-                AnsiConsole.MarkupLine("[yellow]Warning: --resolution and --assa-style-file only apply to ASSA/SSA targets; ignored.[/]");
+                AnsiConsole.MarkupLine("[yellow]Warning: --resolution, --layout-resolution and --assa-style-file only apply to ASSA/SSA targets; ignored.[/]");
             }
             return;
         }
@@ -1106,6 +1111,11 @@ internal static class LibSEIntegration
         if (resolution is { } r)
         {
             subtitle.Header = AdvancedSubStationAlpha.SetResolution(subtitle.Header, r.Width, r.Height);
+        }
+
+        if (layoutResolution is { } lr)
+        {
+            subtitle.Header = AdvancedSubStationAlpha.SetLayoutResolution(subtitle.Header, lr.Width, lr.Height);
         }
 
         if (!string.IsNullOrEmpty(assaStyleFile))

@@ -25,6 +25,10 @@ namespace Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 /// (chat_template_kwargs.enable_thinking=false): a hybrid model the server was started without
 /// "--reasoning off" for (a self-supplied .gguf, custom server arguments, a server SE did not
 /// start) otherwise spends the whole token budget thinking and never reaches the translation.
+///
+/// With <see cref="LlamaCppExtensions"/> off the client speaks plain OpenAI chat-completions, for
+/// an endpoint that may be a hosted provider: no llama.cpp request fields, and a model that
+/// reasons gets a larger reply budget instead of the thinking switch.
 /// </summary>
 public class LlamaCppAdvancedClient : IDisposable
 {
@@ -55,6 +59,32 @@ public class LlamaCppAdvancedClient : IDisposable
     /// that very reply, so it does not tell whether the server already had the flag.
     /// </summary>
     public bool LastRequestDisabledThinking { get; private set; }
+
+    /// <summary>
+    /// Sent as "Authorization: Bearer ..." with every request when set. A property and not a
+    /// constructor argument, so a key changed in the settings applies to the next request of a
+    /// client that already exists.
+    /// </summary>
+    public string? ApiKey { get; set; }
+
+    /// <summary>
+    /// False for an endpoint that is only known to speak the OpenAI chat-completions API, such as
+    /// a hosted provider. The llama.cpp request fields cache_prompt and chat_template_kwargs are
+    /// then left out - a strict server rejects a field it does not know - and a reply that ran
+    /// out of tokens while the model was reasoning is asked for again with a larger budget (see
+    /// <see cref="PostWithReasoningRoomAsync"/>), as there is no thinking switch to send.
+    /// </summary>
+    public bool LlamaCppExtensions { get; set; } = true;
+
+    /// <summary>
+    /// True when the last reply ended on the token limit ("finish_reason": "length") and the
+    /// model had been reasoning: reasoning tokens count against max_tokens, so the answer was
+    /// cut short or never started.
+    /// </summary>
+    public bool ReplyRanOutWhileReasoning { get; private set; }
+
+    // Set by the first such reply; the following requests of this client keep the larger budget.
+    private bool _reasoningNeedsRoom;
 
     /// <param name="settings">The sampling overrides sent with every request.</param>
     public LlamaCppAdvancedClient(SeLlamaCppAdvanced settings)
@@ -110,14 +140,15 @@ public class LlamaCppAdvancedClient : IDisposable
     /// </summary>
     private async Task<(bool ok, bool stalled, bool isAssembledContent, string body, string reasoning, int status)> PostWithThinkingFallbackAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump, CancellationToken cancellationToken)
     {
-        LastRequestDisabledThinking = DisableThinking;
-        var response = await PostAsync(url, BuildRequestJson(_settings, systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, DisableThinking), cancellationToken);
-        if (response.ok || response.stalled || !DisableThinking || response.status < 400 || response.status >= 500 || cancellationToken.IsCancellationRequested)
+        var disableThinking = DisableThinking && LlamaCppExtensions;
+        LastRequestDisabledThinking = disableThinking;
+        var response = await PostWithReasoningRoomAsync(url, systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, disableThinking, cancellationToken);
+        if (response.ok || response.stalled || !disableThinking || response.status < 400 || response.status >= 500 || cancellationToken.IsCancellationRequested)
         {
             return response;
         }
 
-        var retry = await PostAsync(url, BuildRequestJson(_settings, systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, false), cancellationToken);
+        var retry = await PostWithReasoningRoomAsync(url, systemPrompt, userContent, responseFormatJson, model, defaultMaxTokens, temperatureBump, false, cancellationToken);
         if (!retry.ok)
         {
             return response;
@@ -130,29 +161,92 @@ public class LlamaCppAdvancedClient : IDisposable
     }
 
     /// <summary>
+    /// Posts one request. The engine's max_tokens is sized for the visible translation, and a
+    /// reasoning model spends it on thoughts first. Without the llama.cpp extensions there is no
+    /// thinking switch to send, so a reply that hit the limit while reasoning is asked for once
+    /// more with a larger budget, and the following requests keep it. Only the engine's own
+    /// budget grows: a cap the user set (the max tokens setting, max_tokens in the extra request
+    /// JSON) is sent again unchanged, so there is no second request then. The larger budget can
+    /// be more than the model may write, which a server answers with an error: the first reply
+    /// then stands, and the following requests are back on the usual budget.
+    /// </summary>
+    private async Task<(bool ok, bool stalled, bool isAssembledContent, string body, string reasoning, int status)> PostWithReasoningRoomAsync(string url, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump, bool disableThinking, CancellationToken cancellationToken)
+    {
+        string Build() => BuildRequestJson(_settings, systemPrompt, userContent, responseFormatJson, model, ReplyBudget(defaultMaxTokens, _reasoningNeedsRoom), temperatureBump, disableThinking, LlamaCppExtensions);
+
+        var json = Build();
+        var response = await PostAsync(url, json, cancellationToken);
+        if (!ReplyRanOutWhileReasoning || LlamaCppExtensions || _reasoningNeedsRoom || cancellationToken.IsCancellationRequested)
+        {
+            return response;
+        }
+
+        _reasoningNeedsRoom = true;
+        var roomier = Build();
+        if (roomier == json)
+        {
+            return response;
+        }
+
+        var roomierResponse = await PostAsync(url, roomier, cancellationToken);
+        if (roomierResponse.ok)
+        {
+            return roomierResponse;
+        }
+
+        // Kept, the flag would send every later request with a budget the server turns down.
+        SeLogger.Error("llama.cpp advanced translate: the larger reply budget for a reasoning model was not accepted, keeping the usual one: " + roomierResponse.body);
+        _reasoningNeedsRoom = false;
+        ReplyRanOutWhileReasoning = true; // the first reply's, the failed request reset it
+        return response;
+    }
+
+    /// <summary>
+    /// The reply budget for a model that reasons: four times the engine's, and at least 2048
+    /// tokens - a short batch has a small budget, and the thoughts do not shrink with it.
+    /// </summary>
+    internal static int ReplyBudget(int defaultMaxTokens, bool reasoningNeedsRoom)
+    {
+        return reasoningNeedsRoom && defaultMaxTokens > 0 ? Math.Max(2048, defaultMaxTokens * 4) : defaultMaxTokens;
+    }
+
+    /// <summary>
     /// The "model" field is only written when the caller supplies one (Ollama requires it;
     /// llama-server serves the single model it was started with, and sending one would only
-    /// risk a mismatch). cache_prompt is llama.cpp-specific; other servers ignore it.
+    /// risk a mismatch). cache_prompt is llama.cpp-specific and left out with
+    /// <paramref name="llamaCppExtensions"/> off; other local servers ignore it.
     /// chat_template_kwargs.enable_thinking=false is read by llama-server (Jinja templates) and
-    /// vLLM - the Qwen 3 / Qwen 3.5 family and their fine-tunes honour it.
+    /// vLLM - the Qwen 3 / Qwen 3.5 family and their fine-tunes honour it. The user's extra
+    /// request JSON (<see cref="SeLlamaCppAdvanced.RequestJson"/>) is written last and wins: a
+    /// field it names is left out of the engine's part, a null value removes the field, and
+    /// "messages" and "response_format" are refused by <see cref="ParseRequestJson"/>.
     /// </summary>
-    internal static string BuildRequestJson(SeLlamaCppAdvanced settings, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump = 0, bool disableThinking = false)
+    internal static string BuildRequestJson(SeLlamaCppAdvanced settings, string systemPrompt, string userContent, string? responseFormatJson, string? model, int defaultMaxTokens, double temperatureBump = 0, bool disableThinking = false, bool llamaCppExtensions = true)
     {
+        using var extra = ParseRequestJson(settings.RequestJson);
+        var overrides = extra?.RootElement;
         using var stream = new System.IO.MemoryStream();
         using (var writer = new Utf8JsonWriter(stream, LlamaCppAdvancedProtocol.WireOptions))
         {
             writer.WriteStartObject();
-            if (!string.IsNullOrWhiteSpace(model))
+            if (!string.IsNullOrWhiteSpace(model) && !Overrides(overrides, "model"))
             {
                 writer.WriteString("model", model);
             }
 
-            writer.WriteBoolean("stream", true);
-            writer.WriteBoolean("cache_prompt", true);
+            if (!Overrides(overrides, "stream"))
+            {
+                writer.WriteBoolean("stream", true);
+            }
 
-            WriteSampling(writer, settings, defaultMaxTokens, temperatureBump);
+            if (llamaCppExtensions && !Overrides(overrides, "cache_prompt"))
+            {
+                writer.WriteBoolean("cache_prompt", true);
+            }
 
-            if (disableThinking)
+            WriteSampling(writer, settings, defaultMaxTokens, temperatureBump, overrides);
+
+            if (disableThinking && llamaCppExtensions && !Overrides(overrides, "chat_template_kwargs"))
             {
                 writer.WriteStartObject("chat_template_kwargs");
                 writer.WriteBoolean("enable_thinking", false);
@@ -176,11 +270,94 @@ public class LlamaCppAdvancedClient : IDisposable
             writer.WriteEndObject();
             writer.WriteEndArray();
 
+            // The user's fields last, so they win; a null only removes the engine's field.
+            if (overrides.HasValue)
+            {
+                foreach (var property in overrides.Value.EnumerateObject())
+                {
+                    if (property.Value.ValueKind != JsonValueKind.Null)
+                    {
+                        property.WriteTo(writer);
+                    }
+                }
+            }
+
             writer.WriteEndObject();
         }
 
         return Encoding.UTF8.GetString(stream.ToArray());
     }
+
+    private static bool Overrides(JsonElement? extra, string name)
+    {
+        return extra.HasValue && extra.Value.TryGetProperty(name, out _);
+    }
+
+    /// <summary>
+    /// The user's extra request fields (<see cref="SeLlamaCppAdvanced.RequestJson"/>) as a parsed
+    /// object, or null for an empty setting. Throws <see cref="InvalidOperationException"/> with a
+    /// message for the user when the text is not a JSON object or names a field the protocol owns:
+    /// "messages", which the prompt options build, and "response_format", which the client steps
+    /// down from json_schema to json_object to none when a server rejects one - a fixed value would
+    /// defeat that. The caller disposes the document.
+    /// </summary>
+    internal static JsonDocument? ParseRequestJson(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return null;
+        }
+
+        JsonDocument document;
+        try
+        {
+            document = JsonDocument.Parse(json);
+        }
+        catch (JsonException e)
+        {
+            throw new InvalidOperationException("The extra request JSON is not valid JSON: " + e.Message);
+        }
+
+        var kind = document.RootElement.ValueKind;
+        if (kind != JsonValueKind.Object)
+        {
+            document.Dispose();
+            throw new InvalidOperationException("The extra request JSON must be a JSON object ({\"field\": value, ...}), not " + kind.ToString().ToLowerInvariant() + ".");
+        }
+
+        foreach (var name in ProtectedRequestFields)
+        {
+            if (document.RootElement.TryGetProperty(name, out _))
+            {
+                document.Dispose();
+                throw new InvalidOperationException("The extra request JSON cannot set \"" + name + "\": " +
+                                                    (name == "messages"
+                                                        ? "the prompt options build the messages."
+                                                        : "the engine falls back from json_schema to json_object to none itself when a server rejects one."));
+            }
+        }
+
+        return document;
+    }
+
+    /// <summary>
+    /// The message <see cref="ParseRequestJson"/> would fail with for <paramref name="json"/>, or
+    /// null when it is usable - for checking an option or a settings value up front.
+    /// </summary>
+    public static string? ValidateRequestJson(string? json)
+    {
+        try
+        {
+            using var document = ParseRequestJson(json);
+            return null;
+        }
+        catch (InvalidOperationException e)
+        {
+            return e.Message;
+        }
+    }
+
+    private static readonly string[] ProtectedRequestFields = { "messages", "response_format" };
 
     /// <summary>
     /// Advanced-settings sampling overrides first, then the curated model's recommended values
@@ -191,9 +368,10 @@ public class LlamaCppAdvancedClient : IDisposable
     /// cap so a looping model runs out of tokens (a retryable failed batch) instead of
     /// generating until the context fills (#13830). <paramref name="temperatureBump"/> raises the
     /// temperature for a retry after the model echoed the source untranslated - the same request
-    /// at the same low temperature tends to echo again.
+    /// at the same low temperature tends to echo again. A field the user's extra request JSON
+    /// names is skipped here and written from there.
     /// </summary>
-    private static void WriteSampling(Utf8JsonWriter writer, SeLlamaCppAdvanced advanced, int defaultMaxTokens, double temperatureBump = 0)
+    private static void WriteSampling(Utf8JsonWriter writer, SeLlamaCppAdvanced advanced, int defaultMaxTokens, double temperatureBump, JsonElement? overrides)
     {
         var tools = Configuration.Settings.Tools;
 
@@ -205,13 +383,28 @@ public class LlamaCppAdvancedClient : IDisposable
             temperature = Math.Min(1.0, temperature + temperatureBump);
         }
 
-        WriteNumberIfSet(writer, "temperature", temperature);
-        WriteNumberIfSet(writer, "top_p", advanced.TopP >= 0 ? advanced.TopP : tools.LlamaCppModelTopP);
-        WriteNumberIfSet(writer, "top_k", advanced.TopK >= 0 ? advanced.TopK : tools.LlamaCppModelTopK);
-        WriteNumberIfSet(writer, "repeat_penalty", advanced.RepeatPenalty >= 0 ? advanced.RepeatPenalty : tools.LlamaCppModelRepeatPenalty);
+        if (!Overrides(overrides, "temperature"))
+        {
+            WriteNumberIfSet(writer, "temperature", temperature);
+        }
+
+        if (!Overrides(overrides, "top_p"))
+        {
+            WriteNumberIfSet(writer, "top_p", advanced.TopP >= 0 ? advanced.TopP : tools.LlamaCppModelTopP);
+        }
+
+        if (!Overrides(overrides, "top_k"))
+        {
+            WriteNumberIfSet(writer, "top_k", advanced.TopK >= 0 ? advanced.TopK : tools.LlamaCppModelTopK);
+        }
+
+        if (!Overrides(overrides, "repeat_penalty"))
+        {
+            WriteNumberIfSet(writer, "repeat_penalty", advanced.RepeatPenalty >= 0 ? advanced.RepeatPenalty : tools.LlamaCppModelRepeatPenalty);
+        }
 
         var maxTokens = advanced.MaxTokens > 0 ? advanced.MaxTokens : defaultMaxTokens;
-        if (maxTokens > 0)
+        if (maxTokens > 0 && !Overrides(overrides, "max_tokens"))
         {
             writer.WriteNumber("max_tokens", maxTokens);
         }
@@ -234,6 +427,7 @@ public class LlamaCppAdvancedClient : IDisposable
     /// </summary>
     private async Task<(bool ok, bool stalled, bool isAssembledContent, string body, string reasoning, int status)> PostAsync(string url, string json, CancellationToken cancellationToken)
     {
+        ReplyRanOutWhileReasoning = false;
         using var overall = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         overall.CancelAfter(TotalTimeout);
         try
@@ -248,6 +442,11 @@ public class LlamaCppAdvancedClient : IDisposable
             var content = new StringContent(json, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             using var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
+            if (!string.IsNullOrWhiteSpace(ApiKey))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", ApiKey.Trim());
+            }
+
             using var result = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, idle.Token).ConfigureAwait(false);
             if (!result.IsSuccessStatusCode)
             {
@@ -262,6 +461,8 @@ public class LlamaCppAdvancedClient : IDisposable
             var reasoning = new StringBuilder();
             var raw = new StringBuilder();
             var sawSseData = false;
+            var hitTokenLimit = false;
+            var reasoned = false;
 
             while (true)
             {
@@ -287,12 +488,16 @@ public class LlamaCppAdvancedClient : IDisposable
                 }
 
                 sawSseData = true;
-                if (!TryAppendDelta(payload, assembled, reasoning, out var chunkError))
+                if (!TryAppendDelta(payload, assembled, reasoning, out var chunkError, out var chunkHitTokenLimit, out var chunkReasoned))
                 {
                     return (false, false, false, chunkError, string.Empty, 0);
                 }
+
+                hitTokenLimit |= chunkHitTokenLimit;
+                reasoned |= chunkReasoned;
             }
 
+            ReplyRanOutWhileReasoning = hitTokenLimit && reasoned;
             return sawSseData
                 ? (true, false, true, assembled.ToString(), reasoning.ToString(), (int)result.StatusCode)
                 : (true, false, false, raw.ToString(), string.Empty, (int)result.StatusCode);
@@ -316,11 +521,14 @@ public class LlamaCppAdvancedClient : IDisposable
 
     /// <summary>
     /// Appends one SSE chunk's delta content (and, separately, its reasoning_content); returns
-    /// false on an in-stream error object.
+    /// false on an in-stream error object. <paramref name="hitTokenLimit"/> and
+    /// <paramref name="reasoned"/> are what <see cref="ReadReplyEnd"/> found in the chunk.
     /// </summary>
-    internal static bool TryAppendDelta(string payload, StringBuilder assembled, StringBuilder reasoning, out string error)
+    internal static bool TryAppendDelta(string payload, StringBuilder assembled, StringBuilder reasoning, out string error, out bool hitTokenLimit, out bool reasoned)
     {
         error = string.Empty;
+        hitTokenLimit = false;
+        reasoned = false;
         try
         {
             using var doc = JsonDocument.Parse(payload);
@@ -330,6 +538,7 @@ public class LlamaCppAdvancedClient : IDisposable
                 return false;
             }
 
+            ReadReplyEnd(doc.RootElement, out hitTokenLimit, out reasoned);
             if (doc.RootElement.TryGetProperty("choices", out var choices) &&
                 choices.ValueKind == JsonValueKind.Array &&
                 choices.GetArrayLength() > 0 &&
@@ -355,6 +564,44 @@ public class LlamaCppAdvancedClient : IDisposable
         {
             // Tolerate malformed keep-alive/comment chunks.
             return true;
+        }
+    }
+
+    /// <summary>
+    /// What one SSE chunk says about how the reply ended: <paramref name="hitTokenLimit"/> for
+    /// the chunk that ends it on max_tokens, <paramref name="reasoned"/> for any sign that the
+    /// model reasoned - thoughts in the delta under one of the names servers use for them
+    /// ("reasoning_content", "reasoning", "reasoning_details"), or reasoning tokens in the usage.
+    /// The signs are required: a model that runs away inside the JSON grammar also ends on the
+    /// limit (#13830), and more tokens would only make that longer.
+    /// </summary>
+    private static void ReadReplyEnd(JsonElement chunk, out bool hitTokenLimit, out bool reasoned)
+    {
+        hitTokenLimit = false;
+        reasoned = chunk.TryGetProperty("usage", out var usage) &&
+                   usage.ValueKind == JsonValueKind.Object &&
+                   usage.TryGetProperty("completion_tokens_details", out var details) &&
+                   details.ValueKind == JsonValueKind.Object &&
+                   details.TryGetProperty("reasoning_tokens", out var reasoningTokens) &&
+                   reasoningTokens.ValueKind == JsonValueKind.Number &&
+                   reasoningTokens.GetDouble() > 0;
+
+        if (!chunk.TryGetProperty("choices", out var choices) ||
+            choices.ValueKind != JsonValueKind.Array ||
+            choices.GetArrayLength() == 0 ||
+            choices[0].ValueKind != JsonValueKind.Object)
+        {
+            return;
+        }
+
+        hitTokenLimit = GetStringOrEmpty(choices[0], "finish_reason") == "length";
+        if (choices[0].TryGetProperty("delta", out var delta) && delta.ValueKind == JsonValueKind.Object)
+        {
+            reasoned |= GetStringOrEmpty(delta, "reasoning_content").Length > 0 ||
+                        GetStringOrEmpty(delta, "reasoning").Length > 0 ||
+                        (delta.TryGetProperty("reasoning_details", out var reasoningDetails) &&
+                         reasoningDetails.ValueKind == JsonValueKind.Array &&
+                         reasoningDetails.GetArrayLength() > 0);
         }
     }
 

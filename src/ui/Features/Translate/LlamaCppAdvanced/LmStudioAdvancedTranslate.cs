@@ -38,4 +38,9 @@ public class LmStudioAdvancedTranslate : AdvancedTranslatorBase
         var model = Se.Settings.AutoTranslate.LmStudioAdvancedModel;
         return string.IsNullOrWhiteSpace(model) ? null : model.Trim();
     }
+
+    protected override string? GetApiKey()
+    {
+        return Se.Settings.AutoTranslate.LmStudioAdvancedApiKey;
+    }
 }

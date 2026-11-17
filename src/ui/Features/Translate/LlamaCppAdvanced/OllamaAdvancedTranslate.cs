@@ -39,4 +39,9 @@ public class OllamaAdvancedTranslate : AdvancedTranslatorBase
         var model = Se.Settings.AutoTranslate.OllamaAdvancedModel;
         return string.IsNullOrWhiteSpace(model) ? null : model.Trim();
     }
+
+    protected override string? GetApiKey()
+    {
+        return Se.Settings.AutoTranslate.OllamaAdvancedApiKey;
+    }
 }

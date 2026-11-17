@@ -32,6 +32,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.BaseAddress = new Uri(AutoTranslateUrl.Complete(Configuration.Settings.Tools.LlamaCppApiUrl, DefaultUrl));
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
+
+            // Optional: a llama-server started with --api-key, or one behind a reverse proxy.
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.LlamaCppApiKey))
+            {
+                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.LlamaCppApiKey);
+            }
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()

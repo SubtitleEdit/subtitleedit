@@ -377,6 +377,7 @@ public class CutVideoWindow : Window
         dataGridSubtitle.SelectionChanged += vm.SegmentsGridChanged;
         dataGridSubtitle.DoubleTapped += vm.SegmentsGridDoubleTapped;
         vm.SegmentGrid = dataGridSubtitle;
+        ListInput.RunOnDeleteKey(dataGridSubtitle, vm.DeleteCommand);
 
         Button Action(string icon, string name, System.Windows.Input.ICommand command, string? isEnabledProperty = null)
         {

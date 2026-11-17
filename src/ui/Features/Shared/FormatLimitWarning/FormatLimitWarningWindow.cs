@@ -55,6 +55,7 @@ public class FormatLimitWarningWindow : Window
             {
                 MakeRow(IconNames.FormatFont, nameof(vm.MaxCharactersText), nameof(vm.IsMaxCharactersVisible)),
                 MakeRow(IconNames.FormatFont, nameof(vm.MaxLinesText), nameof(vm.IsMaxLinesVisible)),
+                MakeRow(IconNames.ClockOutline, nameof(vm.MaxTimeCodeText), nameof(vm.IsMaxTimeCodeVisible)),
                 MakeRow(IconNames.ViewList, nameof(vm.LinesText), null),
             },
         };
@@ -71,7 +72,7 @@ public class FormatLimitWarningWindow : Window
 
         var explanation = new TextBlock
         {
-            Text = Se.Language.Main.FormatLimitWarningTextWillBeRewrapped,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ExplanationText)),
             TextWrapping = TextWrapping.Wrap,
             MaxWidth = 460,
             FontSize = EditorChrome.FieldFontSize,

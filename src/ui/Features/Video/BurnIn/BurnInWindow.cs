@@ -9,6 +9,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -375,7 +376,7 @@ public class BurnInWindow : Window
         boxType.SelectionChanged += vm.BoxTypeChanged;
 
         var rows = new StackPanel { Spacing = 7 };
-        rows.Children.Add(fontName);
+        rows.Children.Add(FontPickerRow.Make(fontName));
         rows.Children.Add(sizeRow);
         rows.Children.Add(Row(Se.Language.Video.BurnIn.BoxType, boxType));
         rows.Children.Add(Row(Se.Language.General.TextColor, EditorChrome.MakeInlineRow(textColor)));
@@ -744,8 +745,9 @@ public class BurnInWindow : Window
             RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(new GridLength(1, GridUnitType.Star)), new RowDefinition(GridLength.Auto) },
         };
         grid.Add(header, 0, 0);
-        grid.Add(dataGrid, 1, 0);
+        grid.Add(ListInput.MakeFileDropHost(dataGrid, vm.AddFiles), 1, 0);
         grid.Add(output, 2, 0);
+        ListInput.RunOnDeleteKey(dataGrid, vm.RemoveCommand);
 
         return new Border
         {

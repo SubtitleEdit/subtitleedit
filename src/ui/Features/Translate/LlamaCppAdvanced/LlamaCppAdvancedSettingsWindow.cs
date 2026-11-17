@@ -220,6 +220,12 @@ public class LlamaCppAdvancedSettingsWindow : Window
         var rowServerArgumentsOnly = EditorChrome.MakeSwitchRow(switchServerArgumentsOnly, Se.Language.Translate.UseOnlyExtraServerParameters);
         SetHint(rowServerArgumentsOnly, Se.Language.Translate.UseOnlyExtraServerParametersHint);
 
+        // Provider-specific request fields the settings above do not know (a reasoning switch,
+        // penalties): a JSON object merged into every request last, so its fields win.
+        var requestJsonBox = MakeMultilineTextBox(vm, nameof(vm.RequestJson), 56, Se.Language.Translate.ExtraRequestJson);
+        requestJsonBox.PlaceholderText = "{\"top_k\": 40}";
+        SetHint(requestJsonBox, Se.Language.Translate.ExtraRequestJsonHint);
+
         return new StackPanel
         {
             Spacing = 10,
@@ -230,6 +236,7 @@ public class LlamaCppAdvancedSettingsWindow : Window
                 EditorChrome.MakeLabeledRow(Se.Language.Translate.ServerContextSizeTokens, contextSize, LabelWidth, spacing: 10),
                 EditorChrome.MakeLabeledRow(Se.Language.Translate.ExtraServerParameters, serverArguments, LabelWidth, spacing: 10),
                 EditorChrome.MakeLabeledRow(string.Empty, rowServerArgumentsOnly, LabelWidth, spacing: 10),
+                EditorChrome.MakeLabeledRow(Se.Language.Translate.ExtraRequestJson, requestJsonBox, LabelWidth, spacing: 10, alignTop: true),
             },
         };
     }

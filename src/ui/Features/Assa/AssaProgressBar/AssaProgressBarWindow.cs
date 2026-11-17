@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaProgressBar;
 
@@ -352,7 +353,7 @@ public class AssaProgressBarWindow : Window
         var splitterHeight = Field(nameof(vm.SplitterHeight), 0, 500, "H", Se.Language.Assa.ProgressBarSplitterHeight);
 
         var content = new StackPanel { Spacing = 8 };
-        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Font, fontCombo));
+        content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Font, FontPickerRow.Make(fontCombo)));
         content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Size, size, alignment));
         content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Position, x, y));
         content.Children.Add(EditorChrome.MakePropertyRow(Se.Language.Assa.ProgressBarSplitter, splitterWidth, splitterHeight));

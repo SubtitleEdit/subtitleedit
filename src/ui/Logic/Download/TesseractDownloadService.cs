@@ -16,10 +16,10 @@ public interface ITesseractDownloadService
 public class TesseractDownloadService : ITesseractDownloadService
 {
     private readonly HttpClient _httpClient;
-    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/tesseract553/Tesseract553.zip";
+    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/tesseract554/Tesseract554.zip";
 
     /// <summary>Tesseract version behind <see cref="WindowsUrl"/>; stamped into the install folder.</summary>
-    public const string WindowsVersion = "5.5.3";
+    public const string WindowsVersion = "5.5.4";
 
     private const string VersionFileName = "version.txt";
 

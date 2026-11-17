@@ -39,6 +39,12 @@ namespace Nikse.SubtitleEdit.Controls
 
         // A negative time code is shown as "-00:00:01,500". Like the separators, the sign is a mask
         // literal: it is never typed over and the caret skips past it.
+        /// <summary>
+        /// Largest time code that can be typed, pasted or stepped to - the current subtitle format's
+        /// limit (<see cref="SubtitleFormat.MaxTimeCodeTotalMilliseconds"/>), set by the main window.
+        /// </summary>
+        public static double MaxInputTotalMilliseconds { get; set; } = TimeCode.MaxTimeTotalMilliseconds;
+
         private int SignOffset => _textBuffer.Length > 0 && _textBuffer[0] == '-' ? 1 : 0;
 
         public static readonly StyledProperty<TimeSpan> ValueProperty =
@@ -554,9 +560,9 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (long.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var milliseconds))
             {
-                if (milliseconds > TimeCode.MaxTimeTotalMilliseconds)
+                if (milliseconds > MaxInputTotalMilliseconds)
                 {
-                    return false; // beyond the control's range (max 99:59:59,999) - reject rather than overflow
+                    return false; // beyond the current format's range - reject rather than overflow
                 }
 
                 value = RemoveVideoOffset(TimeSpan.FromMilliseconds(isNegative ? -milliseconds : milliseconds));
@@ -583,7 +589,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return false; // int-parseable but out-of-range parts (e.g. "999999999:0:0,0") overflow the TimeSpan ctor
             }
 
-            if (ms > TimeCode.MaxTimeTotalMilliseconds)
+            if (ms > MaxInputTotalMilliseconds)
             {
                 return false;
             }
@@ -756,15 +762,15 @@ namespace Nikse.SubtitleEdit.Controls
                 var frame = FrameNumbers.FromMilliseconds(newVal.TotalMilliseconds);
                 newVal = TimeSpan.FromMilliseconds(FrameNumbers.ToMilliseconds(frame + delta));
             }
-            else if (caret <= 2)
+            else if (PartIndexAt(caret) == 0)
             {
                 newVal = newVal.Add(TimeSpan.FromHours(delta));
             }
-            else if (caret <= 5)
+            else if (PartIndexAt(caret) == 1)
             {
                 newVal = newVal.Add(TimeSpan.FromMinutes(delta));
             }
-            else if (caret <= 8)
+            else if (PartIndexAt(caret) == 2)
             {
                 newVal = newVal.Add(TimeSpan.FromSeconds(delta));
             }
@@ -785,10 +791,35 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
+            // Stepping up stops at the current format's limit (#16937); a value already past it
+            // (loaded from a file) is left alone rather than pulled back.
+            if (delta > 0 && newVal.TotalMilliseconds > MaxInputTotalMilliseconds)
+            {
+                return;
+            }
+
             _isUpdatingFromValue = true;
             SetValue(ValueProperty, newVal);
             UpdateText();
             _isUpdatingFromValue = false;
+        }
+
+        // Which time code part (0 = hours, 1 = minutes, 2 = seconds, 3 = ms/frames) a caret
+        // position measured from the first digit is in. Counted by separators, so hours with 3+
+        // digits (#16937) still map the following parts correctly.
+        private int PartIndexAt(int caret)
+        {
+            var text = _textBuffer.Substring(SignOffset);
+            var part = 0;
+            for (var i = 0; i < caret && i < text.Length; i++)
+            {
+                if (IsSeparator(text[i]))
+                {
+                    part++;
+                }
+            }
+
+            return part;
         }
 
         /// <summary>
@@ -833,18 +864,21 @@ namespace Nikse.SubtitleEdit.Controls
 
             // A negative time span has negative parts throughout, which TimeCode renders as a single
             // leading minus.
+            // Hours include whole days: TimeSpan.Hours alone wraps at 24 (#16937).
+            const int maxHours = 9999;
+            var hours = time.Days * 24 + time.Hours;
             TimeCode tc;
-            if (time.TotalHours > 99)
+            if (hours > maxHours)
             {
-                tc = new TimeCode(99, time.Minutes, time.Seconds, time.Milliseconds);
+                tc = new TimeCode(maxHours, time.Minutes, time.Seconds, time.Milliseconds);
             }
-            else if (time.TotalHours < -99)
+            else if (hours < -maxHours)
             {
-                tc = new TimeCode(-99, time.Minutes, time.Seconds, time.Milliseconds);
+                tc = new TimeCode(-maxHours, time.Minutes, time.Seconds, time.Milliseconds);
             }
             else
             {
-                tc = new TimeCode(time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                tc = new TimeCode(hours, time.Minutes, time.Seconds, time.Milliseconds);
             }
 
 
@@ -879,8 +913,8 @@ namespace Nikse.SubtitleEdit.Controls
         // into range.
         private TimeSpan Clamp(TimeSpan time)
         {
-            return time.TotalMilliseconds < -TimeCode.MaxTimeTotalMilliseconds
-                ? TimeSpan.FromMilliseconds(-TimeCode.MaxTimeTotalMilliseconds)
+            return time.TotalMilliseconds < -TimeCode.MaxSupportedTotalMilliseconds
+                ? TimeSpan.FromMilliseconds(-TimeCode.MaxSupportedTotalMilliseconds)
                 : time;
         }
     }

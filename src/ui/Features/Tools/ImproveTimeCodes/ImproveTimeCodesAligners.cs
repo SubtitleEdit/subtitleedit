@@ -48,7 +48,7 @@ public static class ImproveTimeCodesAligners
 
     /// <summary>
     /// The Parakeet model to check with: an installed one that knows the language, best first,
-    /// or - when none is - the smallest multilingual one, to be downloaded.
+    /// or - when none is - Ultra q4_k (the smallest and best multilingual one), to be downloaded.
     /// </summary>
     public static WhisperModel PickSpeechToTextModel(CrispAsrParakeet engine, string? twoLetterLanguageCode, Func<WhisperModel, bool> isInstalled)
     {
@@ -69,7 +69,7 @@ public static class ImproveTimeCodesAligners
                 : Enumerable.Empty<WhisperModel>());
 
         return candidates.FirstOrDefault(isInstalled)
-               ?? multilingual.First(m => m.Name == "parakeet-tdt-0.6b-v3-q4_k.gguf");
+               ?? multilingual.First(m => m.Name == "parakeet-ultra-q4_k.gguf");
     }
 
     public static List<ForcedAlignerOption> Rank(string? twoLetterLanguageCode)

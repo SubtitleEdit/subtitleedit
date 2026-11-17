@@ -41,15 +41,7 @@ public class ActorPickerWindow : Window
         {
             PlaceholderText = Se.Language.General.ActorPickerFilterHint,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-        }.AsTextField(Se.Language.General.ActorPickerFilterHint);
-        textBoxFilter.InnerLeftContent = new Optris.Icons.Avalonia.Icon
-        {
-            Value = "fa-solid fa-magnifying-glass",
-            FontSize = 11,
-            Foreground = EditorChrome.FaintTextBrush,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(8, 0, 0, 0),
-        };
+        }.AsTextField(Se.Language.General.ActorPickerFilterHint).WithSearchAndClearIcons();
         textBoxFilter.Bind(TextBox.TextProperty, new Binding(nameof(vm.FilterText)) { Mode = BindingMode.TwoWay });
 
         var listBox = new ListBox
@@ -87,7 +79,7 @@ public class ActorPickerWindow : Window
             {
                 labelSelectionInfo,
                 textBoxFilter,
-                EditorChrome.MakeCompactListFrame(listBox),
+                EditorChrome.MakeCompactListFrame(listBox, overlay: EditorChrome.MakeNoMatchesNote(vm.VisibleItems, textBoxFilter)),
                 labelKeysHint,
             },
         };

@@ -32,6 +32,12 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.BaseAddress = new Uri(AutoTranslateUrl.Complete(Configuration.Settings.Tools.LmStudioApiUrl, DefaultUrl));
             _httpClient.Timeout = TimeSpan.FromMinutes(15);
+
+            // Optional: LM Studio can require an API token, and the server may sit behind a reverse proxy.
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.LmStudioApiKey))
+            {
+                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer " + Configuration.Settings.Tools.LmStudioApiKey);
+            }
         }
 
         public List<TranslationPair> GetSupportedSourceLanguages()

@@ -188,7 +188,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that MOSS-TTS (CrispASR) runs on is installed.
-    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.53).
+    /// The moss-tts backend ships in CrispASR v0.8.13 and newer (SE pins v0.8.54).
     /// </summary>
     public static Task<bool> EnsureCrispAsrForMossTts(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
@@ -198,7 +198,7 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that dots.tts (CrispASR) runs on is installed.
-    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.53); the version
+    /// The dots-tts backend ships in CrispASR v0.8.25 and newer (SE pins v0.8.54); the version
     /// note names that floor because older builds have no dots-tts backend at all and abort on
     /// the unknown --backend value.
     /// </summary>
@@ -316,12 +316,14 @@ public static class TtsVoiceInstaller
                 return false;
             }
 
+            var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan, GpuBuild.Cuda);
             var variantAnswer = isUpdateRequired && !string.IsNullOrEmpty(savedBackend)
                 ? MessageBoxResult.None
                 : await MessageBox.Show(
                 window,
                 string.Format(Se.Language.General.DownloadXQuestion, "audio.cpp"),
                 Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRunsThroughYSelectBuild, engineDisplayName, "audio.cpp"),
+                gpuHint,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -459,10 +461,12 @@ public static class TtsVoiceInstaller
         }
         else if (Configuration.IsRunningOnWindows)
         {
+            var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan, GpuBuild.Cuda);
             var variantAnswer = await MessageBox.Show(
                 window,
                 string.Format(Se.Language.General.DownloadXQuestion, "CrispASR"),
                 Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRunsThroughYSelectBuild, engineDisplayName, "CrispASR"),
+                gpuHint,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -601,10 +605,12 @@ public static class TtsVoiceInstaller
     /// </summary>
     private static async Task<string?> PromptCrispAsrLinuxVariantAsync(Window window, string engineDisplayName)
     {
+        var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan, GpuBuild.Cuda, GpuBuild.Rocm);
         var answer = await MessageBox.Show(
             window,
             string.Format(Se.Language.General.DownloadXQuestion, "CrispASR"),
             Environment.NewLine + string.Format(Se.Language.Video.TextToSpeech.XRunsThroughYSelectBuild, engineDisplayName, "CrispASR"),
+            gpuHint,
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CPU",
@@ -633,10 +639,12 @@ public static class TtsVoiceInstaller
     /// </summary>
     private static async Task<string?> PromptCrispAsrCudaVersionAsync(Window window)
     {
+        var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cuda12, GpuBuild.Cuda13);
         var cudaAnswer = await MessageBox.Show(
             window,
             Se.Language.General.CrispAsrCudaBuild,
             Environment.NewLine + Se.Language.General.CrispAsrCudaBuildInfo,
+            gpuHint,
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CUDA 12",

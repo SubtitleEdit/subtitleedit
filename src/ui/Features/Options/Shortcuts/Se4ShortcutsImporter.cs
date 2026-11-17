@@ -281,7 +281,7 @@ public static class Se4ShortcutsImporter
         ["MainCreateSetEnd"] = nameof(MainViewModel.WaveformSetEndCommand),
         ["MainCreateStartDownEndUp"] = nameof(MainViewModel.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand),
         ["MainCreateSetEndAddNewAndGoToNew"] = nameof(MainViewModel.WaveformSetEndAddNewAndGoToNewCommand),
-        ["MainAdjustSetStartAndOffsetTheWholeSubtitle"] = nameof(MainViewModel.WaveformSetStartAndKeepDurationCommand),
+        ["MainAdjustSetStartAndOffsetTheWholeSubtitle"] = nameof(MainViewModel.WaveformSetStartAndOffsetTheWholeSubtitleCommand),
         ["MainAdjustSetStartAndOffsetTheRest"] = nameof(MainViewModel.WaveformSetStartAndOffsetTheRestCommand),
         ["MainAdjustSetStartAndOffsetTheRest2"] = nameof(MainViewModel.WaveformSetStartAndOffsetTheRestCommand),
         ["MainAdjustSetStartAndEndOfPrevious"] = nameof(MainViewModel.WaveformSetStartAndSetEndOfPreviousMinusGapCommand),

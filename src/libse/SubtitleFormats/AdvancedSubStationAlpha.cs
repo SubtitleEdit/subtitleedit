@@ -77,6 +77,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const string NameOfFormat = "Advanced Sub Station Alpha";
         public override string Name => NameOfFormat;
 
+        public override double MaxTimeCodeTotalMilliseconds => TimeCode.MaxSupportedTotalMilliseconds; // 3+ digit hours (#16937)
+
         public const int DefaultWidth = 384;
         public const int DefaultHeight = 288;
 
@@ -314,7 +316,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 var effect = string.Empty;
                 if (!string.IsNullOrEmpty(p.Effect))
                 {
-                    effect = p.Effect;
+                    // a comma would end the Effect field early and push the rest of it into
+                    // the text, e.g. an effect carried over from another format (#16989)
+                    effect = p.Effect.IndexOf(',') >= 0 ? p.Effect.Replace(',', ';') : p.Effect;
                 }
 
                 // Layout: "(Dialogue|Comment): {layer},{start},{end},{style},{actor},{marginL},{marginR},{marginV},{effect},{text}".
@@ -2884,6 +2888,126 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             h = AdvancedSubStationAlpha.AddTagToHeader("PlayResY", "PlayResY: " + height.ToString(CultureInfo.InvariantCulture), "[Script Info]", h);
 
             return h;
+        }
+
+        /// <summary>
+        /// Reads LayoutResX/LayoutResY (libass 0.17+, xy-VSFilter). They replace the video storage
+        /// size in libass' aspect-ratio correction and in the VSFilter-style scaling of borders,
+        /// shadows and blur (ScaledBorderAndShadow: no), so a script that carries them renders the
+        /// same on every video of the same display aspect ratio. Positions and font sizes are still
+        /// in PlayRes units. Only a pair of positive numbers counts - libass ignores anything else.
+        /// </summary>
+        public static bool TryGetLayoutResolution(string header, out int width, out int height)
+        {
+            width = 0;
+            height = 0;
+            if (string.IsNullOrEmpty(header))
+            {
+                return false;
+            }
+
+            if (!int.TryParse(GetTagValueFromHeader("LayoutResX", "[Script Info]", header), NumberStyles.Integer, CultureInfo.InvariantCulture, out var w) ||
+                !int.TryParse(GetTagValueFromHeader("LayoutResY", "[Script Info]", header), NumberStyles.Integer, CultureInfo.InvariantCulture, out var h) ||
+                w <= 0 || h <= 0)
+            {
+                return false;
+            }
+
+            width = w;
+            height = h;
+            return true;
+        }
+
+        /// <summary>
+        /// Writes LayoutResX/LayoutResY into [Script Info]; a width or height of zero (or less) removes both.
+        /// </summary>
+        public static string SetLayoutResolution(string header, int width, int height)
+        {
+            var h = (string.IsNullOrEmpty(header) || !header.Contains("[V4+ Styles]")) ? DefaultHeader : header;
+            if (width <= 0 || height <= 0)
+            {
+                h = RemoveTagFromHeader("LayoutResX", "[Script Info]", h);
+                return RemoveTagFromHeader("LayoutResY", "[Script Info]", h);
+            }
+
+            h = AddTagToHeader("LayoutResX", "LayoutResX: " + width.ToString(CultureInfo.InvariantCulture), "[Script Info]", h);
+            return AddTagToHeader("LayoutResY", "LayoutResY: " + height.ToString(CultureInfo.InvariantCulture), "[Script Info]", h);
+        }
+
+        /// <summary>
+        /// Removes every "tagName:" line from the given section.
+        /// </summary>
+        public static string RemoveTagFromHeader(string tagName, string section, string header)
+        {
+            if (string.IsNullOrEmpty(header))
+            {
+                return header;
+            }
+
+            var sectionOn = false;
+            var sb = new StringBuilder();
+            foreach (var line in header.SplitToLines())
+            {
+                var s = line.Trim();
+                if (s.StartsWith('['))
+                {
+                    sectionOn = s.Equals(section, StringComparison.OrdinalIgnoreCase);
+                }
+                else if (sectionOn &&
+                         s.StartsWith(tagName, StringComparison.OrdinalIgnoreCase) &&
+                         s.RemoveChar(' ').StartsWith(tagName + ":", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                sb.AppendLine(line);
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// The LayoutRes a script needs after its PlayRes is resampled from source to target, so it
+        /// renders the same (Aegisub's rule, "Properly adjust LayoutRes when resampling resolution").
+        /// LayoutResY never changes (vertical blur and the perspective focal length are in its
+        /// units), and LayoutResX follows the change of aspect ratio, so the ratio between the
+        /// LayoutRes and PlayRes aspect ratios - how much text is stretched against drawings -
+        /// stays the same. A proportional resample (same aspect ratio) leaves LayoutRes untouched.
+        /// </summary>
+        public static (int Width, int Height) GetLayoutResolutionAfterResample(int layoutWidth, int layoutHeight, decimal sourceWidth, decimal sourceHeight, decimal targetWidth, decimal targetHeight)
+        {
+            if (layoutWidth <= 0 || layoutHeight <= 0 || sourceWidth <= 0 || sourceHeight <= 0 || targetWidth <= 0 || targetHeight <= 0)
+            {
+                return (layoutWidth, layoutHeight);
+            }
+
+            var sourceAspect = sourceWidth / sourceHeight;
+            var targetAspect = targetWidth / targetHeight;
+            var width = (int)Math.Round(layoutWidth * targetAspect / sourceAspect, MidpointRounding.AwayFromZero);
+            return (Math.Max(1, width), layoutHeight);
+        }
+
+        /// <summary>
+        /// The display size of a video frame: the storage size widened (or heightened) to the display
+        /// aspect ratio, never shrunk - an anamorphic 720x576 PAL DVD with DAR 16:9 gives 1024x576.
+        /// This is what LayoutRes should be set to for a new script (libass ASS File Format Guide).
+        /// A missing or invalid display aspect ratio means square pixels.
+        /// </summary>
+        public static (int Width, int Height) GetDisplayResolution(int storageWidth, int storageHeight, double displayAspectRatio)
+        {
+            if (storageWidth <= 0 || storageHeight <= 0)
+            {
+                return (storageWidth, storageHeight);
+            }
+
+            var storageAspect = (double)storageWidth / storageHeight;
+            if (displayAspectRatio <= 0 || double.IsNaN(displayAspectRatio) || double.IsInfinity(displayAspectRatio))
+            {
+                displayAspectRatio = storageAspect;
+            }
+
+            return ((int)Math.Round(storageWidth * Math.Max(1.0, displayAspectRatio / storageAspect), MidpointRounding.AwayFromZero),
+                    (int)Math.Round(storageHeight * Math.Max(1.0, storageAspect / displayAspectRatio), MidpointRounding.AwayFromZero));
         }
     }
 }

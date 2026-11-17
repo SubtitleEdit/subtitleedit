@@ -43,11 +43,6 @@ public static class TtsEngineCatalog
         // one 200 MB GGUF, and by far the fastest local engine here (RTF ~0.09 on an M4).
         engines.Add(new SupertonicCrispAsr());
 
-        // KugelAudio-0-Open (audio.cpp) — four preset voices and no cloning, 23 European
-        // languages (Danish, Swedish, Norwegian, Finnish, Polish...) from a 7B model. Slow
-        // (3-4x real time on an M4) and ~9 GB resident, but MIT-licensed.
-        engines.Add(new KugelAudioAudioCpp());
-
         // Voxtral 4B TTS (audio.cpp) — 20 preset voices and no cloning, nine languages (English,
         // French, German, Spanish, Italian, Portuguese, Dutch, Hindi, Arabic). ~1.35x real time
         // on an M4 and ~9.5 GB resident; CC BY-NC 4.0, so it shows the licence gate first.
@@ -136,6 +131,12 @@ public static class TtsEngineCatalog
             // weights are Apache-2.0, so no licence gate. Needs an explicit language pick
             // (no detection; audio.cpp defaults to Chinese).
             new FireRedTts3AudioCpp(),
+
+            // KugelAudio-0-Open (audio.cpp) — four preset voices plus reference-audio cloning
+            // (audio.cpp v0.9.5, with an acoustic encoder SE downloads beside the GGUF), 23
+            // European languages (Danish, Swedish, Norwegian, Finnish, Polish...) from a 7B model.
+            // Slow (3-4x real time on an M4) and ~9 GB resident, but MIT-licensed. Same runtime.
+            new KugelAudioAudioCpp(),
 
             // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
             // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on

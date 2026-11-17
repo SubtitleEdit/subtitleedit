@@ -65,6 +65,7 @@ internal static class HelpDisplay
         ShowParameter(console, "--reel-duration:<hh:mm:ss:ff>", "D-Cinema MXF output: reel (picture) length, which every asset of a DCP reel must have (default: until the last subtitle)");
         ShowParameter(console, "--renumber:<starting number>", "Renumber subtitles from this number");
         ShowParameter(console, "--resolution:<width>x<height>", "Video resolution (e.g., 1920x1080)");
+        ShowParameter(console, "--layout-resolution:<width>x<height>", "ASSA LayoutResX/LayoutResY: the video's display size (e.g., 1024x576 for anamorphic PAL)");
         ShowParameter(console, "--target-fps:<frame rate>", "Target frame rate");
         ShowParameter(console, "--teletext-only", "Process teletext only");
         ShowParameter(console, "--teletext-only-page:<page number>", "Teletext page number");
@@ -83,16 +84,18 @@ internal static class HelpDisplay
         ShowParameter(console, "--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter(console, "--translate-to:<lang>", "Auto-translate to this language (code or English name, e.g. de or German)");
         ShowParameter(console, "--translate-from:<lang>", "Auto-translate source language (default: auto-detect per file)");
-        ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | llamacpp-advanced | ollama | ollama-advanced | lmstudio | lmstudio-advanced | openai-compatible | libretranslate | nllb-serve | nllb-api | deepl; the advanced engines translate in batches with context");
+        ShowParameter(console, "--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | llamacpp-advanced | ollama | ollama-advanced | lmstudio | lmstudio-advanced | openai-compatible | openai-compatible-advanced | libretranslate | nllb-serve | nllb-api | deepl; the advanced engines translate in batches with context");
         ShowParameter(console, "--translate-url:<url>", "Endpoint of an already-running translate server (llamacpp: skips the auto-start)");
         ShowParameter(console, "--translate-model:<model>", "Ollama/LM Studio/OpenAI-compatible model name (required for ollama-advanced), or llamacpp .gguf file name/path");
-        ShowParameter(console, "--translate-api-key:<key>", "API key for openai-compatible and deepl (required for deepl)");
+        ShowParameter(console, "--translate-api-key:<key>", "API key for a server that asks for one (the LLM engines send it as a Bearer token); required for deepl");
         ShowParameter(console, "--translate-prompt:<text|file>", "Prompt for llamacpp/ollama/lmstudio/openai-compatible and the advanced engines' system prompt: inline text (\\n = line break) or a text file; {0}=source, {1}=target, {2}=text (completion-format models, regular llamacpp only)");
         ShowParameter(console, "--translate-batch-size:<n>", "Advanced engines: subtitle lines per request, 1-50 (default: 10)");
         ShowParameter(console, "--translate-history:<n>", "Advanced engines: already-translated lines sent as context before each batch, 0-50 (default: 12)");
         ShowParameter(console, "--translate-synopsis:<text|file>", "Advanced engines: what the content is about (genre, setting, tone); inline text or a text file");
         ShowParameter(console, "--translate-glossary:<text|file>", "Advanced engines: one \"source term = translation\" per line; inline text (\\n = line break) or a text file");
         ShowParameter(console, "--translate-formality:<value>", "Advanced engines: default | formal | informal");
+        ShowParameter(console, "--translate-keep-line-breaks[:false]", "Advanced engines: ask the model to keep the same number of line breaks per line (default: on)");
+        ShowParameter(console, "--translate-request-json:<json|file>", "Advanced engines: extra request body fields as a JSON object (inline, or a .json file), merged last so they win; messages and response_format cannot be set");
         ShowParameter(console, "--multiple-replace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");
         ShowParameter(console, "--custom-format:<path.xml>", "SE CustomFormatItem XML (use with --format customtext)");
         ShowParameter(console, "--settings:<path.json>", "JSON settings file overriding libse defaults");

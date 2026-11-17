@@ -143,6 +143,7 @@ public class CustomErrorRulesWindow : Window
         });
 
         AutomationProperties.SetName(grid, Se.Language.Options.Settings.CustomErrorRules);
+        ListInput.RunOnDeleteKey(grid, vm.RemoveCommand, () => vm.HasSelectedRule);
         return EditorChrome.MakeListFrame(grid, clearListBackground: true);
     }
 

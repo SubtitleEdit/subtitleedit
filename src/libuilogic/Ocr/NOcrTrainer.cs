@@ -42,8 +42,8 @@ public sealed class NOcrTrainer
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
         "0123456789" +
         ".,!?\"'()[]:;-+/%&$#@*=" +
-        "æøåäöüßéèêëáàâíìîóòôúùûñç" +
-        "ÆØÅÄÖÜÉÈÊËÁÀÂÍÌÎÓÒÔÚÙÛÑÇ";
+        "æøåäöüßéèêëáàâíìîïóòôúùûñçœ" +
+        "ÆØÅÄÖÜÉÈÊËÁÀÂÍÌÎÏÓÒÔÚÙÛÑÇŒ";
 
     // Matches the runtime OCR pipeline (OcrViewModel/seconv): two-color threshold and the
     // wrong-pixel budget used when checking whether a glyph is already recognized.

@@ -128,6 +128,13 @@ public class LanguageAutoDetectTest
     [InlineData(866, 8, new[] { "Что ты здесь делаешь?", "Я не знаю, что сказать.", "Нам нужно идти прямо сейчас.", "Он был здесь вчера." })] // DOS, was 1251 (Serbian letters)
     [InlineData(1256, 120, new[] { "اينجا چه کار مي‌کني؟", "نمي‌دانم چه بگويم.", "بايد همين حالا برويم، وقت نداريم.", "خيلي ممنونم، دوست من." })] // Persian, was Hebrew in long files
     [InlineData(1256, 3, new[] { "تم يہاں کيا کر رہے ہو؟", "مجھے نہيں معلوم کيا کہوں.", "بہت شکريہ، دوست." })] // Urdu, was 1252
+    [InlineData(1256, 1, new[] { "ساکت باش!" })] // Persian, one line: was ISO Greek
+    [InlineData(1256, 1, new[] { "دکتر گفت بايد استراحت کند." })] // Persian, one line: was ISO Greek
+    [InlineData(1256, 1, new[] { "ديگر نمي‌توانم تحمل کنم.\r\nتو کي هستي؟" })] // Persian, one cue: was ISO Arabic
+    [InlineData(1256, 1, new[] { "أمي تنتظرنا." })] // Arabic, one line: was ISO Arabic
+    [InlineData(1256, 5, new[] { "چاوترووکاندن", "هاوشانکراو", "زمان", "ئاگر", "زووم" })] // Central Kurdish: was GBK
+    [InlineData(1253, 2, new[] { "ΠΟΥ ΗΣΟΥΝ ΟΛΗ ΤΗ ΝΥΧΤΑ;", "ΓΙΑΤΙ ΜΟΥ ΕΙΠΕΣ ΨΕΜΑΤΑ;" })] // all-caps Greek is Arabic letters in 1256 - must stay Greek
+    [InlineData(1250, 2, new[] { "ŽÁDNÝ PROBLÉM.", "ČEKÁM TADY UŽ DVĚ HODINY." })] // all-caps Czech is Arabic letters in 1256 - must stay 1250
     [InlineData(1252, 1, new[] { "- Sorry isn’t enough anymore.\r\n[sighs] I know, I know." })] // only a smart quote: was Mac Central European
     [InlineData(1252, 3, new[] { "Waar is jou broer?\r\nOns moet nou gaan, daar is nie tyd nie.", "Ek weet nie wat om te sê nie.", "Ons moet nou gaan, daar is nie tyd nie." })] // Afrikaans: was Mac Central European
     public void AutoDetectAnsiEncodingKeepsText(int codePage, int cueCount, string[] lines)

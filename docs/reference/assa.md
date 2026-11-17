@@ -107,6 +107,8 @@ Video Position: 0
 | `ScriptType` | Format version | `v4.00+` |
 | `PlayResX` | Video width in pixels | `384` |
 | `PlayResY` | Video height in pixels | `288` |
+| `LayoutResX` | Display width of the video the script was made for (libass 0.17+) | not set |
+| `LayoutResY` | Display height of the video the script was made for (libass 0.17+) | not set |
 | `WrapStyle` | Line wrapping style (0-3) | `0` |
 | `ScaledBorderAndShadow` | Scale borders with video | `yes` |
 | `Timer` | Timer speed percentage | `100.0000` |

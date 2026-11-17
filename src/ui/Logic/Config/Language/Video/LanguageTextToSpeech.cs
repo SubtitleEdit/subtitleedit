@@ -199,6 +199,8 @@ public class LanguageTextToSpeech
     public string Qwen3TtsSettings { get; set; }
     public string KokoroTtsSettings { get; set; }
     public string ChatterboxTtsSettings { get; set; }
+    public string ReferenceLanguage { get; set; }
+    public string ReferenceLanguageHint { get; set; }
     public string PiperSettings { get; set; }
     public string VoiceInstruction { get; set; }
     public string VoiceInstructionHint { get; set; }
@@ -513,6 +515,8 @@ public class LanguageTextToSpeech
         Qwen3TtsSettings = "Qwen3 TTS settings";
         KokoroTtsSettings = "Kokoro TTS settings";
         ChatterboxTtsSettings = "Chatterbox TTS settings";
+        ReferenceLanguage = "Reference language";
+        ReferenceLanguageHint = "Language spoken in imported reference WAVs (for cross-lingual cloning).";
         PiperSettings = "Piper settings";
         VoiceInstruction = "Voice design";
         VoiceInstructionHint = "Optional - e.g. \"Speak in a calm and friendly tone\"";

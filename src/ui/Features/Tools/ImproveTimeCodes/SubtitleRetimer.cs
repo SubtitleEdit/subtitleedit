@@ -835,9 +835,12 @@ public sealed partial class SubtitleRetimer
         for (var i = 0; i < placements.Length; i++)
         {
             var p = placements[i];
-            var moved = Math.Abs(p.StartSeconds - original[i].StartSeconds) >= 0.0005 ||
-                        Math.Abs(p.EndSeconds - original[i].EndSeconds) >= 0.0005;
-            if (!p.CanMove || !moved)
+
+            // Only a re-timed side snaps: with "Adjust start" (or "Adjust end") off, or when the
+            // aligner left that side where it was, it is not moved onto a cut either.
+            var startMoved = Math.Abs(p.StartSeconds - original[i].StartSeconds) >= 0.0005;
+            var endMoved = Math.Abs(p.EndSeconds - original[i].EndSeconds) >= 0.0005;
+            if (!p.CanMove || (!startMoved && !endMoved))
             {
                 continue;
             }
@@ -847,7 +850,7 @@ public sealed partial class SubtitleRetimer
 
             // The cut the start is closest to, preferring one it may reach.
             double? startCut = null;
-            foreach (var cut in cuts)
+            foreach (var cut in startMoved ? cuts : Array.Empty<double>())
             {
                 var later = cut - start; // > 0: the cut comes after the start
                 var allowed = later >= 0 ? later <= ShotChangeSnapLaterSeconds : -later <= ShotChangeSnapSeconds;
@@ -863,7 +866,7 @@ public sealed partial class SubtitleRetimer
             }
 
             double? endCut = null;
-            foreach (var cut in cuts)
+            foreach (var cut in endMoved ? cuts : Array.Empty<double>())
             {
                 if (Math.Abs(cut - minGapSeconds - end) <= ShotChangeSnapSeconds &&
                     (endCut == null || Math.Abs(cut - end) < Math.Abs(endCut.Value - end)))

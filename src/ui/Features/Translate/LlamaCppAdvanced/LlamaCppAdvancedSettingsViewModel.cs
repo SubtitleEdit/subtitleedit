@@ -37,6 +37,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
     [ObservableProperty] private int _contextSize;
     [ObservableProperty] private string _serverArguments = string.Empty;
     [ObservableProperty] private bool _serverArgumentsOnly;
+    [ObservableProperty] private string _requestJson = string.Empty;
     [ObservableProperty] private bool _isGenerating;
     [ObservableProperty] private bool _canGenerate;
     [ObservableProperty] private string _generateButtonText = Se.Language.Tools.AiReview.GenerateContext;
@@ -79,6 +80,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
         ContextSize = settings.ContextSize;
         ServerArguments = settings.ServerArguments;
         ServerArgumentsOnly = settings.ServerArgumentsOnly;
+        RequestJson = settings.RequestJson;
     }
 
     /// <summary>
@@ -155,8 +157,17 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Ok()
+    private async Task Ok()
     {
+        // The extra request JSON goes into every request body: refuse it here rather than fail
+        // every batch later with a parse error.
+        var requestJsonError = LlamaCppAdvancedClient.ValidateRequestJson(RequestJson);
+        if (requestJsonError != null && Window != null)
+        {
+            await MessageBox.Show(Window, Se.Language.Translate.ExtraRequestJson, requestJsonError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
         _generateCancellation?.Cancel();
         var settings = Se.Settings.AutoTranslate.LlamaCppAdvanced;
         settings.Synopsis = Synopsis?.Trim() ?? string.Empty;
@@ -174,6 +185,7 @@ public partial class LlamaCppAdvancedSettingsViewModel : ObservableObject
         settings.ContextSize = Math.Clamp(ContextSize, 2048, 262144);
         settings.ServerArguments = ServerArguments?.Trim() ?? string.Empty;
         settings.ServerArgumentsOnly = ServerArgumentsOnly;
+        settings.RequestJson = RequestJson?.Trim() ?? string.Empty;
         Se.SaveSettings();
 
         OkPressed = true;

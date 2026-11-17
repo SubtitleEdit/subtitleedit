@@ -1335,8 +1335,36 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         return IsSpelledCorrect(word[1] + word.Substring(1).ToLowerInvariant());
     }
 
+    // Accented letters (lowercase) of the language's own alphabet. In these languages the marks are
+    // phonemic letters, so a dictionary miss on such a letter is far more likely an unknown word
+    // (mostly a name: "Hád", "Seléné") than a misread - and the plain or other-accent variant is
+    // often a real, different word ("kuš" -> "kus", "Afrodíté" -> "Afroditě"), so these letters are
+    // left alone (#16982). Letters foreign to the alphabet (Czech "ë" for "č", "à") are still fixed.
+    private static readonly Dictionary<string, string> NativeAccentedLetters = new(StringComparer.Ordinal)
+    {
+        { "cs", "áčďéěíňóřšťúůýž" },
+        { "sk", "áäčďéíĺľňóôŕšťúýž" },
+        { "pl", "ąćęłńóśźż" },
+        { "hu", "áéíóöőúüű" },
+        { "ro", "ăâîșțşţ" },
+        { "hr", "čćđšž" },
+        { "bs", "čćđšž" },
+        { "sr", "čćđšž" },
+        { "sl", "čšž" },
+        { "lt", "ąčęėįšųūž" },
+        { "lv", "āčēģīķļņšūž" },
+        { "et", "äöõüšž" },
+        { "tr", "çğıöşü" },
+    };
+
     private bool IsAccentCandidate(char c)
     {
+        if (NativeAccentedLetters.TryGetValue(_twoLetterIsoLanguageName, out var native) &&
+            native.IndexOf(char.ToLowerInvariant(c)) >= 0)
+        {
+            return false;
+        }
+
         return c > 127 && char.IsLetter(c) && GetAccentLookalikesForLanguage(c).Length > 0;
     }
 

@@ -209,6 +209,21 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
         Assert.Equal(1, textBox.CaretIndex);
     }
 
+    // #16937: hours past 24 used to wrap (TimeSpan.Hours ignores days) and past 99 were cut to 99.
+    [AvaloniaTheory]
+    [InlineData(30, "30:00:00,000")]
+    [InlineData(123, "123:00:00,000")]
+    [InlineData(1234, "1234:00:00,000")]
+    public void ShowsHoursPast24And99(int hours, string expected)
+    {
+        using var _ = MillisecondMode();
+
+        var control = new TimeCodeUpDown { Value = TimeSpan.FromHours(hours) };
+        var (_, _, textBox) = Show(control);
+
+        Assert.Equal(expected, textBox.Text);
+    }
+
     [AvaloniaFact]
     public void ValueBelowTheMaskRangeIsClamped()
     {
@@ -216,11 +231,11 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
 
         var control = new TimeCodeUpDown
         {
-            Value = TimeSpan.FromMilliseconds(-TimeCode.MaxTimeTotalMilliseconds - 5000)
+            Value = TimeSpan.FromMilliseconds(-TimeCode.MaxSupportedTotalMilliseconds - 5000)
         };
         Show(control);
 
-        Assert.Equal(-TimeCode.MaxTimeTotalMilliseconds, control.Value.TotalMilliseconds);
+        Assert.Equal(-TimeCode.MaxSupportedTotalMilliseconds, control.Value.TotalMilliseconds);
     }
 
     [AvaloniaTheory]

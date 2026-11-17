@@ -36,6 +36,15 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// <summary>The "model" request field; null for single-model servers like llama-server.</summary>
     protected virtual string? GetModel() => null;
 
+    /// <summary>The key sent as a Bearer token (read per request); null or empty for a server that asks for none.</summary>
+    protected virtual string? GetApiKey() => null;
+
+    /// <summary>
+    /// False for an engine whose endpoint is only known to speak the OpenAI chat-completions API,
+    /// such as a hosted provider (read per request; see <see cref="LlamaCppAdvancedClient.LlamaCppExtensions"/>).
+    /// </summary>
+    protected virtual bool UsesLlamaCppExtensions => true;
+
     public void Initialize()
     {
         _client?.Dispose();
@@ -193,7 +202,9 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
             Dictionary<int, string> single;
             try
             {
-                single = await TranslateLinesAsync(new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, line.Text) }, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken);
+                // One request: the batch already had its warmer retry, and a line that comes back
+                // unchanged again is kept anyway - a second try only costs time (#16910).
+                single = await TranslateLinesAsync(new List<LlamaCppAdvancedProtocol.BatchLine> { new(1, line.Text) }, new List<LlamaCppAdvancedProtocol.HistoryPair>(), sourceLanguageCode, targetLanguageCode, cancellationToken, maxAttempts: 1);
             }
             catch (HttpRequestException)
             {
@@ -207,10 +218,12 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         }
     }
 
-    private async Task<Dictionary<int, string>> TranslateLinesAsync(List<LlamaCppAdvancedProtocol.BatchLine> lines, List<LlamaCppAdvancedProtocol.HistoryPair> history, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
+    private async Task<Dictionary<int, string>> TranslateLinesAsync(List<LlamaCppAdvancedProtocol.BatchLine> lines, List<LlamaCppAdvancedProtocol.HistoryPair> history, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken, int maxAttempts = 2)
     {
         var client = _client ?? throw new InvalidOperationException("Initialize() not called");
         var url = GetApiUrl();
+        client.ApiKey = GetApiKey();
+        client.LlamaCppExtensions = UsesLlamaCppExtensions;
 
         // The "codes" this engine receives are English language names (ListLanguages puts the
         // name in TranslationPair.Code), which is what the prompt expects.
@@ -231,7 +244,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
         var map = new Dictionary<int, string>();
         Dictionary<int, string>? echoedMap = null;
-        for (var attempt = 0; attempt < 2 && !cancellationToken.IsCancellationRequested; attempt++)
+        for (var attempt = 0; attempt < maxAttempts && !cancellationToken.IsCancellationRequested; attempt++)
         {
             try
             {
@@ -274,12 +287,12 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                     continue;
                 }
 
-                Error = DescribeUnusableReply(reply, client.ReplyFromReasoning, client.LastRequestDisabledThinking);
+                Error = DescribeUnusableReply(reply, client.ReplyFromReasoning, client.LastRequestDisabledThinking, client.ReplyRanOutWhileReasoning && !client.LlamaCppExtensions, client.LlamaCppExtensions);
             }
             catch (HttpRequestException)
             {
                 Error = client.Error;
-                if (attempt == 1)
+                if (attempt == maxAttempts - 1)
                 {
                     throw;
                 }
@@ -297,8 +310,19 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// none - an empty reply used to leave the message bare, which made a server that streams
     /// the answer somewhere else impossible to tell from a model that answered badly (#15009).
     /// </summary>
-    internal static string DescribeUnusableReply(string reply, bool fromReasoning, bool requestDisabledThinking = true)
+    internal static string DescribeUnusableReply(string reply, bool fromReasoning, bool requestDisabledThinking = true, bool ranOutWhileReasoning = false, bool hasThinkingSwitch = true)
     {
+        // What switches reasoning off on an endpoint without a thinking switch is the provider's.
+        const string providerSwitch = "switch reasoning off or lower it with the extra request JSON (the field is the provider's, e.g. {\"reasoning\": {\"enabled\": false}})";
+
+        // On such an endpoint: the larger reply budget was not enough either, or was not
+        // accepted, or the user's own token cap is in the way.
+        if (ranOutWhileReasoning)
+        {
+            return "the reply ran out of tokens, which the model spent on reasoning - " + providerSwitch + ", or raise max tokens" +
+                   (string.IsNullOrWhiteSpace(reply) || fromReasoning ? string.Empty : ": " + reply);
+        }
+
         if (string.IsNullOrWhiteSpace(reply))
         {
             return "the server returned an empty reply (no \"content\" and no \"reasoning_content\")";
@@ -307,6 +331,13 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         if (!fromReasoning)
         {
             return reply;
+        }
+
+        // No "enable_thinking" goes to such an endpoint, so the advice below would promise a
+        // request field that is never sent.
+        if (!hasThinkingSwitch)
+        {
+            return "the server left \"content\" empty and answered in \"reasoning_content\" only - the model looks to be in thinking mode, " + providerSwitch + ": " + reply;
         }
 
         // Only claim the model ignored "enable_thinking" off when this request actually sent it -

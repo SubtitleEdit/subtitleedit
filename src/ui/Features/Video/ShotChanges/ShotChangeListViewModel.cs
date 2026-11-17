@@ -121,16 +121,19 @@ public partial class ShotChangeListViewModel : ObservableObject
             return;
         }
 
-        var result = await MessageBox.Show(
-            Window,
-            Se.Language.General.DeleteCurrentLine,
-            Se.Language.Video.ShotChanges.DeleteSelectedShotChangeQuestion,
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
-
-        if (result != MessageBoxResult.Yes)
+        if (Se.Settings.General.PromptBeforeDelete)
         {
-            return;
+            var result = await MessageBox.Show(
+                Window,
+                Se.Language.General.Delete,
+                Se.Language.Video.ShotChanges.DeleteSelectedShotChangeQuestion,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         ShotChanges.Remove(shotChange);
@@ -188,16 +191,16 @@ public partial class ShotChangeListViewModel : ObservableObject
         HasShotChanges = value != null;
     }
 
-    internal void OnShotChangeGridDoubleTapped(object? sender, TappedEventArgs e)
-    {
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            GoTo();
-        });
-    }
-
     internal void GridKeyDown(KeyEventArgs e)
     {
+        // Enter on a row goes to it, as double-click does - unhandled it would click Done and just close
+        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && SelectedShotChange != null)
+        {
+            e.Handled = true;
+            GoTo();
+            return;
+        }
+
         if (e.Key == Key.Delete)
         {
             e.Handled = true;

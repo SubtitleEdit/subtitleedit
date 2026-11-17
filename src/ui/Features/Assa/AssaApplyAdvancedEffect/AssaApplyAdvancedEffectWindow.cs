@@ -42,16 +42,8 @@ public class AssaApplyAdvancedEffectWindow : Window
         var searchBox = new TextBox
         {
             PlaceholderText = Se.Language.Assa.AdvancedEffectSearchWatermark,
-            InnerLeftContent = new Icon
-            {
-                Value = IconNames.Find,
-                FontSize = 16,
-                Opacity = 0.6,
-                Margin = new Thickness(8, 0, 0, 0),
-                VerticalAlignment = VerticalAlignment.Center,
-            },
             [!TextBox.TextProperty] = new Binding(nameof(vm.SearchText)) { Mode = BindingMode.TwoWay },
-        }.WithAccessibleName(Se.Language.General.Search);
+        }.WithSearchAndClearIcons().WithAccessibleName(Se.Language.General.Search);
 
         var categoryList = MakeCategoryList(vm).WithAccessibleName(Se.Language.General.Category);
         var gallery = MakeGallery(vm).WithAccessibleName(Se.Language.Assa.ChooseEffect);

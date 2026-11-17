@@ -236,6 +236,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     private void LoadSettings()
     {
         Configuration.Settings.Tools.OllamaApiUrl = Se.Settings.AutoTranslate.OllamaUrl;
+        Configuration.Settings.Tools.OllamaApiKey = Se.Settings.AutoTranslate.OllamaApiKey;
         Configuration.Settings.Tools.OllamaModel = Se.Settings.AutoTranslate.OllamaModel;
         Configuration.Settings.Tools.OllamaPrompt = Se.Settings.AutoTranslate.OllamaPrompt;
 
@@ -268,6 +269,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt = Se.Settings.AutoTranslate.OpenAiCompatiblePrompt;
 
         Configuration.Settings.Tools.LmStudioApiUrl = Se.Settings.AutoTranslate.LmStudioApiUrl;
+        Configuration.Settings.Tools.LmStudioApiKey = Se.Settings.AutoTranslate.LmStudioApiKey;
         Configuration.Settings.Tools.LmStudioModel = Se.Settings.AutoTranslate.LmStudioModel;
         Configuration.Settings.Tools.LmStudioPrompt = Se.Settings.AutoTranslate.LmStudioPrompt;
 
@@ -415,6 +417,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (engineType == typeof(LmStudioTranslate))
         {
             Configuration.Settings.Tools.LmStudioApiUrl = apiUrl.Trim();
+            Configuration.Settings.Tools.LmStudioApiKey = apiKey.Trim();
             Configuration.Settings.Tools.LmStudioModel = apiModel.Trim();
         }
 
@@ -423,12 +426,17 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.LlamaCppUseRemoteServer = LlamaCppUseRemoteServer;
             if (LlamaCppUseRemoteServer)
             {
-                // Remote mode: persist the user-entered endpoint.
+                // Remote mode: persist the user-entered endpoint and its optional key.
                 Configuration.Settings.Tools.LlamaCppApiUrl = apiUrl.Trim();
                 Se.Settings.AutoTranslate.LlamaCppApiUrl = apiUrl.Trim();
+                Se.Settings.AutoTranslate.LlamaCppApiKey = apiKey.Trim();
             }
             // Local mode stays server-managed: the API URL is set by LlamaCppServerManager and the
             // model is persisted via OnSelectedLlamaCppModelChanged.
+
+            // Both llama.cpp engines read the key from here. It belongs to the external server:
+            // the one Subtitle Edit starts itself asks for none and must not be sent the saved key.
+            Configuration.Settings.Tools.LlamaCppApiKey = LlamaCppUseRemoteServer ? apiKey.Trim() : string.Empty;
 
             // Model-specific prompt/sampling only apply in local mode, where we know which curated
             // model the server runs (e.g. Hy-MT2's trained-in prompt); a remote server's model is
@@ -441,20 +449,24 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (engineType == typeof(OllamaTranslate))
         {
             Configuration.Settings.Tools.OllamaApiUrl = apiUrl.Trim();
+            Configuration.Settings.Tools.OllamaApiKey = apiKey.Trim();
             Configuration.Settings.Tools.OllamaModel = apiModel.Trim();
             Se.Settings.AutoTranslate.OllamaUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OllamaApiKey = apiKey.Trim();
             Se.Settings.AutoTranslate.OllamaModel = apiModel.Trim();
         }
 
         if (engineType == typeof(OllamaAdvancedTranslate))
         {
             Se.Settings.AutoTranslate.OllamaAdvancedUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OllamaAdvancedApiKey = apiKey.Trim();
             Se.Settings.AutoTranslate.OllamaAdvancedModel = apiModel.Trim();
         }
 
         if (engineType == typeof(LmStudioAdvancedTranslate))
         {
             Se.Settings.AutoTranslate.LmStudioAdvancedUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.LmStudioAdvancedApiKey = apiKey.Trim();
             Se.Settings.AutoTranslate.LmStudioAdvancedModel = apiModel.Trim();
         }
 
@@ -600,6 +612,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.OpenAiCompatiblePrompt = Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt;
 
         Se.Settings.AutoTranslate.LmStudioApiUrl = Configuration.Settings.Tools.LmStudioApiUrl;
+        Se.Settings.AutoTranslate.LmStudioApiKey = Configuration.Settings.Tools.LmStudioApiKey;
         Se.Settings.AutoTranslate.LmStudioModel = Configuration.Settings.Tools.LmStudioModel;
         Se.Settings.AutoTranslate.LmStudioPrompt = Configuration.Settings.Tools.LmStudioPrompt;
 
@@ -883,7 +896,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     {
         // OpenAI-compatible servers list their models at GET {base}/v1/models; Ollama uses /api/tags.
         var isOpenAiStyle = SelectedAutoTranslator is OpenAiCompatibleTranslate or LmStudioTranslate or LmStudioAdvancedTranslate;
-        var apiKey = SelectedAutoTranslator is OpenAiCompatibleTranslate ? ApiKeyText : null;
+        var apiKey = ApiKeyText; // a server that asks for a key asks for it on the model list too
         var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!, vm =>
         {
             if (isOpenAiStyle)
@@ -892,7 +905,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             }
             else
             {
-                vm.Initialize(Se.Language.General.PickOllamaModel, ModelText, ApiUrlText);
+                vm.Initialize(Se.Language.General.PickOllamaModel, ModelText, ApiUrlText, apiKey: apiKey);
             }
         });
 
@@ -1488,6 +1501,19 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Engines that show the API key box but also run with it empty: a LibreTranslate,
+    /// OpenAI-compatible, llama.cpp, Ollama or LM Studio server may ask for no key (the advanced
+    /// engines talk to the same servers), and MyMemory works without one (anonymous daily quota,
+    /// the key only raises the limit). These engines leave the key out of the request when it is
+    /// empty. Batch convert uses the same list for its start guard.
+    /// </summary>
+    internal static bool ApiKeyIsOptional(IAutoTranslator translator)
+    {
+        return translator is LibreTranslate or MyMemoryApi or OpenAiCompatibleTranslate
+            or LlamaCppTranslate or OllamaTranslate or LmStudioTranslate or AdvancedTranslatorBase;
+    }
+
     private async Task<bool> StartTranslation(IAutoTranslator translator)
     {
         _abort = false;
@@ -1495,10 +1521,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         IsProgressEnabled = true;
         var engineType = translator.GetType();
 
-        // LibreTranslate and MyMemory keys are optional: MyMemory works without one (anonymous
-        // daily quota), the key only raises the limit, and MakeUrl leaves it out when empty.
-        if (ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) &&
-            engineType != typeof(LibreTranslate) && engineType != typeof(MyMemoryApi))
+        if (ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) && !ApiKeyIsOptional(translator))
         {
             IsProgressEnabled = false;
             await MessageBox.Show(
@@ -2371,6 +2394,10 @@ public partial class AutoTranslateViewModel : ObservableObject
                 Configuration.Settings.Tools.LmStudioApiUrl.TrimEnd('/'),
             });
 
+            // Optional: only a server set up to ask for a key needs one.
+            ApiKeyText = Configuration.Settings.Tools.LmStudioApiKey;
+            ApiKeyIsVisible = true;
+
             // LM Studio serves whatever model is loaded - free-text field, may be left empty.
             ModelIsVisible = true;
             ModelBrowseIsVisible = true;
@@ -2393,6 +2420,9 @@ public partial class AutoTranslateViewModel : ObservableObject
             {
                 Se.Settings.AutoTranslate.LmStudioAdvancedUrl.TrimEnd('/'),
             });
+
+            ApiKeyText = Se.Settings.AutoTranslate.LmStudioAdvancedApiKey;
+            ApiKeyIsVisible = true;
 
             // Empty model = whatever model LM Studio has loaded.
             ModelIsVisible = true;
@@ -2428,6 +2458,10 @@ public partial class AutoTranslateViewModel : ObservableObject
                     Se.Settings.AutoTranslate.LlamaCppApiUrl.TrimEnd('/'),
                 });
 
+                // For a llama-server started with --api-key; the local one below takes no key.
+                ApiKeyText = Se.Settings.AutoTranslate.LlamaCppApiKey;
+                ApiKeyIsVisible = true;
+
                 return;
             }
 
@@ -2460,6 +2494,9 @@ public partial class AutoTranslateViewModel : ObservableObject
                 Se.Settings.AutoTranslate.OllamaUrl.TrimEnd('/'),
             });
 
+            ApiKeyText = Se.Settings.AutoTranslate.OllamaApiKey;
+            ApiKeyIsVisible = true;
+
             _apiModels = Se.Settings.AutoTranslate.OllamaModels.Split(',').ToList();
             ModelIsVisible = true;
             ModelText = Se.Settings.AutoTranslate.OllamaModel;
@@ -2481,6 +2518,9 @@ public partial class AutoTranslateViewModel : ObservableObject
             {
                 Se.Settings.AutoTranslate.OllamaAdvancedUrl.TrimEnd('/'),
             });
+
+            ApiKeyText = Se.Settings.AutoTranslate.OllamaAdvancedApiKey;
+            ApiKeyIsVisible = true;
 
             // Same installed-model list as the classic Ollama engine - only the endpoint differs.
             _apiModels = Se.Settings.AutoTranslate.OllamaModels.Split(',').ToList();

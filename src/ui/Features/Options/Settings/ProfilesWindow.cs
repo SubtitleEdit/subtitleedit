@@ -117,6 +117,7 @@ public class ProfilesWindow : Window
         dataGrid.Bind(TableView.SelectedItemProperty, new Binding(nameof(vm.SelectedProfile)) { Source = vm });
 
         tableView = dataGrid;
+        ListInput.RunOnDeleteKey(dataGrid, vm.DeleteCommand);
 
         // List actions as icon buttons in the list header
         var buttonNew = EditorChrome.CreateToolButton("fa-solid fa-plus", Se.Language.General.NewProfile, vm.NewCommand, 26);
