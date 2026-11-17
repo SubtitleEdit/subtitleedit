@@ -1,10 +1,14 @@
 # Auto Translate: Advanced Local Engines
 
-The **llama.cpp advanced (local LLM)**, **Ollama advanced (local LLM)** and **LM Studio advanced (local LLM)** engines translate in batches with surrounding context, a synopsis, and a glossary — giving more consistent names, pronouns, and terminology than line-by-line translation. This page covers their **Advanced...** settings dialog and the llama.cpp engine settings.
+The **llama.cpp advanced (local LLM)**, **Ollama advanced (local LLM)**, **LM Studio advanced (local LLM)** and **OpenAI Compatible API advanced** engines translate in batches with surrounding context, a synopsis, and a glossary — giving more consistent names, pronouns, and terminology than line-by-line translation. This page covers their **Advanced...** settings dialog and the llama.cpp engine settings.
 
 LM Studio advanced talks to LM Studio's OpenAI-compatible endpoint (default `http://localhost:1234/v1/chat/completions`). LM Studio can have several models loaded; leave the model empty to use the loaded one.
 
-The same engines are available headlessly in `seconv` as `--translate-engine:llamacpp-advanced`, `ollama-advanced` and `lmstudio-advanced`, with the context options below as command-line options or as `tools.llamaCppAdvanced` keys in its `--settings` file — see [Advanced local engines](../reference/command-line.md#advanced-local-engines) in the command-line reference. `seconv` also has `openai-compatible-advanced`, the same loop for any OpenAI-style chat-completions endpoint such as a hosted provider.
+OpenAI Compatible API advanced talks to any OpenAI-style chat-completions endpoint, for example a hosted provider. It takes its URL, model and API key like **OpenAI Compatible API**: the same default URL (`http://localhost:8000/v1/chat/completions`), and the model and the key are sent when set. It leaves out the request fields only llama.cpp knows, which a strict server rejects, and sampling values you leave at `-1` are not filled in from a curated llama.cpp model.
+
+A model that reasons before it answers spends the reply budget on its thoughts. When a reply runs out that way, OpenAI Compatible API advanced asks once more with a larger budget and keeps it for the rest of the file. To switch reasoning off, put the provider's own field in **Extra request JSON**, for example `{"reasoning": {"enabled": false}}` on OpenRouter. OpenAI's own reasoning models (the o-series, gpt-5) want `max_completion_tokens` in place of `max_tokens` and accept only their default temperature: `{"max_tokens": null, "temperature": null, "max_completion_tokens": 8000}`.
+
+The same engines are available headlessly in `seconv` as `--translate-engine:llamacpp-advanced`, `ollama-advanced`, `lmstudio-advanced` and `openai-compatible-advanced`, with the context options below as command-line options or as `tools.llamaCppAdvanced` keys in its `--settings` file — see [Advanced local engines](../reference/command-line.md#advanced-local-engines) in the command-line reference.
 
 See [Auto Translate](auto-translate.md) for the translation window itself, and [Best local models for translating from English](auto-translate.md#best-local-models-for-translating-from-english) for which llama.cpp model to download.
 

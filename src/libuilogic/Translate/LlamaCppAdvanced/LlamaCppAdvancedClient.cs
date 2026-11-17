@@ -244,7 +244,7 @@ public class LlamaCppAdvancedClient : IDisposable
                 writer.WriteBoolean("cache_prompt", true);
             }
 
-            WriteSampling(writer, settings, defaultMaxTokens, temperatureBump, overrides);
+            WriteSampling(writer, settings, defaultMaxTokens, temperatureBump, overrides, llamaCppExtensions);
 
             if (disableThinking && llamaCppExtensions && !Overrides(overrides, "chat_template_kwargs"))
             {
@@ -371,12 +371,20 @@ public class LlamaCppAdvancedClient : IDisposable
     /// at the same low temperature tends to echo again. A field the user's extra request JSON
     /// names is skipped here and written from there.
     /// </summary>
-    private static void WriteSampling(Utf8JsonWriter writer, SeLlamaCppAdvanced advanced, int defaultMaxTokens, double temperatureBump, JsonElement? overrides)
+    private static void WriteSampling(Utf8JsonWriter writer, SeLlamaCppAdvanced advanced, int defaultMaxTokens, double temperatureBump, JsonElement? overrides, bool llamaCppExtensions)
     {
+        // The curated model's values come from a local llama.cpp run and stay set for the rest of the
+        // session. They are for that model, and a strict server refuses top_k and repeat_penalty, so
+        // without the llama.cpp extensions only the user's own settings are sent - as in seconv,
+        // where a run of such an engine never sets them.
         var tools = Configuration.Settings.Tools;
+        var curatedTemperature = llamaCppExtensions ? tools.LlamaCppModelTemperature : -1;
+        var curatedTopP = llamaCppExtensions ? tools.LlamaCppModelTopP : -1;
+        var curatedTopK = llamaCppExtensions ? tools.LlamaCppModelTopK : -1;
+        var curatedRepeatPenalty = llamaCppExtensions ? tools.LlamaCppModelRepeatPenalty : -1;
 
         var temperature = advanced.Temperature >= 0 ? advanced.Temperature
-            : tools.LlamaCppModelTemperature >= 0 ? tools.LlamaCppModelTemperature
+            : curatedTemperature >= 0 ? curatedTemperature
             : 0.2;
         if (temperatureBump > 0)
         {
@@ -390,17 +398,17 @@ public class LlamaCppAdvancedClient : IDisposable
 
         if (!Overrides(overrides, "top_p"))
         {
-            WriteNumberIfSet(writer, "top_p", advanced.TopP >= 0 ? advanced.TopP : tools.LlamaCppModelTopP);
+            WriteNumberIfSet(writer, "top_p", advanced.TopP >= 0 ? advanced.TopP : curatedTopP);
         }
 
         if (!Overrides(overrides, "top_k"))
         {
-            WriteNumberIfSet(writer, "top_k", advanced.TopK >= 0 ? advanced.TopK : tools.LlamaCppModelTopK);
+            WriteNumberIfSet(writer, "top_k", advanced.TopK >= 0 ? advanced.TopK : curatedTopK);
         }
 
         if (!Overrides(overrides, "repeat_penalty"))
         {
-            WriteNumberIfSet(writer, "repeat_penalty", advanced.RepeatPenalty >= 0 ? advanced.RepeatPenalty : tools.LlamaCppModelRepeatPenalty);
+            WriteNumberIfSet(writer, "repeat_penalty", advanced.RepeatPenalty >= 0 ? advanced.RepeatPenalty : curatedRepeatPenalty);
         }
 
         var maxTokens = advanced.MaxTokens > 0 ? advanced.MaxTokens : defaultMaxTokens;

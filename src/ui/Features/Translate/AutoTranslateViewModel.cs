@@ -165,6 +165,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new MyMemoryApi(),
             new ChatGptTranslate(),
             new OpenAiCompatibleTranslate(),
+            new OpenAiCompatibleAdvancedTranslate(),
             new LmStudioTranslate(),
             new LmStudioAdvancedTranslate(),
             new OllamaTranslate(),
@@ -468,6 +469,13 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.LmStudioAdvancedUrl = apiUrl.Trim();
             Se.Settings.AutoTranslate.LmStudioAdvancedApiKey = apiKey.Trim();
             Se.Settings.AutoTranslate.LmStudioAdvancedModel = apiModel.Trim();
+        }
+
+        if (engineType == typeof(OpenAiCompatibleAdvancedTranslate))
+        {
+            Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedApiKey = apiKey.Trim();
+            Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedModel = apiModel.Trim();
         }
 
         if (engineType == typeof(AnthropicTranslate))
@@ -895,7 +903,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     private async Task BrowseModel()
     {
         // OpenAI-compatible servers list their models at GET {base}/v1/models; Ollama uses /api/tags.
-        var isOpenAiStyle = SelectedAutoTranslator is OpenAiCompatibleTranslate or LmStudioTranslate or LmStudioAdvancedTranslate;
+        var isOpenAiStyle = SelectedAutoTranslator is OpenAiCompatibleTranslate or OpenAiCompatibleAdvancedTranslate or LmStudioTranslate or LmStudioAdvancedTranslate;
         var apiKey = ApiKeyText; // a server that asks for a key asks for it on the model list too
         var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!, vm =>
         {
@@ -1963,6 +1971,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             LlamaCppAdvancedTranslate => settings.LlamaCppApiUrl,
             OllamaAdvancedTranslate => Se.Settings.AutoTranslate.OllamaAdvancedUrl,
             LmStudioAdvancedTranslate => Se.Settings.AutoTranslate.LmStudioAdvancedUrl,
+            OpenAiCompatibleAdvancedTranslate => Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl,
             AnthropicTranslate => settings.AnthropicApiUrl,
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
@@ -2378,6 +2387,33 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ModelBrowseIsVisible = true;
             ModelText = Configuration.Settings.Tools.OpenAiCompatibleTranslateModel;
+
+            return;
+        }
+
+        if (engineType == typeof(OpenAiCompatibleAdvancedTranslate))
+        {
+            // Url, key and model as for the regular OpenAI Compatible engine above.
+            LlamaCppAdvancedButtonIsVisible = true;
+
+            if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl))
+            {
+                Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl = OpenAiCompatibleTranslate.DefaultUrl;
+            }
+
+            FillUrls(new List<string>
+            {
+                Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl.TrimEnd('/'),
+                "http://localhost:8000/v1/chat/completions",
+                "http://localhost:1234/v1/chat/completions",
+            }.Distinct().ToList());
+
+            ApiKeyText = Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedApiKey;
+            ApiKeyIsVisible = true;
+
+            ModelIsVisible = true;
+            ModelBrowseIsVisible = true;
+            ModelText = Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedModel;
 
             return;
         }
