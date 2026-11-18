@@ -237,7 +237,7 @@ public partial class MainViewModel
 
             using var waveFile = new WavePeakGenerator2(stemFileName);
             // Same timeline as the normal waveform (#16966).
-            return waveFile.GeneratePeaks(WaveFileExtractor.GetWaveformDelayMilliseconds(videoFileName), speechPeakFileName);
+            return waveFile.GeneratePeaks(WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName), speechPeakFileName);
         }
         finally
         {

@@ -10,12 +10,14 @@ namespace Nikse.SubtitleEdit.Logic.Media;
 public static class WaveFileExtractor
 {
     /// <summary>
-    /// How far to delay the peaks of a wave file extracted by <see cref="GetCommandLineProcess"/>
-    /// so the waveform matches the player's timeline (#16966). ffmpeg starts the wave file at the
-    /// file's start time, but mpv and the FFmpeg player count from the file's raw time stamps for
-    /// everything except transport streams - an MPEG-PS file starting at 0.9 s was drawn 0.9 s early.
+    /// How far the player's timeline is ahead of ffmpeg's for this file (#16966). ffmpeg (without
+    /// "-copyts") counts from the file's start time - the extracted wave file, shot-change
+    /// "pts_time" and "-ss" seeks all do - but mpv and the FFmpeg player count from the file's raw
+    /// time stamps for everything except transport streams. An MPEG-PS file starting at 0.9 s had
+    /// its waveform, shot changes and speech-to-text lines 0.9 s early. Add it to a time from
+    /// ffmpeg; subtract it from a player time handed to ffmpeg.
     /// </summary>
-    public static int GetWaveformDelayMilliseconds(string videoFileName)
+    public static int GetTimelineOffsetMilliseconds(string videoFileName)
     {
         if (string.IsNullOrEmpty(videoFileName) || videoFileName.Contains("://") || !File.Exists(videoFileName))
         {
@@ -24,8 +26,25 @@ public static class WaveFileExtractor
 
         try
         {
+            // Cached per file version: clips are cut one line at a time, and each lookup runs ffmpeg.
+            var fileInfo = new FileInfo(videoFileName);
+            var key = (fileInfo.FullName, fileInfo.Length, fileInfo.LastWriteTimeUtc);
+            lock (TimelineOffsetLock)
+            {
+                if (_timelineOffsetCache is { } cached && cached.Key == key)
+                {
+                    return cached.OffsetMilliseconds;
+                }
+            }
+
             var isTransportStream = FileUtil.IsTransportStream(videoFileName) || FileUtil.IsM2TransportStream(videoFileName);
-            return isTransportStream ? 0 : GetWaveformDelayMilliseconds(FfmpegMediaInfo2.TryGetStartSeconds(videoFileName), false);
+            var offset = isTransportStream ? 0 : GetTimelineOffsetMilliseconds(FfmpegMediaInfo2.TryGetStartSeconds(videoFileName), false);
+            lock (TimelineOffsetLock)
+            {
+                _timelineOffsetCache = (key, offset);
+            }
+
+            return offset;
         }
         catch
         {
@@ -33,7 +52,31 @@ public static class WaveFileExtractor
         }
     }
 
-    internal static int GetWaveformDelayMilliseconds(double? startSeconds, bool isTransportStream)
+    private static readonly object TimelineOffsetLock = new();
+    private static ((string Path, long Length, DateTime LastWriteUtc) Key, int OffsetMilliseconds)? _timelineOffsetCache;
+
+    /// <summary>
+    /// Turns a range on the player's timeline into the "-ss"/"-t" ffmpeg needs for the same audio
+    /// (see <see cref="GetTimelineOffsetMilliseconds(string)"/>). A range starting before ffmpeg's
+    /// zero keeps only the part after it.
+    /// </summary>
+    public static (double StartSeconds, double DurationSeconds) ToFfmpegRange(string videoFileName, double startSeconds, double durationSeconds)
+    {
+        return ToFfmpegRange(startSeconds, durationSeconds, GetTimelineOffsetMilliseconds(videoFileName));
+    }
+
+    internal static (double StartSeconds, double DurationSeconds) ToFfmpegRange(double startSeconds, double durationSeconds, int offsetMilliseconds)
+    {
+        if (offsetMilliseconds <= 0)
+        {
+            return (startSeconds, durationSeconds);
+        }
+
+        var start = startSeconds - offsetMilliseconds / 1000.0;
+        return start >= 0 ? (start, durationSeconds) : (0, Math.Max(0, durationSeconds + start));
+    }
+
+    internal static int GetTimelineOffsetMilliseconds(double? startSeconds, bool isTransportStream)
     {
         // Transport streams: both players count from the file's start, like the wave file.
         // A negative start (MP4 edit lists) has no samples before it to show.

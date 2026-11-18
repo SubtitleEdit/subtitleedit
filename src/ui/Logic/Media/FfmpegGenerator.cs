@@ -2321,6 +2321,7 @@ public class FfmpegGenerator
         int sampleRate = 24000,
         double minimumSeconds = 0)
     {
+        (startSeconds, durationSeconds) = WaveFileExtractor.ToFfmpegRange(videoFileName, startSeconds, durationSeconds);
         var start = startSeconds.ToString("0.000", CultureInfo.InvariantCulture);
         var duration = FormatClipDuration(durationSeconds);
 
@@ -2362,6 +2363,7 @@ public class FfmpegGenerator
        int sampleRate = 16000,
        string audioBitRate = "32k")
     {
+        (startSeconds, durationSeconds) = WaveFileExtractor.ToFfmpegRange(videoFileName, startSeconds, durationSeconds);
         var start = startSeconds.ToString("0.000", CultureInfo.InvariantCulture);
         var duration = FormatClipDuration(durationSeconds);
 
