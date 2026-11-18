@@ -63,6 +63,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public static readonly StyledProperty<ICommand?> ToggleSubtitlesCommandProperty =
             AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(ToggleSubtitlesCommand));
 
+        public static readonly StyledProperty<ICommand?> CycleVideoFlipCommandProperty =
+            AvaloniaProperty.Register<VideoPlayerControl, ICommand?>(nameof(CycleVideoFlipCommand));
+
         public static readonly StyledProperty<bool> SubtitlesOnVideoIsVisibleProperty =
             AvaloniaProperty.Register<VideoPlayerControl, bool>(nameof(SubtitlesOnVideoIsVisible), true);
 
@@ -208,6 +211,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             set => SetValue(ToggleSubtitlesCommandProperty, value);
         }
 
+        public ICommand? CycleVideoFlipCommand
+        {
+            get => GetValue(CycleVideoFlipCommandProperty);
+            set => SetValue(CycleVideoFlipCommandProperty, value);
+        }
+
         /// <summary>
         /// Whether the subtitles are shown on the video - the checked state of the toggle
         /// subtitles button. Set by the owner after <see cref="ToggleSubtitlesCommand"/> runs.
@@ -327,6 +336,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Button _buttonPreviousSubtitle;
         private readonly Button _buttonNextSubtitle;
         private readonly NonSpaceToggleButton _buttonToggleSubtitles;
+        private readonly Button _buttonCycleVideoFlip;
         private readonly Button _buttonPlaybackSpeed;
         private readonly StackPanel _panelFullScreen;
         private readonly Slider _sliderPosition;
@@ -726,6 +736,14 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 Source = this,
                 Mode = BindingMode.OneWay,
             });
+
+            // Off, horizontal, vertical, both - the main window's players only, like the
+            // subtitle buttons, as the command is the main window's (#17012).
+            _buttonCycleVideoFlip = MakeSubtitleButton(
+                new NonSpaceButton(),
+                Se.Language.Video.CycleVideoFlip,
+                "fa-solid fa-arrows-left-right",
+                nameof(CycleVideoFlipCommand));
 
             // Playback speed, e.g. "1.0x" - a click opens a menu with the speeds (#16306).
             _buttonPlaybackSpeed = new NonSpaceButton
@@ -1255,6 +1273,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     SeVideoControlsItemType.NextSubtitle => _buttonNextSubtitle,
                     SeVideoControlsItemType.ToggleSubtitles => _buttonToggleSubtitles,
                     SeVideoControlsItemType.PlaybackSpeed => _buttonPlaybackSpeed,
+                    SeVideoControlsItemType.CycleVideoFlip => _buttonCycleVideoFlip,
                     SeVideoControlsItemType.FullScreen => _panelFullScreen,
                     SeVideoControlsItemType.PositionSlider => _sliderPosition,
                     SeVideoControlsItemType.Volume => _panelVolume,
@@ -1421,7 +1440,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             static bool IsButton(SeVideoControlsItemType type) =>
                 type is SeVideoControlsItemType.Play or SeVideoControlsItemType.Stop or SeVideoControlsItemType.FullScreen or
                     SeVideoControlsItemType.PreviousSubtitle or SeVideoControlsItemType.NextSubtitle or
-                    SeVideoControlsItemType.ToggleSubtitles or SeVideoControlsItemType.PlaybackSpeed;
+                    SeVideoControlsItemType.ToggleSubtitles or SeVideoControlsItemType.PlaybackSpeed or
+                    SeVideoControlsItemType.CycleVideoFlip;
 
             if (IsButton(left) && IsButton(right))
             {
