@@ -270,15 +270,26 @@ public class LlamaCppAdvancedClient : IDisposable
             writer.WriteEndObject();
             writer.WriteEndArray();
 
-            // The user's fields last, so they win; a null only removes the engine's field.
+            // The user's fields last, so they win; a null only removes the engine's field. A
+            // temperature of their own still runs warmer on a retry, as the engine's does - sent
+            // unchanged, the retry would be the same request at the same temperature.
             if (overrides.HasValue)
             {
                 foreach (var property in overrides.Value.EnumerateObject())
                 {
-                    if (property.Value.ValueKind != JsonValueKind.Null)
+                    if (property.Value.ValueKind == JsonValueKind.Null)
                     {
-                        property.WriteTo(writer);
+                        continue;
                     }
+
+                    if (temperatureBump > 0 && property.NameEquals("temperature") &&
+                        property.Value.ValueKind == JsonValueKind.Number && property.Value.TryGetDouble(out var userTemperature))
+                    {
+                        writer.WriteNumber("temperature", Math.Max(userTemperature, Math.Min(1.0, userTemperature + temperatureBump)));
+                        continue;
+                    }
+
+                    property.WriteTo(writer);
                 }
             }
 
