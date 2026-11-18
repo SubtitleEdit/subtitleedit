@@ -12360,7 +12360,7 @@ public partial class MainViewModel :
         // tried out without reopening it; "Cancel" just closes and keeps what was applied.
         await ShowDialogAsync<SetVideoOffsetWindow, SetVideoOffsetViewModel>(vm =>
         {
-            vm.Initialize(ApplyVideoOffset, ResetVideoOffset);
+            vm.Initialize(ApplyVideoOffset, ResetVideoOffset, _videoFileName);
         });
     }
 

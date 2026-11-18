@@ -44,6 +44,8 @@ public class FfmpegMediaInfo2
     private static readonly Regex DisplayAspectRatioRegex = new Regex(@"\bDAR (?<num>\d+):(?<den>\d+)", RegexOptions.Compiled);
     private static readonly Regex DurationRegex = new Regex(@"Duration: \d+[:\.,]\d+[:\.,]\d+[:\.,]\d+", RegexOptions.Compiled);
     private static readonly Regex StartRegex = new Regex(@"Duration: [^,\r\n]*, start: (?<start>-?\d+(?:\.\d+)?)", RegexOptions.Compiled);
+    // "    timecode        : 10:00:00:00" (";" before the frames for drop-frame)
+    private static readonly Regex TimeCodeTagRegex = new Regex(@"^\s*timecode\s*:\s*(?<tc>(?<h>\d{1,2}):(?<m>\d\d):(?<s>\d\d)[:;.,](?<f>\d{2,3}))\s*$", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
     private static readonly Regex Fps1Regex = new Regex(@" \d+\.\d+ fps", RegexOptions.Compiled);
     private static readonly Regex Fps2Regex = new Regex(@" \d+ fps", RegexOptions.Compiled);
     // Match the language tag in the ffmpeg stream header prefix, e.g.
@@ -121,6 +123,68 @@ public class FfmpegMediaInfo2
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// The start time code a professional export stores in its metadata (a QuickTime/MP4 "tmcd"
+    /// track, an MXF material package time code), as ffmpeg prints it ("timecode : 10:00:00:00",
+    /// ";" for drop-frame). Null when ffmpeg is unavailable or the file has none. Runs ffmpeg once.
+    /// </summary>
+    public static StartTimeCode? TryGetStartTimeCode(string videoFileName, double fallbackFrameRate)
+    {
+        if (Configuration.IsRunningOnWindows &&
+            (string.IsNullOrEmpty(Se.Settings.General.FfmpegPath) || !File.Exists(Se.Settings.General.FfmpegPath)))
+        {
+            return null;
+        }
+
+        try
+        {
+            return ParseStartTimeCode(RunFfmpegOnce(videoFileName, out _), fallbackFrameRate);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Reads the first "timecode : HH:MM:SS:FF" line of an ffmpeg log. The frames are converted
+    /// with the video's frame rate (the fallback when the log has none) - the same way a typed
+    /// "HH:MM:SS:FF" offset is - so 10:00:00:12 at 25 fps is 10 hours and 480 ms. A drop-frame
+    /// label (";") already tracks the clock, so it converts the same way.
+    /// </summary>
+    internal static StartTimeCode? ParseStartTimeCode(string log, double fallbackFrameRate)
+    {
+        var match = TimeCodeTagRegex.Match(log);
+        if (!match.Success)
+        {
+            return null;
+        }
+
+        var hours = int.Parse(match.Groups["h"].Value, CultureInfo.InvariantCulture);
+        var minutes = int.Parse(match.Groups["m"].Value, CultureInfo.InvariantCulture);
+        var seconds = int.Parse(match.Groups["s"].Value, CultureInfo.InvariantCulture);
+        var frames = int.Parse(match.Groups["f"].Value, CultureInfo.InvariantCulture);
+        if (minutes >= 60 || seconds >= 60)
+        {
+            return null;
+        }
+
+        var frameRate = (double)ParseLog(log).FramesRateNonNormalized;
+        if (frameRate <= 0)
+        {
+            frameRate = fallbackFrameRate > 0 ? fallbackFrameRate : 25;
+        }
+
+        if (frames >= Math.Ceiling(frameRate))
+        {
+            return null; // not a frame number at this rate - better nothing than a wrong offset
+        }
+
+        var ms = hours * 3_600_000L + minutes * 60_000L + seconds * 1000L +
+                 (long)Math.Round(frames * 1000.0 / frameRate, MidpointRounding.AwayFromZero);
+        return new StartTimeCode(match.Groups["tc"].Value, TimeSpan.FromMilliseconds(ms));
     }
 
     internal static double? ParseStartSeconds(string log)
@@ -429,3 +493,8 @@ public class FfmpegMediaInfo2
         };
     }
 }
+
+/// <summary>
+/// A video's embedded start time code: the label as stored ("10:00:00:00") and what it is as an offset.
+/// </summary>
+public record StartTimeCode(string Text, TimeSpan Offset);
