@@ -36,11 +36,12 @@ public partial class VideoControlsItemDisplay : ObservableObject
             SeVideoControlsItemType.NextSubtitle => l.VideoControlsNextSubtitle,
             SeVideoControlsItemType.ToggleSubtitles => Se.Language.Video.ToggleSubtitlesOnVideoPlayer,
             SeVideoControlsItemType.PlaybackSpeed => Se.Language.General.PlaybackSpeed,
+            SeVideoControlsItemType.CycleVideoFlip => Se.Language.Video.CycleVideoFlip,
             _ => type.ToString(),
         };
     }
 
-    // Play, stop, previous/next subtitle, toggle subtitles, full screen and volume use the same icons as the video controls themselves.
+    // Play, stop, previous/next subtitle, toggle subtitles, cycle video flip, full screen and volume use the same icons as the video controls themselves.
     private static string GetIconName(SeVideoControlsItemType type)
     {
         return type switch
@@ -57,6 +58,7 @@ public partial class VideoControlsItemDisplay : ObservableObject
             SeVideoControlsItemType.NextSubtitle => "fa-solid fa-forward-step",
             SeVideoControlsItemType.ToggleSubtitles => "fa-solid fa-closed-captioning",
             SeVideoControlsItemType.PlaybackSpeed => "fa-solid fa-gauge-high",
+            SeVideoControlsItemType.CycleVideoFlip => "fa-solid fa-arrows-left-right",
             _ => "fa-solid fa-circle",
         };
     }

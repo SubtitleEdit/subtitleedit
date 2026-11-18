@@ -205,6 +205,12 @@ public class LanguageVideo
     public string ToggleSubtitlesOnVideoPlayer { get; set; }
     public string SubtitlesOnVideoPlayerOn { get; set; }
     public string SubtitlesOnVideoPlayerOff { get; set; }
+    public string CycleVideoFlip { get; set; }
+    public string VideoFlipOff { get; set; }
+    public string VideoFlipHorizontal { get; set; }
+    public string VideoFlipVertical { get; set; }
+    public string VideoFlipHorizontalAndVertical { get; set; }
+    public string VideoFlipRequiresMpv { get; set; }
     public string OnlyMkvCanSupportEmbeddedSubtitleEditing { get; set; }
     public string ReEncodeInfo { get; set; }
     public string ReEncodeGeneratingVideoX { get; set; }
@@ -408,6 +414,12 @@ public class LanguageVideo
         ToggleSubtitlesOnVideoPlayer = "Toggle subtitles on video player";
         SubtitlesOnVideoPlayerOn = "Subtitles on video player: on";
         SubtitlesOnVideoPlayerOff = "Subtitles on video player: off";
+        CycleVideoFlip = "Cycle video flip (mpv)";
+        VideoFlipOff = "Video flip: off";
+        VideoFlipHorizontal = "Video flip: horizontal (mirror)";
+        VideoFlipVertical = "Video flip: vertical";
+        VideoFlipHorizontalAndVertical = "Video flip: horizontal and vertical";
+        VideoFlipRequiresMpv = "Video flip needs the mpv video player.";
         OnlyMkvCanSupportEmbeddedSubtitleEditing = "Only Matroska (.mkv, .webm) files are supported for editing embedded subtitles.";
         ReEncodeInfo = "Re-encoding can make subtitling smoother:" + Environment.NewLine +
                        "• Smaller resolution (high resolutions make subtitling slow)" + Environment.NewLine +

@@ -204,6 +204,7 @@ using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
@@ -5305,6 +5306,50 @@ public partial class MainViewModel :
             ShowStatus(Se.Language.Video.SubtitlesOnVideoPlayerOff);
         }
 
+        _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Cycles the video flip: off, horizontal (mirror), vertical, both (#17012). Only the video
+    /// is flipped - mpv draws the subtitles after its video filters, so they stay readable.
+    /// The flip is for this session only, and shared by every mpv player (docked, undocked,
+    /// fullscreen).
+    /// </summary>
+    [RelayCommand]
+    private void CycleVideoFlip()
+    {
+        var players = new[] { VideoPlayerControl, _fullScreenVideoPlayerControl, _videoPlayerUndockedViewModel?.VideoPlayerControl }
+            .Select(p => p?.VideoPlayer)
+            .OfType<LibMpvDynamicPlayer>()
+            .Distinct()
+            .ToList();
+        if (players.Count == 0)
+        {
+            ShowStatus(Se.Language.Video.VideoFlipRequiresMpv);
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        var flip = LibMpvDynamicPlayer.SessionVideoFlip switch
+        {
+            VideoFlipMode.None => VideoFlipMode.Horizontal,
+            VideoFlipMode.Horizontal => VideoFlipMode.Vertical,
+            VideoFlipMode.Vertical => VideoFlipMode.HorizontalAndVertical,
+            _ => VideoFlipMode.None,
+        };
+        LibMpvDynamicPlayer.SessionVideoFlip = flip;
+        foreach (var mpv in players)
+        {
+            mpv.ApplyVideoFlip();
+        }
+
+        ShowStatus(flip switch
+        {
+            VideoFlipMode.Horizontal => Se.Language.Video.VideoFlipHorizontal,
+            VideoFlipMode.Vertical => Se.Language.Video.VideoFlipVertical,
+            VideoFlipMode.HorizontalAndVertical => Se.Language.Video.VideoFlipHorizontalAndVertical,
+            _ => Se.Language.Video.VideoFlipOff,
+        });
         _shortcutManager.ClearKeys();
     }
 
@@ -21177,6 +21222,7 @@ public partial class MainViewModel :
         _fullScreenVideoPlayerControl.PreviousSubtitleCommand = PlayPreviousCommand;
         _fullScreenVideoPlayerControl.NextSubtitleCommand = PlayNextCommand;
         _fullScreenVideoPlayerControl.ToggleSubtitlesCommand = ToggleSubtitlesOnVideoPlayerCommand;
+        _fullScreenVideoPlayerControl.CycleVideoFlipCommand = CycleVideoFlipCommand;
         _fullScreenVideoPlayerControl.SubtitlesOnVideoIsVisible = _mpvReloader.SubtitlesVisible;
         _fullScreenVideoPlayerControl.SubtitleButtonsIsVisible = true;
         _fullScreenVideoPlayerControl.PlaybackSpeedCommand = SetPlaybackSpeedCommand;
