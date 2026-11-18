@@ -357,7 +357,7 @@ public class FfmpegGenerator
         string filterParameter;
         if (subtitleIsImage)
         {
-            imageSubtitleInput = $"{GetImageSubtitleOffset(cutStart, assaSubtitleFileName)} -i \"{assaSubtitleFileName}\"";
+            imageSubtitleInput = $"{GetImageSubtitleOffset(cutStart, assaSubtitleFileName, inputVideoFileName)} -i \"{assaSubtitleFileName}\"";
             withSubtitles = mode3D == Export3DMode.None
                 ? $"{mainVideoStream}scale={width}:{height}[video];[{inputCount}:s]scale={width}:{height}[subs];[video][subs]overlay={ImageSubtitleOverlayOptions}"
                 : MakeStereo3DGraph($"{mainVideoStream}scale={width}:{height}", $"[{inputCount}:s]scale={width}:{height}", null, width, height, mode3D, depth3D);
@@ -418,11 +418,13 @@ public class FfmpegGenerator
     /// ffmpeg restarts every input at zero: a video seeked with "-ss" begins at the cut, and a
     /// sup begins at its first segment - so without an offset a sup whose first subtitle is at
     /// 11:19 showed it on the first frame, and every later one that much too early. The offset
-    /// is the sup's own start minus the cut. Empty when that is zero.
+    /// is the sup's own start minus the cut. Empty when that is zero. The sup is on the player's
+    /// timeline, which is ahead of ffmpeg's (the cut) by the video's timeline offset (#16966).
     /// </summary>
-    private static string GetImageSubtitleOffset(string? cutStart, string imageSubtitleFileName)
+    private static string GetImageSubtitleOffset(string? cutStart, string imageSubtitleFileName, string inputVideoFileName)
     {
-        var offset = GetFirstSupSegmentSeconds(imageSubtitleFileName) - GetSeekSeconds(cutStart);
+        var offset = GetFirstSupSegmentSeconds(imageSubtitleFileName) - GetSeekSeconds(cutStart) -
+                     WaveFileExtractor.GetTimelineOffsetMilliseconds(inputVideoFileName) / 1000.0;
         if (Math.Abs(offset) < 0.0005)
         {
             return string.Empty;
@@ -570,6 +572,17 @@ public class FfmpegGenerator
     public static string GetScreenShot(string inputFileName, string timeCode, string colorMatrix = "")
     {
         timeCode = NormalizeFfmpegTimeCode(timeCode);
+
+        // The time is on the player's timeline, "-ss" on ffmpeg's (#16966).
+        if (TryGetFfmpegSeconds(timeCode, out var playerSeconds))
+        {
+            var ffmpegSeconds = WaveFileExtractor.ToFfmpegSeconds(inputFileName, playerSeconds);
+            if (ffmpegSeconds != playerSeconds)
+            {
+                timeCode = ffmpegSeconds.ToString("0.###", CultureInfo.InvariantCulture);
+            }
+        }
+
         var outputFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
         var vfMatrix = string.Empty;
         if (!string.IsNullOrEmpty(colorMatrix))
@@ -1831,6 +1844,16 @@ public class FfmpegGenerator
         CutVideoTransitionOptions? transitions,
         string videoEncoding)
     {
+        // The ranges are on the player's timeline; seeks and trims are on ffmpeg's (#16966).
+        var offsetSeconds = WaveFileExtractor.GetTimelineOffsetMilliseconds(inputFileName) / 1000.0;
+        if (offsetSeconds > 0)
+        {
+            ranges = ranges
+                .Select(r => (r.Start.HasValue ? Math.Max(0, r.Start.Value - offsetSeconds) : r.Start,
+                              r.End.HasValue ? Math.Max(0, r.End.Value - offsetSeconds) : r.End))
+                .ToList();
+        }
+
         if (transitions is { UsesPlan: true })
         {
             var plan = CutVideoTransitionPlan.Create(ranges, transitions);

@@ -65,6 +65,23 @@ public static class WaveFileExtractor
         return ToFfmpegRange(startSeconds, durationSeconds, GetTimelineOffsetMilliseconds(videoFileName));
     }
 
+    /// <summary>A time on the player's timeline as the "-ss" ffmpeg needs for the same frame or sample.</summary>
+    public static double ToFfmpegSeconds(string videoFileName, double playerSeconds)
+    {
+        return Math.Max(0, playerSeconds - GetTimelineOffsetMilliseconds(videoFileName) / 1000.0);
+    }
+
+    /// <summary>
+    /// An "adelay" that pads the start of audio extracted with "aresample=async=1:first_pts=0" so
+    /// it lines up with the player's timeline, as ",adelay=..." to append to that filter chain -
+    /// empty when there is no offset.
+    /// </summary>
+    public static string GetTimelinePadFilter(string videoFileName)
+    {
+        var offset = GetTimelineOffsetMilliseconds(videoFileName);
+        return offset > 0 ? $",adelay=delays={offset}:all=1" : string.Empty;
+    }
+
     internal static (double StartSeconds, double DurationSeconds) ToFfmpegRange(double startSeconds, double durationSeconds, int offsetMilliseconds)
     {
         if (offsetMilliseconds <= 0)

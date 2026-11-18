@@ -762,7 +762,7 @@ public partial class VideoOcrViewModel : ObservableObject
     private async Task ExtractSingleFrame(string outputFileName, double positionSeconds, CancellationToken cancellationToken)
     {
         // -ss before -i: seek in the demuxer, so a test frame late in a long video is still fast.
-        var arguments = $"-nostdin -y -ss {positionSeconds.ToString("0.###", CultureInfo.InvariantCulture)} " +
+        var arguments = $"-nostdin -y -ss {WaveFileExtractor.ToFfmpegSeconds(_videoFileName, positionSeconds).ToString("0.###", CultureInfo.InvariantCulture)} " +
                         $"-i \"{_videoFileName}\" " +
                         $"-vf \"{GetCropAndScaleFilter()}\" " +
                         $"-frames:v 1 -q:v 2 \"{outputFileName}\"";
@@ -890,7 +890,8 @@ public partial class VideoOcrViewModel : ObservableObject
                         VideoFileName = _videoFileName,
                         FramesFolder = rangeScan.Folder,
                         CoarseFps = FramesPerSecond,
-                        OffsetMs = rangeScan.Range.StartSeconds * 1000.0,
+                        OffsetMs = GetFirstFrameSeconds(rangeScan.Range) * 1000.0,
+                        TimelineOffsetMs = WaveFileExtractor.GetTimelineOffsetMilliseconds(_videoFileName),
                         BrightnessMinimum = BrightnessMinimum,
                         ImageSimilarityPercent = Se.Settings.Video.VideoOcr.ImageSimilarityPercent,
                         CropAndScaleFilter = GetCropAndScaleFilter(),
@@ -1041,6 +1042,17 @@ public partial class VideoOcrViewModel : ObservableObject
         return $"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}";
     }
 
+    /// <summary>
+    /// The player time of a range's first extracted frame: its start, but never before ffmpeg's
+    /// zero - the video's timeline offset (#16966) - where a whole-video or early range begins.
+    /// </summary>
+    private double GetFirstFrameSeconds(VideoOcrTimeRange range)
+    {
+        var offsetSeconds = WaveFileExtractor.GetTimelineOffsetMilliseconds(_videoFileName) / 1000.0;
+        var isWholeVideo = range.StartSeconds <= 0 && range.EndSeconds >= DurationSeconds;
+        return isWholeVideo ? offsetSeconds : Math.Max(range.StartSeconds, offsetSeconds);
+    }
+
     private async Task<List<VideoOcrFrameGroup>> GroupFrames(List<string> frameFileNames, VideoOcrTimeRange range, CancellationToken cancellationToken)
     {
         var lastAnalyzeUpdate = 0L;
@@ -1065,7 +1077,7 @@ public partial class VideoOcrViewModel : ObservableObject
 
         foreach (var group in groups)
         {
-            group.OffsetMs = range.StartSeconds * 1000.0;
+            group.OffsetMs = GetFirstFrameSeconds(range) * 1000.0;
         }
 
         return groups;
@@ -1078,11 +1090,13 @@ public partial class VideoOcrViewModel : ObservableObject
         // A range seeks with -ss before -i (fast), and ffmpeg then decodes from the key frame
         // and drops frames up to the exact start, so frame 0 is the range start.
         var outputPattern = Path.Combine(framesFolder, "img%06d.jpg");
+        // Range times are on the player's timeline, "-ss" on ffmpeg's (#16966).
         var isWholeVideo = range.StartSeconds <= 0 && range.EndSeconds >= DurationSeconds;
+        var firstFrameSeconds = GetFirstFrameSeconds(range);
         var rangeArguments = isWholeVideo
             ? string.Empty
-            : $"-ss {range.StartSeconds.ToString("0.###", CultureInfo.InvariantCulture)} " +
-              $"-t {range.LengthSeconds.ToString("0.###", CultureInfo.InvariantCulture)} ";
+            : $"-ss {WaveFileExtractor.ToFfmpegSeconds(_videoFileName, firstFrameSeconds).ToString("0.###", CultureInfo.InvariantCulture)} " +
+              $"-t {Math.Max(0, range.EndSeconds - firstFrameSeconds).ToString("0.###", CultureInfo.InvariantCulture)} ";
         var arguments = $"-nostdin -y {rangeArguments}-i \"{_videoFileName}\" " +
                         $"-vf \"fps={FramesPerSecond.ToString(CultureInfo.InvariantCulture)}," +
                         $"{GetCropAndScaleFilter()}\" " +
