@@ -414,7 +414,7 @@ public class LanguageVideo
         ToggleSubtitlesOnVideoPlayer = "Toggle subtitles on video player";
         SubtitlesOnVideoPlayerOn = "Subtitles on video player: on";
         SubtitlesOnVideoPlayerOff = "Subtitles on video player: off";
-        CycleVideoFlip = "Cycle video flip";
+        CycleVideoFlip = "Cycle video flip (mpv)";
         VideoFlipOff = "Video flip: off";
         VideoFlipHorizontal = "Video flip: horizontal (mirror)";
         VideoFlipVertical = "Video flip: vertical";
