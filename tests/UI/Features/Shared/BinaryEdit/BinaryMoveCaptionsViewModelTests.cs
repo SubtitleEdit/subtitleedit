@@ -129,4 +129,53 @@ public class BinaryMoveCaptionsViewModelTests
         Assert.Equal(0, top.Y);
         Assert.Equal(1040, bottom.Y);
     }
+
+    [AvaloniaFact]
+    public void Apply_CaptionsThatSharedAYKeepSharingIt()
+    {
+        // #16360: same Y, different bitmap heights (one has descenders). 2.39:1 on 1080p, offset 10.
+        var withDescenders = MakeItem(y: 876, height: 149);
+        var withoutDescenders = MakeItem(y: 876, height: 137);
+
+        BinaryMoveCaptionsViewModel.Apply(new List<BinarySubtitleItem> { withDescenders, withoutDescenders }, 1080, 138, 10, MoveCaptionsMode.IntoPicture);
+
+        Assert.Equal(783, withDescenders.Y);
+        Assert.Equal(783, withoutDescenders.Y);
+    }
+
+    [AvaloniaFact]
+    public void Apply_TopCaptionsKeepTheirRelativePositions()
+    {
+        var higher = MakeItem(y: 20, height: 60);
+        var lower = MakeItem(y: 30, height: 80);
+
+        BinaryMoveCaptionsViewModel.Apply(new List<BinarySubtitleItem> { higher, lower }, 1080, 138, 10, MoveCaptionsMode.IntoPicture);
+
+        Assert.Equal(148, higher.Y);
+        Assert.Equal(158, lower.Y);
+    }
+
+    [AvaloniaFact]
+    public void Apply_IntoBars_BottomOffsetComesFromTheLowestBottomEdge()
+    {
+        var a = MakeItem(y: 800, height: 100); // bottom edge 900
+        var b = MakeItem(y: 820, height: 60);  // bottom edge 880
+
+        BinaryMoveCaptionsViewModel.Apply(new List<BinarySubtitleItem> { a, b }, 1080, 138, 10, MoveCaptionsMode.IntoBars);
+
+        Assert.Equal(1080 - 10 - 100, a.Y);
+        Assert.Equal(a.Y + 20, b.Y);
+    }
+
+    [AvaloniaFact]
+    public void GetNewYs_TopAndBottomMoveIndependently()
+    {
+        var top = MakeItem(y: 0, height: 60);
+        var bottom = MakeItem(y: 1010, height: 60);
+        var noBitmap = new BinarySubtitleItem(TimeSpan.Zero, TimeSpan.FromSeconds(1)) { Y = 42 };
+
+        var newYs = BinaryMoveCaptionsViewModel.GetNewYs(new List<BinarySubtitleItem> { top, bottom, noBitmap }, 1080, 138, 10, MoveCaptionsMode.IntoPicture);
+
+        Assert.Equal(new[] { 148, 1080 - 138 - 60 - 10, 42 }, newYs);
+    }
 }

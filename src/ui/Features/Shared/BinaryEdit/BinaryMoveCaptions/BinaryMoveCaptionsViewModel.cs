@@ -25,7 +25,8 @@ public enum MoveCaptionsMode
 /// BDSup2Sub's "move all captions": for letterboxed (cinemascope) video, push every caption
 /// either into the black bars or back inside the active picture, keeping a fixed offset from
 /// the bar edge. A caption whose centre is in the upper half of the screen goes to the top
-/// edge, the rest go to the bottom edge - the same rule BDSup2Sub uses.
+/// edge, the rest go to the bottom edge - the same rule BDSup2Sub uses. Unlike BDSup2Sub, all
+/// captions of one edge move by the same offset, so their relative positions are kept (#16360).
 /// </summary>
 public partial class BinaryMoveCaptionsViewModel : ObservableObject
 {
@@ -132,7 +133,8 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
     private void UpdateInfo()
     {
         var lang = Se.Language.Tools.ImageBasedEdit;
-        var moving = _subtitles.Count(s => GetNewY(s, _screenHeight, BarHeight, Offset, Mode) != s.Y);
+        var newYs = GetNewYs(_subtitles, _screenHeight, BarHeight, Offset, Mode);
+        var moving = _subtitles.Where((s, i) => newYs[i] != s.Y).Count();
         InfoText = string.Format(lang.LetterboxBarHeightXPxYOfZCaptionsWillMove, BarHeight, moving, _subtitles.Count);
     }
 
@@ -148,7 +150,7 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
             return item.Y;
         }
 
-        var isTop = item.Y + height / 2.0 < screenHeight / 2.0;
+        var isTop = IsTop(item, screenHeight);
         int y;
         if (mode == MoveCaptionsMode.IntoBars)
         {
@@ -164,11 +166,61 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
         return Math.Clamp(y, 0, Math.Max(0, screenHeight - height));
     }
 
-    public static void Apply(IEnumerable<BinarySubtitleItem> subtitles, int screenHeight, int barHeight, int offset, MoveCaptionsMode mode)
+    /// <summary>
+    /// Computes the new Y of every caption. All captions of one edge (top or bottom) move by the
+    /// same offset, taken from the caption that sticks out furthest towards that edge, so captions
+    /// that shared a Y keep sharing it. Bitmaps are cropped to the ink, so their heights differ
+    /// with the text (descenders); placing each one by its own edge would make the text baseline
+    /// jump between captions (#16360).
+    /// </summary>
+    public static int[] GetNewYs(IReadOnlyList<BinarySubtitleItem> subtitles, int screenHeight, int barHeight, int offset, MoveCaptionsMode mode)
     {
-        foreach (var item in subtitles)
+        var newYs = subtitles.Select(s => s.Y).ToArray();
+        if (screenHeight <= 0)
         {
-            item.Y = GetNewY(item, screenHeight, barHeight, offset, mode);
+            return newYs;
+        }
+
+        var movable = Enumerable.Range(0, subtitles.Count)
+            .Where(i => (subtitles[i].Bitmap?.PixelSize.Height ?? 0) > 0)
+            .ToList();
+        var top = movable.Where(i => IsTop(subtitles[i], screenHeight)).ToList();
+        var bottom = movable.Except(top).ToList();
+
+        // Top edge: the caption closest to the top. Bottom edge: the caption whose bottom is lowest.
+        MoveZone(top, i => subtitles[i].Y);
+        MoveZone(bottom, i => -(subtitles[i].Y + subtitles[i].Bitmap!.PixelSize.Height));
+        return newYs;
+
+        void MoveZone(List<int> zone, Func<int, int> protrusion)
+        {
+            if (zone.Count == 0)
+            {
+                return;
+            }
+
+            var anchor = subtitles[zone.MinBy(protrusion)];
+            var delta = GetNewY(anchor, screenHeight, barHeight, offset, mode) - anchor.Y;
+            foreach (var i in zone)
+            {
+                var height = subtitles[i].Bitmap!.PixelSize.Height;
+                newYs[i] = Math.Clamp(subtitles[i].Y + delta, 0, Math.Max(0, screenHeight - height));
+            }
+        }
+    }
+
+    private static bool IsTop(BinarySubtitleItem item, int screenHeight)
+    {
+        var height = item.Bitmap?.PixelSize.Height ?? 0;
+        return item.Y + height / 2.0 < screenHeight / 2.0;
+    }
+
+    public static void Apply(IReadOnlyList<BinarySubtitleItem> subtitles, int screenHeight, int barHeight, int offset, MoveCaptionsMode mode)
+    {
+        var newYs = GetNewYs(subtitles, screenHeight, barHeight, offset, mode);
+        for (var i = 0; i < subtitles.Count; i++)
+        {
+            subtitles[i].Y = newYs[i];
         }
     }
 
