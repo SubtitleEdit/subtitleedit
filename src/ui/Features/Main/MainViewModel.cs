@@ -12002,6 +12002,11 @@ public partial class MainViewModel :
             case OpenFromUrlMode.OpenOnline:
                 await VideoOpenFile(url);
                 SetSubtitleFileNameFromVideoIfEmpty(url);
+                if (!await WaitForOnlineVideoLoadedAsync(url))
+                {
+                    break;
+                }
+
                 if (result.DownloadSubtitles)
                 {
                     // No video on disk — fetch subs to a temp dir, show picker, then
@@ -12029,6 +12034,65 @@ public partial class MainViewModel :
                 break;
         }
     }
+
+    /// <summary>
+    /// Shows "Loading online video..." until the stream opened by "Open online" is playable.
+    /// Opening a URL returns as soon as the player has queued it, while the player still has to
+    /// resolve it via yt-dlp and buffer the stream - often many seconds of an empty player with
+    /// no sign that anything is happening (#17001). The player reports no load failure, so the
+    /// wait ends on a known duration, on Cancel (which closes the video), when another video
+    /// replaces this one, or after a timeout. Returns false when the user cancelled.
+    /// </summary>
+    private async Task<bool> WaitForOnlineVideoLoadedAsync(string url, int timeoutSeconds = 90)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || Window == null || IsOnlineVideoReady(vp))
+        {
+            return true;
+        }
+
+        var pleaseWaitVm = _windowService.ShowWindow<PleaseWaitWindow, PleaseWaitViewModel>(Window, (_, vm) =>
+        {
+            vm.StatusText = Se.Language.Video.OpenFromUrlLoadingVideo;
+            vm.CanCancel = true;
+        });
+
+        try
+        {
+            var end = DateTime.UtcNow.AddSeconds(timeoutSeconds);
+            while (DateTime.UtcNow < end)
+            {
+                if (pleaseWaitVm.IsCancelled)
+                {
+                    if (_videoFileName == url)
+                    {
+                        VideoCloseFile();
+                    }
+
+                    return false;
+                }
+
+                // A video opened meanwhile (the wait window is not modal) or a layout rebuild
+                // that disposed the control ends this wait - it is no longer about this stream.
+                vp = GetVideoPlayerControl();
+                if (vp == null || vp.IsDisposed || _videoFileName != url || IsOnlineVideoReady(vp))
+                {
+                    return true;
+                }
+
+                await Task.Delay(200);
+            }
+
+            ShowStatus(Se.Language.Video.OpenFromUrlStillLoadingVideo, 6000);
+            return true;
+        }
+        finally
+        {
+            pleaseWaitVm.Close();
+        }
+    }
+
+    private static bool IsOnlineVideoReady(VideoPlayerControl vp) => vp.VideoPlayer.Duration > 0.001;
 
     /// <summary>
     /// Streaming-mode helper: runs yt-dlp once to write every available subtitle

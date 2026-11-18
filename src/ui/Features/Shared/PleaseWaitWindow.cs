@@ -3,12 +3,14 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
 /// <summary>
 /// Busy indicator in the editor look (see <see cref="EditorChrome"/>): the status text over
-/// an accent progress bar.
+/// an accent progress bar, plus a Cancel button for callers that set
+/// <see cref="PleaseWaitViewModel.CanCancel"/>.
 /// </summary>
 public class PleaseWaitWindow : Window
 {
@@ -56,6 +58,11 @@ public class PleaseWaitWindow : Window
         progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsIndeterminate)));
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
+        var buttonCancel = UiUtil.MakeButton(Se.Language.General.Cancel, vm.CancelCommand);
+        buttonCancel.HorizontalAlignment = HorizontalAlignment.Right;
+        buttonCancel.Margin = new Thickness(0, 6, 0, 0);
+        buttonCancel.Bind(IsVisibleProperty, new Binding(nameof(vm.CanCancel)));
+
         Content = new Border
         {
             Background = EditorChrome.PanelBrush,
@@ -67,6 +74,7 @@ public class PleaseWaitWindow : Window
                 {
                     titleText,
                     progressBar,
+                    buttonCancel,
                 }
             },
         };

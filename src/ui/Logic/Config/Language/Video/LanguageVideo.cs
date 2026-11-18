@@ -196,6 +196,8 @@ public class LanguageVideo
     public string IndexTts25Emotion { get; set; }
     public string IndexTts25EmotionStrength { get; set; }
     public string PickOnlineSubtitleFetching { get; set; }
+    public string OpenFromUrlLoadingVideo { get; set; }
+    public string OpenFromUrlStillLoadingVideo { get; set; }
     public string PickOnlineSubtitleNoneFound { get; set; }
     public string ForcedAligner { get; set; }
     public string PostProcessing { get; set; }
@@ -397,6 +399,8 @@ public class LanguageVideo
         OpenFromUrlBotCheckHintWithBrowserX = "YouTube still wants to confirm you are not a bot. Make sure you are signed in to YouTube in {0}. Chrome and Edge on Windows often block reading their cookies - close the browser first, or try Firefox.";
         PickOnlineSubtitleTitle = "Pick subtitle to download";
         PickOnlineSubtitleFetching = "Downloading subtitles...";
+        OpenFromUrlLoadingVideo = "Loading online video...";
+        OpenFromUrlStillLoadingVideo = "The online video is still not loaded - it may be unavailable.";
         PickOnlineSubtitleNoneFound = "No subtitles found for this URL.";
         ForcedAligner = "Forced aligner";
         PostProcessing = "Post-processing...";
