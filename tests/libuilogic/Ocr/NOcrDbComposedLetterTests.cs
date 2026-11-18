@@ -142,6 +142,29 @@ public class NOcrDbComposedLetterTests
         Assert.Equal("ł", db.GetMatch(new NikseBitmap2(100, 40), line, line[1], 0, true, 25)?.Text);
     }
 
+    [Fact]
+    public void StrokedL_NextToADescender_IsRead()
+    {
+        // A "j" hangs below the baseline: taller than the "\u0142", but it reaches no higher.
+        var stroked = Draw(10, 24, (c, p) =>
+        {
+            c.DrawRect(3, 0, 4, 24, p);
+            c.DrawRect(0, 13, 3, 2, p);
+            c.DrawRect(7, 8, 3, 2, p);
+        });
+        var tall = Draw(12, 24, (c, p) => c.DrawRect(0, 0, 12, 24, p));
+        var descender = Draw(6, 34, (c, p) => c.DrawRect(0, 0, 6, 34, p));
+        var line = new List<ImageSplitterItem2>
+        {
+            new(0, 0, tall) { Top = 0, Baseline = 24 },
+            new(20, 0, stroked) { Top = 0, Baseline = 24 },
+            new(40, 0, descender) { Top = 0, Baseline = 24 },
+        };
+        var db = Db(Entry("e", Body(), 0));
+
+        Assert.Equal("\u0142", db.GetMatch(new NikseBitmap2(100, 40), line, line[1], 0, true, 25)?.Text);
+    }
+
     [Theory]
     [InlineData("dot", '\u0307')]
     [InlineData("acute", '\u0301')]

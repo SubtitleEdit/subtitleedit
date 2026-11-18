@@ -577,13 +577,16 @@ public class NOcrDb
     }
 
     /// <summary>
-    /// A stroked "ł" has no entry in a Latin database, and its stem fit a quote entry scaled
-    /// up ("mia'em" for "miałem"). A glyph that matched nothing or a quote mark, and is about as
-    /// tall as the tallest glyph on its line - which no comma or apostrophe is - is tried as one.
+    /// A stroked "ł" has no entry in a Latin database: its stem fit a quote entry scaled up
+    /// ("mia'em" for "miałem"), and a heavy diagonal stroke fit "f" ("byfo" for "było"). A glyph
+    /// that matched nothing, a quote mark or a bar-like letter, and is about as tall as the
+    /// tallest glyph on its line - which no comma or apostrophe is - is tried as one. The stroke
+    /// test itself rejects a real "f" or "t": their crossbar is level, not rising.
     /// </summary>
     private static NOcrChar? MatchStrokedLInLine(NOcrChar? match, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin)
     {
-        if (match != null && match.Text is not ("'" or "’" or "‘" or "´" or "`" or ",") || item.NikseBitmap is not { } bitmap)
+        if (match != null && match.Text is not ("'" or "’" or "‘" or "´" or "`" or "," or "f" or "t" or "l" or "I" or "|" or "1") ||
+            item.NikseBitmap is not { } bitmap)
         {
             return match;
         }
@@ -600,16 +603,21 @@ public class NOcrDb
             start--;
         }
 
+        // Heights above the baseline where it is known: a descender ("j", "g") makes a glyph
+        // taller without making it reach higher.
+        static int Ascent(ImageSplitterItem2 it, NikseBitmap2 b) =>
+            it.Baseline is { } baseline ? Math.Min(it.Top + b.Height, baseline) - it.Top : b.Height;
+
         var tallest = 0;
         for (var i = start; i < list.Count && list[i].SpecialCharacter != Environment.NewLine; i++)
         {
             if (list[i].NikseBitmap is { } other)
             {
-                tallest = Math.Max(tallest, other.Height);
+                tallest = Math.Max(tallest, Ascent(list[i], other));
             }
         }
 
-        if (bitmap.Height * 10 < tallest * 8)
+        if (Ascent(item, bitmap) * 10 < tallest * 8)
         {
             return match;
         }
@@ -991,13 +999,14 @@ public class NOcrDb
 
         // An accented letter the database has no entry for ("ż", "ś", "ń" in a Latin database)
         // is a letter it knows with a mark over it. A loose match to another accented letter is
-        // challenged by that reading too: a "ć" fit "á" at a tenth of its points wrong.
+        // challenged by that reading too: a "ć" fit "á" at a tenth of its points wrong. So is any
+        // very loose match: a small "ż" fit an italic "k" at an eighth wrong.
         if (single == null)
         {
             single = MatchComposedAccent(bitmap, topMargin, maxWrongPixels) ?? MatchOgonek(bitmap, topMargin);
         }
         else if (singleRate > ItalicChallengeMinRate && single.Text.Length == 1 &&
-                 single.Text.Normalize(System.Text.NormalizationForm.FormD).Length > 1 &&
+                 (single.Text.Normalize(System.Text.NormalizationForm.FormD).Length > 1 || singleRate > ComposedBodyMaxRate * 2) &&
                  MatchComposedAccent(bitmap, topMargin, maxWrongPixels, out var composedRate) is { } composed &&
                  composed.Text != single.Text && composedRate * ItalicChallengeRatio <= singleRate)
         {
@@ -1463,7 +1472,9 @@ public class NOcrDb
                 break;
             }
 
-            if (tailInk == 0 || tailInk * 10 > total * 3 || tailSumX < tailInk * width * 4 / 10 || rowInk[cut - 1] == 0)
+            // The hook hangs under the middle or the right of the letter (some fonts draw it
+            // detached, under the middle), never off its left edge.
+            if (tailInk == 0 || tailInk * 10 > total * 3 || tailSumX < tailInk * width * 2 / 10 || rowInk[cut - 1] == 0)
             {
                 continue;
             }
