@@ -32,7 +32,7 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 
 `-1` means the model/server default is used.
 
-- **Temperature** — Randomness. When unset, Subtitle Edit uses the curated value for the model, or 0.2 — low temperatures keep terminology consistent across batches
+- **Temperature** — Randomness. When unset, Subtitle Edit uses the curated value for a local llama.cpp model, or 0.2 — low temperatures keep terminology consistent across batches
 - **Top-p**, **Top-k**, **Repeat penalty** — Standard sampling options, passed through when set
 - **Max tokens per reply** — Response length cap; unset means no cap is sent
 - **Server context size (tokens)** — The context window for the locally started llama.cpp server (default 16384). Bigger batches, more history, and a long synopsis/glossary need more context. Only affects the local llama.cpp server; Ollama and LM Studio manage their own context
