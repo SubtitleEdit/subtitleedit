@@ -1,10 +1,14 @@
 # Auto Translate: Advanced Local Engines
 
-The **llama.cpp advanced (local LLM)**, **Ollama advanced (local LLM)** and **LM Studio advanced (local LLM)** engines translate in batches with surrounding context, a synopsis, and a glossary — giving more consistent names, pronouns, and terminology than line-by-line translation. This page covers their **Advanced...** settings dialog and the llama.cpp engine settings.
+The **llama.cpp advanced (local LLM)**, **Ollama advanced (local LLM)**, **LM Studio advanced (local LLM)** and **OpenAI Compatible API advanced** engines translate in batches with surrounding context, a synopsis, and a glossary — giving more consistent names, pronouns, and terminology than line-by-line translation. This page covers their **Advanced...** settings dialog and the llama.cpp engine settings.
 
 LM Studio advanced talks to LM Studio's OpenAI-compatible endpoint (default `http://localhost:1234/v1/chat/completions`). LM Studio can have several models loaded; leave the model empty to use the loaded one.
 
-The same engines are available headlessly in `seconv` as `--translate-engine:llamacpp-advanced`, `ollama-advanced` and `lmstudio-advanced`, with the context options below as command-line options or as `tools.llamaCppAdvanced` keys in its `--settings` file — see [Advanced local engines](../reference/command-line.md#advanced-local-engines) in the command-line reference. `seconv` also has `openai-compatible-advanced`, the same loop for any OpenAI-style chat-completions endpoint such as a hosted provider.
+OpenAI Compatible API advanced talks to any OpenAI-style chat-completions endpoint, for example a hosted provider. It takes its URL, model and API key like **OpenAI Compatible API**: the same default URL (`http://localhost:8000/v1/chat/completions`), and the model and the key are sent when set. It leaves out the request fields only llama.cpp knows, which a strict server rejects, and sampling values you leave at `-1` are not filled in from a curated llama.cpp model.
+
+A model that reasons before it answers spends the reply budget on its thoughts. When a reply runs out that way, OpenAI Compatible API advanced asks once more with a larger budget and keeps it for the rest of the file. To switch reasoning off, put the provider's own field in **Extra request JSON**, for example `{"reasoning": {"enabled": false}}` on OpenRouter. OpenAI's own reasoning models (the o-series, gpt-5) want `max_completion_tokens` in place of `max_tokens` and accept only their default temperature: `{"max_tokens": null, "temperature": null, "max_completion_tokens": 8000}`. The **Advanced...** settings, Extra request JSON included, are shared by all four advanced engines, so clear such provider fields again before a run with a local engine.
+
+The same engines are available headlessly in `seconv` as `--translate-engine:llamacpp-advanced`, `ollama-advanced`, `lmstudio-advanced` and `openai-compatible-advanced`, with the context options below as command-line options or as `tools.llamaCppAdvanced` keys in its `--settings` file — see [Advanced local engines](../reference/command-line.md#advanced-local-engines) in the command-line reference.
 
 See [Auto Translate](auto-translate.md) for the translation window itself, and [Best local models for translating from English](auto-translate.md#best-local-models-for-translating-from-english) for which llama.cpp model to download.
 
@@ -16,7 +20,7 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 
 ### Context
 
-- **Synopsis** — Optional description of the content (genre, setting, tone), included in every request so the model picks a fitting style
+- **Synopsis** — Optional description of the content (genre, setting, tone), included in every request so the model picks a fitting style. **Generate with AI** drafts it, with names and terms, from the whole subtitle: llama.cpp advanced uses the local model, the other advanced engines their own server, model and key
 - **Glossary** — Terms the model must translate a certain way, one per line: `source term = translation`
 - **Prompt text** — Custom system instructions replacing the built-in prompt (`{0}` = source language, `{1}` = target language); leave empty to use the built-in prompt
 - **Previous lines as context** — How many already-translated lines before the batch are sent as history for consistency (default 12)
@@ -34,7 +38,7 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 - **Server context size (tokens)** — The context window for the locally started llama.cpp server (default 16384). Bigger batches, more history, and a long synopsis/glossary need more context. Only affects the local llama.cpp server; Ollama and LM Studio manage their own context
 - **Extra server parameters** — Additional `llama-server` command-line arguments, e.g. `-ngl 30 --no-mmap`, applied when the local server starts. They are appended after Subtitle Edit's own flags, so a repeated flag overrides Subtitle Edit's value
 - **Use only these parameters** — Start `llama-server` with the parameters above instead of Subtitle Edit's own tuning; only the model, host and port are still set. Ignored while the field is empty
-- **Extra request JSON** — A JSON object merged into every request after Subtitle Edit's own fields, so its fields win: provider switches such as a reasoning on/off field, or sampling fields the dialog does not have (`{"top_k": 40}`). A `null` value removes a field. `messages` and `response_format` cannot be set
+- **Extra request JSON** — A JSON object merged into every request after Subtitle Edit's own fields, so its fields win: provider switches such as a reasoning on/off field, or sampling fields the dialog does not have (`{"top_k": 40}`). A `null` value removes a field. `messages` and `response_format` cannot be set. Like the other settings here, it is shared by all advanced engines
 
 ## llama.cpp Engine Settings
 

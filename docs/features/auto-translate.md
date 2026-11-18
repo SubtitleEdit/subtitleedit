@@ -43,6 +43,7 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 - **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (Index-Translate, TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT, Hy-MT2 or TranslatePsy-AfriSLM for English ↔ 19 African languages) and runs a local `llama-server` for you. See [Best local models for translating from English](#best-local-models-for-translating-from-english) for a recommendation and [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
 - **llama.cpp advanced (local LLM)** — The managed llama.cpp server translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **OpenAI Compatible API** — Generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...); configure URL, model, prompt, and an optional API key
+- **OpenAI Compatible API advanced** — Any OpenAI-compatible `chat/completions` endpoint, for example a hosted provider, translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **Anthropic Claude** — AI translation (requires API key)
 - **Groq** — AI translation (requires API key)
 - **OpenRouter** — AI translation (requires API key)
@@ -151,13 +152,13 @@ Headless runs take the same prompt via `seconv --translate-prompt:<text|file>` �
 
 Depending on the selected engine, you may need to provide:
 
-- **API Key** — Authentication key for cloud services. Optional for LM Studio, Ollama, llama.cpp with your own server, their advanced variants and OpenAI Compatible API: fill it in only when the server asks for a key. It is sent as a Bearer token. Each engine keeps its own key together with its URL; the two llama.cpp engines share both.
+- **API Key** — Authentication key for cloud services. Optional for LM Studio, Ollama, llama.cpp with your own server, OpenAI Compatible API and their advanced variants: fill it in only when the server asks for a key. It is sent as a Bearer token. Each engine keeps its own key together with its URL; the two llama.cpp engines share both.
 - **API URL** — Custom endpoint URL (for self-hosted services)
 - **Model** — Specific model to use (for AI engines)
 
 The gear button opens the engine's **Settings** dialog with **Line merge**, **Delay in seconds between requests**, **Max bytes per request** and, for engines that have one, the **Prompt text** with a reset-to-default button. **Do not translate lines in music symbols (♪ ... ♪)** leaves song lines untranslated.
 
-The **llama.cpp advanced**, **Ollama advanced** and **LM Studio advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
+The **llama.cpp advanced**, **Ollama advanced**, **LM Studio advanced** and **OpenAI Compatible API advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
 
 ## Translation Review
 

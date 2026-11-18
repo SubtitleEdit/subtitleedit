@@ -47,6 +47,12 @@ public class SeAutoTranslate
     public string LmStudioAdvancedUrl { get; set; } = LmStudioAdvancedTranslate.DefaultUrl;
     public string LmStudioAdvancedModel { get; set; } = string.Empty;
 
+    // OpenAI Compatible advanced: the advanced engine against any OpenAI-style endpoint, for example
+    // a hosted provider. Url, model and key as for the regular OpenAI Compatible engine.
+    public string OpenAiCompatibleAdvancedUrl { get; set; } = OpenAiCompatibleTranslate.DefaultUrl;
+    public string OpenAiCompatibleAdvancedModel { get; set; } = string.Empty;
+    public string OpenAiCompatibleAdvancedApiKey { get; set; } = string.Empty;
+
     // Optional keys for a llama.cpp, Ollama or LM Studio server that asks for one, sent as a
     // Bearer token. One per URL setting above, so a key only ever goes to the address it was
     // entered for; the llama.cpp key is for the external server (the two llama.cpp engines share

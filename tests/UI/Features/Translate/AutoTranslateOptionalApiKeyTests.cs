@@ -29,6 +29,7 @@ public class AutoTranslateOptionalApiKeyTests
     public void EnginesThatRunWithoutAKey_MayLeaveTheBoxEmpty()
     {
         Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new OpenAiCompatibleTranslate()));
+        Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new OpenAiCompatibleAdvancedTranslate()));
         Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new LibreTranslate()));
         Assert.True(AutoTranslateViewModel.ApiKeyIsOptional(new MyMemoryApi()));
     }

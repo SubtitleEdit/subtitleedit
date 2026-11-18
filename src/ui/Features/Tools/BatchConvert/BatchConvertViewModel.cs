@@ -554,6 +554,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             new OllamaAdvancedTranslate(),
             new LibreTranslate(),
             new OpenAiCompatibleTranslate(),
+            new OpenAiCompatibleAdvancedTranslate(),
             new LmStudioTranslate(),
             new LmStudioAdvancedTranslate(),
             new LlamaCppTranslate(),
@@ -3233,13 +3234,14 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     private async Task AutoTranslateBrowseModel()
     {
         // OpenAI-compatible servers list their models at GET {base}/v1/models instead of /api/tags.
-        if (SelectedAutoTranslator is OpenAiCompatibleTranslate or LmStudioTranslate or LmStudioAdvancedTranslate)
+        if (SelectedAutoTranslator is OpenAiCompatibleTranslate or OpenAiCompatibleAdvancedTranslate or LmStudioTranslate or LmStudioAdvancedTranslate)
         {
             var isOpenAiCompatible = SelectedAutoTranslator is OpenAiCompatibleTranslate;
+            var isOpenAiCompatibleAdvanced = SelectedAutoTranslator is OpenAiCompatibleAdvancedTranslate;
             var isLmStudio = SelectedAutoTranslator is LmStudioTranslate;
             var openAiUrl = !string.IsNullOrWhiteSpace(AutoTranslateUrl)
                 ? AutoTranslateUrl.Trim()
-                : isOpenAiCompatible ? OpenAiCompatibleTranslate.DefaultUrl
+                : isOpenAiCompatible || isOpenAiCompatibleAdvanced ? OpenAiCompatibleTranslate.DefaultUrl
                 : isLmStudio ? LmStudioTranslate.DefaultUrl : LmStudioAdvancedTranslate.DefaultUrl;
             var apiKey = AutoTranslateApiKey; // a server that asks for a key asks for it on the model list too
             var openAiResult = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!,
@@ -3251,6 +3253,10 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 if (isOpenAiCompatible)
                 {
                     Se.Settings.AutoTranslate.OpenAiCompatibleModel = openAiResult.SelectedModel;
+                }
+                else if (isOpenAiCompatibleAdvanced)
+                {
+                    Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedModel = openAiResult.SelectedModel;
                 }
                 else if (isLmStudio)
                 {
@@ -4128,6 +4134,15 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             Se.Settings.AutoTranslate.OpenAiCompatibleModel = AutoTranslateModel.Trim();
         }
 
+        if (engineType == typeof(OpenAiCompatibleAdvancedTranslate))
+        {
+            // As for OpenAI Compatible above, in SE's own settings only, like the other advanced engines.
+            var apiUrl = AutoTranslateUrl.Trim();
+            Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl = string.IsNullOrEmpty(apiUrl) ? OpenAiCompatibleTranslate.DefaultUrl : apiUrl;
+            Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedApiKey = AutoTranslateApiKey.Trim();
+            Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedModel = AutoTranslateModel.Trim();
+        }
+
         if (engineType == typeof(LmStudioTranslate))
         {
             if (!string.IsNullOrEmpty(AutoTranslateUrl.Trim()))
@@ -4497,7 +4512,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // Batch size, context history and the synopsis/glossary/style prompt only exist on the
         // advanced engines; they are shared settings, so the same window serves both llama.cpp
         // (local or remote llama-server) and Ollama.
-        LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate or OllamaAdvancedTranslate or LmStudioAdvancedTranslate;
+        LlamaCppAdvancedButtonIsVisible = engine is LlamaCppAdvancedTranslate or OllamaAdvancedTranslate or LmStudioAdvancedTranslate or OpenAiCompatibleAdvancedTranslate;
 
         // The translate settings dialog holds the prompt and the shared delay/max-bytes/merge/
         // keep-music-lines settings, like in the Auto-translate window. The advanced engines run
@@ -4572,6 +4587,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
             AutoTranslateUrl = Se.Settings.AutoTranslate.OpenAiCompatibleUrl;
             AutoTranslateUrlIsVisible = true;
             AutoTranslateApiKey = Se.Settings.AutoTranslate.OpenAiCompatibleApiKey;
+            AutoTranslateApiKeyIsVisible = true;
+        }
+        else if (engine is OpenAiCompatibleAdvancedTranslate)
+        {
+            // Url, key and model as for OpenAI Compatible above, from its own settings.
+            AutoTranslateModel = Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedModel;
+            AutoTranslateModelBrowseIsVisible = true;
+            AutoTranslateModelIsVisible = true;
+            AutoTranslateUrl = Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl;
+            AutoTranslateUrlIsVisible = true;
+            AutoTranslateApiKey = Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedApiKey;
             AutoTranslateApiKeyIsVisible = true;
         }
         else if (engine is LmStudioTranslate)
