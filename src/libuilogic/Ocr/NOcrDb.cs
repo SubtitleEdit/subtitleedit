@@ -571,20 +571,289 @@ public class NOcrDb
         }
 
         match ??= MatchUnplacedMark(item, placement);
+        match = MatchStrokedLInLine(match, list, item, topMargin);
+        match = ResolveItalicSlash(match, parentBitmap, list, item, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor);
         return PlaceMark(match, placement, item);
     }
+
+    /// <summary>
+    /// A stroked "ł" has no entry in a Latin database, and its stem fit a quote entry scaled
+    /// up ("mia'em" for "miałem"). A glyph that matched nothing or a quote mark, and is about as
+    /// tall as the tallest glyph on its line - which no comma or apostrophe is - is tried as one.
+    /// </summary>
+    private static NOcrChar? MatchStrokedLInLine(NOcrChar? match, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin)
+    {
+        if (match != null && match.Text is not ("'" or "’" or "‘" or "´" or "`" or ",") || item.NikseBitmap is not { } bitmap)
+        {
+            return match;
+        }
+
+        var index = list.IndexOf(item);
+        if (index < 0)
+        {
+            return match;
+        }
+
+        var start = index;
+        while (start > 0 && list[start - 1].SpecialCharacter != Environment.NewLine)
+        {
+            start--;
+        }
+
+        var tallest = 0;
+        for (var i = start; i < list.Count && list[i].SpecialCharacter != Environment.NewLine; i++)
+        {
+            if (list[i].NikseBitmap is { } other)
+            {
+                tallest = Math.Max(tallest, other.Height);
+            }
+        }
+
+        if (bitmap.Height * 10 < tallest * 8)
+        {
+            return match;
+        }
+
+        return MatchStrokedL(bitmap, topMargin) ?? match;
+    }
+
+    // A straightened slash must fit "l" or "I" at least this well to be read as that letter.
+    private const double ItalicSlashMaxRate = 0.035;
+
+    // Letters looked at on each side of a slash to decide whether its line is italic.
+    private const int ItalicSlashNeighbors = 4;
+
+    /// <summary>
+    /// A steep italic "l" or "I" is a slanted bar - the very shape of "/" - and fits the slash
+    /// entry almost perfectly, so an italic line read "/ wou/d abso/ute/y /ove". A slash whose
+    /// straightened glyph fits "l" or "I" just as well, among letters that are mostly italic, is
+    /// that letter. Upright lines and slashes next to a digit ("24/7") keep the slash. Which of
+    /// "l" and "I" follows from the word around it (<see cref="ChooseBarLetter"/>). The decision
+    /// depends on the neighbors, so it runs after the per-bitmap match cache.
+    /// </summary>
+    private NOcrChar? ResolveItalicSlash(NOcrChar? match, NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor)
+    {
+        if (match is not { Text: "/", Italic: false } || italicFactor <= 0 || item.NikseBitmap is not { } bitmap)
+        {
+            return match;
+        }
+
+        var index = list.IndexOf(item);
+        if (index < 0)
+        {
+            return match;
+        }
+
+        NOcrChar? letter = null;
+        var letterRate = double.MaxValue;
+        foreach (var factor in GetItalicShears(italicFactor))
+        {
+            var straightened = bitmap.UnItalic(factor);
+            if (straightened.Width <= 0 || straightened.Height <= 0)
+            {
+                continue;
+            }
+
+            var candidate = GetMatchSingle(straightened, topMargin, deepSeek, maxWrongPixels, lastDitch: false, skipExactCheck: false, BaselinePlacement.Unknown, out var rate);
+            if (candidate?.Text is "l" or "I" && rate < letterRate)
+            {
+                letter = candidate;
+                letterRate = rate;
+            }
+        }
+
+        if (letter == null || letterRate > ItalicSlashMaxRate)
+        {
+            return match;
+        }
+
+        var previous = GetAdjacentText(parentBitmap, list, index - 1, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor);
+        var next = GetAdjacentText(parentBitmap, list, index + 1, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor);
+        if (previous.Length > 0 && char.IsDigit(previous[^1]) || next.Length > 0 && char.IsDigit(next[0]))
+        {
+            return match;
+        }
+
+        var italic = 0;
+        var upright = 0;
+        foreach (var direction in new[] { -1, 1 })
+        {
+            var found = 0;
+            for (var i = index + direction; i >= 0 && i < list.Count && found < ItalicSlashNeighbors; i += direction)
+            {
+                var neighbor = list[i];
+                if (neighbor.SpecialCharacter == Environment.NewLine)
+                {
+                    break;
+                }
+
+                if (neighbor.NikseBitmap is not { } neighborBitmap || neighborBitmap.Width * neighborBitmap.Height < SmallGlyphAreaLimit)
+                {
+                    continue;
+                }
+
+                var neighborMatch = GetMatch(parentBitmap, list, neighbor, neighbor.Top, deepSeek, maxWrongPixels, lastDitch, italicFactor, BaselinePlacement.Unknown);
+                if (neighborMatch == null || neighborMatch.Text == "/" || !neighborMatch.Text.Any(char.IsLetter))
+                {
+                    continue;
+                }
+
+                found++;
+                if (neighborMatch.Italic)
+                {
+                    italic++;
+                }
+                else
+                {
+                    upright++;
+                }
+            }
+        }
+
+        if (italic <= upright)
+        {
+            return match;
+        }
+
+        var text = ChooseBarLetter(
+            SkipBars(parentBitmap, list, index, -1, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor),
+            SkipBars(parentBitmap, list, index, 1, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor),
+            GetWordTextAfter(parentBitmap, list, index, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor),
+            () => IsSentenceStart(parentBitmap, list, index, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor));
+        return new NOcrChar(letter) { Text = text, Italic = true };
+    }
+
+    /// <summary>
+    /// "l" or "I" for a bar from the letters around it in its word (empty when the bar starts or
+    /// ends the word): after a lowercase letter or an apostrophe ("'ll") it is "l", and so it is
+    /// between a capital and a lowercase letter ("Please"); among capitals or alone it is "I".
+    /// Starting a word before an apostrophe it is "I" for the English contractions ("I'm",
+    /// "I'll", "I've", "I'd") and "l" for the French and Italian article ("l'edificio"). A bar
+    /// starting a lowercase word is "I" only at the start of a sentence ("It's"), as "l" is never
+    /// capitalized there ("a lot", "love"). <paramref name="wordAfter"/> is the rest of the word.
+    /// </summary>
+    internal static string ChooseBarLetter(string previous, string next, string wordAfter, Func<bool> isSentenceStart)
+    {
+        var before = previous.Length > 0 ? previous[^1] : '\0';
+        var after = next.Length > 0 ? next[0] : '\0';
+        if (char.IsLower(before) || before is '\'' or '’')
+        {
+            return "l";
+        }
+
+        if (before == '\0' && wordAfter.Length > 0 && wordAfter[0] is '\'' or '’')
+        {
+            // Bars after the apostrophe are as uncertain as this one: "I'II" is "I'll".
+            var contraction = new string(wordAfter.Skip(1).TakeWhile(c => char.IsLetter(c) || c is '/' or '|').ToArray())
+                .Replace('/', 'l').Replace('|', 'l').Replace('I', 'l').ToLowerInvariant();
+            return contraction is "" or "m" or "ll" or "ve" or "d" ? "I" : "l";
+        }
+
+        if (char.IsUpper(before))
+        {
+            return char.IsLower(after) ? "l" : "I";
+        }
+
+        if (before == '\0' && char.IsLower(after))
+        {
+            return isSentenceStart() ? "I" : "l";
+        }
+
+        return "I";
+    }
+
+    /// <summary>
+    /// The text of the glyphs after <paramref name="index"/> up to the end of its word.
+    /// </summary>
+    private string GetWordTextAfter(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, int index, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor)
+    {
+        var sb = new StringBuilder();
+        for (var i = index + 1; i < list.Count && list[i].NikseBitmap != null && sb.Length < 8; i++)
+        {
+            sb.Append(GetAdjacentText(parentBitmap, list, i, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor));
+        }
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// The text of the nearest glyph in <paramref name="direction"/> within the same word that is
+    /// not another bar - a slash ("ca//ing") or an "I"/"l" whose case is just as uncertain
+    /// ("seI/") - or empty at a word boundary.
+    /// </summary>
+    private string SkipBars(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, int index, int direction, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor)
+    {
+        for (var i = index + direction; ; i += direction)
+        {
+            var text = GetAdjacentText(parentBitmap, list, i, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor);
+            if (text is not ("/" or "I" or "l" or "|"))
+            {
+                return text;
+            }
+        }
+    }
+
+    /// <summary>
+    /// No glyph before the word at <paramref name="index"/> in the image, or the glyph before it
+    /// ends a sentence or opens a dialog line.
+    /// </summary>
+    private bool IsSentenceStart(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, int index, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor)
+    {
+        var i = index - 1;
+        while (i >= 0 && list[i].NikseBitmap != null)
+        {
+            i--;
+        }
+
+        while (i >= 0 && list[i].NikseBitmap == null)
+        {
+            i--;
+        }
+
+        if (i < 0)
+        {
+            return true;
+        }
+
+        var text = GetAdjacentText(parentBitmap, list, i, topMargin, deepSeek, maxWrongPixels, lastDitch, italicFactor);
+        return text.Length > 0 && text[^1] is '.' or '!' or '?' or '…' or '-' or '♪' or '"';
+    }
+
+    /// <summary>
+    /// The text matched for the glyph at <paramref name="index"/>, or empty for a space, a line
+    /// break or no glyph.
+    /// </summary>
+    private string GetAdjacentText(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, int index, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch, double italicFactor)
+    {
+        if (index < 0 || index >= list.Count || list[index].NikseBitmap is null)
+        {
+            return string.Empty;
+        }
+
+        var neighbor = list[index];
+        return GetMatch(parentBitmap, list, neighbor, neighbor.Top, deepSeek, maxWrongPixels, lastDitch, italicFactor, BaselinePlacement.Unknown)?.Text ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Shears tried to straighten a slanted glyph: the configured italic factor, and steeper ones
+    /// for fonts slanted more than it - a steep italic "t" half straightened still fits "l".
+    /// </summary>
+    private static double[] GetItalicShears(double italicFactor) =>
+        [italicFactor, italicFactor * ItalicChallengeSteeperShear, italicFactor * ItalicChallengeSteepestShear];
 
     // Share of wrong points a comma/apostrophe shape may have when its position is ignored.
     private const double UnplacedMarkMaxRate = 0.15;
 
     // An upright match with a higher share of wrong points than this is challenged by the
-    // straightened glyph (sheared by the italic factor and by 1.5 x it), which wins when its
+    // straightened glyph (sheared by the italic factor, 1.5 x and 2 x it), which wins when its
     // share is at most two thirds of the upright one. Measured on 38 Blu-ray discs: a steep bold
     // italic went from "/f* accogd/ng fo plan" to "/t* accord/ng to plan" while upright discs
-    // were byte-identical.
+    // were byte-identical. The 2 x shear fits a font slanted by a third ("aboul lhe" -> "about
+    // the" on Trespass), which 1.5 x leaves half straightened.
     private const double ItalicChallengeMinRate = 0.02;
     private const double ItalicChallengeRatio = 1.5;
     private const double ItalicChallengeSteeperShear = 1.5;
+    private const double ItalicChallengeSteepestShear = 2;
 
     /// <summary>
     /// A small mark that matched nothing, tried against the comma and apostrophe shapes without
@@ -661,8 +930,11 @@ public class NOcrDb
         // A slanted glyph often still fits some entry loosely - an italic "t" read as an italic
         // "f", "r" as "g", "y" as "x" - and a loose hit used to end the search before the
         // straightened glyph was ever tried. When the upright match is not a close one, match the
-        // straightened glyph too and keep whichever fits clearly better.
-        if (single != null && italicFactor > 0 && singleRate > ItalicChallengeMinRate &&
+        // straightened glyph too and keep whichever fits clearly better. A slanted "o" fits the
+        // slashed "Ø" closely ("brØther"), so that one is always challenged - a real "Ø" keeps
+        // its slash when straightened, which "o" can't fit.
+        if (single != null && italicFactor > 0 &&
+            (singleRate > ItalicChallengeMinRate || single.Text is "Ø" or "ø") &&
             bitmap.Width * bitmap.Height >= SmallGlyphAreaLimit)
         {
             // Slants differ between fonts: a bold italic sheared by the configured factor is
@@ -670,10 +942,12 @@ public class NOcrDb
             // and keep the better fit.
             NOcrChar? challenger = null;
             var challengerRate = double.MaxValue;
-            foreach (var factor in new[] { italicFactor, italicFactor * ItalicChallengeSteeperShear })
+            foreach (var factor in GetItalicShears(italicFactor))
             {
+                // Straightening a slanted glyph narrows its ink, while an upright one comes out
+                // wider and slanted back - and a back-slanted serif "I" fits "X".
                 var straightened = bitmap.UnItalic(factor);
-                if (straightened.Width <= 0 || straightened.Height <= 0)
+                if (straightened.Width <= 0 || straightened.Height <= 0 || straightened.Width * 10 > bitmap.Width * 11 + 20)
                 {
                     continue;
                 }
@@ -687,12 +961,47 @@ public class NOcrDb
             }
 
             // A mark may not replace a mark: a straightened comma is a period, which says
-            // nothing about slant.
+            // nothing about slant. A slash is the exception: a steep italic "!" is a slash with
+            // a dot ("Help/"), and a straightened slash isn't one. A slash straightened into a
+            // bar is left to ResolveItalicSlash, which reads "l" or "I" from the word around it.
             if (challenger != null && challengerRate * ItalicChallengeRatio <= singleRate &&
-                (single.Text.All(char.IsLetterOrDigit) || challenger.Text.All(char.IsLetterOrDigit)))
+                (singleRate > ItalicChallengeMinRate || challenger.Text is "o" or "O") &&
+                (single.Text == "/"
+                    ? challenger.Text is "!" or "?" ||
+                      challenger.Text is not ("l" or "I" or "|") && challenger.Text.All(char.IsLetterOrDigit)
+                    : single.Text.All(char.IsLetterOrDigit) || challenger.Text.All(char.IsLetterOrDigit)))
             {
                 single = new NOcrChar(challenger) { Italic = true };
+                singleRate = challengerRate;
             }
+        }
+
+        // A trained two-letter entry ("fw") fits other touching pairs loosely ("tw" in "between"
+        // read as "befween"). When the fit is not a close one, cut the glyph in two as for a
+        // pair that matched nothing, and keep the halves if they fit clearly better.
+        if (single is { Text.Length: > 1 } && singleRate > ItalicChallengeMinRate && single.Text.All(char.IsLetter))
+        {
+            var pair = MatchTouchingLetters(bitmap, topMargin, maxWrongPixels, depth: 0, out var pairRate);
+            if (pair != null && pair.Text != single.Text && pairRate * ItalicChallengeRatio <= singleRate)
+            {
+                single = pair;
+                singleRate = pairRate;
+            }
+        }
+
+        // An accented letter the database has no entry for ("ż", "ś", "ń" in a Latin database)
+        // is a letter it knows with a mark over it. A loose match to another accented letter is
+        // challenged by that reading too: a "ć" fit "á" at a tenth of its points wrong.
+        if (single == null)
+        {
+            single = MatchComposedAccent(bitmap, topMargin, maxWrongPixels) ?? MatchOgonek(bitmap, topMargin);
+        }
+        else if (singleRate > ItalicChallengeMinRate && single.Text.Length == 1 &&
+                 single.Text.Normalize(System.Text.NormalizationForm.FormD).Length > 1 &&
+                 MatchComposedAccent(bitmap, topMargin, maxWrongPixels, out var composedRate) is { } composed &&
+                 composed.Text != single.Text && composedRate * ItalicChallengeRatio <= singleRate)
+        {
+            single = new NOcrChar(composed) { Italic = composed.Italic || single.Italic };
         }
 
         // Two letters drawn touching ("av", "wt", "As") are one glyph that fits nothing. Read it
@@ -740,7 +1049,9 @@ public class NOcrDb
     /// Reads a glyph that matched nothing as two touching letters: cut it at one of the
     /// thinnest columns of its middle half, trim each side to its ink and match both strictly
     /// (no deep-seek or last-ditch guessing). One side may itself be a touching pair ("ryw").
-    /// Only letters and digits count, so a stray mark can't make a split look good.
+    /// Only letters and digits count, so a stray mark can't make a split look good - except a
+    /// question or exclamation mark ending the pair, which touches the letter before it in some
+    /// fonts ("What?" read as "Wha*").
     /// </summary>
     private NOcrChar? MatchTouchingLetters(NikseBitmap2 bitmap, int topMargin, int maxWrongPixels, int depth, out double rate, bool returnStrokeEnds = false)
     {
@@ -811,9 +1122,10 @@ public class NOcrDb
                     continue;
                 }
 
-                var rightMatch = MatchLetterOrPair(right, topMargin + rightTop, maxWrongPixels, depth, out var rightRate, returnStrokeEnds);
-                if (rightMatch == null ||
-                    leftMatch.Text.All(char.IsDigit) != rightMatch.Text.All(char.IsDigit))
+                var rightMatch = MatchLetterOrPair(right, topMargin + rightTop, maxWrongPixels, depth, out var rightRate, returnStrokeEnds, allowEndMark: depth == 0);
+                var endMark = rightMatch?.Text is "?" or "!";
+                if (rightMatch == null || endMark && !leftMatch.Text.All(char.IsLetter) ||
+                    !endMark && leftMatch.Text.All(char.IsDigit) != rightMatch.Text.All(char.IsDigit))
                 {
                     // Touching letters or touching digits, never one of each: an "M" cut in two
                     // read as "b1" or "A4".
@@ -847,6 +1159,503 @@ public class NOcrDb
 
         rate = bestPairRate;
         return bestPair;
+    }
+
+    // Base letters a composed mark may sit on: not the dotted or tall thin ones, where a dot or
+    // an accent is part of the letter ("i", "j") or a caron is drawn beside it ("ď", "ť", "ľ").
+    private const string ComposableBaseLetters = "aceinorsuyzACEGINORSUYZgwWlL";
+    private const double ComposedBodyMaxRate = 0.05;
+
+    /// <summary>
+    /// Reads a glyph that matched nothing as a letter with a mark over it: the rows above the
+    /// first blank row in its top half are the mark, the rest is the body. The body must match a
+    /// letter on its own; the mark is told by its shape (one dot, two dots, a stroke rising to the
+    /// right or to the left, a "v" or a "^"), and the two compose into one precomposed letter
+    /// ("ż", "ś", "ć", "ń", "č", "ê"). A database without Polish or Czech entries read those as
+    /// "*" ("Mo*e" for "Może").
+    /// </summary>
+    private NOcrChar? MatchComposedAccent(NikseBitmap2 bitmap, int topMargin, int maxWrongPixels) =>
+        MatchComposedAccent(bitmap, topMargin, maxWrongPixels, out _);
+
+    private NOcrChar? MatchComposedAccent(NikseBitmap2 bitmap, int topMargin, int maxWrongPixels, out double bodyRate)
+    {
+        bodyRate = double.MaxValue;
+        var width = bitmap.Width;
+        var height = bitmap.Height;
+        if (height < 10 || width < 4)
+        {
+            return null;
+        }
+
+        var rowInk = new int[height];
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    rowInk[y]++;
+                }
+            }
+        }
+
+        // The mark: ink from the top down to the first blank row, within the top 45%.
+        var gapStart = -1;
+        for (var y = 1; y < height * 45 / 100; y++)
+        {
+            if (rowInk[y] == 0 && rowInk[y - 1] > 0)
+            {
+                gapStart = y;
+                break;
+            }
+        }
+
+        if (gapStart < 0)
+        {
+            return null;
+        }
+
+        var bodyStart = gapStart;
+        while (bodyStart < height && rowInk[bodyStart] == 0)
+        {
+            bodyStart++;
+        }
+
+        if (height - bodyStart < height / 2)
+        {
+            return null;
+        }
+
+        var markPart = TrimToInkBox(bitmap.CopyRectangle(new NikseRectangle(0, 0, width, gapStart)), out _, out _);
+        var bodyPart = TrimToInkBox(bitmap.CopyRectangle(new NikseRectangle(0, bodyStart, width, height - bodyStart)), out _, out var bodyTop);
+        if (markPart == null || bodyPart == null || markPart.Width * markPart.Height < 4)
+        {
+            return null;
+        }
+
+        var body = GetMatchSingle(bodyPart, topMargin + bodyStart + bodyTop, false, maxWrongPixels, false, false, BaselinePlacement.Unknown, out bodyRate);
+        if (body is not { Text.Length: 1 } || bodyRate > ComposedBodyMaxRate || !ComposableBaseLetters.Contains(body.Text[0]))
+        {
+            return null;
+        }
+
+        var mark = ClassifyMark(markPart, bodyPart.Width);
+        if (mark == null)
+        {
+            return null;
+        }
+
+        var baseText = body.Text switch
+        {
+            // A dotless body under a mark: the matcher reads it as "l"/"I"/"ı" by its shape.
+            "l" or "I" when bodyPart.Height * 10 < height * 7 => "i",
+            "l" or "L" => null,
+            _ => body.Text,
+        };
+
+        if (baseText == null || baseText == "i" && mark == '\u0307')
+        {
+            return null;
+        }
+
+        var text = (baseText + mark).Normalize(System.Text.NormalizationForm.FormC);
+        if (text.Length != 1 || text[0] < '\u00C0' || text[0] > '\u017F')
+        {
+            return null;
+        }
+
+        return new NOcrChar(text)
+        {
+            Width = width,
+            Height = height,
+            MarginTop = topMargin,
+            Italic = body.Italic,
+        };
+    }
+
+    /// <summary>
+    /// "ł" or "Ł": a stem through the whole glyph with a stroke crossing it in the middle rows,
+    /// rising to the right (ink on both sides of the stem, lower on the left), and for "Ł" a foot
+    /// along the bottom to the right. A plain "l" has no ink beside its stem, and a comma or an
+    /// apostrophe has its head beside the top of it.
+    /// </summary>
+    private static NOcrChar? MatchStrokedL(NikseBitmap2 bitmap, int topMargin)
+    {
+        var width = bitmap.Width;
+        var height = bitmap.Height;
+        if (height < 10 || width < 4 || width * 10 > height * 9)
+        {
+            return null;
+        }
+
+        var columnInk = new int[width];
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    columnInk[x]++;
+                }
+            }
+        }
+
+        // The stem: the run of columns inked over 80% of the height.
+        var stemStart = -1;
+        var stemEnd = -1;
+        for (var x = 0; x < width; x++)
+        {
+            if (columnInk[x] * 10 < height * 8)
+            {
+                continue;
+            }
+
+            if (stemStart >= 0 && x != stemEnd + 1)
+            {
+                return null;
+            }
+
+            if (stemStart < 0)
+            {
+                stemStart = x;
+            }
+
+            stemEnd = x;
+        }
+
+        if (stemStart <= 0 || stemEnd >= width - 1 || (stemEnd - stemStart + 1) * 10 > width * 7)
+        {
+            return null;
+        }
+
+        // Ink beside the stem: where it is, rows and sides. Every row has ink - a blank row is
+        // the gap of a "!".
+        var footRows = Math.Max(2, height / 6);
+        long leftY = 0, rightY = 0;
+        int leftCount = 0, rightCount = 0, footRight = 0, leftRows = 0, rightRows = 0;
+        for (var y = 0; y < height; y++)
+        {
+            var rowHasInk = false;
+            var rowHasLeft = false;
+            var rowHasRight = false;
+            for (var x = 0; x < width; x++)
+            {
+                rowHasInk |= bitmap.GetAlpha(x, y) > 150;
+                if ((x >= stemStart && x <= stemEnd) || bitmap.GetAlpha(x, y) <= 150)
+                {
+                    continue;
+                }
+
+                if (y >= height - footRows && x > stemEnd)
+                {
+                    footRight++;
+                    continue;
+                }
+
+                if (y < height / 5 || y > height * 4 / 5)
+                {
+                    // Nothing beside the top or the bottom of the stem but a pixel of its edge:
+                    // the head of a comma or an apostrophe is there.
+                    if (x < stemStart - 1 || x > stemEnd + 1)
+                    {
+                        return null;
+                    }
+
+                    continue;
+                }
+
+                if (x < stemStart)
+                {
+                    leftY += y;
+                    leftCount++;
+                    rowHasLeft = true;
+                }
+                else
+                {
+                    rightY += y;
+                    rightCount++;
+                    rowHasRight = true;
+                }
+            }
+
+            if (!rowHasInk)
+            {
+                return null;
+            }
+
+            leftRows += rowHasLeft ? 1 : 0;
+            rightRows += rowHasRight ? 1 : 0;
+        }
+
+        // Each end of the stroke is short; a taper or a bulge runs along the stem.
+        if (leftRows * 100 > height * 35 || rightRows * 100 > height * 35)
+        {
+            return null;
+        }
+
+        // The stroke rises to the right: its left end is clearly lower than its right end, while a
+        // tapered "!" or a serif has ink on both sides at the same rows.
+        if (leftCount < 2 || rightCount < 2 ||
+            (leftY / (double)leftCount - rightY / (double)rightCount) * 12 < Math.Max(12, height))
+        {
+            return null;
+        }
+
+        var capital = footRight >= footRows * (width - stemEnd - 1) * 6 / 10 && width - stemEnd - 1 >= (stemEnd - stemStart + 1);
+        return new NOcrChar(capital ? "Ł" : "ł")
+        {
+            Width = width,
+            Height = height,
+            MarginTop = topMargin,
+        };
+    }
+
+    // Letters that take an ogonek ("ą", "ę", "ų"), and how well the body must fit one of them.
+    private const string OgonekBaseLetters = "aeuAEU";
+    private const double OgonekBodyMaxRate = 0.04;
+
+    /// <summary>
+    /// Reads a glyph that matched nothing as a letter with an ogonek - the hook under the right
+    /// side of "ą" and "ę" that no Latin database entry has, so Polish text came out as "si*",
+    /// "Wygl*da". The hook joins the letter, so there is no blank row to cut at: each cut in the
+    /// bottom 45% is tried, and the body above it must fit one of the ogonek letters while the
+    /// ink below it is a small piece leaning right.
+    /// </summary>
+    private NOcrChar? MatchOgonek(NikseBitmap2 bitmap, int topMargin)
+    {
+        var width = bitmap.Width;
+        var height = bitmap.Height;
+        if (height < 12 || width < 6)
+        {
+            return null;
+        }
+
+        var total = 0;
+        var rowInk = new int[height];
+        var rowSumX = new long[height];
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    rowInk[y]++;
+                    rowSumX[y] += x;
+                    total++;
+                }
+            }
+        }
+
+        NOcrChar? best = null;
+        var bestRate = OgonekBodyMaxRate;
+        long tailInk = 0;
+        long tailSumX = 0;
+        var tailWidest = 0;
+        for (var cut = height - 1; cut >= height * 55 / 100; cut--)
+        {
+            // Rows cut .. height-1 are the hook: a narrow stroke, so cutting a wide row - the
+            // bottom of the letter's own bowl - ends the search.
+            tailInk += rowInk[cut];
+            tailSumX += rowSumX[cut];
+            tailWidest = Math.Max(tailWidest, rowInk[cut]);
+            if (tailWidest * 100 > width * 60)
+            {
+                break;
+            }
+
+            if (tailInk == 0 || tailInk * 10 > total * 3 || tailSumX < tailInk * width * 4 / 10 || rowInk[cut - 1] == 0)
+            {
+                continue;
+            }
+
+            var body = TrimToInkBox(bitmap.CopyRectangle(new NikseRectangle(0, 0, width, cut)), out _, out _);
+            if (body == null || body.Width * 10 < width * 6 || body.Width * body.Height < SmallGlyphAreaLimit)
+            {
+                continue;
+            }
+
+            foreach (var letter in OgonekBaseLetters)
+            {
+                var (match, rate) = FindBestByText(body, letter.ToString(), bestRate);
+                if (match != null && rate < bestRate)
+                {
+                    best = match;
+                    bestRate = rate;
+                }
+            }
+        }
+
+        // A plain letter that only missed the error budget fits its own entries whole about as
+        // well as with its bottom cut off.
+        if (best == null || FindBestByText(bitmap, best.Text, bestRate + 0.005).Match != null)
+        {
+            return null;
+        }
+
+        return new NOcrChar((best.Text + "\u0328").Normalize(System.Text.NormalizationForm.FormC))
+        {
+            Width = width,
+            Height = height,
+            MarginTop = topMargin,
+            Italic = best.Italic,
+        };
+    }
+
+    /// <summary>
+    /// The combining mark a small piece of ink over a letter is: two blobs side by side are a
+    /// diaeresis, a stroke whose top leans right an acute and left a grave, a compact blob a dot,
+    /// a "v" (ink low in the middle, high at the sides) a caron and a "^" a circumflex. Null when
+    /// it is none of these.
+    /// </summary>
+    internal static char? ClassifyMark(NikseBitmap2 mark, int bodyWidth)
+    {
+        var width = mark.Width;
+        var height = mark.Height;
+        bool Ink(int x, int y) => mark.GetAlpha(x, y) > 150;
+
+        var columnInk = new int[width];
+        var total = 0;
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                if (Ink(x, y))
+                {
+                    columnInk[x]++;
+                    total++;
+                }
+            }
+        }
+
+        // Two blobs: a blank column between two inked runs.
+        var runs = 0;
+        for (var x = 0; x < width; x++)
+        {
+            if (columnInk[x] > 0 && (x == 0 || columnInk[x - 1] == 0))
+            {
+                runs++;
+            }
+        }
+
+        if (runs == 2)
+        {
+            return '\u0308';
+        }
+
+        if (runs != 1 || width > bodyWidth * 1.2)
+        {
+            return null;
+        }
+
+        // Where the ink is in the top and bottom rows, as the mean x of each.
+        double MeanX(int y0, int y1)
+        {
+            double sum = 0;
+            var count = 0;
+            for (var y = y0; y < y1; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    if (Ink(x, y))
+                    {
+                        sum += x;
+                        count++;
+                    }
+                }
+            }
+
+            return count == 0 ? width / 2.0 : sum / count;
+        }
+
+        var band = Math.Max(1, height / 3);
+        var topX = MeanX(0, band);
+        var bottomX = MeanX(height - band, height);
+        var lean = (topX - bottomX) / width;
+        if (lean > 0.2)
+        {
+            return '\u0301';
+        }
+
+        if (lean < -0.2)
+        {
+            return '\u0300';
+        }
+
+        // A dot: about as wide as tall and mostly ink. A small acute is a compact blob too, so
+        // the lean is checked first.
+        if (width * 10 <= height * 16 && height * 10 <= width * 16 && total * 10 >= width * height * 6)
+        {
+            return '\u0307';
+        }
+
+        if (width * 10 < height * 13)
+        {
+            return null;
+        }
+
+        // A "v" or a "^": compare the ink spread across the top and the bottom rows.
+        int Spread(int y0, int y1)
+        {
+            var min = width;
+            var max = -1;
+            for (var y = y0; y < y1; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    if (Ink(x, y))
+                    {
+                        min = Math.Min(min, x);
+                        max = Math.Max(max, x);
+                    }
+                }
+            }
+
+            return max < 0 ? 0 : max - min + 1;
+        }
+
+        var topSpread = Spread(0, band);
+        var bottomSpread = Spread(height - band, height);
+        if (topSpread * 10 >= bottomSpread * 15)
+        {
+            return '\u030C';
+        }
+
+        if (bottomSpread * 10 >= topSpread * 15)
+        {
+            return '\u0302';
+        }
+
+        return null;
+    }
+
+    /// <summary>The inked box of <paramref name="bitmap"/>, and its offset; null when blank.</summary>
+    private static NikseBitmap2? TrimToInkBox(NikseBitmap2 bitmap, out int left, out int top)
+    {
+        left = 0;
+        top = 0;
+        int minX = bitmap.Width, minY = bitmap.Height, maxX = -1, maxY = -1;
+        for (var y = 0; y < bitmap.Height; y++)
+        {
+            for (var x = 0; x < bitmap.Width; x++)
+            {
+                if (bitmap.GetAlpha(x, y) > 150)
+                {
+                    minX = Math.Min(minX, x);
+                    maxX = Math.Max(maxX, x);
+                    minY = Math.Min(minY, y);
+                    maxY = Math.Max(maxY, y);
+                }
+            }
+        }
+
+        if (maxX < 0)
+        {
+            return null;
+        }
+
+        left = minX;
+        top = minY;
+        return bitmap.CopyRectangle(new NikseRectangle(minX, minY, maxX - minX + 1, maxY - minY + 1));
     }
 
     // Letters whose capital is the same shape as the lowercase, only taller.
@@ -1030,12 +1839,12 @@ public class NOcrDb
         return widened;
     }
 
-    private NOcrChar? MatchLetterOrPair(NikseBitmap2 part, int topMargin, int maxWrongPixels, int depth, out double rate, bool returnStrokeEnds)
+    private NOcrChar? MatchLetterOrPair(NikseBitmap2 part, int topMargin, int maxWrongPixels, int depth, out double rate, bool returnStrokeEnds, bool allowEndMark = false)
     {
         var match = GetMatchSingle(part, topMargin, false, maxWrongPixels, false, false, BaselinePlacement.Unknown, out rate);
         if (match != null)
         {
-            return match.Text.All(char.IsLetterOrDigit) ? match : null;
+            return match.Text.All(char.IsLetterOrDigit) || allowEndMark && match.Text is "?" or "!" ? match : null;
         }
 
         rate = double.MaxValue;
@@ -1393,12 +2202,14 @@ public class NOcrDb
 
     /// <summary>
     /// Marks whose shape has no lookalike at the other height: a dash or a degree sign never sits
-    /// on the baseline, a period, ellipsis or underscore never floats above it.
+    /// on the baseline, a period, ellipsis or underscore never floats above it - nor do the marks
+    /// that end in a dot on it ("!", "?", ":", ";"), whose scaled-down bar fit an apostrophe
+    /// ("can!t", "We!re").
     /// </summary>
     private static bool FitsBaselinePlacement(NOcrChar oc, BaselinePlacement placement) => placement switch
     {
         BaselinePlacement.OnBaseline => oc.Text is not ("-" or "‐" or "–" or "—" or "°" or "^"),
-        BaselinePlacement.AboveBaseline => oc.Text is not ("." or "…" or "_"),
+        BaselinePlacement.AboveBaseline => oc.Text is not ("." or "…" or "_" or "!" or "?" or ":" or ";" or "¡" or "¿"),
         _ => true,
     };
 
