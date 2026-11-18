@@ -280,4 +280,27 @@ public class YtDlpDownloadServiceTests
         Assert.Equal("Firefox", YtDlpDownloadService.GetBrowserDisplayName("firefox"));
         Assert.Contains("firefox", YtDlpDownloadService.CookieBrowsers);
     }
+
+    [Fact]
+    public void GetFfmpegArguments_PassesExistingFile()
+    {
+        var file = Path.GetTempFileName();
+        try
+        {
+            Assert.Equal(["--ffmpeg-location", file], YtDlpDownloadService.GetFfmpegArguments(file));
+        }
+        finally
+        {
+            File.Delete(file);
+        }
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("ffmpeg")] // bare name: let yt-dlp search PATH itself
+    public void GetFfmpegArguments_EmptyWhenNotAFile(string? location)
+    {
+        Assert.Empty(YtDlpDownloadService.GetFfmpegArguments(location));
+    }
 }

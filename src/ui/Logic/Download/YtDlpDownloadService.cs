@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -123,6 +124,20 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     {
         var browser = GetCookiesBrowser();
         return browser == null ? [] : ["--cookies-from-browser", browser];
+    }
+
+    /// <summary>
+    /// The <c>--ffmpeg-location</c> arguments for the ffmpeg Subtitle Edit uses, or nothing when
+    /// it is not a file on disk (then yt-dlp searches PATH itself). yt-dlp needs ffmpeg to merge
+    /// separate video and audio streams; when it cannot find one it silently leaves the two
+    /// streams unmerged and still exits 0. An app started from Finder gets a minimal PATH
+    /// without e.g. /opt/homebrew/bin, so relying on PATH fails there (#17001).
+    /// </summary>
+    internal static List<string> GetFfmpegArguments(string? ffmpegLocation)
+    {
+        return !string.IsNullOrEmpty(ffmpegLocation) && File.Exists(ffmpegLocation)
+            ? ["--ffmpeg-location", ffmpegLocation]
+            : [];
     }
 
     /// <summary>
@@ -317,8 +332,13 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             "--newline",       // emit one progress line per update, never carriage-return rewriting
             "--no-mtime",      // don't carry remote mtime to the local file
             "--no-playlist",   // single video only — playlist URLs would download many files
+            // Merge separate video + audio streams into Matroska, the container the save
+            // dialog offers - otherwise yt-dlp picks webm/mp4 and the file gets an .mkv name
+            // with other content (#17001).
+            "--merge-output-format", "mkv",
             "-o", outputPath,
         };
+        args.AddRange(GetFfmpegArguments(FfmpegHelper.GetFfmpegLocation()));
 
         if (downloadAllSubtitles)
         {
@@ -450,6 +470,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             "--sub-format", "vtt/best",
             "-o", outputStem,
         };
+        args.AddRange(GetFfmpegArguments(FfmpegHelper.GetFfmpegLocation()));
         args.AddRange(GetCookiesArguments());
         args.Add(url);
 
