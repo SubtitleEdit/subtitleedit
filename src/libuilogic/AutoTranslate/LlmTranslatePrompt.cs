@@ -33,16 +33,48 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
 
         /// <summary>
         /// Fills a completion-format template: {0} = source language English name, {1} = target
-        /// language English name, {2} = the text to translate. Placeholders are replaced rather
-        /// than string.Format'ed, so braces in a user-edited prompt cannot throw, and the text goes
-        /// in last so brace sequences in subtitle text (ASSA override tags) can never hit one.
+        /// language English name, {2} = the text to translate, {3} / {4} = source / target language
+        /// code (see <see cref="ToLanguageCode"/>; PLaMo 3 Translate is cued with a code, not a
+        /// name). Placeholders are replaced rather than string.Format'ed, so braces in a user-edited
+        /// prompt cannot throw, and the text goes in last so brace sequences in subtitle text (ASSA
+        /// override tags) can never hit one.
         /// </summary>
         public static string FillCompletionTemplate(string template, string sourceLanguage, string targetLanguage, string text)
         {
-            return template
+            var filled = template
                 .Replace("{0}", sourceLanguage)
-                .Replace("{1}", targetLanguage)
-                .Replace("{2}", text.Trim());
+                .Replace("{1}", targetLanguage);
+            if (filled.Contains("{3}"))
+            {
+                filled = filled.Replace("{3}", ToLanguageCode(sourceLanguage));
+            }
+
+            if (filled.Contains("{4}"))
+            {
+                filled = filled.Replace("{4}", ToLanguageCode(targetLanguage));
+            }
+
+            return filled.Replace("{2}", text.Trim());
+        }
+
+        /// <summary>
+        /// The lowercase language code for an English language name from the LLM engines' language
+        /// list ("Japanese" -> "ja"). Simplified and Traditional Chinese use the script subtags
+        /// ("zh-hans" / "zh-hant") rather than a region. A value that is not a listed name - a code
+        /// seconv was given, say - comes back lowercased as it is.
+        /// </summary>
+        public static string ToLanguageCode(string language)
+        {
+            var trimmed = (language ?? string.Empty).Trim();
+            var pair = ChatGptTranslate.ListLanguages()
+                .FirstOrDefault(p => p.Name.Equals(trimmed, StringComparison.OrdinalIgnoreCase));
+            var code = (pair?.TwoLetterIsoLanguageName ?? trimmed).ToLowerInvariant();
+            return code switch
+            {
+                "zh-cn" or "zh" => "zh-hans",
+                "zh-tw" => "zh-hant",
+                _ => code,
+            };
         }
 
         /// <summary>
