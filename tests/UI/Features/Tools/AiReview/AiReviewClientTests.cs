@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
 
 namespace UITests.Features.Tools.AiReview;
@@ -102,6 +103,24 @@ public class AiReviewClientTests
 
         Assert.Contains("\"max_tokens\":1024", capped);
         Assert.DoesNotContain("max_tokens", uncapped);
+    }
+
+    [Fact]
+    public void BuildRequestJson_ExtraFieldsGoLast_AndANullRemovesTheClientsField()
+    {
+        // The Extra request JSON of the advanced translate settings, as "Generate with AI" sends it.
+        using var extra = JsonDocument.Parse("{\"reasoning\": {\"enabled\": false}, \"max_tokens\": 2000, \"temperature\": null}");
+
+        var json = AiReviewClient.BuildRequestJson("vendor/model", "system", "user", jsonMode: true, includeTemperature: true, maxTokens: 1024, extra.RootElement);
+
+        using var request = JsonDocument.Parse(json);
+        var root = request.RootElement;
+        Assert.False(root.GetProperty("reasoning").GetProperty("enabled").GetBoolean());
+        Assert.Equal(2000, root.GetProperty("max_tokens").GetInt32());
+        Assert.Single(json.Split("\"max_tokens\"").Skip(1)); // replaced, not sent twice
+        Assert.False(root.TryGetProperty("temperature", out _));
+        Assert.Equal("vendor/model", root.GetProperty("model").GetString());
+        Assert.Equal("json_object", root.GetProperty("response_format").GetProperty("type").GetString());
     }
 
     [Theory]

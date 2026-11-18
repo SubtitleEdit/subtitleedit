@@ -1166,22 +1166,35 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
+        // Generate with AI sends the dialog's Extra request JSON as it stands in the box, saved or not.
         await _windowService.ShowDialogAsync<LlamaCppAdvancedSettingsWindow, LlamaCppAdvancedSettingsViewModel>(
             Window!,
-            vm => vm.Initialize(_subtitle.Paragraphs.Count > 0 ? GenerateLlamaCppAdvancedSynopsisAsync : null));
+            vm => vm.Initialize(_subtitle.Paragraphs.Count > 0
+                ? new AiReviewContextGenerate((owner, progress, cancellationToken) => GenerateLlamaCppAdvancedSynopsisAsync(owner, progress, cancellationToken, vm.RequestJson))
+                : null));
     }
 
     /// <summary>
     /// "Generate with AI" in the advanced settings (#16589): drafts names, terms and a synopsis
     /// from the whole subtitle with the selected engine's model, like AI review's reference context.
     /// llama.cpp advanced uses the local model, or its external server when one is set; the other
-    /// advanced engines use their own server.
+    /// advanced engines use their own server. The requests carry the dialog's Extra request JSON, as
+    /// the translate requests do.
     /// </summary>
-    internal async Task<string?> GenerateLlamaCppAdvancedSynopsisAsync(Window owner, Action<int, int> progress, CancellationToken cancellationToken)
+    internal async Task<string?> GenerateLlamaCppAdvancedSynopsisAsync(Window owner, Action<int, int> progress, CancellationToken cancellationToken, string? extraRequestJson = null)
     {
         if (_cancellationTokenSource.IsCancellationRequested)
         {
             _cancellationTokenSource = new CancellationTokenSource();
+        }
+
+        // The dialog checks the box on OK, which has not happened yet: the same check, before any
+        // server is started or asked.
+        var requestJsonError = LlamaCppAdvancedClient.ValidateRequestJson(extraRequestJson);
+        if (requestJsonError != null)
+        {
+            await MessageBox.Show(owner, Se.Language.Translate.ExtraRequestJson, requestJsonError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return null;
         }
 
         string url;
@@ -1240,7 +1253,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         // The advanced server runs with the user's context size (2048-262144), so the parts and the
         // answer must fit it - a fixed 3000-token part plus an uncapped reply overflowed 4096 (#16701).
         var contextSize = Math.Clamp(Se.Settings.AutoTranslate.LlamaCppAdvanced.ContextSize, 2048, 262144);
-        using var client = new AiReviewClient { Log = s => Se.WriteToolsLog(s, true) };
+        using var client = new AiReviewClient { Log = s => Se.WriteToolsLog(s, true), ExtraRequestJson = extraRequestJson?.Trim() ?? string.Empty };
         Se.WriteToolsLog($"Advanced translate - Generate with AI: model {modelForLog}, server context size {contextSize}");
         return await AiReviewContextGenerator.GenerateAsync(lines, languageName,
             (systemPrompt, userContent, jsonObject, ct) => client.ChatAsync(url, model, systemPrompt, userContent, ct, apiKey, jsonObject, AiReviewContextGenerator.MaxAnswerTokens),
