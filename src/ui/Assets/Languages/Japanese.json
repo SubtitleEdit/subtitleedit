@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "5.5.0-beta8",
+  "version": "5.5.0-beta9",
   "translatedBy": "hisui3393",
   "cultureName": "jp-JP",
   "general": {
@@ -552,6 +552,7 @@
     "searchDirection": "検索方向",
     "searchFontNames": "フォント名を検索",
     "searchSubtitleFormats": "字幕フォーマットを検索",
+    "searchLanguages": "言語を検索",
     "seconds": "秒",
     "selectAll": "すべて選択",
     "selectFilesToConvert": "変換するファイルを選択",
