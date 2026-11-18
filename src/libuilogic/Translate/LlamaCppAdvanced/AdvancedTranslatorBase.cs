@@ -45,6 +45,12 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// </summary>
     protected virtual bool UsesLlamaCppExtensions => true;
 
+    /// <summary>
+    /// The endpoint, model and key a run would use, for a one-off request to the same server, such
+    /// as "Generate with AI" in the advanced settings.
+    /// </summary>
+    public (string Url, string? Model, string? ApiKey) GetEndpoint() => (GetApiUrl(), GetModel(), GetApiKey());
+
     public void Initialize()
     {
         _client?.Dispose();

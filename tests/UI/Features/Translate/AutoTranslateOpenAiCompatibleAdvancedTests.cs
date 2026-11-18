@@ -62,6 +62,9 @@ public class AutoTranslateOpenAiCompatibleAdvancedTests
         Assert.Equal("advanced-key", probe.ApiKey);
         Assert.False(probe.LlamaCppExtensions);
 
+        // "Generate with AI" asks the same server, model and key as a run.
+        Assert.Equal(("http://hosted.example:8080/v1/chat/completions", "vendor/model", "advanced-key"), probe.GetEndpoint());
+
         // The model is optional: a one-model server needs none, and no "model" field is sent.
         settings.OpenAiCompatibleAdvancedModel = string.Empty;
         Assert.Null(new Probe().Model);
