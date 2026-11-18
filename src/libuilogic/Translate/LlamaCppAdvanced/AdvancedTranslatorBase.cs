@@ -140,7 +140,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
         // Translation-tuned models (TranslateGemma) can echo history into a lone line's
         // translation, so the single-line case - including bisection retries - goes context-free.
-        var history = count > 1 ? CollectHistory(rows, index) : new List<LlamaCppAdvancedProtocol.HistoryPair>();
+        var history = count > 1 ? CollectHistory(rows, index, Settings.HistoryPairs) : new List<LlamaCppAdvancedProtocol.HistoryPair>();
         var map = await TranslateLinesAsync(lines, history, sourceLanguageCode, targetLanguageCode, cancellationToken);
 
         // A few lines handed back in the source language in an otherwise good batch are asked for
@@ -354,13 +354,20 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     }
 
     /// <summary>
-    /// The rolling context: the last N already-translated rows immediately before the batch.
+    /// The rolling context: the last N already-translated rows before the batch, each source text
+    /// once. A typeset sign is often hundreds of frames of the same text, and without the check
+    /// those copies filled the whole history - TranslateGemma 4B, with nothing but eleven copies of
+    /// an untranslated sign to go by, answered the next Danish batch in Norwegian. The nearest copy
+    /// is kept, and the search goes further back for real lines, up to <see cref="HistoryScanFactor"/>
+    /// rows per pair.
     /// </summary>
-    private List<LlamaCppAdvancedProtocol.HistoryPair> CollectHistory(ObservableCollection<TranslateRow> rows, int index)
+    internal static List<LlamaCppAdvancedProtocol.HistoryPair> CollectHistory(IReadOnlyList<TranslateRow> rows, int index, int historyPairs)
     {
-        var maxPairs = Math.Clamp(Settings.HistoryPairs, 0, 50);
+        var maxPairs = Math.Clamp(historyPairs, 0, 50);
         var history = new List<LlamaCppAdvancedProtocol.HistoryPair>(maxPairs);
-        for (var i = index - 1; i >= 0 && history.Count < maxPairs; i--)
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var oldest = Math.Max(0, index - maxPairs * HistoryScanFactor);
+        for (var i = index - 1; i >= oldest && history.Count < maxPairs; i--)
         {
             if (string.IsNullOrEmpty(rows[i].TranslatedText))
             {
@@ -376,12 +383,20 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                 continue; // a pure override/drawing line is no use as an example pair
             }
 
+            if (!seen.Add(source))
+            {
+                continue; // a repeat adds nothing the nearer copy did not
+            }
+
             history.Add(new LlamaCppAdvancedProtocol.HistoryPair(source, target));
         }
 
         history.Reverse();
         return history;
     }
+
+    /// <summary>How many rows back the history search may go per pair, past repeated lines.</summary>
+    internal const int HistoryScanFactor = 10;
 
     private const double RetryTemperatureBump = 0.3;
 
