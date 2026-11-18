@@ -73,7 +73,9 @@ public class AiReviewClient : IDisposable
 
             // OpenAI's reasoning models (gpt-5*, o*) only accept the default temperature and answer
             // "Unsupported value: 'temperature' does not support 0 with this model" - see issue #13473.
-            if (includeTemperature && IsUnsupportedParameter(response.body, "temperature"))
+            // A field the user's extra JSON names is sent as set, so dropping the client's own would
+            // only send the same request again.
+            if (includeTemperature && !Names(extra?.RootElement, "temperature") && IsUnsupportedParameter(response.body, "temperature"))
             {
                 _temperatureUnsupported = true;
                 includeTemperature = false;
@@ -83,7 +85,7 @@ public class AiReviewClient : IDisposable
             // They refuse max_tokens too ("Use 'max_completion_tokens' instead"). The request goes
             // again without a cap rather than with max_completion_tokens: that one also counts the
             // model's reasoning, which can use all of it before an answer is written.
-            if (maxTokens != null && IsUnsupportedParameter(response.body, "max_tokens"))
+            if (maxTokens != null && !Names(extra?.RootElement, "max_tokens") && IsUnsupportedParameter(response.body, "max_tokens"))
             {
                 _maxTokensUnsupported = true;
                 maxTokens = null;

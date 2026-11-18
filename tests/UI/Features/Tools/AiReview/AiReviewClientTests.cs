@@ -191,6 +191,24 @@ public class AiReviewClientTests
     }
 
     [Fact]
+    public async Task ChatAsync_DoesNotResendTheSameRequest_WhenTheServerRejectsAFieldTheUserSet()
+    {
+        // The user's temperature and max_tokens are sent as set; dropping the client's own fields
+        // would only repeat the same request.
+        using var server = new StubServer(body => body.Contains("\"temperature\"") ? (400, TemperatureError) : (200, Reply));
+        using var client = new AiReviewClient { ExtraRequestJson = "{\"temperature\": 0.5, \"max_tokens\": 2000}" };
+
+        await Assert.ThrowsAsync<HttpRequestException>(() =>
+            client.ChatAsync(server.Url, "gpt-5.6-luna", "system", "user", CancellationToken.None, maxTokens: 1024));
+
+        // Only the plain (no response_format) retry, which is a different request.
+        Assert.Equal(2, server.Requests.Count);
+        Assert.All(server.Requests, r => Assert.Contains("\"temperature\":0.5", r));
+        Assert.All(server.Requests, r => Assert.Contains("\"max_tokens\":2000", r));
+        Assert.DoesNotContain("\"response_format\"", server.Requests[1]);
+    }
+
+    [Fact]
     public async Task ChatAsync_DropsTemperatureAndJsonMode_WhenTheServerRejectsBoth()
     {
         using var server = new StubServer(body =>
