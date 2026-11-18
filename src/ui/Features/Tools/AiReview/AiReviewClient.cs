@@ -32,6 +32,14 @@ public class AiReviewClient : IDisposable
     /// </summary>
     public Action<string>? Log { get; set; }
 
+    /// <summary>
+    /// Extra fields for every request, as a JSON object: the Extra request JSON of the advanced
+    /// translate settings, merged as the translate requests merge it. A field it names replaces the
+    /// client's own, a null removes it. Empty for AI review and the AI assistant; callers check it
+    /// with LlamaCppAdvancedClient.ValidateRequestJson first.
+    /// </summary>
+    public string ExtraRequestJson { get; set; } = string.Empty;
+
     public AiReviewClient()
     {
         _httpClient = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
@@ -51,11 +59,12 @@ public class AiReviewClient : IDisposable
             maxTokens = null;
         }
 
+        using var extra = string.IsNullOrWhiteSpace(ExtraRequestJson) ? null : JsonDocument.Parse(ExtraRequestJson);
         (bool ok, string body) response;
         while (true)
         {
             response = await PostAsync(url,
-                BuildRequestJson(model, systemPrompt, userContent, jsonMode, includeTemperature, maxTokens),
+                BuildRequestJson(model, systemPrompt, userContent, jsonMode, includeTemperature, maxTokens, extra?.RootElement),
                 apiKey, cancellationToken);
             if (response.ok || cancellationToken.IsCancellationRequested)
             {
@@ -64,7 +73,9 @@ public class AiReviewClient : IDisposable
 
             // OpenAI's reasoning models (gpt-5*, o*) only accept the default temperature and answer
             // "Unsupported value: 'temperature' does not support 0 with this model" - see issue #13473.
-            if (includeTemperature && IsUnsupportedParameter(response.body, "temperature"))
+            // A field the user's extra JSON names is sent as set, so dropping the client's own would
+            // only send the same request again.
+            if (includeTemperature && !Names(extra?.RootElement, "temperature") && IsUnsupportedParameter(response.body, "temperature"))
             {
                 _temperatureUnsupported = true;
                 includeTemperature = false;
@@ -74,7 +85,7 @@ public class AiReviewClient : IDisposable
             // They refuse max_tokens too ("Use 'max_completion_tokens' instead"). The request goes
             // again without a cap rather than with max_completion_tokens: that one also counts the
             // model's reasoning, which can use all of it before an answer is written.
-            if (maxTokens != null && IsUnsupportedParameter(response.body, "max_tokens"))
+            if (maxTokens != null && !Names(extra?.RootElement, "max_tokens") && IsUnsupportedParameter(response.body, "max_tokens"))
             {
                 _maxTokensUnsupported = true;
                 maxTokens = null;
@@ -231,24 +242,29 @@ public class AiReviewClient : IDisposable
 
     /// <param name="maxTokens">Output cap; only for servers that take "max_tokens" (llama-server) - OpenAI's
     /// reasoning models reject it, so remote engines leave it null.</param>
-    internal static string BuildRequestJson(string model, string systemPrompt, string userContent, bool jsonMode, bool includeTemperature, int? maxTokens = null)
+    /// <param name="extra">The user's extra fields (<see cref="ExtraRequestJson"/>), written last.</param>
+    internal static string BuildRequestJson(string model, string systemPrompt, string userContent, bool jsonMode, bool includeTemperature, int? maxTokens = null, JsonElement? extra = null)
     {
         using var stream = new System.IO.MemoryStream();
         using (var writer = new Utf8JsonWriter(stream, AiReviewProtocol.WireOptions))
         {
             writer.WriteStartObject();
-            if (!string.IsNullOrWhiteSpace(model))
+            if (!string.IsNullOrWhiteSpace(model) && !Names(extra, "model"))
             {
                 writer.WriteString("model", model);
             }
 
-            if (includeTemperature)
+            if (includeTemperature && !Names(extra, "temperature"))
             {
                 writer.WriteNumber("temperature", 0);
             }
 
-            writer.WriteBoolean("stream", false);
-            if (maxTokens is > 0)
+            if (!Names(extra, "stream"))
+            {
+                writer.WriteBoolean("stream", false);
+            }
+
+            if (maxTokens is > 0 && !Names(extra, "max_tokens"))
             {
                 writer.WriteNumber("max_tokens", maxTokens.Value);
             }
@@ -271,10 +287,28 @@ public class AiReviewClient : IDisposable
             writer.WriteEndObject();
             writer.WriteEndArray();
 
+            // The user's fields last, so they win; a null only removes the client's field. It cannot
+            // name "messages" or "response_format" (ValidateRequestJson refuses both).
+            if (extra.HasValue)
+            {
+                foreach (var property in extra.Value.EnumerateObject())
+                {
+                    if (property.Value.ValueKind != JsonValueKind.Null)
+                    {
+                        property.WriteTo(writer);
+                    }
+                }
+            }
+
             writer.WriteEndObject();
         }
 
         return Encoding.UTF8.GetString(stream.ToArray());
+    }
+
+    private static bool Names(JsonElement? extra, string name)
+    {
+        return extra.HasValue && extra.Value.TryGetProperty(name, out _);
     }
 
     private async Task<(bool ok, string body)> PostAsync(string url, string json, string? apiKey, CancellationToken cancellationToken)

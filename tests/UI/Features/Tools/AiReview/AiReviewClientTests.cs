@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
 
 namespace UITests.Features.Tools.AiReview;
@@ -104,6 +105,24 @@ public class AiReviewClientTests
         Assert.DoesNotContain("max_tokens", uncapped);
     }
 
+    [Fact]
+    public void BuildRequestJson_ExtraFieldsGoLast_AndANullRemovesTheClientsField()
+    {
+        // The Extra request JSON of the advanced translate settings, as "Generate with AI" sends it.
+        using var extra = JsonDocument.Parse("{\"reasoning\": {\"enabled\": false}, \"max_tokens\": 2000, \"temperature\": null}");
+
+        var json = AiReviewClient.BuildRequestJson("vendor/model", "system", "user", jsonMode: true, includeTemperature: true, maxTokens: 1024, extra.RootElement);
+
+        using var request = JsonDocument.Parse(json);
+        var root = request.RootElement;
+        Assert.False(root.GetProperty("reasoning").GetProperty("enabled").GetBoolean());
+        Assert.Equal(2000, root.GetProperty("max_tokens").GetInt32());
+        Assert.Single(json.Split("\"max_tokens\"").Skip(1)); // replaced, not sent twice
+        Assert.False(root.TryGetProperty("temperature", out _));
+        Assert.Equal("vendor/model", root.GetProperty("model").GetString());
+        Assert.Equal("json_object", root.GetProperty("response_format").GetProperty("type").GetString());
+    }
+
     [Theory]
     [InlineData(TemperatureError, "temperature", true)]
     [InlineData(TemperatureError, "response_format", false)]
@@ -169,6 +188,24 @@ public class AiReviewClientTests
         await client.ChatAsync(server.Url, "gpt-5.6-luna", "system", "user two", CancellationToken.None, maxTokens: 1024);
         Assert.Equal(4, server.Requests.Count);
         Assert.DoesNotContain("max_tokens", server.Requests[3]);
+    }
+
+    [Fact]
+    public async Task ChatAsync_DoesNotResendTheSameRequest_WhenTheServerRejectsAFieldTheUserSet()
+    {
+        // The user's temperature and max_tokens are sent as set; dropping the client's own fields
+        // would only repeat the same request.
+        using var server = new StubServer(body => body.Contains("\"temperature\"") ? (400, TemperatureError) : (200, Reply));
+        using var client = new AiReviewClient { ExtraRequestJson = "{\"temperature\": 0.5, \"max_tokens\": 2000}" };
+
+        await Assert.ThrowsAsync<HttpRequestException>(() =>
+            client.ChatAsync(server.Url, "gpt-5.6-luna", "system", "user", CancellationToken.None, maxTokens: 1024));
+
+        // Only the plain (no response_format) retry, which is a different request.
+        Assert.Equal(2, server.Requests.Count);
+        Assert.All(server.Requests, r => Assert.Contains("\"temperature\":0.5", r));
+        Assert.All(server.Requests, r => Assert.Contains("\"max_tokens\":2000", r));
+        Assert.DoesNotContain("\"response_format\"", server.Requests[1]);
     }
 
     [Fact]

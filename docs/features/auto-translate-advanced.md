@@ -38,7 +38,7 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 - **Server context size (tokens)** — The context window for the locally started llama.cpp server (default 16384). Bigger batches, more history, and a long synopsis/glossary need more context. Only affects the local llama.cpp server; Ollama and LM Studio manage their own context
 - **Extra server parameters** — Additional `llama-server` command-line arguments, e.g. `-ngl 30 --no-mmap`, applied when the local server starts. They are appended after Subtitle Edit's own flags, so a repeated flag overrides Subtitle Edit's value
 - **Use only these parameters** — Start `llama-server` with the parameters above instead of Subtitle Edit's own tuning; only the model, host and port are still set. Ignored while the field is empty
-- **Extra request JSON** — A JSON object merged into every request after Subtitle Edit's own fields, so its fields win: provider switches such as a reasoning on/off field, or sampling fields the dialog does not have (`{"top_k": 40}`). A `null` value removes a field. `messages` and `response_format` cannot be set. Like the other settings here, it is shared by all advanced engines
+- **Extra request JSON** — A JSON object merged into every request after Subtitle Edit's own fields, so its fields win: provider switches such as a reasoning on/off field, or sampling fields the dialog does not have (`{"top_k": 40}`). A `null` value removes a field. `messages` and `response_format` cannot be set. Like the other settings here, it is shared by all advanced engines. **Generate with AI** sends it too, as it stands in the box
 
 ## llama.cpp Engine Settings
 
