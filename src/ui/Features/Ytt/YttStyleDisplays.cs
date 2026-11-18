@@ -16,6 +16,7 @@ public partial class YttPenDisplay : ObservableObject
 {
     public int Id { get; }
 
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(Description))] private string _name;
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(Description))] private bool _bold;
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(Description))] private bool _italic;
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(Description))] private bool _underline;
@@ -39,6 +40,7 @@ public partial class YttPenDisplay : ObservableObject
     {
         _original = pen.Clone();
         Id = pen.Id;
+        _name = pen.Name ?? string.Empty;
         _bold = pen.Bold == true;
         _italic = pen.Italic == true;
         _underline = pen.Underline == true;
@@ -66,6 +68,11 @@ public partial class YttPenDisplay : ObservableObject
         get
         {
             var parts = new List<string>();
+            if (!string.IsNullOrWhiteSpace(Name))
+            {
+                parts.Add(Name.Trim());
+            }
+
             if (Bold)
             {
                 parts.Add(Se.Language.General.Bold);
@@ -118,6 +125,7 @@ public partial class YttPenDisplay : ObservableObject
     public YttPen ToPen()
     {
         var pen = _original.Clone();
+        pen.Name = string.IsNullOrWhiteSpace(Name) ? null : Name.Trim();
         pen.Bold = Bold ? true : _original.Bold == false ? false : null;
         pen.Italic = Italic ? true : _original.Italic == false ? false : null;
         pen.Underline = Underline ? true : _original.Underline == false ? false : null;
@@ -137,6 +145,13 @@ public partial class YttPenDisplay : ObservableObject
     {
         var pen = ToPen();
         pen.Id = id;
+
+        // Two pens with one name are hard to tell apart; an unnamed pen stays unnamed.
+        if (pen.Name != null)
+        {
+            pen.Name += " (" + Se.Language.General.Copy + ")";
+        }
+
         return new YttPenDisplay(pen);
     }
 

@@ -66,6 +66,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <summary>te - text emphasis dots. Rejected by YouTube's upload, only kept for round-trip.</summary>
         public int? TextEmphasis { get; set; }
 
+        /// <summary>
+        /// name - a label for the editor only (YouTube ignores it and drops it on upload). Not part of
+        /// the look, but two pens with different names are never merged into one.
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>Attributes not modeled above, kept as read.</summary>
         public List<KeyValuePair<string, string>> OtherAttributes { get; set; } = new List<KeyValuePair<string, string>>();
 
@@ -113,10 +119,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return pen;
         }
 
-        /// <summary>Same look - everything but the id.</summary>
-        public bool HasSameFormatting(YttPen other)
+        /// <summary>Same look and same name - everything but the id.</summary>
+        public bool HasSameFormatting(YttPen other) => HasSameFormatting(other, true);
+
+        /// <summary>Same look - everything but the id, and the name unless <paramref name="compareName"/> is set.</summary>
+        public bool HasSameFormatting(YttPen other, bool compareName)
         {
             return other != null &&
+                   (!compareName || string.Equals(Name ?? string.Empty, other.Name ?? string.Empty, StringComparison.Ordinal)) &&
                    Bold == other.Bold &&
                    Italic == other.Italic &&
                    Underline == other.Underline &&
@@ -159,6 +169,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     case "rb": pen.Ruby = YttHead.ParseInt(v); break;
                     case "hg": pen.Packed = YttHead.ParseBool(v); break;
                     case "te": pen.TextEmphasis = YttHead.ParseInt(v); break;
+                    case "name": pen.Name = string.IsNullOrEmpty(v) ? null : v; break;
                     default: pen.OtherAttributes.Add(new KeyValuePair<string, string>(attribute.Name, v)); break;
                 }
             }
@@ -207,6 +218,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             YttHead.AppendAttribute(sb, "rb", Ruby);
             YttHead.AppendAttribute(sb, "hg", Packed);
             YttHead.AppendAttribute(sb, "te", TextEmphasis);
+            if (!string.IsNullOrEmpty(Name))
+            {
+                YttHead.AppendAttribute(sb, "name", Name);
+            }
+
             foreach (var kvp in OtherAttributes)
             {
                 YttHead.AppendAttribute(sb, kvp.Key, kvp.Value);
