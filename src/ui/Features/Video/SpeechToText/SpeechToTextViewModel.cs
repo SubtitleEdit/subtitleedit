@@ -2610,28 +2610,10 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             process.WaitForExit();
 
-            // check for delay in matroska files
-            var delayInMilliseconds = 0;
-            if (_videoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    using var matroska = new MatroskaFile(_videoFileName);
-                    if (matroska.IsValid)
-                    {
-                        var firstAudioTrack = matroska.GetTracks().FirstOrDefault(track => track.IsAudio);
-                        if (firstAudioTrack != null)
-                        {
-                            delayInMilliseconds =
-                                (int)matroska.GetAudioTrackDelayMilliseconds(firstAudioTrack.TrackNumber);
-                        }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    SeLogger.Error(exception, $"Error getting delay from mkv: {_videoFileName}");
-                }
-            }
+            // These peaks are cached as the main window's waveform, so they get its timeline
+            // (#16966). A Matroska audio delay needs nothing extra: "first_pts=0" already pads it
+            // into the wave file, and adding it again here drew that audio twice as late.
+            var delayInMilliseconds = _audioClips != null ? 0 : WaveFileExtractor.GetTimelineOffsetMilliseconds(_videoFileName);
 
             if (File.Exists(targetFile))
             {
@@ -2907,6 +2889,19 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         // Small delay to ensure all output is captured and flushed
         await Task.Delay(100);
+
+        // The engine's times count from the extracted audio, which starts at the file's start
+        // time; the player may count from the raw time stamps (#16966). Audio clips are mapped
+        // back by their own start, which GetAudioClips already corrected.
+        if (_audioClips == null && transcribedSubtitle != null && !string.IsNullOrEmpty(_videoFileName))
+        {
+            var videoFileName = _videoFileName;
+            var offsetMilliseconds = await Task.Run(() => WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName));
+            if (offsetMilliseconds > 0)
+            {
+                transcribedSubtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(offsetMilliseconds));
+            }
+        }
 
         var sbLog = new StringBuilder();
         foreach (var s in _outputText)

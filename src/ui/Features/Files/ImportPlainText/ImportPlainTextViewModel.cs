@@ -628,8 +628,10 @@ public partial class ImportPlainTextViewModel : ObservableObject, IClosingCleanu
     {
         // 16 kHz mono PCM - what every CTC aligner expects. "aresample=async=1:first_pts=0" keeps
         // gaps in the audio timestamps as silence, or the aligned times after a gap come out early (#15385).
+        // The pad puts the audio on the player's timeline, where the subtitle times are (#16966).
+        var pad = Nikse.SubtitleEdit.Logic.Media.WaveFileExtractor.GetTimelinePadFilter(_videoFileName);
         var arguments =
-            $"-hide_banner -nostats -loglevel error -y -i \"{_videoFileName}\" -vn -af aresample=async=1:first_pts=0 -ar 16000 -ac 1 -acodec pcm_s16le \"{audioFileName}\"";
+            $"-hide_banner -nostats -loglevel error -y -i \"{_videoFileName}\" -vn -af \"aresample=async=1:first_pts=0{pad}\" -ar 16000 -ac 1 -acodec pcm_s16le \"{audioFileName}\"";
 
         using var process = new System.Diagnostics.Process
         {

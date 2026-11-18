@@ -213,7 +213,7 @@ internal sealed class TimelineThumbnailCache
         // "-noaccurate_seek" keeps the frames before the seek point and "-skip_frame nokey"
         // decodes keyframes only, so the first frame out is the keyframe the seek landed on.
         // showinfo logs its time relative to the seek point (negative when before it).
-        var arguments = $"-hide_banner -nostats -noaccurate_seek -skip_frame nokey -threads 1 -ss {ToSeconds(milliseconds)} " +
+        var arguments = $"-hide_banner -nostats -noaccurate_seek -skip_frame nokey -threads 1 -ss {ToFfmpegSeconds(videoFileName, milliseconds)} " +
                         $"-i \"{videoFileName}\" -frames:v 1 -an -sn -dn " +
                         $"-vf showinfo,scale=-2:{ThumbnailHeight} -f image2pipe -c:v png -";
         var bitmap = RunFfmpeg(arguments, readLog: true, out _, out var log);
@@ -243,14 +243,15 @@ internal sealed class TimelineThumbnailCache
         }
 
         // stderr is silenced rather than redirected, so only one pipe has to be drained
-        var arguments = $"-v quiet -threads 1 -ss {ToSeconds(milliseconds)} -i \"{videoFileName}\" -frames:v 1 -an -sn -dn " +
+        var arguments = $"-v quiet -threads 1 -ss {ToFfmpegSeconds(videoFileName, milliseconds)} -i \"{videoFileName}\" -frames:v 1 -an -sn -dn " +
                         $"-vf scale=-2:{ThumbnailHeight} -f image2pipe -c:v png -";
         return RunFfmpeg(arguments, readLog: false, out failed, out _);
     }
 
-    private static string ToSeconds(long milliseconds)
+    // Waveform times are on the player's timeline, "-ss" on ffmpeg's (#16966).
+    private static string ToFfmpegSeconds(string videoFileName, long milliseconds)
     {
-        return (milliseconds / 1000.0).ToString("0.###", CultureInfo.InvariantCulture);
+        return WaveFileExtractor.ToFfmpegSeconds(videoFileName, milliseconds / 1000.0).ToString("0.###", CultureInfo.InvariantCulture);
     }
 
     private static Bitmap? RunFfmpeg(string arguments, bool readLog, out bool failed, out string log)
