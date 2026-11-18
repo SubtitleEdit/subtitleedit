@@ -31955,7 +31955,9 @@ public partial class MainViewModel :
             {
                 WaveformGeneratingText = Se.Language.Main.GeneratingWaveformDotDotDot;
                 using var waveFile = new WavePeakGenerator2(tempWaveFileName);
-                var wavePeaks = waveFile.GeneratePeaks(0, peakWaveFileName);
+                // The wave file starts at the file's start time; the player may not (#16966).
+                var delayMilliseconds = WaveFileExtractor.GetWaveformDelayMilliseconds(videoFileName);
+                var wavePeaks = waveFile.GeneratePeaks(delayMilliseconds, peakWaveFileName);
 
                 if (WasCancelled())
                 {
@@ -31966,7 +31968,7 @@ public partial class MainViewModel :
                 if (Se.Settings.Waveform.GenerateSpectrogram)
                 {
                     WaveformGeneratingText = Se.Language.Main.GeneratingSpectrogramDotDotDot;
-                    var spectrogram = waveFile.GenerateSpectrogram(0, spectrogramFolderName, _videoOpenTokenSource.Token);
+                    var spectrogram = waveFile.GenerateSpectrogram(delayMilliseconds, spectrogramFolderName, _videoOpenTokenSource.Token);
                     // On the UI thread: SetSpectrogram synchronously disposes the SKBitmaps
                     // DrawSpectrogram is handing to Skia, and this method runs on the
                     // extraction worker (everything else here marshals the same way).

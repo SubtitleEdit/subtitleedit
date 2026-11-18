@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Diagnostics;
 using System.IO;
 using Nikse.SubtitleEdit.UiLogic.Media;
@@ -8,6 +9,42 @@ namespace Nikse.SubtitleEdit.Logic.Media;
 
 public static class WaveFileExtractor
 {
+    /// <summary>
+    /// How far to delay the peaks of a wave file extracted by <see cref="GetCommandLineProcess"/>
+    /// so the waveform matches the player's timeline (#16966). ffmpeg starts the wave file at the
+    /// file's start time, but mpv and the FFmpeg player count from the file's raw time stamps for
+    /// everything except transport streams - an MPEG-PS file starting at 0.9 s was drawn 0.9 s early.
+    /// </summary>
+    public static int GetWaveformDelayMilliseconds(string videoFileName)
+    {
+        if (string.IsNullOrEmpty(videoFileName) || videoFileName.Contains("://") || !File.Exists(videoFileName))
+        {
+            return 0;
+        }
+
+        try
+        {
+            var isTransportStream = FileUtil.IsTransportStream(videoFileName) || FileUtil.IsM2TransportStream(videoFileName);
+            return isTransportStream ? 0 : GetWaveformDelayMilliseconds(FfmpegMediaInfo2.TryGetStartSeconds(videoFileName), false);
+        }
+        catch
+        {
+            return 0;
+        }
+    }
+
+    internal static int GetWaveformDelayMilliseconds(double? startSeconds, bool isTransportStream)
+    {
+        // Transport streams: both players count from the file's start, like the wave file.
+        // A negative start (MP4 edit lists) has no samples before it to show.
+        if (isTransportStream || startSeconds is not > 0)
+        {
+            return 0;
+        }
+
+        return (int)Math.Round(Math.Min(startSeconds.Value, int.MaxValue / 1000.0) * 1000.0);
+    }
+
     public static Process GetCommandLineProcess(string inputVideoFile, int audioTrackNumber, string outWaveFile, string encodeParamters, out string encoderName)
     {
         var settings = Se.Settings;

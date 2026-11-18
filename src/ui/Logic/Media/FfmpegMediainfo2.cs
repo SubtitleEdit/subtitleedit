@@ -43,6 +43,7 @@ public class FfmpegMediaInfo2
     private static readonly Regex ResolutionRegex = new Regex(@"\d\d+x\d\d+", RegexOptions.Compiled);
     private static readonly Regex DisplayAspectRatioRegex = new Regex(@"\bDAR (?<num>\d+):(?<den>\d+)", RegexOptions.Compiled);
     private static readonly Regex DurationRegex = new Regex(@"Duration: \d+[:\.,]\d+[:\.,]\d+[:\.,]\d+", RegexOptions.Compiled);
+    private static readonly Regex StartRegex = new Regex(@"Duration: [^,\r\n]*, start: (?<start>-?\d+(?:\.\d+)?)", RegexOptions.Compiled);
     private static readonly Regex Fps1Regex = new Regex(@" \d+\.\d+ fps", RegexOptions.Compiled);
     private static readonly Regex Fps2Regex = new Regex(@" \d+ fps", RegexOptions.Compiled);
     // Match the language tag in the ffmpeg stream header prefix, e.g.
@@ -98,6 +99,41 @@ public class FfmpegMediaInfo2
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Returns the start time ffmpeg reports for the file ("Duration: ..., start: 0.900000"), or
+    /// null when ffmpeg is unavailable or prints none. Runs ffmpeg once (no retry).
+    /// </summary>
+    public static double? TryGetStartSeconds(string videoFileName)
+    {
+        if (Configuration.IsRunningOnWindows &&
+            (string.IsNullOrEmpty(Se.Settings.General.FfmpegPath) || !File.Exists(Se.Settings.General.FfmpegPath)))
+        {
+            return null;
+        }
+
+        try
+        {
+            return ParseStartSeconds(RunFfmpegOnce(videoFileName, out _));
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    internal static double? ParseStartSeconds(string log)
+    {
+        var match = StartRegex.Match(log);
+        if (!match.Success)
+        {
+            return null;
+        }
+
+        return double.TryParse(match.Groups["start"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var start)
+            ? start
+            : null;
     }
 
     internal static double? ParseDurationSeconds(string log)
