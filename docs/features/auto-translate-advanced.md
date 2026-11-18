@@ -20,7 +20,7 @@ With an advanced engine selected, click **Advanced...** in the engine settings r
 
 ### Context
 
-- **Synopsis** — Optional description of the content (genre, setting, tone), included in every request so the model picks a fitting style. **Generate with AI** drafts it, with names and terms, from the whole subtitle: llama.cpp advanced uses the local model, the other advanced engines their own server, model and key
+- **Synopsis** — Optional description of the content (genre, setting, tone), included in every request so the model picks a fitting style. **Generate with AI** drafts it, with names and terms, from the whole subtitle: llama.cpp advanced uses the local model, or your own server when **Use external server (URL)** is on, the other advanced engines their own server, model and key
 - **Glossary** — Terms the model must translate a certain way, one per line: `source term = translation`
 - **Prompt text** — Custom system instructions replacing the built-in prompt (`{0}` = source language, `{1}` = target language); leave empty to use the built-in prompt
 - **Previous lines as context** — How many already-translated lines before the batch are sent as history for consistency (default 12)

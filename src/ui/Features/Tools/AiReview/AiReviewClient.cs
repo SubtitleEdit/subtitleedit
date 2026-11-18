@@ -22,6 +22,7 @@ public class AiReviewClient : IDisposable
     // turned down instead of paying a failed request per chunk for the rest of the run.
     private bool _temperatureUnsupported;
     private bool _jsonObjectUnsupported;
+    private bool _maxTokensUnsupported;
 
     public string Error { get; private set; } = string.Empty;
 
@@ -45,6 +46,10 @@ public class AiReviewClient : IDisposable
         // reply, so it passes preferJsonObject: false to avoid a JSON-wrapped answer.
         var jsonMode = preferJsonObject && !_jsonObjectUnsupported;
         var includeTemperature = !_temperatureUnsupported;
+        if (_maxTokensUnsupported)
+        {
+            maxTokens = null;
+        }
 
         (bool ok, string body) response;
         while (true)
@@ -63,6 +68,16 @@ public class AiReviewClient : IDisposable
             {
                 _temperatureUnsupported = true;
                 includeTemperature = false;
+                continue;
+            }
+
+            // They refuse max_tokens too ("Use 'max_completion_tokens' instead"). The request goes
+            // again without a cap rather than with max_completion_tokens: that one also counts the
+            // model's reasoning, which can use all of it before an answer is written.
+            if (maxTokens != null && IsUnsupportedParameter(response.body, "max_tokens"))
+            {
+                _maxTokensUnsupported = true;
+                maxTokens = null;
                 continue;
             }
 
