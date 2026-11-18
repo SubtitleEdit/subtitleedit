@@ -44,8 +44,10 @@ public class NOcrCaseFixer : INOcrCaseFixer
             return descent > Math.Max(2, baseline / 10) ? "p" : "P";
         }
 
-        // Reference heights: letters with no lookalike in the other case.
-        if (result.Text is "e" or "a" or "d" or "t" or "а" or "е")
+        // Reference heights: letters with no lookalike in the other case. Only x-height letters:
+        // "d" and "t" reach up to about the capital height, and a steep italic "t" read right
+        // instead of as "l" pulled the "lowercase" height up until "Well" came out as "well".
+        if (result.Text is "e" or "a" or "n" or "r" or "m" or "а" or "е")
         {
             _ocrLowercaseHeightsTotalCount++;
             _ocrLowercaseHeightsTotal += targetItem.NikseBitmap.Height;
@@ -94,8 +96,7 @@ public class NOcrCaseFixer : INOcrCaseFixer
         // Latin letters where lowercase versions look like uppercase version
         if (UppercaseLikeLowercase.Contains(result.Text))
         {
-            var averageLowercase = _ocrLowercaseHeightsTotal / _ocrLowercaseHeightsTotalCount;
-            var averageUppercase = _ocrUppercaseHeightsTotal / _ocrUppercaseHeightsTotalCount;
+            var (averageLowercase, averageUppercase) = GetExpectedHeights(result.Text);
             if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) < Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
             {
                 return result.Text.ToLowerInvariant();
@@ -106,8 +107,7 @@ public class NOcrCaseFixer : INOcrCaseFixer
 
         if (LowercaseLikeUppercase.Contains(result.Text))
         {
-            var averageLowercase = _ocrLowercaseHeightsTotal / _ocrLowercaseHeightsTotalCount;
-            var averageUppercase = _ocrUppercaseHeightsTotal / _ocrUppercaseHeightsTotalCount;
+            var (averageLowercase, averageUppercase) = GetExpectedHeights(result.Text);
             if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) > Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
             {
                 return result.Text.ToUpperInvariant();
@@ -143,6 +143,21 @@ public class NOcrCaseFixer : INOcrCaseFixer
         }
 
         return result.Text;
+    }
+
+    /// <summary>
+    /// The heights a lowercase and an uppercase <paramref name="text"/> are expected to have: the
+    /// average x-height and capital heights seen so far, except for "ø"/"Ø", whose slash reaches
+    /// past the ring - a lowercase "ø" stands about a quarter taller than the x-height and read as
+    /// "Ø" ("prØvde") once the x-height came from x-height letters only.
+    /// </summary>
+    private (double Lowercase, double Uppercase) GetExpectedHeights(string text)
+    {
+        var averageLowercase = _ocrLowercaseHeightsTotal / (double)_ocrLowercaseHeightsTotalCount;
+        var averageUppercase = _ocrUppercaseHeightsTotal / (double)_ocrUppercaseHeightsTotalCount;
+        return text is "ø" or "Ø"
+            ? (averageLowercase * 1.25, averageUppercase * 1.1)
+            : (averageLowercase, averageUppercase);
     }
 
     /// <summary>

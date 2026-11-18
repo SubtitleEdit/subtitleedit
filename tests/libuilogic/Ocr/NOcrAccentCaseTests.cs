@@ -39,6 +39,16 @@ public class NOcrAccentCaseTests
     }
 
     [Theory]
+    [InlineData("Ø", 25, "ø")] // the slash reaches a quarter past the x-height ("prøvde")
+    [InlineData("ø", 33, "Ø")] // and a bit past the cap height
+    [InlineData("O", 21, "o")]
+    [InlineData("o", 30, "O")]
+    public void SameShapeLetters_CaseFromHeight(string matched, int height, string expected)
+    {
+        Assert.Equal(expected, WarmedUpFixer().FixUppercaseLowercaseIssues(Glyph(height, Baseline - height), new NOcrChar(matched)));
+    }
+
+    [Theory]
     [InlineData("Ç", 20, "ç")] // cedilla below: the body is x-high
     [InlineData("ç", 30, "Ç")] // the body is cap-high
     public void CedillaBelow_CaseFromBodyHeight(string matched, int bodyHeight, string expected)
