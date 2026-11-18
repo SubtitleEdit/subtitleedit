@@ -12243,6 +12243,13 @@ public partial class MainViewModel :
             return;
         }
 
+        // yt-dlp needs ffmpeg to merge the separate video and audio streams most sites serve;
+        // without one it leaves two unmerged files and the download fails (#17001).
+        if (!await RequireFfmpegOk())
+        {
+            return;
+        }
+
         var suggestedName = await MakeDownloadSuggestedFileNameAsync(url);
         var outputPath = await _fileHelper.PickSaveFile(Window, ".mkv", suggestedName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputPath))
