@@ -690,6 +690,10 @@ public class LanguageGeneral
     public string TeletextColor { get; set; } = string.Empty;
     public string TeletextLine { get; set; } = string.Empty;
     public string TenHours { get; set; }
+    public string FromVideo { get; set; }
+    public string UseStartTimeCodeFromVideo { get; set; }
+    public string UseStartTimeCodeFromVideoX { get; set; }
+    public string NoTimeCodeInVideo { get; set; }
     public string Text { get; set; }
     public string TextColor { get; set; }
     public string TextFiles { get; set; }
@@ -1728,6 +1732,10 @@ public class LanguageGeneral
         TeletextColor = "Teletext color";
         TeletextLine = "Teletext line";
         TenHours = "10 hours";
+        FromVideo = "From video";
+        UseStartTimeCodeFromVideo = "Use the start time code stored in the video file";
+        UseStartTimeCodeFromVideoX = "Use the start time code stored in the video file: {0}";
+        NoTimeCodeInVideo = "No start time code found in the video file";
         Text = "Text";
         TextColor = "Text color";
         TextFiles = "Text files";
