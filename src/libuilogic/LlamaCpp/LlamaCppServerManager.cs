@@ -72,6 +72,14 @@ public static class LlamaCppServerManager
     private const string MiLmMt46PromptTemplate =
         "Translate this from {0} to {1}:\n{0}: {2}\n{1}:";
 
+    // PLaMo 3 Translate's PFML3 prompt. The GGUF's embedded chat template renders a user message
+    // that starts with "<|plamo:tag|>dataset<|plamo:msg|>translation" verbatim (its documented
+    // pass-through for chat-only clients), so this works through the plain chat endpoint with no
+    // chat_template_kwargs. The output is cued with the target language CODE ({4}) the model was
+    // trained on; the input carries no lang, so the model detects the source itself.
+    private const string PlamoTranslatePromptTemplate =
+        "<|plamo:tag|>dataset<|plamo:msg|>translation<|plamo:tag|>input<|plamo:msg|>{2}<|plamo:tag|>output<|plamo:key|>lang<|plamo:val|>{4}<|plamo:msg|>";
+
     public static readonly IReadOnlyList<LlamaCppModel> TranslateModels = new[]
     {
         new LlamaCppModel("TranslateGemma 4B (Q4_K_M)", "translategemma-4b_Q4_K_M.gguf", "2.5 GB",
@@ -241,6 +249,20 @@ public static class LlamaCppServerManager
         new LlamaCppModel("Index-Nailong 9B (Q4_K_M) - 150 languages, long context", "Index-Nailong-9B.Q4_K_M.gguf", "5.6 GB",
             "https://huggingface.co/IndexTeam/Index-Nailong-9B-GGUF/resolve/main/Index-Nailong-9B.Q4_K_M.gguf",
             Temperature: 0, NoThinking: true),
+
+        // PLaMo 3 Translate (Preferred Networks, 2026-11) - translation-specialized, official GGUFs,
+        // 53 languages with Japanese <-> English as its strength. No Nordic languages, and no
+        // Portuguese, Turkish or Ukrainian either. PLaMo Community License: free for personal use,
+        // commercial use needs a (free) registration with PFN, or a contract above 1 billion yen
+        // in revenue - hence the note in the display name. Trained on PFML3, not on instructions,
+        // so CompletionOnly keeps it out of the advanced engine's JSON batch protocol. Greedy
+        // decoding, as the model card recommends.
+        new LlamaCppModel("PLaMo 3 Translate 8B (Q4_K_M) - 53 languages, PLaMo license", "plamo-3-translate-8b-Q4_K_M.gguf", "5.3 GB",
+            "https://huggingface.co/pfnet/plamo-3-translate-8b-GGUF/resolve/main/plamo-3-translate-8b-Q4_K_M.gguf",
+            PromptTemplate: PlamoTranslatePromptTemplate, Temperature: 0, CompletionOnly: true),
+        new LlamaCppModel("PLaMo 3 Translate 2B (Q4_K_M) - 53 languages, PLaMo license", "plamo-3-translate-2b-Q4_K_M.gguf", "1.8 GB",
+            "https://huggingface.co/pfnet/plamo-3-translate-2b-GGUF/resolve/main/plamo-3-translate-2b-Q4_K_M.gguf",
+            PromptTemplate: PlamoTranslatePromptTemplate, Temperature: 0, CompletionOnly: true),
 
         // Aya Expanse 8B (Cohere) - a dedicated multilingual model (23 languages), a good translation
         // alternative to the Gemma/Qwen families. Uses its own embedded (Cohere) chat template, so we
@@ -677,7 +699,7 @@ public static class LlamaCppServerManager
     /// Builds the <see cref="LlamaCppModel"/> for a non-curated <c>*.gguf</c> (dropped into the
     /// models folder, or passed to seconv by path), inferring the same per-family settings the
     /// curated entries carry: chat-template flags via <see cref="InferChatTemplate"/>, and for
-    /// MiLMMT quants the trained completion prompt, greedy sampling and the regular-engine-only
+    /// MiLMMT and PLaMo 3 Translate quants the trained completion prompt, greedy sampling and the regular-engine-only
     /// restriction - a self-supplied MiLMMT quant echo-loops the source under any other prompt.
     /// <paramref name="fileNameOrPath"/> may be a bare file name or a full path (seconv).
     /// </summary>
@@ -686,11 +708,16 @@ public static class LlamaCppServerManager
         var name = Path.GetFileName(fileNameOrPath);
         var (chatTemplate, noJinja, noThinking) = InferChatTemplate(name);
         var isMiLmMt = name.Contains("milmmt", StringComparison.OrdinalIgnoreCase);
+        // PLaMo 3 only: PLaMo 2 Translate uses the older "<|plamo:op|>" format.
+        var isPlamo = (name.Contains("plamo-3", StringComparison.OrdinalIgnoreCase) ||
+                       name.Contains("plamo3", StringComparison.OrdinalIgnoreCase)) &&
+                      name.Contains("translate", StringComparison.OrdinalIgnoreCase);
+        var promptTemplate = isMiLmMt ? MiLmMt46PromptTemplate : isPlamo ? PlamoTranslatePromptTemplate : null;
         return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
             ChatTemplate: chatTemplate, NoJinja: noJinja,
-            PromptTemplate: isMiLmMt ? MiLmMt46PromptTemplate : null,
-            Temperature: isMiLmMt ? 0 : -1,
-            CompletionOnly: isMiLmMt,
+            PromptTemplate: promptTemplate,
+            Temperature: promptTemplate != null ? 0 : -1,
+            CompletionOnly: promptTemplate != null,
             NoThinking: noThinking);
     }
 

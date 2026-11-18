@@ -194,7 +194,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? TranslateApiKey { get; init; }
 
         [CommandOption("--translate-prompt|--translateprompt")]
-        [Description("Prompt for llamacpp/ollama/lmstudio/openai-compatible and the system prompt of the advanced engines: inline text (\\n = line break) or a path to a text file; {0}=source language, {1}=target language, {2}=the text (completion-format models, not for the advanced engines)")]
+        [Description("Prompt for llamacpp/ollama/lmstudio/openai-compatible and the system prompt of the advanced engines: inline text (\\n = line break) or a path to a text file; {0}=source language, {1}=target language, {2}=the text, {3}/{4}=source/target language code (completion-format models, not for the advanced engines)")]
         public string? TranslatePrompt { get; init; }
 
         [CommandOption("--translate-batch-size|--translatebatchsize")]
