@@ -16,6 +16,11 @@ public class AiReviewClientTests
         "Only the default (1) value is supported.\", \"type\": \"invalid_request_error\", " +
         "\"param\": \"temperature\", \"code\": \"unsupported_value\" } }";
 
+    private const string MaxTokensError =
+        "{ \"error\": { \"message\": \"Unsupported parameter: 'max_tokens' is not supported with this model. " +
+        "Use 'max_completion_tokens' instead.\", \"type\": \"invalid_request_error\", " +
+        "\"param\": \"max_tokens\", \"code\": \"unsupported_parameter\" } }";
+
     private const string ResponseFormatError =
         "{ \"error\": { \"message\": \"Unrecognized request argument supplied: response_format\", " +
         "\"type\": \"invalid_request_error\" } }";
@@ -133,6 +138,37 @@ public class AiReviewClientTests
         await client.ChatAsync(server.Url, "gpt-5.6-luna", "system", "user two", CancellationToken.None);
         Assert.Equal(3, server.Requests.Count);
         Assert.DoesNotContain("\"temperature\"", server.Requests[2]);
+    }
+
+    [Fact]
+    public async Task ChatAsync_RetriesWithoutMaxTokens_WhenTheModelRejectsIt()
+    {
+        // The answer cap of "Generate with AI" in the advanced translate settings reaches whatever
+        // server the selected engine uses, OpenAI's own included.
+        using var server = new StubServer(body =>
+        {
+            if (body.Contains("\"max_tokens\""))
+            {
+                return (400, MaxTokensError);
+            }
+
+            return body.Contains("\"temperature\"") ? (400, TemperatureError) : (200, Reply);
+        });
+        using var client = new AiReviewClient();
+
+        var reply = await client.ChatAsync(server.Url, "gpt-5.6-luna", "system", "user", CancellationToken.None, maxTokens: 1024);
+
+        Assert.Equal("all good", reply);
+        Assert.Equal(3, server.Requests.Count);
+        Assert.Contains("\"max_tokens\":1024", server.Requests[0]);
+        Assert.DoesNotContain("max_tokens", server.Requests[2]);
+        Assert.DoesNotContain("max_completion_tokens", server.Requests[2]);
+        Assert.Contains("\"response_format\"", server.Requests[2]);
+
+        // The rejection sticks, so later parts go straight out without the cap.
+        await client.ChatAsync(server.Url, "gpt-5.6-luna", "system", "user two", CancellationToken.None, maxTokens: 1024);
+        Assert.Equal(4, server.Requests.Count);
+        Assert.DoesNotContain("max_tokens", server.Requests[3]);
     }
 
     [Fact]

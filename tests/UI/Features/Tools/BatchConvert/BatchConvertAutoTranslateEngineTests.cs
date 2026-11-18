@@ -440,7 +440,7 @@ public class BatchConvertAutoTranslateEngineTests
         Assert.Equal(string.Empty, Se.Settings.AutoTranslate.LmStudioApiKey);
     }
 
-    private sealed class TranslateSettingsSnapshot : IDisposable
+    internal sealed class TranslateSettingsSnapshot : IDisposable
     {
         private readonly List<(object Target, System.Reflection.PropertyInfo Property, object? Value)> _values = new();
 

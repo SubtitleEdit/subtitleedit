@@ -1174,9 +1174,10 @@ public partial class AutoTranslateViewModel : ObservableObject
     /// <summary>
     /// "Generate with AI" in the advanced settings (#16589): drafts names, terms and a synopsis
     /// from the whole subtitle with the selected engine's model, like AI review's reference context.
-    /// llama.cpp advanced uses the local model; the other advanced engines use their own server.
+    /// llama.cpp advanced uses the local model, or its external server when one is set; the other
+    /// advanced engines use their own server.
     /// </summary>
-    private async Task<string?> GenerateLlamaCppAdvancedSynopsisAsync(Window owner, Action<int, int> progress, CancellationToken cancellationToken)
+    internal async Task<string?> GenerateLlamaCppAdvancedSynopsisAsync(Window owner, Action<int, int> progress, CancellationToken cancellationToken)
     {
         if (_cancellationTokenSource.IsCancellationRequested)
         {
@@ -1187,10 +1188,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         var model = string.Empty;
         string? apiKey = null;
         string modelForLog;
-        if (SelectedAutoTranslator is AdvancedTranslatorBase advanced and not LlamaCppAdvancedTranslate)
+        if (SelectedAutoTranslator is AdvancedTranslatorBase advanced && (advanced is not LlamaCppAdvancedTranslate || LlamaCppUseRemoteServer))
         {
-            // Ollama, LM Studio and OpenAI Compatible advanced: the endpoint, model and key in the
-            // boxes, saved first so a value typed but not yet run is the one asked.
+            // Ollama, LM Studio and OpenAI Compatible advanced, and llama.cpp advanced with an external
+            // server: the endpoint, model and key in the boxes, saved first so a value typed but not
+            // yet run is the one asked.
             SaveSettings();
             var endpoint = advanced.GetEndpoint();
             url = endpoint.Url;
