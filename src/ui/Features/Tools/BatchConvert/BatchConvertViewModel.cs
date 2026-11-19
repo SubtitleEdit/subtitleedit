@@ -2091,8 +2091,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
     }
 
-    private async Task<bool> EnsureLlamaCppAvailable(BatchConvertConfig config)
+    internal async Task<bool> EnsureLlamaCppAvailable(BatchConvertConfig config)
     {
+        // A local llama.cpp run sets its model's prompt and sampling below. Clear what an earlier
+        // run left first, so another engine or an external server never gets the values of a model
+        // it does not run. The Auto-translate window clears them the same way.
+        LlamaCppServerManager.ApplyTranslatePromptSettings(null);
+
         if (Window == null)
         {
             return true;

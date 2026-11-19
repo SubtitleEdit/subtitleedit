@@ -446,6 +446,12 @@ public partial class AutoTranslateViewModel : ObservableObject
             var curatedModel = LlamaCppUseRemoteServer ? null : SelectedLlamaCppModel?.Model;
             LlamaCppServerManager.ApplyTranslatePromptSettings(curatedModel);
         }
+        else
+        {
+            // Another engine runs no local model either: clear the model-specific prompt/sampling as
+            // for a remote server, or the advanced engines send that sampling for every field left unset.
+            LlamaCppServerManager.ApplyTranslatePromptSettings(null);
+        }
 
         if (engineType == typeof(OllamaTranslate))
         {

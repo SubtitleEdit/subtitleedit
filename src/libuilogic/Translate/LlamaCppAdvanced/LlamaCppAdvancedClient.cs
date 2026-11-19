@@ -384,8 +384,8 @@ public class LlamaCppAdvancedClient : IDisposable
     /// </summary>
     private static void WriteSampling(Utf8JsonWriter writer, SeLlamaCppAdvanced advanced, int defaultMaxTokens, double temperatureBump, JsonElement? overrides, bool llamaCppExtensions)
     {
-        // The curated model's values come from a local llama.cpp run and stay set for the rest of the
-        // session. They are for that model, and a strict server refuses top_k and repeat_penalty, so
+        // The curated model's values are set for a local llama.cpp run and cleared before any other
+        // run. They are for that model, and a strict server refuses top_k and repeat_penalty, so
         // without the llama.cpp extensions only the user's own settings are sent - as in seconv,
         // where a run of such an engine never sets them.
         var tools = Configuration.Settings.Tools;
