@@ -3,6 +3,24 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta10 (19th of November 2026)
+
+* Video player: optional "Cycle video flip" button + shortcut (mpv) - thx Cotae88
+* Set video offset: "From video" reads the start time code stored in the video - thx accessallareas
+* Open video from URL: show "Loading online video..." until the stream is playable - thx GitGianluc
+* YouTube Timed Text (YTT): name pens - thx VisibleReality/muaz978
+* Image based edit, Move captions: "Align by" option, text baseline by default - thx Lukewarm1141/caioocesar
+* nOCR: learn 24 hand-labeled glyphs, heavy/thin ł, detached ogonek
+* Auto-translate: llama.cpp PLaMo 3 Translate 8B and 2B models
+* Auto-translate: a local llama.cpp model's prompt/sampling no longer leaks into other engines - thx Makar8000
+* Advanced translate: a temperature in the extra request JSON runs warmer on a retry
+* Advanced translate: a repeated line fills one history pair
+* Generate with AI: use llama.cpp's external server when set, use the Extra request JSON - thx Makar8000
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
 v5.5.0-beta9 (18th of November 2026)
 
 * Open video from URL: give yt-dlp ffmpeg so streams merge, mode cards disabled until a URL is entered - thx GitGianluc
