@@ -780,6 +780,15 @@ public static class LlamaCppServerManager
         return candidates.FirstOrDefault(File.Exists);
     }
 
+    /// <summary>
+    /// True for an OCR-only vision model (GLM-OCR, HunyuanOCR, LightOnOCR, PaddleOCR-VL...): it reads
+    /// text off an image and cannot translate or review, so it is kept out of those model lists.
+    /// </summary>
+    internal static bool IsOcrModelFileName(string fileName)
+    {
+        return fileName.Contains("ocr", StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary>True when the file name is a vision projector rather than a model in its own right.</summary>
     private static bool IsMmprojFileName(string fileName)
     {
@@ -866,6 +875,14 @@ public static class LlamaCppServerManager
                     continue;
                 }
                 if (IsMmprojFileName(name))
+                {
+                    continue;
+                }
+
+                // An OCR model left over from an older curated list (LightOnOCR 1B after LightOnOCR-3
+                // replaced it) is no longer "known", so it showed up as a custom translate model -
+                // and only answers with the prompt's "<translation of line 1>" example.
+                if (!requireVisionProjector && IsOcrModelFileName(name))
                 {
                     continue;
                 }
