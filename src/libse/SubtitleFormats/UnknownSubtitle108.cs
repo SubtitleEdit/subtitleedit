@@ -56,6 +56,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
+
+            // The same list is often kept as a Word table - read a binary .doc directly
+            if (WordDocumentReader.IsWordDocument(fileName))
+            {
+                lines = WordDocumentReader.GetLines(fileName);
+                if (lines == null)
+                {
+                    _errorCount++;
+                    return;
+                }
+            }
+
             Paragraph p = null;
             var expectEnd = false;
 
