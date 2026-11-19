@@ -504,6 +504,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle105(),
                     new UnknownSubtitle106(),
                     new UnknownSubtitle107(),
+                    new UnknownSubtitle108(),
                 };               
 
                 _subtitleFormatsWithDefaultOrder = new List<SubtitleFormat>(_allSubtitleFormats);
