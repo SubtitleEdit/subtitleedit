@@ -124,4 +124,97 @@ public class TranslationShiftGuardTests
     {
         Assert.Equal(-1, TranslationShiftGuard.FindPlaceholderTranslation(new[] { "Yes.", "...", "25" }, new[] { "Ja.", "...", "25" }));
     }
+
+    // Ted Lasso S03E01 lines 11-20, Index-Translate 9B EN->DA: lines 11+12 (one sentence) came
+    // back joined in row 11, every later row moved up by one and the freed last row got "Hmm."
+    // (line 10's translation) - too short for FindDuplicatedTranslation.
+    private static readonly string[] TedLassoSources =
+    {
+        "Feels like a potentially\ntroublesome sentence to",
+        "say in this setting, but\nhey, I appreciate you.",
+        "Hello, Henry.",
+        "It's nice to see you again.",
+        "You excited to head back home.",
+        "To all my toys, yes.",
+        "To my country's political\nlandscape, not so much.",
+        "Well, I have a tendency\nto doze off with CNN on.",
+        "All right, big guy.",
+        "Let's get you all set up here.",
+    };
+
+    [Fact]
+    public void MergedRowPaddedWithShortLine_ReportsTheMergedRow()
+    {
+        var translations = new[]
+        {
+            "Det føles som en potentielt\nbesværlig sætning at sige i denne situation, men\nhej, jeg sætter pris på dig.",
+            "Hej, Henry.",
+            "Det er dejligt at se dig igen.",
+            "Er du spændt på at tage hjem igen?",
+            "Til alle mine legetøjsfigurer, ja.",
+            "Til mit lands politiske\nlandskab, ikke ligeså meget.",
+            "Tja, jeg har en tendens til\nat falde i søvn med CNN tændt.",
+            "Hmm.",
+            "Okay, store fyr.",
+            "Lad os få dig sat ordentligt til her.",
+        };
+
+        Assert.Equal(-1, TranslationShiftGuard.FindDuplicatedTranslation(TedLassoSources, translations));
+        Assert.Equal(0, TranslationShiftGuard.FindLengthShift(TedLassoSources, translations));
+    }
+
+    [Fact]
+    public void AlignedTedLassoReply_HasNoLengthShift()
+    {
+        var translations = new[]
+        {
+            "Det føles som en potentielt\nbesværlig sætning at",
+            "sige i denne situation, men\nhej, jeg sætter pris på dig.",
+            "Hej, Henry.",
+            "Det er dejligt at se dig igen.",
+            "Er du spændt på at tage hjem igen?",
+            "Til alle mine legetøjsfigurer, ja.",
+            "Til mit lands politiske\nlandskab, ikke ligeså meget.",
+            "Tja, jeg har en tendens til\nat falde i søvn med CNN tændt.",
+            "Okay, store fyr.",
+            "Lad os få dig sat ordentligt til her.",
+        };
+
+        Assert.Equal(-1, TranslationShiftGuard.FindLengthShift(TedLassoSources, translations));
+    }
+
+    [Fact]
+    public void AlignedReplies_HaveNoLengthShift()
+    {
+        var sources = new[]
+        {
+            "Henry.", "We're here.", "We're here.", "Sorry about that.", "We got distracted.",
+            "Little guy was trying to unlock\nPrincess Peach on Super Smash Bros.", "Totally understand.",
+            "I once held an entire\nflight to Sydney hostage", "until I finished the final\nlevel of Breath of the Wild.", "Hmm.",
+        };
+        var translations = new[]
+        {
+            "Henry.", "Vi er her.", "Vi er her.", "Undskyld det.", "Vi blev distraherede.",
+            "Den lille fyr prøvede at låse\nPrinsesse Peach op i Super Smash Bros.", "Det forstår jeg helt og holdent.",
+            "Engang holdt jeg en hel flytur\ntil Sydney som gidsel", "indtil jeg havde klaret det sidste\nniveau i Breath of the Wild.", "Hmm.",
+        };
+
+        Assert.Equal(-1, TranslationShiftGuard.FindLengthShift(sources, translations));
+        Assert.Equal(-1, TranslationShiftGuard.FindLengthShift(Sources, new[]
+        {
+            "Du weißt, dass ich alles für dich tun würde. Wenn du",
+            "immer so nett zu mir bist, gebe ich dir alles, was ich habe.",
+            "Komm schon. Du weißt nicht, wie schön das ist.",
+            "Gefällt es dir?",
+        }));
+    }
+
+    [Fact]
+    public void OneWordyTranslation_IsNoLengthShift()
+    {
+        var sources = new[] { "Hmm.", "Okay.", "Where were we?", "The car.", "It's gone.", "Yes." };
+        var translations = new[] { "Hmm.", "Okay, det er i orden, helt i orden.", "Hvor var vi?", "Bilen.", "Den er væk.", "Ja." };
+
+        Assert.Equal(-1, TranslationShiftGuard.FindLengthShift(sources, translations));
+    }
 }
