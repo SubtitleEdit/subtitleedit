@@ -130,4 +130,33 @@ public class YttStylesWindowTests : IDisposable
 
         Assert.Equal(Color.FromRgb(255, 0, 0), range.Color);
     }
+
+    [AvaloniaFact]
+    public void DuplicateOfANamedPenNumbersTheCopies()
+    {
+        var vm = ShowWindow(MakeSubtitle());
+        vm.SelectedTabIndex = YttStylesViewModel.TabPens;
+        vm.SelectedPen = vm.Pens.Single(p => p.Id == 1);
+        vm.SelectedPen.Name = "Alice";
+
+        vm.DuplicateCommand.Execute(null);
+        var copy = vm.SelectedPen!;
+        vm.DuplicateCommand.Execute(null);
+        var copyOfCopy = vm.SelectedPen!;
+        vm.SelectedPen = vm.Pens.Single(p => p.Id == 2);
+        vm.DuplicateCommand.Execute(null);
+
+        var copyText = Nikse.SubtitleEdit.Logic.Config.Se.Language.General.Copy;
+        Assert.Equal("Alice (" + copyText + ")", copy.Name);
+        Assert.Equal("Alice (" + copyText + " 2)", copyOfCopy.Name);
+        Assert.Equal(string.Empty, vm.SelectedPen!.Name);
+    }
+
+    [AvaloniaFact]
+    public void MenuHeaderKeepsUnderscoresInPenNames()
+    {
+        var display = new YttPenDisplay(new YttPen { Id = 3, Name = "Mr_Smith" });
+
+        Assert.Contains("Mr__Smith", display.MenuHeader);
+    }
 }

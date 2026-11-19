@@ -101,7 +101,7 @@ public partial class MainViewModel
         {
             linePen.Items.Add(new MenuItem
             {
-                Header = string.Format(Se.Language.File.Ytt.PenX, pen.Id) + " - " + new YttPenDisplay(pen).Description,
+                Header = new YttPenDisplay(pen).MenuHeader,
                 Command = SetYttLinePenCommand,
                 CommandParameter = pen.Id.ToString(CultureInfo.InvariantCulture),
             });
@@ -248,7 +248,7 @@ public partial class MainViewModel
         foreach (var pen in head.Pens.Where(p => p.Id != 0).OrderBy(p => p.Id))
         {
             var penId = pen.Id;
-            var menuItem = new MenuItem { Header = string.Format(Se.Language.File.Ytt.PenX, pen.Id) + " - " + new YttPenDisplay(pen).Description };
+            var menuItem = new MenuItem { Header = new YttPenDisplay(pen).MenuHeader };
             menuItem.Click += (_, _) => WrapYttSelection("<s p=\"" + penId.ToString(CultureInfo.InvariantCulture) + "\">");
             setPen.Items.Add(menuItem);
         }

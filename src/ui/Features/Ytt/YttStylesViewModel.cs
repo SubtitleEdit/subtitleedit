@@ -229,7 +229,7 @@ public partial class YttStylesViewModel : ObservableObject, IClosingCleanup
                 SelectedWindowStyle = windowStyle;
                 break;
             case TabPens when SelectedPen != null:
-                var pen = SelectedPen.CloneWithId(NextPenId());
+                var pen = SelectedPen.CloneWithId(NextPenId(), Pens.Select(p => p.Name));
                 AddPen(pen);
                 SelectedPen = pen;
                 break;

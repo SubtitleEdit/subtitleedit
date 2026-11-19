@@ -370,6 +370,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            // A named pen with extra formatting on top is a new look, not that pen: leave the name
+            // with the pen it belongs to, or two pens would share one.
+            if (basePen != null && pen.Name != null && !pen.HasSameFormatting(basePen, false))
+            {
+                pen.Name = null;
+            }
+
             return pen;
         }
 

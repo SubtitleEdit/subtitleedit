@@ -223,6 +223,11 @@ public class YttStylesWindow : Window
         var offset = MakeIndexCombo(YttStylesViewModel.OffsetNames, Pen + nameof(YttPenDisplay.OffsetIndex), Se.Language.File.Ytt.Offset);
 
         var font = new StackPanel { Spacing = 8 };
+        font.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Name, new TextBox
+        {
+            Classes = { EditorChrome.TextClass },
+            [!TextBox.TextProperty] = new Binding(Pen + nameof(YttPenDisplay.Name)) { Mode = BindingMode.TwoWay },
+        }));
         font.Children.Add(EditorChrome.MakePropertyRow(Se.Language.File.Ytt.FontStyle, fontStyle));
         font.Children.Add(EditorChrome.MakePropertyRow(Se.Language.File.Ytt.Size, size));
         font.Children.Add(realSize);
