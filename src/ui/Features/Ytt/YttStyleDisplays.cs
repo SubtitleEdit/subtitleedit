@@ -5,6 +5,8 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Features.Ytt;
 
@@ -141,18 +143,45 @@ public partial class YttPenDisplay : ObservableObject
         return pen;
     }
 
-    public YttPenDisplay CloneWithId(int id)
+    /// <summary>
+    /// Pen number and description for a menu item. Underscores are doubled, else Avalonia takes
+    /// the first one in a pen name as an access key and hides it.
+    /// </summary>
+    public string MenuHeader => (string.Format(Se.Language.File.Ytt.PenX, Id) + " - " + Description).Replace("_", "__");
+
+    public YttPenDisplay CloneWithId(int id) => CloneWithId(id, Array.Empty<string>());
+
+    /// <summary>
+    /// A copy with a new id. A named pen gets "(Copy)", "(Copy 2)", ... - the first one not in
+    /// <paramref name="takenNames"/> - so copies of copies don't stack "(Copy) (Copy)".
+    /// An unnamed pen stays unnamed.
+    /// </summary>
+    public YttPenDisplay CloneWithId(int id, IEnumerable<string?> takenNames)
     {
         var pen = ToPen();
         pen.Id = id;
 
-        // Two pens with one name are hard to tell apart; an unnamed pen stays unnamed.
         if (pen.Name != null)
         {
-            pen.Name += " (" + Se.Language.General.Copy + ")";
+            pen.Name = MakeCopyName(pen.Name, takenNames);
         }
 
         return new YttPenDisplay(pen);
+    }
+
+    internal static string MakeCopyName(string name, IEnumerable<string?> takenNames)
+    {
+        var copy = Se.Language.General.Copy;
+        var match = Regex.Match(name, "^(.*) \\(" + Regex.Escape(copy) + "(?: \\d+)?\\)$");
+        var baseName = match.Success && match.Groups[1].Value.Length > 0 ? match.Groups[1].Value : name;
+        var taken = new HashSet<string>(takenNames.OfType<string>().Select(n => n.Trim()), StringComparer.Ordinal);
+        var candidate = baseName + " (" + copy + ")";
+        for (var i = 2; taken.Contains(candidate); i++)
+        {
+            candidate = baseName + " (" + copy + " " + i.ToString(CultureInfo.InvariantCulture) + ")";
+        }
+
+        return candidate;
     }
 
     internal static Color ParseColor(string? html, string fallback)
