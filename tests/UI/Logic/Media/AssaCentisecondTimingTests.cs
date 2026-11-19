@@ -82,4 +82,26 @@ public class AssaCentisecondTimingTests
         Assert.True(subtitle.Paragraphs[0].EndTime.IsMaxTime);
         Assert.Equal(1000, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
     }
+
+    [Fact]
+    public void FloorToCentiseconds_NeverWritesZeroLengthLines()
+    {
+        // A zero-length Dialogue in the preview file hid the first line in libmpv (issue #16967).
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("line #1", 1220, 2547));
+        subtitle.Paragraphs.Add(new Paragraph("Short", 6611, 6619));
+        subtitle.Paragraphs.Add(new Paragraph("Zero", 7000, 7000));
+        subtitle.Paragraphs.Add(new Paragraph("Negative", 8000, 7900));
+
+        AssaCentisecondTiming.FloorToCentiseconds(subtitle);
+
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("line #1", subtitle.Paragraphs[0].Text);
+        Assert.Equal("Short", subtitle.Paragraphs[1].Text);
+        Assert.Equal(6610, subtitle.Paragraphs[1].StartTime.TotalMilliseconds);
+        Assert.Equal(6620, subtitle.Paragraphs[1].EndTime.TotalMilliseconds);
+
+        var text = subtitle.ToText(new AdvancedSubStationAlpha());
+        Assert.Contains("0:00:06.61,0:00:06.62", text);
+    }
 }

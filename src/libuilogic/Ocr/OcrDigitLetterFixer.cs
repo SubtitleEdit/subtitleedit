@@ -5,12 +5,15 @@ namespace Nikse.SubtitleEdit.UiLogic.Ocr;
 /// <summary>
 /// "0" and "O" are the same ring in most subtitle fonts, and the image matchers decide each glyph
 /// on its own. The neighbours settle it: a run of digits is a number ("5O" -> "50", "1O:3O" ->
-/// "10:30"), and a "0" inside a word of letters is a letter ("0f" -> "of", "g0t" -> "got").
+/// "10:30"), and a "0" inside a word of letters is a letter ("0f" -> "of", "g0t" -> "got"). A
+/// font with a slashed zero has its zeros read as "Ø", which a run of digits settles the same way
+/// ("minus 5Ø degrees" -> "minus 50 degrees").
 /// </summary>
 public static partial class OcrDigitLetterFixer
 {
-    // Digits and capital O's, optionally grouped by . , : ("1,OOO", "1O:3O"), not touching letters.
-    [GeneratedRegex(@"(?<![\p{L}\d])[\dO]+(?:[.,:][\dO]+)*(?![\p{L}\d])")]
+    // Digits and capital O's (or slashed zeros read as "Ø"), optionally grouped by . , : ("1,OOO",
+    // "1O:3O"), not touching letters.
+    [GeneratedRegex(@"(?<![\p{L}\d])[\dOØø]+(?:[.,:][\dOØø]+)*(?![\p{L}\d])")]
     private static partial Regex NumberLikeRun();
 
     // A word of letters with zeros in it and no other digits.
@@ -39,10 +42,12 @@ public static partial class OcrDigitLetterFixer
             text = SplitPercent().Replace(text, "%");
         }
 
-        if (text.Contains('O'))
+        if (text.Contains('O') || text.Contains('Ø') || text.Contains('ø'))
         {
             text = NumberLikeRun().Replace(text, m =>
-                m.Value.Contains('O') && m.Value.Any(char.IsDigit) ? m.Value.Replace('O', '0') : m.Value);
+                m.Value.Any(char.IsDigit) && m.Value.Any(c => c is 'O' or 'Ø' or 'ø')
+                    ? m.Value.Replace('O', '0').Replace('Ø', '0').Replace('ø', '0')
+                    : m.Value);
         }
 
         if (text.Contains('0'))

@@ -63,6 +63,21 @@ public class SetVideoOffsetWindow : Window
         buttonTenHours.MinHeight = 28;
         buttonTenHours.VerticalAlignment = VerticalAlignment.Center;
 
+        // The start time code the video carries in its metadata (#17009) - enabled once the
+        // background ffmpeg probe found one; fills the box like a history pick, applies nothing.
+        var buttonFromVideo = UiUtil.MakeButton(Se.Language.General.FromVideo, vm.SetFromVideoCommand).WithFontSize(11);
+        buttonFromVideo.Margin = new Thickness(0);
+        buttonFromVideo.MinWidth = 0;
+        buttonFromVideo.MinHeight = 28;
+        buttonFromVideo.VerticalAlignment = VerticalAlignment.Center;
+        buttonFromVideo.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.HasVideoTimeCode)));
+        AutomationProperties.SetName(buttonFromVideo, Se.Language.General.UseStartTimeCodeFromVideo);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetShowOnDisabled(buttonFromVideo, true);
+            buttonFromVideo.Bind(ToolTip.TipProperty, new Binding(nameof(vm.VideoTimeCodeHint)));
+        }
+
         var panelTimeCode = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -72,6 +87,7 @@ public class SetVideoOffsetWindow : Window
                 timeCodeUpDownOffset,
                 comboBoxHistory,
                 buttonTenHours,
+                buttonFromVideo,
             }
         };
 

@@ -516,7 +516,7 @@ for example a hosted provider. It takes its URL, model and key like `openai-comp
 URL is `http://localhost:8000/v1/chat/completions`, and `--translate-model` and `--translate-api-key`
 are sent when given (a hosted provider requires the model, a single-model server ignores it). It
 leaves out the request fields only llama.cpp knows (`cache_prompt`, the thinking switch), which a
-strict server rejects. It is a seconv engine without a GUI counterpart.
+strict server rejects. In the GUI it is the "OpenAI Compatible API advanced" engine.
 
 A model that reasons before it answers spends the reply budget on its thoughts, as reasoning tokens
 count against `max_tokens`. When a reply runs out of tokens that way, `openai-compatible-advanced`

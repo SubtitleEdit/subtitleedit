@@ -13,6 +13,7 @@ public class SeVideoControlsItemTests
         Assert.False(items.Single(p => p.Type == SeVideoControlsItemType.NextSubtitle).IsVisible);
         Assert.False(items.Single(p => p.Type == SeVideoControlsItemType.ToggleSubtitles).IsVisible);
         Assert.False(items.Single(p => p.Type == SeVideoControlsItemType.PlaybackSpeed).IsVisible);
+        Assert.False(items.Single(p => p.Type == SeVideoControlsItemType.CycleVideoFlip).IsVisible);
     }
 
     [Fact]
@@ -44,6 +45,7 @@ public class SeVideoControlsItemTests
             SeVideoControlsItemType.PositionSlider,
             SeVideoControlsItemType.Volume,
             SeVideoControlsItemType.PlaybackSpeed,
+            SeVideoControlsItemType.CycleVideoFlip,
             SeVideoControlsItemType.PositionText,
             SeVideoControlsItemType.VideoFileName,
             SeVideoControlsItemType.PlayerName,
@@ -52,6 +54,7 @@ public class SeVideoControlsItemTests
         Assert.False(result[4].IsVisible);
         Assert.False(result[5].IsVisible);
         Assert.False(result[8].IsVisible);
+        Assert.False(result[9].IsVisible);
         Assert.Equal(Enumerable.Range(1, result.Count).Select(i => i * 10), result.Select(p => p.SortOrder));
     }
 

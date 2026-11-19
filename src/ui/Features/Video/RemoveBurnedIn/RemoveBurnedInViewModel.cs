@@ -266,7 +266,8 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                         }
 
                         using var waveFile = new WavePeakGenerator2(tempWaveFileName);
-                        return waveFile.GeneratePeaks(0, peakWaveFileName);
+                        // Cached as the main window's waveform, so on its timeline (#16966).
+                        return waveFile.GeneratePeaks(WaveFileExtractor.GetTimelineOffsetMilliseconds(_videoFileName), peakWaveFileName);
                     }
                     finally
                     {
@@ -596,6 +597,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         _previewCancellation = new CancellationTokenSource();
         var token = _previewCancellation.Token;
         var seconds = PositionSeconds;
+        var ffmpegSeconds = WaveFileExtractor.ToFfmpegSeconds(_videoFileName, seconds); // frame numbers count from ffmpeg's zero (#16966)
         var showResult = ShowResult;
         var options = MakeOptions(new List<(TimeSpan, TimeSpan)>());
         const double margin = 1.5; // same apply margin as the run (BurnedInSubtitleRemover.MakeMaskBuilder)
@@ -604,7 +606,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                         seconds >= l.Line.StartTime.TotalSeconds - margin &&
                         seconds <= l.Line.EndTime.TotalSeconds + margin)
             .ToList();
-        var frameIndex = (long)Math.Floor(seconds * options.FrameRate + 0.001);
+        var frameIndex = (long)Math.Floor(ffmpegSeconds * options.FrameRate + 0.001);
         var rectangleBoxes = BurnedInSubtitleRemover.GetRectangleBoxes(MakeOptions(new List<(TimeSpan, TimeSpan)>(),
                 Lines.Where(l => l.IsIncluded && l.IsRectangle).Select(l => l.ToRectangle()).ToList()))
             .Where(b => frameIndex >= b.StartFrame && frameIndex <= b.EndFrame)
@@ -635,7 +637,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                 }
             }
 
-            var rgb = await Task.Run(() => BurnedInPreviewRenderer.DecodeFrame(options, seconds), token);
+            var rgb = await Task.Run(() => BurnedInPreviewRenderer.DecodeFrame(options, ffmpegSeconds), token);
             if (rgb == null || token.IsCancellationRequested)
             {
                 return;
@@ -650,7 +652,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                     continue;
                 }
 
-                var relative = (long)Math.Round((seconds - m.StartSeconds) * options.FrameRate);
+                var relative = (long)Math.Round((ffmpegSeconds - m.StartSeconds) * options.FrameRate);
                 if (m.Builder.GetFrameMask(relative, rgb, mask))
                 {
                     masked++;
@@ -674,7 +676,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                         continue;
                     }
 
-                    var relative = (long)Math.Round((seconds - m.StartSeconds) * options.FrameRate);
+                    var relative = (long)Math.Round((ffmpegSeconds - m.StartSeconds) * options.FrameRate);
                     boxes.AddRange(m.Builder.GetLineBoxes()
                         .Where(b => relative >= b.StartFrame && relative <= b.EndFrame)
                         .Select(b => (b.X, b.Y, b.Width, b.Height)));
@@ -774,8 +776,11 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         RegionY = _regionY,
         RegionWidth = _regionWidth,
         RegionHeight = _regionHeight,
-        Lines = lines,
-        Rectangles = rectangles ?? Array.Empty<BurnedInRectangle>(),
+        // Line and rectangle times are on the player's timeline; the removal counts frames from
+        // ffmpeg's zero, which is the video's timeline offset later (#16966).
+        Lines = lines.Select(l => (ToFfmpegTime(l.Item1), ToFfmpegTime(l.Item2))).ToList(),
+        Rectangles = (rectangles ?? Array.Empty<BurnedInRectangle>())
+            .Select(r => r with { Start = ToFfmpegTime(r.Start), End = ToFfmpegTime(r.End) }).ToList(),
         OcrFramesPerSecond = _ocrFramesPerSecond,
         BrightnessMinimum = BrightnessMinimum,
         RequireOutline = RequireOutline,
@@ -788,6 +793,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         CrispEmbedExecutable = CrispEmbedEngine.GetCliExecutable(),
         ModelFileName = GetModelFileName(),
     };
+
+    private TimeSpan ToFfmpegTime(TimeSpan playerTime) =>
+        TimeSpan.FromSeconds(WaveFileExtractor.ToFfmpegSeconds(_videoFileName, playerTime.TotalSeconds));
 
     private string GetModelFileName()
     {

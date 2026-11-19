@@ -50,6 +50,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
     public static readonly Regex TimeRegex = new Regex(@"pts_time:\d+[.,]*\d*", RegexOptions.Compiled);
 
     private string _videoFileName = string.Empty;
+    private double _timelineOffsetSeconds;
     private Process? _ffmpegProcess;
     private FfmpegProgressTracker? _progressTracker;
     private readonly System.Timers.Timer _timerGenerate;
@@ -163,6 +164,9 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
         var argumentsFormat = Se.Settings.Video.ShowChangesFFmpegArguments;
         var arguments = string.Format(argumentsFormat, _videoFileName, threshold);
 
+        // ffmpeg's "pts_time" counts from the file's start time, the player may not (#16966).
+        _timelineOffsetSeconds = WaveFileExtractor.GetTimelineOffsetMilliseconds(_videoFileName) / 1000.0;
+
         // Detected-scene-change times only tick forward when a cut is found, so in long cut-less
         // stretches the progress bar used to freeze. Ask ffmpeg for machine-readable progress on
         // stdout instead and drive a smooth percentage from "out_time_us" vs. the video duration.
@@ -225,7 +229,7 @@ public partial class ShotChangesViewModel : ObservableObject, IClosingCleanup
                 {
                     Dispatcher.UIThread.Invoke(() =>
                     {
-                        var item = new TimeItem(seconds, FfmpegLines.Count);
+                        var item = new TimeItem(seconds + _timelineOffsetSeconds, FfmpegLines.Count);
                         FfmpegLines.Add(item);
                         FfmpegLinesGrid.ScrollIntoView(item);
 

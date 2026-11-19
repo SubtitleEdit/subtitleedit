@@ -538,6 +538,13 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _coreInitialized = true;
         StartEventLoop();
 
+        // A player made after the flip was set (fullscreen, layout rebuild, undock) - vf is a
+        // global option, so it also holds for every file this player loads later (#17012).
+        if (SessionVideoFlip != VideoFlipMode.None)
+        {
+            ApplyVideoFlip();
+        }
+
         var pendingFileName = Interlocked.Exchange(ref _pendingLoadFileName, null);
         if (string.IsNullOrEmpty(pendingFileName))
         {
@@ -3199,6 +3206,60 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public int SubRemove()
     {
         return DoSubtitleCommand("sub-remove");
+    }
+
+    /// <summary>
+    /// The video flip for this session (#17012), shared by every mpv player so the docked,
+    /// undocked and fullscreen players - and those rebuilt after a layout change - agree.
+    /// Not saved: a flipped video at the next start would look like a broken file.
+    /// </summary>
+    public static VideoFlipMode SessionVideoFlip { get; set; }
+
+    private const string VideoFlipFilterLabel = "@se_flip";
+    private VideoFlipMode _appliedVideoFlip;
+
+    /// <summary>
+    /// Applies <see cref="SessionVideoFlip"/> as a labeled mpv video filter. mpv draws the
+    /// subtitles (and OSD) after the video filters, so they are not flipped.
+    /// </summary>
+    public bool ApplyVideoFlip()
+    {
+        if (!IsCoreUp)
+        {
+            return false;
+        }
+
+        var flip = SessionVideoFlip;
+        if (flip == _appliedVideoFlip)
+        {
+            return true;
+        }
+
+        if (_appliedVideoFlip != VideoFlipMode.None)
+        {
+            DoMpvCommand("vf", "remove", VideoFlipFilterLabel);
+            _appliedVideoFlip = VideoFlipMode.None;
+        }
+
+        var filter = flip switch
+        {
+            VideoFlipMode.Horizontal => "hflip",
+            VideoFlipMode.Vertical => "vflip",
+            VideoFlipMode.HorizontalAndVertical => "lavfi=[hflip,vflip]",
+            _ => null,
+        };
+        if (filter == null)
+        {
+            return true;
+        }
+
+        if (DoMpvCommand("vf", "add", VideoFlipFilterLabel + ":" + filter) < 0)
+        {
+            return false;
+        }
+
+        _appliedVideoFlip = flip;
+        return true;
     }
 
     public void SetSubtitleVisibility(bool visible)

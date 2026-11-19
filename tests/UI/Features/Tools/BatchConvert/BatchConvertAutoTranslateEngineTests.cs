@@ -39,7 +39,7 @@ public class BatchConvertAutoTranslateEngineTests
         var original = Se.Settings.AutoTranslate.LlamaCppAdvanced;
         try
         {
-            var engines = new AdvancedTranslatorBase[] { new LlamaCppAdvancedTranslate(), new OllamaAdvancedTranslate(), new LmStudioAdvancedTranslate() };
+            var engines = new AdvancedTranslatorBase[] { new LlamaCppAdvancedTranslate(), new OllamaAdvancedTranslate(), new LmStudioAdvancedTranslate(), new OpenAiCompatibleAdvancedTranslate() };
             var replaced = new SeLlamaCppAdvanced { BatchSize = 7 };
             Se.Settings.AutoTranslate.LlamaCppAdvanced = replaced;
 
@@ -323,6 +323,53 @@ public class BatchConvertAutoTranslateEngineTests
     }
 
     /// <summary>
+    /// The OpenAI Compatible advanced engine takes url, key and model like the regular OpenAI
+    /// Compatible engine, from its own settings: the boxes and Browse show its saved values, a run
+    /// saves what is typed, an emptied url box falls back to the default url, and an emptied key or
+    /// model box clears it.
+    /// </summary>
+    [AvaloniaFact]
+    public void OpenAiCompatibleAdvanced_ShowsItsOwnUrlKeyAndModel_AndARunSavesThem()
+    {
+        using var _ = new TranslateSettingsSnapshot();
+        var se = Se.Settings.AutoTranslate;
+        (se.OpenAiCompatibleUrl, se.OpenAiCompatibleModel, se.OpenAiCompatibleApiKey) = ("http://regular.example/v1/chat/completions", "regular-model", "regular-key");
+        (se.OpenAiCompatibleAdvancedUrl, se.OpenAiCompatibleAdvancedModel, se.OpenAiCompatibleAdvancedApiKey) = ("https://hosted.example/api/v1/chat/completions", "vendor/model", "advanced-key");
+        var viewModel = MakeViewModel();
+
+        viewModel.SelectedAutoTranslator = viewModel.AutoTranslators.First(t => t is OpenAiCompatibleAdvancedTranslate);
+        viewModel.OnAutoTranslatorChanged();
+
+        Assert.True(viewModel.AutoTranslateUrlIsVisible);
+        Assert.True(viewModel.AutoTranslateApiKeyIsVisible);
+        Assert.True(viewModel.AutoTranslateModelIsVisible);
+        Assert.True(viewModel.AutoTranslateModelBrowseIsVisible);
+        Assert.True(viewModel.LlamaCppAdvancedButtonIsVisible);
+        Assert.Equal("https://hosted.example/api/v1/chat/completions", viewModel.AutoTranslateUrl);
+        Assert.Equal("advanced-key", viewModel.AutoTranslateApiKey);
+        Assert.Equal("vendor/model", viewModel.AutoTranslateModel);
+
+        viewModel.AutoTranslateUrl = " http://typed.example/v1/chat/completions ";
+        viewModel.AutoTranslateApiKey = " typed-key ";
+        viewModel.AutoTranslateModel = " typed/model ";
+        viewModel.UpdateAutoTranslateSettings();
+        Assert.Equal("http://typed.example/v1/chat/completions", se.OpenAiCompatibleAdvancedUrl);
+        Assert.Equal("typed-key", se.OpenAiCompatibleAdvancedApiKey);
+        Assert.Equal("typed/model", se.OpenAiCompatibleAdvancedModel);
+
+        viewModel.AutoTranslateUrl = string.Empty;
+        viewModel.AutoTranslateApiKey = string.Empty;
+        viewModel.AutoTranslateModel = string.Empty;
+        viewModel.UpdateAutoTranslateSettings();
+        Assert.Equal(OpenAiCompatibleTranslate.DefaultUrl, se.OpenAiCompatibleAdvancedUrl);
+        Assert.Equal(string.Empty, se.OpenAiCompatibleAdvancedApiKey);
+        Assert.Equal(string.Empty, se.OpenAiCompatibleAdvancedModel);
+
+        // The regular engine's settings are its own.
+        Assert.Equal(("http://regular.example/v1/chat/completions", "regular-model", "regular-key"), (se.OpenAiCompatibleUrl, se.OpenAiCompatibleModel, se.OpenAiCompatibleApiKey));
+    }
+
+    /// <summary>
     /// LM Studio's model box opens with the model saved in the Auto-translate window, so a run
     /// uses that model instead of clearing it.
     /// </summary>
@@ -393,7 +440,7 @@ public class BatchConvertAutoTranslateEngineTests
         Assert.Equal(string.Empty, Se.Settings.AutoTranslate.LmStudioApiKey);
     }
 
-    private sealed class TranslateSettingsSnapshot : IDisposable
+    internal sealed class TranslateSettingsSnapshot : IDisposable
     {
         private readonly List<(object Target, System.Reflection.PropertyInfo Property, object? Value)> _values = new();
 

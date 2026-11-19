@@ -165,6 +165,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new MyMemoryApi(),
             new ChatGptTranslate(),
             new OpenAiCompatibleTranslate(),
+            new OpenAiCompatibleAdvancedTranslate(),
             new LmStudioTranslate(),
             new LmStudioAdvancedTranslate(),
             new OllamaTranslate(),
@@ -468,6 +469,13 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.LmStudioAdvancedUrl = apiUrl.Trim();
             Se.Settings.AutoTranslate.LmStudioAdvancedApiKey = apiKey.Trim();
             Se.Settings.AutoTranslate.LmStudioAdvancedModel = apiModel.Trim();
+        }
+
+        if (engineType == typeof(OpenAiCompatibleAdvancedTranslate))
+        {
+            Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedApiKey = apiKey.Trim();
+            Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedModel = apiModel.Trim();
         }
 
         if (engineType == typeof(AnthropicTranslate))
@@ -895,7 +903,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     private async Task BrowseModel()
     {
         // OpenAI-compatible servers list their models at GET {base}/v1/models; Ollama uses /api/tags.
-        var isOpenAiStyle = SelectedAutoTranslator is OpenAiCompatibleTranslate or LmStudioTranslate or LmStudioAdvancedTranslate;
+        var isOpenAiStyle = SelectedAutoTranslator is OpenAiCompatibleTranslate or OpenAiCompatibleAdvancedTranslate or LmStudioTranslate or LmStudioAdvancedTranslate;
         var apiKey = ApiKeyText; // a server that asks for a key asks for it on the model list too
         var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!, vm =>
         {
@@ -1158,25 +1166,62 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
+        // Generate with AI sends the dialog's Extra request JSON as it stands in the box, saved or not.
         await _windowService.ShowDialogAsync<LlamaCppAdvancedSettingsWindow, LlamaCppAdvancedSettingsViewModel>(
             Window!,
-            vm => vm.Initialize(_subtitle.Paragraphs.Count > 0 ? GenerateLlamaCppAdvancedSynopsisAsync : null));
+            vm => vm.Initialize(_subtitle.Paragraphs.Count > 0
+                ? new AiReviewContextGenerate((owner, progress, cancellationToken) => GenerateLlamaCppAdvancedSynopsisAsync(owner, progress, cancellationToken, vm.RequestJson))
+                : null));
     }
 
     /// <summary>
     /// "Generate with AI" in the advanced settings (#16589): drafts names, terms and a synopsis
-    /// from the whole subtitle with the selected local model, like AI review's reference context.
+    /// from the whole subtitle with the selected engine's model, like AI review's reference context.
+    /// llama.cpp advanced uses the local model, or its external server when one is set; the other
+    /// advanced engines use their own server. The requests carry the dialog's Extra request JSON, as
+    /// the translate requests do.
     /// </summary>
-    private async Task<string?> GenerateLlamaCppAdvancedSynopsisAsync(Window owner, Action<int, int> progress, CancellationToken cancellationToken)
+    internal async Task<string?> GenerateLlamaCppAdvancedSynopsisAsync(Window owner, Action<int, int> progress, CancellationToken cancellationToken, string? extraRequestJson = null)
     {
         if (_cancellationTokenSource.IsCancellationRequested)
         {
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        if (!await EnsureLlamaCppReady(owner))
+        // The dialog checks the box on OK, which has not happened yet: the same check, before any
+        // server is started or asked.
+        var requestJsonError = LlamaCppAdvancedClient.ValidateRequestJson(extraRequestJson);
+        if (requestJsonError != null)
         {
+            await MessageBox.Show(owner, Se.Language.Translate.ExtraRequestJson, requestJsonError, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return null;
+        }
+
+        string url;
+        var model = string.Empty;
+        string? apiKey = null;
+        string modelForLog;
+        if (SelectedAutoTranslator is AdvancedTranslatorBase advanced && (advanced is not LlamaCppAdvancedTranslate || LlamaCppUseRemoteServer))
+        {
+            // Ollama, LM Studio and OpenAI Compatible advanced, and llama.cpp advanced with an external
+            // server: the endpoint, model and key in the boxes, saved first so a value typed but not
+            // yet run is the one asked.
+            SaveSettings();
+            var endpoint = advanced.GetEndpoint();
+            url = endpoint.Url;
+            model = endpoint.Model ?? string.Empty;
+            apiKey = endpoint.ApiKey;
+            modelForLog = $"{advanced.Name} {url} {model}".TrimEnd();
+        }
+        else
+        {
+            if (!await EnsureLlamaCppReady(owner))
+            {
+                return null;
+            }
+
+            url = LlamaCppServerManager.ApiUrl;
+            modelForLog = SelectedLlamaCppModel?.Model?.FileName ?? string.Empty;
         }
 
         var lines = new List<string>();
@@ -1208,10 +1253,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         // The advanced server runs with the user's context size (2048-262144), so the parts and the
         // answer must fit it - a fixed 3000-token part plus an uncapped reply overflowed 4096 (#16701).
         var contextSize = Math.Clamp(Se.Settings.AutoTranslate.LlamaCppAdvanced.ContextSize, 2048, 262144);
-        using var client = new AiReviewClient { Log = s => Se.WriteToolsLog(s, true) };
-        Se.WriteToolsLog($"llama.cpp advanced - Generate with AI: model {SelectedLlamaCppModel?.Model?.FileName}, server context size {contextSize}");
+        using var client = new AiReviewClient { Log = s => Se.WriteToolsLog(s, true), ExtraRequestJson = extraRequestJson?.Trim() ?? string.Empty };
+        Se.WriteToolsLog($"Advanced translate - Generate with AI: model {modelForLog}, server context size {contextSize}");
         return await AiReviewContextGenerator.GenerateAsync(lines, languageName,
-            (systemPrompt, userContent, jsonObject, ct) => client.ChatAsync(LlamaCppServerManager.ApiUrl, string.Empty, systemPrompt, userContent, ct, null, jsonObject, AiReviewContextGenerator.MaxAnswerTokens),
+            (systemPrompt, userContent, jsonObject, ct) => client.ChatAsync(url, model, systemPrompt, userContent, ct, apiKey, jsonObject, AiReviewContextGenerator.MaxAnswerTokens),
             progress, cancellationToken, (s, force) => Se.WriteToolsLog(s, force), AiReviewContextGenerator.TokensPerPartForContextSize(contextSize));
     }
 
@@ -1963,6 +2008,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             LlamaCppAdvancedTranslate => settings.LlamaCppApiUrl,
             OllamaAdvancedTranslate => Se.Settings.AutoTranslate.OllamaAdvancedUrl,
             LmStudioAdvancedTranslate => Se.Settings.AutoTranslate.LmStudioAdvancedUrl,
+            OpenAiCompatibleAdvancedTranslate => Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl,
             AnthropicTranslate => settings.AnthropicApiUrl,
             GroqTranslate => settings.GroqUrl,
             OpenRouterTranslate => settings.OpenRouterUrl,
@@ -2378,6 +2424,33 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ModelBrowseIsVisible = true;
             ModelText = Configuration.Settings.Tools.OpenAiCompatibleTranslateModel;
+
+            return;
+        }
+
+        if (engineType == typeof(OpenAiCompatibleAdvancedTranslate))
+        {
+            // Url, key and model as for the regular OpenAI Compatible engine above.
+            LlamaCppAdvancedButtonIsVisible = true;
+
+            if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl))
+            {
+                Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl = OpenAiCompatibleTranslate.DefaultUrl;
+            }
+
+            FillUrls(new List<string>
+            {
+                Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedUrl.TrimEnd('/'),
+                "http://localhost:8000/v1/chat/completions",
+                "http://localhost:1234/v1/chat/completions",
+            }.Distinct().ToList());
+
+            ApiKeyText = Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedApiKey;
+            ApiKeyIsVisible = true;
+
+            ModelIsVisible = true;
+            ModelBrowseIsVisible = true;
+            ModelText = Se.Settings.AutoTranslate.OpenAiCompatibleAdvancedModel;
 
             return;
         }

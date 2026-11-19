@@ -66,6 +66,7 @@ Batch Convert can machine-translate files as part of the conversion. Supported e
 
 - Ollama
 - OpenAI Compatible API
+- OpenAI Compatible API advanced — the batch/context engine described in [Advanced local engines](auto-translate-advanced.md), for any OpenAI-compatible endpoint
 - Ollama advanced (local LLM) — the batch/context engine described in [Advanced local engines](auto-translate-advanced.md), talking to Ollama's OpenAI-compatible endpoint
 - LibreTranslate
 - LM Studio (local LLM)

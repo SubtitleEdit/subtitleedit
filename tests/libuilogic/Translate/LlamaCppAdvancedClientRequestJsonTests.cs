@@ -43,6 +43,23 @@ public class LlamaCppAdvancedClientRequestJsonTests
         Assert.Equal(2, root.GetProperty("messages").GetArrayLength());
     }
 
+    [Theory]
+    [InlineData(0.0, 0.3)]
+    [InlineData(0.5, 0.8)]
+    [InlineData(0.9, 1.0)] // capped at 1, like the engine's own
+    [InlineData(1.4, 1.4)] // never lowered
+    public void UserTemperatureRunsWarmerOnARetry(double userTemperature, double expected)
+    {
+        var settings = new SeLlamaCppAdvanced { RequestJson = "{\"temperature\": " + userTemperature.ToString(System.Globalization.CultureInfo.InvariantCulture) + "}" };
+
+        using var first = JsonDocument.Parse(LlamaCppAdvancedClient.BuildRequestJson(settings, "system", "user", null, null, 100));
+        using var retry = JsonDocument.Parse(LlamaCppAdvancedClient.BuildRequestJson(settings, "system", "user", null, null, 100, temperatureBump: 0.3));
+
+        Assert.Equal(userTemperature, first.RootElement.GetProperty("temperature").GetDouble());
+        Assert.Equal(expected, retry.RootElement.GetProperty("temperature").GetDouble(), 6);
+        Assert.Equal(1, Count(retry, "temperature"));
+    }
+
     [Fact]
     public void NullRemovesTheEngineField()
     {

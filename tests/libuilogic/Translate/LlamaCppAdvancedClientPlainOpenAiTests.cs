@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using LibUiLogicTests.AutoTranslate;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 
 namespace LibUiLogicTests.Translate;
@@ -57,6 +58,47 @@ public class LlamaCppAdvancedClientPlainOpenAiTests
         using var doc = JsonDocument.Parse(json);
         Assert.True(doc.RootElement.GetProperty("cache_prompt").GetBoolean());
         Assert.True(doc.RootElement.TryGetProperty("chat_template_kwargs", out _));
+    }
+
+    /// <summary>
+    /// A local llama.cpp run with a curated model leaves that model's sampling values in the
+    /// settings for the rest of the session. Without the extensions they are left out - they are
+    /// for another model, and a strict server refuses top_k and repeat_penalty - while the user's
+    /// own values are still sent. The local engines keep the curated values.
+    /// </summary>
+    [Fact]
+    public void CuratedModelSamplingGoesToTheLocalEnginesOnly()
+    {
+        var tools = Configuration.Settings.Tools;
+        var saved = (tools.LlamaCppModelTemperature, tools.LlamaCppModelTopP, tools.LlamaCppModelTopK, tools.LlamaCppModelRepeatPenalty);
+        string plain, plainWithUserTopK, local;
+        try
+        {
+            (tools.LlamaCppModelTemperature, tools.LlamaCppModelTopP, tools.LlamaCppModelTopK, tools.LlamaCppModelRepeatPenalty) = (0.7, 0.6, 20, 1.05);
+            plain = LlamaCppAdvancedClient.BuildRequestJson(new SeLlamaCppAdvanced(), "system", "user", null, "some/model", 100, llamaCppExtensions: false);
+            plainWithUserTopK = LlamaCppAdvancedClient.BuildRequestJson(new SeLlamaCppAdvanced { TopK = 40 }, "system", "user", null, "some/model", 100, llamaCppExtensions: false);
+            local = LlamaCppAdvancedClient.BuildRequestJson(new SeLlamaCppAdvanced(), "system", "user", null, null, 100);
+        }
+        finally
+        {
+            (tools.LlamaCppModelTemperature, tools.LlamaCppModelTopP, tools.LlamaCppModelTopK, tools.LlamaCppModelRepeatPenalty) = saved;
+        }
+
+        using var plainDoc = JsonDocument.Parse(plain);
+        Assert.Equal(0.2, plainDoc.RootElement.GetProperty("temperature").GetDouble());
+        foreach (var name in new[] { "top_p", "top_k", "repeat_penalty" })
+        {
+            Assert.False(plainDoc.RootElement.TryGetProperty(name, out _), name);
+        }
+
+        using var userDoc = JsonDocument.Parse(plainWithUserTopK);
+        Assert.Equal(40, userDoc.RootElement.GetProperty("top_k").GetInt32());
+
+        using var localDoc = JsonDocument.Parse(local);
+        Assert.Equal(0.7, localDoc.RootElement.GetProperty("temperature").GetDouble());
+        Assert.Equal(0.6, localDoc.RootElement.GetProperty("top_p").GetDouble());
+        Assert.Equal(20, localDoc.RootElement.GetProperty("top_k").GetInt32());
+        Assert.Equal(1.05, localDoc.RootElement.GetProperty("repeat_penalty").GetDouble());
     }
 
     [Theory]

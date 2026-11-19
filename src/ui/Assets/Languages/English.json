@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.5.0-beta8",
+  "version": "v5.5.0-beta9",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -690,6 +690,10 @@
     "teletextColor": "Teletext color",
     "teletextLine": "Teletext line",
     "tenHours": "10 hours",
+    "fromVideo": "From video",
+    "useStartTimeCodeFromVideo": "Use the start time code stored in the video file",
+    "useStartTimeCodeFromVideoX": "Use the start time code stored in the video file: {0}",
+    "noTimeCodeInVideo": "No start time code found in the video file",
     "text": "Text",
     "textColor": "Text color",
     "textFiles": "Text files",

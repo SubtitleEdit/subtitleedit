@@ -782,6 +782,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.EditSecondarySubtitleSettingsCommand), Se.Language.Video.EditSecondarySubtitleSettings },
         { nameof(MainViewModel.ToggleCurrentSubtitleWhilePlayingCommand), Se.Language.Video.ToggleCurrentSubtitleWhilePlaying },
         { nameof(MainViewModel.ToggleSubtitlesOnVideoPlayerCommand), Se.Language.Video.ToggleSubtitlesOnVideoPlayer },
+        { nameof(MainViewModel.CycleVideoFlipCommand), Se.Language.Video.CycleVideoFlip },
         { nameof(MainViewModel.ToggleSmpteTimingCommand), Se.Language.Main.Menu.SmpteTiming },
     };
     }
@@ -1360,6 +1361,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.EditSecondarySubtitleSettingsCommand, nameof(vm.EditSecondarySubtitleSettingsCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleCurrentSubtitleWhilePlayingCommand, nameof(vm.ToggleCurrentSubtitleWhilePlayingCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleSubtitlesOnVideoPlayerCommand, nameof(vm.ToggleSubtitlesOnVideoPlayerCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.CycleVideoFlipCommand, nameof(vm.CycleVideoFlipCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleSmpteTimingCommand, nameof(vm.ToggleSmpteTimingCommand), ShortcutCategory.General, ShortcutGroup.Video);
 
         // One entry per enabled plugin (SE 4 had the same: Options > Shortcuts > Plugins).

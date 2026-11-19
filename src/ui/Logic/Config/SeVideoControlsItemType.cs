@@ -30,4 +30,8 @@ public enum SeVideoControlsItemType
     // Button with the current playback speed (e.g. "1.0x") that opens a menu with the speeds
     // (#16306). Hidden by default.
     PlaybackSpeed = 11,
+
+    // Button that cycles the video flip: off, horizontal, vertical, both (#17012). Hidden by
+    // default.
+    CycleVideoFlip = 12,
 }
