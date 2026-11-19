@@ -5725,7 +5725,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task CheckCrispAsrForUpdateAsync()
     {
-        if (_crispAsrUpdatePromptShown || Window == null)
+        if (_crispAsrUpdatePromptShown || Window == null || _windowClosing)
         {
             return;
         }
@@ -5827,7 +5827,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task CheckQwen3AsrCppForUpdateAsync()
     {
-        if (_qwen3AsrCppUpdatePromptShown || Window == null)
+        if (_qwen3AsrCppUpdatePromptShown || Window == null || _windowClosing)
         {
             return;
         }
@@ -5888,7 +5888,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task CheckWhisperCppForUpdateAsync()
     {
-        if (_whisperCppUpdatePromptShown || Window == null)
+        if (_whisperCppUpdatePromptShown || Window == null || _windowClosing)
         {
             return;
         }
@@ -5938,7 +5938,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task CheckWhisperXForUpdateAsync()
     {
-        if (_whisperXUpdatePromptShown || Window == null)
+        if (_whisperXUpdatePromptShown || Window == null || _windowClosing)
         {
             return;
         }
