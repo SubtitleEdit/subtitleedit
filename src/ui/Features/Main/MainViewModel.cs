@@ -27375,7 +27375,7 @@ public partial class MainViewModel :
             // Never save back over the audio file: ResetSubtitle() above cleared _converted, and
             // the loaded format (LRC) matches the selected one, so Ctrl+S (or auto-save) wrote the
             // LRC text over the .opus (#15213). Suggest a subtitle file next to it and route Save
-            // through "Save as". Same for a subtitle list read from a binary Word .doc.
+            // through "Save as". Same for a subtitle list read from a Word .doc/.docx.
             if (isAudioFile || WordDocumentReader.IsWordDocument(fileName))
             {
                 _subtitleFileName = Path.ChangeExtension(fileName, SelectedSubtitleFormat.Extension);

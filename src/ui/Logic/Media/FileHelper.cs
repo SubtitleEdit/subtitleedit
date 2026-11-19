@@ -203,7 +203,8 @@ namespace Nikse.SubtitleEdit.Logic.Media
             {
                 subtitlePatterns.Add("*.ifo");
                 subtitlePatterns.Add("*.vob");
-                subtitlePatterns.Add("*.doc"); // Word 97-2003 text, read by UnknownFormatImporter
+                subtitlePatterns.Add("*.doc"); // Word text, read by UnknownFormatImporter
+                subtitlePatterns.Add("*.docx");
             }
 
             var fileTypes = new List<FilePickerFileType>
