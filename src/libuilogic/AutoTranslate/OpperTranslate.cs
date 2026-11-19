@@ -25,18 +25,27 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         public static string[] Models => new[]
         {
             // Pooled models: Opper picks the route per request
-            "claude-sonnet-4-6",
-            "claude-opus-5",
-            "gpt-5.5",
-            "gpt-5.4-mini",
+            "claude-sonnet-5-5",
+            "claude-opus-5-5",
+            "claude-haiku-5-5",
+            "claude-fable-5-2",
+            "gpt-6.2-sol",
+            "gpt-6.2-astra",
+            "gpt-6.1-terra",
+            "gpt-6-luna",
+            "gemini-4-neon",
+            "gemini-4-carbon",
+            "gemini-4-hydrogen",
             "gemini-3.8-flash",
             "gemini-3.1-flash-lite",
             "deepseek-v4-pro",
-            "kimi-k3",
-            "glm-5.2",
-            "qwen3-max",
-            "mistral-large-2512",
-            "claude-haiku-4-5",
+            "deepseek-flash",
+            "kimi-k3.1-pro",
+            "glm-5.3",
+            "qwen4-max",
+            "qwen3.8-max",
+            "mistral-large-4-0",
+            "grok-4.7",
         };
 
         /// <summary>
