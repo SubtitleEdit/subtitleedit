@@ -21,6 +21,7 @@ v5.5.0-beta10 (19th of November 2026)
 * Update Korean translation - thx 12si27
 
 -----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta9 (18th of November 2026)
 
 * Open video from URL: give yt-dlp ffmpeg so streams merge, mode cards disabled until a URL is entered - thx GitGianluc
