@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public Subtitle AutoGuessImport(List<string> lines, string fileName)
         {
-            // Binary Word 97-2003 .doc: use the document text instead of the raw bytes. A known
+            // Word .doc/.docx: use the document text instead of the raw bytes. A known
             // format pasted into Word (SubRip, a time code list, ...) loads as that format;
             // anything else goes through the generic guessing below.
             if (WordDocumentReader.IsWordDocument(fileName))

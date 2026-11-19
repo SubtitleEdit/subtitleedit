@@ -6,9 +6,10 @@ using System.Text;
 namespace Nikse.SubtitleEdit.Core.Common
 {
     /// <summary>
-    /// Minimal reader for the main text of a binary Word 97-2003 document (.doc).
-    /// Reads the OLE compound file, the "WordDocument" stream and the piece table in the
-    /// table stream. Table rows are flattened like a plain text export: cells are separated
+    /// Minimal reader for the main text of a Word document: binary Word 97-2003 (.doc) and
+    /// Office Open XML (.docx, see <see cref="WordDocxReader"/>).
+    /// For .doc it reads the OLE compound file, the "WordDocument" stream and the piece table in
+    /// the table stream. Table rows are flattened like a plain text export: cells are separated
     /// by tabs, and a cell with several paragraphs spreads over several lines.
     /// </summary>
     public static class WordDocumentReader
@@ -17,7 +18,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         private const int MaxFileSize = 50_000_000;
         private const uint EndOfChain = 0xFFFFFFFE;
 
+        /// <summary>
+        /// True for a binary Word 97-2003 .doc or a Word .docx file.
+        /// </summary>
         public static bool IsWordDocument(string fileName)
+        {
+            return IsBinaryWordDocument(fileName) || WordDocxReader.IsDocx(fileName);
+        }
+
+        private static bool IsBinaryWordDocument(string fileName)
         {
             if (string.IsNullOrEmpty(fileName) ||
                 !fileName.EndsWith(".doc", StringComparison.OrdinalIgnoreCase) ||
@@ -59,11 +68,16 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Returns the document text as lines, or null if the file is not a readable Word 97-2003 document.
+        /// Returns the document text as lines, or null if the file is not a readable Word document.
         /// </summary>
         public static List<string> GetLines(string fileName)
         {
-            if (!IsWordDocument(fileName))
+            if (WordDocxReader.IsDocx(fileName))
+            {
+                return WordDocxReader.GetLines(fileName);
+            }
+
+            if (!IsBinaryWordDocument(fileName))
             {
                 return null;
             }
@@ -273,7 +287,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return lines;
         }
 
-        private static void AddRow(List<string> lines, List<List<string>> cells)
+        internal static void AddRow(List<string> lines, List<List<string>> cells)
         {
             var rowLines = 0;
             foreach (var cell in cells)
