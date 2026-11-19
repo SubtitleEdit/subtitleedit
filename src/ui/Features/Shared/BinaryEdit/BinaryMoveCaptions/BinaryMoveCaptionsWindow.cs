@@ -58,6 +58,15 @@ public class BinaryMoveCaptionsWindow : Window
         offsetRow.Margin = new Thickness(0, 8, 0, 0);
         moveToPanel.Children.Add(offsetRow);
 
+        // Align by
+        var alignPanel = new StackPanel { Spacing = 2 };
+        var radioAlignBaseline = UiUtil.MakeRadioButton(l.MoveCaptionsAlignBaseline, vm, nameof(vm.AlignBaseline), "align");
+        var radioAlignKeepRelative = UiUtil.MakeRadioButton(l.MoveCaptionsAlignKeepRelativePositions, vm, nameof(vm.AlignKeepRelativePositions), "align");
+        radioAlignBaseline.FontSize = EditorChrome.FieldFontSize;
+        radioAlignKeepRelative.FontSize = EditorChrome.FieldFontSize;
+        alignPanel.Children.Add(radioAlignBaseline);
+        alignPanel.Children.Add(radioAlignKeepRelative);
+
         var infoText = new TextBlock
         {
             [!TextBlock.TextProperty] = new Binding(nameof(vm.InfoText)),
@@ -70,6 +79,7 @@ public class BinaryMoveCaptionsWindow : Window
         var sections = new StackPanel();
         sections.Children.Add(EditorChrome.MakeEditorSection(l.Letterbox, letterboxPanel, first: true));
         sections.Children.Add(EditorChrome.MakeEditorSection(l.MoveCaptionsTo, moveToPanel));
+        sections.Children.Add(EditorChrome.MakeEditorSection(l.MoveCaptionsAlignBy, alignPanel));
         sections.Children.Add(new Border
         {
             Child = infoText,
