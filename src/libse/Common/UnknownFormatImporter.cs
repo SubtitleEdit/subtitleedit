@@ -51,6 +51,26 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public Subtitle AutoGuessImport(List<string> lines, string fileName)
         {
+            // Binary Word 97-2003 .doc: use the document text instead of the raw bytes. A known
+            // format pasted into Word (SubRip, a time code list, ...) loads as that format;
+            // anything else goes through the generic guessing below.
+            if (WordDocumentReader.IsWordDocument(fileName))
+            {
+                var docLines = WordDocumentReader.GetLines(fileName);
+                if (docLines == null || docLines.Count == 0)
+                {
+                    return new Subtitle();
+                }
+
+                var knownFormat = Subtitle.Parse(docLines, ".txt");
+                if (knownFormat != null && knownFormat.Paragraphs.Count > 0)
+                {
+                    return knownFormat;
+                }
+
+                lines = docLines;
+            }
+
             if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
             {
                 var xlsxSubtitle = new UnknownFormatImporterXlsx().AutoGuessImport(fileName);
