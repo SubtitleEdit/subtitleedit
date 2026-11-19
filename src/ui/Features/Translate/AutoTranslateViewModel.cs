@@ -177,6 +177,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new OpenRouterTranslate(),
             new ApiRouteTranslate(),
             new OpperTranslate(),
+            new TrustedRouterTranslate(),
             new LaraTranslate(),
             new PerplexityTranslate(),
             new GeminiTranslate(),
@@ -258,6 +259,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.OpperUrl = Se.Settings.AutoTranslate.OpperUrl;
         Configuration.Settings.Tools.OpperModel = Se.Settings.AutoTranslate.OpperModel;
         Configuration.Settings.Tools.OpperPrompt = Se.Settings.AutoTranslate.OpperPrompt;
+
+        Configuration.Settings.Tools.TrustedRouterApiKey = Se.Settings.AutoTranslate.TrustedRouterApiKey;
+        Configuration.Settings.Tools.TrustedRouterUrl = Se.Settings.AutoTranslate.TrustedRouterUrl;
+        Configuration.Settings.Tools.TrustedRouterModel = Se.Settings.AutoTranslate.TrustedRouterModel;
+        Configuration.Settings.Tools.TrustedRouterPrompt = Se.Settings.AutoTranslate.TrustedRouterPrompt;
 
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
         Configuration.Settings.Tools.ChatGptUrl = Se.Settings.AutoTranslate.ChatGptUrl;
@@ -549,6 +555,14 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.OpperUrl = apiUrl.Trim();
         }
 
+        if (engineType == typeof(TrustedRouterTranslate))
+        {
+            Configuration.Settings.Tools.TrustedRouterApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.TrustedRouterModel = apiModel.Trim();
+            Configuration.Settings.Tools.TrustedRouterUrl = apiUrl.Trim();
+            Se.Settings.AutoTranslate.TrustedRouterUrl = apiUrl.Trim();
+        }
+
         if (engineType == typeof(GeminiTranslate))
         {
             Configuration.Settings.Tools.GeminiProApiKey = apiKey.Trim();
@@ -614,6 +628,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.OpperUrl = Configuration.Settings.Tools.OpperUrl;
         Se.Settings.AutoTranslate.OpperModel = Configuration.Settings.Tools.OpperModel;
         Se.Settings.AutoTranslate.OpperPrompt = Configuration.Settings.Tools.OpperPrompt;
+
+        Se.Settings.AutoTranslate.TrustedRouterApiKey = Configuration.Settings.Tools.TrustedRouterApiKey;
+        Se.Settings.AutoTranslate.TrustedRouterUrl = Configuration.Settings.Tools.TrustedRouterUrl;
+        Se.Settings.AutoTranslate.TrustedRouterModel = Configuration.Settings.Tools.TrustedRouterModel;
+        Se.Settings.AutoTranslate.TrustedRouterPrompt = Configuration.Settings.Tools.TrustedRouterPrompt;
 
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
         Se.Settings.AutoTranslate.ChatGptUrl = Configuration.Settings.Tools.ChatGptUrl;
@@ -2020,6 +2039,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             OpenRouterTranslate => settings.OpenRouterUrl,
             ApiRouteTranslate => settings.ApiRouteUrl,
             OpperTranslate => settings.OpperUrl,
+            TrustedRouterTranslate => settings.TrustedRouterUrl,
             LaraTranslate => settings.LaraUrl,
             PerplexityTranslate => settings.PerplexityUrl,
             NvidiaTranslate => settings.NvidiaUrl,
@@ -2714,6 +2734,23 @@ public partial class AutoTranslateViewModel : ObservableObject
             _apiModels = OpperTranslate.Models.ToList();
             ModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.OpperModel) ? _apiModels[0] : Configuration.Settings.Tools.OpperModel;
+
+            return;
+        }
+
+        if (engineType == typeof(TrustedRouterTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.TrustedRouterUrl,
+            });
+
+            ApiKeyText = Configuration.Settings.Tools.TrustedRouterApiKey;
+            ApiKeyIsVisible = true;
+
+            _apiModels = TrustedRouterTranslate.Models.ToList();
+            ModelIsVisible = true;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.TrustedRouterModel) ? _apiModels[0] : Configuration.Settings.Tools.TrustedRouterModel;
 
             return;
         }

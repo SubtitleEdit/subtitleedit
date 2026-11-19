@@ -125,6 +125,10 @@ public class SeAutoTranslate
     public string OpperPrompt { get; set; }
     public string OpperApiKey { get; set; }
     public string OpperModel { get; set; }
+    public string TrustedRouterUrl { get; set; }
+    public string TrustedRouterPrompt { get; set; }
+    public string TrustedRouterApiKey { get; set; }
+    public string TrustedRouterModel { get; set; }
 
     public string PerplexityUrl { get; set; }
     public string PerplexityPrompt { get; set; }
@@ -162,6 +166,10 @@ public class SeAutoTranslate
         OpperModel = OpperTranslate.Models[0];
         OpperPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
         OpperUrl = OpperTranslate.DefaultUrl;
+        TrustedRouterApiKey = string.Empty;
+        TrustedRouterModel = TrustedRouterTranslate.Models[0];
+        TrustedRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
+        TrustedRouterUrl = TrustedRouterTranslate.DefaultUrl;
         PerplexityApiKey = string.Empty;
         PerplexityModel = PerplexityTranslate.Models[0];
         PerplexityPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
