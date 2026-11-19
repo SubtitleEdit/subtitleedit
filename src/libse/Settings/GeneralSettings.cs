@@ -7,7 +7,23 @@ namespace Nikse.SubtitleEdit.Core.Settings
     {
 
         public double DefaultFrameRate { get; set; }
-        public double CurrentFrameRate { get; set; }
+        private double _currentFrameRate;
+
+        /// <summary>
+        /// Inside a <see cref="ThreadFrameRateScope"/> this is a value of the current thread only.
+        /// </summary>
+        public double CurrentFrameRate
+        {
+            get => ThreadFrameRateScope.TryGet(out var frameRate) ? frameRate : _currentFrameRate;
+            set
+            {
+                if (!ThreadFrameRateScope.TrySet(value))
+                {
+                    _currentFrameRate = value;
+                }
+            }
+        }
+
         public string DefaultSubtitleFormat { get; set; }
         public string FavoriteSubtitleFormats { get; set; }
         public string DefaultEncoding { get; set; }

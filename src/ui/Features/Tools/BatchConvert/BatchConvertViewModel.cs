@@ -2985,12 +2985,6 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         }
     }
 
-    // Text/binary format detection runs IsMine/LoadSubtitle on the shared SubtitleFormat
-    // instances, which keep per-instance state (error counts, ...) - so only one file at a time
-    // may go through it. The container probes (Matroska, MP4, TS, ...) use their own instances
-    // and run in parallel.
-    private static readonly Lock FormatDetectionLock = new();
-
     // Parses a file and returns the resulting item(s) without touching any shared collection,
     // so it is safe to call from several background threads at once (see BatchConvertFileLoader).
     // Callers append the returned items to _allBatchItems and the visible BatchItems on the UI
@@ -3151,10 +3145,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         if (format == Se.Language.General.Unknown)
         {
-            lock (FormatDetectionLock)
-            {
-                (subtitle, format) = DetectTextOrBinaryFormat(fileName, fileInfo.Length);
-            }
+            (subtitle, format) = DetectTextOrBinaryFormat(fileName, fileInfo.Length);
         }
 
         var batchItem = new BatchConvertItem(fileName, fileInfo.Length, format, subtitle);
@@ -3162,13 +3153,17 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         return added;
     }
 
+    private static readonly Lock BinaryFormatDetectionLock = new();
+
     private static (Subtitle? Subtitle, string Format) DetectTextOrBinaryFormat(string fileName, long fileLength)
     {
         Subtitle? subtitle = null;
         var format = Se.Language.General.Unknown;
         if (fileLength < 20_000_000)
         {
-            subtitle = Subtitle.Parse(fileName);
+            // Subtitle.Parse that is safe to run on several files at once (own format instances
+            // and frame rate per thread)
+            subtitle = ConcurrentSubtitleParser.Parse(fileName);
             if (subtitle != null)
             {
                 format = subtitle.OriginalFormat.Name;
@@ -3177,16 +3172,32 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         if (format == Se.Language.General.Unknown)
         {
-            foreach (var f in SubtitleFormat.GetBinaryFormats(false))
+            // Only unrecognized files get here. The binary and load-only formats are fresh
+            // instances, but some still write global settings (EBU STL's teletext flags) - so one
+            // file at a time, and with its own frame rate like above.
+            lock (BinaryFormatDetectionLock)
+            using (ThreadFrameRateScope.Begin())
             {
-                if (f.IsMine(null, fileName))
-                {
-                    subtitle = new Subtitle();
-                    f.LoadSubtitle(subtitle, null, fileName);
-                    subtitle.OriginalFormat = f;
-                    format = f.Name;
-                    break; // format found, exit the loop
-                }
+                return DetectBinaryOrLoadOnlyFormat(fileName, fileLength);
+            }
+        }
+
+        return (subtitle, format);
+    }
+
+    private static (Subtitle? Subtitle, string Format) DetectBinaryOrLoadOnlyFormat(string fileName, long fileLength)
+    {
+        Subtitle? subtitle = null;
+        var format = Se.Language.General.Unknown;
+        foreach (var f in SubtitleFormat.GetBinaryFormats(false))
+        {
+            if (f.IsMine(null, fileName))
+            {
+                subtitle = new Subtitle();
+                f.LoadSubtitle(subtitle, null, fileName);
+                subtitle.OriginalFormat = f;
+                format = f.Name;
+                break; // format found, exit the loop
             }
         }
 
