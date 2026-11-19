@@ -111,4 +111,5 @@ You can submit it via:
 
 ## Tips
 
-- **WinMerge** ([winmerge.org](https://winmerge.org)) is an excellent free tool for comparing your translation against an updated English base file to find new or changed strings after a release.
+- **WinMerge** for Windows ([winmerge.org](https://winmerge.org)) is an excellent free tool for comparing your translation against an updated English base file to find new or changed strings after a release.
+- **CompareMerge2** for macOS ([App Store](https://apps.apple.com/us/app/comparemerge2/id1459748650?mt=12)) is an equally useful and free alternative for comparing two versions of the original `English.json` base file and identifying newly added or modified strings after a release. Additional advanced features are available through in-app purchases.
