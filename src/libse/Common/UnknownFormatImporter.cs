@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -236,8 +237,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 p.Text = p.Text.Replace("<br>", Environment.NewLine);
                 p.Text = p.Text.Replace("<br/>", Environment.NewLine);
                 p.Text = p.Text.Replace("<br />", Environment.NewLine);
-                p.Text = p.Text.Replace("&lt;", "<");
-                p.Text = p.Text.Replace("&gt;", ">");
+                if (p.Text.IndexOf('&') >= 0)
+                {
+                    // &amp; &quot; &#39; &nbsp; ... not only &lt; and &gt;
+                    p.Text = WebUtility.HtmlDecode(p.Text).Replace(' ', ' ');
+                }
+
                 p.Text = p.Text.Replace("  ", " ");
                 p.Text = p.Text.Replace("  ", " ");
                 p.Text = p.Text.Replace("  ", " ");
@@ -459,7 +464,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     string[] arr = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 1)
                     {
-                        string[] tc = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        string[] tc = SplitTimeCode(arr[0].Trim());
                         if (p == null || Math.Abs(p.EndTime.TotalMilliseconds) > 0.001)
                         {
                             if (p != null)
@@ -565,7 +570,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (matches.Count == 1 && hasOnlyOneTimeCode)
                 {
-                    var start = matches[0].ToString().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                    var start = SplitTimeCode(matches[0].ToString());
                     if (start.Length == 3 || start.Length == 4)
                     {
                         if (p != null)
@@ -597,8 +602,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (matches.Count == 2)
                 {
-                    var start = matches[0].ToString().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
-                    var end = matches[1].ToString().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                    var start = SplitTimeCode(matches[0].ToString());
+                    var end = SplitTimeCode(matches[1].ToString());
                     if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                     {
                         if (p != null)
@@ -611,13 +616,28 @@ namespace Nikse.SubtitleEdit.Core.Common
                         p.StartTime = DecodeTime(start);
                         p.EndTime = DecodeTime(end);
                     }
-                    if (matches[0].Index < 9)
+
+                    var betweenStart = matches[0].Index + matches[0].Length;
+                    var between = line.Substring(betweenStart, Math.Max(0, matches[1].Index - betweenStart));
+                    if (IsOnlyTimeCodeSeparators(between))
                     {
-                        line = line.Remove(0, matches[0].Index);
+                        // drop "start --> end", "start - end", "[start --> end]" as one block so the
+                        // arrow/dash between the time codes does not end up in the text
+                        var prefix = matches[0].Index < 9 ? string.Empty : line.Substring(0, matches[0].Index);
+                        line = prefix + line.Substring(matches[1].Index + matches[1].Length);
+                        line = line.Trim().TrimStart(']', ')', '}', '|');
+                    }
+                    else
+                    {
+                        if (matches[0].Index < 9)
+                        {
+                            line = line.Remove(0, matches[0].Index);
+                        }
+
+                        line = line.Replace(matches[0].ToString(), string.Empty);
+                        line = line.Replace(matches[1].ToString(), string.Empty);
                     }
 
-                    line = line.Replace(matches[0].ToString(), string.Empty);
-                    line = line.Replace(matches[1].ToString(), string.Empty);
                     line = line.Trim().TrimStart(']');
                     if (Utilities.IsInteger(line.RemoveChar('[', ']')))
                     {
@@ -799,8 +819,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     string[] arr = ReplaceBracketsWithSpaces(line).Trim().Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
-                        string[] start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[1].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        string[] start = SplitTimeCode(arr[0].Trim());
+                        string[] end = SplitTimeCode(arr[1].Trim());
                         if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                         {
                             if (p != null)
@@ -820,13 +840,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                         string[] end;
                         if (arr[0].Length > 9)
                         {
-                            start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
-                            end = arr[1].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                            start = SplitTimeCode(arr[0].Trim());
+                            end = SplitTimeCode(arr[1].Trim());
                         }
                         else
                         {
-                            start = arr[1].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
-                            end = arr[2].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                            start = SplitTimeCode(arr[1].Trim());
+                            end = SplitTimeCode(arr[2].Trim());
                         }
                         if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                         {
@@ -1001,6 +1021,40 @@ namespace Nikse.SubtitleEdit.Core.Common
             return subtitle;
         }
 
+        /// <summary>
+        /// Splits a time code into parts. Two digits (or one) after a "." or "," are hundredths
+        /// (or tenths) of a second, not frames: "00:00:01.50" is 1.500 s. Frames stay for ":"/";".
+        /// </summary>
+        private static string[] SplitTimeCode(string timeCode)
+        {
+            var parts = timeCode.Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+            var lastSeparator = timeCode.TrimEnd().LastIndexOfAny(ExpectedSplitChars);
+            if (parts.Length >= 3 && lastSeparator > 0 &&
+                (timeCode[lastSeparator] == '.' || timeCode[lastSeparator] == ',') &&
+                parts[parts.Length - 1].Length <= 2)
+            {
+                parts[parts.Length - 1] = parts[parts.Length - 1].PadRight(3, '0');
+            }
+
+            return parts;
+        }
+
+        /// <summary>
+        /// True for what usually sits between a start and an end time code: " --> ", " - ", " – ", "}{", ...
+        /// </summary>
+        private static bool IsOnlyTimeCodeSeparators(string s)
+        {
+            foreach (var ch in s)
+            {
+                if (!char.IsWhiteSpace(ch) && "-–—>=~|[](){},;/".IndexOf(ch) < 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private static string GetLineWithPerhapsOnlyNumbers(string line)
         {
             return line.RemoveChar(' ', '.', ',', '\t', ':', ';', '{', '}', '[', ']', '-', '>', '<');
@@ -1069,8 +1123,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                             i += match.Value.Length;
                             p = new Paragraph
                             {
-                                StartTime = DecodeTime(arr[1].Split(ExpectedSplitChars)),
-                                EndTime = DecodeTime(arr[3].Split(ExpectedSplitChars))
+                                StartTime = DecodeTime(SplitTimeCode(arr[1])),
+                                EndTime = DecodeTime(SplitTimeCode(arr[3]))
                             };
                             subtitle.Paragraphs.Add(p);
                             continue;
@@ -1141,8 +1195,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                             i += match.Value.Length;
                             p = new Paragraph
                             {
-                                StartTime = DecodeTime(arr[0].RemoveChar(' ').TrimEnd('-').Split(ExpectedSplitChars)),
-                                EndTime = DecodeTime(arr[1].RemoveChar(' ').TrimEnd('-').Split(ExpectedSplitChars))
+                                StartTime = DecodeTime(SplitTimeCode(arr[0].RemoveChar(' ').TrimEnd('-'))),
+                                EndTime = DecodeTime(SplitTimeCode(arr[1].RemoveChar(' ').TrimEnd('-')))
                             };
                             subtitle.Paragraphs.Add(p);
                             continue;

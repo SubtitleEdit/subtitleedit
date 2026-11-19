@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
@@ -58,10 +60,69 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var csvLines = ReadCsvLines(headers, lines, separator);
+            ConvertPlainNumberTimes(csvLines);
 
             var subtitle = MakeSubtitle(csvLines);
 
             return subtitle;
+        }
+
+        private static readonly Regex PlainNumberRegex = new Regex(@"^\d+([.,]\d+)?$", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Start/end/duration given as plain numbers ("1.5", "1,5", "1500") instead of time codes.
+        /// Decimals are seconds; whole numbers are milliseconds when they would make cues last
+        /// over 100 seconds on average, otherwise seconds. Columns already converted from an
+        /// "_ms" header are time codes and leave this alone.
+        /// </summary>
+        private static void ConvertPlainNumberTimes(List<CsvLine> csvLines)
+        {
+            var values = csvLines.SelectMany(l => new[] { l.Start, l.End, l.Duration }).Where(v => !string.IsNullOrWhiteSpace(v)).ToList();
+            if (values.Count == 0 || !values.All(v => PlainNumberRegex.IsMatch(v.Trim())))
+            {
+                return;
+            }
+
+            var factor = 1000.0;
+            if (!values.Any(v => v.IndexOf('.') >= 0 || v.IndexOf(',') >= 0))
+            {
+                var durations = new List<double>();
+                foreach (var l in csvLines)
+                {
+                    if (TryParseNumber(l.Duration, out var d))
+                    {
+                        durations.Add(d);
+                    }
+                    else if (TryParseNumber(l.Start, out var s) && TryParseNumber(l.End, out var e))
+                    {
+                        durations.Add(e - s);
+                    }
+                }
+
+                if (durations.Count > 0 && durations.Average() > 100)
+                {
+                    factor = 1;
+                }
+            }
+
+            foreach (var l in csvLines)
+            {
+                l.Start = ConvertNumber(l.Start, factor);
+                l.End = ConvertNumber(l.End, factor);
+                l.Duration = ConvertNumber(l.Duration, factor);
+            }
+        }
+
+        private static bool TryParseNumber(string value, out double number)
+        {
+            number = 0;
+            return !string.IsNullOrWhiteSpace(value) &&
+                   double.TryParse(value.Trim().Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out number);
+        }
+
+        private static string ConvertNumber(string value, double factor)
+        {
+            return TryParseNumber(value, out var number) ? new TimeCode(number * factor).ToString(false) : value;
         }
 
         private Subtitle MakeSubtitle(List<CsvLine> csvLines)
