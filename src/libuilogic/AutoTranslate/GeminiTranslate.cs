@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "gemini-flash-lite-latest",
 
             // Gemini 4
+            "gemini-4-neon",
             "gemini-4-carbon",
             "gemini-4-argon",
             "gemini-4-hydrogen",
@@ -44,8 +45,6 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "gemini-3-flash-preview",
 
             // Gemini 2.5 - Stable
-            "gemini-2.5-pro",
-            "gemini-2.5-flash",
             "gemini-2.5-flash-lite",
 
             // Gemma - open models served via the Gemini API

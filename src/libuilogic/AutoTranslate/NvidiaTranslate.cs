@@ -24,56 +24,65 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         /// </summary>
         public static string[] Models => new[]
         {
-            // Meta Llama
-            "meta/llama-4-maverick-17b-128e-instruct",
-            "meta/llama-3.3-70b-instruct",
-
             // NVIDIA Nemotron
             "nvidia/nemotron-3-ultra-550b-a55b",
+            "nvidia/nemotron-3.5-super-vl-120b-a12b",
+            "nvidia/nemotron-3.5-lightning-30b-a3b",
+
+            // NVIDIA Riva (translation-specific)
+            "nvidia/riva-translate-4b-instruct-v2",
+
+            // Mistral
+            "mistralai/mistral-large-4-1t-a52b",
+
+            // Moonshot Kimi
+            "moonshotai/kimi-k3.1-pro",
+
+            // Zhipu GLM
+            "z-ai/glm-5.3-flash",
+
+            // MiniMax
+            "minimaxai/minimax-m3.1-flash",
+
+            // StepFun
+            "stepfun-ai/step-5-preview",
+
+            // Google Gemma
+            "google/gemma-4-31b-it",
+            "google/gemma-3-12b-it",
+        };
+
+        /// <summary>
+        /// Models NVIDIA has taken down from build.nvidia.com (the API answers "410 Gone").
+        /// A saved setting pointing at one of these is moved to the default model.
+        /// </summary>
+        private static readonly HashSet<string> RetiredModels = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "meta/llama-4-maverick-17b-128e-instruct",
+            "meta/llama-3.3-70b-instruct",
             "nvidia/nemotron-3-super-120b-a12b",
             "nvidia/llama-3.3-nemotron-super-49b-v1.5",
             "nvidia/llama-3.1-nemotron-ultra-253b-v1",
             "nvidia/llama-3.1-nemotron-70b-instruct",
             "nvidia/nemotron-nano-3-30b-a3b",
             "nvidia/nvidia-nemotron-nano-9b-v2",
-
-            // NVIDIA Riva (translation-specific)
-            "nvidia/riva-translate-4b-instruct-v2",
             "nvidia/riva-translate-4b-instruct-v1.1",
             "nvidia/riva-translate-4b-instruct",
-
-            // DeepSeek
             "deepseek-ai/deepseek-v4.1-flash",
             "deepseek-ai/deepseek-v4-pro",
             "deepseek-ai/deepseek-v4-flash",
-
-            // Mistral
             "mistralai/mistral-large-3-675b-instruct-2512",
             "mistralai/mistral-medium-3.5-128b",
             "mistralai/mistral-small-4-119b-2603",
             "mistralai/mistral-nemotron",
-
-            // Google Gemma
-            "google/gemma-4-31b-it",
-            "google/gemma-3-12b-it",
-
-            // Qwen
             "qwen/qwen3.5-397b-a17b",
             "qwen/qwen3.5-122b-a10b",
             "qwen/qwen3-next-80b-a3b-instruct",
-
-            // Moonshot Kimi
             "moonshotai/kimi-k2.6",
-
-            // Zhipu GLM
             "z-ai/glm-5.3",
             "z-ai/glm-5.2",
-
-            // OpenAI (open weights)
             "openai/gpt-oss-120b",
             "openai/gpt-oss-20b",
-
-            // Microsoft Phi
             "microsoft/phi-4-mini-instruct",
             "microsoft/phi-3.5-moe-instruct",
         };
@@ -108,10 +117,19 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             return ListLanguages();
         }
 
+        /// <summary>
+        /// Retired ids are only swapped on NVIDIA's own cloud - a self-hosted NIM may still serve them.
+        /// </summary>
+        private static bool IsNvidiaCloud()
+        {
+            var url = Configuration.Settings.Tools.NvidiaUrl;
+            return string.IsNullOrWhiteSpace(url) || url.Contains("integrate.api.nvidia.com", StringComparison.OrdinalIgnoreCase);
+        }
+
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var model = Configuration.Settings.Tools.NvidiaModel;
-            if (string.IsNullOrEmpty(model))
+            if (string.IsNullOrEmpty(model) || (RetiredModels.Contains(model) && IsNvidiaCloud()))
             {
                 model = Models[0];
                 Configuration.Settings.Tools.NvidiaModel = model;

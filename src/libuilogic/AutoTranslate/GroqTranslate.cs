@@ -30,11 +30,25 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             // Medium / Efficient Multilingual
             "openai/gpt-oss-20b",                           // High-speed reasoning model (Production)
             "qwen/qwen3.8-27b",                             // Strong multilingual mid-size model (Preview)
-            "llama-3.3-70b-versatile",                      // Solid multilingual Llama (Production)
+            "minimaxai/minimax-m2.7",                       // MiniMax M2.7 (Preview)
+            "meta-models/muse-spark-open",                  // Meta Muse Spark open weights (Preview)
+        };
 
-            // Agentic systems
-            "groq/compound",                                // Groq compound system
-            "groq/compound-mini",                           // Smaller compound system
+        /// <summary>
+        /// Models Groq has shut down (see https://console.groq.com/docs/deprecations).
+        /// A saved setting pointing at one of these is moved to the default model.
+        /// </summary>
+        private static readonly HashSet<string> RetiredModels = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "llama-3.3-70b-versatile",                      // shut down 2026-08-16
+            "llama-3.1-8b-instant",                         // shut down 2026-08-16
+            "groq/compound",                                // shut down 2026-09-21
+            "groq/compound-mini",                           // shut down 2026-09-21
+            "qwen/qwen3.6-27b",                             // shut down 2026-09-14
+            "qwen/qwen3-32b",                               // shut down 2026-07-17
+            "meta-llama/llama-4-scout-17b-16e-instruct",    // shut down 2026-07-17
+            "meta-llama/llama-4-maverick-17b-128e-instruct",// shut down 2026-03-09
+            "moonshotai/kimi-k2-instruct-0905",             // shut down 2026-04-15
         };
 
         /// <summary>
@@ -72,10 +86,19 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         //-H "Content-Type: application/json" \
         //-d '{"messages": [{"role": "user", "content": "Explain the importance of fast language models"}], "model": "llama3-8b-8192"}
 
+        /// <summary>
+        /// Retired ids are only swapped on Groq's own endpoint - another OpenAI compatible server may still serve them.
+        /// </summary>
+        private static bool IsGroqCloud()
+        {
+            var url = Configuration.Settings.Tools.GroqUrl;
+            return string.IsNullOrWhiteSpace(url) || url.Contains("api.groq.com", StringComparison.OrdinalIgnoreCase);
+        }
+
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var model = Configuration.Settings.Tools.GroqModel;
-            if (string.IsNullOrEmpty(model))
+            if (string.IsNullOrEmpty(model) || (RetiredModels.Contains(model) && IsGroqCloud()))
             {
                 model = Models[0];
                 Configuration.Settings.Tools.GroqModel = model;

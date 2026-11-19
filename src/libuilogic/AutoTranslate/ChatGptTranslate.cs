@@ -34,6 +34,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         // gpt-oss-120b is an open-weights model not hosted on api.openai.com at all.
         public static string[] Models => new[]
         {
+            "gpt-6.2-astra",
+            "gpt-6.2-sol",
             "gpt-6.1-sol",
             "gpt-6.1-terra",
             "gpt-6-astra",
@@ -43,8 +45,18 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "gpt-5.4", "gpt-5.4-mini", "gpt-5.4-nano",
             "gpt-5.2",
             "gpt-5.1",
-            "gpt-5", "gpt-5-mini", "gpt-5-nano",
-            "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano",
+            "gpt-4.1", "gpt-4.1-mini",
+        };
+
+        /// <summary>
+        /// Models OpenAI has shut down (see https://developers.openai.com/api/docs/deprecations).
+        /// A saved setting pointing at one of these is moved to <see cref="DefaultModel"/> on the official endpoint.
+        /// </summary>
+        public static readonly HashSet<string> RetiredModels = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "gpt-4.1-nano", "gpt-4.1-nano-2025-04-14",          // shut down 2026-10-23
+            "gpt-5-chat-latest", "gpt-5.1-chat-latest",         // shut down 2026-07-23
+            "gpt-5.2-chat-latest", "gpt-5.3-chat-latest",       // shut down 2026-08-10
         };
 
         public static string RemovePreamble(string original, string input)

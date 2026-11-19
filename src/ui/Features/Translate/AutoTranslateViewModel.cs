@@ -2390,13 +2390,15 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             // Migrate away from models older builds defaulted to that the chat/completions
             // endpoint does not serve ("-pro" models, gpt-oss-120b) - they fail with
-            // "This is not a chat model" (#12078). Only on the official endpoint, so custom
-            // servers keep whatever model name the user configured.
+            // "This is not a chat model" (#12078) - and from models OpenAI has shut down.
+            // Only on the official endpoint, so custom servers keep whatever model name
+            // the user configured.
             var chatGptModel = Configuration.Settings.Tools.ChatGptModel;
             var isOfficialChatGptUrl = Configuration.Settings.Tools.ChatGptUrl.Contains("api.openai.com", StringComparison.OrdinalIgnoreCase);
             if (isOfficialChatGptUrl &&
                 (chatGptModel.EndsWith("-pro", StringComparison.OrdinalIgnoreCase) ||
-                 chatGptModel.StartsWith("gpt-oss", StringComparison.OrdinalIgnoreCase)))
+                 chatGptModel.StartsWith("gpt-oss", StringComparison.OrdinalIgnoreCase) ||
+                 ChatGptTranslate.RetiredModels.Contains(chatGptModel)))
             {
                 Configuration.Settings.Tools.ChatGptModel = ChatGptTranslate.DefaultModel;
             }

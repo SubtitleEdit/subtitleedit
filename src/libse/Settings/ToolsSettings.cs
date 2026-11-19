@@ -164,13 +164,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
             DeepSeekModel = "deepseek-flash"; // DeepSeekTranslate.Models[0] in LibUiLogic
             NvidiaUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
             NvidiaPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            NvidiaModel = "meta/llama-4-maverick-17b-128e-instruct"; // NvidiaTranslate.Models[0] in LibUiLogic
+            NvidiaModel = "nvidia/nemotron-3-ultra-550b-a55b"; // NvidiaTranslate.Models[0] in LibUiLogic
             ApiRouteUrl = "https://global.api-route.com/v1/chat/completions";
             ApiRoutePrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             ApiRouteModel = "claude-sonnet-5"; // ApiRouteTranslate.Models[0] in LibUiLogic
             OpperUrl = "https://api.opper.ai/v3/compat/chat/completions";
             OpperPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            OpperModel = "claude-sonnet-4-6"; // OpperTranslate.Models[0] in LibUiLogic
+            OpperModel = "claude-sonnet-5-5"; // OpperTranslate.Models[0] in LibUiLogic
             OpenRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
             OpenRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             OpenRouterModel = "openai/gpt-5.6-sol"; // OpenRouterTranslate.Models[0] in LibUiLogic
