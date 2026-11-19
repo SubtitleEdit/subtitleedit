@@ -16,26 +16,35 @@ public class CrispAsrEngine : CrispAsrEngineBase
     public CrispAsrEngineBase SelectedBackend { get; private set; }
     public CrispAsrEngine()
     {
+        // Ordered by quality, best first; the first backend is the default. General-purpose
+        // backends come first, ranked by published English Open ASR Leaderboard WER (vendor
+        // numbers, not measured in SE) - except where SE's own FLEURS runs disagree: Parakeet
+        // (Ultra) measured best in SE (default since #16988), and Granite measured at roughly twice
+        // Parakeet's WER despite its published score, so it closes the group. Specialists (one
+        // language family, diarization, translation, coverage over accuracy) follow.
         _backends = new List<CrispAsrEngineBase>
         {
-            new CrispAsrParakeet(),
-            new CrispAsrCanary(),
-            new CrispAsrCohere(),
+            new CrispAsrParakeet(),   // Ultra 5.80, 25 languages - SE-measured best
+            new CrispAsrArk(),        // 5.04, 20 languages
+            new CrispAsrQwen3(),      // 5.40, 31 languages
+            new CrispAsrCohere(),     // 5.42, 15 languages
+            new CrispAsrKyutai(),     // 2.6B 6.40, English/French
+            new CrispAsrCanary(),     // 7.15, 25 languages
+            new CrispAsrVoxtral(),    // Mini 3B, 9 languages
+            new CrispAsrGranite(),    // published 5.33, SE-measured 9-12% on FLEURS en/de
+
+            // Chinese: FireRedASR2 3.05 vs Fun-ASR-Nano 4.55 average Mandarin CER (FireRed report).
             new CrispAsrFireRed(),
             new CrispAsrFunAsrNano(),
             //new CrispAsrFunAsrMltNano(), does not work well enough
-            new CrispAsrGigaAm(),
-            new CrispAsrGlm(),
-            new CrispAsrGranite(),
-            new CrispAsrIndexEcho(),
-            new CrispAsrQwen3(),
-            new CrispAsrMega(),
-            new CrispAsrMossDiarize(),
-            new CrispAsrOmni(),
-            new CrispAsrKyutai(),
-            new CrispAsrSenseVoice(),
-            new CrispAsrArk(),
-            new CrispAsrVoxtral(),
+            new CrispAsrSenseVoice(), // zh/yue/ja/ko/en
+            new CrispAsrGlm(),        // zh/yue/en
+
+            new CrispAsrGigaAm(),     // Russian only
+            new CrispAsrMega(),       // Qwen3-ASR fine-tune for noisy audio, slightly worse on clean speech
+            new CrispAsrOmni(),       // broadest coverage (150 listed), accuracy second
+            new CrispAsrMossDiarize(),// transcription with speaker labels
+            new CrispAsrIndexEcho(),  // Chinese speech -> translated subtitles
         };
 
         SelectedBackend = _backends[0];
