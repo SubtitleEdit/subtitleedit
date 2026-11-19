@@ -1256,6 +1256,24 @@ public static partial class MergeAndSplitHelper
         return rows;
     }
 
+    /// <summary>
+    /// Splits one translation that covers two rows back into a text per row, with the same
+    /// length/duration/punctuation candidates the merge path uses, each part re-broken into
+    /// subtitle lines. Null when the text cannot be split into two non-empty parts.
+    /// </summary>
+    public static List<string>? SplitTranslationInTwo(string text, TranslateRow first, TranslateRow second, string language)
+    {
+        var oneLine = string.Join(" ", text.SplitToLines().Select(l => l.Trim()).Where(l => l.Length > 0));
+        var item = new MergeResultItem { StartIndex = 0, EndIndex = 1, Paragraphs = [first, second] };
+        var parts = SplitIntoTwoParts(oneLine, item, TextRulesLanguage(language));
+        if (parts.Count != 2 || string.IsNullOrWhiteSpace(parts[0]) || string.IsNullOrWhiteSpace(parts[1]))
+        {
+            return null;
+        }
+
+        return parts.Select(part => AutoBreakIfNeeded(part.Trim(), TextRulesLanguage(language))).ToList();
+    }
+
     private static List<string> SplitIntoTwoParts(string text, MergeResultItem item, string language)
     {
         var candidates = GenerateSplitCandidates(text, item, language);

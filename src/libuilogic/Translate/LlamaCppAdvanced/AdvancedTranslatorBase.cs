@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.ObjectModel;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 
@@ -142,6 +143,14 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
         // translation, so the single-line case - including bisection retries - goes context-free.
         var history = count > 1 ? CollectHistory(rows, index, Settings.HistoryPairs) : new List<LlamaCppAdvancedProtocol.HistoryPair>();
         var map = await TranslateLinesAsync(lines, history, sourceLanguageCode, targetLanguageCode, cancellationToken);
+
+        // Two rows joined into one, the rest moved up and padded (Index-Translate 9B joined a
+        // sentence split over two rows): split the joined translation back over its two rows and
+        // move the others down, when the result passes every check below.
+        if (count > 1 && IsComplete(map, lines))
+        {
+            map = TryRepairMergedRow(map, lines, history, rows, index, sourceLanguageCode, targetLanguageCode);
+        }
 
         // A few lines handed back in the source language in an otherwise good batch are asked for
         // again one at a time; a batch where many came back that way is cut to end before the
@@ -579,7 +588,81 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
             failure = new BatchFailure(shift, true);
         }
 
+        // A merge whose padding is too short to show up above: the length check names the merged
+        // row itself, so the retry can end right before it.
+        var merged = FindLengthShift(map, lines);
+        if (merged >= 0 && (failure.Line < 0 || merged < failure.Line))
+        {
+            failure = new BatchFailure(merged, false);
+        }
+
         return failure;
+    }
+
+    /// <summary>
+    /// <paramref name="map"/> with a merged row (see <see cref="TranslationShiftGuard.FindLengthShift"/>)
+    /// split back over its two rows, the rows after it moved down by one and the padding row
+    /// dropped - or <paramref name="map"/> itself when there is no merge, or the repaired reply
+    /// still fails a check.
+    /// </summary>
+    internal static Dictionary<int, string> TryRepairMergedRow(Dictionary<int, string> map, List<LlamaCppAdvancedProtocol.BatchLine> lines, List<LlamaCppAdvancedProtocol.HistoryPair> history, IReadOnlyList<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode)
+    {
+        var sources = lines.Select(l => l.Text).ToList();
+        var translations = lines.Select(l => map.TryGetValue(l.Number, out var t) ? t : string.Empty).ToList();
+        var merged = TranslationShiftGuard.FindLengthShift(sources, translations);
+        if (merged < 0)
+        {
+            return map;
+        }
+
+        var padding = TranslationShiftGuard.FindPaddingIndex(sources, translations, merged);
+        if (padding < 0)
+        {
+            return map;
+        }
+
+        var language = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(targetLanguageCode);
+        var parts = MergeAndSplitHelper.SplitTranslationInTwo(translations[merged], rows[index + merged], rows[index + merged + 1], string.IsNullOrEmpty(language) ? "en" : language);
+        if (parts == null)
+        {
+            return map;
+        }
+
+        var repaired = new List<string>(translations);
+        repaired[merged] = parts[0];
+        repaired[merged + 1] = parts[1];
+        for (var j = merged + 1; j < padding; j++)
+        {
+            repaired[j + 1] = translations[j];
+        }
+
+        var repairedMap = new Dictionary<int, string>(map);
+        for (var i = 0; i < lines.Count; i++)
+        {
+            repairedMap[lines[i].Number] = repaired[i];
+        }
+
+        return FindFirstFailure(repairedMap, lines, history, sourceLanguageCode, targetLanguageCode).Line < 0
+            ? repairedMap
+            : map;
+    }
+
+    /// <summary>
+    /// The number of the line whose translation also holds the next line's (see
+    /// <see cref="TranslationShiftGuard.FindLengthShift"/>), or -1 when there is none.
+    /// </summary>
+    internal static int FindLengthShift(Dictionary<int, string> map, List<LlamaCppAdvancedProtocol.BatchLine> lines)
+    {
+        var sources = new List<string>(lines.Count);
+        var translations = new List<string>(lines.Count);
+        foreach (var line in lines)
+        {
+            sources.Add(line.Text);
+            translations.Add(map.TryGetValue(line.Number, out var translation) ? translation : string.Empty);
+        }
+
+        var index = TranslationShiftGuard.FindLengthShift(sources, translations);
+        return index < 0 ? -1 : lines[index].Number;
     }
 
     /// <summary>
