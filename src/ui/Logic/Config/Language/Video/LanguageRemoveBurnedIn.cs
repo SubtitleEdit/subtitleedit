@@ -18,6 +18,8 @@ public class LanguageRemoveBurnedIn
     public string RequireOutlineHint { get; set; }
     public string GrowMask { get; set; }
     public string GrowMaskHint { get; set; }
+    public string ExpandDarkEdges { get; set; }
+    public string ExpandDarkEdgesHint { get; set; }
     public string ExtraWidth { get; set; }
     public string ExtraWidthHint { get; set; }
     public string TemporalConsistency { get; set; }
@@ -77,6 +79,8 @@ public class LanguageRemoveBurnedIn
         RequireOutlineHint = "Only remove bright pixels next to a dark outline - keeps bright picture details out of the mask";
         GrowMask = "Grow mask (pixels)";
         GrowMaskHint = "Extra pixels around the text, to cover its outline and soft edges";
+        ExpandDarkEdges = "Expand into dark edges";
+        ExpandDarkEdgesHint = "Turn this off if the mask grows into nearby picture detail. Turn it on if the preview leaves traces of the subtitle outline or shadow.";
         ExtraWidth = "Extra width (pixels)";
         ExtraWidthHint = "Widen the mask this much on the left and right of each line - for outlines or shadows at the first and last letter";
         TemporalConsistency = "Temporal consistency (less flicker)";

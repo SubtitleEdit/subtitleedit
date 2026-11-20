@@ -38,9 +38,9 @@ public class BurnedInMaskBuilderTests
 
     private static byte[] ToRgb(byte[] luma) => luma.SelectMany(v => new[] { v, v, v }).ToArray();
 
-    private static BurnedInMaskBuilder Build(bool requireOutline, Func<int, byte[]> frame, int frames = 30)
+    private static BurnedInMaskBuilder Build(bool requireOutline, Func<int, byte[]> frame, int frames = 30, bool expandDarkEdges = true)
     {
-        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, (long)frames - 1) }, 190, requireOutline, 2);
+        var builder = new BurnedInMaskBuilder(W, H, 0, 40, W, 40, new[] { (0L, (long)frames - 1) }, 190, requireOutline, 2, expandDarkEdges: expandDarkEdges);
         for (var i = 0; i < frames; i++)
         {
             var luma = frame(i);
@@ -73,6 +73,21 @@ public class BurnedInMaskBuilderTests
         Assert.Equal(0, mask[70 * W + 20]); // background outside text + outline + grow
         Assert.Equal(0, mask[70 * W + 60]); // background below
         Assert.Equal(0, mask[20 * W + 60]); // outside the scan area
+    }
+
+    [Fact]
+    public void TightMaskLeavesAdjacentDarkPictureDetail()
+    {
+        var rgb = ToRgb(TextFrame(10));
+        var expanded = new byte[W * H];
+        var tight = new byte[W * H];
+
+        Assert.True(Build(true, TextFrame).GetFrameMask(10, rgb, expanded));
+        Assert.True(Build(true, TextFrame, expandDarkEdges: false).GetFrameMask(10, rgb, tight));
+        Assert.Equal(255, tight[59 * W + 60]); // text
+        Assert.Equal(255, tight[54 * W + 60]); // outline
+        Assert.Equal(255, expanded[68 * W + 60]); // extra per-frame growth
+        Assert.Equal(0, tight[68 * W + 60]);
     }
 
     [Fact]

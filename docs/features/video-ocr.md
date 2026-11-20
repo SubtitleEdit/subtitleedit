@@ -82,7 +82,9 @@ method.
 the selected lines — OCR lines or rectangles — from the review; the OCR result is not changed.
 
 **Text mask settings:** *Text brightness minimum*, *Text has a dark outline*, *Grow mask* and
-*Extra width* control which pixels are removed — check the preview after each change.
+*Extra width* control which pixels are removed. For AI inpainting, turn off *Expand into dark edges*
+if the mask spreads from the text into nearby picture detail. Check the preview for leftover outlines
+or shadows before starting the full removal.
 The video methods re-encode the video with x264 at the chosen **Quality (CRF)** and copy the audio.
 
 ## Settings

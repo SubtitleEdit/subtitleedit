@@ -49,6 +49,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     [ObservableProperty] private bool _requireOutline;
     [ObservableProperty] private int _grow;
     [ObservableProperty] private int _extraWidth;
+    [ObservableProperty] private bool _expandDarkEdges;
     [ObservableProperty] private bool _temporal;
     [ObservableProperty] private int _crf;
     [ObservableProperty] private int _blurStrength;
@@ -168,6 +169,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         RequireOutline = settings.RemoveBurnedInRequireOutline;
         Grow = settings.RemoveBurnedInGrow > 0 ? settings.RemoveBurnedInGrow : BurnedInMaskBuilder.DefaultGrow(videoHeight);
         ExtraWidth = settings.RemoveBurnedInExtraWidth is >= 0 and <= 100 ? settings.RemoveBurnedInExtraWidth : 5;
+        ExpandDarkEdges = settings.RemoveBurnedInExpandDarkEdges;
         Temporal = settings.RemoveBurnedInTemporal;
         Crf = settings.RemoveBurnedInCrf is >= 0 and <= 51 ? settings.RemoveBurnedInCrf : 18;
 
@@ -537,6 +539,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     partial void OnRequireOutlineChanged(bool value) => InvalidatePreview();
     partial void OnGrowChanged(int value) => InvalidatePreview();
     partial void OnExtraWidthChanged(int value) => InvalidatePreview();
+    partial void OnExpandDarkEdgesChanged(bool value) => InvalidatePreview();
     partial void OnMethodIndexChanged(int value) => InvalidatePreview();
     partial void OnBlurStrengthChanged(int value) => InvalidatePreview();
 
@@ -583,7 +586,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     // ── review: preview ──────────────────────────────────────────────
 
     private string MaskKey(RemoveBurnedInLineItem item) =>
-        $"{item.Line.StartTime.Ticks}|{item.Line.EndTime.Ticks}|{BrightnessMinimum}|{RequireOutline}|{Grow}|{ExtraWidth}|{_frameRate}";
+        $"{item.Line.StartTime.Ticks}|{item.Line.EndTime.Ticks}|{BrightnessMinimum}|{RequireOutline}|{Grow}|{ExtraWidth}|{!IsInpaint || ExpandDarkEdges}|{_frameRate}";
 
     private async Task RefreshPreviewAsync()
     {
@@ -786,6 +789,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         RequireOutline = RequireOutline,
         Grow = Grow,
         ExtraWidth = ExtraWidth,
+        ExpandDarkEdges = !IsInpaint || ExpandDarkEdges,
         Temporal = Temporal,
         Method = Method,
         BlurStrength = BlurStrength,
@@ -1053,6 +1057,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         var settings = Se.Settings.Video.VideoOcr;
         settings.RemoveBurnedInRequireOutline = RequireOutline;
         settings.RemoveBurnedInGrow = Grow == BurnedInMaskBuilder.DefaultGrow(_videoHeight) ? 0 : Grow;
+        settings.RemoveBurnedInExpandDarkEdges = ExpandDarkEdges;
         settings.RemoveBurnedInTemporal = Temporal;
         settings.RemoveBurnedInExtraWidth = ExtraWidth;
         settings.RemoveBurnedInCrf = Crf;
