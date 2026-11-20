@@ -15,6 +15,7 @@ public class LanguageMainToolbar
     public string RemoveTextForHiHint { get; set; }
     public string VisualSyncHint { get; set; }
     public string PointSyncHint { get; set; }
+    public string AdjustAllTimesHint { get; set; }
     public string BeautifyTimeCodesHint { get; set; }
     public string BurnInHint { get; set; }
     public string AutoTranslateHint { get; set; }
@@ -51,6 +52,7 @@ public class LanguageMainToolbar
         RemoveTextForHiHint = "Remove text for hearing impaired {0}";
         VisualSyncHint = "Visual sync {0}";
         PointSyncHint = "Point sync via another subtitle {0}";
+        AdjustAllTimesHint = "Adjust all times {0}";
         BeautifyTimeCodesHint = "Beautify time codes {0}";
         BurnInHint = "Burn subtitles into a video file {0}";
         AutoTranslateHint = "Auto-translate {0}";

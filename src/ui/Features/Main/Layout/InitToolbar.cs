@@ -228,6 +228,19 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowAdjustAllTimes)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("AdjustAllTimes"),
+                Command = vm.ShowSyncAdjustAllTimesCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.AdjustAllTimesHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AdjustAllTimesHint, shortcuts, nameof(vm.ShowSyncAdjustAllTimesCommand)),
+            });
+            isLastSeparator = false;
+        }
+
         if (appearance.ToolbarShowBeautifyTimeCodes)
         {
             stackPanelLeft.Children.Add(new Button

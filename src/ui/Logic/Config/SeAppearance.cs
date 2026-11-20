@@ -94,6 +94,7 @@ public class SeAppearance
     public bool ToolbarShowRemoveTextForHi { get; set; }
     public bool ToolbarShowVisualSync { get; set; }
     public bool ToolbarShowPointSync { get; set; }
+    public bool ToolbarShowAdjustAllTimes { get; set; }
     public bool ToolbarShowBeautifyTimeCodes { get; set; }
     public bool ToolbarShowBurnIn { get; set; }
     public bool ToolbarShowAutoTranslate { get; set; }
@@ -189,6 +190,7 @@ public class SeAppearance
         ToolbarShowRemoveTextForHi = false;
         ToolbarShowVisualSync = false;
         ToolbarShowPointSync = false;
+        ToolbarShowAdjustAllTimes = false;
         ToolbarShowBeautifyTimeCodes = false;
         ToolbarShowBurnIn = false;
         ToolbarShowAutoTranslate = false;
