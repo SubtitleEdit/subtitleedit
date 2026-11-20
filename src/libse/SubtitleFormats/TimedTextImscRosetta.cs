@@ -466,6 +466,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            ResetLoadFrameRate();
 
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
@@ -496,7 +497,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (fr > 20 && fr < 100)
                     {
-                        Configuration.Settings.General.CurrentFrameRate = fr;
+                        SetLoadFrameRate(fr);
                     }
 
                     var frameRateMultiplier = xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
@@ -505,12 +506,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if ((frameRateMultiplier.InnerText == "999 1000" ||
                              frameRateMultiplier.InnerText == "1000 1001") && Math.Abs(fr - 30) < 0.01)
                         {
-                            Configuration.Settings.General.CurrentFrameRate = 29.97;
+                            SetLoadFrameRate(29.97);
                         }
                         else if ((frameRateMultiplier.InnerText == "999 1000" ||
                                   frameRateMultiplier.InnerText == "1000 1001") && Math.Abs(fr - 24) < 0.01)
                         {
-                            Configuration.Settings.General.CurrentFrameRate = 23.976;
+                            SetLoadFrameRate(23.976);
                         }
                         else
                         {
@@ -520,7 +521,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 fr = double.Parse(arr[0], CultureInfo.InvariantCulture) / double.Parse(arr[1], CultureInfo.InvariantCulture);
                                 if (fr > 20 && fr < 100)
                                 {
-                                    Configuration.Settings.General.CurrentFrameRate = fr;
+                                    SetLoadFrameRate(fr);
                                 }
                             }
                         }
@@ -530,7 +531,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (BatchSourceFrameRate.HasValue)
             {
-                Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
+                SetLoadFrameRate(BatchSourceFrameRate.Value);
             }
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
@@ -561,7 +562,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var textBuilder = new StringBuilder();
             foreach (XmlNode divNode in body.SelectNodes("ttml:div", namespaceManager))
             {
-                TimedText10.ExtractTimeCodes(divNode, subtitle, out var begin, out var end);
+                TimedText10.ExtractTimeCodes(divNode, subtitle, LoadFrameRate, out var begin, out var end);
 
                 var pNodes = divNode.SelectNodes("ttml:p", namespaceManager);
                 if (pNodes != null && pNodes.Count > 0)

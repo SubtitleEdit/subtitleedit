@@ -60,13 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            foreach (var s in lines)
-            {
-                sb.Append(s);
-            }
-
-            var json = sb.ToString();
+            var json = ConcatLines(lines);
             if (!json.Contains("\"transcript\"", StringComparison.Ordinal))
             {
                 return;

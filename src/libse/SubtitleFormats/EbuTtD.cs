@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (XmlNode node in body.SelectNodes("//ttml:p", namespaceManager))
             {
-                TimedText10.ExtractTimeCodes(node, subtitle, out var begin, out var end);
+                TimedText10.ExtractTimeCodes(node, subtitle, LoadFrameRate, out var begin, out var end);
                 var text = ReadParagraph(node, italicStyles, boldStyles, colorStyles);
 
                 var region = node.Attributes?["region"]?.Value;

@@ -45,13 +45,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.Append(s);
-            }
-
-            var text = sb.ToString();
+            var text = ConcatLines(lines);
             if (!text.Contains("\"items\"") || !text.Contains("\"alternatives\"", StringComparison.Ordinal))
             {
                 return;

@@ -64,6 +64,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double ParseHHMMSSFFToMilliseconds(string text)
         {
+            return ParseHHMMSSFFToMilliseconds(text, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        public static double ParseHHMMSSFFToMilliseconds(string text, double frameRate)
+        {
             Span<int> starts = stackalloc int[MaxTimeParts];
             Span<int> lengths = stackalloc int[MaxTimeParts];
             var count = SplitTimeParts(text, starts, lengths);
@@ -76,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     int.TryParse(s.Slice(starts[2], lengths[2]), out var seconds) &&
                     int.TryParse(s.Slice(starts[3], lengths[3]), out var frames))
                 {
-                    return new TimeCode(hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames)).TotalMilliseconds;
+                    return new TimeCode(hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames, frameRate)).TotalMilliseconds;
                 }
             }
             return 0;

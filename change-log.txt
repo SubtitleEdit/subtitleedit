@@ -3,6 +3,29 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta11 (20th of November 2026)
+
+* Show OCR source images in the main window after OCR - thx ChristianD-Hahn
+* Burn-in output settings: file name suffix (also used by Embedded subtitles edit and Cut video) - thx korjen03
+* Optional "Adjust all times" toolbar button - thx fraternl
+* Point sync via other subtitle: keep synced lines marked - thx MoBit65
+* Batch convert: delete lines by ASSA/SSA style - thx rojaljelly
+* Batch convert: faster loading (parallel parsing, faster unknown-file detection)
+* New format: Unknown 108 (tab separated two-row time code list), also read from Word .doc/.docx
+* Unknown format importer: read Word .doc/.docx files + five fixes for txt/csv/json
+* Remove burned-in subtitles: native ProPainter on Apple Silicon and Windows x64
+* Remove burned-in subtitles: "Expand into dark edges" option for a tighter mask
+* Auto-translate: llama.cpp Hy-MT2 30B-A3B model
+* Auto-translate: refresh online model lists (fixes NVIDIA retired models)
+* Auto-translate: OCR models no longer listed as llama.cpp translate models
+* llama.cpp advanced translate: split a merged row back instead of shifting lines
+* Order llama.cpp translate, Crisp ASR, CrispEmbed OCR and voice-cloning engines by quality
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta10 (19th of November 2026)
 
 * Video player: optional "Cycle video flip" button + shortcut (mpv) - thx Cotae88

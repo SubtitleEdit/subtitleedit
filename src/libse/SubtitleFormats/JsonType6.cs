@@ -67,12 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.Append(s);
-            }
-
-            string allText = sb.ToString();
+            string allText = ConcatLines(lines);
             if (!allText.Contains("\"words\"") && !allText.Contains("'words'"))
             {
                 return;

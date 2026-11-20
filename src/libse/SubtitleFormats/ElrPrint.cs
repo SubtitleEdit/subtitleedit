@@ -16,13 +16,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-            {
-                sb.AppendLine(line);
-            }
-
-            string s = sb.ToString();
+            string s = JoinLines(lines);
             if (s.Contains("#PE2"))
             {
                 return false;

@@ -50,13 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.Append(s);
-            }
-
-            string allText = sb.ToString().Trim();
+            string allText = ConcatLinesTrimmed(lines);
             if (!(allText.StartsWith('{') || allText.StartsWith('[')))
             {
                 return;

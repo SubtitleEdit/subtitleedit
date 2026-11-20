@@ -60,12 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.Append(s);
-            }
-
-            string allLines = sb.ToString();
+            string allLines = ConcatLines(lines);
             if (!allLines.Contains("\"subtitles\":", StringComparison.Ordinal))
             {
                 return;

@@ -115,6 +115,24 @@ public class RemoveBurnedInWindowTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void ProPainterUsesMaskPreviewOnlyWhenSupportedAndSelected()
+    {
+        var vm = new RemoveBurnedInViewModel(new WindowService(new NullServiceProvider()), new FileHelper(), new FolderHelper());
+        Assert.False(vm.IsUsingProPainter);
+        Assert.True(vm.CanShowResult);
+
+        vm.UseProPainter = true;
+        Assert.Equal(ProPainterPackage.IsSupported, vm.IsUsingProPainter);
+        Assert.Equal(!ProPainterPackage.IsSupported, vm.CanShowResult);
+        Assert.Equal(!ProPainterPackage.IsSupported, vm.UsesMiGan);
+
+        vm.MethodIndex = (int)BurnedInMethod.Blur;
+        Assert.False(vm.CanSelectProPainter);
+        Assert.False(vm.IsUsingProPainter);
+        Assert.True(vm.CanShowResult);
+    }
+
+    [AvaloniaFact]
     public void Timeline_Has_No_Minimum_Gap_And_Blocks_Overlap()
     {
         var vm = new RemoveBurnedInViewModel(new WindowService(new NullServiceProvider()), new FileHelper(), new FolderHelper());

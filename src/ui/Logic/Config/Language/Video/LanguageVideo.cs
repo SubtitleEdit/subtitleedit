@@ -182,6 +182,9 @@ public class LanguageVideo
     public string AssaStyleWillBeUsed { get; set; }
     public string PickOnlineSubtitleTitle { get; set; }
     public string OutputSettingsTitle { get; set; }
+    public string OutputFileNameSuffix { get; set; }
+    public string OutputFileNameExampleX { get; set; }
+    public string OutputFileNameSuffixInvalid { get; set; }
     public string TtsCrispAsrSettingsTitle { get; set; }
     public string TtsDownloadEngineTitle { get; set; }
     public string IndexTts25LicenseTitle { get; set; }
@@ -449,6 +452,9 @@ public class LanguageVideo
         TtsEngineTooOldUpdateRequired = "{0} too old - update required";
         TtsEngineChatterboxCapable = "{0} (Chatterbox-capable)";
         OutputSettingsTitle = "Output settings";
+        OutputFileNameSuffix = "File name suffix";
+        OutputFileNameExampleX = "Example: {0}";
+        OutputFileNameSuffixInvalid = "The file name suffix contains characters that are not allowed in file names.";
         TtsCrispAsrSettingsTitle = "{0} (CrispASR) settings";
         TtsDownloadEngineTitle = "TTS - Download engine";
         IndexTts25LicenseTitle = "IndexTTS 2.5 - model license";

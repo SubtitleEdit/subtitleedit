@@ -42,6 +42,7 @@ public sealed class BurnedInMaskBuilder
     private readonly int _padFrames;
     private readonly int _applyMargin;
     private readonly int _extraWidth;
+    private readonly bool _expandDarkEdges;
     private readonly List<LineMask> _lines = new();
 
     private sealed class LineMask
@@ -65,7 +66,7 @@ public sealed class BurnedInMaskBuilder
     /// <param name="spans">Frame spans (inclusive) of the OCR lines, already padded.</param>
     public BurnedInMaskBuilder(int videoWidth, int videoHeight, int regionX, int regionY, int regionWidth, int regionHeight,
         IEnumerable<(long StartFrame, long EndFrame)> spans, int brightnessMinimum, bool requireOutline, int grow, int padFrames = 0,
-        int applyMarginFrames = 0, int extraWidth = 0)
+        int applyMarginFrames = 0, int extraWidth = 0, bool expandDarkEdges = true)
     {
         _videoWidth = videoWidth;
         _videoHeight = videoHeight;
@@ -84,6 +85,7 @@ public sealed class BurnedInMaskBuilder
         _padFrames = Math.Max(0, padFrames);
         _applyMargin = Math.Max(0, applyMarginFrames);
         _extraWidth = Math.Max(0, extraWidth);
+        _expandDarkEdges = expandDarkEdges;
         foreach (var (start, end) in spans)
         {
             if (end < start)
@@ -283,7 +285,11 @@ public sealed class BurnedInMaskBuilder
                 y1 = Math.Max(y1, y + 1);
             }
 
-            GrowIntoDarkPixels(rgb, mask, x0, y0, x1, y1);
+            if (_expandDarkEdges)
+            {
+                GrowIntoDarkPixels(rgb, mask, x0, y0, x1, y1);
+            }
+
             any = true;
         }
 

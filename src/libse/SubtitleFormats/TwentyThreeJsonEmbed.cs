@@ -31,13 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.Append(s);
-            }
-
-            string allText = sb.ToString();
+            string allText = ConcatLines(lines);
             var indexOfMainTag = allText.IndexOf("\"timestamp_begin\"", StringComparison.Ordinal);
             if (indexOfMainTag < 0 && !allText.Contains("\"data\""))
             {

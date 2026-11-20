@@ -40,13 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.Append(s);
-            }
-
-            var text = sb.ToString();
+            var text = ConcatLines(lines);
             int startIndex = text.IndexOf("[{\"", StringComparison.Ordinal);
             if (startIndex < 0 || text.Contains("\"captions\"", StringComparison.Ordinal))
             {

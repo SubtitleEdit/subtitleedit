@@ -104,6 +104,7 @@ version=1.1
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            ResetLoadFrameRate();
             var idFound = false;
             var textLine = string.Empty;
             for (var index = 0; index < lines.Count; index++)
@@ -131,7 +132,7 @@ version=1.1
                     if (double.TryParse(fpsString, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fr) &&
                         fr > 20 && fr < 200)
                     {
-                        Configuration.Settings.General.CurrentFrameRate = fr;
+                        SetLoadFrameRate(fr);
                     }
                 }
             }
@@ -140,7 +141,7 @@ version=1.1
             for (var i = 0; i < matches.Count; i++)
             {
                 var match = matches[i];
-                var start = DecodeTimeCode(match.Value);
+                var start = DecodeTimeCode(match.Value, LoadFrameRate);
                 string text;
                 if (i >= matches.Count - 1)
                 {
@@ -181,9 +182,9 @@ version=1.1
             subtitle.Renumber();
         }
 
-        private static TimeCode DecodeTimeCode(string s)
+        private static TimeCode DecodeTimeCode(string s, double frameRate)
         {
-            return DecodeTimeCodeFrames(s.TrimStart('[').TrimEnd(']'), new[] { ':', '.' });
+            return DecodeTimeCodeFrames(s.TrimStart('[').TrimEnd(']'), new[] { ':', '.' }, frameRate);
         }
     }
 }

@@ -43,12 +43,17 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsInpaint))]
     [NotifyPropertyChangedFor(nameof(IsBlur))]
     [NotifyPropertyChangedFor(nameof(WritesVideo))]
+    [NotifyPropertyChangedFor(nameof(CanSelectProPainter), nameof(IsUsingProPainter), nameof(CanShowResult), nameof(UsesMiGan))]
     private int _methodIndex;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsUsingProPainter), nameof(CanShowResult), nameof(UsesMiGan))]
+    private bool _useProPainter;
     [ObservableProperty] private string _outputFileName = string.Empty;
     [ObservableProperty] private int _brightnessMinimum;
     [ObservableProperty] private bool _requireOutline;
     [ObservableProperty] private int _grow;
     [ObservableProperty] private int _extraWidth;
+    [ObservableProperty] private bool _expandDarkEdges;
     [ObservableProperty] private bool _temporal;
     [ObservableProperty] private int _crf;
     [ObservableProperty] private int _blurStrength;
@@ -131,6 +136,10 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     public BurnedInMethod Method => MethodIndex is >= 0 and <= (int)BurnedInMethod.Delogo ? (BurnedInMethod)MethodIndex : BurnedInMethod.Inpaint;
     public bool IsInpaint => Method == BurnedInMethod.Inpaint;
+    public bool CanSelectProPainter => IsInpaint && ProPainterPackage.IsSupported;
+    public bool IsUsingProPainter => CanSelectProPainter && UseProPainter;
+    public bool UsesMiGan => IsInpaint && !IsUsingProPainter;
+    public bool CanShowResult => !IsUsingProPainter;
     public bool IsBlur => Method == BurnedInMethod.Blur;
 
     /// <summary>All methods but the black boxes (an ASSA subtitle for the main window) write a video.</summary>
@@ -168,7 +177,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         RequireOutline = settings.RemoveBurnedInRequireOutline;
         Grow = settings.RemoveBurnedInGrow > 0 ? settings.RemoveBurnedInGrow : BurnedInMaskBuilder.DefaultGrow(videoHeight);
         ExtraWidth = settings.RemoveBurnedInExtraWidth is >= 0 and <= 100 ? settings.RemoveBurnedInExtraWidth : 5;
+        ExpandDarkEdges = settings.RemoveBurnedInExpandDarkEdges;
         Temporal = settings.RemoveBurnedInTemporal;
+        UseProPainter = settings.RemoveBurnedInUseProPainter;
         Crf = settings.RemoveBurnedInCrf is >= 0 and <= 51 ? settings.RemoveBurnedInCrf : 18;
 
         var number = 1;
@@ -537,7 +548,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     partial void OnRequireOutlineChanged(bool value) => InvalidatePreview();
     partial void OnGrowChanged(int value) => InvalidatePreview();
     partial void OnExtraWidthChanged(int value) => InvalidatePreview();
+    partial void OnExpandDarkEdgesChanged(bool value) => InvalidatePreview();
     partial void OnMethodIndexChanged(int value) => InvalidatePreview();
+    partial void OnUseProPainterChanged(bool value) => InvalidatePreview();
     partial void OnBlurStrengthChanged(int value) => InvalidatePreview();
 
     private void InvalidatePreview()
@@ -583,7 +596,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     // ── review: preview ──────────────────────────────────────────────
 
     private string MaskKey(RemoveBurnedInLineItem item) =>
-        $"{item.Line.StartTime.Ticks}|{item.Line.EndTime.Ticks}|{BrightnessMinimum}|{RequireOutline}|{Grow}|{ExtraWidth}|{_frameRate}";
+        $"{item.Line.StartTime.Ticks}|{item.Line.EndTime.Ticks}|{BrightnessMinimum}|{RequireOutline}|{Grow}|{ExtraWidth}|{!IsInpaint || ExpandDarkEdges}|{_frameRate}";
 
     private async Task RefreshPreviewAsync()
     {
@@ -598,7 +611,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         var token = _previewCancellation.Token;
         var seconds = PositionSeconds;
         var ffmpegSeconds = WaveFileExtractor.ToFfmpegSeconds(_videoFileName, seconds); // frame numbers count from ffmpeg's zero (#16966)
-        var showResult = ShowResult;
+        var showResult = ShowResult && CanShowResult;
         var options = MakeOptions(new List<(TimeSpan, TimeSpan)>());
         const double margin = 1.5; // same apply margin as the run (BurnedInSubtitleRemover.MakeMaskBuilder)
         var candidates = Lines
@@ -786,10 +799,12 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         RequireOutline = RequireOutline,
         Grow = Grow,
         ExtraWidth = ExtraWidth,
+        ExpandDarkEdges = !IsInpaint || ExpandDarkEdges,
         Temporal = Temporal,
         Method = Method,
         BlurStrength = BlurStrength,
         Crf = Crf,
+        ProPainterExecutable = IsUsingProPainter ? ProPainterPackage.Executable : string.Empty,
         CrispEmbedExecutable = CrispEmbedEngine.GetCliExecutable(),
         ModelFileName = GetModelFileName(),
     };
@@ -819,6 +834,52 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         }
 
         return true;
+    }
+
+    private async Task<bool> EnsureProPainterReady()
+    {
+        if (ProPainterPackage.IsInstalled)
+        {
+            return true;
+        }
+
+        var language = Se.Language.Video.RemoveBurnedIn;
+        var answer = await MessageBox.Show(Window!, language.Title, language.ProPainterDownloadQuestion,
+            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        if (answer != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+
+        using var cancellation = new CancellationTokenSource();
+        _cancellationTokenSource = cancellation;
+        IsRunning = true;
+        ProgressText = string.Format(Se.Language.General.DownloadingXDotDotDot, "ProPainter");
+        ProgressValue = 0;
+        try
+        {
+            var progress = new Progress<float>(value => ProgressValue = value * 100);
+            await Task.Run(() => ProPainterPackage.InstallAsync(progress, cancellation.Token), cancellation.Token);
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            return false;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "ProPainter installation failed");
+            await MessageBox.Show(Window!, language.Title, Se.Language.General.DownloadFailed + Environment.NewLine +
+                exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+        finally
+        {
+            IsRunning = false;
+            ProgressText = string.Empty;
+            ProgressValue = 0;
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
     }
 
     [RelayCommand]
@@ -874,7 +935,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
             }
         }
 
-        if (IsInpaint && !await EnsureEngineReady())
+        if (IsInpaint && !(IsUsingProPainter ? await EnsureProPainterReady() : await EnsureEngineReady()))
         {
             return;
         }
@@ -924,7 +985,10 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
         if (cancelled)
         {
-            TryDelete(options.OutputFileName);
+            if (string.IsNullOrEmpty(options.ProPainterExecutable))
+            {
+                TryDelete(options.OutputFileName);
+            }
             return;
         }
 
@@ -1053,7 +1117,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         var settings = Se.Settings.Video.VideoOcr;
         settings.RemoveBurnedInRequireOutline = RequireOutline;
         settings.RemoveBurnedInGrow = Grow == BurnedInMaskBuilder.DefaultGrow(_videoHeight) ? 0 : Grow;
+        settings.RemoveBurnedInExpandDarkEdges = ExpandDarkEdges;
         settings.RemoveBurnedInTemporal = Temporal;
+        settings.RemoveBurnedInUseProPainter = UseProPainter;
         settings.RemoveBurnedInExtraWidth = ExtraWidth;
         settings.RemoveBurnedInCrf = Crf;
         settings.RemoveBurnedInMethod = MethodIndex;

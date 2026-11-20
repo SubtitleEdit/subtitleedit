@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            ResetLoadFrameRate();
             int number = 0;
             var verticalAlign = "$VertAlign=Bottom";
             var horizontalAlign = "$HorzAlign=Center";
@@ -58,8 +59,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string[] toPart = line.Split(new[] { ',' }, 3);
                         var p = new Paragraph();
                         if (toPart.Length == 3 &&
-                            DvdStudioPro.GetTimeCode(p.StartTime, toPart[0]) &&
-                            DvdStudioPro.GetTimeCode(p.EndTime, toPart[1]))
+                            DvdStudioPro.GetTimeCode(p.StartTime, toPart[0], LoadFrameRate) &&
+                            DvdStudioPro.GetTimeCode(p.EndTime, toPart[1], LoadFrameRate))
                         {
                             number++;
                             p.Number = number;
@@ -89,11 +90,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (line.StartsWith("// Format: NTSC - 29.97", StringComparison.OrdinalIgnoreCase))
                 {
-                    Configuration.Settings.General.CurrentFrameRate = 29.97;
+                    SetLoadFrameRate(29.97);
                 }
                 else if (line.StartsWith("// Format: NTSC - 23.9", StringComparison.OrdinalIgnoreCase))
                 {
-                    Configuration.Settings.General.CurrentFrameRate = 23.976;
+                    SetLoadFrameRate(23.976);
                 }
                 else if (line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
                 {

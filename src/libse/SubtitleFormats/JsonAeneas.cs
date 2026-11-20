@@ -53,14 +53,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            foreach (var s in lines)
-            {
-                sb.Append(s);
-            }
-
-            var allText = sb.ToString();
-            if (!allText.Contains("\"lines\""))
+            var allText = ConcatLines(lines);
+            // Paragraphs only come from the "fragments" array
+            if (!allText.Contains("\"lines\"") || !allText.Contains("\"fragments\""))
             {
                 return;
             }

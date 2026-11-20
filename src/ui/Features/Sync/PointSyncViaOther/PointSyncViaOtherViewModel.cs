@@ -53,6 +53,17 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     public ObservableCollection<SyncPoint> SyncPoints { get; set; }
     [ObservableProperty] private SyncPoint? _selectedSyncPoint;
 
+    /// <summary>
+    /// Lines that are part of a sync point, in either grid - marked in the "#" column so it is
+    /// easy to see which lines are already synced (issue #17053).
+    /// </summary>
+    private readonly HashSet<SubtitleLineViewModel> _syncedLines = new(ReferenceEqualityComparer.Instance);
+
+    /// <summary>Raised when the set of synced lines changes, so visible cells re-mark themselves.</summary>
+    public event Action? SyncedLinesChanged;
+
+    public bool IsSynced(SubtitleLineViewModel line) => _syncedLines.Contains(line);
+
     public Window? Window { get; set; }
     public List<SubtitleLineViewModel> SyncedSubtitles { get; private set; }
     public bool OkPressed { get; private set; }
@@ -90,6 +101,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
         Othersubtitles = new ObservableCollection<SubtitleLineViewModel>();
         SyncPoints = new ObservableCollection<SyncPoint>();
+        SyncPoints.CollectionChanged += (_, _) => UpdateSyncedLines();
         WindowTitle = string.Empty;
         FileName = string.Empty;
         FileNameOther = string.Empty;
@@ -125,6 +137,25 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     private static void UpdateGaps(IList<SubtitleLineViewModel> lines)
     {
         SubtitleTextInfoHelper.UpdateGaps(lines);
+    }
+
+    private void UpdateSyncedLines()
+    {
+        _syncedLines.Clear();
+        foreach (var syncPoint in SyncPoints)
+        {
+            if (syncPoint.LeftIndex >= 0 && syncPoint.LeftIndex < Subtitles.Count)
+            {
+                _syncedLines.Add(Subtitles[syncPoint.LeftIndex]);
+            }
+
+            if (syncPoint.RightIndex >= 0 && syncPoint.RightIndex < Othersubtitles.Count)
+            {
+                _syncedLines.Add(Othersubtitles[syncPoint.RightIndex]);
+            }
+        }
+
+        SyncedLinesChanged?.Invoke();
     }
 
     private void Close()
@@ -338,7 +369,8 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             StartTime = TimeSpan.FromSeconds(result.SyncPosition),
         };
 
-        AddSyncPoint(new SyncPoint(_originalSubtitles[leftIndex], leftIndex, right, leftIndex));
+        // No other-subtitle line belongs to a video position, so no right index (-1).
+        AddSyncPoint(new SyncPoint(_originalSubtitles[leftIndex], leftIndex, right, -1));
     }
 
     /// <summary>

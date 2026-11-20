@@ -39,14 +39,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.Append(s);
-            }
-
-            string allText = sb.ToString().Trim();
-            if (!(allText.StartsWith('{') || allText.Contains("captionGroups", StringComparison.Ordinal)))
+            string allText = ConcatLinesTrimmed(lines);
+            // Only the "captionGroups" array is read - without it there is nothing to find, so skip
+            // the full json parse (this runs for every json file in format detection).
+            if (!allText.StartsWith('{') || !allText.Contains("\"captionGroups\"", StringComparison.Ordinal))
             {
                 return;
             }

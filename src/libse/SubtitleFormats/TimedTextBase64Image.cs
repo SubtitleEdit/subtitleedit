@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var p = new Paragraph { Text = text };
 
                 // Time codes
-                TimedText10.ExtractTimeCodes(node, subtitle, out var begin, out var end);
+                TimedText10.ExtractTimeCodes(node, subtitle, LoadFrameRate, out var begin, out var end);
                 p.StartTime.TotalMilliseconds = begin.TotalMilliseconds;
                 p.EndTime.TotalSeconds = end.TotalSeconds;
 
