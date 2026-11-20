@@ -161,6 +161,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     [ObservableProperty] private bool _normalCasing;
     [ObservableProperty] private bool _normalCasingFixNames;
     [ObservableProperty] private bool _normalCasingOnlyUpper;
+    [ObservableProperty] private string _changeCasingOnlyActorsOrStyles;
     [ObservableProperty] private bool _fixNamesOnly;
     [ObservableProperty] private bool _allUppercase;
     [ObservableProperty] private bool _allLowercase;
@@ -456,6 +457,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         OutputEncodingLabel = string.Empty;
         StatusText = string.Empty;
         DeleteActorsOrStyles = string.Empty;
+        ChangeCasingOnlyActorsOrStyles = string.Empty;
         OffsetTimeCodesForward = true;
         FunctionContainer = new ScrollViewer();
         FromFrameRates = new ObservableCollection<double>
@@ -870,6 +872,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         Se.Settings.Tools.BatchConvert.NormalCasingFixNames = NormalCasingFixNames;
         Se.Settings.Tools.BatchConvert.NormalCasingOnlyUpper = NormalCasingOnlyUpper;
+        Se.Settings.Tools.BatchConvert.ChangeCasingOnlyActorsOrStyles = ChangeCasingOnlyActorsOrStyles ?? string.Empty;
 
         // Offset time codes
         Se.Settings.Tools.BatchConvert.OffsetTimeCodesMilliseconds = OffsetTimeCodesTime.TotalMilliseconds;
@@ -1143,6 +1146,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
 
         NormalCasingFixNames = Se.Settings.Tools.BatchConvert.NormalCasingFixNames;
         NormalCasingOnlyUpper = Se.Settings.Tools.BatchConvert.NormalCasingOnlyUpper;
+        ChangeCasingOnlyActorsOrStyles = Se.Settings.Tools.BatchConvert.ChangeCasingOnlyActorsOrStyles ?? string.Empty;
 
         UpdateOutputProperties();
 
@@ -3801,6 +3805,7 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
                 FixNamesOnly = FixNamesOnly,
                 AllLowercase = AllLowercase,
                 AllUppercase = AllUppercase,
+                OnlyActorsOrStyles = ChangeCasingOnlyActorsOrStyles ?? string.Empty,
             },
 
             ChangeSpeed = new BatchConvertConfig.ChangeSpeedSettings
