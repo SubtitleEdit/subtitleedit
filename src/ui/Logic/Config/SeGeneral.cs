@@ -260,6 +260,12 @@ public class SeGeneral
     /// </summary>
     public bool ShowColumnForced { get; set; }
 
+    /// <summary>
+    /// The original image of each line after OCR (#17066), like the OCR window's image column.
+    /// Only shown while the image source of the last OCR session is still kept; on by default.
+    /// </summary>
+    public bool ShowColumnOcrImage { get; set; }
+
     // Subtitle grid column widths (pixels) keyed by column key (DataGridColumn.Tag),
     // snapshotted on exit and restored on startup. The stretchy Text/OriginalText
     // columns are intentionally not stored so they keep filling the window (#11415).
@@ -410,6 +416,7 @@ public class SeGeneral
         ShowColumnGap = false;
         ShowColumnDuration = true;
         ShowColumnTeletext = true;
+        ShowColumnOcrImage = true;
         TeletextAlignmentPreview = true;
     }
 

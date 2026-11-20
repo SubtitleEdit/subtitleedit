@@ -200,6 +200,7 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.Features.Shared.ShowImage;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -367,6 +368,8 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showColumnPixelWidth;
     [ObservableProperty] private bool _showColumnLayer;
     [ObservableProperty] private bool _showColumnForced;
+    [ObservableProperty] private bool _showColumnOcrImage;
+    [ObservableProperty] private bool _hasOcrImageSource; // images from the last OCR session are kept (#17066)
     [ObservableProperty] private bool _showUpDownStartTime;
     [ObservableProperty] private bool _showUpDownEndTime;
     [ObservableProperty] private bool _showUpDownDuration;
@@ -459,6 +462,8 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _areAssaContentMenuItemsVisible;
     [ObservableProperty] private bool _areWebVttContentMenuItemsVisible;
     [ObservableProperty] private bool _isWebVttBrowserPreviewVisible;
+    [ObservableProperty] private bool _isShowOcrImageMenuItemVisible;
+    [ObservableProperty] private bool _isShowOcrImageColumnMenuItemVisible;
     [ObservableProperty] private bool _selectCurrentSubtitleWhilePlaying;
     [ObservableProperty] private bool _waveformCenter;
     [ObservableProperty] private bool _isRightToLeftEnabled;
@@ -1067,6 +1072,8 @@ public partial class MainViewModel :
         _undoRedoManager = undoRedoManager;
         _bluRayHelper = bluRayHelper;
         _ocrImageSourceHolder = ocrImageSourceHolder;
+        _ocrImageSourceHolder.Changed += (_, _) =>
+            Dispatcher.UIThread.Post(() => HasOcrImageSource = _ocrImageSourceHolder.Source is { Count: > 0 });
         _mpvReloader = mpvReloader;
         _vlcReloader = vlcReloader;
         _findService = findService;
@@ -1202,6 +1209,7 @@ public partial class MainViewModel :
         ShowColumnPixelWidth = Se.Settings.General.ShowColumnPixelWidth;
         ShowColumnLayer = Se.Settings.General.ShowColumnLayer;
         ShowColumnForced = Se.Settings.General.ShowColumnForced;
+        ShowColumnOcrImage = Se.Settings.General.ShowColumnOcrImage;
         ShowUpDownStartTime = Se.Settings.Appearance.ShowUpDownStartTime;
         ShowUpDownEndTime = Se.Settings.Appearance.ShowUpDownEndTime;
         ShowUpDownDuration = Se.Settings.Appearance.ShowUpDownDuration;
@@ -3344,8 +3352,7 @@ public partial class MainViewModel :
     // and break the spell-check auto-attach for image-based formats (#11719).
     private void ClearOcrImageSource()
     {
-        _ocrImageSourceHolder.Source = null;
-        _ocrImageSourceHolder.FileName = null;
+        _ocrImageSourceHolder.Clear();
     }
 
     private void ResetSubtitle(SubtitleFormat? format = null)
@@ -16065,6 +16072,7 @@ public partial class MainViewModel :
         ShowColumnPixelWidth = general.ShowColumnPixelWidth;
         ShowColumnLayer = general.ShowColumnLayer && IsFormatAssa; // the layer column is ASSA only
         ShowColumnForced = general.ShowColumnForced;
+        ShowColumnOcrImage = general.ShowColumnOcrImage;
         SubtitleGridColumnManager?.ApplyOrder(general.SubtitleGridColumnOrder);
     }
 
@@ -16878,6 +16886,75 @@ public partial class MainViewModel :
         AutoFitColumns();
     }
 
+    /// <summary>
+    /// Shows the original image of the selected line after OCR (#17066), like Ctrl+P in the OCR
+    /// window: left/right step through the lines and move the grid selection along.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowOcrImage()
+    {
+        var line = SelectedSubtitle;
+        if (Window == null || line == null || !HasOcrImageSource)
+        {
+            return;
+        }
+
+        var item = MakeOcrImageItem(line);
+        if (item == null)
+        {
+            ShowStatus(Se.Language.Main.NoOcrImageForLine);
+            return;
+        }
+
+        await ShowDialogAsync<ShowImageWindow, ShowImageViewModel>(vm =>
+        {
+            vm.Initialize(item.Title, item.Bitmap, item.Text);
+            vm.Navigate = direction =>
+            {
+                var index = Subtitles.IndexOf(line) + direction;
+                while (index >= 0 && index < Subtitles.Count)
+                {
+                    var next = Subtitles[index];
+                    var nextItem = next.IsHidden ? null : MakeOcrImageItem(next);
+                    if (nextItem != null)
+                    {
+                        line = next;
+                        SelectAndScrollToRow(index, next, restoreGridFocus: false);
+                        return nextItem;
+                    }
+
+                    index += direction;
+                }
+
+                return null;
+            };
+        });
+    }
+
+    private ShowImageItem? MakeOcrImageItem(SubtitleLineViewModel line)
+    {
+        var index = _ocrImageSourceHolder.GetSourceIndex(line.Id, line.StartTime, line.EndTime);
+        var bitmap = OcrSourceImage.GetCroppedBitmap(_ocrImageSourceHolder.Source, index);
+        return bitmap == null
+            ? null
+            : new ShowImageItem($"{Se.Language.Ocr.OcrImage} - #{line.Number}", bitmap, line.Text);
+    }
+
+    /// <summary>The OCR image column's cell image for a line (#17066), or null when it has none.</summary>
+    public Avalonia.Media.Imaging.Bitmap? GetOcrImage(SubtitleLineViewModel line)
+    {
+        var index = _ocrImageSourceHolder.GetSourceIndex(line.Id, line.StartTime, line.EndTime);
+        return OcrSourceImage.GetCroppedBitmap(_ocrImageSourceHolder.Source, index);
+    }
+
+    [RelayCommand]
+    private void ToggleShowColumnOcrImage()
+    {
+        Se.Settings.General.ShowColumnOcrImage = !Se.Settings.General.ShowColumnOcrImage;
+        ShowColumnOcrImage = Se.Settings.General.ShowColumnOcrImage;
+        AutoFitColumns();
+    }
+
     [RelayCommand]
     private void ToggleShowColumnLayer()
     {
@@ -16919,6 +16996,14 @@ public partial class MainViewModel :
             new(Se.Language.General.PixelWidth, true, ShowColumnPixelWidth, InitListViewAndEditBox.SubtitleGridColumnKeys.PixelWidth) { DefaultIsVisible = defaults.ShowColumnPixelWidth },
             new(Se.Language.General.Layer, true, ShowColumnLayer, InitListViewAndEditBox.SubtitleGridColumnKeys.Layer) { DefaultIsVisible = defaults.ShowColumnLayer },
         };
+
+        // The OCR image column only exists while images from the last OCR session are kept (#17066).
+        if (HasOcrImageSource)
+        {
+            var textIndex = entries.FindIndex(e => e.Keys[0] == InitListViewAndEditBox.SubtitleGridColumnKeys.Text);
+            entries.Insert(Math.Max(0, textIndex),
+                new(Se.Language.Ocr.OcrImage, true, ShowColumnOcrImage, InitListViewAndEditBox.SubtitleGridColumnKeys.OcrImage) { DefaultIsVisible = defaults.ShowColumnOcrImage });
+        }
 
         var result = await _windowService.ShowDialogAsync<GridColumnsWindow, GridColumnsViewModel>(Window, vm =>
         {
@@ -16978,6 +17063,10 @@ public partial class MainViewModel :
             case InitListViewAndEditBox.SubtitleGridColumnKeys.Forced:
                 Se.Settings.General.ShowColumnForced = isVisible;
                 ShowColumnForced = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.OcrImage:
+                Se.Settings.General.ShowColumnOcrImage = isVisible;
+                ShowColumnOcrImage = isVisible;
                 break;
             case InitListViewAndEditBox.SubtitleGridColumnKeys.Style:
                 Se.Settings.General.ShowColumnStyle = isVisible;
@@ -25718,6 +25807,7 @@ public partial class MainViewModel :
                     break;
                 case InitListViewAndEditBox.SubtitleGridColumnKeys.Text:
                 case InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText:
+                case InitListViewAndEditBox.SubtitleGridColumnKeys.OcrImage:
                     column.Width = new GridLength(1, GridUnitType.Star);
                     break;
             }
@@ -26694,8 +26784,7 @@ public partial class MainViewModel :
         // Drop any image source kept from a previous OCR session; the image-import branches
         // below re-populate it via the OCR window, while plain text subtitles leave it cleared
         // so spell check does not show unrelated images (#11719).
-        _ocrImageSourceHolder.Source = null;
-        _ocrImageSourceHolder.FileName = null;
+        _ocrImageSourceHolder.Clear();
 
         // Lower case: every check below compares with lower-case extensions, and DVD/Blu-ray rips
         // are often upper case (MOVIE.SUP, 00001.M2TS) - those fell through to the text formats.
@@ -33417,6 +33506,8 @@ public partial class MainViewModel :
         ShowAutoTranslateSelectedLines = selectedCount > 0;
         HasMultipleLinesSelected = selectedCount > 1;
         ShowColumnLayerFlyoutMenuItem = IsFormatAssa;
+        IsShowOcrImageMenuItemVisible = HasOcrImageSource && !IsSubtitleGridFlyoutHeaderVisible && selectedCount == 1;
+        IsShowOcrImageColumnMenuItemVisible = HasOcrImageSource && IsSubtitleGridFlyoutHeaderVisible;
 
         if (IsSubtitleGridFlyoutHeaderVisible)
         {

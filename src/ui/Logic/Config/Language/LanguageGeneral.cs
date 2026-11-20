@@ -617,6 +617,7 @@ public class LanguageGeneral
     public string ShowTimeCodes { get; set; }
     public string ShowWpmColumn { get; set; }
     public string ShowPixelWidthColumn { get; set; }
+    public string ShowOcrImageColumn { get; set; }
     public string Shrink { get; set; }
     public string SingleMode { get; set; }
     public string TextTotalLength { get; set; }
@@ -1667,6 +1668,7 @@ public class LanguageGeneral
         ShowTimeCodes = "Show time codes";
         ShowWpmColumn = "Show \"Words/min\" column";
         ShowPixelWidthColumn = "Show \"Pixel width\" column";
+        ShowOcrImageColumn = "Show \"OCR image\" column";
         Shrink = "Shrink";
         SingleMode = "Single mode";
         TextTotalLength = "Text - total length";

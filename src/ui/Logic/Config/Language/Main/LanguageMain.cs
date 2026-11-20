@@ -156,6 +156,8 @@ public class LanguageMain
     public string OpenSubtitleFileX { get; set; }
     public string FfmpegDownloadedAndInstalledToX { get; set; }
     public string NothingToSave { get; set; }
+    public string NoOcrImageForLine { get; set; }
+    public string ShowOcrImage { get; set; }
     public string FormatLimitWarningTitle { get; set; }
     public string FormatLimitWarningXLinesExceedLimitsOfY { get; set; }
     public string FormatLimitWarningMaxXCharactersPerLine { get; set; }
@@ -333,6 +335,8 @@ public class LanguageMain
         OpenSubtitleFileX = "Open subtitle file \"{0}\"?";
         FfmpegDownloadedAndInstalledToX = "ffmpeg downloaded and installed to {0}";
         NothingToSave = "Nothing to save";
+        NoOcrImageForLine = "No OCR image for this line";
+        ShowOcrImage = "Show OCR image";
         FormatLimitWarningTitle = "Format limits exceeded";
         FormatLimitWarningXLinesExceedLimitsOfY = "{0} subtitle(s) exceed the limits of the \"{1}\" format:";
         FormatLimitWarningMaxXCharactersPerLine = "Max {0} characters per line";
