@@ -133,7 +133,7 @@ Good to know:
 - **Adjust all times, remember line selection choice**
 - **Merge lines: keep end time (allow overlap with next subtitle)**, and the variant that limits it to ASSA files
 - **Merge lines: auto-break merged text** - On by default; turn it off to keep the merged lines' own line breaks when merging from menus, the waveform or *Merge selected lines* (the explicit "unbreak" and "keep breaks" shortcuts are not affected)
-- **Auto-break** — Break early for end of sentence, comma or dash; break by pixel width; prefer bottom heavy and its **bottom heavy percentage**; **use do-not-break-after list** (with an editor for the list); **split odd lines action**
+- **Auto-break** — Break early for end of sentence, comma or dash, also before a speaker tag; break by pixel width; prefer bottom heavy and its **bottom heavy percentage**; **use do-not-break-after list** (with an editor for the list); **split odd lines action**
 - **Spell check engine**, and *treat words ending in 'in'' as 'ing'* (English only), **Spell check: remember "Use always" list**
 - **OCR: use word split list**, **OCR: try to guess unknown words**
 - **Speech to text: prompt for language/engine first time only**
