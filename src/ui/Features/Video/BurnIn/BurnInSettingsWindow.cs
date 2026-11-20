@@ -68,6 +68,33 @@ public class BurnInSettingsWindow : Window
             }
         };  
 
+        var textBoxSuffix = new TextBox
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Width = 200,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.Suffix)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
+        };
+        textBoxSuffix.Classes.Add("text");
+        Avalonia.Automation.AutomationProperties.SetName(textBoxSuffix, Se.Language.Video.OutputFileNameSuffix);
+
+        var labelSuffixExample = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.7,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.SuffixExample)) { Mode = BindingMode.OneWay },
+        };
+
+        var rowsFileName = new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                textBoxSuffix,
+                labelSuffixExample,
+            },
+        };
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -93,7 +120,16 @@ public class BurnInSettingsWindow : Window
             },
         };
 
-        grid.Add(EditorChrome.MakePanel(EditorChrome.MakeEditorSection(Se.Language.General.OutputFolder, rows, first: true)), 0);
+        var sections = new StackPanel
+        {
+            Children =
+            {
+                EditorChrome.MakeEditorSection(Se.Language.General.OutputFolder, rows, first: true),
+                EditorChrome.MakeEditorSection(Se.Language.Video.OutputFileNameSuffix, rowsFileName),
+            },
+        };
+
+        grid.Add(EditorChrome.MakePanel(sections), 0);
         grid.Add(panelButtons, 1);
 
         Content = grid;

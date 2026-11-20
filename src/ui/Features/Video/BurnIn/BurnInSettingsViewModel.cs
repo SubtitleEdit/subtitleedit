@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -15,6 +16,8 @@ public partial class BurnInSettingsViewModel : ObservableObject
     [ObservableProperty] private bool _useSourceFolder;
     [ObservableProperty] private bool _useOutputFolder;
     [ObservableProperty] private string _outputFolder;
+    [ObservableProperty] private string _suffix;
+    [ObservableProperty] private string _suffixExample;
     
     public Window? Window { get; set; }
 
@@ -27,6 +30,8 @@ public partial class BurnInSettingsViewModel : ObservableObject
         _folderHelper = folderHelper;
 
         OutputFolder = string.Empty;
+        Suffix = string.Empty;
+        SuffixExample = string.Empty;
         LoadSettings();
     }
 
@@ -35,12 +40,20 @@ public partial class BurnInSettingsViewModel : ObservableObject
         UseSourceFolder = !Se.Settings.Video.BurnIn.UseOutputFolder; 
         UseOutputFolder = Se.Settings.Video.BurnIn.UseOutputFolder;
         OutputFolder = Se.Settings.Video.BurnIn.OutputFolder;
+        Suffix = Se.Settings.Video.BurnIn.BurnInSuffix ?? string.Empty;
+    }
+
+    partial void OnSuffixChanged(string value)
+    {
+        var ext = string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputExtension) ? ".mkv" : Se.Settings.Video.BurnIn.OutputExtension;
+        SuffixExample = string.Format(Se.Language.Video.OutputFileNameExampleX, "video" + value + ext);
     }
 
     private void SaveSettings()
     {
         Se.Settings.Video.BurnIn.UseOutputFolder = UseOutputFolder;
         Se.Settings.Video.BurnIn.OutputFolder = OutputFolder;
+        Se.Settings.Video.BurnIn.BurnInSuffix = Suffix ?? string.Empty;
         Se.SaveSettings();
     }
 
@@ -51,6 +64,13 @@ public partial class BurnInSettingsViewModel : ObservableObject
         {
             await MessageBox.Show(Window!, Se.Language.General.Error,
                 Se.Language.General.PleaseSelectOutputFolder, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(Suffix) && Suffix.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+        {
+            await MessageBox.Show(Window!, Se.Language.General.Error,
+                Se.Language.Video.OutputFileNameSuffixInvalid, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
