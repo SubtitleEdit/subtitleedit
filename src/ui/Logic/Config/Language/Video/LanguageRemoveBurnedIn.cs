@@ -88,7 +88,7 @@ public class LanguageRemoveBurnedIn
         ExtraWidthHint = "Widen the mask this much on the left and right of each line - for outlines or shadows at the first and last letter";
         UseProPainter = "Use ProPainter for removal";
         UseProPainterHint = "Use neighboring frames to repair the text area. Preview shows the mask. The repair runs during export.";
-        ProPainterDownloadQuestion = "Download ProPainter (about 350 MB) from Subtitle Edit Support Files? ProPainter is licensed for non-commercial use and runs locally after installation.";
+        ProPainterDownloadQuestion = "Download ProPainter (about 180 MB) from Subtitle Edit Support Files? ProPainter is licensed for non-commercial use and runs locally after installation.";
         TemporalConsistency = "Temporal consistency (less flicker)";
         TemporalConsistencyHint = "Reuse the real background from nearby frames and the previous fill while the picture is still";
         OutputFile = "Output file";
