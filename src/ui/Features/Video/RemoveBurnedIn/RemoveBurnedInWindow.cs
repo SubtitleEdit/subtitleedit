@@ -199,6 +199,7 @@ public class RemoveBurnedInWindow : Window
 
         var resultToggle = EditorChrome.MakeSwitchRow(nameof(vm.ShowResult), l.ShowResult);
         SetHint(resultToggle, l.ShowResultHint);
+        resultToggle.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.CanShowResult)));
         return EditorChrome.MakeDockedFillSection(l.Preview, content, resultToggle, first: true);
     }
 
@@ -365,11 +366,14 @@ public class RemoveBurnedInWindow : Window
         var expandDarkEdges = EditorChrome.MakeSwitchRow(nameof(vm.ExpandDarkEdges), l.ExpandDarkEdges);
         SetHint(expandDarkEdges, l.ExpandDarkEdgesHint);
         expandDarkEdges.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInpaint)));
+        var proPainter = EditorChrome.MakeSwitchRow(nameof(vm.UseProPainter), l.UseProPainter);
+        SetHint(proPainter, l.UseProPainterHint);
+        proPainter.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.CanSelectProPainter)));
         var temporal = EditorChrome.MakeSwitchRow(nameof(vm.Temporal), l.TemporalConsistency);
         SetHint(temporal, l.TemporalConsistencyHint);
 
         // Temporal consistency only applies to inpainting.
-        temporal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInpaint)));
+        temporal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.UsesMiGan)));
 
         var blurStrength = EditorChrome.MakeField(nameof(vm.BlurStrength), 1, 100, 90);
         SetHint(blurStrength, l.BlurStrengthHint);
@@ -384,6 +388,7 @@ public class RemoveBurnedInWindow : Window
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.ExtraWidth, extraWidth, LabelWidth));
         maskRows.Children.Add(outline);
         maskRows.Children.Add(expandDarkEdges);
+        maskRows.Children.Add(proPainter);
         maskRows.Children.Add(temporal);
 
         var outputBox = EditorChrome.MakeTextField(nameof(vm.OutputFileName), l.OutputFile);
@@ -406,6 +411,7 @@ public class RemoveBurnedInWindow : Window
         return new ScrollViewer
         {
             MaxHeight = 430,
+            [!InputElement.IsEnabledProperty] = new Binding("!" + nameof(vm.IsRunning)),
             Content = new StackPanel
             {
                 Children =
