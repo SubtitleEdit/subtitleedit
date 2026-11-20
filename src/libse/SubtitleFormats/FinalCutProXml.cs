@@ -493,7 +493,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var frameRate = Configuration.Settings.General.CurrentFrameRate;
+            ResetLoadFrameRate();
+            var frameRate = LoadFrameRate;
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -518,7 +519,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     catch
                     {
-                        frameRate = Configuration.Settings.General.CurrentFrameRate;
+                        frameRate = LoadFrameRate;
                     }
                 }
 
@@ -691,7 +692,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _errorCount = 1;
                 return;
             }
-            Configuration.Settings.General.CurrentFrameRate = frameRate;
+            SetLoadFrameRate(frameRate);
         }
     }
 }

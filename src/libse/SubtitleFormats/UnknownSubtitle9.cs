@@ -35,13 +35,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             //<a class="caption" starttime="0" duration="16000">[♪techno music♪]</a>
 
-            var temp = new StringBuilder();
-            foreach (string l in lines)
-            {
-                temp.Append(l);
-            }
-
-            string all = temp.ToString();
+            string all = ConcatLines(lines);
             if (!all.Contains("class=\"caption\""))
             {
                 return;

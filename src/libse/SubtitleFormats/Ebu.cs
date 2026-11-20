@@ -1398,6 +1398,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
         {
+            ResetLoadFrameRate();
             subtitle.Paragraphs.Clear();
             var header = ReadHeader(buffer);
             subtitle.Header = header.ToString();
@@ -1411,7 +1412,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // Resolve this import once, independently of concurrent video-frame-rate updates.
             var overrideReadFrameRate = OverrideReadFrameRate;
             var readFrameRate = overrideReadFrameRate > 20 ? overrideReadFrameRate : header.FrameRate;
-            Configuration.Settings.General.CurrentFrameRate = readFrameRate;
+            SetLoadFrameRate(readFrameRate);
 
             foreach (var tti in ReadTextAndTiming(buffer, header, readFrameRate))
             {

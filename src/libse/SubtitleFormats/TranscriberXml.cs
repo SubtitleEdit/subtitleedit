@@ -73,7 +73,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            if (!JoinLines(lines).Contains("<Trans"))
+            // Only <Turn> elements are read ("<Trans" alone also matches e.g. <TranslatedBy>), so
+            // without one skip the full XML parse.
+            if (!JoinLines(lines).Contains("<Trans") || !AnyLineContains(lines, "<Turn"))
             {
                 return;
             }

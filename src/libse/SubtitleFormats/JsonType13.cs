@@ -66,13 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
 
-            var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.AppendLine(s);
-            }
-
-            string allText = sb.ToString();
+            string allText = JoinLines(lines);
             var indxOfSpeakers = allText.IndexOf("speakers", StringComparison.Ordinal);
             if (indxOfSpeakers < 0)
             {

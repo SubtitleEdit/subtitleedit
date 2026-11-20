@@ -44,12 +44,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetSamiFromAvDicPlayerText(List<string> lines)
         {
-            var sb = new StringBuilder();
-            foreach (var line in lines)
-            {
-                sb.AppendLine(line);
-            }
-            var text = sb.ToString();
+            var text = JoinLines(lines);
             if (text.Contains("<AVDicPlayer"))
             {
                 text = RegexAvDicPlayer.Replace(text, "<SYNC");
