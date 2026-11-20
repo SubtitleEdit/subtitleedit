@@ -26,6 +26,7 @@ public class LanguageSync
     public string SetSyncPointViaVideo { get; set; }
     public string SyncPointTimeCode { get; set; }
     public string SyncPoints { get; set; }
+    public string SyncedLine { get; set; }
     public string PointSync { get; set; }
     public string PointSyncViaOther { get; set; }
     public string SyncPointCandidateAfterInfo { get; set; }
@@ -62,6 +63,7 @@ public class LanguageSync
         SetSyncPointViaVideo = "Set sync point via video...";
         SyncPointTimeCode = "Sync point time code";
         SyncPoints = "Sync points";
+        SyncedLine = "Synced line";
         PointSync = "Point sync";
         PointSyncViaOther = "Point sync via other subtitle";
         SyncPointCandidateAfterInfo = "Lines followed by {0}+ seconds of silence are highlighted - they often make reliable sync points";
