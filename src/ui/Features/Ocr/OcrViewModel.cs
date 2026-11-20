@@ -2373,25 +2373,35 @@ public partial class OcrViewModel : ObservableObject
 
         OkPressed = true;
 
-        // Remember the image source so spell check can show the original images (#11719)
-        _ocrImageSourceHolder.Source = _ocrSubtitle;
-        _ocrImageSourceHolder.FileName = _sourceFileName;
-
         OcredSubtitle.Clear();
+        var lineSourceIndices = new Dictionary<Guid, int>();
         var number = 1;
         for (var i = 0; i < OcrSubtitleItems.Count; i++)
         {
             var item = OcrSubtitleItems[i];
             foreach (var groupText in OcrAssaAlignment.SplitTextByAlignmentGroups(item.Text))
             {
-                OcredSubtitle.Add(new SubtitleLineViewModel
+                var line = new SubtitleLineViewModel
                 {
                     Number = number++,
                     Text = groupText,
                     StartTime = item.StartTime,
                     EndTime = item.EndTime,
-                });
+                };
+                OcredSubtitle.Add(line);
+                lineSourceIndices[line.Id] = item.SourceIndex;
             }
+        }
+
+        // Remember the image source and which image each line came from, so spell check and the
+        // main window's OCR image column can show the original images (#11719, #17066).
+        if (_ocrSubtitle != null)
+        {
+            _ocrImageSourceHolder.Set(_ocrSubtitle, _sourceFileName, lineSourceIndices);
+        }
+        else
+        {
+            _ocrImageSourceHolder.Clear();
         }
 
         Close();

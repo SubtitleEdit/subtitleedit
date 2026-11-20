@@ -262,6 +262,7 @@ public class LanguageSettingsShortcuts
     public string ImportImageSubtitleForEdit { get; set; }
     public string ShowPointSyncViaOther { get; set; }
     public string ShowPointSync { get; set; }
+    public string ShowOcrImage { get; set; }
     public string ShowMediaInformation { get; set; }
     public string ChooseSubtitleFormat { get; set; }
     public string TrimWhitespaceSelectedLines { get; set; }
@@ -624,6 +625,7 @@ public class LanguageSettingsShortcuts
         ImportImageSubtitleForEdit = "Import image-based subtitle for edit";
         ShowPointSyncViaOther = "Show point sync via other subtitle";
         ShowPointSync = "Show point sync";
+        ShowOcrImage = "Show OCR image";
         ShowMediaInformation = "Show media information";
         ChooseSubtitleFormat = "Choose subtitle format";
         TrimWhitespaceSelectedLines = "Trim whitespace (selected lines)";
