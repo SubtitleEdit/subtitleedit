@@ -234,6 +234,19 @@ public static class LlamaCppServerManager
         // Trained on a fixed prompt (PromptTemplate below, with language NAMES - the generic prompt
         // makes it answer in Chinese) and Tencent-recommended sampling. Embedded chat template works
         // as-is, so no ChatTemplate/NoJinja overrides.
+        // Hy-MT2 30B-A3B - the same family as a mixture-of-experts model (30B total, ~3B active per
+        // token), as mradermacher's imatrix IQ3_XXS: Tencent's own GGUFs start at Q4_K_M (18.2 GB).
+        // Tested 2026-11-20 (seconv, 24 dialog lines EN->DE/FR/JA, M4 24 GB): the only model of the
+        // list that renders idioms by meaning instead of word by word ("That ship has sailed" ->
+        // "Le train est déjà parti" / "もう手遅れだよ", "not holding my breath" right in all three),
+        // clearly ahead of the 7B ("Avant-propos", "Jure-moi", a stray "<br") and faster than
+        // Index-Translate 9B (13-31 s vs ~40 s per language). Its slips were small: a dropped
+        // apostrophe/word in French ("qu un", "jusqu'lundi"), one Japanese line given twice, and a
+        // space after dialogue dashes. TranslateGemma 27B at the same size (IQ3_XXS, 10.7 GB) was
+        // tested alongside and is not offered: stray "< />" fragments on many lines, and 15-25x slower.
+        new LlamaCppModel("Hy-MT2 30B-A3B (IQ3_XXS) - 33 languages, no Nordic", "Hy-MT2-30B-A3B.i1-IQ3_XXS.gguf", "11.6 GB",
+            "https://huggingface.co/mradermacher/Hy-MT2-30B-A3B-i1-GGUF/resolve/main/Hy-MT2-30B-A3B.i1-IQ3_XXS.gguf",
+            PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
         new LlamaCppModel("Hy-MT2 7B (Q4_K_M) - 33 languages, no Nordic", "Hy-MT2-7B-Q4_K_M.gguf", "4.6 GB",
             "https://huggingface.co/tencent/Hy-MT2-7B-GGUF/resolve/main/Hy-MT2-7B-Q4_K_M.gguf",
             PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
