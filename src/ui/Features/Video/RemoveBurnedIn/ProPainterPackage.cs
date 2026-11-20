@@ -15,11 +15,12 @@ namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 
 internal static class ProPainterPackage
 {
-    private const string ArchiveBase = "https://github.com/SubtitleEdit/support-files/releases/download/propainter-native-0.3.0/";
-    private const string MacSha256 = "611e3cf100f71b40184215cdffa046941f05d3b14944c9dea066945463442a94";
+    private const string ArchiveBase = "https://github.com/SubtitleEdit/support-files/releases/download/";
+    private const string MacSha256 = "5a129b65700a0f085d6d959a6aa0b1884e334e62e124c74e0041bcbf0a9514c8";
     private const string WindowsSha256 = "a0d98f69636a1a71791b6c51a77dbb9c2d539a0801ffd37d9946b519f3654748";
     private static readonly HttpClient Client = new();
-    private static string InstallFolder => Path.Combine(Se.DataFolder, "ProPainter", "0.3.0-native");
+    private static string PackageVersion => IsWindowsX64 ? "0.3.0" : "0.3.1";
+    private static string InstallFolder => Path.Combine(Se.DataFolder, "ProPainter", PackageVersion + "-native");
     private static bool IsWindowsX64 => OperatingSystem.IsWindows() && RuntimeInformation.OSArchitecture == Architecture.X64;
     private static string ArchiveRoot => IsWindowsX64 ? "propainter-native-windows-x64" : "propainter-native-macos-arm64";
     private static string ExecutableName => IsWindowsX64 ? "propainter-native.exe" : "propainter-native";
@@ -56,7 +57,7 @@ internal static class ProPainterPackage
         {
             var archivePath = Path.Combine(staging, "propainter.tar.gz");
             var target = IsWindowsX64 ? "windows-x64" : "macos-arm64";
-            await DownloadHelper.DownloadFileAsync(Client, $"{ArchiveBase}propainter-native-0.3.0-{target}.tar.gz",
+            await DownloadHelper.DownloadFileAsync(Client, $"{ArchiveBase}propainter-native-{PackageVersion}/propainter-native-{PackageVersion}-{target}.tar.gz",
                 archivePath, progress, cancellationToken);
 
             await using var archive = File.OpenRead(archivePath);
