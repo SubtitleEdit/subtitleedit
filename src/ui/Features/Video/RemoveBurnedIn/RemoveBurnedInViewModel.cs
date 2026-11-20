@@ -805,6 +805,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         BlurStrength = BlurStrength,
         Crf = Crf,
         ProPainterExecutable = IsUsingProPainter ? ProPainterPackage.Executable : string.Empty,
+        ProPainterScript = IsUsingProPainter ? ProPainterPackage.Script : string.Empty,
         CrispEmbedExecutable = CrispEmbedEngine.GetCliExecutable(),
         ModelFileName = GetModelFileName(),
     };
@@ -844,7 +845,8 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         }
 
         var language = Se.Language.Video.RemoveBurnedIn;
-        var answer = await MessageBox.Show(Window!, language.Title, language.ProPainterDownloadQuestion,
+        var question = string.Format(language.ProPainterDownloadQuestion, ProPainterPackage.DownloadSizeMegabytes);
+        var answer = await MessageBox.Show(Window!, language.Title, question,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         if (answer != MessageBoxResult.Yes)
         {

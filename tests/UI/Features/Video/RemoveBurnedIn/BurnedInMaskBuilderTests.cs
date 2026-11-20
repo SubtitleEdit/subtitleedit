@@ -62,6 +62,15 @@ public class BurnedInMaskBuilderTests
     }
 
     [Fact]
+    public void ProPainterStreamArgumentsSupportBothLaunchers()
+    {
+        Assert.Equal("--stream 960x400", BurnedInSubtitleRemover.GetProPainterArguments(string.Empty, 960, 400));
+        const string script = @"C:\Subtitle Edit\ProPainter\stream.py";
+        Assert.Equal($"-I -B -u \"{script}\" --stream 960x400",
+            BurnedInSubtitleRemover.GetProPainterArguments(script, 960, 400));
+    }
+
+    [Fact]
     public void MaskCoversStaticTextAndOutline()
     {
         var builder = Build(true, TextFrame);

@@ -87,9 +87,10 @@ if the mask spreads from the text into nearby picture detail. Check the preview 
 or shadows before starting the full removal.
 The video methods re-encode the video with x264 at the chosen **Quality (CRF)** and copy the audio.
 
-On Apple Silicon with macOS 15 or newer, enable **Use ProPainter for removal** to repair text using
-neighboring frames. Subtitle Edit offers a one-time download from Support Files on export. The
-download is optional and inference runs locally. ProPainter is licensed for
+On Windows x64 or Apple Silicon with macOS 15 or newer, enable **Use ProPainter for removal**
+to repair text using neighboring frames. The Windows package runs on CPU. Subtitle Edit offers a
+one-time download from Support Files on export. The download is optional and inference runs locally.
+ProPainter is licensed for
 [non-commercial use](https://github.com/sczhou/ProPainter/blob/main/LICENSE). The preview shows the
 mask, and the inpainted result is available in the exported video.
 

@@ -62,6 +62,7 @@ public sealed class BurnedInRemovalOptions
 
     public int Crf { get; init; } = 18;
     public string ProPainterExecutable { get; init; } = string.Empty;
+    public string ProPainterScript { get; init; } = string.Empty;
     public string CrispEmbedExecutable { get; init; } = string.Empty;
     public string ModelFileName { get; init; } = string.Empty;
 }
@@ -472,6 +473,9 @@ public sealed class BurnedInSubtitleRemover
         }
     }
 
+    internal static string GetProPainterArguments(string script, int width, int height) =>
+        (string.IsNullOrEmpty(script) ? string.Empty : $"-I -B -u \"{script}\" ") + $"--stream {width}x{height}";
+
     private async Task<bool> InpaintAsync(BurnedInRemovalOptions o, BurnedInMaskBuilder builder, long totalFrames,
         IProgress<ProgressInfo> progress, string outputFileName, CancellationToken cancellationToken)
     {
@@ -482,7 +486,7 @@ public sealed class BurnedInSubtitleRemover
         var useProPainter = !string.IsNullOrEmpty(o.ProPainterExecutable);
         var engineFile = useProPainter ? o.ProPainterExecutable : o.CrispEmbedExecutable;
         var engineArgs = useProPainter
-            ? $"--stream {w}x{h}"
+            ? GetProPainterArguments(o.ProPainterScript, w, h)
             : CrispEmbedEngine.GetInpaintArguments(o.ModelFileName) + $" --inpaint-stream {w}x{h}" +
                 (o.Temporal ? " --inpaint-temporal 15" : string.Empty);
         var rate = o.FrameRate.ToString("0.######", CultureInfo.InvariantCulture);

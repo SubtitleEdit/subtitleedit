@@ -14,16 +14,27 @@ namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 
 internal static class ProPainterPackage
 {
-    private const string ArchiveUrl = "https://github.com/SubtitleEdit/support-files/releases/download/propainter-0.2.0/propainter-0.2.0-macos-arm64.tar.gz";
-    private const string ArchiveSha256 = "7d1711f39c1d8bf77d04de95a9bd8fb9d2610b95cdcd360508af016f0456fd82";
-    private const string ArchiveRoot = "propainter-macos-arm64";
+    private const string ArchiveBase = "https://github.com/SubtitleEdit/support-files/releases/download/propainter-0.2.0/";
+    private const string MacArchive = "propainter-0.2.0-macos-arm64.tar.gz";
+    private const string MacSha256 = "7d1711f39c1d8bf77d04de95a9bd8fb9d2610b95cdcd360508af016f0456fd82";
+    private const string WindowsArchive = "propainter-0.2.0-windows-x64-cpu.tar.gz";
+    private const string WindowsSha256 = "5118fc69fb290bca679a65a11cba43703e8778474659cc3031ea234692a115a3";
     private static readonly HttpClient Client = new();
-    private static string InstallFolder => Path.Combine(Se.DataFolder, "ProPainter", "0.2.0");
 
-    public static bool IsSupported =>
+    private static bool IsWindowsX64 => OperatingSystem.IsWindows() && RuntimeInformation.OSArchitecture == Architecture.X64;
+    private static string InstallFolder => Path.Combine(Se.DataFolder, "ProPainter",
+        IsWindowsX64 ? "0.2.0-windows-x64" : "0.2.0");
+    private static string ExecutableRelativePath => IsWindowsX64 ? Path.Combine("python", "python.exe") : "propainter";
+
+    public static bool IsSupported => IsWindowsX64 ||
         OperatingSystem.IsMacOSVersionAtLeast(15) && RuntimeInformation.OSArchitecture == Architecture.Arm64;
-    public static string Executable => Path.Combine(InstallFolder, "propainter");
-    public static bool IsInstalled => File.Exists(Executable) && File.Exists(Path.Combine(InstallFolder, "stream.py"));
+    public static string Executable => Path.Combine(InstallFolder, ExecutableRelativePath);
+    public static int DownloadSizeMegabytes => IsWindowsX64 ? 400 : 350;
+    public static string Script => IsWindowsX64 ? Path.Combine(InstallFolder, "stream.py") : string.Empty;
+    public static bool IsInstalled => HasLauncher(InstallFolder);
+
+    private static bool HasLauncher(string folder) =>
+        File.Exists(Path.Combine(folder, ExecutableRelativePath)) && File.Exists(Path.Combine(folder, "stream.py"));
 
     public static async Task InstallAsync(IProgress<float> progress, CancellationToken cancellationToken)
     {
@@ -39,11 +50,13 @@ internal static class ProPainterPackage
         try
         {
             var archivePath = Path.Combine(staging, "propainter.tar.gz");
-            await DownloadHelper.DownloadFileAsync(Client, ArchiveUrl, archivePath, progress, cancellationToken);
+            var archiveName = IsWindowsX64 ? WindowsArchive : MacArchive;
+            var expectedSha256 = IsWindowsX64 ? WindowsSha256 : MacSha256;
+            await DownloadHelper.DownloadFileAsync(Client, ArchiveBase + archiveName, archivePath, progress, cancellationToken);
 
             await using var archive = File.OpenRead(archivePath);
             var hash = Convert.ToHexString(await SHA256.HashDataAsync(archive, cancellationToken));
-            if (!hash.Equals(ArchiveSha256, StringComparison.OrdinalIgnoreCase))
+            if (!hash.Equals(expectedSha256, StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidDataException("ProPainter download checksum mismatch.");
             }
@@ -52,8 +65,8 @@ internal static class ProPainterPackage
             Directory.CreateDirectory(localInstall);
             await using var gzip = new GZipStream(archive, CompressionMode.Decompress);
             await TarFile.ExtractToDirectoryAsync(gzip, localInstall, overwriteFiles: false, cancellationToken);
-            var source = Path.Combine(localInstall, ArchiveRoot);
-            if (!File.Exists(Path.Combine(source, "propainter")) || !File.Exists(Path.Combine(source, "stream.py")))
+            var source = Path.Combine(localInstall, IsWindowsX64 ? "propainter-windows-x64" : "propainter-macos-arm64");
+            if (!HasLauncher(source))
             {
                 throw new InvalidDataException("ProPainter archive is missing its launcher.");
             }
