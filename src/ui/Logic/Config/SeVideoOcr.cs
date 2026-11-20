@@ -47,6 +47,7 @@ public class SeVideoOcr
     /// <summary>Remove burned-in subtitles: extra mask width in px left and right of each line.</summary>
     public int RemoveBurnedInExtraWidth { get; set; }
     public bool RemoveBurnedInExpandDarkEdges { get; set; } = true;
+    public bool RemoveBurnedInUseProPainter { get; set; }
     public int RemoveBurnedInCrf { get; set; }
 
     /// <summary>Remove burned-in subtitles: cover each line with a black box instead of inpainting.</summary>
