@@ -602,6 +602,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            ResetLoadFrameRate();
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(JoinLines(lines).Replace("<dcst:", "<").Replace("</dcst:", "</").Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\"", string.Empty)); // tags might be prefixed with namespace (or not)... so we just remove them
             var ss = Configuration.Settings.SubtitleSettings;
@@ -620,10 +621,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     ss.CurrentDCinemaReelNumber = node.InnerText;
                 }
 
+                // Read back locally, not from the shared settings: other files may be loading at the same time
+                var loadedEditRate = ss.CurrentDCinemaEditRate;
                 node = xml.DocumentElement.SelectSingleNode("EditRate");
                 if (node != null)
                 {
                     ss.CurrentDCinemaEditRate = node.InnerText;
+                    loadedEditRate = node.InnerText;
                     var editRate = node.InnerText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (editRate.Length == 2 &&
                         double.TryParse(editRate[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var numerator) &&
@@ -645,18 +649,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _frameRate = timeCodeRate;
                     }
 
-                    if (DCinemaEditRate.TryParse(ss.CurrentDCinemaEditRate, out var loadedNumerator, out var loadedDenominator) && loadedNumerator == 24 * loadedDenominator)
+                    if (DCinemaEditRate.TryParse(loadedEditRate, out var loadedNumerator, out var loadedDenominator) && loadedNumerator == 24 * loadedDenominator)
                     {
-                        Configuration.Settings.General.CurrentFrameRate = 24;
+                        SetLoadFrameRate(24);
                     }
                     else if (loadedNumerator > 0 && loadedNumerator == 25 * loadedDenominator)
                     {
-                        Configuration.Settings.General.CurrentFrameRate = 25;
+                        SetLoadFrameRate(25);
                     }
 
                     if (BatchSourceFrameRate.HasValue)
                     {
-                        Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
+                        SetLoadFrameRate(BatchSourceFrameRate.Value);
                     }
                 }
 

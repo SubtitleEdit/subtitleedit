@@ -43,13 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var temp = new StringBuilder();
-            foreach (string l in lines)
-            {
-                temp.Append(l);
-            }
-
-            string all = temp.ToString();
+            string all = ConcatLines(lines);
             if (!all.Contains(" begin=") || !all.Contains(" end=") || all.Contains("http://www.w3.org/ns/ttml") || all.Contains("http://www.w3.org/20"))
             {
                 return;

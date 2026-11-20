@@ -3158,12 +3158,13 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
     private static (Subtitle? Subtitle, string Format) DetectTextOrBinaryFormat(string fileName, long fileLength)
     {
         Subtitle? subtitle = null;
+        List<string>? lines = null;
         var format = Se.Language.General.Unknown;
         if (fileLength < 20_000_000)
         {
             // Subtitle.Parse that is safe to run on several files at once (own format instances
             // and frame rate per thread)
-            subtitle = ConcurrentSubtitleParser.Parse(fileName);
+            subtitle = ConcurrentSubtitleParser.Parse(fileName, out lines);
             if (subtitle != null)
             {
                 format = subtitle.OriginalFormat.Name;
@@ -3173,24 +3174,25 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         if (format == Se.Language.General.Unknown)
         {
             // Only unrecognized files get here. The binary and load-only formats are fresh
-            // instances, but some still write global settings (EBU STL's teletext flags) - so one
-            // file at a time, and with its own frame rate like above.
+            // instances (frame rate kept local like above), but EBU STL still writes its teletext
+            // flags to the global settings - so one file at a time.
             lock (BinaryFormatDetectionLock)
-            using (ThreadFrameRateScope.Begin())
             {
-                return DetectBinaryOrLoadOnlyFormat(fileName, fileLength);
+                return DetectBinaryOrLoadOnlyFormat(fileName, fileLength, lines);
             }
         }
 
         return (subtitle, format);
     }
 
-    private static (Subtitle? Subtitle, string Format) DetectBinaryOrLoadOnlyFormat(string fileName, long fileLength)
+    /// <param name="lines">The text lines the text parse already read (null if none) - reused for the load-only formats.</param>
+    private static (Subtitle? Subtitle, string Format) DetectBinaryOrLoadOnlyFormat(string fileName, long fileLength, List<string>? lines)
     {
         Subtitle? subtitle = null;
         var format = Se.Language.General.Unknown;
         foreach (var f in SubtitleFormat.GetBinaryFormats(false))
         {
+            f.KeepDeclaredFrameRateLocal = true;
             if (f.IsMine(null, fileName))
             {
                 subtitle = new Subtitle();
@@ -3205,7 +3207,11 @@ public partial class BatchConvertViewModel : ObservableObject, IClosingCleanup
         // This replaces a second, identical Subtitle.Parse that could only fail again.
         if (format == Se.Language.General.Unknown && fileLength < 20_000_000)
         {
-            subtitle = LoadOnlyTextFormatLoader.TryLoad(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
+            // Reuse the lines the text parse read (same encoding detection) instead of detecting
+            // the encoding and reading the file a second time.
+            subtitle = lines != null
+                ? LoadOnlyTextFormatLoader.TryLoad(lines, fileName)
+                : LoadOnlyTextFormatLoader.TryLoad(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
             if (subtitle != null)
             {
                 format = subtitle.OriginalFormat.Name;

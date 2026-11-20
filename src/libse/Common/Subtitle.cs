@@ -192,8 +192,14 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         internal static Subtitle Parse(string fileName, Encoding useThisEncoding, IFormatCheckGate gate)
         {
+            return Parse(fileName, useThisEncoding, gate, out _);
+        }
+
+        /// <param name="linesRead">The lines of the first read of the file (null if it could not be read) - lets a caller try more formats on an unknown file without reading it again.</param>
+        internal static Subtitle Parse(string fileName, Encoding useThisEncoding, IFormatCheckGate gate, out List<string> linesRead)
+        {
             var subtitle = new Subtitle();
-            var format = subtitle.LoadSubtitle(fileName, out var encodingUsed, useThisEncoding, false, null, true, gate);
+            var format = subtitle.LoadSubtitle(fileName, out var encodingUsed, useThisEncoding, false, null, true, gate, out linesRead);
             if (format == null)
             {
                 return null;
@@ -272,14 +278,15 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode, double? sourceFrameRate = null, bool loadSubtitle = true)
         {
-            return LoadSubtitle(fileName, out encoding, useThisEncoding, batchMode, sourceFrameRate, loadSubtitle, null);
+            return LoadSubtitle(fileName, out encoding, useThisEncoding, batchMode, sourceFrameRate, loadSubtitle, null, out _);
         }
 
         /// <param name="gate">
         /// Runs each format check (IsMine + load) - lets <see cref="ConcurrentSubtitleParser"/> pick
         /// the format instance and lock. Null runs the check directly on the shared instance.
         /// </param>
-        internal SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode, double? sourceFrameRate, bool loadSubtitle, IFormatCheckGate gate)
+        /// <param name="linesRead">The lines read from the file (before any UTF-16 retry), null if it could not be read.</param>
+        internal SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode, double? sourceFrameRate, bool loadSubtitle, IFormatCheckGate gate, out List<string> linesRead)
         {
             FileName = fileName;
             Paragraphs = new List<Paragraph>();
@@ -292,8 +299,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
                 encoding = Encoding.UTF8;
+                linesRead = null;
                 return null;
             }
+
+            linesRead = lines;
 
             SubtitleFormat TryFormat(SubtitleFormat format)
             {
@@ -323,7 +333,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             if (useThisEncoding == null && MayBeUtf16(fileName, encoding))
             {
-                return LoadSubtitle(fileName, out encoding, Encoding.Unicode, false, null, true, gate);
+                return LoadSubtitle(fileName, out encoding, Encoding.Unicode, false, null, true, gate, out _);
             }
 
             return null;

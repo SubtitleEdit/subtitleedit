@@ -309,6 +309,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            ResetLoadFrameRate();
 
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
@@ -328,7 +329,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (BatchSourceFrameRate.HasValue)
             {
-                Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
+                SetLoadFrameRate(BatchSourceFrameRate.Value);
             }
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
@@ -344,7 +345,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     ReadParagraph(pText, node);
 
                     // Time codes
-                    TimedText10.ExtractTimeCodes(node, subtitle, out var begin, out var end);
+                    TimedText10.ExtractTimeCodes(node, subtitle, LoadFrameRate, out var begin, out var end);
 
                     // Style
                     var p = new Paragraph(begin, end, pText.ToString()) { Style = LookupForAttribute("style", node) };

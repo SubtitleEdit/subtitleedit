@@ -111,13 +111,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
 
-            var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.Append(s);
-            }
-
-            var allText = sb.ToString();
+            var allText = ConcatLines(lines);
             if (!allText.Contains("text_tees"))
             {
                 return;

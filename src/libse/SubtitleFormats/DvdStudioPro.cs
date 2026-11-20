@@ -315,13 +315,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static bool GetTimeCode(TimeCode timeCode, string timeString)
         {
+            return GetTimeCode(timeCode, timeString, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        internal static bool GetTimeCode(TimeCode timeCode, string timeString, double frameRate)
+        {
             try
             {
                 var timeParts = timeString.Split(':', ';');
                 timeCode.Hours = int.Parse(timeParts[0]);
                 timeCode.Minutes = int.Parse(timeParts[1]);
                 timeCode.Seconds = int.Parse(timeParts[2]);
-                timeCode.Milliseconds = FramesToMillisecondsMax999(int.Parse(timeParts[3]));
+                timeCode.Milliseconds = FramesToMillisecondsMax999(int.Parse(timeParts[3]), frameRate);
                 return true;
             }
             catch

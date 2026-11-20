@@ -102,13 +102,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-            {
-                sb.AppendLine(line);
-            }
-
-            string xml = sb.ToString();
+            ResetLoadFrameRate();
+            string xml = JoinLines(lines);
             if (!xml.Contains("<EZTSubtitlesProject", StringComparison.Ordinal))
             {
                 return;
@@ -137,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var timeCodeStandardNode = doc.SelectSingleNode("//TimeCodeStandard");
             if (timeCodeStandardNode != null && TryParseTimeCodeStandard(timeCodeStandardNode.InnerText, out var timeCodeFrameRate))
             {
-                Configuration.Settings.General.CurrentFrameRate = timeCodeFrameRate;
+                SetLoadFrameRate(timeCodeFrameRate);
             }
             else
             {
@@ -145,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var frameRateNode = doc.SelectSingleNode("//VideoFrameRate");
                 if (frameRateNode != null && TryParseTimeCodeStandard(frameRateNode.InnerText, out var frameRate))
                 {
-                    Configuration.Settings.General.CurrentFrameRate = frameRate;
+                    SetLoadFrameRate(frameRate);
                 }
             }
 
@@ -173,8 +168,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = alignment + text;
                 }
                 // Subtitles without timing have "--:--:--:--" cues.
-                var startMs = inCue.InnerText.StartsWith("-", StringComparison.Ordinal) ? 0 : DecodeTimeCodeFrames(inCue.InnerText, splitChars).TotalMilliseconds;
-                var endMs = outCue.InnerText.StartsWith("-", StringComparison.Ordinal) ? 0 : DecodeTimeCodeFrames(outCue.InnerText, splitChars).TotalMilliseconds;
+                var startMs = inCue.InnerText.StartsWith("-", StringComparison.Ordinal) ? 0 : DecodeTimeCodeFrames(inCue.InnerText, splitChars, LoadFrameRate).TotalMilliseconds;
+                var endMs = outCue.InnerText.StartsWith("-", StringComparison.Ordinal) ? 0 : DecodeTimeCodeFrames(outCue.InnerText, splitChars, LoadFrameRate).TotalMilliseconds;
                 subtitle.Paragraphs.Add(new Paragraph(text, startMs, endMs));
             }
             subtitle.Renumber();

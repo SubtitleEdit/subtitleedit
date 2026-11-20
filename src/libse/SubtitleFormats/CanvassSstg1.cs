@@ -118,6 +118,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            ResetLoadFrameRate();
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
 
@@ -145,7 +146,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var frameRate = GetFrameRate(db, out var frameRateFromFile);
             if (frameRateFromFile)
             {
-                Configuration.Settings.General.CurrentFrameRate = frameRate; // like EBU STL: the file knows its own frame rate
+                SetLoadFrameRate(frameRate); // like EBU STL: the file knows its own frame rate
             }
 
             var segments = ReadTimecodes(db);

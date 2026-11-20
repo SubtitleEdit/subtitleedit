@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //Comment elle s’appelait ?
             //924.6/
 
-            Configuration.Settings.General.CurrentFrameRate = 24.0;
+            SetLoadFrameRate(24.0);
             _errorCount = 0;
             Paragraph p = null;
             bool textOn = false;
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (line.Length > 1 && line.Length < 11 && RegexTimeCodes.Match(line.TrimEnd('/')).Success)
                         {
-                            p.EndTime = DecodeTimeCode(line.TrimEnd('/').Split('.'));
+                            p.EndTime = DecodeTimeCode(line.TrimEnd('/').Split('.'), LoadFrameRate);
                             if (sb.Length > 0)
                             {
                                 p.Text = sb.ToString().TrimEnd();
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             p = new Paragraph();
                             sb.Clear();
-                            p.StartTime = DecodeTimeCode(line.Split('.'));
+                            p.StartTime = DecodeTimeCode(line.Split('.'), LoadFrameRate);
                             textOn = true;
                         }
                     }
@@ -100,11 +100,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return $"{footage}.{rest:0}";
         }
 
-        private static TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts, double frameRate)
         {
             var frames16 = int.Parse(parts[0]);
             var frames = int.Parse(parts[1]);
-            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * frames16 + frames));
+            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * frames16 + frames, frameRate));
         }
 
     }
