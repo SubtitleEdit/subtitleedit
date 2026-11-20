@@ -3021,6 +3021,10 @@ public static partial class InitListViewAndEditBox
         // the same box - as SE4's edit boxes allowed (#14534).
         TextBoxTextDragDrop.Attach(textBox);
 
+        // A command replacing the text must not leave the old selection range behind - the
+        // next "surround with" would then only work on that stale part (#17052).
+        TextBoxStaleSelectionGuard.Attach(textBox);
+
         if (appearance.SubtitleTextBoxCenterText)
         {
             textBox.TextAlignment = TextAlignment.Center;
