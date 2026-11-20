@@ -3842,14 +3842,20 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             paragraphs = paragraphs.Where(p => !p.Text.Contains(c.DeleteContains)).ToList();
         }
 
+        // ASSA/SSA keep a line's style in Paragraph.Extra (Paragraph.Style is the TTML/WebVTT
+        // style), so matching only Style never deleted anything in an .ass file (#17057).
+        // Extra means other things in other formats, so only look there for ASSA/SSA.
+        var styleInExtra = subtitle.OriginalFormat is AdvancedSubStationAlpha or SubStationAlpha;
         var actorsOrSpeakers = c.DeleteActorsOrStyles.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
             .Select(a => a.Trim()).ToList();
         foreach (var actor in actorsOrSpeakers)
         {
             // Paragraph.Actor/Style have no initializer, so they are null for SRT and friends -
             // p.Actor.Equals(...) threw an NRE on the first line of any non-ASSA file.
-            paragraphs = paragraphs.Where(p => !string.Equals(p.Actor, actor, StringComparison.OrdinalIgnoreCase)).ToList();
-            paragraphs = paragraphs.Where(p => !string.Equals(p.Style, actor, StringComparison.OrdinalIgnoreCase)).ToList();
+            paragraphs = paragraphs.Where(p =>
+                !string.Equals(p.Actor, actor, StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(p.Style, actor, StringComparison.OrdinalIgnoreCase) &&
+                !(styleInExtra && string.Equals(p.Extra, actor, StringComparison.OrdinalIgnoreCase))).ToList();
         }
 
         subtitle.Paragraphs.Clear();
