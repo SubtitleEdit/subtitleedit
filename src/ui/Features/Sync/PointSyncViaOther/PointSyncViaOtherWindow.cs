@@ -101,7 +101,7 @@ public class PointSyncViaOtherWindow : Window
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsEnabled(nameof(vm.IsOkEnabled));
         buttonOk.Classes.Add("primary");
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = EditorChrome.MakeButtonBar(MakeGapLegend(), buttonApply, buttonCancel, buttonOk);
+        var panelButtons = EditorChrome.MakeButtonBar(MakeLegend(), buttonApply, buttonCancel, buttonOk);
 
         var content = new Grid
         {
@@ -155,6 +155,147 @@ public class PointSyncViaOtherWindow : Window
         };
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// Color of the "synced" marker - violet, so it stands apart from the green gap badges and
+    /// from the accent colored row selection (issue #17053).
+    /// </summary>
+    private static readonly IBrush SyncedBrush = new ImmutableSolidColorBrush(Color.FromRgb(142, 84, 233));
+
+    /// <summary>
+    /// The synced-line sample, then the gap badge legend.
+    /// </summary>
+    private static Control MakeLegend()
+    {
+        var synced = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        var sample = MakeSyncedPill(new TextBlock { Text = "#", FontSize = EditorChrome.ScaledFont(11) });
+        sample.IsVisible = true;
+        synced.Children.Add(sample);
+        synced.Children.Add(new TextBlock
+        {
+            Text = Se.Language.Sync.SyncedLine,
+            FontSize = EditorChrome.ScaledFont(11.5),
+            Foreground = EditorChrome.DimTextBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+        });
+
+        var panel = new Grid
+        {
+            ColumnSpacing = 16,
+            ColumnDefinitions =
+            {
+                new ColumnDefinition(GridLength.Auto),
+                new ColumnDefinition(new GridLength(1, GridUnitType.Star)),
+            },
+        };
+        panel.Add(synced, 0, 0);
+        panel.Add(MakeGapLegend(), 0, 1);
+        return panel;
+    }
+
+    /// <summary>
+    /// Violet pill with a link icon, holding the line number of a synced line.
+    /// </summary>
+    private static Border MakeSyncedPill(TextBlock number)
+    {
+        number.Foreground = Brushes.White;
+        number.FontWeight = FontWeight.SemiBold;
+        number.VerticalAlignment = VerticalAlignment.Center;
+
+        return new Border
+        {
+            Background = SyncedBrush,
+            CornerRadius = new CornerRadius(9),
+            Padding = new Thickness(6, 1, 7, 1),
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 4,
+                Children =
+                {
+                    new Optris.Icons.Avalonia.Icon
+                    {
+                        Value = "fa-solid fa-link",
+                        FontSize = EditorChrome.ScaledFont(9),
+                        Foreground = Brushes.White,
+                        VerticalAlignment = VerticalAlignment.Center,
+                    },
+                    number,
+                },
+            },
+        };
+    }
+
+    /// <summary>
+    /// The "#" column: a plain number, or - for a line that is part of a sync point - the number
+    /// in a violet pill with a link icon, kept until the sync point is removed (issue #17053).
+    /// </summary>
+    private static SeTableViewColumn MakeNumberColumn(PointSyncViaOtherViewModel vm)
+    {
+        return new SeTableViewColumn
+        {
+            Header = Se.Language.General.NumberSymbol,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            NameBinding = new Binding(nameof(SubtitleLineViewModel.Number)) { Mode = BindingMode.OneWay },
+            Width = new GridLength(70), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+            {
+                var plain = new TextBlock
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Number)) { Mode = BindingMode.OneWay },
+                };
+                var pillText = new TextBlock
+                {
+                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Number)) { Mode = BindingMode.OneWay },
+                };
+                var pill = MakeSyncedPill(pillText);
+                pill.Margin = new Thickness(-4, 0, 0, 0);
+
+                // Accent bar on the row's left edge, so a synced row also stands out when scrolling fast.
+                var bar = new Border
+                {
+                    Width = 3,
+                    Background = SyncedBrush,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                };
+
+                var cell = new Grid();
+                cell.Children.Add(bar);
+                cell.Children.Add(new Border { Padding = new Thickness(8, 2, 4, 2), Child = new Panel { Children = { plain, pill } } });
+
+                void Update()
+                {
+                    var isSynced = cell.DataContext is SubtitleLineViewModel line && vm.IsSynced(line);
+                    plain.IsVisible = !isSynced;
+                    pill.IsVisible = isSynced;
+                    bar.IsVisible = isSynced;
+                }
+
+                // Cells are recycled, so re-mark on a new line and whenever sync points change -
+                // only while the cell is shown, so a dropped cell does not stay subscribed.
+                cell.DataContextChanged += (_, _) => Update();
+                cell.AttachedToVisualTree += (_, _) =>
+                {
+                    vm.SyncedLinesChanged += Update;
+                    Update();
+                };
+                cell.DetachedFromVisualTree += (_, _) => vm.SyncedLinesChanged -= Update;
+                Update();
+
+                return cell;
+            }),
+        };
     }
 
     /// <summary>
@@ -383,14 +524,7 @@ public class PointSyncViaOtherWindow : Window
         dataGrid.ItemsSource = vm.Subtitles;
         dataGrid.Columns.AddRange(new[]
         {
-            new SeTableViewColumn
-            {
-                Header = Se.Language.General.NumberSymbol,
-                CellTheme = UiUtil.TableViewCellTheme,
-                HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                Width = new GridLength(60), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
-            },
+            MakeNumberColumn(vm),
             new SeTableViewColumn
             {
                 Header = Se.Language.General.Show,
@@ -498,14 +632,7 @@ public class PointSyncViaOtherWindow : Window
         var columnManager = new TableViewColumnManager(dataGridSubtitle);
         foreach (var column in new TableViewColumn[]
                  {
-                     new SeTableViewColumn
-                     {
-                         Header = Se.Language.General.NumberSymbol,
-                         CellTheme = UiUtil.TableViewCellTheme,
-                         HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
-                         Binding = new Binding(nameof(SubtitleLineViewModel.Number)),
-                         Width = new GridLength(60), // content-sized (Auto) on the DataGrid; TableView treats Auto as star
-                     },
+                     MakeNumberColumn(vm),
                      new SeTableViewColumn
                      {
                          Header = Se.Language.General.Show,
