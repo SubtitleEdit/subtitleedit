@@ -25,6 +25,9 @@ public class LanguageRemoveBurnedIn
     public string UseProPainter { get; set; }
     public string UseProPainterHint { get; set; }
     public string ProPainterDownloadQuestion { get; set; }
+    public string UseProPainterCuda { get; set; }
+    public string UseProPainterCudaHint { get; set; }
+    public string ProPainterCudaDownloadQuestion { get; set; }
     public string TemporalConsistency { get; set; }
     public string TemporalConsistencyHint { get; set; }
     public string OutputFile { get; set; }
@@ -89,6 +92,9 @@ public class LanguageRemoveBurnedIn
         UseProPainter = "Use ProPainter for removal";
         UseProPainterHint = "Use neighboring frames to repair the text area. Preview shows the mask. The repair runs during export.";
         ProPainterDownloadQuestion = "Download ProPainter (about {0} MB) from Subtitle Edit Support Files? ProPainter is licensed for non-commercial use and runs locally after installation.";
+        UseProPainterCuda = "Use NVIDIA CUDA for ProPainter";
+        UseProPainterCudaHint = "Requires an NVIDIA GPU with a CUDA 12.8-compatible driver. Uses CPU if CUDA is unavailable or fails.";
+        ProPainterCudaDownloadQuestion = "Set up ProPainter for CUDA? The CUDA runtime downloads about 2.8 GB from PyTorch. The base Windows package downloads separately if needed. ProPainter is licensed for non-commercial use and runs locally after installation.";
         TemporalConsistency = "Temporal consistency (less flicker)";
         TemporalConsistencyHint = "Reuse the real background from nearby frames and the previous fill while the picture is still";
         OutputFile = "Output file";

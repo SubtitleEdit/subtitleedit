@@ -369,6 +369,9 @@ public class RemoveBurnedInWindow : Window
         var proPainter = EditorChrome.MakeSwitchRow(nameof(vm.UseProPainter), l.UseProPainter);
         SetHint(proPainter, l.UseProPainterHint);
         proPainter.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.CanSelectProPainter)));
+        var proPainterCuda = EditorChrome.MakeSwitchRow(nameof(vm.UseProPainterCuda), l.UseProPainterCuda);
+        SetHint(proPainterCuda, l.UseProPainterCudaHint);
+        proPainterCuda.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.CanSelectProPainterCuda)));
         var temporal = EditorChrome.MakeSwitchRow(nameof(vm.Temporal), l.TemporalConsistency);
         SetHint(temporal, l.TemporalConsistencyHint);
 
@@ -389,6 +392,7 @@ public class RemoveBurnedInWindow : Window
         maskRows.Children.Add(outline);
         maskRows.Children.Add(expandDarkEdges);
         maskRows.Children.Add(proPainter);
+        maskRows.Children.Add(proPainterCuda);
         maskRows.Children.Add(temporal);
 
         var outputBox = EditorChrome.MakeTextField(nameof(vm.OutputFileName), l.OutputFile);

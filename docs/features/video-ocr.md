@@ -88,8 +88,10 @@ or shadows before starting the full removal.
 The video methods re-encode the video with x264 at the chosen **Quality (CRF)** and copy the audio.
 
 On Windows x64 or Apple Silicon with macOS 15 or newer, enable **Use ProPainter for removal**
-to repair text using neighboring frames. The Windows package runs on CPU. Subtitle Edit offers a
-one-time download from Support Files on export. The download is optional and inference runs locally.
+to repair text using neighboring frames. Subtitle Edit offers a one-time download from Support
+Files on export. On Windows x64, select **Use NVIDIA CUDA for ProPainter** to download the
+PyTorch CUDA 12.8 runtime separately. This requires a compatible NVIDIA driver and uses CPU if
+CUDA is unavailable or fails. The download is optional and inference runs locally.
 ProPainter is licensed for
 [non-commercial use](https://github.com/sczhou/ProPainter/blob/main/LICENSE). The preview shows the
 mask, and the inpainted result is available in the exported video.

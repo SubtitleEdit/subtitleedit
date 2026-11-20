@@ -71,6 +71,15 @@ public class BurnedInMaskBuilderTests
     }
 
     [Fact]
+    public void CudaDownloadProgressParsesLargeWheelSize()
+    {
+        Assert.Equal(0.5f, ProPainterPackage.GetCudaDownloadProgress("Progress 1376598019 of 2753196039"));
+        Assert.Equal(1f, ProPainterPackage.GetCudaDownloadProgress("Progress 2753196039 of 2753196039"));
+        Assert.Null(ProPainterPackage.GetCudaDownloadProgress("Progress 1000 of 5000000"));
+        Assert.Null(ProPainterPackage.GetCudaDownloadProgress("Installing collected packages"));
+    }
+
+    [Fact]
     public void MaskCoversStaticTextAndOutline()
     {
         var builder = Build(true, TextFrame);

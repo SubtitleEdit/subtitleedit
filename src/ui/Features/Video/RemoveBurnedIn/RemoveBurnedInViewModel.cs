@@ -43,11 +43,12 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsInpaint))]
     [NotifyPropertyChangedFor(nameof(IsBlur))]
     [NotifyPropertyChangedFor(nameof(WritesVideo))]
-    [NotifyPropertyChangedFor(nameof(CanSelectProPainter), nameof(IsUsingProPainter), nameof(CanShowResult), nameof(UsesMiGan))]
+    [NotifyPropertyChangedFor(nameof(CanSelectProPainter), nameof(IsUsingProPainter), nameof(CanSelectProPainterCuda), nameof(CanShowResult), nameof(UsesMiGan))]
     private int _methodIndex;
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsUsingProPainter), nameof(CanShowResult), nameof(UsesMiGan))]
+    [NotifyPropertyChangedFor(nameof(IsUsingProPainter), nameof(CanSelectProPainterCuda), nameof(CanShowResult), nameof(UsesMiGan))]
     private bool _useProPainter;
+    [ObservableProperty] private bool _useProPainterCuda;
     [ObservableProperty] private string _outputFileName = string.Empty;
     [ObservableProperty] private int _brightnessMinimum;
     [ObservableProperty] private bool _requireOutline;
@@ -138,6 +139,8 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     public bool IsInpaint => Method == BurnedInMethod.Inpaint;
     public bool CanSelectProPainter => IsInpaint && ProPainterPackage.IsSupported;
     public bool IsUsingProPainter => CanSelectProPainter && UseProPainter;
+    public bool CanSelectProPainterCuda => IsUsingProPainter && ProPainterPackage.CanUseCuda;
+    private bool IsUsingProPainterCuda => CanSelectProPainterCuda && UseProPainterCuda;
     public bool UsesMiGan => IsInpaint && !IsUsingProPainter;
     public bool CanShowResult => !IsUsingProPainter;
     public bool IsBlur => Method == BurnedInMethod.Blur;
@@ -180,6 +183,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         ExpandDarkEdges = settings.RemoveBurnedInExpandDarkEdges;
         Temporal = settings.RemoveBurnedInTemporal;
         UseProPainter = settings.RemoveBurnedInUseProPainter;
+        UseProPainterCuda = settings.RemoveBurnedInUseProPainterCuda;
         Crf = settings.RemoveBurnedInCrf is >= 0 and <= 51 ? settings.RemoveBurnedInCrf : 18;
 
         var number = 1;
@@ -805,7 +809,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         BlurStrength = BlurStrength,
         Crf = Crf,
         ProPainterExecutable = IsUsingProPainter ? ProPainterPackage.Executable : string.Empty,
-        ProPainterScript = IsUsingProPainter ? ProPainterPackage.Script : string.Empty,
+        ProPainterScript = IsUsingProPainter ? ProPainterPackage.GetScript(IsUsingProPainterCuda) : string.Empty,
         CrispEmbedExecutable = CrispEmbedEngine.GetCliExecutable(),
         ModelFileName = GetModelFileName(),
     };
@@ -839,13 +843,15 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
     private async Task<bool> EnsureProPainterReady()
     {
-        if (ProPainterPackage.IsInstalled)
+        var cuda = IsUsingProPainterCuda;
+        if (ProPainterPackage.IsInstalled(cuda))
         {
             return true;
         }
 
         var language = Se.Language.Video.RemoveBurnedIn;
-        var question = string.Format(language.ProPainterDownloadQuestion, ProPainterPackage.DownloadSizeMegabytes);
+        var question = cuda ? language.ProPainterCudaDownloadQuestion :
+            string.Format(language.ProPainterDownloadQuestion, ProPainterPackage.DownloadSizeMegabytes);
         var answer = await MessageBox.Show(Window!, language.Title, question,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         if (answer != MessageBoxResult.Yes)
@@ -856,12 +862,12 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         using var cancellation = new CancellationTokenSource();
         _cancellationTokenSource = cancellation;
         IsRunning = true;
-        ProgressText = string.Format(Se.Language.General.DownloadingXDotDotDot, "ProPainter");
+        ProgressText = string.Format(Se.Language.General.DownloadingXDotDotDot, cuda ? "ProPainter CUDA" : "ProPainter");
         ProgressValue = 0;
         try
         {
             var progress = new Progress<float>(value => ProgressValue = value * 100);
-            await Task.Run(() => ProPainterPackage.InstallAsync(progress, cancellation.Token), cancellation.Token);
+            await Task.Run(() => ProPainterPackage.InstallAsync(cuda, progress, cancellation.Token), cancellation.Token);
             return true;
         }
         catch (OperationCanceledException)
@@ -1122,6 +1128,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         settings.RemoveBurnedInExpandDarkEdges = ExpandDarkEdges;
         settings.RemoveBurnedInTemporal = Temporal;
         settings.RemoveBurnedInUseProPainter = UseProPainter;
+        settings.RemoveBurnedInUseProPainterCuda = UseProPainterCuda;
         settings.RemoveBurnedInExtraWidth = ExtraWidth;
         settings.RemoveBurnedInCrf = Crf;
         settings.RemoveBurnedInMethod = MethodIndex;

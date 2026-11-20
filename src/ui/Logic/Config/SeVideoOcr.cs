@@ -48,6 +48,7 @@ public class SeVideoOcr
     public int RemoveBurnedInExtraWidth { get; set; }
     public bool RemoveBurnedInExpandDarkEdges { get; set; } = true;
     public bool RemoveBurnedInUseProPainter { get; set; }
+    public bool RemoveBurnedInUseProPainterCuda { get; set; }
     public int RemoveBurnedInCrf { get; set; }
 
     /// <summary>Remove burned-in subtitles: cover each line with a black box instead of inpainting.</summary>
