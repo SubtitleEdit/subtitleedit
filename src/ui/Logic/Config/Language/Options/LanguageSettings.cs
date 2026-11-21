@@ -62,6 +62,7 @@ public class LanguageSettings
     public string ShowUpDownLabels { get; set; }
     public string ShowButtonHints { get; set; }
     public string ShowTimeCodeModeInStatusBar { get; set; }
+    public string ShowVideoOffsetInStatusBar { get; set; }
     public string GridCompactMode { get; set; }
     public string GridAlternatingRows { get; set; }
     public string GridAlternatingRowColor { get; set; }
@@ -464,6 +465,7 @@ public class LanguageSettings
         ShowUpDownLabels = "Show labels for up/down controls (Show/Hide/Duration)";
         ShowButtonHints = "Show button hints";
         ShowTimeCodeModeInStatusBar = "Show time code mode in status bar";
+        ShowVideoOffsetInStatusBar = "Show video offset button in status bar";
         GridCompactMode = "Use compact mode for grids";
         GridAlternatingRows = "Use alternating row colors in grid";
         GridAlternatingRowColor = "Alternating row color (light theme)";

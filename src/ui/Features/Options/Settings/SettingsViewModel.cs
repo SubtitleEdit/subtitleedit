@@ -258,6 +258,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showUpDownDuration;
     [ObservableProperty] private bool _showUpDownLabels;
     [ObservableProperty] private bool _showTimeCodeModeInStatusBar;
+    [ObservableProperty] private bool _showVideoOffsetInStatusBar;
 
     public IReadOnlyList<ToolbarSettingItem> ToolbarItems { get; } = ToolbarSettingItem.CreateItems();
 
@@ -1068,6 +1069,7 @@ public partial class SettingsViewModel : ObservableObject
         GridAlternatingRowColorDark = appearance.GridAlternatingRowColorDark.FromHexToColor();
         ShowUpDownStartTime = appearance.ShowUpDownStartTime;
         ShowTimeCodeModeInStatusBar = appearance.ShowTimeCodeModeInStatusBar;
+        ShowVideoOffsetInStatusBar = appearance.ShowVideoOffsetInStatusBar;
         ShowUpDownEndTime = appearance.ShowUpDownEndTime;
         ShowUpDownDuration = appearance.ShowUpDownDuration;
         ShowUpDownLabels = appearance.ShowUpDownLabels;
@@ -1987,6 +1989,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.GridAlternatingRowColorDark = GridAlternatingRowColorDark.FromColorToHex();
         appearance.ShowUpDownStartTime = ShowUpDownStartTime;
         appearance.ShowTimeCodeModeInStatusBar = ShowTimeCodeModeInStatusBar;
+        appearance.ShowVideoOffsetInStatusBar = ShowVideoOffsetInStatusBar;
         appearance.ShowUpDownEndTime = ShowUpDownEndTime;
         appearance.ShowUpDownDuration = ShowUpDownDuration;
         appearance.ShowUpDownLabels = ShowUpDownLabels;
