@@ -473,6 +473,7 @@ public class LanguageGeneral
     public string PlayPreviousAndStop { get; set; }
     public string PlayPreviousAndLoop { get; set; }
     public string PlaySelectedLines { get; set; }
+    public string PlaySubtitleEnd { get; set; }
     public string PlaySelectedLinesWithLoop { get; set; }
     public string PlaySelectedLinesAndFocusWaveform { get; set; }
     public string PlaySelectedLinesWithLoopAndFocusWaveform { get; set; }
@@ -1524,6 +1525,7 @@ public class LanguageGeneral
         PlayPreviousAndStop = "Play previous (and stop)";
         PlayPreviousAndLoop = "Play previous (and loop)";
         PlaySelectedLines = "Play selected lines";
+        PlaySubtitleEnd = "Play subtitle end";
         PlaySelectedLinesWithLoop = "Play selected lines with loop";
         PlaySelectedLinesAndFocusWaveform = "Play selected lines and focus waveform";
         PlaySelectedLinesWithLoopAndFocusWaveform = "Play selected lines with loop and focus waveform";
