@@ -1721,7 +1721,7 @@
       "openStyleFileTitle": "Stillerin içe aktarılacağı WebVTT dosyasını aç",
       "noStylesToImport": "Seçilen dosyada stil bulunamadı",
       "duplicateStyleNamesX": "Yinelenen stil adları: {0}",
-	  "Settings": "Hizalama için satır ayarları",
+      "cueSettings": "Hizalama için satır ayarları",
       "cueSettingsHint": "Bir satır hizalandığında yazılan satır ayarları, örn. üst-orta için \"line:20%\"",
       "useXTimeStamp": "X-TIMESTAMP-MAP üst bilgi değerini kullan",
       "mergeLines": "Yükleme sırasında aynı metne sahip satırları birleştir",
@@ -2491,7 +2491,7 @@
       "onlyNames": "Sadece isimler",
       "numberOfConversionsX": "Dönüştürme sayısı: {0}",
 	  "selectActor": "Aktör seç",
-      "unselectActor": "Aktör seçimini kaldır",
+      "unselectActor": "Aktör seçimini kaldır"
     },
     "joinSubtitles": {
       "title": "Alt yazıları birleştir",
@@ -3024,7 +3024,7 @@
       "installToEngine": "Motora kur",
       "downloadAndInstall": "İndir ve kur",
       "selectAtLeastOneVoicePack": "En az bir ses paketi seçin",
-      "downloadingXDotDotDot": "{0} indiriliyor...",
+      "installingXDotDotDot": "{0} kuruluyor...",
       "xVoicesInstalledYSkipped": "{0} ses kuruldu ({1} zaten mevcut)",
       "useSpeechToTextDotDotDot": "Ses tanımayı kullan...",
 	  "autoCastMenuItem": "Videodaki sesleri bul ve klonla...",
