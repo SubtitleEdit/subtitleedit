@@ -20,6 +20,7 @@ public static class ViewChangeCasing
         var radioFixNamesOnly = MakeRadio(Se.Language.Tools.ChangeCasing.FixNamesOnly, nameof(vm.FixNamesOnly));
         var radioAllUppercase = MakeRadio(Se.Language.Tools.ChangeCasing.AllUppercase, nameof(vm.AllUppercase));
         var radioAllLowercase = MakeRadio(Se.Language.Tools.ChangeCasing.AllLowercase, nameof(vm.AllLowercase));
+        var textBoxOnlyActorsOrStyles = EditorChrome.MakeTextField(nameof(vm.ChangeCasingOnlyActorsOrStyles), Se.Language.Tools.BatchConvert.OnlyLinesWithActorsOrStyles);
 
         return FunctionViewChrome.MakePanel(vm, Se.Language.General.ChangeCasing,
             radioNormalCasing,
@@ -27,7 +28,8 @@ public static class ViewChangeCasing
             switchNormalCasingOnlyUpper,
             radioFixNamesOnly,
             radioAllUppercase,
-            radioAllLowercase);
+            radioAllLowercase,
+            FunctionViewChrome.MakeRow(Se.Language.Tools.BatchConvert.OnlyLinesWithActorsOrStyles, textBoxOnlyActorsOrStyles));
     }
 
     private static RadioButton MakeRadio(string text, string property)

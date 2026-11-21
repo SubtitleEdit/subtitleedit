@@ -2386,6 +2386,7 @@
       "addAlignment": "Add alignment",
       "addColor": "Add color",
       "deleteLinesWithSpecificActorsOrStyles": "Delete lines with actors or styles (separate multiple by comma)",
+      "onlyLinesWithActorsOrStyles": "Only lines with actors or styles (separate multiple by comma, empty = all lines)",
       "useSourceStylesIfPossible": "Use source styles if possible (the header below is then only used for non-ASSA input)",
       "keepSourceEmbeddedFonts": "Keep source embedded fonts (footer)",
       "editStyles": "Edit styles",
