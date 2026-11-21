@@ -6557,11 +6557,33 @@ public partial class MainViewModel :
             return;
         }
 
-        // Blu-ray sup, binary formats etc. (#17089) - a big sup takes a moment to parse
+        // Blu-ray sup, VobSub, binary formats etc. (#17089) - a big sup takes a moment to parse
         Subtitle? subtitle;
         try
         {
-            subtitle = await Task.Run(() => TimeCodeImportLoader.TryLoad(fileName));
+            var vobSub = await Task.Run(() => TimeCodeImportLoader.TryLoadVobSub(fileName));
+            if (vobSub != null)
+            {
+                var streamId = vobSub.LanguageStreamIds[0];
+                if (vobSub.LanguageStreamIds.Count > 1)
+                {
+                    var pickResult = await ShowDialogAsync<PickVobSubLanguageWindow, PickVobSubLanguageViewModel>(
+                        vm => vm.Initialize(vobSub.Streams, vobSub.Palette, vobSub.Languages, fileName));
+                    if (!pickResult.OkPressed)
+                    {
+                        _shortcutManager.ClearKeys();
+                        return;
+                    }
+
+                    streamId = pickResult.SelectedStreamId;
+                }
+
+                subtitle = TimeCodeImportLoader.MakeSubtitle(vobSub.Streams[streamId]);
+            }
+            else
+            {
+                subtitle = await Task.Run(() => TimeCodeImportLoader.TryLoad(fileName));
+            }
         }
         catch (Exception exception)
         {

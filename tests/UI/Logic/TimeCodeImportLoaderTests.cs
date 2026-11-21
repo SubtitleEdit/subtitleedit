@@ -93,6 +93,26 @@ public class TimeCodeImportLoaderTests
     }
 
     [Fact]
+    public void TryLoad_MicroDvdSub_IsNotTakenForVobSub()
+    {
+        var fileName = TempFileName(".sub");
+        try
+        {
+            File.WriteAllText(fileName, "{25}{50}Hello\r\n{100}{150}World\r\n", new UTF8Encoding(false));
+
+            Assert.Null(TimeCodeImportLoader.TryLoadVobSub(fileName));
+            var subtitle = TimeCodeImportLoader.TryLoad(fileName);
+
+            Assert.NotNull(subtitle);
+            Assert.Equal(2, subtitle.Paragraphs.Count);
+        }
+        finally
+        {
+            File.Delete(fileName);
+        }
+    }
+
+    [Fact]
     public void TryLoad_UnknownFile_ReturnsNull()
     {
         var fileName = TempFileName(".sup");
