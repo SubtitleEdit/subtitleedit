@@ -165,6 +165,8 @@ wins over the menu activation.
 | Shift+Numpad + | Vertical zoom in (waveform focused) |
 | Shift+Numpad − | Vertical zoom out (waveform focused) |
 
+Assign **Play subtitle end** in **Options** → **Shortcuts** (Waveform). With the waveform focused, it plays the final 500 ms of the selected subtitle, or the whole subtitle if it is shorter. Change the duration under **Options** → **Settings** → **Waveform/spectrogram**.
+
 ## Tools
 
 | Shortcut | Action |

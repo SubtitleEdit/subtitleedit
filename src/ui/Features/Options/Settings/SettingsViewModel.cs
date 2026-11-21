@@ -375,6 +375,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private decimal _waveformSnapToShotChangeSameShotEndMaxSeconds;
     [ObservableProperty] private int _waveformGuessStartOffsetMs;
     [ObservableProperty] private int _waveformGuessEndOffsetMs;
+    [ObservableProperty] private int _waveformSubtitleEndPreviewMs;
     [ObservableProperty] private bool _waveformShotChangesAutoGenerate;
     [ObservableProperty] private bool _waveformAllowOverlap;
     [ObservableProperty] private bool _waveformSetVideoPositionOnMoveStartEnd;
@@ -1171,6 +1172,7 @@ public partial class SettingsViewModel : ObservableObject
         WaveformSnapToShotChangeSameShotEndMaxSeconds = (decimal)Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds;
         WaveformGuessStartOffsetMs = Se.Settings.Waveform.GuessStartOffsetMs;
         WaveformGuessEndOffsetMs = Se.Settings.Waveform.GuessEndOffsetMs;
+        WaveformSubtitleEndPreviewMs = SeWaveform.NormalizeSubtitleEndPreviewMs(Se.Settings.Waveform.SubtitleEndPreviewMs);
         WaveformShotChangesAutoGenerate = Se.Settings.Waveform.ShotChangesAutoGenerate;
         WaveformAllowOverlap = Se.Settings.Waveform.AllowOverlap;
         WaveformSetVideoPositionOnMoveStartEnd = Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd;
@@ -2083,6 +2085,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.SnapToShotChangeSameShotEndMaxSeconds = (double)WaveformSnapToShotChangeSameShotEndMaxSeconds;
         Se.Settings.Waveform.GuessStartOffsetMs = WaveformGuessStartOffsetMs;
         Se.Settings.Waveform.GuessEndOffsetMs = WaveformGuessEndOffsetMs;
+        Se.Settings.Waveform.SubtitleEndPreviewMs = SeWaveform.NormalizeSubtitleEndPreviewMs(WaveformSubtitleEndPreviewMs);
         Se.Settings.Waveform.ShotChangesAutoGenerate = WaveformShotChangesAutoGenerate;
         Se.Settings.Waveform.AllowOverlap = WaveformAllowOverlap;
         Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd = WaveformSetVideoPositionOnMoveStartEnd;

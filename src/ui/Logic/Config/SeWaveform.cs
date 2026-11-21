@@ -7,6 +7,13 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class SeWaveform
 {
+    internal const int DefaultSubtitleEndPreviewMs = 500;
+    internal const int MaximumSubtitleEndPreviewMs = 10000;
+
+    internal static int NormalizeSubtitleEndPreviewMs(int value) =>
+        value > 0 ? System.Math.Min(value, MaximumSubtitleEndPreviewMs) : DefaultSubtitleEndPreviewMs;
+
+    public int SubtitleEndPreviewMs { get; set; } = DefaultSubtitleEndPreviewMs;
     public bool ShowToolbar { get; set; }
     public bool ShowOriginalSubtitle { get; set; }
     public bool CenterVideoPosition { get; set; }

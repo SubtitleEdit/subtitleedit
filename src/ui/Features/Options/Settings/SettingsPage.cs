@@ -911,6 +911,9 @@ public class SettingsPage : UserControl
                 0, 1000, 0, 120, _vm, nameof(_vm.WaveformGuessStartOffsetMs))),
             new SettingsItem(Se.Language.Options.Settings.WaveformGuessEndOffsetMs, () => UiUtil.MakeNumericUpDownInt(
                 0, 1000, 0, 120, _vm, nameof(_vm.WaveformGuessEndOffsetMs))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformSubtitleEndPreviewMs, () => UiUtil.MakeNumericUpDownInt(
+                1, SeWaveform.MaximumSubtitleEndPreviewMs, SeWaveform.DefaultSubtitleEndPreviewMs,
+                120, _vm, nameof(_vm.WaveformSubtitleEndPreviewMs))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShotChangesAutoGenerate, nameof(_vm.WaveformShotChangesAutoGenerate)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusOnMouseOver, nameof(_vm.WaveformFocusOnMouseOver)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusTextboxAfterInsertNew, nameof(_vm.WaveformFocusTextboxAfterInsertNew)),
