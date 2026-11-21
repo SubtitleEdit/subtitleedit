@@ -37,12 +37,12 @@ public class IndexTts25AudioCppDownloadService : IIndexTts25AudioCppDownloadServ
 {
     private readonly HttpClient _httpClient;
 
-    // 2026-11-15: upstream v0.9.5 @ 61c7838b with the same nine families as 2026-11-05
+    // 2026-11-21: upstream v0.9.6 @ 04a37f2e with the same nine families as 2026-11-15
     // (index_tts2 + higgs_audio_tts + fish_audio + fireredtts3 + ace_step + kugelaudio + sidon
-    // + breeze_tts + voxtral_tts). The bump brings the shared DiT runtime for the denoiser models
-    // (#1254), KugelAudio reference-audio cloning (#1275), IndexTTS segment streaming and text
-    // controls (#1206) and inline voice_ref in server requests (#1252).
-    private const string ReleaseTag = "audiocpp-indextts25-2026-11-15";
+    // + breeze_tts + voxtral_tts). The bump brings ACE-Step reference-audio conditioning (#1307),
+    // an LRU of encoded reference voices for Fish Drama3 (#1345) and smaller GGML metadata arena
+    // reservations (#1346, #1347).
+    private const string ReleaseTag = "audiocpp-indextts25-2026-11-21";
     private const string ReleaseBase =
         "https://github.com/SubtitleEdit/support-files/releases/download/" + ReleaseTag + "/";
 
