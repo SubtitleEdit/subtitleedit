@@ -6554,22 +6554,64 @@ public partial class MainViewModel :
             return;
         }
 
-        if (Subtitles.Count == 0)
-        {
-            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.NoVideoLoaded,
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
-            _shortcutManager.ClearKeys();
-            return;
-        }
-
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false, GetOpenFileStartPath());
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, true, GetOpenFileStartPath());
         if (string.IsNullOrEmpty(fileName))
         {
             _shortcutManager.ClearKeys();
             return;
         }
 
-        var subtitle = Subtitle.Parse(fileName);
+        // mkv/mp4 track, Blu-ray sup, VobSub, binary formats etc. (#17089) - only the times are used, no OCR
+        Subtitle? subtitle;
+        try
+        {
+            var embedded = await new EmbeddedSubtitleLoader(_windowService, Window).TryLoad(fileName, includeBluRaySup: false);
+            if (embedded != null)
+            {
+                if (embedded.Cancelled)
+                {
+                    _shortcutManager.ClearKeys();
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(embedded.Error))
+                {
+                    await MessageBox.Show(Window, Se.Language.General.Error, embedded.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _shortcutManager.ClearKeys();
+                    return;
+                }
+
+                subtitle = embedded.ToTimeCodeSubtitle();
+            }
+            else if (await Task.Run(() => TimeCodeImportLoader.TryLoadVobSub(fileName)) is { } vobSub)
+            {
+                var streamId = vobSub.LanguageStreamIds[0];
+                if (vobSub.LanguageStreamIds.Count > 1)
+                {
+                    var pickResult = await ShowDialogAsync<PickVobSubLanguageWindow, PickVobSubLanguageViewModel>(
+                        vm => vm.Initialize(vobSub.Streams, vobSub.Palette, vobSub.Languages, fileName));
+                    if (!pickResult.OkPressed)
+                    {
+                        _shortcutManager.ClearKeys();
+                        return;
+                    }
+
+                    streamId = pickResult.SelectedStreamId;
+                }
+
+                subtitle = TimeCodeImportLoader.MakeSubtitle(vobSub.Streams[streamId]);
+            }
+            else
+            {
+                subtitle = await Task.Run(() => TimeCodeImportLoader.TryLoad(fileName));
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, $"Import time codes from {fileName} failed");
+            subtitle = null;
+        }
+
         if (subtitle == null)
         {
             await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat,
@@ -6580,14 +6622,9 @@ public partial class MainViewModel :
 
         if (subtitle.Paragraphs.Count != Subtitles.Count)
         {
-            var message = "The time code import subtitle does not have the same number of lines as the current subtitle." + Environment.NewLine
-                + "Imported lines: " + subtitle.Paragraphs.Count + Environment.NewLine
-                + "Current lines: " + Subtitles.Count + Environment.NewLine
-                + Environment.NewLine +
-                "Do you want to continue anyway?";
-
+            var message = string.Format(Se.Language.File.Import.TimeCodesDifferentNumberOfLinesXY, subtitle.Paragraphs.Count, Subtitles.Count);
             var answer = await MessageBox.Show(Window, Se.Language.General.Import, message, MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Error);
+                MessageBoxIcon.Question);
 
             if (answer != MessageBoxResult.Yes)
             {
@@ -6596,13 +6633,16 @@ public partial class MainViewModel :
             }
         }
 
+        var count = 0;
         for (var i = 0; i < Subtitles.Count && i < subtitle.Paragraphs.Count; i++)
         {
             Subtitles[i].SetStartTimeOnly(subtitle.Paragraphs[i].StartTime.TimeSpan);
             Subtitles[i].EndTime = subtitle.Paragraphs[i].EndTime.TimeSpan;
+            count++;
         }
 
         _updateAudioVisualizer = true;
+        ShowStatus(string.Format(Se.Language.File.Import.TimeCodesImportedFromXY, Path.GetFileName(fileName), count));
         _shortcutManager.ClearKeys();
     }
 

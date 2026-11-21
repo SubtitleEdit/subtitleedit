@@ -12,6 +12,8 @@ public class LanguageImport
     public string SeparatorSpace { get; set; }
     public string ImagesForOcrDotDotDot { get; set; }
     public string TimeCodesDotDotDot { get; set; }
+    public string TimeCodesDifferentNumberOfLinesXY { get; set; }
+    public string TimeCodesImportedFromXY { get; set; }
     public string SubtitleWithManuallyChosenEncodingDotDotDot { get; set; }
     public string TitleImportImages { get; set; }
     public string ImportFileLabel { get; set; }
@@ -66,6 +68,8 @@ public class LanguageImport
         ImagesForOcrDotDotDot = "Images for OCR...";
         TitleImportImages = "Import images";
         TimeCodesDotDotDot = "Time codes...";
+        TimeCodesDifferentNumberOfLinesXY = "The subtitle with time codes has a different number of lines ({0}) than the current subtitle ({1}).\n\nContinue anyway?";
+        TimeCodesImportedFromXY = "Time codes imported from {0}: {1} lines";
         FormattingDotDotDot = "Formatting...";
         SubtitleWithManuallyChosenEncodingDotDotDot = "_Subtitle with manually chosen encoding...";
         ImportFileLabel = "Choose images to import (time codes in file names supported)";
