@@ -1442,6 +1442,8 @@
       "separatorSpace": "Space",
       "imagesForOcrDotDotDot": "Images for OCR...",
       "timeCodesDotDotDot": "Time codes...",
+      "timeCodesDifferentNumberOfLinesXY": "The subtitle with time codes has a different number of lines ({0}) than the current subtitle ({1}).\n\nContinue anyway?",
+      "timeCodesImportedFromXY": "Time codes imported from {0}: {1} lines",
       "subtitleWithManuallyChosenEncodingDotDotDot": "_Subtitle with manually chosen encoding...",
       "titleImportImages": "Import images",
       "importFileLabel": "Choose images to import (time codes in file names supported)",
