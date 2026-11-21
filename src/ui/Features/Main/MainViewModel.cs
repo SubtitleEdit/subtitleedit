@@ -15586,6 +15586,7 @@ public partial class MainViewModel :
 
     private bool _oldGenerateSpectrogram;
     private string _oldSpectrogramStyle = string.Empty;
+    private bool _oldFfmpegUseCenterChannelOnly;
 
     // Set for the ApplySettings that follows a settings import or reset: the layout sizes and
     // the waveform zoom then come from the settings, not from what is on screen (#16213).
@@ -15596,6 +15597,7 @@ public partial class MainViewModel :
     {
         _oldGenerateSpectrogram = Se.Settings.Waveform.GenerateSpectrogram;
         _oldSpectrogramStyle = Se.Settings.Waveform.SpectrogramStyle;
+        _oldFfmpegUseCenterChannelOnly = Se.Settings.General.FfmpegUseCenterChannelOnly;
 
         var oldSettngsSerialized = SettingsChangeSnapshot.Take();
 
@@ -15890,6 +15892,18 @@ public partial class MainViewModel :
             InitializeFfmpeg();
             LoadShortcuts();
 
+            // The cached waveform/spectrogram file names only know the video and the audio track,
+            // so a waveform extracted with all channels kept being shown after turning on "Use only
+            // front center channel" (and the other way around) - issue #17090. Every cached file was
+            // extracted with the old channel setting, so drop them all; the current video is
+            // loaded again below, the others are extracted again when opened.
+            var centerChannelChanged = _oldFfmpegUseCenterChannelOnly != Se.Settings.General.FfmpegUseCenterChannelOnly;
+            _oldFfmpegUseCenterChannelOnly = Se.Settings.General.FfmpegUseCenterChannelOnly;
+            if (centerChannelChanged)
+            {
+                SettingsViewModel.DeleteWaveformAndSpectrogramFiles();
+            }
+
             if (!string.IsNullOrEmpty(_videoFileName))
             {
                 if (_oldGenerateSpectrogram == false && Se.Settings.Waveform.GenerateSpectrogram ||
@@ -15926,6 +15940,12 @@ public partial class MainViewModel :
                     Se.Settings.Waveform.LastDisplayMode = WaveformDisplayMode.OnlyWaveform.ToString();
                     AudioVisualizer?.SetSpectrogram(null);
                     AudioVisualizer?.SetDisplayMode(WaveformDisplayMode.OnlyWaveform);
+                }
+                else if (centerChannelChanged)
+                {
+                    // Like an audio track switch: extract again if auto-generate is on,
+                    // otherwise show the click-to-generate hint.
+                    ReloadWaveformForCurrentAudioTrack();
                 }
 
                 _oldGenerateSpectrogram = Se.Settings.Waveform.GenerateSpectrogram;
