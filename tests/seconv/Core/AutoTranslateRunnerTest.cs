@@ -46,12 +46,15 @@ public class AutoTranslateRunnerTest : IDisposable
         Configuration.Settings.Tools.OpenAiCompatibleTranslateModel = _defaultOpenAiCompatibleModel;
         Configuration.Settings.Tools.AutoTranslateDeepLUrl = _defaultDeepLUrl;
         Configuration.Settings.Tools.AutoTranslateDeepLApiKey = _defaultDeepLApiKey;
+        Configuration.Settings.Tools.LlamaCppApiKey = string.Empty;
+        Configuration.Settings.Tools.OllamaApiKey = string.Empty;
+        Configuration.Settings.Tools.LmStudioApiKey = string.Empty;
         if (Directory.Exists(_fakeLlamaFolder))
             Directory.Delete(_fakeLlamaFolder, recursive: true);
     }
 
     private static ConversionOptions MakeOptions(string engine = "llamacpp", string? url = null, string? model = null, string to = "de", string? prompt = null, string? apiKey = null,
-        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null, bool? keepLineBreaks = null, SeLlamaCppAdvanced? advanced = null)
+        int? batchSize = null, int? history = null, string? synopsis = null, string? glossary = null, string? formality = null, bool? keepLineBreaks = null, string? requestJson = null, SeLlamaCppAdvanced? advanced = null)
     {
         return new ConversionOptions
         {
@@ -69,6 +72,7 @@ public class AutoTranslateRunnerTest : IDisposable
             TranslateGlossary = glossary,
             TranslateFormality = formality,
             TranslateKeepLineBreaks = keepLineBreaks,
+            TranslateRequestJson = requestJson,
             TranslateAdvancedSettings = advanced,
             Quiet = true,
         };
@@ -308,6 +312,7 @@ public class AutoTranslateRunnerTest : IDisposable
     [InlineData("llamacpp-advanced", true)]
     [InlineData("ollama-advanced", true)]
     [InlineData("lmstudio-advanced", true)]
+    [InlineData("openai-compatible-advanced", true)]
     public void SupportsPrompt_OnlyForLlmEngines(string? engine, bool expected)
     {
         Assert.Equal(expected, AutoTranslateRunner.SupportsPrompt(engine));
@@ -465,9 +470,47 @@ public class AutoTranslateRunnerTest : IDisposable
     public void Create_ApiKeyWithEngineThatHasNone_Throws()
     {
         var ex = Assert.Throws<InvalidOperationException>(
-            () => AutoTranslateRunner.Create(MakeOptions(engine: "ollama", apiKey: "abc")));
+            () => AutoTranslateRunner.Create(MakeOptions(engine: "libretranslate", apiKey: "abc")));
 
         Assert.Contains("--translate-api-key is not supported", ex.Message);
+    }
+
+    [Fact]
+    public void Create_LocalEngines_ApplyApiKey()
+    {
+        AutoTranslateRunner.Create(MakeOptions(engine: "llamacpp", url: "http://myhost:8080", apiKey: " llama-key "));
+        AutoTranslateRunner.Create(MakeOptions(engine: "ollama", apiKey: "ollama-key"));
+        AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio", apiKey: "lm-key"));
+
+        Assert.Equal("llama-key", Configuration.Settings.Tools.LlamaCppApiKey);
+        Assert.Equal("ollama-key", Configuration.Settings.Tools.OllamaApiKey);
+        Assert.Equal("lm-key", Configuration.Settings.Tools.LmStudioApiKey);
+    }
+
+    [Theory]
+    [InlineData("llamacpp-advanced", "http://myhost:8080", null)]
+    [InlineData("ollama-advanced", null, "gemma4")]
+    [InlineData("lmstudio-advanced", null, null)]
+    [InlineData("openai-compatible-advanced", null, null)]
+    public void Create_AdvancedEngines_PassApiKeyToTheEngine(string engineName, string? url, string? model)
+    {
+        var withKey = AutoTranslateRunner.Create(MakeOptions(engine: engineName, url: url, model: model, apiKey: "abc"));
+        var withoutKey = AutoTranslateRunner.Create(MakeOptions(engine: engineName, url: url, model: model));
+
+        Assert.Equal("abc", Assert.IsType<AdvancedTranslateEngine>(withKey.Translator).ApiKey);
+        Assert.Null(Assert.IsType<AdvancedTranslateEngine>(withoutKey.Translator).ApiKey);
+    }
+
+    [Theory]
+    [InlineData("llamacpp")]
+    [InlineData("llamacpp-advanced")]
+    public void Create_LlamaCppLocal_ApiKeyWithoutUrl_Throws(string engineName)
+    {
+        // seconv would start the llama-server itself, and that server takes no key.
+        var ex = Assert.Throws<InvalidOperationException>(
+            () => AutoTranslateRunner.Create(MakeOptions(engine: engineName, apiKey: "abc")));
+
+        Assert.Contains("--translate-api-key needs --translate-url", ex.Message);
     }
 
     [Fact]
@@ -642,6 +685,47 @@ public class AutoTranslateRunnerTest : IDisposable
         Assert.Null(engine.Model);
     }
 
+    /// <summary>As for openai-compatible: a hosted provider requires the model, a single-model server ignores it.</summary>
+    [Fact]
+    public void Create_OpenAiCompatibleAdvanced_ModelOptional()
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "openai-compatible-advanced", url: "http://myhost:8080"));
+
+        Assert.Null(Assert.IsType<AdvancedTranslateEngine>(runner.Translator).Model);
+    }
+
+    /// <summary>The url is taken like the regular openai-compatible engine's: same default, a base is completed, a full endpoint is kept.</summary>
+    [Theory]
+    [InlineData(null, "http://localhost:8000/v1/chat/completions")]
+    [InlineData("myhost:8000", "http://myhost:8000/v1/chat/completions")]
+    [InlineData("https://api.example.com/v1", "https://api.example.com/v1/chat/completions")]
+    [InlineData("https://openrouter.ai/api/v1/chat/completions", "https://openrouter.ai/api/v1/chat/completions")]
+    public void Create_OpenAiCompatibleAdvanced_CompletesTheUrl(string? url, string expected)
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "openai-compatible-advanced", url: url, model: " some/model "));
+
+        var engine = Assert.IsType<AdvancedTranslateEngine>(runner.Translator);
+        Assert.Equal(expected, engine.ApiUrl);
+        Assert.Equal("some/model", engine.Model);
+        Assert.NotNull(runner.AdvancedSettings); // the batch/context loop, with the advanced options
+    }
+
+    /// <summary>
+    /// Only the engine for any OpenAI-style endpoint leaves the llama.cpp request fields out; the
+    /// three engines for local servers keep sending them.
+    /// </summary>
+    [Theory]
+    [InlineData("openai-compatible-advanced", null, null, false)]
+    [InlineData("lmstudio-advanced", null, null, true)]
+    [InlineData("ollama-advanced", null, "gemma4", true)]
+    [InlineData("llamacpp-advanced", "http://myhost:8080", null, true)]
+    public void Create_AdvancedEngines_LlamaCppExtensions(string engineName, string? url, string? model, bool expected)
+    {
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: engineName, url: url, model: model));
+
+        Assert.Equal(expected, Assert.IsType<AdvancedTranslateEngine>(runner.Translator).LlamaCppExtensions);
+    }
+
     [Fact]
     public void Create_AdvancedOptionsWithRegularEngine_Throws()
     {
@@ -718,6 +802,73 @@ public class AutoTranslateRunnerTest : IDisposable
             () => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", history: -1)));
 
         Assert.Contains("--translate-history", ex.Message);
+    }
+
+    // --- --translate-request-json: provider fields merged into every request, checked up front ---
+
+    [Fact]
+    public void Create_Advanced_RequestJsonInline_IsKeptExactly()
+    {
+        // Nothing is unescaped: the \n inside the JSON string stays a JSON escape.
+        var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: "{\"reasoning\": {\"enabled\": false}, \"stop\": [\"\\n\"]}"));
+
+        Assert.Equal("{\"reasoning\": {\"enabled\": false}, \"stop\": [\"\\n\"]}", runner.AdvancedSettings!.RequestJson);
+    }
+
+    [Fact]
+    public void Create_Advanced_RequestJsonFromFile_IsRead()
+    {
+        var path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".json");
+        File.WriteAllText(path, "{ \"top_k\": 40 }\n");
+        try
+        {
+            var runner = AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: path));
+
+            Assert.Equal("{ \"top_k\": 40 }", runner.AdvancedSettings!.RequestJson);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Theory]
+    [InlineData("{\"top_k\": ", "not valid JSON")]
+    [InlineData("{\"messages\": []}", "\"messages\"")]
+    [InlineData("{\"response_format\": {\"type\": \"text\"}}", "\"response_format\"")]
+    public void Create_Advanced_RequestJsonUnusable_Throws(string requestJson, string expectedInMessage)
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: requestJson)));
+
+        Assert.Contains("--translate-request-json", ex.Message);
+        Assert.Contains(expectedInMessage, ex.Message);
+    }
+
+    [Fact]
+    public void Create_Advanced_RequestJsonMissingFile_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", requestJson: "no-such-file.json")));
+
+        Assert.Contains("file not found", ex.Message);
+    }
+
+    [Fact]
+    public void Create_Advanced_SettingsFileRequestJson_IsCheckedToo()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            AutoTranslateRunner.Create(MakeOptions(engine: "lmstudio-advanced", advanced: new SeLlamaCppAdvanced { RequestJson = "[1, 2]" })));
+
+        Assert.Contains("tools.llamaCppAdvanced.requestJson", ex.Message);
+        Assert.Contains("must be a JSON object", ex.Message);
+    }
+
+    [Fact]
+    public void Create_RequestJsonWithRegularEngine_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => AutoTranslateRunner.Create(MakeOptions(engine: "ollama", requestJson: "{\"top_k\": 40}")));
+
+        Assert.Contains("--translate-request-json", ex.Message);
+        Assert.Contains("llamacpp-advanced", ex.Message);
     }
 
     [Fact]

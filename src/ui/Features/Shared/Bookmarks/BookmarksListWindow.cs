@@ -68,21 +68,13 @@ public class BookmarksListWindow : Window
             PlaceholderText = Se.Language.General.BookmarksFilterHint,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Margin = new Thickness(0, 0, 0, 10),
-        }.AsTextField(Se.Language.General.BookmarksFilterHint);
-        textBoxFilter.InnerLeftContent = new Optris.Icons.Avalonia.Icon
-        {
-            Value = "fa-solid fa-magnifying-glass",
-            FontSize = 11,
-            Foreground = EditorChrome.FaintTextBrush,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(8, 0, 0, 0),
-        };
+        }.AsTextField(Se.Language.General.BookmarksFilterHint).WithSearchAndClearIcons();
         textBoxFilter.Bind(TextBox.TextProperty, new Binding(nameof(vm.FilterText)) { Mode = BindingMode.TwoWay });
 
         var listPanel = new DockPanel();
         DockPanel.SetDock(textBoxFilter, Dock.Top);
         listPanel.Children.Add(textBoxFilter);
-        listPanel.Children.Add(MakeBookmarkGridView(vm));
+        listPanel.Children.Add(MakeBookmarkGridView(vm, out var bookmarkGrid));
 
         var list = new Border
         {
@@ -92,18 +84,17 @@ public class BookmarksListWindow : Window
 
         Content = EditorChrome.MakeRoot(list, EditorChrome.MakeDockedButtonBar(left, buttonGoTo, buttonCancel));
 
-        UiUtil.FocusOnFirstActivation(this, buttonCancel); // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => TableViewExtras.FocusRow(bookmarkGrid)); // initial focus on the list, not an action button - a focused button clicks on bare Space
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Border MakeBookmarkGridView(BookmarksListViewModel vm)
+    private static Border MakeBookmarkGridView(BookmarksListViewModel vm, out TableView grid)
     {
         var dataGrid = TableViewExtras.MakeTableView();
+        grid = dataGrid;
         dataGrid.Height = double.NaN; // auto size inside scroll viewer
         dataGrid.ItemsSource = vm.Subtitles;
         dataGrid.DataContext = vm.Subtitles;
-
-        dataGrid.DoubleTapped += vm.OnBookmarksGridDoubleTapped;
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var bookmarkColorConverter = new BookmarkColorToBrushConverter();

@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
+            ResetLoadFrameRate();
             foreach (string line in lines)
             {
                 string s = line;
@@ -59,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string text = temp[5];
                         try
                         {
-                            p = new Paragraph(DecodeTimeCodeFramesFourParts(start.Split(':')), DecodeTimeCodeFramesFourParts(end.Split(':')), text);
+                            p = new Paragraph(DecodeTimeCodeFramesFourParts(start.Split(':'), LoadFrameRate), DecodeTimeCodeFramesFourParts(end.Split(':'), LoadFrameRate), text);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch (Exception exception)
@@ -78,12 +79,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         double f = frameRate / TimeCode.BaseUnit;
                         if (f > 10 && f < 500)
                         {
-                            Configuration.Settings.General.CurrentFrameRate = f;
+                            SetLoadFrameRate(f);
                         }
 
                         if (BatchSourceFrameRate.HasValue)
                         {
-                            Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
+                            SetLoadFrameRate(BatchSourceFrameRate.Value);
                         }
                     }
                 }

@@ -2373,25 +2373,35 @@ public partial class OcrViewModel : ObservableObject
 
         OkPressed = true;
 
-        // Remember the image source so spell check can show the original images (#11719)
-        _ocrImageSourceHolder.Source = _ocrSubtitle;
-        _ocrImageSourceHolder.FileName = _sourceFileName;
-
         OcredSubtitle.Clear();
+        var lineSourceIndices = new Dictionary<Guid, int>();
         var number = 1;
         for (var i = 0; i < OcrSubtitleItems.Count; i++)
         {
             var item = OcrSubtitleItems[i];
             foreach (var groupText in OcrAssaAlignment.SplitTextByAlignmentGroups(item.Text))
             {
-                OcredSubtitle.Add(new SubtitleLineViewModel
+                var line = new SubtitleLineViewModel
                 {
                     Number = number++,
                     Text = groupText,
                     StartTime = item.StartTime,
                     EndTime = item.EndTime,
-                });
+                };
+                OcredSubtitle.Add(line);
+                lineSourceIndices[line.Id] = item.SourceIndex;
             }
+        }
+
+        // Remember the image source and which image each line came from, so spell check and the
+        // main window's OCR image column can show the original images (#11719, #17066).
+        if (_ocrSubtitle != null)
+        {
+            _ocrImageSourceHolder.Set(_ocrSubtitle, _sourceFileName, lineSourceIndices);
+        }
+        else
+        {
+            _ocrImageSourceHolder.Clear();
         }
 
         Close();
@@ -2756,10 +2766,12 @@ public partial class OcrViewModel : ObservableObject
         {
             if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
             {
+                var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Cuda11, GpuBuild.Cuda12);
                 var answer = await MessageBox.Show(
                     Window!,
                     string.Format(Se.Language.General.DownloadXQuestion, "Paddle OCR"),
                     Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Paddle OCR", "Paddle OCR", "Paddle OCR"),
+                    gpuHint,
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU",
@@ -2800,10 +2812,12 @@ public partial class OcrViewModel : ObservableObject
             }
             else if (Configuration.IsRunningOnLinux && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin")))
             {
+                var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Cuda11, GpuBuild.Cuda12);
                 var answer = await MessageBox.Show(
                     Window!,
                     string.Format(Se.Language.General.DownloadXQuestion, "Paddle OCR"),
                     Environment.NewLine + string.Format(Se.Language.General.XRequiresDownloadingYUseZ, "Paddle OCR", "Paddle OCR", "Paddle OCR"),
+                    gpuHint,
                     MessageBoxButtons.Cancel,
                     MessageBoxIcon.Question,
                     "CPU",

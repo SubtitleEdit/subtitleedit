@@ -249,6 +249,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.DeleteSelectedLinesEverywhereCommand), Se.Language.Options.Shortcuts.DeleteSelectionEverywhere },
         { nameof(MainViewModel.RippleDeleteSelectedLinesCommand), Se.Language.Options.Shortcuts.RippleDeleteSelection },
         { nameof(MainViewModel.DuplicateSelectedLinesCommand), Se.Language.Options.Shortcuts.DuplicateSelectedLines},
+        { nameof(MainViewModel.ShowOcrImageCommand), Se.Language.Options.Shortcuts.ShowOcrImage },
         { nameof(MainViewModel.ShowAlignmentPickerCommand), Se.Language.General.Alignment},
         { nameof(MainViewModel.DoAlignmentAn1Command), string.Format(Se.Language.General.AlignmentX, "an1")},
         { nameof(MainViewModel.DoAlignmentAn2Command), string.Format(Se.Language.General.AlignmentX, "an2")},
@@ -782,6 +783,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.EditSecondarySubtitleSettingsCommand), Se.Language.Video.EditSecondarySubtitleSettings },
         { nameof(MainViewModel.ToggleCurrentSubtitleWhilePlayingCommand), Se.Language.Video.ToggleCurrentSubtitleWhilePlaying },
         { nameof(MainViewModel.ToggleSubtitlesOnVideoPlayerCommand), Se.Language.Video.ToggleSubtitlesOnVideoPlayer },
+        { nameof(MainViewModel.CycleVideoFlipCommand), Se.Language.Video.CycleVideoFlip },
         { nameof(MainViewModel.ToggleSmpteTimingCommand), Se.Language.Main.Menu.SmpteTiming },
     };
     }
@@ -830,6 +832,9 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.DeleteSelectedLinesEverywhereCommand, nameof(vm.DeleteSelectedLinesEverywhereCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.RippleDeleteSelectedLinesCommand, nameof(vm.RippleDeleteSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.DuplicateSelectedLinesCommand, nameof(vm.DuplicateSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
+        // The original image of the line after OCR (#17066) - also from the text box, where the
+        // OCR'd text is being proofread.
+        AddShortcut(shortcuts, vm.ShowOcrImageCommand, nameof(vm.ShowOcrImageCommand), ShortcutCategory.SubtitleGridAndTextBox);
         // Alignment works on the selected lines regardless of where focus is, so these are active in
         // the text box too - not only in the subtitle grid (discussion #11744).
         AddShortcut(shortcuts, vm.ShowAlignmentPickerCommand, nameof(vm.ShowAlignmentPickerCommand), ShortcutCategory.SubtitleGridAndTextBox);
@@ -1360,6 +1365,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.EditSecondarySubtitleSettingsCommand, nameof(vm.EditSecondarySubtitleSettingsCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleCurrentSubtitleWhilePlayingCommand, nameof(vm.ToggleCurrentSubtitleWhilePlayingCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleSubtitlesOnVideoPlayerCommand, nameof(vm.ToggleSubtitlesOnVideoPlayerCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.CycleVideoFlipCommand, nameof(vm.CycleVideoFlipCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ToggleSmpteTimingCommand, nameof(vm.ToggleSmpteTimingCommand), ShortcutCategory.General, ShortcutGroup.Video);
 
         // One entry per enabled plugin (SE 4 had the same: Options > Shortcuts > Plugins).
@@ -1526,6 +1532,7 @@ public static class ShortcutsMain
             new(nameof(vm.InverseSelectionCommand), [cmd, "Shift", "I"], ShortcutCategory.SubtitleGrid),
             new(nameof(vm.ToggleLinesItalicOrSelectedTextCommand), [cmd, "I"], ShortcutCategory.SubtitleGrid),
             new(nameof(vm.DeleteSelectedLinesCommand), ["Delete"], ShortcutCategory.SubtitleGrid),
+            new(nameof(vm.ShowOcrImageCommand), [cmd, nameof(Avalonia.Input.Key.P)], ShortcutCategory.SubtitleGridAndTextBox), // like the OCR window (#17066)
             new(nameof(vm.ShowFindCommand), [cmd, "F"], ShortcutCategory.General),
             new(nameof(vm.FindNextCommand), [nameof(Avalonia.Input.Key.F3)], ShortcutCategory.General),
             new(nameof(vm.FindPreviousCommand), ["Shift", nameof(Avalonia.Input.Key.F3)], ShortcutCategory.General),

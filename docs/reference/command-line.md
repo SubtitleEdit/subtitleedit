@@ -358,10 +358,10 @@ Translated output is named with the target language code — `way.srt --translat
 |---|---|
 | `--translate-to:<lang>` | Target language — enables translation |
 | `--translate-from:<lang>` | Source language (default: auto-detect per file) |
-| `--translate-engine:<engine>` | `llamacpp` (default) \| `llamacpp-advanced` \| `ollama` \| `ollama-advanced` \| `lmstudio` \| `lmstudio-advanced` \| `openai-compatible` \| `libretranslate` \| `nllb-serve` \| `nllb-api` \| `deepl`. The `-advanced` engines translate in batches with context, see [Advanced local engines](#advanced-local-engines). |
+| `--translate-engine:<engine>` | `llamacpp` (default) \| `llamacpp-advanced` \| `ollama` \| `ollama-advanced` \| `lmstudio` \| `lmstudio-advanced` \| `openai-compatible` \| `openai-compatible-advanced` \| `libretranslate` \| `nllb-serve` \| `nllb-api` \| `deepl`. The `-advanced` engines translate in batches with context, see [Advanced local engines](#advanced-local-engines). |
 | `--translate-url:<url>` | Endpoint of an already-running translate server. For `llamacpp` this skips the local server auto-start; a bare `host:port` is completed to `/v1/chat/completions`. |
 | `--translate-model:<model>` | `ollama`/`lmstudio`/`openai-compatible` and their `-advanced` variants: model name (required for `ollama-advanced`). `llamacpp`/`llamacpp-advanced`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model; the advanced engine skips completion-only models). |
-| `--translate-api-key:<key>` | API key for `openai-compatible` (sent as a Bearer token, optional) and `deepl` (required; a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
+| `--translate-api-key:<key>` | API key. Optional for `llamacpp` / `ollama` / `lmstudio` / `openai-compatible` and their `-advanced` variants: sent as a Bearer token, for a server that asks for one (`llama-server --api-key`, an LM Studio API token, Ollama's hosted models, a reverse proxy). `llamacpp` and `llamacpp-advanced` take it only together with `--translate-url`, since the server seconv starts itself has no key. Required for `deepl` (a free-tier `:fx` key is routed to `api-free.deepl.com`, a Pro key to `api.deepl.com`). `--translate-url` overrides the DeepL endpoint (default `https://api-free.deepl.com/`) or the OpenAI-compatible endpoint (default `http://localhost:8000/v1/chat/completions`). |
 | `--translate-prompt:<text\|file>` | Prompt for `llamacpp` / `ollama` / `lmstudio` / `openai-compatible`, and the system prompt of the advanced engines — inline text or a path to a text file. See [Custom prompt](#custom-prompt) below. |
 | `--translate-batch-size:<n>` | Advanced engines: subtitle lines per request, 1-50 (default 10). See [Advanced local engines](#advanced-local-engines). |
 | `--translate-history:<n>` | Advanced engines: already-translated lines sent as context before each batch, 0-50 (default 12). |
@@ -369,6 +369,7 @@ Translated output is named with the target language code — `way.srt --translat
 | `--translate-glossary:<text\|file>` | Advanced engines: terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
 | `--translate-formality:<value>` | Advanced engines: `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
 | `--translate-keep-line-breaks[:false]` | Advanced engines: ask the model to keep each line's number of line breaks, the GUI's "Keep line breaks" switch. On by default; `:false` turns the instruction off. |
+| `--translate-request-json:<json\|file>` | Advanced engines: extra request body fields as one JSON object, inline (starting with `{`) or the path to a `.json` file, merged into every request last so they win over seconv's own fields; a `null` value removes a field. `messages` and `response_format` cannot be set. See [Advanced local engines](#advanced-local-engines). |
 
 **llama.cpp (default engine).** With no `--translate-url`, seconv runs a local `llama-server` for you: it looks for the binary in Subtitle Edit's data folder (`llama.cpp` next to `seconv`, then `%AppData%\Subtitle Edit\llama.cpp` / `~/Library/Application Support/Subtitle Edit/llama.cpp` / `~/.config/Subtitle Edit/llama.cpp`) and falls back to `llama-server` on `PATH`. The server is started on a free localhost port with the model's correct chat-template flags and stopped again when seconv exits. Models resolve against the data folder's `models` subfolder.
 
@@ -387,6 +388,9 @@ seconv movie.srt subrip --translate-from:en --translate-to:da --translate-model:
 
 # Already-running llama-server (local or remote)
 seconv movie.srt subrip --translate-to:de --translate-url:http://192.168.1.10:8080
+
+# The same, for a llama-server started with --api-key
+seconv movie.srt subrip --translate-to:de --translate-url:http://192.168.1.10:8080 --translate-api-key:<key>
 
 # Ollama
 seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2
@@ -474,6 +478,25 @@ completion-only MiLMMT models are refused (use them with `llamacpp`).
 | `--translate-glossary:<text\|file>` | Terms to translate exactly as given, one `source term = translation` per line. Inline text (`\n` = line break) or a path to a text file. |
 | `--translate-formality:<value>` | `default` \| `formal` \| `informal` — adds an instruction to use e.g. German "Sie" or "du". |
 | `--translate-keep-line-breaks[:false]` | Ask the model to keep each line's number of line breaks (the GUI's "Keep line breaks" switch). On by default, also when the `--settings` file leaves `keepLineBreaks` out; `:false` turns the instruction off. |
+| `--translate-request-json:<json\|file>` | Extra request body fields as one JSON object (inline, or a `.json` file), merged into every request last so they win: provider switches the options above do not know, e.g. a reasoning on/off field. A `null` value removes seconv's field. `messages` and `response_format` cannot be set. |
+
+`--translate-request-json` carries the fields a provider needs that no option covers. The object is written into
+every request last, so its fields win over seconv's own (`temperature`, `max_tokens`, `cache_prompt`, ...), and a
+`null` removes a field a server rejects. Two fields are refused: `messages`, which the prompt options build, and
+`response_format`, which the engine steps down from json_schema to json_object to none itself when a server
+rejects one. Nothing is unescaped in the value: pass it as JSON, or point at a file. The same object can be set as
+`tools.llamaCppAdvanced.requestJson` in a `--settings` file.
+
+```bash
+# llama.cpp sampling fields the options do not cover
+seconv movie.srt subrip --translate-to:en --translate-engine:llamacpp-advanced --translate-request-json:"{\"top_k\": 40, \"min_p\": 0.05}"
+
+# drop seconv's token cap for a server that sets its own
+seconv movie.srt subrip --translate-to:en --translate-engine:lmstudio-advanced --translate-request-json:"{\"max_tokens\": null}"
+
+# from a file; a value that does not start with { is a path
+seconv movie.srt subrip --translate-to:en --translate-engine:llamacpp-advanced --translate-request-json:extra.json
+```
 
 `--translate-prompt` replaces the built-in system prompt for these engines (`{0}` = source language,
 `{1}` = target language; no `{2}`, the lines travel in the request as JSON). The options are read
@@ -487,6 +510,27 @@ default context (16384 tokens) so history, synopsis and glossary fit. `--transla
 Ollama's OpenAI-compatible endpoint (default `http://localhost:11434/v1/chat/completions`) and needs
 `--translate-model`; `lmstudio-advanced` uses `http://localhost:1234/v1/chat/completions` and sends
 `--translate-model` when given.
+
+`openai-compatible-advanced` runs the same loop against any OpenAI-style chat-completions endpoint,
+for example a hosted provider. It takes its URL, model and key like `openai-compatible`: the default
+URL is `http://localhost:8000/v1/chat/completions`, and `--translate-model` and `--translate-api-key`
+are sent when given (a hosted provider requires the model, a single-model server ignores it). It
+leaves out the request fields only llama.cpp knows (`cache_prompt`, the thinking switch), which a
+strict server rejects. In the GUI it is the "OpenAI Compatible API advanced" engine.
+
+A model that reasons before it answers spends the reply budget on its thoughts, as reasoning tokens
+count against `max_tokens`. When a reply runs out of tokens that way, `openai-compatible-advanced`
+asks once more with a larger budget (four times the usual one, at least 2048 tokens) and keeps it for
+the rest of the file. If the endpoint turns the larger budget down, because it is more than the model
+may write, the usual one stays. A `max_tokens` you set yourself is not raised. To switch reasoning off
+or lower it, pass the provider's own field with `--translate-request-json`, for example
+`{"reasoning": {"enabled": false}}` on OpenRouter.
+
+Some endpoints take the reply budget under another name or refuse a sampling field: OpenAI's own
+reasoning models (the o-series, gpt-5) want `max_completion_tokens` in place of `max_tokens` and accept
+only their default `temperature`. Swap the fields with
+`--translate-request-json:"{\"max_tokens\": null, \"temperature\": null, \"max_completion_tokens\": 8000}"`.
+A budget set this way is yours, so it is not raised either.
 
 Every setting of the GUI's "Advanced..." dialog can also be set in a `--settings` file under
 `tools.llamaCppAdvanced`, including the ones without an option (prompt, sampling, server context
@@ -522,6 +566,11 @@ seconv movie.srt subrip --translate-to:de --translate-engine:ollama-advanced --t
 
 # LM Studio on another machine
 seconv movie.srt subrip --translate-to:de --translate-engine:lmstudio-advanced --translate-url:http://192.168.1.10:1234
+
+# A hosted OpenAI-style endpoint, reasoning switched off with the provider's field
+seconv movie.srt subrip --translate-to:de --translate-engine:openai-compatible-advanced \
+  --translate-url:https://openrouter.ai/api/v1/chat/completions --translate-api-key:<key> --translate-model:<model> \
+  --translate-request-json:"{\"reasoning\": {\"enabled\": false}}"
 ```
 
 ### Templates / replacements
@@ -640,6 +689,7 @@ The keys and defaults below are exactly what `dump-settings` emits:
       "glossary": "",
       "formality": "Default",
       "keepLineBreaks": true,
+      "requestJson": "",
       "prompt": "",
       "temperature": -1,
       "topP": -1,

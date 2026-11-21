@@ -142,6 +142,11 @@ public class OpenFromUrlWindow : Window
                 new Setter(ContentPresenter.ForegroundProperty, EditorChrome.StrongTextBrush),
             },
         });
+        // Disabled until a URL is entered: fade the whole card so it clearly reads as unavailable.
+        Styles.Add(new Style(x => x.OfType<Button>().Class("card").Class(":disabled"))
+        {
+            Setters = { new Setter(OpacityProperty, 0.45) },
+        });
         Styles.Add(new Style(x => x.OfType<Button>().Class("card").Class(":pressed").Template().OfType<ContentPresenter>().Name("PART_ContentPresenter"))
         {
             Setters = { new Setter(ContentPresenter.BackgroundProperty, EditorChrome.PressedBrush) },

@@ -27,7 +27,7 @@ public class PickLanguageWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var textBoxSearch = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), null, 220);
+        var textBoxSearch = EditorChrome.MakeSearchBox(vm, nameof(vm.SearchText), Se.Language.General.SearchLanguages, 220);
         textBoxSearch.TextChanged += (_, _) => vm.SearchTextChanged();
 
         var listBoxLanguages = new ListBox
@@ -41,7 +41,7 @@ public class PickLanguageWindow : Window
         listBoxLanguages.DoubleTapped += (_, _) => vm.OkCommand.Execute(null);
         AutomationProperties.SetName(listBoxLanguages, Se.Language.General.Language);
 
-        var section = EditorChrome.MakePickerListSection(Se.Language.General.Language, listBoxLanguages, textBoxSearch);
+        var section = EditorChrome.MakePickerListSection(Se.Language.General.Language, listBoxLanguages, textBoxSearch, overlay: EditorChrome.MakeNoMatchesNote(vm.Languages, textBoxSearch));
 
         var buttonOk = EditorChrome.AsPrimary(UiUtil.MakeButtonOk(vm.OkCommand));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);

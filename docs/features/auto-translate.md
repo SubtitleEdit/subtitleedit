@@ -43,6 +43,7 @@ The shortcut **Auto-translate selected lines (no prompt, use last engine/languag
 - **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (Index-Translate, TranslateGemma, Gemma 4, Qwen, Aya Expanse, MiLMMT, Hy-MT2 or TranslatePsy-AfriSLM for English ↔ 19 African languages) and runs a local `llama-server` for you. See [Best local models for translating from English](#best-local-models-for-translating-from-english) for a recommendation and [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
 - **llama.cpp advanced (local LLM)** — The managed llama.cpp server translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **OpenAI Compatible API** — Generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...); configure URL, model, prompt, and an optional API key
+- **OpenAI Compatible API advanced** — Any OpenAI-compatible `chat/completions` endpoint, for example a hosted provider, translated in batches with surrounding context, a synopsis and a glossary; see [Advanced local engines](auto-translate-advanced.md)
 - **Anthropic Claude** — AI translation (requires API key)
 - **Groq** — AI translation (requires API key)
 - **OpenRouter** — AI translation (requires API key)
@@ -86,6 +87,7 @@ To translate English subtitles into Spanish, German, Danish or another language 
 | **Index-Translate 2B (Q8_0)** | 2.1 GB | Best small model, for limited memory or when speed matters most. About 0.6 s per line, with more slips than the 9B |
 | **Gemma 4 E4B it (Q4_K_M)** | 5.4 GB | Good alternative at about 1 s per line, with more errors than the 9B in Danish and German but not in Japanese |
 | **TranslateGemma 12B (Q4_K_M)** | 7.3 GB | Close to the 9B in quality, but it can return English lines untranslated when lines are merged into one request. Subtitle Edit detects this and retries, so it can take longer |
+| **Hy-MT2 30B-A3B (IQ3_XXS)** | 11.6 GB | Best with idioms ("That ship has sailed" becomes the matching local expression, not a literal ship) and faster than the 9B, with small slips such as a missing apostrophe. No Danish, Swedish, Norwegian or Finnish |
 | **TranslatePsy-AfriSLM 4B** | 3.1 GB | The one to use for the 19 African languages it covers |
 
 These recommendations come from small tests of about 24 lines of English dialogue, mostly into Danish, German and Japanese, with Index-Translate 9B also tested into Spanish, French, Russian and Chinese. Results for other languages can differ, so try a few lines before translating a whole file.
@@ -110,7 +112,8 @@ Two ways to use one:
    self-downloaded TranslateGemma or Qwen quant behaves like the curated ones.
 2. **Run your own server.** Tick **Use remote server** and point Subtitle Edit at any
    `llama-server` you started yourself (the default is `http://localhost:8080/v1/chat/completions`).
-   Subtitle Edit then does no model management at all.
+   Subtitle Edit then does no model management at all. If the server was started with `--api-key`,
+   enter that key in **API key**.
 
 Be aware of what a bigger model costs. TranslateGemma 27B at Q4_K_M is roughly a 16 GB download and
 needs about 20 GB of VRAM to run fully on the GPU — a 24 GB card in practice. Google's own figures
@@ -150,13 +153,13 @@ Headless runs take the same prompt via `seconv --translate-prompt:<text|file>` �
 
 Depending on the selected engine, you may need to provide:
 
-- **API Key** — Authentication key for cloud services
+- **API Key** — Authentication key for cloud services. Optional for LM Studio, Ollama, llama.cpp with your own server, OpenAI Compatible API and their advanced variants: fill it in only when the server asks for a key. It is sent as a Bearer token. Each engine keeps its own key together with its URL; the two llama.cpp engines share both.
 - **API URL** — Custom endpoint URL (for self-hosted services)
 - **Model** — Specific model to use (for AI engines)
 
 The gear button opens the engine's **Settings** dialog with **Line merge**, **Delay in seconds between requests**, **Max bytes per request** and, for engines that have one, the **Prompt text** with a reset-to-default button. **Do not translate lines in music symbols (♪ ... ♪)** leaves song lines untranslated.
 
-The **llama.cpp advanced**, **Ollama advanced** and **LM Studio advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
+The **llama.cpp advanced**, **Ollama advanced**, **LM Studio advanced** and **OpenAI Compatible API advanced** engines translate in batches with context, synopsis, and glossary support — see [Advanced Local Engines](auto-translate-advanced.md).
 
 ## Translation Review
 

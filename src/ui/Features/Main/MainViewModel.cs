@@ -200,10 +200,12 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.Features.Shared.ShowImage;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.Ffmpeg;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
@@ -264,6 +266,13 @@ public partial class MainViewModel :
 
     [ObservableProperty] private ObservableCollection<SubtitleFormat> _subtitleFormats;
     [ObservableProperty] private SubtitleFormat _selectedSubtitleFormat;
+
+    // Typed/pasted time codes follow the format's limit: 99:59:59,999 by default, 9999 hours for
+    // SubRip, WebVTT, TTML and ASSA/SSA (#16937).
+    partial void OnSelectedSubtitleFormatChanged(SubtitleFormat value)
+    {
+        TimeCodeUpDown.MaxInputTotalMilliseconds = value?.MaxTimeCodeTotalMilliseconds ?? TimeCode.MaxTimeTotalMilliseconds;
+    }
 
     [ObservableProperty] private ObservableCollection<TextEncoding> _encodings;
     [ObservableProperty] private TextEncoding _selectedEncoding;
@@ -359,6 +368,8 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showColumnPixelWidth;
     [ObservableProperty] private bool _showColumnLayer;
     [ObservableProperty] private bool _showColumnForced;
+    [ObservableProperty] private bool _showColumnOcrImage;
+    [ObservableProperty] private bool _hasOcrImageSource; // images from the last OCR session are kept (#17066)
     [ObservableProperty] private bool _showUpDownStartTime;
     [ObservableProperty] private bool _showUpDownEndTime;
     [ObservableProperty] private bool _showUpDownDuration;
@@ -451,6 +462,8 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _areAssaContentMenuItemsVisible;
     [ObservableProperty] private bool _areWebVttContentMenuItemsVisible;
     [ObservableProperty] private bool _isWebVttBrowserPreviewVisible;
+    [ObservableProperty] private bool _isShowOcrImageMenuItemVisible;
+    [ObservableProperty] private bool _isShowOcrImageColumnMenuItemVisible;
     [ObservableProperty] private bool _selectCurrentSubtitleWhilePlaying;
     [ObservableProperty] private bool _waveformCenter;
     [ObservableProperty] private bool _isRightToLeftEnabled;
@@ -1059,6 +1072,8 @@ public partial class MainViewModel :
         _undoRedoManager = undoRedoManager;
         _bluRayHelper = bluRayHelper;
         _ocrImageSourceHolder = ocrImageSourceHolder;
+        _ocrImageSourceHolder.Changed += (_, _) =>
+            Dispatcher.UIThread.Post(() => HasOcrImageSource = _ocrImageSourceHolder.Source is { Count: > 0 });
         _mpvReloader = mpvReloader;
         _vlcReloader = vlcReloader;
         _findService = findService;
@@ -1194,6 +1209,7 @@ public partial class MainViewModel :
         ShowColumnPixelWidth = Se.Settings.General.ShowColumnPixelWidth;
         ShowColumnLayer = Se.Settings.General.ShowColumnLayer;
         ShowColumnForced = Se.Settings.General.ShowColumnForced;
+        ShowColumnOcrImage = Se.Settings.General.ShowColumnOcrImage;
         ShowUpDownStartTime = Se.Settings.Appearance.ShowUpDownStartTime;
         ShowUpDownEndTime = Se.Settings.Appearance.ShowUpDownEndTime;
         ShowUpDownDuration = Se.Settings.Appearance.ShowUpDownDuration;
@@ -3336,8 +3352,7 @@ public partial class MainViewModel :
     // and break the spell-check auto-attach for image-based formats (#11719).
     private void ClearOcrImageSource()
     {
-        _ocrImageSourceHolder.Source = null;
-        _ocrImageSourceHolder.FileName = null;
+        _ocrImageSourceHolder.Clear();
     }
 
     private void ResetSubtitle(SubtitleFormat? format = null)
@@ -5298,6 +5313,50 @@ public partial class MainViewModel :
             ShowStatus(Se.Language.Video.SubtitlesOnVideoPlayerOff);
         }
 
+        _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Cycles the video flip: off, horizontal (mirror), vertical, both (#17012). Only the video
+    /// is flipped - mpv draws the subtitles after its video filters, so they stay readable.
+    /// The flip is for this session only, and shared by every mpv player (docked, undocked,
+    /// fullscreen).
+    /// </summary>
+    [RelayCommand]
+    private void CycleVideoFlip()
+    {
+        var players = new[] { VideoPlayerControl, _fullScreenVideoPlayerControl, _videoPlayerUndockedViewModel?.VideoPlayerControl }
+            .Select(p => p?.VideoPlayer)
+            .OfType<LibMpvDynamicPlayer>()
+            .Distinct()
+            .ToList();
+        if (players.Count == 0)
+        {
+            ShowStatus(Se.Language.Video.VideoFlipRequiresMpv);
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        var flip = LibMpvDynamicPlayer.SessionVideoFlip switch
+        {
+            VideoFlipMode.None => VideoFlipMode.Horizontal,
+            VideoFlipMode.Horizontal => VideoFlipMode.Vertical,
+            VideoFlipMode.Vertical => VideoFlipMode.HorizontalAndVertical,
+            _ => VideoFlipMode.None,
+        };
+        LibMpvDynamicPlayer.SessionVideoFlip = flip;
+        foreach (var mpv in players)
+        {
+            mpv.ApplyVideoFlip();
+        }
+
+        ShowStatus(flip switch
+        {
+            VideoFlipMode.Horizontal => Se.Language.Video.VideoFlipHorizontal,
+            VideoFlipMode.Vertical => Se.Language.Video.VideoFlipVertical,
+            VideoFlipMode.HorizontalAndVertical => Se.Language.Video.VideoFlipHorizontalAndVertical,
+            _ => Se.Language.Video.VideoFlipOff,
+        });
         _shortcutManager.ClearKeys();
     }
 
@@ -11198,6 +11257,23 @@ public partial class MainViewModel :
         ShowStatus(string.Format(Se.Language.Main.RuleProfileIsX, profile.Name));
     }
 
+    /// <summary>
+    /// Toolbar "Speech to text": with more than one line selected only those lines are
+    /// transcribed, otherwise the whole video (#16928). Menus and shortcuts keep their own scope.
+    /// </summary>
+    [RelayCommand]
+    private async Task ToolbarSpeechToText()
+    {
+        if (SubtitleGridSelectedItems.Count > 1 && !string.IsNullOrEmpty(_videoFileName))
+        {
+            await SpeechToTextSelectedLines();
+        }
+        else
+        {
+            await ShowSpeechToTextWhisper();
+        }
+    }
+
     [RelayCommand]
     private async Task ShowSpeechToTextWhisper()
     {
@@ -11978,6 +12054,11 @@ public partial class MainViewModel :
             case OpenFromUrlMode.OpenOnline:
                 await VideoOpenFile(url);
                 SetSubtitleFileNameFromVideoIfEmpty(url);
+                if (!await WaitForOnlineVideoLoadedAsync(url))
+                {
+                    break;
+                }
+
                 if (result.DownloadSubtitles)
                 {
                     // No video on disk — fetch subs to a temp dir, show picker, then
@@ -12005,6 +12086,65 @@ public partial class MainViewModel :
                 break;
         }
     }
+
+    /// <summary>
+    /// Shows "Loading online video..." until the stream opened by "Open online" is playable.
+    /// Opening a URL returns as soon as the player has queued it, while the player still has to
+    /// resolve it via yt-dlp and buffer the stream - often many seconds of an empty player with
+    /// no sign that anything is happening (#17001). The player reports no load failure, so the
+    /// wait ends on a known duration, on Cancel (which closes the video), when another video
+    /// replaces this one, or after a timeout. Returns false when the user cancelled.
+    /// </summary>
+    private async Task<bool> WaitForOnlineVideoLoadedAsync(string url, int timeoutSeconds = 90)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || Window == null || IsOnlineVideoReady(vp))
+        {
+            return true;
+        }
+
+        var pleaseWaitVm = _windowService.ShowWindow<PleaseWaitWindow, PleaseWaitViewModel>(Window, (_, vm) =>
+        {
+            vm.StatusText = Se.Language.Video.OpenFromUrlLoadingVideo;
+            vm.CanCancel = true;
+        });
+
+        try
+        {
+            var end = DateTime.UtcNow.AddSeconds(timeoutSeconds);
+            while (DateTime.UtcNow < end)
+            {
+                if (pleaseWaitVm.IsCancelled)
+                {
+                    if (_videoFileName == url)
+                    {
+                        VideoCloseFile();
+                    }
+
+                    return false;
+                }
+
+                // A video opened meanwhile (the wait window is not modal) or a layout rebuild
+                // that disposed the control ends this wait - it is no longer about this stream.
+                vp = GetVideoPlayerControl();
+                if (vp == null || vp.IsDisposed || _videoFileName != url || IsOnlineVideoReady(vp))
+                {
+                    return true;
+                }
+
+                await Task.Delay(200);
+            }
+
+            ShowStatus(Se.Language.Video.OpenFromUrlStillLoadingVideo, 6000);
+            return true;
+        }
+        finally
+        {
+            pleaseWaitVm.Close();
+        }
+    }
+
+    private static bool IsOnlineVideoReady(VideoPlayerControl vp) => vp.VideoPlayer.Duration > 0.001;
 
     /// <summary>
     /// Streaming-mode helper: runs yt-dlp once to write every available subtitle
@@ -12219,6 +12359,13 @@ public partial class MainViewModel :
             return;
         }
 
+        // yt-dlp needs ffmpeg to merge the separate video and audio streams most sites serve;
+        // without one it leaves two unmerged files and the download fails (#17001).
+        if (!await RequireFfmpegOk())
+        {
+            return;
+        }
+
         var suggestedName = await MakeDownloadSuggestedFileNameAsync(url);
         var outputPath = await _fileHelper.PickSaveFile(Window, ".mkv", suggestedName, Se.Language.General.SaveVideoAsVideoTitle);
         if (string.IsNullOrEmpty(outputPath))
@@ -12329,7 +12476,7 @@ public partial class MainViewModel :
         // tried out without reopening it; "Cancel" just closes and keeps what was applied.
         await ShowDialogAsync<SetVideoOffsetWindow, SetVideoOffsetViewModel>(vm =>
         {
-            vm.Initialize(ApplyVideoOffset, ResetVideoOffset);
+            vm.Initialize(ApplyVideoOffset, ResetVideoOffset, _videoFileName);
         });
     }
 
@@ -14505,6 +14652,23 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Toolbar "Auto-translate": with more than one line selected only those lines are translated,
+    /// otherwise the whole subtitle (#16928). Menus and shortcuts keep their own fixed scope.
+    /// </summary>
+    [RelayCommand]
+    private async Task ToolbarAutoTranslate()
+    {
+        if (SubtitleGridSelectedItems.Count > 1)
+        {
+            await AutoTranslateSelectedLines(autoStart: false);
+        }
+        else
+        {
+            await ShowAutoTranslate();
+        }
+    }
+
     [RelayCommand]
     private async Task ShowAutoTranslate()
     {
@@ -15908,6 +16072,7 @@ public partial class MainViewModel :
         ShowColumnPixelWidth = general.ShowColumnPixelWidth;
         ShowColumnLayer = general.ShowColumnLayer && IsFormatAssa; // the layer column is ASSA only
         ShowColumnForced = general.ShowColumnForced;
+        ShowColumnOcrImage = general.ShowColumnOcrImage;
         SubtitleGridColumnManager?.ApplyOrder(general.SubtitleGridColumnOrder);
     }
 
@@ -16721,6 +16886,75 @@ public partial class MainViewModel :
         AutoFitColumns();
     }
 
+    /// <summary>
+    /// Shows the original image of the selected line after OCR (#17066), like Ctrl+P in the OCR
+    /// window: left/right step through the lines and move the grid selection along.
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowOcrImage()
+    {
+        var line = SelectedSubtitle;
+        if (Window == null || line == null || !HasOcrImageSource)
+        {
+            return;
+        }
+
+        var item = MakeOcrImageItem(line);
+        if (item == null)
+        {
+            ShowStatus(Se.Language.Main.NoOcrImageForLine);
+            return;
+        }
+
+        await ShowDialogAsync<ShowImageWindow, ShowImageViewModel>(vm =>
+        {
+            vm.Initialize(item.Title, item.Bitmap, item.Text);
+            vm.Navigate = direction =>
+            {
+                var index = Subtitles.IndexOf(line) + direction;
+                while (index >= 0 && index < Subtitles.Count)
+                {
+                    var next = Subtitles[index];
+                    var nextItem = next.IsHidden ? null : MakeOcrImageItem(next);
+                    if (nextItem != null)
+                    {
+                        line = next;
+                        SelectAndScrollToRow(index, next, restoreGridFocus: false);
+                        return nextItem;
+                    }
+
+                    index += direction;
+                }
+
+                return null;
+            };
+        });
+    }
+
+    private ShowImageItem? MakeOcrImageItem(SubtitleLineViewModel line)
+    {
+        var index = _ocrImageSourceHolder.GetSourceIndex(line.Id, line.StartTime, line.EndTime);
+        var bitmap = OcrSourceImage.GetCroppedBitmap(_ocrImageSourceHolder.Source, index);
+        return bitmap == null
+            ? null
+            : new ShowImageItem($"{Se.Language.Ocr.OcrImage} - #{line.Number}", bitmap, line.Text);
+    }
+
+    /// <summary>The OCR image column's cell image for a line (#17066), or null when it has none.</summary>
+    public Avalonia.Media.Imaging.Bitmap? GetOcrImage(SubtitleLineViewModel line)
+    {
+        var index = _ocrImageSourceHolder.GetSourceIndex(line.Id, line.StartTime, line.EndTime);
+        return OcrSourceImage.GetCroppedBitmap(_ocrImageSourceHolder.Source, index);
+    }
+
+    [RelayCommand]
+    private void ToggleShowColumnOcrImage()
+    {
+        Se.Settings.General.ShowColumnOcrImage = !Se.Settings.General.ShowColumnOcrImage;
+        ShowColumnOcrImage = Se.Settings.General.ShowColumnOcrImage;
+        AutoFitColumns();
+    }
+
     [RelayCommand]
     private void ToggleShowColumnLayer()
     {
@@ -16762,6 +16996,14 @@ public partial class MainViewModel :
             new(Se.Language.General.PixelWidth, true, ShowColumnPixelWidth, InitListViewAndEditBox.SubtitleGridColumnKeys.PixelWidth) { DefaultIsVisible = defaults.ShowColumnPixelWidth },
             new(Se.Language.General.Layer, true, ShowColumnLayer, InitListViewAndEditBox.SubtitleGridColumnKeys.Layer) { DefaultIsVisible = defaults.ShowColumnLayer },
         };
+
+        // The OCR image column only exists while images from the last OCR session are kept (#17066).
+        if (HasOcrImageSource)
+        {
+            var textIndex = entries.FindIndex(e => e.Keys[0] == InitListViewAndEditBox.SubtitleGridColumnKeys.Text);
+            entries.Insert(Math.Max(0, textIndex),
+                new(Se.Language.Ocr.OcrImage, true, ShowColumnOcrImage, InitListViewAndEditBox.SubtitleGridColumnKeys.OcrImage) { DefaultIsVisible = defaults.ShowColumnOcrImage });
+        }
 
         var result = await _windowService.ShowDialogAsync<GridColumnsWindow, GridColumnsViewModel>(Window, vm =>
         {
@@ -16821,6 +17063,10 @@ public partial class MainViewModel :
             case InitListViewAndEditBox.SubtitleGridColumnKeys.Forced:
                 Se.Settings.General.ShowColumnForced = isVisible;
                 ShowColumnForced = isVisible;
+                break;
+            case InitListViewAndEditBox.SubtitleGridColumnKeys.OcrImage:
+                Se.Settings.General.ShowColumnOcrImage = isVisible;
+                ShowColumnOcrImage = isVisible;
                 break;
             case InitListViewAndEditBox.SubtitleGridColumnKeys.Style:
                 Se.Settings.General.ShowColumnStyle = isVisible;
@@ -21065,6 +21311,7 @@ public partial class MainViewModel :
         _fullScreenVideoPlayerControl.PreviousSubtitleCommand = PlayPreviousCommand;
         _fullScreenVideoPlayerControl.NextSubtitleCommand = PlayNextCommand;
         _fullScreenVideoPlayerControl.ToggleSubtitlesCommand = ToggleSubtitlesOnVideoPlayerCommand;
+        _fullScreenVideoPlayerControl.CycleVideoFlipCommand = CycleVideoFlipCommand;
         _fullScreenVideoPlayerControl.SubtitlesOnVideoIsVisible = _mpvReloader.SubtitlesVisible;
         _fullScreenVideoPlayerControl.SubtitleButtonsIsVisible = true;
         _fullScreenVideoPlayerControl.PlaybackSpeedCommand = SetPlaybackSpeedCommand;
@@ -25560,6 +25807,7 @@ public partial class MainViewModel :
                     break;
                 case InitListViewAndEditBox.SubtitleGridColumnKeys.Text:
                 case InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText:
+                case InitListViewAndEditBox.SubtitleGridColumnKeys.OcrImage:
                     column.Width = new GridLength(1, GridUnitType.Star);
                     break;
             }
@@ -26536,8 +26784,7 @@ public partial class MainViewModel :
         // Drop any image source kept from a previous OCR session; the image-import branches
         // below re-populate it via the OCR window, while plain text subtitles leave it cleared
         // so spell check does not show unrelated images (#11719).
-        _ocrImageSourceHolder.Source = null;
-        _ocrImageSourceHolder.FileName = null;
+        _ocrImageSourceHolder.Clear();
 
         // Lower case: every check below compares with lower-case extensions, and DVD/Blu-ray rips
         // are often upper case (MOVIE.SUP, 00001.M2TS) - those fell through to the text formats.
@@ -27217,8 +27464,8 @@ public partial class MainViewModel :
             // Never save back over the audio file: ResetSubtitle() above cleared _converted, and
             // the loaded format (LRC) matches the selected one, so Ctrl+S (or auto-save) wrote the
             // LRC text over the .opus (#15213). Suggest a subtitle file next to it and route Save
-            // through "Save as".
-            if (isAudioFile)
+            // through "Save as". Same for a subtitle list read from a Word .doc/.docx.
+            if (isAudioFile || WordDocumentReader.IsWordDocument(fileName))
             {
                 _subtitleFileName = Path.ChangeExtension(fileName, SelectedSubtitleFormat.Extension);
                 _converted = true;
@@ -29898,7 +30145,7 @@ public partial class MainViewModel :
             return true;
         }
 
-        var limits = format.FormatLimits;
+        var limits = SubtitleFormatLimits.ForFormat(format);
         if (limits == null)
         {
             return true;
@@ -29911,7 +30158,7 @@ public partial class MainViewModel :
         }
 
         var vm = await ShowDialogAsync<FormatLimitWarningWindow, FormatLimitWarningViewModel>(
-            vm => vm.Initialize(format, limits, violating));
+            vm => vm.Initialize(format, limits, violating, subtitle));
         return vm.SaveAnywayPressed;
     }
 
@@ -31907,7 +32154,9 @@ public partial class MainViewModel :
             {
                 WaveformGeneratingText = Se.Language.Main.GeneratingWaveformDotDotDot;
                 using var waveFile = new WavePeakGenerator2(tempWaveFileName);
-                var wavePeaks = waveFile.GeneratePeaks(0, peakWaveFileName);
+                // The wave file starts at the file's start time; the player may not (#16966).
+                var delayMilliseconds = WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName);
+                var wavePeaks = waveFile.GeneratePeaks(delayMilliseconds, peakWaveFileName);
 
                 if (WasCancelled())
                 {
@@ -31918,7 +32167,7 @@ public partial class MainViewModel :
                 if (Se.Settings.Waveform.GenerateSpectrogram)
                 {
                     WaveformGeneratingText = Se.Language.Main.GeneratingSpectrogramDotDotDot;
-                    var spectrogram = waveFile.GenerateSpectrogram(0, spectrogramFolderName, _videoOpenTokenSource.Token);
+                    var spectrogram = waveFile.GenerateSpectrogram(delayMilliseconds, spectrogramFolderName, _videoOpenTokenSource.Token);
                     // On the UI thread: SetSpectrogram synchronously disposes the SKBitmaps
                     // DrawSpectrogram is handing to Skia, and this method runs on the
                     // extraction worker (everything else here marshals the same way).
@@ -32049,6 +32298,9 @@ public partial class MainViewModel :
         var argumentsFormat = Se.Settings.Video.ShowChangesFFmpegArguments;
         var arguments = string.Format(argumentsFormat, videoFileName, threshold);
 
+        // ffmpeg's "pts_time" counts from the file's start time, the player may not (#16966).
+        var timelineOffsetSeconds = WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName) / 1000.0;
+
         // Filled on ffmpeg's stderr callback thread; the UI only ever gets snapshots of it
         // (see PublishShotChanges). The waveform render loop binary-searches ShotChanges at
         // ~60 fps, so handing it a list a background thread keeps Add'ing to could tear a
@@ -32070,7 +32322,7 @@ public partial class MainViewModel :
                 {
                     lock (collected)
                     {
-                        collected.Add(seconds);
+                        collected.Add(seconds + timelineOffsetSeconds);
                     }
                 }
             }
@@ -33254,6 +33506,8 @@ public partial class MainViewModel :
         ShowAutoTranslateSelectedLines = selectedCount > 0;
         HasMultipleLinesSelected = selectedCount > 1;
         ShowColumnLayerFlyoutMenuItem = IsFormatAssa;
+        IsShowOcrImageMenuItemVisible = HasOcrImageSource && !IsSubtitleGridFlyoutHeaderVisible && selectedCount == 1;
+        IsShowOcrImageColumnMenuItemVisible = HasOcrImageSource && IsSubtitleGridFlyoutHeaderVisible;
 
         if (IsSubtitleGridFlyoutHeaderVisible)
         {

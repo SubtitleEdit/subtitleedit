@@ -21,13 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            foreach (string s in lines)
-            {
-                sb.Append(s);
-            }
-
-            var allText = sb.ToString().Trim();
+            var allText = ConcatLinesTrimmed(lines);
             if (!allText.StartsWith('{') || !allText.Contains("\"alternatives\""))
             {
                 return;

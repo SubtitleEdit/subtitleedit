@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.ObjectModel;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 
@@ -35,6 +36,21 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
     /// <summary>The "model" request field; null for single-model servers like llama-server.</summary>
     protected virtual string? GetModel() => null;
+
+    /// <summary>The key sent as a Bearer token (read per request); null or empty for a server that asks for none.</summary>
+    protected virtual string? GetApiKey() => null;
+
+    /// <summary>
+    /// False for an engine whose endpoint is only known to speak the OpenAI chat-completions API,
+    /// such as a hosted provider (read per request; see <see cref="LlamaCppAdvancedClient.LlamaCppExtensions"/>).
+    /// </summary>
+    protected virtual bool UsesLlamaCppExtensions => true;
+
+    /// <summary>
+    /// The endpoint, model and key a run would use, for a one-off request to the same server, such
+    /// as "Generate with AI" in the advanced settings.
+    /// </summary>
+    public (string Url, string? Model, string? ApiKey) GetEndpoint() => (GetApiUrl(), GetModel(), GetApiKey());
 
     public void Initialize()
     {
@@ -125,8 +141,16 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
 
         // Translation-tuned models (TranslateGemma) can echo history into a lone line's
         // translation, so the single-line case - including bisection retries - goes context-free.
-        var history = count > 1 ? CollectHistory(rows, index) : new List<LlamaCppAdvancedProtocol.HistoryPair>();
+        var history = count > 1 ? CollectHistory(rows, index, Settings.HistoryPairs) : new List<LlamaCppAdvancedProtocol.HistoryPair>();
         var map = await TranslateLinesAsync(lines, history, sourceLanguageCode, targetLanguageCode, cancellationToken);
+
+        // Two rows joined into one, the rest moved up and padded (Index-Translate 9B joined a
+        // sentence split over two rows): split the joined translation back over its two rows and
+        // move the others down, when the result passes every check below.
+        if (count > 1 && IsComplete(map, lines))
+        {
+            map = TryRepairMergedRow(map, lines, history, rows, index, sourceLanguageCode, targetLanguageCode);
+        }
 
         // A few lines handed back in the source language in an otherwise good batch are asked for
         // again one at a time; a batch where many came back that way is cut to end before the
@@ -213,6 +237,8 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     {
         var client = _client ?? throw new InvalidOperationException("Initialize() not called");
         var url = GetApiUrl();
+        client.ApiKey = GetApiKey();
+        client.LlamaCppExtensions = UsesLlamaCppExtensions;
 
         // The "codes" this engine receives are English language names (ListLanguages puts the
         // name in TranslationPair.Code), which is what the prompt expects.
@@ -276,7 +302,7 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                     continue;
                 }
 
-                Error = DescribeUnusableReply(reply, client.ReplyFromReasoning, client.LastRequestDisabledThinking);
+                Error = DescribeUnusableReply(reply, client.ReplyFromReasoning, client.LastRequestDisabledThinking, client.ReplyRanOutWhileReasoning && !client.LlamaCppExtensions, client.LlamaCppExtensions);
             }
             catch (HttpRequestException)
             {
@@ -299,8 +325,19 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     /// none - an empty reply used to leave the message bare, which made a server that streams
     /// the answer somewhere else impossible to tell from a model that answered badly (#15009).
     /// </summary>
-    internal static string DescribeUnusableReply(string reply, bool fromReasoning, bool requestDisabledThinking = true)
+    internal static string DescribeUnusableReply(string reply, bool fromReasoning, bool requestDisabledThinking = true, bool ranOutWhileReasoning = false, bool hasThinkingSwitch = true)
     {
+        // What switches reasoning off on an endpoint without a thinking switch is the provider's.
+        const string providerSwitch = "switch reasoning off or lower it with the extra request JSON (the field is the provider's, e.g. {\"reasoning\": {\"enabled\": false}})";
+
+        // On such an endpoint: the larger reply budget was not enough either, or was not
+        // accepted, or the user's own token cap is in the way.
+        if (ranOutWhileReasoning)
+        {
+            return "the reply ran out of tokens, which the model spent on reasoning - " + providerSwitch + ", or raise max tokens" +
+                   (string.IsNullOrWhiteSpace(reply) || fromReasoning ? string.Empty : ": " + reply);
+        }
+
         if (string.IsNullOrWhiteSpace(reply))
         {
             return "the server returned an empty reply (no \"content\" and no \"reasoning_content\")";
@@ -311,6 +348,13 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
             return reply;
         }
 
+        // No "enable_thinking" goes to such an endpoint, so the advice below would promise a
+        // request field that is never sent.
+        if (!hasThinkingSwitch)
+        {
+            return "the server left \"content\" empty and answered in \"reasoning_content\" only - the model looks to be in thinking mode, " + providerSwitch + ": " + reply;
+        }
+
         // Only claim the model ignored "enable_thinking" off when this request actually sent it -
         // the first reasoning-only reply is what switches it on for the following requests.
         return requestDisabledThinking
@@ -319,13 +363,20 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
     }
 
     /// <summary>
-    /// The rolling context: the last N already-translated rows immediately before the batch.
+    /// The rolling context: the last N already-translated rows before the batch, each source text
+    /// once. A typeset sign is often hundreds of frames of the same text, and without the check
+    /// those copies filled the whole history - TranslateGemma 4B, with nothing but eleven copies of
+    /// an untranslated sign to go by, answered the next Danish batch in Norwegian. The nearest copy
+    /// is kept, and the search goes further back for real lines, up to <see cref="HistoryScanFactor"/>
+    /// rows per pair.
     /// </summary>
-    private List<LlamaCppAdvancedProtocol.HistoryPair> CollectHistory(ObservableCollection<TranslateRow> rows, int index)
+    internal static List<LlamaCppAdvancedProtocol.HistoryPair> CollectHistory(IReadOnlyList<TranslateRow> rows, int index, int historyPairs)
     {
-        var maxPairs = Math.Clamp(Settings.HistoryPairs, 0, 50);
+        var maxPairs = Math.Clamp(historyPairs, 0, 50);
         var history = new List<LlamaCppAdvancedProtocol.HistoryPair>(maxPairs);
-        for (var i = index - 1; i >= 0 && history.Count < maxPairs; i--)
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var oldest = Math.Max(0, index - maxPairs * HistoryScanFactor);
+        for (var i = index - 1; i >= oldest && history.Count < maxPairs; i--)
         {
             if (string.IsNullOrEmpty(rows[i].TranslatedText))
             {
@@ -341,12 +392,20 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
                 continue; // a pure override/drawing line is no use as an example pair
             }
 
+            if (!seen.Add(source))
+            {
+                continue; // a repeat adds nothing the nearer copy did not
+            }
+
             history.Add(new LlamaCppAdvancedProtocol.HistoryPair(source, target));
         }
 
         history.Reverse();
         return history;
     }
+
+    /// <summary>How many rows back the history search may go per pair, past repeated lines.</summary>
+    internal const int HistoryScanFactor = 10;
 
     private const double RetryTemperatureBump = 0.3;
 
@@ -529,7 +588,81 @@ public abstract class AdvancedTranslatorBase : IAutoTranslator, IBatchContextTra
             failure = new BatchFailure(shift, true);
         }
 
+        // A merge whose padding is too short to show up above: the length check names the merged
+        // row itself, so the retry can end right before it.
+        var merged = FindLengthShift(map, lines);
+        if (merged >= 0 && (failure.Line < 0 || merged < failure.Line))
+        {
+            failure = new BatchFailure(merged, false);
+        }
+
         return failure;
+    }
+
+    /// <summary>
+    /// <paramref name="map"/> with a merged row (see <see cref="TranslationShiftGuard.FindLengthShift"/>)
+    /// split back over its two rows, the rows after it moved down by one and the padding row
+    /// dropped - or <paramref name="map"/> itself when there is no merge, or the repaired reply
+    /// still fails a check.
+    /// </summary>
+    internal static Dictionary<int, string> TryRepairMergedRow(Dictionary<int, string> map, List<LlamaCppAdvancedProtocol.BatchLine> lines, List<LlamaCppAdvancedProtocol.HistoryPair> history, IReadOnlyList<TranslateRow> rows, int index, string sourceLanguageCode, string targetLanguageCode)
+    {
+        var sources = lines.Select(l => l.Text).ToList();
+        var translations = lines.Select(l => map.TryGetValue(l.Number, out var t) ? t : string.Empty).ToList();
+        var merged = TranslationShiftGuard.FindLengthShift(sources, translations);
+        if (merged < 0)
+        {
+            return map;
+        }
+
+        var padding = TranslationShiftGuard.FindPaddingIndex(sources, translations, merged);
+        if (padding < 0)
+        {
+            return map;
+        }
+
+        var language = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(targetLanguageCode);
+        var parts = MergeAndSplitHelper.SplitTranslationInTwo(translations[merged], rows[index + merged], rows[index + merged + 1], string.IsNullOrEmpty(language) ? "en" : language);
+        if (parts == null)
+        {
+            return map;
+        }
+
+        var repaired = new List<string>(translations);
+        repaired[merged] = parts[0];
+        repaired[merged + 1] = parts[1];
+        for (var j = merged + 1; j < padding; j++)
+        {
+            repaired[j + 1] = translations[j];
+        }
+
+        var repairedMap = new Dictionary<int, string>(map);
+        for (var i = 0; i < lines.Count; i++)
+        {
+            repairedMap[lines[i].Number] = repaired[i];
+        }
+
+        return FindFirstFailure(repairedMap, lines, history, sourceLanguageCode, targetLanguageCode).Line < 0
+            ? repairedMap
+            : map;
+    }
+
+    /// <summary>
+    /// The number of the line whose translation also holds the next line's (see
+    /// <see cref="TranslationShiftGuard.FindLengthShift"/>), or -1 when there is none.
+    /// </summary>
+    internal static int FindLengthShift(Dictionary<int, string> map, List<LlamaCppAdvancedProtocol.BatchLine> lines)
+    {
+        var sources = new List<string>(lines.Count);
+        var translations = new List<string>(lines.Count);
+        foreach (var line in lines)
+        {
+            sources.Add(line.Text);
+            translations.Add(map.TryGetValue(line.Number, out var translation) ? translation : string.Empty);
+        }
+
+        var index = TranslationShiftGuard.FindLengthShift(sources, translations);
+        return index < 0 ? -1 : lines[index].Number;
     }
 
     /// <summary>

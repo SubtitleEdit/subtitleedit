@@ -2977,7 +2977,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             WavePeakData2? peaks;
             using (var waveFile = new WavePeakGenerator2(tempWaveFileName))
             {
-                peaks = waveFile.GeneratePeaks(0, peakWaveFileName);
+                // Cached as the main window's waveform, so on its timeline (#16966).
+                peaks = waveFile.GeneratePeaks(WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName), peakWaveFileName);
             }
 
             if (peaks != null)

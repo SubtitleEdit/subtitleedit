@@ -76,12 +76,69 @@ public static class OutputContainer
     /// carry it, otherwise the container's default. The extension combo box is kept in sync with
     /// the container, but the "save as" dialog lets the user pick another one at generate time.
     /// </summary>
-    public static string GetAudioEncodingFor(string extension, string audioEncoding)
+    /// <remarks>
+    /// "copy" is replaced by AAC (or the container's first real encoder) when the source audio
+    /// codec is known and the container cannot carry it in a widely playable way - e.g. the
+    /// Opus track of a downloaded WebM copied into .mp4 muxes fine, but Windows' players and
+    /// most TVs then play the video silently (#16980).
+    /// </remarks>
+    public static string GetAudioEncodingFor(string extension, string audioEncoding, string? sourceAudioCodec = null)
     {
         var items = GetAudioEncodings(extension);
         var wanted = MigrateAudioEncoding(audioEncoding);
+        var encoding = !string.IsNullOrEmpty(wanted) && items.Contains(wanted) ? wanted : items[0];
 
-        return !string.IsNullOrEmpty(wanted) && items.Contains(wanted) ? wanted : items[0];
+        if (encoding == AudioEncodingCopy && !CanCopyAudio(extension, sourceAudioCodec))
+        {
+            return items.Contains("aac") ? "aac" : items.Find(p => p != AudioEncodingCopy) ?? encoding;
+        }
+
+        return encoding;
+    }
+
+    /// <summary>
+    /// True when a source audio track in <paramref name="sourceAudioCodec"/> (ffmpeg's codec name,
+    /// e.g. "opus") can be stream-copied into <paramref name="extension"/> and still play in common
+    /// players. An unknown codec (null/empty) is trusted, as before.
+    /// </summary>
+    public static bool CanCopyAudio(string extension, string? sourceAudioCodec)
+    {
+        if (string.IsNullOrWhiteSpace(sourceAudioCodec))
+        {
+            return true;
+        }
+
+        var codec = sourceAudioCodec.Trim().ToLowerInvariant();
+        switch (extension?.ToLowerInvariant())
+        {
+            case ".mp4":
+            case ".m4v":
+                return codec is "aac" or "mp3" or "ac3" or "eac3" or "alac";
+            case ".mov":
+                return codec is "aac" or "mp3" or "ac3" or "eac3" or "alac" || codec.StartsWith("pcm_", StringComparison.Ordinal);
+            case ".ts":
+                return codec is "aac" or "mp3" or "mp2" or "ac3" or "eac3" or "opus" or "dts";
+            case ".webm":
+                return codec is "opus" or "vorbis";
+            default:
+                return true;
+        }
+    }
+
+    /// <summary>
+    /// ffmpeg's codec name from an audio stream description such as
+    /// "aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp" - here "aac". Empty when none.
+    /// </summary>
+    public static string GetCodecName(string? trackInfo)
+    {
+        if (string.IsNullOrWhiteSpace(trackInfo))
+        {
+            return string.Empty;
+        }
+
+        var s = trackInfo.Trim();
+        var end = s.IndexOfAny(new[] { ',', ' ', '(' });
+        return (end < 0 ? s : s.Substring(0, end)).ToLowerInvariant();
     }
 
     /// <summary>

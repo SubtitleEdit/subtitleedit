@@ -113,7 +113,7 @@ public class BatchConvertWindow : Window
 
         Content = root;
 
-        UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, () => TableViewExtras.FocusRow(vm.FileGrid)); // initial focus on the file list, not Done - a focused button clicks on bare Space
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
         KeyDown += (s, e) => vm.OnKeyDown(e);

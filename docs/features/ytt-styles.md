@@ -32,6 +32,7 @@ The text box colors the pen number in the pen's text color, and the grid's "show
 | Font style | `fs` | Courier New, Times New Roman, Lucida Console, Roboto, Comic Sans, Monotype Corsiva, small caps |
 | Size | `sz` | not a real percentage: YouTube draws `100 + (sz − 100) / 4` %, so 200 is 125% and 0 (the smallest) is 75%. The editor shows the real size. |
 | Offset | `of` | subscript, normal, superscript |
+| Name | `name` | a label for you, shown in the styles list and in the pen menus. It is for this editor only: YouTube ignores it and drops it when the file is uploaded. A copy of a named pen gets "(Copy)" added, and a pen made from a named pen by `<i>`, `<b>`, `<u>` or `<font>` tags starts without a name. |
 
 Each color has its own on/off switch. An attribute that is off is left out of the file, and YouTube then uses the viewer's own caption settings for it.
 

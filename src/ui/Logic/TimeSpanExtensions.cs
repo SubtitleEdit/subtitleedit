@@ -4,7 +4,11 @@ namespace Nikse.SubtitleEdit.Logic;
 
 public static class TimeSpanExtensions
 {
+    // The "no time" marker (99:59:59,999), same as TimeCode.MaxTimeTotalMilliseconds.
     public const double MaxTimeTotalMilliseconds = 359999999; // new TimeCode(99, 59, 59, 999).TotalMilliseconds
+
+    // The largest time code SE holds (9999:59:59,999), same as TimeCode.MaxSupportedTotalMilliseconds (#16937).
+    public const double MaxSupportedTotalMilliseconds = 35999999999;
 
     public static bool IsMaxTime(this TimeSpan ts)
     {
@@ -33,7 +37,7 @@ public static class TimeSpanExtensions
     /// turns a fractional-millisecond double (typed input, pixel positions, video positions,
     /// scale factors) into a subtitle time must come through here.
     /// </para>
-    /// Out-of-range values are clamped to the time-code domain (±99:59:59,999) rather than
+    /// Out-of-range values are clamped to the time-code domain (±9999:59:59,999) rather than
     /// TimeSpan's, so the result is always a whole millisecond a <see cref="Core.Common.TimeCode"/>
     /// can hold. NaN throws, like <see cref="TimeSpan.FromSeconds(double)"/> always has - a NaN
     /// time is a bug at the call site and must not silently become 00:00:00,000.
@@ -46,13 +50,13 @@ public static class TimeSpanExtensions
         }
 
         var ms = Math.Round(milliseconds, MidpointRounding.AwayFromZero);
-        if (ms > MaxTimeTotalMilliseconds)
+        if (ms > MaxSupportedTotalMilliseconds)
         {
-            ms = MaxTimeTotalMilliseconds;
+            ms = MaxSupportedTotalMilliseconds;
         }
-        else if (ms < -MaxTimeTotalMilliseconds)
+        else if (ms < -MaxSupportedTotalMilliseconds)
         {
-            ms = -MaxTimeTotalMilliseconds;
+            ms = -MaxSupportedTotalMilliseconds;
         }
 
         return TimeSpan.FromTicks((long)ms * TimeSpan.TicksPerMillisecond);

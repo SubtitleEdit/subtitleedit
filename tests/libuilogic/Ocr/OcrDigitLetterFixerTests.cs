@@ -18,6 +18,9 @@ public class OcrDigitLetterFixerTests
     [InlineData("STAND D0WN", "STAND DOWN")]
     [InlineData("7o/o of childhood accidents", "7% of childhood accidents")]
     [InlineData("34o/o of accidents", "34% of accidents")]
+    [InlineData("still minus 5Ø degrees", "still minus 50 degrees")] // slashed zero
+    [InlineData("Day 1Ø, and", "Day 10, and")]
+    [InlineData("5ø%", "50%")]
     [InlineData("<i>♪ D00-wah-doo-wah</i>", "<i>♪ Doo-wah-doo-wah</i>")]
     public void Fixes(string input, string expected)
     {
@@ -33,6 +36,8 @@ public class OcrDigitLetterFixerTests
     [InlineData("O, Romeo")]
     [InlineData("100 or 0")]
     [InlineData("and/or he/she")]
+    [InlineData("up by Øksfjord")]
+    [InlineData("Ø is a letter")]
     [InlineData("З000 долларов.")] // Cyrillic "З" read for "3" - still a number
     public void LeavesAlone(string input)
     {

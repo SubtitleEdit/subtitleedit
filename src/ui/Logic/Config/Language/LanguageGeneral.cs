@@ -552,6 +552,8 @@ public class LanguageGeneral
     public string SearchDirection { get; set; }
     public string SearchFontNames { get; set; }
     public string SearchSubtitleFormats { get; set; }
+    public string SearchLanguages { get; set; }
+    public string NoMatches { get; set; }
     public string Seconds { get; set; }
     public string SelectAll { get; set; }
     public string SelectFilesToConvert { get; set; }
@@ -615,6 +617,7 @@ public class LanguageGeneral
     public string ShowTimeCodes { get; set; }
     public string ShowWpmColumn { get; set; }
     public string ShowPixelWidthColumn { get; set; }
+    public string ShowOcrImageColumn { get; set; }
     public string Shrink { get; set; }
     public string SingleMode { get; set; }
     public string TextTotalLength { get; set; }
@@ -688,6 +691,10 @@ public class LanguageGeneral
     public string TeletextColor { get; set; } = string.Empty;
     public string TeletextLine { get; set; } = string.Empty;
     public string TenHours { get; set; }
+    public string FromVideo { get; set; }
+    public string UseStartTimeCodeFromVideo { get; set; }
+    public string UseStartTimeCodeFromVideoX { get; set; }
+    public string NoTimeCodeInVideo { get; set; }
     public string Text { get; set; }
     public string TextColor { get; set; }
     public string TextFiles { get; set; }
@@ -966,6 +973,12 @@ public class LanguageGeneral
     public string VulkanDriverRequiredContinue { get; set; }
     public string CrispAsrCudaBuild { get; set; }
     public string CrispAsrCudaBuildInfo { get; set; }
+    public string GpuDetectedX { get; set; }
+    public string GpuNoneDetected { get; set; }
+    public string GpuRecommendedBuildX { get; set; }
+    public string GpuCuda13NeedsNewerDriver { get; set; }
+    public string GpuCuda13NotForComputeX { get; set; }
+    public string GpuCudaTooOld { get; set; }
     public string CrispAsrCpuBuild { get; set; }
     public string CrispAsrCpuBuildInfo { get; set; }
 
@@ -1026,6 +1039,12 @@ public class LanguageGeneral
         VulkanDriverRequiredContinue = "The Vulkan build needs a Vulkan-capable GPU driver.\n\nWithout it audio.cpp cannot start at all. Pick the CPU build instead if you are unsure.\n\nContinue with Vulkan download?";
         CrispAsrCudaBuild = "CrispASR CUDA build";
         CrispAsrCudaBuildInfo = "CUDA 12 works with most current NVIDIA drivers.\n\nPick CUDA 13 only if your driver stack is built for CUDA 13.";
+        GpuDetectedX = "Detected: {0}";
+        GpuNoneDetected = "No GPU with a usable driver was detected.";
+        GpuRecommendedBuildX = "Recommended for this computer: {0}";
+        GpuCuda13NeedsNewerDriver = "CUDA 13 needs NVIDIA driver 580 or newer.";
+        GpuCuda13NotForComputeX = "CUDA 13 does not support this card (compute capability {0}).";
+        GpuCudaTooOld = "The NVIDIA card or driver is too old for the CUDA build.";
         CrispAsrCpuBuild = "CrispASR CPU build";
         CrispAsrCpuBuildInfo = "Standard is recommended for most machines.\n\nLegacy is a fallback for older CPUs without AVX2 support.";
         Abort = "Abort";
@@ -1184,7 +1203,7 @@ public class LanguageGeneral
         ColumnsDotDotDot = "Columns...";
         ConsoleLog = "Console log";
         ContentAlignment = "Content alignment";
-        ContinueFindTitle = "Continue Find?";
+        ContinueFindTitle = "Continue find?";
         SearchItemNotFoundContinueFromTop = "The search item was not found.\nWould you like to start from the top of the document and search one more time?";
         SearchItemNotFoundContinueFromBottom = "The search item was not found.\nWould you like to start from the end of the document and search one more time?";
         ContinueReplaceTitle = "Continue replace?";
@@ -1584,6 +1603,8 @@ public class LanguageGeneral
         SearchDirection = "Search direction";
         SearchFontNames = "Search font names...";
         SearchSubtitleFormats = "Search subtitle formats";
+        SearchLanguages = "Search languages";
+        NoMatches = "No matches";
         Seconds = "Seconds";
         SelectAll = "Select all";
         SelectFilesToConvert = "Select files to convert";
@@ -1647,6 +1668,7 @@ public class LanguageGeneral
         ShowTimeCodes = "Show time codes";
         ShowWpmColumn = "Show \"Words/min\" column";
         ShowPixelWidthColumn = "Show \"Pixel width\" column";
+        ShowOcrImageColumn = "Show \"OCR image\" column";
         Shrink = "Shrink";
         SingleMode = "Single mode";
         TextTotalLength = "Text - total length";
@@ -1712,6 +1734,10 @@ public class LanguageGeneral
         TeletextColor = "Teletext color";
         TeletextLine = "Teletext line";
         TenHours = "10 hours";
+        FromVideo = "From video";
+        UseStartTimeCodeFromVideo = "Use the start time code stored in the video file";
+        UseStartTimeCodeFromVideoX = "Use the start time code stored in the video file: {0}";
+        NoTimeCodeInVideo = "No start time code found in the video file";
         Text = "Text";
         TextColor = "Text color";
         TextFiles = "Text files";
@@ -1859,11 +1885,11 @@ public class LanguageGeneral
         PlaybackSpeed = "Playback speed";
         HoursMinutesSecondsMilliseconds = "HH:MM:SS.FFF";
         ImageFiles = "Image files";
-        OpenAiCompatibleSttEndpoint = "STT Endpoint URL";
-        OpenAiCompatibleSttApiKey = "API Key";
-        OpenAiCompatibleSttExtraHeaders = "Extra Headers";
+        OpenAiCompatibleSttEndpoint = "STT endpoint URL";
+        OpenAiCompatibleSttApiKey = "API key";
+        OpenAiCompatibleSttExtraHeaders = "Extra headers";
         OpenAiCompatibleSttTimeout = "Timeout (seconds)";
-        OpenAiCompatibleSttLanguage = "Language Hint";
+        OpenAiCompatibleSttLanguage = "Language hint";
         OpenAiCompatibleSttModelRejectedHint = "The server rejected the model name. Not every OpenAI compatible endpoint takes a model - xAI's https://api.x.ai/v1/stt, for one, has no 'model' parameter at all. Try clearing the Model field.";
         DashScopeSttRegion = "Region";
         DashScopeSttEnableWords = "Word-level timestamps";
@@ -1877,8 +1903,8 @@ public class LanguageGeneral
         OpenAiCompatibleSttStreamHint = "Send 'stream=true' to receive live text deltas (SSE). Disable for servers that reject the 'stream' parameter (e.g. Groq).";
         OpenAiCompatibleSttAudioFormat = "Audio upload format";
         OpenAiCompatibleSttAudioFormatHint = "Audio format sent to the STT server. OpenAI caps uploads at 25 MB, so MP3/M4A/WebM (Opus) are recommended for long videos. WAV is lossless but ~5x larger.";
-        ConfigurationRequired = "Configuration Required";
-        TranscriptionError = "Transcription Error";
+        ConfigurationRequired = "Configuration required";
+        TranscriptionError = "Transcription error";
         TranscriptionComplete = "Transcription complete";
         ProcessingResponse = "Processing response...";
         UnauthorizedApiKey = "Unauthorized: Invalid API key or insufficient permissions.";
@@ -1888,7 +1914,7 @@ public class LanguageGeneral
         TranscriptionFailed = "Transcription failed";
         TranscriptionProgressServerFormat = "Server: {0}";
         TranscriptionProgressModelFormat = "Model: {0}";
-        TranscriptionProgressReceivedSegmentsFormat = "Received Segments ({0})";
+        TranscriptionProgressReceivedSegmentsFormat = "Received segments ({0})";
         TranscriptionProgressModelAuto = "(auto)";
         Prompt = "Prompt";
         Temperature = "Temperature";

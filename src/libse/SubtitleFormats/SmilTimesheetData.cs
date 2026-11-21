@@ -104,13 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            foreach (string l in lines)
-            {
-                sb.AppendLine(l);
-            }
-
-            string allInput = sb.ToString();
+            string allInput = JoinLines(lines);
             string allInputLower = allInput.ToLowerInvariant();
             const string syncTag = "<p ";
             var syncStartPos = allInputLower.IndexOf(syncTag, StringComparison.Ordinal);

@@ -185,10 +185,6 @@ public static class LlamaCppAdvancedProtocol
     }
 
     /// <summary>
-    /// Parses the model reply into number → translation. Tolerates markdown fences and stray
-    /// prose around the JSON object (the plain-text fallback path has no grammar guarantee).
-    /// </summary>
-    /// <summary>
     /// True when a reply value is the "&lt;translation of line N&gt;" example from
     /// <see cref="ProtocolText"/> rather than a translation.
     /// </summary>
@@ -320,6 +316,10 @@ public static class LlamaCppAdvancedProtocol
     private static readonly System.Text.RegularExpressions.Regex ExamplePlaceholderRegex =
         new(@"^\s*<\s*translation of line\s*\d*\s*>\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.CultureInvariant);
 
+    /// <summary>
+    /// Parses the model reply into number → translation. Tolerates markdown fences and stray
+    /// prose around the JSON object (the plain-text fallback path has no grammar guarantee).
+    /// </summary>
     public static Dictionary<int, string> ParseTranslations(string responseText)
     {
         var result = new Dictionary<int, string>();

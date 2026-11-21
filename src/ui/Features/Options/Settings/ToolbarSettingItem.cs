@@ -53,6 +53,7 @@ public class ToolbarSettingItem : ObservableObject
             new(menu.RemoveTextForHearingImpaired, "RemoveTextForHi", a => a.ToolbarShowRemoveTextForHi, (a, value) => a.ToolbarShowRemoveTextForHi = value),
             new(menu.VisualSync, "VisualSync", a => a.ToolbarShowVisualSync, (a, value) => a.ToolbarShowVisualSync = value),
             new(menu.PointSyncViaOther, "PointSync", a => a.ToolbarShowPointSync, (a, value) => a.ToolbarShowPointSync = value),
+            new(menu.AdjustAllTimes, "AdjustAllTimes", a => a.ToolbarShowAdjustAllTimes, (a, value) => a.ToolbarShowAdjustAllTimes = value),
             new(menu.BeautifyTimeCodes, "BeautifyTimeCodes", a => a.ToolbarShowBeautifyTimeCodes, (a, value) => a.ToolbarShowBeautifyTimeCodes = value),
             new(menu.GenerateBurnIn, "BurnIn", a => a.ToolbarShowBurnIn, (a, value) => a.ToolbarShowBurnIn = value),
             new(menu.AutoTranslate, "AutoTranslate", a => a.ToolbarShowAutoTranslate, (a, value) => a.ToolbarShowAutoTranslate = value),

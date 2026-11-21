@@ -211,6 +211,11 @@ public class BatchConvertConfig
         public bool FixNamesOnly { get; set; }
         public bool AllUppercase { get; set; }
         public bool AllLowercase { get; set; }
+
+        /// <summary>
+        /// Comma/semicolon separated actors or styles; when set, only those lines change casing (#17072).
+        /// </summary>
+        public string OnlyActorsOrStyles { get; set; } = string.Empty;
     }
 
     public class FixCommonErrorsSettings2

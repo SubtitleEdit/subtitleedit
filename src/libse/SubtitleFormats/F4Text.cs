@@ -57,13 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-            {
-                sb.AppendLine(line);
-            }
-
-            string text = sb.ToString();
+            string text = JoinLines(lines);
             if (text.Contains("{\\rtf") || text.Contains("<transcript>"))
             {
                 return;

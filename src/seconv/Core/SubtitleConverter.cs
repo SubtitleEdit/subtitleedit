@@ -1546,7 +1546,7 @@ internal record class ConversionOptions
     /// <summary>Model: ollama/lmstudio/openai-compatible model name, or llamacpp .gguf file name/path.</summary>
     public string? TranslateModel { get; init; }
 
-    /// <summary>API key for the engines in <see cref="AutoTranslateRunner.ApiKeyEngines"/> (openai-compatible, deepl).</summary>
+    /// <summary>API key for the engines in <see cref="AutoTranslateRunner.ApiKeyEngines"/>.</summary>
     public string? TranslateApiKey { get; init; }
 
     /// <summary>
@@ -1574,9 +1574,12 @@ internal record class ConversionOptions
     /// <summary>Advanced engines: ask the model to keep each line's number of line breaks (the GUI's "Keep line breaks" switch). Null = the settings file's value, else on.</summary>
     public bool? TranslateKeepLineBreaks { get; init; }
 
+    /// <summary>Advanced engines: extra request body fields as one JSON object (inline, or the path to a .json file), merged into every request last so they win. Null = the settings file's value.</summary>
+    public string? TranslateRequestJson { get; init; }
+
     /// <summary>
     /// Advanced engines: the <c>tools.llamaCppAdvanced</c> section of a <c>--settings</c> file
-    /// (what the GUI's "Advanced..." dialog edits), the base the six options above and the
+    /// (what the GUI's "Advanced..." dialog edits), the base the seven options above and the
     /// prompt are applied onto. Null = the dialog's defaults.
     /// </summary>
     public SeLlamaCppAdvanced? TranslateAdvancedSettings { get; init; }

@@ -15,8 +15,10 @@ name: Tests
 # thread and the static Se.Settings, so tests/xunit.runner.json turns parallelization off.
 # Separate processes have none of that shared state, so UITests is sharded by namespace
 # into three runs of about the same length (measured 10-20: 118 s in one process, 48 s as
-# three). The three filters partition the namespace - Features.Main, the rest of Features,
-# everything else - so a new test lands in exactly one shard without editing this file.
+# three). The three filters partition the namespace - Features.Main, the rest of Features
+# except Features.Video, everything else plus Features.Video - so a new test lands in exactly
+# one shard without editing this file. Features.Video moved to ui-other on 11-19, when
+# ui-features had grown to 94 s of tests against 65 s (ui-main) and 49 s (ui-other).
 # The libs job builds the whole solution, so the app and benchmark projects still have to
 # compile; the UI jobs build only UITests and what it references.
 on:
@@ -46,11 +48,11 @@ jobs:
           - name: ui-features
             build: tests/UI/UITests.csproj
             projects: tests/UI/UITests.csproj
-            filter: FullyQualifiedName~UITests.Features.&FullyQualifiedName!~UITests.Features.Main.
+            filter: FullyQualifiedName~UITests.Features.&FullyQualifiedName!~UITests.Features.Main.&FullyQualifiedName!~UITests.Features.Video
           - name: ui-other
             build: tests/UI/UITests.csproj
             projects: tests/UI/UITests.csproj
-            filter: FullyQualifiedName!~UITests.Features.
+            filter: (FullyQualifiedName!~UITests.Features.)|(FullyQualifiedName~UITests.Features.Video)
 
     env:
       PROJECTS: ${{ matrix.projects }}

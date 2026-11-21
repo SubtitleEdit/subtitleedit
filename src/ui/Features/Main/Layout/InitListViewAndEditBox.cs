@@ -419,6 +419,59 @@ public static partial class InitListViewAndEditBox
             ? TextAlignment.Center
             : TextAlignment.Start;
 
+        // The original image of each line after OCR (#17066), like the OCR window's image column:
+        // decoded fresh per realized row (nothing cached), cropped to the text, on the shared image
+        // preview backdrop so light text on transparency shows on a light grid. Only shown while
+        // the image source of the last OCR session is kept.
+        var ocrImageBackground = ImagePreviewBackground.CreateBrush();
+        var ocrImageColumn = new SeTableViewColumn
+        {
+            Header = Se.Language.Ocr.OcrImage,
+            Tag = SubtitleGridColumnKeys.OcrImage,
+            // Star-sized like the OCR window's image column (#10533): it shares the width with the
+            // Text column instead of pushing it out of a narrow grid next to the video player.
+            Width = new GridLength(1, GridUnitType.Star),
+            MinWidth = 60,
+            CellTheme = UiUtil.TableViewNoPaddingCellTheme,
+            HeaderTheme = UiUtil.TableViewColumnHeaderTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
+            {
+                var panel = new Panel { Margin = new Thickness(3) };
+
+                // FuncDataTemplate gets null items while the grid swaps its ItemsSource.
+                var bitmap = value == null ? null : vm.GetOcrImage(value);
+                if (bitmap != null)
+                {
+                    panel.Children.Add(new Border
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Background = ocrImageBackground,
+                        CornerRadius = new CornerRadius(3),
+                        Padding = new Thickness(3),
+                        Child = new Image
+                        {
+                            Source = bitmap,
+                            Stretch = Stretch.Uniform,
+                            MaxHeight = OcrImageColumnMaxImageHeight,
+                        },
+                    });
+                }
+
+                return panel;
+            }),
+        };
+        columnManager.Add(ocrImageColumn);
+        ocrImageColumn.Bind(SeTableViewColumn.IsVisibleProperty, new MultiBinding
+        {
+            Converter = booleanAndConverter,
+            Bindings =
+            {
+                new Binding(nameof(vm.HasOcrImageSource)) { Source = vm, Mode = BindingMode.OneWay },
+                new Binding(nameof(vm.ShowColumnOcrImage)) { Source = vm, Mode = BindingMode.OneWay },
+            },
+        });
+
         columnManager.Add(new SeTableViewColumn
         {
             Header = Se.Language.General.Text,
@@ -781,6 +834,20 @@ public static partial class InitListViewAndEditBox
 
         flyout.Opening += vm.SubtitleContextOpening;
 
+        // The original image of the line after OCR (#17066), like "Show image" in the OCR window.
+        var showOcrImageMenuItem = new MenuItem
+        {
+            Header = Se.Language.Main.ShowOcrImage,
+            Command = vm.ShowOcrImageCommand,
+            DataContext = vm,
+            Icon = new Icon { Value = IconNames.Image, VerticalAlignment = VerticalAlignment.Center },
+        };
+        showOcrImageMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsShowOcrImageMenuItemVisible)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(showOcrImageMenuItem);
+        var sepOcrImage = new Separator { DataContext = vm };
+        sepOcrImage.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsShowOcrImageMenuItemVisible)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(sepOcrImage);
+
         var assaStylesMenuItem = new MenuItem
         {
             Header = Se.Language.General.Styles,
@@ -1047,6 +1114,21 @@ public static partial class InitListViewAndEditBox
         };
         showForcedMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsSubtitleGridFlyoutHeaderVisible)) { Mode = BindingMode.OneWay });
         flyout.Items.Add(showForcedMenuItem);
+
+        var showOcrImageColumnMenuItem = new MenuItem
+        {
+            Header = Se.Language.General.ShowOcrImageColumn,
+            Command = vm.ToggleShowColumnOcrImageCommand,
+            DataContext = vm,
+            Icon = new Icon
+            {
+                Value = IconNames.CheckBold,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowColumnOcrImage)),
+            }
+        };
+        showOcrImageColumnMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsShowOcrImageColumnMenuItemVisible)) { Mode = BindingMode.OneWay });
+        flyout.Items.Add(showOcrImageColumnMenuItem);
 
         var showLayerMenuItem = new MenuItem
         {
@@ -2425,11 +2507,15 @@ public static partial class InitListViewAndEditBox
         public const string Wpm = "Wpm";
         public const string PixelWidth = "PixelWidth";
         public const string Layer = "Layer";
+        public const string OcrImage = "OcrImage";
     }
 
-    // The stretchy text columns keep filling the window, so their width is never stored.
+    // Same height cap as the OCR window's thumbnails at their default zoom.
+    private const double OcrImageColumnMaxImageHeight = 100;
+
+    // The stretchy text/image columns keep filling the window, so their width is never stored.
     private static bool IsStretchyColumn(string key)
-        => key == SubtitleGridColumnKeys.Text || key == SubtitleGridColumnKeys.OriginalText;
+        => key == SubtitleGridColumnKeys.Text || key == SubtitleGridColumnKeys.OriginalText || key == SubtitleGridColumnKeys.OcrImage;
 
     private static void RestoreSubtitleGridColumnWidths(TableViewColumnManager columnManager)
     {
@@ -2934,6 +3020,10 @@ public static partial class InitListViewAndEditBox
         // Drag a selection out of one edit box and drop it into the other, or move it within
         // the same box - as SE4's edit boxes allowed (#14534).
         TextBoxTextDragDrop.Attach(textBox);
+
+        // A command replacing the text must not leave the old selection range behind - the
+        // next "surround with" would then only work on that stale part (#17052).
+        TextBoxStaleSelectionGuard.Attach(textBox);
 
         if (appearance.SubtitleTextBoxCenterText)
         {

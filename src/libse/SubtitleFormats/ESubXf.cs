@@ -267,6 +267,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            ResetLoadFrameRate();
             string xmlString = JoinLines(lines);
             if (!xmlString.Contains("<subtitlelist"))
             {
@@ -299,7 +300,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 double.TryParse(frameRateAttribute, NumberStyles.Float, CultureInfo.InvariantCulture, out var declaredFrameRate) &&
                 declaredFrameRate > 1 && declaredFrameRate < 200)
             {
-                Configuration.Settings.General.CurrentFrameRate = declaredFrameRate;
+                SetLoadFrameRate(declaredFrameRate);
             }
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//esub-xf:subtitlelist/esub-xf:subtitle", ns))
             {
@@ -338,7 +339,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         text = "{\\an8}" + text;
                     }
-                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCodeFrames(start, timeCodeSeparators, isTimebaseSmtp), DecodeTimeCodeFrames(end, timeCodeSeparators, isTimebaseSmtp), text));
+                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCodeFrames(start, timeCodeSeparators, isTimebaseSmtp, LoadFrameRate), DecodeTimeCodeFrames(end, timeCodeSeparators, isTimebaseSmtp, LoadFrameRate), text));
                 }
                 catch (Exception ex)
                 {
@@ -386,11 +387,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return ColorDictionary.ContainsKey(colorName) ? colorName : null;
         }
 
-        protected static TimeCode DecodeTimeCodeFrames(string timestamp, char[] splitChars, bool isTimebaseSmtp)
+        protected static TimeCode DecodeTimeCodeFrames(string timestamp, char[] splitChars, bool isTimebaseSmtp, double frameRate)
         {
             if (isTimebaseSmtp)
             {
-                return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
+                return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries), frameRate);
             }
             return new TimeCode(Convert.ToInt32(timestamp));
         }

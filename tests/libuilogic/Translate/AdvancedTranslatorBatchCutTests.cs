@@ -471,4 +471,75 @@ public class AdvancedTranslatorBatchCutTests
 
         Assert.Equal(50, governor.Limit(50));
     }
+
+    [Fact]
+    public void MergedRow_IsSplitBackAndRowsMovedDown()
+    {
+        // Ted Lasso S03E01 lines 11-20, Index-Translate 9B EN->DA: lines 11+12 came back joined
+        // in row 1, every later row moved up and "Hmm." (line 10's translation) padded row 8.
+        var sources = new[]
+        {
+            ("Feels like a potentially\ntroublesome sentence to", 13280, 14960),
+            ("say in this setting, but\nhey, I appreciate you.", 14961, 16960),
+            ("Hello, Henry.", 17040, 17896),
+            ("It's nice to see you again.", 17920, 19120),
+            ("You excited to head back home.", 19360, 20640),
+            ("To all my toys, yes.", 20720, 22400),
+            ("To my country's political\nlandscape, not so much.", 22480, 25680),
+            ("Well, I have a tendency\nto doze off with CNN on.", 26720, 29040),
+            ("All right, big guy.", 29200, 30400),
+            ("Let's get you all set up here.", 30480, 32000),
+        };
+        var replies = new[]
+        {
+            "Det føles som en potentielt\nbesværlig sætning at sige i denne situation, men\nhej, jeg sætter pris på dig.",
+            "Hej, Henry.",
+            "Det er dejligt at se dig igen.",
+            "Er du spændt på at tage hjem igen?",
+            "Til alle mine legetøjsfigurer, ja.",
+            "Til mit lands politiske\nlandskab, ikke ligeså meget.",
+            "Tja, jeg har en tendens til\nat falde i søvn med CNN tændt.",
+            "Hmm.",
+            "Okay, store fyr.",
+            "Lad os få dig sat ordentligt til her.",
+        };
+        var rows = sources.Select((s, i) => new Nikse.SubtitleEdit.UiLogic.Translate.TranslateRow
+        {
+            Number = i + 11,
+            Text = s.Item1,
+            Show = TimeSpan.FromMilliseconds(s.Item2),
+            Hide = TimeSpan.FromMilliseconds(s.Item3),
+        }).ToList();
+        var lines = sources.Select((s, i) => new LlamaCppAdvancedProtocol.BatchLine(i + 1, s.Item1)).ToList();
+        var map = replies.Select((r, i) => (r, i)).ToDictionary(x => x.i + 1, x => x.r);
+        var history = new List<LlamaCppAdvancedProtocol.HistoryPair> { new("Hmm.", "Hmm.") };
+
+        var repaired = AdvancedTranslatorBase.TryRepairMergedRow(map, lines, history, rows, 0, "English", "Danish");
+
+        Assert.StartsWith("Det føles som en potentielt", repaired[1]);
+        Assert.DoesNotContain("jeg sætter pris på dig", repaired[1]);
+        Assert.EndsWith("jeg sætter pris på dig.", repaired[2]);
+        Assert.Equal("Hej, Henry.", repaired[3]);
+        Assert.Equal("Det er dejligt at se dig igen.", repaired[4]);
+        Assert.Equal("Tja, jeg har en tendens til\nat falde i søvn med CNN tændt.", repaired[8]);
+        Assert.Equal("Okay, store fyr.", repaired[9]);
+        Assert.Equal("Lad os få dig sat ordentligt til her.", repaired[10]);
+        Assert.DoesNotContain("Hmm.", repaired.Values);
+        Assert.Equal(-1, AdvancedTranslatorBase.FindFirstFailure(repaired, lines, history, "English", "Danish").Line);
+    }
+
+    [Fact]
+    public void AlignedReply_IsNotRepaired()
+    {
+        var map = new Dictionary<int, string>
+        {
+            [1] = "Hvor var du i går aftes?",
+            [2] = "Jeg var på kontoret til sent.",
+            [3] = "Hvem var der ellers?",
+            [4] = "Ingen. Kun mig.",
+        };
+        var rows = Lines.Select(l => new Nikse.SubtitleEdit.UiLogic.Translate.TranslateRow { Number = l.Number, Text = l.Text, Show = TimeSpan.FromSeconds(l.Number * 2), Hide = TimeSpan.FromSeconds(l.Number * 2 + 1.5) }).ToList();
+
+        Assert.Same(map, AdvancedTranslatorBase.TryRepairMergedRow(map, Lines, NoHistory, rows, 0, "English", "Danish"));
+    }
 }

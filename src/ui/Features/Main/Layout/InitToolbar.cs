@@ -228,6 +228,19 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowAdjustAllTimes)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("AdjustAllTimes"),
+                Command = vm.ShowSyncAdjustAllTimesCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.AdjustAllTimesHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AdjustAllTimesHint, shortcuts, nameof(vm.ShowSyncAdjustAllTimesCommand)),
+            });
+            isLastSeparator = false;
+        }
+
         if (appearance.ToolbarShowBeautifyTimeCodes)
         {
             stackPanelLeft.Children.Add(new Button
@@ -259,7 +272,7 @@ public static class InitToolbar
             stackPanelLeft.Children.Add(new Button
             {
                 Content = MakeImage("AutoTranslate"),
-                Command = vm.ShowAutoTranslateCommand,
+                Command = vm.ToolbarAutoTranslateCommand,
                 Background = Brushes.Transparent,
                 [AutomationProperties.NameProperty] = languageHints.AutoTranslateHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AutoTranslateHint, shortcuts, nameof(vm.ShowAutoTranslateCommand)),
@@ -272,7 +285,7 @@ public static class InitToolbar
             stackPanelLeft.Children.Add(new Button
             {
                 Content = MakeImage("SpeechToText"),
-                Command = vm.ShowSpeechToTextWhisperCommand,
+                Command = vm.ToolbarSpeechToTextCommand,
                 Background = Brushes.Transparent,
                 [AutomationProperties.NameProperty] = languageHints.SpeechToTextHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SpeechToTextHint, shortcuts, nameof(vm.ShowSpeechToTextWhisperCommand)),

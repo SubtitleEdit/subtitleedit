@@ -71,20 +71,28 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
 
     private static TimeCodeSettings FrameMode() => new(frameMode: true, stepMs: 100);
 
-    // Focus() alone can leave the caret placement (and with it the part the arrow keys step)
-    // a dispatcher frame behind on a loaded runner; the first key then lands before the control
-    // has settled on the millisecond part (CI flake: Up from -100 ms left the value unchanged).
+    // Keys sent with window.KeyPress go to the focused element, and KeyPress first runs any queued
+    // dispatcher jobs. A window an earlier test left open can still have a focus/activate job
+    // queued; run after our Focus() it takes focus, the arrow key never reaches this text box and
+    // the value stays put (CI flake: Up from -100 ms left -100 ms). Same fix as FrameNumbersModeTests:
+    // drain those jobs first, activate our window, focus, and check focus actually landed.
     private static void FocusAndSettle(TextBox textBox)
     {
+        Dispatcher.UIThread.RunJobs();
+        (TopLevel.GetTopLevel(textBox) as Window)?.Activate();
         textBox.Focus();
         Dispatcher.UIThread.RunJobs();
+        Assert.True(textBox.IsFocused, $"Focus is on {TopLevel.GetTopLevel(textBox)?.FocusManager?.GetFocusedElement()}");
     }
 
     private (Window window, TimeCodeUpDown control, TextBox textBox) Show(TimeCodeUpDown control)
     {
+        Dispatcher.UIThread.RunJobs();
+
         var window = new Window { Content = control };
         _windows.Add(window);
         window.Show();
+        Dispatcher.UIThread.RunJobs();
         var textBox = control.GetVisualDescendants().OfType<TextBox>().Single();
         return (window, control, textBox);
     }
@@ -209,6 +217,21 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
         Assert.Equal(1, textBox.CaretIndex);
     }
 
+    // #16937: hours past 24 used to wrap (TimeSpan.Hours ignores days) and past 99 were cut to 99.
+    [AvaloniaTheory]
+    [InlineData(30, "30:00:00,000")]
+    [InlineData(123, "123:00:00,000")]
+    [InlineData(1234, "1234:00:00,000")]
+    public void ShowsHoursPast24And99(int hours, string expected)
+    {
+        using var _ = MillisecondMode();
+
+        var control = new TimeCodeUpDown { Value = TimeSpan.FromHours(hours) };
+        var (_, _, textBox) = Show(control);
+
+        Assert.Equal(expected, textBox.Text);
+    }
+
     [AvaloniaFact]
     public void ValueBelowTheMaskRangeIsClamped()
     {
@@ -216,11 +239,11 @@ public partial class TimeCodeUpDownNegativeTests : IDisposable
 
         var control = new TimeCodeUpDown
         {
-            Value = TimeSpan.FromMilliseconds(-TimeCode.MaxTimeTotalMilliseconds - 5000)
+            Value = TimeSpan.FromMilliseconds(-TimeCode.MaxSupportedTotalMilliseconds - 5000)
         };
         Show(control);
 
-        Assert.Equal(-TimeCode.MaxTimeTotalMilliseconds, control.Value.TotalMilliseconds);
+        Assert.Equal(-TimeCode.MaxSupportedTotalMilliseconds, control.Value.TotalMilliseconds);
     }
 
     [AvaloniaTheory]

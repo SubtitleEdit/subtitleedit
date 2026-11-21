@@ -38,6 +38,29 @@ public class LlmTranslatePromptTests
             result);
     }
 
+    // PLaMo 3 Translate is cued with language codes ({3} / {4}), not English names.
+    [Fact]
+    public void FillCompletionTemplate_LanguageCodePlaceholders_AreFilledWithCodes()
+    {
+        var result = LlmTranslatePrompt.FillCompletionTemplate(
+            "in={3} out={4} name={1}: {2}", "English", "Japanese", "Hello.");
+
+        Assert.Equal("in=en out=ja name=Japanese: Hello.", result);
+    }
+
+    [Theory]
+    [InlineData("Japanese", "ja")]
+    [InlineData("english", "en")]
+    [InlineData("Chinese (Simplified)", "zh-hans")]
+    [InlineData("Chinese (Traditional)", "zh-hant")]
+    [InlineData("Brazilian Portuguese", "pt-br")]
+    [InlineData("ja", "ja")]
+    [InlineData("Klingon", "klingon")]
+    public void ToLanguageCode_MapsEnglishNamesToLowercaseCodes(string language, string expected)
+    {
+        Assert.Equal(expected, LlmTranslatePrompt.ToLanguageCode(language));
+    }
+
     [Theory]
     [InlineData(CompletionTemplate, true)]
     [InlineData(ChatTemplate, false)]

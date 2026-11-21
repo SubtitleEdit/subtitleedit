@@ -54,12 +54,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             var sb = new StringBuilder();
-            foreach (var s in lines)
-            {
-                sb.Append(s);
-            }
-
-            var allText = sb.ToString().Trim();
+            var allText = ConcatLinesTrimmed(lines);
             if (!allText.StartsWith('[') || !allText.Contains("\"start\""))
             {
                 return;

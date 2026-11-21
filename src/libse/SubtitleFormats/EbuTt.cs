@@ -961,6 +961,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            ResetLoadFrameRate();
 
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
@@ -1008,7 +1009,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                Configuration.Settings.General.CurrentFrameRate = rate;
+                SetLoadFrameRate(rate);
             }
 
             var cellRows = CellRows;
@@ -1174,7 +1175,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (var (node, parts, region, regionId, textAlign) in paragraphData)
             {
-                TimedText10.ExtractTimeCodes(node, subtitle, out var begin, out var end);
+                TimedText10.ExtractTimeCodes(node, subtitle, LoadFrameRate, out var begin, out var end);
                 var text = BuildText(parts, skipBoxTags);
 
                 var row = region?.Row ?? -1;

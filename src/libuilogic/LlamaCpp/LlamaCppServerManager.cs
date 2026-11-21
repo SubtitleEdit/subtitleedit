@@ -72,8 +72,51 @@ public static class LlamaCppServerManager
     private const string MiLmMt46PromptTemplate =
         "Translate this from {0} to {1}:\n{0}: {2}\n{1}:";
 
+    // PLaMo 3 Translate's PFML3 prompt. The GGUF's embedded chat template renders a user message
+    // that starts with "<|plamo:tag|>dataset<|plamo:msg|>translation" verbatim (its documented
+    // pass-through for chat-only clients), so this works through the plain chat endpoint with no
+    // chat_template_kwargs. The output is cued with the target language CODE ({4}) the model was
+    // trained on; the input carries no lang, so the model detects the source itself.
+    private const string PlamoTranslatePromptTemplate =
+        "<|plamo:tag|>dataset<|plamo:msg|>translation<|plamo:tag|>input<|plamo:msg|>{2}<|plamo:tag|>output<|plamo:key|>lang<|plamo:val|>{4}<|plamo:msg|>";
+
     public static readonly IReadOnlyList<LlamaCppModel> TranslateModels = new[]
     {
+        // Ordered by family, best general translation quality first (from SE's own A/B runs, see
+        // the per-family notes), and the first entry is the default for new users and the fallback
+        // when no model is saved or installed. Specialists with limited language coverage or a
+        // restrictive license come last. Keep each family's quants together.
+        // Index-Translate (bilibili, 2026) - a Qwen 3.5 fine-tune for translation, 150 languages,
+        // Apache-2.0 (#15518). Temperature 0 = bilibili's greedy default. NoThinking because it keeps
+        // Qwen 3.5's thinking template: without "--reasoning off" every line still came back, but at
+        // ~4x the time (34 s vs 8 s for 24 lines EN->DA on the 2B). No PromptTemplate - its trained
+        // prompt ("Translate the following text into {1}. Output the translation directly...") is
+        // already what SE's generic prompt asks for. Downloads come from IndexTeam's official GGUF
+        // repos (published 2026-10-02); the local file names are kept from the earlier community
+        // quants so existing downloads and saved selections still match. Compared 2026-10-01 (seconv, 24 dialog lines
+        // EN->DA/DE/JA, b10840): the 9B was on par with TranslateGemma 12B (best in Japanese, never
+        // left a line untranslated) and ahead of Gemma 4 E4B; the 2B is roughly TranslateGemma 4B
+        // level at twice its speed. The 2B Q4_K_M is not offered - it made clearly worse slips than
+        // the Q8_0 (e.g. "sweetie" -> the Danish insult "kærling"). Index-Homura (same family) is
+        // left out: it needs a target syllable count per line, which the engines cannot supply.
+        new LlamaCppModel("Index-Translate 2B (Q8_0) - 150 languages", "Index-Translate-2B.Q8_0.gguf", "2.1 GB",
+            "https://huggingface.co/IndexTeam/Index-Translate-2B-GGUF/resolve/main/Index-Translate-2B.Q8_0.gguf",
+            Temperature: 0, NoThinking: true),
+        new LlamaCppModel("Index-Translate 9B (Q4_K_M) - 150 languages", "index-translate-9b-q4_k_m.gguf", "5.8 GB",
+            "https://huggingface.co/IndexTeam/Index-Translate-9B-GGUF/resolve/main/Index-Translate-9B.Q4_K_M.gguf",
+            Temperature: 0, NoThinking: true),
+
+        // Index-Nailong 9B v1.1 (IndexTeam/bilibili, #16856) - the same family, merged with their
+        // long-document model (256K context), official GGUFs, Apache-2.0; same flags as above.
+        // Tested 2026-11-12 (seconv, 150 dialog lines EN->DA/DE/JA, advanced engine at 10/50/100
+        // lines per batch): on par with Index-Translate 9B, and longer batches did not buy more
+        // consistent names or pronouns. At 50+ lines it twice filled a whole batch with the
+        // prompt's "<translation of line N>" example, and a user saw it pack later lines' JSON
+        // into one value - both are now rejected by IsBrokenValue.
+        new LlamaCppModel("Index-Nailong 9B (Q4_K_M) - 150 languages, long context", "Index-Nailong-9B.Q4_K_M.gguf", "5.6 GB",
+            "https://huggingface.co/IndexTeam/Index-Nailong-9B-GGUF/resolve/main/Index-Nailong-9B.Q4_K_M.gguf",
+            Temperature: 0, NoThinking: true),
+
         new LlamaCppModel("TranslateGemma 4B (Q4_K_M)", "translategemma-4b_Q4_K_M.gguf", "2.5 GB",
             "https://huggingface.co/SandLogicTechnologies/translategemma-4b-it-GGUF/resolve/main/translategemma-4b_Q4_K_M.gguf",
             ChatTemplate: "gemma", NoJinja: true),
@@ -127,6 +170,20 @@ public static class LlamaCppServerManager
             "https://huggingface.co/bartowski/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf",
             NoThinking: true),
 
+        // Qwen 3.5 - newer Qwen generation. Same NoThinking handling as Qwen 3 below. Kept to <= 8 GB.
+        new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
+            NoThinking: true),
+        new LlamaCppModel("Qwen 3.5 4B (Q8_0)", "Qwen_Qwen3.5-4B-Q8_0.gguf", "4.3 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q8_0.gguf",
+            NoThinking: true),
+        new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
+            NoThinking: true),
+        new LlamaCppModel("Qwen 3.5 9B (Q8_0)", "Qwen_Qwen3.5-9B-Q8_0.gguf", "9.8 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
+            NoThinking: true),
+
         // Alternative model family. Qwen 3 is the strongest open model for CJK
         // (Chinese/Japanese/Korean) and competitive elsewhere — useful fallback
         // when Gemma's quirks bite (occasional refusals, formatting drift, etc).
@@ -148,19 +205,15 @@ public static class LlamaCppServerManager
             "https://huggingface.co/bartowski/Qwen_Qwen3-8B-GGUF/resolve/main/Qwen_Qwen3-8B-Q4_K_M.gguf",
             NoThinking: true),
 
-        // Qwen 3.5 - newer Qwen generation. Same NoThinking handling as Qwen 3 above. Kept to <= 8 GB.
-        new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
-            "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
-            NoThinking: true),
-        new LlamaCppModel("Qwen 3.5 4B (Q8_0)", "Qwen_Qwen3.5-4B-Q8_0.gguf", "4.3 GB",
-            "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q8_0.gguf",
-            NoThinking: true),
-        new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
-            "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
-            NoThinking: true),
-        new LlamaCppModel("Qwen 3.5 9B (Q8_0)", "Qwen_Qwen3.5-9B-Q8_0.gguf", "9.8 GB",
-            "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q8_0.gguf",
-            NoThinking: true),
+        // Aya Expanse 8B (Cohere) - a dedicated multilingual model (23 languages), a good translation
+        // alternative to the Gemma/Qwen families. Uses its own embedded (Cohere) chat template, so we
+        // leave ChatTemplate/NoJinja at their defaults instead of forcing gemma/chatml. Kept to <= 8 GB.
+        new LlamaCppModel("Aya Expanse 8B (Q4_K_M)", "aya-expanse-8b-Q4_K_M.gguf", "4.7 GB",
+            "https://huggingface.co/bartowski/aya-expanse-8b-GGUF/resolve/main/aya-expanse-8b-Q4_K_M.gguf"),
+        new LlamaCppModel("Aya Expanse 8B (Q5_K_M)", "aya-expanse-8b-Q5_K_M.gguf", "5.4 GB",
+            "https://huggingface.co/bartowski/aya-expanse-8b-GGUF/resolve/main/aya-expanse-8b-Q5_K_M.gguf"),
+        new LlamaCppModel("Aya Expanse 8B (Q8_0)", "aya-expanse-8b-Q8_0.gguf", "7.9 GB",
+            "https://huggingface.co/bartowski/aya-expanse-8b-GGUF/resolve/main/aya-expanse-8b-Q8_0.gguf"),
 
         // Qwen 3.6 35B-A3B - a mixture-of-experts model: 35B total but only ~3B active per token, so
         // it generates fast even fully on CPU. That makes it the option for machines with plenty of
@@ -181,6 +234,19 @@ public static class LlamaCppServerManager
         // Trained on a fixed prompt (PromptTemplate below, with language NAMES - the generic prompt
         // makes it answer in Chinese) and Tencent-recommended sampling. Embedded chat template works
         // as-is, so no ChatTemplate/NoJinja overrides.
+        // Hy-MT2 30B-A3B - the same family as a mixture-of-experts model (30B total, ~3B active per
+        // token), as mradermacher's imatrix IQ3_XXS: Tencent's own GGUFs start at Q4_K_M (18.2 GB).
+        // Tested 2026-11-20 (seconv, 24 dialog lines EN->DE/FR/JA, M4 24 GB): the only model of the
+        // list that renders idioms by meaning instead of word by word ("That ship has sailed" ->
+        // "Le train est déjà parti" / "もう手遅れだよ", "not holding my breath" right in all three),
+        // clearly ahead of the 7B ("Avant-propos", "Jure-moi", a stray "<br") and faster than
+        // Index-Translate 9B (13-31 s vs ~40 s per language). Its slips were small: a dropped
+        // apostrophe/word in French ("qu un", "jusqu'lundi"), one Japanese line given twice, and a
+        // space after dialogue dashes. TranslateGemma 27B at the same size (IQ3_XXS, 10.7 GB) was
+        // tested alongside and is not offered: stray "< />" fragments on many lines, and 15-25x slower.
+        new LlamaCppModel("Hy-MT2 30B-A3B (IQ3_XXS) - 33 languages, no Nordic", "Hy-MT2-30B-A3B.i1-IQ3_XXS.gguf", "11.6 GB",
+            "https://huggingface.co/mradermacher/Hy-MT2-30B-A3B-i1-GGUF/resolve/main/Hy-MT2-30B-A3B.i1-IQ3_XXS.gguf",
+            PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
         new LlamaCppModel("Hy-MT2 7B (Q4_K_M) - 33 languages, no Nordic", "Hy-MT2-7B-Q4_K_M.gguf", "4.6 GB",
             "https://huggingface.co/tencent/Hy-MT2-7B-GGUF/resolve/main/Hy-MT2-7B-Q4_K_M.gguf",
             PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
@@ -190,6 +256,20 @@ public static class LlamaCppServerManager
         new LlamaCppModel("Hy-MT2 1.8B (Q8_0) - 33 languages, no Nordic", "Hy-MT2-1.8B-Q8_0.gguf", "1.9 GB",
             "https://huggingface.co/tencent/Hy-MT2-1.8B-GGUF/resolve/main/Hy-MT2-1.8B-Q8_0.gguf",
             PromptTemplate: HyMt2PromptTemplate, Temperature: 0.7, TopP: 0.6, TopK: 20, RepeatPenalty: 1.05),
+
+        // PLaMo 3 Translate (Preferred Networks, 2026-11) - translation-specialized, official GGUFs,
+        // 53 languages with Japanese <-> English as its strength. No Nordic languages, and no
+        // Portuguese, Turkish or Ukrainian either. PLaMo Community License: free for personal use,
+        // commercial use needs a (free) registration with PFN, or a contract above 1 billion yen
+        // in revenue - hence the note in the display name. Trained on PFML3, not on instructions,
+        // so CompletionOnly keeps it out of the advanced engine's JSON batch protocol. Greedy
+        // decoding, as the model card recommends.
+        new LlamaCppModel("PLaMo 3 Translate 8B (Q4_K_M) - 53 languages, PLaMo license", "plamo-3-translate-8b-Q4_K_M.gguf", "5.3 GB",
+            "https://huggingface.co/pfnet/plamo-3-translate-8b-GGUF/resolve/main/plamo-3-translate-8b-Q4_K_M.gguf",
+            PromptTemplate: PlamoTranslatePromptTemplate, Temperature: 0, CompletionOnly: true),
+        new LlamaCppModel("PLaMo 3 Translate 2B (Q4_K_M) - 53 languages, PLaMo license", "plamo-3-translate-2b-Q4_K_M.gguf", "1.8 GB",
+            "https://huggingface.co/pfnet/plamo-3-translate-2b-GGUF/resolve/main/plamo-3-translate-2b-Q4_K_M.gguf",
+            PromptTemplate: PlamoTranslatePromptTemplate, Temperature: 0, CompletionOnly: true),
 
         // TranslatePsy-AfriSLM 4B (Tether/QVAC, 2026) - a Qwen 3.5 4B fine-tune for English <-> 19
         // Sub-Saharan African languages (Afrikaans, Amharic, Hausa, Igbo, Kinyarwanda, Lingala,
@@ -210,47 +290,6 @@ public static class LlamaCppServerManager
         new LlamaCppModel("TranslatePsy-AfriSLM 4B (Q8_0) - English <-> 19 African languages", "TranslatePsy-AfriSLM-4B-Q8_0-imat.gguf", "5.2 GB",
             "https://huggingface.co/qvac/TranslatePsy-AfriSLM-4B-Q8-GGUF/resolve/main/TranslatePsy-AfriSLM-4B-Q8_0-imat.gguf",
             NoThinking: true),
-
-        // Index-Translate (bilibili, 2026) - a Qwen 3.5 fine-tune for translation, 150 languages,
-        // Apache-2.0 (#15518). Temperature 0 = bilibili's greedy default. NoThinking because it keeps
-        // Qwen 3.5's thinking template: without "--reasoning off" every line still came back, but at
-        // ~4x the time (34 s vs 8 s for 24 lines EN->DA on the 2B). No PromptTemplate - its trained
-        // prompt ("Translate the following text into {1}. Output the translation directly...") is
-        // already what SE's generic prompt asks for. Downloads come from IndexTeam's official GGUF
-        // repos (published 2026-10-02); the local file names are kept from the earlier community
-        // quants so existing downloads and saved selections still match. Compared 2026-10-01 (seconv, 24 dialog lines
-        // EN->DA/DE/JA, b10840): the 9B was on par with TranslateGemma 12B (best in Japanese, never
-        // left a line untranslated) and ahead of Gemma 4 E4B; the 2B is roughly TranslateGemma 4B
-        // level at twice its speed. The 2B Q4_K_M is not offered - it made clearly worse slips than
-        // the Q8_0 (e.g. "sweetie" -> the Danish insult "kærling"). Index-Homura (same family) is
-        // left out: it needs a target syllable count per line, which the engines cannot supply.
-        new LlamaCppModel("Index-Translate 2B (Q8_0) - 150 languages", "Index-Translate-2B.Q8_0.gguf", "2.1 GB",
-            "https://huggingface.co/IndexTeam/Index-Translate-2B-GGUF/resolve/main/Index-Translate-2B.Q8_0.gguf",
-            Temperature: 0, NoThinking: true),
-        new LlamaCppModel("Index-Translate 9B (Q4_K_M) - 150 languages", "index-translate-9b-q4_k_m.gguf", "5.8 GB",
-            "https://huggingface.co/IndexTeam/Index-Translate-9B-GGUF/resolve/main/Index-Translate-9B.Q4_K_M.gguf",
-            Temperature: 0, NoThinking: true),
-
-        // Index-Nailong 9B v1.1 (IndexTeam/bilibili, #16856) - the same family, merged with their
-        // long-document model (256K context), official GGUFs, Apache-2.0; same flags as above.
-        // Tested 2026-11-12 (seconv, 150 dialog lines EN->DA/DE/JA, advanced engine at 10/50/100
-        // lines per batch): on par with Index-Translate 9B, and longer batches did not buy more
-        // consistent names or pronouns. At 50+ lines it twice filled a whole batch with the
-        // prompt's "<translation of line N>" example, and a user saw it pack later lines' JSON
-        // into one value - both are now rejected by IsBrokenValue.
-        new LlamaCppModel("Index-Nailong 9B (Q4_K_M) - 150 languages, long context", "Index-Nailong-9B.Q4_K_M.gguf", "5.6 GB",
-            "https://huggingface.co/IndexTeam/Index-Nailong-9B-GGUF/resolve/main/Index-Nailong-9B.Q4_K_M.gguf",
-            Temperature: 0, NoThinking: true),
-
-        // Aya Expanse 8B (Cohere) - a dedicated multilingual model (23 languages), a good translation
-        // alternative to the Gemma/Qwen families. Uses its own embedded (Cohere) chat template, so we
-        // leave ChatTemplate/NoJinja at their defaults instead of forcing gemma/chatml. Kept to <= 8 GB.
-        new LlamaCppModel("Aya Expanse 8B (Q4_K_M)", "aya-expanse-8b-Q4_K_M.gguf", "4.7 GB",
-            "https://huggingface.co/bartowski/aya-expanse-8b-GGUF/resolve/main/aya-expanse-8b-Q4_K_M.gguf"),
-        new LlamaCppModel("Aya Expanse 8B (Q5_K_M)", "aya-expanse-8b-Q5_K_M.gguf", "5.4 GB",
-            "https://huggingface.co/bartowski/aya-expanse-8b-GGUF/resolve/main/aya-expanse-8b-Q5_K_M.gguf"),
-        new LlamaCppModel("Aya Expanse 8B (Q8_0)", "aya-expanse-8b-Q8_0.gguf", "7.9 GB",
-            "https://huggingface.co/bartowski/aya-expanse-8b-GGUF/resolve/main/aya-expanse-8b-Q8_0.gguf"),
     };
 
     // Models for the AI review tool (proofreading). Translation-tuned models (TranslateGemma,
@@ -677,7 +716,7 @@ public static class LlamaCppServerManager
     /// Builds the <see cref="LlamaCppModel"/> for a non-curated <c>*.gguf</c> (dropped into the
     /// models folder, or passed to seconv by path), inferring the same per-family settings the
     /// curated entries carry: chat-template flags via <see cref="InferChatTemplate"/>, and for
-    /// MiLMMT quants the trained completion prompt, greedy sampling and the regular-engine-only
+    /// MiLMMT and PLaMo 3 Translate quants the trained completion prompt, greedy sampling and the regular-engine-only
     /// restriction - a self-supplied MiLMMT quant echo-loops the source under any other prompt.
     /// <paramref name="fileNameOrPath"/> may be a bare file name or a full path (seconv).
     /// </summary>
@@ -686,11 +725,16 @@ public static class LlamaCppServerManager
         var name = Path.GetFileName(fileNameOrPath);
         var (chatTemplate, noJinja, noThinking) = InferChatTemplate(name);
         var isMiLmMt = name.Contains("milmmt", StringComparison.OrdinalIgnoreCase);
+        // PLaMo 3 only: PLaMo 2 Translate uses the older "<|plamo:op|>" format.
+        var isPlamo = (name.Contains("plamo-3", StringComparison.OrdinalIgnoreCase) ||
+                       name.Contains("plamo3", StringComparison.OrdinalIgnoreCase)) &&
+                      name.Contains("translate", StringComparison.OrdinalIgnoreCase);
+        var promptTemplate = isMiLmMt ? MiLmMt46PromptTemplate : isPlamo ? PlamoTranslatePromptTemplate : null;
         return new LlamaCppModel(displayName, fileNameOrPath, size, Url: string.Empty,
             ChatTemplate: chatTemplate, NoJinja: noJinja,
-            PromptTemplate: isMiLmMt ? MiLmMt46PromptTemplate : null,
-            Temperature: isMiLmMt ? 0 : -1,
-            CompletionOnly: isMiLmMt,
+            PromptTemplate: promptTemplate,
+            Temperature: promptTemplate != null ? 0 : -1,
+            CompletionOnly: promptTemplate != null,
             NoThinking: noThinking);
     }
 
@@ -747,6 +791,15 @@ public static class LlamaCppServerManager
             Path.Combine(dir, Path.GetFileNameWithoutExtension(modelPath) + "-mmproj.gguf"),
         };
         return candidates.FirstOrDefault(File.Exists);
+    }
+
+    /// <summary>
+    /// True for an OCR-only vision model (GLM-OCR, HunyuanOCR, LightOnOCR, PaddleOCR-VL...): it reads
+    /// text off an image and cannot translate or review, so it is kept out of those model lists.
+    /// </summary>
+    internal static bool IsOcrModelFileName(string fileName)
+    {
+        return fileName.Contains("ocr", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>True when the file name is a vision projector rather than a model in its own right.</summary>
@@ -835,6 +888,14 @@ public static class LlamaCppServerManager
                     continue;
                 }
                 if (IsMmprojFileName(name))
+                {
+                    continue;
+                }
+
+                // An OCR model left over from an older curated list (LightOnOCR 1B after LightOnOCR-3
+                // replaced it) is no longer "known", so it showed up as a custom translate model -
+                // and only answers with the prompt's "<translation of line 1>" example.
+                if (!requireVisionProjector && IsOcrModelFileName(name))
                 {
                     continue;
                 }

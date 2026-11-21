@@ -46,6 +46,22 @@ public class SeAutoTranslate
     // LM Studio advanced: same advanced engine against LM Studio's OpenAI-compatible endpoint.
     public string LmStudioAdvancedUrl { get; set; } = LmStudioAdvancedTranslate.DefaultUrl;
     public string LmStudioAdvancedModel { get; set; } = string.Empty;
+
+    // OpenAI Compatible advanced: the advanced engine against any OpenAI-style endpoint, for example
+    // a hosted provider. Url, model and key as for the regular OpenAI Compatible engine.
+    public string OpenAiCompatibleAdvancedUrl { get; set; } = OpenAiCompatibleTranslate.DefaultUrl;
+    public string OpenAiCompatibleAdvancedModel { get; set; } = string.Empty;
+    public string OpenAiCompatibleAdvancedApiKey { get; set; } = string.Empty;
+
+    // Optional keys for a llama.cpp, Ollama or LM Studio server that asks for one, sent as a
+    // Bearer token. One per URL setting above, so a key only ever goes to the address it was
+    // entered for; the llama.cpp key is for the external server (the two llama.cpp engines share
+    // LlamaCppApiUrl), the server Subtitle Edit starts itself takes none.
+    public string LlamaCppApiKey { get; set; } = string.Empty;
+    public string OllamaApiKey { get; set; } = string.Empty;
+    public string LmStudioApiKey { get; set; } = string.Empty;
+    public string OllamaAdvancedApiKey { get; set; } = string.Empty;
+    public string LmStudioAdvancedApiKey { get; set; } = string.Empty;
     public string GroqUrl { get; set; }
     public string GroqPrompt { get; set; }
     public string GroqApiKey { get; set; }

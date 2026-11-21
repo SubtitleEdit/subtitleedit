@@ -171,7 +171,7 @@ public partial class BookmarksListViewModel : ObservableObject
         {
             var result = await MessageBox.Show(
                 Window,
-                Se.Language.General.DeleteCurrentLine,
+                Se.Language.General.Delete,
                 Se.Language.General.BookmarkDeleteSelectedQuestion,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -221,13 +221,16 @@ public partial class BookmarksListViewModel : ObservableObject
         HasBookmarks = SelectedSubtitle != null;
     }
 
-    internal void OnBookmarksGridDoubleTapped(object? sender, TappedEventArgs e)
-    {
-        Dispatcher.UIThread.Invoke(() => { GoTo(); });
-    }
-
     internal void GridKeyDown(KeyEventArgs e)
     {
+        // Enter on a row goes to it, as double-click does - unhandled it would click Done and just close
+        if (e.Key == Key.Enter && e.KeyModifiers == KeyModifiers.None && SelectedSubtitle != null)
+        {
+            e.Handled = true;
+            GoTo();
+            return;
+        }
+
         if (e.Key == Key.Delete)
         {
             e.Handled = true;

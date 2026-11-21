@@ -3,6 +3,115 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta11 (20th of November 2026)
+
+* Show OCR source images in the main window after OCR - thx ChristianD-Hahn
+* Burn-in output settings: file name suffix (also used by Embedded subtitles edit and Cut video) - thx korjen03
+* Optional "Adjust all times" toolbar button - thx fraternl
+* Point sync via other subtitle: keep synced lines marked - thx MoBit65
+* Batch convert: delete lines by ASSA/SSA style - thx rojaljelly
+* Batch convert: faster loading (parallel parsing, faster unknown-file detection)
+* New format: Unknown 108 (tab separated two-row time code list), also read from Word .doc/.docx
+* Unknown format importer: read Word .doc/.docx files + five fixes for txt/csv/json
+* Remove burned-in subtitles: native ProPainter on Apple Silicon and Windows x64
+* Remove burned-in subtitles: "Expand into dark edges" option for a tighter mask
+* Auto-translate: llama.cpp Hy-MT2 30B-A3B model
+* Auto-translate: refresh online model lists (fixes NVIDIA retired models)
+* Auto-translate: OCR models no longer listed as llama.cpp translate models
+* llama.cpp advanced translate: split a merged row back instead of shifting lines
+* Order llama.cpp translate, Crisp ASR, CrispEmbed OCR and voice-cloning engines by quality
+* Update German translation - thx FunkyKnilch
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
+v5.5.0-beta10 (19th of November 2026)
+
+* Video player: optional "Cycle video flip" button + shortcut (mpv) - thx Cotae88
+* Set video offset: "From video" reads the start time code stored in the video - thx accessallareas
+* Open video from URL: show "Loading online video..." until the stream is playable - thx GitGianluc
+* YouTube Timed Text (YTT): name pens - thx VisibleReality/muaz978
+* Image based edit, Move captions: "Align by" option, text baseline by default - thx Lukewarm1141/caioocesar
+* nOCR: learn 24 hand-labeled glyphs, heavy/thin ł, detached ogonek
+* Auto-translate: llama.cpp PLaMo 3 Translate 8B and 2B models
+* Auto-translate: a local llama.cpp model's prompt/sampling no longer leaks into other engines - thx Makar8000
+* Advanced translate: a temperature in the extra request JSON runs warmer on a retry
+* Advanced translate: a repeated line fills one history pair
+* Generate with AI: use llama.cpp's external server when set, use the Extra request JSON - thx Makar8000
+* Update Italian translation - thx bovirus
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
+v5.5.0-beta9 (18th of November 2026)
+
+* Open video from URL: give yt-dlp ffmpeg so streams merge, mode cards disabled until a URL is entered - thx GitGianluc
+* Video player: follow the player's timeline for files with a start time - thx Tenespirited
+* mpv preview: never write zero-length ASS lines (first subtitle not shown) - thx bereld
+* Burn-in: audio "copy" falls back to AAC when the container can't play the source codec - thx bichitoxxx
+* nOCR: steep italics, composed Polish/Czech letters, touching pairs
+* nOCR: keep a bold "ï" whole and learn ï and œ - thx Codling
+* Fix common OCR errors: don't strip native accented letters (Czech, Polish, Hungarian...) - thx radektuma
+* iTT/TTML: keep a color set on the <p> element - thx El-Has
+* Encoding detection: Arabic-script letters pick Windows-1256 in short files - thx JalalLucky
+* Speech to text: Parakeet Ultra is now the default Crisp ASR Parakeet model
+* Auto-translate: new "OpenAI Compatible (advanced)" engine for any chat-completions endpoint (Auto-translate, Batch convert, seconv) - thx emsb8888-prog/Makar8000
+* Batch convert: the typed translate URL is used and saved for every engine, URL box for Ollama - thx Makar8000
+* Batch convert: model box and Browse for the LM Studio engine - thx Makar8000
+* Batch convert: an emptied LibreTranslate API key box clears the saved key - thx Makar8000
+* Pickers show "No matches"; list windows focus the list, Enter goes to the row
+* Dialog lists: Delete key, file drop, font picker button
+* Update German translation - thx FunkyKnilch
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
+v5.5.0-beta8 (17th of November 2026)
+
+* UI consistency: sentence case, initial focus off OK buttons, clear buttons in filter boxes, delete prompts honor "Prompt before delete"
+* Auto-translate: API key field for llama.cpp, Ollama and LM Studio (incl. advanced) - thx Makar8000
+* Auto-translate: OpenAI Compatible API works without an API key - thx Makar8000
+* Improve time codes: snap only the re-timed side to shot changes
+* Improve time codes: mention Shift+F7 / Shift+F8 in the to-check hint - thx Uer9-create
+* Installer: fix invalid chars in Russian/Finnish changelog shortcut name - thx Diaskhan
+* Update Tesseract (Windows) to 5.5.4
+* Update CrispASR to v0.8.54
+* Update CrispEmbed to v0.17.19
+* Update German translation - thx FunkyKnilch
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
+v5.5.0-beta7 (16th of November 2026)
+
+* Text to speech: KugelAudio voice cloning from a reference clip
+* ASSA: support LayoutResX/LayoutResY headers - thx k6G52m4Dz75W
+* ASSA properties: support setting the YCbCr Matrix header - thx Khaoklong51/k6G52m4Dz75W
+* Allow time codes past 99:59:59,999 (per-format limit) - thx claudiu-mn
+* Add "Set start and offset the whole subtitle" shortcut - thx club706
+* Toolbar auto-translate/speech to text: use the selected lines when more than one line is selected - thx hisui3393
+* Improve time codes: refine starts from the audio level and snap to shot changes
+* Auto-translate: names and repeated interjections no longer count as untranslated echoes - thx Giorgio800
+* Auto-translate: extra request body JSON for the advanced engines - thx Makar8000
+* Auto-translate: refresh model lists
+* Batch convert: show the translate settings button for every auto-translate engine - thx svarga91
+* seconv: --translate-keep-line-breaks for the advanced translate engines - thx Makar8000
+* seconv: --verbose prints the prompt the translate engine sends - thx Makar8000
+* seconv: --translate-api-key for llama.cpp, Ollama and LM Studio (incl. advanced) - thx Makar8000
+* Speech to text: show the detected GPU and recommended build in CPU/Vulkan/CUDA prompts - thx Uer9-create
+* Settings search: also find settings grouped inside an item, e.g. Alignment - thx routineCode/caioocesar
+* Burn-in: logo picker opens in the logo's folder - thx bichitoxxx/caioocesar
+* OCR fix: read replace lists saved as ANSI - thx fraternl
+* Word lists: edit spell-checked OCR regex rules in Regex rules - thx fraternl
+* nOCR: fix pixel color reading used for match points and italic space fixing
+* Update audio.cpp to v0.9.5
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta6 (14th of November 2026)
 
 * Fix common errors: sort the fixes by line number - thx radektuma
@@ -22,6 +131,7 @@ v5.5.0-beta6 (14th of November 2026)
 * Update Japanese translation - thx hisui3393
 
 -----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta5 (13th of November 2026)
 
 * Layout 14: quality control layout with QC panel and tag chips
@@ -54,6 +164,7 @@ v5.5.0-beta5 (13th of November 2026)
 * Update Korean translation - thx 12si27
 
 -----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta4 (11th of November 2026)
 
 * Add Qwen3-ForcedAligner-Ultra as a forced aligner option
@@ -76,6 +187,7 @@ v5.5.0-beta4 (11th of November 2026)
 * Update Swedish translation - thx Manavagg2003
 
 -----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta3 (10th of November 2026)
 
 * Option to preset the save encoding on open to a chosen UTF-8 variant now also works for UTF-8 files - thx darnn
@@ -95,6 +207,7 @@ v5.5.0-beta3 (10th of November 2026)
 * Update Russian translation - thx Manavagg2003
 
 -----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta2 (9th of November 2026)
 
 * Waveform: "Edit original subtitle timing" toggle edits the original subtitle's timing in any layout - thx hisui3393

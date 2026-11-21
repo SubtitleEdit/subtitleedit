@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,11 +22,25 @@ public enum MoveCaptionsMode
     IntoPicture,
 }
 
+public enum MoveCaptionsAlignment
+{
+    /// <summary>
+    /// Each caption is placed on its own, by the baseline of its last text line at the bottom
+    /// edge (by the image edge at the top), so descenders don't lift the text (#16360).
+    /// </summary>
+    Baseline,
+
+    /// <summary>All captions of one edge move by the same offset, so their relative positions are kept.</summary>
+    KeepRelativePositions,
+}
+
 /// <summary>
 /// BDSup2Sub's "move all captions": for letterboxed (cinemascope) video, push every caption
 /// either into the black bars or back inside the active picture, keeping a fixed offset from
 /// the bar edge. A caption whose centre is in the upper half of the screen goes to the top
-/// edge, the rest go to the bottom edge - the same rule BDSup2Sub uses.
+/// edge, the rest go to the bottom edge - the same rule BDSup2Sub uses. Unlike BDSup2Sub, bottom
+/// captions are placed by their text baseline, or optionally all captions of one edge move by the
+/// same offset (#16360).
 /// </summary>
 public partial class BinaryMoveCaptionsViewModel : ObservableObject
 {
@@ -35,6 +50,8 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
     [ObservableProperty] private bool _isBarHeightEditable;
     [ObservableProperty] private bool _moveIntoBars;
     [ObservableProperty] private bool _moveIntoPicture;
+    [ObservableProperty] private bool _alignBaseline;
+    [ObservableProperty] private bool _alignKeepRelativePositions;
     [ObservableProperty] private int _offset;
     [ObservableProperty] private string _infoText;
 
@@ -45,6 +62,7 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
     private int _screenWidth;
     private int _screenHeight;
     private bool _isSyncingRatio;
+    private int[]? _descents;
 
     public BinaryMoveCaptionsViewModel()
     {
@@ -62,6 +80,8 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
         };
         _selectedLetterboxRatio = _letterboxRatios[5];
         _moveIntoBars = true;
+        _alignKeepRelativePositions = Se.Settings.Tools.BinEditMoveCaptionsKeepRelativePositions;
+        _alignBaseline = !_alignKeepRelativePositions;
         _offset = 10;
         _infoText = string.Empty;
     }
@@ -126,13 +146,44 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
     partial void OnOffsetChanged(int value) => UpdateInfo();
     partial void OnMoveIntoBarsChanged(bool value) => UpdateInfo();
     partial void OnMoveIntoPictureChanged(bool value) => UpdateInfo();
+    partial void OnAlignBaselineChanged(bool value) => UpdateInfo();
+    partial void OnAlignKeepRelativePositionsChanged(bool value) => UpdateInfo();
 
     private MoveCaptionsMode Mode => MoveIntoPicture ? MoveCaptionsMode.IntoPicture : MoveCaptionsMode.IntoBars;
+
+    private MoveCaptionsAlignment Alignment => AlignKeepRelativePositions ? MoveCaptionsAlignment.KeepRelativePositions : MoveCaptionsAlignment.Baseline;
+
+    /// <summary>The descents are only needed for baseline alignment, and finding them runs the letter splitter on every image, so they are found once, on first use.</summary>
+    private int[]? Descents => Alignment == MoveCaptionsAlignment.Baseline ? _descents ??= GetDescents(_subtitles, _screenHeight) : null;
+
+    /// <summary>
+    /// How far the last text line of each image hangs below its baseline (0 without a bitmap, a
+    /// descender, or when it can't be told), as used by "Bottom align (baseline)".
+    /// </summary>
+    public static int[] GetDescents(IReadOnlyList<BinarySubtitleItem> subtitles, int screenHeight)
+    {
+        var minLineHeight = screenHeight >= 1080 ? 25 : 12;
+        var descents = new int[subtitles.Count];
+        for (var i = 0; i < subtitles.Count; i++)
+        {
+            var bitmap = subtitles[i].Bitmap;
+            if (bitmap == null || bitmap.PixelSize.Height <= 0)
+            {
+                continue;
+            }
+
+            using var skBitmap = bitmap.ToSkBitmap();
+            descents[i] = ImageBaselineFinder.GetDescent(skBitmap, minLineHeight);
+        }
+
+        return descents;
+    }
 
     private void UpdateInfo()
     {
         var lang = Se.Language.Tools.ImageBasedEdit;
-        var moving = _subtitles.Count(s => GetNewY(s, _screenHeight, BarHeight, Offset, Mode) != s.Y);
+        var newYs = GetNewYs(_subtitles, _screenHeight, BarHeight, Offset, Mode, Alignment, Descents);
+        var moving = _subtitles.Where((s, i) => newYs[i] != s.Y).Count();
         InfoText = string.Format(lang.LetterboxBarHeightXPxYOfZCaptionsWillMove, BarHeight, moving, _subtitles.Count);
     }
 
@@ -148,7 +199,7 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
             return item.Y;
         }
 
-        var isTop = item.Y + height / 2.0 < screenHeight / 2.0;
+        var isTop = IsTop(item, screenHeight);
         int y;
         if (mode == MoveCaptionsMode.IntoBars)
         {
@@ -164,11 +215,86 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
         return Math.Clamp(y, 0, Math.Max(0, screenHeight - height));
     }
 
-    public static void Apply(IEnumerable<BinarySubtitleItem> subtitles, int screenHeight, int barHeight, int offset, MoveCaptionsMode mode)
+    /// <summary>
+    /// Computes the new Y of every caption. Bitmaps are cropped to the ink, so their heights differ
+    /// with the text (descenders); placing each one by its own image edge would make the text
+    /// baseline jump between captions (#16360). So:
+    /// <list type="bullet">
+    /// <item><see cref="MoveCaptionsAlignment.Baseline"/>: each caption is placed on its own, and a
+    /// bottom caption is moved down by its <paramref name="descents"/> so its last baseline, not
+    /// its image edge, sits at the edge (as "Bottom align (baseline)" does).</item>
+    /// <item><see cref="MoveCaptionsAlignment.KeepRelativePositions"/>: all captions of one edge
+    /// move by the same offset, taken from the caption that sticks out furthest towards that edge,
+    /// so captions that shared a Y keep sharing it.</item>
+    /// </list>
+    /// </summary>
+    public static int[] GetNewYs(IReadOnlyList<BinarySubtitleItem> subtitles, int screenHeight, int barHeight, int offset, MoveCaptionsMode mode, MoveCaptionsAlignment alignment, IReadOnlyList<int>? descents)
     {
-        foreach (var item in subtitles)
+        var newYs = subtitles.Select(s => s.Y).ToArray();
+        if (screenHeight <= 0)
         {
-            item.Y = GetNewY(item, screenHeight, barHeight, offset, mode);
+            return newYs;
+        }
+
+        var movable = Enumerable.Range(0, subtitles.Count)
+            .Where(i => (subtitles[i].Bitmap?.PixelSize.Height ?? 0) > 0)
+            .ToList();
+
+        if (alignment == MoveCaptionsAlignment.Baseline)
+        {
+            foreach (var i in movable)
+            {
+                var item = subtitles[i];
+                var y = GetNewY(item, screenHeight, barHeight, offset, mode);
+                if (descents != null && !IsTop(item, screenHeight))
+                {
+                    var height = item.Bitmap!.PixelSize.Height;
+                    y = Math.Clamp(y + descents[i], 0, Math.Max(0, screenHeight - height));
+                }
+
+                newYs[i] = y;
+            }
+
+            return newYs;
+        }
+
+        var top = movable.Where(i => IsTop(subtitles[i], screenHeight)).ToList();
+        var bottom = movable.Except(top).ToList();
+
+        // Top edge: the caption closest to the top. Bottom edge: the caption whose bottom is lowest.
+        MoveZone(top, i => subtitles[i].Y);
+        MoveZone(bottom, i => -(subtitles[i].Y + subtitles[i].Bitmap!.PixelSize.Height));
+        return newYs;
+
+        void MoveZone(List<int> zone, Func<int, int> protrusion)
+        {
+            if (zone.Count == 0)
+            {
+                return;
+            }
+
+            var anchor = subtitles[zone.MinBy(protrusion)];
+            var delta = GetNewY(anchor, screenHeight, barHeight, offset, mode) - anchor.Y;
+            foreach (var i in zone)
+            {
+                var height = subtitles[i].Bitmap!.PixelSize.Height;
+                newYs[i] = Math.Clamp(subtitles[i].Y + delta, 0, Math.Max(0, screenHeight - height));
+            }
+        }
+    }
+
+    private static bool IsTop(BinarySubtitleItem item, int screenHeight)
+    {
+        var height = item.Bitmap?.PixelSize.Height ?? 0;
+        return item.Y + height / 2.0 < screenHeight / 2.0;
+    }
+
+    public static void Apply(IReadOnlyList<BinarySubtitleItem> subtitles, int screenHeight, int barHeight, int offset, MoveCaptionsMode mode, MoveCaptionsAlignment alignment, IReadOnlyList<int>? descents)
+    {
+        var newYs = GetNewYs(subtitles, screenHeight, barHeight, offset, mode, alignment, descents);
+        for (var i = 0; i < subtitles.Count; i++)
+        {
+            subtitles[i].Y = newYs[i];
         }
     }
 
@@ -188,7 +314,8 @@ public partial class BinaryMoveCaptionsViewModel : ObservableObject
             return;
         }
 
-        Apply(_subtitles, _screenHeight, BarHeight, Offset, Mode);
+        Apply(_subtitles, _screenHeight, BarHeight, Offset, Mode, Alignment, Descents);
+        Se.Settings.Tools.BinEditMoveCaptionsKeepRelativePositions = AlignKeepRelativePositions;
         OkPressed = true;
         Window.Close();
     }

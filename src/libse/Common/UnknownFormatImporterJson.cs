@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             "startMilliseconds", "start_millisesonds", "startmilliseconds",
             "from", "fromTime", "from_ms","fromms", "fromMilliseconds", "from_milliseconds", "show",
             "tStartMs", "displayTimeOffset", "milliseconds", "timestamp", "timestamp_begin", "time",
+            "offset", "offsetMs", "startOffset",
             "t1", "st", "s"
         };
 

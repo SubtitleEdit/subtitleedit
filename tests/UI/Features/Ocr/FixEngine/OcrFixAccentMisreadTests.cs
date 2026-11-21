@@ -91,6 +91,53 @@ public class OcrFixAccentMisreadTests : IDisposable
         Assert.Equal("Een voor de sergeant.", engine.FixOcrErrors(0, "Eèn voor de sergeant.", doTryToGuessUnknownWords: false).GetText());
     }
 
+    [Theory]
+    [InlineData("Říkám kuš!")]
+    [InlineData("To je Hád.")]
+    [InlineData("Hélios a Seléné.")]
+    [InlineData("Bůh Hádés.")]
+    [InlineData("Přišla Afrodíté.")]
+    public void FixOcrErrors_Czech_NativeAccentedLetters_AreNotChanged(string input)
+    {
+        // Unknown Czech words (mostly names) must not become the dictionary word their plain or
+        // other-accent variant spells: "kuš" -> "kus", "Hád" -> "Had", "Seléné" -> "Selene" (#16982).
+        var engine = CreateEngine("ces", "říkám", "kus", "to", "je", "had", "a", "selene", "bůh", "hádes", "přišla", "afroditě");
+
+        Assert.Equal(input, engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false).GetText());
+    }
+
+    [Theory]
+    [InlineData("slk", "To je Hád.", new[] { "to", "je", "had" })]
+    [InlineData("pol", "To jest Łoś.", new[] { "to", "jest", "los" })]
+    [InlineData("hun", "Ez a Kürt.", new[] { "ez", "a", "kurt" })]
+    [InlineData("ron", "Este Câine.", new[] { "este", "caine" })]
+    [InlineData("hrv", "To je Đurić.", new[] { "to", "je", "duric", "đuric" })]
+    [InlineData("tur", "Bu Şeker.", new[] { "bu", "seker" })]
+    public void FixOcrErrors_NativeAccentedLetter_IsNotChanged(string language, string input, string[] words)
+    {
+        var engine = CreateEngine(language, words);
+
+        Assert.Equal(input, engine.FixOcrErrors(0, input, doTryToGuessUnknownWords: false).GetText());
+    }
+
+    [Fact]
+    public void FixOcrErrors_Polish_ForeignAccentedLetter_StillFixed()
+    {
+        // "à" is not a Polish letter.
+        var engine = CreateEngine("pol", "tak", "jest");
+
+        Assert.Equal("Tak jest.", engine.FixOcrErrors(0, "Tàk jest.", doTryToGuessUnknownWords: false).GetText());
+    }
+
+    [Fact]
+    public void FixOcrErrors_Czech_ForeignAccentedLetter_StillFixed()
+    {
+        // "ë" is not a Czech letter: it is nOCR's misread of "č".
+        var engine = CreateEngine("ces", "počkej", "tady");
+
+        Assert.Equal("Počkej tady.", engine.FixOcrErrors(0, "Poëkej tady.", doTryToGuessUnknownWords: false).GetText());
+    }
+
     [Fact]
     public void FixOcrErrors_NoLookalikeInDictionary_IsLeftAlone()
     {

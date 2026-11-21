@@ -111,4 +111,24 @@ public class LlamaCppCustomOcrModelTests : IDisposable
         // concerned - only its projector is filtered out.
         Assert.Contains(models, m => m.FileName == "my-vision-model.gguf");
     }
+
+    [Theory]
+    [InlineData("LightOnOCR-1B-1025-Q8_0.gguf", "mmproj-LightOnOCR-1B-1025-Q8_0.gguf")]
+    [InlineData("PaddleOCR-VL-1.6-GGUF.gguf", "PaddleOCR-VL-1.6-GGUF-mmproj.gguf")]
+    public void RetiredOcrModel_IsNotATranslateOrReviewModel_ButStillAnOcrModel(string model, string mmproj)
+    {
+        PlantModel(model, mmproj);
+
+        Assert.DoesNotContain(LlamaCppServerManager.GetAllTranslateModels(), m => m.FileName == model);
+        Assert.DoesNotContain(LlamaCppServerManager.GetAllReviewModels(), m => m.FileName == model);
+        Assert.Contains(LlamaCppServerManager.GetAllOcrModels(), m => m.FileName == model);
+    }
+
+    [Fact]
+    public void CustomTextModel_IsStillATranslateModel()
+    {
+        PlantModel("my-translator-Q4_K_M.gguf");
+
+        Assert.Contains(LlamaCppServerManager.GetAllTranslateModels(), m => m.FileName == "my-translator-Q4_K_M.gguf");
+    }
 }

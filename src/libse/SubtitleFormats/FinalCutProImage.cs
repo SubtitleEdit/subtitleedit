@@ -22,7 +22,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            FrameRate = Configuration.Settings.General.CurrentFrameRate;
+            ResetLoadFrameRate();
+            FrameRate = LoadFrameRate;
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -36,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var frameRate = double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText, CultureInfo.InvariantCulture);
                         if (frameRate > 10 && frameRate < 2000)
                         {
-                            Configuration.Settings.General.CurrentFrameRate = frameRate;
+                            SetLoadFrameRate(frameRate);
                         }
                     }
                     catch
@@ -68,21 +69,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 XmlNode startNode = node.SelectSingleNode("start");
                                 if (startNode != null)
                                 {
-                                    p.StartTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(startNode.InnerText));
+                                    p.StartTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(startNode.InnerText), LoadFrameRate);
                                 }
                                 else if (inNode != null)
                                 {
-                                    p.StartTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(inNode.InnerText));
+                                    p.StartTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(inNode.InnerText), LoadFrameRate);
                                 }
                                 XmlNode outNode = node.SelectSingleNode("out");
                                 XmlNode endNode = node.SelectSingleNode("end");
                                 if (endNode != null)
                                 {
-                                    p.EndTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(endNode.InnerText));
+                                    p.EndTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(endNode.InnerText), LoadFrameRate);
                                 }
                                 else if (outNode != null)
                                 {
-                                    p.EndTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(outNode.InnerText));
+                                    p.EndTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(outNode.InnerText), LoadFrameRate);
                                 }
                                 subtitle.Paragraphs.Add(p);
                             }

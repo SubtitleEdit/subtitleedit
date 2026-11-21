@@ -114,6 +114,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            ResetLoadFrameRate();
 
             if (!JoinLines(lines).Contains("<StTextList"))
             {
@@ -129,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode use2997DropFrame = xml.DocumentElement.SelectSingleNode("TrackList/Track/FcpProperty");
                 if (use2997DropFrame != null && use2997DropFrame.Attributes["Use2997DropFrame"] != null && use2997DropFrame.Attributes["Use2997DropFrame"].InnerText == "1")
                 {
-                    Configuration.Settings.General.CurrentFrameRate = 29.97;
+                    SetLoadFrameRate(29.97);
                 }
 
                 foreach (XmlNode node in xml.SelectNodes("//StItem"))
@@ -143,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         if (list.Count == 3 && RegexTimeCodes.IsMatch(list[2].InnerText))
                         {
-                            p.StartTime.TotalMilliseconds = TimeCode.ParseHHMMSSFFToMilliseconds(list[2].InnerText);
+                            p.StartTime.TotalMilliseconds = TimeCode.ParseHHMMSSFFToMilliseconds(list[2].InnerText, LoadFrameRate);
                         }
 
                         if (list.Count > 1)

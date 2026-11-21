@@ -94,6 +94,7 @@ public class SeTools
     public int BinEditTopMargin { get; set; }
     public int BinEditRightMargin { get; set; }
     public int BinEditBottomMargin { get; set; }
+    public bool BinEditMoveCaptionsKeepRelativePositions { get; set; }
     public string BinEditFontName { get; set; }
     public int BinEditFontSize { get; set; }
     public bool BinEditIsBold { get; set; }

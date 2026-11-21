@@ -46,8 +46,8 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "gpt-4.1-mini",
 
             // DeepSeek
-            "deepseek-chat",
-            "deepseek-reasoner",
+            "deepseek-flash",
+            "deepseek-v4-pro",
 
             // Google Gemini
             "gemini-flash-latest",

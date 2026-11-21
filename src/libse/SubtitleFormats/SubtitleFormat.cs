@@ -103,6 +103,57 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return _joinedLinesTrimmed ??= joined.Trim();
         }
 
+        [ThreadStatic] private static List<string> _concatLinesKey;
+        [ThreadStatic] private static int _concatLinesKeyCount;
+        [ThreadStatic] private static string _concatLines;
+        [ThreadStatic] private static string _concatLinesTrimmed;
+
+        /// <summary>
+        /// All lines appended with no separator - same result as appending every line to a
+        /// StringBuilder with Append (what the json readers do). Memoized per thread like
+        /// <see cref="JoinLines"/>, as every json format in the detection walk does this join.
+        /// </summary>
+        protected static string ConcatLines(List<string> lines)
+        {
+            if (!ReferenceEquals(lines, _concatLinesKey) || lines.Count != _concatLinesKeyCount)
+            {
+                _concatLines = string.Concat(lines);
+                _concatLinesTrimmed = null;
+                _concatLinesKey = lines;
+                _concatLinesKeyCount = lines.Count;
+            }
+
+            return _concatLines;
+        }
+
+        /// <summary>Same as <see cref="ConcatLines"/> followed by Trim().</summary>
+        protected static string ConcatLinesTrimmed(List<string> lines)
+        {
+            var joined = ConcatLines(lines);
+            return _concatLinesTrimmed ??= joined.Trim();
+        }
+
+        /// <summary>
+        /// Whether the text starts with an RTF header ("{\rtf", leading white space ignored) -
+        /// the same answer as joining all lines, trimming and testing StartsWith, but it only
+        /// looks at the first non-blank line, so the many RTF readers can reject a file without
+        /// joining it.
+        /// </summary>
+        protected static bool StartsWithRtfHeader(List<string> lines)
+        {
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                return line.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal);
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Builds the format cache on a worker thread so the ~330 type loads and constructor JITs
         /// overlap with other start-up work instead of blocking the first window. Purely an
@@ -504,6 +555,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle105(),
                     new UnknownSubtitle106(),
                     new UnknownSubtitle107(),
+                    new UnknownSubtitle108(),
                 };               
 
                 _subtitleFormatsWithDefaultOrder = new List<SubtitleFormat>(_allSubtitleFormats);
@@ -571,6 +623,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public virtual bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
+            if (KeepDeclaredFrameRateLocal)
+            {
+                // Nothing to restore: a declared frame rate stays on this instance
+                LoadSubtitle(subtitle, lines, fileName);
+                return subtitle.Paragraphs.Count > _errorCount;
+            }
+
             var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
             LoadSubtitle(subtitle, lines, fileName);
             Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
@@ -666,7 +725,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </summary>
         protected static void FromMediaTime(Subtitle subtitle)
         {
-            if (!IsSmpteTimeCodeClock(Configuration.Settings.General.CurrentFrameRate))
+            FromMediaTime(subtitle, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        /// <summary>
+        /// The reverse of <see cref="ToMediaTime"/> for a subtitle just read from media time at
+        /// <paramref name="frameRate"/>.
+        /// </summary>
+        protected static void FromMediaTime(Subtitle subtitle, double frameRate)
+        {
+            if (!IsSmpteTimeCodeClock(frameRate))
             {
                 return;
             }
@@ -698,10 +766,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
-            var frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetTimeCodeFrameRate(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
-            if (frames >= Configuration.Settings.General.CurrentFrameRate)
+            return MillisecondsToFramesMaxFrameRate(milliseconds, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        public static int MillisecondsToFramesMaxFrameRate(double milliseconds, double frameRate)
+        {
+            var frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetTimeCodeFrameRate(frameRate)), MidpointRounding.AwayFromZero);
+            if (frames >= frameRate)
             {
-                frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
+                frames = (int)(frameRate - 0.01);
             }
 
             return frames;
@@ -719,7 +792,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int FramesToMillisecondsMax999(double frames)
         {
-            var ms = (int)Math.Round(frames * (TimeCode.BaseUnit / GetTimeCodeFrameRate(Configuration.Settings.General.CurrentFrameRate)), MidpointRounding.AwayFromZero);
+            return FramesToMillisecondsMax999(frames, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        public static int FramesToMillisecondsMax999(double frames, double frameRate)
+        {
+            var ms = (int)Math.Round(frames * (TimeCode.BaseUnit / GetTimeCodeFrameRate(frameRate)), MidpointRounding.AwayFromZero);
             return Math.Min(ms, 999);
         }
 
@@ -749,8 +827,61 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </remarks>
         public virtual SubtitleFormatLimits FormatLimits => null;
 
+        /// <summary>
+        /// Largest time code the format can write. Defaults to 99:59:59,999; text formats whose
+        /// readers take 3+ digit hours (SubRip, WebVTT, TTML, ASSA/SSA) allow up to
+        /// <see cref="TimeCode.MaxSupportedTotalMilliseconds"/> (#16937).
+        /// </summary>
+        public virtual double MaxTimeCodeTotalMilliseconds => TimeCode.MaxTimeTotalMilliseconds;
+
         public bool BatchMode { get; set; }
         public double? BatchSourceFrameRate { get; set; }
+
+        private double? _loadFrameRate;
+
+        /// <summary>
+        /// When true, a frame rate a file declares while loading (TTML ttp:frameRate, D-Cinema
+        /// EditRate, EBU STL's header, ...) is kept on this instance only, in
+        /// <see cref="DeclaredFrameRate"/>, and Configuration.Settings.General.CurrentFrameRate is
+        /// never written - so several files can load at the same time
+        /// (<see cref="ConcurrentSubtitleParser"/>). When false (the default) the declared frame rate
+        /// is also written to CurrentFrameRate, as it always was, so File > Open picks it up.
+        /// </summary>
+        public bool KeepDeclaredFrameRateLocal { get; set; }
+
+        /// <summary>
+        /// The frame rate the last loaded file declared (or BatchSourceFrameRate), null if it
+        /// declared none.
+        /// </summary>
+        public double? DeclaredFrameRate => _loadFrameRate;
+
+        /// <summary>
+        /// The frame rate to convert frames with while loading: the one the file declared (see
+        /// <see cref="SetLoadFrameRate"/>), else Configuration.Settings.General.CurrentFrameRate.
+        /// </summary>
+        protected double LoadFrameRate => _loadFrameRate ?? Configuration.Settings.General.CurrentFrameRate;
+
+        /// <summary>
+        /// Call when the file being loaded declares its frame rate - use <see cref="LoadFrameRate"/>
+        /// (not CurrentFrameRate) for the rest of the load.
+        /// </summary>
+        protected void SetLoadFrameRate(double frameRate)
+        {
+            _loadFrameRate = frameRate;
+            if (!KeepDeclaredFrameRateLocal)
+            {
+                Configuration.Settings.General.CurrentFrameRate = frameRate;
+            }
+        }
+
+        /// <summary>
+        /// Call at the start of a load that may call <see cref="SetLoadFrameRate"/>, so a frame
+        /// rate the previous file declared is not used for this one.
+        /// </summary>
+        protected void ResetLoadFrameRate()
+        {
+            _loadFrameRate = null;
+        }
 
         public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration = false)
         {
@@ -788,6 +919,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         protected static TimeCode DecodeTimeCodeFramesFourParts(string[] tokens)
         {
+            return DecodeTimeCodeFramesFourParts(tokens, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        protected static TimeCode DecodeTimeCodeFramesFourParts(string[] tokens, double frameRate)
+        {
             if (tokens == null)
             {
                 return new TimeCode();
@@ -808,7 +944,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return new TimeCode(TimeCode.MaxTimeTotalMilliseconds);
             }
 
-            return new TimeCode(int.Parse(tokens[0], CultureInfo.InvariantCulture), int.Parse(tokens[1], CultureInfo.InvariantCulture), int.Parse(tokens[2], CultureInfo.InvariantCulture), FramesToMillisecondsMax999(int.Parse(tokens[3], CultureInfo.InvariantCulture)));
+            return new TimeCode(int.Parse(tokens[0], CultureInfo.InvariantCulture), int.Parse(tokens[1], CultureInfo.InvariantCulture), int.Parse(tokens[2], CultureInfo.InvariantCulture), FramesToMillisecondsMax999(int.Parse(tokens[3], CultureInfo.InvariantCulture), frameRate));
         }
 
         protected static TimeCode DecodeTimeCodeMsFourParts(string[] tokens)
@@ -829,6 +965,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected static TimeCode DecodeTimeCodeFrames(string timestamp, char[] splitChars)
         {
             return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        protected static TimeCode DecodeTimeCodeFrames(string timestamp, char[] splitChars, double frameRate)
+        {
+            return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries), frameRate);
         }
 
         public static SubtitleFormat[] GetBinaryFormats(bool batchMode)

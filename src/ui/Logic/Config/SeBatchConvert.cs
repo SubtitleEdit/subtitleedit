@@ -130,6 +130,7 @@ public class SeBatchConvert
     public string ChangeCasingType { get; set; }
     public bool NormalCasingFixNames { get; set; }
     public bool NormalCasingOnlyUpper { get; set; }
+    public string ChangeCasingOnlyActorsOrStyles { get; set; }
 
     public string FixRtlMode { get; set; }
     public string LastFilterItem { get; set; }
@@ -305,6 +306,7 @@ public class SeBatchConvert
         ChangeSpeedPercent = 100;
         DeleteLinesContains = string.Empty;
         DeleteActorsOrStyles = string.Empty;
+        ChangeCasingOnlyActorsOrStyles = string.Empty;
         FormattingAddAlignmentTagOption = "an2";
         FormattingAddColorValue = "#FFFFFFFF";
         AssaChangeResolutionTargetWidth = 1920;

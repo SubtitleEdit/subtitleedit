@@ -10,7 +10,13 @@ namespace Nikse.SubtitleEdit.Core.Common
         public const double BaseUnit = 1000.0; // Base unit of time
 
         public bool IsMaxTime => Math.Abs(TotalMilliseconds - MaxTimeTotalMilliseconds) < 0.01;
+        // 99:59:59,999 - the "no time" marker (e.g. "--:--:--:--" in EBU STL, a new line after
+        // the last one). Not a limit: real time codes may go past it, see MaxSupportedTotalMilliseconds.
         public const double MaxTimeTotalMilliseconds = 359999999; // new TimeCode(99, 59, 59, 999).TotalMilliseconds
+
+        // 9999:59:59,999 (~416 days) - the largest time code SE holds (#16937). Players read SubRip,
+        // WebVTT, TTML and ASSA hours with 3+ digits, e.g. for videos with huge start timestamps.
+        public const double MaxSupportedTotalMilliseconds = 35999999999; // new TimeCode(9999, 59, 59, 999).TotalMilliseconds
 
         public static TimeCode FromSeconds(double seconds)
         {
@@ -58,6 +64,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double ParseHHMMSSFFToMilliseconds(string text)
         {
+            return ParseHHMMSSFFToMilliseconds(text, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        public static double ParseHHMMSSFFToMilliseconds(string text, double frameRate)
+        {
             Span<int> starts = stackalloc int[MaxTimeParts];
             Span<int> lengths = stackalloc int[MaxTimeParts];
             var count = SplitTimeParts(text, starts, lengths);
@@ -70,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     int.TryParse(s.Slice(starts[2], lengths[2]), out var seconds) &&
                     int.TryParse(s.Slice(starts[3], lengths[3]), out var frames))
                 {
-                    return new TimeCode(hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames)).TotalMilliseconds;
+                    return new TimeCode(hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames, frameRate)).TotalMilliseconds;
                 }
             }
             return 0;
@@ -230,7 +241,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             get
             {
-                if (TotalMilliseconds > MaxTimeTotalMilliseconds || TotalMilliseconds < -MaxTimeTotalMilliseconds)
+                if (TotalMilliseconds > MaxSupportedTotalMilliseconds || TotalMilliseconds < -MaxSupportedTotalMilliseconds)
                 {
                     return new TimeSpan();
                 }

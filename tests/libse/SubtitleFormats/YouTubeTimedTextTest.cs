@@ -210,4 +210,106 @@ public class YouTubeTimedTextTest
         Assert.Contains("Line two &amp; more", text);
         Assert.Equal(subtitle.Paragraphs[0].Text, reloaded.Paragraphs[0].Text);
     }
+
+    private const string NamedPensFile =
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+        "<timedtext format=\"3\">\n" +
+        "<head>\n" +
+        "<wp id=\"0\" ap=\"7\" ah=\"50\" av=\"100\" />\n" +
+        "<ws id=\"0\" />\n" +
+        "<pen id=\"0\" />\n" +
+        "<pen id=\"1\" fc=\"#FF0000\" fo=\"254\" name=\"Alice &amp; &lt;Bob&gt; &quot;q&quot;\" />\n" +
+        "<pen id=\"2\" i=\"1\" name=\"Narrator\" />\n" +
+        "<pen id=\"3\" b=\"1\" fc=\"#00FF00\" fo=\"254\" />\n" +
+        "</head>\n" +
+        "<body>\n" +
+        "<p t=\"1000\" d=\"2000\" p=\"1\">Red line</p>\n" +
+        "<p t=\"4000\" d=\"2000\" p=\"1\">Red <s p=\"2\">narrated</s> end</p>\n" +
+        "</body>\n" +
+        "</timedtext>\n";
+
+    [Fact]
+    public void PenNameRoundTrips()
+    {
+        var subtitle = Load(NamedPensFile, out var format);
+        var head = YttHead.Parse(subtitle.Header);
+
+        Assert.Equal("Alice & <Bob> \"q\"", head.GetPen(1).Name);
+        Assert.Equal("Narrator", head.GetPen(2).Name);
+        Assert.Null(head.GetPen(3).Name);
+        Assert.Empty(head.GetPen(1).OtherAttributes);
+
+        var saved = format.ToText(subtitle, "test");
+        var savedHead = YttHead.Parse(Load(saved, out _).Header);
+
+        Assert.Equal("Alice & <Bob> \"q\"", savedHead.GetPen(1).Name);
+        Assert.Equal("Narrator", savedHead.GetPen(2).Name);
+        Assert.Null(savedHead.GetPen(3).Name);
+        Assert.Contains("name=\"Alice &amp; &lt;Bob> &quot;q&quot;\"", saved);
+        Assert.DoesNotContain("name=\"\"", saved);
+    }
+
+    [Fact]
+    public void PenMadeFromANamedPenByATagStartsWithoutAName()
+    {
+        var subtitle = Load(NamedPensFile, out var format);
+        subtitle.Paragraphs[0].Text = "Red <i>slanted</i> end";
+
+        var reloaded = Load(format.ToText(subtitle, "test"), out _);
+        var head = YttHead.Parse(reloaded.Header);
+
+        // pen 1 keeps its name, and the new red italic pen has none - never two pens with one name
+        Assert.Equal("Alice & <Bob> \"q\"", head.GetPen(1).Name);
+        Assert.Single(head.Pens, p => p.Name == head.GetPen(1).Name);
+        var derived = head.Pens.Single(p => p.Italic == true && p.ForeColor == "#FF0000");
+        Assert.Null(derived.Name);
+    }
+
+    [Fact]
+    public void ATagThatChangesNothingKeepsTheNamedPen()
+    {
+        var subtitle = Load(NamedPensFile, out var format);
+
+        // pen 2 is already italic, so the line stays on the pen named Narrator
+        subtitle.Paragraphs[0].Style = "2";
+        subtitle.Paragraphs[0].Text = "<i>Narrated</i>";
+
+        var reloaded = Load(format.ToText(subtitle, "test"), out _);
+        var head = YttHead.Parse(reloaded.Header);
+
+        Assert.Equal("2", reloaded.Paragraphs[0].Style);
+        Assert.Equal(1, head.Pens.Count(p => p.Name == "Narrator"));
+        Assert.Equal(3, head.Pens.Count(p => p.Id != 0));
+    }
+
+    [Fact]
+    public void PlainItalicLineIsNotGivenANamedPen()
+    {
+        var subtitle = Load(NamedPensFile, out var format);
+        subtitle.Paragraphs[0].Style = null;
+        subtitle.Paragraphs[0].Text = "<i>Just italic</i>";
+
+        var reloaded = Load(format.ToText(subtitle, "test"), out _);
+        var head = YttHead.Parse(reloaded.Header);
+        var pen = head.GetPen(reloaded.Paragraphs[0].Style);
+
+        // pen 2 is italic only, but it is named, so a plain italic line gets a pen of its own
+        Assert.NotNull(pen);
+        Assert.NotEqual(2, pen.Id);
+        Assert.Null(pen.Name);
+        Assert.Equal("Narrator", head.GetPen(2).Name);
+    }
+
+    [Fact]
+    public void PensWithDifferentNamesAreDifferentPens()
+    {
+        var a = new YttPen { Id = 1, Italic = true, Name = "A" };
+        var b = new YttPen { Id = 2, Italic = true, Name = "B" };
+        var unnamed = new YttPen { Id = 3, Italic = true };
+
+        Assert.False(a.HasSameFormatting(b));
+        Assert.False(a.HasSameFormatting(unnamed));
+        Assert.True(a.HasSameFormatting(b, false));
+        Assert.True(unnamed.HasSameFormatting(new YttPen { Id = 4, Italic = true, Name = string.Empty }));
+    }
 }

@@ -88,4 +88,20 @@ Style: Default,Arial,20,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,
 
         Assert.False(new AdvancedSubStationAlpha().IsMine(lines, "episode.ssa"));
     }
+
+    [Fact]
+    public void EffectWithCommaDoesNotSpillIntoText()
+    {
+        // an effect carried over from TTML, e.g. tts:backgroundColor=rgb(0,0,0) (#16989)
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("Hello", 1000, 2000) { Effect = "a=rgb(1,2,3)" });
+        var raw = sub.ToText(new AdvancedSubStationAlpha());
+
+        var loaded = new Subtitle();
+        new AdvancedSubStationAlpha().LoadSubtitle(loaded, raw.SplitToLines(), null);
+
+        Assert.Single(loaded.Paragraphs);
+        Assert.Equal("Hello", loaded.Paragraphs[0].Text);
+        Assert.Equal("a=rgb(1;2;3)", loaded.Paragraphs[0].Effect);
+    }
 }

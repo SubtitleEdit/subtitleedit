@@ -3452,6 +3452,22 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
+        // "Only lines with actors or styles" (#17072): run the casing on a subtitle holding just
+        // the matching paragraphs. They are the same Paragraph objects, so the changes land in
+        // the original subtitle and the other lines are left alone.
+        var target = subtitle;
+        var onlyNames = ParseActorOrStyleNames(_config.ChangeCasing.OnlyActorsOrStyles);
+        if (onlyNames.Count > 0)
+        {
+            var styleInExtra = IsStyleInExtra(subtitle);
+            target = new Subtitle { Header = subtitle.Header, Footer = subtitle.Footer, OriginalFormat = subtitle.OriginalFormat };
+            target.Paragraphs.AddRange(subtitle.Paragraphs.Where(p => MatchesActorOrStyle(p, onlyNames, styleInExtra)));
+            if (target.Paragraphs.Count == 0)
+            {
+                return subtitle;
+            }
+        }
+
         // "Fix names only" turns every FixCasing flag off, so without the names pass below the
         // whole step was a silent no-op - and with "Normal casing" + "Fix names" the names half
         // was dropped. The batch UI offers both, so both have to do something here.
@@ -3467,16 +3483,45 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 FixProperCaseOnlyAllUppercase = false,
                 Format = subtitle.OriginalFormat,
             };
-            fixCasing.Fix(subtitle);
+            fixCasing.Fix(target);
         }
 
         if (_config.ChangeCasing.FixNamesOnly ||
             (_config.ChangeCasing.NormalCasing && _config.ChangeCasing.NormalCasingFixNames))
         {
-            FixNames(subtitle, language);
+            FixNames(target, language);
         }
 
         return subtitle;
+    }
+
+    private static List<string> ParseActorOrStyleNames(string? names)
+    {
+        return (names ?? string.Empty).Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(a => a.Trim())
+            .Where(a => a.Length > 0)
+            .ToList();
+    }
+
+    // ASSA/SSA keep a line's style in Paragraph.Extra (Paragraph.Style is the TTML/WebVTT
+    // style). Extra means other things in other formats, so only look there for ASSA/SSA.
+    private static bool IsStyleInExtra(Subtitle subtitle) =>
+        subtitle.OriginalFormat is AdvancedSubStationAlpha or SubStationAlpha;
+
+    // Paragraph.Actor/Style have no initializer, so they are null for SRT and friends.
+    private static bool MatchesActorOrStyle(Paragraph p, List<string> names, bool styleInExtra)
+    {
+        foreach (var name in names)
+        {
+            if (string.Equals(p.Actor, name, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(p.Style, name, StringComparison.OrdinalIgnoreCase) ||
+                (styleInExtra && string.Equals(p.Extra?.TrimStart('*'), name, StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -3842,14 +3887,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             paragraphs = paragraphs.Where(p => !p.Text.Contains(c.DeleteContains)).ToList();
         }
 
-        var actorsOrSpeakers = c.DeleteActorsOrStyles.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
-            .Select(a => a.Trim()).ToList();
-        foreach (var actor in actorsOrSpeakers)
+        // Matching only Style never deleted anything in an .ass file, ASSA keeps it in Extra (#17057).
+        var actorsOrSpeakers = ParseActorOrStyleNames(c.DeleteActorsOrStyles);
+        if (actorsOrSpeakers.Count > 0)
         {
-            // Paragraph.Actor/Style have no initializer, so they are null for SRT and friends -
-            // p.Actor.Equals(...) threw an NRE on the first line of any non-ASSA file.
-            paragraphs = paragraphs.Where(p => !string.Equals(p.Actor, actor, StringComparison.OrdinalIgnoreCase)).ToList();
-            paragraphs = paragraphs.Where(p => !string.Equals(p.Style, actor, StringComparison.OrdinalIgnoreCase)).ToList();
+            var styleInExtra = IsStyleInExtra(subtitle);
+            paragraphs = paragraphs.Where(p => !MatchesActorOrStyle(p, actorsOrSpeakers, styleInExtra)).ToList();
         }
 
         subtitle.Paragraphs.Clear();
@@ -3903,6 +3946,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
         Configuration.Settings.Tools.OllamaPrompt = Se.Settings.AutoTranslate.OllamaPrompt;
         Configuration.Settings.Tools.OllamaApiUrl = Se.Settings.AutoTranslate.OllamaUrl;
+        Configuration.Settings.Tools.OllamaApiKey = Se.Settings.AutoTranslate.OllamaApiKey;
         Configuration.Settings.Tools.OllamaModel = Se.Settings.AutoTranslate.OllamaModel;
 
         // The LM Studio prompt is edited in the translate settings dialog but only lives in

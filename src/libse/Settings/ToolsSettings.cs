@@ -83,9 +83,11 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string OpenRouterApiKey { get; set; }
         public string OpenRouterModel { get; set; }
         public string LmStudioApiUrl { get; set; }
+        public string LmStudioApiKey { get; set; }
         public string LmStudioModel { get; set; }
         public string LmStudioPrompt { get; set; }
         public string LlamaCppApiUrl { get; set; }
+        public string LlamaCppApiKey { get; set; }
         public string LlamaCppPrompt { get; set; }
         public string LlamaCppModelPrompt { get; set; }
         public double LlamaCppModelTemperature { get; set; }
@@ -94,6 +96,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public double LlamaCppModelRepeatPenalty { get; set; }
 
         public string OllamaApiUrl { get; set; }
+        public string OllamaApiKey { get; set; }
         public string OllamaModel { get; set; }
         public string OllamaPrompt { get; set; }
         public string AnthropicApiUrl { get; set; }
@@ -165,13 +168,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
             DeepSeekModel = "deepseek-flash"; // DeepSeekTranslate.Models[0] in LibUiLogic
             NvidiaUrl = "https://integrate.api.nvidia.com/v1/chat/completions";
             NvidiaPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            NvidiaModel = "meta/llama-4-maverick-17b-128e-instruct"; // NvidiaTranslate.Models[0] in LibUiLogic
+            NvidiaModel = "nvidia/nemotron-3-ultra-550b-a55b"; // NvidiaTranslate.Models[0] in LibUiLogic
             ApiRouteUrl = "https://global.api-route.com/v1/chat/completions";
             ApiRoutePrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             ApiRouteModel = "claude-sonnet-5"; // ApiRouteTranslate.Models[0] in LibUiLogic
             OpperUrl = "https://api.opper.ai/v3/compat/chat/completions";
             OpperPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            OpperModel = "claude-sonnet-4-6"; // OpperTranslate.Models[0] in LibUiLogic
+            OpperModel = "claude-sonnet-5-5"; // OpperTranslate.Models[0] in LibUiLogic
             TrustedRouterUrl = "https://api.trustedrouter.com/v1/chat/completions";
             TrustedRouterPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             TrustedRouterModel = "deepseek/deepseek-v4-flash"; // TrustedRouterTranslate.Models[0] in LibUiLogic

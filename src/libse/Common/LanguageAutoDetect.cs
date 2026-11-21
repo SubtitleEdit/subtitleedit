@@ -2966,6 +2966,14 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return russianEncoding;
                 }
 
+                // Arabic, Persian, Urdu or Kurdish text with too few words for the lists: its letters still tell
+                // 1256 apart, where the CJK check took it for GBK and the fallback detector guessed ISO Arabic or Greek.
+                var arabicEncoding = Encoding.GetEncoding(1256);
+                if (LooksLikeArabicScriptInWindows1256(arabicEncoding.GetString(buffer), buffer))
+                {
+                    return arabicEncoding;
+                }
+
                 // Before the Latin-script word lists: CJK bytes read as 1250/1252 match their short words by chance.
                 if (DetectCjkEncoding(buffer) is { } cjkEncoding)
                 {
@@ -3086,7 +3094,6 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return thaiCount > koreanCount ? thaiEncoding : koreanEncoding;
                 }
 
-                var arabicEncoding = Encoding.GetEncoding(1256); // Arabic
                 var hebrewEncoding = Encoding.GetEncoding(1255); // Hebrew
                 // 1256 is the ANSI code page of Persian and Urdu too. Read as 1255, a long 1256 text matches
                 // Hebrew words as well, so Hebrew has to beat the 1256 count, not just pass a fixed one.
@@ -3203,6 +3210,78 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return inRun * 2 < nonAscii;
+        }
+
+        /// <summary>
+        /// Whether the bytes outside ASCII, read as Windows-1256, are Arabic-script text: nearly all of them
+        /// Arabic, Persian or Urdu letters (or ZWNJ, RLM, Arabic punctuation and marks), with the letter
+        /// alef (ا) as common as it is in those languages, or a letter only Persian and Urdu write (پ چ ژ گ ک).
+        /// Lowercase Cyrillic, Greek and Hebrew bytes read as 1256 include the Latin letters à, é, î, ô, ...,
+        /// and the byte of ا is a rare capital (З, Η) in 1251 and 1253. The letters must come in runs (words):
+        /// accented capitals of Latin text (Ž, Ť, Č, É) are Arabic letters in 1256 too, but stand alone. Without
+        /// پ چ ژ گ ک, one of ل م ن ه و ی (bytes 0xE1 and up) is needed too: no capital letter of 1250-1253 is
+        /// there, and all-caps Greek or Cyrillic read as 1256 is Arabic letters only.
+        /// </summary>
+        /// <param name="text1256">The buffer read as Windows-1256 - one char per byte.</param>
+        /// <param name="buffer">The bytes.</param>
+        private static bool LooksLikeArabicScriptInWindows1256(string text1256, byte[] buffer)
+        {
+            var letters = 0;
+            var alef = 0;
+            var persianOrUrdu = 0;
+            var other = 0;
+            var highBytes = 0;
+            var inRun = 0;
+            var highRowLetters = 0;
+            for (var i = 0; i < buffer.Length && i < text1256.Length; i++)
+            {
+                if (buffer[i] < 0x80)
+                {
+                    continue;
+                }
+
+                highBytes++;
+                if (i > 0 && buffer[i - 1] >= 0x80 || i + 1 < buffer.Length && buffer[i + 1] >= 0x80)
+                {
+                    inRun++;
+                }
+
+                var c = text1256[i];
+                if (c == '\u0627') // ا
+                {
+                    alef++;
+                    letters++;
+                }
+                else if (c == '\u067E' || c == '\u0686' || c == '\u0698' || c == '\u06AF' || c == '\u06A9') // پ چ ژ گ ک
+                {
+                    persianOrUrdu++;
+                    letters++;
+                }
+                else if (c >= '\u0621' && c <= '\u064A' || c >= '\u0679' && c <= '\u06D2') // ء-ي, ٹ-ے
+                {
+                    letters++;
+                    if (buffer[i] >= 0xE1)
+                    {
+                        highRowLetters++; // ل م ن ه و ى ي ے
+                    }
+                }
+                else if (c >= '\u064B' && c <= '\u0652' || // harakat
+                         c >= '\u200C' && c <= '\u200F' || // ZWNJ, ZWJ, LRM, RLM
+                         c == '\u060C' || c == '\u061B' || c == '\u061F' || c == '\u00AB' || c == '\u00BB' || // ، ؛ ؟ « »
+                         c == '\u2026' || c == '\u2013' || c == '\u2014' || c >= '\u2018' && c <= '\u201D') // … – — ‘ ’ “ ”
+                {
+                    // neutral
+                }
+                else
+                {
+                    other++;
+                }
+            }
+
+            return letters >= 6 &&
+                   other * 20 <= letters &&
+                   inRun * 10 >= highBytes * 8 &&
+                   (persianOrUrdu > 0 || highRowLetters > 0 && alef * 20 >= letters);
         }
 
         /// <summary>

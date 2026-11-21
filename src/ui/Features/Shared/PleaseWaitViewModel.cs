@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
@@ -16,6 +17,15 @@ public partial class PleaseWaitViewModel : ObservableObject
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isIndeterminate = true;
+
+    // Off by default: most callers wait on work that cannot be stopped. A caller that can
+    // abort turns it on and polls IsCancelled.
+    [ObservableProperty] private bool _canCancel;
+
+    /// <summary>
+    /// True once the user pressed Cancel (only possible when <see cref="CanCancel"/> is on).
+    /// </summary>
+    public bool IsCancelled { get; private set; }
 
     private int _lastPercent = -1;
 
@@ -63,6 +73,13 @@ public partial class PleaseWaitViewModel : ObservableObject
                 StatusText = statusText;
             }
         });
+    }
+
+    [RelayCommand]
+    private void Cancel()
+    {
+        IsCancelled = true;
+        Window?.Close();
     }
 
     public void Close()

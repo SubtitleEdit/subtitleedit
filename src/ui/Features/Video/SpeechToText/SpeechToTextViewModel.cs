@@ -441,6 +441,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
         }
 
+        // "CPP" is also the value of a never-touched setting, so while no Whisper CPP backend has
+        // been downloaded the CPU backend is not a choice the user made: start on the backend
+        // that fits this computer's GPU instead (#16944). A saved cuBLAS/Vulkan choice is kept.
+        if (whisperCppEngine != null &&
+            savedChoice is not (WhisperChoice.CppCuBlas or WhisperChoice.CppVulkan or WhisperChoice.CppCuBlasLib))
+        {
+            whisperCppEngine.SelectRecommendedBackendIfNoneInstalled(GpuCapabilityHelper.Detect());
+        }
+
         Parameters = GetEffectiveSelectedEngine().CommandLineParameter;
 
         EngineChanged();
@@ -1077,7 +1086,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// was the crispasr v0.8.29 GPU packages, built with AVX-512 against a CI runner that had it
     /// (CrispASR #374) - every CPU without AVX-512 got this on the CUDA/Vulkan build while the CPU
     /// build ran fine, so naming the installed package is most of the answer. That build flaw is
-    /// fixed from v0.8.30 (SE now pins v0.8.53), but the message still earns its keep: a pre-AVX2 CPU
+    /// fixed from v0.8.30 (SE now pins v0.8.54), but the message still earns its keep: a pre-AVX2 CPU
     /// hits the same silent death on the AVX2 CPU package, and an install predating the pin bump
     /// keeps the broken GPU binary until the user downloads the engine again.
     /// </summary>
@@ -2601,28 +2610,10 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             process.WaitForExit();
 
-            // check for delay in matroska files
-            var delayInMilliseconds = 0;
-            if (_videoFileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    using var matroska = new MatroskaFile(_videoFileName);
-                    if (matroska.IsValid)
-                    {
-                        var firstAudioTrack = matroska.GetTracks().FirstOrDefault(track => track.IsAudio);
-                        if (firstAudioTrack != null)
-                        {
-                            delayInMilliseconds =
-                                (int)matroska.GetAudioTrackDelayMilliseconds(firstAudioTrack.TrackNumber);
-                        }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    SeLogger.Error(exception, $"Error getting delay from mkv: {_videoFileName}");
-                }
-            }
+            // These peaks are cached as the main window's waveform, so they get its timeline
+            // (#16966). A Matroska audio delay needs nothing extra: "first_pts=0" already pads it
+            // into the wave file, and adding it again here drew that audio twice as late.
+            var delayInMilliseconds = _audioClips != null ? 0 : WaveFileExtractor.GetTimelineOffsetMilliseconds(_videoFileName);
 
             if (File.Exists(targetFile))
             {
@@ -2898,6 +2889,19 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         // Small delay to ensure all output is captured and flushed
         await Task.Delay(100);
+
+        // The engine's times count from the extracted audio, which starts at the file's start
+        // time; the player may count from the raw time stamps (#16966). Audio clips are mapped
+        // back by their own start, which GetAudioClips already corrected.
+        if (_audioClips == null && transcribedSubtitle != null && !string.IsNullOrEmpty(_videoFileName))
+        {
+            var videoFileName = _videoFileName;
+            var offsetMilliseconds = await Task.Run(() => WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName));
+            if (offsetMilliseconds > 0)
+            {
+                transcribedSubtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(offsetMilliseconds));
+            }
+        }
 
         var sbLog = new StringBuilder();
         foreach (var s in _outputText)
@@ -3598,10 +3602,12 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// </summary>
     private async Task<bool?> PromptQwen3AsrGpuAsync(string engineName)
     {
+        var gpuHint = await GpuBuildHint.GetAsync(GpuBuild.Cpu, GpuBuild.Vulkan);
         var answer = await MessageBox.Show(
             Window!,
             string.Format(Se.Language.General.DownloadXQuestion, engineName),
             Environment.NewLine + string.Format(Se.Language.Video.AudioToText.XRequiresEngineSelectVersion, engineName),
+            gpuHint,
             MessageBoxButtons.Cancel,
             MessageBoxIcon.Question,
             "CPU",
@@ -5719,7 +5725,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task CheckCrispAsrForUpdateAsync()
     {
-        if (_crispAsrUpdatePromptShown || Window == null)
+        if (_crispAsrUpdatePromptShown || Window == null || _windowClosing)
         {
             return;
         }
@@ -5821,7 +5827,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task CheckQwen3AsrCppForUpdateAsync()
     {
-        if (_qwen3AsrCppUpdatePromptShown || Window == null)
+        if (_qwen3AsrCppUpdatePromptShown || Window == null || _windowClosing)
         {
             return;
         }
@@ -5882,7 +5888,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task CheckWhisperCppForUpdateAsync()
     {
-        if (_whisperCppUpdatePromptShown || Window == null)
+        if (_whisperCppUpdatePromptShown || Window == null || _windowClosing)
         {
             return;
         }
@@ -5932,7 +5938,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task CheckWhisperXForUpdateAsync()
     {
-        if (_whisperXUpdatePromptShown || Window == null)
+        if (_whisperXUpdatePromptShown || Window == null || _windowClosing)
         {
             return;
         }

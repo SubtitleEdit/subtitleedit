@@ -3,8 +3,9 @@ using Nikse.SubtitleEdit.UiLogic.Translate.LlamaCppAdvanced;
 namespace SeConv.Core;
 
 /// <summary>
-/// seconv's instance of the advanced local-LLM translate engines (the GUI's "llama.cpp advanced",
-/// "Ollama advanced" and "LM Studio advanced"): libuilogic's batch/context loop with the endpoint
+/// seconv's instance of the advanced translate engines (the GUI's "llama.cpp advanced",
+/// "Ollama advanced" and "LM Studio advanced", plus openai-compatible-advanced for any
+/// chat-completions endpoint): libuilogic's batch/context loop with the endpoint
 /// and model coming from the command line instead of the GUI settings. The endpoint is read per
 /// request because the local llama-server, and so its port, only starts right before the first
 /// file is translated.
@@ -31,7 +32,17 @@ internal sealed class AdvancedTranslateEngine : AdvancedTranslatorBase
     /// <summary>The "model" request field (null for llama-server, which serves one model), exposed for tests.</summary>
     internal string? Model => _model;
 
+    /// <summary>--translate-api-key, sent as a Bearer token; null when none was given.</summary>
+    internal string? ApiKey { get; init; }
+
     protected override string GetApiUrl() => _apiUrl();
 
     protected override string? GetModel() => _model;
+
+    protected override string? GetApiKey() => ApiKey;
+
+    /// <summary>False for openai-compatible-advanced, whose endpoint may be a hosted provider.</summary>
+    internal bool LlamaCppExtensions { get; init; } = true;
+
+    protected override bool UsesLlamaCppExtensions => LlamaCppExtensions;
 }

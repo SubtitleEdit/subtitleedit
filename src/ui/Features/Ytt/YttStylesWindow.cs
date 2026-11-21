@@ -157,6 +157,7 @@ public class YttStylesWindow : Window
         table.Columns.Add(Column(Se.Language.General.Usages, nameof(YttPenDisplay.UsageCount), new GridLength(70)));
         table.Bind(TableView.SelectedItemProperty, new Binding(selectedProperty) { Source = vm, Mode = BindingMode.TwoWay });
         TableViewExtras.AttachListNavigation(table);
+        ListInput.RunOnDeleteKey(table, vm.DeleteCommand);
         return table;
     }
 
@@ -222,6 +223,11 @@ public class YttStylesWindow : Window
         var offset = MakeIndexCombo(YttStylesViewModel.OffsetNames, Pen + nameof(YttPenDisplay.OffsetIndex), Se.Language.File.Ytt.Offset);
 
         var font = new StackPanel { Spacing = 8 };
+        font.Children.Add(EditorChrome.MakePropertyRow(Se.Language.General.Name, new TextBox
+        {
+            Classes = { EditorChrome.TextClass },
+            [!TextBox.TextProperty] = new Binding(Pen + nameof(YttPenDisplay.Name)) { Mode = BindingMode.TwoWay },
+        }));
         font.Children.Add(EditorChrome.MakePropertyRow(Se.Language.File.Ytt.FontStyle, fontStyle));
         font.Children.Add(EditorChrome.MakePropertyRow(Se.Language.File.Ytt.Size, size));
         font.Children.Add(realSize);

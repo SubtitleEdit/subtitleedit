@@ -200,6 +200,32 @@ public static class CrispEmbedEngine
     {
         return new List<CrispEmbedBackend>
         {
+            // Ordered best-first on subtitle bitmaps; the first entry is what the OCR window
+            // preselects when nothing is saved. Measured 2026-08-05 on v0.17.5, 9-image
+            // EN/DE/FR/ES/IT/ZH/JA/RU corpus, exact lines: DeepSeek-OCR-2 9/9, PP-OCRv6 7/9
+            // (Russian comes back as bare punctuation), GLM-OCR q4_k 6/9, Qwen3-VL-2B q4_k 2/9
+            // (repetition loop). Video OCR keeps its own order (VideoOcrViewModel).
+            // DeepSeek-OCR-2 (CrispEmbed v0.17.5): the most accurate backend here on
+            // subtitle-style images - the only one exact on a 9-image EN/DE/FR/ES/IT/ZH/JA/RU
+            // corpus where GLM-OCR scored 6/9 and GOT-OCR2 0/9 (verified 2026-08-05). ~2 s/image
+            // on Apple Silicon with the single-view mode CrispEmbedOcr requests via
+            // DS2_CROP_MODE=0. Only the q4_k "stacked" quant is offered: q8_0 measured slightly
+            // worse on the same corpus (8/9, drops an umlaut) while being 1.3 GB larger and no
+            // faster.
+            new()
+            {
+                Name = "DeepSeek-OCR-2",
+                Models = new List<CrispEmbedModel>
+                {
+                    new()
+                    {
+                        Name = "deepseek-ocr2-q4_k-stacked.gguf",
+                        Size = "2.31 GB",
+                        Url = "https://huggingface.co/cstr/deepseek-ocr2-crispembed-GGUF/resolve/main/deepseek-ocr2-q4_k-stacked.gguf",
+                        MinimumSizeBytes = 2_000_000_000,
+                    },
+                },
+            },
             // PP-OCRv6 (CrispEmbed v0.17.0) is a detector + recognizer pair rather than a VLM:
             // two small GGUFs instead of one ~1 GB model, and it keeps punctuation and per-line
             // breaks on subtitle bitmaps. Only the "medium" tier is offered - "tiny" returns
@@ -241,6 +267,25 @@ public static class CrispEmbedEngine
                     },
                 },
             },
+            new()
+            {
+                Name = "Qwen3-VL-2B",
+                Models = new List<CrispEmbedModel>
+                {
+                    new()
+                    {
+                        Name = "qwen3-vl-2b-q4_k.gguf",
+                        Size = "1.59 GB",
+                        Url = "https://huggingface.co/cstr/qwen3-vl-2b-crispembed-gguf/resolve/main/qwen3-vl-2b-q4_k.gguf",
+                    },
+                    new()
+                    {
+                        Name = "qwen3-vl-2b-q8_0.gguf",
+                        Size = "2.29 GB",
+                        Url = "https://huggingface.co/cstr/qwen3-vl-2b-crispembed-gguf/resolve/main/qwen3-vl-2b-q8_0.gguf",
+                    },
+                },
+            },
             // GOT-OCR2 disabled: since CrispEmbed v0.17.14 it only loads with
             // CRISPEMBED_ACCEPT_TONGYI_QIANWEN_LICENSE=1, because its Qwen1.5-0.5B decoder is under
             // the non-commercial Tongyi Qianwen RESEARCH LICENSE.
@@ -266,46 +311,6 @@ public static class CrispEmbedEngine
             // PaddleOCR-VL (109 languages) omitted for now: in CrispEmbed v0.14.0 both the
             // q4_k and q8_0 quants truncate or hallucinate on subtitle-style single-line
             // images via both the server and CLI single-model paths - verified 2026-07-11.
-            new()
-            {
-                Name = "Qwen3-VL-2B",
-                Models = new List<CrispEmbedModel>
-                {
-                    new()
-                    {
-                        Name = "qwen3-vl-2b-q4_k.gguf",
-                        Size = "1.59 GB",
-                        Url = "https://huggingface.co/cstr/qwen3-vl-2b-crispembed-gguf/resolve/main/qwen3-vl-2b-q4_k.gguf",
-                    },
-                    new()
-                    {
-                        Name = "qwen3-vl-2b-q8_0.gguf",
-                        Size = "2.29 GB",
-                        Url = "https://huggingface.co/cstr/qwen3-vl-2b-crispembed-gguf/resolve/main/qwen3-vl-2b-q8_0.gguf",
-                    },
-                },
-            },
-            // DeepSeek-OCR-2 (CrispEmbed v0.17.5): the most accurate backend here on
-            // subtitle-style images - the only one exact on a 9-image EN/DE/FR/ES/IT/ZH/JA/RU
-            // corpus where GLM-OCR scored 6/9 and GOT-OCR2 0/9 (verified 2026-08-05). ~2 s/image
-            // on Apple Silicon with the single-view mode CrispEmbedOcr requests via
-            // DS2_CROP_MODE=0. Only the q4_k "stacked" quant is offered: q8_0 measured slightly
-            // worse on the same corpus (8/9, drops an umlaut) while being 1.3 GB larger and no
-            // faster.
-            new()
-            {
-                Name = "DeepSeek-OCR-2",
-                Models = new List<CrispEmbedModel>
-                {
-                    new()
-                    {
-                        Name = "deepseek-ocr2-q4_k-stacked.gguf",
-                        Size = "2.31 GB",
-                        Url = "https://huggingface.co/cstr/deepseek-ocr2-crispembed-GGUF/resolve/main/deepseek-ocr2-q4_k-stacked.gguf",
-                        MinimumSizeBytes = 2_000_000_000,
-                    },
-                },
-            },
         };
     }
 }

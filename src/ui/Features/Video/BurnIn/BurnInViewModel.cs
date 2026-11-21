@@ -748,6 +748,8 @@ public partial class BurnInViewModel : ObservableObject
         var mediaInfo = FfmpegMediaInfo.Parse(jobItem.InputVideoFileName);
         jobItem.TotalFrames = mediaInfo.GetTotalFrames();
         jobItem.TotalSeconds = mediaInfo.Duration.TotalSeconds;
+        jobItem.SourceAudioCodec = OutputContainer.GetCodecName(
+            mediaInfo.Tracks.FirstOrDefault(p => p.TrackType == FfmpegTrackType.Audio)?.TrackInfo);
 
         // With "Cut" on, only the cut range is encoded (-ss/-t below). Measuring the full
         // source made the target-file-size bit rate a fraction of what was asked for, and
@@ -974,6 +976,33 @@ public partial class BurnInViewModel : ObservableObject
         }
     }
 
+    /// <summary>Codec name of the loaded video's first audio track, empty when unknown.</summary>
+    private string GetSourceAudioCodec()
+    {
+        return OutputContainer.GetCodecName(
+            _mediaInfo?.Tracks.FirstOrDefault(p => p.TrackType == FfmpegTrackType.Audio)?.TrackInfo);
+    }
+
+    /// <summary>
+    /// True when the audio is really stream-copied for this job - "copy" can be swapped for AAC
+    /// when the output container cannot play the source codec (#16980).
+    /// </summary>
+    private bool IsAudioCopy(BurnInJobItem item)
+    {
+        return OutputContainer.GetAudioEncodingFor(
+            Path.GetExtension(item.OutputVideoFileName),
+            SelectedAudioEncoding,
+            item.SourceAudioCodec) == OutputContainer.AudioEncodingCopy;
+    }
+
+    private bool IsAudioCopy()
+    {
+        return OutputContainer.GetAudioEncodingFor(
+            SelectedVideoExtension,
+            SelectedAudioEncoding,
+            GetSourceAudioCodec()) == OutputContainer.AudioEncodingCopy;
+    }
+
     private int GetVideoBitRate(BurnInJobItem item)
     {
         if (item.TargetFileSize < 1)
@@ -989,14 +1018,15 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         var audioMb = 0;
-        if (SelectedAudioEncoding == "copy")
+        var isAudioCopy = IsAudioCopy(item);
+        if (isAudioCopy)
         {
             audioMb = GetAudioFileSizeInMb(item.InputVideoFileName);
         }
 
         // (MiB * 8192 [converts MiB to kBit]) / video seconds = kBit/s total bitrate
         var bitRate = (int)Math.Round(((double)item.TargetFileSize - audioMb) * 8192.0 / item.TotalSeconds);
-        if (SelectedAudioEncoding != "copy" && !string.IsNullOrWhiteSpace(SelectedAudioBitRate))
+        if (!isAudioCopy && !string.IsNullOrWhiteSpace(SelectedAudioBitRate))
         {
             var audioBitRate = int.Parse(SelectedAudioBitRate.RemoveChar('k').TrimEnd());
             bitRate -= audioBitRate;
@@ -1005,16 +1035,26 @@ public partial class BurnInViewModel : ObservableObject
         return bitRate;
     }
 
-    /// <summary>The "-ss" / "-t" arguments for the cut range, empty when "Cut" is off (or not a valid range).</summary>
-    private (string CutStart, string CutEnd) GetCutArguments()
+    /// <summary>
+    /// The "-ss" / "-t" arguments for the cut range, empty when "Cut" is off (or not a valid range).
+    /// The range is on the player's timeline, "-ss" on ffmpeg's (#16966).
+    /// </summary>
+    private (string CutStart, string CutEnd) GetCutArguments(string videoFileName)
     {
         if (!IsCutActive || CutTo <= CutFrom)
         {
             return (string.Empty, string.Empty);
         }
 
-        var start = CutFrom;
-        var duration = CutTo - start;
+        var offset = TimeSpan.FromMilliseconds(WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName));
+        var playerStart = CutFrom > offset ? CutFrom : offset;
+        if (CutTo <= playerStart)
+        {
+            return (string.Empty, string.Empty);
+        }
+
+        var start = playerStart - offset;
+        var duration = CutTo - playerStart;
         return ($"-ss {(int)start.TotalHours:00}:{start.Minutes:00}:{start.Seconds:00}.{start.Milliseconds:000}",
                 $"-t {(int)duration.TotalHours:00}:{duration.Minutes:00}:{duration.Seconds:00}.{duration.Milliseconds:000}");
     }
@@ -1039,7 +1079,7 @@ public partial class BurnInViewModel : ObservableObject
             return 0;
         }
 
-        var (cutStart, cutEnd) = GetCutArguments();
+        var (cutStart, cutEnd) = GetCutArguments(videoFileName);
         var cacheKey = videoFileName + "|" + cutStart + "|" + cutEnd;
         if (_audioSizeInMbCache.TryGetValue(cacheKey, out var cachedMb))
         {
@@ -1136,14 +1176,15 @@ public partial class BurnInViewModel : ObservableObject
         var cutEnd = string.Empty;
         if (!preview)
         {
-            (cutStart, cutEnd) = GetCutArguments();
+            (cutStart, cutEnd) = GetCutArguments(jobItem.InputVideoFileName);
         }
 
         // The "save as" dialog can end up with another container than the one the audio encoder
         // list was built for, so pick an encoder the actual output file can hold.
         var audioEncoding = OutputContainer.GetAudioEncodingFor(
             Path.GetExtension(jobItem.OutputVideoFileName),
-            SelectedAudioEncoding);
+            SelectedAudioEncoding,
+            jobItem.SourceAudioCodec);
 
         var ffmpegParameters = FfmpegGenerator.GenerateHardcodedVideoFile(
             jobItem.InputVideoFileName,
@@ -1274,6 +1315,7 @@ public partial class BurnInViewModel : ObservableObject
             OutputVideoFileName = outputVideoFileName,
             UseTargetFileSize = UseTargetFileSize,
             TargetFileSize = TargetFileSize ?? 0,
+            SourceAudioCodec = GetSourceAudioCodec(),
         };
         jobItem.AddSubtitleFileName(subtitleFileName);
 
@@ -1350,7 +1392,7 @@ public partial class BurnInViewModel : ObservableObject
             return string.Empty;
         }
 
-        subtitle = GetSubtitleBasedOnCut(subtitle);
+        subtitle = GetSubtitleBasedOnCut(subtitle, jobItem.InputVideoFileName);
 
         AssaCentisecondTiming.FloorToCentiseconds(subtitle); // first frame kept, issue #15520
 
@@ -1387,33 +1429,43 @@ public partial class BurnInViewModel : ObservableObject
 
     // The "-ss" input seek makes ffmpeg restart timestamps at zero, so the burned-in
     // subtitle must be limited to the cut window and shifted accordingly (same as
-    // TransparentSubtitlesViewModel.GetSubtitleBasedOnCut).
-    private Subtitle GetSubtitleBasedOnCut(Subtitle inputSubtitle)
+    // TransparentSubtitlesViewModel.GetSubtitleBasedOnCut). Without a cut the output starts at
+    // ffmpeg's zero, which is the video's timeline offset on the player's timeline (#16966).
+    private Subtitle GetSubtitleBasedOnCut(Subtitle inputSubtitle, string videoFileName)
     {
+        var offsetMs = (double)WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName);
         if (!IsCutActive)
         {
-            return inputSubtitle;
+            return offsetMs > 0 ? ShiftToOutput(inputSubtitle, offsetMs, double.MaxValue, offsetMs) : inputSubtitle;
         }
 
+        return ShiftToOutput(inputSubtitle, CutFrom.TotalMilliseconds, CutTo.TotalMilliseconds, Math.Max(CutFrom.TotalMilliseconds, offsetMs));
+    }
+
+    /// <summary>The lines inside [fromMs, toMs], clipped to it, moved back by <paramref name="outputStartMs"/>.</summary>
+    private static Subtitle ShiftToOutput(Subtitle inputSubtitle, double fromMs, double toMs, double outputStartMs)
+    {
         var subtitle = new Subtitle
         {
             Header = inputSubtitle.Header, // keep ASSA styles + PlayRes
             Footer = inputSubtitle.Footer,
+            OriginalFormat = inputSubtitle.OriginalFormat, // MakeAssa checks it (Netflix Japanese)
         };
 
+        fromMs = Math.Max(fromMs, outputStartMs);
         foreach (var p in inputSubtitle.Paragraphs)
         {
-            if (p.EndTime.TotalMilliseconds > CutFrom.TotalMilliseconds &&
-                p.StartTime.TotalMilliseconds < CutTo.TotalMilliseconds)
+            if (p.EndTime.TotalMilliseconds > fromMs &&
+                p.StartTime.TotalMilliseconds < toMs)
             {
                 var paragraph = new Paragraph(p);
-                paragraph.StartTime.TotalMilliseconds = Math.Max(paragraph.StartTime.TotalMilliseconds, CutFrom.TotalMilliseconds);
-                paragraph.EndTime.TotalMilliseconds = Math.Min(paragraph.EndTime.TotalMilliseconds, CutTo.TotalMilliseconds);
+                paragraph.StartTime.TotalMilliseconds = Math.Max(paragraph.StartTime.TotalMilliseconds, fromMs);
+                paragraph.EndTime.TotalMilliseconds = Math.Min(paragraph.EndTime.TotalMilliseconds, toMs);
                 subtitle.Paragraphs.Add(paragraph);
             }
         }
 
-        subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-CutFrom.TotalMilliseconds));
+        subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-outputStartMs));
 
         return subtitle;
     }
@@ -1609,6 +1661,19 @@ public partial class BurnInViewModel : ObservableObject
 
         var fileNames = await _fileHelper.PickOpenVideoFiles(Window!, Se.Language.General.AddVideoFiles);
         if (fileNames == null || fileNames.Length == 0)
+        {
+            return;
+        }
+
+        await AddFiles(fileNames);
+    }
+
+    /// <summary>
+    /// Adds video files to the batch list - from Add... and from files dropped on the list.
+    /// </summary>
+    internal async Task AddFiles(string[] fileNames)
+    {
+        if (IsGenerating)
         {
             return;
         }
@@ -2764,14 +2829,15 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         var audioMb = 0;
-        if (SelectedAudioEncoding == "copy")
+        var isAudioCopy = IsAudioCopy();
+        if (isAudioCopy)
         {
             audioMb = GetAudioFileSizeInMb(_inputVideoFileName);
         }
 
         // (MiB * 8192 [converts MiB to kBit]) / video seconds = kBit/s total bitrate
         var bitRate = (int)Math.Round(((double)targetMb - audioMb) * 8192.0 / totalSeconds);
-        if (SelectedAudioEncoding != "copy" && !string.IsNullOrWhiteSpace(SelectedAudioBitRate))
+        if (!isAudioCopy && !string.IsNullOrWhiteSpace(SelectedAudioBitRate))
         {
             var audioBitRate = int.Parse(SelectedAudioBitRate.RemoveChar('k').TrimEnd());
             bitRate -= audioBitRate;
@@ -2797,14 +2863,15 @@ public partial class BurnInViewModel : ObservableObject
             return;
         }
 
-        var separateAudio = SelectedAudioEncoding != "copy" && !string.IsNullOrWhiteSpace(SelectedAudioBitRate);
+        var isAudioCopy = IsAudioCopy();
+        var separateAudio = !isAudioCopy && !string.IsNullOrWhiteSpace(SelectedAudioBitRate);
         var audioBitRate = 0;
         if (separateAudio)
         {
             audioBitRate = int.Parse(SelectedAudioBitRate.RemoveChar('k').TrimEnd());
         }
 
-        if (SelectedAudioEncoding == "copy")
+        if (isAudioCopy)
         {
             var audioTrack = _mediaInfo.Tracks.FirstOrDefault(p => p.TrackType == FfmpegTrackType.Audio);
             if (audioTrack?.BitRate > 0)

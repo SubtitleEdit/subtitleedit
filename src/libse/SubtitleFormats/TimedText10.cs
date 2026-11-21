@@ -22,6 +22,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
+        public override double MaxTimeCodeTotalMilliseconds => TimeCode.MaxSupportedTotalMilliseconds; // 3+ digit hours (#16937)
+
         // Carries the region of every paragraph, and the regions themselves in the header.
         public override bool HasPositionSupport => true;
 
@@ -810,6 +812,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            ResetLoadFrameRate();
 
             var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
@@ -837,7 +840,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (fr > 20 && fr < 100)
                     {
-                        Configuration.Settings.General.CurrentFrameRate = fr;
+                        SetLoadFrameRate(fr);
                     }
 
                     var frameRateMultiplier = xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
@@ -845,11 +848,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if ((frameRateMultiplier.InnerText == "999 1000" || frameRateMultiplier.InnerText == "1000 1001") && Math.Abs(fr - 30) < 0.01)
                         {
-                            Configuration.Settings.General.CurrentFrameRate = 29.97;
+                            SetLoadFrameRate(29.97);
                         }
                         else if ((frameRateMultiplier.InnerText == "999 1000" || frameRateMultiplier.InnerText == "1000 1001") && Math.Abs(fr - 24) < 0.01)
                         {
-                            Configuration.Settings.General.CurrentFrameRate = 23.976;
+                            SetLoadFrameRate(23.976);
                         }
                         else
                         {
@@ -860,7 +863,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 fr = fr * double.Parse(arr[0], CultureInfo.InvariantCulture) / double.Parse(arr[1], CultureInfo.InvariantCulture);
                                 if (fr > 20 && fr < 100)
                                 {
-                                    Configuration.Settings.General.CurrentFrameRate = fr;
+                                    SetLoadFrameRate(fr);
                                 }
                             }
                         }
@@ -869,7 +872,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             if (BatchSourceFrameRate.HasValue)
             {
-                Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
+                SetLoadFrameRate(BatchSourceFrameRate.Value);
             }
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
@@ -908,7 +911,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     ReadParagraph(pText, node, styles, headIndex);
 
                     // Time codes
-                    ExtractTimeCodes(node, subtitle, out var begin, out var end);
+                    ExtractTimeCodes(node, subtitle, LoadFrameRate, out var begin, out var end);
 
                     // Style
                     var p = new Paragraph(begin, end, pText.ToString()) { Style = LookupForAttribute("style", node, nsmgr) };
@@ -934,7 +937,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         "tts:fontSize",
                         "tts:fontFamily",
                         "tts:backgroundColor",
-                        "tts:color",
                         "tts:origin",
                         "tts:extent",
                         "tts:textAlign"
@@ -1038,7 +1040,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        internal static void ExtractTimeCodes(XmlNode paragraph, Subtitle subtitle, out TimeCode begin, out TimeCode end)
+        /// <param name="frameRate">Frame rate for frame based time codes (the file's declared one while loading).</param>
+        internal static void ExtractTimeCodes(XmlNode paragraph, Subtitle subtitle, double frameRate, out TimeCode begin, out TimeCode end)
         {
             var beginAttr = TryGetAttribute(paragraph, "begin", TtmlNamespace);
             var endAttr = TryGetAttribute(paragraph, "end", TtmlNamespace);
@@ -1054,7 +1057,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             begin = new TimeCode();
             if (beginAttr.Length > 0)
             {
-                begin = GetTimeCode(beginAttr, IsFrames(beginAttr));
+                begin = GetTimeCode(beginAttr, IsFrames(beginAttr), frameRate);
             }
             else if (subtitle.Paragraphs.Count > 0)
             {
@@ -1064,11 +1067,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             end = new TimeCode(begin.TotalMilliseconds + 3000);
             if (endAttr.Length > 0)
             {
-                end = GetTimeCode(endAttr, IsFrames(endAttr));
+                end = GetTimeCode(endAttr, IsFrames(endAttr), frameRate);
             }
             else if (durAttr.Length > 0)
             {
-                end = new TimeCode(GetTimeCode(durAttr, IsFrames(durAttr)).TotalMilliseconds + begin.TotalMilliseconds);
+                end = new TimeCode(GetTimeCode(durAttr, IsFrames(durAttr), frameRate).TotalMilliseconds + begin.TotalMilliseconds);
             }
         }
 
@@ -1130,7 +1133,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 if (!found)
                 {
-                    sb.Append("|" + tag + "=" + value);
+                    sb.Append(tag + "=" + value);
                 }
                 paragraph.Effect = sb.ToString().TrimEnd('|');
             }
@@ -1334,11 +1337,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var paragraphStyle = inherited.Clone();
             ApplyTtmlTextStyle(paragraphStyle, node, styles, headIndex);
 
-            // italic/bold/underline in effect on the <p> (own or from body/div) become tags;
-            // its color/font are kept as paragraph effects
+            // italic/bold/underline in effect on the <p> (own or from body/div) become tags.
+            // A tts:color set on the <p> itself becomes a font tag too - Final Cut Pro writes a
+            // line that starts with a color as <p tts:color="x">colored<span tts:color="white">rest</span></p>,
+            // which otherwise loaded as plain "colored" + a white font tag (#16989).
+            string fontTag = null;
+            if (node.Attributes?["tts:color"] != null &&
+                !string.IsNullOrEmpty(paragraphStyle.Color) &&
+                !IsSameTtmlColor(paragraphStyle.Color, inherited.Color))
+            {
+                fontTag = $"<font color=\"{paragraphStyle.Color}\">";
+            }
+
             var openTags = new List<string>();
             var start = pText.Length;
-            SetTtmlTextTags(pText, openTags, paragraphStyle.Italic, paragraphStyle.Bold, paragraphStyle.Underline, null);
+            SetTtmlTextTags(pText, openTags, paragraphStyle.Italic, paragraphStyle.Bold, paragraphStyle.Underline, fontTag);
             ReadParagraphChildren(pText, node, styles, headIndex, paragraphStyle, openTags);
             CloseTtmlTags(pText, openTags, 0);
             RemoveEmptyTtmlTags(pText, start);
@@ -1501,6 +1514,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static TimeCode GetTimeCode(string input, bool frames)
         {
+            return GetTimeCode(input, frames, Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        /// <param name="input">TTML time expression.</param>
+        /// <param name="frames">Whether a fourth part is frames (not milliseconds).</param>
+        /// <param name="frameRate">Frame rate for frame based time codes.</param>
+        public static TimeCode GetTimeCode(string input, bool frames, double frameRate)
+        {
             var s = input;
             if (s.EndsWith("ms", StringComparison.Ordinal))
             {
@@ -1530,7 +1551,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "frames";
                 s = s.TrimEnd('f');
                 var totalFrames = long.Parse(s, CultureInfo.InvariantCulture);
-                return new TimeCode(FramesToMilliseconds(totalFrames));
+                return new TimeCode(FramesToMilliseconds(totalFrames, frameRate));
             }
 
             var parts = s.Split(':', '.', ',', ';');
@@ -1559,11 +1580,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (frames)
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "frames";
-                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
+                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3]), frameRate));
             }
 
             var hours = int.Parse(parts[0]);
-            if (hours > 99)
+            if (hours > 9999) // TTML allows 2+ hour digits; beyond SE's 9999 hours is junk
             {
                 hours = 0;
             }

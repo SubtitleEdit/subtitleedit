@@ -262,6 +262,7 @@ public class LanguageSettingsShortcuts
     public string ImportImageSubtitleForEdit { get; set; }
     public string ShowPointSyncViaOther { get; set; }
     public string ShowPointSync { get; set; }
+    public string ShowOcrImage { get; set; }
     public string ShowMediaInformation { get; set; }
     public string ChooseSubtitleFormat { get; set; }
     public string TrimWhitespaceSelectedLines { get; set; }
@@ -624,6 +625,7 @@ public class LanguageSettingsShortcuts
         ImportImageSubtitleForEdit = "Import image-based subtitle for edit";
         ShowPointSyncViaOther = "Show point sync via other subtitle";
         ShowPointSync = "Show point sync";
+        ShowOcrImage = "Show OCR image";
         ShowMediaInformation = "Show media information";
         ChooseSubtitleFormat = "Choose subtitle format";
         TrimWhitespaceSelectedLines = "Trim whitespace (selected lines)";
@@ -661,12 +663,12 @@ public class LanguageSettingsShortcuts
         CopyTextFromOriginalToClipboard = "Copy text from original to clipboard (selected lines)";
         CopyPlainTextToClipboard = "Copy plain text to clipboard (selected lines)";
         CopyPlainTextFromOriginalToClipboard = "Copy plain text from original to clipboard (selected lines)";
-        AssaDraw = "ASSA Draw";
-        AssaGenerateProgressBar = "ASSA Generate progress bar";
-        AssaGenerateBackgroundBox = "ASSA Generate background box";
-        AssaStyles = "ASSA Styles";
-        AssaAttachments = "ASSA Attachments";   
-        AssaProperties = "ASSA Properties";
+        AssaDraw = "ASSA draw";
+        AssaGenerateProgressBar = "ASSA generate progress bar";
+        AssaGenerateBackgroundBox = "ASSA generate background box";
+        AssaStyles = "ASSA styles";
+        AssaAttachments = "ASSA attachments";
+        AssaProperties = "ASSA properties";
         RecalculateDurationSelectedLines = "Recalculate duration (selected lines)";
         SetDurationMaxCpsSelectedLines = "Set duration to max CPS (selected lines)";
         ToggleWaveformAndSpectrogramHeight = "Cycle waveform/spectrogram divided height";

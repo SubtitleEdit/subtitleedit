@@ -77,6 +77,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const string NameOfFormat = "Advanced Sub Station Alpha";
         public override string Name => NameOfFormat;
 
+        public override double MaxTimeCodeTotalMilliseconds => TimeCode.MaxSupportedTotalMilliseconds; // 3+ digit hours (#16937)
+
         public const int DefaultWidth = 384;
         public const int DefaultHeight = 288;
 
@@ -314,7 +316,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 var effect = string.Empty;
                 if (!string.IsNullOrEmpty(p.Effect))
                 {
-                    effect = p.Effect;
+                    // a comma would end the Effect field early and push the rest of it into
+                    // the text, e.g. an effect carried over from another format (#16989)
+                    effect = p.Effect.IndexOf(',') >= 0 ? p.Effect.Replace(',', ';') : p.Effect;
                 }
 
                 // Layout: "(Dialogue|Comment): {layer},{start},{end},{style},{actor},{marginL},{marginR},{marginV},{effect},{text}".

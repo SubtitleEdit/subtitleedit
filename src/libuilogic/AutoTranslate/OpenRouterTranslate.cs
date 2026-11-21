@@ -26,7 +26,9 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
         {
             // High-Reasoning & Multilingual (The Leaders)
             "openai/gpt-5.6-sol",                       // OpenAI flagship for complex professional work
-            "openai/gpt-6.1-sol",                       // Newest OpenAI flagship
+            "openai/gpt-6.2-astra",                     // Newest OpenAI flagship
+            "openai/gpt-6.2-sol",                       // Newest OpenAI balanced model
+            "openai/gpt-6.1-sol",                       // Previous OpenAI flagship
             "openai/gpt-6-sol",                         // GPT-6 flagship
             "openai/gpt-6.1-terra",                     // Newest OpenAI mid-tier, balanced cost
             "openai/gpt-5.5",                           // Previous-gen flagship general-purpose translator
@@ -36,6 +38,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "anthropic/claude-opus-5",                  // Previous Anthropic flagship
             "anthropic/claude-opus-4.8",                // Exceptional nuance and formal tone preservation
             "anthropic/claude-sonnet-5",                // Previous-gen Sonnet
+            "google/gemini-4-neon",                     // Google's newest frontier model, fast
             "google/gemini-4-carbon",                   // Google frontier flagship
             "google/gemini-4-argon",                    // Google's newest frontier model
             "google/gemini-4-hydrogen",                 // Fast, low-cost Gemini 4
@@ -60,6 +63,7 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             "deepseek/deepseek-v4.1-flash",             // Low-latency DeepSeek
 
             // Specialized & Open-Weight (High Translation Performance)
+            "qwen/qwen4-max",                           // Newest Qwen flagship
             "qwen/qwen3.8-max-0902",                    // Dominant for Asian & Middle Eastern languages
             "tencent/hy4",                              // Tencent flagship, strong for Chinese
             "minimax/minimax-m3.1-flash",               // Cheap, fast MiniMax generalist

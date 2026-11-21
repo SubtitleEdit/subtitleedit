@@ -19,6 +19,14 @@ public class CrispAsrParakeetModelTests
     }
 
     [Fact]
+    public void Models_DefaultToParakeetUltra()
+    {
+        // With no saved model the window selects the first one. v3 garbles Danish and Swedish
+        // without VAD, Ultra does not, so Ultra q4_k leads the list.
+        Assert.Equal("parakeet-ultra-q4_k.gguf", new CrispAsrParakeet().Models[0].Name);
+    }
+
+    [Fact]
     public void Models_DownloadToTheirOwnName()
     {
         // GetWhisperModelDownloadFileName saves under the URL's file name while IsModelInstalled

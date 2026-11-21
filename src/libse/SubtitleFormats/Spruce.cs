@@ -103,6 +103,7 @@ $ColorIndex4    = 3
         {
             //00:01:54:19,00:01:56:17,We should be thankful|they accepted our offer.
             _errorCount = 0;
+            ResetLoadFrameRate();
             subtitle.Paragraphs.Clear();
 
             // Copy reference of static compiled regex (RegexTimeCodes1).
@@ -125,7 +126,7 @@ $ColorIndex4    = 3
                     {
                         var text = DecodeText(line.Substring(24));
                         text = DvdStudioPro.GetAlignment(verticalAlign, horizontalAlign) + text;
-                        var p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text);
+                        var p = new Paragraph(DecodeTimeCode(start, LoadFrameRate), DecodeTimeCode(end, LoadFrameRate), text);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
@@ -147,7 +148,7 @@ $ColorIndex4    = 3
                     if (arr.Length == 2 && double.TryParse(arr[1].Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fr) &&
                         fr > 20 && fr < 300)
                     {
-                        Configuration.Settings.General.CurrentFrameRate = fr;
+                        SetLoadFrameRate(fr);
                     }
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
@@ -159,7 +160,7 @@ $ColorIndex4    = 3
             subtitle.Renumber();
         }
 
-        private static TimeCode DecodeTimeCode(string time)
+        private static TimeCode DecodeTimeCode(string time, double frameRate)
         {
             //00:01:54:19
             var hour = time.Substring(0, 2);
@@ -167,7 +168,7 @@ $ColorIndex4    = 3
             var seconds = time.Substring(6, 2);
             var frames = time.Substring(9, 2);
 
-            var milliseconds = FramesToMillisecondsMax999(int.Parse(frames));
+            var milliseconds = FramesToMillisecondsMax999(int.Parse(frames), frameRate);
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 

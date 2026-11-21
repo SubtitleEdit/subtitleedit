@@ -141,4 +141,37 @@ public class ItunesTimedTextTest
 
         Assert.Equal("<font color=\"yellow\">a</font> <i><font face=\"Arial\">b</font></i>", text);
     }
+
+    [Fact]
+    public void ReadParagraphColorAtStartIsKept()
+    {
+        // Final Cut Pro puts a color that starts the line on the <p> itself (#16989)
+        var text = Read("<p begin=\"00:00:01:00\" end=\"00:00:02:00\" tts:color=\"rgb(205,205,255)\">[phaser]<span tts:color=\"white\"> and voice</span></p>");
+
+        Assert.Equal("<font color=\"rgb(205,205,255)\">[phaser]<font color=\"white\"> and voice</font></font>", text);
+    }
+
+    [Fact]
+    public void ReadParagraphColorIsNotAnEffect()
+    {
+        var sub = new Subtitle();
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><tt xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xml:lang=\"en\"><head><layout><region xml:id=\"bottom\"/></layout></head>" +
+                  "<body region=\"bottom\"><div><p begin=\"00:00:01.000\" end=\"00:00:02.000\" tts:color=\"rgb(205,205,255)\">a</p></div></body></tt>";
+        new ItunesTimedText().LoadSubtitle(sub, xml.SplitToLines(), null);
+
+        Assert.Single(sub.Paragraphs);
+        Assert.Equal("<font color=\"rgb(205,205,255)\">a</font>", sub.Paragraphs[0].Text);
+        Assert.Equal("region=bottom", sub.Paragraphs[0].Effect);
+        Assert.DoesNotContain("||", sub.Paragraphs[0].Effect);
+    }
+
+    [Fact]
+    public void ParagraphColorAtStartRoundTrips()
+    {
+        var input = "<font color=\"#cdcdff\">[phaser]<font color=\"white\"> and voice</font></font>";
+
+        var text = RoundTrip(input, out _);
+
+        Assert.Equal(input, text);
+    }
 }

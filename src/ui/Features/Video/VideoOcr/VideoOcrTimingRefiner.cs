@@ -34,6 +34,9 @@ public static class VideoOcrTimingRefiner
         /// <summary>Video time of the first coarse frame (the scanned range's start), so
         /// a line's video time maps back to its frame file in <see cref="FramesFolder"/>.</summary>
         public double OffsetMs { get; init; }
+
+        /// <summary>How far the player's timeline (all times here) is ahead of ffmpeg's "-ss" (#16966).</summary>
+        public double TimelineOffsetMs { get; init; }
         public int BrightnessMinimum { get; init; }
         public int ImageSimilarityPercent { get; init; }
 
@@ -196,8 +199,11 @@ public static class VideoOcrTimingRefiner
         var folder = Path.Combine(context.FramesFolder, "refine_" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(folder);
 
+        // The seek is on ffmpeg's timeline; frame times come back relative to it.
+        var seekMs = Math.Max(0, windowStartMs - context.TimelineOffsetMs);
+        var baseMs = seekMs + context.TimelineOffsetMs;
         var arguments = "-nostdin -y " +
-                        $"-ss {(windowStartMs / 1000.0).ToString("0.###", CultureInfo.InvariantCulture)} " +
+                        $"-ss {(seekMs / 1000.0).ToString("0.###", CultureInfo.InvariantCulture)} " +
                         $"-i \"{context.VideoFileName}\" " +
                         $"-t {(lengthMs / 1000.0).ToString("0.###", CultureInfo.InvariantCulture)} " +
                         $"-vf \"showinfo,{context.CropAndScaleFilter}\" " +
@@ -220,7 +226,7 @@ public static class VideoOcrTimingRefiner
             {
                 lock (frameTimes)
                 {
-                    frameTimes[frameNumber] = windowStartMs + Math.Max(0, ptsSeconds) * 1000.0;
+                    frameTimes[frameNumber] = baseMs + Math.Max(0, ptsSeconds) * 1000.0;
                 }
             }
         });

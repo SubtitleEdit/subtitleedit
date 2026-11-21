@@ -41,13 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-            {
-                sb.AppendLine(line);
-            }
-
-            string xml = sb.ToString();
+            string xml = JoinLines(lines);
             if (!xml.Contains("<transcript", StringComparison.Ordinal))
             {
                 return;

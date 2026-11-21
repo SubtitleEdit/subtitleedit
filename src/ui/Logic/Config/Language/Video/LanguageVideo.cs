@@ -182,6 +182,9 @@ public class LanguageVideo
     public string AssaStyleWillBeUsed { get; set; }
     public string PickOnlineSubtitleTitle { get; set; }
     public string OutputSettingsTitle { get; set; }
+    public string OutputFileNameSuffix { get; set; }
+    public string OutputFileNameExampleX { get; set; }
+    public string OutputFileNameSuffixInvalid { get; set; }
     public string TtsCrispAsrSettingsTitle { get; set; }
     public string TtsDownloadEngineTitle { get; set; }
     public string IndexTts25LicenseTitle { get; set; }
@@ -196,6 +199,8 @@ public class LanguageVideo
     public string IndexTts25Emotion { get; set; }
     public string IndexTts25EmotionStrength { get; set; }
     public string PickOnlineSubtitleFetching { get; set; }
+    public string OpenFromUrlLoadingVideo { get; set; }
+    public string OpenFromUrlStillLoadingVideo { get; set; }
     public string PickOnlineSubtitleNoneFound { get; set; }
     public string ForcedAligner { get; set; }
     public string PostProcessing { get; set; }
@@ -203,6 +208,12 @@ public class LanguageVideo
     public string ToggleSubtitlesOnVideoPlayer { get; set; }
     public string SubtitlesOnVideoPlayerOn { get; set; }
     public string SubtitlesOnVideoPlayerOff { get; set; }
+    public string CycleVideoFlip { get; set; }
+    public string VideoFlipOff { get; set; }
+    public string VideoFlipHorizontal { get; set; }
+    public string VideoFlipVertical { get; set; }
+    public string VideoFlipHorizontalAndVertical { get; set; }
+    public string VideoFlipRequiresMpv { get; set; }
     public string OnlyMkvCanSupportEmbeddedSubtitleEditing { get; set; }
     public string ReEncodeInfo { get; set; }
     public string ReEncodeGeneratingVideoX { get; set; }
@@ -397,6 +408,8 @@ public class LanguageVideo
         OpenFromUrlBotCheckHintWithBrowserX = "YouTube still wants to confirm you are not a bot. Make sure you are signed in to YouTube in {0}. Chrome and Edge on Windows often block reading their cookies - close the browser first, or try Firefox.";
         PickOnlineSubtitleTitle = "Pick subtitle to download";
         PickOnlineSubtitleFetching = "Downloading subtitles...";
+        OpenFromUrlLoadingVideo = "Loading online video...";
+        OpenFromUrlStillLoadingVideo = "The online video is still not loaded - it may be unavailable.";
         PickOnlineSubtitleNoneFound = "No subtitles found for this URL.";
         ForcedAligner = "Forced aligner";
         PostProcessing = "Post-processing...";
@@ -404,6 +417,12 @@ public class LanguageVideo
         ToggleSubtitlesOnVideoPlayer = "Toggle subtitles on video player";
         SubtitlesOnVideoPlayerOn = "Subtitles on video player: on";
         SubtitlesOnVideoPlayerOff = "Subtitles on video player: off";
+        CycleVideoFlip = "Cycle video flip (mpv)";
+        VideoFlipOff = "Video flip: off";
+        VideoFlipHorizontal = "Video flip: horizontal (mirror)";
+        VideoFlipVertical = "Video flip: vertical";
+        VideoFlipHorizontalAndVertical = "Video flip: horizontal and vertical";
+        VideoFlipRequiresMpv = "Video flip needs the mpv video player.";
         OnlyMkvCanSupportEmbeddedSubtitleEditing = "Only Matroska (.mkv, .webm) files are supported for editing embedded subtitles.";
         ReEncodeInfo = "Re-encoding can make subtitling smoother:" + Environment.NewLine +
                        "• Smaller resolution (high resolutions make subtitling slow)" + Environment.NewLine +
@@ -433,6 +452,9 @@ public class LanguageVideo
         TtsEngineTooOldUpdateRequired = "{0} too old - update required";
         TtsEngineChatterboxCapable = "{0} (Chatterbox-capable)";
         OutputSettingsTitle = "Output settings";
+        OutputFileNameSuffix = "File name suffix";
+        OutputFileNameExampleX = "Example: {0}";
+        OutputFileNameSuffixInvalid = "The file name suffix contains characters that are not allowed in file names.";
         TtsCrispAsrSettingsTitle = "{0} (CrispASR) settings";
         TtsDownloadEngineTitle = "TTS - Download engine";
         IndexTts25LicenseTitle = "IndexTTS 2.5 - model license";

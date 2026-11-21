@@ -84,7 +84,7 @@ public class ChangeSpeedWindow : Window
 
         Content = EditorChrome.MakeRoot(EditorChrome.MakeSideBySide(speedSection, linesSection), EditorChrome.MakeDockedButtonBar(null, buttonApply, buttonDone));
 
-        UiUtil.FocusOnFirstActivation(this, buttonDone); // hack to make OnKeyDown work
+        UiUtil.FocusOnFirstActivation(this, numericUpDownSpeed); // initial focus on an input, not an action button - a focused button clicks on bare Space
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);

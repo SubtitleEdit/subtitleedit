@@ -18,14 +18,15 @@ namespace SeConv.Core;
 /// seconv never downloads engines or models (consistent with its Tesseract/Paddle policy) —
 /// missing pieces fail fast with instructions instead.
 ///
-/// The advanced engines (llamacpp-advanced, ollama-advanced, lmstudio-advanced) run libuilogic's
+/// The advanced engines (llamacpp-advanced, ollama-advanced, lmstudio-advanced,
+/// openai-compatible-advanced) run libuilogic's
 /// batch/context loop - numbered batches with a rolling history of translated lines plus an
 /// optional synopsis, glossary and formality - with those settings taken from the command line
 /// (<see cref="CreateAdvancedSettings"/>) instead of the GUI's "Advanced..." dialog.
 /// </summary>
 internal sealed class AutoTranslateRunner
 {
-    public static readonly string[] SupportedEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible", "libretranslate", "nllb-serve", "nllb-api", "deepl", "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced" };
+    public static readonly string[] SupportedEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible", "libretranslate", "nllb-serve", "nllb-api", "deepl", "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced", "openai-compatible-advanced" };
 
     /// <summary>
     /// Engines that build their request from an editable prompt, i.e. the ones
@@ -33,19 +34,19 @@ internal sealed class AutoTranslateRunner
     /// services with no prompt at all. For the advanced engines the prompt is the system prompt
     /// of the batch protocol (see <see cref="CreateAdvancedSettings"/>).
     /// </summary>
-    public static readonly string[] PromptEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible", "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced" };
+    public static readonly string[] PromptEngines = { "llamacpp", "ollama", "lmstudio", "openai-compatible", "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced", "openai-compatible-advanced" };
 
     /// <summary>
     /// Engines that run libuilogic's advanced batch/context loop, i.e. the ones the options in
     /// <see cref="AdvancedOptionNames"/> apply to.
     /// </summary>
-    public static readonly string[] AdvancedEngines = { "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced" };
+    public static readonly string[] AdvancedEngines = { "llamacpp-advanced", "ollama-advanced", "lmstudio-advanced", "openai-compatible-advanced" };
 
     /// <summary>Accepted <c>--translate-formality</c> values (case-insensitive).</summary>
     public static readonly string[] FormalityValues = { "default", "formal", "informal" };
 
     /// <summary>The options that only the <see cref="AdvancedEngines"/> understand, for error messages.</summary>
-    public const string AdvancedOptionNames = "--translate-batch-size/--translate-history/--translate-synopsis/--translate-glossary/--translate-formality/--translate-keep-line-breaks";
+    public const string AdvancedOptionNames = "--translate-batch-size/--translate-history/--translate-synopsis/--translate-glossary/--translate-formality/--translate-keep-line-breaks/--translate-request-json";
 
     /// <summary>
     /// The Ollama advanced engine talks to Ollama's OpenAI-compatible endpoint, not the native
@@ -53,8 +54,12 @@ internal sealed class AutoTranslateRunner
     /// </summary>
     private const string OllamaAdvancedDefaultUrl = "http://localhost:11434/v1/chat/completions";
 
-    /// <summary>Engines that send <c>--translate-api-key</c>; the local/self-hosted rest have no key.</summary>
-    public static readonly string[] ApiKeyEngines = { "openai-compatible", "deepl" };
+    /// <summary>
+    /// Engines that send <c>--translate-api-key</c>. For the LLM engines it is an optional Bearer
+    /// token: a local server can ask for one (llama-server --api-key, LM Studio) or sit behind a
+    /// reverse proxy, and Ollama's hosted models need one.
+    /// </summary>
+    public static readonly string[] ApiKeyEngines = { "llamacpp", "llamacpp-advanced", "ollama", "ollama-advanced", "lmstudio", "lmstudio-advanced", "openai-compatible", "openai-compatible-advanced", "deepl" };
 
     /// <summary>File extensions that make <c>--translate-prompt</c> a file path rather than inline text.</summary>
     private static readonly string[] PromptFileExtensions = { ".txt", ".prompt", ".md" };
@@ -147,8 +152,15 @@ internal sealed class AutoTranslateRunner
                 $"--translate-api-key is not supported by translate engine '{engine}'. Use one of: {string.Join(", ", ApiKeyEngines)}.");
         }
 
+        if (!string.IsNullOrEmpty(apiKey) && string.IsNullOrEmpty(url) && engine is "llamacpp" or "llamacpp-advanced")
+        {
+            // Without a url seconv starts the llama-server itself, and that server takes no key.
+            throw new InvalidOperationException(
+                $"--translate-api-key needs --translate-url with translate engine '{engine}': it is the key of a llama-server that is already running.");
+        }
+
         var advancedSettings = AdvancedEngines.Contains(engine)
-            ? CreateAdvancedSettings(options.TranslateBatchSize, options.TranslateHistory, options.TranslateSynopsis, options.TranslateGlossary, options.TranslateFormality, options.TranslateKeepLineBreaks, prompt, options.TranslateAdvancedSettings)
+            ? CreateAdvancedSettings(options.TranslateBatchSize, options.TranslateHistory, options.TranslateSynopsis, options.TranslateGlossary, options.TranslateFormality, options.TranslateKeepLineBreaks, options.TranslateRequestJson, prompt, options.TranslateAdvancedSettings)
             : null;
         if (advancedSettings == null && HasAdvancedOptions(options))
         {
@@ -172,6 +184,10 @@ internal sealed class AutoTranslateRunner
                     // bare host:port or an OpenAI-style ".../v1" base and complete either to the
                     // chat/completions endpoint (without doubling an already-present /v1).
                     tools.LlamaCppApiUrl = CompleteChatCompletionsUrl(url);
+                    if (!string.IsNullOrEmpty(apiKey))
+                    {
+                        tools.LlamaCppApiKey = apiKey;
+                    }
                 }
                 else
                 {
@@ -197,6 +213,10 @@ internal sealed class AutoTranslateRunner
                 {
                     tools.OllamaApiUrl = url;
                 }
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    tools.OllamaApiKey = apiKey;
+                }
                 if (!string.IsNullOrWhiteSpace(options.TranslateModel))
                 {
                     tools.OllamaModel = options.TranslateModel.Trim();
@@ -218,6 +238,10 @@ internal sealed class AutoTranslateRunner
             case "lmstudio":
                 translator = new LmStudioTranslate();
                 tools.LmStudioApiUrl = string.IsNullOrEmpty(url) ? "http://localhost:1234/v1/chat/completions" : url;
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    tools.LmStudioApiKey = apiKey;
+                }
                 if (!string.IsNullOrWhiteSpace(options.TranslateModel))
                 {
                     tools.LmStudioModel = options.TranslateModel.Trim();
@@ -250,6 +274,14 @@ internal sealed class AutoTranslateRunner
                 {
                     tools.OpenAiCompatibleTranslatePrompt = prompt;
                 }
+                break;
+            case "openai-compatible-advanced":
+                // Url and model as for openai-compatible: the same default, and the model stays optional
+                // (a hosted provider requires it, a single-model server ignores it). The endpoint may be
+                // a hosted provider, so no llama.cpp request fields.
+                var openAiCompatibleAdvancedUrl = AutoTranslateUrl.Complete(url, OpenAiCompatibleTranslate.DefaultUrl);
+                translator = MakeAdvanced("OpenAI Compatible API advanced", "https://platform.openai.com/docs/api-reference/chat", () => openAiCompatibleAdvancedUrl,
+                    string.IsNullOrWhiteSpace(options.TranslateModel) ? null : options.TranslateModel.Trim(), llamaCppExtensions: false);
                 break;
             case "libretranslate":
                 translator = new LibreTranslate();
@@ -297,9 +329,9 @@ internal sealed class AutoTranslateRunner
         runner.ApplyPromptOverride();
         return runner;
 
-        AdvancedTranslateEngine MakeAdvanced(string name, string homepage, Func<string> apiUrl, string? model)
+        AdvancedTranslateEngine MakeAdvanced(string name, string homepage, Func<string> apiUrl, string? model, bool llamaCppExtensions = true)
         {
-            return new AdvancedTranslateEngine(name, homepage, apiUrl, model) { Settings = advancedSettings! };
+            return new AdvancedTranslateEngine(name, homepage, apiUrl, model) { Settings = advancedSettings!, ApiKey = apiKey, LlamaCppExtensions = llamaCppExtensions };
         }
     }
 
@@ -343,7 +375,8 @@ internal sealed class AutoTranslateRunner
                !string.IsNullOrWhiteSpace(options.TranslateSynopsis) ||
                !string.IsNullOrWhiteSpace(options.TranslateGlossary) ||
                !string.IsNullOrWhiteSpace(options.TranslateFormality) ||
-               options.TranslateKeepLineBreaks.HasValue;
+               options.TranslateKeepLineBreaks.HasValue ||
+               !string.IsNullOrWhiteSpace(options.TranslateRequestJson);
     }
 
     /// <summary>
@@ -352,11 +385,12 @@ internal sealed class AutoTranslateRunner
     /// <c>tools.llamaCppAdvanced</c> section of a <c>--settings</c> file (null = the dialog's
     /// defaults: 10 lines per batch, 12 history pairs, no synopsis/glossary, default formality,
     /// keep line breaks on), so an option given wins over the file and the file over the defaults.
-    /// The synopsis and glossary are read like <c>--translate-prompt</c> (inline text or a file).
+    /// The synopsis and glossary are read like <c>--translate-prompt</c> (inline text or a file), the
+    /// request JSON inline when it starts with a brace and from a file otherwise.
     /// The merged result is validated once, so a bad value from either source throws
     /// <see cref="InvalidOperationException"/> with an actionable message.
     /// </summary>
-    internal static SeLlamaCppAdvanced CreateAdvancedSettings(int? batchSize, int? history, string? synopsis, string? glossary, string? formality, bool? keepLineBreaks, string? prompt, SeLlamaCppAdvanced? baseSettings = null)
+    internal static SeLlamaCppAdvanced CreateAdvancedSettings(int? batchSize, int? history, string? synopsis, string? glossary, string? formality, bool? keepLineBreaks, string? requestJson, string? prompt, SeLlamaCppAdvanced? baseSettings = null)
     {
         var settings = baseSettings ?? new SeLlamaCppAdvanced();
         if (prompt != null)
@@ -396,6 +430,12 @@ internal sealed class AutoTranslateRunner
             settings.KeepLineBreaks = keepLineBreaks.Value;
         }
 
+        var requestJsonText = ReadRequestJsonOption(requestJson);
+        if (requestJsonText != null)
+        {
+            settings.RequestJson = requestJsonText;
+        }
+
         // The protocol sends the lines as JSON in the user message and the prompt is the system
         // prompt, so a completion template with the text at {2} has nowhere to put it.
         if (settings.Prompt.Contains("{2}"))
@@ -403,6 +443,12 @@ internal sealed class AutoTranslateRunner
             throw new InvalidOperationException(
                 "--translate-prompt (or tools.llamaCppAdvanced.prompt in --settings) is the system prompt for an advanced engine ({0}=source language, {1}=target language) and cannot contain {2}; " +
                 "use --translate-engine:llamacpp for completion-format models.");
+        }
+
+        var requestJsonError = LlamaCppAdvancedClient.ValidateRequestJson(settings.RequestJson);
+        if (requestJsonError != null)
+        {
+            throw new InvalidOperationException("--translate-request-json (or tools.llamaCppAdvanced.requestJson in --settings): " + requestJsonError);
         }
 
         if (settings.BatchSize is < 1 or > 50)
@@ -433,6 +479,43 @@ internal sealed class AutoTranslateRunner
             "informal" => SeLlamaCppAdvanced.FormalityInformal,
             _ => throw new InvalidOperationException($"{optionName} '{value}' is not valid. Use one of: {string.Join(", ", FormalityValues)}."),
         };
+    }
+
+    /// <summary>
+    /// Resolves <c>--translate-request-json</c>: the text itself when it starts with a brace, else
+    /// the path of a file to read. Unlike <see cref="ReadPromptOption"/> nothing is unescaped - a
+    /// JSON string keeps its own escapes. Null when the option was not given.
+    /// </summary>
+    internal static string? ReadRequestJsonOption(string? value)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        var trimmed = value.Trim();
+        if (trimmed.Length == 0)
+        {
+            throw new InvalidOperationException("--translate-request-json is empty. Pass a JSON object ({...}) or the path to a .json file.");
+        }
+
+        if (trimmed.StartsWith('{'))
+        {
+            return trimmed;
+        }
+
+        if (!FileExistsSafe(trimmed))
+        {
+            throw new InvalidOperationException($"--translate-request-json: file not found: {trimmed}. A value that does not start with {{ is read as a file path.");
+        }
+
+        var size = new FileInfo(trimmed).Length;
+        if (size > MaxPromptFileBytes)
+        {
+            throw new InvalidOperationException($"--translate-request-json: file is too large ({size / 1024} KB, max {MaxPromptFileBytes / 1024} KB): {trimmed}");
+        }
+
+        return File.ReadAllText(trimmed).Trim();
     }
 
     /// <summary>

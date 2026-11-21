@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Shared.SetVideoOffset;
 
@@ -18,6 +21,11 @@ public partial class SetVideoOffsetViewModel : ObservableObject
     [ObservableProperty] private bool _keepTimeCodes;
     [ObservableProperty] private ObservableCollection<VideoOffsetHistoryItem> _offsetHistory;
     [ObservableProperty] private VideoOffsetHistoryItem? _selectedOffsetHistoryItem;
+    [ObservableProperty] private bool _hasVideoTimeCode;
+    [ObservableProperty] private string _videoTimeCodeHint = string.Empty;
+
+    // The start time code embedded in the open video (#17009), once the background probe found one.
+    private StartTimeCode? _videoTimeCode;
 
     private const int MaxHistoryItems = 10;
 
@@ -40,17 +48,49 @@ public partial class SetVideoOffsetViewModel : ObservableObject
         TimeOffset = TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs);
     }
 
-    public void Initialize(Action<TimeSpan, bool, bool> applyCallback, Action<bool> resetCallback)
+    public void Initialize(Action<TimeSpan, bool, bool> applyCallback, Action<bool> resetCallback, string? videoFileName = null)
     {
         _applyCallback = applyCallback;
         _resetCallback = resetCallback;
         LoadHistory();
+        VideoTimeCodeHint = Se.Language.General.NoTimeCodeInVideo;
+
+        if (!string.IsNullOrEmpty(videoFileName) && !videoFileName.Contains("://", StringComparison.Ordinal))
+        {
+            // ffmpeg can take a moment (network drives, large MXF) - the dialog opens right away
+            // and the button lights up when the probe is done.
+            var frameRate = Se.Settings.General.CurrentFrameRate;
+            _ = Task.Run(() =>
+            {
+                var timeCode = FfmpegMediaInfo2.TryGetStartTimeCode(videoFileName, frameRate);
+                if (timeCode != null)
+                {
+                    Dispatcher.UIThread.Post(() => SetVideoTimeCode(timeCode));
+                }
+            });
+        }
+    }
+
+    internal void SetVideoTimeCode(StartTimeCode timeCode)
+    {
+        _videoTimeCode = timeCode;
+        VideoTimeCodeHint = string.Format(Se.Language.General.UseStartTimeCodeFromVideoX, timeCode.Text);
+        HasVideoTimeCode = true;
     }
 
     [RelayCommand]
     private void SetTenHours()
     {
         TimeOffset = TimeSpan.FromHours(10);
+    }
+
+    [RelayCommand]
+    private void SetFromVideo()
+    {
+        if (_videoTimeCode != null)
+        {
+            TimeOffset = _videoTimeCode.Offset;
+        }
     }
 
     [RelayCommand]
