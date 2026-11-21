@@ -246,4 +246,51 @@ public class DCinemaSmpteTest
             Configuration.Settings.General.CurrentFrameRate = originalGlobal;
         }
     }
+
+    // #17079: left/right aligned text wrote Halign but no Hposition, and Hposition defaults
+    // to 0 = the very frame edge, so the text was rendered touching the edge.
+    [Theory]
+    [MemberData(nameof(SmpteFormats))]
+    public void Smpte_ToText_LeftRightAligned_WritesHposition(SubtitleFormat format, string dcstYear)
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("{\\an1}Left", 1000, 2000));
+        subtitle.Paragraphs.Add(new Paragraph("{\\an9}Right", 3000, 4000));
+        subtitle.Paragraphs.Add(new Paragraph("Center", 5000, 6000));
+
+        var text = format.ToText(subtitle, "title");
+
+        Assert.Contains(dcstYear, text);
+        var errors = format switch
+        {
+            DCinemaSmpte2007 f => f.Errors,
+            DCinemaSmpte2010 f => f.Errors,
+            DCinemaSmpte2014 f => f.Errors,
+            _ => null,
+        };
+        Assert.True(string.IsNullOrEmpty(errors), errors);
+        Assert.Matches("<Text [^>]*Halign=\"left\" Hposition=\"10\"[^>]*>Left<", text);
+        Assert.Matches("<Text [^>]*Halign=\"right\" Hposition=\"10\"[^>]*>Right<", text);
+        Assert.Matches("<Text [^>]*Halign=\"center\" Direction[^>]*>Center<", text);
+
+        var loaded = new Subtitle();
+        format.LoadSubtitle(loaded, text.SplitToLines(), null);
+        Assert.StartsWith("{\\an1}", loaded.Paragraphs[0].Text);
+        Assert.StartsWith("{\\an9}", loaded.Paragraphs[1].Text);
+    }
+
+    [Fact]
+    public void Interop_ToText_LeftRightAligned_WritesHPosition()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("{\\an1}Left", 1000, 2000));
+        subtitle.Paragraphs.Add(new Paragraph("{\\an3}Right", 3000, 4000));
+        subtitle.Paragraphs.Add(new Paragraph("Center", 5000, 6000));
+
+        var text = new DCinemaInterop().ToText(subtitle, "title");
+
+        Assert.Matches("<Text [^>]*HAlign=\"left\" HPosition=\"10\"[^>]*>Left<", text);
+        Assert.Matches("<Text [^>]*HAlign=\"right\" HPosition=\"10\"[^>]*>Right<", text);
+        Assert.Matches("<Text [^>]*HAlign=\"center\" Direction[^>]*>Center<", text);
+    }
 }

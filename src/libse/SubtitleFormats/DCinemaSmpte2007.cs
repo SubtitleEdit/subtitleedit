@@ -310,6 +310,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         textNode.Attributes.Append(hAlign);
 
+                        if (alignLeft || alignRight)
+                        {
+                            // Hposition is measured from the Halign edge and defaults to 0 = text at the very frame edge (#17079)
+                            var hPosition = xml.CreateAttribute("Hposition");
+                            hPosition.InnerText = "10";
+                            textNode.Attributes.Append(hPosition);
+                        }
+
                         var direction = xml.CreateAttribute("Direction");
                         direction.InnerText = "ltr";
                         textNode.Attributes.Append(direction);
