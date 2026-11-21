@@ -6550,19 +6550,36 @@ public partial class MainViewModel :
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false, GetOpenFileStartPath());
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, true, GetOpenFileStartPath());
         if (string.IsNullOrEmpty(fileName))
         {
             _shortcutManager.ClearKeys();
             return;
         }
 
-        // Blu-ray sup, VobSub, binary formats etc. (#17089) - a big sup takes a moment to parse
+        // mkv/mp4 track, Blu-ray sup, VobSub, binary formats etc. (#17089) - only the times are used, no OCR
         Subtitle? subtitle;
         try
         {
-            var vobSub = await Task.Run(() => TimeCodeImportLoader.TryLoadVobSub(fileName));
-            if (vobSub != null)
+            var embedded = await new EmbeddedSubtitleLoader(_windowService, Window).TryLoad(fileName, includeBluRaySup: false);
+            if (embedded != null)
+            {
+                if (embedded.Cancelled)
+                {
+                    _shortcutManager.ClearKeys();
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(embedded.Error))
+                {
+                    await MessageBox.Show(Window, Se.Language.General.Error, embedded.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _shortcutManager.ClearKeys();
+                    return;
+                }
+
+                subtitle = embedded.ToTimeCodeSubtitle();
+            }
+            else if (await Task.Run(() => TimeCodeImportLoader.TryLoadVobSub(fileName)) is { } vobSub)
             {
                 var streamId = vobSub.LanguageStreamIds[0];
                 if (vobSub.LanguageStreamIds.Count > 1)
