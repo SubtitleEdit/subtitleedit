@@ -194,10 +194,12 @@ public static class InitFooter
                     {
                         Value = IconNames.TimerSettings,
                         FontSize = 20,
-                        [ToolTip.TipProperty] = Se.Language.General.OffsetTimeCodes,
+                        [!ToolTip.TipProperty] = new Binding(nameof(vm.VideoOffsetButtonToolTip)),
                     },
-                    [AutomationProperties.NameProperty] = Se.Language.General.OffsetTimeCodes,
-                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsVideoOffsetVisible)),
+                    [!AutomationProperties.NameProperty] = new Binding(nameof(vm.VideoOffsetButtonToolTip)),
+                    // Always shown when opted in, so an offset can be set from here (#17080);
+                    // the offset label next to it still only shows while one is set.
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsVideoOffsetButtonVisible)),
                     [!Button.CommandProperty] = new Binding(nameof(vm.ShowVideoSetOffsetCommand)),
 
                     // make it look like just an icon

@@ -500,6 +500,9 @@ public partial class MainViewModel :
     [ObservableProperty] private string _videoOffsetText;
     [ObservableProperty] private string _setVideoOffsetText;
     [ObservableProperty] private bool _isVideoOffsetVisible;
+    // The status bar offset button: shown while an offset is set, or always when opted in (#17080).
+    [ObservableProperty] private bool _isVideoOffsetButtonVisible;
+    [ObservableProperty] private string _videoOffsetButtonToolTip = Se.Language.General.SetVideoOffset;
     [ObservableProperty] private bool _isAudioTracksVisible;
     [ObservableProperty] private ObservableCollection<WaveformAudioTrackItem> _waveformAudioTracks;
     [ObservableProperty] private WaveformAudioTrackItem? _selectedWaveformAudioTrack;
@@ -1215,6 +1218,7 @@ public partial class MainViewModel :
         ShowUpDownDuration = Se.Settings.Appearance.ShowUpDownDuration;
         ShowUpDownLabels = Se.Settings.Appearance.ShowUpDownLabels;
         ShowTimeCodeModeInStatusBar = Se.Settings.Appearance.ShowTimeCodeModeInStatusBar;
+        IsVideoOffsetButtonVisible = Se.Settings.Appearance.ShowVideoOffsetInStatusBar || Se.Settings.General.CurrentVideoOffsetInMs != 0;
         SelectCurrentSubtitleWhilePlaying = Se.Settings.General.SelectCurrentSubtitleWhilePlaying;
         WaveformCenter = Se.Settings.Waveform.CenterVideoPosition;
         EditTextBoxOriginal = new TextBoxWrapper(new TextBox());
@@ -38642,6 +38646,8 @@ public partial class MainViewModel :
     private void UpdateVideoOffsetText()
     {
         IsVideoOffsetVisible = Se.Settings.General.CurrentVideoOffsetInMs != 0;
+        IsVideoOffsetButtonVisible = IsVideoOffsetVisible || Se.Settings.Appearance.ShowVideoOffsetInStatusBar;
+        VideoOffsetButtonToolTip = IsVideoOffsetVisible ? Se.Language.General.OffsetTimeCodes : Se.Language.General.SetVideoOffset;
         if (IsVideoOffsetVisible)
         {
             VideoOffsetText = TimeCodeShortDisplay.Format(Se.Settings.General.CurrentVideoOffsetInMs);
