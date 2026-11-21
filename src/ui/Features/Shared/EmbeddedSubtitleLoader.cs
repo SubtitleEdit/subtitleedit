@@ -3,17 +3,20 @@ using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
 using Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
+using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -101,10 +104,49 @@ public class EmbeddedSubtitleLoader
     }
 
     /// <summary>
-    /// Null when the file is not an mkv/mp4/sup (load it as a subtitle file).
+    /// Transport stream by content, like File > Open: .ts/.m2ts/... (a small .m2ts/.mts may be
+    /// TextST instead), or an HLS rip saved as .mp4.
+    /// </summary>
+    public static bool IsTransportStreamFile(string fileName)
+    {
+        try
+        {
+            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            var fileSize = new FileInfo(fileName).Length;
+            if (fileSize <= 10000)
+            {
+                return false;
+            }
+
+            if (ext is ".ts" or ".tsv" or ".tts" or ".rec" or ".mpeg" or ".mpg" && FileUtil.IsTransportStream(fileName))
+            {
+                return true;
+            }
+
+            if (ext is ".m2ts" or ".ts" or ".tsv" or ".tts" or ".mts" && FileUtil.IsM2TransportStream(fileName))
+            {
+                return fileSize >= 2000000 || !new TextST().IsMine(null, fileName);
+            }
+
+            return FileUtil.IsTransportStreamWithOtherVideoExtension(fileName);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Null when the file is not an mkv/mp4/ts/sup (load it as a subtitle file).
     /// </summary>
     public async Task<Result?> TryLoad(string fileName, bool includeBluRaySup = true)
     {
+        // before mp4: an HLS transport stream saved as .mp4 has no mp4 tracks
+        if (IsTransportStreamFile(fileName))
+        {
+            return await LoadFromTransportStream(fileName);
+        }
+
         if (IsMatroskaFile(fileName))
         {
             return await LoadFromMatroska(fileName);
@@ -184,6 +226,66 @@ public class EmbeddedSubtitleLoader
         }
 
         return MakeTextResult(subtitle.Paragraphs, format);
+    }
+
+    /// <summary>
+    /// DVB, teletext, ARIB and closed caption tracks - same track rules as the main window's
+    /// transport stream import.
+    /// </summary>
+    private async Task<Result> LoadFromTransportStream(string fileName)
+    {
+        var tsParser = new TransportStreamParser();
+        await RunWithProgress(fileName, cb =>
+        {
+            tsParser.Parse(fileName, (pos, total) => cb(pos, total));
+            return true;
+        });
+
+        var teletextTrackCount = tsParser.TeletextSubtitlesLookup.Sum(p => p.Value.Count);
+        var aribTrackCount = tsParser.AribSubtitlesLookup.Sum(p => p.Value.Count);
+        var closedCaptionTrackCount = tsParser.ClosedCaptionSubtitlesLookup.Sum(p => p.Value.Count);
+        var textTrackCount = teletextTrackCount + aribTrackCount + closedCaptionTrackCount;
+        if (tsParser.SubtitlePacketIds.Count == 0 && textTrackCount == 0)
+        {
+            return new Result { Error = Se.Language.General.NoSubtitlesFound };
+        }
+
+        if (tsParser.SubtitlePacketIds.Count == 0 && textTrackCount == 1)
+        {
+            var paragraphs = teletextTrackCount == 1
+                ? tsParser.TeletextSubtitlesLookup.First().Value.First().Value
+                : aribTrackCount == 1
+                    ? tsParser.AribSubtitlesLookup.First().Value.First().Value
+                    : tsParser.ClosedCaptionSubtitlesLookup.First().Value.First().Value;
+            return MakeTextResult(paragraphs, new SubRip());
+        }
+
+        int packetId;
+        if (tsParser.SubtitlePacketIds.Count + textTrackCount > 1)
+        {
+            var pick = await _windowService.ShowDialogAsync<PickTsTrackWindow, PickTsTrackViewModel>(_window!, vm =>
+            {
+                vm.Initialize(tsParser, fileName);
+            });
+
+            if (!pick.OkPressed || pick.SelectedTrack == null)
+            {
+                return new Result { Cancelled = true };
+            }
+
+            if (pick.SelectedTrack.IsTeletext)
+            {
+                return MakeTextResult(pick.TeletextSubtitle.Paragraphs, new SubRip());
+            }
+
+            packetId = pick.SelectedTrack.TrackNumber;
+        }
+        else
+        {
+            packetId = tsParser.SubtitlePacketIds[0];
+        }
+
+        return MakeImageResult(new OcrSubtitleTransportStream(tsParser.GetDvbSubtitles(packetId)));
     }
 
     private static bool IsImageCodec(string codecId) =>

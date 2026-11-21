@@ -44,6 +44,12 @@
     <Content Include="..\libse\Files\sample_BDSUP_multi_image.sup" Link="Files\sample_BDSUP_multi_image.sup">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\libse\Files\sample_TS_with_graphics.ts" Link="Files\sample_TS_with_graphics.ts">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libse\Files\sample_TS_cea608_scte20.ts" Link="Files\sample_TS_cea608_scte20.ts">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\xunit.runner.json" Link="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
