@@ -2346,6 +2346,26 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         return _lastRawTimePos < 0 || !_audioEndBound.HasValue || _lastRawTimePos >= _audioEndBound.Value - 2.0;
     }
 
+    internal bool IsPlaybackEndReached => IsEofReached();
+
+    // Clearing the preview restores the audio-only file bound that stops the synthetic picture.
+    internal bool SetPlaybackEnd(double? seconds)
+    {
+        if (!IsCoreUp)
+        {
+            return false;
+        }
+
+        seconds ??= _audioEndBound is { } audioEnd ? Math.Round(audioEnd + 0.05, 1) : null;
+        var error = SetOptionString("end", seconds?.ToString(CultureInfo.InvariantCulture) ?? "none");
+        if (error < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(error)), "LibMpvDynamicPlayer SetPlaybackEnd");
+        }
+
+        return error >= 0;
+    }
+
     private bool IsEofReached()
     {
         if (_eventLoopActive)
