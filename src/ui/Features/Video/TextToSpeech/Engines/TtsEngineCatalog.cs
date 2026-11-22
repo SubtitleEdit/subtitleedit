@@ -48,9 +48,9 @@ public static class TtsEngineCatalog
         // on an M4 and ~9.5 GB resident; CC BY-NC 4.0, so it shows the licence gate first.
         engines.Add(new VoxtralTtsAudioCpp());
 
-        // Zonos (CrispASR) — not a cloning engine: the zonos backend has no speaker encoder, so
-        // it speaks with one fixed default voice (CrispASR v0.8.34 dropped its voice-cloning
-        // cap). Move it back into CreateVoiceCloningEngines when upstream ports the encoder.
+        // Zonos (CrispASR) — ZONOS3-Mini with Zyphra's preset voices. Not a cloning engine: the
+        // zonos3 backend cannot make a speaker embedding from a WAV yet. Move it into
+        // CreateVoiceCloningEngines when upstream wires its speaker encoder.
         engines.Add(new ZonosTtsCrispAsr());
 
         engines.AddRange(CreateVoiceCloningEngines());

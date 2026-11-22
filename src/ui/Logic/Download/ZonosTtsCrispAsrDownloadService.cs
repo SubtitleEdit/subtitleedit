@@ -1,7 +1,7 @@
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,76 +15,88 @@ public interface IZonosTtsCrispAsrDownloadService
 }
 
 /// <summary>
-/// Downloads the Zonos TTS (CrispASR) transformer (Q8_0) plus the DAC 44 kHz codec into SE's
-/// CrispASR/models folder so the user gets a progress dialog instead of crispasr's silent
-/// --auto-download on first synth. Same shape as <see cref="IndexTtsCrispAsrDownloadService"/>,
-/// minus the model-key plumbing (Zonos is a single fixed quant here).
+/// Downloads ZONOS3-Mini for Zonos TTS (CrispASR) from Zyphra's own repo at a pinned revision:
+/// the backbone and the fast codec (~1.1 GB together), plus the 27 preset speaker embeddings
+/// (896 bytes each). crispasr has no --auto-download for this backend, so this is the only way
+/// the files arrive. Every file goes to a .part file first and is SHA-256 checked before it is
+/// moved into place.
 /// </summary>
 public class ZonosTtsCrispAsrDownloadService : IZonosTtsCrispAsrDownloadService
 {
-    private readonly HttpClient _httpClient;
+    private const string BaseUrl = "https://huggingface.co/Zyphra/ZONOS3-Mini/resolve/" + ZonosTtsCrispAsr.RepoRevision + "/gguf/";
 
-    private static readonly Dictionary<string, string> ModelUrls = new(StringComparer.OrdinalIgnoreCase)
-    {
-        [ZonosTtsCrispAsr.TalkerFileName] =
-            "https://huggingface.co/cstr/zonos-v0.1-transformer-GGUF/resolve/main/zonos-v0.1-transformer-q8_0.gguf",
-        [ZonosTtsCrispAsr.CodecFileName] =
-            "https://huggingface.co/cstr/dac-44khz-GGUF/resolve/main/dac-44khz-f16.gguf",
-    };
+    private readonly HttpClient _httpClient;
 
     public ZonosTtsCrispAsrDownloadService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
 
+    internal static string GetModelUrl(string fileName) => BaseUrl + fileName;
+
+    internal static string GetVoiceUrl(ZonosVoicePresets.Preset preset) =>
+        BaseUrl + "voices/" + Uri.EscapeDataString(preset.RepoFolder) + "/" + preset.FileName;
+
     public async Task DownloadModels(string modelsFolder, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken)
     {
-        var talkerFileName = ZonosTtsCrispAsr.TalkerFileName;
-        var codecFileName = ZonosTtsCrispAsr.CodecFileName;
-
         var talkerPath = ZonosTtsCrispAsr.GetTalkerPath();
         var codecPath = ZonosTtsCrispAsr.GetCodecPath();
 
-        // Cache seeding does synchronous File.Copy of up to ~1.8 GB; the caller passes us the
-        // resulting Task without awaiting (DownloadTtsViewModel polls it from a timer), so
-        // anything before the first real await runs on the caller's thread (the UI thread when
-        // invoked from the download dialog's init callback). Push the seeding and size-check
-        // work onto the threadpool so the dialog stays responsive.
+        // Off the caller's thread: DownloadTtsViewModel polls the returned task from a timer,
+        // so anything before the first await would run on the UI thread.
         await Task.Run(() =>
         {
-            ZonosTtsCrispAsr.TrySeedModelFromCrispAsrCache(talkerFileName, talkerPath);
-            ZonosTtsCrispAsr.TrySeedModelFromCrispAsrCache(codecFileName, codecPath);
-            EnsureRemovedIfInvalid(talkerPath, talkerFileName);
-            EnsureRemovedIfInvalid(codecPath, codecFileName);
+            EnsureRemovedIfInvalid(talkerPath, ZonosTtsCrispAsr.IsValidLocalModelFile(talkerPath, ZonosTtsCrispAsr.TalkerFileName));
+            EnsureRemovedIfInvalid(codecPath, ZonosTtsCrispAsr.IsValidLocalModelFile(codecPath, ZonosTtsCrispAsr.CodecFileName));
         }, cancellationToken);
 
-        var needTalker = !ZonosTtsCrispAsr.IsValidLocalModelFile(talkerPath, talkerFileName);
-        var needCodec = !ZonosTtsCrispAsr.IsValidLocalModelFile(codecPath, codecFileName);
-        var total = (needTalker ? 1 : 0) + (needCodec ? 1 : 0);
+        var needTalker = !File.Exists(talkerPath);
+        var needCodec = !File.Exists(codecPath);
+        var missingVoices = ZonosVoicePresets.All
+            .Where(p => !ZonosTtsCrispAsr.IsValidVoiceFile(ZonosTtsCrispAsr.GetVoicePath(p)))
+            .ToList();
+        var total = (needTalker ? 1 : 0) + (needCodec ? 1 : 0) + (missingVoices.Count > 0 ? 1 : 0);
         var step = 0;
 
         if (needTalker)
         {
             step++;
-            titleProgress?.Invoke($"Downloading Zonos TTS (CrispASR) models ({step}/{total}): {talkerFileName}");
-            await DownloadAndVerify(talkerPath, talkerFileName, progress, cancellationToken);
+            titleProgress?.Invoke($"Downloading Zonos TTS (CrispASR) models ({step}/{total}): {ZonosTtsCrispAsr.TalkerFileName}");
+            await DownloadAndVerify(GetModelUrl(ZonosTtsCrispAsr.TalkerFileName), talkerPath,
+                DownloadHashManager.GetLatestKnownHash(DownloadHashManager.ZonosTtsCrispAsr.Backbone), progress, cancellationToken);
         }
+
         if (needCodec)
         {
             step++;
-            titleProgress?.Invoke($"Downloading Zonos TTS (CrispASR) models ({step}/{total}): {codecFileName}");
-            await DownloadAndVerify(codecPath, codecFileName, progress, cancellationToken);
+            titleProgress?.Invoke($"Downloading Zonos TTS (CrispASR) models ({step}/{total}): {ZonosTtsCrispAsr.CodecFileName}");
+            await DownloadAndVerify(GetModelUrl(ZonosTtsCrispAsr.CodecFileName), codecPath,
+                DownloadHashManager.GetLatestKnownHash(DownloadHashManager.ZonosTtsCrispAsr.Codec), progress, cancellationToken);
+        }
+
+        if (missingVoices.Count > 0)
+        {
+            step++;
+            titleProgress?.Invoke($"Downloading Zonos TTS (CrispASR) models ({step}/{total}): {missingVoices.Count} voices");
+            for (var i = 0; i < missingVoices.Count; i++)
+            {
+                var preset = missingVoices[i];
+                var path = ZonosTtsCrispAsr.GetVoicePath(preset);
+                TryDelete(path);
+                await DownloadAndVerify(GetVoiceUrl(preset), path, preset.Sha256, null, cancellationToken);
+                progress?.Report((i + 1) / (float)missingVoices.Count);
+            }
         }
     }
 
-    private async Task DownloadAndVerify(string finalPath, string fileName, IProgress<float>? progress, CancellationToken cancellationToken)
+    private async Task DownloadAndVerify(string url, string finalPath, string? expectedSha256, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         var partPath = finalPath + ".part";
         try
         {
-            await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(fileName), partPath, progress, cancellationToken);
-            await VerifyFile(partPath, GetHashKey(fileName), fileName, cancellationToken);
-            File.Move(partPath, finalPath);
+            await DownloadHelper.DownloadFileAsync(_httpClient, url, partPath, progress, cancellationToken);
+            await VerifyFile(partPath, expectedSha256, Path.GetFileName(finalPath), cancellationToken);
+            File.Move(partPath, finalPath, overwrite: true);
         }
         catch
         {
@@ -93,27 +105,8 @@ public class ZonosTtsCrispAsrDownloadService : IZonosTtsCrispAsrDownloadService
         }
     }
 
-    private static string? GetHashKey(string fileName)
+    private static async Task VerifyFile(string filePath, string? expected, string fileName, CancellationToken cancellationToken)
     {
-        if (string.Equals(fileName, ZonosTtsCrispAsr.TalkerFileName, StringComparison.OrdinalIgnoreCase))
-        {
-            return DownloadHashManager.ZonosTtsCrispAsr.TalkerQ8_0;
-        }
-        if (string.Equals(fileName, ZonosTtsCrispAsr.CodecFileName, StringComparison.OrdinalIgnoreCase))
-        {
-            return DownloadHashManager.ZonosTtsCrispAsr.Codec;
-        }
-        return null;
-    }
-
-    private static async Task VerifyFile(string filePath, string? key, string fileName, CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrEmpty(key))
-        {
-            return;
-        }
-
-        var expected = DownloadHashManager.GetLatestKnownHash(key);
         if (string.IsNullOrEmpty(expected))
         {
             return;
@@ -128,17 +121,8 @@ public class ZonosTtsCrispAsrDownloadService : IZonosTtsCrispAsrDownloadService
         if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
         {
             throw new IOException(
-                $"Zonos TTS (CrispASR) model {fileName} failed integrity check (expected SHA-256 {expected}, got {actual}).");
+                $"Zonos TTS (CrispASR) file {fileName} failed integrity check (expected SHA-256 {expected}, got {actual}).");
         }
-    }
-
-    private static string GetUrl(string fileName)
-    {
-        if (!ModelUrls.TryGetValue(fileName, out var url))
-        {
-            throw new ArgumentException($"Unknown Zonos TTS (CrispASR) model: {fileName}", nameof(fileName));
-        }
-        return url;
     }
 
     private static void TryDelete(string path)
@@ -146,12 +130,11 @@ public class ZonosTtsCrispAsrDownloadService : IZonosTtsCrispAsrDownloadService
         try { File.Delete(path); } catch { /* best-effort cleanup */ }
     }
 
-    private static void EnsureRemovedIfInvalid(string path, string fileName)
+    private static void EnsureRemovedIfInvalid(string path, bool isValid)
     {
-        if (!File.Exists(path) || ZonosTtsCrispAsr.IsValidLocalModelFile(path, fileName))
+        if (File.Exists(path) && !isValid)
         {
-            return;
+            TryDelete(path);
         }
-        TryDelete(path);
     }
 }

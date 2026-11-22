@@ -59,29 +59,38 @@ public class TtsEngineCatalogTests
     [Fact]
     public void ZonosIsOfferedButNotAsACloningEngine()
     {
-        // CrispASR's zonos backend has no speaker encoder: --voice was always ignored (output
-        // with and without it is sample-identical) and v0.8.34 dropped its voice-cloning cap. It
-        // stays in the TTS window with its one default voice, and out of the clone menu, the
-        // Voice Manager and the consent gate - all of which key off SupportsVoiceCloning.
+        // CrispASR's zonos3 backend (ZONOS3-Mini) takes a speaker only as a precomputed
+        // embedding - cloning from a WAV is not wired upstream yet. It stays in the TTS window
+        // with Zyphra's presets, and out of the clone menu, the Voice Manager and the consent
+        // gate - all of which key off SupportsVoiceCloning.
         var zonos = Assert.Single(TtsEngineCatalog.CreateAll(null!), e => e is ZonosTtsCrispAsr);
 
         Assert.False(zonos.SupportsVoiceCloning);
+        Assert.False(zonos.HasLanguageParameter);
         Assert.False(VoiceCloningConsent.RequiresConsent(zonos));
         Assert.DoesNotContain(TtsEngineCatalog.CreateVoiceCloningEngines(), e => e is ZonosTtsCrispAsr);
     }
 
     [Fact]
-    public async Task ZonosListsItsSingleDefaultVoiceWithoutAnyReferenceFile()
+    public async Task ZonosListsTheDefaultVoiceThenEveryPresetWithoutAnyReferenceFile()
     {
-        // The combo used to be empty until a reference WAV was imported, and Speak threw without
-        // one. The voice must exist with no file behind it, and must not read as a clone.
-        var voice = Assert.Single(await new ZonosTtsCrispAsr().GetVoices(string.Empty));
-        var zonosVoice = Assert.IsType<ZonosTtsVoice>(voice.EngineVoice);
+        var voices = await new ZonosTtsCrispAsr().GetVoices(string.Empty);
 
-        Assert.Equal(ZonosTtsCrispAsr.DefaultVoiceName, zonosVoice.Voice);
-        Assert.Empty(zonosVoice.FilePath);
-        Assert.False(VoiceCloningConsent.IsCloneVoice(voice));
-        Assert.False(VoiceFileRename.CanRename(voice));
+        Assert.Equal(ZonosVoicePresets.All.Length + 1, voices.Length);
+        var first = Assert.IsType<ZonosTtsVoice>(voices[0].EngineVoice);
+        Assert.Equal(ZonosTtsCrispAsr.DefaultVoiceName, first.Voice);
+        Assert.Empty(first.PresetStem);
+
+        foreach (var voice in voices)
+        {
+            var zonosVoice = Assert.IsType<ZonosTtsVoice>(voice.EngineVoice);
+            Assert.Empty(zonosVoice.FilePath);
+            Assert.False(VoiceCloningConsent.IsCloneVoice(voice));
+            Assert.False(VoiceFileRename.CanRename(voice));
+        }
+
+        var imogen = Assert.Single(voices, v => ((ZonosTtsVoice)v.EngineVoice).PresetStem == "Imogen_en-British_F_1");
+        Assert.Equal("English - Imogen (British, female)", imogen.Name);
     }
 
     [Fact]
