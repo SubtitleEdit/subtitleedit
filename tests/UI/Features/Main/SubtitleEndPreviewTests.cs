@@ -82,7 +82,7 @@ public class SubtitleEndPreviewTests
                 s => s.Name == shortcut.Name));
             var key = new KeyEventArgs { Key = Key.D, PhysicalKey = PhysicalKey.D };
             shortcutManager.OnKeyPressed(null, key);
-            var command = shortcutManager.CheckShortcuts(key, ShortcutCategory.Waveform.ToString());
+            var command = shortcutManager.CheckShortcuts(key, ShortcutCategory.General.ToString());
             Assert.Same(vm.PlaySubtitleEndCommand, command);
             command!.Execute(null);
             Assert.Equal(14.25 * clockFactor, player.Position, 8);
