@@ -119,6 +119,7 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
 
                 if (!AllFileExists())
                 {
+                    DeleteDownloadTempFolder();
                     ProgressText = Se.Language.General.DownloadFailed;
                     Error = Se.Language.General.NoDataReceived;
                     return;
@@ -168,13 +169,13 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
                 OkPressed = true;
                 Close();
             }
-            else if (_downloadTask is { IsFaulted: true })
+            else if (_downloadTask is { IsFaulted: true } or { IsCanceled: true })
             {
                 _timer.Stop();
                 _done = true;
                 var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
                 DeleteDownloadTempFolder();
-                if (ex is OperationCanceledException)
+                if (_downloadTask.IsCanceled || ex is OperationCanceledException)
                 {
                     ProgressText = Se.Language.General.DownloadCanceled;
                     Close();
@@ -195,6 +196,11 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
     /// </summary>
     private void DeleteDownloadTempFolder()
     {
+        if (string.IsNullOrEmpty(_tempFolder))
+        {
+            return;
+        }
+
         try
         {
             if (Directory.Exists(_tempFolder))
@@ -286,6 +292,51 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
     public void OnClosingCleanup()
     {
         _timer.StopAndDispose(OnTimerOnElapsed);
+
+        // Closing the window (Cancel, Escape or the title bar X) must stop the download and
+        // remove its partial archive - otherwise every aborted attempt leaves a GUID folder
+        // of up to 2.5 GB behind in the install folder. Delete once the download task has
+        // let go of the file.
+        _cancellationTokenSource.Cancel();
+        if (_downloadTask is { IsCompleted: false } task)
+        {
+            task.ContinueWith(_ => DeleteDownloadTempFolder(), TaskScheduler.Default);
+        }
+        else
+        {
+            DeleteDownloadTempFolder();
+        }
+    }
+
+    /// <summary>
+    /// Removes download folders (named by a GUID) left behind by earlier aborted or failed
+    /// downloads, from before every exit path cleaned up after itself.
+    /// </summary>
+    private static void DeleteStaleDownloadFolders(string installFolder)
+    {
+        try
+        {
+            foreach (var folder in Directory.GetDirectories(installFolder))
+            {
+                if (!Guid.TryParse(Path.GetFileName(folder), out _))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    Directory.Delete(folder, true);
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception, $"Could not delete stale Paddle OCR download folder \"{folder}\"");
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, $"Could not scan Paddle OCR folder \"{installFolder}\"");
+        }
     }
 
     public void StartDownload()
@@ -304,6 +355,8 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
             Directory.CreateDirectory(folder);
         }
 
+        DeleteStaleDownloadFolders(folder);
+
         _tempFolder = Path.Combine(folder, $"{Guid.NewGuid()}");
         Directory.CreateDirectory(_tempFolder);
         _downloadTaskIndex = 0;
@@ -319,6 +372,7 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
             Se.LogError(exception, $"Unknown Paddle OCR download type: {_downloadType}");
             ProgressText = Se.Language.General.DownloadFailed;
             Error = "Unknown download type";
+            DeleteDownloadTempFolder();
             return;
         }
 
