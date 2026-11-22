@@ -139,6 +139,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     textNodes = xml.SelectNodes("//title");
+
+                    // Every title usually shares one parent (the <gap>), and ParentNode.InnerXml
+                    // serializes that whole parent - so asking per title was quadratic (5000 titles:
+                    // 14 s to load, twice that to open). Same answer, worked out once per parent.
+                    XmlNode styleParent = null;
+                    var parentBold = false;
+                    var parentItalic = false;
                     foreach (XmlNode node in textNodes)
                     {
                         try
@@ -152,12 +159,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                             var text = node.Attributes["name"].InnerText.Replace("\r\r", "\r");
                             var p = new Paragraph { Text = text.Trim() };
-                            if (node.ParentNode.InnerXml.Contains("bold=\"1\""))
+                            if (!ReferenceEquals(node.ParentNode, styleParent))
+                            {
+                                styleParent = node.ParentNode;
+                                var parentXml = styleParent.InnerXml;
+                                parentBold = parentXml.Contains("bold=\"1\"");
+                                parentItalic = parentXml.Contains("italic=\"1\"");
+                            }
+
+                            if (parentBold)
                             {
                                 p.Text = "<b>" + p.Text + "</b>";
                             }
 
-                            if (node.ParentNode.InnerXml.Contains("italic=\"1\""))
+                            if (parentItalic)
                             {
                                 p.Text = "<i>" + p.Text + "</i>";
                             }
