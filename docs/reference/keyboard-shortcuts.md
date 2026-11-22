@@ -143,6 +143,8 @@ Inside the [source view](../features/source-view.md) window (F2), which edits th
 | Alt+Enter | Video full screen |
 | Ctrl+Alt+P | Pause |
 
+Assign **Play subtitle end** in **Options** → **Shortcuts** (Video). It plays the final 500 ms of the selected subtitle, or the whole subtitle if it is shorter, and parks on the subtitle's last frame. To change the duration, select the shortcut and click its gear button.
+
 ## Timing
 
 | Shortcut | Action |
@@ -164,8 +166,6 @@ wins over the menu activation.
 | Ctrl+C | Copy the selected subtitle to the clipboard ("Copy (text only)" has no default key) |
 | Shift+Numpad + | Vertical zoom in (waveform focused) |
 | Shift+Numpad − | Vertical zoom out (waveform focused) |
-
-Assign **Play subtitle end** in **Options** → **Shortcuts** (Waveform). With the waveform focused, it plays the final 500 ms of the selected subtitle, or the whole subtitle if it is shorter. Change the duration under **Options** → **Settings** → **Waveform/spectrogram**.
 
 ## Tools
 

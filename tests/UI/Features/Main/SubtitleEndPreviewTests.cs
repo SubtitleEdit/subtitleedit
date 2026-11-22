@@ -63,7 +63,7 @@ public class SubtitleEndPreviewTests
         var (vm, player, control) = MakeViewModel(services, smpte);
         var originalFrameRate = Se.Settings.General.CurrentFrameRate;
         var originalDuration = Se.Settings.Waveform.SubtitleEndPreviewMs;
-        var binding = new SeShortCut(nameof(MainViewModel.PlaySubtitleEndCommand), ["D"], ShortcutCategory.Waveform);
+        var binding = new SeShortCut(nameof(MainViewModel.PlaySubtitleEndCommand), ["D"], ShortcutCategory.General);
         try
         {
             Se.Settings.General.CurrentFrameRate = 25;
@@ -73,7 +73,8 @@ public class SubtitleEndPreviewTests
 
             var shortcut = Assert.Single(ShortcutsMain.GetAllShortcuts(vm),
                 s => s.Name == nameof(MainViewModel.PlaySubtitleEndCommand));
-            Assert.Equal(ShortcutCategory.Waveform, shortcut.Category);
+            Assert.Equal(ShortcutCategory.General, shortcut.Category);
+            Assert.Equal(ShortcutGroup.Video, shortcut.Group);
             Assert.Empty(shortcut.Keys);
             Se.Settings.Shortcuts.Add(binding);
             var shortcutManager = new ShortcutManager();
@@ -81,7 +82,6 @@ public class SubtitleEndPreviewTests
                 s => s.Name == shortcut.Name));
             var key = new KeyEventArgs { Key = Key.D, PhysicalKey = PhysicalKey.D };
             shortcutManager.OnKeyPressed(null, key);
-            Assert.Null(shortcutManager.CheckShortcuts(key, ShortcutCategory.SubtitleGridAndTextBox.ToString()));
             var command = shortcutManager.CheckShortcuts(key, ShortcutCategory.Waveform.ToString());
             Assert.Same(vm.PlaySubtitleEndCommand, command);
             command!.Execute(null);
@@ -115,7 +115,7 @@ public class SubtitleEndPreviewTests
     }
 
     [AvaloniaFact]
-    public void APositionChangeCancelsThePreviewBeforeNormalPlayback()
+    public void ASeekEndsThePreviewAndKeepsPlaying()
     {
         using var services = MakeServices();
         var (vm, player, control) = MakeViewModel(services, false);
@@ -124,12 +124,12 @@ public class SubtitleEndPreviewTests
             vm.PlaySubtitleEndCommand.Execute(null);
             Assert.True(player.IsPlaying);
 
+            // Like any seek during playback: playing continues from the new spot.
             vm.OnVideoPlayerPositionSet(20);
-            Assert.False(player.IsPlaying);
+            Assert.True(player.IsPlaying);
 
             player.Position = 20;
             player.SeekLanded = true;
-            vm.TogglePlayPauseCommand.Execute(null);
             vm.UpdateSubtitleEndPreview(control);
             Assert.True(player.IsPlaying);
             Assert.Equal(20, player.Position);

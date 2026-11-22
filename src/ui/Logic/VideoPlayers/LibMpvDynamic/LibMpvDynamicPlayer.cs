@@ -1984,6 +1984,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // Reset any end-of-playback bound from a previous file (see audio-only handling below).
         SetOptionString("end", "none");
         _audioEndBound = null;
+        _playbackEndOverridden = false;
         _lastRawTimePos = -1;
 
         // Open at the wanted position instead of at 0:00 - a seek issued once the file is up
@@ -2184,6 +2185,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _pausedValue = null;
         CancelPendingExactSeek();
         _audioEndBound = null;
+        _playbackEndOverridden = false;
         _lastRawTimePos = -1;
 
         EnsureNotDisposed();
@@ -2348,6 +2350,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     internal bool IsPlaybackEndReached => IsEofReached();
 
+    // True while SetPlaybackEnd holds a temporary end: EOF then means that end, not the file's.
+    private bool _playbackEndOverridden;
+
     // Clearing the preview restores the audio-only file bound that stops the synthetic picture.
     internal bool SetPlaybackEnd(double? seconds)
     {
@@ -2356,6 +2361,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             return false;
         }
 
+        _playbackEndOverridden = seconds.HasValue;
         seconds ??= _audioEndBound is { } audioEnd ? Math.Round(audioEnd + 0.05, 1) : null;
         var error = SetOptionString("end", seconds?.ToString(CultureInfo.InvariantCulture) ?? "none");
         if (error < 0)
@@ -2405,7 +2411,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             // earlier in the session, _pausedValue still holds that stale seek target and
             // the cache below would return it, causing the position to "jump back" to the
             // last seek when playback completes. See #10835 / #10877.
-            if (_audioEndBound.HasValue && MightBeAtAudioEnd() && IsEofReached())
+            if (!_playbackEndOverridden && _audioEndBound.HasValue && MightBeAtAudioEnd() && IsEofReached())
             {
                 return _audioEndBound.Value;
             }

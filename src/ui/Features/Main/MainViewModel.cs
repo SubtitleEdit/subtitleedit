@@ -11795,7 +11795,7 @@ public partial class MainViewModel :
 
     private void ResetPlaySelection()
     {
-        CancelSubtitleEndPreview();
+        ClearSubtitleEndPreview();
         _playSelectionItem = null;
     }
 
@@ -36609,7 +36609,7 @@ public partial class MainViewModel :
     private void PinPlayheadTo(double targetSeconds)
     {
         CancelFrameStepPlayBlip(); // any other seek moves the cursor off the stepped-to frame
-        CancelSubtitleEndPreview();
+        ClearSubtitleEndPreview(); // a seek ends the preview but, like any seek, keeps playing
         _playheadSeekTarget = targetSeconds;
         _playheadSeekTargetTs = Stopwatch.GetTimestamp();
         _playheadEstimateSeconds = targetSeconds;
@@ -37938,7 +37938,7 @@ public partial class MainViewModel :
     /// </summary>
     internal void OnVideoPlayerPositionSet(double newPositionSeconds)
     {
-        CancelSubtitleEndPreview();
+        ClearSubtitleEndPreview();
         if (_frameStepPlayBlipping)
         {
             // The blip started this playback and its end (which would have paused) will never

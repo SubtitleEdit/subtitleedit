@@ -11,6 +11,8 @@ namespace Nikse.SubtitleEdit.Features.Main;
 
 public partial class MainViewModel
 {
+    private const double SubtitleEndPreviewBoundSlackSeconds = 0.25;
+
     private (IVideoPlayer Player, double StartSeconds, double EndSeconds, long SeekTimestamp, LibMpvDynamicPlayer? BoundedPlayer)? _subtitleEndPreview;
 
     [RelayCommand]
@@ -70,22 +72,6 @@ public partial class MainViewModel
         preview.BoundedPlayer?.SetPlaybackEnd(null);
     }
 
-    private void CancelSubtitleEndPreview()
-    {
-        if (_subtitleEndPreview is not { } preview)
-        {
-            return;
-        }
-
-        var vp = GetVideoPlayerControl();
-        if (vp != null && ReferenceEquals(vp.VideoPlayer, preview.Player))
-        {
-            PauseVideoAndFreezePlayhead(vp);
-        }
-
-        ClearSubtitleEndPreview();
-    }
-
     internal void UpdateSubtitleEndPreview(VideoPlayerControl vp)
     {
         if (_subtitleEndPreview is not { } preview)
@@ -111,9 +97,12 @@ public partial class MainViewModel
 
         var isPlaying = player.IsPlaying;
         var clockFactor = vp.IsSmpteTimingEnabled ? 1001.0 / 1000.0 : 1.0;
+        // The clock check also backs up the mpv bound: an older libmpv may accept "end" without
+        // applying it to the file that is already playing, and playback would then never stop.
+        var endSeconds = preview.EndSeconds * clockFactor;
         var reachedEnd = preview.BoundedPlayer is { } mpv
-            ? !isPlaying && mpv.IsPlaybackEndReached
-            : player.Position >= preview.EndSeconds * clockFactor;
+            ? (!isPlaying && mpv.IsPlaybackEndReached) || player.Position >= endSeconds + SubtitleEndPreviewBoundSlackSeconds
+            : player.Position >= endSeconds;
         if (reachedEnd)
         {
             FinishPlaySelection(vp, preview.StartSeconds, preview.EndSeconds);
