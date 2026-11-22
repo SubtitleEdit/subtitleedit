@@ -364,9 +364,9 @@ public static class DownloadHashManager
 
     public static class ZonosTtsCrispAsr
     {
-        // SHA-256 of the Zonos-v0.1 transformer (Q8_0) and the shared DAC 44 kHz codec.
-        // Pulled from cstr's HF tree API (lfs.oid).
-        public const string TalkerQ8_0 = "ZonosTtsCrispAsr.TalkerQ8_0";
+        // SHA-256 of the ZONOS3-Mini backbone and fast codec (Zyphra/ZONOS3-Mini gguf/, HF tree
+        // API lfs.oid). The preset voice embeddings carry their hashes in ZonosVoicePresets.
+        public const string Backbone = "ZonosTtsCrispAsr.Backbone";
         public const string Codec = "ZonosTtsCrispAsr.Codec";
     }
 
@@ -3051,15 +3051,15 @@ public static class DownloadHashManager
                 "4d5839e622c532d8bee9f7a9dcde0d40697009fa0698d27ea4142cea19cf0bcf", // audiocpp-indextts25-linux-x86_64-cuda.tar.gz (2026-08-16-r4)
             },
 
-            // Zonos TTS (CrispASR) — cstr/zonos-v0.1-transformer-GGUF + cstr/dac-44khz-GGUF.
+            // Zonos TTS (CrispASR) — Zyphra/ZONOS3-Mini gguf/ at ZonosTtsCrispAsr.RepoRevision.
             // Hashes are HF LFS oid (= SHA-256) pulled from the tree API.
-            [ZonosTtsCrispAsr.TalkerQ8_0] = new[]
+            [ZonosTtsCrispAsr.Backbone] = new[]
             {
-                "6aea47e0ffac9cc1e4910ec8f4dff94dbf52379d903c43048f1adbc9587a0846", // zonos-v0.1-transformer-q8_0.gguf
+                "66fceb6d73a8c30bde80249e4112bb308380ab7f3384fa11c8e4048115e4ceec", // backbone-ptq.gguf
             },
             [ZonosTtsCrispAsr.Codec] = new[]
             {
-                "6f62c6dbb26fd69f0634db3c7f044464cfbd9a5b8806eb621f8be7034d869a3e", // dac-44khz-f16.gguf
+                "834e5b70b88294afc3c702a478487e0664dcc6b574c16fc6167d72444aabeafd", // zac-keep2.gguf
             },
 
             // CosyVoice3 (CrispASR) — cstr/cosyvoice3-0.5b-2512-GGUF on HuggingFace.

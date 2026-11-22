@@ -296,7 +296,7 @@ public class LanguageTextToSpeech
         XRequiresModelsSizeYDownload = "\"{0}\" requires models ({1}).\n\nDownload models?";
         RequiresXDownloadAndUse = "\"Text to speech\" requires {0}.\n\nDownload and use {0}?";
         RequiresXSelectBuild = "\"Text to speech\" requires {0}.\n\nSelect a build to download:";
-        ZonosRequiresModels = "\"Zonos TTS (CrispASR)\" requires the Zonos transformer + DAC codec (~1.8 GB).\n\nDownload models?";
+        ZonosRequiresModels = "\"Zonos TTS (CrispASR)\" requires the ZONOS3-Mini model, codec and preset voices (~1.1 GB).\n\nDownload models?";
         CosyVoiceXRequiresModels = "\"CosyVoice3 (CrispASR)\" ({0}) requires LLM + flow + hift + s3tok + campplus + voice-bank GGUFs (all sized into the total above).\n\nDownload models?";
         AllTalkRequiresServer = "\"AllTalk\" text to speech requires a running local AllTalk web server.\n\nRead more?";
         EdgeTtsRequiresCli = "\"EdgeTts\" text to speech requires the edge-tts CLI tool.\n\nInstall with: pipx install edge-tts\n(or pip install edge-tts)\n\nRead more?";

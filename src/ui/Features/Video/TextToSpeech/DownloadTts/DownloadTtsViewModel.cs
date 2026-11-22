@@ -3089,7 +3089,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadZonosTtsCrispAsrModels()
     {
-        TitleText = string.Format(Se.Language.General.DownloadingX, $"Zonos TTS (CrispASR) models: {ZonosTtsCrispAsr.TalkerFileName}");
+        TitleText = string.Format(Se.Language.General.DownloadingX, $"Zonos TTS (CrispASR) models: ZONOS3-Mini");
 
         var downloadProgress = new Progress<float>(number =>
         {

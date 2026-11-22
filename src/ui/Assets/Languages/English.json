@@ -3165,7 +3165,7 @@
       "xRequiresModelsSizeYDownload": "\"{0}\" requires models ({1}).\n\nDownload models?",
       "requiresXDownloadAndUse": "\"Text to speech\" requires {0}.\n\nDownload and use {0}?",
       "requiresXSelectBuild": "\"Text to speech\" requires {0}.\n\nSelect a build to download:",
-      "zonosRequiresModels": "\"Zonos TTS (CrispASR)\" requires the Zonos transformer + DAC codec (~1.8 GB).\n\nDownload models?",
+      "zonosRequiresModels": "\"Zonos TTS (CrispASR)\" requires the ZONOS3-Mini model, codec and preset voices (~1.1 GB).\n\nDownload models?",
       "cosyVoiceXRequiresModels": "\"CosyVoice3 (CrispASR)\" ({0}) requires LLM + flow + hift + s3tok + campplus + voice-bank GGUFs (all sized into the total above).\n\nDownload models?",
       "allTalkRequiresServer": "\"AllTalk\" text to speech requires a running local AllTalk web server.\n\nRead more?",
       "edgeTtsRequiresCli": "\"EdgeTts\" text to speech requires the edge-tts CLI tool.\n\nInstall with: pipx install edge-tts\n(or pip install edge-tts)\n\nRead more?",

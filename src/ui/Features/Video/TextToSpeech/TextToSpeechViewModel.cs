@@ -455,10 +455,6 @@ public partial class TextToSpeechViewModel : ObservableObject
                 Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
             }
         }
-        else if (SelectedEngine is ZonosTtsCrispAsr)
-        {
-            Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
-        }
         else if (SelectedEngine is SupertonicCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.SupertonicCrispAsrLanguage = SelectedLanguage?.Name ?? string.Empty;
@@ -1228,7 +1224,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         CosyVoice3CrispAsr => Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrLanguage,
         Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrLanguage,
         ChatterboxTtsCpp => Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage,
-        ZonosTtsCrispAsr => Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage,
         SupertonicCrispAsr => Se.Settings.Video.TextToSpeech.SupertonicCrispAsrLanguage,
         FireRedTts3AudioCpp => Se.Settings.Video.TextToSpeech.FireRedTts3AudioCppLanguage,
         ElevenLabs => Se.Settings.Video.TextToSpeech.ElevenLabsLanguage,
@@ -4980,10 +4975,6 @@ public partial class TextToSpeechViewModel : ObservableObject
                                         ?? Languages.FirstOrDefault(),
                     ChatterboxTtsCpp => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.ChatterboxCrispAsrLanguage)
                                         ?? Languages.FirstOrDefault(),
-                    // Zonos leads with English (US) rather than "Auto" (the backend cannot
-                    // detect a language), so the first-entry fallback is the backend default.
-                    ZonosTtsCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.ZonosTtsCrispAsrLanguage)
-                                        ?? Languages.FirstOrDefault(),
                     // Supertonic leads with English too: it cannot detect a language, and English
                     // is the backend's own default.
                     SupertonicCrispAsr => Languages.FirstOrDefault(l => l.Name == Se.Settings.Video.TextToSpeech.SupertonicCrispAsrLanguage)
@@ -5238,8 +5229,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
             else if (SelectedEngine is ZonosTtsCrispAsr)
             {
-                // Minimal engine: single fixed quant (no model dropdown) and no settings
-                // dialog. Show only the model-download button so the user can fetch the GGUFs.
+                // Minimal engine: one fixed model set (no model dropdown) and no settings
+                // dialog. Show only the model-download button so the user can fetch the files.
                 IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is KugelAudioAudioCpp)
