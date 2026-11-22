@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Text.Json;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
@@ -55,7 +56,9 @@ public static partial class MergeAndSplitHelper
     {
         applyRowUpdate ??= action => action();
 
-        if (index < rows.Count && IsKeptUntranslated(rows[index].Text))
+        if (index < rows.Count &&
+            (IsKeptUntranslated(rows[index].Text) ||
+             (autoTranslator is ChatGptTranslate && string.IsNullOrWhiteSpace(rows[index].Text))))
         {
             var row = rows[index];
             applyRowUpdate(() => row.TranslatedText = row.Text);
@@ -66,6 +69,19 @@ public static partial class MergeAndSplitHelper
         var noSentenceEndingTarget = IsNonMergeLanguage(target);
 
         var maxChars = CalculateMaxChars(autoTranslator, forceSingleLineMode);
+        if (!forceSingleLineMode && autoTranslator is ChatGptTranslate chatGpt)
+        {
+            var translatedCount = await TranslateChatGptBatch(rows, source, target, index, chatGpt, maxChars,
+                cancellationToken, applyRowUpdate);
+            if (translatedCount > 0)
+            {
+                return translatedCount;
+            }
+
+            forceSingleLineMode = true;
+            maxChars = 0;
+        }
+
         var joinContinuousRowsWithLineBreak = autoTranslator is ILineBreakPreservingTranslator;
 
         // Only the rows from index up to where the merge stops are used, so copy and format a
@@ -112,6 +128,59 @@ public static partial class MergeAndSplitHelper
         }
 
         return TrySplitStrategies(rows, target, index, tempSubtitle, formattingList, mergeResult, mergedTranslation, applyRowUpdate);
+    }
+
+    private static async Task<int> TranslateChatGptBatch(
+        ObservableCollection<TranslateRow> rows, TranslationPair source, TranslationPair target,
+        int index, ChatGptTranslate translator, int maxBytes, CancellationToken cancellationToken,
+        Action<Action> applyRowUpdate)
+    {
+        const int maxBatchCues = 20;
+        var count = Math.Min(maxBatchCues, rows.Count - index);
+        var batchRows = CreateTempSubtitle(rows, index, count);
+        var formatting = HandleFormatting(batchRows, 0, TextRulesLanguage(source.Code));
+        var cues = new List<ChatGptTranslate.Cue>();
+        for (var offset = 0; offset < count; offset++)
+        {
+            var original = rows[index + offset];
+            if (string.IsNullOrWhiteSpace(original.Text) || IsKeptUntranslated(original.Text))
+            {
+                break;
+            }
+
+            // Use stable row positions: imported subtitle numbering can be missing or duplicated.
+            cues.Add(new ChatGptTranslate.Cue(index + offset + 1, batchRows[offset].Text));
+            if (JsonSerializer.SerializeToUtf8Bytes(cues).Length > maxBytes)
+            {
+                cues.RemoveAt(cues.Count - 1);
+                break;
+            }
+        }
+
+        while (cues.Count > 1)
+        {
+            await DelayBetweenRequestsIfNeeded(cancellationToken);
+            var results = await translator.TranslateCues(cues, source.Code, target.Code, cancellationToken);
+            _lastTranslateCompletedUtc = DateTime.UtcNow;
+            if (results != null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                applyRowUpdate(() =>
+                {
+                    for (var offset = 0; offset < cues.Count; offset++)
+                    {
+                        var text = results[cues[offset].Id];
+                        rows[index + offset].TranslatedText = RebalanceLines(formatting[offset].ReAddFormatting(text), target);
+                    }
+                });
+                return cues.Count;
+            }
+
+            var smallerCount = cues.Count / 2;
+            cues.RemoveRange(smallerCount, cues.Count - smallerCount);
+        }
+
+        return 0;
     }
 
     /// <summary>
