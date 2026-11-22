@@ -143,6 +143,8 @@ Inside the [source view](../features/source-view.md) window (F2), which edits th
 | Alt+Enter | Video full screen |
 | Ctrl+Alt+P | Pause |
 
+Assign **Play subtitle end** in **Options** → **Shortcuts** (Video). It plays the final 500 ms of the selected subtitle, or the whole subtitle if it is shorter, and parks on the subtitle's last frame. To change the duration, select the shortcut and click its gear button.
+
 ## Timing
 
 | Shortcut | Action |

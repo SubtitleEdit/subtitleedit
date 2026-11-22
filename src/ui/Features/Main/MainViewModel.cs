@@ -2087,6 +2087,7 @@ public partial class MainViewModel :
     internal void CancelPausePlayheadFreeze()
     {
         CancelFrameStepPlayBlip(); // playback the user started must not be stopped by a stale blip
+        ClearSubtitleEndPreview();
 
         // Playback moves the player away from the last relative-seek target. A short play
         // (under the tracker's 0.5 s guard) left it armed, so the next 500 ms / custom step
@@ -11794,7 +11795,25 @@ public partial class MainViewModel :
 
     private void ResetPlaySelection()
     {
+        ClearSubtitleEndPreview();
         _playSelectionItem = null;
+    }
+
+    private void FinishPlaySelection(VideoPlayerControl vp, double startSeconds, double endSeconds)
+    {
+        PauseVideoAndFreezePlayhead(vp);
+        ClearSubtitleEndPreview();
+
+        // Park on the line's last visible frame. mpv hides the line at its end time (#13429).
+        var fps = Se.Settings.General.CurrentFrameRate;
+        var frameSeconds = fps >= 10 ? 1.0 / fps : 0.04;
+        var stopSeconds = Math.Max(startSeconds, endSeconds - frameSeconds);
+        SeekVideoPlayer(vp, stopSeconds);
+        PinPlayheadTo(stopSeconds);
+
+        // This is not a user scrub. Keep the played line selected at a shared boundary (#13331).
+        _pausedSelectLastSeconds = stopSeconds;
+        ResetPlaySelection();
     }
 
     [RelayCommand]
@@ -31218,6 +31237,7 @@ public partial class MainViewModel :
 
         _videoOpenTokenSource?.Cancel();
         _audioTrack = null;
+        ClearSubtitleEndPreview();
         await vp.Open(videoFileName, startPositionSeconds);
         _videoFileName = videoFileName;
         RefreshSubtitlePreview();
@@ -32505,6 +32525,7 @@ public partial class MainViewModel :
     private void VideoCloseFile()
     {
         _videoOpenTokenSource?.Cancel();
+        ClearSubtitleEndPreview();
         GetVideoPlayerControl()?.Close();
         _videoFileName = string.Empty;
         IsVideoLoaded = false;
@@ -36588,6 +36609,7 @@ public partial class MainViewModel :
     private void PinPlayheadTo(double targetSeconds)
     {
         CancelFrameStepPlayBlip(); // any other seek moves the cursor off the stepped-to frame
+        ClearSubtitleEndPreview(); // a seek ends the preview but, like any seek, keeps playing
         _playheadSeekTarget = targetSeconds;
         _playheadSeekTargetTs = Stopwatch.GetTimestamp();
         _playheadEstimateSeconds = targetSeconds;
@@ -36751,30 +36773,14 @@ public partial class MainViewModel :
 
                     _playStartGate.PlayingObserved();
 
-                    if (_playSelectionItem != null && mediaPlayerSeconds >= _playSelectionItem.EndSeconds)
+                    if (_subtitleEndPreview == null && _playSelectionItem != null &&
+                        mediaPlayerSeconds >= _playSelectionItem.EndSeconds)
                     {
                         var p = _playSelectionItem.GetNextSubtitle(mediaPlayerSeconds);
                         if (p == null)
                         {
-                            PauseVideoAndFreezePlayhead(vp);
-
-                            // Park on the line's last visible frame, not the exact end time: mpv renders
-                            // the sub track itself and hides the line at its end time, so an exact-end stop
-                            // shows a blank frame - or the *next* line on a shared boundary - instead of the
-                            // line that was just played (#13429).
-                            var fps = Se.Settings.General.CurrentFrameRate;
-                            var frameSeconds = fps >= 10 ? 1.0 / fps : 0.04;
-                            var stopSeconds = Math.Max(_playSelectionItem.GetCurrentStartSeconds(),
-                                _playSelectionItem.EndSeconds - frameSeconds);
-
-                            SeekVideoPlayer(vp, stopSeconds);
-                            PinPlayheadTo(stopSeconds);
-
-                            // Stopping here is not a user scrub: without this the "center also while paused"
-                            // branch below sees the play-head jump (its baseline is still where playback
-                            // started) and re-selects the line under the play-head (#13331).
-                            _pausedSelectLastSeconds = stopSeconds;
-                            ResetPlaySelection();
+                            FinishPlaySelection(vp, _playSelectionItem.GetCurrentStartSeconds(),
+                                _playSelectionItem.EndSeconds);
                         }
                         else
                         {
@@ -36821,7 +36827,7 @@ public partial class MainViewModel :
                     // the line instead of stopping there (#14167). It would also let the paused
                     // scrub-select below move the selection off the line about to be played,
                     // which resets the play selection a second way through SelectionChanged.
-                    if (!_playStartGate.IsPending(Stopwatch.GetTimestamp(), Stopwatch.Frequency))
+                    if (_subtitleEndPreview == null && !_playStartGate.IsPending(Stopwatch.GetTimestamp(), Stopwatch.Frequency))
                     {
                         ResetPlaySelection();
 
@@ -36908,6 +36914,7 @@ public partial class MainViewModel :
             // Checked here rather than from the 50 ms position timer so the blip is one frame long
             // instead of one-frame-plus-however-long-that-timer-took-to-notice.
             UpdateFrameStepPlayBlip(vp);
+            UpdateSubtitleEndPreview(vp);
 
             // Always advance the estimate: the 50 ms _positionTimer reads _playheadEstimateSeconds as
             // its source of truth (SelectCurrentSubtitleWhilePlaying, play-selection end detection, the
@@ -37931,6 +37938,7 @@ public partial class MainViewModel :
     /// </summary>
     internal void OnVideoPlayerPositionSet(double newPositionSeconds)
     {
+        ClearSubtitleEndPreview();
         if (_frameStepPlayBlipping)
         {
             // The blip started this playback and its end (which would have paused) will never

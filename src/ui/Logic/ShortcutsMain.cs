@@ -707,6 +707,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SpeechToTextSelectedLinesPromptForLangaugeAlwaysCommand), Se.Language.General.SpeechToTextSelectedLinesPromptAlways },
         { nameof(MainViewModel.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand), Se.Language.General.SpeechToTextSelectedLinesPromptFirstTime },
         { nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand), Se.Language.General.PlaySelectedLines },
+        { nameof(MainViewModel.PlaySubtitleEndCommand), string.Format(Se.Language.General.PlaySubtitleEndX, SeWaveform.NormalizeSubtitleEndPreviewMs(Se.Settings.Waveform.SubtitleEndPreviewMs)) },
         { nameof(MainViewModel.PlaySelectedLinesWithLoopCommand), Se.Language.General.PlaySelectedLinesWithLoop },
         { nameof(MainViewModel.PlaySelectedLinesAndFocusWaveformCommand), Se.Language.General.PlaySelectedLinesAndFocusWaveform },
         { nameof(MainViewModel.PlaySelectedLinesWithLoopAndFocusWaveformCommand), Se.Language.General.PlaySelectedLinesWithLoopAndFocusWaveform },
@@ -1286,6 +1287,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SpeechToTextSelectedLinesPromptForLangaugeAlwaysCommand, nameof(vm.SpeechToTextSelectedLinesPromptForLangaugeAlwaysCommand), ShortcutCategory.General, ShortcutGroup.Ai);
         AddShortcut(shortcuts, vm.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand, nameof(vm.SpeechToTextSelectedLinesPromptForLangaugeFirstTimeCommand), ShortcutCategory.General, ShortcutGroup.Ai);
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithoutLoopCommand, nameof(vm.PlaySelectedLinesWithoutLoopCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.PlaySubtitleEndCommand, nameof(vm.PlaySubtitleEndCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithLoopCommand, nameof(vm.PlaySelectedLinesWithLoopCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.PlaySelectedLinesAndFocusWaveformCommand, nameof(vm.PlaySelectedLinesAndFocusWaveformCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithLoopAndFocusWaveformCommand, nameof(vm.PlaySelectedLinesWithLoopAndFocusWaveformCommand), ShortcutCategory.General, ShortcutGroup.Video);

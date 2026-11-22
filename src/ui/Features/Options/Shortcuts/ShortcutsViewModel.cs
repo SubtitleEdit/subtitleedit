@@ -77,6 +77,8 @@ public partial class ShortcutsViewModel : ObservableObject
     // go-to-first/last-line option: these used to be written straight into Se.Settings from
     // the Configure dialogs, so Cancel did not undo them and the next save persisted them.
     private readonly int[] _videoSeekSlots = new int[8];
+    // Same for the "Play subtitle end" duration.
+    private int _playSubtitleEndMs;
     // Same for the "move lines, custom milliseconds" steps: [scope][slot] (#14789).
     private readonly int[,] _moveLinesSlots = new int[3, MoveLinesSlotCount];
     private const int MoveLinesSlotCount = 2;
@@ -134,6 +136,7 @@ public partial class ShortcutsViewModel : ObservableObject
         _videoSeekSlots[5] = Se.Settings.Video.MoveVideoPositionCustom3Forward;
         _videoSeekSlots[6] = Se.Settings.Video.MoveVideoPositionCustom4Back;
         _videoSeekSlots[7] = Se.Settings.Video.MoveVideoPositionCustom4Forward;
+        _playSubtitleEndMs = SeWaveform.NormalizeSubtitleEndPreviewMs(Se.Settings.Waveform.SubtitleEndPreviewMs);
         _goToFirstAndLastLineAlsoSetVideoPosition = Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition;
         foreach (var scope in Enum.GetValues<MoveLinesScope>())
         {
@@ -336,6 +339,7 @@ public partial class ShortcutsViewModel : ObservableObject
         _configurableCommands.Add(vm.MoveAllLinesCustom2ForwardCommand);
         _configurableCommands.Add(vm.GoToFirstLineCommand);
         _configurableCommands.Add(vm.GoToLastLineCommand);
+        _configurableCommands.Add(vm.PlaySubtitleEndCommand);
     }
 
     private void BuildGroupTiles()
@@ -673,6 +677,9 @@ public partial class ShortcutsViewModel : ObservableObject
         Se.Settings.Video.MoveVideoPositionCustom3Forward = _videoSeekSlots[5];
         Se.Settings.Video.MoveVideoPositionCustom4Back = _videoSeekSlots[6];
         Se.Settings.Video.MoveVideoPositionCustom4Forward = _videoSeekSlots[7];
+        Se.Settings.Waveform.SubtitleEndPreviewMs = _playSubtitleEndMs;
+        ShortcutsMain.CommandTranslationLookup[nameof(MainViewModel.PlaySubtitleEndCommand)] =
+            string.Format(Se.Language.General.PlaySubtitleEndX, _playSubtitleEndMs);
         Se.Settings.Tools.GoToFirstAndLastLineAlsoSetVideoPosition = _goToFirstAndLastLineAlsoSetVideoPosition;
         foreach (var scope in Enum.GetValues<MoveLinesScope>())
         {
@@ -841,6 +848,18 @@ public partial class ShortcutsViewModel : ObservableObject
             if (result.OkPressed)
             {
                 _color8 = result.SelectedColor;
+            }
+        }
+        else if (node.ShortCut.Action == MainViewModel.PlaySubtitleEndCommand)
+        {
+            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
+            {
+                vm.Initialize(_playSubtitleEndMs);
+            });
+            if (result.OkPressed)
+            {
+                _playSubtitleEndMs = SeWaveform.NormalizeSubtitleEndPreviewMs(result.Milliseconds);
+                node.Title = string.Format(Se.Language.General.PlaySubtitleEndX, _playSubtitleEndMs);
             }
         }
         else if (GetVideoSeekNodes(MainViewModel).FirstOrDefault(n => n.Command == node.ShortCut.Action) is { Command: not null } seekNode)

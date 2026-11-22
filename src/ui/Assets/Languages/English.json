@@ -473,6 +473,7 @@
     "playPreviousAndStop": "Play previous (and stop)",
     "playPreviousAndLoop": "Play previous (and loop)",
     "playSelectedLines": "Play selected lines",
+    "playSubtitleEndX": "Play subtitle end ({0:#,###,##0} ms)",
     "playSelectedLinesWithLoop": "Play selected lines with loop",
     "playSelectedLinesAndFocusWaveform": "Play selected lines and focus waveform",
     "playSelectedLinesWithLoopAndFocusWaveform": "Play selected lines with loop and focus waveform",
