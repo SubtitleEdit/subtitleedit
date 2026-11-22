@@ -16,6 +16,18 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
     public override bool IncludeLanguage => true;
     public override string Url => "https://github.com/CrispStrobe/CrispASR";
 
+    /// <summary>
+    /// The first CrispASR that runs Rumble-2-Flash: v0.8.55 added its 8 s encoder attention
+    /// windows and the Reson8 control-token system prefix to the qwen3 runtime (#602).
+    /// </summary>
+    public static readonly Version RumbleMinimumCrispAsrVersion = new(0, 8, 55);
+
+    public override Version? GetMinimumCrispAsrVersion(WhisperModel model) =>
+        IsRumbleModel(model.Name) ? RumbleMinimumCrispAsrVersion : null;
+
+    internal static bool IsRumbleModel(string? modelName) =>
+        modelName != null && modelName.StartsWith("rumble-", StringComparison.OrdinalIgnoreCase);
+
     public override List<WhisperLanguage> Languages =>
        new()
        {
@@ -58,9 +70,33 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
     // (now 1.49 GB, sha256 ec197cef...; the broken one was 1f1d26ee...). Verified OK
     // against the pinned v0.8.9 binary. Users who downloaded the old file must delete
     // it from CrispASR/models and re-download - same filename, so SE can't tell them apart.
+    //
+    // Rumble-2-Flash (Reson8, Apache-2.0) leads: a 0.5B Qwen3-ASR fine-tune for 45 languages on
+    // the same qwen3 runtime. On FLEURS dev (30 sentences each of da/de/en/sv/fr/pl, FireRedVAD
+    // as SE runs it, CrispASR v0.8.55, 2026-11-22) q8_0 scored 9.0% pooled WER against 16.1%
+    // for qwen3-asr-1.7b-q4_k and 23.4% for 0.6b-q4_k, and was the best in all six languages
+    // (Danish 11.9% vs 24.6%). q8_0 beat Rumble's own q4_k (11.4%) clearly, so it goes first.
     public override List<WhisperModel> Models =>
        new()
        {
+            new WhisperModel
+            {
+                Name = "rumble-2-flash-q8_0.gguf",
+                Size = "657 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/rumble-2-flash-GGUF/resolve/main/rumble-2-flash-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "rumble-2-flash-q4_k.gguf",
+                Size = "445 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/rumble-2-flash-GGUF/resolve/main/rumble-2-flash-q4_k.gguf",
+                ],
+            },
             new WhisperModel
             {
                 Name = "qwen3-asr-1.7b-q4_k.gguf",
