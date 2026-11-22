@@ -366,9 +366,6 @@ public class RemoveBurnedInWindow : Window
         var expandDarkEdges = EditorChrome.MakeSwitchRow(nameof(vm.ExpandDarkEdges), l.ExpandDarkEdges);
         SetHint(expandDarkEdges, l.ExpandDarkEdgesHint);
         expandDarkEdges.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInpaint)));
-        var proPainter = EditorChrome.MakeSwitchRow(nameof(vm.UseProPainter), l.UseProPainter);
-        SetHint(proPainter, l.UseProPainterHint);
-        proPainter.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.CanSelectProPainter)));
         var temporal = EditorChrome.MakeSwitchRow(nameof(vm.Temporal), l.TemporalConsistency);
         SetHint(temporal, l.TemporalConsistencyHint);
 
@@ -388,7 +385,6 @@ public class RemoveBurnedInWindow : Window
         maskRows.Children.Add(EditorChrome.MakeLabeledRow(l.ExtraWidth, extraWidth, LabelWidth));
         maskRows.Children.Add(outline);
         maskRows.Children.Add(expandDarkEdges);
-        maskRows.Children.Add(proPainter);
         maskRows.Children.Add(temporal);
 
         var outputBox = EditorChrome.MakeTextField(nameof(vm.OutputFileName), l.OutputFile);

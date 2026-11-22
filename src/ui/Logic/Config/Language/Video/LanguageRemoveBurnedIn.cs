@@ -22,8 +22,6 @@ public class LanguageRemoveBurnedIn
     public string ExpandDarkEdgesHint { get; set; }
     public string ExtraWidth { get; set; }
     public string ExtraWidthHint { get; set; }
-    public string UseProPainter { get; set; }
-    public string UseProPainterHint { get; set; }
     public string ProPainterDownloadQuestion { get; set; }
     public string TemporalConsistency { get; set; }
     public string TemporalConsistencyHint { get; set; }
@@ -86,8 +84,6 @@ public class LanguageRemoveBurnedIn
         ExpandDarkEdgesHint = "Turn this off if the mask grows into nearby picture detail. Turn it on if the preview leaves traces of the subtitle outline or shadow.";
         ExtraWidth = "Extra width (pixels)";
         ExtraWidthHint = "Widen the mask this much on the left and right of each line - for outlines or shadows at the first and last letter";
-        UseProPainter = "Use ProPainter for removal";
-        UseProPainterHint = "Use neighboring frames to repair the text area. Preview shows the mask. The repair runs during export.";
         ProPainterDownloadQuestion = "Download ProPainter (about 180 MB) from Subtitle Edit Support Files? ProPainter is licensed for non-commercial use and runs locally after installation.";
         TemporalConsistency = "Temporal consistency (less flicker)";
         TemporalConsistencyHint = "Reuse the real background from nearby frames and the previous fill while the picture is still";
