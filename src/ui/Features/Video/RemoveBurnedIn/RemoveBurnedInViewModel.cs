@@ -910,17 +910,30 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     [RelayCommand]
     private async Task BrowseOutput()
     {
+        await PickOutputFileName();
+    }
+
+    /// <summary>
+    /// The save dialog for the output video, starting in the output box's folder with its name.
+    /// False when cancelled. The dialog asks about overwriting itself.
+    /// </summary>
+    private async Task<bool> PickOutputFileName()
+    {
         var extension = Path.GetExtension(OutputFileName);
         var fileName = await _fileHelper.PickSaveFile(Window!, new List<(string, string)> { ("MP4", ".mp4"), ("Matroska", ".mkv") }
             .OrderByDescending(p => p.Item2.Equals(extension, StringComparison.OrdinalIgnoreCase)).ToList(),
-            Path.GetFileName(OutputFileName), Se.Language.General.SaveVideoAsVideoTitle);
-        if (!string.IsNullOrEmpty(fileName))
+            OutputFileName, Se.Language.General.SaveVideoAsVideoTitle);
+        if (string.IsNullOrEmpty(fileName))
         {
-            OutputFileName = fileName;
-            _outputOverwriteConfirmed = true;
+            return false;
         }
+
+        OutputFileName = fileName;
+        _outputOverwriteConfirmed = true;
+        return true;
     }
 
+    // Set when the file name came from the save dialog; typing in the output box clears it.
     partial void OnOutputFileNameChanged(string value) => _outputOverwriteConfirmed = false;
 
     [RelayCommand]
@@ -935,6 +948,13 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         if (Method == BurnedInMethod.BlackBox)
         {
             await MakeBoxes(included);
+            return;
+        }
+
+        // Ask where to save the new video, like the other video exports - Start used to write
+        // the suggested "<video>.no-subs" name without asking. Skipped when Browse just picked it.
+        if (!_outputOverwriteConfirmed && !await PickOutputFileName())
+        {
             return;
         }
 
@@ -959,6 +979,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                 return;
             }
         }
+
+        // The pick is used up by this run: the next Start asks again.
+        _outputOverwriteConfirmed = false;
 
         if (IsInpaint && !(IsUsingProPainter ? await EnsureProPainterReady() : await EnsureEngineReady()))
         {

@@ -86,6 +86,8 @@ the selected lines — OCR lines or rectangles — from the review; the OCR resu
 if the mask spreads from the text into nearby picture detail. Check the preview for leftover outlines
 or shadows before starting the full removal.
 The video methods re-encode the video with x264 at the chosen **Quality (CRF)** and copy the audio.
+**Start** asks where to save the new video, suggesting *video*.no-subs.mkv/.mp4 next to the original
+(skipped when you just picked a file with **Browse**).
 
 On Apple Silicon with macOS 15 or newer, enable **Use ProPainter for removal** to repair text using
 neighboring frames. Subtitle Edit offers a one-time download from Support Files on export. The
