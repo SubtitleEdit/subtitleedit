@@ -84,7 +84,45 @@ public readonly record struct BurnedInRectangle(TimeSpan Start, TimeSpan End, in
 /// </summary>
 public sealed class BurnedInSubtitleRemover
 {
-    public sealed record ProgressInfo(double Percent, int Pass, long Frame, long TotalFrames, double FramesPerSecond);
+    public enum ProPainterPhase { Starting, EstimatingMotion, CompletingMotion, Inpainting }
+
+    public sealed record ProPainterStatus(ProPainterPhase Phase, int Frame = 0, int Total = 0);
+
+    public sealed record ProgressInfo(double Percent, int Pass, long Frame, long TotalFrames, double FramesPerSecond,
+        ProPainterStatus? ProPainter = null);
+
+    internal static ProPainterStatus? ParseProPainterStatus(string line)
+    {
+        if (line == "Completed optical flow")
+        {
+            return new ProPainterStatus(ProPainterPhase.Inpainting);
+        }
+
+        const string raft = "RAFT ";
+        const string inpainted = "Inpainted window at frame ";
+        var isRaft = line.StartsWith(raft, StringComparison.Ordinal);
+        if (!isRaft && !line.StartsWith(inpainted, StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        var counts = line.AsSpan(isRaft ? raft.Length : inpainted.Length);
+        var slash = counts.IndexOf('/');
+        if (slash < 0 ||
+            !int.TryParse(counts[..slash], NumberStyles.None, CultureInfo.InvariantCulture, out var frame) ||
+            !int.TryParse(counts[(slash + 1)..], NumberStyles.None, CultureInfo.InvariantCulture, out var total) ||
+            frame < 1 || frame > total)
+        {
+            return null;
+        }
+
+        if (isRaft && frame == total)
+        {
+            return new ProPainterStatus(ProPainterPhase.CompletingMotion);
+        }
+
+        return new ProPainterStatus(isRaft ? ProPainterPhase.EstimatingMotion : ProPainterPhase.Inpainting, frame, total);
+    }
 
     private readonly StringBuilder _log = new();
 
@@ -495,8 +533,36 @@ public sealed class BurnedInSubtitleRemover
         AppendLog(Path.GetFileName(engineFile) + " " + engineArgs);
         AppendLog("ffmpeg " + encoderArgs);
 
+        var stopwatch = Stopwatch.StartNew();
+        var progressGate = new object();
+        long framesOut = 0;
+
+        void ReportOutput(long frame, ProPainterStatus? phase = null)
+        {
+            var fps = frame / Math.Max(0.001, stopwatch.Elapsed.TotalSeconds);
+            progress.Report(new ProgressInfo(15 + 85.0 * Math.Min(1.0, (double)frame / totalFrames),
+                2, frame, totalFrames, fps, phase));
+        }
+
+        void ReportProPainter(string line)
+        {
+            if (ParseProPainterStatus(line) is { } phase)
+            {
+                lock (progressGate)
+                {
+                    ReportOutput(framesOut, phase);
+                }
+            }
+        }
+
+        if (useProPainter)
+        {
+            ReportOutput(0, new ProPainterStatus(ProPainterPhase.Starting));
+        }
+
         using var decoder = StartProcess(FfmpegHelper.GetFfmpegLocation(), decoderArgs, redirectInput: false);
-        using var engine = StartProcess(engineFile, engineArgs, redirectInput: true, inpaint: !useProPainter);
+        using var engine = StartProcess(engineFile, engineArgs, redirectInput: true, inpaint: !useProPainter,
+            onErrorLine: useProPainter ? ReportProPainter : null);
         using var encoder = StartProcess(FfmpegHelper.GetFfmpegLocation(), encoderArgs, redirectInput: true);
         var all = new[] { decoder, engine, encoder };
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -548,8 +614,6 @@ public sealed class BurnedInSubtitleRemover
 
         var frameBytes = w * h * 3;
         var rectangles = GetRectangleBoxes(o);
-        long framesOut = 0;
-        var stopwatch = Stopwatch.StartNew();
 
         // Decoder -> masks -> inpainting engine.
         var feed = Task.Run(async () =>
@@ -595,11 +659,13 @@ public sealed class BurnedInSubtitleRemover
                 while (await ReadExactlyAsync(engine.StandardOutput.BaseStream, frame, token))
                 {
                     await output.WriteAsync(frame, token);
-                    var n = Interlocked.Increment(ref framesOut);
-                    if (n % 10 == 0)
+                    lock (progressGate)
                     {
-                        var fps = n / Math.Max(0.001, stopwatch.Elapsed.TotalSeconds);
-                        progress.Report(new ProgressInfo(15 + 85.0 * Math.Min(1.0, (double)n / totalFrames), 2, n, totalFrames, fps));
+                        var n = ++framesOut;
+                        if (n % 10 == 0)
+                        {
+                            ReportOutput(n);
+                        }
                     }
                 }
             }
@@ -654,7 +720,7 @@ public sealed class BurnedInSubtitleRemover
         return ok;
     }
 
-    private Process StartProcess(string fileName, string arguments, bool redirectInput, string? workingDirectory = null, bool inpaint = false)
+    private Process StartProcess(string fileName, string arguments, bool redirectInput, string? workingDirectory = null, bool inpaint = false, Action<string>? onErrorLine = null)
     {
         var process = new Process
         {
@@ -681,6 +747,7 @@ public sealed class BurnedInSubtitleRemover
             if (!string.IsNullOrWhiteSpace(e.Data))
             {
                 AppendLog($"[{name}] {e.Data}");
+                onErrorLine?.Invoke(e.Data);
             }
         };
         process.Start();
