@@ -3,6 +3,30 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.5.0-beta12 (22nd of November 2026)
+
+* Import time codes: read Blu-ray sup, VobSub, mkv/mp4/ts tracks and binary formats again - thx martinluponda
+* New shortcut: play the end of the selected subtitle (duration set on the shortcut) - thx reiureiu
+* Setting to always show the video offset button in the status bar - thx accessallareas
+* Batch convert: change casing only for lines with given actors or styles - thx anmv-dev
+* DCinema text export: write Hposition for left/right aligned text - thx manousiakisd
+* Waveform: re-extract audio when "front center channel only" changes - thx willian-as
+* Speech to text: use the transcript language for the file name suffix - thx Bug-Cache
+* Edit box: drop stale selection after a command replaces the text - thx kadrimarzouki
+* Remove burned-in subtitles: choose MI-GAN or ProPainter in the removal method dropdown
+* Remove burned-in subtitles: faster Metal ProPainter on macOS
+* ChatGPT auto-translate: keep translations on their original cues when batching
+* Crisp ASR Qwen3: add Rumble-2-Flash
+* Zonos TTS (Crisp ASR): switch to ZONOS3-Mini (better and much faster)
+* Update Crisp ASR to v0.8.55 and audio.cpp to v0.9.6
+* Dutch OCR: fix joined "ken haar" - thx fraternl
+* PaddleOCR: clean up download temp folders on every exit path
+* Update German translation - thx FunkyKnilch
+* Update Japanese translation - thx hisui3393
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.5.0-beta11 (20th of November 2026)
 
 * Show OCR source images in the main window after OCR - thx ChristianD-Hahn

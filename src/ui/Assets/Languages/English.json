@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.5.0-beta11",
+  "version": "v5.5.0-beta12",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -3322,8 +3322,6 @@
       "expandDarkEdgesHint": "Turn this off if the mask grows into nearby picture detail. Turn it on if the preview leaves traces of the subtitle outline or shadow.",
       "extraWidth": "Extra width (pixels)",
       "extraWidthHint": "Widen the mask this much on the left and right of each line - for outlines or shadows at the first and last letter",
-      "useProPainter": "Use ProPainter for removal",
-      "useProPainterHint": "Use neighboring frames to repair the text area. Preview shows the mask. The repair runs during export.",
       "proPainterDownloadQuestion": "Download ProPainter (about 180 MB) from Subtitle Edit Support Files? ProPainter is licensed for non-commercial use and runs locally after installation.",
       "temporalConsistency": "Temporal consistency (less flicker)",
       "temporalConsistencyHint": "Reuse the real background from nearby frames and the previous fill while the picture is still",
@@ -3831,6 +3829,7 @@
       "showUpDownLabels": "Show labels for up/down controls (Show/Hide/Duration)",
       "showButtonHints": "Show button hints",
       "showTimeCodeModeInStatusBar": "Show time code mode in status bar",
+      "showVideoOffsetInStatusBar": "Show video offset button in status bar",
       "gridCompactMode": "Use compact mode for grids",
       "gridAlternatingRows": "Use alternating row colors in grid",
       "gridAlternatingRowColor": "Alternating row color (light theme)",
