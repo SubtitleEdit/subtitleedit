@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 
-/// <summary>How the burned-in lines are removed (the order of the method combo box).</summary>
+/// <summary>How the burned-in lines are removed. Values are persisted in settings.</summary>
 public enum BurnedInMethod
 {
     Inpaint,

@@ -40,14 +40,9 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 {
     [ObservableProperty] private ObservableCollection<string> _methods = new();
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsInpaint))]
-    [NotifyPropertyChangedFor(nameof(IsBlur))]
-    [NotifyPropertyChangedFor(nameof(WritesVideo))]
-    [NotifyPropertyChangedFor(nameof(CanSelectProPainter), nameof(IsUsingProPainter), nameof(CanShowResult), nameof(UsesMiGan))]
-    private int _methodIndex;
-    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Method), nameof(IsInpaint), nameof(IsBlur), nameof(WritesVideo))]
     [NotifyPropertyChangedFor(nameof(IsUsingProPainter), nameof(CanShowResult), nameof(UsesMiGan))]
-    private bool _useProPainter;
+    private int _methodIndex;
     [ObservableProperty] private string _outputFileName = string.Empty;
     [ObservableProperty] private int _brightnessMinimum;
     [ObservableProperty] private bool _requireOutline;
@@ -134,10 +129,34 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     private DateTime _previewDirtySince;
     private bool _waveformDirty = true;
 
-    public BurnedInMethod Method => MethodIndex is >= 0 and <= (int)BurnedInMethod.Delogo ? (BurnedInMethod)MethodIndex : BurnedInMethod.Inpaint;
+    private const int ProPainterIndex = 1;
+
+    public BurnedInMethod Method
+    {
+        get
+        {
+            var index = MethodIndex;
+            if (ProPainterPackage.IsSupported && index >= ProPainterIndex)
+            {
+                index = index == ProPainterIndex ? (int)BurnedInMethod.Inpaint : index - 1;
+            }
+
+            return index is >= 0 and <= (int)BurnedInMethod.Delogo ? (BurnedInMethod)index : BurnedInMethod.Inpaint;
+        }
+    }
+
+    internal static int GetMethodIndex(BurnedInMethod method, bool useProPainter = false)
+    {
+        if (!ProPainterPackage.IsSupported)
+        {
+            return (int)method;
+        }
+
+        return method == BurnedInMethod.Inpaint ? (useProPainter ? ProPainterIndex : 0) : (int)method + 1;
+    }
+
     public bool IsInpaint => Method == BurnedInMethod.Inpaint;
-    public bool CanSelectProPainter => IsInpaint && ProPainterPackage.IsSupported;
-    public bool IsUsingProPainter => CanSelectProPainter && UseProPainter;
+    public bool IsUsingProPainter => ProPainterPackage.IsSupported && MethodIndex == ProPainterIndex;
     public bool UsesMiGan => IsInpaint && !IsUsingProPainter;
     public bool CanShowResult => !IsUsingProPainter;
     public bool IsBlur => Method == BurnedInMethod.Blur;
@@ -170,8 +189,16 @@ public partial class RemoveBurnedInViewModel : ObservableObject
 
         var settings = Se.Settings.Video.VideoOcr;
         var l = Se.Language.Video.RemoveBurnedIn;
-        Methods = new ObservableCollection<string> { l.MethodRemove, l.MethodBlackBox, l.MethodBlur, l.MethodDelogo };
-        MethodIndex = settings.RemoveBurnedInMethod is >= 0 and <= (int)BurnedInMethod.Delogo ? settings.RemoveBurnedInMethod : 0;
+        Methods = new ObservableCollection<string> { $"{l.MethodRemove} (MI-GAN)", l.MethodBlackBox, l.MethodBlur, l.MethodDelogo };
+        if (ProPainterPackage.IsSupported)
+        {
+            Methods.Insert(ProPainterIndex, $"{l.MethodRemove} (ProPainter)");
+        }
+
+        var savedMethod = settings.RemoveBurnedInMethod is >= 0 and <= (int)BurnedInMethod.Delogo
+            ? (BurnedInMethod)settings.RemoveBurnedInMethod
+            : BurnedInMethod.Inpaint;
+        MethodIndex = GetMethodIndex(savedMethod, settings.RemoveBurnedInUseProPainter);
         BlurStrength = settings.RemoveBurnedInBlurStrength is >= 1 and <= 100 ? settings.RemoveBurnedInBlurStrength : 20;
         BrightnessMinimum = brightnessMinimum > 0 ? brightnessMinimum : 190;
         RequireOutline = settings.RemoveBurnedInRequireOutline;
@@ -179,7 +206,6 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         ExtraWidth = settings.RemoveBurnedInExtraWidth is >= 0 and <= 100 ? settings.RemoveBurnedInExtraWidth : 5;
         ExpandDarkEdges = settings.RemoveBurnedInExpandDarkEdges;
         Temporal = settings.RemoveBurnedInTemporal;
-        UseProPainter = settings.RemoveBurnedInUseProPainter;
         Crf = settings.RemoveBurnedInCrf is >= 0 and <= 51 ? settings.RemoveBurnedInCrf : 18;
 
         var number = 1;
@@ -550,7 +576,6 @@ public partial class RemoveBurnedInViewModel : ObservableObject
     partial void OnExtraWidthChanged(int value) => InvalidatePreview();
     partial void OnExpandDarkEdgesChanged(bool value) => InvalidatePreview();
     partial void OnMethodIndexChanged(int value) => InvalidatePreview();
-    partial void OnUseProPainterChanged(bool value) => InvalidatePreview();
     partial void OnBlurStrengthChanged(int value) => InvalidatePreview();
 
     private void InvalidatePreview()
@@ -712,7 +737,7 @@ public partial class RemoveBurnedInViewModel : ObservableObject
                 }
 
                 SetPreview(BurnedInPreviewRenderer.Compose(rgb, null, options, false));
-                PreviewStatus = Methods[(int)method];
+                PreviewStatus = Methods[GetMethodIndex(method)];
                 return;
             }
 
@@ -1119,10 +1144,14 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         settings.RemoveBurnedInGrow = Grow == BurnedInMaskBuilder.DefaultGrow(_videoHeight) ? 0 : Grow;
         settings.RemoveBurnedInExpandDarkEdges = ExpandDarkEdges;
         settings.RemoveBurnedInTemporal = Temporal;
-        settings.RemoveBurnedInUseProPainter = UseProPainter;
+        if (IsInpaint && ProPainterPackage.IsSupported)
+        {
+            settings.RemoveBurnedInUseProPainter = IsUsingProPainter;
+        }
+
         settings.RemoveBurnedInExtraWidth = ExtraWidth;
         settings.RemoveBurnedInCrf = Crf;
-        settings.RemoveBurnedInMethod = MethodIndex;
+        settings.RemoveBurnedInMethod = (int)Method;
         settings.RemoveBurnedInBlurStrength = BlurStrength;
         Se.SaveSettings();
     }
