@@ -13,6 +13,8 @@ public class SpeechToTextFileNameLanguageCodeTests
     [InlineData("danish", "da")]
     [InlineData("pt-BR", "pt-br")] // unknown but code-shaped is kept as typed
     [InlineData("yue", "yue")]
+    [InlineData("sr-Latn", "sr-latn")] // script subtag from the text detector
+    [InlineData("zh-Hant", "zh-hant")]
     public void MapsCodesAndFullNames(string token, string expected)
     {
         Assert.Equal(expected, SpeechToTextViewModel.NormalizeFileNameLanguageCode(token));
@@ -26,6 +28,8 @@ public class SpeechToTextFileNameLanguageCodeTests
     [InlineData("en:us")]
     [InlineData("Portuguese (Brazil)")] // unmappable free text is dropped, not embedded
     [InlineData("simplified chinese")]
+    [InlineData("Deutsch")] // 7+ letter word is not a code
+    [InlineData("Japanisch")]
     public void DropsUnmappableTokens(string? token)
     {
         Assert.Null(SpeechToTextViewModel.NormalizeFileNameLanguageCode(token));

@@ -2348,36 +2348,52 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     /// <summary>
     /// The language code to embed in a generated subtitle file name ("video.en.srt"),
-    /// or null when no usable code can be determined. Resolution mirrors PostProcess:
-    /// selected language, then the online engine's configured hint, then auto-detection
-    /// on the transcript itself - but "auto" is never usable as a file name token.
+    /// or null when no usable code can be determined. "Translate to English" gives "en";
+    /// otherwise the configured language (selected language, else the online engine's hint)
+    /// is weighed against the language detected from the transcript text, which wins when
+    /// it clearly contradicts the configuration (#17098) - see SpeechToTextFileNameLanguage.
+    /// "auto" is never usable as a file name token.
     /// </summary>
     private string? GetFileNameLanguageCode(Subtitle? transcript)
     {
-        if (DoTranslateToEnglish)
+        var configuredCode = SelectedLanguage?.Code;
+        if (!DoTranslateToEnglish && (string.IsNullOrWhiteSpace(configuredCode) || IsAutoOrMultilingual(configuredCode)))
         {
-            return "en";
+            configuredCode = GetOnlineEngineLanguageHint();
         }
 
-        var languageCode = SelectedLanguage?.Code;
-        if (string.IsNullOrWhiteSpace(languageCode) || IsAutoOrMultilingual(languageCode))
+        return GetFileNameLanguageCode(DoTranslateToEnglish, configuredCode, transcript);
+    }
+
+    /// <param name="translateToEnglish">Whisper "translate to English" is on.</param>
+    /// <param name="configuredLanguage">Selected language or online hint, as configured (may be "auto" or a full name).</param>
+    /// <param name="transcript">The finished transcript, or null.</param>
+    internal static string? GetFileNameLanguageCode(bool translateToEnglish, string? configuredLanguage, Subtitle? transcript)
+    {
+        if (translateToEnglish)
         {
-            // Normalized here (not just at the end) so a hint that can't be mapped to a
-            // code falls through to auto-detection instead of being dropped outright.
-            languageCode = NormalizeFileNameLanguageCode(GetOnlineEngineLanguageHint());
+            return SpeechToTextFileNameLanguage.Resolve(true, null, null, 0);
         }
 
-        if (string.IsNullOrWhiteSpace(languageCode) && transcript != null)
+        var configuredCode = IsAutoOrMultilingual(configuredLanguage) ? null : NormalizeFileNameLanguageCode(configuredLanguage);
+
+        string? detectedCode = null;
+        var detectedWordScore = 0;
+        if (transcript != null)
         {
-            languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(transcript);
+            var detected = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(transcript);
+            detectedCode = NormalizeFileNameLanguageCode(detected);
+            if (detectedCode != null)
+            {
+                var fromWords = LanguageAutoDetect.AutoDetectGoogleLanguageFromWordsOrNull(transcript, out var score);
+                if (string.Equals(fromWords, detected, StringComparison.OrdinalIgnoreCase))
+                {
+                    detectedWordScore = score;
+                }
+            }
         }
 
-        if (string.IsNullOrWhiteSpace(languageCode) || IsAutoOrMultilingual(languageCode))
-        {
-            return null;
-        }
-
-        return NormalizeFileNameLanguageCode(languageCode);
+        return SpeechToTextFileNameLanguage.Resolve(false, configuredCode, detectedCode, detectedWordScore);
     }
 
     /// <summary>
@@ -2403,8 +2419,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             return match.Code;
         }
 
-        // Unknown but code-shaped ("pt-BR", "yue") - keep as typed, lowercased.
-        if (token.Length <= 6 && token.All(c => char.IsAsciiLetter(c) || c == '-'))
+        // Unknown but code-shaped ("pt-BR", "yue") - keep as typed, lowercased. A script
+        // subtag ("sr-Latn", "zh-Hant") is longer but still a code; a 7+ letter word isn't.
+        var dash = token.IndexOf('-');
+        var isScriptTag = token.Length <= 8 && dash is 2 or 3 && token.Length - dash - 1 == 4;
+        if ((token.Length <= 6 || isScriptTag) && token.All(c => char.IsAsciiLetter(c) || c == '-'))
         {
             return token.ToLowerInvariant();
         }
