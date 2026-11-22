@@ -16,10 +16,10 @@ namespace Nikse.SubtitleEdit.Features.Video.RemoveBurnedIn;
 internal static class ProPainterPackage
 {
     private const string ArchiveBase = "https://github.com/SubtitleEdit/support-files/releases/download/";
-    private const string MacSha256 = "1bd850c70a4b2ad00d65409e212450c7f8c6892f246d4a863674a2bd3f8af005";
+    private const string MacSha256 = "e8e81d7cdbcba4e16e24c76eb76d5e4a97a96799174d059f285219074adf5d2e";
     private const string WindowsSha256 = "a0d98f69636a1a71791b6c51a77dbb9c2d539a0801ffd37d9946b519f3654748";
     private static readonly HttpClient Client = new();
-    private static string PackageVersion => IsWindowsX64 ? "0.3.0" : "0.3.2";
+    private static string PackageVersion => IsWindowsX64 ? "0.3.0" : "0.3.3";
     private static string InstallFolder => Path.Combine(Se.DataFolder, "ProPainter", PackageVersion + "-native");
     private static bool IsWindowsX64 => OperatingSystem.IsWindows() && RuntimeInformation.OSArchitecture == Architecture.X64;
     private static string ArchiveRoot => IsWindowsX64 ? "propainter-native-windows-x64" : "propainter-native-macos-arm64";

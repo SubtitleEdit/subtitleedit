@@ -23,6 +23,10 @@ public class LanguageRemoveBurnedIn
     public string ExtraWidth { get; set; }
     public string ExtraWidthHint { get; set; }
     public string ProPainterDownloadQuestion { get; set; }
+    public string ProPainterStarting { get; set; }
+    public string ProPainterEstimatingMotionXY { get; set; }
+    public string ProPainterCompletingMotion { get; set; }
+    public string ProPainterInpaintingXY { get; set; }
     public string TemporalConsistency { get; set; }
     public string TemporalConsistencyHint { get; set; }
     public string OutputFile { get; set; }
@@ -112,6 +116,10 @@ public class LanguageRemoveBurnedIn
         GeneratingWaveform = "Generating waveform...";
         FindingText = "Finding subtitle text...";
         Inpainting = "Inpainting...";
+        ProPainterStarting = "Starting ProPainter...";
+        ProPainterEstimatingMotionXY = "ProPainter: estimating motion, frame pair {0} of {1} in this batch...";
+        ProPainterCompletingMotion = "ProPainter: completing motion...";
+        ProPainterInpaintingXY = "ProPainter: inpainting, window at frame {0} of {1} in this batch...";
         ResultInXMs = "Result ({0:#,##0} ms)";
         NoSubtitleHere = "No subtitle here";
         MaskedXPixels = "Mask: {0:#,##0} pixels";

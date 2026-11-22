@@ -974,10 +974,22 @@ public partial class RemoveBurnedInViewModel : ObservableObject
         var progress = new Progress<BurnedInSubtitleRemover.ProgressInfo>(p =>
         {
             ProgressValue = p.Percent;
-            ProgressText = p.Pass == 1
-                ? string.Format(Se.Language.Video.RemoveBurnedIn.BuildingMasksX, $"{p.Percent / 15.0:0%}")
-                : string.Format(options.Method == BurnedInMethod.Inpaint ? Se.Language.Video.RemoveBurnedIn.RemovingXYZ : Se.Language.Video.RemoveBurnedIn.EncodingXYZ,
-                    p.Frame, p.TotalFrames, p.FramesPerSecond);
+            var language = Se.Language.Video.RemoveBurnedIn;
+            ProgressText = p.ProPainter is { } status
+                ? status.Phase switch
+                {
+                    BurnedInSubtitleRemover.ProPainterPhase.Starting => language.ProPainterStarting,
+                    BurnedInSubtitleRemover.ProPainterPhase.EstimatingMotion =>
+                        string.Format(language.ProPainterEstimatingMotionXY, status.Frame, status.Total),
+                    BurnedInSubtitleRemover.ProPainterPhase.CompletingMotion => language.ProPainterCompletingMotion,
+                    BurnedInSubtitleRemover.ProPainterPhase.Inpainting when status.Total > 0 =>
+                        string.Format(language.ProPainterInpaintingXY, status.Frame, status.Total),
+                    _ => language.Inpainting,
+                }
+                : p.Pass == 1
+                    ? string.Format(language.BuildingMasksX, $"{p.Percent / 15.0:0%}")
+                    : string.Format(options.Method == BurnedInMethod.Inpaint ? language.RemovingXYZ : language.EncodingXYZ,
+                        p.Frame, p.TotalFrames, p.FramesPerSecond);
         });
 
         IsDone = false;
