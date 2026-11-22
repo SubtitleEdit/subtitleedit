@@ -870,6 +870,24 @@ public class MergeAndSplitHelperTests
         Assert.Equal(3, count);
     }
 
+    // The batch prompt must carry the text itself, not \uXXXX escapes of it.
+    [Fact]
+    public void ChatGptCues_SerializeNonAsciiAndTagsUnescaped()
+    {
+        var text = "Hej, hvordan går det? <i>こんにちは</i> Привет & 'ok' \"quoted\"";
+        var cues = new[] { new ChatGptTranslate.Cue(7, text) };
+
+        var json = ChatGptTranslate.SerializeCues(cues);
+
+        Assert.DoesNotContain("\\u", json);
+        Assert.Contains("går", json);
+        Assert.Contains("<i>こんにちは</i>", json);
+        Assert.Contains("\\\"quoted\\\"", json);
+        Assert.Equal(System.Text.Encoding.UTF8.GetByteCount(json), ChatGptTranslate.GetSerializedCuesByteCount(cues));
+        var roundTrip = System.Text.Json.JsonSerializer.Deserialize<ChatGptTranslate.Cue[]>(json);
+        Assert.Equal(text, Assert.Single(roundTrip!).Text);
+    }
+
     // Issue #15602: ChatGPT gets the rows of a sentence as lines too, so its words stay in the
     // row whose timing they belong to.
     [Fact]
