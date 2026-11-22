@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Text.Json;
 using Nikse.SubtitleEdit.UiLogic.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
@@ -150,7 +149,7 @@ public static partial class MergeAndSplitHelper
 
             // Use stable row positions: imported subtitle numbering can be missing or duplicated.
             cues.Add(new ChatGptTranslate.Cue(index + offset + 1, batchRows[offset].Text));
-            if (JsonSerializer.SerializeToUtf8Bytes(cues).Length > maxBytes)
+            if (ChatGptTranslate.GetSerializedCuesByteCount(cues) > maxBytes)
             {
                 cues.RemoveAt(cues.Count - 1);
                 break;

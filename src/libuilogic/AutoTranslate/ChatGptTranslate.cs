@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.UiLogic.Translate;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Nikse.SubtitleEdit.UiLogic.Http;
@@ -135,13 +136,26 @@ namespace Nikse.SubtitleEdit.UiLogic.AutoTranslate
             [property: JsonPropertyName("id")] int Id,
             [property: JsonPropertyName("text")] string Text);
 
+        // The default encoder writes every non-ASCII character and <, >, &, ' as \uXXXX, which
+        // the prompt then carries as literal escapes: the model read "g\u00E5r" instead of "går",
+        // and the batch size check counted up to six bytes per character.
+        private static readonly JsonSerializerOptions CueJsonOptions = new()
+        {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        };
+
+        internal static string SerializeCues(IReadOnlyList<Cue> cues) => JsonSerializer.Serialize(cues, CueJsonOptions);
+
+        internal static int GetSerializedCuesByteCount(IReadOnlyList<Cue> cues) =>
+            JsonSerializer.SerializeToUtf8Bytes(cues, CueJsonOptions).Length;
+
         internal async Task<Dictionary<int, string>?> TranslateCues(
             IReadOnlyList<Cue> cues, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             const string batchInstructions = "Translate the following subtitle cues together for context. " +
                 "Return only a JSON array with one object per input cue, each with the same integer id and a text string. " +
                 "Translate only the dialogue belonging to each cue. Never move text between cues or combine cues.";
-            var reply = await RequestTranslation(JsonSerializer.Serialize(cues), sourceLanguageCode, targetLanguageCode,
+            var reply = await RequestTranslation(SerializeCues(cues), sourceLanguageCode, targetLanguageCode,
                 cancellationToken, batchInstructions);
             Cue[]? translated;
             try
