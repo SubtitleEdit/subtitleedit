@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.UiLogic.Translate;
 using System.Text;
 
@@ -37,7 +38,6 @@ public class PerfHuntRound21Benchmarks
     private List<string> _replaceLines = new();
     private NameList _names = null!;
     private string[] _nameProbes = Array.Empty<string>();
-    private string[] _fileNames = Array.Empty<string>();
     private Subtitle _bigSubtitle = new();
     private List<int> _removeIndices = new();
     private SortedDictionary<string, string> _wordTable = new();
@@ -58,14 +58,6 @@ public class PerfHuntRound21Benchmarks
         var dictionaries = FindDictionariesFolder();
         _names = new NameList(dictionaries, "en", false, string.Empty);
         _nameProbes = new[] { "john", "MARY", "jean-luc", "zzznotaname", "new york", "Sherlock holmes", "nobody here", "smith" };
-
-        _fileNames = Enumerable.Range(0, 400).Select(i => (i % 4) switch
-        {
-            0 => $"/videos/Show.S01E{i:00} - Copy (2).mkv",
-            1 => $"/videos/Show.S01E{i:00} - kopia.mkv",
-            2 => $"/videos/Show.S01E{i:00} (3).mkv",
-            _ => $"/videos/Show.S01E{i:00}.mkv",
-        }).ToArray();
 
         _bigSubtitle = BuildTaggedSubtitle(5000);
         _removeIndices = Enumerable.Range(0, 5000).Where(i => i % 2 == 0).ToList();
@@ -246,23 +238,11 @@ public class PerfHuntRound21Benchmarks
     public int LoadUserWordList()
     {
         var list = new List<string>();
-        Utilities.LoadUserWordList(list, "en");
+        UserWordsHelper.LoadUserWordList(list, "en");
         return list.Count;
     }
 
     // ------------------------------------------------------------------ misc helpers
-
-    [Benchmark]
-    public int LenientFileNames()
-    {
-        var total = 0;
-        foreach (var f in _fileNames)
-        {
-            total += Utilities.GetLenientPathAndFileNameWithoutExtension(f).Length;
-        }
-
-        return total;
-    }
 
     [Benchmark]
     public int Cea608CharForByte()

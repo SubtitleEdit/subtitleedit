@@ -198,7 +198,7 @@ public class PerfHuntRound15Benchmarks
         foreach (var raw in _tsPackets)
         {
             var packet = new Packet(raw);
-            if (packet.IsNullPacket)
+            if (packet.PacketId == Packet.NullPacketId)
             {
                 nulls++;
             }

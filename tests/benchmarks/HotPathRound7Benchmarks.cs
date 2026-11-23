@@ -34,7 +34,6 @@ public class HotPathRound7Benchmarks
     private string _timeCodeFile = null!;
 
     private Subtitle _subtitle = null!;
-    private Paragraph[] _missingParagraphs = null!;
 
     private List<string> _importerLines = null!;
 
@@ -68,13 +67,6 @@ public class HotPathRound7Benchmarks
         for (var i = 0; i < 5000; i++)
         {
             _subtitle.Paragraphs.Add(new Paragraph("Line number " + i, i * 2000, i * 2000 + 1800) { Number = i + 1 });
-        }
-
-        // Probes that are not in the list, so the fallback scan runs to the end.
-        _missingParagraphs = new Paragraph[50];
-        for (var i = 0; i < _missingParagraphs.Length; i++)
-        {
-            _missingParagraphs[i] = new Paragraph("nowhere " + i, 100_000_000 + i, 100_000_100 + i);
         }
 
         _importerLines = BuildSrtLikeText(400).SplitToLines();
@@ -164,21 +156,6 @@ public class HotPathRound7Benchmarks
 
     [Benchmark]
     public bool IsPlainText_TimeCodes() => FileUtil.IsPlainText(_timeCodeFile);
-
-    // --------------------------------------------------------------- Subtitle index
-
-    /// <summary>The fallback scan: probes that are not in the list at all.</summary>
-    [Benchmark]
-    public int SubtitleGetIndexMissing()
-    {
-        var sum = 0;
-        foreach (var p in _missingParagraphs)
-        {
-            sum += _subtitle.GetIndex(p);
-        }
-
-        return sum;
-    }
 
     // ------------------------------------------------------------------- importer
 
