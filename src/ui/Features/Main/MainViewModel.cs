@@ -4101,6 +4101,29 @@ public partial class MainViewModel :
             last++;
         }
 
+        // The single-row commands reach one working line past the selection (merge with the line
+        // before/after), and a merge then reads the row after the merged lines to cap the end time.
+        // Stopping at that neighbour left the reference run behind it in the grid, so "merge with
+        // line below" capped the merged end time at a reference row's start (#17121). Take one more
+        // working line on each side and the reference run beyond it.
+        if (first > 0)
+        {
+            first--;
+            while (first > 0 && Subtitles[first - 1].IsReferenceOnly)
+            {
+                first--;
+            }
+        }
+
+        if (last + 1 < Subtitles.Count)
+        {
+            last++;
+            while (last + 1 < Subtitles.Count && Subtitles[last + 1].IsReferenceOnly)
+            {
+                last++;
+            }
+        }
+
         return (first, last);
     }
 

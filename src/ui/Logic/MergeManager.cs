@@ -348,7 +348,15 @@ namespace Nikse.SubtitleEdit.Logic
             //display time
             currentParagraph.EndTime = TimeSpan.FromMilliseconds(endMilliseconds);
 
+            // A display-only reference row is not a line of the working subtitle, so it must not
+            // cap the merged end time (#17121).
             var nextParagraph = inputSubtitle.GetOrNull(next);
+            while (nextParagraph is { IsReferenceOnly: true })
+            {
+                next++;
+                nextParagraph = inputSubtitle.GetOrNull(next);
+            }
+
             if (!keepEndTime && nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
             {
                 currentParagraph.EndTime = TimeSpan.FromMilliseconds(nextParagraph.StartTime.TotalMilliseconds - 1);
