@@ -2331,7 +2331,7 @@ public partial class AudioVisualizer : Control
             return seconds;
         }
 
-        return Math.Round(seconds / frameDur, MidpointRounding.AwayFromZero) * frameDur;
+        return FrameGrid.Snap(seconds, frameDur, FrameGrid.OffsetSeconds);
     }
 
     /// <summary>
@@ -2352,18 +2352,19 @@ public partial class AudioVisualizer : Control
             return seconds;
         }
 
+        var offset = FrameGrid.OffsetSeconds;
         var boundMs = Math.Round(seconds * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
-        var frame = Math.Ceiling(seconds / frameDur);
-        if (FrameToWholeMs(frame - 1, frameDur) >= boundMs)
+        var frame = Math.Max(0, Math.Ceiling((seconds - offset) / frameDur));
+        if (frame > 0 && FrameToWholeMs(frame - 1, frameDur, offset) >= boundMs)
         {
             frame--;
         }
-        else if (FrameToWholeMs(frame, frameDur) < boundMs)
+        else if (FrameToWholeMs(frame, frameDur, offset) < boundMs)
         {
             frame++;
         }
 
-        return frame * frameDur;
+        return frame * frameDur + offset;
     }
 
     /// <summary>
@@ -2377,25 +2378,26 @@ public partial class AudioVisualizer : Control
             return seconds;
         }
 
+        var offset = FrameGrid.OffsetSeconds;
         var boundMs = Math.Round(seconds * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
-        var frame = Math.Floor(seconds / frameDur);
-        if (FrameToWholeMs(frame + 1, frameDur) <= boundMs)
+        var frame = Math.Floor((seconds - offset) / frameDur);
+        if (FrameToWholeMs(frame + 1, frameDur, offset) <= boundMs)
         {
             frame++;
         }
-        else if (FrameToWholeMs(frame, frameDur) > boundMs)
+        else if (FrameToWholeMs(frame, frameDur, offset) > boundMs)
         {
             frame--;
         }
 
-        return frame * frameDur;
+        return Math.Max(0, frame * frameDur + offset);
     }
 
     /// <summary>The whole-millisecond time a frame is stored at (the same rounding as
     /// <see cref="TimeSpanExtensions.FromSecondsWholeMilliseconds"/>).</summary>
-    private static double FrameToWholeMs(double frame, double frameDur)
+    private static double FrameToWholeMs(double frame, double frameDur, double offsetSeconds)
     {
-        return Math.Round(frame * frameDur * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
+        return Math.Round((frame * frameDur + offsetSeconds) * TimeCode.BaseUnit, MidpointRounding.AwayFromZero);
     }
 
     private static bool TryGetFrameDuration(out double frameDur)

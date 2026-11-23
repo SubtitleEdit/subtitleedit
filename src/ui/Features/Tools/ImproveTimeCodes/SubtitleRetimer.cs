@@ -729,9 +729,10 @@ public sealed partial class SubtitleRetimer
     /// <summary>
     /// Puts every line that was moved on whole frames, keeping the minimum gap - in frame mode a
     /// time between two frames is shown a frame early or late, and a gap of two frames can come
-    /// out as one. A line left where it was is not touched.
+    /// out as one. A line left where it was is not touched. Frames start at
+    /// <paramref name="frameOffsetSeconds"/> - the video's first frame on the player's timeline (#17149).
     /// </summary>
-    public static void SnapToFrames(IReadOnlyList<Line> original, Placement[] placements, double framesPerSecond, double minGapSeconds)
+    public static void SnapToFrames(IReadOnlyList<Line> original, Placement[] placements, double framesPerSecond, double minGapSeconds, double frameOffsetSeconds = 0)
     {
         if (framesPerSecond < 1)
         {
@@ -739,6 +740,9 @@ public sealed partial class SubtitleRetimer
         }
 
         var frame = 1.0 / framesPerSecond;
+        var offset = Math.Max(0, frameOffsetSeconds);
+        double ToFrames(double seconds) => (seconds - offset) * framesPerSecond;
+        double FromFrames(double frames) => Math.Max(0, frames) * frame + offset;
         var moved = new bool[placements.Length];
         for (var i = 0; i < placements.Length; i++)
         {
@@ -755,8 +759,8 @@ public sealed partial class SubtitleRetimer
             }
 
             var p = placements[i];
-            var start = Math.Round(p.StartSeconds * framesPerSecond, MidpointRounding.AwayFromZero) * frame;
-            var end = Math.Round(p.EndSeconds * framesPerSecond, MidpointRounding.AwayFromZero) * frame;
+            var start = FromFrames(Math.Round(ToFrames(p.StartSeconds), MidpointRounding.AwayFromZero));
+            var end = FromFrames(Math.Round(ToFrames(p.EndSeconds), MidpointRounding.AwayFromZero));
 
             // A line left where it was need not sit on a frame, so rounding to the nearest frame
             // could cross the gap Settle kept to it: round away from it instead.
@@ -765,7 +769,7 @@ public sealed partial class SubtitleRetimer
                 var earliest = placements[i - 1].EndSeconds + minGapSeconds;
                 if (start < earliest - 0.0005 && p.StartSeconds >= earliest - 0.0005)
                 {
-                    start = Math.Ceiling(earliest * framesPerSecond - 0.0001) * frame;
+                    start = FromFrames(Math.Ceiling(ToFrames(earliest) - 0.0001));
                 }
             }
 
@@ -775,7 +779,7 @@ public sealed partial class SubtitleRetimer
                 var latest = placements[i + 1].StartSeconds - minGapSeconds;
                 if (end > latest + 0.0005 && p.EndSeconds <= latest + 0.0005)
                 {
-                    var flooredEnd = Math.Floor(latest * framesPerSecond + 0.0001) * frame;
+                    var flooredEnd = FromFrames(Math.Floor(ToFrames(latest) + 0.0001));
                     end = flooredEnd >= start + frame ? flooredEnd : Math.Max(p.EndSeconds, start + 0.001);
                 }
             }

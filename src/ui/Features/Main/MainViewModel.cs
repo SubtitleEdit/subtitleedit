@@ -18239,8 +18239,7 @@ public partial class MainViewModel :
             return seconds;
         }
 
-        var frameDur = 1.0 / frameRate;
-        return Math.Round(seconds / frameDur, MidpointRounding.AwayFromZero) * frameDur;
+        return FrameGrid.Snap(seconds, 1.0 / frameRate, FrameGrid.OffsetSeconds);
     }
 
     [RelayCommand]
@@ -31351,6 +31350,7 @@ public partial class MainViewModel :
         ClearSubtitleEndPreview();
         await vp.Open(videoFileName, startPositionSeconds);
         _videoFileName = videoFileName;
+        UpdateFrameGridOffset(videoFileName);
         RefreshSubtitlePreview();
 
         if (IsValidUrl(videoFileName))
@@ -32633,12 +32633,33 @@ public partial class MainViewModel :
         }
     }
 
+    /// <summary>
+    /// Frame snapping counts frames from the video's first frame, which sits at the file's start
+    /// time on the player's timeline (#17149). Looking it up runs ffmpeg, so it is done off the UI thread.
+    /// </summary>
+    private void UpdateFrameGridOffset(string videoFileName)
+    {
+        FrameGrid.OffsetSeconds = 0;
+        _ = Task.Run(() =>
+        {
+            var offsetSeconds = WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName) / 1000.0;
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (string.Equals(_videoFileName, videoFileName, StringComparison.Ordinal))
+                {
+                    FrameGrid.OffsetSeconds = offsetSeconds;
+                }
+            });
+        });
+    }
+
     private void VideoCloseFile()
     {
         _videoOpenTokenSource?.Cancel();
         ClearSubtitleEndPreview();
         GetVideoPlayerControl()?.Close();
         _videoFileName = string.Empty;
+        FrameGrid.OffsetSeconds = 0;
         IsVideoLoaded = false;
         _mediaInfo = null;
 
