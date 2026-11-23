@@ -10,9 +10,10 @@ namespace UITests.Logic;
 
 /// <summary>
 /// The app-wide TableViewRow theme (<see cref="UiUtil.ApplyFluent2TableViewTheme"/>) replaces
-/// Fluent 2's eight-visual row template with a lean one for grid performance. It must keep
-/// Fluent 2's look: the selection pill on selected rows only, no template row lines (SE draws grid
-/// lines on the cells), and the row's own Background (alternating-row tint) on the row border.
+/// Fluent 2's eight-visual row template with a lean one for grid performance. Selected rows are
+/// filled with the accent list brush (full-row selection, as under Fluent 1), there are no template
+/// row lines (SE draws grid lines on the cells), and the row's own Background (alternating-row
+/// tint) reaches the row border.
 /// </summary>
 public class TableViewLeanRowThemeTests : IDisposable
 {
@@ -51,8 +52,8 @@ public class TableViewLeanRowThemeTests : IDisposable
     private static List<TableViewRow> Rows(TableView grid) =>
         grid.GetVisualDescendants().OfType<TableViewRow>().OrderBy(r => r.Bounds.Y).ToList();
 
-    private static Rectangle Pill(TableViewRow row) =>
-        row.GetVisualDescendants().OfType<Rectangle>().Single(r => r.Name == "PART_SelectionIndicator");
+    private static Border RootBorder(TableViewRow row) =>
+        row.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "RootBorder");
 
     [AvaloniaFact]
     public void RowsUseTheLeanTemplate_WithoutTemplateGridLines()
@@ -67,9 +68,10 @@ public class TableViewLeanRowThemeTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void SelectionPill_ShowsOnTheSelectedRowOnly()
+    public void SelectedRow_IsFilledWithTheAccentBrush()
     {
         var (window, grid) = ShowGrid();
+        Assert.True(window.TryFindResource("SystemControlHighlightListAccentLowBrush", window.ActualThemeVariant, out var accent));
 
         grid.SelectedIndex = 2;
         Dispatcher.UIThread.RunJobs();
@@ -78,8 +80,17 @@ public class TableViewLeanRowThemeTests : IDisposable
         var rows = Rows(grid);
         for (var i = 0; i < rows.Count; i++)
         {
-            Assert.Equal(i == 2 ? 1.0 : 0.0, Pill(rows[i]).Opacity);
+            if (i == 2)
+            {
+                Assert.Same(accent, RootBorder(rows[i]).Background);
+            }
+            else
+            {
+                Assert.NotSame(accent, RootBorder(rows[i]).Background);
+            }
         }
+
+        Assert.DoesNotContain(grid.GetVisualDescendants().OfType<Rectangle>(), r => r.Name == "PART_SelectionIndicator");
     }
 
     [AvaloniaFact]
@@ -93,7 +104,6 @@ public class TableViewLeanRowThemeTests : IDisposable
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
 
-        var root = row.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "RootBorder");
-        Assert.Same(Brushes.OrangeRed, root.Background);
+        Assert.Same(Brushes.OrangeRed, RootBorder(row).Background);
     }
 }
