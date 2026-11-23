@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -249,17 +250,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return null;
             }
 
-            var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            foreach (var subtitleFormat in formatsToLookFor.Where(p => p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
-            {
-                if (subtitleFormat.IsMine(lines, fileName))
-                {
-                    subtitle.FinalizeFormat(fileName, false, null, lines, subtitleFormat, true);
-                    return subtitle;
-                }
-            }
-
-            foreach (var subtitleFormat in formatsToLookFor.Where(p => !p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            foreach (var subtitleFormat in GetFormatsInDetectionOrder(formatsToLookFor, fileName))
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
@@ -318,17 +309,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     : null;
             }
 
-            var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
-            {
-                var found = gate == null ? TryFormat(subtitleFormat) : gate.Run(subtitleFormat, TryFormat);
-                if (found != null)
-                {
-                    return found;
-                }
-            }
-
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => !p.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase) || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+            foreach (var subtitleFormat in GetFormatsInDetectionOrder(SubtitleFormat.AllSubtitleFormats, fileName))
             {
                 var found = gate == null ? TryFormat(subtitleFormat) : gate.Run(subtitleFormat, TryFormat);
                 if (found != null)
@@ -343,6 +324,83 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// The order formats are asked about a file: those whose own extension matches it, then
+        /// those that list it as an alternate extension (e.g. ".ttml" for Timed Text 1.0, whose
+        /// extension is ".xml"), then all the rest. "Unknown" formats always go last. Without
+        /// the middle group a .ttml file was checked by some 200 other formats first.
+        /// </summary>
+        internal static IEnumerable<SubtitleFormat> GetFormatsInDetectionOrder(IEnumerable<SubtitleFormat> allFormats, string fileName)
+        {
+            var formats = allFormats as IReadOnlyList<SubtitleFormat> ?? allFormats.ToList();
+            var ext = Path.GetExtension(fileName ?? string.Empty);
+            for (var i = 0; i < formats.Count; i++)
+            {
+                if (GetDetectionGroup(formats[i], ext) == 0)
+                {
+                    yield return formats[i];
+                }
+            }
+
+            for (var i = 0; i < formats.Count; i++)
+            {
+                if (GetDetectionGroup(formats[i], ext) == 1)
+                {
+                    yield return formats[i];
+                }
+            }
+
+            for (var i = 0; i < formats.Count; i++)
+            {
+                if (GetDetectionGroup(formats[i], ext) == 2)
+                {
+                    yield return formats[i];
+                }
+            }
+        }
+
+        /// <summary>0: own extension matches, 1: an alternate extension matches, 2: the rest.</summary>
+        private static int GetDetectionGroup(SubtitleFormat format, string ext)
+        {
+            if (ext.Length == 0 || format.Name.StartsWith("Unknown", StringComparison.Ordinal))
+            {
+                return 2;
+            }
+
+            if (format.Extension.Equals(ext, StringComparison.OrdinalIgnoreCase))
+            {
+                return 0;
+            }
+
+            foreach (var alternate in GetAlternateExtensions(format))
+            {
+                if (alternate.Equals(ext, StringComparison.OrdinalIgnoreCase))
+                {
+                    return 1;
+                }
+            }
+
+            return 2;
+        }
+
+        /// <summary>
+        /// <see cref="SubtitleFormat.AlternateExtensions"/> builds a new list on every call, and
+        /// detection asks every format on every open - cache them per format type.
+        /// </summary>
+        private static readonly ConcurrentDictionary<Type, string[]> AlternateExtensionsByType = new ConcurrentDictionary<Type, string[]>();
+
+        private static string[] GetAlternateExtensions(SubtitleFormat format)
+        {
+            var type = format.GetType();
+            if (!AlternateExtensionsByType.TryGetValue(type, out var alternates))
+            {
+                alternates = format.AlternateExtensions?.ToArray() ?? Array.Empty<string>();
+                AlternateExtensionsByType[type] = alternates;
+            }
+
+            return alternates;
         }
 
         /// <summary>
