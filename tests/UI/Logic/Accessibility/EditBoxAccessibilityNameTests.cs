@@ -31,6 +31,9 @@ public class TestApp : Application
         // theme to resolve their templates when shown in a headless window.
         Styles.Add(new Fluent2Theme());
 
+        // The app-wide TableView row theme Program.cs installs at startup.
+        Nikse.SubtitleEdit.Logic.UiUtil.ApplyFluent2TableViewTheme(this);
+
         // Windows built in code use Attached.SetIcon; without the providers Program.cs
         // registers at startup, constructing such a window throws KeyNotFoundException.
         RegisterIconProvidersOnce();

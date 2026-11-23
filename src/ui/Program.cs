@@ -408,7 +408,7 @@ namespace Nikse.SubtitleEdit
             if (b.Instance != null)
             {
                 b.Instance.Styles.Add(UiTheme.FluentTheme);
-                UiUtil.RemoveFluent2RowLines();
+                UiUtil.ApplyFluent2TableViewTheme(b.Instance);
 
                 // Apply app-level style overrides
                 b.Instance.Styles.Add(new StyleInclude(new Uri("avares://SubtitleEdit/Styles.axaml", UriKind.Absolute))
