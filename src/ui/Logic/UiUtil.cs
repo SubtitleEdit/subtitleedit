@@ -174,35 +174,35 @@ public static class UiUtil
     /// one segment per row instead of continuous columns. The cells carry the inset instead
     /// (see the cell themes above). Call this on any TableView using those cell themes.
     /// </summary>
-    private static bool _fluent2RowLinesRemoved;
+    private static bool _fluent2HeaderLineRemoved;
 
     /// <summary>
-    /// Fluent 2's TableView templates draw their own lines: under the header row
-    /// (PART_HeaderRow) and under every row (RootBorder and GridLineBorder). SE draws grid lines
-    /// itself on the cells and headers (<see cref="TableViewColumnHeaderTheme"/>, the grid-lines
-    /// setting), so the template's lines would show even with grid lines off, double SE's own
-    /// and take a pixel off every cell. The templates set them as template values, which outrank
-    /// styles, so they are cleared as each template is applied. Registers once; safe to call
-    /// repeatedly.
+    /// Makes Fluent 2's TableView cheaper and fits it to SE's own grid lines. Call once at startup
+    /// (safe to call again; a test app or a grid created first also triggers it).
+    /// <list type="bullet">
+    /// <item>Installs <see cref="LeanTableViewRowTheme"/> as the app-wide TableViewRow theme. Fluent
+    /// 2's own row template is eight visuals deep with ~20 state styles per row, which made grid
+    /// scrolling ~20% slower than under Fluent 1; the lean theme keeps its colours, states and
+    /// selection pill in four visuals and nine styles.</item>
+    /// <item>Removes the line Fluent 2 draws under the header row (PART_HeaderRow): SE's header
+    /// theme (<see cref="TableViewColumnHeaderTheme"/>) draws that line itself, so it would be
+    /// doubled and push the first row down 1px. The template sets it as a template value, which
+    /// outranks styles, so it is cleared as each TableView template is applied.</item>
+    /// </list>
     /// </summary>
-    public static void RemoveFluent2RowLines()
+    public static void ApplyFluent2TableViewTheme(Application? application)
     {
-        if (_fluent2RowLinesRemoved)
+        if (application != null && !application.Resources.ContainsKey(typeof(TableViewRow)))
+        {
+            application.Resources[typeof(TableViewRow)] = LeanTableViewRowTheme;
+        }
+
+        if (_fluent2HeaderLineRemoved)
         {
             return;
         }
 
-        _fluent2RowLinesRemoved = true;
-        TemplatedControl.TemplateAppliedEvent.AddClassHandler<TableViewRow>((_, e) =>
-        {
-            foreach (var partName in (string[])["RootBorder", "GridLineBorder"])
-            {
-                if (e.NameScope.Find<Border>(partName) is { } border)
-                {
-                    border.BorderThickness = new Thickness(0);
-                }
-            }
-        });
+        _fluent2HeaderLineRemoved = true;
         TemplatedControl.TemplateAppliedEvent.AddClassHandler<TableView>((_, e) =>
         {
             if (e.NameScope.Find<Border>("PART_HeaderRow") is { } headerRow)
@@ -211,6 +211,100 @@ public static class UiUtil
             }
         });
     }
+
+    private static Setter DynamicSetter(AvaloniaProperty property, string resourceKey) =>
+        new(property, new Avalonia.Markup.Xaml.MarkupExtensions.DynamicResourceExtension(resourceKey));
+
+    private static Style RowBorderState(Func<Selector?, Selector> selector, string backgroundKey) =>
+        new(x => selector(x.Nesting()).Template().OfType<Border>().Name("RootBorder"))
+        {
+            Setters = { DynamicSetter(Border.BackgroundProperty, backgroundKey) },
+        };
+
+    private static Style RowPillState(Func<Selector?, Selector> selector, params Setter[] setters)
+    {
+        var style = new Style(x => selector(x.Nesting()).Template().OfType<Avalonia.Controls.Shapes.Rectangle>().Name("PART_SelectionIndicator"));
+        foreach (var setter in setters)
+        {
+            style.Setters.Add(setter);
+        }
+
+        return style;
+    }
+
+    /// <summary>
+    /// Fluent 2's TableViewRow look (TabularSurface* brushes, selection pill, pointer-over/pressed/
+    /// selected/disabled states) in a lean template: RootBorder > Panel > [cells, pill], with the
+    /// text colour set on the border instead of through an extra ContentPresenter, and no
+    /// GridLineBorder (SE draws grid lines on the cells). Fluent 2 uses the same foreground for
+    /// every state except disabled, so one foreground setter plus a disabled style covers it.
+    /// Part names match Fluent 2's, so selectors written against its template still apply.
+    /// </summary>
+    private static readonly ControlTheme LeanTableViewRowTheme = new(typeof(TableViewRow))
+    {
+        Setters =
+        {
+            DynamicSetter(TemplatedControl.BackgroundProperty, "TabularSurfaceRowBackground"),
+            DynamicSetter(TemplatedControl.ForegroundProperty, "TabularSurfaceRowForeground"),
+            DynamicSetter(Layoutable.MinHeightProperty, "TableViewRowMinHeight"),
+            new Setter(ContentControl.HorizontalContentAlignmentProperty, HorizontalAlignment.Stretch),
+            new Setter(TemplatedControl.TemplateProperty, LeanTableViewRowTemplate),
+        },
+        Children =
+        {
+            // Set by style rather than in the template: a value set in a code template is a local
+            // value and would win over the :selected style below.
+            RowPillState(x => x, new Setter(Visual.OpacityProperty, 0.0)),
+            RowBorderState(x => x.Class(":pointerover"), "TabularSurfaceRowBackgroundPointerOver"),
+            RowBorderState(x => x.Class(":pressed"), "TabularSurfaceRowBackgroundPressed"),
+            RowBorderState(x => x.Class(":selected"), "TabularSurfaceRowBackgroundSelected"),
+            RowBorderState(x => x.Class(":selected").Class(":pointerover"), "TabularSurfaceRowBackgroundSelectedPointerOver"),
+            RowBorderState(x => x.Class(":selected").Class(":pressed"), "TabularSurfaceRowBackgroundSelectedPressed"),
+            RowPillState(x => x.Class(":selected"), new Setter(Visual.OpacityProperty, 1.0)),
+            RowBorderState(x => x.Class(":disabled"), "TabularSurfaceRowBackgroundDisabled"),
+            new Style(x => x.Nesting().Class(":disabled"))
+            {
+                Setters = { DynamicSetter(TemplatedControl.ForegroundProperty, "TabularSurfaceRowForegroundDisabled") },
+            },
+            RowPillState(x => x.Class(":selected").Class(":disabled"), DynamicSetter(Avalonia.Controls.Shapes.Shape.FillProperty, "TabularSurfaceSelectionIndicatorFillDisabled")),
+        },
+    };
+
+    private static FuncControlTemplate<TableViewRow> LeanTableViewRowTemplate => new((_, scope) =>
+    {
+        var cells = new TableViewCellsPresenter
+        {
+            Name = "PART_CellsPresenter",
+            HorizontalAlignment = HorizontalAlignment.Left,
+        };
+        scope.Register(cells.Name, cells);
+
+        var pill = new Avalonia.Controls.Shapes.Rectangle
+        {
+            Name = "PART_SelectionIndicator",
+            Width = 3,
+            Height = 16,
+            RadiusX = 1.5,
+            RadiusY = 1.5,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(2, 0, 0, 0),
+            IsHitTestVisible = false,
+            [!Avalonia.Controls.Shapes.Shape.FillProperty] = new Avalonia.Markup.Xaml.MarkupExtensions.DynamicResourceExtension("TabularSurfaceSelectionIndicatorFill"),
+        };
+        scope.Register(pill.Name, pill);
+
+        var root = new Border
+        {
+            Name = "RootBorder",
+            Child = new Panel { Children = { cells, pill } },
+            [!Border.BackgroundProperty] = new TemplateBinding(TemplatedControl.BackgroundProperty),
+            [!Decorator.PaddingProperty] = new TemplateBinding(TemplatedControl.PaddingProperty),
+            [!Avalonia.Controls.Documents.TextElement.ForegroundProperty] = new TemplateBinding(TemplatedControl.ForegroundProperty),
+        };
+        scope.Register(root.Name, root);
+        return root;
+    });
 
     public static void ApplyTableViewRowStyle(TableView tableView)
     {
@@ -223,7 +317,7 @@ public static class UiUtil
             }
         });
 
-        RemoveFluent2RowLines();
+        ApplyFluent2TableViewTheme(Application.Current);
 
         // TableView's template wraps the header in a Border with hard-coded 6,9,6,12 padding
         // while rows sit flush against the control edge. Left alone the header's column border
