@@ -312,6 +312,30 @@ public class ConcurrentSubtitleParserTest : IDisposable
         Assert.Equal(25, subtitle.Paragraphs.Count);
     }
 
+    [Theory]
+    [InlineData("TimedText10", ".ttml")]
+    [InlineData("TimedText10", ".dfxp")]
+    [InlineData("EbuTt", ".ttml")]
+    [InlineData("EbuTt", ".dfxp")]
+    [InlineData("EbuTtD", ".ttml")]
+    [InlineData("EbuTtD", ".dfxp")]
+    public void AlternateExtensionFormatsAreDetected(string formatName, string extension)
+    {
+        SubtitleFormat writer = formatName switch
+        {
+            "EbuTt" => new EbuTt(),
+            "EbuTtD" => new EbuTtD(),
+            _ => new TimedText10(),
+        };
+        var path = Path.Combine(_folder, "sample" + extension);
+        File.WriteAllText(path, writer.ToText(MakeSubtitle(), "sample"));
+
+        var subtitle = Subtitle.Parse(path);
+        Assert.NotNull(subtitle);
+        Assert.IsType(writer.GetType(), subtitle.OriginalFormat);
+        Assert.Equal(25, subtitle.Paragraphs.Count);
+    }
+
     [Fact]
     public void RenamedWebVttFallsBackFromSubRip()
     {

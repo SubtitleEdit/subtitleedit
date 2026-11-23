@@ -23,6 +23,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".xml";
 
+        // IsMine accepts these too; listing them keeps this format ahead of Timed Text 1.0
+        // (which lists them as well) when a .ttml/.dfxp file is opened.
+        public override List<string> AlternateExtensions => new List<string> { ".ttml", ".dfxp" };
+
         // The reader stores the teletext row a subtitle starts on in MarginV and the region id in
         // Paragraph.Region - the video preview positions from them like it does for an STL.
         public override bool HasPositionSupport => true;
