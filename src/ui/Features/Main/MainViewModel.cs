@@ -35160,6 +35160,16 @@ public partial class MainViewModel :
                         return;
                     }
 
+                    // Bare Delete/Backspace always edit text in a text input, like SE 4 - with
+                    // "allow single-letter shortcuts in text box" on, a General-scope binding such
+                    // as "Delete selection (everywhere)" on Delete removed the whole subtitle line
+                    // instead of one character (#17117). Modified chords (Shift+Delete cut, etc.)
+                    // still reach shortcuts.
+                    if (NonTypingEditKeys.Contains(key) && keyEventArgs.KeyModifiers == KeyModifiers.None)
+                    {
+                        return;
+                    }
+
                     if (!Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox && !AlwaysAllowedSingleKeyShortcuts.Contains(key) && isBareKeyChord)
                     {
                         return; // allow single key shortcuts in text input if enabled in settings, or if it's not an allowed single key shortcut
