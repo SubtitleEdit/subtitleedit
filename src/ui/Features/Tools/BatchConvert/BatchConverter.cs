@@ -3273,7 +3273,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
         }
 
-        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, timeCodes, shotChanges).Beautify();
+        // The video's frames (and its cached shot changes) start at the container start time.
+        var timelineOffsetMs = hasVideoFile ? WaveFileExtractor.GetTimelineOffsetMilliseconds(videoFileName) : 0;
+
+        new Core.Forms.TimeCodesBeautifier(subtitle, frameRate, timeCodes, shotChanges, timelineOffsetMs).Beautify();
         return subtitle;
     }
 
