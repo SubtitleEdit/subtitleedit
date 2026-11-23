@@ -112,6 +112,12 @@ public partial class AdjustDurationViewModel : ObservableObject
 
     private void DoAdjustViaFixed(ObservableCollection<SubtitleLineViewModel> subtitles)
     {
+        if (AdjustFixed <= 0)
+        {
+            // A zero or negative fixed duration would end lines at or before their start.
+            return;
+        }
+
         for (int i = 0; i < subtitles.Count; i++)
         {
             var subtitle = subtitles[i];

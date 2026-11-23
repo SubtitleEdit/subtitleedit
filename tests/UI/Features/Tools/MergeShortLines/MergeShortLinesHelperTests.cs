@@ -182,4 +182,20 @@ public class MergeShortLinesHelperTests
         Assert.True(item.CanToggle);
         Assert.Equal(id, item.SourceLineId);
     }
+
+    [Fact]
+    public void Merge_ShortLineInsideALongerOne_KeepsTheLongerEndTime()
+    {
+        var subtitles = new List<SubtitleLineViewModel>
+        {
+            MakeSubtitle("Long", 1.0, 10.0),
+            MakeSubtitle("Short", 2.0, 3.0),
+        };
+
+        var result = Merge(subtitles);
+
+        Assert.Single(result.MergedSubtitles);
+        Assert.Equal(TimeSpan.FromSeconds(1), result.MergedSubtitles[0].StartTime);
+        Assert.Equal(TimeSpan.FromSeconds(10), result.MergedSubtitles[0].EndTime);
+    }
 }

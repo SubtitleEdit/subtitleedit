@@ -117,4 +117,27 @@ public class PointSyncViaOtherGapTests
     {
         Assert.Equal(expectedLevel, PointSyncViaOtherWindow.GetSyncCandidateLevel(gapMs));
     }
+
+    [Fact]
+    public void SetSyncPoint_OnALineWithTheSameStartTime_RepointsTheExistingPoint()
+    {
+        var vm = MakeViewModel();
+        vm.Initialize(new List<SubtitleLineViewModel> { Line(1000, 2000), Line(1000, 3000) }, 0, string.Empty, string.Empty, VideoPreviewSubtitleContext.Default);
+        vm.Othersubtitles.Add(Line(10000, 11000));
+        vm.Othersubtitles.Add(Line(12000, 13000));
+
+        vm.SelectedSubtitle = vm.Subtitles[0];
+        vm.SelectedOtherSubtitle = vm.Othersubtitles[0];
+        vm.SetSyncPointCommand.Execute(null);
+
+        vm.SelectedSubtitle = vm.Subtitles[1];
+        vm.SelectedOtherSubtitle = vm.Othersubtitles[1];
+        vm.SetSyncPointCommand.Execute(null);
+
+        // Two points sharing a start time cannot define a speed factor; the sync used to
+        // silently apply only the first one's offset.
+        var point = Assert.Single(vm.SyncPoints);
+        Assert.Equal(1, point.LeftIndex);
+        Assert.Equal(TimeSpan.FromSeconds(12), point.RightStartTime);
+    }
 }

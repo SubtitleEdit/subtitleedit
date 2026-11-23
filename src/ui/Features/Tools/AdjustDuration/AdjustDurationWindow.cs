@@ -141,7 +141,7 @@ public class AdjustDurationWindow : Window
 
     private static Grid MakeAdjustFixed(AdjustDurationViewModel vm)
     {
-        var numericUpDownFixed = MakeNumber(Se.Language.Tools.AdjustDurations.Fixed, -1000000, 1000000);
+        var numericUpDownFixed = MakeNumber(Se.Language.Tools.AdjustDurations.Fixed, 0, 1000000);
         numericUpDownFixed.Bind(NumericUpDown.ValueProperty, new Binding
         {
             Mode = BindingMode.TwoWay,
