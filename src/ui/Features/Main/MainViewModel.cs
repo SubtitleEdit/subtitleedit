@@ -1218,7 +1218,7 @@ public partial class MainViewModel :
         ShowUpDownDuration = Se.Settings.Appearance.ShowUpDownDuration;
         ShowUpDownLabels = Se.Settings.Appearance.ShowUpDownLabels;
         ShowTimeCodeModeInStatusBar = Se.Settings.Appearance.ShowTimeCodeModeInStatusBar;
-        IsVideoOffsetButtonVisible = Se.Settings.Appearance.ShowVideoOffsetInStatusBar || Se.Settings.General.CurrentVideoOffsetInMs != 0;
+        UpdateVideoOffsetButtonVisible();
         SelectCurrentSubtitleWhilePlaying = Se.Settings.General.SelectCurrentSubtitleWhilePlaying;
         WaveformCenter = Se.Settings.Waveform.CenterVideoPosition;
         EditTextBoxOriginal = new TextBoxWrapper(new TextBox());
@@ -37057,7 +37057,22 @@ public partial class MainViewModel :
 
     // Both tick bodies are no-ops without an open video, yet their pumps woke the UI thread
     // ~80 times a second for the whole session - so they only run while a video is loaded.
-    partial void OnIsVideoLoadedChanged(bool value) => UpdateVideoTickPumps();
+    partial void OnIsVideoLoadedChanged(bool value)
+    {
+        UpdateVideoTickPumps();
+        UpdateVideoOffsetButtonVisible();
+    }
+
+    /// <summary>
+    /// The status bar offset button shows while an offset is set (so it can always be changed
+    /// or reset), and - when opted in - also with no offset, but then only with a video loaded,
+    /// like the Video > More menu item (#17080).
+    /// </summary>
+    private void UpdateVideoOffsetButtonVisible()
+    {
+        IsVideoOffsetButtonVisible = Se.Settings.General.CurrentVideoOffsetInMs != 0 ||
+                                     (Se.Settings.Appearance.ShowVideoOffsetInStatusBar && IsVideoLoaded);
+    }
 
     private void UpdateVideoTickPumps()
     {
@@ -38747,7 +38762,7 @@ public partial class MainViewModel :
     private void UpdateVideoOffsetText()
     {
         IsVideoOffsetVisible = Se.Settings.General.CurrentVideoOffsetInMs != 0;
-        IsVideoOffsetButtonVisible = IsVideoOffsetVisible || Se.Settings.Appearance.ShowVideoOffsetInStatusBar;
+        UpdateVideoOffsetButtonVisible();
         VideoOffsetButtonToolTip = IsVideoOffsetVisible ? Se.Language.General.OffsetTimeCodes : Se.Language.General.SetVideoOffset;
         if (IsVideoOffsetVisible)
         {
