@@ -7,31 +7,19 @@ using System;
 
 namespace Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 
-public class ColorChannelSlider : Grid
+public partial class ColorChannelSlider : Grid
 {
-    public static readonly StyledProperty<byte> ValueProperty =
-        AvaloniaProperty.Register<ColorChannelSlider, byte>(nameof(Value));
-
-    public static readonly StyledProperty<string> LabelProperty =
-        AvaloniaProperty.Register<ColorChannelSlider, string>(nameof(Label), "");
-
     public static readonly StyledProperty<Color> StartColorProperty =
         AvaloniaProperty.Register<ColorChannelSlider, Color>(nameof(StartColor), Colors.Black);
 
     public static readonly StyledProperty<Color> EndColorProperty =
         AvaloniaProperty.Register<ColorChannelSlider, Color>(nameof(EndColor), Colors.White);
 
-    public byte Value
-    {
-        get => GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial byte Value { get; set; }
 
-    public string Label
-    {
-        get => GetValue(LabelProperty);
-        set => SetValue(LabelProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = "")]
+    public partial string Label { get; set; }
 
     public Color StartColor
     {

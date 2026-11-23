@@ -13,12 +13,9 @@ namespace Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 /// Vertical brightness (tone) bar next to the color wheel: top is the full-brightness
 /// color of the current hue/saturation, bottom is black (issue #15296).
 /// </summary>
-public class ColorBrightnessBar : Control
+public partial class ColorBrightnessBar : Control
 {
     private const double MarkerWidth = 8;
-
-    public static readonly StyledProperty<double> ValueProperty =
-        AvaloniaProperty.Register<ColorBrightnessBar, double>(nameof(Value), 1, defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<Color> TopColorProperty =
         AvaloniaProperty.Register<ColorBrightnessBar, Color>(nameof(TopColor), Colors.White);
@@ -26,11 +23,8 @@ public class ColorBrightnessBar : Control
     /// <summary>
     /// Brightness (0-1), 1 at the top.
     /// </summary>
-    public double Value
-    {
-        get => GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1.0, DefaultBindingMode = BindingMode.TwoWay)]
+    public partial double Value { get; set; }
 
     public Color TopColor
     {

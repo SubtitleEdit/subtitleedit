@@ -14,30 +14,8 @@ namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 /// The area outside the selection is dimmed; the selection can be moved, resized
 /// via edges/corners, or redrawn by dragging on the outside.
 /// </summary>
-public class CropAreaSelector : Control
+public partial class CropAreaSelector : Control
 {
-    public static readonly StyledProperty<int> VideoWidthProperty =
-        AvaloniaProperty.Register<CropAreaSelector, int>(nameof(VideoWidth), 1920);
-
-    public static readonly StyledProperty<int> VideoHeightProperty =
-        AvaloniaProperty.Register<CropAreaSelector, int>(nameof(VideoHeight), 1080);
-
-    public static readonly StyledProperty<int> SelectionXProperty =
-        AvaloniaProperty.Register<CropAreaSelector, int>(nameof(SelectionX));
-
-    public static readonly StyledProperty<int> SelectionYProperty =
-        AvaloniaProperty.Register<CropAreaSelector, int>(nameof(SelectionY), 720);
-
-    public static readonly StyledProperty<int> SelectionWidthProperty =
-        AvaloniaProperty.Register<CropAreaSelector, int>(nameof(SelectionWidth), 1920);
-
-    public static readonly StyledProperty<int> SelectionHeightProperty =
-        AvaloniaProperty.Register<CropAreaSelector, int>(nameof(SelectionHeight), 360);
-
-    /// <summary>Dim the frame outside the selection (the scan area); off for a box drawn over a mask preview.</summary>
-    public static readonly StyledProperty<bool> DimOutsideProperty =
-        AvaloniaProperty.Register<CropAreaSelector, bool>(nameof(DimOutside), true);
-
     private const double HandleHitSize = 8;
     private const int MinSelectionSize = 16;
 
@@ -64,47 +42,27 @@ public class CropAreaSelector : Control
     private static readonly IImmutableSolidColorBrush AccentBrush = new ImmutableSolidColorBrush(Color.FromRgb(0x2e, 0x9b, 0xe0));
     private static readonly ImmutablePen BorderPen = new(AccentBrush, 2);
 
-    public int VideoWidth
-    {
-        get => GetValue(VideoWidthProperty);
-        set => SetValue(VideoWidthProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1920)]
+    public partial int VideoWidth { get; set; }
 
-    public int VideoHeight
-    {
-        get => GetValue(VideoHeightProperty);
-        set => SetValue(VideoHeightProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1080)]
+    public partial int VideoHeight { get; set; }
 
-    public int SelectionX
-    {
-        get => GetValue(SelectionXProperty);
-        set => SetValue(SelectionXProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial int SelectionX { get; set; }
 
-    public int SelectionY
-    {
-        get => GetValue(SelectionYProperty);
-        set => SetValue(SelectionYProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 720)]
+    public partial int SelectionY { get; set; }
 
-    public int SelectionWidth
-    {
-        get => GetValue(SelectionWidthProperty);
-        set => SetValue(SelectionWidthProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1920)]
+    public partial int SelectionWidth { get; set; }
 
-    public int SelectionHeight
-    {
-        get => GetValue(SelectionHeightProperty);
-        set => SetValue(SelectionHeightProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 360)]
+    public partial int SelectionHeight { get; set; }
 
-    public bool DimOutside
-    {
-        get => GetValue(DimOutsideProperty);
-        set => SetValue(DimOutsideProperty, value);
-    }
+    /// <summary>Dim the frame outside the selection (the scan area); off for a box drawn over a mask preview.</summary>
+    [GeneratedStyledProperty(DefaultValue = true)]
+    public partial bool DimOutside { get; set; }
 
     static CropAreaSelector()
     {

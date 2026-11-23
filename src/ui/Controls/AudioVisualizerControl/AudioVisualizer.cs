@@ -23,34 +23,10 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 
-public class AudioVisualizer : Control
+public partial class AudioVisualizer : Control
 {
-    public static readonly StyledProperty<WavePeakData2?> WavePeaksProperty =
-        AvaloniaProperty.Register<AudioVisualizer, WavePeakData2?>(nameof(WavePeaks));
-
     public static readonly StyledProperty<double> StartPositionSecondsProperty =
         AvaloniaProperty.Register<AudioVisualizer, double>(nameof(StartPositionSeconds));
-
-    public static readonly StyledProperty<double> ZoomFactorProperty =
-        AvaloniaProperty.Register<AudioVisualizer, double>(nameof(ZoomFactor), 1.0);
-
-    public static readonly StyledProperty<double> VerticalZoomFactorProperty =
-        AvaloniaProperty.Register<AudioVisualizer, double>(nameof(VerticalZoomFactor), 1.0);
-
-    public static readonly StyledProperty<double> CurrentVideoPositionSecondsProperty =
-        AvaloniaProperty.Register<AudioVisualizer, double>(nameof(CurrentVideoPositionSeconds));
-
-    public static readonly StyledProperty<bool> DrawGridLinesProperty =
-        AvaloniaProperty.Register<AudioVisualizer, bool>(nameof(DrawGridLines));
-
-    public static readonly StyledProperty<bool> IsReadOnlyProperty =
-        AvaloniaProperty.Register<AudioVisualizer, bool>(nameof(IsReadOnly));
-
-    public static readonly StyledProperty<bool> InvertMouseWheelProperty =
-        AvaloniaProperty.Register<AudioVisualizer, bool>(nameof(InvertMouseWheel));
-
-    public static readonly StyledProperty<List<SubtitleLineViewModel>> AllSelectedParagraphsProperty =
-        AvaloniaProperty.Register<AudioVisualizer, List<SubtitleLineViewModel>>(nameof(AllSelectedParagraphs));
 
     public static readonly StyledProperty<Color> WaveformColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformColor));
@@ -76,11 +52,8 @@ public class AudioVisualizer : Control
     public static readonly StyledProperty<Color> WaveformParagraphRightColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformParagraphRightColor));
 
-    public WavePeakData2? WavePeaks
-    {
-        get => GetValue(WavePeaksProperty);
-        set => SetValue(WavePeaksProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial WavePeakData2? WavePeaks { get; set; }
 
     public double StartPositionSeconds
     {
@@ -88,47 +61,26 @@ public class AudioVisualizer : Control
         set => SetValue(StartPositionSecondsProperty, Math.Clamp(value, 0, MaxStartPositionSeconds));
     }
 
-    public double ZoomFactor
-    {
-        get => GetValue(ZoomFactorProperty);
-        set => SetValue(ZoomFactorProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1.0)]
+    public partial double ZoomFactor { get; set; }
 
-    public double VerticalZoomFactor
-    {
-        get => GetValue(VerticalZoomFactorProperty);
-        set => SetValue(VerticalZoomFactorProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1.0)]
+    public partial double VerticalZoomFactor { get; set; }
 
-    public double CurrentVideoPositionSeconds
-    {
-        get => GetValue(CurrentVideoPositionSecondsProperty);
-        set => SetValue(CurrentVideoPositionSecondsProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial double CurrentVideoPositionSeconds { get; set; }
 
-    public bool InvertMouseWheel
-    {
-        get => GetValue(InvertMouseWheelProperty);
-        set => SetValue(InvertMouseWheelProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool InvertMouseWheel { get; set; }
 
-    public bool DrawGridLines
-    {
-        get => GetValue(DrawGridLinesProperty);
-        set => SetValue(DrawGridLinesProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool DrawGridLines { get; set; }
 
-    public bool IsReadOnly
-    {
-        get => GetValue(IsReadOnlyProperty);
-        set => SetValue(IsReadOnlyProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool IsReadOnly { get; set; }
 
-    public List<SubtitleLineViewModel> AllSelectedParagraphs
-    {
-        get => GetValue(AllSelectedParagraphsProperty);
-        set => SetValue(AllSelectedParagraphsProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial List<SubtitleLineViewModel> AllSelectedParagraphs { get; set; }
 
     public Color WaveformColor
     {
@@ -445,6 +397,7 @@ public class AudioVisualizer : Control
     // "center video position" mode can turn into a seek that keeps the play-head centered
     // (#12864). Hosts without a video player (or that never set this) keep plain scrolling.
     public Func<bool>? GetIsVideoPlaying { get; set; }
+
     private Color _waveformFancyHighColor = Colors.Orange;
 
     public Color WaveformFancyHighColor
@@ -713,7 +666,9 @@ public class AudioVisualizer : Control
     private long _lastMouseWheelScroll = -1;
     private readonly Lock _lock = new();
     public SubtitleLineViewModel? NewSelectionParagraph { get; set; }
+
     public double _newSelectionSeconds { get; set; }
+
     private SubtitleLineViewModel? _activeParagraph;
     private SubtitleLineViewModel? _activeParagraphPrevious;
     private SubtitleLineViewModel? _activeParagraphNext;
@@ -821,12 +776,14 @@ public class AudioVisualizer : Control
     public class PositionEventArgs : EventArgs
     {
         public double PositionInSeconds { get; set; }
+
         public bool IsCtrlShift { get; set; }
     }
 
     public class ContextEventArgs : EventArgs
     {
         public double PositionInSeconds { get; set; }
+
         public SubtitleLineViewModel? NewParagraph { get; set; }
     }
 

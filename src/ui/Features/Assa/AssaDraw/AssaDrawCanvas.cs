@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Features.Assa.AssaDraw;
 /// <summary>
 /// Custom canvas control for ASSA drawing with zoom, pan, and shape rendering.
 /// </summary>
-public class AssaDrawCanvas : Control
+public partial class AssaDrawCanvas : Control
 {
     private float _zoomFactor = 1.0f;
     private float _panX;
@@ -121,44 +121,14 @@ public class AssaDrawCanvas : Control
     public static readonly StyledProperty<List<DrawShape>> ShapesProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, List<DrawShape>>(nameof(Shapes), []);
 
-    public static readonly StyledProperty<DrawShape?> ActiveShapeProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, DrawShape?>(nameof(ActiveShape));
-
-    public static readonly StyledProperty<DrawShape?> SelectedShapeProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, DrawShape?>(nameof(SelectedShape));
-
     public static readonly StyledProperty<List<DrawShape>> SelectedShapesProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, List<DrawShape>>(nameof(SelectedShapes), []);
-
-    public static readonly StyledProperty<DrawCoordinate?> ActivePointProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, DrawCoordinate?>(nameof(ActivePoint));
-
-    public static readonly StyledProperty<int> CanvasWidthProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, int>(nameof(CanvasWidth), 1920);
-
-    public static readonly StyledProperty<int> CanvasHeightProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, int>(nameof(CanvasHeight), 1080);
 
     public static readonly StyledProperty<float> CurrentXProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, float>(nameof(CurrentX), float.MinValue);
 
     public static readonly StyledProperty<float> CurrentYProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, float>(nameof(CurrentY), float.MinValue);
-
-    public static readonly StyledProperty<bool> ShowPreviewProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, bool>(nameof(ShowPreview));
-
-    /// <summary>
-    /// The drawing as libass renders it, at canvas (PlayRes) size with a transparent background.
-    /// </summary>
-    public static readonly StyledProperty<IImage?> PreviewImageProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, IImage?>(nameof(PreviewImage));
-
-    /// <summary>
-    /// Video frame shown behind the preview.
-    /// </summary>
-    public static readonly StyledProperty<IImage?> BackgroundImageProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, IImage?>(nameof(BackgroundImage));
 
     public static readonly StyledProperty<DrawingTool> CurrentToolProperty =
         AvaloniaProperty.Register<AssaDrawCanvas, DrawingTool>(nameof(CurrentTool), DrawingTool.Line);
@@ -169,17 +139,11 @@ public class AssaDrawCanvas : Control
         set => SetValue(ShapesProperty, value);
     }
 
-    public DrawShape? ActiveShape
-    {
-        get => GetValue(ActiveShapeProperty);
-        set => SetValue(ActiveShapeProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial DrawShape? ActiveShape { get; set; }
 
-    public DrawShape? SelectedShape
-    {
-        get => GetValue(SelectedShapeProperty);
-        set => SetValue(SelectedShapeProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial DrawShape? SelectedShape { get; set; }
 
     public List<DrawShape> SelectedShapes
     {
@@ -187,23 +151,14 @@ public class AssaDrawCanvas : Control
         set => SetValue(SelectedShapesProperty, value);
     }
 
-    public DrawCoordinate? ActivePoint
-    {
-        get => GetValue(ActivePointProperty);
-        set => SetValue(ActivePointProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial DrawCoordinate? ActivePoint { get; set; }
 
-    public int CanvasWidth
-    {
-        get => GetValue(CanvasWidthProperty);
-        set => SetValue(CanvasWidthProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1920)]
+    public partial int CanvasWidth { get; set; }
 
-    public int CanvasHeight
-    {
-        get => GetValue(CanvasHeightProperty);
-        set => SetValue(CanvasHeightProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1080)]
+    public partial int CanvasHeight { get; set; }
 
     public float CurrentX
     {
@@ -228,44 +183,29 @@ public class AssaDrawCanvas : Control
     /// </summary>
     public Func<DrawShape, double, (DrawAnimationState State, float AnchorX, float AnchorY)>? GetAnimationTransform { get; set; }
 
-    public bool ShowPreview
-    {
-        get => GetValue(ShowPreviewProperty);
-        set => SetValue(ShowPreviewProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool ShowPreview { get; set; }
 
-    public IImage? PreviewImage
-    {
-        get => GetValue(PreviewImageProperty);
-        set => SetValue(PreviewImageProperty, value);
-    }
+    /// <summary>
+    /// The drawing as libass renders it, at canvas (PlayRes) size with a transparent background.
+    /// </summary>
+    [GeneratedStyledProperty]
+    public partial IImage? PreviewImage { get; set; }
 
-    public IImage? BackgroundImage
-    {
-        get => GetValue(BackgroundImageProperty);
-        set => SetValue(BackgroundImageProperty, value);
-    }
+    /// <summary>
+    /// Video frame shown behind the preview.
+    /// </summary>
+    [GeneratedStyledProperty]
+    public partial IImage? BackgroundImage { get; set; }
 
-    public static readonly StyledProperty<double> BackgroundOpacityProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, double>(nameof(BackgroundOpacity), 1.0);
-
-    public static readonly StyledProperty<bool> BackgroundStretchProperty =
-        AvaloniaProperty.Register<AssaDrawCanvas, bool>(nameof(BackgroundStretch));
-
-    public double BackgroundOpacity
-    {
-        get => GetValue(BackgroundOpacityProperty);
-        set => SetValue(BackgroundOpacityProperty, value);
-    }
+    [GeneratedStyledProperty(DefaultValue = 1.0)]
+    public partial double BackgroundOpacity { get; set; }
 
     /// <summary>
     /// Stretch the background to the canvas; otherwise it keeps its aspect ratio, centered.
     /// </summary>
-    public bool BackgroundStretch
-    {
-        get => GetValue(BackgroundStretchProperty);
-        set => SetValue(BackgroundStretchProperty, value);
-    }
+    [GeneratedStyledProperty]
+    public partial bool BackgroundStretch { get; set; }
 
     public DrawingTool CurrentTool
     {
