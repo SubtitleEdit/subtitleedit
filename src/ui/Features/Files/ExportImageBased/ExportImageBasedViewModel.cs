@@ -1076,6 +1076,12 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
     partial void OnBoxPaddingTopChanged(int value) => _dirty = true;
     partial void OnBoxPaddingBottomChanged(int value) => _dirty = true;
 
+    /// <summary>
+    /// Index of the first real size in <see cref="Resolutions"/>, after the "Pick resolution
+    /// from video..." and "Custom resolution..." entries.
+    /// </summary>
+    private int FirstSizeIndex => Resolutions.TakeWhile(r => r.Width <= 0 || r.Height <= 0).Count();
+
     public void ComboResolutionChanged(object? sender, SelectionChangedEventArgs e)
     {
         _dirty = true;
@@ -1088,6 +1094,23 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         _dirty = true;
         if (res is { Width: > 0, Height: > 0 })
         {
+            return;
+        }
+
+        if (res.IsCustom)
+        {
+            var previous = e.RemovedItems.Count > 0 ? e.RemovedItems[0] as ResolutionItem : null;
+            Dispatcher.UIThread.Post(async void () =>
+            {
+                try
+                {
+                    await PickCustomResolution(previous);
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception);
+                }
+            });
             return;
         }
 
@@ -1121,7 +1144,7 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
 
                         Dispatcher.UIThread.Post(() =>
                         {
-                            Resolutions.Insert(1, resolutionItem);
+                            Resolutions.Insert(FirstSizeIndex, resolutionItem);
                             SelectedResolution = resolutionItem;
                             _dirty = true;
                         });
@@ -1133,6 +1156,25 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
                 Se.LogError(exception);
             }
         });
+    }
+
+    /// <summary>
+    /// Prompts for a free width x height, e.g. 1920x800 for a video with the black bars cropped
+    /// (#17132). Cancel goes back to the previous resolution.
+    /// </summary>
+    private async Task PickCustomResolution(ResolutionItem? previous)
+    {
+        var fallback = previous is { Width: > 0, Height: > 0 }
+            ? previous
+            : Resolutions.FirstOrDefault(p => p.Width == 1920);
+
+        var result = await _windowService.ShowDialogAsync<CustomResolutionWindow, CustomResolutionViewModel>(Window!,
+            vm => vm.Initialize(fallback?.Width ?? 1920, fallback?.Height ?? 1080));
+
+        SelectedResolution = result.OkPressed
+            ? EnsureResolutionItem(result.Width, result.Height) ?? fallback
+            : fallback;
+        _dirty = true;
     }
 
     internal void OnClosing()
@@ -1177,8 +1219,9 @@ public partial class ExportImageBasedViewModel : ObservableObject, IClosingClean
         }
 
         var item = new ResolutionItem(string.Empty, width, height, pixelAspect ?? string.Empty);
-        // Index 0 is the "Pick resolution from video..." entry; keep custom sizes right below it.
-        Resolutions.Insert(1, item);
+        // The first entries are "Pick resolution from video..." and "Custom resolution...";
+        // keep custom sizes right below them.
+        Resolutions.Insert(FirstSizeIndex, item);
         return item;
     }
 
