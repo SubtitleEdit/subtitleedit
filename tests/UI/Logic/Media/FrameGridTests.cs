@@ -32,4 +32,15 @@ public class FrameGridTests
     {
         Assert.True(FrameGrid.Snap(0.0, FrameDuration, 0.0) >= 0);
     }
+
+    [Theory]
+    [InlineData(0.02, 0.02)]
+    [InlineData(0.0, 0.0)]
+    [InlineData(-0.5, 0.0)]
+    [InlineData(double.NaN, 0.0)]
+    [InlineData(double.PositiveInfinity, 0.0)]
+    public void NormalizeOffset_KeepsOnlyPositiveFiniteOffsets(double offset, double expected)
+    {
+        Assert.Equal(expected, FrameGrid.NormalizeOffset(offset));
+    }
 }
