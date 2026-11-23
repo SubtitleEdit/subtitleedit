@@ -309,8 +309,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 // These readers already parse the whole file to detect their format. Retain
                 // the result only if detection succeeds, so fallback formats see a clean target.
-                var type = format.GetType();
-                var parsed = loadSubtitle && (type == typeof(SubRip) || type == typeof(AdvancedSubStationAlpha))
+                var parsed = loadSubtitle && FormatsThatLoadToDetect.Contains(format.GetType())
                     ? new Subtitle { Header = null, Footer = null }
                     : null;
 
@@ -374,6 +373,22 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
+        /// Formats whose <see cref="SubtitleFormat.IsMine"/> is a full load (<see cref="SubtitleFormat.TryLoadAndDetect"/>),
+        /// so opening a file keeps that parse instead of loading again. Exact types only: a
+        /// subclass may detect or load differently.
+        /// </summary>
+        private static readonly HashSet<Type> FormatsThatLoadToDetect = new HashSet<Type>
+        {
+            typeof(SubRip),
+            typeof(AdvancedSubStationAlpha),
+            typeof(SubStationAlpha),
+            typeof(WebVTT),
+            typeof(Sami),
+            typeof(YouTubeSbv),
+            typeof(Json),
+        };
+
+        /// <summary>
         /// Asks one format whether the lines are its own. A damaged or truncated file can make a
         /// reader throw (an unclosed xml element, a json string with no end quote, ...), and this
         /// runs for EVERY format when a file is opened - so a throw here used to take down the
@@ -383,17 +398,9 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             try
             {
-                if (parsed != null)
-                {
-                    return subtitleFormat switch
-                    {
-                        SubRip subRip => subRip.TryLoadAndDetect(parsed, lines, fileName, keepErrors: true),
-                        AdvancedSubStationAlpha ass => ass.TryLoadAndDetect(parsed, lines, fileName, keepErrors: true),
-                        _ => subtitleFormat.IsMine(lines, fileName),
-                    };
-                }
-
-                return subtitleFormat.IsMine(lines, fileName);
+                return parsed != null
+                    ? subtitleFormat.TryLoadAndDetect(parsed, lines, fileName, keep: true)
+                    : subtitleFormat.IsMine(lines, fileName);
             }
             catch (Exception exception)
             {

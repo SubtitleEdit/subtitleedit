@@ -620,9 +620,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public int ErrorCount => _errorCount;
 
-        public virtual bool IsMine(List<string> lines, string fileName)
+        public virtual bool IsMine(List<string> lines, string fileName) =>
+            TryLoadAndDetect(new Subtitle(), lines, fileName, keep: false);
+
+        /// <summary>
+        /// The detection behind <see cref="IsMine"/> for formats that detect by loading the whole
+        /// file: loads into <paramref name="subtitle"/> and says whether the lines are this format.
+        /// With <paramref name="keep"/> and a match, the state a real load leaves (frame rate,
+        /// errors) is kept too, so opening a file can use this parse instead of loading it a
+        /// second time.
+        /// </summary>
+        internal virtual bool TryLoadAndDetect(Subtitle subtitle, List<string> lines, string fileName, bool keep)
         {
-            var subtitle = new Subtitle();
             if (KeepDeclaredFrameRateLocal)
             {
                 // Nothing to restore: a declared frame rate stays on this instance
@@ -632,8 +641,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
             LoadSubtitle(subtitle, lines, fileName);
-            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
-            return subtitle.Paragraphs.Count > _errorCount;
+            var detected = subtitle.Paragraphs.Count > _errorCount;
+            if (!detected || !keep)
+            {
+                Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
+            }
+
+            return detected;
         }
 
         public abstract string ToText(Subtitle subtitle, string title);

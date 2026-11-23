@@ -83,9 +83,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int DefaultHeight = 288;
 
         public override bool IsMine(List<string> lines, string fileName) =>
-            TryLoadAndDetect(new Subtitle(), lines, fileName, keepErrors: false);
+            TryLoadAndDetect(new Subtitle(), lines, fileName, keep: false);
 
-        internal bool TryLoadAndDetect(Subtitle subtitle, List<string> lines, string fileName, bool keepErrors)
+        internal override bool TryLoadAndDetect(Subtitle subtitle, List<string> lines, string fileName, bool keep)
         {
             if (!SubStationAlpha.HasEvents(lines))
             {
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // A style template with no events is a valid ASS file too.
             var detected = subtitle.Paragraphs.Count > _errorCount ||
                 (subtitle.Paragraphs.Count == 0 && _errorCount == 0 && IsStylesOnlyScript(lines));
-            if (!detected || !keepErrors)
+            if (!detected || !keep)
             {
                 Errors = null;
             }
