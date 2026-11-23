@@ -309,8 +309,15 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
     }
 
     /// <summary>
+    /// A download folder untouched for this long is left over from an aborted run. Younger ones
+    /// may belong to a download still running in another editor window or dialog.
+    /// </summary>
+    internal static readonly TimeSpan StaleDownloadFolderAge = TimeSpan.FromHours(6);
+
+    /// <summary>
     /// Removes download folders (named by a GUID) left behind by earlier aborted or failed
-    /// downloads, from before every exit path cleaned up after itself.
+    /// downloads, from before every exit path cleaned up after itself. Only stale ones: a download
+    /// running elsewhere at the same time keeps its folder.
     /// </summary>
     private static void DeleteStaleDownloadFolders(string installFolder)
     {
@@ -318,7 +325,7 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
         {
             foreach (var folder in Directory.GetDirectories(installFolder))
             {
-                if (!Guid.TryParse(Path.GetFileName(folder), out _))
+                if (!Guid.TryParse(Path.GetFileName(folder), out _) || !IsStaleDownloadFolder(folder, DateTime.UtcNow))
                 {
                     continue;
                 }
@@ -336,6 +343,33 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject, IClosingClea
         catch (Exception exception)
         {
             Se.LogError(exception, $"Could not scan Paddle OCR folder \"{installFolder}\"");
+        }
+    }
+
+    /// <summary>
+    /// True when nothing in the folder was written for <see cref="StaleDownloadFolderAge"/>. The
+    /// archive's own write time counts: a running download keeps writing to it, while the folder's
+    /// write time only changes when files are added or removed.
+    /// </summary>
+    internal static bool IsStaleDownloadFolder(string folder, DateTime utcNow)
+    {
+        try
+        {
+            var lastWrite = Directory.GetLastWriteTimeUtc(folder);
+            foreach (var file in Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories))
+            {
+                var fileWrite = File.GetLastWriteTimeUtc(file);
+                if (fileWrite > lastWrite)
+                {
+                    lastWrite = fileWrite;
+                }
+            }
+
+            return utcNow - lastWrite >= StaleDownloadFolderAge;
+        }
+        catch
+        {
+            return false; // can't tell - leave it
         }
     }
 
