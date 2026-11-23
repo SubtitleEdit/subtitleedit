@@ -150,9 +150,9 @@
       },
       "SharpCompress": {
         "type": "Direct",
-        "requested": "[0.50.9, )",
-        "resolved": "0.50.9",
-        "contentHash": "Jm32AbptP318P+G4Bew0c72X7R1MXqImenXD9kfkygysZJCTfXfp01CLKuFhGvJGIxSw/dutEAaAlwNOZ8MBlw=="
+        "requested": "[0.50.11, )",
+        "resolved": "0.50.11",
+        "contentHash": "OVurDgTt5RPybp3rRPD0yWlGyao6AfyiVWPNlAgnIhgucdMNthbc+ytpt5tYPDSrk1i+N4wZ9AiNZxKN/XPNsg=="
       },
       "SkiaSharp.HarfBuzz": {
         "type": "Direct",
