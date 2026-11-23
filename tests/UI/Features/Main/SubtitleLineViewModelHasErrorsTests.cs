@@ -409,4 +409,55 @@ public class SubtitleLineViewModelHasErrorsTests
         Assert.False(SubtitleLineViewModel.IsGapInColorRange(general, double.MaxValue));
         Assert.False(SubtitleLineViewModel.IsGapInColorRange(general, -40));
     }
+
+    /// <summary>
+    /// #17140: the Gap column is hidden by default, so "gap too short"/"gap in range" must
+    /// also tint the Hide cell of the line and the Show cell of the next line - but only while
+    /// the Gap column is hidden (otherwise the Gap cell shows it).
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(0, false, false, true)]   // touching lines, too short (the issue)
+    [InlineData(40, false, false, true)]
+    [InlineData(200, false, false, false)] // fine gap
+    [InlineData(200, false, true, true)]   // gap in range
+    [InlineData(0, true, false, false)]    // Gap column visible: only the Gap cell is tinted
+    public void GapError_TintsShowHideCells_WhenGapColumnHidden(double gapMs, bool showGapColumn, bool colorInRange, bool expectedTint)
+    {
+        var originalSettings = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+            var general = Se.Settings.General;
+            general.UseFrameMode = false;
+            general.ShowColumnGap = showGapColumn;
+            general.ColorGapTooShort = true;
+            general.MinimumBetweenLines = new MsOrFramesValue { Milliseconds = 80, Frames = 2 };
+            general.ColorGapInRange = colorInRange;
+            general.GapRangeMin = new MsOrFramesValue { Milliseconds = 100, Frames = 3 };
+            general.GapRangeMax = new MsOrFramesValue { Milliseconds = 300, Frames = 8 };
+
+            var first = Line("First.", 1000, 2000);
+            var second = Line("Second.", 2000 + gapMs, 4000);
+            // First/last line: no neighbour (same as SubtitleTextInfoHelper sets them).
+            first.PreviousGap = double.MaxValue;
+            first.Gap = gapMs;
+            second.PreviousGap = gapMs;
+            second.Gap = double.MaxValue;
+
+            var clean = Line("Clean.", 0, 500);
+            clean.Gap = double.MaxValue;
+            var transparent = clean.EndTimeBackgroundBrush;
+            Assert.Equal(expectedTint, !ReferenceEquals(transparent, first.EndTimeBackgroundBrush));
+            Assert.Equal(expectedTint, !ReferenceEquals(transparent, second.StartTimeBackgroundBrush));
+            Assert.Same(transparent, first.StartTimeBackgroundBrush);
+            Assert.Same(transparent, second.EndTimeBackgroundBrush);
+
+            // The error list still reports it either way.
+            Assert.Equal(expectedTint || showGapColumn, first.HasErrors(null, second));
+        }
+        finally
+        {
+            Se.Settings = originalSettings;
+        }
+    }
 }
