@@ -510,9 +510,9 @@ public static class DownloadHashManager
     internal static readonly IReadOnlyDictionary<string, string> PinnedHashUrls =
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            [Ffmpeg.Windows] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-2/ffmpeg902.zip",
+            [Ffmpeg.Windows] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-1-0/ffmpeg91.zip",
             [Ffmpeg.MacOsX64] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffmpeg80intel.zip",
-            [Ffmpeg.MacOsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-2/ffmpeg902arm.zip",
+            [Ffmpeg.MacOsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v9-1-0/ffmpeg91arm.zip",
             [LibMpv.WindowsX64] = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win64.zip",
             [LibMpv.WindowsArm64] = "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2026-08-14b/libmpv2-win-arm64.zip",
             [LibVlc.WindowsX64] = "https://get.videolan.org/vlc/3.0.24/win64/vlc-3.0.24-win64.7z",
@@ -528,7 +528,7 @@ public static class DownloadHashManager
             // ffmpeg - FfmpegDownloadService (SubtitleEdit/support-files releases)
             [Ffmpeg.Windows] = new[]
             {
-                "19ccdb1d6cfd4b07a14b6a4d51fb7a24c1de4672aec1485a0d0703bb7ec5ba8b", // ffmpeg-v9-2/ffmpeg902.zip (current download URL)
+                "4860a37d04d603e35130a566375b64f6a2dc247f26cd162a3a73fb427bda6575", // ffmpeg-v9-1-0/ffmpeg91.zip (current download URL)
             },
             [Ffmpeg.MacOsX64] = new[]
             {
@@ -536,7 +536,7 @@ public static class DownloadHashManager
             },
             [Ffmpeg.MacOsArm64] = new[]
             {
-                "9156d4f630d532fa68b181e583b47ea308e5ac637417874bc42b6c9a70847faf", // ffmpeg-v9-2/ffmpeg902arm.zip (current download URL)
+                "55b396cc5c2cb825faf3c29143e201052f954ae5718f7eb98a07f45c96c4e055", // ffmpeg-v9-1-0/ffmpeg91arm.zip (current download URL)
             },
 
             // libmpv - LibMpvDownloadService (SubtitleEdit/support-files releases)
