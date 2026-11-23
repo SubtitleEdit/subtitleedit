@@ -95,8 +95,21 @@ public class Se
     public SeOcr Ocr { get; set; } = new();
     public SePlugins Plugins { get; set; } = new();
     public SeProviders Providers { get; set; } = new();
-    public static SeLanguage Language { get; set; } = new();
-    public static Se Settings { get; set; } = new();
+    private static SeLanguage? _language;
+    private static Se? _settings;
+
+    // A successful settings or translation load supplies its own object graph.
+    public static SeLanguage Language
+    {
+        get => System.Threading.LazyInitializer.EnsureInitialized(ref _language);
+        set => _language = value;
+    }
+
+    public static Se Settings
+    {
+        get => System.Threading.LazyInitializer.EnsureInitialized(ref _settings);
+        set => _settings = value;
+    }
 
     public static readonly bool IsInstalledInProgramFiles;
     public static readonly bool IsPortable;

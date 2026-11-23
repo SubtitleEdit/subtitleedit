@@ -836,6 +836,9 @@ public partial class MainViewModel :
     private UiTickPump _positionTimer = new(TimeSpan.FromMilliseconds(50)); // posted ticks, not a DispatcherTimer - see UiTickPump
     private DispatcherTimer _slowTimer = new();
     private UiTickPump? _cursorTimer; // ~60 fps; drives only the waveform/video playhead cursor (a posted tick, not a DispatcherTimer - see UiTickPump)
+    private static int _startupAssetUpdateStarted;
+    private readonly TaskCompletionSource _startupLayoutReady = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly Task _startupFfmpeg;
     private volatile bool _backgroundWorkRunning; // between StartBackgroundWork and StopBackgroundWork; the tick pumps also need a video
 
     // Playhead interpolation state. When mpv resumes after a paused seek its time-pos stalls
@@ -1270,26 +1273,31 @@ public partial class MainViewModel :
         _ = themeInitializer.UpdateThemesIfNeeded().ContinueWith(
             t => Se.LogError(t.Exception!, "Could not unpack themes"),
             TaskContinuationOptions.OnlyOnFaulted);
-        Dispatcher.UIThread.Post(async void () =>
+        // Archive checks and extraction are process-wide disk work. Extra editor windows
+        // share the same folders and must not start another extraction while one is running.
+        if (Interlocked.Exchange(ref _startupAssetUpdateStarted, 1) == 0)
         {
-            try
+            _ = Task.Run(async () =>
             {
-                await languageInitializer.UpdateLanguagesIfNeeded();
-                await dictionaryInitializer.UpdateDictionariesIfNeeded();
-                await ocrInitializer.UpdateOcrDictionariesIfNeeded();
-            }
-            catch (Exception e)
-            {
-                Se.LogError(e);
-            }
-        }, DispatcherPriority.Loaded);
+                try
+                {
+                    await languageInitializer.UpdateLanguagesIfNeeded();
+                    await dictionaryInitializer.UpdateDictionariesIfNeeded();
+                    await ocrInitializer.UpdateOcrDictionariesIfNeeded();
+                }
+                catch (Exception e)
+                {
+                    Se.LogError(e);
+                }
+            });
+        }
 
         if (!File.Exists(Se.GetSettingsFilePath()))
         {
             FirstLoad();
         }
 
-        InitializeFfmpeg();
+        _startupFfmpeg = InitializeFfmpegAsync();
         InitializeLibMpv();
         LibVlcDynamicPlayer.LibVlcPath = Se.VlcFolder;
         Logic.VideoPlayers.Ffmpeg.FfmpegLibraries.LibraryPath = Se.FfmpegLibFolder;
@@ -1467,27 +1475,59 @@ public partial class MainViewModel :
         Configuration.Settings.SubtitleSettings.DCinemaAutoGenerateSubtitleId = Se.Settings.File.DCinemaSmpte.DCinemaAutoGenerateSubtitleId;
     }
 
+    private static bool TryUseConfiguredFfmpeg()
+    {
+        if (File.Exists(Se.Settings.General.FfmpegPath))
+        {
+            return true;
+        }
+
+        var bundledPath = DownloadFfmpegViewModel.GetFfmpegFileName();
+        if (!File.Exists(bundledPath))
+        {
+            return false;
+        }
+
+        FfmpegHelper.SetFfmpegPath(bundledPath);
+        return true;
+    }
+
     private static void InitializeFfmpeg()
     {
-        if (!string.IsNullOrEmpty(Se.Settings.General.FfmpegPath) &&
-            File.Exists(Se.Settings.General.FfmpegPath))
+        if (TryUseConfiguredFfmpeg())
         {
             return;
         }
 
-        var ffmpegFileName = DownloadFfmpegViewModel.GetFfmpegFileName();
-        if (!string.IsNullOrEmpty(ffmpegFileName) && File.Exists(ffmpegFileName))
-        {
-            FfmpegHelper.SetFfmpegPath(ffmpegFileName);
-            return;
-        }
-
-        // Fall back to an ffmpeg already on the system PATH (e.g. after a failed download), so SE
-        // does not get stuck on actions that need ffmpeg on the next start - issue #11760.
         var systemFfmpeg = FfmpegHelper.GetSystemFfmpegPath();
         if (!string.IsNullOrEmpty(systemFfmpeg))
         {
             FfmpegHelper.SetFfmpegPath(systemFfmpeg);
+        }
+    }
+
+    private static async Task InitializeFfmpegAsync()
+    {
+        if (TryUseConfiguredFfmpeg())
+        {
+            return;
+        }
+
+        try
+        {
+            var general = Se.Settings.General;
+            var configuredPath = general.FfmpegPath;
+            var systemFfmpeg = await Task.Run(FfmpegHelper.GetSystemFfmpegPath);
+            // Settings or an FFmpeg download can replace the path during the probe.
+            if (!string.IsNullOrEmpty(systemFfmpeg) &&
+                ReferenceEquals(general, Se.Settings.General) && general.FfmpegPath == configuredPath)
+            {
+                FfmpegHelper.SetFfmpegPath(systemFfmpeg);
+            }
+        }
+        catch (Exception e)
+        {
+            Se.LogError(e, "Could not discover system FFmpeg");
         }
     }
 
@@ -30901,8 +30941,9 @@ public partial class MainViewModel :
     /// <see cref="Program.PendingVideoToOpen"/> (CLI arguments, or a macOS File activation
     /// from a Finder launch) into this window, restoring the saved layout first.
     /// </summary>
-    private async Task OpenPendingStartupFilesAsync(bool delayForLayout)
+    private async Task OpenPendingStartupFilesAsync()
     {
+        await _startupLayoutReady.Task;
         if (Se.Settings.General.RememberPositionAndSize)
         {
             if (Se.Settings.General.UndockVideoControls)
@@ -30911,11 +30952,6 @@ public partial class MainViewModel :
             }
 
             InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
-        }
-
-        if (delayForLayout)
-        {
-            await Task.Delay(100);
         }
 
         var hasCliVideo = !string.IsNullOrEmpty(Program.PendingVideoToOpen);
@@ -30957,7 +30993,7 @@ public partial class MainViewModel :
                 if (!string.IsNullOrEmpty(Program.PendingFileToOpen) ||
                     !string.IsNullOrEmpty(Program.PendingVideoToOpen))
                 {
-                    await OpenPendingStartupFilesAsync(delayForLayout: false);
+                    await OpenPendingStartupFilesAsync();
                 }
             }
             catch (Exception e)
@@ -30966,6 +31002,8 @@ public partial class MainViewModel :
             }
         });
     }
+
+    internal void MarkStartupLayoutReady() => _startupLayoutReady.TrySetResult();
 
     internal void OnLoaded()
     {
@@ -31024,7 +31062,7 @@ public partial class MainViewModel :
             Program.StartupFileDecisionDone = true;
             Dispatcher.UIThread.Post(async void () =>
             {
-                await OpenPendingStartupFilesAsync(delayForLayout: true);
+                await OpenPendingStartupFilesAsync();
             });
         }
         else if (Se.Settings.File.OpenLastFileOnStart && Se.Settings.File.ShowRecentFiles)
@@ -31038,7 +31076,12 @@ public partial class MainViewModel :
                     {
                         // Delay to allow Activated event to set FileOpenedViaActivation flag, the Activated event fires asynchronously during startup
                         // and may not have completed by the time OnLoaded runs so wait and recheck the flag
-                        await Task.Delay(100);
+                        if (OperatingSystem.IsMacOS())
+                        {
+                            await Task.Delay(100);
+                        }
+
+                        await _startupLayoutReady.Task;
                         Program.StartupFileDecisionDone = true;
 
                         if (!string.IsNullOrEmpty(Program.PendingFileToOpen) ||
@@ -31047,7 +31090,7 @@ public partial class MainViewModel :
                             // A macOS File activation landed during the grace delay (cold
                             // launch via a Finder double-click): open that file in this
                             // still-empty window instead of the last-used one.
-                            await OpenPendingStartupFilesAsync(delayForLayout: false);
+                            await OpenPendingStartupFilesAsync();
                             return;
                         }
 
@@ -31059,7 +31102,6 @@ public partial class MainViewModel :
 
                         bool skipLoadVideo = false;
                         _videoFileName = first.VideoFileName;
-                        await Task.Delay(25);
 
                         if (Se.Settings.General.RememberPositionAndSize)
                         {
@@ -31279,6 +31321,7 @@ public partial class MainViewModel :
 
     private async Task VideoOpenFile(string videoFileName, int desiredAudioTrackId = -1, double startPositionSeconds = 0) // OpenVideoFile
     {
+        await _startupFfmpeg;
         var vp = GetVideoPlayerControl();
         if (vp == null)
         {

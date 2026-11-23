@@ -170,6 +170,7 @@ public partial class MainView : ViewBase
                 _vm.ContentGrid.InvalidateMeasure();
                 _vm.ContentGrid.InvalidateArrange();
                 Dispatcher.UIThread.Post(() => TableViewExtras.FocusRow(_vm.SubtitleGrid));
+                _vm.MarkStartupLayoutReady();
             }, DispatcherPriority.Loaded);
         };
 
