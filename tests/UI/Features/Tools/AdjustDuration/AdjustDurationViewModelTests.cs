@@ -171,4 +171,29 @@ public class AdjustDurationViewModelTests
 
         Assert.Equal(TimeSpan.FromSeconds(5), subtitles[0].EndTime);
     }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(0)]
+    public void AdjustDuration_FixedNotPositive_LeavesLinesAlone(double fixedSeconds)
+    {
+        var vm = new AdjustDurationViewModel
+        {
+            SelectedAdjustType = new AdjustDurationDisplay { Type = AdjustDurationType.Fixed },
+            AdjustFixed = fixedSeconds,
+        };
+        var subtitles = new ObservableCollection<SubtitleLineViewModel>
+        {
+            new()
+            {
+                Text = "First",
+                StartTime = TimeSpan.FromSeconds(5),
+                EndTime = TimeSpan.FromSeconds(7),
+            },
+        };
+
+        vm.AdjustDuration(subtitles);
+
+        Assert.Equal(TimeSpan.FromSeconds(7), subtitles[0].EndTime);
+    }
 }

@@ -125,7 +125,9 @@ public partial class PointSyncViewModel : ObservableObject
 
         // A line has at most one sync point (setting it again re-points it), and the list
         // stays in chronological order.
-        var existing = SyncPoints.FirstOrDefault(p => p.LeftIndex == syncPoint.LeftIndex);
+        // Two points on lines with the same start time cannot define a speed factor - PointSyncer
+        // would silently apply only the first offset - so the new one re-points the old one.
+        var existing = SyncPoints.FirstOrDefault(p => p.LeftIndex == syncPoint.LeftIndex || p.LeftStartTime == syncPoint.LeftStartTime);
         if (existing != null)
         {
             SyncPoints.Remove(existing);

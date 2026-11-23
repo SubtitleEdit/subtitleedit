@@ -99,7 +99,9 @@ public static class MergeShortLinesHelper
                 {
                     // Unticked by the user: keep the candidate visible, but leave `next` alone
                     // so it heads the next group.
-                    var refused = new SubtitleLineViewModel(current) { Text = wrapped, EndTime = next.EndTime };
+                    // Never end earlier than current already does: a short line inside a longer one
+                    // (1-10 s + 2-3 s) must not cut the merged line down to 3 s.
+                    var refused = new SubtitleLineViewModel(current) { Text = wrapped, EndTime = Max(current.EndTime, next.EndTime) };
                     refused.UpdateDuration();
                     fixes.Add(new MergeShortLinesItem(Se.Language.Tools.MergeShortLines.Title, index + 1, fixText, refused, next.Id)
                     {
@@ -110,7 +112,7 @@ public static class MergeShortLinesHelper
 
                 // Merge
                 current.Text = wrapped;
-                current.EndTime = next.EndTime;
+                current.EndTime = Max(current.EndTime, next.EndTime);
                 current.UpdateDuration();
                 mergeCount++;
 
@@ -127,6 +129,8 @@ public static class MergeShortLinesHelper
 
         return new MergeShortLinesResult(result, fixes, mergeCount);
     }
+
+    private static TimeSpan Max(TimeSpan a, TimeSpan b) => a >= b ? a : b;
 
     private static double[] SortShotChanges(List<double>? shotChanges)
     {
