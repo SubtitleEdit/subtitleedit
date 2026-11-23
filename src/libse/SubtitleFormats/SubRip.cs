@@ -55,9 +55,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override List<string> AlternateExtensions => new List<string> { ".wsrt" };
 
         public override bool IsMine(List<string> lines, string fileName) =>
-            TryLoadAndDetect(new Subtitle(), lines, fileName, keepErrors: false);
+            TryLoadAndDetect(new Subtitle(), lines, fileName, keep: false);
 
-        internal bool TryLoadAndDetect(Subtitle subtitle, List<string> lines, string fileName, bool keepErrors)
+        internal override bool TryLoadAndDetect(Subtitle subtitle, List<string> lines, string fileName, bool keep)
         {
             if (lines.Count > 0 && lines[0].StartsWith("WEBVTT", StringComparison.OrdinalIgnoreCase))
             {
@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             LoadSubtitle(subtitle, lines, fileName);
             var detected = subtitle.Paragraphs.Count > _errorCount;
-            if (!detected || !keepErrors)
+            if (!detected || !keep)
             {
                 Errors = null;
             }

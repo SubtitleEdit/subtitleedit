@@ -263,6 +263,55 @@ public class ConcurrentSubtitleParserTest : IDisposable
         Assert.Null(ReadErrors(detected!));
     }
 
+    [Theory]
+    [InlineData(".vtt")]
+    [InlineData(".ssa")]
+    [InlineData(".smi")]
+    [InlineData(".sbv")]
+    [InlineData(".json")]
+    public void FileLoadKeepsDetectionParse(string extension)
+    {
+        SubtitleFormat reader = extension switch
+        {
+            ".vtt" => new WebVTT(),
+            ".ssa" => new SubStationAlpha(),
+            ".smi" => new Sami(),
+            ".sbv" => new YouTubeSbv(),
+            _ => new Json(),
+        };
+        var input = reader.ToText(MakeSubtitle(), "sample");
+        var path = Path.Combine(_folder, "sample" + extension);
+        File.WriteAllText(path, input);
+
+        var expected = new Subtitle { Header = null! };
+        reader.LoadSubtitle(expected, input.SplitToLines(), path);
+        Assert.Equal(25, expected.Paragraphs.Count);
+
+        var loaded = Subtitle.Parse(path);
+        Assert.NotNull(loaded);
+        Assert.IsType(reader.GetType(), loaded.OriginalFormat);
+        Assert.Equal(expected.Header, loaded.Header);
+        Assert.Equal(expected.Footer, loaded.Footer);
+        Assert.Equal(expected.Paragraphs.Select(p => (p.Number, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, p.Text, p.Extra, p.Style)),
+            loaded.Paragraphs.Select(p => (p.Number, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, p.Text, p.Extra, p.Style)));
+
+        var detectOnly = new Subtitle();
+        var detected = detectOnly.LoadSubtitle(path, out _, null, batchMode: false, loadSubtitle: false);
+        Assert.IsType(reader.GetType(), detected);
+        Assert.Empty(detectOnly.Paragraphs);
+    }
+
+    [Fact]
+    public void SamiWithClosingSyncTagsStaysSamiModern()
+    {
+        var path = Path.Combine(_folder, "modern.smi");
+        File.WriteAllText(path, new SamiModern().ToText(MakeSubtitle(), "modern"));
+        var subtitle = Subtitle.Parse(path);
+        Assert.NotNull(subtitle);
+        Assert.IsType<SamiModern>(subtitle.OriginalFormat);
+        Assert.Equal(25, subtitle.Paragraphs.Count);
+    }
+
     [Fact]
     public void RenamedWebVttFallsBackFromSubRip()
     {

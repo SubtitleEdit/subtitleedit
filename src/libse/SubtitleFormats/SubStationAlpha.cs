@@ -19,7 +19,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override double MaxTimeCodeTotalMilliseconds => TimeCode.MaxSupportedTotalMilliseconds; // 3+ digit hours (#16937)
 
-        public override bool IsMine(List<string> lines, string fileName)
+        public override bool IsMine(List<string> lines, string fileName) =>
+            TryLoadAndDetect(new Subtitle(), lines, fileName, keep: false);
+
+        internal override bool TryLoadAndDetect(Subtitle subtitle, List<string> lines, string fileName, bool keep)
         {
             if (!HasEvents(lines))
             {
@@ -27,10 +30,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
-            Errors = null;
-            return subtitle.Paragraphs.Count > _errorCount;
+            var detected = subtitle.Paragraphs.Count > _errorCount;
+            if (!detected || !keep)
+            {
+                Errors = null;
+            }
+
+            return detected;
         }
 
         /// <summary>

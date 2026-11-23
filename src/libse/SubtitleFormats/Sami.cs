@@ -20,25 +20,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "SAMI";
 
-        public override bool IsMine(List<string> lines, string fileName)
+        internal override bool TryLoadAndDetect(Subtitle subtitle, List<string> lines, string fileName, bool keep)
         {
             if (!HasSyncTag(lines))
             {
                 return false; // LoadSubtitle finds nothing without one
             }
 
-            var sb = new StringBuilder();
-            foreach (string l in lines)
-            {
-                sb.AppendLine(l);
-            }
-
-            if (Name == "SAMI" && sb.ToString().Contains("</SYNC>"))
+            if (Name == "SAMI" && lines.Exists(line => line.Contains("</SYNC>")))
             {
                 return false;
             }
 
-            return base.IsMine(lines, fileName);
+            return base.TryLoadAndDetect(subtitle, lines, fileName, keep);
         }
 
         public override string ToText(Subtitle subtitle, string title)
